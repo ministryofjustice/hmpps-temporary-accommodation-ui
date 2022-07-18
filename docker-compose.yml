@@ -37,7 +37,7 @@ services:
     container_name: wiremock
     restart: always
     ports:
-      - "9091:8080"
+      - "9092:8080"
 
   app:
     build: .

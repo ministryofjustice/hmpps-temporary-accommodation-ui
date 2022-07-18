@@ -5,7 +5,7 @@ services:
     image: 'bitnami/redis:5.0'
     networks:
       - hmpps
-    container_name: redis 
+    container_name: redis
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
@@ -15,20 +15,35 @@ services:
     image: quay.io/hmpps/hmpps-auth:latest
     networks:
       - hmpps
-    container_name: hmpps-auth 
+    container_name: hmpps-auth
     ports:
       - "9090:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8080/auth/health"
+        ]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+
+  wiremock:
+    image: wiremock/wiremock
+    networks:
+      - hmpps
+    container_name: wiremock
+    restart: always
+    ports:
+      - "9091:8080"
 
   app:
     build: .
     networks:
       - hmpps
-    depends_on: [redis]
+    depends_on: [ redis ]
     ports:
       - "3000:3000"
     environment:

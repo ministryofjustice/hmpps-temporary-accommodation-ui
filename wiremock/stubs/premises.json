@@ -1,0 +1,810 @@
+[
+  {
+    "id": "efd52239-f5cb-4b00-ab1a-9a4e3402fc58",
+    "name": "Beckenham Road",
+    "apCode": "BELON",
+    "postcode": "BR3 4LR",
+    "bedCount": "20",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "181d6175-c1d8-4d61-b194-7f09e3c6611b",
+    "name": "Camden House",
+    "apCode": "CALON",
+    "postcode": "NW1 7HA",
+    "bedCount": "44",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "d84c6ad8-7334-4fcd-8191-ec6784af0844",
+    "name": "Canadian Avenue",
+    "apCode": "CALON",
+    "postcode": "SE6 3AU",
+    "bedCount": "24",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "2190797b-60eb-4118-ae49-1ed7d7effc52",
+    "name": "Ealing",
+    "apCode": "EALON",
+    "postcode": "W5 2HS",
+    "bedCount": "18",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "c22d8773-ff1f-4edb-bc8d-70d764d87515",
+    "name": "Hestia Battersea",
+    "apCode": "HELON",
+    "postcode": "SW11 2AH",
+    "bedCount": "10",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "a3982fd5-cd14-413d-871e-51efbd796ab3",
+    "name": "Hestia Streatham",
+    "apCode": "HELON",
+    "postcode": "SW16 2QP",
+    "bedCount": "25",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "4df798b5-e147-4459-b6d8-1f0f85a6d39d",
+    "name": "Joyce Meggie House",
+    "apCode": "JOLON",
+    "postcode": "SE5 0BL",
+    "bedCount": "36",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "0d0b2e17-c2ae-4ea1-b64d-c642e2c130a5",
+    "name": "Katherine Price Hughes House",
+    "apCode": "KALON",
+    "postcode": "N5 2EA",
+    "bedCount": "20",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "2572a5d4-f88f-4ef5-bbfb-5c6387d25d45",
+    "name": "Kew",
+    "apCode": "KELON",
+    "postcode": "TW9 4HQ",
+    "bedCount": "23",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "b9e50fdb-5eb8-49d0-84fd-4ac9cc1d8e0f",
+    "name": "Seafield Lodge",
+    "apCode": "SELON",
+    "postcode": "NW2 3PS",
+    "bedCount": "20",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "794da773-5870-4191-94ee-7b1454297832",
+    "name": "Tulse Hill",
+    "apCode": "TULON",
+    "postcode": "SW2 2QD",
+    "bedCount": "31",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "16ef47af-8d58-487e-9d10-b42c2e2f893b",
+    "name": "Westbourne House",
+    "apCode": "WELON",
+    "postcode": "E7 9HL",
+    "bedCount": "41",
+    "apAreaId": "LON"
+  },
+  {
+    "id": "b09cb20c-6a73-4f01-86c9-4fc1483ece93",
+    "name": "Astral Grove",
+    "apCode": "ASMids",
+    "postcode": "NG15 6FY",
+    "bedCount": "14",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "cb05adf4-4552-43da-9dfd-d56b86a38188",
+    "name": "Augustus House",
+    "apCode": "AUMids",
+    "postcode": "CV32 6JG",
+    "bedCount": "22",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "1b3d8e64-ddfe-4175-948b-4447a890f9ca",
+    "name": "Bilston House",
+    "apCode": "BIMids",
+    "postcode": "WV14 6AH",
+    "bedCount": "14",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "6218ab67-3623-4a3e-9940-2e0af17a4b4c",
+    "name": "Braley House",
+    "apCode": "BRMids",
+    "postcode": "WR3 7BT",
+    "bedCount": "20",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "a2338bd4-feb0-4438-975b-78d3321089fe",
+    "name": "Burdett Lodge",
+    "apCode": "BUMids",
+    "postcode": "DE22 3BR",
+    "bedCount": "29",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "6c5f0f2e-ffe1-4165-896c-7b8684e39ddb",
+    "name": "Carpenter House",
+    "apCode": "CAMids",
+    "postcode": "B16 9HS",
+    "bedCount": "21",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "fcf0ab1c-8823-4c13-9a0e-869d2513bed1",
+    "name": "Crowley House",
+    "apCode": "CRMids",
+    "postcode": "B29 6QY",
+    "bedCount": "21",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "ef20031f-f903-4038-99b5-2c6fe383a817",
+    "name": "Elliott House",
+    "apCode": "ELMids",
+    "postcode": "B12 9QA",
+    "bedCount": "20",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "37d005e9-a660-47a1-b156-d726abb9d84f",
+    "name": "Howard House",
+    "apCode": "HOMids",
+    "postcode": "LE1 6YF",
+    "bedCount": "13",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "e4463fca-2609-4819-9673-9c4093cccdcc",
+    "name": "Jackie Harriet House",
+    "apCode": "JAMids",
+    "postcode": "B6 6AJ",
+    "bedCount": "20",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "cdfca98c-2966-44c6-b5a3-0aaa7e10ec97",
+    "name": "Kirk Lodge",
+    "apCode": "KIMids",
+    "postcode": "LE2 2PJ",
+    "bedCount": "32",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "94ae1998-3917-46c9-8a25-4e8134eeb2c5",
+    "name": "McIntyre House",
+    "apCode": "MCMids",
+    "postcode": "CV11 5RD",
+    "bedCount": "19",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "5b71111d-dd78-4168-8dfb-c3031c9ce1bd",
+    "name": "Southwell House",
+    "apCode": "SOMids",
+    "postcode": "NG7 4DJ",
+    "bedCount": "21",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "ae01ea1b-63e0-45be-ad97-66102517b71e",
+    "name": "Staitheford House",
+    "apCode": "STMids",
+    "postcode": "ST17 4JX",
+    "bedCount": "13",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "60037d8e-d90b-4be6-9a0c-068950131af8",
+    "name": "Stonnall Road",
+    "apCode": "STMids",
+    "postcode": "WS9 8JZ",
+    "bedCount": "11",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "12e41286-021d-4308-9670-d6e98e7228e1",
+    "name": "Sycamore Lodge",
+    "apCode": "SYMids",
+    "postcode": "B69 4TH",
+    "bedCount": "32",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "b6b7ca95-42e7-4055-976f-e272f840b316",
+    "name": "Trent House",
+    "apCode": "TRMids",
+    "postcode": "NG3 4JF",
+    "bedCount": "20",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "1c243647-e42f-4de7-9a1e-feffb6a34a20",
+    "name": "Wenger House ",
+    "apCode": "WEMids",
+    "postcode": "ST5 1HJ",
+    "bedCount": "25",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "d540873b-1d34-45c1-9287-7ca8f0380651",
+    "name": "Wharflane House",
+    "apCode": "WHMids",
+    "postcode": "ST1 4PW",
+    "bedCount": "22",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "52b62e02-8f72-4baf-b3b2-dd09d3ad395d",
+    "name": "Wordsworth House",
+    "apCode": "WOMids",
+    "postcode": "LN1 3NQ",
+    "bedCount": "20",
+    "apAreaId": "Mids"
+  },
+  {
+    "id": "84c6926c-1ddf-44ff-a95a-61b2fe9d2e4e",
+    "name": "Albion Street",
+    "apCode": "ALNE",
+    "postcode": "WF13 2AJ",
+    "bedCount": "24",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "af21b973-d780-4d2c-9a44-fa6f80f5778e",
+    "name": "Cardigan House",
+    "apCode": "CANE",
+    "postcode": "LS6 3BJ",
+    "bedCount": "26",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "76fdcdf7-4005-4835-a36c-640ae438af86",
+    "name": "Cuthbert House",
+    "apCode": "CUNE",
+    "postcode": "NE8 2SH",
+    "bedCount": "24",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "17a326b7-da30-42ff-878e-10ea91280262",
+    "name": "Elm Bank",
+    "apCode": "ELNE",
+    "postcode": "BD19 3LW",
+    "bedCount": "23",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "2bfc9d18-0b1c-498e-a7d1-963453fe4982",
+    "name": "Holbeck House",
+    "apCode": "HONE",
+    "postcode": "LS12 1BS",
+    "bedCount": "25",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "6830330a-fa1a-445d-bb05-ea876939c772",
+    "name": "Nelson House",
+    "apCode": "NENE",
+    "postcode": "TS6 6DD",
+    "bedCount": "24",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "5950ba1d-4f2f-4010-ae09-861170e346cd",
+    "name": "Norfork Park",
+    "apCode": "NONE",
+    "postcode": "S2 2RU",
+    "bedCount": "32",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "d347454f-ed23-4a91-9a0b-5de317c3e1e6",
+    "name": "Ozanam House",
+    "apCode": "OZNE",
+    "postcode": "NE4 6XD",
+    "bedCount": "26",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "e9cec154-b1a2-4a37-b951-0ea85373b448",
+    "name": "Pennywell House",
+    "apCode": "PENE",
+    "postcode": "SR4 8DS",
+    "bedCount": "18",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "7e7ad270-9522-4460-8511-8ddcf1e41d50",
+    "name": "Queens Road",
+    "apCode": "QUNE",
+    "postcode": "HU5 2QW",
+    "bedCount": "19",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "52450206-5102-4212-81ca-3df9f1a83ee3",
+    "name": "Ripon House",
+    "apCode": "RINE",
+    "postcode": "LS2 9NZ",
+    "bedCount": "22",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "d86befab-2bef-4e89-b540-16986cbf7dbc",
+    "name": "Rookwood",
+    "apCode": "RONE",
+    "postcode": "S65 1NN",
+    "bedCount": "25",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "0c8a1dc8-adc3-4973-865f-5cfa5a08dc77",
+    "name": "Southview",
+    "apCode": "SONE",
+    "postcode": "YO26 5RU",
+    "bedCount": "22",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "b929dd1e-1779-4853-aae4-93295bd84b5c",
+    "name": "St Christopher's",
+    "apCode": "STNE",
+    "postcode": "NE4 6QX",
+    "bedCount": "21",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "aca9508b-a336-42c9-abd5-04de667ef869",
+    "name": "St Johns",
+    "apCode": "STNE",
+    "postcode": "LS6 1AG",
+    "bedCount": "29",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "05ba98d3-6f2e-4b01-bc59-83ea2d31f210",
+    "name": "The Crescent ",
+    "apCode": "THNE",
+    "postcode": "TS5 6SG",
+    "bedCount": "20",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "5d28e3cd-2f55-4d7f-8329-35e61c1119d4",
+    "name": "Town Moor",
+    "apCode": "TONE",
+    "postcode": "DN1 2QL",
+    "bedCount": "19",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "fba87ab0-e8e8-4145-a3c3-ec3dfac6e5fe",
+    "name": "Victoria House",
+    "apCode": "VINE",
+    "postcode": "DN15 6AS",
+    "bedCount": "20",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "65a7f5e3-93de-4385-aea0-9c916f9cc047",
+    "name": "Westgate",
+    "apCode": "WENE",
+    "postcode": "WF2 9RF",
+    "bedCount": "19",
+    "apAreaId": "NE"
+  },
+  {
+    "id": "baac8a4b-c906-404b-bf1e-600bd3282c99",
+    "name": "Adelaide House",
+    "apCode": "ADNW",
+    "postcode": "L7 2FP",
+    "bedCount": "18",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "241997eb-a697-4eda-869a-34a275eb2f84",
+    "name": "Ascot House",
+    "apCode": "ASNW",
+    "postcode": "SK4 2PB",
+    "bedCount": "25",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "f0a4239a-e8c1-479a-9f15-5c3f76694cf8",
+    "name": "Bowling Green",
+    "apCode": "BONW",
+    "postcode": "CA3 8DP",
+    "bedCount": "25",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "e961756b-84aa-43b2-819a-659af7557097",
+    "name": "Bradshaw House",
+    "apCode": "BRNW",
+    "postcode": "BL9 5DE",
+    "bedCount": "26",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "66946c97-25f7-40d9-adc6-e3fc28683565",
+    "name": "Bunbury House",
+    "apCode": "BUNW",
+    "postcode": "CH65 9HE",
+    "bedCount": "23",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "607a3e43-fb96-41fe-9195-34154f67d940",
+    "name": "Chorlton",
+    "apCode": "CHNW",
+    "postcode": "M21 9LH",
+    "bedCount": "27",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "f99b65ed-e2bf-46a6-81f8-a95a2c2a4d07",
+    "name": "Edith Rigby House",
+    "apCode": "EDNW",
+    "postcode": "PR1 3JE",
+    "bedCount": "12",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "65c40bb2-e13c-441e-a0b8-8e4f642d92dd",
+    "name": "Haworth House",
+    "apCode": "HANW",
+    "postcode": "BB2 2HL",
+    "bedCount": "26",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "d3dd2f4d-ea97-49fd-b3b5-3bfefb3fa122",
+    "name": "Highfield House",
+    "apCode": "HINW",
+    "postcode": "BB5 0PX",
+    "bedCount": "22",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "11946a48-3b2c-4579-b14d-cf06b2e8e174",
+    "name": "Linden Bank",
+    "apCode": "LINW",
+    "postcode": "CW11 3BD",
+    "bedCount": "22",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "d97c2ae5-b02d-4cbb-ae4a-d4fe3752d630",
+    "name": "Merseybank",
+    "apCode": "MENW",
+    "postcode": "L3 7HS",
+    "bedCount": "24",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "2d91558e-f9b5-499f-a3e3-00e64134470f",
+    "name": "Southwood",
+    "apCode": "SONW",
+    "postcode": "L17 7BQ",
+    "bedCount": "29",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "54b86577-b31c-4432-ac96-ce938270d55f",
+    "name": "St Josephs",
+    "apCode": "STNW",
+    "postcode": "M30 8PF",
+    "bedCount": "29",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "27c76cd0-4344-4ca9-a515-786ab01a9bcc",
+    "name": "Stafford House",
+    "apCode": "STNW",
+    "postcode": "L8 3SG",
+    "bedCount": "16",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "ce8c2011-081b-4d9c-8ea2-3ecb4f01a1c7",
+    "name": "Wilton Place",
+    "apCode": "WINW",
+    "postcode": "OL9 7QW",
+    "bedCount": "29",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "a99616f3-5f7b-4a95-a1a1-b3f8ef011e10",
+    "name": "Withington Road",
+    "apCode": "WINW",
+    "postcode": "M16 8JN",
+    "bedCount": "35",
+    "apAreaId": "NW"
+  },
+  {
+    "id": "98e42f78-b39a-4336-905d-1f97fd618fe7",
+    "name": "Bedford",
+    "apCode": "BESEE",
+    "postcode": "MK40 2AP",
+    "bedCount": "17",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "22f6a72a-f09c-4039-a7cb-0fb8c89f8a6d",
+    "name": "Bridgewood",
+    "apCode": "BRSEE",
+    "postcode": "NN3 8AX",
+    "bedCount": "22",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "ad7c91d5-9fe0-4c38-94ac-78397091a7bd",
+    "name": "Brighton",
+    "apCode": "BRSEE",
+    "postcode": "BN2 1EJ",
+    "bedCount": "16",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "661544e5-d6d4-4377-86a0-2e458a4b941d",
+    "name": "Felmores",
+    "apCode": "FESEE",
+    "postcode": "SS13 1RN",
+    "bedCount": "25",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "05d0b115-467c-483d-8482-95bbbbb0fa80",
+    "name": "Fleming House",
+    "apCode": "FLSEE",
+    "postcode": "ME16 8SH",
+    "bedCount": "31",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "dddeedd0-2cc4-46ff-8ede-9c25b2056438",
+    "name": "John Boag House",
+    "apCode": "JOSEE",
+    "postcode": "NR3 2DF",
+    "bedCount": "25",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "a28a25c3-8f02-4e9e-a42b-77b1a621b37d",
+    "name": "Lightfoot House",
+    "apCode": "LISEE",
+    "postcode": "IP4 5AA",
+    "bedCount": "26",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "9f32965c-3bec-4070-91b7-42fd68777038",
+    "name": "Luton",
+    "apCode": "LUSEE",
+    "postcode": "LU1 1RG",
+    "bedCount": "20",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "af1f09fc-9a2a-43fa-a2a9-14ea15b9a0d1",
+    "name": "Peterborough",
+    "apCode": "PESEE",
+    "postcode": "PE1 3RW",
+    "bedCount": "31",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "8fd71403-b6eb-4d57-9f2c-684e365149c4",
+    "name": "St Catherines Priory ",
+    "apCode": "STSEE",
+    "postcode": "GU2 4EE",
+    "bedCount": "19",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "274b9bdf-5973-431c-b257-fd5f37a30983",
+    "name": "The Cottage",
+    "apCode": "THSEE",
+    "postcode": "IP1 6LH",
+    "bedCount": "14",
+    "apAreaId": "SEE"
+  },
+  {
+    "id": "5532356a-0a97-46d7-9379-cf372434edca",
+    "name": "Abingdon Road",
+    "apCode": "ABSWSC",
+    "postcode": "OX1 4PY",
+    "bedCount": "20",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "82cdb880-80de-47fb-bb7d-dc603717ed51",
+    "name": "Ashley House",
+    "apCode": "ASSWSC",
+    "postcode": "BS2 8NB",
+    "bedCount": "22",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "c8915cb4-f706-471f-81c5-2f90349c60fc",
+    "name": "Bridge House",
+    "apCode": "BRSWSC",
+    "postcode": "BS7 0PD",
+    "bedCount": "14",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "979ecd34-3b7e-4f71-a8f5-f54466ff396f",
+    "name": "Brigstocke Road",
+    "apCode": "BRSWSC",
+    "postcode": "BS2 8UB",
+    "bedCount": "25",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "b3ae5602-1114-4f26-96f0-df5e89a5537e",
+    "name": "Clarks House",
+    "apCode": "CLSWSC",
+    "postcode": "OX1 1RE",
+    "bedCount": "18",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "0709378b-3961-480a-bb79-a6caeb8ec4a0",
+    "name": "Dickson House",
+    "apCode": "DISWSC",
+    "postcode": "PO16 7SL",
+    "bedCount": "19",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "997cffc1-4414-424b-a4bb-1d39ae8c8e59",
+    "name": "Eden House",
+    "apCode": "EDSWSC",
+    "postcode": "BS16 2EQ",
+    "bedCount": "26",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "16ac0414-162b-460b-a27a-d1334df493f0",
+    "name": "Elizabeth Fry",
+    "apCode": "ELSWSC",
+    "postcode": "RG1 6LQ",
+    "bedCount": "24",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "4301cc46-4657-4f81-9772-9058a5a0c44d",
+    "name": "Glogan House",
+    "apCode": "GLSWSC",
+    "postcode": "TA6 3LP",
+    "bedCount": "16",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "53eefb53-5258-4334-b0fa-f7152c7810e0",
+    "name": "Great Holm",
+    "apCode": "GRSWSC",
+    "postcode": "MK8 9AL",
+    "bedCount": "16",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "3d9f4ad2-97f8-464d-ab79-e197e0f9e0aa",
+    "name": "Landguard Road",
+    "apCode": "LASWSC",
+    "postcode": "SO15 5DJ",
+    "bedCount": "26",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "62d91be0-eeac-4821-9b08-d3dcf1e6d41e",
+    "name": "Lawson House",
+    "apCode": "LASWSC",
+    "postcode": "PL1 5QU",
+    "bedCount": "19",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "eff1abfc-f197-4e52-b19e-d20f7d1a26c2",
+    "name": "Manor Lodge",
+    "apCode": "MASWSC",
+    "postcode": "SL4 2RL",
+    "bedCount": "25",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "3c6afd91-8a6a-426a-bda0-d927206ffbc2",
+    "name": "Meneghy House",
+    "apCode": "MESWSC",
+    "postcode": "TR14 8NQ",
+    "bedCount": "18",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "9954f784-57da-4d85-83be-b415209a49f9",
+    "name": "Ryecroft",
+    "apCode": "RYSWSC",
+    "postcode": "GL1 4LY",
+    "bedCount": "18",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "3eaa7541-d1ad-45b0-a121-6a212456f141",
+    "name": "St Leonards",
+    "apCode": "STSWSC",
+    "postcode": "RG30 2AA",
+    "bedCount": "22",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "6761cbdf-9693-4cda-9d32-2f9ed452d24e",
+    "name": "The Grange",
+    "apCode": "THSWSC",
+    "postcode": "PO7 5PL",
+    "bedCount": "25",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "89b86d3a-0333-41c0-8d91-c1d21a9949b0",
+    "name": "The Pines",
+    "apCode": "THSWSC",
+    "postcode": "BH5 1DU",
+    "bedCount": "16",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "478979fe-365b-412d-806d-0c1d849f5e91",
+    "name": "Weston",
+    "apCode": "WESWSC",
+    "postcode": "DT4 8SU",
+    "bedCount": "25",
+    "apAreaId": "SWSC"
+  },
+  {
+    "id": "0a822b51-1883-4f88-80d9-82bbffa16c7a",
+    "name": "Mandeville House",
+    "apCode": "MAWales",
+    "postcode": "CF11 6JY",
+    "bedCount": "26",
+    "apAreaId": "Wales"
+  },
+  {
+    "id": "f77e4cd2-0d69-4fc4-8dd1-9a7251bbde46",
+    "name": "Plas y Wern",
+    "apCode": "PLWales",
+    "postcode": "LL14 6RN",
+    "bedCount": "27",
+    "apAreaId": "Wales"
+  },
+  {
+    "id": "50899b22-ba03-425a-9b7e-500ce8be9682",
+    "name": "Quay House",
+    "apCode": "QUWales",
+    "postcode": "SA1 2AW",
+    "bedCount": "27",
+    "apAreaId": "Wales"
+  },
+  {
+    "id": "39049458-133d-4fe9-9994-b500be742749",
+    "name": "Ty Newydd",
+    "apCode": "TYWales",
+    "postcode": "LL57 4HP",
+    "bedCount": "23",
+    "apAreaId": "Wales"
+  }
+]

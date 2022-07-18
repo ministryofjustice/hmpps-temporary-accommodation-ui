@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# script/test: Run the test suite for the application.
+
+set -e
+
+script/utils/launch-docker.sh
+
+echo "==> Starting the backing services in Docker..."
+
+docker-compose -f docker-compose-test.yml up -d
+
+echo "==> Typechecking the code"
+
+npm run typecheck
+
+echo "==> Linting the code"
+
+npm run lint
+
+echo "==> Running unit tests..."
+
+npm run test
+
+echo "==> Running e2e tests..."
+
+npm run test:e2e
+
+cleanup() {
+  docker-compose -f docker-compose-test.yml down --remove-orphans
+}
+
+trap cleanup EXIT

@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 import { resetStubs } from './wiremock'
 import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
+import premises from './integration_tests/mockApis/premises'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -22,6 +23,7 @@ export default defineConfig({
         reset: resetStubs,
         ...auth,
         ...tokenVerification,
+        ...premises,
       })
     },
     baseUrl: 'http://localhost:3007',

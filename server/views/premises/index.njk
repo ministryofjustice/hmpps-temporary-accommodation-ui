@@ -1,0 +1,34 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Home" %}
+
+{% block content %}
+
+	<main class="app-container govuk-body">
+		<h1>Premises</h1>
+
+		{{
+      govukTable({
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: true,
+        head: [
+          {
+            text: "Name"
+          },
+          {
+            text: "Code"
+          },
+          {
+            text: "Bed Count"
+          },
+          {
+            html: '<span class="govuk-visually-hidden">Actions</span>'
+          }
+        ],
+        rows: tableRows
+      })
+    }}
+	</main>
+
+{% endblock %}

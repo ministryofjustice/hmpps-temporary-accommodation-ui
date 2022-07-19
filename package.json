@@ -87,6 +87,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^7.3.0",
+    "@golevelup/ts-jest": "^0.3.3",
     "@ministryofjustice/frontend": "^1.4.2",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.3.3",

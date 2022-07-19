@@ -133,7 +133,7 @@
     "@types/superagent": "^4.1.15",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.30.5",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
     "audit-ci": "^6.3.0",
     "concurrently": "^7.3.0",

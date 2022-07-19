@@ -15,3 +15,8 @@ nodenv install --skip-existing
 npm install
 
 script/utils/start-backing-services.sh
+
+echo "==> Stubbing API endpoints"
+
+npm run api-stubs:reset > /dev/null
+npm run api-stubs:create > /dev/null

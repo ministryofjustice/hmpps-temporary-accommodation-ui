@@ -17,4 +17,19 @@ export default {
         jsonBody: premises,
       },
     }),
+
+  subSinglePremises: (premises: Premises) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/premises/${premises.id}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: premises,
+      },
+    }),
 }

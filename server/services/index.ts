@@ -2,16 +2,19 @@ import { dataAccess } from '../data'
 
 import UserService from './userService'
 import PremisesService from './premisesService'
+import BookingService from './bookingService'
 
 export const services = () => {
-  const data = dataAccess()
+  const { hmppsAuthClient, approvedPremisesClientBuilder, bookingClientBuilder } = dataAccess()
 
-  const userService = new UserService(data.hmppsAuthClient)
-  const premisesService = new PremisesService(data.approvedPremisesClientBuilder)
+  const userService = new UserService(hmppsAuthClient)
+  const premisesService = new PremisesService(approvedPremisesClientBuilder)
+  const bookingService = new BookingService(bookingClientBuilder)
 
   return {
     userService,
     premisesService,
+    bookingService,
   }
 }
 

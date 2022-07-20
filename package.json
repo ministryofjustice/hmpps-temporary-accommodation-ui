@@ -22,6 +22,7 @@
     "typecheck": "tsc && tsc -p integration_tests",
     "test": "jest",
     "test:e2e": "start-server-and-test start-feature http://localhost:3007/ping int-test",
+    "test:e2e:ui": "start-server-and-test start-feature:dev http://localhost:3007/ping int-test-ui",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",
@@ -86,6 +87,8 @@
     ]
   },
   "dependencies": {
+    "@faker-js/faker": "^7.3.0",
+    "@golevelup/ts-jest": "^0.3.3",
     "@ministryofjustice/frontend": "^1.4.2",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.3.3",
@@ -101,6 +104,7 @@
     "express": "^4.18.1",
     "express-prom-bundle": "^6.5.0",
     "express-session": "^1.17.3",
+    "fishery": "^2.2.2",
     "govuk-frontend": "^4.2.0",
     "helmet": "^5.1.0",
     "http-errors": "^2.0.0",

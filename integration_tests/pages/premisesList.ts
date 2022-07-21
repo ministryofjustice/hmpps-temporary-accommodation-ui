@@ -23,4 +23,8 @@ export default class PremisesListPage extends Page {
         })
     })
   }
+
+  static shouldShowFlashMessage(): void {
+    cy.get('.govuk-notification-banner__content').should('contain', 'Booking made successfully')
+  }
 }

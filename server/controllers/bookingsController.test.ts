@@ -35,7 +35,7 @@ describe('bookingsController', () => {
     it('given the expected form data, the posting of the booking is successful should redirect to the "premises" page', async () => {
       const booking = BookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
-
+      const mockFlash = jest.fn()
       const requestHandler = bookingController.create()
 
       await requestHandler(
@@ -52,10 +52,12 @@ describe('bookingsController', () => {
             'expected-departure-month': '02',
             'expected-departure-year': '2023',
           },
+          flash: mockFlash,
         },
         response,
         next,
       )
+      expect(mockFlash).toHaveBeenCalledWith('info', 'Booking made successfully')
 
       expect(bookingService.postBooking).toHaveBeenCalledWith('premisesIdParam', {
         CRN: 'CRN',
@@ -71,7 +73,10 @@ describe('bookingsController', () => {
       const booking = BookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
 
+      const mockFlash = jest.fn()
+
       const requestHandler = bookingController.create()
+
       await requestHandler(
         {
           ...request,
@@ -86,10 +91,13 @@ describe('bookingsController', () => {
             'expected-departure-month': '',
             'expected-departure-year': '',
           },
+          flash: mockFlash,
         },
         response,
         next,
       )
+      expect(mockFlash).toHaveBeenCalledWith('info', 'Booking made successfully')
+
       expect(bookingService.postBooking).toHaveBeenCalledWith('premisesIdParam', {
         CRN: '',
         arrivalDate: '1899-12-31T00:00:00.000Z',
@@ -103,6 +111,8 @@ describe('bookingsController', () => {
     it('given the form is submitted with unexpected values the posting of the booking is successful should redirect to the "premises" page', async () => {
       const booking = BookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
+
+      const mockFlash = jest.fn()
 
       const requestHandler = bookingController.create()
 
@@ -120,10 +130,13 @@ describe('bookingsController', () => {
             'expected-departure-month': 'bar',
             'expected-departure-year': 'b4z',
           },
+          flash: mockFlash,
         },
         response,
         next,
       )
+      expect(mockFlash).toHaveBeenCalledWith('info', 'Booking made successfully')
+
       expect(bookingService.postBooking).toHaveBeenCalledWith('premisesIdParam', {
         CRN: '££$%£$£',
         arrivalDate: '1899-12-31T00:00:00.000Z',

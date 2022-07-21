@@ -1,8 +1,8 @@
 import premisesFactory from '../../server/testutils/factories/premises'
 import bookingFactory from '../../server/testutils/factories/booking'
 import BookingPage from '../pages/booking'
-import PremisesPage from '../pages/premises'
 import Page from '../pages/page'
+import PremisesPage from '../pages/premisesList'
 
 context('Booking', () => {
   beforeEach(() => {
@@ -35,7 +35,6 @@ context('Booking', () => {
 
     // Then I should be redirected to the premises page
     Page.verifyOnPage(PremisesPage)
-
     PremisesPage.shouldShowFlashMessage()
 
     // And the booking should be created in the API

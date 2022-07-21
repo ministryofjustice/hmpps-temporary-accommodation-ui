@@ -45,6 +45,8 @@ export default class BookingsController {
         keyWorker,
       })
 
+      req.flash('info', 'Booking made successfully')
+
       res.redirect(`/premises`)
     }
   }

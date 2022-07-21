@@ -2,14 +2,14 @@ import type { Premises } from 'approved-premises'
 
 import Page from './page'
 
-export default class PremisesPage extends Page {
+export default class PremisesListPage extends Page {
   constructor() {
     super('Premises')
   }
 
-  static visit(): PremisesPage {
+  static visit(): PremisesListPage {
     cy.visit('/premises')
-    return new PremisesPage()
+    return new PremisesListPage()
   }
 
   shouldShowPremises(premises: Array<Premises>): void {

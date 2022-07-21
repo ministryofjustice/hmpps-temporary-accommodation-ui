@@ -16,6 +16,7 @@ export default function routes(services: Services): Router {
   })
 
   get('/premises', premisesController.index())
+  get('/premises/:id', premisesController.show())
 
   return router
 }

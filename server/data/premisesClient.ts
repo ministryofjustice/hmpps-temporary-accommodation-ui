@@ -12,4 +12,8 @@ export default class PremisesClient {
   async getAllPremises(): Promise<Array<Premises>> {
     return (await this.restClient.get({ path: '/premises' })) as Array<Premises>
   }
+
+  async getPremises(id: string): Promise<Premises> {
+    return (await this.restClient.get({ path: `/premises/${id}` })) as Premises
+  }
 }

@@ -74,4 +74,35 @@ describe('PremisesService', () => {
       ])
     })
   })
+
+  describe('getPremisesDetails', () => {
+    it('returns a title and a summary list for a given Premises ID', async () => {
+      const premises = premisesFactory.build({ name: 'Test', apCode: 'ABC', postcode: 'SW1A 1AA', bedCount: 50 })
+      premisesClient.getPremises.mockResolvedValue(premises)
+
+      const result = await service.getPremisesDetails(premises.id)
+
+      expect(result).toEqual({
+        name: 'Test',
+        summaryList: {
+          rows: [
+            {
+              key: { text: 'Code' },
+              value: { text: 'ABC' },
+            },
+            {
+              key: { text: 'Postcode' },
+              value: { text: 'SW1A 1AA' },
+            },
+            {
+              key: { text: 'Number of Beds' },
+              value: { text: '50' },
+            },
+          ],
+        },
+      })
+
+      expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
+    })
+  })
 })

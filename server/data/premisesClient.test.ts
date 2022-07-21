@@ -1,6 +1,6 @@
 import nock from 'nock'
 
-import type { Premises } from 'approved-premises'
+import premisesFactory from '../testutils/factories/premises'
 import PremisesClient from './premisesClient'
 import config from '../config'
 
@@ -26,12 +26,26 @@ describe('PremisesClient', () => {
   })
 
   describe('getAllPremises', () => {
-    const premises: Premises[] = []
+    const premises = premisesFactory.buildList(5)
 
     it('should get all premises', async () => {
       fakeApprovedPremisesApi.get('/premises').matchHeader('authorization', `Bearer ${token}`).reply(200, premises)
 
       const output = await premisesClient.getAllPremises()
+      expect(output).toEqual(premises)
+    })
+  })
+
+  describe('getPremises', () => {
+    const premises = premisesFactory.build()
+
+    it('should get a single premises', async () => {
+      fakeApprovedPremisesApi
+        .get(`/premises/${premises.id}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, premises)
+
+      const output = await premisesClient.getPremises(premises.id)
       expect(output).toEqual(premises)
     })
   })

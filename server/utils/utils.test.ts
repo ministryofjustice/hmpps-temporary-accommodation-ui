@@ -1,4 +1,4 @@
-import { convertToTitleCase, initialiseName } from './utils'
+import { convertToTitleCase, initialiseName, convertDateInputsToDateObj } from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -26,5 +26,61 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string, expected: string) => {
     expect(initialiseName(a)).toEqual(expected)
+  })
+})
+
+describe('convertDate', () => {
+  it('converts a date object', () => {
+    interface MyObjectWithADate {
+      date?: Date
+      ['date-year']: string
+      ['date-month']: string
+      ['date-day']: string
+    }
+    const obj: MyObjectWithADate = {
+      'date-year': '2022',
+      'date-month': '12',
+      'date-day': '11',
+    }
+
+    const result = convertDateInputsToDateObj(obj, 'date')
+
+    expect(result.date.toString()).toMatch('Dec 11 2022')
+  })
+
+  it('returns a date object when given empty strings as input', () => {
+    interface MyObjectWithADate {
+      date?: Date
+      ['date-year']: string
+      ['date-month']: string
+      ['date-day']: string
+    }
+    const obj: MyObjectWithADate = {
+      'date-year': '',
+      'date-month': '',
+      'date-day': '',
+    }
+
+    const result = convertDateInputsToDateObj(obj, 'date')
+
+    expect(result.date.toString()).toMatch('Dec 31 1899')
+  })
+
+  it('returns a date object when given invalid strings as input', () => {
+    interface MyObjectWithADate {
+      date?: Date
+      ['date-year']: string
+      ['date-month']: string
+      ['date-day']: string
+    }
+    const obj: MyObjectWithADate = {
+      'date-year': 'twothousandtwentytwo',
+      'date-month': '20',
+      'date-day': 'foo',
+    }
+
+    const result = convertDateInputsToDateObj(obj, 'date')
+
+    expect(result.date.toString()).toMatch('Dec 31 1899')
   })
 })

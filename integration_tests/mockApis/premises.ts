@@ -18,7 +18,7 @@ export default {
       },
     }),
 
-  subSinglePremises: (premises: Premises) =>
+  stubSinglePremises: (premises: Premises) =>
     stubFor({
       request: {
         method: 'GET',

@@ -9,6 +9,10 @@ declare module 'approved-premises' {
     [P in K]?: Date
   }
 
+  export type ArrivalDto = Omit<Arrival, 'id' | 'bookingId'> &
+    ObjectWithDateParts<'dateTime'> &
+    ObjectWithDateParts<'expectedDeparture'>
+
   export interface HtmlAttributes {
     [key: string]: string
   }

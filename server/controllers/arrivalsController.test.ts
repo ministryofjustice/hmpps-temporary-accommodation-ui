@@ -31,4 +31,41 @@ describe('ArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('arrivals/new', { premisesId: 'premisesId', bookingId: 'bookingId' })
     })
   })
+
+  describe('create', () => {
+    it('creates an arrival and redirects to the premises page', () => {
+      const requestHandler = arrivalsController.create()
+
+      request.params = {
+        bookingId: 'bookingId',
+        premisesId: 'premisesId',
+      }
+
+      request.body = {
+        'dateTime-year': 2022,
+        'dateTime-month': 12,
+        'dateTime-day': 11,
+        'expectedDeparture-year': 2022,
+        'expectedDeparture-month': 11,
+        'expectedDeparture-day': 12,
+        notes: 'Some notes',
+      }
+
+      requestHandler(request, response, next)
+
+      const expectedArrival = {
+        ...request.body,
+        dateTime: new Date(2022, 11, 11),
+        expectedDeparture: new Date(2022, 10, 12),
+      }
+
+      expect(arrivalService.createArrival).toHaveBeenCalledWith(
+        request.params.premisesId,
+        request.params.bookingId,
+        expectedArrival,
+      )
+
+      expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
+    })
+  })
 })

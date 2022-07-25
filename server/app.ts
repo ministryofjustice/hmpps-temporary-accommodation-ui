@@ -1,4 +1,5 @@
 import express from 'express'
+import flash from 'connect-flash'
 
 import path from 'path'
 import createError from 'http-errors'
@@ -33,12 +34,17 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpWebSession())
   app.use(setUpWebRequestParsing())
   app.use(setUpStaticResources())
+
+  app.use(flash())
   nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
-
+  app.use((req, res, next) => {
+    res.app.locals.infoMessages = req.flash('info')
+    return next()
+  })
   app.use(routes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

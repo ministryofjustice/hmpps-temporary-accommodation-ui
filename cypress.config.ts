@@ -3,6 +3,7 @@ import { resetStubs } from './wiremock'
 import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import premises from './integration_tests/mockApis/premises'
+import booking from './integration_tests/mockApis/booking'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -24,6 +25,7 @@ export default defineConfig({
         ...auth,
         ...tokenVerification,
         ...premises,
+        ...booking,
       })
     },
     baseUrl: 'http://localhost:3007',

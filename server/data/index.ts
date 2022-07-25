@@ -4,6 +4,7 @@
  * In particular, applicationinsights automatically collects bunyan logs
  */
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
+import BookingClient from './bookingClient'
 
 initialiseAppInsights()
 buildAppInsightsClient()
@@ -18,8 +19,9 @@ type RestClientBuilder<T> = (token: string) => T
 export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
   approvedPremisesClientBuilder: ((token: string) => new PremisesClient(token)) as RestClientBuilder<PremisesClient>,
+  bookingClientBuilder: ((token: string) => new BookingClient(token)) as RestClientBuilder<BookingClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { PremisesClient, HmppsAuthClient, RestClientBuilder }
+export { BookingClient, PremisesClient, HmppsAuthClient, RestClientBuilder }

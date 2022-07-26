@@ -1,4 +1,10 @@
-import { convertToTitleCase, initialiseName, convertDateInputsToDateObj } from './utils'
+import {
+  convertDateString,
+  convertToTitleCase,
+  initialiseName,
+  convertDateInputsToDateObj,
+  InvalidDateStringError,
+} from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -82,5 +88,31 @@ describe('convertDate', () => {
     const result = convertDateInputsToDateObj(obj, 'date')
 
     expect(result.date.toString()).toMatch('Dec 31 1899')
+  })
+})
+
+describe('convertDateString', () => {
+  it('returns the date object unmutated', () => {
+    const date = new Date(2022, 10, 11)
+
+    expect(convertDateString(date)).toEqual(date)
+  })
+
+  it('converts a ISO8601 date string', () => {
+    const date = '2022-11-11T00:00:00.000Z'
+
+    expect(convertDateString(date)).toEqual(new Date(2022, 10, 11))
+  })
+
+  it('raises an error if the date is not a valid ISO8601 date string', () => {
+    const date = '23/11/2022'
+
+    expect(() => convertDateString(date)).toThrow(new InvalidDateStringError(`Invalid Date: ${date}`))
+  })
+
+  it('raises an error if the date is not a date string', () => {
+    const date = 'NOT A DATE'
+
+    expect(() => convertDateString(date)).toThrow(new InvalidDateStringError(`Invalid Date: ${date}`))
   })
 })

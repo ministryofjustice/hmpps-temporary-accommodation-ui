@@ -19,8 +19,12 @@ export default class BookingPage extends Page {
     cy.get('legend').should('contain', legendName)
   }
 
-  getByInputByIdAndEnterDetails(id: string, details: string): void {
+  getTextInputByIdAndEnterDetails(id: string, details: string): void {
     cy.get(`#${id}`).type(details)
+  }
+
+  getSelectInputByIdAndSelectAnEntry(id: string, entry: string): void {
+    cy.get(`#${id}`).select(entry)
   }
 
   arrivalDay(): PageElement {
@@ -53,7 +57,7 @@ export default class BookingPage extends Page {
 
   completeForm(booking: Booking): void {
     this.getLabel('CRN')
-    this.getByInputByIdAndEnterDetails('CRN', booking.CRN)
+    this.getTextInputByIdAndEnterDetails('CRN', booking.CRN)
 
     this.getLegend('What is the arrival date?')
     this.arrivalDay().type((booking.arrivalDate as Date).getDate().toString())
@@ -66,6 +70,6 @@ export default class BookingPage extends Page {
     this.expectedDepartureYear().type((booking.expectedDepartureDate as Date).getFullYear().toString())
 
     this.getLabel('Key Worker')
-    this.getByInputByIdAndEnterDetails('keyWorker', booking.keyWorker)
+    this.getSelectInputByIdAndSelectAnEntry('keyWorker', booking.keyWorker)
   }
 }

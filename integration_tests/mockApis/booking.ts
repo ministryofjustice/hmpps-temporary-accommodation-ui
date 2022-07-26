@@ -17,6 +17,20 @@ export default {
         jsonBody: args.booking,
       },
     }),
+  stubBookingGet: (args: { premisesId: string; booking: Booking }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${args.premisesId}/bookings/${args.booking.id}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: args.booking,
+      },
+    }),
   stubBookingsForPremisesId: (args: { premisesId: string; bookings: Array<Booking> }) =>
     stubFor({
       request: {

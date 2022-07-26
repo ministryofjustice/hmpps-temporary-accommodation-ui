@@ -59,6 +59,9 @@ export default class BookingPage extends Page {
     this.getLabel('CRN')
     this.getTextInputByIdAndEnterDetails('CRN', booking.CRN)
 
+    this.getLabel('Name')
+    this.getTextInputByIdAndEnterDetails('name', booking.name)
+
     this.getLegend('What is the arrival date?')
 
     const arrivalDate = new Date(Date.parse(booking.arrivalDate))

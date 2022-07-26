@@ -8,5 +8,6 @@ export default Factory.define<Booking>(() => ({
   arrivalDate: faker.date.soon().toISOString(),
   expectedDepartureDate: faker.date.future().toISOString(),
   keyWorker: `${faker.name.firstName()} ${faker.name.lastName()}`,
+  name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
 }))

@@ -11,13 +11,13 @@
 
 {% block content %}
 
-	<h1>Make a booking</h1>
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
-			<form action="/premises/{{premisesId}}/bookings" method="post">
-				<input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <h1>Make a booking</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="/premises/{{premisesId}}/bookings" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-				{{ govukInput({
+                {{ govukInput({
                     label: {
                         text: "CRN",
                         classes: "govuk-label--m"
@@ -27,7 +27,17 @@
                     name: "CRN"
                 }) }}
 
-				{{ govukDateInput({
+                {{ govukInput({
+                    label: {
+                        text: "Name",
+                        classes: "govuk-label--m"
+                    },
+                    classes: "govuk-input--width-10",
+                    id: "name",
+                    name: "name"
+                }) }}
+
+                {{ govukDateInput({
                     id: "arrivalDate",
                     namePrefix: "arrivalDate",
                     fieldset: {
@@ -41,7 +51,7 @@
                     }
                 }) }}
 
-				{{ govukDateInput({
+                {{ govukDateInput({
                     id: "expectedDepartureDate",
                     namePrefix: "expectedDepartureDate",
                     fieldset: {
@@ -55,7 +65,7 @@
                     }
                 }) }}
 
-				{{ govukSelect({
+                {{ govukSelect({
                     label: {
                         text: "Key Worker",
                         classes: "govuk-label--m"
@@ -79,11 +89,10 @@
                     ]
                 }) }}
 
-
-				{{ govukButton({
+                {{ govukButton({
                     text: "Submit"
                 }) }}
-			</form>
-		</div>
-	</div>
+            </form>
+        </div>
+    </div>
 {% endblock %}

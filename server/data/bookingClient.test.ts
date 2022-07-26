@@ -33,6 +33,7 @@ describe('BookingClient', () => {
         expectedDepartureDate: booking.expectedDepartureDate.toString(),
         CRN: booking.CRN,
         keyWorker: booking.keyWorker,
+        name: booking.name,
       }
 
       fakeApprovedPremisesApi

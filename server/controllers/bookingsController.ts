@@ -25,11 +25,9 @@ export default class BookingsController {
         ...convertDateInputsToIsoString(req.body, 'expectedDepartureDate'),
       }
 
-      await this.bookingService.postBooking(premisesId as string, booking)
+      const confirmedBooking = await this.bookingService.postBooking(premisesId as string, booking)
 
-      req.flash('info', 'Booking made successfully')
-
-      res.redirect(`/premises`)
+      return res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
     }
   }
 }

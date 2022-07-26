@@ -1,3 +1,5 @@
+import { parseISO } from 'date-fns'
+
 import type { Premises, Booking } from 'approved-premises'
 
 import Page from './page'
@@ -31,7 +33,7 @@ export default class PremisesShowPage extends Page {
 
   shouldShowBookings(bookings: Array<Booking>): void {
     bookings.forEach((item: Booking) => {
-      const arrivalDate = new Date(Date.parse(item.arrivalDate))
+      const arrivalDate = parseISO(item.arrivalDate)
       cy.contains(item.CRN)
         .parent()
         .within(() => {

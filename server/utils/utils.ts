@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns'
 import type { ObjectWithDateParts } from 'approved-premises'
 
 const properCase = (word: string): string =>
@@ -33,17 +34,13 @@ export const initialiseName = (fullName?: string): string | null => {
  * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
  */
 export const convertDateString = (date: string): Date => {
-  try {
-    const parsedDate = new Date(Date.parse(date))
+  const parsedDate = parseISO(date)
 
-    if (date === parsedDate.toISOString()) {
-      return parsedDate
-    }
-
-    throw new Error()
-  } catch (error) {
+  if (Number.isNaN(parsedDate.getTime())) {
     throw new InvalidDateStringError(`Invalid Date: ${date}`)
   }
+
+  return parsedDate
 }
 
 /**

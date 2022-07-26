@@ -1,6 +1,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -13,9 +14,9 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <form action="/premises/{{premisesId}}/booking/new" method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-            {{ govukInput({
+                {{ govukInput({
                 label: {
                     text: "CRN",
                     classes: "govuk-label--m"
@@ -25,7 +26,7 @@
                 name: "CRN"
             }) }}
 
-            {{ govukDateInput({
+                {{ govukDateInput({
                 id: "arrival-date",
                 namePrefix: "arrival",
                 fieldset: {
@@ -39,7 +40,7 @@
                 }
             }) }}
 
-            {{ govukDateInput({
+                {{ govukDateInput({
                 id: "expected-departure-date",
                 namePrefix: "expected-departure",
                 fieldset: {
@@ -53,19 +54,33 @@
                 }
             }) }}
 
-            {{ govukInput({
+                {{ govukSelect({
                 label: {
                     text: "Key Worker",
                     classes: "govuk-label--m"
                 },
                 classes: "govuk-input--width-20",
                 id: "keyWorker",
-                name: "keyWorker"
+                name: "keyWorker",
+                 items: [   
+                    {
+                    value: "bda42ec2-2435-47da-bb7f-54e90eda78b2",
+                    text: "George Frank"
+                    },
+                    {
+                    value: "55126a32-0d27-4044-bc4e-e21c01632e56",
+                    text: "Alex Evans"
+                    },
+                    {
+                    value: "cddb4be3-f0ef-4889-b987-61e1777ab17c",
+                    text: "Jo Longford"
+                    }
+                ]
             }) }}
 
-            {% from "govuk/components/button/macro.njk" import govukButton %}
+                {% from "govuk/components/button/macro.njk" import govukButton %}
 
-            {{ govukButton({
+                {{ govukButton({
                 text: "Submit"
             }) }}
             </form>

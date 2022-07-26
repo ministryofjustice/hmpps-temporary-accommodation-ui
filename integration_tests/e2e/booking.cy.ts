@@ -16,7 +16,7 @@ context('Booking', () => {
       CRN: '1bee477b-462f-47c1-8f71-7835a76a2c42',
       arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)),
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)),
-      keyWorker: 'Lizeth Hagenes',
+      keyWorker: 'Alex Evans',
     })
 
     const premises = premisesFactory.buildList(5)
@@ -45,7 +45,7 @@ context('Booking', () => {
       expect(requestBody.CRN).equal('1bee477b-462f-47c1-8f71-7835a76a2c42')
       expect(requestBody.arrivalDate).equal((booking.arrivalDate as Date).toISOString())
       expect(requestBody.expectedDepartureDate).equal((booking.expectedDepartureDate as Date).toISOString())
-      expect(requestBody.keyWorker).equal('Lizeth Hagenes')
+      expect(requestBody.keyWorker).equal('55126a32-0d27-4044-bc4e-e21c01632e56')
     })
   })
 })

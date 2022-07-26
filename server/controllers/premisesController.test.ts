@@ -1,8 +1,9 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
-import type { SummaryListItem } from 'approved-premises'
+import type { SummaryListItem, TableRow } from 'approved-premises'
 import PremisesService from '../services/premisesService'
+import BookingService from '../services/bookingService'
 import PremisesController from './premisesController'
 
 describe('PremisesController', () => {
@@ -12,10 +13,12 @@ describe('PremisesController', () => {
 
   let premisesController: PremisesController
   let premisesService: DeepMocked<PremisesService>
+  let bookingService: DeepMocked<BookingService>
 
   beforeEach(() => {
     premisesService = createMock<PremisesService>({})
-    premisesController = new PremisesController(premisesService)
+    bookingService = createMock<BookingService>({})
+    premisesController = new PremisesController(premisesService, bookingService)
   })
 
   describe('index', () => {
@@ -32,16 +35,19 @@ describe('PremisesController', () => {
   describe('show', () => {
     it('should return the premises detail to the template', async () => {
       const premises = { name: 'Some premises', summaryList: { rows: [] as Array<SummaryListItem> } }
+      const bookings = [] as Array<TableRow>
       premisesService.getPremisesDetails.mockResolvedValue(premises)
+      bookingService.listOfBookingsForPremisesId.mockResolvedValue(bookings)
 
       request.params.id = 'some-uuid'
 
       const requestHandler = premisesController.show()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('premises/show', { premises })
+      expect(response.render).toHaveBeenCalledWith('premises/show', { premises, bookings })
 
       expect(premisesService.getPremisesDetails).toHaveBeenCalledWith('some-uuid')
+      expect(bookingService.listOfBookingsForPremisesId).toHaveBeenCalledWith('some-uuid')
     })
   })
 })

@@ -2,7 +2,7 @@
 import { stubFor } from './index'
 
 import premises from './stubs/premises.json'
-import BookingFactory from '../server/testutils/factories/booking'
+import bookingFactory from '../server/testutils/factories/booking'
 import arrivalFactory from '../server/testutils/factories/arrival'
 
 const stubs = []
@@ -39,20 +39,38 @@ premises.forEach(p => {
       },
     }),
   )
+
+  const bookings = bookingFactory.buildList(Math.floor(Math.random() * 10))
+
+  stubs.push(async () =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${p.id}/bookings`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(bookings),
+      },
+    }),
+  )
 })
 
 stubs.push(async () =>
   stubFor({
     request: {
       method: 'POST',
-      url: `/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/booking/new`,
+      urlPathPattern: `/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings`,
     },
     response: {
       status: 201,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: BookingFactory.build(),
+      body: JSON.stringify(bookingFactory.build()),
     },
   }),
 )
@@ -69,7 +87,7 @@ stubs.push(async () =>
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: arrivalFactory.build(),
+      jsonBody: JSON.stringify(arrivalFactory.build()),
     },
   }),
 )

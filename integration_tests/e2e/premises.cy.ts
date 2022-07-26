@@ -1,4 +1,5 @@
 import premisesFactory from '../../server/testutils/factories/premises'
+import bookingsFactory from '../../server/testutils/factories/booking'
 import PremisesListPage from '../pages/premisesList'
 import PremisesShowPage from '../pages/premisesShow'
 
@@ -27,7 +28,9 @@ context('Premises', () => {
   it('should show a single premises', () => {
     // Given there is a premises in the database
     const premises = premisesFactory.build()
-    cy.task('stubSinglePremises', premises)
+    const bookings = bookingsFactory.buildList(5)
+
+    cy.task('stubPremisesWithBookings', { premises, bookings })
 
     // And I am signed in
     cy.signIn()
@@ -37,5 +40,8 @@ context('Premises', () => {
 
     // Then I should see the premises details shown
     page.shouldShowPremisesDetail()
+
+    // And I should see all the bookings for that premises listed
+    page.shouldShowBookings(bookings)
   })
 })

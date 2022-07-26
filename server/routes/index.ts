@@ -12,7 +12,7 @@ export default function routes(services: Services): Router {
   const router = Router()
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
-  const premisesController = new PremisesController(services.premisesService)
+  const premisesController = new PremisesController(services.premisesService, services.bookingService)
   const bookingsController = new BookingsController(services.bookingService)
   const arrivalsController = new ArrivalsController(services.arrivalService)
 
@@ -23,8 +23,8 @@ export default function routes(services: Services): Router {
   get('/premises', premisesController.index())
   get('/premises/:id', premisesController.show())
 
-  get('/premises/:premisesId/booking/new', bookingsController.new())
-  post('/premises/:premisesId/booking/new', bookingsController.create())
+  get('/premises/:premisesId/bookings/new', bookingsController.new())
+  post('/premises/:premisesId/bookings', bookingsController.create())
 
   get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
   router.post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())

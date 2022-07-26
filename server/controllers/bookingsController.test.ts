@@ -25,7 +25,7 @@ describe('bookingsController', () => {
       const requestHandler = bookingController.new()
       requestHandler({ ...request, params: { premisesId: 'premisesIdParam' } }, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('premises/booking/new', {
+      expect(response.render).toHaveBeenCalledWith('premises/bookings/new', {
         premisesId: 'premisesIdParam',
       })
     })

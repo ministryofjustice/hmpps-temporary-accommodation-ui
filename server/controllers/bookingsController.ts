@@ -11,7 +11,7 @@ export default class BookingsController {
     return (req: Request, res: Response) => {
       const { premisesId } = req.params
 
-      return res.render(`premises/booking/new`, { premisesId })
+      return res.render(`premises/bookings/new`, { premisesId })
     }
   }
 

@@ -7,7 +7,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/booking/new`,
+        url: `/premises/${args.premisesId}/bookings`,
       },
       response: {
         status: 200,
@@ -17,6 +17,20 @@ export default {
         jsonBody: args.booking,
       },
     }),
+  stubBookingsForPremisesId: (args: { premisesId: string; bookings: Array<Booking> }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${args.premisesId}/bookings`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(args.bookings),
+      },
+    }),
   verifyBookingCreate: async (args: { premisesId }) =>
-    (await getMatchingRequests({ method: 'POST', url: `/premises/${args.premisesId}/booking/new` })).body.requests,
+    (await getMatchingRequests({ method: 'POST', url: `/premises/${args.premisesId}/bookings` })).body.requests,
 }

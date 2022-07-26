@@ -13,6 +13,8 @@ const isBlank = (str: string): boolean => !str || /^\s*$/.test(str)
  */
 const properCaseName = (name: string): string => (isBlank(name) ? '' : name.split('-').map(properCase).join('-'))
 
+export class InvalidDateStringError extends Error {}
+
 export const convertToTitleCase = (sentence: string): string =>
   isBlank(sentence) ? '' : sentence.split(' ').map(properCaseName).join(' ')
 
@@ -22,6 +24,30 @@ export const initialiseName = (fullName?: string): string | null => {
 
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
+}
+
+/**
+ * Converts an object that may be a Date object or an ISO8601 datetime string into a Javascript Date object.
+ * @param date Either a Javascript Date object or an ISO8601 datetime string
+ * @returns A Date object
+ * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
+ */
+export const convertDateString = (date: string | Date): Date => {
+  if (date instanceof Date) {
+    return date
+  }
+
+  try {
+    const parsedDate = new Date(Date.parse(date))
+
+    if (date === parsedDate.toISOString()) {
+      return parsedDate
+    }
+
+    throw new Error()
+  } catch (error) {
+    throw new InvalidDateStringError(`Invalid Date: ${date}`)
+  }
 }
 
 /**

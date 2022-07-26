@@ -30,8 +30,8 @@ describe('BookingService', () => {
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
       const bookings = [
-        BookingFactory.build({ arrivalDate: new Date(2022, 10, 22) }),
-        BookingFactory.build({ arrivalDate: new Date(2022, 2, 11) }),
+        BookingFactory.build({ arrivalDate: new Date(2022, 10, 22).toISOString() }),
+        BookingFactory.build({ arrivalDate: new Date(2022, 2, 11).toISOString() }),
       ]
       const premisesId = 'some-uuid'
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)

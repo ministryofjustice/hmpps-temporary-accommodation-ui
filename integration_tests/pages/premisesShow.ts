@@ -31,12 +31,11 @@ export default class PremisesShowPage extends Page {
 
   shouldShowBookings(bookings: Array<Booking>): void {
     bookings.forEach((item: Booking) => {
+      const arrivalDate = new Date(Date.parse(item.arrivalDate))
       cy.contains(item.CRN)
         .parent()
         .within(() => {
-          cy.get('td')
-            .eq(0)
-            .contains((item.arrivalDate as Date).toLocaleDateString('en-GB'))
+          cy.get('td').eq(0).contains(arrivalDate.toLocaleDateString('en-GB'))
           cy.get('td')
             .eq(1)
             .contains('Manage')

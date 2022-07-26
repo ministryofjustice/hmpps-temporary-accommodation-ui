@@ -60,15 +60,15 @@ declare module 'approved-premises' {
     Booking: {
       id: string
       CRN: string
-      arrivalDate: Date | string
-      expectedDepartureDate: Date | string
+      arrivalDate: string
+      expectedDepartureDate: string
       keyWorker: string
     }
     Arrival: {
       id: string
       bookingId: string
-      dateTime: Date | string
-      expectedDeparture: Date | string
+      dateTime: string
+      expectedDeparture: string
       notes: string
     }
   }

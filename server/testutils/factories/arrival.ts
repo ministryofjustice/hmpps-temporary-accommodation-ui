@@ -5,8 +5,8 @@ import type { Arrival } from 'approved-premises'
 
 export default Factory.define<Arrival>(() => ({
   id: faker.datatype.uuid(),
-  dateTime: faker.date.soon(),
+  dateTime: faker.date.soon().toISOString(),
   bookingId: faker.datatype.uuid(),
-  expectedDeparture: faker.date.future(),
+  expectedDeparture: faker.date.future().toISOString(),
   notes: faker.lorem.sentence(),
 }))

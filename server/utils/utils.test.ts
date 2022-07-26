@@ -110,12 +110,6 @@ describe('convertDateInputsToDateObj', () => {
 })
 
 describe('convertDateString', () => {
-  it('returns the date object unmutated', () => {
-    const date = new Date(2022, 10, 11)
-
-    expect(convertDateString(date)).toEqual(date)
-  })
-
   it('converts a ISO8601 date string', () => {
     const date = '2022-11-11T00:00:00.000Z'
 

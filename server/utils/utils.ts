@@ -27,16 +27,12 @@ export const initialiseName = (fullName?: string): string | null => {
 }
 
 /**
- * Converts an object that may be a Date object or an ISO8601 datetime string into a Javascript Date object.
- * @param date Either a Javascript Date object or an ISO8601 datetime string
+ * Converts an ISO8601 datetime string into a Javascript Date object.
+ * @param date An ISO8601 datetime string
  * @returns A Date object
  * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
  */
-export const convertDateString = (date: string | Date): Date => {
-  if (date instanceof Date) {
-    return date
-  }
-
+export const convertDateString = (date: string): Date => {
   try {
     const parsedDate = new Date(Date.parse(date))
 

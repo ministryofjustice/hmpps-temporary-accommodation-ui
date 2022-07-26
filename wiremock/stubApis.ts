@@ -39,6 +39,24 @@ premises.forEach(p => {
       },
     }),
   )
+
+  const bookings = bookingFactory.buildList(Math.floor(Math.random() * 10))
+
+  stubs.push(async () =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${p.id}/bookings`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(bookings),
+      },
+    }),
+  )
 })
 
 stubs.push(async () =>

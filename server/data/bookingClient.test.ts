@@ -50,4 +50,27 @@ describe('BookingClient', () => {
       expect(nock.isDone()).toBeTruthy()
     })
   })
+
+  describe('allBookingsForPremisesId', () => {
+    it('should return all bookings for a given premises ID', async () => {
+      const bookings = BookingFactory.buildList(5)
+
+      fakeApprovedPremisesApi
+        .get(`/premises/some-uuid/bookings`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, bookings)
+
+      const result = await bookingClient.allBookingsForPremisesId('some-uuid')
+      const expectedBookings = bookings.map(booking => {
+        return {
+          ...booking,
+          arrivalDate: (booking.arrivalDate as Date).toISOString(),
+          expectedDepartureDate: (booking.expectedDepartureDate as Date).toISOString(),
+        }
+      })
+
+      expect(result).toEqual(expectedBookings)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
 })

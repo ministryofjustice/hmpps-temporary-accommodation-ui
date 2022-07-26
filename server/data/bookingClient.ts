@@ -12,4 +12,8 @@ export default class BookingClient {
   async postBooking(premisesId: string, data: BookingDto): Promise<Booking> {
     return (await this.restClient.post({ path: `/premises/${premisesId}/bookings`, data })) as Booking
   }
+
+  async allBookingsForPremisesId(premisesId: string): Promise<Array<Booking>> {
+    return (await this.restClient.get({ path: `/premises/${premisesId}/bookings` })) as Array<Booking>
+  }
 }

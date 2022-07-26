@@ -27,7 +27,7 @@ context('Premises', () => {
   it('should show a single premises', () => {
     // Given there is a premises in the database
     const premises = premisesFactory.build()
-    cy.task('subSinglePremises', premises)
+    cy.task('stubSinglePremises', premises)
 
     // And I am signed in
     cy.signIn()

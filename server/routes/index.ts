@@ -5,6 +5,7 @@ import type { Services } from '../services'
 
 import PremisesController from '../controllers/premisesController'
 import BookingsController from '../controllers/bookingsController'
+import ArrivalsController from '../controllers/arrivalsController'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(services: Services): Router {
@@ -13,6 +14,7 @@ export default function routes(services: Services): Router {
   const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   const premisesController = new PremisesController(services.premisesService)
   const bookingsController = new BookingsController(services.bookingService)
+  const arrivalsController = new ArrivalsController(services.arrivalService)
 
   get('/', (req, res, next) => {
     res.render('pages/index')
@@ -23,6 +25,9 @@ export default function routes(services: Services): Router {
 
   get('/premises/:premisesId/booking/new', bookingsController.new())
   post('/premises/:premisesId/booking/new', bookingsController.create())
+
+  get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
+  router.post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())
 
   return router
 }

@@ -1,0 +1,42 @@
+<form action="/premises/{{premisesId}}/bookings/{{bookingId}}/arrivals" method="post">
+	<input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+	{{ govukDateInput({
+    id: "dateTime",
+    namePrefix: "dateTime",
+    fieldset: {
+    legend: {
+        text: "What is the arrival date?",
+        classes: "govuk-fieldset__legend--m"
+        }
+    },
+    hint: {
+        text: "For example, 27 3 2007"
+    }
+  }) }}
+
+	{{ govukDateInput({
+    id: "expectedDeparture",
+    namePrefix: "expectedDeparture",
+    fieldset: {
+    legend: {
+        text: "What is their expected departure date?",
+        classes: "govuk-fieldset__legend--m"
+        }
+    },
+    hint: {
+    text: "For example, 27 3 2007"
+    }
+  }) }}
+
+	{{ govukTextarea({
+    name: "notes",
+    id: "notes",
+    label: {
+      text: "Any other information"
+    }
+  }) }}
+
+	{{ govukButton({
+    text: "Submit"
+  }) }}
+</form>

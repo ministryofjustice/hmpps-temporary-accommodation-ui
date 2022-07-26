@@ -4,6 +4,7 @@ import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import premises from './integration_tests/mockApis/premises'
 import booking from './integration_tests/mockApis/booking'
+import arrival from './integration_tests/mockApis/arrival'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -22,6 +23,7 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
+        ...arrival,
         ...auth,
         ...tokenVerification,
         ...premises,

@@ -11,6 +11,7 @@ buildAppInsightsClient()
 
 import HmppsAuthClient from './hmppsAuthClient'
 import PremisesClient from './premisesClient'
+import ArrivalClient from './arrivalClient'
 import { createRedisClient } from './redisClient'
 import TokenStore from './tokenStore'
 
@@ -20,8 +21,9 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
   approvedPremisesClientBuilder: ((token: string) => new PremisesClient(token)) as RestClientBuilder<PremisesClient>,
   bookingClientBuilder: ((token: string) => new BookingClient(token)) as RestClientBuilder<BookingClient>,
+  arrivalClientBuilder: ((token: string) => new ArrivalClient(token)) as RestClientBuilder<ArrivalClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { BookingClient, PremisesClient, HmppsAuthClient, RestClientBuilder }
+export { BookingClient, PremisesClient, ArrivalClient, HmppsAuthClient, RestClientBuilder }

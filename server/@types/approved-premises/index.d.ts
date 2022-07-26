@@ -1,5 +1,6 @@
 declare module 'approved-premises' {
   export type Premises = schemas['Premises']
+  export type Arrival = schemas['Arrival']
   export type Booking = schemas['Booking']
 
   export type BookingDto = Omit<Booking, 'id'>
@@ -7,6 +8,10 @@ declare module 'approved-premises' {
   export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'year' | 'month' | 'day'}`]: string } & {
     [P in K]?: Date
   }
+
+  export type ArrivalDto = Omit<Arrival, 'id' | 'bookingId'> &
+    ObjectWithDateParts<'dateTime'> &
+    ObjectWithDateParts<'expectedDeparture'>
 
   export interface HtmlAttributes {
     [key: string]: string
@@ -58,6 +63,13 @@ declare module 'approved-premises' {
       arrivalDate: Date | string
       expectedDepartureDate: Date | string
       keyWorker: string
+    }
+    Arrival: {
+      id: string
+      bookingId: string
+      dateTime: Date | string
+      expectedDeparture: Date | string
+      notes: string
     }
   }
 }

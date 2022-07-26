@@ -23,8 +23,8 @@ export default function routes(services: Services): Router {
   get('/premises', premisesController.index())
   get('/premises/:id', premisesController.show())
 
-  get('/premises/:premisesId/booking/new', bookingsController.new())
-  post('/premises/:premisesId/booking/new', bookingsController.create())
+  get('/premises/:premisesId/bookings/new', bookingsController.new())
+  post('/premises/:premisesId/bookings', bookingsController.create())
 
   get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
   router.post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())

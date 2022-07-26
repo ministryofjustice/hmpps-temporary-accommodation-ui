@@ -10,6 +10,6 @@ export default class BookingClient {
   }
 
   async postBooking(premisesId: string, data: BookingDto): Promise<Booking> {
-    return (await this.restClient.post({ path: `/premises/${premisesId}/booking/new`, data })) as Booking
+    return (await this.restClient.post({ path: `/premises/${premisesId}/bookings`, data })) as Booking
   }
 }

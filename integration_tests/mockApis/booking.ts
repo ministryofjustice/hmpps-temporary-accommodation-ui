@@ -7,7 +7,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/booking/new`,
+        url: `/premises/${args.premisesId}/bookings`,
       },
       response: {
         status: 200,
@@ -18,5 +18,5 @@ export default {
       },
     }),
   verifyBookingCreate: async (args: { premisesId }) =>
-    (await getMatchingRequests({ method: 'POST', url: `/premises/${args.premisesId}/booking/new` })).body.requests,
+    (await getMatchingRequests({ method: 'POST', url: `/premises/${args.premisesId}/bookings` })).body.requests,
 }

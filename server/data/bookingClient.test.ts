@@ -36,7 +36,7 @@ describe('BookingClient', () => {
       }
 
       fakeApprovedPremisesApi
-        .post(`/premises/${booking.id}/booking/new`)
+        .post(`/premises/${booking.id}/bookings`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, booking)
 

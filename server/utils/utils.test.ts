@@ -2,7 +2,7 @@ import {
   convertDateString,
   convertToTitleCase,
   initialiseName,
-  convertDateInputsToDateObj,
+  convertDateInputsToIsoString,
   InvalidDateStringError,
 } from './utils'
 
@@ -35,10 +35,10 @@ describe('initialise name', () => {
   })
 })
 
-describe('convertDate', () => {
+describe('convertDateInputsToDateObj', () => {
   it('converts a date object', () => {
     interface MyObjectWithADate {
-      date?: Date
+      date?: string
       ['date-year']: string
       ['date-month']: string
       ['date-day']: string
@@ -49,14 +49,32 @@ describe('convertDate', () => {
       'date-day': '11',
     }
 
-    const result = convertDateInputsToDateObj(obj, 'date')
+    const result = convertDateInputsToIsoString(obj, 'date')
 
-    expect(result.date.toString()).toMatch('Dec 11 2022')
+    expect(result.date).toEqual(new Date(2022, 11, 11).toISOString())
   })
 
-  it('returns a date object when given empty strings as input', () => {
+  it('pads the months and days', () => {
     interface MyObjectWithADate {
-      date?: Date
+      date?: string
+      ['date-year']: string
+      ['date-month']: string
+      ['date-day']: string
+    }
+    const obj: MyObjectWithADate = {
+      'date-year': '2022',
+      'date-month': '1',
+      'date-day': '1',
+    }
+
+    const result = convertDateInputsToIsoString(obj, 'date')
+
+    expect(result.date).toEqual(new Date(2022, 0, 1).toISOString())
+  })
+
+  it('returns an empty string when given empty strings as input', () => {
+    interface MyObjectWithADate {
+      date?: string
       ['date-year']: string
       ['date-month']: string
       ['date-day']: string
@@ -67,14 +85,14 @@ describe('convertDate', () => {
       'date-day': '',
     }
 
-    const result = convertDateInputsToDateObj(obj, 'date')
+    const result = convertDateInputsToIsoString(obj, 'date')
 
-    expect(result.date.toString()).toMatch('Dec 31 1899')
+    expect(result.date).toEqual('')
   })
 
-  it('returns a date object when given invalid strings as input', () => {
+  it('returns an invalid ISO string when given invalid strings as input', () => {
     interface MyObjectWithADate {
-      date?: Date
+      date?: string
       ['date-year']: string
       ['date-month']: string
       ['date-day']: string
@@ -85,9 +103,9 @@ describe('convertDate', () => {
       'date-day': 'foo',
     }
 
-    const result = convertDateInputsToDateObj(obj, 'date')
+    const result = convertDateInputsToIsoString(obj, 'date')
 
-    expect(result.date.toString()).toMatch('Dec 31 1899')
+    expect(result.date.toString()).toEqual('twothousandtwentytwo-20-ooT00:00:00.000Z')
   })
 })
 

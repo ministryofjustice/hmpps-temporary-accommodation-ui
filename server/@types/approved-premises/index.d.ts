@@ -6,7 +6,7 @@ declare module 'approved-premises' {
   export type BookingDto = Omit<Booking, 'id'>
 
   export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'year' | 'month' | 'day'}`]: string } & {
-    [P in K]?: Date
+    [P in K]?: string
   }
 
   export type ArrivalDto = Omit<Arrival, 'id' | 'bookingId'> &

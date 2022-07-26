@@ -1,7 +1,7 @@
 import type { Response, Request, RequestHandler } from 'express'
 import type { Arrival, ArrivalDto } from 'approved-premises'
 
-import { convertDateInputsToDateObj } from '../utils/utils'
+import { convertDateInputsToIsoString } from '../utils/utils'
 import ArrivalService from '../services/arrivalService'
 
 export default class ArrivalsController {
@@ -22,8 +22,8 @@ export default class ArrivalsController {
 
       const arrival: Omit<Arrival, 'id' | 'bookingId'> = {
         ...body,
-        ...convertDateInputsToDateObj(body, 'dateTime'),
-        ...convertDateInputsToDateObj(body, 'expectedDeparture'),
+        ...convertDateInputsToIsoString(body, 'dateTime'),
+        ...convertDateInputsToIsoString(body, 'expectedDeparture'),
       }
 
       this.arrivalService.createArrival(premisesId, bookingId, arrival)

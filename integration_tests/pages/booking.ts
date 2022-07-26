@@ -28,27 +28,27 @@ export default class BookingPage extends Page {
   }
 
   arrivalDay(): PageElement {
-    return cy.get('#arrival-date-day')
+    return cy.get('#arrivalDate-day')
   }
 
   arrivalMonth(): PageElement {
-    return cy.get('#arrival-date-month')
+    return cy.get('#arrivalDate-month')
   }
 
   arrivalYear(): PageElement {
-    return cy.get('#arrival-date-year')
+    return cy.get('#arrivalDate-year')
   }
 
   expectedDepartureDay(): PageElement {
-    return cy.get('#expected-departure-date-day')
+    return cy.get('#expectedDepartureDate-day')
   }
 
   expectedDepartureMonth(): PageElement {
-    return cy.get('#expected-departure-date-month')
+    return cy.get('#expectedDepartureDate-month')
   }
 
   expectedDepartureYear(): PageElement {
-    return cy.get('#expected-departure-date-year')
+    return cy.get('#expectedDepartureDate-year')
   }
 
   clickSubmit(): void {

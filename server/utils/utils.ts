@@ -52,22 +52,25 @@ export const convertDateString = (date: string | Date): Date => {
 
 /**
  * Converts input for a GDS date input https://design-system.service.gov.uk/components/date-input/
- * into a javascript date object
+ * into an ISO8601 date string
  * @param dateInputObj an object with date parts (i.e. `-month` `-day` `-year`), which come from a `govukDateInput`.
  * @param key the key that prefixes each item in the dateInputObj, also the name of the property which the date object will be returned in the return value.
  * @returns name converted to proper case.
  */
-export const convertDateInputsToDateObj = <K extends string | number>(dateInputObj: ObjectWithDateParts<K>, key: K) => {
-  const [day, month, year] = [
-    Number(dateInputObj[`${key}-day`]),
-    Number(dateInputObj[`${key}-month`]),
-    Number(dateInputObj[`${key}-year`]),
-  ]
-  const o: { [P in K]?: Date } = dateInputObj
+export const convertDateInputsToIsoString = <K extends string | number>(
+  dateInputObj: ObjectWithDateParts<K>,
+  key: K,
+) => {
+  const day = `0${dateInputObj[`${key}-day`]}`.slice(-2)
+  const month = `0${dateInputObj[`${key}-month`]}`.slice(-2)
+  const year = dateInputObj[`${key}-year`]
+
+  const o: { [P in K]?: string } = dateInputObj
   if (day && month && year) {
-    o[key] = new Date(Date.UTC(year, month - 1, day, 0, 0, 0))
+    o[key] = `${year}-${month}-${day}T00:00:00.000Z`
   } else {
-    o[key] = new Date(0, 0, 0)
+    o[key] = ''
   }
+
   return dateInputObj
 }

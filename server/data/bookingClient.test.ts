@@ -48,6 +48,22 @@ describe('BookingClient', () => {
     })
   })
 
+  describe('getBooking', () => {
+    it('should return the booking that has been requested', async () => {
+      const booking = BookingFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`/premises/premisesId/bookings/bookingId`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, booking)
+
+      const result = await bookingClient.getBooking('premisesId', 'bookingId')
+
+      expect(result).toEqual(booking)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
   describe('allBookingsForPremisesId', () => {
     it('should return all bookings for a given premises ID', async () => {
       const bookings = BookingFactory.buildList(5)

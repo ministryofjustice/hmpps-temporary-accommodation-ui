@@ -25,6 +25,7 @@ export default function routes(services: Services): Router {
 
   get('/premises/:premisesId/bookings/new', bookingsController.new())
   post('/premises/:premisesId/bookings', bookingsController.create())
+  get('/premises/:premisesId/bookings/:bookingId/confirmation', bookingsController.confirm())
 
   get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
   router.post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())

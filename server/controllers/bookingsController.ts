@@ -30,4 +30,13 @@ export default class BookingsController {
       return res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
     }
   }
+
+  confirm(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, bookingId } = req.params
+      const booking = await this.bookingService.getBooking(premisesId, bookingId)
+
+      return res.render('premises/bookings/confirm', booking)
+    }
+  }
 }

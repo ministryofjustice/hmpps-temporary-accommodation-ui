@@ -129,4 +129,29 @@ describe('bookingsController', () => {
       expect(response.redirect).toHaveBeenCalledWith(`/premises/${premisesId}/bookings/${booking.id}/confirmation`)
     })
   })
+
+  describe('confirm', () => {
+    it('renders the form with the details from the booking that is requested', async () => {
+      const booking = BookingFactory.build({
+        arrivalDate: new Date('07/27/22').toISOString(),
+        expectedDepartureDate: new Date('07/28/22').toISOString(),
+      })
+      bookingService.getBooking.mockResolvedValue(booking)
+      const premisesId = 'premisesId'
+      const requestHandler = bookingController.confirm()
+
+      request = {
+        ...request,
+        params: {
+          premisesId,
+          bookingId: booking.id,
+        },
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, booking.id)
+      expect(response.render).toHaveBeenCalledWith('premises/bookings/confirm', booking)
+    })
+  })
 })

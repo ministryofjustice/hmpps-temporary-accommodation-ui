@@ -42,11 +42,7 @@ describe('BookingClient', () => {
 
       const result = await bookingClient.postBooking(booking.id, payload)
 
-      expect(result).toEqual({
-        ...booking,
-        arrivalDate: booking.arrivalDate,
-        expectedDepartureDate: booking.expectedDepartureDate,
-      })
+      expect(result).toEqual(booking)
       expect(nock.isDone()).toBeTruthy()
     })
   })
@@ -61,15 +57,8 @@ describe('BookingClient', () => {
         .reply(200, bookings)
 
       const result = await bookingClient.allBookingsForPremisesId('some-uuid')
-      const expectedBookings = bookings.map(booking => {
-        return {
-          ...booking,
-          arrivalDate: booking.arrivalDate,
-          expectedDepartureDate: booking.expectedDepartureDate,
-        }
-      })
 
-      expect(result).toEqual(expectedBookings)
+      expect(result).toEqual(bookings)
       expect(nock.isDone()).toBeTruthy()
     })
   })

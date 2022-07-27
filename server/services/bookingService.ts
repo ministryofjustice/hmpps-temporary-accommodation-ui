@@ -43,7 +43,7 @@ export default class BookingService {
 
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
 
-    return this.bookingsToTableRows(bookings, premisesId)
+    return this.bookingsToTableRows(bookings, premisesId, 'arrival')
   }
 
   async groupedListOfBookingsForPremisesId(premisesId: string): Promise<GroupedListofBookings> {
@@ -54,20 +54,22 @@ export default class BookingService {
     const today = new Date(new Date().setHours(0, 0, 0, 0))
 
     return {
-      arrivingToday: this.bookingsToTableRows(this.bookingsArrivingToday(bookings, today), premisesId),
-      departingToday: this.bookingsToTableRows(this.bookingsDepartingToday(bookings, today), premisesId),
-      upcomingArrivals: this.bookingsToTableRows(this.upcomingArrivals(bookings, today), premisesId),
-      upcomingDepartures: this.bookingsToTableRows(this.upcomingDepartures(bookings, today), premisesId),
+      arrivingToday: this.bookingsToTableRows(this.bookingsArrivingToday(bookings, today), premisesId, 'arrival'),
+      departingToday: this.bookingsToTableRows(this.bookingsDepartingToday(bookings, today), premisesId, 'departure'),
+      upcomingArrivals: this.bookingsToTableRows(this.upcomingArrivals(bookings, today), premisesId, 'arrival'),
+      upcomingDepartures: this.bookingsToTableRows(this.upcomingDepartures(bookings, today), premisesId, 'departure'),
     }
   }
 
-  bookingsToTableRows(bookings: Array<Booking>, premisesId: string): Array<TableRow> {
+  bookingsToTableRows(bookings: Array<Booking>, premisesId: string, type: 'arrival' | 'departure'): Array<TableRow> {
     return bookings.map(booking => [
       {
         text: booking.CRN,
       },
       {
-        text: convertDateString(booking.arrivalDate).toLocaleDateString('en-GB'),
+        text: convertDateString(
+          type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate,
+        ).toLocaleDateString('en-GB'),
       },
       {
         html: `<a href="/premises/${premisesId}/bookings/${booking.id}/arrivals/new">

@@ -55,8 +55,8 @@ describe('ArrivalsController', () => {
 
       const expectedArrival = {
         ...request.body,
-        dateTime: new Date(2022, 11, 11),
-        expectedDeparture: new Date(2022, 10, 12),
+        dateTime: new Date(2022, 11, 11).toISOString(),
+        expectedDeparture: new Date(2022, 10, 12).toISOString(),
       }
 
       expect(arrivalService.createArrival).toHaveBeenCalledWith(

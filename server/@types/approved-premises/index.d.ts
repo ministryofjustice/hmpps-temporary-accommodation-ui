@@ -6,7 +6,7 @@ declare module 'approved-premises' {
   export type BookingDto = Omit<Booking, 'id'>
 
   export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'year' | 'month' | 'day'}`]: string } & {
-    [P in K]?: Date
+    [P in K]?: string
   }
 
   export type ArrivalDto = Omit<Arrival, 'id' | 'bookingId'> &
@@ -60,15 +60,15 @@ declare module 'approved-premises' {
     Booking: {
       id: string
       CRN: string
-      arrivalDate: Date | string
-      expectedDepartureDate: Date | string
+      arrivalDate: string
+      expectedDepartureDate: string
       keyWorker: string
     }
     Arrival: {
       id: string
       bookingId: string
-      dateTime: Date | string
-      expectedDeparture: Date | string
+      dateTime: string
+      expectedDeparture: string
       notes: string
     }
   }

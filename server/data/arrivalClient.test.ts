@@ -43,8 +43,8 @@ describe('PremisesClient', () => {
 
       expect(result).toEqual({
         ...arrival,
-        dateTime: (arrival.dateTime as Date).toISOString(),
-        expectedDeparture: (arrival.expectedDeparture as Date).toISOString(),
+        dateTime: arrival.dateTime,
+        expectedDeparture: arrival.expectedDeparture,
       })
       expect(nock.isDone()).toBeTruthy()
     })

@@ -6,7 +6,7 @@ import BookingsController from './bookingsController'
 import BookingFactory from '../testutils/factories/booking'
 
 describe('bookingsController', () => {
-  const request: DeepMocked<Request> = createMock<Request>({})
+  let request: DeepMocked<Request> = createMock<Request>({})
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -38,32 +38,29 @@ describe('bookingsController', () => {
       const mockFlash = jest.fn()
       const requestHandler = bookingController.create()
 
-      await requestHandler(
-        {
-          ...request,
-          params: { premisesId: 'premisesIdParam' },
-          body: {
-            CRN: 'CRN',
-            keyWorker: 'John Doe',
-            'arrival-day': '01',
-            'arrival-month': '02',
-            'arrival-year': '2022',
-            'expected-departure-day': '01',
-            'expected-departure-month': '02',
-            'expected-departure-year': '2023',
-          },
-          flash: mockFlash,
+      request = {
+        ...request,
+        params: { premisesId: 'premisesIdParam' },
+        body: {
+          CRN: 'CRN',
+          keyWorker: 'John Doe',
+          'arrivalDate-day': '01',
+          'arrivalDate-month': '02',
+          'arrivalDate-year': '2022',
+          'expectedDepartureDate-day': '01',
+          'expectedDepartureDate-month': '02',
+          'expectedDepartureDate-year': '2023',
         },
-        response,
-        next,
-      )
+        flash: mockFlash,
+      }
+
+      await requestHandler(request, response, next)
       expect(mockFlash).toHaveBeenCalledWith('info', 'Booking made successfully')
 
       expect(bookingService.postBooking).toHaveBeenCalledWith('premisesIdParam', {
-        CRN: 'CRN',
+        ...request.body,
         arrivalDate: '2022-02-01T00:00:00.000Z',
         expectedDepartureDate: '2023-02-01T00:00:00.000Z',
-        keyWorker: 'John Doe',
       })
 
       expect(response.redirect).toHaveBeenCalledWith('/premises')
@@ -77,32 +74,29 @@ describe('bookingsController', () => {
 
       const requestHandler = bookingController.create()
 
-      await requestHandler(
-        {
-          ...request,
-          params: { premisesId: 'premisesIdParam' },
-          body: {
-            CRN: '',
-            keyWorker: '',
-            'arrival-day': '',
-            'arrival-month': '',
-            'arrival-year': '',
-            'expected-departure-day': '',
-            'expected-departure-month': '',
-            'expected-departure-year': '',
-          },
-          flash: mockFlash,
+      request = {
+        ...request,
+        params: { premisesId: 'premisesIdParam' },
+        body: {
+          CRN: '',
+          keyWorker: '',
+          'arrivalDate-day': '',
+          'arrivalDate-month': '',
+          'arrivalDate-year': '',
+          'expectedDepartureDate-day': '',
+          'expectedDepartureDate-month': '',
+          'expectedDepartureDate-year': '',
         },
-        response,
-        next,
-      )
+        flash: mockFlash,
+      }
+
+      await requestHandler(request, response, next)
       expect(mockFlash).toHaveBeenCalledWith('info', 'Booking made successfully')
 
       expect(bookingService.postBooking).toHaveBeenCalledWith('premisesIdParam', {
-        CRN: '',
-        arrivalDate: '1899-12-31T00:00:00.000Z',
-        expectedDepartureDate: '1899-12-31T00:00:00.000Z',
-        keyWorker: '',
+        ...request.body,
+        arrivalDate: '',
+        expectedDepartureDate: '',
       })
 
       expect(response.redirect).toHaveBeenCalledWith('/premises')
@@ -115,33 +109,29 @@ describe('bookingsController', () => {
       const mockFlash = jest.fn()
 
       const requestHandler = bookingController.create()
-
-      await requestHandler(
-        {
-          ...request,
-          params: { premisesId: 'premisesIdParam' },
-          body: {
-            CRN: '££$%£$£',
-            keyWorker: '[]',
-            'arrival-day': 'monday',
-            'arrival-month': '££',
-            'arrival-year': 'lorem ipsum',
-            'expected-departure-day': 'foo',
-            'expected-departure-month': 'bar',
-            'expected-departure-year': 'b4z',
-          },
-          flash: mockFlash,
+      request = {
+        ...request,
+        params: { premisesId: 'premisesIdParam' },
+        body: {
+          CRN: '££$%£$£',
+          keyWorker: '[]',
+          'arrivalDate-day': 'monday',
+          'arrivalDate-month': '££',
+          'arrivalDate-year': 'lorem ipsum',
+          'expectedDepartureDate-day': 'foo',
+          'expectedDepartureDate-month': 'bar',
+          'expectedDepartureDate-year': 'b4z',
         },
-        response,
-        next,
-      )
+        flash: mockFlash,
+      }
+
+      await requestHandler(request, response, next)
       expect(mockFlash).toHaveBeenCalledWith('info', 'Booking made successfully')
 
       expect(bookingService.postBooking).toHaveBeenCalledWith('premisesIdParam', {
-        CRN: '££$%£$£',
-        arrivalDate: '1899-12-31T00:00:00.000Z',
-        expectedDepartureDate: '1899-12-31T00:00:00.000Z',
-        keyWorker: '[]',
+        ...request.body,
+        arrivalDate: 'lorem ipsum-££-ayT00:00:00.000Z',
+        expectedDepartureDate: 'b4z-ar-ooT00:00:00.000Z',
       })
 
       expect(response.redirect).toHaveBeenCalledWith('/premises')

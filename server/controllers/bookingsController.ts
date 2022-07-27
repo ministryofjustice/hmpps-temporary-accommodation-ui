@@ -1,8 +1,8 @@
-import type { Booking } from 'approved-premises'
+import type { BookingDto } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
 import BookingService from '../services/bookingService'
-import { convertDateInputsToDateObj } from '../utils/utils'
+import { convertDateInputsToIsoString } from '../utils/utils'
 
 export default class BookingsController {
   constructor(private readonly bookingService: BookingService) {}
@@ -18,32 +18,14 @@ export default class BookingsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId } = req.params
-      const { CRN, keyWorker }: Booking = req.body
 
-      const arrivalDate = convertDateInputsToDateObj(
-        {
-          'arrival-day': req.body['arrival-day'],
-          'arrival-month': req.body['arrival-month'],
-          'arrival-year': req.body['arrival-year'],
-        },
-        'arrival',
-      ).arrival.toISOString()
+      const booking: BookingDto = {
+        ...req.body,
+        ...convertDateInputsToIsoString(req.body, 'arrivalDate'),
+        ...convertDateInputsToIsoString(req.body, 'expectedDepartureDate'),
+      }
 
-      const expectedDepartureDate = convertDateInputsToDateObj(
-        {
-          'expected-departure-day': req.body['expected-departure-day'],
-          'expected-departure-month': req.body['expected-departure-month'],
-          'expected-departure-year': req.body['expected-departure-year'],
-        },
-        'expected-departure',
-      )['expected-departure'].toISOString()
-
-      await this.bookingService.postBooking(premisesId as string, {
-        CRN,
-        arrivalDate,
-        expectedDepartureDate,
-        keyWorker,
-      })
+      await this.bookingService.postBooking(premisesId as string, booking)
 
       req.flash('info', 'Booking made successfully')
 

@@ -44,8 +44,8 @@ describe('BookingClient', () => {
 
       expect(result).toEqual({
         ...booking,
-        arrivalDate: (booking.arrivalDate as Date).toISOString(),
-        expectedDepartureDate: (booking.expectedDepartureDate as Date).toISOString(),
+        arrivalDate: booking.arrivalDate,
+        expectedDepartureDate: booking.expectedDepartureDate,
       })
       expect(nock.isDone()).toBeTruthy()
     })
@@ -64,8 +64,8 @@ describe('BookingClient', () => {
       const expectedBookings = bookings.map(booking => {
         return {
           ...booking,
-          arrivalDate: (booking.arrivalDate as Date).toISOString(),
-          expectedDepartureDate: (booking.expectedDepartureDate as Date).toISOString(),
+          arrivalDate: booking.arrivalDate,
+          expectedDepartureDate: booking.expectedDepartureDate,
         }
       })
 

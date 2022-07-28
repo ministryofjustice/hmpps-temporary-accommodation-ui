@@ -70,6 +70,8 @@ declare module 'approved-premises' {
       dateTime: string
       expectedDeparture: string
       notes: string
+      name: string
+      CRN: string
     }
   }
 }

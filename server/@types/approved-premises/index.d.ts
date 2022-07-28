@@ -57,6 +57,21 @@ declare module 'approved-premises' {
   export type GroupedListofBookings = {
     [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
   }
+
+  export interface ErrorMessages {
+    [K: string]: {
+      text: string
+      attributes: {
+        [K: string]: boolean
+      }
+    }
+  }
+
+  export interface ErrorSummary {
+    text: string
+    href: string
+  }
+
   export interface schemas {
     Premises: {
       id: string

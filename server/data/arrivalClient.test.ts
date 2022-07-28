@@ -32,6 +32,8 @@ describe('PremisesClient', () => {
         dateTime: arrival.dateTime.toString(),
         expectedDeparture: arrival.expectedDeparture.toString(),
         notes: arrival.notes,
+        name: arrival.name,
+        CRN: arrival.CRN,
       }
 
       fakeApprovedPremisesApi

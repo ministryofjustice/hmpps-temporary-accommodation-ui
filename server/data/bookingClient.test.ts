@@ -1,7 +1,8 @@
 import nock from 'nock'
 
 import BookingClient from './bookingClient'
-import BookingFactory from '../testutils/factories/booking'
+import bookingFactory from '../testutils/factories/booking'
+import bookingDtoFactory from '../testutils/factories/bookingDto'
 import config from '../config'
 
 describe('BookingClient', () => {
@@ -27,21 +28,21 @@ describe('BookingClient', () => {
 
   describe('postBooking', () => {
     it('should return the booking that has been posted', async () => {
-      const booking = BookingFactory.build()
-      const payload = {
-        arrivalDate: booking.arrivalDate.toString(),
-        expectedDepartureDate: booking.expectedDepartureDate.toString(),
+      const booking = bookingFactory.build()
+      const payload = bookingDtoFactory.build({
+        arrivalDate: booking.arrivalDate,
+        expectedDepartureDate: booking.expectedDepartureDate,
         CRN: booking.CRN,
         keyWorker: booking.keyWorker,
         name: booking.name,
-      }
+      })
 
       fakeApprovedPremisesApi
-        .post(`/premises/${booking.id}/bookings`)
+        .post(`/premises/some-uuid/bookings`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, booking)
 
-      const result = await bookingClient.postBooking(booking.id, payload)
+      const result = await bookingClient.postBooking('some-uuid', payload)
 
       expect(result).toEqual(booking)
       expect(nock.isDone()).toBeTruthy()
@@ -50,7 +51,7 @@ describe('BookingClient', () => {
 
   describe('getBooking', () => {
     it('should return the booking that has been requested', async () => {
-      const booking = BookingFactory.build()
+      const booking = bookingFactory.build()
 
       fakeApprovedPremisesApi
         .get(`/premises/premisesId/bookings/bookingId`)
@@ -66,7 +67,7 @@ describe('BookingClient', () => {
 
   describe('allBookingsForPremisesId', () => {
     it('should return all bookings for a given premises ID', async () => {
-      const bookings = BookingFactory.buildList(5)
+      const bookings = bookingFactory.buildList(5)
 
       fakeApprovedPremisesApi
         .get(`/premises/some-uuid/bookings`)

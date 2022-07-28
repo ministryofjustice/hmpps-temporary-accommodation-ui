@@ -2,6 +2,7 @@
 import { stubFor } from './index'
 
 import premises from './stubs/premises.json'
+import bookingDtoFactory from '../server/testutils/factories/bookingDto'
 import bookingFactory from '../server/testutils/factories/booking'
 import arrivalFactory from '../server/testutils/factories/arrival'
 
@@ -40,7 +41,17 @@ premises.forEach(p => {
     }),
   )
 
-  const bookings = bookingFactory.buildList(Math.floor(Math.random() * 10))
+  const rand = () => Math.floor(Math.random() * 10)
+
+  const bookings = [
+    bookingFactory.arrivingToday().buildList(rand()),
+    bookingFactory.arrivedToday().buildList(rand()),
+    bookingFactory.departingToday().buildList(rand()),
+    bookingFactory.departedToday().buildList(rand()),
+    bookingFactory.arrivingSoon().buildList(rand()),
+    bookingFactory.cancelledWithFutureArrivalDate().buildList(rand()),
+    bookingFactory.departingSoon().buildList(rand()),
+  ].flat()
 
   stubs.push(async () =>
     stubFor({
@@ -70,7 +81,7 @@ stubs.push(async () =>
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify(bookingFactory.build()),
+      body: JSON.stringify(bookingDtoFactory.build()),
     },
   }),
 )

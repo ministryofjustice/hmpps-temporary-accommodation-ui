@@ -3,7 +3,7 @@ declare module 'approved-premises' {
   export type Arrival = schemas['Arrival']
   export type Booking = schemas['Booking']
 
-  export type BookingDto = Omit<Booking, 'id'>
+  export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival'>
 
   export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'year' | 'month' | 'day'}`]: string } & {
     [P in K]?: string
@@ -12,6 +12,8 @@ declare module 'approved-premises' {
   export type ArrivalDto = Omit<Arrival, 'id' | 'bookingId'> &
     ObjectWithDateParts<'dateTime'> &
     ObjectWithDateParts<'expectedDeparture'>
+
+  export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 
   export interface HtmlAttributes {
     [key: string]: string
@@ -48,6 +50,9 @@ declare module 'approved-premises' {
     rows: Array<SummaryListItem>
   }
 
+  export type GroupedListofBookings = {
+    [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
+  }
   export interface schemas {
     Premises: {
       id: string
@@ -64,6 +69,8 @@ declare module 'approved-premises' {
       arrivalDate: string
       expectedDepartureDate: string
       keyWorker: string
+      status: BookingStatus
+      arrival?: Arrival
     }
     Arrival: {
       id: string

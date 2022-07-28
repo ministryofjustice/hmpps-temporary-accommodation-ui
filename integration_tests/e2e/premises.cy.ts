@@ -28,7 +28,16 @@ context('Premises', () => {
   it('should show a single premises', () => {
     // Given there is a premises in the database
     const premises = premisesFactory.build()
-    const bookings = bookingsFactory.buildList(5)
+    const bookingsArrivingToday = bookingsFactory.arrivingToday().buildList(2)
+    const bookingsLeavingToday = bookingsFactory.departingToday().buildList(2)
+    const bookingsArrivingSoon = bookingsFactory.arrivingSoon().buildList(5)
+    const bookingsDepartingSoon = bookingsFactory.departingSoon().buildList(5)
+    const bookings = [
+      ...bookingsArrivingToday,
+      ...bookingsLeavingToday,
+      ...bookingsArrivingSoon,
+      ...bookingsDepartingSoon,
+    ]
 
     cy.task('stubPremisesWithBookings', { premises, bookings })
 
@@ -42,6 +51,6 @@ context('Premises', () => {
     page.shouldShowPremisesDetail()
 
     // And I should see all the bookings for that premises listed
-    page.shouldShowBookings(bookings)
+    page.shouldShowBookings(bookingsArrivingToday, bookingsLeavingToday, bookingsArrivingSoon, bookingsDepartingSoon)
   })
 })

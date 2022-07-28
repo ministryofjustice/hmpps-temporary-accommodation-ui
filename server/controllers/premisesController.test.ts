@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
-import type { SummaryListItem, TableRow } from 'approved-premises'
+import type { SummaryListItem, GroupedListofBookings } from 'approved-premises'
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
 import PremisesController from './premisesController'
@@ -35,9 +35,9 @@ describe('PremisesController', () => {
   describe('show', () => {
     it('should return the premises detail to the template', async () => {
       const premises = { name: 'Some premises', summaryList: { rows: [] as Array<SummaryListItem> } }
-      const bookings = [] as Array<TableRow>
+      const bookings = createMock<GroupedListofBookings>()
       premisesService.getPremisesDetails.mockResolvedValue(premises)
-      bookingService.listOfBookingsForPremisesId.mockResolvedValue(bookings)
+      bookingService.groupedListOfBookingsForPremisesId.mockResolvedValue(bookings)
 
       request.params.id = 'some-uuid'
 
@@ -47,7 +47,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('premises/show', { premises, bookings })
 
       expect(premisesService.getPremisesDetails).toHaveBeenCalledWith('some-uuid')
-      expect(bookingService.listOfBookingsForPremisesId).toHaveBeenCalledWith('some-uuid')
+      expect(bookingService.groupedListOfBookingsForPremisesId).toHaveBeenCalledWith('some-uuid')
     })
   })
 })

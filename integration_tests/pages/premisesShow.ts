@@ -31,13 +31,48 @@ export default class PremisesShowPage extends Page {
       .should('contain', this.premises.bedCount)
   }
 
-  shouldShowBookings(bookings: Array<Booking>): void {
+  shouldShowBookings(
+    bookingsArrivingToday: Array<Booking>,
+    bookingsLeavingToday: Array<Booking>,
+    bookingsArrivingSoon: Array<Booking>,
+    bookingsLeavingSoon: Array<Booking>,
+  ): void {
+    cy.get('a')
+      .contains('Arriving Today')
+      .click()
+      .then(() => {
+        this.tableShouldContainBookings(bookingsArrivingToday, 'arrival')
+      })
+
+    cy.get('a')
+      .contains('Departing Today')
+      .click()
+      .then(() => {
+        this.tableShouldContainBookings(bookingsLeavingToday, 'departure')
+      })
+
+    cy.get('a')
+      .contains('Upcoming Arrivals')
+      .click()
+      .then(() => {
+        this.tableShouldContainBookings(bookingsArrivingSoon, 'arrival')
+      })
+
+    cy.get('a')
+      .contains('Upcoming Departures')
+      .click()
+      .then(() => {
+        this.tableShouldContainBookings(bookingsLeavingSoon, 'departure')
+      })
+  }
+
+  private tableShouldContainBookings(bookings: Array<Booking>, type: 'arrival' | 'departure') {
     bookings.forEach((item: Booking) => {
-      const arrivalDate = parseISO(item.arrivalDate)
+      const date = type === 'arrival' ? parseISO(item.arrivalDate) : parseISO(item.expectedDepartureDate)
       cy.contains(item.CRN)
         .parent()
         .within(() => {
-          cy.get('td').eq(0).contains(arrivalDate.toLocaleDateString('en-GB'))
+          cy.get('td').eq(0).contains(date.toLocaleDateString('en-GB'))
           cy.get('td')
             .eq(1)
             .contains('Manage')

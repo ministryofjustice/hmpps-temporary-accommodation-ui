@@ -1,6 +1,8 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "./bookings/_table.njk" import bookingTable %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -20,24 +22,39 @@
 		govukSummaryList(premises.summaryList)
 	}}
 
-	{{
-      govukTable({
-				caption: "Current Bookings",
-        captionClasses: "govuk-table__caption--l",
-        firstCellIsHeader: true,
-        head: [
-          {
-            text: "CRN"
-          },
-          {
-            text: "Expected Arrival Date"
-          },
-          {
-            html: '<span class="govuk-visually-hidden">Actions</span>'
-          }
-        ],
-        rows: bookings
-      })
-    }}
+	<h2>Arrivals and Departures</h2>
+
+	{{ govukTabs({
+  items: [
+    {
+      label: "Arriving Today",
+      id: "arriving-today",
+      panel: {
+        html: bookingTable("Arriving Today", "Arrival", bookings.arrivingToday)
+      }
+    },
+    {
+      label: "Departing Today",
+      id: "departing-today",
+      panel: {
+        html: bookingTable("Departing Today", "Departure", bookings.departingToday)
+      }
+    },
+    {
+      label: "Upcoming Arrivals",
+      id: "upcoming-arrivals",
+      panel: {
+        html: bookingTable("Upcoming Arrivals", "Arrival", bookings.upcomingArrivals)
+      }
+    },
+    {
+      label: "Upcoming Departures",
+      id: "upcoming-departures",
+      panel: {
+        html: bookingTable("Upcoming Departures", "Departute", bookings.upcomingDepartures)
+      }
+    }
+  ]
+}) }}
 
 {% endblock %}

@@ -33,6 +33,7 @@ describe('BookingClient', () => {
         expectedDepartureDate: booking.expectedDepartureDate.toString(),
         CRN: booking.CRN,
         keyWorker: booking.keyWorker,
+        name: booking.name,
       }
 
       fakeApprovedPremisesApi
@@ -42,11 +43,23 @@ describe('BookingClient', () => {
 
       const result = await bookingClient.postBooking(booking.id, payload)
 
-      expect(result).toEqual({
-        ...booking,
-        arrivalDate: booking.arrivalDate,
-        expectedDepartureDate: booking.expectedDepartureDate,
-      })
+      expect(result).toEqual(booking)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('getBooking', () => {
+    it('should return the booking that has been requested', async () => {
+      const booking = BookingFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`/premises/premisesId/bookings/bookingId`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, booking)
+
+      const result = await bookingClient.getBooking('premisesId', 'bookingId')
+
+      expect(result).toEqual(booking)
       expect(nock.isDone()).toBeTruthy()
     })
   })
@@ -61,15 +74,8 @@ describe('BookingClient', () => {
         .reply(200, bookings)
 
       const result = await bookingClient.allBookingsForPremisesId('some-uuid')
-      const expectedBookings = bookings.map(booking => {
-        return {
-          ...booking,
-          arrivalDate: booking.arrivalDate,
-          expectedDepartureDate: booking.expectedDepartureDate,
-        }
-      })
 
-      expect(result).toEqual(expectedBookings)
+      expect(result).toEqual(bookings)
       expect(nock.isDone()).toBeTruthy()
     })
   })

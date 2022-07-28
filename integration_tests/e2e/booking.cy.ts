@@ -2,7 +2,7 @@ import premisesFactory from '../../server/testutils/factories/premises'
 import bookingFactory from '../../server/testutils/factories/booking'
 import BookingPage from '../pages/booking'
 import Page from '../pages/page'
-import PremisesPage from '../pages/premisesList'
+import BookingConfirmation from '../pages/bookingConfirmation'
 
 context('Booking', () => {
   beforeEach(() => {
@@ -19,26 +19,27 @@ context('Booking', () => {
       keyWorker: 'Alex Evans',
     })
 
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubBookingCreate', { premisesId: 'premisesId', booking })
-    cy.task('stubPremises', premises)
+    const premises = premisesFactory.build()
+    cy.task('stubBookingCreate', { premisesId: premises.id, booking })
+    cy.task('stubBookingGet', { premisesId: premises.id, booking })
+    cy.task('stubSinglePremises', { premisesId: premises.id, booking })
 
     // Given I am signed in
     cy.signIn()
 
     // When I visit the booking page
-    const page = BookingPage.visit()
+    const page = BookingPage.visit(premises.id)
 
     // And I fill in the booking form
     page.completeForm(booking)
     page.clickSubmit()
 
-    // Then I should be redirected to the premises page
-    Page.verifyOnPage(PremisesPage)
-    PremisesPage.shouldShowFlashMessage()
+    // Then I should be redirected to the confirmation page and the booking should be created in the API
+    Page.verifyOnPage(BookingConfirmation)
+    const bookingConfirmationPage = new BookingConfirmation()
+    bookingConfirmationPage.verifyBookingIsVisible(booking)
 
-    // And the booking should be created in the API
-    cy.task('verifyBookingCreate', { premisesId: 'premisesId' }).then(requests => {
+    cy.task('verifyBookingCreate', { premisesId: premises.id }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 

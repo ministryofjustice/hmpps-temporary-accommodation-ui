@@ -59,6 +59,7 @@ declare module 'approved-premises' {
     }
     Booking: {
       id: string
+      name: string
       CRN: string
       arrivalDate: string
       expectedDepartureDate: string

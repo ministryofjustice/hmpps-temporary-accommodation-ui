@@ -25,11 +25,18 @@ export default class BookingsController {
         ...convertDateInputsToIsoString(req.body, 'expectedDepartureDate'),
       }
 
-      await this.bookingService.postBooking(premisesId as string, booking)
+      const confirmedBooking = await this.bookingService.postBooking(premisesId as string, booking)
 
-      req.flash('info', 'Booking made successfully')
+      return res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
+    }
+  }
 
-      res.redirect(`/premises`)
+  confirm(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, bookingId } = req.params
+      const booking = await this.bookingService.getBooking(premisesId, bookingId)
+
+      return res.render('premises/bookings/confirm', booking)
     }
   }
 }

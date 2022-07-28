@@ -27,6 +27,20 @@ describe('BookingService', () => {
     })
   })
 
+  describe('getBooking', () => {
+    it('on success returns the booking that has been requested', async () => {
+      const booking = BookingFactory.build({
+        arrivalDate: new Date(2022, 2, 11).toISOString(),
+        expectedDepartureDate: new Date(2022, 2, 12).toISOString(),
+      })
+
+      bookingClient.getBooking.mockResolvedValue(booking)
+
+      const retrievedBooking = await service.getBooking('premisesId', booking.id)
+      expect(retrievedBooking).toEqual({ ...booking, arrivalDate: '11/03/2022', expectedDepartureDate: '12/03/2022' })
+    })
+  })
+
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
       const bookings = [

@@ -1,3 +1,5 @@
+import parseISO from 'date-fns/parseISO'
+
 import type { Booking, BookingDto, TableRow } from 'approved-premises'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
@@ -15,6 +17,21 @@ export default class BookingService {
     const confirmedBooking = await bookingClient.postBooking(premisesId, booking)
 
     return confirmedBooking
+  }
+
+  async getBooking(premisesId: string, bookingId: string): Promise<Booking> {
+    // TODO: We need to do some more work on authentication to work
+    // out how to get this token, so let's stub for now
+    const token = 'FAKE_TOKEN'
+    const bookingClient = this.bookingClientFactory(token)
+
+    const booking = await bookingClient.getBooking(premisesId, bookingId)
+
+    return {
+      ...booking,
+      arrivalDate: parseISO(booking.arrivalDate).toLocaleDateString('en-GB'),
+      expectedDepartureDate: parseISO(booking.expectedDepartureDate).toLocaleDateString('en-GB'),
+    }
   }
 
   async listOfBookingsForPremisesId(premisesId: string): Promise<Array<TableRow>> {

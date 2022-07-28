@@ -6,8 +6,8 @@ export default class BookingPage extends Page {
     super('Make a booking')
   }
 
-  static visit(): BookingPage {
-    cy.visit('/premises/premisesId/bookings/new')
+  static visit(premisesId: string): BookingPage {
+    cy.visit(`/premises/${premisesId}/bookings/new`)
     return new BookingPage()
   }
 
@@ -58,6 +58,9 @@ export default class BookingPage extends Page {
   completeForm(booking: Booking): void {
     this.getLabel('CRN')
     this.getTextInputByIdAndEnterDetails('CRN', booking.CRN)
+
+    this.getLabel('Name')
+    this.getTextInputByIdAndEnterDetails('name', booking.name)
 
     this.getLegend('What is the arrival date?')
 

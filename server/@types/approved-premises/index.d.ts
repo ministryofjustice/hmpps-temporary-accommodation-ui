@@ -1,6 +1,7 @@
 declare module 'approved-premises' {
   export type Premises = schemas['Premises']
   export type Arrival = schemas['Arrival']
+  export type NonArrival = schemas['NonArrival']
   export type Booking = schemas['Booking']
 
   export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival'>
@@ -14,6 +15,10 @@ declare module 'approved-premises' {
     ObjectWithDateParts<'expectedDeparture'>
 
   export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
+
+  export type NonArrivalDto = ObjectWithDateParts<'nonArrivalDate'> & {
+    nonArrival: Omit<NonArrival, 'id' | 'bookingId'>
+  }
 
   export interface HtmlAttributes {
     [key: string]: string
@@ -80,6 +85,12 @@ declare module 'approved-premises' {
       notes: string
       name: string
       CRN: string
+    }
+    NonArrival: {
+      id: string
+      date: string
+      reason: string
+      notes: string
     }
   }
 }

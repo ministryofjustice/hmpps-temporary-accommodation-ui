@@ -5,6 +5,7 @@ import premises from './stubs/premises.json'
 import bookingDtoFactory from '../server/testutils/factories/bookingDto'
 import bookingFactory from '../server/testutils/factories/booking'
 import arrivalFactory from '../server/testutils/factories/arrival'
+import nonArrivalFactory from '../server/testutils/factories/nonArrival'
 
 const stubs = []
 
@@ -115,6 +116,23 @@ stubs.push(async () =>
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: JSON.stringify(arrivalFactory.build()),
+    },
+  }),
+)
+
+stubs.push(async () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern:
+        '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/non-arrivals',
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: JSON.stringify(nonArrivalFactory.build()),
     },
   }),
 )

@@ -1,5 +1,5 @@
 import premisesFactory from '../../server/testutils/factories/premises'
-import bookingFactory from '../../server/testutils/factories/booking'
+import bookingDtoFactory from '../../server/testutils/factories/booking'
 import BookingPage from '../pages/booking'
 import Page from '../pages/page'
 import BookingConfirmation from '../pages/bookingConfirmation'
@@ -12,7 +12,7 @@ context('Booking', () => {
   })
 
   it('should show booking form', () => {
-    const booking = bookingFactory.build({
+    const booking = bookingDtoFactory.build({
       CRN: '1bee477b-462f-47c1-8f71-7835a76a2c42',
       arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),

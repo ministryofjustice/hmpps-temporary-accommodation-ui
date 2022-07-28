@@ -2,6 +2,7 @@
 import { stubFor } from './index'
 
 import premises from './stubs/premises.json'
+import bookingDtoFactory from '../server/testutils/factories/bookingDto'
 import bookingFactory from '../server/testutils/factories/booking'
 import arrivalFactory from '../server/testutils/factories/arrival'
 
@@ -70,7 +71,7 @@ stubs.push(async () =>
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify(bookingFactory.build()),
+      body: JSON.stringify(bookingDtoFactory.build()),
     },
   }),
 )

@@ -1,7 +1,8 @@
 import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
 
-import BookingFactory from '../testutils/factories/booking'
+import bookingDtoFactory from '../testutils/factories/bookingDto'
+import bookingFactory from '../testutils/factories/booking'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -19,10 +20,11 @@ describe('BookingService', () => {
 
   describe('postBooking', () => {
     it('on success returns the booking that has been posted', async () => {
-      const booking = BookingFactory.build()
+      const booking = bookingFactory.build()
+      const bookingDto = bookingDtoFactory.build()
       bookingClient.postBooking.mockResolvedValue(booking)
 
-      const postedBooking = await service.postBooking('premisesId', booking)
+      const postedBooking = await service.postBooking('premisesId', bookingDto)
       expect(postedBooking).toEqual(booking)
     })
   })
@@ -44,8 +46,8 @@ describe('BookingService', () => {
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
       const bookings = [
-        BookingFactory.build({ arrivalDate: new Date(2022, 10, 22).toISOString() }),
-        BookingFactory.build({ arrivalDate: new Date(2022, 2, 11).toISOString() }),
+        bookingFactory.build({ arrivalDate: new Date(2022, 10, 22).toISOString() }),
+        bookingFactory.build({ arrivalDate: new Date(2022, 2, 11).toISOString() }),
       ]
       const premisesId = 'some-uuid'
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)

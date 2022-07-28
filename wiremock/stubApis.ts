@@ -41,7 +41,17 @@ premises.forEach(p => {
     }),
   )
 
-  const bookings = bookingFactory.buildList(Math.floor(Math.random() * 10))
+  const rand = () => Math.floor(Math.random() * 10)
+
+  const bookings = [
+    bookingFactory.arrivingToday().buildList(rand()),
+    bookingFactory.arrivedToday().buildList(rand()),
+    bookingFactory.departingToday().buildList(rand()),
+    bookingFactory.departedToday().buildList(rand()),
+    bookingFactory.arrivingSoon().buildList(rand()),
+    bookingFactory.cancelledWithFutureArrivalDate().buildList(rand()),
+    bookingFactory.departingSoon().buildList(rand()),
+  ].flat()
 
   stubs.push(async () =>
     stubFor({

@@ -50,6 +50,9 @@ declare module 'approved-premises' {
     rows: Array<SummaryListItem>
   }
 
+  export type GroupedListofBookings = {
+    [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
+  }
   export interface schemas {
     Premises: {
       id: string

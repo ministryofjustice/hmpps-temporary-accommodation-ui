@@ -5,6 +5,7 @@ import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import premises from './integration_tests/mockApis/premises'
 import booking from './integration_tests/mockApis/booking'
 import arrival from './integration_tests/mockApis/arrival'
+import nonArrival from './integration_tests/mockApis/nonArrival'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -24,6 +25,7 @@ export default defineConfig({
       on('task', {
         reset: resetStubs,
         ...arrival,
+        ...nonArrival,
         ...auth,
         ...tokenVerification,
         ...premises,

@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+/* istanbul ignore file */
+
 import express from 'express'
 import promBundle from 'express-prom-bundle'
 

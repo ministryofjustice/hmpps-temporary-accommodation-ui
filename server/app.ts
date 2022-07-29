@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import express from 'express'
 import flash from 'connect-flash'
 

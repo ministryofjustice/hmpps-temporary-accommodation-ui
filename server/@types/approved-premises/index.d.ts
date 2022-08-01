@@ -2,6 +2,7 @@ declare module 'approved-premises' {
   export type Premises = schemas['Premises']
   export type Arrival = schemas['Arrival']
   export type NonArrival = schemas['NonArrival']
+  export type Departure = schemas['Departure']
   export type Booking = schemas['Booking']
 
   export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival'>
@@ -16,6 +17,8 @@ declare module 'approved-premises' {
   export type NonArrivalDto = ObjectWithDateParts<'nonArrivalDate'> & {
     nonArrival: Omit<NonArrival, 'id' | 'bookingId'>
   }
+
+  export type DepartureDto = ObjectWithDateParts<'dateTime'> & { departure: Omit<Departure, 'id' | 'bookingId'> }
 
   export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 
@@ -105,6 +108,16 @@ declare module 'approved-premises' {
       date: string
       reason: string
       notes: string
+    }
+    Departure: {
+      id: string
+      bookingId: string
+      dateTime: string
+      reason: string
+      notes: string
+      moveOnCategory: string
+      destinationProvider: string
+      destinationAp: string
     }
   }
 }

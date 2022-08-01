@@ -7,6 +7,7 @@ import bookingFactory from '../server/testutils/factories/booking'
 import bookingStubs from './bookingStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
+import departureFactory from '../server/testutils/factories/departure'
 
 const stubs = []
 const guidRegex = '([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
@@ -90,6 +91,22 @@ stubs.push(async () =>
 )
 
 stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs)
+
+stubs.push(async () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures`,
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify(departureFactory.build()),
+    },
+  }),
+)
 
 console.log('Stubbing APIs')
 

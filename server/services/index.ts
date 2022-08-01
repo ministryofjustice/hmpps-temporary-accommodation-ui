@@ -7,6 +7,7 @@ import PremisesService from './premisesService'
 import BookingService from './bookingService'
 import ArrivalService from './arrivalService'
 import NonArrivalService from './nonArrivalService'
+import DepartureService from './departureService'
 
 export const services = () => {
   const {
@@ -15,6 +16,7 @@ export const services = () => {
     bookingClientBuilder,
     arrivalClientBuilder,
     nonArrivalClientBuilder,
+    departureClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
@@ -22,6 +24,7 @@ export const services = () => {
   const bookingService = new BookingService(bookingClientBuilder)
   const arrivalService = new ArrivalService(arrivalClientBuilder)
   const nonArrivalService = new NonArrivalService(nonArrivalClientBuilder)
+  const departureService = new DepartureService(departureClientBuilder)
 
   return {
     userService,
@@ -29,9 +32,10 @@ export const services = () => {
     bookingService,
     arrivalService,
     nonArrivalService,
+    departureService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { UserService, PremisesService, ArrivalService, NonArrivalService }
+export { UserService, PremisesService, ArrivalService, NonArrivalService, DepartureService }

@@ -66,7 +66,7 @@ describe('BookingService', () => {
       })
     })
 
-    it('should convert bookings to table rows with a departute date', () => {
+    it('should convert bookings to table rows with a departure date', () => {
       const premisesId = 'some-uuid'
       const bookings = [
         bookingFactory.build({ expectedDepartureDate: new Date(2022, 10, 22).toISOString() }),

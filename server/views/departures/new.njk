@@ -1,0 +1,185 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Home" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1>Log a departure</h1>
+            {{ govukSummaryList({
+                rows: [
+                   {
+                    key: {
+                        text: "Name"
+                    },
+                    value: {
+                        text: booking.name
+                    }
+                    },
+                    {
+                    key: {
+                        text: "CRN"
+                    },
+                    value: {
+                        text: booking.CRN
+                    }
+                    }
+                    ]
+            })
+            }}
+            <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/departures" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+                {{ govukDateInput({
+                    id: "dateTime",
+                    namePrefix: "dateTime",
+                    fieldset: {
+                    legend: {
+                        text: "What is the departure date?",
+                        classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    hint: {
+                        text: "For example, 27 3 2007"
+                    }
+                }) }}
+
+                <label class="govuk-label govuk-label--m" for="time">
+                    What is the time of departure?
+                </label>
+                <input type="time" id="dateTime-time" name="dateTime-time" class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-4">
+
+                {{ govukSelect({
+                    name: "departure[destinationAp]",
+                    id: "destinationAp",
+                    label: {
+                        text: "Destination Approved Premises",
+                        classes: "govuk-label govuk-label--m"
+                        },
+                    items: premisesSelectList
+                    }) }}
+
+                {{ govukRadios({
+                    name: "departure[reason]",
+                    id: "reason",
+                    fieldset: {
+                        legend: {
+                        text: "Departure reason",
+                        classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: [
+                        {
+                            text: "Absconded",
+                            value: "absconded"
+                        },
+                        {
+                            text: "Bed withdrawn",
+                            value: "bed-withdrawn"
+                        },
+                        {
+                            text: "Recall",
+                            value: "recall"
+                        },
+                        {
+                            text: "Died",
+                            value: "died"
+                        },
+                        {
+                            text: "Other",
+                            value: "other"
+                        }
+                    ]
+                    }) }}
+
+                {{ govukRadios({
+                    name: "departure[moveOnCategory]",
+                    id: "moveOnCategory",
+                    fieldset: {
+                        legend: {
+                        text: "Move on category",
+                        classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: [
+                        {
+                            text: "B&B",
+                            value: "b&b"
+                        },
+                        {
+                            text: "Custody",
+                            value: "custody"
+                        },
+                        {
+                            text: "No fixed abode",
+                            value: "no-fixed-abode"
+                        },
+                        {
+                            text: "Not applicable",
+                            value: "not-applicable"
+                        },
+                        {
+                            text: "Private rented",
+                            value: "private-rented"
+                        }
+                    ]
+                    }) }}
+
+                {{ govukRadios({
+                    name: "departure[destinationProvider]",
+                    id: "destinationProvider",
+                    fieldset: {
+                        legend: {
+                        text: "Destination provider",
+                        classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    items: [
+                        {
+                            text: "East of England",
+                            value: "east-of-england"
+                        },
+                        {
+                            text: "London",
+                            value: "london"
+                        },
+                        {
+                            text: "Wales",
+                            value: "wales"
+                        },
+                        {
+                            text: "Greater Manchester",
+                            value: "greater-manchester"
+                        },
+                        {
+                            text: "Yorkshire and The Humber",
+                            value: "yorkshire-and-the-humber"
+                        }
+                    ]
+                    }) }}
+
+                {{ govukTextarea({
+                    name: "departure[notes]",
+                    id: "notes",
+                    label: {
+                    text: "Any other information"
+                    }
+                }) }}
+
+                {{ govukButton({
+                    text: "Submit"
+                }) }}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}

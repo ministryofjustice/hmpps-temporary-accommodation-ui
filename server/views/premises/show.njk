@@ -51,10 +51,30 @@
       label: "Upcoming Departures",
       id: "upcoming-departures",
       panel: {
-        html: bookingTable("Upcoming Departures", "Departure", bookings.upcomingDepartures)
+        html: bookingTable("Upcoming Departures", "Departute", bookings.upcomingDepartures)
       }
     }
   ]
 }) }}
+
+<h2>Current Residents</h2>
+
+  {{ govukTable({
+    caption: "Current Residents",
+    captionClasses: "govuk-visually-hidden",
+    firstCellIsHeader: true,
+    head: [
+      {
+        text: "Resident"
+      },
+      {
+        text: "Expected Departure Date"
+      },
+      {
+        text: "Actions"
+      }
+    ],
+    rows: currentResidents
+  }) }}
 
 {% endblock %}

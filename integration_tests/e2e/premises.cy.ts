@@ -52,5 +52,8 @@ context('Premises', () => {
 
     // And I should see all the bookings for that premises listed
     page.shouldShowBookings(bookingsArrivingToday, bookingsLeavingToday, bookingsArrivingSoon, bookingsDepartingSoon)
+
+    // And I should see all the current residents for that premises listed
+    page.shouldShowCurrentResidents(bookingsDepartingSoon)
   })
 })

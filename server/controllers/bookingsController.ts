@@ -2,8 +2,8 @@ import type { BookingDto } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
 import BookingService from '../services/bookingService'
-import { convertDateInputsToIsoString } from '../utils/utils'
 import renderWithErrors from '../utils/renderWithErrors'
+import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 
 export default class BookingsController {
   constructor(private readonly bookingService: BookingService) {}
@@ -22,8 +22,8 @@ export default class BookingsController {
 
       const booking: BookingDto = {
         ...req.body,
-        ...convertDateInputsToIsoString(req.body, 'arrivalDate'),
-        ...convertDateInputsToIsoString(req.body, 'expectedDepartureDate'),
+        ...convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
+        ...convertDateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
       }
 
       try {

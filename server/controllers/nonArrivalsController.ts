@@ -1,6 +1,6 @@
 import { Response, Request, RequestHandler } from 'express'
 import type { NonArrival, NonArrivalDto } from 'approved-premises'
-import { convertDateInputsToIsoString } from '../utils/utils'
+import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import NonArrivalService from '../services/nonArrivalService'
 import renderWithErrors from '../utils/renderWithErrors'
 
@@ -11,7 +11,7 @@ export default class NonArrivalsController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
       const body = req.body as NonArrivalDto
-      const { nonArrivalDate } = convertDateInputsToIsoString(body, 'nonArrivalDate')
+      const { nonArrivalDate } = convertDateAndTimeInputsToIsoString(body, 'nonArrivalDate')
 
       const nonArrival: Omit<NonArrival, 'id' | 'bookingId'> = {
         ...body.nonArrival,

@@ -144,4 +144,19 @@ describe('BookingService', () => {
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
     })
   })
+  describe('currentResidents', () => {
+    it('should return table rows of the current residents', async () => {
+      const bookingsArrivingToday = bookingFactory.arrivingToday().buildList(2)
+      const currentResidents = bookingFactory.arrived().buildList(2)
+
+      const premisesId = 'some-uuid'
+      bookingClient.allBookingsForPremisesId.mockResolvedValue([...currentResidents, ...bookingsArrivingToday])
+
+      const results = await service.currentResidents('some-uuid')
+
+      expect(results).toEqual(service.currentResidentsToTableRows(currentResidents, premisesId))
+
+      expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+    })
+  })
 })

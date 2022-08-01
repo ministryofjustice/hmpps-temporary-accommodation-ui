@@ -82,6 +82,35 @@ export default class BookingService {
     ])
   }
 
+  async currentResidents(premisesId: string): Promise<Array<TableRow>> {
+    const token = 'FAKE_TOKEN'
+    const bookingClient = this.bookingClientFactory(token)
+
+    const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
+    const arrivedBookings = this.arrivedBookings(bookings)
+
+    return this.currentResidentsToTableRows(arrivedBookings, premisesId)
+  }
+
+  currentResidentsToTableRows(bookings: Array<Booking>, premisesId: string): Array<TableRow> {
+    return bookings.map(booking => [
+      {
+        text: booking.CRN,
+      },
+      {
+        text: convertDateString(booking.expectedDepartureDate).toLocaleDateString('en-GB'),
+      },
+      {
+        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/">
+        Manage
+        <span class="govuk-visually-hidden">
+          booking for ${booking.CRN}
+        </span>
+      </a>`,
+      },
+    ])
+  }
+
   private bookingsArrivingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
     return this.bookingsAwaitingArrival(bookings).filter(booking =>
       isSameDay(convertDateString(booking.arrivalDate), today),

@@ -24,6 +24,14 @@ class BookingFactory extends Factory<Booking> {
     })
   }
 
+  arrived() {
+    return this.params({
+      arrivalDate: past(),
+      expectedDepartureDate: future(),
+      status: 'arrived',
+    })
+  }
+
   departingToday() {
     return this.params({
       arrivalDate: past(),

@@ -3,15 +3,16 @@ import type { Departure, DepartureDto } from 'approved-premises'
 
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import DepartureService from '../services/departureService'
+import PremisesService from '../services/premisesService'
 
 export default class DeparturesController {
-  constructor(private readonly departureService: DepartureService) {}
+  constructor(private readonly departureService: DepartureService, private readonly premisesService: PremisesService) {}
 
   new(): RequestHandler {
-    return (req: Request, res: Response) => {
+    return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-
       const booking = await this.bookingService.getBooking(premisesId, bookingId)
+      const premisesSelectList = await this.premisesService.getPremisesSelectList()
 
       res.render('departures/new', { premisesId, booking, premisesSelectList })
     }

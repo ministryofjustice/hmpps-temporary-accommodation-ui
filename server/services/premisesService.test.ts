@@ -75,6 +75,24 @@ describe('PremisesService', () => {
     })
   })
 
+  describe('premisesSelectList', () => {
+    it('returns the list mapped into the format required by the nunjucks macro and sorted alphabetically', async () => {
+      const premisesA = premisesFactory.build({ name: 'a' })
+      const premisesB = premisesFactory.build({ name: 'b' })
+      const premisesC = premisesFactory.build({ name: 'c' })
+      premisesClient.getAllPremises.mockResolvedValue([premisesC, premisesB, premisesA, premisesC])
+
+      const result = await service.getPremisesSelectList()
+
+      expect(result).toEqual([
+        { text: 'a', value: 'a' },
+        { text: 'b', value: 'b' },
+        { text: 'c', value: 'c' },
+        { text: 'c', value: 'c' },
+      ])
+    })
+  })
+
   describe('getPremisesDetails', () => {
     it('returns a title and a summary list for a given Premises ID', async () => {
       const premises = premisesFactory.build({ name: 'Test', apCode: 'ABC', postcode: 'SW1A 1AA', bedCount: 50 })

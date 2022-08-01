@@ -34,6 +34,25 @@ export default class PremisesService {
     return { name: premises.name, summaryList }
   }
 
+  async getPremisesSelectList(): Promise<Array<{ text: string; value: string }>> {
+    const premisesClient = this.premisesClientFactory(this.token)
+    const premises = await premisesClient.getAllPremises()
+
+    return premises
+      .map(p => {
+        return { text: `${p.name}`, value: `${p.name}` }
+      })
+      .sort((a, b) => {
+        if (a.text < b.text) {
+          return -1
+        }
+        if (a.text > b.text) {
+          return 1
+        }
+        return 0
+      })
+  }
+
   async summaryListForPremises(premises: Premises): Promise<SummaryList> {
     return {
       rows: [

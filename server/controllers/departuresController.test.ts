@@ -1,9 +1,9 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
-import type { Departure } from 'approved-premises'
 
 import DepartureService from '../services/departureService'
 import DeparturesController from './departuresController'
+import { PremisesService } from '../services'
 
 describe('DeparturesController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
@@ -12,10 +12,12 @@ describe('DeparturesController', () => {
 
   let departuresController: DeparturesController
   let departureService: DeepMocked<DepartureService>
+  let premisesService: DeepMocked<PremisesService>
 
   beforeEach(() => {
     departureService = createMock<DepartureService>({})
-    departuresController = new DeparturesController(departureService)
+    premisesService = createMock<PremisesService>({})
+    departuresController = new DeparturesController(departureService, premisesService)
   })
 
   describe('new', () => {

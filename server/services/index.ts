@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { dataAccess } from '../data'
 
 import UserService from './userService'

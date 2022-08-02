@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import 'dotenv/config'
 
 const production = process.env.NODE_ENV === 'production'

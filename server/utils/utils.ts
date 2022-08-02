@@ -1,9 +1,11 @@
 import { parseISO } from 'date-fns'
 import type { ObjectWithDateParts } from 'approved-premises'
 
+/* istanbul ignore next */
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
+/* istanbul ignore next */
 const isBlank = (str: string): boolean => !str || /^\s*$/.test(str)
 
 /**

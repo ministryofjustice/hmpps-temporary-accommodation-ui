@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { config } from 'dotenv'
 import { setup, defaultClient, TelemetryClient, DistributedTracingModes } from 'applicationinsights'
 import applicationVersion from '../applicationVersion'

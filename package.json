@@ -37,9 +37,17 @@
   },
   "jest": {
     "preset": "ts-jest",
+    "collectCoverage": true,
     "collectCoverageFrom": [
-      "server/**/*.{ts,js,jsx,mjs}"
+      "server/**/*.{ts,js,jsx,mjs}",
+      "!server/middleware/*.ts",
+      "!server/authentication/*.ts"
     ],
+    "coverageThreshold": {
+      "global": {
+        "functions": 100
+      }
+    },
     "testMatch": [
       "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
     ],

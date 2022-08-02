@@ -7,6 +7,7 @@ import arrivalFactory from '../server/testutils/factories/arrival'
 import nonArrivalFactory from '../server/testutils/factories/nonArrival'
 
 import bookingStubs from './bookingStubs'
+import arrivalStubs from './arrivalStubs'
 
 const stubs = []
 
@@ -93,23 +94,6 @@ stubs.push(async () =>
     request: {
       method: 'POST',
       urlPathPattern:
-        '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/arrivals',
-    },
-    response: {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: JSON.stringify(arrivalFactory.build()),
-    },
-  }),
-)
-
-stubs.push(async () =>
-  stubFor({
-    request: {
-      method: 'POST',
-      urlPathPattern:
         '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/non-arrivals',
     },
     response: {
@@ -122,7 +106,7 @@ stubs.push(async () =>
   }),
 )
 
-stubs.push(...bookingStubs)
+stubs.push(...bookingStubs, ...arrivalStubs)
 
 console.log('Stubbing APIs')
 

@@ -23,8 +23,8 @@ describe('ArrivalService', () => {
       const arrival: Arrival = ArrivalFactory.build()
       arrivalClient.create.mockResolvedValue(arrival)
 
-      const postedBooking = await service.createArrival('premisesID', 'bookingId', arrival)
-      expect(postedBooking).toEqual(arrival)
+      const postedArrival = await service.createArrival('premisesID', 'bookingId', arrival)
+      expect(postedArrival).toEqual(arrival)
     })
   })
 })

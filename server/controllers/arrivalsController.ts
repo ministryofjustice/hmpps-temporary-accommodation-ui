@@ -20,10 +20,13 @@ export default class ArrivalsController {
       const { premisesId, bookingId } = req.params
       const body = req.body as ArrivalDto
 
+      const { date } = convertDateInputsToIsoString(body, 'date')
+      const { expectedDepartureDate } = convertDateInputsToIsoString(body, 'expectedDepartureDate')
+
       const arrival: Omit<Arrival, 'id' | 'bookingId'> = {
-        ...body,
-        ...convertDateInputsToIsoString(body, 'dateTime'),
-        ...convertDateInputsToIsoString(body, 'expectedDeparture'),
+        ...body.arrival,
+        date,
+        expectedDepartureDate,
       }
 
       this.arrivalService.createArrival(premisesId, bookingId, arrival)

@@ -29,8 +29,8 @@ describe('PremisesClient', () => {
     it('should create an arrival', async () => {
       const arrival = arrivalFactory.build()
       const payload = {
-        dateTime: arrival.dateTime.toString(),
-        expectedDeparture: arrival.expectedDeparture.toString(),
+        date: arrival.date.toString(),
+        expectedDepartureDate: arrival.expectedDepartureDate.toString(),
         notes: arrival.notes,
         name: arrival.name,
         CRN: arrival.CRN,
@@ -45,8 +45,8 @@ describe('PremisesClient', () => {
 
       expect(result).toEqual({
         ...arrival,
-        dateTime: arrival.dateTime,
-        expectedDeparture: arrival.expectedDeparture,
+        date: arrival.date,
+        expectedDepartureDate: arrival.expectedDepartureDate,
       })
       expect(nock.isDone()).toBeTruthy()
     })

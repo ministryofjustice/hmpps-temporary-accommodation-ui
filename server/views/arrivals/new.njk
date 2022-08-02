@@ -10,14 +10,18 @@
 
 {% block content %}
 
-	<div class="govuk-grid-row">
-		<div class="govuk-grid-column-two-thirds">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-			{% set arrivalHTML %}
-			{% include "./_arrival_form.njk" %}
-			{% endset -%}
+      {% set arrivalHTML %}
+      {% include "./_arrival_form.njk" %}
+      {% endset -%}
 
-			{{ govukRadios({
+      {% set nonArrivalHTML %}
+      {% include "./_non-arrival_form.njk" %}
+      {% endset -%}
+
+      {{ govukRadios({
             name: "arrived",
             fieldset: {
               legend: {
@@ -39,11 +43,14 @@
               },
               {
                 value: "No",
-                text: "No"
+                text: "No",
+                conditional: {
+                  html: nonArrivalHTML
+                }
               }
             ]
           })
         }}
-		</div>
-	</div>
+    </div>
+  </div>
 {% endblock %}

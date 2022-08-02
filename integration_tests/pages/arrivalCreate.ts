@@ -17,20 +17,20 @@ export default class ArrivalCreatePage extends Page {
 
     cy.log('arrival', arrival)
 
-    const dateTime = new Date(Date.parse(arrival.dateTime))
-    const expectedDeparture = new Date(Date.parse(arrival.expectedDeparture))
+    const date = new Date(Date.parse(arrival.date))
+    const expectedDeparture = new Date(Date.parse(arrival.expectedDepartureDate))
 
-    cy.get('input[name="dateTime-day"]').type(String(dateTime.getDate()))
-    cy.get('input[name="dateTime-month"]').type(String(dateTime.getMonth() + 1))
-    cy.get('input[name="dateTime-year"]').type(String(dateTime.getFullYear()))
+    cy.get('input[name="date-day"]').type(String(date.getDate()))
+    cy.get('input[name="date-month"]').type(String(date.getMonth() + 1))
+    cy.get('input[name="date-year"]').type(String(date.getFullYear()))
 
-    cy.get('input[name="expectedDeparture-day"]').type(String(expectedDeparture.getDate()))
-    cy.get('input[name="expectedDeparture-month"]').type(String(expectedDeparture.getMonth() + 1))
-    cy.get('input[name="expectedDeparture-year"]').type(String(expectedDeparture.getFullYear()))
+    cy.get('input[name="expectedDepartureDate-day"]').type(String(expectedDeparture.getDate()))
+    cy.get('input[name="expectedDepartureDate-month"]').type(String(expectedDeparture.getMonth() + 1))
+    cy.get('input[name="expectedDepartureDate-year"]').type(String(expectedDeparture.getFullYear()))
 
-    cy.get('#conditional-arrived > form >> textarea[name="notes"]').type(arrival.notes)
+    cy.get('[name="arrival[notes]"]').type(arrival.notes)
 
-    cy.get('#conditional-arrived > form > .govuk-button').click()
+    cy.get('[name="arrival[submit]"]').click()
   }
 
   public completeNonArrivalForm(nonArrival: NonArrival): void {

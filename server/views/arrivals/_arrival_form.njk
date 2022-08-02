@@ -1,8 +1,8 @@
 <form action="/premises/{{premisesId}}/bookings/{{bookingId}}/arrivals" method="post">
-	<input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-	{{ govukDateInput({
-    id: "dateTime",
-    namePrefix: "dateTime",
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+  {{ govukDateInput({
+    id: "arrival[date]",
+    namePrefix: "date",
     fieldset: {
     legend: {
         text: "What is the arrival date?",
@@ -14,9 +14,9 @@
     }
   }) }}
 
-	{{ govukDateInput({
-    id: "expectedDeparture",
-    namePrefix: "expectedDeparture",
+  {{ govukDateInput({
+    id: "arrival[expectedDepartureDate]",
+    namePrefix: "expectedDepartureDate",
     fieldset: {
     legend: {
         text: "What is their expected departure date?",
@@ -28,15 +28,16 @@
     }
   }) }}
 
-	{{ govukTextarea({
-    name: "notes",
+  {{ govukTextarea({
+    name: "arrival[notes]",
     id: "notes",
     label: {
       text: "Any other information"
     }
   }) }}
 
-	{{ govukButton({
+  {{ govukButton({
+    name: 'arrival[submit]',
     text: "Submit"
   }) }}
 </form>

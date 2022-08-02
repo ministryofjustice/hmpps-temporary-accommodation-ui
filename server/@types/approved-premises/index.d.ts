@@ -10,15 +10,14 @@ declare module 'approved-premises' {
     [P in K]?: string
   }
 
-  export type ArrivalDto = Omit<Arrival, 'id' | 'bookingId'> &
-    ObjectWithDateParts<'dateTime'> &
-    ObjectWithDateParts<'expectedDeparture'>
-
-  export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
+  export type ArrivalDto = ObjectWithDateParts<'date'> &
+    ObjectWithDateParts<'expectedDepartureDate'> & { arrival: Omit<Arrival, 'id' | 'bookingId'> }
 
   export type NonArrivalDto = ObjectWithDateParts<'nonArrivalDate'> & {
     nonArrival: Omit<NonArrival, 'id' | 'bookingId'>
   }
+
+  export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 
   export interface HtmlAttributes {
     [key: string]: string
@@ -80,8 +79,8 @@ declare module 'approved-premises' {
     Arrival: {
       id: string
       bookingId: string
-      dateTime: string
-      expectedDeparture: string
+      date: string
+      expectedDepartureDate: string
       notes: string
       name: string
       CRN: string

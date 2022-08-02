@@ -20,8 +20,8 @@ context('Arrivals', () => {
     const premises = premisesFactory.build()
     const bookingId = 'some-uuid'
     const arrival = arrivalFactory.build({
-      dateTime: new Date(2022, 1, 11).toISOString(),
-      expectedDeparture: new Date(2022, 11, 11).toISOString(),
+      date: new Date(2022, 1, 11).toISOString(),
+      expectedDepartureDate: new Date(2022, 11, 11).toISOString(),
     })
 
     cy.task('stubSinglePremises', premises)
@@ -36,11 +36,11 @@ context('Arrivals', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      const { dateTime, expectedDeparture } = arrival
+      const { date, expectedDepartureDate } = arrival
 
       expect(requestBody.notes).equal(arrival.notes)
-      expect(requestBody.dateTime).equal(dateTime)
-      expect(requestBody.expectedDeparture).equal(expectedDeparture)
+      expect(requestBody.date).equal(date)
+      expect(requestBody.expectedDepartureDate).equal(expectedDepartureDate)
     })
 
     // And I should be redirected to the premises page

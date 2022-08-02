@@ -42,21 +42,21 @@ describe('ArrivalsController', () => {
       }
 
       request.body = {
-        'dateTime-year': 2022,
-        'dateTime-month': 12,
-        'dateTime-day': 11,
-        'expectedDeparture-year': 2022,
-        'expectedDeparture-month': 11,
-        'expectedDeparture-day': 12,
+        'date-year': 2022,
+        'date-month': 12,
+        'date-day': 11,
+        'expectedDepartureDate-year': 2022,
+        'expectedDepartureDate-month': 11,
+        'expectedDepartureDate-day': 12,
         notes: 'Some notes',
       }
 
       requestHandler(request, response, next)
 
       const expectedArrival = {
-        ...request.body,
-        dateTime: new Date(2022, 11, 11).toISOString(),
-        expectedDeparture: new Date(2022, 10, 12).toISOString(),
+        ...request.body.arrival,
+        date: new Date(2022, 11, 11).toISOString(),
+        expectedDepartureDate: new Date(2022, 10, 12).toISOString(),
       }
 
       expect(arrivalService.createArrival).toHaveBeenCalledWith(

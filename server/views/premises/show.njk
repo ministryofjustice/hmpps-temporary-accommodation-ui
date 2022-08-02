@@ -57,4 +57,24 @@
   ]
 }) }}
 
+<h2>Current Residents</h2>
+
+  {{ govukTable({
+    caption: "Current Residents",
+    captionClasses: "govuk-visually-hidden",
+    firstCellIsHeader: true,
+    head: [
+      {
+        text: "Resident"
+      },
+      {
+        text: "Expected Departure Date"
+      },
+      {
+        text: "Actions"
+      }
+    ],
+    rows: currentResidents
+  }) }}
+
 {% endblock %}

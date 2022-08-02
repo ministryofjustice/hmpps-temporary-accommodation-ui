@@ -17,7 +17,8 @@ export default class PremisesController {
     return async (req: ShowRequest, res: Response) => {
       const premises = await this.premisesService.getPremisesDetails(req.params.id)
       const bookings = await this.bookingService.groupedListOfBookingsForPremisesId(req.params.id)
-      return res.render('premises/show', { premises, bookings })
+      const currentResidents = await this.bookingService.currentResidents(req.params.id)
+      return res.render('premises/show', { premises, bookings, currentResidents })
     }
   }
 }

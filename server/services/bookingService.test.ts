@@ -66,7 +66,7 @@ describe('BookingService', () => {
       })
     })
 
-    it('should convert bookings to table rows with a departute date', () => {
+    it('should convert bookings to table rows with a departure date', () => {
       const premisesId = 'some-uuid'
       const bookings = [
         bookingFactory.build({ expectedDepartureDate: new Date(2022, 10, 22).toISOString() }),
@@ -140,6 +140,21 @@ describe('BookingService', () => {
       expect(results.upcomingDepartures).toEqual(
         service.bookingsToTableRows(bookingsDepartingSoon, premisesId, 'departure'),
       )
+
+      expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+    })
+  })
+  describe('currentResidents', () => {
+    it('should return table rows of the current residents', async () => {
+      const bookingsArrivingToday = bookingFactory.arrivingToday().buildList(2)
+      const currentResidents = bookingFactory.arrived().buildList(2)
+
+      const premisesId = 'some-uuid'
+      bookingClient.allBookingsForPremisesId.mockResolvedValue([...currentResidents, ...bookingsArrivingToday])
+
+      const results = await service.currentResidents('some-uuid')
+
+      expect(results).toEqual(service.currentResidentsToTableRows(currentResidents, premisesId))
 
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
     })

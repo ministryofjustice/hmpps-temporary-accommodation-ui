@@ -80,4 +80,19 @@ export default class PremisesShowPage extends Page {
         })
     })
   }
+
+  shouldShowCurrentResidents(currentResidents: Array<Booking>) {
+    cy.get('h2').should('contain', 'Current Residents')
+    currentResidents.forEach((item: Booking) => {
+      cy.contains(item.CRN)
+        .parent()
+        .within(() => {
+          cy.get('td').eq(0).contains(parseISO(item.expectedDepartureDate).toLocaleDateString('en-GB'))
+          cy.get('td')
+            .eq(1)
+            .contains('Manage')
+            .should('have.attr', 'href', `/premises/${this.premises.id}/bookings/${item.id}/arrivals/new`)
+        })
+    })
+  }
 }

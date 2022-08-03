@@ -21,4 +21,12 @@ export default class DepartureClient {
 
     return response as Departure
   }
+
+  async get(premisesId: string, bookingId: string, departureId: string): Promise<Departure> {
+    const response = await this.restClient.get({
+      path: `/premises/${premisesId}/bookings/${bookingId}/departures/${departureId}`,
+    })
+
+    return response as Departure
+  }
 }

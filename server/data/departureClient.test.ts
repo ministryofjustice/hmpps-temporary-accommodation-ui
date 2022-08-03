@@ -40,4 +40,19 @@ describe('DepartureClient', () => {
       expect(nock.isDone()).toBeTruthy()
     })
   })
+  describe('get', () => {
+    it('given a departure ID should return a departure', async () => {
+      const departure = departureFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`/premises/premisesId/bookings/bookingId/departures/${departure.id}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, departure)
+
+      const result = await departureClient.get('premisesId', 'bookingId', departure.id)
+
+      expect(result).toEqual(departure)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
 })

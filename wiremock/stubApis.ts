@@ -108,6 +108,22 @@ stubs.push(async () =>
   }),
 )
 
+stubs.push(async () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures/${guidRegex}`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify(departureFactory.build()),
+    },
+  }),
+)
+
 console.log('Stubbing APIs')
 
 stubs.forEach(s =>

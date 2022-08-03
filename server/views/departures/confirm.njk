@@ -1,0 +1,93 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Home" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukPanel({
+            titleText: "Departure confirmed"
+            }) }}
+            {{ govukSummaryList({
+                rows: [
+                   {
+                    key: {
+                        text: "Name"
+                    },
+                    value: {
+                        text: name
+                    }
+                    },
+                    {
+                    key: {
+                        text: "CRN"
+                    },
+                    value: {
+                        text: CRN
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Departure date"
+                    },
+                    value: {
+                        text: dateTime
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Reason"
+                    },
+                    value: {
+                        text: reason
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Move on category"
+                    },
+                    value: {
+                        text: moveOnCategory
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Destination approved premises"
+                    },
+                    value: {
+                        text: destinationAp
+                    }
+                    },
+                       {
+                    key: {
+                        text: "Destination provider"
+                    },
+                    value: {
+                        text: destinationProvider
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Move on category"
+                    },
+                    value: {
+                        text: moveOnCategory
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Notes"
+                    },
+                    value: {
+                        text: notes
+                    }
+                    }
+                ]
+            }) }}
+        </div>
+    </div>
+{% endblock %}

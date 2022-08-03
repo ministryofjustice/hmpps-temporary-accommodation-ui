@@ -5,6 +5,18 @@ import type { Departure } from 'approved-premises'
 import { stubFor, getMatchingRequests } from '../../wiremock'
 
 export default {
+  stubDepartureGet: (args: { premisesId: string; bookingId: string; departure: Departure }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/departures/${args.departure.id}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.departure,
+      },
+    }),
   stubDepartureCreate: (args: { premisesId: string; bookingId: string; departure: Departure }): SuperAgentRequest =>
     stubFor({
       request: {

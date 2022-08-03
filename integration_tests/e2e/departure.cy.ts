@@ -3,7 +3,7 @@ import departureFactory from '../../server/testutils/factories/departure'
 import bookingFactory from '../../server/testutils/factories/booking'
 
 import DepartureCreatePage from '../pages/departureCreate'
-import PremisesShowPage from '../pages/premisesShow'
+import DepartureConfirmation from '../pages/departureConfirmation'
 
 context('Departures', () => {
   beforeEach(() => {
@@ -30,6 +30,7 @@ context('Departures', () => {
     cy.task('stubPremises', premises)
     cy.task('stubBookingGet', { premisesId: premises[0].id, booking })
     cy.task('stubDepartureCreate', { premisesId: premises[0].id, bookingId: booking.id, departure })
+    cy.task('stubDepartureGet', { premisesId: premises[0].id, bookingId: booking.id, departure })
 
     // When I mark the booking as having departed
     const page = DepartureCreatePage.visit(premises[0].id, booking.id)
@@ -37,7 +38,7 @@ context('Departures', () => {
     page.completeForm(departure)
 
     // Then an departure should be created in the API
-    cy.task('verifyDepartureCreate', { premisesId: premises[0].id, booking: booking.id }).then(requests => {
+    cy.task('verifyDepartureCreate', { premisesId: premises[0].id, bookingId: booking.id }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
@@ -49,7 +50,9 @@ context('Departures', () => {
       expect(requestBody.notes).equal(departure.notes)
     })
 
-    // And I should be redirected to the premises page
-    PremisesShowPage.verifyOnPage(PremisesShowPage, premises[0])
+    // And I should be redirected to the confirmation page
+    const departureConfirmationPage = DepartureConfirmation.verifyOnPage(DepartureConfirmation, departure, booking)
+
+    departureConfirmationPage.verifyConfirmedDepartureIsVisible(departure, booking)
   })
 })

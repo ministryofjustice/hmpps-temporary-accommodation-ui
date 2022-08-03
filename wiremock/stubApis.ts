@@ -9,6 +9,7 @@ import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 
 const stubs = []
+const guidRegex = '([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
 
 stubs.push(async () =>
   stubFor({
@@ -76,7 +77,7 @@ stubs.push(async () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPathPattern: `/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`,
+      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}`,
     },
     response: {
       status: 200,

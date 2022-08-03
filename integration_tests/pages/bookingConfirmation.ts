@@ -12,11 +12,6 @@ export default class BookingConfirmationPage extends Page {
     return new BookingConfirmationPage()
   }
 
-  assertDefinition(term: string, value: string): void {
-    cy.get('dt').should('contain', term)
-    cy.get('dd').should('contain', value)
-  }
-
   verifyBookingIsVisible(booking: Booking): void {
     cy.get('dl').within(() => {
       this.assertDefinition('Name', booking.name)

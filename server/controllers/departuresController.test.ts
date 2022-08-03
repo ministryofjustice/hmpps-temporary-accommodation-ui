@@ -4,20 +4,27 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import DepartureService from '../services/departureService'
 import DeparturesController from './departuresController'
 import { PremisesService } from '../services'
+import BookingService from '../services/bookingService'
+import departureFactory from '../testutils/factories/departure'
+import bookingFactory from '../testutils/factories/booking'
 
 describe('DeparturesController', () => {
-  const request: DeepMocked<Request> = createMock<Request>({})
+  let request: DeepMocked<Request> = createMock<Request>({})
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   let departuresController: DeparturesController
   let departureService: DeepMocked<DepartureService>
   let premisesService: DeepMocked<PremisesService>
+  let bookingService: DeepMocked<BookingService>
 
   beforeEach(() => {
+    jest.resetAllMocks()
+    request = createMock<Request>({})
     departureService = createMock<DepartureService>({})
     premisesService = createMock<PremisesService>({})
-    departuresController = new DeparturesController(departureService, premisesService)
+    bookingService = createMock<BookingService>({})
+    departuresController = new DeparturesController(departureService, premisesService, bookingService)
   })
 
   describe('new', () => {
@@ -52,7 +59,10 @@ describe('DeparturesController', () => {
   })
 
   describe('create', () => {
-    it('creates an Departure and redirects to the premises page', async () => {
+    it('creates an Departure and redirects to the confirmation page', async () => {
+      const departure = departureFactory.build()
+      departureService.createDeparture.mockResolvedValue(departure)
+
       const requestHandler = departuresController.create()
 
       request.params = {
@@ -89,7 +99,39 @@ describe('DeparturesController', () => {
         expectedDeparture,
       )
 
-      expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
+      expect(response.redirect).toHaveBeenCalledWith(
+        `/premises/premisesId/bookings/bookingId/departures/${departure.id}/confirmation`,
+      )
+    })
+  })
+
+  describe('confirm', () => {
+    it('renders the confirmation page', async () => {
+      const booking = bookingFactory.build()
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const departure = departureFactory.build()
+      departureService.getDeparture.mockResolvedValue(departure)
+
+      const premisesId = 'premisesId'
+      const bookingId = 'bookingId'
+      const requestHandler = departuresController.confirm()
+
+      request.params = {
+        premisesId,
+        bookingId,
+        departureId: departure.id,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(departureService.getDeparture).toHaveBeenCalledWith(premisesId, bookingId, departure.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)
+      expect(response.render).toHaveBeenCalledWith('departures/confirm', {
+        ...departure,
+        name: booking.name,
+        CRN: booking.CRN,
+      })
     })
   })
 })

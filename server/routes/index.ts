@@ -18,7 +18,11 @@ export default function routes(services: Services): Router {
   const bookingsController = new BookingsController(services.bookingService)
   const arrivalsController = new ArrivalsController(services.arrivalService)
   const nonArrivalsController = new NonArrivalsController(services.nonArrivalService)
-  const departuresController = new DeparturesController(services.departureService, services.premisesService)
+  const departuresController = new DeparturesController(
+    services.departureService,
+    services.premisesService,
+    services.bookingService,
+  )
 
   get('/', (req, res, next) => {
     res.render('pages/index')
@@ -36,7 +40,8 @@ export default function routes(services: Services): Router {
   router.post('/premises/:premisesId/bookings/:bookingId/nonArrivals', nonArrivalsController.create())
 
   get('/premises/:premisesId/bookings/:bookingId/departures/new', departuresController.new())
-  router.post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())
+  post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())
+  get('/premises/:premisesId/bookings/:bookingId/departures/:departureId/confirmation', departuresController.confirm())
 
   return router
 }

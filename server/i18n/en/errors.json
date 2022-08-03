@@ -11,6 +11,9 @@
   "date": {
     "blank": "You must enter a valid departure date"
   },
+  "reason": {
+    "blank": "You must choose a valid reason"
+  },
   "expectedDepartureDate": {
     "blank": "You must enter a valid expected departure date"
   },

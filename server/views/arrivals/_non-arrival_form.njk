@@ -9,6 +9,8 @@
         classes: "govuk-fieldset__legend--m"
         }
     },
+    items: dateFieldValues('date', errors),
+    errorMessage: errors.date,
     hint: {
         text: "For example, 27 3 2007"
     }
@@ -22,6 +24,7 @@
       classes: "govuk-fieldset__legend--m"
     }
   },
+  errorMessage: errors.reason,
   items: [
     {
       value: "absconded",

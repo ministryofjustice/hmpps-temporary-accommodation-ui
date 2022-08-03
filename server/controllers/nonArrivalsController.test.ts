@@ -3,6 +3,9 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import NonArrivalService from '../services/nonArrivalService'
 
 import NonArrivalsController from './nonArrivalsController'
+import renderWithErrors from '../utils/renderWithErrors'
+
+jest.mock('../utils/renderWithErrors')
 
 describe('NonArrivalsController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
@@ -18,7 +21,7 @@ describe('NonArrivalsController', () => {
   })
 
   describe('create', () => {
-    it('creates an nonArrival and redirects to the premises page', () => {
+    it('creates an nonArrival and redirects to the premises page', async () => {
       const requestHandler = nonArrivalsController.create()
 
       request.params = {
@@ -33,7 +36,7 @@ describe('NonArrivalsController', () => {
         nonArrival: { notes: 'Some notes', reason: 'Some reason' },
       }
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       const expectedNonArrival = {
         ...request.body.nonArrival,
@@ -47,6 +50,29 @@ describe('NonArrivalsController', () => {
       )
 
       expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = nonArrivalsController.create()
+
+      request.params = {
+        bookingId: 'bookingId',
+        premisesId: 'premisesId',
+      }
+
+      const err = new Error()
+
+      nonArrivalService.createNonArrival.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, `arrivals/new`, {
+        premisesId: request.params.premisesId,
+        bookingId: request.params.bookingId,
+        arrived: false,
+      })
     })
   })
 })

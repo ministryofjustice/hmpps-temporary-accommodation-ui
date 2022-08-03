@@ -47,6 +47,31 @@ context('Arrivals', () => {
     PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
   })
 
+  it('show errors when the API returns an error', () => {
+    // Given I am logged in
+    cy.signIn()
+
+    // And I have a booking for a premises
+    const premises = premisesFactory.build()
+    const bookingId = 'some-uuid'
+
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the arrivals page
+    const page = ArrivalCreatePage.visit(premises.id, bookingId)
+
+    // And I miss a required field
+    cy.task('stubArrivalErrors', {
+      premisesId: premises.id,
+      bookingId,
+      params: ['date', 'expectedDepartureDate'],
+    })
+    page.submitArrivalFormWithoutFields()
+
+    // Then I should see error messages relating to that field
+    page.shouldShowErrorMessagesForFields(['date', 'expectedDepartureDate'])
+  })
+
   it('creates a non-arrival', () => {
     // Given I am logged in
     cy.signIn()

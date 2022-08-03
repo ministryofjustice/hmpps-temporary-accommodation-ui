@@ -50,4 +50,9 @@ export default class ArrivalCreatePage extends Page {
 
     cy.get('[name="nonArrival[submit]"]').click()
   }
+
+  public submitArrivalFormWithoutFields(): void {
+    cy.get('input[name="arrived"][value="Yes"]').check()
+    cy.get('[name="arrival[submit]"]').click()
+  }
 }

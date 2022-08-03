@@ -8,6 +8,9 @@
   "arrivalDate": {
     "blank": "You must enter a valid arrival date"
   },
+  "date": {
+    "blank": "You must enter a valid departure date"
+  },
   "expectedDepartureDate": {
     "blank": "You must enter a valid expected departure date"
   },

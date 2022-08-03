@@ -3,6 +3,9 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import ArrivalService from '../services/arrivalService'
 import ArrivalsController from './arrivalsController'
+import renderWithErrors from '../utils/renderWithErrors'
+
+jest.mock('../utils/renderWithErrors')
 
 describe('ArrivalsController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
@@ -33,7 +36,7 @@ describe('ArrivalsController', () => {
   })
 
   describe('create', () => {
-    it('creates an arrival and redirects to the premises page', () => {
+    it('creates an arrival and redirects to the premises page', async () => {
       const requestHandler = arrivalsController.create()
 
       request.params = {
@@ -51,7 +54,7 @@ describe('ArrivalsController', () => {
         notes: 'Some notes',
       }
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       const expectedArrival = {
         ...request.body.arrival,
@@ -66,6 +69,29 @@ describe('ArrivalsController', () => {
       )
 
       expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = arrivalsController.create()
+
+      request.params = {
+        bookingId: 'bookingId',
+        premisesId: 'premisesId',
+      }
+
+      const err = new Error()
+
+      arrivalService.createArrival.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, `arrivals/new`, {
+        premisesId: request.params.premisesId,
+        bookingId: request.params.bookingId,
+        arrived: true,
+      })
     })
   })
 })

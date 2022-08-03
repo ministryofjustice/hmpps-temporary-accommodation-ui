@@ -3,6 +3,7 @@ import type { Arrival, ArrivalDto } from 'approved-premises'
 
 import { convertDateInputsToIsoString } from '../utils/utils'
 import ArrivalService from '../services/arrivalService'
+import renderWithErrors from '../utils/renderWithErrors'
 
 export default class ArrivalsController {
   constructor(private readonly arrivalService: ArrivalService) {}
@@ -16,7 +17,7 @@ export default class ArrivalsController {
   }
 
   create(): RequestHandler {
-    return (req: Request, res: Response) => {
+    return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
       const body = req.body as ArrivalDto
 
@@ -29,9 +30,13 @@ export default class ArrivalsController {
         expectedDepartureDate,
       }
 
-      this.arrivalService.createArrival(premisesId, bookingId, arrival)
+      try {
+        await this.arrivalService.createArrival(premisesId, bookingId, arrival)
 
-      res.redirect(`/premises/${premisesId}`)
+        res.redirect(`/premises/${premisesId}`)
+      } catch (err) {
+        renderWithErrors(req, res, err, `arrivals/new`, { premisesId, bookingId, arrived: true })
+      }
     }
   }
 }

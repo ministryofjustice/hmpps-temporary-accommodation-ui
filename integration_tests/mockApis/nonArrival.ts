@@ -3,6 +3,7 @@ import { SuperAgentRequest } from 'superagent'
 import type { NonArrival } from 'approved-premises'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
+import { errorStub } from '../../wiremock/utils'
 
 export default {
   stubNonArrivalCreate: (args: { premisesId: string; bookingId: string; nonArrival: NonArrival }): SuperAgentRequest =>
@@ -17,6 +18,8 @@ export default {
         jsonBody: args.nonArrival,
       },
     }),
+  stubNonArrivalErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }): SuperAgentRequest =>
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/non-arrivals`, ['reason'])),
   verifyNonArrivalCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({

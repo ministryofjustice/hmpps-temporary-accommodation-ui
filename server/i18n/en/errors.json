@@ -1,0 +1,23 @@
+{
+  "CRN": {
+    "blank": "You must enter a CRN"
+  },
+  "name": {
+    "blank": "You must enter a name"
+  },
+  "arrivalDate": {
+    "blank": "You must enter a valid arrival date"
+  },
+  "date": {
+    "blank": "You must enter a valid departure date"
+  },
+  "reason": {
+    "blank": "You must choose a valid reason"
+  },
+  "expectedDepartureDate": {
+    "blank": "You must enter a valid expected departure date"
+  },
+  "keyWorker": {
+    "blank": "You must choose a keyworker"
+  }
+}

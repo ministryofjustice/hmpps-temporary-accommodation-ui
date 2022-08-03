@@ -47,6 +47,31 @@ context('Arrivals', () => {
     PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
   })
 
+  it('show arrival errors when the API returns an error', () => {
+    // Given I am logged in
+    cy.signIn()
+
+    // And I have a booking for a premises
+    const premises = premisesFactory.build()
+    const bookingId = 'some-uuid'
+
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the arrivals page
+    const page = ArrivalCreatePage.visit(premises.id, bookingId)
+
+    // And I miss a required field
+    cy.task('stubArrivalErrors', {
+      premisesId: premises.id,
+      bookingId,
+      params: ['date', 'expectedDepartureDate'],
+    })
+    page.submitArrivalFormWithoutFields()
+
+    // Then I should see error messages relating to that field
+    page.shouldShowErrorMessagesForFields(['date', 'expectedDepartureDate'])
+  })
+
   it('creates a non-arrival', () => {
     // Given I am logged in
     cy.signIn()
@@ -78,5 +103,30 @@ context('Arrivals', () => {
 
     // And I should be redirected to the premises page
     PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+  })
+
+  it('show non-arrival errors when the API returns an error', () => {
+    // Given I am logged in
+    cy.signIn()
+
+    // And I have a booking for a premises
+    const premises = premisesFactory.build()
+    const bookingId = 'some-uuid'
+
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the arrivals page
+    const page = ArrivalCreatePage.visit(premises.id, bookingId)
+
+    // And I miss a required field
+    cy.task('stubNonArrivalErrors', {
+      premisesId: premises.id,
+      bookingId,
+      params: ['date', 'reason'],
+    })
+    page.submitNonArrivalFormWithoutFields()
+
+    // Then I should see error messages relating to that field
+    page.shouldShowErrorMessagesForFields(['date', 'reason'])
   })
 })

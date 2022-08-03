@@ -3,7 +3,11 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import BookingService from '../services/bookingService'
 import BookingsController from './bookingsController'
+import renderWithErrors from '../utils/renderWithErrors'
+
 import bookingFactory from '../testutils/factories/booking'
+
+jest.mock('../utils/renderWithErrors')
 
 describe('bookingsController', () => {
   let request: DeepMocked<Request> = createMock<Request>({})
@@ -65,68 +69,26 @@ describe('bookingsController', () => {
       expect(response.redirect).toHaveBeenCalledWith(`/premises/${premisesId}/bookings/${booking.id}/confirmation`)
     })
 
-    it('given the form is submitted with no data the posting of the booking is successful should redirect to the "premises" page', async () => {
+    it('should render the page with errors when the API returns an error', async () => {
       const booking = bookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
-      const premisesId = 'premisesId'
       const requestHandler = bookingController.create()
+      const premisesId = 'premisesId'
 
       request = {
         ...request,
         params: { premisesId },
-        body: {
-          CRN: '',
-          keyWorker: '',
-          'arrivalDate-day': '',
-          'arrivalDate-month': '',
-          'arrivalDate-year': '',
-          'expectedDepartureDate-day': '',
-          'expectedDepartureDate-month': '',
-          'expectedDepartureDate-year': '',
-        },
       }
+
+      const err = new Error()
+
+      bookingService.postBooking.mockImplementation(() => {
+        throw err
+      })
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.postBooking).toHaveBeenCalledWith(premisesId, {
-        ...request.body,
-        arrivalDate: '',
-        expectedDepartureDate: '',
-      })
-
-      expect(response.redirect).toHaveBeenCalledWith(`/premises/${premisesId}/bookings/${booking.id}/confirmation`)
-    })
-
-    it('given the form is submitted with unexpected values the posting of the booking is successful should redirect to the "premises" page', async () => {
-      const booking = bookingFactory.build()
-      bookingService.postBooking.mockResolvedValue(booking)
-      const premisesId = 'premisesId'
-      const requestHandler = bookingController.create()
-
-      request = {
-        ...request,
-        params: { premisesId },
-        body: {
-          CRN: '££$%£$£',
-          keyWorker: '[]',
-          'arrivalDate-day': 'monday',
-          'arrivalDate-month': '££',
-          'arrivalDate-year': 'lorem ipsum',
-          'expectedDepartureDate-day': 'foo',
-          'expectedDepartureDate-month': 'bar',
-          'expectedDepartureDate-year': 'b4z',
-        },
-      }
-
-      await requestHandler(request, response, next)
-
-      expect(bookingService.postBooking).toHaveBeenCalledWith(premisesId, {
-        ...request.body,
-        arrivalDate: 'lorem ipsum-££-ayT00:00:00.000Z',
-        expectedDepartureDate: 'b4z-ar-ooT00:00:00.000Z',
-      })
-
-      expect(response.redirect).toHaveBeenCalledWith(`/premises/${premisesId}/bookings/${booking.id}/confirmation`)
+      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, `premises/bookings/new`, { premisesId })
     })
   })
 

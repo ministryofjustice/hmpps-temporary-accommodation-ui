@@ -2,10 +2,11 @@
 import { stubFor } from './index'
 
 import premises from './stubs/premises.json'
-import bookingDtoFactory from '../server/testutils/factories/bookingDto'
 import bookingFactory from '../server/testutils/factories/booking'
-import arrivalFactory from '../server/testutils/factories/arrival'
-import nonArrivalFactory from '../server/testutils/factories/nonArrival'
+
+import bookingStubs from './bookingStubs'
+import arrivalStubs from './arrivalStubs'
+import nonArrivalStubs from './nonArrivalStubs'
 
 const stubs = []
 
@@ -74,22 +75,6 @@ premises.forEach(p => {
 stubs.push(async () =>
   stubFor({
     request: {
-      method: 'POST',
-      urlPathPattern: `/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings`,
-    },
-    response: {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      body: JSON.stringify(bookingDtoFactory.build()),
-    },
-  }),
-)
-
-stubs.push(async () =>
-  stubFor({
-    request: {
       method: 'GET',
       urlPathPattern: `/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`,
     },
@@ -103,39 +88,7 @@ stubs.push(async () =>
   }),
 )
 
-stubs.push(async () =>
-  stubFor({
-    request: {
-      method: 'POST',
-      urlPathPattern:
-        '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/arrivals',
-    },
-    response: {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: JSON.stringify(arrivalFactory.build()),
-    },
-  }),
-)
-
-stubs.push(async () =>
-  stubFor({
-    request: {
-      method: 'POST',
-      urlPathPattern:
-        '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/non-arrivals',
-    },
-    response: {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: JSON.stringify(nonArrivalFactory.build()),
-    },
-  }),
-)
+stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs)
 
 console.log('Stubbing APIs')
 

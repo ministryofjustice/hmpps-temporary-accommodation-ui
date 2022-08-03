@@ -3,6 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -17,6 +18,8 @@
             <form action="/premises/{{premisesId}}/bookings" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
+                {{ showErrorSummary(errorSummary) }}
+
                 {{ govukInput({
                     label: {
                         text: "CRN",
@@ -24,7 +27,9 @@
                     },
                     classes: "govuk-input--width-10",
                     id: "CRN",
-                    name: "CRN"
+                    name: "CRN",
+                    value: CRN,
+                    errorMessage: errors.CRN
                 }) }}
 
                 {{ govukInput({
@@ -34,7 +39,8 @@
                     },
                     classes: "govuk-input--width-10",
                     id: "name",
-                    name: "name"
+                    name: "name",
+                    errorMessage: errors.name
                 }) }}
 
                 {{ govukDateInput({
@@ -48,7 +54,9 @@
                     },
                     hint: {
                         text: "For example, 27 3 2007"
-                    }
+                    },
+                    items: dateFieldValues('arrivalDate', errors),
+                    errorMessage: errors.arrivalDate
                 }) }}
 
                 {{ govukDateInput({
@@ -62,7 +70,9 @@
                     },
                     hint: {
                     text: "For example, 27 3 2007"
-                    }
+                    },
+                    items: dateFieldValues('expectedDepartureDate', errors),
+                    errorMessage: errors.expectedDepartureDate
                 }) }}
 
                 {{ govukSelect({
@@ -75,6 +85,11 @@
                     name: "keyWorker",
                     items: [
                         {
+                        value: "",
+                        text: "Select a keyworker",
+                        selected: keyWorker === ''
+                        },
+                        {
                         value: "bda42ec2-2435-47da-bb7f-54e90eda78b2",
                         text: "George Frank"
                         },
@@ -86,7 +101,8 @@
                         value: "cddb4be3-f0ef-4889-b987-61e1777ab17c",
                         text: "Jo Longford"
                         }
-                    ]
+                    ],
+                    errorMessage: errors.keyWorker
                 }) }}
 
                 {{ govukButton({

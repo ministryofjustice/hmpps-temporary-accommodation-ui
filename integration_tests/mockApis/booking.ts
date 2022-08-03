@@ -1,6 +1,7 @@
 import type { Booking } from 'approved-premises'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
+import { errorStub } from '../../wiremock/utils'
 
 export default {
   stubBookingCreate: (args: { premisesId: string; booking: Booking }) =>
@@ -17,6 +18,8 @@ export default {
         jsonBody: args.booking,
       },
     }),
+  stubBookingErrors: (args: { premisesId: string; params: Array<string> }) =>
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings`)),
   stubBookingGet: (args: { premisesId: string; booking: Booking }) =>
     stubFor({
       request: {

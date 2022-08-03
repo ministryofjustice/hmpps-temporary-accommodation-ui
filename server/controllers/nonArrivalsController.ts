@@ -2,12 +2,13 @@ import { Response, Request, RequestHandler } from 'express'
 import type { NonArrival, NonArrivalDto } from 'approved-premises'
 import { convertDateInputsToIsoString } from '../utils/utils'
 import NonArrivalService from '../services/nonArrivalService'
+import renderWithErrors from '../utils/renderWithErrors'
 
 export default class NonArrivalsController {
   constructor(private readonly nonArrivalService: NonArrivalService) {}
 
   create(): RequestHandler {
-    return (req: Request, res: Response) => {
+    return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
       const body = req.body as NonArrivalDto
       const { nonArrivalDate } = convertDateInputsToIsoString(body, 'nonArrivalDate')
@@ -17,9 +18,13 @@ export default class NonArrivalsController {
         date: nonArrivalDate,
       }
 
-      this.nonArrivalService.createNonArrival(premisesId, bookingId, nonArrival)
+      try {
+        await this.nonArrivalService.createNonArrival(premisesId, bookingId, nonArrival)
 
-      res.redirect(`/premises/${premisesId}`)
+        res.redirect(`/premises/${premisesId}`)
+      } catch (err) {
+        renderWithErrors(req, res, err, `arrivals/new`, { premisesId, bookingId, arrived: false })
+      }
     }
   }
 }

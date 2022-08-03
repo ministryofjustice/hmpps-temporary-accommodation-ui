@@ -49,4 +49,25 @@ context('Booking', () => {
       expect(requestBody.keyWorker).equal('55126a32-0d27-4044-bc4e-e21c01632e56')
     })
   })
+
+  it('should show errors', () => {
+    const premises = premisesFactory.build()
+    cy.task('stubSinglePremises', { premisesId: premises.id })
+
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the booking page
+    const page = BookingPage.visit(premises.id)
+
+    // And I miss a required field
+    cy.task('stubBookingErrors', {
+      premisesId: premises.id,
+      params: ['CRN', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'],
+    })
+    page.clickSubmit()
+
+    // Then I should see error messages relating to that field
+    page.shouldShowErrorMessagesForFields(['CRN', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'])
+  })
 })

@@ -1,3 +1,5 @@
+import errorLookups from '../../server/i18n/en/errors.json'
+
 export type PageElement = Cypress.Chainable<JQuery>
 
 export default abstract class Page {
@@ -16,4 +18,11 @@ export default abstract class Page {
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
+
+  shouldShowErrorMessagesForFields(fields: Array<string>): void {
+    fields.forEach(field => {
+      cy.get('.govuk-error-summary').should('contain', errorLookups[field]?.blank)
+      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[field]?.blank)
+    })
+  }
 }

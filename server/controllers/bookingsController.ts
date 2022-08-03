@@ -3,6 +3,7 @@ import type { Request, Response, RequestHandler } from 'express'
 
 import BookingService from '../services/bookingService'
 import { convertDateInputsToIsoString } from '../utils/utils'
+import renderWithErrors from '../utils/renderWithErrors'
 
 export default class BookingsController {
   constructor(private readonly bookingService: BookingService) {}
@@ -25,9 +26,13 @@ export default class BookingsController {
         ...convertDateInputsToIsoString(req.body, 'expectedDepartureDate'),
       }
 
-      const confirmedBooking = await this.bookingService.postBooking(premisesId as string, booking)
+      try {
+        const confirmedBooking = await this.bookingService.postBooking(premisesId as string, booking)
 
-      return res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
+        res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
+      } catch (err) {
+        renderWithErrors(req, res, err, `premises/bookings/new`, { premisesId })
+      }
     }
   }
 

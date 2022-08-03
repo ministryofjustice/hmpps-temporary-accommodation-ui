@@ -17,6 +17,30 @@ export default {
         jsonBody: args.booking,
       },
     }),
+  stubBookingErrors: (args: { premisesId: string; params: Array<string> }) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/premises/${args.premisesId}/bookings`,
+      },
+      response: {
+        status: 400,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: {
+          type: 'https://example.net/validation-error',
+          title: 'Invalid request parameters',
+          code: 400,
+          'invalid-params': args.params.map(param => {
+            return {
+              propertyName: param,
+              errorType: 'blank',
+            }
+          }),
+        },
+      },
+    }),
   stubBookingGet: (args: { premisesId: string; booking: Booking }) =>
     stubFor({
       request: {

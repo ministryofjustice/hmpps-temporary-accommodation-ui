@@ -5,7 +5,8 @@
     "lib": ["es5", "dom", "es2015.promise"],
     "types": ["cypress", "approved-premises"],
     "esModuleInterop": true,
-    "typeRoots": ["../server/@types", "../node_modules/@types"]
+    "typeRoots": ["../server/@types", "../node_modules/@types"],
+    "resolveJsonModule": true
   },
   "include": ["**/*.ts"]
 }

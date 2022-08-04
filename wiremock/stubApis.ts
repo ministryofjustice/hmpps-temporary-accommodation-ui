@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { stubFor } from './index'
+import { stubFor, guidRegex } from './index'
 
 import premises from './stubs/premises.json'
 import bookingFactory from '../server/testutils/factories/booking'
@@ -10,7 +10,6 @@ import nonArrivalStubs from './nonArrivalStubs'
 import departureFactory from '../server/testutils/factories/departure'
 
 const stubs = []
-const guidRegex = '([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
 
 stubs.push(async () =>
   stubFor({

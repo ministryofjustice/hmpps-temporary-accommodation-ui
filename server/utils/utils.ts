@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns'
+import { parseISO, format } from 'date-fns'
 import type { ObjectWithDateParts } from 'approved-premises'
 
 /* istanbul ignore next */
@@ -28,6 +28,8 @@ export const initialiseName = (fullName?: string): string | null => {
   const array = fullName.split(' ')
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
+
+export const formatDate = (date: Date): string => format(date, 'cccc d MMMM y')
 
 /**
  * Converts an ISO8601 datetime string into a Javascript Date object.

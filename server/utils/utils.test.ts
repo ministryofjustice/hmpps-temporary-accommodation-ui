@@ -4,6 +4,7 @@ import {
   initialiseName,
   convertDateAndTimeInputsToIsoString,
   InvalidDateStringError,
+  formatDate,
 } from './utils'
 
 describe('convert to title case', () => {
@@ -32,6 +33,16 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string, expected: string) => {
     expect(initialiseName(a)).toEqual(expected)
+  })
+})
+
+describe('formatDate', () => {
+  it('converts a date to a GOV.UK formatted date', () => {
+    const date1 = new Date(2022, 7, 1)
+    const date2 = new Date(2022, 8, 16)
+
+    expect(formatDate(date1)).toEqual('Monday 1 August 2022')
+    expect(formatDate(date2)).toEqual('Friday 16 September 2022')
   })
 })
 

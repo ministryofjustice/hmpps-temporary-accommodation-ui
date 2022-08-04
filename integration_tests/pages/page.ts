@@ -11,6 +11,11 @@ export default abstract class Page {
     this.checkOnPage()
   }
 
+  assertDefinition(term: string, value: string): void {
+    cy.get('dt').should('contain', term)
+    cy.get('dd').should('contain', value)
+  }
+
   checkOnPage(): void {
     cy.get('h1').contains(this.title)
   }

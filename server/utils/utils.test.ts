@@ -2,7 +2,7 @@ import {
   convertDateString,
   convertToTitleCase,
   initialiseName,
-  convertDateInputsToIsoString,
+  convertDateAndTimeInputsToIsoString,
   InvalidDateStringError,
 } from './utils'
 
@@ -49,7 +49,7 @@ describe('convertDateInputsToDateObj', () => {
       'date-day': '11',
     }
 
-    const result = convertDateInputsToIsoString(obj, 'date')
+    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
 
     expect(result.date).toEqual(new Date(2022, 11, 11).toISOString())
   })
@@ -67,9 +67,29 @@ describe('convertDateInputsToDateObj', () => {
       'date-day': '1',
     }
 
-    const result = convertDateInputsToIsoString(obj, 'date')
+    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
 
     expect(result.date).toEqual(new Date(2022, 0, 1).toISOString())
+  })
+
+  it('returns the date with a time if passed one', () => {
+    interface MyObjectWithADate {
+      date?: string
+      ['date-year']: string
+      ['date-month']: string
+      ['date-day']: string
+      ['date-time']: string
+    }
+    const obj: MyObjectWithADate = {
+      'date-year': '2022',
+      'date-month': '1',
+      'date-day': '1',
+      'date-time': '12:35',
+    }
+
+    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
+
+    expect(result.date).toEqual(new Date(2022, 0, 1, 12, 35).toISOString())
   })
 
   it('returns an empty string when given empty strings as input', () => {
@@ -85,7 +105,7 @@ describe('convertDateInputsToDateObj', () => {
       'date-day': '',
     }
 
-    const result = convertDateInputsToIsoString(obj, 'date')
+    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
 
     expect(result.date).toEqual('')
   })
@@ -103,7 +123,7 @@ describe('convertDateInputsToDateObj', () => {
       'date-day': 'foo',
     }
 
-    const result = convertDateInputsToIsoString(obj, 'date')
+    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
 
     expect(result.date.toString()).toEqual('twothousandtwentytwo-20-ooT00:00:00.000Z')
   })

@@ -101,7 +101,7 @@ export default class BookingService {
         text: convertDateString(booking.expectedDepartureDate).toLocaleDateString('en-GB'),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/">
+        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/departures/new">
         Manage
         <span class="govuk-visually-hidden">
           booking for ${booking.CRN}

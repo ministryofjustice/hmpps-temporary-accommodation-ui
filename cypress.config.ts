@@ -6,6 +6,7 @@ import premises from './integration_tests/mockApis/premises'
 import booking from './integration_tests/mockApis/booking'
 import arrival from './integration_tests/mockApis/arrival'
 import nonArrival from './integration_tests/mockApis/nonArrival'
+import departure from './integration_tests/mockApis/departure'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -30,6 +31,7 @@ export default defineConfig({
         ...tokenVerification,
         ...premises,
         ...booking,
+        ...departure,
       })
     },
     baseUrl: 'http://localhost:3007',

@@ -7,8 +7,10 @@ import bookingFactory from '../server/testutils/factories/booking'
 import bookingStubs from './bookingStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
+import departureFactory from '../server/testutils/factories/departure'
 
 const stubs = []
+const guidRegex = '([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
 
 stubs.push(async () =>
   stubFor({
@@ -76,7 +78,7 @@ stubs.push(async () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPathPattern: `/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`,
+      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}`,
     },
     response: {
       status: 200,
@@ -89,6 +91,38 @@ stubs.push(async () =>
 )
 
 stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs)
+
+stubs.push(async () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures`,
+    },
+    response: {
+      status: 201,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify(departureFactory.build()),
+    },
+  }),
+)
+
+stubs.push(async () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures/${guidRegex}`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: JSON.stringify(departureFactory.build()),
+    },
+  }),
+)
 
 console.log('Stubbing APIs')
 

@@ -4,6 +4,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "../partials/showErrorSummary.njk" import showErrorSummary %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -15,7 +16,11 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1>Log a departure</h1>
-            {{ govukSummaryList({
+
+            <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/departures" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+                {{ govukSummaryList({
                 rows: [
                    {
                     key: {
@@ -36,21 +41,23 @@
                     ]
             })
             }}
-            <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/departures" method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+                {{ showErrorSummary(errorSummary) }}
 
                 {{ govukDateInput({
                     id: "dateTime",
                     namePrefix: "dateTime",
                     fieldset: {
-                    legend: {
-                        text: "What is the departure date?",
-                        classes: "govuk-fieldset__legend--m"
-                        }
+                        legend: {
+                            text: "What is the departure date?",
+                            classes: "govuk-fieldset__legend--m"
+                            }
                     },
                     hint: {
                         text: "For example, 27 3 2007"
-                    }
+                    },
+                    errorMessage: errors.dateTime,
+                    items: dateFieldValues('dateTime', errors)
                 }) }}
 
                 <label class="govuk-label govuk-label--m" for="time">
@@ -65,7 +72,8 @@
                         text: "Destination Approved Premises",
                         classes: "govuk-label govuk-label--m"
                         },
-                    items: premisesSelectList
+                    items: premisesSelectList,
+                    errorMessage: errors.expectedDepartureDate
                     }) }}
 
                 {{ govukRadios({
@@ -77,6 +85,7 @@
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
+                    errorMessage: errors.reason,
                     items: [
                         {
                             text: "Absconded",
@@ -110,6 +119,7 @@
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
+                    errorMessage: errors.moveOnCategory,
                     items: [
                         {
                             text: "B&B",
@@ -143,6 +153,7 @@
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
+                    errorMessage: errors.destinationProvider,
                     items: [
                         {
                             text: "East of England",

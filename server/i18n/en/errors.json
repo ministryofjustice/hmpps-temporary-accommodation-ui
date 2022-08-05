@@ -19,5 +19,10 @@
   },
   "keyWorker": {
     "blank": "You must choose a keyworker"
-  }
+  },
+  "dateTime": {
+    "blank": "You must enter a valid departure date and time"
+  },
+  "moveOnCategory": { "blank": "You must enter a move on category" },
+  "destinationProvider": { "blank": "You must enter a destination provider" }
 }

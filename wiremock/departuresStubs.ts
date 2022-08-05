@@ -1,33 +1,46 @@
 import { stubFor, guidRegex } from './index'
-
+import { errorStub } from './utils'
 import departureFactory from '../server/testutils/factories/departure'
 
-export default [
-  stubFor({
-    request: {
-      method: 'POST',
-      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures`,
-    },
-    response: {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+const departureStubs = [
+  async () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures`,
       },
-      body: JSON.stringify(departureFactory.build()),
-    },
-  }),
+      response: {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(departureFactory.build()),
+      },
+    }),
 
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures/${guidRegex}`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
+  async () =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures/${guidRegex}`,
       },
-      body: JSON.stringify(departureFactory.build()),
-    },
-  }),
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(departureFactory.build()),
+      },
+    }),
 ]
+
+departureStubs.push(async () =>
+  stubFor(
+    errorStub(
+      ['dateTime', 'destinationProvider', 'moveOnCategory', 'reason'],
+      `/premises/${guidRegex}/bookings/${guidRegex}/departures`,
+    ),
+  ),
+)
+
+export default departureStubs

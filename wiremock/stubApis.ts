@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { stubFor, guidRegex } from './index'
+import { bulkStub } from './index'
 
 import premises from './stubs/premises.json'
 import bookingFactory from '../server/testutils/factories/booking'
@@ -7,41 +7,38 @@ import bookingFactory from '../server/testutils/factories/booking'
 import bookingStubs from './bookingStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
+import departureStubs from './departuresStubs'
 
 const stubs = []
 
-stubs.push(async () =>
-  stubFor({
+stubs.push({
+  request: {
+    method: 'GET',
+    url: '/premises',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: premises,
+  },
+})
+
+premises.forEach(p => {
+  stubs.push({
     request: {
       method: 'GET',
-      url: '/premises',
+      url: `/premises/${p.id}`,
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: premises,
+      jsonBody: p,
     },
-  }),
-)
-
-premises.forEach(p => {
-  stubs.push(async () =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `/premises/${p.id}`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: p,
-      },
-    }),
-  )
+  })
 
   const rand = () => Math.floor(Math.random() * 10)
 
@@ -55,47 +52,32 @@ premises.forEach(p => {
     bookingFactory.departingSoon().buildList(rand()),
   ].flat()
 
-  stubs.push(async () =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `/premises/${p.id}/bookings`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        body: JSON.stringify(bookings),
-      },
-    }),
-  )
-})
-
-stubs.push(async () =>
-  stubFor({
+  stubs.push({
     request: {
       method: 'GET',
-      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}`,
+      url: `/premises/${p.id}/bookings`,
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify(bookingFactory.build()),
+      body: JSON.stringify(bookings),
     },
-  }),
-)
+  })
+})
 
-stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs)
+stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs, ...departureStubs)
 
 console.log('Stubbing APIs')
 
-stubs.forEach(s =>
-  s().then(response => {
-    console.log(
-      `Stubbed ${response.body.request.method} ${response.body.request.url || response.body.request.urlPathPattern}`,
-    )
-  }),
-)
+bulkStub({
+  mappings: stubs,
+  importOptions: {
+    duplicatePolicy: 'IGNORE',
+    deleteAllNotInImport: true,
+  },
+}).then(_response => {
+  console.log('Done!')
+  process.exit(0)
+})

@@ -91,7 +91,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
           name: unit tests
-          command: npm run test
+          command: npm run test -- --runInBand
       - store_test_results:
           path: test_results
       - store_artifacts:
@@ -101,7 +101,7 @@ jobs:
     executor:
       name: hmpps/node_redis
       node_tag: << pipeline.parameters.node-version >>
-      redis_tag: "6.2"
+      redis_tag: '6.2'
     steps:
       - checkout
       - attach_workspace:
@@ -159,7 +159,7 @@ workflows:
                 - main
       - hmpps/deploy_env:
           name: deploy_dev
-          env: "dev"
+          env: 'dev'
           jira_update: true
           context: hmpps-common-vars
           filters:
@@ -172,41 +172,41 @@ workflows:
             - integration_test
             - build_docker
 
-#      - request-preprod-approval:
-#          type: approval
-#          requires:
-#            - deploy_dev
-#      - hmpps/deploy_env:
-#          name: deploy_preprod
-#          env: "preprod"
-#          jira_update: true
-#          jira_env_type: staging
-#          context:
-#            - hmpps-common-vars
-#            - approved-premises-ui-preprod
-#          requires:
-#            - request-preprod-approval
-#      - request-prod-approval:
-#          type: approval
-#          requires:
-#            - deploy_preprod
-#      - hmpps/deploy_env:
-#          name: deploy_prod
-#          env: "prod"
-#          jira_update: true
-#          jira_env_type: production
-#          slack_notification: true
-#          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
-#          context:
-#            - hmpps-common-vars
-#            - approved-premises-ui-prod
-#          requires:
-#            - request-prod-approval
+  #      - request-preprod-approval:
+  #          type: approval
+  #          requires:
+  #            - deploy_dev
+  #      - hmpps/deploy_env:
+  #          name: deploy_preprod
+  #          env: "preprod"
+  #          jira_update: true
+  #          jira_env_type: staging
+  #          context:
+  #            - hmpps-common-vars
+  #            - approved-premises-ui-preprod
+  #          requires:
+  #            - request-preprod-approval
+  #      - request-prod-approval:
+  #          type: approval
+  #          requires:
+  #            - deploy_preprod
+  #      - hmpps/deploy_env:
+  #          name: deploy_prod
+  #          env: "prod"
+  #          jira_update: true
+  #          jira_env_type: production
+  #          slack_notification: true
+  #          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
+  #          context:
+  #            - hmpps-common-vars
+  #            - approved-premises-ui-prod
+  #          requires:
+  #            - request-prod-approval
 
   security:
     triggers:
       - schedule:
-          cron: "1 7 * * 1-5"
+          cron: '1 7 * * 1-5'
           filters:
             branches:
               only:
@@ -231,7 +231,7 @@ workflows:
   security-weekly:
     triggers:
       - schedule:
-          cron: "20 7 * * 1"
+          cron: '20 7 * * 1'
           filters:
             branches:
               only:

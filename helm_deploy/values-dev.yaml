@@ -9,10 +9,10 @@ generic-service:
     contextColour: green
 
   env:
-    INGRESS_URL: "https://approved-premises-ui-dev.hmpps.service.justice.gov.uk"
-    HMPPS_AUTH_URL: "https://sign-in-dev.hmpps.service.justice.gov.uk/auth"
-    TOKEN_VERIFICATION_API_URL: "https://token-verification-api-dev.prison.service.justice.gov.uk"
+    APPROVED_PREMISES_API_URL: 'https://approved-premises-api-dev.hmpps.service.justice.gov.uk'
+    INGRESS_URL: 'https://approved-premises-ui-dev.hmpps.service.justice.gov.uk'
+    HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
+    TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
-

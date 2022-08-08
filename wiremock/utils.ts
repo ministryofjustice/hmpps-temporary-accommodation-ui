@@ -1,16 +1,14 @@
 const getCombinations = (arr: Array<string>) => {
   const result: Array<Array<string>> = []
-  const f = (prefixes: Array<string>, suffixes: Array<string>) => {
-    for (let i = 0; i < suffixes.length; i += 1) {
-      result.push([...prefixes, suffixes[i]])
-      f(
-        [...prefixes, suffixes[i]],
-        suffixes.filter(suffix => suffixes.indexOf(suffix) !== i),
-      )
+  arr.forEach(item => {
+    result.push([item])
+    const index = arr.indexOf(item) + 1
+    for (let i = index; i < arr.length; i += 1) {
+      const group = [item, ...arr.slice(index, i + 1)]
+      result.push(group)
     }
-  }
-  f([], arr)
-  return result
+  })
+  return result.sort((a, b) => b.length - a.length)
 }
 
 const errorStub = (fields: Array<string>, pattern: string, nullifiedFields: Array<string> = []) => {

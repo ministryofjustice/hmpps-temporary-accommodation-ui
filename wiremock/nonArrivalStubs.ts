@@ -5,6 +5,7 @@ import { getCombinations, errorStub } from './utils'
 const nonArrivalStubs: Array<Record<string, unknown>> = []
 
 nonArrivalStubs.push({
+  priority: 99,
   request: {
     method: 'POST',
     urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/non-arrivals`,

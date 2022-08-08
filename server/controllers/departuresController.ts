@@ -5,6 +5,7 @@ import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import DepartureService from '../services/departureService'
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
+import renderWithErrors from '../utils/renderWithErrors'
 
 export default class DeparturesController {
   constructor(
@@ -34,9 +35,15 @@ export default class DeparturesController {
         dateTime,
       }
 
-      const { id } = await this.departureService.createDeparture(premisesId, bookingId, departure)
+      try {
+        const { id } = await this.departureService.createDeparture(premisesId, bookingId, departure)
+        res.redirect(`/premises/${premisesId}/bookings/${bookingId}/departures/${id}/confirmation`)
+      } catch (err) {
+        const booking = await this.bookingService.getBooking(premisesId, bookingId)
+        const premisesSelectList = await this.premisesService.getPremisesSelectList()
 
-      return res.redirect(`/premises/${premisesId}/bookings/${bookingId}/departures/${id}/confirmation`)
+        renderWithErrors(req, res, err, 'departures/new', { premisesId, booking, premisesSelectList })
+      }
     }
   }
 

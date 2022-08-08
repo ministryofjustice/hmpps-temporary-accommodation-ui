@@ -1,4 +1,4 @@
-import { stubFor } from './index'
+import { stubFor, guidRegex } from './index'
 import arrivalFactory from '../server/testutils/factories/arrival'
 import { getCombinations, errorStub } from './utils'
 
@@ -7,8 +7,7 @@ const arrivalStubs = [
     stubFor({
       request: {
         method: 'POST',
-        urlPathPattern:
-          '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/arrivals',
+        urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/arrivals`,
       },
       response: {
         status: 201,
@@ -23,14 +22,7 @@ const arrivalStubs = [
 const requiredFields = getCombinations(['date', 'expectedDepartureDate'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  arrivalStubs.push(async () =>
-    stubFor(
-      errorStub(
-        fields,
-        '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/arrivals',
-      ),
-    ),
-  )
+  arrivalStubs.push(async () => stubFor(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/arrivals`)))
 })
 
 export default arrivalStubs

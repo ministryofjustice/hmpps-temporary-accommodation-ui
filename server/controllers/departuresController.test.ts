@@ -7,6 +7,9 @@ import { PremisesService } from '../services'
 import BookingService from '../services/bookingService'
 import departureFactory from '../testutils/factories/departure'
 import bookingFactory from '../testutils/factories/booking'
+import renderWithErrors from '../utils/renderWithErrors'
+
+jest.mock('../utils/renderWithErrors')
 
 describe('DeparturesController', () => {
   let request: DeepMocked<Request> = createMock<Request>({})
@@ -102,6 +105,31 @@ describe('DeparturesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(
         `/premises/premisesId/bookings/bookingId/departures/${departure.id}/confirmation`,
       )
+    })
+
+    it('should render the page with errors when the API returns an error', async () => {
+      const requestHandler = departuresController.create()
+
+      const premisesId = 'premisesId'
+
+      request.params = {
+        bookingId: 'bookingId',
+        premisesId,
+      }
+
+      const err = new Error()
+
+      departureService.createDeparture.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, 'departures/new', {
+        booking: {},
+        premisesId,
+        premisesSelectList: {},
+      })
     })
   })
 

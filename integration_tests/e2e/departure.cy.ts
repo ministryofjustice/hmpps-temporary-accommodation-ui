@@ -55,4 +55,36 @@ context('Departures', () => {
 
     departureConfirmationPage.verifyConfirmedDepartureIsVisible(departure, booking)
   })
+  it('should show errors', () => {
+    const premises = premisesFactory.buildList(5)
+    const booking = bookingFactory.build()
+    const departure = departureFactory.build({
+      dateTime: new Date(2022, 1, 11, 12, 35).toISOString(),
+      reason: 'other',
+      destinationAp: premises[2].name,
+      moveOnCategory: 'private-rented',
+      destinationProvider: 'yorkshire-and-the-humber',
+    })
+
+    // Given I am signed in
+    cy.task('stubPremises', premises)
+    cy.task('stubBookingGet', { premisesId: premises[0].id, booking })
+    cy.task('stubDepartureGet', { premisesId: premises[0].id, bookingId: booking.id, departure })
+    cy.signIn()
+
+    // When I visit the departure page
+    const page = DepartureCreatePage.visit(premises[0].id, booking.id)
+
+    // And I miss a required field
+    cy.task('stubDepartureErrors', {
+      premisesId: premises[0].id,
+      bookingId: booking.id,
+      params: ['dateTime', 'destinationProvider', 'moveOnCategory', 'reason'],
+    })
+
+    page.clickSubmit()
+
+    // Then I should see error messages relating to that field
+    page.shouldShowErrorMessagesForFields(['dateTime', 'reason', 'moveOnCategory', 'destinationProvider'])
+  })
 })

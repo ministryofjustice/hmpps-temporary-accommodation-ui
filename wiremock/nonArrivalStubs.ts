@@ -1,4 +1,4 @@
-import { stubFor } from './index'
+import { stubFor, guidRegex } from './index'
 import nonArrivalFactory from '../server/testutils/factories/nonArrival'
 import { getCombinations, errorStub } from './utils'
 
@@ -7,8 +7,7 @@ const nonArrivalStubs = [
     stubFor({
       request: {
         method: 'POST',
-        urlPathPattern:
-          '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/non-arrivals',
+        urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/non-arrivals`,
         bodyPatterns: [
           {
             matchesJsonPath: "$.[?(@.date != '')]",
@@ -32,13 +31,7 @@ const requiredFields = getCombinations(['date', 'reason'])
 
 requiredFields.forEach((fields: Array<string>) => {
   nonArrivalStubs.push(async () =>
-    stubFor(
-      errorStub(
-        fields,
-        '/premises/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/bookings/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/non-arrivals',
-        ['reason'],
-      ),
-    ),
+    stubFor(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/non-arrivals`, ['reason'])),
   )
 })
 

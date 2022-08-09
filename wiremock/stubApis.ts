@@ -65,6 +65,22 @@ premises.forEach(p => {
       body: JSON.stringify(bookings),
     },
   })
+
+  bookings.forEach(booking => {
+    stubs.push({
+      request: {
+        method: 'GET',
+        url: `/premises/${p.id}/bookings/${booking.id}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: JSON.stringify(booking),
+      },
+    })
+  })
 })
 
 stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs, ...departureStubs)

@@ -8,6 +8,7 @@ import bookingStubs from './bookingStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 import departureStubs from './departuresStubs'
+import * as referenceDataStubs from './referenceDataStubs'
 
 const stubs = []
 
@@ -83,7 +84,13 @@ premises.forEach(p => {
   })
 })
 
-stubs.push(...bookingStubs, ...arrivalStubs, ...nonArrivalStubs, ...departureStubs)
+stubs.push(
+  ...bookingStubs,
+  ...arrivalStubs,
+  ...nonArrivalStubs,
+  ...departureStubs,
+  ...Object.values(referenceDataStubs),
+)
 
 console.log('Stubbing APIs')
 

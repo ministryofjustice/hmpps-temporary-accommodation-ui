@@ -1,10 +1,6 @@
-import type { ErrorMessages } from 'approved-premises'
+import type { ErrorMessages, RadioItems } from 'approved-premises'
 
-export default function dateFieldValues(
-  fieldName: string,
-  context: Record<string, unknown>,
-  errors: ErrorMessages = {},
-) {
+export const dateFieldValues = (fieldName: string, context: Record<string, unknown>, errors: ErrorMessages = {}) => {
   const errorClass = errors[fieldName] ? 'govuk-input--error' : ''
   return [
     {
@@ -23,4 +19,20 @@ export default function dateFieldValues(
       value: context[`${fieldName}-year`],
     },
   ]
+}
+
+export const convertObjectsToRadioItems = (
+  items: Array<Record<string, string>>,
+  textKey: string,
+  valueKey: string,
+  fieldName: string,
+  context: Record<string, unknown>,
+): Array<RadioItems> => {
+  return items.map(item => {
+    return {
+      text: item[textKey],
+      value: item[valueKey],
+      checked: context[fieldName] === item[valueKey],
+    }
+  })
 }

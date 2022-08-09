@@ -60,6 +60,12 @@ declare module 'approved-premises' {
     rows: Array<SummaryListItem>
   }
 
+  export interface RadioItems {
+    text: string
+    value: string
+    checked?: boolean
+  }
+
   export type GroupedListofBookings = {
     [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
   }

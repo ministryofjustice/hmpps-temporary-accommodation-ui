@@ -4,6 +4,7 @@ declare module 'approved-premises' {
   export type NonArrival = schemas['NonArrival']
   export type Departure = schemas['Departure']
   export type Booking = schemas['Booking']
+  export type ReferenceData = schemas['ReferenceData']
 
   export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival'>
 
@@ -120,6 +121,11 @@ declare module 'approved-premises' {
       moveOnCategory: string
       destinationProvider: string
       destinationAp: string
+    }
+    ReferenceData: {
+      id: string
+      name: string
+      isActive: boolean
     }
   }
 }

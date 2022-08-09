@@ -5,14 +5,16 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: approved-premises-ui-dev.hmpps.service.justice.gov.uk
+    host: approved-premises-dev.hmpps.service.justice.gov.uk
     contextColour: green
 
   env:
     APPROVED_PREMISES_API_URL: 'https://approved-premises-api-dev.hmpps.service.justice.gov.uk'
-    INGRESS_URL: 'https://approved-premises-ui-dev.hmpps.service.justice.gov.uk'
+    INGRESS_URL: 'https://approved-premises-dev.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
+
+  allowlist: null
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev

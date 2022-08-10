@@ -24,6 +24,8 @@ export default abstract class Page {
 
   manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
 
+  headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
+
   shouldShowErrorMessagesForFields(fields: Array<string>): void {
     fields.forEach(field => {
       cy.get('.govuk-error-summary').should('contain', errorLookups[field]?.blank)

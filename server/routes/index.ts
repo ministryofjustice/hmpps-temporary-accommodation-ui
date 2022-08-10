@@ -25,7 +25,7 @@ export default function routes(services: Services): Router {
   )
 
   get('/', (req, res, next) => {
-    res.render('pages/index')
+    res.redirect('/premises')
   })
 
   get('/premises', premisesController.index())

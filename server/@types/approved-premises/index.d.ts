@@ -122,11 +122,11 @@ declare module 'approved-premises' {
       id: string
       bookingId: string
       dateTime: string
-      reason: string
+      reason: ReferenceData
       notes: string
-      moveOnCategory: string
-      destinationProvider: string
-      destinationAp: string
+      moveOnCategory: ReferenceData
+      destinationProvider: ReferenceData
+      destinationAp: Premises
     }
     ReferenceData: {
       id: string

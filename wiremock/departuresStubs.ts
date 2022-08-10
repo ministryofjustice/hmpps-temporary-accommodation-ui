@@ -6,6 +6,7 @@ const departureStubs: Array<Record<string, unknown>> = []
 
 departureStubs.push(
   {
+    priority: 99,
     request: {
       method: 'POST',
       urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures`,

@@ -1,9 +1,10 @@
-import { SuperAgentRequest } from 'superagent'
+import type { SuperAgentRequest, Response } from 'superagent'
 
 import type { Departure } from 'approved-premises'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
+import { departureReasons, moveOnCategories, destinationProviders } from '../../wiremock/referenceDataStubs'
 
 export default {
   stubDepartureGet: (args: { premisesId: string; bookingId: string; departure: Departure }): SuperAgentRequest =>
@@ -39,6 +40,8 @@ export default {
         'reason',
       ]),
     ),
+  stubDepartureReferenceData: (): Promise<[Response, Response, Response]> =>
+    Promise.all([stubFor(departureReasons), stubFor(moveOnCategories), stubFor(destinationProviders)]),
   verifyDepartureCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({

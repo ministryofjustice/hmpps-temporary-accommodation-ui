@@ -65,17 +65,6 @@
                 </label>
                 <input type="time" id="dateTime-time" name="dateTime-time" class="govuk-input govuk-input--width-5 govuk-!-margin-bottom-4">
 
-                {{ govukSelect({
-                    name: "departure[destinationAp]",
-                    id: "destinationAp",
-                    label: {
-                        text: "Destination Approved Premises",
-                        classes: "govuk-label govuk-label--m"
-                        },
-                    items: premisesSelectList,
-                    errorMessage: errors.expectedDepartureDate
-                    }) }}
-
                 {{ govukRadios({
                     name: "departure[reason]",
                     id: "reason",
@@ -86,28 +75,7 @@
                         }
                     },
                     errorMessage: errors.reason,
-                    items: [
-                        {
-                            text: "Absconded",
-                            value: "absconded"
-                        },
-                        {
-                            text: "Bed withdrawn",
-                            value: "bed-withdrawn"
-                        },
-                        {
-                            text: "Recall",
-                            value: "recall"
-                        },
-                        {
-                            text: "Died",
-                            value: "died"
-                        },
-                        {
-                            text: "Other",
-                            value: "other"
-                        }
-                    ]
+                    items: convertObjectsToRadioItems(referenceData.departureReasons, 'name', 'id', 'departure[reason]')
                     }) }}
 
                 {{ govukRadios({
@@ -120,28 +88,7 @@
                         }
                     },
                     errorMessage: errors.moveOnCategory,
-                    items: [
-                        {
-                            text: "B&B",
-                            value: "b&b"
-                        },
-                        {
-                            text: "Custody",
-                            value: "custody"
-                        },
-                        {
-                            text: "No fixed abode",
-                            value: "no-fixed-abode"
-                        },
-                        {
-                            text: "Not applicable",
-                            value: "not-applicable"
-                        },
-                        {
-                            text: "Private rented",
-                            value: "private-rented"
-                        }
-                    ]
+                    items: convertObjectsToRadioItems(referenceData.moveOnCategories, 'name', 'id', 'departure[moveOnCategory]')
                     }) }}
 
                 {{ govukRadios({
@@ -154,28 +101,18 @@
                         }
                     },
                     errorMessage: errors.destinationProvider,
-                    items: [
-                        {
-                            text: "East of England",
-                            value: "east-of-england"
+                    items: convertObjectsToRadioItems(referenceData.destinationProviders, 'name', 'id', 'departure[destinationProvider]')
+                    }) }}
+
+                {{ govukSelect({
+                    name: "departure[destinationAp]",
+                    id: "destinationAp",
+                    label: {
+                        text: "Destination Approved Premises",
+                        classes: "govuk-label govuk-label--m"
                         },
-                        {
-                            text: "London",
-                            value: "london"
-                        },
-                        {
-                            text: "Wales",
-                            value: "wales"
-                        },
-                        {
-                            text: "Greater Manchester",
-                            value: "greater-manchester"
-                        },
-                        {
-                            text: "Yorkshire and The Humber",
-                            value: "yorkshire-and-the-humber"
-                        }
-                    ]
+                    items: premisesSelectList,
+                    errorMessage: errors.expectedDepartureDate
                     }) }}
 
                 {{ govukTextarea({

@@ -22,7 +22,7 @@
     "typecheck": "tsc && tsc -p integration_tests",
     "test": "jest",
     "test:e2e": "start-server-and-test start-feature http://localhost:3007/ping int-test",
-    "test:e2e:ui": "start-server-and-test start-feature:dev http://localhost:3007/ping int-test-ui",
+    "test:e2e:ui": "npm run start-test-wiremock && start-server-and-test start-feature:dev http://localhost:3007/ping int-test-ui",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open",

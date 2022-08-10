@@ -1,6 +1,6 @@
 import { parseISO } from 'date-fns'
 
-import type { Departure, ReferenceData } from 'approved-premises'
+import type { Departure, ReferenceData, DepartureDto } from 'approved-premises'
 import type { RestClientBuilder, DepartureClient, ReferenceDataClient } from '../data'
 
 export type DepartureReferenceData = {
@@ -19,11 +19,7 @@ export default class DepartureService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async createDeparture(
-    premisesId: string,
-    bookingId: string,
-    departure: Omit<Departure, 'id' | 'bookingId'>,
-  ): Promise<Departure> {
+  async createDeparture(premisesId: string, bookingId: string, departure: DepartureDto): Promise<Departure> {
     const departureClient = this.departureClientFactory(this.token)
 
     const confirmedDeparture = await departureClient.create(premisesId, bookingId, departure)

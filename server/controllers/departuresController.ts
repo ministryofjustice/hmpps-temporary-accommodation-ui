@@ -27,13 +27,12 @@ export default class DeparturesController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const body = req.body as DepartureDto
-      const { dateTime } = convertDateAndTimeInputsToIsoString(body, 'dateTime')
+      const { dateTime } = convertDateAndTimeInputsToIsoString(req.body, 'dateTime')
 
-      const departure: Omit<Departure, 'id' | 'bookingId'> = {
-        ...body.departure,
+      const departure = {
+        ...req.body.departure,
         dateTime,
-      }
+      } as DepartureDto
 
       try {
         const { id } = await this.departureService.createDeparture(premisesId, bookingId, departure)

@@ -8,6 +8,9 @@ declare module 'approved-premises' {
 
   export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival'>
 
+  // A utility type that allows us to define an object with a date attribute split into
+  // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
+  // date input
   export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'year' | 'month' | 'day'}`]: string } & {
     [P in `${K}-time`]?: string
   } & {
@@ -21,7 +24,16 @@ declare module 'approved-premises' {
     nonArrival: Omit<NonArrival, 'id' | 'bookingId'>
   }
 
-  export type DepartureDto = ObjectWithDateParts<'dateTime'> & { departure: Omit<Departure, 'id' | 'bookingId'> }
+  export type DepartureDto = Omit<
+    Departure,
+    'id' | 'bookingId' | 'reason' | 'moveOnCategory' | 'destinationProvider' | 'destinationAp'
+  > &
+    ObjectWithDateParts<'dateTime'> & {
+      reason: string
+      moveOnCategory: string
+      destinationProvider: string
+      destinationAp: string
+    }
 
   export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 

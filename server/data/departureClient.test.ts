@@ -3,6 +3,7 @@ import nock from 'nock'
 import DepartureClient from './departureClient'
 import config from '../config'
 import departureFactory from '../testutils/factories/departure'
+import departureDtoFactory from '../testutils/factories/departureDto'
 
 describe('DepartureClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -27,7 +28,7 @@ describe('DepartureClient', () => {
 
   describe('create', () => {
     it('should create a departure', async () => {
-      const departure = departureFactory.build()
+      const departure = departureDtoFactory.build()
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/departures`, departure)

@@ -37,7 +37,13 @@ departureStubs.push(
 const requiredFields = getCombinations(['dateTime', 'destinationProvider', 'moveOnCategory', 'reason'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  departureStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/departures`))
+  departureStubs.push(
+    errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/departures`, [
+      'destinationProvider',
+      'moveOnCategory',
+      'reason',
+    ]),
+  )
 })
 
 export default departureStubs

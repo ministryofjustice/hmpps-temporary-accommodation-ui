@@ -11,12 +11,12 @@ context('Premises', () => {
   })
 
   it('should list all premises', () => {
-    // Given there are premises in the database
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
     const premises = premisesFactory.buildList(5)
     cy.task('stubPremises', premises)
-
-    // And I am signed in
-    cy.signIn()
 
     // When I visit the premises page
     const page = PremisesListPage.visit()

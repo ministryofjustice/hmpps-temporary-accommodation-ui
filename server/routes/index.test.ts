@@ -13,12 +13,7 @@ afterEach(() => {
 })
 
 describe('GET /', () => {
-  it('should render index page', () => {
-    return request(app)
-      .get('/')
-      .expect('Content-Type', /html/)
-      .expect(res => {
-        expect(res.text).toContain('This site is under construction...')
-      })
+  it('should redirect to the premises page', () => {
+    return request(app).get('/').expect(302).expect('Location', '/premises')
   })
 })

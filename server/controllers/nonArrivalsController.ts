@@ -2,7 +2,7 @@ import { Response, Request, RequestHandler } from 'express'
 import type { NonArrival, NonArrivalDto } from 'approved-premises'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import NonArrivalService from '../services/nonArrivalService'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate } from '../utils/validation'
 
 export default class NonArrivalsController {
   constructor(private readonly nonArrivalService: NonArrivalService) {}
@@ -23,7 +23,7 @@ export default class NonArrivalsController {
 
         res.redirect(`/premises/${premisesId}`)
       } catch (err) {
-        renderWithErrors(req, res, err, `arrivals/new`, { premisesId, bookingId, arrived: false })
+        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/arrivals/new`)
       }
     }
   }

@@ -9,24 +9,6 @@ interface InvalidParams {
   errorType: string
 }
 
-export default function renderWithErrors(
-  request: Request,
-  response: Response,
-  error: SanitisedError | Error,
-  template: string,
-  options: Record<string, unknown> = {},
-): void {
-  if ('data' in error) {
-    const invalidParams = error.data['invalid-params']
-    const errors = generateErrorMessages(invalidParams)
-    const errorSummary = generateErrorSummary(invalidParams)
-
-    response.render(template, { errors, errorSummary, ...options, ...request.body })
-  } else {
-    throw error
-  }
-}
-
 export const catchValidationErrorOrPropogate = (
   request: Request,
   response: Response,

@@ -3,7 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import NonArrivalService from '../services/nonArrivalService'
 
 import NonArrivalsController from './nonArrivalsController'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate } from '../utils/validation'
 
 jest.mock('../utils/validation')
 
@@ -68,11 +68,12 @@ describe('NonArrivalsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, `arrivals/new`, {
-        premisesId: request.params.premisesId,
-        bookingId: request.params.bookingId,
-        arrived: false,
-      })
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        `/premises/${request.params.premisesId}/bookings/${request.params.bookingId}/arrivals/new`,
+      )
     })
   })
 })

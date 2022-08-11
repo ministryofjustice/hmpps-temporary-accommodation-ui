@@ -5,7 +5,7 @@ import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import DepartureService from '../services/departureService'
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 
 export default class DeparturesController {
   constructor(

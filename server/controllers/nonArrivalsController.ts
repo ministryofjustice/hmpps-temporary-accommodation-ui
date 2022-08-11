@@ -2,7 +2,7 @@ import { Response, Request, RequestHandler } from 'express'
 import type { NonArrival, NonArrivalDto } from 'approved-premises'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import NonArrivalService from '../services/nonArrivalService'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 
 export default class NonArrivalsController {
   constructor(private readonly nonArrivalService: NonArrivalService) {}

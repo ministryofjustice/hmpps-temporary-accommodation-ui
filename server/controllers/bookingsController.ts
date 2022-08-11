@@ -2,7 +2,7 @@ import type { BookingDto } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
 import BookingService from '../services/bookingService'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 
 export default class BookingsController {

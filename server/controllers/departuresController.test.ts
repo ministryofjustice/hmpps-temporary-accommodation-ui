@@ -7,9 +7,9 @@ import { PremisesService } from '../services'
 import BookingService from '../services/bookingService'
 import departureFactory from '../testutils/factories/departure'
 import bookingFactory from '../testutils/factories/booking'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 
-jest.mock('../utils/renderWithErrors')
+jest.mock('../utils/validation')
 
 describe('DeparturesController', () => {
   let request: DeepMocked<Request> = createMock<Request>({})

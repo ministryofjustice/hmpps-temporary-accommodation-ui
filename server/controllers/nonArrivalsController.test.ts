@@ -3,9 +3,9 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import NonArrivalService from '../services/nonArrivalService'
 
 import NonArrivalsController from './nonArrivalsController'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 
-jest.mock('../utils/renderWithErrors')
+jest.mock('../utils/validation')
 
 describe('NonArrivalsController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})

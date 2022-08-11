@@ -96,6 +96,12 @@ declare module 'approved-premises' {
     href: string
   }
 
+  export interface ErrorsAndUserInput {
+    errors: ErrorMessages
+    errorSummary: Array<string>
+    userInput: Record<string, unknown>
+  }
+
   export interface schemas {
     Premises: {
       id: string

@@ -2,7 +2,7 @@
 
 {% macro showErrorSummary(errorList) %}
 
-  {% if errorList %}
+  {% if errorList | length %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errorList

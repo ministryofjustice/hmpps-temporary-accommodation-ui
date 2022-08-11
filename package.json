@@ -145,7 +145,7 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^18.6.5",
     "@types/nunjucks": "^3.2.1",
-    "@types/passport": "^1.0.9",
+    "@types/passport": "^1.0.10",
     "@types/passport-oauth2": "^1.4.11",
     "@types/superagent": "^4.1.15",
     "@types/supertest": "^2.0.12",

@@ -4,7 +4,7 @@ import type { Booking, BookingDto, TableRow, GroupedListofBookings } from 'appro
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
-import { convertDateString } from '../utils/utils'
+import { convertDateString, formatDate } from '../utils/utils'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -32,8 +32,8 @@ export default class BookingService {
 
     return {
       ...booking,
-      arrivalDate: parseISO(booking.arrivalDate).toLocaleDateString('en-GB'),
-      expectedDepartureDate: parseISO(booking.expectedDepartureDate).toLocaleDateString('en-GB'),
+      arrivalDate: formatDate(parseISO(booking.arrivalDate)),
+      expectedDepartureDate: formatDate(parseISO(booking.expectedDepartureDate)),
     }
   }
 
@@ -67,9 +67,7 @@ export default class BookingService {
         text: booking.CRN,
       },
       {
-        text: convertDateString(
-          type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate,
-        ).toLocaleDateString('en-GB'),
+        text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate)),
       },
       {
         html: `<a href="/premises/${premisesId}/bookings/${booking.id}/arrivals/new">
@@ -98,7 +96,7 @@ export default class BookingService {
         text: booking.CRN,
       },
       {
-        text: convertDateString(booking.expectedDepartureDate).toLocaleDateString('en-GB'),
+        text: formatDate(convertDateString(booking.expectedDepartureDate)),
       },
       {
         html: `<a href="/premises/${premisesId}/bookings/${booking.id}/departures/new">

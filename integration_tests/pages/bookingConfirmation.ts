@@ -1,5 +1,6 @@
 import parseISO from 'date-fns/parseISO'
 import type { Booking } from 'approved-premises'
+import { formatDate } from '../../server/utils/utils'
 import Page from './page'
 
 export default class BookingConfirmationPage extends Page {
@@ -16,11 +17,8 @@ export default class BookingConfirmationPage extends Page {
     cy.get('dl').within(() => {
       this.assertDefinition('Name', booking.name)
       this.assertDefinition('CRN', booking.CRN)
-      this.assertDefinition('Arrival date', parseISO(booking.arrivalDate).toLocaleDateString('en-GB'))
-      this.assertDefinition(
-        'Expected departure date',
-        parseISO(booking.expectedDepartureDate).toLocaleDateString('en-GB'),
-      )
+      this.assertDefinition('Arrival date', formatDate(parseISO(booking.arrivalDate)))
+      this.assertDefinition('Expected departure date', formatDate(parseISO(booking.expectedDepartureDate)))
       this.assertDefinition('Key worker', booking.keyWorker)
     })
   }

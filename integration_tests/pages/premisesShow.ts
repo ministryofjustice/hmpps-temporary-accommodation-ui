@@ -3,6 +3,7 @@ import { parseISO } from 'date-fns'
 import type { Premises, Booking } from 'approved-premises'
 
 import Page from './page'
+import { formatDate } from '../../server/utils/utils'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
@@ -72,7 +73,7 @@ export default class PremisesShowPage extends Page {
       cy.contains(item.CRN)
         .parent()
         .within(() => {
-          cy.get('td').eq(0).contains(date.toLocaleDateString('en-GB'))
+          cy.get('td').eq(0).contains(formatDate(date))
           cy.get('td')
             .eq(1)
             .contains('Manage')
@@ -87,7 +88,9 @@ export default class PremisesShowPage extends Page {
       cy.contains(item.CRN)
         .parent()
         .within(() => {
-          cy.get('td').eq(0).contains(parseISO(item.expectedDepartureDate).toLocaleDateString('en-GB'))
+          cy.get('td')
+            .eq(0)
+            .contains(formatDate(parseISO(item.expectedDepartureDate)))
           cy.get('td')
             .eq(1)
             .contains('Manage')

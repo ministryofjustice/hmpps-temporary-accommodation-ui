@@ -40,7 +40,7 @@
               {
                 value: "Yes",
                 text: "Yes",
-                checked: arrived === true,
+                checked: arrival|length,
                 conditional: {
                   html: arrivalHTML
                 }
@@ -48,7 +48,7 @@
               {
                 value: "No",
                 text: "No",
-                checked: arrived === false,
+                checked: nonArrival|length,
                 conditional: {
                   html: nonArrivalHTML
                 }

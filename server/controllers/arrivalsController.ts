@@ -3,7 +3,7 @@ import type { Arrival, ArrivalDto } from 'approved-premises'
 
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import ArrivalService from '../services/arrivalService'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 export default class ArrivalsController {
   constructor(private readonly arrivalService: ArrivalService) {}
@@ -11,8 +11,9 @@ export default class ArrivalsController {
   new(): RequestHandler {
     return (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      res.render('arrivals/new', { premisesId, bookingId })
+      res.render('arrivals/new', { premisesId, bookingId, errors, errorSummary, ...userInput })
     }
   }
 
@@ -35,7 +36,7 @@ export default class ArrivalsController {
 
         res.redirect(`/premises/${premisesId}`)
       } catch (err) {
-        renderWithErrors(req, res, err, `arrivals/new`, { premisesId, bookingId, arrived: true })
+        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/arrivals/new`)
       }
     }
   }

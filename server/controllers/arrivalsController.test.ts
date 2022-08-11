@@ -1,9 +1,10 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
+import type { ErrorsAndUserInput } from 'approved-premises'
 import ArrivalService from '../services/arrivalService'
 import ArrivalsController from './arrivalsController'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 jest.mock('../utils/validation')
 
@@ -23,6 +24,7 @@ describe('ArrivalsController', () => {
   describe('new', () => {
     it('renders the form', () => {
       const requestHandler = arrivalsController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       request.params = {
         bookingId: 'bookingId',
@@ -31,7 +33,35 @@ describe('ArrivalsController', () => {
 
       requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('arrivals/new', { premisesId: 'premisesId', bookingId: 'bookingId' })
+      expect(response.render).toHaveBeenCalledWith('arrivals/new', {
+        premisesId: 'premisesId',
+        bookingId: 'bookingId',
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('renders the form with errors and user input if an error has been sent to the flash', () => {
+      const requestHandler = arrivalsController.new()
+
+      request.params = {
+        bookingId: 'bookingId',
+        premisesId: 'premisesId',
+      }
+
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('arrivals/new', {
+        premisesId: 'premisesId',
+        bookingId: 'bookingId',
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+      })
     })
   })
 
@@ -87,11 +117,12 @@ describe('ArrivalsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, `arrivals/new`, {
-        premisesId: request.params.premisesId,
-        bookingId: request.params.bookingId,
-        arrived: true,
-      })
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        `/premises/${request.params.premisesId}/bookings/${request.params.bookingId}/arrivals/new`,
+      )
     })
   })
 })

@@ -2,7 +2,7 @@ import type { BookingDto } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
 import BookingService from '../services/bookingService'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 
 export default class BookingsController {
@@ -11,8 +11,9 @@ export default class BookingsController {
   new(): RequestHandler {
     return (req: Request, res: Response) => {
       const { premisesId } = req.params
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      return res.render(`premises/bookings/new`, { premisesId })
+      return res.render(`premises/bookings/new`, { premisesId, errors, errorSummary, ...userInput })
     }
   }
 
@@ -31,7 +32,7 @@ export default class BookingsController {
 
         res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
       } catch (err) {
-        renderWithErrors(req, res, err, `premises/bookings/new`, { premisesId })
+        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/new`)
       }
     }
   }

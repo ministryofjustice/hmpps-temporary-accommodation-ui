@@ -1,9 +1,10 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
+import type { ErrorsAndUserInput } from 'approved-premises'
 import BookingService from '../services/bookingService'
 import BookingsController from './bookingsController'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
 
@@ -28,10 +29,34 @@ describe('bookingsController', () => {
     it('should render the form', async () => {
       const requestHandler = bookingController.new()
       const premisesId = 'premisesId'
+      ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
+        return { errors: {}, errorSummary: [], userInput: {} }
+      })
+
       requestHandler({ ...request, params: { premisesId } }, response, next)
 
       expect(response.render).toHaveBeenCalledWith('premises/bookings/new', {
         premisesId,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('renders the form with errors and user input if an error has been sent to the flash', () => {
+      const requestHandler = bookingController.new()
+      const premisesId = 'premisesId'
+
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      requestHandler({ ...request, params: { premisesId } }, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('premises/bookings/new', {
+        premisesId,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
       })
     })
   })
@@ -88,7 +113,12 @@ describe('bookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, `premises/bookings/new`, { premisesId })
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        `/premises/${premisesId}/bookings/new`,
+      )
     })
   })
 

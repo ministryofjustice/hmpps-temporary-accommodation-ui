@@ -97,8 +97,6 @@
     ]
   },
   "dependencies": {
-    "@faker-js/faker": "^7.4.0",
-    "@golevelup/ts-jest": "^0.3.3",
     "@ministryofjustice/frontend": "^1.4.2",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.3.4",
@@ -152,6 +150,8 @@
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
+    "@faker-js/faker": "^7.4.0",
+    "@golevelup/ts-jest": "^0.3.3",
     "audit-ci": "^6.3.0",
     "concurrently": "^7.3.0",
     "cookie-session": "^2.0.0",

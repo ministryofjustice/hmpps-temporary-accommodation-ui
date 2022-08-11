@@ -5,7 +5,7 @@ import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import DepartureService from '../services/departureService'
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 export default class DeparturesController {
   constructor(
@@ -17,11 +17,21 @@ export default class DeparturesController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
       const booking = await this.bookingService.getBooking(premisesId, bookingId)
       const premisesSelectList = await this.premisesService.getPremisesSelectList()
       const referenceData = await this.departureService.getReferenceData()
 
-      res.render('departures/new', { premisesId, booking, premisesSelectList, referenceData })
+      res.render('departures/new', {
+        premisesId,
+        booking,
+        premisesSelectList,
+        referenceData,
+        errors,
+        errorSummary,
+        ...userInput,
+      })
     }
   }
 
@@ -39,11 +49,7 @@ export default class DeparturesController {
         const { id } = await this.departureService.createDeparture(premisesId, bookingId, departure)
         res.redirect(`/premises/${premisesId}/bookings/${bookingId}/departures/${id}/confirmation`)
       } catch (err) {
-        const booking = await this.bookingService.getBooking(premisesId, bookingId)
-        const premisesSelectList = await this.premisesService.getPremisesSelectList()
-        const referenceData = await this.departureService.getReferenceData()
-
-        renderWithErrors(req, res, err, 'departures/new', { premisesId, booking, premisesSelectList, referenceData })
+        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/departures/new`)
       }
     }
   }

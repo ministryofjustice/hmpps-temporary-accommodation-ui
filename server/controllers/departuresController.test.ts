@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
+import type { ErrorsAndUserInput } from 'approved-premises'
 
 import DepartureService, { DepartureReferenceData } from '../services/departureService'
 import DeparturesController from './departuresController'
@@ -7,7 +8,7 @@ import { PremisesService } from '../services'
 import BookingService from '../services/bookingService'
 import departureFactory from '../testutils/factories/departure'
 import bookingFactory from '../testutils/factories/booking'
-import renderWithErrors from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 jest.mock('../utils/validation')
 
@@ -31,15 +32,20 @@ describe('DeparturesController', () => {
   })
 
   describe('new', () => {
-    it('renders the form', async () => {
-      const booking = bookingFactory.build()
-      const bookingId = 'bookingId'
-      const premisesId = 'premisesId'
-      const referenceData = createMock<DepartureReferenceData>({})
+    const booking = bookingFactory.build()
+    const bookingId = 'bookingId'
+    const premisesId = 'premisesId'
 
+    beforeEach(() => {
       premisesService.getPremisesSelectList.mockResolvedValue([{ value: 'id', text: 'name' }])
       bookingService.getBooking.mockResolvedValue(booking)
+    })
+
+    it('renders the form', async () => {
+      const referenceData = createMock<DepartureReferenceData>()
       departureService.getReferenceData.mockResolvedValue(referenceData)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
       const requestHandler = departuresController.new()
 
       request.params = {
@@ -61,6 +67,42 @@ describe('DeparturesController', () => {
           },
         ],
         referenceData,
+        errorSummary: [],
+        errors: {},
+      })
+    })
+
+    it('renders the form with errors', async () => {
+      const referenceData = createMock<DepartureReferenceData>()
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+
+      departureService.getReferenceData.mockResolvedValue(referenceData)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      const requestHandler = departuresController.new()
+
+      request.params = {
+        bookingId,
+        premisesId,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremisesSelectList).toHaveBeenCalled()
+      expect(bookingService.getBooking).toHaveBeenCalledWith('premisesId', 'bookingId')
+      expect(response.render).toHaveBeenCalledWith('departures/new', {
+        premisesId,
+        booking,
+        premisesSelectList: [
+          {
+            text: 'name',
+            value: 'id',
+          },
+        ],
+        referenceData,
+        errorSummary: errorsAndUserInput.errorSummary,
+        errors: errorsAndUserInput.errors,
+        ...errorsAndUserInput.userInput,
       })
     })
   })
@@ -111,13 +153,8 @@ describe('DeparturesController', () => {
       )
     })
 
-    it('should render the page with errors when the API returns an error', async () => {
+    it('should catch the validation errors when the API returns an error', async () => {
       const requestHandler = departuresController.create()
-      const referenceData = createMock<DepartureReferenceData>({})
-      const premisesSelectList = [{ value: 'id', text: 'name' }]
-
-      departureService.getReferenceData.mockResolvedValue(referenceData)
-      premisesService.getPremisesSelectList.mockResolvedValue(premisesSelectList)
 
       const premisesId = 'premisesId'
 
@@ -134,12 +171,12 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, 'departures/new', {
-        booking: {},
-        premisesId,
-        premisesSelectList,
-        referenceData,
-      })
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        `/premises/${request.params.premisesId}/bookings/${request.params.bookingId}/departures/new`,
+      )
     })
   })
 

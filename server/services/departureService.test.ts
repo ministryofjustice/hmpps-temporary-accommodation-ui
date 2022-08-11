@@ -3,32 +3,43 @@ import { parseISO } from 'date-fns'
 
 import DepartureService from './departureService'
 import DepartureClient from '../data/departureClient'
+import ReferenceDataClient from '../data/referenceDataClient'
+
 import departureFactory from '../testutils/factories/departure'
+import referenceDataFactory from '../testutils/factories/referenceData'
+import departureDtoFactory from '../testutils/factories/departureDto'
 
 jest.mock('../data/departureClient.ts')
+jest.mock('../data/referenceDataClient.ts')
 
 describe('DepartureService', () => {
   const departureClient = new DepartureClient(null) as jest.Mocked<DepartureClient>
+  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
   let service: DepartureService
 
   const DepartureClientFactory = jest.fn()
+  const ReferenceDataClientFactory = jest.fn()
 
   beforeEach(() => {
     jest.resetAllMocks()
     DepartureClientFactory.mockReturnValue(departureClient)
-    service = new DepartureService(DepartureClientFactory)
+    ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
+    service = new DepartureService(DepartureClientFactory, ReferenceDataClientFactory)
   })
 
   describe('createDeparture', () => {
     it('on success returns the departure that has been posted', async () => {
-      const departure: Departure = departureFactory.build()
+      const departureDto = departureDtoFactory.build()
+      const departure = departureFactory.build()
+
       departureClient.create.mockResolvedValue(departure)
 
-      const postedDeparture = await service.createDeparture('premisesId', 'bookingId', departure)
+      const postedDeparture = await service.createDeparture('premisesId', 'bookingId', departureDto)
       expect(postedDeparture).toEqual(departure)
-      expect(departureClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', departure)
+      expect(departureClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', departureDto)
     })
   })
+
   describe('getDeparture', () => {
     it('on success returns the departure that has been requested', async () => {
       const departure: Departure = departureFactory.build()
@@ -41,6 +52,32 @@ describe('DepartureService', () => {
         dateTime: parseISO(departure.dateTime).toLocaleDateString('en-GB'),
       })
       expect(departureClient.get).toHaveBeenCalledWith('premisesId', 'bookingId', departure.id)
+    })
+  })
+
+  describe('getReferenceData', () => {
+    it('should return the reference data needed to create departures', async () => {
+      const departureReasons = referenceDataFactory.buildList(2)
+      const moveOnCategories = referenceDataFactory.buildList(3)
+      const destinationProviders = referenceDataFactory.buildList(4)
+
+      referenceDataClient.getReferenceData.mockImplementation(category => {
+        return Promise.resolve(
+          {
+            'departure-reasons': departureReasons,
+            'move-on-categories': moveOnCategories,
+            'destination-providers': destinationProviders,
+          }[category],
+        )
+      })
+
+      const result = await service.getReferenceData()
+
+      expect(result).toEqual({
+        departureReasons,
+        moveOnCategories,
+        destinationProviders,
+      })
     })
   })
 })

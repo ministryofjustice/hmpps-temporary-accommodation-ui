@@ -17,6 +17,7 @@ export const services = () => {
     arrivalClientBuilder,
     nonArrivalClientBuilder,
     departureClientBuilder,
+    referenceDataClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
@@ -24,7 +25,7 @@ export const services = () => {
   const bookingService = new BookingService(bookingClientBuilder)
   const arrivalService = new ArrivalService(arrivalClientBuilder)
   const nonArrivalService = new NonArrivalService(nonArrivalClientBuilder)
-  const departureService = new DepartureService(departureClientBuilder)
+  const departureService = new DepartureService(departureClientBuilder, referenceDataClientBuilder)
 
   return {
     userService,

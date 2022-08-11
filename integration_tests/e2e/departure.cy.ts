@@ -1,6 +1,7 @@
 import premisesFactory from '../../server/testutils/factories/premises'
 import departureFactory from '../../server/testutils/factories/departure'
 import bookingFactory from '../../server/testutils/factories/booking'
+import referenceDataFactory from '../../server/testutils/factories/referenceData'
 
 import DepartureCreatePage from '../pages/departureCreate'
 import DepartureConfirmation from '../pages/departureConfirmation'
@@ -10,6 +11,7 @@ context('Departures', () => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('stubDepartureReferenceData')
   })
 
   it('creates an departure', () => {
@@ -19,12 +21,17 @@ context('Departures', () => {
     // And I have a booking for a premises
     const premises = premisesFactory.buildList(5)
     const booking = bookingFactory.build()
+
+    const departureReason = referenceDataFactory.departureReasons().build()
+    const moveOnCategory = referenceDataFactory.moveOnCategories().build()
+    const destinationProvider = referenceDataFactory.destinationProviders().build()
+
     const departure = departureFactory.build({
       dateTime: new Date(2022, 1, 11, 12, 35).toISOString(),
-      reason: 'other',
-      destinationAp: premises[2].name,
-      moveOnCategory: 'private-rented',
-      destinationProvider: 'yorkshire-and-the-humber',
+      reason: departureReason,
+      destinationAp: premises[2],
+      moveOnCategory,
+      destinationProvider,
     })
 
     cy.task('stubPremises', premises)
@@ -43,10 +50,10 @@ context('Departures', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.dateTime).equal(departure.dateTime)
-      expect(requestBody.reason).equal(departure.reason)
-      expect(requestBody.destinationAp).equal(departure.destinationAp)
-      expect(requestBody.destinationProvider).equal(departure.destinationProvider)
-      expect(requestBody.moveOnCategory).equal(departure.moveOnCategory)
+      expect(requestBody.reason).equal(departure.reason.id)
+      expect(requestBody.destinationAp).equal(departure.destinationAp.id)
+      expect(requestBody.destinationProvider).equal(departure.destinationProvider.id)
+      expect(requestBody.moveOnCategory).equal(departure.moveOnCategory.id)
       expect(requestBody.notes).equal(departure.notes)
     })
 
@@ -55,15 +62,13 @@ context('Departures', () => {
 
     departureConfirmationPage.verifyConfirmedDepartureIsVisible(departure, booking)
   })
+
   it('should show errors', () => {
     const premises = premisesFactory.buildList(5)
     const booking = bookingFactory.build()
     const departure = departureFactory.build({
       dateTime: new Date(2022, 1, 11, 12, 35).toISOString(),
-      reason: 'other',
-      destinationAp: premises[2].name,
-      moveOnCategory: 'private-rented',
-      destinationProvider: 'yorkshire-and-the-humber',
+      destinationAp: premises[2],
     })
 
     // Given I am signed in

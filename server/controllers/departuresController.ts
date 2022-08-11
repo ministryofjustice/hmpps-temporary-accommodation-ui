@@ -1,5 +1,5 @@
 import type { Response, Request, RequestHandler } from 'express'
-import type { Departure, DepartureDto } from 'approved-premises'
+import type { DepartureDto } from 'approved-premises'
 
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import DepartureService from '../services/departureService'
@@ -19,21 +19,21 @@ export default class DeparturesController {
       const { premisesId, bookingId } = req.params
       const booking = await this.bookingService.getBooking(premisesId, bookingId)
       const premisesSelectList = await this.premisesService.getPremisesSelectList()
+      const referenceData = await this.departureService.getReferenceData()
 
-      res.render('departures/new', { premisesId, booking, premisesSelectList })
+      res.render('departures/new', { premisesId, booking, premisesSelectList, referenceData })
     }
   }
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const body = req.body as DepartureDto
-      const { dateTime } = convertDateAndTimeInputsToIsoString(body, 'dateTime')
+      const { dateTime } = convertDateAndTimeInputsToIsoString(req.body, 'dateTime')
 
-      const departure: Omit<Departure, 'id' | 'bookingId'> = {
-        ...body.departure,
+      const departure = {
+        ...req.body.departure,
         dateTime,
-      }
+      } as DepartureDto
 
       try {
         const { id } = await this.departureService.createDeparture(premisesId, bookingId, departure)
@@ -41,8 +41,9 @@ export default class DeparturesController {
       } catch (err) {
         const booking = await this.bookingService.getBooking(premisesId, bookingId)
         const premisesSelectList = await this.premisesService.getPremisesSelectList()
+        const referenceData = await this.departureService.getReferenceData()
 
-        renderWithErrors(req, res, err, 'departures/new', { premisesId, booking, premisesSelectList })
+        renderWithErrors(req, res, err, 'departures/new', { premisesId, booking, premisesSelectList, referenceData })
       }
     }
   }

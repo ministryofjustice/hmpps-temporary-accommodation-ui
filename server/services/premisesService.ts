@@ -39,8 +39,8 @@ export default class PremisesService {
     const premises = await premisesClient.getAllPremises()
 
     return premises
-      .map(p => {
-        return { text: `${p.name}`, value: `${p.name}` }
+      .map(singlePremises => {
+        return { text: `${singlePremises.name}`, value: `${singlePremises.id}` }
       })
       .sort((a, b) => {
         if (a.text < b.text) {

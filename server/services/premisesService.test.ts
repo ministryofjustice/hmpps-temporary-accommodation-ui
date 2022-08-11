@@ -80,15 +80,14 @@ describe('PremisesService', () => {
       const premisesA = premisesFactory.build({ name: 'a' })
       const premisesB = premisesFactory.build({ name: 'b' })
       const premisesC = premisesFactory.build({ name: 'c' })
-      premisesClient.getAllPremises.mockResolvedValue([premisesC, premisesB, premisesA, premisesC])
+      premisesClient.getAllPremises.mockResolvedValue([premisesC, premisesB, premisesA])
 
       const result = await service.getPremisesSelectList()
 
       expect(result).toEqual([
-        { text: 'a', value: 'a' },
-        { text: 'b', value: 'b' },
-        { text: 'c', value: 'c' },
-        { text: 'c', value: 'c' },
+        { text: premisesA.name, value: premisesA.id },
+        { text: premisesB.name, value: premisesB.id },
+        { text: premisesC.name, value: premisesC.id },
       ])
     })
   })

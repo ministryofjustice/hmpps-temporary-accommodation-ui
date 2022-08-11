@@ -7,7 +7,7 @@ import * as pathModule from 'path'
 
 import type { ErrorMessages } from 'approved-premises'
 import { initialiseName } from './utils'
-import dateFieldValues from './formUtils'
+import { dateFieldValues, convertObjectsToRadioItems } from './formUtils'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -46,8 +46,19 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
 
-  // eslint-disable-next-line func-names
-  njkEnv.addGlobal('dateFieldValues', function (fieldName: string, errors: ErrorMessages) {
+  njkEnv.addGlobal('dateFieldValues', function sendContextToDateFieldValues(fieldName: string, errors: ErrorMessages) {
     return dateFieldValues(fieldName, this.ctx, errors)
   })
+
+  njkEnv.addGlobal(
+    'convertObjectsToRadioItems',
+    function sendContextConvertObjectsToRadioItems(
+      items: Array<Record<string, string>>,
+      textKey: string,
+      valueKey: string,
+      fieldName: string,
+    ) {
+      return convertObjectsToRadioItems(items, textKey, valueKey, fieldName, this.ctx)
+    },
+  )
 }

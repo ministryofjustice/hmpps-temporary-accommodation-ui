@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
-import DepartureService from '../services/departureService'
+import DepartureService, { DepartureReferenceData } from '../services/departureService'
 import DeparturesController from './departuresController'
 import { PremisesService } from '../services'
 import BookingService from '../services/bookingService'
@@ -35,8 +35,11 @@ describe('DeparturesController', () => {
       const booking = bookingFactory.build()
       const bookingId = 'bookingId'
       const premisesId = 'premisesId'
+      const referenceData = createMock<DepartureReferenceData>({})
+
       premisesService.getPremisesSelectList.mockResolvedValue([{ value: 'id', text: 'name' }])
       bookingService.getBooking.mockResolvedValue(booking)
+      departureService.getReferenceData.mockResolvedValue(referenceData)
       const requestHandler = departuresController.new()
 
       request.params = {
@@ -57,6 +60,7 @@ describe('DeparturesController', () => {
             value: 'id',
           },
         ],
+        referenceData,
       })
     })
   })
@@ -109,6 +113,11 @@ describe('DeparturesController', () => {
 
     it('should render the page with errors when the API returns an error', async () => {
       const requestHandler = departuresController.create()
+      const referenceData = createMock<DepartureReferenceData>({})
+      const premisesSelectList = [{ value: 'id', text: 'name' }]
+
+      departureService.getReferenceData.mockResolvedValue(referenceData)
+      premisesService.getPremisesSelectList.mockResolvedValue(premisesSelectList)
 
       const premisesId = 'premisesId'
 
@@ -128,7 +137,8 @@ describe('DeparturesController', () => {
       expect(renderWithErrors).toHaveBeenCalledWith(request, response, err, 'departures/new', {
         booking: {},
         premisesId,
-        premisesSelectList: {},
+        premisesSelectList,
+        referenceData,
       })
     })
   })

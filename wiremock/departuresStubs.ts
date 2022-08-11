@@ -6,6 +6,7 @@ const departureStubs: Array<Record<string, unknown>> = []
 
 departureStubs.push(
   {
+    priority: 99,
     request: {
       method: 'POST',
       urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/departures`,
@@ -36,7 +37,13 @@ departureStubs.push(
 const requiredFields = getCombinations(['dateTime', 'destinationProvider', 'moveOnCategory', 'reason'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  departureStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/departures`))
+  departureStubs.push(
+    errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/departures`, [
+      'destinationProvider',
+      'moveOnCategory',
+      'reason',
+    ]),
+  )
 })
 
 export default departureStubs

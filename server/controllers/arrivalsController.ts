@@ -3,7 +3,7 @@ import type { Arrival, ArrivalDto } from 'approved-premises'
 
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import ArrivalService from '../services/arrivalService'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 
 export default class ArrivalsController {
   constructor(private readonly arrivalService: ArrivalService) {}

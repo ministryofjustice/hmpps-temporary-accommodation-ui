@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { createMock } from '@golevelup/ts-jest'
 
 import { SanitisedError } from '../sanitisedError'
-import renderWithErrors from './renderWithErrors'
+import renderWithErrors, { catchValidationErrorOrPropogate } from './validation'
 import errorLookups from '../i18n/en/errors.json'
 
 jest.mock('../i18n/en/errors.json', () => {
@@ -71,6 +71,54 @@ describe('renderWithErrors', () => {
       ...request.body,
       something: 'else',
     })
+  })
+
+  it('throws the error if the error is not the type we expect', () => {
+    const err = new Error()
+    expect(() => renderWithErrors(request, response, err, 'some/template', { something: 'else' })).toThrowError(err)
+  })
+})
+
+describe('catchValidationErrorOrPropogate', () => {
+  const request = createMock<Request>({})
+  const response = createMock<Response>()
+  const error = createMock<SanitisedError>({
+    data: {
+      'invalid-params': [
+        {
+          propertyName: 'CRN',
+          errorType: 'blank',
+        },
+        {
+          propertyName: 'arrivalDate',
+          errorType: 'blank',
+        },
+      ],
+    },
+  })
+
+  const expectedErrors = {
+    CRN: { text: errorLookups.CRN.blank, attributes: { 'data-cy-error-CRN': true } },
+    arrivalDate: { text: errorLookups.arrivalDate.blank, attributes: { 'data-cy-error-arrivalDate': true } },
+  }
+
+  const expectedErrorSummary = [
+    { text: errorLookups.CRN.blank, href: '#CRN' },
+    { text: errorLookups.arrivalDate.blank, href: '#arrivalDate' },
+  ]
+
+  it('sets the errors and request body as flash messages and redirects back to the form', () => {
+    request.body = {
+      some: 'field',
+    }
+
+    catchValidationErrorOrPropogate(request, response, error, 'some/url')
+
+    expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
+
+    expect(response.redirect).toHaveBeenCalledWith('some/url')
   })
 
   it('throws the error if the error is not the type we expect', () => {

@@ -27,6 +27,27 @@ export default function renderWithErrors(
   }
 }
 
+export const catchValidationErrorOrPropogate = (
+  request: Request,
+  response: Response,
+  error: SanitisedError | Error,
+  redirectPath: string,
+): void => {
+  if ('data' in error) {
+    const invalidParams = error.data['invalid-params']
+    const errors = generateErrorMessages(invalidParams)
+    const errorSummary = generateErrorSummary(invalidParams)
+
+    request.flash('errors', errors)
+    request.flash('errorSummary', errorSummary)
+    request.flash('userInput', request.body)
+
+    response.redirect(redirectPath)
+  } else {
+    throw error
+  }
+}
+
 const generateErrorMessages = (params: Array<InvalidParams>): ErrorMessages => {
   return params.reduce((obj, error) => {
     return {

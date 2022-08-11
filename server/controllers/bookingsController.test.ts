@@ -3,11 +3,11 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import BookingService from '../services/bookingService'
 import BookingsController from './bookingsController'
-import renderWithErrors from '../utils/renderWithErrors'
+import renderWithErrors from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
 
-jest.mock('../utils/renderWithErrors')
+jest.mock('../utils/validation')
 
 describe('bookingsController', () => {
   let request: DeepMocked<Request> = createMock<Request>({})

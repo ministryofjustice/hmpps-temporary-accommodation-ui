@@ -20,9 +20,10 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 
 import routes from './routes'
+import type { Controllers } from './controllers'
 import type { Services } from './services'
 
-export default function createApp(services: Services): express.Application {
+export default function createApp(controllers: Controllers, services: Services): express.Application {
   const app = express()
 
   app.set('json spaces', 2)

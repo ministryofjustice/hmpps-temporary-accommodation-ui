@@ -66,7 +66,7 @@ export default class BookingService {
         text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate)),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/arrivals/new">
+        html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
           Manage
           <span class="govuk-visually-hidden">
             booking for ${booking.CRN}
@@ -95,7 +95,7 @@ export default class BookingService {
         text: formatDate(convertDateString(booking.expectedDepartureDate)),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/departures/new">
+        html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
         Manage
         <span class="govuk-visually-hidden">
           booking for ${booking.CRN}

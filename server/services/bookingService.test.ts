@@ -64,13 +64,13 @@ describe('BookingService', () => {
       expect(results[0][0]).toEqual({ text: bookings[0].CRN })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}/arrivals/new`),
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].CRN })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}/arrivals/new`),
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
       })
     })
 
@@ -90,13 +90,13 @@ describe('BookingService', () => {
       expect(results[0][0]).toEqual({ text: bookings[0].CRN })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}/arrivals/new`),
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].CRN })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}/arrivals/new`),
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
       })
     })
   })

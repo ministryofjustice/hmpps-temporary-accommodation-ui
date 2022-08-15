@@ -43,11 +43,7 @@ describe('BookingService', () => {
       bookingClient.getBooking.mockResolvedValue(booking)
 
       const retrievedBooking = await service.getBooking('premisesId', booking.id)
-      expect(retrievedBooking).toEqual({
-        ...booking,
-        arrivalDate: formatDate(arrivalDate),
-        expectedDepartureDate: formatDate(expectedDepartureDate),
-      })
+      expect(retrievedBooking).toEqual(booking)
     })
   })
 

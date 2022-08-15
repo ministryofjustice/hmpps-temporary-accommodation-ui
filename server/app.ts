@@ -47,7 +47,7 @@ export default function createApp(controllers: Controllers, services: Services):
     res.app.locals.infoMessages = req.flash('info')
     return next()
   })
-  app.use(routes(services))
+  app.use(routes(controllers))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

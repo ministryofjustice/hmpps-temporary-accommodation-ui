@@ -1,28 +1,19 @@
+/* istanbul ignore file */
+
 import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import type { Services } from '../services'
-
-import PremisesController from '../controllers/premisesController'
-import BookingsController from '../controllers/bookingsController'
-import ArrivalsController from '../controllers/arrivalsController'
-import NonArrivalsController from '../controllers/nonArrivalsController'
-import DeparturesController from '../controllers/departuresController'
+import type { Controllers } from '../controllers'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function routes(services: Services): Router {
+export default function routes(controllers: Controllers): Router {
   const router = Router()
+
+  const { premisesController, bookingsController, arrivalsController, nonArrivalsController, departuresController } =
+    controllers
+
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
-  const premisesController = new PremisesController(services.premisesService, services.bookingService)
-  const bookingsController = new BookingsController(services.bookingService)
-  const arrivalsController = new ArrivalsController(services.arrivalService)
-  const nonArrivalsController = new NonArrivalsController(services.nonArrivalService)
-  const departuresController = new DeparturesController(
-    services.departureService,
-    services.premisesService,
-    services.bookingService,
-  )
 
   get('/', (req, res, next) => {
     res.redirect('/premises')
@@ -36,8 +27,8 @@ export default function routes(services: Services): Router {
   get('/premises/:premisesId/bookings/:bookingId/confirmation', bookingsController.confirm())
 
   get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
-  router.post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())
-  router.post('/premises/:premisesId/bookings/:bookingId/nonArrivals', nonArrivalsController.create())
+  post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())
+  post('/premises/:premisesId/bookings/:bookingId/nonArrivals', nonArrivalsController.create())
 
   get('/premises/:premisesId/bookings/:bookingId/departures/new', departuresController.new())
   post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())

@@ -1,0 +1,154 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Placement details" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {{ govukBackLink({
+  text: "Back",
+  href: "/premises/" + premisesId
+}) }}
+
+  <h1>Booking details</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+
+      {{ mojIdentityBar({
+        title: {
+          html: '<b>Simon Wolensky</b>'
+        },
+        menus: bookingActions(booking, premisesId)
+      }) }}
+
+      <br>
+      <h2>Expected dates of stay</h2>
+
+      {{
+        govukSummaryList({
+          classes: 'govuk-summary-list--no-border',
+          attributes: {
+            'data-cy-expected-dates': true
+          },
+          rows: [
+            {
+              key: {
+                text: "Arrival date"
+              },
+              value: {
+                text: formatDate(booking.arrivalDate)
+              }
+            },
+            {
+              key: {
+                text: "Departure date"
+              },
+              value: {
+                text: formatDate(booking.expectedDepartureDate)
+              }
+            },
+            {
+              key: {
+                text: "Key worker"
+              },
+              value: {
+                text: booking.keyWorker
+              }
+            }
+          ]
+        })
+      }}
+      <br>
+      {% if booking.arrival | length %}
+        <h2>Arrival information</h2>
+
+        {{
+          govukSummaryList({
+            classes: 'govuk-summary-list--no-border',
+            attributes: {
+              'data-cy-arrival-information': true
+            },
+            rows: [
+              {
+                key: {
+                  text: "Arrival date"
+                },
+                value: {
+                  text: formatDate(booking.arrival.date)
+                }
+              },
+              {
+                key: {
+                  text: "Departure date"
+                },
+                value: {
+                  text: formatDate(booking.arrival.expectedDepartureDate)
+                }
+              },
+              {
+                key: {
+                  text: "Notes"
+                },
+                value: {
+                  text: booking.arrival.notes
+                }
+              }
+            ]
+          })
+        }}
+
+      {% endif %}
+      <br>
+      {% if booking.departure | length %}
+        <h2>Departure information</h2>
+
+        {{
+          govukSummaryList({
+            classes: 'govuk-summary-list--no-border',
+            attributes: {
+              'data-cy-departure-information': true
+            },
+            rows: [
+              {
+                key: {
+                  text: "Actual departure date"
+                },
+                value: {
+                  text: formatDate(booking.departure.dateTime)
+                }
+              },
+              {
+                key: {
+                  text: "Reason"
+                },
+                value: {
+                  text: booking.departure.reason.name
+                }
+              },
+              {
+                key: {
+                  text: "Notes"
+                },
+                value: {
+                  text: booking.departure.notes
+                }
+              }
+            ]
+          })
+        }}
+
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+  </script>
+{% endblock %}

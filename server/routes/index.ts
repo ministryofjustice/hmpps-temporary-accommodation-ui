@@ -5,19 +5,22 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Controllers } from '../controllers'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function routes(controllers: Controllers): Router {
   const router = Router()
 
-  const { premisesController, bookingsController, arrivalsController, nonArrivalsController, departuresController } =
-    controllers
+  const {
+    applicationController,
+    premisesController,
+    bookingsController,
+    arrivalsController,
+    nonArrivalsController,
+    departuresController,
+  } = controllers
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string | string[], handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get('/', (req, res, next) => {
-    res.redirect('/premises')
-  })
+  get('/', applicationController.index())
 
   get('/premises', premisesController.index())
   get('/premises/:id', premisesController.show())

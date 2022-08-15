@@ -130,6 +130,7 @@ declare module 'approved-premises' {
       keyWorker: string
       status: BookingStatus
       arrival?: Arrival
+      departure?: Departure
     }
     Arrival: {
       id: string

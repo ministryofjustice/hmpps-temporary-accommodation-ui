@@ -25,6 +25,26 @@ describe('bookingsController', () => {
     bookingController = new BookingsController(bookingService)
   })
 
+  describe('show', () => {
+    it('should fetch the booking and render the show page', async () => {
+      const booking = bookingFactory.build()
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const requestHandler = bookingController.show()
+      const premisesId = 'premisesId'
+      const bookingId = 'bookingId'
+
+      await requestHandler({ ...request, params: { premisesId, bookingId } }, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('bookings/show', {
+        booking,
+        premisesId,
+      })
+
+      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)
+    })
+  })
+
   describe('new', () => {
     it('should render the form', async () => {
       const requestHandler = bookingController.new()

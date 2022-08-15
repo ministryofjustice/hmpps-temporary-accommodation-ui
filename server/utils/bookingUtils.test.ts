@@ -26,12 +26,12 @@ describe('bookingUtils', () => {
             },
             {
               classes: 'govuk-button--secondary',
-              href: `/premises/premisesId/bookings/${booking.id}/non-arrivals/new`,
+              href: `/premises/premisesId/bookings/${booking.id}/arrivals/new`,
               text: 'Mark as not arrived',
             },
             {
               classes: 'govuk-button--secondary',
-              href: `/premises/premisesId/bookings/${booking.id}/cancellation/new`,
+              href: `/premises/premisesId/bookings/${booking.id}/cancellations/new`,
               text: 'Cancel booking',
             },
           ],

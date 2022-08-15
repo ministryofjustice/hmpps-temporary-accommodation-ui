@@ -78,6 +78,16 @@ declare module 'approved-premises' {
     checked?: boolean
   }
 
+  export interface IdentityBarMenuItem {
+    classes: string
+    href: string
+    text: string
+  }
+
+  export interface IdentityBarMenu {
+    items: Array<IdentityBarMenuItem>
+  }
+
   export type GroupedListofBookings = {
     [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
   }

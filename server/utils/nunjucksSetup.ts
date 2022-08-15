@@ -8,6 +8,7 @@ import * as pathModule from 'path'
 import type { ErrorMessages } from 'approved-premises'
 import { initialiseName, formatDateString } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems } from './formUtils'
+import bookingActions from './bookingUtils'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -62,4 +63,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       return convertObjectsToRadioItems(items, textKey, valueKey, fieldName, this.ctx)
     },
   )
+
+  njkEnv.addGlobal('bookingActions', bookingActions)
 }

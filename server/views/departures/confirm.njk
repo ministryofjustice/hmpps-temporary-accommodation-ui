@@ -2,7 +2,6 @@
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Home" %}
@@ -94,7 +93,8 @@
         </div>
     </div>
 
+    <p class="govuk-body">
+        <a href="/premises"> Back to dashboard</a>
+    </p>
 
-  <p class="govuk-body"><a href="#"> Back to dashboard</a></p>
-  
 {% endblock %}

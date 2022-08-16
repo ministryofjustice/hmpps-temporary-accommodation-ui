@@ -4,6 +4,7 @@ import { addDays, startOfToday } from 'date-fns'
 
 import type { Booking } from 'approved-premises'
 import arrivalFactory from './arrival'
+import departureFactory from './departure'
 
 const today = startOfToday().toISOString()
 const soon = () => faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)).toISOString()
@@ -29,6 +30,14 @@ class BookingFactory extends Factory<Booking> {
       arrivalDate: past(),
       expectedDepartureDate: future(),
       status: 'arrived',
+    })
+  }
+
+  notArrived() {
+    return this.params({
+      arrivalDate: past(),
+      expectedDepartureDate: future(),
+      status: 'not-arrived',
     })
   }
 
@@ -82,4 +91,5 @@ export default BookingFactory.define(() => ({
   id: faker.datatype.uuid(),
   status: 'awaiting-arrival' as const,
   arrival: arrivalFactory.build(),
+  departure: departureFactory.build(),
 }))

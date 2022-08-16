@@ -1,7 +1,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% extends "../../partials/layout.njk" %}
+{% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Home" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -35,7 +35,7 @@
                         text: "Arrival date"
                     },
                     value: {
-                        text: arrivalDate
+                        text: formatDate(arrivalDate)
                     }
                     },
                     {
@@ -43,7 +43,7 @@
                         text: "Expected departure date"
                     },
                     value: {
-                        text: expectedDepartureDate
+                        text: formatDate(expectedDepartureDate)
                     }
                     },
                     {

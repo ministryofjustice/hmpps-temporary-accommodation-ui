@@ -77,7 +77,7 @@ export default class PremisesShowPage extends Page {
           cy.get('td')
             .eq(1)
             .contains('Manage')
-            .should('have.attr', 'href', `/premises/${this.premises.id}/bookings/${item.id}/arrivals/new`)
+            .should('have.attr', 'href', `/premises/${this.premises.id}/bookings/${item.id}`)
         })
     })
   }
@@ -94,7 +94,7 @@ export default class PremisesShowPage extends Page {
           cy.get('td')
             .eq(1)
             .contains('Manage')
-            .should('have.attr', 'href', `/premises/${this.premises.id}/bookings/${item.id}/arrivals/new`)
+            .should('have.attr', 'href', `/premises/${this.premises.id}/bookings/${item.id}`)
         })
     })
   }

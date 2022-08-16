@@ -1,4 +1,4 @@
-import { parseISO, isSameDay, isWithinInterval, addDays } from 'date-fns'
+import { isSameDay, isWithinInterval, addDays } from 'date-fns'
 
 import type { Booking, BookingDto, TableRow, GroupedListofBookings } from 'approved-premises'
 
@@ -30,11 +30,7 @@ export default class BookingService {
 
     const booking = await bookingClient.getBooking(premisesId, bookingId)
 
-    return {
-      ...booking,
-      arrivalDate: formatDate(parseISO(booking.arrivalDate)),
-      expectedDepartureDate: formatDate(parseISO(booking.expectedDepartureDate)),
-    }
+    return booking
   }
 
   async listOfBookingsForPremisesId(premisesId: string): Promise<Array<TableRow>> {
@@ -70,7 +66,7 @@ export default class BookingService {
         text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate)),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/arrivals/new">
+        html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
           Manage
           <span class="govuk-visually-hidden">
             booking for ${booking.CRN}
@@ -99,7 +95,7 @@ export default class BookingService {
         text: formatDate(convertDateString(booking.expectedDepartureDate)),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}/departures/new">
+        html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
         Manage
         <span class="govuk-visually-hidden">
           booking for ${booking.CRN}

@@ -8,12 +8,22 @@ import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 export default class BookingsController {
   constructor(private readonly bookingService: BookingService) {}
 
+  show(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, bookingId } = req.params
+
+      const booking = await this.bookingService.getBooking(premisesId, bookingId)
+
+      return res.render(`bookings/show`, { booking, premisesId })
+    }
+  }
+
   new(): RequestHandler {
     return (req: Request, res: Response) => {
       const { premisesId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      return res.render(`premises/bookings/new`, { premisesId, errors, errorSummary, ...userInput })
+      return res.render(`bookings/new`, { premisesId, errors, errorSummary, ...userInput })
     }
   }
 
@@ -42,7 +52,7 @@ export default class BookingsController {
       const { premisesId, bookingId } = req.params
       const booking = await this.bookingService.getBooking(premisesId, bookingId)
 
-      return res.render('premises/bookings/confirm', booking)
+      return res.render('bookings/confirm', booking)
     }
   }
 }

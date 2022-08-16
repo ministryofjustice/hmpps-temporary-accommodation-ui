@@ -1,6 +1,7 @@
 import premisesFactory from '../../server/testutils/factories/premises'
-import bookingDtoFactory from '../../server/testutils/factories/booking'
-import BookingPage from '../pages/booking'
+import bookingFactory from '../../server/testutils/factories/booking'
+import BookingCreatePage from '../pages/bookingCreate'
+import BookingShowPage from '../pages/bookingShow'
 import Page from '../pages/page'
 import BookingConfirmation from '../pages/bookingConfirmation'
 
@@ -12,7 +13,7 @@ context('Booking', () => {
   })
 
   it('should show booking form', () => {
-    const booking = bookingDtoFactory.build({
+    const booking = bookingFactory.build({
       CRN: '1bee477b-462f-47c1-8f71-7835a76a2c42',
       arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
@@ -28,7 +29,7 @@ context('Booking', () => {
     cy.signIn()
 
     // When I visit the booking page
-    const page = BookingPage.visit(premises.id)
+    const page = BookingCreatePage.visit(premises.id)
 
     // And I fill in the booking form
     page.completeForm(booking)
@@ -58,7 +59,7 @@ context('Booking', () => {
     cy.signIn()
 
     // When I visit the booking page
-    const page = BookingPage.visit(premises.id)
+    const page = BookingCreatePage.visit(premises.id)
 
     // And I miss a required field
     cy.task('stubBookingErrors', {
@@ -69,5 +70,21 @@ context('Booking', () => {
 
     // Then I should see error messages relating to that field
     page.shouldShowErrorMessagesForFields(['CRN', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'])
+  })
+
+  it('should allow me to see a booking', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And a booking is available
+    const premises = premisesFactory.build()
+    const booking = bookingFactory.build()
+    cy.task('stubBookingGet', { premisesId: premises.id, booking })
+
+    // When I navigate to the booking's manage page
+    const page = BookingShowPage.visit(premises.id, booking)
+
+    // Then I should see the details for that booking
+    page.shouldShowBookingDetails(booking)
   })
 })

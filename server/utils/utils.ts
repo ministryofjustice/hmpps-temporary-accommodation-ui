@@ -31,6 +31,8 @@ export const initialiseName = (fullName?: string): string | null => {
 
 export const formatDate = (date: Date): string => format(date, 'cccc d MMMM y')
 
+export const formatDateString = (date: string): string => format(convertDateString(date), 'cccc d MMMM y')
+
 /**
  * Converts an ISO8601 datetime string into a Javascript Date object.
  * @param date An ISO8601 datetime string

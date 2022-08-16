@@ -1,14 +1,14 @@
 import type { Booking } from 'approved-premises'
 import Page, { PageElement } from './page'
 
-export default class BookingPage extends Page {
+export default class BookingCreatePage extends Page {
   constructor() {
     super('Make a booking')
   }
 
-  static visit(premisesId: string): BookingPage {
+  static visit(premisesId: string): BookingCreatePage {
     cy.visit(`/premises/${premisesId}/bookings/new`)
-    return new BookingPage()
+    return new BookingCreatePage()
   }
 
   getLabel(labelName: string): void {

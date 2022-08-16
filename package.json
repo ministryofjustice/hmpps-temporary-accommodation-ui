@@ -149,7 +149,7 @@
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
-    "@typescript-eslint/parser": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.1",
     "@faker-js/faker": "^7.4.0",
     "@golevelup/ts-jest": "^0.3.3",
     "audit-ci": "^6.3.0",

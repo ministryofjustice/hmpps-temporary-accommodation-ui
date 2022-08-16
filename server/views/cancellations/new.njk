@@ -1,0 +1,108 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Cancel this placement" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1>Cancel this placement</h1>
+
+      <p>If {{ booking.name }} has not arrived or no longer requires this bed, cancel this booking. Cancelling this booking will make this bed available to another person. </p>
+
+      <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/cancellations" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ govukSummaryList({
+            rows: [
+                {
+                  key: {
+                    text: "Name"
+                  },
+                  value: {
+                    text: booking.name
+                  }
+                },
+                {
+                  key: {
+                    text: "CRN"
+                  },
+                  value: {
+                    text: booking.CRN
+                  }
+                },
+                {
+                  key: {
+                    text: "Arrival Date"
+                  },
+                  value: {
+                    text: formatDate(booking.arrivalDate)
+                  }
+                },
+                {
+                  key: {
+                    text: "Departure Date"
+                  },
+                  value: {
+                    text: formatDate(booking.expectedDepartureDate)
+                  }
+                }
+              ]
+          })
+        }}
+
+        {{ showErrorSummary(errorSummary) }}
+
+        {{ govukDateInput({
+            id: "date",
+            namePrefix: "date",
+            fieldset: {
+                legend: {
+                    text: "Date of Cancellation",
+                    classes: "govuk-fieldset__legend--m"
+                    }
+            },
+            hint: {
+                text: "For example, 27 3 2007"
+            },
+            errorMessage: errors.date,
+            items: dateFieldValues('date', errors)
+        }) }}
+
+        {{ govukRadios({
+          name: "cancellation[reason]",
+          id: "reason",
+          fieldset: {
+              legend: {
+              text: "What is the reason for cancelling this placement?",
+              classes: "govuk-fieldset__legend--m"
+              }
+          },
+          errorMessage: errors.reason,
+          items: convertObjectsToRadioItems(cancellationReasons, 'name', 'id', 'cancellation[reason]')
+          }) }}
+
+        {{ govukTextarea({
+            name: "cancellation[notes]",
+            id: "notes",
+            label: {
+            text: "Additional notes"
+            }
+        }) }}
+
+        {{ govukButton({
+            text: "Submit"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

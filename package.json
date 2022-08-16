@@ -148,7 +148,7 @@
     "@types/superagent": "^4.1.15",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "@faker-js/faker": "^7.4.0",
     "@golevelup/ts-jest": "^0.3.3",

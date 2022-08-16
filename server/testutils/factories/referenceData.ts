@@ -6,6 +6,7 @@ import type { ReferenceData } from 'approved-premises'
 import departureReasonsJson from '../../../wiremock/stubs/departure-reasons.json'
 import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.json'
 import destinationProvidersJson from '../../../wiremock/stubs/destination-providers.json'
+import cancellationReasonsJson from '../../../wiremock/stubs/cancellation-reasons.json'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
@@ -20,6 +21,11 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
 
   destinationProviders() {
     const data = faker.helpers.arrayElement(destinationProvidersJson)
+    return this.params(data)
+  }
+
+  cancellationReasons() {
+    const data = faker.helpers.arrayElement(cancellationReasonsJson)
     return this.params(data)
   }
 }

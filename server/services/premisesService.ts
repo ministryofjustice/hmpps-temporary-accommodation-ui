@@ -68,6 +68,10 @@ export default class PremisesService {
           key: this.textValue('Number of Beds'),
           value: this.textValue(premises.bedCount.toString()),
         },
+        {
+          key: this.textValue('Available Beds'),
+          value: this.textValue(premises.availableBedsForToday.toString()),
+        },
       ],
     }
   }

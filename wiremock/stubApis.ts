@@ -1,8 +1,12 @@
 /* eslint-disable no-console */
+import { DeepPartial } from 'fishery'
+
+import type { Premises } from 'approved-premises'
 import { bulkStub } from './index'
 
-import premises from './stubs/premises.json'
+import premisesJson from './stubs/premises.json'
 import bookingFactory from '../server/testutils/factories/booking'
+import premisesFactory from '../server/testutils/factories/premises'
 
 import bookingStubs from './bookingStubs'
 import arrivalStubs from './arrivalStubs'
@@ -13,6 +17,8 @@ import cancellationStubs from './cancellationStubs'
 import * as referenceDataStubs from './referenceDataStubs'
 
 const stubs = []
+
+const premises = premisesJson.map(item => premisesFactory.build(item as DeepPartial<Premises>))
 
 stubs.push({
   request: {
@@ -28,18 +34,18 @@ stubs.push({
   },
 })
 
-premises.forEach(p => {
+premises.forEach(item => {
   stubs.push({
     request: {
       method: 'GET',
-      url: `/premises/${p.id}`,
+      url: `/premises/${item.id}`,
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: p,
+      jsonBody: item,
     },
   })
 
@@ -58,7 +64,7 @@ premises.forEach(p => {
   stubs.push({
     request: {
       method: 'GET',
-      url: `/premises/${p.id}/bookings`,
+      url: `/premises/${item.id}/bookings`,
     },
     response: {
       status: 200,
@@ -73,7 +79,7 @@ premises.forEach(p => {
     stubs.push({
       request: {
         method: 'GET',
-        url: `/premises/${p.id}/bookings/${booking.id}`,
+        url: `/premises/${item.id}/bookings/${booking.id}`,
       },
       response: {
         status: 200,

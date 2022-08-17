@@ -30,6 +30,11 @@ export default class PremisesShowPage extends Page {
       .contains('Number of Beds')
       .siblings('.govuk-summary-list__value')
       .should('contain', this.premises.bedCount)
+
+    cy.get('.govuk-summary-list__key')
+      .contains('Available Beds')
+      .siblings('.govuk-summary-list__value')
+      .should('contain', this.premises.availableBedsForToday)
   }
 
   shouldShowBookings(

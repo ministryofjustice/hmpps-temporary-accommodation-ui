@@ -126,6 +126,7 @@ declare module 'approved-premises' {
       postcode: string
       bedCount: number
       apAreaId: string
+      availableBedsForToday: number
     }
     Booking: {
       id: string

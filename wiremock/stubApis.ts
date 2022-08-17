@@ -8,6 +8,8 @@ import bookingStubs from './bookingStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 import departureStubs from './departuresStubs'
+import cancellationStubs from './cancellationStubs'
+
 import * as referenceDataStubs from './referenceDataStubs'
 
 const stubs = []
@@ -89,6 +91,7 @@ stubs.push(
   ...arrivalStubs,
   ...nonArrivalStubs,
   ...departureStubs,
+  ...cancellationStubs,
   ...Object.values(referenceDataStubs),
 )
 

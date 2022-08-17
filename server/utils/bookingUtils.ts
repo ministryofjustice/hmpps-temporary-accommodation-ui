@@ -28,6 +28,11 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
         classes: 'govuk-button--secondary',
         href: `/premises/${premisesId}/bookings/${booking.id}/departures/new`,
       })
+      items.push({
+        text: 'Cancel booking',
+        classes: 'govuk-button--secondary',
+        href: `/premises/${premisesId}/bookings/${booking.id}/cancellations/new`,
+      })
     }
 
     return [

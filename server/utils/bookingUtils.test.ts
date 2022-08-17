@@ -50,6 +50,11 @@ describe('bookingUtils', () => {
               href: `/premises/premisesId/bookings/${booking.id}/departures/new`,
               text: 'Log departure',
             },
+            {
+              classes: 'govuk-button--secondary',
+              href: `/premises/premisesId/bookings/${booking.id}/cancellations/new`,
+              text: 'Cancel booking',
+            },
           ],
         },
       ])

@@ -45,6 +45,10 @@ context('Booking', () => {
       expect(requestBody.notes).equal(cancellation.notes)
       expect(requestBody.reason).equal(cancellation.reason.id)
     })
+
+    // And I should see a confirmation screen for that cancellation
+    const cancellationConfirmationPage = new CancellationConfirmPage()
+    cancellationConfirmationPage.verifyConfirmedCancellatiobIsVisible(cancellation, booking)
   })
 
   it('should show errors', () => {

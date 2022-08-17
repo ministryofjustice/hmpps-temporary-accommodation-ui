@@ -37,6 +37,7 @@ export default function routes(controllers: Controllers): Router {
 
   get('/premises/:premisesId/bookings/:bookingId/cancellations/new', cancellationsController.new())
   post('/premises/:premisesId/bookings/:bookingId/cancellations', cancellationsController.create())
+  get('/premises/:premisesId/bookings/:bookingId/cancellations/:id/confirmation', cancellationsController.confirm())
 
   get('/premises/:premisesId/bookings/:bookingId/departures/new', departuresController.new())
   post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())

@@ -147,4 +147,32 @@ describe('cancellationsController', () => {
       )
     })
   })
+
+  describe('confirm', () => {
+    it('renders the confirmation page with the details from the cancellation that is requested', async () => {
+      const cancellation = cancellationFactory.build()
+
+      cancellationService.getCancellation.mockResolvedValue(cancellation)
+
+      const requestHandler = cancellationsController.confirm()
+
+      await requestHandler(
+        {
+          ...request,
+          params: {
+            premisesId,
+            bookingId,
+            id: cancellation.id,
+          },
+        },
+        response,
+        next,
+      )
+
+      expect(cancellationService.getCancellation).toHaveBeenCalledWith(premisesId, bookingId, cancellation.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)
+
+      expect(response.render).toHaveBeenCalledWith('cancellations/confirm', { cancellation, booking })
+    })
+  })
 })

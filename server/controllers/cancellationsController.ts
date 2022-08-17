@@ -55,4 +55,14 @@ export default class CancellationsController {
       }
     }
   }
+
+  confirm(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, bookingId, id } = req.params
+      const booking = await this.bookingService.getBooking(premisesId, bookingId)
+      const cancellation = await this.cancellationService.getCancellation(premisesId, bookingId, id)
+
+      return res.render('cancellations/confirm', { cancellation, booking })
+    }
+  }
 }

@@ -24,6 +24,24 @@ export default {
         jsonBody: args.cancellation,
       },
     }),
+  stubCancellationGet: (args: { premisesId: string; bookingId: string; cancellation: Cancellation }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/cancellations/${args.cancellation.id}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: args.cancellation,
+      },
+    }),
+  stubCancellationErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
+    stubFor(
+      errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/cancellations`, ['reason']),
+    ),
   verifyCancellationCreate: async (args: { premisesId: string; bookingId: string; cancellation: Cancellation }) =>
     (
       await getMatchingRequests({

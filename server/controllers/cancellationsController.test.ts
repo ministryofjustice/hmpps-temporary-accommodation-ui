@@ -6,9 +6,10 @@ import type { ErrorsAndUserInput } from 'approved-premises'
 import CancellationService from '../services/cancellationService'
 import BookingService from '../services/bookingService'
 import CancellationsController from './cancellationsController'
-import { fetchErrorsAndUserInput } from '../utils/validation'
+import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
+import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
 
 jest.mock('../utils/validation')
@@ -78,6 +79,72 @@ describe('cancellationsController', () => {
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
       })
+    })
+  })
+
+  describe('create', () => {
+    it('creates a Cancellation and redirects to the confirmation page', async () => {
+      const cancellation = cancellationFactory.build()
+
+      cancellationService.createCancellation.mockResolvedValue(cancellation)
+
+      const requestHandler = cancellationsController.create()
+
+      request.params = {
+        bookingId: 'bookingId',
+        premisesId: 'premisesId',
+      }
+
+      request.body = {
+        'date-year': 2022,
+        'date-month': 12,
+        'date-day': 11,
+        cancellation: {
+          notes: 'Some notes',
+          reason: '8b2677dd-e5d4-407a-a8f8-e2035aec9227',
+        },
+      }
+
+      await requestHandler(request, response, next)
+
+      const expectedCancellation = {
+        ...request.body.cancellation,
+        date: new Date(2022, 11, 11).toISOString(),
+      }
+
+      expect(cancellationService.createCancellation).toHaveBeenCalledWith(
+        request.params.premisesId,
+        request.params.bookingId,
+        expectedCancellation,
+      )
+
+      expect(response.redirect).toHaveBeenCalledWith(
+        `/premises/premisesId/bookings/bookingId/cancellations/${cancellation.id}/confirmation`,
+      )
+    })
+
+    it('should catch the validation errors when the API returns an error', async () => {
+      const requestHandler = cancellationsController.create()
+
+      request.params = {
+        bookingId,
+        premisesId,
+      }
+
+      const err = new Error()
+
+      cancellationService.createCancellation.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        `/premises/${premisesId}/bookings/${bookingId}/cancellations/new`,
+      )
     })
   })
 })

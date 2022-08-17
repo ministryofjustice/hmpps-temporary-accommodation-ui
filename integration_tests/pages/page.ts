@@ -1,4 +1,5 @@
 import errorLookups from '../../server/i18n/en/errors.json'
+import { convertDateString } from '../../server/utils/utils'
 
 export type PageElement = Cypress.Chainable<JQuery>
 
@@ -31,5 +32,37 @@ export default abstract class Page {
       cy.get('.govuk-error-summary').should('contain', errorLookups[field]?.blank)
       cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[field]?.blank)
     })
+  }
+
+  getLabel(labelName: string): void {
+    cy.get('label').should('contain', labelName)
+  }
+
+  getLegend(legendName: string): void {
+    cy.get('legend').should('contain', legendName)
+  }
+
+  getTextInputByIdAndEnterDetails(id: string, details: string): void {
+    cy.get(`#${id}`).type(details)
+  }
+
+  getSelectInputByIdAndSelectAnEntry(id: string, entry: string): void {
+    cy.get(`#${id}`).select(entry)
+  }
+
+  checkRadioByNameAndValue(name: string, option: string): void {
+    cy.get(`input[name="${name}"][value="${option}"]`).check()
+  }
+
+  completeTextArea(name: string, value: string): void {
+    cy.get(`textarea[name="${name}"]`).type(value)
+  }
+
+  completeDateInputs(prefix: string, date: string): void {
+    const parsedDate = convertDateString(date)
+
+    cy.get(`#${prefix}-day`).type(parsedDate.getDate().toString())
+    cy.get(`#${prefix}-month`).type(`${parsedDate.getMonth() + 1}`)
+    cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())
   }
 }

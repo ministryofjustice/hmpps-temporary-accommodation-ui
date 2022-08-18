@@ -83,7 +83,7 @@ class BookingFactory extends Factory<Booking> {
 }
 
 export default BookingFactory.define(() => ({
-  CRN: faker.datatype.uuid(),
+  crn: faker.datatype.uuid(),
   arrivalDate: faker.date.soon().toISOString(),
   expectedDepartureDate: faker.date.future().toISOString(),
   keyWorker: `${faker.name.firstName()} ${faker.name.lastName()}`,

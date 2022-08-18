@@ -63,13 +63,13 @@ describe('BookingService', () => {
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')
 
-      expect(results[0][0]).toEqual({ text: bookings[0].CRN })
+      expect(results[0][0]).toEqual({ text: bookings[0].crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
       })
 
-      expect(results[1][0]).toEqual({ text: bookings[1].CRN })
+      expect(results[1][0]).toEqual({ text: bookings[1].crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
@@ -89,13 +89,13 @@ describe('BookingService', () => {
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'departure')
 
-      expect(results[0][0]).toEqual({ text: bookings[0].CRN })
+      expect(results[0][0]).toEqual({ text: bookings[0].crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
       })
 
-      expect(results[1][0]).toEqual({ text: bookings[1].CRN })
+      expect(results[1][0]).toEqual({ text: bookings[1].crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),

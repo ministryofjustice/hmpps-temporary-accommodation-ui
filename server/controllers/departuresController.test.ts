@@ -128,7 +128,7 @@ describe('DeparturesController', () => {
           destinationProvider: 'London',
           destinationAp: 'Some AP',
           name: 'John Doe',
-          CRN: 'A123456',
+          crn: 'A123456',
         },
       }
 
@@ -199,7 +199,7 @@ describe('DeparturesController', () => {
       expect(response.render).toHaveBeenCalledWith('departures/confirm', {
         ...departure,
         name: booking.name,
-        CRN: booking.CRN,
+        crn: booking.crn,
       })
     })
   })

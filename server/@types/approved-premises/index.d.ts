@@ -131,7 +131,7 @@ declare module 'approved-premises' {
     Booking: {
       id: string
       name: string
-      CRN: string
+      crn: string
       arrivalDate: string
       expectedDepartureDate: string
       keyWorker: string
@@ -146,7 +146,7 @@ declare module 'approved-premises' {
       expectedDepartureDate: string
       notes: string
       name: string
-      CRN: string
+      crn: string
     }
     NonArrival: {
       id: string

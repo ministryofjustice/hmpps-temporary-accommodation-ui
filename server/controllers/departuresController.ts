@@ -68,7 +68,7 @@ export default class DeparturesController {
       return res.render(`departures/confirm`, {
         ...departure,
         name: booking.name,
-        CRN: booking.CRN,
+        crn: booking.crn,
       })
     }
   }

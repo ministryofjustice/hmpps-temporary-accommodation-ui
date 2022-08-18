@@ -32,7 +32,7 @@ describe('BookingClient', () => {
       const payload = bookingDtoFactory.build({
         arrivalDate: booking.arrivalDate,
         expectedDepartureDate: booking.expectedDepartureDate,
-        CRN: booking.CRN,
+        crn: booking.crn,
         keyWorker: booking.keyWorker,
         name: booking.name,
       })

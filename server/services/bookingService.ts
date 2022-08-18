@@ -55,7 +55,7 @@ export default class BookingService extends Service {
   bookingsToTableRows(bookings: Array<Booking>, premisesId: string, type: 'arrival' | 'departure'): Array<TableRow> {
     return bookings.map(booking => [
       {
-        text: booking.CRN,
+        text: booking.crn,
       },
       {
         text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate)),
@@ -64,7 +64,7 @@ export default class BookingService extends Service {
         html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
           Manage
           <span class="govuk-visually-hidden">
-            booking for ${booking.CRN}
+            booking for ${booking.crn}
           </span>
         </a>`,
       },
@@ -83,7 +83,7 @@ export default class BookingService extends Service {
   currentResidentsToTableRows(bookings: Array<Booking>, premisesId: string): Array<TableRow> {
     return bookings.map(booking => [
       {
-        text: booking.CRN,
+        text: booking.crn,
       },
       {
         text: formatDate(convertDateString(booking.expectedDepartureDate)),
@@ -92,7 +92,7 @@ export default class BookingService extends Service {
         html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
         Manage
         <span class="govuk-visually-hidden">
-          booking for ${booking.CRN}
+          booking for ${booking.crn}
         </span>
       </a>`,
       },

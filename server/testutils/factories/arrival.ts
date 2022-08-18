@@ -10,5 +10,5 @@ export default Factory.define<Arrival>(() => ({
   expectedDepartureDate: faker.date.future().toISOString(),
   notes: faker.lorem.sentence(),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
-  CRN: faker.datatype.uuid(),
+  crn: faker.datatype.uuid(),
 }))

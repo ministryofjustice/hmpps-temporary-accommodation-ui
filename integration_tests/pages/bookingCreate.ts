@@ -57,7 +57,7 @@ export default class BookingCreatePage extends Page {
 
   completeForm(booking: Booking): void {
     this.getLabel('CRN')
-    this.getTextInputByIdAndEnterDetails('CRN', booking.CRN)
+    this.getTextInputByIdAndEnterDetails('crn', booking.crn)
 
     this.getLabel('Name')
     this.getTextInputByIdAndEnterDetails('name', booking.name)

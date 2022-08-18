@@ -90,7 +90,7 @@ describe('bookingsController', () => {
         ...request,
         params: { premisesId },
         body: {
-          CRN: 'CRN',
+          crn: 'CRN',
           keyWorker: 'John Doe',
           'arrivalDate-day': '01',
           'arrivalDate-month': '02',

@@ -33,7 +33,7 @@ describe('BookingClient', () => {
         expectedArrivalDate: booking.expectedArrivalDate,
         expectedDepartureDate: booking.expectedDepartureDate,
         crn: booking.crn,
-        keyWorker: booking.keyWorker,
+        keyWorkerId: booking.keyWorker.id,
         name: booking.name,
       })
 

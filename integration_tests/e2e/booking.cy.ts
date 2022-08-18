@@ -1,5 +1,7 @@
 import premisesFactory from '../../server/testutils/factories/premises'
 import bookingFactory from '../../server/testutils/factories/booking'
+import keyWorkerFactory from '../../server/testutils/factories/keyWorker'
+
 import BookingCreatePage from '../pages/bookingCreate'
 import BookingShowPage from '../pages/bookingShow'
 import Page from '../pages/page'
@@ -17,7 +19,7 @@ context('Booking', () => {
       crn: '1bee477b-462f-47c1-8f71-7835a76a2c42',
       expectedArrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
-      keyWorker: 'Alex Evans',
+      keyWorker: keyWorkerFactory.build({ name: 'Alex Evans' }),
     })
 
     const premises = premisesFactory.build()
@@ -47,7 +49,7 @@ context('Booking', () => {
       expect(requestBody.crn).equal('1bee477b-462f-47c1-8f71-7835a76a2c42')
       expect(requestBody.expectedArrivalDate).equal(booking.expectedArrivalDate)
       expect(requestBody.expectedDepartureDate).equal(booking.expectedDepartureDate)
-      expect(requestBody.keyWorker).equal('55126a32-0d27-4044-bc4e-e21c01632e56')
+      expect(requestBody.keyWorkerId).equal('55126a32-0d27-4044-bc4e-e21c01632e56')
     })
   })
 
@@ -64,7 +66,7 @@ context('Booking', () => {
     // And I miss a required field
     cy.task('stubBookingErrors', {
       premisesId: premises.id,
-      params: ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'],
+      params: ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],
     })
     page.clickSubmit()
 

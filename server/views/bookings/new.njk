@@ -87,13 +87,13 @@
                         classes: "govuk-label--m"
                     },
                     classes: "govuk-input--width-20",
-                    id: "keyWorker",
-                    name: "keyWorker",
+                    id: "keyWorkerId",
+                    name: "keyWorkerId",
                     items: [
                         {
                         value: "",
                         text: "Select a keyworker",
-                        selected: keyWorker === ''
+                        selected: keyWorkerId === ''
                         },
                         {
                         value: "bda42ec2-2435-47da-bb7f-54e90eda78b2",
@@ -108,7 +108,7 @@
                         text: "Jo Longford"
                         }
                     ],
-                    errorMessage: errors.keyWorker
+                    errorMessage: errors.keyWorkerId
                 }) }}
 
                 {{ govukButton({

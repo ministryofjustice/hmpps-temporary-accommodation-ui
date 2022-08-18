@@ -5,6 +5,7 @@ import { addDays, startOfToday } from 'date-fns'
 import type { Booking } from 'approved-premises'
 import arrivalFactory from './arrival'
 import departureFactory from './departure'
+import keyWorkerFactory from './keyWorker'
 
 const today = startOfToday().toISOString()
 const soon = () => faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)).toISOString()
@@ -86,7 +87,7 @@ export default BookingFactory.define(() => ({
   crn: faker.datatype.uuid(),
   expectedArrivalDate: faker.date.soon().toISOString(),
   expectedDepartureDate: faker.date.future().toISOString(),
-  keyWorker: `${faker.name.firstName()} ${faker.name.lastName()}`,
+  keyWorker: keyWorkerFactory.build(),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
   status: 'awaiting-arrival' as const,

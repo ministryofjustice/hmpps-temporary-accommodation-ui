@@ -79,6 +79,6 @@ export default class BookingCreatePage extends Page {
     this.expectedDepartureYear().type(expectedDepartureDate.getFullYear().toString())
 
     this.getLabel('Key Worker')
-    this.getSelectInputByIdAndSelectAnEntry('keyWorker', booking.keyWorker)
+    this.getSelectInputByIdAndSelectAnEntry('keyWorkerId', booking.keyWorker.name)
   }
 }

@@ -1,12 +1,11 @@
 import type { Premises, TableRow, SummaryList } from 'approved-premises'
 import type { RestClientBuilder, PremisesClient } from '../data'
+import Service from './service'
 
-export default class PremisesService {
-  // TODO: We need to do some more work on authentication to work
-  // out how to get this token, so let's stub for now
-  token = 'FAKE_TOKEN'
-
-  constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
+export default class PremisesService extends Service {
+  constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {
+    super()
+  }
 
   async tableRows(): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(this.token)

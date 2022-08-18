@@ -5,17 +5,17 @@ import type { Booking, BookingDto, TableRow, GroupedListofBookings } from 'appro
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { convertDateString, formatDate } from '../utils/utils'
+import Service from './service'
 
-export default class BookingService {
+export default class BookingService extends Service {
   UPCOMING_WINDOW_IN_DAYS = 5
 
-  constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
+  constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {
+    super()
+  }
 
   async postBooking(premisesId: string, booking: BookingDto): Promise<Booking> {
-    // TODO: We need to do some more work on authentication to work
-    // out how to get this token, so let's stub for now
-    const token = 'FAKE_TOKEN'
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(this.token)
 
     const confirmedBooking = await bookingClient.postBooking(premisesId, booking)
 
@@ -23,10 +23,7 @@ export default class BookingService {
   }
 
   async getBooking(premisesId: string, bookingId: string): Promise<Booking> {
-    // TODO: We need to do some more work on authentication to work
-    // out how to get this token, so let's stub for now
-    const token = 'FAKE_TOKEN'
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(this.token)
 
     const booking = await bookingClient.getBooking(premisesId, bookingId)
 
@@ -34,8 +31,7 @@ export default class BookingService {
   }
 
   async listOfBookingsForPremisesId(premisesId: string): Promise<Array<TableRow>> {
-    const token = 'FAKE_TOKEN'
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(this.token)
 
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
 
@@ -43,8 +39,7 @@ export default class BookingService {
   }
 
   async groupedListOfBookingsForPremisesId(premisesId: string): Promise<GroupedListofBookings> {
-    const token = 'FAKE_TOKEN'
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(this.token)
 
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
     const today = new Date(new Date().setHours(0, 0, 0, 0))
@@ -77,8 +72,7 @@ export default class BookingService {
   }
 
   async currentResidents(premisesId: string): Promise<Array<TableRow>> {
-    const token = 'FAKE_TOKEN'
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(this.token)
 
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
     const arrivedBookings = this.arrivedBookings(bookings)

@@ -5,6 +5,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import cancellationDtoFactory from '../testutils/factories/cancellationDto'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
+import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/cancellationClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -12,17 +13,19 @@ jest.mock('../data/referenceDataClient.ts')
 describe('DepartureService', () => {
   const cancellationClient = new CancellationClient(null) as jest.Mocked<CancellationClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
-  let service: CancellationService
 
   const CancellationClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
+
+  const service = new CancellationService(CancellationClientFactory, ReferenceDataClientFactory)
 
   beforeEach(() => {
     jest.resetAllMocks()
     CancellationClientFactory.mockReturnValue(cancellationClient)
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
-    service = new CancellationService(CancellationClientFactory, ReferenceDataClientFactory)
   })
+
+  itGetsATokenFromARequest(service)
 
   describe('createCancellation', () => {
     it('on success returns the cancellation that has been posted', async () => {

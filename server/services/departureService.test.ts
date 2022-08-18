@@ -8,6 +8,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import departureFactory from '../testutils/factories/departure'
 import referenceDataFactory from '../testutils/factories/referenceData'
 import departureDtoFactory from '../testutils/factories/departureDto'
+import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/departureClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -15,17 +16,18 @@ jest.mock('../data/referenceDataClient.ts')
 describe('DepartureService', () => {
   const departureClient = new DepartureClient(null) as jest.Mocked<DepartureClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
-  let service: DepartureService
 
   const DepartureClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
+  const service = new DepartureService(DepartureClientFactory, ReferenceDataClientFactory)
 
   beforeEach(() => {
     jest.resetAllMocks()
     DepartureClientFactory.mockReturnValue(departureClient)
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
-    service = new DepartureService(DepartureClientFactory, ReferenceDataClientFactory)
   })
+
+  itGetsATokenFromARequest(service)
 
   describe('createDeparture', () => {
     it('on success returns the departure that has been posted', async () => {

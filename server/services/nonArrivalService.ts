@@ -1,12 +1,11 @@
 import type { NonArrival } from 'approved-premises'
 import type { RestClientBuilder, NonArrivalClient } from '../data'
+import Service from './service'
 
-export default class NonArrivalService {
-  // TODO: We need to do some more work on authentication to work
-  // out how to get this token, so let's stub for now
-  token = 'FAKE_TOKEN'
-
-  constructor(private readonly nonArrivalClientFactory: RestClientBuilder<NonArrivalClient>) {}
+export default class NonArrivalService extends Service {
+  constructor(private readonly nonArrivalClientFactory: RestClientBuilder<NonArrivalClient>) {
+    super()
+  }
 
   async createNonArrival(
     premisesId: string,

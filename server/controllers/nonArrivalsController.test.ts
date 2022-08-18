@@ -4,6 +4,7 @@ import NonArrivalService from '../services/nonArrivalService'
 
 import NonArrivalsController from './nonArrivalsController'
 import { catchValidationErrorOrPropogate } from '../utils/validation'
+import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
@@ -12,13 +13,10 @@ describe('NonArrivalsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  let nonArrivalsController: NonArrivalsController
-  let nonArrivalService: DeepMocked<NonArrivalService>
+  const nonArrivalService = createMock<NonArrivalService>({})
+  const nonArrivalsController = new NonArrivalsController(nonArrivalService)
 
-  beforeEach(() => {
-    nonArrivalService = createMock<NonArrivalService>({})
-    nonArrivalsController = new NonArrivalsController(nonArrivalService)
-  })
+  servicesShouldGetTokenFromRequest([nonArrivalService], request)
 
   describe('create', () => {
     it('creates an nonArrival and redirects to the premises page', async () => {

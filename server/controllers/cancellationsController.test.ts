@@ -11,6 +11,7 @@ import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../uti
 import bookingFactory from '../testutils/factories/booking'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
+import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
@@ -19,29 +20,25 @@ describe('cancellationsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  let cancellationsController: CancellationsController
-
-  let cancellationService: DeepMocked<CancellationService>
-  let bookingService: DeepMocked<BookingService>
-
   const premisesId = 'premisesId'
   const bookingId = 'bookingId'
+
   const booking = bookingFactory.build()
   const cancellationReasons = referenceDataFactory.buildList(4)
 
+  const cancellationService = createMock<CancellationService>({})
+  const bookingService = createMock<BookingService>({})
+
+  const cancellationsController = new CancellationsController(cancellationService, bookingService)
+
   beforeEach(() => {
-    jest.resetAllMocks()
-
-    cancellationService = createMock<CancellationService>({})
-    bookingService = createMock<BookingService>({})
-
-    cancellationsController = new CancellationsController(cancellationService, bookingService)
-
     bookingService.getBooking.mockResolvedValue(booking)
     cancellationService.getCancellationReasons.mockResolvedValue(cancellationReasons)
   })
 
   describe('new', () => {
+    servicesShouldGetTokenFromRequest([cancellationService, bookingService], request)
+
     it('should render the form', async () => {
       ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
         return { errors: {}, errorSummary: [], userInput: {} }
@@ -83,6 +80,8 @@ describe('cancellationsController', () => {
   })
 
   describe('create', () => {
+    servicesShouldGetTokenFromRequest([cancellationService], request)
+
     it('creates a Cancellation and redirects to the confirmation page', async () => {
       const cancellation = cancellationFactory.build()
 
@@ -149,6 +148,8 @@ describe('cancellationsController', () => {
   })
 
   describe('confirm', () => {
+    servicesShouldGetTokenFromRequest([cancellationService, bookingService], request)
+
     it('renders the confirmation page with the details from the cancellation that is requested', async () => {
       const cancellation = cancellationFactory.build()
 

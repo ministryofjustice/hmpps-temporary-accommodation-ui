@@ -5,23 +5,20 @@ import type { SummaryListItem, GroupedListofBookings, TableRow } from 'approved-
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
 import PremisesController from './premisesController'
+import servicesShouldGetTokenFromRequest from './shared_examples'
 
 describe('PremisesController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  let premisesController: PremisesController
-  let premisesService: DeepMocked<PremisesService>
-  let bookingService: DeepMocked<BookingService>
-
-  beforeEach(() => {
-    premisesService = createMock<PremisesService>({})
-    bookingService = createMock<BookingService>({})
-    premisesController = new PremisesController(premisesService, bookingService)
-  })
+  const premisesService = createMock<PremisesService>({})
+  const bookingService = createMock<BookingService>({})
+  const premisesController = new PremisesController(premisesService, bookingService)
 
   describe('index', () => {
+    servicesShouldGetTokenFromRequest([premisesService], request)
+
     it('should return the table rows to the template', async () => {
       premisesService.tableRows.mockResolvedValue([])
 
@@ -33,6 +30,8 @@ describe('PremisesController', () => {
   })
 
   describe('show', () => {
+    servicesShouldGetTokenFromRequest([premisesService, bookingService], request)
+
     it('should return the premises detail to the template', async () => {
       const premises = { name: 'Some premises', summaryList: { rows: [] as Array<SummaryListItem> } }
       const bookings = createMock<GroupedListofBookings>()

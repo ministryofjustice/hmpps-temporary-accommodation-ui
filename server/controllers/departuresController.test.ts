@@ -9,27 +9,20 @@ import BookingService from '../services/bookingService'
 import departureFactory from '../testutils/factories/departure'
 import bookingFactory from '../testutils/factories/booking'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
+import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
 describe('DeparturesController', () => {
-  let request: DeepMocked<Request> = createMock<Request>({})
+  const request = createMock<Request>({})
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  let departuresController: DeparturesController
-  let departureService: DeepMocked<DepartureService>
-  let premisesService: DeepMocked<PremisesService>
-  let bookingService: DeepMocked<BookingService>
+  const departureService = createMock<DepartureService>({})
+  const premisesService = createMock<PremisesService>({})
+  const bookingService = createMock<BookingService>({})
 
-  beforeEach(() => {
-    jest.resetAllMocks()
-    request = createMock<Request>({})
-    departureService = createMock<DepartureService>({})
-    premisesService = createMock<PremisesService>({})
-    bookingService = createMock<BookingService>({})
-    departuresController = new DeparturesController(departureService, premisesService, bookingService)
-  })
+  const departuresController = new DeparturesController(departureService, premisesService, bookingService)
 
   describe('new', () => {
     const booking = bookingFactory.build()
@@ -40,6 +33,8 @@ describe('DeparturesController', () => {
       premisesService.getPremisesSelectList.mockResolvedValue([{ value: 'id', text: 'name' }])
       bookingService.getBooking.mockResolvedValue(booking)
     })
+
+    servicesShouldGetTokenFromRequest([departureService, premisesService, bookingService], request)
 
     it('renders the form', async () => {
       const referenceData = createMock<DepartureReferenceData>()
@@ -108,6 +103,8 @@ describe('DeparturesController', () => {
   })
 
   describe('create', () => {
+    servicesShouldGetTokenFromRequest([departureService], request)
+
     it('creates an Departure and redirects to the confirmation page', async () => {
       const departure = departureFactory.build()
       departureService.createDeparture.mockResolvedValue(departure)
@@ -181,6 +178,8 @@ describe('DeparturesController', () => {
   })
 
   describe('confirm', () => {
+    servicesShouldGetTokenFromRequest([departureService, bookingService], request)
+
     it('renders the confirmation page', async () => {
       const booking = bookingFactory.build()
       bookingService.getBooking.mockResolvedValue(booking)
@@ -190,15 +189,10 @@ describe('DeparturesController', () => {
 
       const premisesId = 'premisesId'
       const bookingId = 'bookingId'
+
       const requestHandler = departuresController.confirm()
 
-      request.params = {
-        premisesId,
-        bookingId,
-        departureId: departure.id,
-      }
-
-      await requestHandler(request, response, next)
+      await requestHandler({ ...request, params: { premisesId, bookingId, departureId: departure.id } }, response, next)
 
       expect(departureService.getDeparture).toHaveBeenCalledWith(premisesId, bookingId, departure.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)

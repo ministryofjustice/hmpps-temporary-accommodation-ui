@@ -19,9 +19,9 @@ export default class DeparturesController {
       const { premisesId, bookingId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const booking = await this.bookingService.getBooking(premisesId, bookingId)
-      const premisesSelectList = await this.premisesService.getPremisesSelectList()
-      const referenceData = await this.departureService.getReferenceData()
+      const booking = await this.bookingService.withTokenFromRequest(req).getBooking(premisesId, bookingId)
+      const premisesSelectList = await this.premisesService.withTokenFromRequest(req).getPremisesSelectList()
+      const referenceData = await this.departureService.withTokenFromRequest(req).getReferenceData()
 
       res.render('departures/new', {
         premisesId,
@@ -46,7 +46,9 @@ export default class DeparturesController {
       } as DepartureDto
 
       try {
-        const { id } = await this.departureService.createDeparture(premisesId, bookingId, departure)
+        const { id } = await this.departureService
+          .withTokenFromRequest(req)
+          .createDeparture(premisesId, bookingId, departure)
         res.redirect(`/premises/${premisesId}/bookings/${bookingId}/departures/${id}/confirmation`)
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/departures/new`)
@@ -58,8 +60,10 @@ export default class DeparturesController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId, departureId } = req.params
 
-      const booking = await this.bookingService.getBooking(premisesId, bookingId)
-      const departure = await this.departureService.getDeparture(premisesId, bookingId, departureId)
+      const booking = await this.bookingService.withTokenFromRequest(req).getBooking(premisesId, bookingId)
+      const departure = await this.departureService
+        .withTokenFromRequest(req)
+        .getDeparture(premisesId, bookingId, departureId)
 
       return res.render(`departures/confirm`, {
         ...departure,

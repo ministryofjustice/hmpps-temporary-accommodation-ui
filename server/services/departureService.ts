@@ -2,6 +2,7 @@ import { parseISO } from 'date-fns'
 
 import type { Departure, ReferenceData, DepartureDto } from 'approved-premises'
 import type { RestClientBuilder, DepartureClient, ReferenceDataClient } from '../data'
+import Service from './service'
 
 export type DepartureReferenceData = {
   departureReasons: Array<ReferenceData>
@@ -9,15 +10,13 @@ export type DepartureReferenceData = {
   destinationProviders: Array<ReferenceData>
 }
 
-export default class DepartureService {
-  // TODO: We need to do some more work on authentication to work
-  // out how to get this token, so let's stub for now
-  token = 'FAKE_TOKEN'
-
+export default class DepartureService extends Service {
   constructor(
     private readonly departureClientFactory: RestClientBuilder<DepartureClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
-  ) {}
+  ) {
+    super()
+  }
 
   async createDeparture(premisesId: string, bookingId: string, departure: DepartureDto): Promise<Departure> {
     const departureClient = this.departureClientFactory(this.token)

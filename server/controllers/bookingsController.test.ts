@@ -7,6 +7,7 @@ import BookingsController from './bookingsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
+import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
@@ -15,17 +16,12 @@ describe('bookingsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  let bookingController: BookingsController
-  let bookingService: DeepMocked<BookingService>
-
-  beforeEach(() => {
-    jest.resetAllMocks()
-
-    bookingService = createMock<BookingService>({})
-    bookingController = new BookingsController(bookingService)
-  })
+  const bookingService = createMock<BookingService>({})
+  const bookingController = new BookingsController(bookingService)
 
   describe('show', () => {
+    servicesShouldGetTokenFromRequest([bookingService], request)
+
     it('should fetch the booking and render the show page', async () => {
       const booking = bookingFactory.build()
       bookingService.getBooking.mockResolvedValue(booking)
@@ -82,6 +78,8 @@ describe('bookingsController', () => {
   })
 
   describe('create', () => {
+    servicesShouldGetTokenFromRequest([bookingService], request)
+
     it('given the expected form data, the posting of the booking is successful should redirect to the "premises" page', async () => {
       const booking = bookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
@@ -143,6 +141,8 @@ describe('bookingsController', () => {
   })
 
   describe('confirm', () => {
+    servicesShouldGetTokenFromRequest([bookingService], request)
+
     it('renders the form with the details from the booking that is requested', async () => {
       const booking = bookingFactory.build({
         arrivalDate: new Date('07/27/22').toISOString(),

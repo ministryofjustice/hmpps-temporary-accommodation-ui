@@ -1,4 +1,4 @@
-import type { Request, Response, RequestHandler, ShowRequest, ShowRequestHandler } from 'express'
+import type { Request, Response, RequestHandler } from 'express'
 
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
@@ -7,17 +7,20 @@ export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bookingService: BookingService) {}
 
   index(): RequestHandler {
-    return async (_req: Request, res: Response) => {
-      const tableRows = await this.premisesService.tableRows()
+    return async (req: Request, res: Response) => {
+      const tableRows = await this.premisesService.withTokenFromRequest(req).tableRows()
       return res.render('premises/index', { tableRows })
     }
   }
 
-  show(): ShowRequestHandler {
-    return async (req: ShowRequest, res: Response) => {
-      const premises = await this.premisesService.getPremisesDetails(req.params.id)
-      const bookings = await this.bookingService.groupedListOfBookingsForPremisesId(req.params.id)
-      const currentResidents = await this.bookingService.currentResidents(req.params.id)
+  show(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const premises = await this.premisesService.withTokenFromRequest(req).getPremisesDetails(req.params.id)
+
+      const bookingService = this.bookingService.withTokenFromRequest(req)
+      const bookings = await bookingService.groupedListOfBookingsForPremisesId(req.params.id)
+      const currentResidents = await bookingService.currentResidents(req.params.id)
+
       return res.render('premises/show', { premises, bookings, currentResidents })
     }
   }

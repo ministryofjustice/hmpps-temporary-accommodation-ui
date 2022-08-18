@@ -4,20 +4,22 @@ import BookingClient from '../data/bookingClient'
 import bookingDtoFactory from '../testutils/factories/bookingDto'
 import bookingFactory from '../testutils/factories/booking'
 import { formatDate } from '../utils/utils'
+import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/bookingClient.ts')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
-  let service: BookingService
 
   const bookingClientFactory = jest.fn()
+  const service = new BookingService(bookingClientFactory)
 
   beforeEach(() => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
-    service = new BookingService(bookingClientFactory)
   })
+
+  itGetsATokenFromARequest(service)
 
   describe('postBooking', () => {
     it('on success returns the booking that has been posted', async () => {

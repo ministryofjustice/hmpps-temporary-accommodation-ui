@@ -2,20 +2,22 @@ import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 
 import premisesFactory from '../testutils/factories/premises'
+import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/premisesClient')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
-  let service: PremisesService
-
   const premisesClientFactory = jest.fn()
+
+  const service = new PremisesService(premisesClientFactory)
 
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
-    service = new PremisesService(premisesClientFactory)
   })
+
+  itGetsATokenFromARequest(service)
 
   describe('tableRows', () => {
     it('returns a table view of the premises', async () => {

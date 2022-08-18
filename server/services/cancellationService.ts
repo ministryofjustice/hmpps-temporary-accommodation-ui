@@ -1,15 +1,14 @@
 import type { Cancellation, CancellationDto, ReferenceData } from 'approved-premises'
 import type { RestClientBuilder, CancellationClient, ReferenceDataClient } from '../data'
+import Service from './service'
 
-export default class CancellationService {
-  // TODO: We need to do some more work on authentication to work
-  // out how to get this token, so let's stub for now
-  token = 'FAKE_TOKEN'
-
+export default class CancellationService extends Service {
   constructor(
     private readonly cancellationClientFactory: RestClientBuilder<CancellationClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
-  ) {}
+  ) {
+    super()
+  }
 
   async createCancellation(
     premisesId: string,

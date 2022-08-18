@@ -30,7 +30,7 @@ describe('BookingClient', () => {
     it('should return the booking that has been posted', async () => {
       const booking = bookingFactory.build()
       const payload = bookingDtoFactory.build({
-        arrivalDate: booking.arrivalDate,
+        expectedArrivalDate: booking.expectedArrivalDate,
         expectedDepartureDate: booking.expectedDepartureDate,
         crn: booking.crn,
         keyWorker: booking.keyWorker,

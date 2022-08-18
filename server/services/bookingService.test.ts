@@ -34,11 +34,11 @@ describe('BookingService', () => {
 
   describe('getBooking', () => {
     it('on success returns the booking that has been requested', async () => {
-      const arrivalDate = new Date(2022, 2, 11)
+      const expectedArrivalDate = new Date(2022, 2, 11)
       const expectedDepartureDate = new Date(2022, 2, 12)
 
       const booking = bookingFactory.build({
-        arrivalDate: arrivalDate.toISOString(),
+        expectedArrivalDate: expectedArrivalDate.toISOString(),
         expectedDepartureDate: expectedDepartureDate.toISOString(),
       })
 
@@ -57,8 +57,8 @@ describe('BookingService', () => {
       const booking2Date = new Date(2022, 2, 11)
 
       const bookings = [
-        bookingFactory.build({ arrivalDate: booking1Date.toISOString() }),
-        bookingFactory.build({ arrivalDate: booking2Date.toISOString() }),
+        bookingFactory.build({ expectedArrivalDate: booking1Date.toISOString() }),
+        bookingFactory.build({ expectedArrivalDate: booking2Date.toISOString() }),
       ]
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')

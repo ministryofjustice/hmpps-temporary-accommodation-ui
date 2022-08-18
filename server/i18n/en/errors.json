@@ -5,7 +5,7 @@
   "name": {
     "blank": "You must enter a name"
   },
-  "arrivalDate": {
+  "expectedArrivalDate": {
     "blank": "You must enter a valid arrival date"
   },
   "date": {

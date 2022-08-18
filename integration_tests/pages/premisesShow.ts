@@ -74,7 +74,7 @@ export default class PremisesShowPage extends Page {
 
   private tableShouldContainBookings(bookings: Array<Booking>, type: 'arrival' | 'departure') {
     bookings.forEach((item: Booking) => {
-      const date = type === 'arrival' ? parseISO(item.arrivalDate) : parseISO(item.expectedDepartureDate)
+      const date = type === 'arrival' ? parseISO(item.expectedArrivalDate) : parseISO(item.expectedDepartureDate)
       cy.contains(item.crn)
         .parent()
         .within(() => {

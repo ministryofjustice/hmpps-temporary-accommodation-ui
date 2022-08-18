@@ -50,19 +50,19 @@
                 }) }}
 
                 {{ govukDateInput({
-                    id: "arrivalDate",
-                    namePrefix: "arrivalDate",
+                    id: "expectedArrivalDate",
+                    namePrefix: "expectedArrivalDate",
                     fieldset: {
                     legend: {
-                        text: "What is the arrival date?",
+                        text: "What is the expected arrival date?",
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {
                         text: "For example, 27 3 2007"
                     },
-                    items: dateFieldValues('arrivalDate', errors),
-                    errorMessage: errors.arrivalDate
+                    items: dateFieldValues('expectedArrivalDate', errors),
+                    errorMessage: errors.expectedArrivalDate
                 }) }}
 
                 {{ govukDateInput({

@@ -92,9 +92,9 @@ describe('bookingsController', () => {
         body: {
           crn: 'CRN',
           keyWorker: 'John Doe',
-          'arrivalDate-day': '01',
-          'arrivalDate-month': '02',
-          'arrivalDate-year': '2022',
+          'expectedArrivalDate-day': '01',
+          'expectedArrivalDate-month': '02',
+          'expectedArrivalDate-year': '2022',
           'expectedDepartureDate-day': '01',
           'expectedDepartureDate-month': '02',
           'expectedDepartureDate-year': '2023',
@@ -105,7 +105,7 @@ describe('bookingsController', () => {
 
       expect(bookingService.postBooking).toHaveBeenCalledWith(premisesId, {
         ...request.body,
-        arrivalDate: '2022-02-01T00:00:00.000Z',
+        expectedArrivalDate: '2022-02-01T00:00:00.000Z',
         expectedDepartureDate: '2023-02-01T00:00:00.000Z',
       })
 
@@ -145,7 +145,7 @@ describe('bookingsController', () => {
 
     it('renders the form with the details from the booking that is requested', async () => {
       const booking = bookingFactory.build({
-        arrivalDate: new Date('07/27/22').toISOString(),
+        expectedArrivalDate: new Date('07/27/22').toISOString(),
         expectedDepartureDate: new Date('07/28/22').toISOString(),
       })
       bookingService.getBooking.mockResolvedValue(booking)

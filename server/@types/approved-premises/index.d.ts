@@ -132,7 +132,7 @@ declare module 'approved-premises' {
       id: string
       name: string
       crn: string
-      arrivalDate: string
+      expectedArrivalDate: string
       expectedDepartureDate: string
       keyWorker: string
       status: BookingStatus

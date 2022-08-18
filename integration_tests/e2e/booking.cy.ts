@@ -15,7 +15,7 @@ context('Booking', () => {
   it('should show booking form', () => {
     const booking = bookingFactory.build({
       crn: '1bee477b-462f-47c1-8f71-7835a76a2c42',
-      arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
+      expectedArrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
       keyWorker: 'Alex Evans',
     })
@@ -45,7 +45,7 @@ context('Booking', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.crn).equal('1bee477b-462f-47c1-8f71-7835a76a2c42')
-      expect(requestBody.arrivalDate).equal(booking.arrivalDate)
+      expect(requestBody.expectedArrivalDate).equal(booking.expectedArrivalDate)
       expect(requestBody.expectedDepartureDate).equal(booking.expectedDepartureDate)
       expect(requestBody.keyWorker).equal('55126a32-0d27-4044-bc4e-e21c01632e56')
     })
@@ -64,12 +64,12 @@ context('Booking', () => {
     // And I miss a required field
     cy.task('stubBookingErrors', {
       premisesId: premises.id,
-      params: ['crn', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'],
+      params: ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'],
     })
     page.clickSubmit()
 
     // Then I should see error messages relating to that field
-    page.shouldShowErrorMessagesForFields(['crn', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'])
+    page.shouldShowErrorMessagesForFields(['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'])
   })
 
   it('should allow me to see a booking', () => {

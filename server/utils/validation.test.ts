@@ -11,7 +11,7 @@ jest.mock('../i18n/en/errors.json', () => {
     crn: {
       blank: 'You must enter a CRN',
     },
-    arrivalDate: {
+    expectedArrivalDate: {
       blank: 'You must enter a valid arrival date',
     },
   }
@@ -28,7 +28,7 @@ describe('catchValidationErrorOrPropogate', () => {
           errorType: 'blank',
         },
         {
-          propertyName: 'arrivalDate',
+          propertyName: 'expectedArrivalDate',
           errorType: 'blank',
         },
       ],
@@ -37,12 +37,15 @@ describe('catchValidationErrorOrPropogate', () => {
 
   const expectedErrors = {
     crn: { text: errorLookups.crn.blank, attributes: { 'data-cy-error-crn': true } },
-    arrivalDate: { text: errorLookups.arrivalDate.blank, attributes: { 'data-cy-error-arrivalDate': true } },
+    expectedArrivalDate: {
+      text: errorLookups.expectedArrivalDate.blank,
+      attributes: { 'data-cy-error-expectedArrivalDate': true },
+    },
   }
 
   const expectedErrorSummary = [
     { text: errorLookups.crn.blank, href: '#crn' },
-    { text: errorLookups.arrivalDate.blank, href: '#arrivalDate' },
+    { text: errorLookups.expectedArrivalDate.blank, href: '#expectedArrivalDate' },
   ]
 
   it('sets the errors and request body as flash messages and redirects back to the form', () => {

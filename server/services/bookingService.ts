@@ -58,7 +58,9 @@ export default class BookingService extends Service {
         text: booking.crn,
       },
       {
-        text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.expectedDepartureDate)),
+        text: formatDate(
+          convertDateString(type === 'arrival' ? booking.expectedArrivalDate : booking.expectedDepartureDate),
+        ),
       },
       {
         html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
@@ -101,7 +103,7 @@ export default class BookingService extends Service {
 
   private bookingsArrivingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
     return this.bookingsAwaitingArrival(bookings).filter(booking =>
-      isSameDay(convertDateString(booking.arrivalDate), today),
+      isSameDay(convertDateString(booking.expectedArrivalDate), today),
     )
   }
 
@@ -112,7 +114,7 @@ export default class BookingService extends Service {
   }
 
   private upcomingArrivals(bookings: Array<Booking>, today: Date): Array<Booking> {
-    return this.bookingsAwaitingArrival(bookings).filter(booking => this.isUpcoming(booking.arrivalDate, today))
+    return this.bookingsAwaitingArrival(bookings).filter(booking => this.isUpcoming(booking.expectedArrivalDate, today))
   }
 
   private upcomingDepartures(bookings: Array<Booking>, today: Date): Array<Booking> {

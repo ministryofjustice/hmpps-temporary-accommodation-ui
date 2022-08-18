@@ -6,19 +6,19 @@ describe('utils', () => {
       const arr = ['crn', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker']
 
       expect(getCombinations(arr)).toEqual([
-        ['crn', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'],
-        ['crn', 'name', 'arrivalDate', 'expectedDepartureDate'],
-        ['name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'],
-        ['crn', 'name', 'arrivalDate'],
-        ['name', 'arrivalDate', 'expectedDepartureDate'],
-        ['arrivalDate', 'expectedDepartureDate', 'keyWorker'],
+        ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'],
+        ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate'],
+        ['name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'],
+        ['crn', 'name', 'expectedArrivalDate'],
+        ['name', 'expectedArrivalDate', 'expectedDepartureDate'],
+        ['expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'],
         ['crn', 'name'],
-        ['name', 'arrivalDate'],
-        ['arrivalDate', 'expectedDepartureDate'],
+        ['name', 'expectedArrivalDate'],
+        ['expectedArrivalDate', 'expectedDepartureDate'],
         ['expectedDepartureDate', 'keyWorker'],
         ['crn'],
         ['name'],
-        ['arrivalDate'],
+        ['expectedArrivalDate'],
         ['expectedDepartureDate'],
         ['keyWorker'],
       ])

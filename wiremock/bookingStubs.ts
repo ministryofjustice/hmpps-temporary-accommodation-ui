@@ -14,7 +14,7 @@ bookingStubs.push({
         matchesJsonPath: "$.[?(@.crn != '')]",
       },
       {
-        matchesJsonPath: "$.[?(@.arrivalDate != '')]",
+        matchesJsonPath: "$.[?(@.expectedArrivalDate != '')]",
       },
       {
         matchesJsonPath: "$.[?(@.expectedDepartureDate != '')]",
@@ -33,7 +33,7 @@ bookingStubs.push({
   },
 })
 
-const requiredFields = getCombinations(['crn', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'])
+const requiredFields = getCombinations(['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'])
 
 requiredFields.forEach((fields: Array<string>) => {
   bookingStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings`))

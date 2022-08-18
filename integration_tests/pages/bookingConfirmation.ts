@@ -17,7 +17,7 @@ export default class BookingConfirmationPage extends Page {
     cy.get('dl').within(() => {
       this.assertDefinition('Name', booking.name)
       this.assertDefinition('CRN', booking.crn)
-      this.assertDefinition('Arrival date', formatDate(parseISO(booking.expectedArrivalDate)))
+      this.assertDefinition('Expected arrival date', formatDate(parseISO(booking.expectedArrivalDate)))
       this.assertDefinition('Expected departure date', formatDate(parseISO(booking.expectedDepartureDate)))
       this.assertDefinition('Key worker', booking.keyWorker)
     })

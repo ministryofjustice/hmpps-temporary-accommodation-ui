@@ -69,7 +69,13 @@ context('Booking', () => {
     page.clickSubmit()
 
     // Then I should see error messages relating to that field
-    page.shouldShowErrorMessagesForFields(['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorker'])
+    page.shouldShowErrorMessagesForFields([
+      'crn',
+      'name',
+      'expectedArrivalDate',
+      'expectedDepartureDate',
+      'keyWorkerId',
+    ])
   })
 
   it('should allow me to see a booking', () => {

@@ -62,7 +62,7 @@ export default class BookingCreatePage extends Page {
     this.getLabel('Name')
     this.getTextInputByIdAndEnterDetails('name', booking.name)
 
-    this.getLegend('What is the arrival date?')
+    this.getLegend('What is the expected arrival date?')
 
     const expectedArrivalDate = new Date(Date.parse(booking.expectedArrivalDate))
 

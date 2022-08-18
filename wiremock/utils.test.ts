@@ -3,24 +3,24 @@ import { getCombinations } from './utils'
 describe('utils', () => {
   describe('getCombinations', () => {
     it('returns all the possible combinations of an array', () => {
-      const arr = ['CRN', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker']
+      const arr = ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId']
 
       expect(getCombinations(arr)).toEqual([
-        ['CRN', 'name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'],
-        ['CRN', 'name', 'arrivalDate', 'expectedDepartureDate'],
-        ['name', 'arrivalDate', 'expectedDepartureDate', 'keyWorker'],
-        ['CRN', 'name', 'arrivalDate'],
-        ['name', 'arrivalDate', 'expectedDepartureDate'],
-        ['arrivalDate', 'expectedDepartureDate', 'keyWorker'],
-        ['CRN', 'name'],
-        ['name', 'arrivalDate'],
-        ['arrivalDate', 'expectedDepartureDate'],
-        ['expectedDepartureDate', 'keyWorker'],
-        ['CRN'],
+        ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],
+        ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate'],
+        ['name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],
+        ['crn', 'name', 'expectedArrivalDate'],
+        ['name', 'expectedArrivalDate', 'expectedDepartureDate'],
+        ['expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],
+        ['crn', 'name'],
+        ['name', 'expectedArrivalDate'],
+        ['expectedArrivalDate', 'expectedDepartureDate'],
+        ['expectedDepartureDate', 'keyWorkerId'],
+        ['crn'],
         ['name'],
-        ['arrivalDate'],
+        ['expectedArrivalDate'],
         ['expectedDepartureDate'],
-        ['keyWorker'],
+        ['keyWorkerId'],
       ])
     })
   })

@@ -1,11 +1,11 @@
 {
-  "CRN": {
+  "crn": {
     "blank": "You must enter a CRN"
   },
   "name": {
     "blank": "You must enter a name"
   },
-  "arrivalDate": {
+  "expectedArrivalDate": {
     "blank": "You must enter a valid arrival date"
   },
   "date": {
@@ -17,7 +17,7 @@
   "expectedDepartureDate": {
     "blank": "You must enter a valid expected departure date"
   },
-  "keyWorker": {
+  "keyWorkerId": {
     "blank": "You must choose a keyworker"
   },
   "dateTime": {

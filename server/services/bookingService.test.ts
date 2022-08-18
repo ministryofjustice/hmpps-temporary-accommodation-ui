@@ -34,11 +34,11 @@ describe('BookingService', () => {
 
   describe('getBooking', () => {
     it('on success returns the booking that has been requested', async () => {
-      const arrivalDate = new Date(2022, 2, 11)
+      const expectedArrivalDate = new Date(2022, 2, 11)
       const expectedDepartureDate = new Date(2022, 2, 12)
 
       const booking = bookingFactory.build({
-        arrivalDate: arrivalDate.toISOString(),
+        expectedArrivalDate: expectedArrivalDate.toISOString(),
         expectedDepartureDate: expectedDepartureDate.toISOString(),
       })
 
@@ -57,19 +57,19 @@ describe('BookingService', () => {
       const booking2Date = new Date(2022, 2, 11)
 
       const bookings = [
-        bookingFactory.build({ arrivalDate: booking1Date.toISOString() }),
-        bookingFactory.build({ arrivalDate: booking2Date.toISOString() }),
+        bookingFactory.build({ expectedArrivalDate: booking1Date.toISOString() }),
+        bookingFactory.build({ expectedArrivalDate: booking2Date.toISOString() }),
       ]
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')
 
-      expect(results[0][0]).toEqual({ text: bookings[0].CRN })
+      expect(results[0][0]).toEqual({ text: bookings[0].crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
       })
 
-      expect(results[1][0]).toEqual({ text: bookings[1].CRN })
+      expect(results[1][0]).toEqual({ text: bookings[1].crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
@@ -89,13 +89,13 @@ describe('BookingService', () => {
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'departure')
 
-      expect(results[0][0]).toEqual({ text: bookings[0].CRN })
+      expect(results[0][0]).toEqual({ text: bookings[0].crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
       })
 
-      expect(results[1][0]).toEqual({ text: bookings[1].CRN })
+      expect(results[1][0]).toEqual({ text: bookings[1].crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),

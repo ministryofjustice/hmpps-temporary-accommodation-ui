@@ -6,8 +6,9 @@ declare module 'approved-premises' {
   export type Booking = schemas['Booking']
   export type ReferenceData = schemas['ReferenceData']
   export type Cancellation = schemas['Cancellation']
+  export type KeyWorker = schemas['KeyWorker']
 
-  export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival'>
+  export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival' | 'keyWorker'> & { keyWorkerId: string }
 
   // A utility type that allows us to define an object with a date attribute split into
   // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
@@ -131,13 +132,17 @@ declare module 'approved-premises' {
     Booking: {
       id: string
       name: string
-      CRN: string
-      arrivalDate: string
+      crn: string
+      expectedArrivalDate: string
       expectedDepartureDate: string
-      keyWorker: string
+      keyWorker: KeyWorker
       status: BookingStatus
       arrival?: Arrival
       departure?: Departure
+    }
+    KeyWorker: {
+      id: string
+      name: string
     }
     Arrival: {
       id: string
@@ -146,7 +151,7 @@ declare module 'approved-premises' {
       expectedDepartureDate: string
       notes: string
       name: string
-      CRN: string
+      crn: string
     }
     NonArrival: {
       id: string

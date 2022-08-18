@@ -32,10 +32,10 @@
                         classes: "govuk-label--m"
                     },
                     classes: "govuk-input--width-10",
-                    id: "CRN",
-                    name: "CRN",
-                    value: CRN,
-                    errorMessage: errors.CRN
+                    id: "crn",
+                    name: "crn",
+                    value: crn,
+                    errorMessage: errors.crn
                 }) }}
 
                 {{ govukInput({
@@ -50,19 +50,19 @@
                 }) }}
 
                 {{ govukDateInput({
-                    id: "arrivalDate",
-                    namePrefix: "arrivalDate",
+                    id: "expectedArrivalDate",
+                    namePrefix: "expectedArrivalDate",
                     fieldset: {
                     legend: {
-                        text: "What is the arrival date?",
+                        text: "What is the expected arrival date?",
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {
                         text: "For example, 27 3 2007"
                     },
-                    items: dateFieldValues('arrivalDate', errors),
-                    errorMessage: errors.arrivalDate
+                    items: dateFieldValues('expectedArrivalDate', errors),
+                    errorMessage: errors.expectedArrivalDate
                 }) }}
 
                 {{ govukDateInput({
@@ -87,13 +87,13 @@
                         classes: "govuk-label--m"
                     },
                     classes: "govuk-input--width-20",
-                    id: "keyWorker",
-                    name: "keyWorker",
+                    id: "keyWorkerId",
+                    name: "keyWorkerId",
                     items: [
                         {
                         value: "",
                         text: "Select a keyworker",
-                        selected: keyWorker === ''
+                        selected: keyWorkerId === ''
                         },
                         {
                         value: "bda42ec2-2435-47da-bb7f-54e90eda78b2",
@@ -108,7 +108,7 @@
                         text: "Jo Longford"
                         }
                     ],
-                    errorMessage: errors.keyWorker
+                    errorMessage: errors.keyWorkerId
                 }) }}
 
                 {{ govukButton({

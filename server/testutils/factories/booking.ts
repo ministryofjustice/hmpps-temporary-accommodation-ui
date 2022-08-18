@@ -5,6 +5,7 @@ import { addDays, startOfToday } from 'date-fns'
 import type { Booking } from 'approved-premises'
 import arrivalFactory from './arrival'
 import departureFactory from './departure'
+import keyWorkerFactory from './keyWorker'
 
 const today = startOfToday().toISOString()
 const soon = () => faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)).toISOString()
@@ -13,21 +14,21 @@ const future = () => faker.date.future().toISOString()
 class BookingFactory extends Factory<Booking> {
   arrivingToday() {
     return this.params({
-      arrivalDate: today,
+      expectedArrivalDate: today,
       status: 'awaiting-arrival',
     })
   }
 
   arrivedToday() {
     return this.params({
-      arrivalDate: today,
+      expectedArrivalDate: today,
       status: 'arrived',
     })
   }
 
   arrived() {
     return this.params({
-      arrivalDate: past(),
+      expectedArrivalDate: past(),
       expectedDepartureDate: future(),
       status: 'arrived',
     })
@@ -35,7 +36,7 @@ class BookingFactory extends Factory<Booking> {
 
   notArrived() {
     return this.params({
-      arrivalDate: past(),
+      expectedArrivalDate: past(),
       expectedDepartureDate: future(),
       status: 'not-arrived',
     })
@@ -43,7 +44,7 @@ class BookingFactory extends Factory<Booking> {
 
   departingToday() {
     return this.params({
-      arrivalDate: past(),
+      expectedArrivalDate: past(),
       expectedDepartureDate: today,
       status: 'arrived',
     })
@@ -51,7 +52,7 @@ class BookingFactory extends Factory<Booking> {
 
   departedToday() {
     return this.params({
-      arrivalDate: past(),
+      expectedArrivalDate: past(),
       expectedDepartureDate: today,
       status: 'departed',
     })
@@ -59,7 +60,7 @@ class BookingFactory extends Factory<Booking> {
 
   arrivingSoon() {
     return this.params({
-      arrivalDate: soon(),
+      expectedArrivalDate: soon(),
       expectedDepartureDate: future(),
       status: 'awaiting-arrival',
     })
@@ -67,7 +68,7 @@ class BookingFactory extends Factory<Booking> {
 
   cancelledWithFutureArrivalDate() {
     return this.params({
-      arrivalDate: soon(),
+      expectedArrivalDate: soon(),
       expectedDepartureDate: future(),
       status: 'cancelled',
     })
@@ -76,17 +77,17 @@ class BookingFactory extends Factory<Booking> {
   departingSoon() {
     return this.params({
       expectedDepartureDate: soon(),
-      arrivalDate: past(),
+      expectedArrivalDate: past(),
       status: 'arrived',
     })
   }
 }
 
 export default BookingFactory.define(() => ({
-  CRN: faker.datatype.uuid(),
-  arrivalDate: faker.date.soon().toISOString(),
+  crn: faker.datatype.uuid(),
+  expectedArrivalDate: faker.date.soon().toISOString(),
   expectedDepartureDate: faker.date.future().toISOString(),
-  keyWorker: `${faker.name.firstName()} ${faker.name.lastName()}`,
+  keyWorker: keyWorkerFactory.build(),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
   status: 'awaiting-arrival' as const,

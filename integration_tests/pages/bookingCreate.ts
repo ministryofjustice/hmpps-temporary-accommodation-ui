@@ -28,15 +28,15 @@ export default class BookingCreatePage extends Page {
   }
 
   arrivalDay(): PageElement {
-    return cy.get('#arrivalDate-day')
+    return cy.get('#expectedArrivalDate-day')
   }
 
   arrivalMonth(): PageElement {
-    return cy.get('#arrivalDate-month')
+    return cy.get('#expectedArrivalDate-month')
   }
 
   arrivalYear(): PageElement {
-    return cy.get('#arrivalDate-year')
+    return cy.get('#expectedArrivalDate-year')
   }
 
   expectedDepartureDay(): PageElement {
@@ -57,18 +57,18 @@ export default class BookingCreatePage extends Page {
 
   completeForm(booking: Booking): void {
     this.getLabel('CRN')
-    this.getTextInputByIdAndEnterDetails('CRN', booking.CRN)
+    this.getTextInputByIdAndEnterDetails('crn', booking.crn)
 
     this.getLabel('Name')
     this.getTextInputByIdAndEnterDetails('name', booking.name)
 
-    this.getLegend('What is the arrival date?')
+    this.getLegend('What is the expected arrival date?')
 
-    const arrivalDate = new Date(Date.parse(booking.arrivalDate))
+    const expectedArrivalDate = new Date(Date.parse(booking.expectedArrivalDate))
 
-    this.arrivalDay().type(arrivalDate.getDate().toString())
-    this.arrivalMonth().type(`${arrivalDate.getMonth() + 1}`)
-    this.arrivalYear().type(arrivalDate.getFullYear().toString())
+    this.arrivalDay().type(expectedArrivalDate.getDate().toString())
+    this.arrivalMonth().type(`${expectedArrivalDate.getMonth() + 1}`)
+    this.arrivalYear().type(expectedArrivalDate.getFullYear().toString())
 
     this.getLegend('What is the expected departure date?')
 
@@ -79,6 +79,6 @@ export default class BookingCreatePage extends Page {
     this.expectedDepartureYear().type(expectedDepartureDate.getFullYear().toString())
 
     this.getLabel('Key Worker')
-    this.getSelectInputByIdAndSelectAnEntry('keyWorker', booking.keyWorker)
+    this.getSelectInputByIdAndSelectAnEntry('keyWorkerId', booking.keyWorker.name)
   }
 }

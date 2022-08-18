@@ -14,7 +14,7 @@ export default class DepartureCreatePage extends Page {
 
   public verifySummary(booking: Booking): void {
     this.assertDefinition('Name', booking.name)
-    this.assertDefinition('CRN', booking.CRN)
+    this.assertDefinition('CRN', booking.crn)
   }
 
   public completeForm(departure: Departure): void {

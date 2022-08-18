@@ -6,7 +6,6 @@
 {% from "../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Cancel this placement" %}
@@ -14,7 +13,7 @@
 
 {% block content %}
 
-{{ govukBackLink({
+  {{ govukBackLink({
   text: "Back",
   href: "/premises/" + premisesId + "/bookings/" + bookingId
 }) }}
@@ -43,7 +42,7 @@
                     text: "CRN"
                   },
                   value: {
-                    text: booking.CRN
+                    text: booking.crn
                   }
                 },
                 {
@@ -51,7 +50,7 @@
                     text: "Arrival Date"
                   },
                   value: {
-                    text: formatDate(booking.arrivalDate)
+                    text: formatDate(booking.expectedArrivalDate)
                   }
                 },
                 {

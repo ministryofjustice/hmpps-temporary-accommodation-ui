@@ -33,7 +33,7 @@ export default class BookingsController {
 
       const booking: BookingDto = {
         ...req.body,
-        ...convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
+        ...convertDateAndTimeInputsToIsoString(req.body, 'expectedArrivalDate'),
         ...convertDateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
       }
 

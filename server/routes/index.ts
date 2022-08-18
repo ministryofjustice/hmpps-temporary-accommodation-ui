@@ -15,6 +15,7 @@ export default function routes(controllers: Controllers): Router {
     arrivalsController,
     nonArrivalsController,
     departuresController,
+    cancellationsController,
   } = controllers
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -33,6 +34,10 @@ export default function routes(controllers: Controllers): Router {
   get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
   post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())
   post('/premises/:premisesId/bookings/:bookingId/nonArrivals', nonArrivalsController.create())
+
+  get('/premises/:premisesId/bookings/:bookingId/cancellations/new', cancellationsController.new())
+  post('/premises/:premisesId/bookings/:bookingId/cancellations', cancellationsController.create())
+  get('/premises/:premisesId/bookings/:bookingId/cancellations/:id/confirmation', cancellationsController.confirm())
 
   get('/premises/:premisesId/bookings/:bookingId/departures/new', departuresController.new())
   post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())

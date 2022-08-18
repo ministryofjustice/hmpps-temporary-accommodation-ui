@@ -1,0 +1,75 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Home" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: "Cancellation complete"
+      }) }}
+
+      {{ govukSummaryList({
+          rows: [
+              {
+                key: {
+                    text: "Name"
+                },
+                value: {
+                    text: booking.name
+                }
+              },
+              {
+                key: {
+                    text: "CRN"
+                },
+                value: {
+                    text: booking.CRN
+                }
+              },
+              {
+                key: {
+                    text: "Arrival date"
+                },
+                value: {
+                    text: formatDate(booking.arrivalDate)
+                }
+              },
+              {
+                key: {
+                    text: "Expected departure date"
+                },
+                value: {
+                    text: formatDate(booking.expectedDepartureDate)
+                }
+              },
+              {
+                key: {
+                    text: "Date of cancellation"
+                },
+                value: {
+                    text: formatDate(cancellation.date)
+                }
+              },
+              {
+                key: {
+                    text: "Notes"
+                },
+                value: {
+                    text: cancellation.notes
+                }
+              }
+          ]
+      }) }}
+
+      <p class="govuk-body">
+        <a href="/premises"> Back to dashboard</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

@@ -1,14 +1,11 @@
 import type { Premises, TableRow, SummaryList } from 'approved-premises'
 import type { RestClientBuilder, PremisesClient } from '../data'
-import Service from './service'
 
-export default class PremisesService extends Service {
-  constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {
-    super()
-  }
+export default class PremisesService {
+  constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
 
-  async tableRows(): Promise<Array<TableRow>> {
-    const premisesClient = this.premisesClientFactory(this.token)
+  async tableRows(token: string): Promise<Array<TableRow>> {
+    const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.getAllPremises()
 
     return premises
@@ -25,16 +22,16 @@ export default class PremisesService extends Service {
       })
   }
 
-  async getPremisesDetails(id: string): Promise<{ name: string; summaryList: SummaryList }> {
-    const premisesClient = this.premisesClientFactory(this.token)
+  async getPremisesDetails(token: string, id: string): Promise<{ name: string; summaryList: SummaryList }> {
+    const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.getPremises(id)
     const summaryList = await this.summaryListForPremises(premises)
 
     return { name: premises.name, summaryList }
   }
 
-  async getPremisesSelectList(): Promise<Array<{ text: string; value: string }>> {
-    const premisesClient = this.premisesClientFactory(this.token)
+  async getPremisesSelectList(token: string): Promise<Array<{ text: string; value: string }>> {
+    const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.getAllPremises()
 
     return premises

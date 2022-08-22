@@ -8,7 +8,6 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import departureFactory from '../testutils/factories/departure'
 import referenceDataFactory from '../testutils/factories/referenceData'
 import departureDtoFactory from '../testutils/factories/departureDto'
-import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/departureClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -17,8 +16,11 @@ describe('DepartureService', () => {
   const departureClient = new DepartureClient(null) as jest.Mocked<DepartureClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
+  const token = 'SOME_TOKEN'
+
   const DepartureClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
+
   const service = new DepartureService(DepartureClientFactory, ReferenceDataClientFactory)
 
   beforeEach(() => {
@@ -27,8 +29,6 @@ describe('DepartureService', () => {
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
-  itGetsATokenFromARequest(service)
-
   describe('createDeparture', () => {
     it('on success returns the departure that has been posted', async () => {
       const departureDto = departureDtoFactory.build()
@@ -36,8 +36,10 @@ describe('DepartureService', () => {
 
       departureClient.create.mockResolvedValue(departure)
 
-      const postedDeparture = await service.createDeparture('premisesId', 'bookingId', departureDto)
+      const postedDeparture = await service.createDeparture(token, 'premisesId', 'bookingId', departureDto)
       expect(postedDeparture).toEqual(departure)
+
+      expect(DepartureClientFactory).toHaveBeenCalledWith(token)
       expect(departureClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', departureDto)
     })
   })
@@ -47,12 +49,14 @@ describe('DepartureService', () => {
       const departure: Departure = departureFactory.build()
       departureClient.get.mockResolvedValue(departure)
 
-      const requestedDeparture = await service.getDeparture('premisesId', 'bookingId', departure.id)
+      const requestedDeparture = await service.getDeparture(token, 'premisesId', 'bookingId', departure.id)
 
       expect(requestedDeparture).toEqual({
         ...departure,
         dateTime: parseISO(departure.dateTime).toLocaleDateString('en-GB'),
       })
+
+      expect(DepartureClientFactory).toHaveBeenCalledWith(token)
       expect(departureClient.get).toHaveBeenCalledWith('premisesId', 'bookingId', departure.id)
     })
   })
@@ -73,13 +77,19 @@ describe('DepartureService', () => {
         )
       })
 
-      const result = await service.getReferenceData()
+      const result = await service.getReferenceData(token)
 
       expect(result).toEqual({
         departureReasons,
         moveOnCategories,
         destinationProviders,
       })
+
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
+
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('departure-reasons')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('move-on-categories')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('destination-providers')
     })
   })
 })

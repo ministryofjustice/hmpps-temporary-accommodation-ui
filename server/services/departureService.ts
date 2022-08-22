@@ -2,7 +2,6 @@ import { parseISO } from 'date-fns'
 
 import type { Departure, ReferenceData, DepartureDto } from 'approved-premises'
 import type { RestClientBuilder, DepartureClient, ReferenceDataClient } from '../data'
-import Service from './service'
 
 export type DepartureReferenceData = {
   departureReasons: Array<ReferenceData>
@@ -10,32 +9,35 @@ export type DepartureReferenceData = {
   destinationProviders: Array<ReferenceData>
 }
 
-export default class DepartureService extends Service {
+export default class DepartureService {
   constructor(
     private readonly departureClientFactory: RestClientBuilder<DepartureClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
-  ) {
-    super()
-  }
+  ) {}
 
-  async createDeparture(premisesId: string, bookingId: string, departure: DepartureDto): Promise<Departure> {
-    const departureClient = this.departureClientFactory(this.token)
+  async createDeparture(
+    token: string,
+    premisesId: string,
+    bookingId: string,
+    departure: DepartureDto,
+  ): Promise<Departure> {
+    const departureClient = this.departureClientFactory(token)
 
     const confirmedDeparture = await departureClient.create(premisesId, bookingId, departure)
 
     return confirmedDeparture
   }
 
-  async getDeparture(premisesId: string, bookingId: string, departureId: string): Promise<Departure> {
-    const departureClient = this.departureClientFactory(this.token)
+  async getDeparture(token: string, premisesId: string, bookingId: string, departureId: string): Promise<Departure> {
+    const departureClient = this.departureClientFactory(token)
 
     const departure = await departureClient.get(premisesId, bookingId, departureId)
 
     return { ...departure, dateTime: parseISO(departure.dateTime).toLocaleDateString('en-GB') }
   }
 
-  async getReferenceData(): Promise<DepartureReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(this.token)
+  async getReferenceData(token: string): Promise<DepartureReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(token)
 
     const [departureReasons, moveOnCategories, destinationProviders] = await Promise.all([
       referenceDataClient.getReferenceData('departure-reasons'),

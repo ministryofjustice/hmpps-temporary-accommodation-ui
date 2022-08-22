@@ -17,8 +17,8 @@ export default class CancellationsController {
       const { premisesId, bookingId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const booking = await this.bookingService.withTokenFromRequest(req).getBooking(premisesId, bookingId)
-      const cancellationReasons = await this.cancellationService.withTokenFromRequest(req).getCancellationReasons()
+      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const cancellationReasons = await this.cancellationService.getCancellationReasons(req.user.token)
 
       res.render('cancellations/new', {
         premisesId,
@@ -43,9 +43,12 @@ export default class CancellationsController {
       } as CancellationDto
 
       try {
-        const { id } = await this.cancellationService
-          .withTokenFromRequest(req)
-          .createCancellation(premisesId, bookingId, cancellation)
+        const { id } = await this.cancellationService.createCancellation(
+          req.user.token,
+          premisesId,
+          bookingId,
+          cancellation,
+        )
         res.redirect(`/premises/${premisesId}/bookings/${bookingId}/cancellations/${id}/confirmation`)
       } catch (err) {
         catchValidationErrorOrPropogate(
@@ -61,10 +64,8 @@ export default class CancellationsController {
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId, id } = req.params
-      const booking = await this.bookingService.withTokenFromRequest(req).getBooking(premisesId, bookingId)
-      const cancellation = await this.cancellationService
-        .withTokenFromRequest(req)
-        .getCancellation(premisesId, bookingId, id)
+      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const cancellation = await this.cancellationService.getCancellation(req.user.token, premisesId, bookingId, id)
 
       return res.render('cancellations/confirm', { cancellation, booking })
     }

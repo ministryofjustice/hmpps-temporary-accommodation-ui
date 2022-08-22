@@ -9,12 +9,13 @@ import BookingService from '../services/bookingService'
 import departureFactory from '../testutils/factories/departure'
 import bookingFactory from '../testutils/factories/booking'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
 describe('DeparturesController', () => {
-  const request = createMock<Request>({})
+  const token = 'SOME_TOKEN'
+
+  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -34,8 +35,6 @@ describe('DeparturesController', () => {
       bookingService.getBooking.mockResolvedValue(booking)
     })
 
-    servicesShouldGetTokenFromRequest([departureService, premisesService, bookingService], request)
-
     it('renders the form', async () => {
       const referenceData = createMock<DepartureReferenceData>()
       departureService.getReferenceData.mockResolvedValue(referenceData)
@@ -50,8 +49,6 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremisesSelectList).toHaveBeenCalled()
-      expect(bookingService.getBooking).toHaveBeenCalledWith('premisesId', 'bookingId')
       expect(response.render).toHaveBeenCalledWith('departures/new', {
         premisesId,
         booking,
@@ -65,6 +62,10 @@ describe('DeparturesController', () => {
         errorSummary: [],
         errors: {},
       })
+
+      expect(premisesService.getPremisesSelectList).toHaveBeenCalledWith(token)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
+      expect(departureService.getReferenceData).toHaveBeenCalledWith(token)
     })
 
     it('renders the form with errors', async () => {
@@ -83,8 +84,6 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremisesSelectList).toHaveBeenCalled()
-      expect(bookingService.getBooking).toHaveBeenCalledWith('premisesId', 'bookingId')
       expect(response.render).toHaveBeenCalledWith('departures/new', {
         premisesId,
         booking,
@@ -99,12 +98,13 @@ describe('DeparturesController', () => {
         errors: errorsAndUserInput.errors,
         ...errorsAndUserInput.userInput,
       })
+
+      expect(premisesService.getPremisesSelectList).toHaveBeenCalledWith(token)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
     })
   })
 
   describe('create', () => {
-    servicesShouldGetTokenFromRequest([departureService], request)
-
     it('creates an Departure and redirects to the confirmation page', async () => {
       const departure = departureFactory.build()
       departureService.createDeparture.mockResolvedValue(departure)
@@ -140,6 +140,7 @@ describe('DeparturesController', () => {
       }
 
       expect(departureService.createDeparture).toHaveBeenCalledWith(
+        token,
         request.params.premisesId,
         request.params.bookingId,
         expectedDeparture,
@@ -178,8 +179,6 @@ describe('DeparturesController', () => {
   })
 
   describe('confirm', () => {
-    servicesShouldGetTokenFromRequest([departureService, bookingService], request)
-
     it('renders the confirmation page', async () => {
       const booking = bookingFactory.build()
       bookingService.getBooking.mockResolvedValue(booking)
@@ -194,13 +193,14 @@ describe('DeparturesController', () => {
 
       await requestHandler({ ...request, params: { premisesId, bookingId, departureId: departure.id } }, response, next)
 
-      expect(departureService.getDeparture).toHaveBeenCalledWith(premisesId, bookingId, departure.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)
       expect(response.render).toHaveBeenCalledWith('departures/confirm', {
         ...departure,
         name: booking.name,
         crn: booking.crn,
       })
+
+      expect(departureService.getDeparture).toHaveBeenCalledWith(token, premisesId, bookingId, departure.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
     })
   })
 })

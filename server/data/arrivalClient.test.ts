@@ -4,7 +4,7 @@ import ArrivalClient from './arrivalClient'
 import config from '../config'
 import arrivalFactory from '../testutils/factories/arrival'
 
-describe('PremisesClient', () => {
+describe('ArrivalClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let arrivalClient: ArrivalClient
 

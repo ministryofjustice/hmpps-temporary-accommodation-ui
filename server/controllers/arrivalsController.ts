@@ -32,7 +32,7 @@ export default class ArrivalsController {
       }
 
       try {
-        await this.arrivalService.withTokenFromRequest(req).createArrival(premisesId, bookingId, arrival)
+        await this.arrivalService.createArrival(req.user.token, premisesId, bookingId, arrival)
 
         res.redirect(`/premises/${premisesId}`)
       } catch (err) {

@@ -2,7 +2,6 @@ import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 
 import premisesFactory from '../testutils/factories/premises'
-import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/premisesClient')
 
@@ -12,12 +11,12 @@ describe('PremisesService', () => {
 
   const service = new PremisesService(premisesClientFactory)
 
+  const token = 'SOME_TOKEN'
+
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
   })
-
-  itGetsATokenFromARequest(service)
 
   describe('tableRows', () => {
     it('returns a table view of the premises', async () => {
@@ -28,7 +27,7 @@ describe('PremisesService', () => {
       const premises = [premises1, premises2, premises3]
       premisesClient.getAllPremises.mockResolvedValue(premises)
 
-      const rows = await service.tableRows()
+      const rows = await service.tableRows(token)
 
       expect(rows).toEqual([
         [
@@ -74,6 +73,9 @@ describe('PremisesService', () => {
           },
         ],
       ])
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.getAllPremises).toHaveBeenCalled()
     })
   })
 
@@ -84,13 +86,16 @@ describe('PremisesService', () => {
       const premisesC = premisesFactory.build({ name: 'c' })
       premisesClient.getAllPremises.mockResolvedValue([premisesC, premisesB, premisesA])
 
-      const result = await service.getPremisesSelectList()
+      const result = await service.getPremisesSelectList(token)
 
       expect(result).toEqual([
         { text: premisesA.name, value: premisesA.id },
         { text: premisesB.name, value: premisesB.id },
         { text: premisesC.name, value: premisesC.id },
       ])
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.getAllPremises).toHaveBeenCalled()
     })
   })
 
@@ -105,7 +110,7 @@ describe('PremisesService', () => {
       })
       premisesClient.getPremises.mockResolvedValue(premises)
 
-      const result = await service.getPremisesDetails(premises.id)
+      const result = await service.getPremisesDetails(token, premises.id)
 
       expect(result).toEqual({
         name: 'Test',
@@ -131,6 +136,9 @@ describe('PremisesService', () => {
         },
       })
 
+      expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
     })
   })

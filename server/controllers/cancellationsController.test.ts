@@ -11,12 +11,13 @@ import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../uti
 import bookingFactory from '../testutils/factories/booking'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
-import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
 describe('cancellationsController', () => {
-  const request: DeepMocked<Request> = createMock<Request>({})
+  const token = 'SOME_TOKEN'
+
+  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -37,8 +38,6 @@ describe('cancellationsController', () => {
   })
 
   describe('new', () => {
-    servicesShouldGetTokenFromRequest([cancellationService, bookingService], request)
-
     it('should render the form', async () => {
       ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
         return { errors: {}, errorSummary: [], userInput: {} }
@@ -56,6 +55,9 @@ describe('cancellationsController', () => {
         errors: {},
         errorSummary: [],
       })
+
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
+      expect(cancellationService.getCancellationReasons).toHaveBeenCalledWith(token)
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
@@ -80,8 +82,6 @@ describe('cancellationsController', () => {
   })
 
   describe('create', () => {
-    servicesShouldGetTokenFromRequest([cancellationService], request)
-
     it('creates a Cancellation and redirects to the confirmation page', async () => {
       const cancellation = cancellationFactory.build()
 
@@ -112,6 +112,7 @@ describe('cancellationsController', () => {
       }
 
       expect(cancellationService.createCancellation).toHaveBeenCalledWith(
+        token,
         request.params.premisesId,
         request.params.bookingId,
         expectedCancellation,
@@ -148,8 +149,6 @@ describe('cancellationsController', () => {
   })
 
   describe('confirm', () => {
-    servicesShouldGetTokenFromRequest([cancellationService, bookingService], request)
-
     it('renders the confirmation page with the details from the cancellation that is requested', async () => {
       const cancellation = cancellationFactory.build()
 
@@ -170,8 +169,8 @@ describe('cancellationsController', () => {
         next,
       )
 
-      expect(cancellationService.getCancellation).toHaveBeenCalledWith(premisesId, bookingId, cancellation.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)
+      expect(cancellationService.getCancellation).toHaveBeenCalledWith(token, premisesId, bookingId, cancellation.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
 
       expect(response.render).toHaveBeenCalledWith('cancellations/confirm', { cancellation, booking })
     })

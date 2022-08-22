@@ -19,7 +19,7 @@ export default class NonArrivalsController {
       }
 
       try {
-        await this.nonArrivalService.withTokenFromRequest(req).createNonArrival(premisesId, bookingId, nonArrival)
+        await this.nonArrivalService.createNonArrival(req.user.token, premisesId, bookingId, nonArrival)
 
         res.redirect(`/premises/${premisesId}`)
       } catch (err) {

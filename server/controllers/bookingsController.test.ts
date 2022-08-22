@@ -7,12 +7,13 @@ import BookingsController from './bookingsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
-import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
 describe('bookingsController', () => {
-  let request: DeepMocked<Request> = createMock<Request>({})
+  const token = 'SOME_TOKEN'
+
+  let request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -20,8 +21,6 @@ describe('bookingsController', () => {
   const bookingController = new BookingsController(bookingService)
 
   describe('show', () => {
-    servicesShouldGetTokenFromRequest([bookingService], request)
-
     it('should fetch the booking and render the show page', async () => {
       const booking = bookingFactory.build()
       bookingService.getBooking.mockResolvedValue(booking)
@@ -37,7 +36,7 @@ describe('bookingsController', () => {
         premisesId,
       })
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, bookingId)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
     })
   })
 
@@ -78,8 +77,6 @@ describe('bookingsController', () => {
   })
 
   describe('create', () => {
-    servicesShouldGetTokenFromRequest([bookingService], request)
-
     it('given the expected form data, the posting of the booking is successful should redirect to the "premises" page', async () => {
       const booking = bookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
@@ -101,7 +98,7 @@ describe('bookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.postBooking).toHaveBeenCalledWith(premisesId, {
+      expect(bookingService.postBooking).toHaveBeenCalledWith(token, premisesId, {
         ...request.body,
         expectedArrivalDate: '2022-02-01T00:00:00.000Z',
         expectedDepartureDate: '2023-02-01T00:00:00.000Z',
@@ -139,8 +136,6 @@ describe('bookingsController', () => {
   })
 
   describe('confirm', () => {
-    servicesShouldGetTokenFromRequest([bookingService], request)
-
     it('renders the form with the details from the booking that is requested', async () => {
       const booking = bookingFactory.build({
         expectedArrivalDate: new Date('07/27/22').toISOString(),
@@ -160,7 +155,7 @@ describe('bookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
       expect(response.render).toHaveBeenCalledWith('bookings/confirm', booking)
     })
   })

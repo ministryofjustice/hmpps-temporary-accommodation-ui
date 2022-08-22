@@ -5,10 +5,11 @@ import type { SummaryListItem, GroupedListofBookings, TableRow } from 'approved-
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
 import PremisesController from './premisesController'
-import servicesShouldGetTokenFromRequest from './shared_examples'
 
 describe('PremisesController', () => {
-  const request: DeepMocked<Request> = createMock<Request>({})
+  const token = 'SOME_TOKEN'
+
+  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -17,8 +18,6 @@ describe('PremisesController', () => {
   const premisesController = new PremisesController(premisesService, bookingService)
 
   describe('index', () => {
-    servicesShouldGetTokenFromRequest([premisesService], request)
-
     it('should return the table rows to the template', async () => {
       premisesService.tableRows.mockResolvedValue([])
 
@@ -26,12 +25,12 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('premises/index', { tableRows: [] })
+
+      expect(premisesService.tableRows).toHaveBeenCalledWith(token)
     })
   })
 
   describe('show', () => {
-    servicesShouldGetTokenFromRequest([premisesService, bookingService], request)
-
     it('should return the premises detail to the template', async () => {
       const premises = { name: 'Some premises', summaryList: { rows: [] as Array<SummaryListItem> } }
       const bookings = createMock<GroupedListofBookings>()
@@ -47,9 +46,9 @@ describe('PremisesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('premises/show', { premises, bookings, currentResidents })
 
-      expect(premisesService.getPremisesDetails).toHaveBeenCalledWith('some-uuid')
-      expect(bookingService.groupedListOfBookingsForPremisesId).toHaveBeenCalledWith('some-uuid')
-      expect(bookingService.currentResidents).toHaveBeenCalledWith('some-uuid')
+      expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(token, 'some-uuid')
+      expect(bookingService.groupedListOfBookingsForPremisesId).toHaveBeenCalledWith(token, 'some-uuid')
+      expect(bookingService.currentResidents).toHaveBeenCalledWith(token, 'some-uuid')
     })
   })
 })

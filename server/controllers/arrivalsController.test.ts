@@ -5,12 +5,13 @@ import type { ErrorsAndUserInput } from 'approved-premises'
 import ArrivalService from '../services/arrivalService'
 import ArrivalsController from './arrivalsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import servicesShouldGetTokenFromRequest from './shared_examples'
 
 jest.mock('../utils/validation')
 
 describe('ArrivalsController', () => {
-  const request: DeepMocked<Request> = createMock<Request>({})
+  const token = 'SOME_TOKEN'
+
+  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -62,8 +63,6 @@ describe('ArrivalsController', () => {
   })
 
   describe('create', () => {
-    servicesShouldGetTokenFromRequest([arrivalService], request)
-
     it('creates an arrival and redirects to the premises page', async () => {
       const requestHandler = arrivalsController.create()
 
@@ -91,6 +90,7 @@ describe('ArrivalsController', () => {
       }
 
       expect(arrivalService.createArrival).toHaveBeenCalledWith(
+        token,
         request.params.premisesId,
         request.params.bookingId,
         expectedArrival,

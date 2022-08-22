@@ -5,7 +5,6 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import cancellationDtoFactory from '../testutils/factories/cancellationDto'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
-import itGetsATokenFromARequest from './shared_examples'
 
 jest.mock('../data/cancellationClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -17,6 +16,8 @@ describe('DepartureService', () => {
   const CancellationClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
 
+  const token = 'SOME_TOKEN'
+
   const service = new CancellationService(CancellationClientFactory, ReferenceDataClientFactory)
 
   beforeEach(() => {
@@ -25,8 +26,6 @@ describe('DepartureService', () => {
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
-  itGetsATokenFromARequest(service)
-
   describe('createCancellation', () => {
     it('on success returns the cancellation that has been posted', async () => {
       const cancellationDto = cancellationDtoFactory.build()
@@ -34,8 +33,10 @@ describe('DepartureService', () => {
 
       cancellationClient.create.mockResolvedValue(cancellation)
 
-      const postedDeparture = await service.createCancellation('premisesId', 'bookingId', cancellationDto)
+      const postedDeparture = await service.createCancellation(token, 'premisesId', 'bookingId', cancellationDto)
       expect(postedDeparture).toEqual(cancellation)
+
+      expect(CancellationClientFactory).toHaveBeenCalledWith(token)
       expect(cancellationClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', cancellationDto)
     })
   })
@@ -46,10 +47,11 @@ describe('DepartureService', () => {
 
       referenceDataClient.getReferenceData.mockResolvedValue(cancellationReasons)
 
-      const result = await service.getCancellationReasons()
+      const result = await service.getCancellationReasons(token)
 
       expect(result).toEqual(cancellationReasons)
 
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('cancellation-reasons')
     })
   })
@@ -59,9 +61,11 @@ describe('DepartureService', () => {
       const cancellation = cancellationFactory.build()
       cancellationClient.get.mockResolvedValue(cancellation)
 
-      const requestedDeparture = await service.getCancellation('premisesId', 'bookingId', cancellation.id)
+      const requestedDeparture = await service.getCancellation(token, 'premisesId', 'bookingId', cancellation.id)
 
       expect(requestedDeparture).toEqual(cancellation)
+
+      expect(CancellationClientFactory).toHaveBeenCalledWith(token)
       expect(cancellationClient.get).toHaveBeenCalledWith('premisesId', 'bookingId', cancellation.id)
     })
   })

@@ -5,7 +5,7 @@ import cancellationFactory from '../../server/testutils/factories/cancellation'
 import CancellationCreatePage from '../pages/cancellationCreate'
 import CancellationConfirmPage from '../pages/cancellationConfirmation'
 
-context('Booking', () => {
+context('Cancellation', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
@@ -48,7 +48,7 @@ context('Booking', () => {
 
     // And I should see a confirmation screen for that cancellation
     const cancellationConfirmationPage = new CancellationConfirmPage()
-    cancellationConfirmationPage.verifyConfirmedCancellatiobIsVisible(cancellation, booking)
+    cancellationConfirmationPage.verifyConfirmedCancellationIsVisible(cancellation, booking)
   })
 
   it('should show errors', () => {

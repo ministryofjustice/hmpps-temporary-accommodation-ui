@@ -44,7 +44,12 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.show()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('premises/show', { premises, bookings, currentResidents })
+      expect(response.render).toHaveBeenCalledWith('premises/show', {
+        premisesId: 'some-uuid',
+        premises,
+        bookings,
+        currentResidents,
+      })
 
       expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(token, 'some-uuid')
       expect(bookingService.groupedListOfBookingsForPremisesId).toHaveBeenCalledWith(token, 'some-uuid')

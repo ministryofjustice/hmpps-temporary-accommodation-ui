@@ -4,6 +4,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "../bookings/_table.njk" import bookingTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -79,5 +80,13 @@
     ],
     rows: currentResidents
   }) }}
+
+  <h2>Log a lost bed</h2>
+
+  {{ govukButton({
+            text: "Log", 
+            type: 'button',
+            href: '/premises/{{premisesId}}/lostBeds/new'
+        }) }}
 
 {% endblock %}

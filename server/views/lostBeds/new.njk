@@ -1,0 +1,110 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Record a lost bed" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {{ govukBackLink({
+        text: "Back",
+        href: "/premises/" + premisesId 
+      }) }}
+
+      <form action="/premises/{{premisesId}}/lostBeds" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ showErrorSummary(errorSummary) }}
+
+        <h1 class="govuk-!-margin-bottom-0">Record a lost bed</h1>
+        <p> Record beds that have been lost within your AP estate.</p>
+
+        {{ govukInput({
+        label: {
+          text: "Number of beds lost"
+        },
+        classes: "govuk-input--width-2",
+        id: "numberOfBeds",
+        name: "lostBed[numberOfBeds]",
+        errorMessage: errors.numberOfBeds
+      }) }}
+
+        {{ govukDateInput({
+        id: "startDate",
+        namePrefix: "startDate",
+        items: dateFieldValues('startDate', errors),
+        errorMessage: errors.startDate,
+        fieldset: {
+          legend: {
+            text: "Start date",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--s"
+          }
+        }
+      }) }}
+
+        {{ govukDateInput({
+        id: "endDate",
+        namePrefix: "endDate",
+        items: dateFieldValues('endDate', errors),
+        errorMessage: errors.endDate,
+        fieldset: {
+          legend: {
+            text: "End date",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--s"
+          }
+        }
+      }) }}
+
+        {{ govukRadios({
+        idPrefix: "reason",
+        name: "lostBed[reason]",
+        fieldset: {
+          legend: {
+            text: "What is the reason for marking this bed as lost?",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        items: convertObjectsToRadioItems(lostBedReasons, 'name', 'id', 'lostBed[reason]'),
+        errorMessage: errors.reason
+      }) }}
+
+        {{ govukInput({
+        label: {
+          text: "Reference number"
+        },
+        classes: "govuk-input--width-6",
+        id: "referenceNumber",
+        name: "lostBed[referenceNumber]",
+        errorMessage: errors.referenceNumber
+      }) }}
+
+        {{ govukTextarea({
+        id: "notes",
+        name: "lostBed[notes]",
+        label: {
+          text: "Additional notes"
+        },
+        errorMessage: errors.notes
+      }) }}
+
+        {{ govukButton({
+          text: "Save and continue",
+          name: "lostBed[submit]"
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

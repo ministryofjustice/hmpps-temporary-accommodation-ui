@@ -1,6 +1,6 @@
 import { isSameDay, isWithinInterval, addDays } from 'date-fns'
 
-import type { Booking, BookingDto, TableRow, GroupedListofBookings } from 'approved-premises'
+import type { Booking, BookingDto, TableRow, GroupedListofBookings, BookingExtension } from 'approved-premises'
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
@@ -47,6 +47,19 @@ export default class BookingService {
       upcomingArrivals: this.bookingsToTableRows(this.upcomingArrivals(bookings, today), premisesId, 'arrival'),
       upcomingDepartures: this.bookingsToTableRows(this.upcomingDepartures(bookings, today), premisesId, 'departure'),
     }
+  }
+
+  async extendBooking(
+    token: string,
+    premisesId: string,
+    bookingId: string,
+    bookingExtension: BookingExtension,
+  ): Promise<Booking> {
+    const bookingClient = this.bookingClientFactory(token)
+
+    const confirmedBooking = await bookingClient.extendBooking(premisesId, bookingId, bookingExtension)
+
+    return confirmedBooking
   }
 
   bookingsToTableRows(bookings: Array<Booking>, premisesId: string, type: 'arrival' | 'departure'): Array<TableRow> {

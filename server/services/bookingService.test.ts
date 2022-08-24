@@ -115,6 +115,26 @@ describe('BookingService', () => {
     })
   })
 
+  describe('extendBooking', () => {
+    it('on success returns the booking that has been extended', async () => {
+      const booking = bookingFactory.build()
+      bookingClient.extendBooking.mockResolvedValue(booking)
+      const newDepartureDateObj = {
+        newDepartureDate: new Date(2042, 13, 11).toISOString(),
+        'newDepartureDate-year': '2042',
+        'newDepartureDate-month': '12',
+        'newDepartureDate-day': '11',
+        notes: 'Some notes',
+      }
+
+      const extendedBooking = await service.extendBooking(token, 'premisesId', booking.id, newDepartureDateObj)
+
+      expect(extendedBooking).toEqual(booking)
+      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClient.extendBooking).toHaveBeenCalledWith('premisesId', booking.id, newDepartureDateObj)
+    })
+  })
+
   describe('bookingsToTableRows', () => {
     it('should convert bookings to table rows with an arrival date', () => {
       const premisesId = 'some-uuid'

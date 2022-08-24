@@ -53,60 +53,6 @@ describe('BookingService', () => {
     })
   })
 
-  describe('bookingsToTableRows', () => {
-    it('should convert bookings to table rows with an arrival date', () => {
-      const premisesId = 'some-uuid'
-
-      const booking1Date = new Date(2022, 10, 22)
-      const booking2Date = new Date(2022, 2, 11)
-
-      const bookings = [
-        bookingFactory.build({ expectedArrivalDate: booking1Date.toISOString() }),
-        bookingFactory.build({ expectedArrivalDate: booking2Date.toISOString() }),
-      ]
-
-      const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')
-
-      expect(results[0][0]).toEqual({ text: bookings[0].crn })
-      expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
-      expect(results[0][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
-      })
-
-      expect(results[1][0]).toEqual({ text: bookings[1].crn })
-      expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
-      expect(results[1][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
-      })
-    })
-
-    it('should convert bookings to table rows with a departure date', () => {
-      const premisesId = 'some-uuid'
-
-      const booking1Date = new Date(2022, 10, 22)
-      const booking2Date = new Date(2022, 2, 11)
-
-      const bookings = [
-        bookingFactory.build({ expectedDepartureDate: booking1Date.toISOString() }),
-        bookingFactory.build({ expectedDepartureDate: booking2Date.toISOString() }),
-      ]
-
-      const results = service.bookingsToTableRows(bookings, premisesId, 'departure')
-
-      expect(results[0][0]).toEqual({ text: bookings[0].crn })
-      expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
-      expect(results[0][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
-      })
-
-      expect(results[1][0]).toEqual({ text: bookings[1].crn })
-      expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
-      expect(results[1][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
-      })
-    })
-  })
-
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
       const premisesId = 'some-uuid'
@@ -168,6 +114,61 @@ describe('BookingService', () => {
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
     })
   })
+
+  describe('bookingsToTableRows', () => {
+    it('should convert bookings to table rows with an arrival date', () => {
+      const premisesId = 'some-uuid'
+
+      const booking1Date = new Date(2022, 10, 22)
+      const booking2Date = new Date(2022, 2, 11)
+
+      const bookings = [
+        bookingFactory.build({ expectedArrivalDate: booking1Date.toISOString() }),
+        bookingFactory.build({ expectedArrivalDate: booking2Date.toISOString() }),
+      ]
+
+      const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')
+
+      expect(results[0][0]).toEqual({ text: bookings[0].crn })
+      expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
+      expect(results[0][2]).toEqual({
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
+      })
+
+      expect(results[1][0]).toEqual({ text: bookings[1].crn })
+      expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
+      expect(results[1][2]).toEqual({
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
+      })
+    })
+
+    it('should convert bookings to table rows with a departure date', () => {
+      const premisesId = 'some-uuid'
+
+      const booking1Date = new Date(2022, 10, 22)
+      const booking2Date = new Date(2022, 2, 11)
+
+      const bookings = [
+        bookingFactory.build({ expectedDepartureDate: booking1Date.toISOString() }),
+        bookingFactory.build({ expectedDepartureDate: booking2Date.toISOString() }),
+      ]
+
+      const results = service.bookingsToTableRows(bookings, premisesId, 'departure')
+
+      expect(results[0][0]).toEqual({ text: bookings[0].crn })
+      expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
+      expect(results[0][2]).toEqual({
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
+      })
+
+      expect(results[1][0]).toEqual({ text: bookings[1].crn })
+      expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
+      expect(results[1][2]).toEqual({
+        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
+      })
+    })
+  })
+
   describe('currentResidents', () => {
     it('should return table rows of the current residents', async () => {
       const bookingsArrivingToday = bookingFactory.arrivingToday().buildList(2)

@@ -80,4 +80,27 @@ describe('BookingClient', () => {
       expect(nock.isDone()).toBeTruthy()
     })
   })
+
+  describe('extendBooking', () => {
+    it('should return the booking that has been extended', async () => {
+      const booking = bookingFactory.build()
+      const payload = {
+        newDepartureDate: new Date(2042, 13, 11).toISOString(),
+        'newDepartureDate-year': '2042',
+        'newDepartureDate-month': '12',
+        'newDepartureDate-day': '11',
+        notes: 'Some notes',
+      }
+
+      fakeApprovedPremisesApi
+        .post(`/premises/premisesId/bookings/${booking.id}/extensions`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, booking)
+
+      const result = await bookingClient.extendBooking('premisesId', booking.id, payload)
+
+      expect(result).toEqual(booking)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
 })

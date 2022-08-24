@@ -12,6 +12,7 @@ export default function routes(controllers: Controllers): Router {
     applicationController,
     premisesController,
     bookingsController,
+    bookingExtensionsController,
     arrivalsController,
     nonArrivalsController,
     departuresController,
@@ -31,6 +32,10 @@ export default function routes(controllers: Controllers): Router {
   get('/premises/:premisesId/bookings/:bookingId', bookingsController.show())
   post('/premises/:premisesId/bookings', bookingsController.create())
   get('/premises/:premisesId/bookings/:bookingId/confirmation', bookingsController.confirm())
+
+  get('/premises/:premisesId/bookings/:bookingId/extensions/new', bookingExtensionsController.new())
+  post('/premises/:premisesId/bookings/:bookingId/extensions', bookingExtensionsController.create())
+  get('/premises/:premisesId/bookings/:bookingId/extensions/confirmation', bookingExtensionsController.confirm())
 
   get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
   post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())

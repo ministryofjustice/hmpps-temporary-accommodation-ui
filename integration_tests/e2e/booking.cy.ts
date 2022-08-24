@@ -2,10 +2,10 @@ import premisesFactory from '../../server/testutils/factories/premises'
 import bookingFactory from '../../server/testutils/factories/booking'
 import keyWorkerFactory from '../../server/testutils/factories/keyWorker'
 
-import BookingCreatePage from '../pages/bookingCreate'
-import BookingShowPage from '../pages/bookingShow'
+import BookingCreatePage from '../pages/booking/create'
+import BookingShowPage from '../pages/booking/show'
 import Page from '../pages/page'
-import BookingConfirmation from '../pages/bookingConfirmation'
+import BookingConfirmation from '../pages/booking/confirmation'
 
 context('Booking', () => {
   beforeEach(() => {

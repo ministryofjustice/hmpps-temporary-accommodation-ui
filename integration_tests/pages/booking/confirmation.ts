@@ -1,7 +1,7 @@
 import parseISO from 'date-fns/parseISO'
 import type { Booking } from 'approved-premises'
-import { formatDate } from '../../server/utils/utils'
-import Page from './page'
+import { formatDate } from '../../../server/utils/utils'
+import Page from '../page'
 
 export default class BookingConfirmationPage extends Page {
   constructor() {

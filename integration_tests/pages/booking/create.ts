@@ -1,5 +1,5 @@
 import type { Booking } from 'approved-premises'
-import Page, { PageElement } from './page'
+import Page, { PageElement } from '../page'
 
 export default class BookingCreatePage extends Page {
   constructor() {

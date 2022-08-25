@@ -11,22 +11,6 @@ export default class BookingCreatePage extends Page {
     return new BookingCreatePage()
   }
 
-  getLabel(labelName: string): void {
-    cy.get('label').should('contain', labelName)
-  }
-
-  getLegend(legendName: string): void {
-    cy.get('legend').should('contain', legendName)
-  }
-
-  getTextInputByIdAndEnterDetails(id: string, details: string): void {
-    cy.get(`#${id}`).type(details)
-  }
-
-  getSelectInputByIdAndSelectAnEntry(id: string, entry: string): void {
-    cy.get(`#${id}`).select(entry)
-  }
-
   arrivalDay(): PageElement {
     return cy.get('#expectedArrivalDate-day')
   }

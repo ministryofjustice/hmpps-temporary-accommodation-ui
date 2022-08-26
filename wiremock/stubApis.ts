@@ -71,7 +71,7 @@ premises.forEach(item => {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify(bookings),
+      jsonBody: bookings,
     },
   })
 
@@ -86,7 +86,7 @@ premises.forEach(item => {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        body: JSON.stringify(booking),
+        jsonBody: booking,
       },
     })
   })

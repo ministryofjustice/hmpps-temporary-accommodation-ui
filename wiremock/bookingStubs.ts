@@ -29,7 +29,7 @@ bookingStubs.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    body: JSON.stringify(bookingDtoFactory.build()),
+    jsonBody: bookingDtoFactory.build(),
   },
 })
 

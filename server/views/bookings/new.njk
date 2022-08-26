@@ -8,25 +8,25 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " - " + pageHeading %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-    {{ govukBackLink({
+  {{ govukBackLink({
       text: "Back",
 	  href: "/premises/" + premisesId
     }) }}
 
-    <h1>Make a booking</h1>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <form action="/premises/{{premisesId}}/bookings" method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+  <h1>{{pageHeading}}</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="/premises/{{premisesId}}/bookings" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-                {{ showErrorSummary(errorSummary) }}
+        {{ showErrorSummary(errorSummary) }}
 
-                {{ govukInput({
+        {{ govukInput({
                     label: {
                         text: "CRN",
                         classes: "govuk-label--m"
@@ -38,7 +38,7 @@
                     errorMessage: errors.crn
                 }) }}
 
-                {{ govukInput({
+        {{ govukInput({
                     label: {
                         text: "Name",
                         classes: "govuk-label--m"
@@ -49,7 +49,7 @@
                     errorMessage: errors.name
                 }) }}
 
-                {{ govukDateInput({
+        {{ govukDateInput({
                     id: "expectedArrivalDate",
                     namePrefix: "expectedArrivalDate",
                     fieldset: {
@@ -65,7 +65,7 @@
                     errorMessage: errors.expectedArrivalDate
                 }) }}
 
-                {{ govukDateInput({
+        {{ govukDateInput({
                     id: "expectedDepartureDate",
                     namePrefix: "expectedDepartureDate",
                     fieldset: {
@@ -81,7 +81,7 @@
                     errorMessage: errors.expectedDepartureDate
                 }) }}
 
-                {{ govukSelect({
+        {{ govukSelect({
                     label: {
                         text: "Key Worker",
                         classes: "govuk-label--m"
@@ -111,10 +111,10 @@
                     errorMessage: errors.keyWorkerId
                 }) }}
 
-                {{ govukButton({
+        {{ govukButton({
                     text: "Submit"
                 }) }}
-            </form>
-        </div>
+      </form>
     </div>
+  </div>
 {% endblock %}

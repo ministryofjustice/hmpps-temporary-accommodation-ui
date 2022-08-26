@@ -4,7 +4,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " - " + pageHeading %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -12,7 +12,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {{ govukPanel({
-            titleText: "Departure confirmed"
+            titleText: pageHeading
             }) }}
             {{ govukSummaryList({
                 rows: [

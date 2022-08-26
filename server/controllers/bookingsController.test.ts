@@ -34,6 +34,7 @@ describe('bookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('bookings/show', {
         booking,
         premisesId,
+        pageHeading: 'Booking details',
       })
 
       expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
@@ -52,6 +53,7 @@ describe('bookingsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('bookings/new', {
         premisesId,
+        pageHeading: 'Make a booking',
         errors: {},
         errorSummary: [],
       })
@@ -69,6 +71,7 @@ describe('bookingsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('bookings/new', {
         premisesId,
+        pageHeading: 'Make a booking',
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
@@ -156,7 +159,12 @@ describe('bookingsController', () => {
       await requestHandler(request, response, next)
 
       expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
-      expect(response.render).toHaveBeenCalledWith('bookings/confirm', booking)
+      expect(response.render).toHaveBeenCalledWith('bookings/confirm', {
+        premisesId,
+        pageHeading: 'Booking complete',
+        bookingId: booking.id,
+        ...booking,
+      })
     })
   })
 })

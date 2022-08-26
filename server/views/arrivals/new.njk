@@ -7,7 +7,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " - " + pageHeading  %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -34,7 +34,7 @@
             name: "arrived",
             fieldset: {
               legend: {
-                text: "Did the resident arrive?",
+                text: pageHeading,
                 isPageHeading: true,
                 classes: "govuk-fieldset__legend--l"
               }

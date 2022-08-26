@@ -25,6 +25,7 @@ export default class CancellationsController {
         bookingId,
         booking,
         cancellationReasons,
+        pageHeading: 'Cancel this placement',
         errors,
         errorSummary,
         ...userInput,
@@ -67,7 +68,12 @@ export default class CancellationsController {
       const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
       const cancellation = await this.cancellationService.getCancellation(req.user.token, premisesId, bookingId, id)
 
-      return res.render('cancellations/confirm', { cancellation, booking })
+      return res.render('cancellations/confirm', {
+        cancellation,
+        booking,
+        premisesId,
+        pageHeading: 'Cancellation complete',
+      })
     }
   }
 }

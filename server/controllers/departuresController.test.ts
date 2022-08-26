@@ -59,6 +59,7 @@ describe('DeparturesController', () => {
           },
         ],
         referenceData,
+        pageHeading: 'Log a departure',
         errorSummary: [],
         errors: {},
       })
@@ -94,6 +95,7 @@ describe('DeparturesController', () => {
           },
         ],
         referenceData,
+        pageHeading: 'Log a departure',
         errorSummary: errorsAndUserInput.errorSummary,
         errors: errorsAndUserInput.errors,
         ...errorsAndUserInput.userInput,
@@ -195,6 +197,9 @@ describe('DeparturesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('departures/confirm', {
         ...departure,
+        premisesId,
+        bookingId,
+        pageHeading: 'Departure confirmed',
         name: booking.name,
         crn: booking.crn,
       })

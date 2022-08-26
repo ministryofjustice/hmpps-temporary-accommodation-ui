@@ -1,5 +1,6 @@
 import { guidRegex } from './index'
 import bookingDtoFactory from '../server/testutils/factories/bookingDto'
+import bookingFactory from '../server/testutils/factories/booking'
 import { getCombinations, errorStub } from './utils'
 
 const bookingStubs: Array<Record<string, unknown>> = []
@@ -30,6 +31,21 @@ bookingStubs.push({
       'Content-Type': 'application/json;charset=UTF-8',
     },
     jsonBody: bookingDtoFactory.build(),
+  },
+})
+
+bookingStubs.push({
+  priority: 99,
+  request: {
+    method: 'GET',
+    urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}`,
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: bookingFactory.build(),
   },
 })
 

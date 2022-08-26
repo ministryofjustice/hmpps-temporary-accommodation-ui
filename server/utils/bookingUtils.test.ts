@@ -30,6 +30,11 @@ describe('bookingUtils', () => {
               text: 'Mark as not arrived',
             },
             {
+              text: 'Extend booking',
+              classes: 'govuk-button--secondary',
+              href: `/premises/premisesId/bookings/${booking.id}/extensions/new`,
+            },
+            {
               classes: 'govuk-button--secondary',
               href: `/premises/premisesId/bookings/${booking.id}/cancellations/new`,
               text: 'Cancel booking',
@@ -49,6 +54,11 @@ describe('bookingUtils', () => {
               classes: 'govuk-button--secondary',
               href: `/premises/premisesId/bookings/${booking.id}/departures/new`,
               text: 'Log departure',
+            },
+            {
+              text: 'Extend booking',
+              classes: 'govuk-button--secondary',
+              href: `/premises/premisesId/bookings/${booking.id}/extensions/new`,
             },
             {
               classes: 'govuk-button--secondary',

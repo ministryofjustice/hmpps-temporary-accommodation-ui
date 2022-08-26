@@ -44,7 +44,8 @@ context('Arrivals', () => {
     })
 
     // And I should be redirected to the premises page
-    PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const premisesPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    premisesPage.shouldShowBanner('Arrival logged')
   })
 
   it('show arrival errors when the API returns an error', () => {
@@ -102,7 +103,8 @@ context('Arrivals', () => {
     })
 
     // And I should be redirected to the premises page
-    PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const premisesPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    premisesPage.shouldShowBanner('Non-arrival logged')
   })
 
   it('show non-arrival errors when the API returns an error', () => {

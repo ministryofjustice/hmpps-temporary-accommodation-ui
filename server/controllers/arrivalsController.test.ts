@@ -98,6 +98,7 @@ describe('ArrivalsController', () => {
         expectedArrival,
       )
 
+      expect(request.flash).toHaveBeenCalledWith('success', 'Arrival logged')
       expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
     })
 

@@ -19,10 +19,10 @@ export default class BookingService {
     return confirmedBooking
   }
 
-  async getBooking(token: string, premisesId: string, bookingId: string): Promise<Booking> {
+  async find(token: string, premisesId: string, bookingId: string): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)
 
-    const booking = await bookingClient.getBooking(premisesId, bookingId)
+    const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking
   }

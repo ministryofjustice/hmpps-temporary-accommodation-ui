@@ -32,7 +32,7 @@ describe('DeparturesController', () => {
 
     beforeEach(() => {
       premisesService.getPremisesSelectList.mockResolvedValue([{ value: 'id', text: 'name' }])
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
     })
 
     it('renders the form', async () => {
@@ -65,7 +65,7 @@ describe('DeparturesController', () => {
       })
 
       expect(premisesService.getPremisesSelectList).toHaveBeenCalledWith(token)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
+      expect(bookingService.find).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
       expect(departureService.getReferenceData).toHaveBeenCalledWith(token)
     })
 
@@ -102,7 +102,7 @@ describe('DeparturesController', () => {
       })
 
       expect(premisesService.getPremisesSelectList).toHaveBeenCalledWith(token)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
+      expect(bookingService.find).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
     })
   })
 
@@ -183,7 +183,7 @@ describe('DeparturesController', () => {
   describe('confirm', () => {
     it('renders the confirmation page', async () => {
       const booking = bookingFactory.build()
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
 
       const departure = departureFactory.build()
       departureService.getDeparture.mockResolvedValue(departure)
@@ -205,7 +205,7 @@ describe('DeparturesController', () => {
       })
 
       expect(departureService.getDeparture).toHaveBeenCalledWith(token, premisesId, bookingId, departure.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, bookingId)
     })
   })
 })

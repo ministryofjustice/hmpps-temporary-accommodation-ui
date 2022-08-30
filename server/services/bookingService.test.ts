@@ -33,7 +33,7 @@ describe('BookingService', () => {
     })
   })
 
-  describe('getBooking', () => {
+  describe('find', () => {
     it('on success returns the booking that has been requested', async () => {
       const expectedArrivalDate = new Date(2022, 2, 11)
       const expectedDepartureDate = new Date(2022, 2, 12)
@@ -43,13 +43,13 @@ describe('BookingService', () => {
         expectedDepartureDate: expectedDepartureDate.toISOString(),
       })
 
-      bookingClient.getBooking.mockResolvedValue(booking)
+      bookingClient.find.mockResolvedValue(booking)
 
-      const retrievedBooking = await service.getBooking(token, 'premisesId', booking.id)
+      const retrievedBooking = await service.find(token, 'premisesId', booking.id)
       expect(retrievedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.getBooking).toHaveBeenCalledWith('premisesId', booking.id)
+      expect(bookingClient.find).toHaveBeenCalledWith('premisesId', booking.id)
     })
   })
 

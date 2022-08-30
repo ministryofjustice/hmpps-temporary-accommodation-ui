@@ -23,7 +23,7 @@ describe('bookingsController', () => {
   describe('show', () => {
     it('should fetch the booking and render the show page', async () => {
       const booking = bookingFactory.build()
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
 
       const requestHandler = bookingController.show()
       const premisesId = 'premisesId'
@@ -37,7 +37,7 @@ describe('bookingsController', () => {
         pageHeading: 'Booking details',
       })
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, bookingId)
     })
   })
 
@@ -144,7 +144,7 @@ describe('bookingsController', () => {
         expectedArrivalDate: new Date('07/27/22').toISOString(),
         expectedDepartureDate: new Date('07/28/22').toISOString(),
       })
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
       const premisesId = 'premisesId'
       const requestHandler = bookingController.confirm()
 
@@ -158,7 +158,7 @@ describe('bookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
       expect(response.render).toHaveBeenCalledWith('bookings/confirm', {
         premisesId,
         pageHeading: 'Booking complete',

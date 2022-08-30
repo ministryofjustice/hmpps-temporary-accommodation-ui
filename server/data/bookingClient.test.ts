@@ -49,7 +49,7 @@ describe('BookingClient', () => {
     })
   })
 
-  describe('getBooking', () => {
+  describe('find', () => {
     it('should return the booking that has been requested', async () => {
       const booking = bookingFactory.build()
 
@@ -58,7 +58,7 @@ describe('BookingClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, booking)
 
-      const result = await bookingClient.getBooking('premisesId', 'bookingId')
+      const result = await bookingClient.find('premisesId', 'bookingId')
 
       expect(result).toEqual(booking)
       expect(nock.isDone()).toBeTruthy()

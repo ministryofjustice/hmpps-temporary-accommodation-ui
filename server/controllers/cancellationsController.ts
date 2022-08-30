@@ -17,7 +17,7 @@ export default class CancellationsController {
       const { premisesId, bookingId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
       const cancellationReasons = await this.cancellationService.getCancellationReasons(req.user.token)
 
       res.render('cancellations/new', {
@@ -65,7 +65,7 @@ export default class CancellationsController {
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId, id } = req.params
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
       const cancellation = await this.cancellationService.getCancellation(req.user.token, premisesId, bookingId, id)
 
       return res.render('cancellations/confirm', {

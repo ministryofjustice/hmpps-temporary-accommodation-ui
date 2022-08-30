@@ -1,4 +1,4 @@
-import type { Cancellation, CancellationDto } from 'approved-premises'
+import type { Cancellation, NewCancellation } from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
@@ -9,7 +9,7 @@ export default class CancellationClient {
     this.restClient = new RestClient('cancellationClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async create(premisesId: string, bookingId: string, cancellation: CancellationDto): Promise<Cancellation> {
+  async create(premisesId: string, bookingId: string, cancellation: NewCancellation): Promise<Cancellation> {
     const response = await this.restClient.post({
       path: `/premises/${premisesId}/bookings/${bookingId}/cancellations`,
       data: cancellation,

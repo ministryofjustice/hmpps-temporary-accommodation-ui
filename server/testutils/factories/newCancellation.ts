@@ -1,10 +1,10 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { CancellationDto } from 'approved-premises'
+import type { NewCancellation } from 'approved-premises'
 import referenceDataFactory from './referenceData'
 
-export default Factory.define<CancellationDto>(() => {
+export default Factory.define<NewCancellation>(() => {
   const date = faker.date.soon()
   return {
     id: faker.datatype.uuid(),

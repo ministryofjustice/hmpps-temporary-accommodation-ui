@@ -2,7 +2,7 @@ import nock from 'nock'
 
 import BookingClient from './bookingClient'
 import bookingFactory from '../testutils/factories/booking'
-import bookingDtoFactory from '../testutils/factories/bookingDto'
+import newBookingFactory from '../testutils/factories/newBooking'
 import config from '../config'
 
 describe('BookingClient', () => {
@@ -29,7 +29,7 @@ describe('BookingClient', () => {
   describe('postBooking', () => {
     it('should return the booking that has been posted', async () => {
       const booking = bookingFactory.build()
-      const payload = bookingDtoFactory.build({
+      const payload = newBookingFactory.build({
         expectedArrivalDate: booking.expectedArrivalDate,
         expectedDepartureDate: booking.expectedDepartureDate,
         crn: booking.crn,

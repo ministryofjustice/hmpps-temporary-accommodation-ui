@@ -1,6 +1,6 @@
 import { parseISO } from 'date-fns'
 
-import type { Departure, ReferenceData, DepartureDto } from 'approved-premises'
+import type { Departure, ReferenceData, NewDeparture } from 'approved-premises'
 import type { RestClientBuilder, DepartureClient, ReferenceDataClient } from '../data'
 
 export type DepartureReferenceData = {
@@ -19,7 +19,7 @@ export default class DepartureService {
     token: string,
     premisesId: string,
     bookingId: string,
-    departure: DepartureDto,
+    departure: NewDeparture,
   ): Promise<Departure> {
     const departureClient = this.departureClientFactory(token)
 

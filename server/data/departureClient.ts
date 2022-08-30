@@ -1,4 +1,4 @@
-import type { Departure, DepartureDto } from 'approved-premises'
+import type { Departure, NewDeparture } from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
@@ -9,7 +9,7 @@ export default class DepartureClient {
     this.restClient = new RestClient('departureClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async create(premisesId: string, bookingId: string, departure: DepartureDto): Promise<Departure> {
+  async create(premisesId: string, bookingId: string, departure: NewDeparture): Promise<Departure> {
     const response = await this.restClient.post({
       path: `/premises/${premisesId}/bookings/${bookingId}/departures`,
       data: departure,

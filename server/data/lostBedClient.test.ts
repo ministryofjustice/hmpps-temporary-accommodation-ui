@@ -3,7 +3,7 @@ import nock from 'nock'
 import LostBedClient from './lostBedClient'
 import config from '../config'
 import lostBedFactory from '../testutils/factories/lostBed'
-import lostBedDtoFactory from '../testutils/factories/lostBedDto'
+import newLostBedFactory from '../testutils/factories/newLostBed'
 
 describe('LostBedClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -29,14 +29,14 @@ describe('LostBedClient', () => {
   describe('create', () => {
     it('should create a lostBed', async () => {
       const lostBed = lostBedFactory.build()
-      const lostBedDto = lostBedDtoFactory.build()
+      const newLostBed = newLostBedFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/lostBeds`, lostBedDto)
+        .post(`/premises/premisesId/lostBeds`, newLostBed)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, lostBed)
 
-      const result = await lostBedClient.create('premisesId', lostBedDto)
+      const result = await lostBedClient.create('premisesId', newLostBed)
 
       expect(result).toEqual(lostBed)
       expect(nock.isDone()).toBeTruthy()

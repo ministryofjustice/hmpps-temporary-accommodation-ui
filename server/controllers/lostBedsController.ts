@@ -1,6 +1,6 @@
 import type { Response, Request, RequestHandler } from 'express'
 
-import type { LostBedDto } from 'approved-premises'
+import type { NewLostBed } from 'approved-premises'
 import LostBedService from '../services/lostBedService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
@@ -32,7 +32,7 @@ export default class LostBedsController {
       const { startDate } = convertDateAndTimeInputsToIsoString(req.body, 'startDate')
       const { endDate } = convertDateAndTimeInputsToIsoString(req.body, 'endDate')
 
-      const lostBed: LostBedDto = { ...req.body.lostBed, startDate, endDate }
+      const lostBed: NewLostBed = { ...req.body.lostBed, startDate, endDate }
 
       try {
         await this.lostBedService.createLostBed(req.user.token, premisesId, lostBed)

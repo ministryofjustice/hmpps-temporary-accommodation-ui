@@ -10,7 +10,7 @@ declare module 'approved-premises' {
   export type BookingExtension = schemas['BookingExtension']
   export type KeyWorker = schemas['KeyWorker']
 
-  export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival' | 'keyWorker'> & { keyWorkerId: string }
+  export type NewBooking = Omit<Booking, 'id' | 'status' | 'arrival' | 'keyWorker'> & { keyWorkerId: string }
 
   // A utility type that allows us to define an object with a date attribute split into
   // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
@@ -21,14 +21,14 @@ declare module 'approved-premises' {
     [P in K]?: string
   }
 
-  export type ArrivalDto = ObjectWithDateParts<'date'> &
+  export type NewArrival = ObjectWithDateParts<'date'> &
     ObjectWithDateParts<'expectedDepartureDate'> & { arrival: Omit<Arrival, 'id' | 'bookingId'> }
 
-  export type NonArrivalDto = ObjectWithDateParts<'nonArrivalDate'> & {
+  export type NewNonArrival = ObjectWithDateParts<'nonArrivalDate'> & {
     nonArrival: Omit<NonArrival, 'id' | 'bookingId'>
   }
 
-  export type DepartureDto = Omit<
+  export type NewDeparture = Omit<
     Departure,
     'id' | 'bookingId' | 'reason' | 'moveOnCategory' | 'destinationProvider' | 'destinationAp'
   > &
@@ -39,12 +39,12 @@ declare module 'approved-premises' {
       destinationAp: string
     }
 
-  export type CancellationDto = Omit<Cancellation, 'id' | 'bookingId' | 'reason'> &
+  export type NewCancellation = Omit<Cancellation, 'id' | 'bookingId' | 'reason'> &
     ObjectWithDateParts<'date'> & {
       reason: string
     }
 
-  export type LostBedDto = Omit<LostBed, 'id' | 'reason'> &
+  export type NewLostBed = Omit<LostBed, 'id' | 'reason'> &
     ObjectWithDateParts<'startDate'> &
     ObjectWithDateParts<'endDate'> & {
       reason: string

@@ -1,7 +1,7 @@
 import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
 
-import bookingDtoFactory from '../testutils/factories/bookingDto'
+import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
 import { formatDate } from '../utils/utils'
 
@@ -22,14 +22,14 @@ describe('BookingService', () => {
   describe('postBooking', () => {
     it('on success returns the booking that has been posted', async () => {
       const booking = bookingFactory.build()
-      const bookingDto = bookingDtoFactory.build()
+      const newBooking = newBookingFactory.build()
       bookingClient.postBooking.mockResolvedValue(booking)
 
-      const postedBooking = await service.postBooking(token, 'premisesId', bookingDto)
+      const postedBooking = await service.postBooking(token, 'premisesId', newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.postBooking).toHaveBeenCalledWith('premisesId', bookingDto)
+      expect(bookingClient.postBooking).toHaveBeenCalledWith('premisesId', newBooking)
     })
   })
 

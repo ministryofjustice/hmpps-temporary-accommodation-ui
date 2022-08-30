@@ -7,7 +7,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 
 import departureFactory from '../testutils/factories/departure'
 import referenceDataFactory from '../testutils/factories/referenceData'
-import departureDtoFactory from '../testutils/factories/departureDto'
+import newDepartureFactory from '../testutils/factories/newDeparture'
 
 jest.mock('../data/departureClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -31,16 +31,16 @@ describe('DepartureService', () => {
 
   describe('createDeparture', () => {
     it('on success returns the departure that has been posted', async () => {
-      const departureDto = departureDtoFactory.build()
+      const newDeparture = newDepartureFactory.build()
       const departure = departureFactory.build()
 
       departureClient.create.mockResolvedValue(departure)
 
-      const postedDeparture = await service.createDeparture(token, 'premisesId', 'bookingId', departureDto)
+      const postedDeparture = await service.createDeparture(token, 'premisesId', 'bookingId', newDeparture)
       expect(postedDeparture).toEqual(departure)
 
       expect(DepartureClientFactory).toHaveBeenCalledWith(token)
-      expect(departureClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', departureDto)
+      expect(departureClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', newDeparture)
     })
   })
 

@@ -24,7 +24,7 @@ export default class PremisesService {
 
   async getPremisesDetails(token: string, id: string): Promise<{ name: string; summaryList: SummaryList }> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.getPremises(id)
+    const premises = await premisesClient.find(id)
     const summaryList = await this.summaryListForPremises(premises)
 
     return { name: premises.name, summaryList }

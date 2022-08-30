@@ -36,7 +36,7 @@ describe('PremisesClient', () => {
     })
   })
 
-  describe('getPremises', () => {
+  describe('find', () => {
     const premises = premisesFactory.build()
 
     it('should get a single premises', async () => {
@@ -45,7 +45,7 @@ describe('PremisesClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, premises)
 
-      const output = await premisesClient.getPremises(premises.id)
+      const output = await premisesClient.find(premises.id)
       expect(output).toEqual(premises)
     })
   })

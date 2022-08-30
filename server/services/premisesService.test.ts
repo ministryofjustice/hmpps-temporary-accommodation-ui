@@ -108,7 +108,7 @@ describe('PremisesService', () => {
         bedCount: 50,
         availableBedsForToday: 20,
       })
-      premisesClient.getPremises.mockResolvedValue(premises)
+      premisesClient.find.mockResolvedValue(premises)
 
       const result = await service.getPremisesDetails(token, premises.id)
 
@@ -136,10 +136,10 @@ describe('PremisesService', () => {
         },
       })
 
-      expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })
   })
 })

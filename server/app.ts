@@ -45,6 +45,7 @@ export default function createApp(controllers: Controllers, services: Services):
   app.use(setUpCurrentUser(services))
   app.use((req, res, next) => {
     res.app.locals.infoMessages = req.flash('info')
+    res.app.locals.successMessages = req.flash('success')
     return next()
   })
   app.use(routes(controllers))

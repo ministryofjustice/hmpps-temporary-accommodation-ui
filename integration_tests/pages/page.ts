@@ -34,6 +34,10 @@ export default abstract class Page {
     })
   }
 
+  shouldShowBanner(copy: string): void {
+    cy.get('.govuk-notification-banner').contains(copy)
+  }
+
   getLabel(labelName: string): void {
     cy.get('label').should('contain', labelName)
   }

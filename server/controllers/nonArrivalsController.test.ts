@@ -42,6 +42,7 @@ describe('NonArrivalsController', () => {
 
       expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
 
+      expect(request.flash).toHaveBeenCalledWith('success', 'Non-arrival logged')
       expect(nonArrivalService.createNonArrival).toHaveBeenCalledWith(
         token,
         request.params.premisesId,

@@ -9,19 +9,19 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Home" %}
+{% set pageTitle = applicationName + " - " + pageHeading %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
     {{ govukBackLink({
     text: "Back",
-    href: "/premises/" + premisesId + "/bookings/" + bookingId
+    href: "/premises/" + premisesId + "/bookings/" + booking.id
     }) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <h1>Log a departure</h1>
+            <h1>{{pageHeading}}</h1>
 
             <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/departures" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>

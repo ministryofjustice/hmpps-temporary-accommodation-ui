@@ -5,7 +5,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Placement details" %}
+{% set pageTitle = applicationName + " - " + pageHeading %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -14,7 +14,7 @@
   href: "/premises/" + premisesId
 }) }}
 
-  <h1>Booking details</h1>
+  <h1>{{pageHeading}}</h1>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 

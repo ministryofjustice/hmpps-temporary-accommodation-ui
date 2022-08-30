@@ -33,6 +33,7 @@ describe('ArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('arrivals/new', {
         premisesId: 'premisesId',
         bookingId: 'bookingId',
+        pageHeading: 'Did the resident arrive?',
         errors: {},
         errorSummary: [],
       })
@@ -55,6 +56,7 @@ describe('ArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('arrivals/new', {
         premisesId: 'premisesId',
         bookingId: 'bookingId',
+        pageHeading: 'Did the resident arrive?',
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,

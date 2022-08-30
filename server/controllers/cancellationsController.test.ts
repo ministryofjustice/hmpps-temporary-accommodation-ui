@@ -52,6 +52,7 @@ describe('cancellationsController', () => {
         bookingId,
         booking,
         cancellationReasons,
+        pageHeading: 'Cancel this placement',
         errors: {},
         errorSummary: [],
       })
@@ -74,6 +75,7 @@ describe('cancellationsController', () => {
         bookingId,
         booking,
         cancellationReasons,
+        pageHeading: 'Cancel this placement',
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
@@ -172,7 +174,12 @@ describe('cancellationsController', () => {
       expect(cancellationService.getCancellation).toHaveBeenCalledWith(token, premisesId, bookingId, cancellation.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
 
-      expect(response.render).toHaveBeenCalledWith('cancellations/confirm', { cancellation, booking })
+      expect(response.render).toHaveBeenCalledWith('cancellations/confirm', {
+        cancellation,
+        booking,
+        premisesId,
+        pageHeading: 'Cancellation complete',
+      })
     })
   })
 })

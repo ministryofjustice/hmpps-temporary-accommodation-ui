@@ -13,7 +13,14 @@ export default class ArrivalsController {
       const { premisesId, bookingId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      res.render('arrivals/new', { premisesId, bookingId, errors, errorSummary, ...userInput })
+      res.render('arrivals/new', {
+        premisesId,
+        bookingId,
+        errors,
+        errorSummary,
+        pageHeading: 'Did the resident arrive?',
+        ...userInput,
+      })
     }
   }
 

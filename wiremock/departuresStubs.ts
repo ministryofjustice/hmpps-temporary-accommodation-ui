@@ -16,7 +16,7 @@ departureStubs.push(
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify(departureFactory.build()),
+      jsonBody: departureFactory.build(),
     },
   },
   {
@@ -29,7 +29,7 @@ departureStubs.push(
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      body: JSON.stringify(departureFactory.build()),
+      jsonBody: departureFactory.build(),
     },
   },
 )

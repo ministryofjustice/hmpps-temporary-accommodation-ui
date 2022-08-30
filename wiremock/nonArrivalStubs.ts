@@ -23,7 +23,7 @@ nonArrivalStubs.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: JSON.stringify(nonArrivalFactory.build()),
+    jsonBody: nonArrivalFactory.build(),
   },
 })
 

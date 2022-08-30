@@ -28,6 +28,7 @@ export default class DeparturesController {
         booking,
         premisesSelectList,
         referenceData,
+        pageHeading: 'Log a departure',
         errors,
         errorSummary,
         ...userInput,
@@ -63,6 +64,9 @@ export default class DeparturesController {
 
       return res.render(`departures/confirm`, {
         ...departure,
+        premisesId,
+        bookingId,
+        pageHeading: 'Departure confirmed',
         name: booking.name,
         crn: booking.crn,
       })

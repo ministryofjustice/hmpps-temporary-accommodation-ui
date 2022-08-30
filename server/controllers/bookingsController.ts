@@ -14,7 +14,7 @@ export default class BookingsController {
 
       const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
 
-      return res.render(`bookings/show`, { booking, premisesId })
+      return res.render(`bookings/show`, { booking, premisesId, pageHeading: 'Booking details' })
     }
   }
 
@@ -23,7 +23,13 @@ export default class BookingsController {
       const { premisesId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      return res.render(`bookings/new`, { premisesId, errors, errorSummary, ...userInput })
+      return res.render(`bookings/new`, {
+        premisesId,
+        errors,
+        errorSummary,
+        pageHeading: 'Make a booking',
+        ...userInput,
+      })
     }
   }
 
@@ -52,7 +58,7 @@ export default class BookingsController {
       const { premisesId, bookingId } = req.params
       const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
 
-      return res.render('bookings/confirm', booking)
+      return res.render('bookings/confirm', { premisesId, bookingId, pageHeading: 'Booking complete', ...booking })
     }
   }
 }

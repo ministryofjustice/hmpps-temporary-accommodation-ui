@@ -4,6 +4,7 @@ import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import premises from './integration_tests/mockApis/premises'
 import booking from './integration_tests/mockApis/booking'
+import bookingExtension from './integration_tests/mockApis/bookingExtension'
 import arrival from './integration_tests/mockApis/arrival'
 import nonArrival from './integration_tests/mockApis/nonArrival'
 import departure from './integration_tests/mockApis/departure'
@@ -22,8 +23,6 @@ export default defineConfig({
   videoUploadOnPasses: false,
   taskTimeout: 60000,
   e2e: {
-    // We've imported your old cypress plugins here.
-    // You may want to clean this up later by importing these.
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
@@ -33,6 +32,7 @@ export default defineConfig({
         ...tokenVerification,
         ...premises,
         ...booking,
+        ...bookingExtension,
         ...departure,
         ...cancellation,
         ...lostBed,

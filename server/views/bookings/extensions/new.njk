@@ -1,0 +1,91 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Extend booking" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+    {{ govukBackLink({
+		text: "Back",
+		href: "/premises/" + premisesId + "/bookings/" + booking.id
+	}) }}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/extensions" method="post">
+
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <h1>Extend booking</h1>
+
+                {{ govukSummaryList({
+                rows: [
+                   {
+                    key: {
+                        text: "Name"
+                    },
+                    value: {
+                        text: booking.name
+                    }
+                    },
+                    {
+                    key: {
+                        text: "CRN"
+                    },
+                    value: {
+                        text: booking.crn
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Expected arrival date"
+                    },
+                    value: {
+                        text: formatDate(booking.expectedArrivalDate)
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Current expected departure date"
+                    },
+                    value: {
+                        text: formatDate(booking.expectedDepartureDate)
+                    }
+                    },
+                    {
+                    key: {
+                        text: "Key worker"
+                    },
+                    value: {
+                        text: booking.keyWorker.name
+                    }
+                    }
+                ]
+            }) }}
+                {{ showErrorSummary(errorSummary) }}
+
+                {{ govukDateInput({
+                    id: "newDepartureDate",
+                    namePrefix: "newDepartureDate",
+                    fieldset: {
+                    legend: {
+                        text: "What is the extended expected departure date?",
+                        classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                    hint: {
+                    text: "For example, 27 3 2007"
+                    },
+                    items: dateFieldValues('newDepartureDate', errors),
+                    errorMessage: errors.newDepartureDate  
+                }) }}
+
+                {{ govukButton({
+                    text: "Submit"
+                }) }}
+            </div>
+        </div>
+    {% endblock %}

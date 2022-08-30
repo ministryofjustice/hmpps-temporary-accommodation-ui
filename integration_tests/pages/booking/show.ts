@@ -1,7 +1,7 @@
 import type { Booking } from 'approved-premises'
 
-import Page from './page'
-import { formatDateString } from '../../server/utils/utils'
+import Page from '../page'
+import { formatDateString } from '../../../server/utils/utils'
 
 export default class BookingShowPage extends Page {
   constructor() {

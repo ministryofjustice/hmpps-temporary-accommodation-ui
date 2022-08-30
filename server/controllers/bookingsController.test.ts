@@ -80,7 +80,7 @@ describe('bookingsController', () => {
   })
 
   describe('create', () => {
-    it('given the expected form data, the posting of the booking is successful should redirect to the "premises" page', async () => {
+    it('given the expected form data, the posting of the booking is successful should redirect to the "confirmation" page', async () => {
       const booking = bookingFactory.build()
       bookingService.postBooking.mockResolvedValue(booking)
       const premisesId = 'premisesId'

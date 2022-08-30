@@ -7,6 +7,7 @@ declare module 'approved-premises' {
   export type LostBed = schemas['LostBed']
   export type ReferenceData = schemas['ReferenceData']
   export type Cancellation = schemas['Cancellation']
+  export type BookingExtension = schemas['BookingExtension']
   export type KeyWorker = schemas['KeyWorker']
 
   export type BookingDto = Omit<Booking, 'id' | 'status' | 'arrival' | 'keyWorker'> & { keyWorkerId: string }
@@ -196,6 +197,10 @@ declare module 'approved-premises' {
       referenceNumber: string
       notes: string
       reason: ReferenceData
+    }
+    BookingExtension: {
+      newDepartureDate: string
+      notes: string
     }
   }
 }

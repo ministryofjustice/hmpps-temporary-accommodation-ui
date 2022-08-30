@@ -1,5 +1,5 @@
 import type { Booking } from 'approved-premises'
-import Page, { PageElement } from './page'
+import Page, { PageElement } from '../page'
 
 export default class BookingCreatePage extends Page {
   constructor() {
@@ -9,22 +9,6 @@ export default class BookingCreatePage extends Page {
   static visit(premisesId: string): BookingCreatePage {
     cy.visit(`/premises/${premisesId}/bookings/new`)
     return new BookingCreatePage()
-  }
-
-  getLabel(labelName: string): void {
-    cy.get('label').should('contain', labelName)
-  }
-
-  getLegend(legendName: string): void {
-    cy.get('legend').should('contain', legendName)
-  }
-
-  getTextInputByIdAndEnterDetails(id: string, details: string): void {
-    cy.get(`#${id}`).type(details)
-  }
-
-  getSelectInputByIdAndSelectAnEntry(id: string, entry: string): void {
-    cy.get(`#${id}`).select(entry)
   }
 
   arrivalDay(): PageElement {

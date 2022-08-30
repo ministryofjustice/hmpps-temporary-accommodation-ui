@@ -9,6 +9,7 @@ import bookingFactory from '../server/testutils/factories/booking'
 import premisesFactory from '../server/testutils/factories/premises'
 
 import bookingStubs from './bookingStubs'
+import boookingExtensionStubs from './bookingExtensionStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 import departureStubs from './departuresStubs'
@@ -99,6 +100,7 @@ stubs.push(
   ...nonArrivalStubs,
   ...departureStubs,
   ...cancellationStubs,
+  ...boookingExtensionStubs,
   ...lostBedStubs,
   ...Object.values(referenceDataStubs),
 )

@@ -16,6 +16,11 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
         href: `/premises/${premisesId}/bookings/${booking.id}/arrivals/new`,
       })
       items.push({
+        text: 'Extend booking',
+        classes: 'govuk-button--secondary',
+        href: `/premises/${premisesId}/bookings/${booking.id}/extensions/new`,
+      })
+      items.push({
         text: 'Cancel booking',
         classes: 'govuk-button--secondary',
         href: `/premises/${premisesId}/bookings/${booking.id}/cancellations/new`,
@@ -27,6 +32,11 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
         text: 'Log departure',
         classes: 'govuk-button--secondary',
         href: `/premises/${premisesId}/bookings/${booking.id}/departures/new`,
+      })
+      items.push({
+        text: 'Extend booking',
+        classes: 'govuk-button--secondary',
+        href: `/premises/${premisesId}/bookings/${booking.id}/extensions/new`,
       })
       items.push({
         text: 'Cancel booking',

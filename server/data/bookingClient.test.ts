@@ -26,7 +26,7 @@ describe('BookingClient', () => {
     nock.cleanAll()
   })
 
-  describe('postBooking', () => {
+  describe('create', () => {
     it('should return the booking that has been posted', async () => {
       const booking = bookingFactory.build()
       const payload = newBookingFactory.build({
@@ -42,7 +42,7 @@ describe('BookingClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, booking)
 
-      const result = await bookingClient.postBooking('some-uuid', payload)
+      const result = await bookingClient.create('some-uuid', payload)
 
       expect(result).toEqual(booking)
       expect(nock.isDone()).toBeTruthy()

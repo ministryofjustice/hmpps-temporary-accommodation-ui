@@ -9,7 +9,7 @@ export default class BookingClient {
     this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async postBooking(premisesId: string, data: NewBooking): Promise<Booking> {
+  async create(premisesId: string, data: NewBooking): Promise<Booking> {
     return (await this.restClient.post({ path: `/premises/${premisesId}/bookings`, data })) as Booking
   }
 

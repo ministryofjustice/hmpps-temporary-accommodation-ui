@@ -82,7 +82,7 @@ describe('bookingsController', () => {
   describe('create', () => {
     it('given the expected form data, the posting of the booking is successful should redirect to the "confirmation" page', async () => {
       const booking = bookingFactory.build()
-      bookingService.postBooking.mockResolvedValue(booking)
+      bookingService.create.mockResolvedValue(booking)
       const premisesId = 'premisesId'
       const requestHandler = bookingController.create()
 
@@ -101,7 +101,7 @@ describe('bookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.postBooking).toHaveBeenCalledWith(token, premisesId, {
+      expect(bookingService.create).toHaveBeenCalledWith(token, premisesId, {
         ...request.body,
         expectedArrivalDate: '2022-02-01T00:00:00.000Z',
         expectedDepartureDate: '2023-02-01T00:00:00.000Z',
@@ -112,7 +112,7 @@ describe('bookingsController', () => {
 
     it('should render the page with errors when the API returns an error', async () => {
       const booking = bookingFactory.build()
-      bookingService.postBooking.mockResolvedValue(booking)
+      bookingService.create.mockResolvedValue(booking)
       const requestHandler = bookingController.create()
       const premisesId = 'premisesId'
 
@@ -123,7 +123,7 @@ describe('bookingsController', () => {
 
       const err = new Error()
 
-      bookingService.postBooking.mockImplementation(() => {
+      bookingService.create.mockImplementation(() => {
         throw err
       })
 

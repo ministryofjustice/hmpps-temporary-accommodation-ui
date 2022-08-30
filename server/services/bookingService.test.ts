@@ -19,17 +19,17 @@ describe('BookingService', () => {
     bookingClientFactory.mockReturnValue(bookingClient)
   })
 
-  describe('postBooking', () => {
+  describe('create', () => {
     it('on success returns the booking that has been posted', async () => {
       const booking = bookingFactory.build()
       const newBooking = newBookingFactory.build()
-      bookingClient.postBooking.mockResolvedValue(booking)
+      bookingClient.create.mockResolvedValue(booking)
 
-      const postedBooking = await service.postBooking(token, 'premisesId', newBooking)
+      const postedBooking = await service.create(token, 'premisesId', newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.postBooking).toHaveBeenCalledWith('premisesId', newBooking)
+      expect(bookingClient.create).toHaveBeenCalledWith('premisesId', newBooking)
     })
   })
 

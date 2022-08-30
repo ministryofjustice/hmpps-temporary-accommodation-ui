@@ -44,7 +44,7 @@ export default class BookingsController {
       }
 
       try {
-        const confirmedBooking = await this.bookingService.postBooking(req.user.token, premisesId as string, booking)
+        const confirmedBooking = await this.bookingService.create(req.user.token, premisesId as string, booking)
 
         res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
       } catch (err) {

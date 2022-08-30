@@ -1,8 +1,8 @@
 import type { Arrival } from 'approved-premises'
-import type { RestClientBuilder, ArrivalClient } from '../data'
+import type { RestClientBuilder, BookingClient } from '../data'
 
 export default class ArrivalService {
-  constructor(private readonly arrivalClientFactory: RestClientBuilder<ArrivalClient>) {}
+  constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
   async createArrival(
     token: string,
@@ -10,9 +10,9 @@ export default class ArrivalService {
     bookingId: string,
     arrival: Omit<Arrival, 'id' | 'bookingId'>,
   ): Promise<Arrival> {
-    const arrivalClient = this.arrivalClientFactory(token)
+    const bookingClient = this.bookingClientFactory(token)
 
-    const confirmedArrival = await arrivalClient.create(premisesId, bookingId, arrival)
+    const confirmedArrival = await bookingClient.markAsArrived(premisesId, bookingId, arrival)
 
     return confirmedArrival
   }

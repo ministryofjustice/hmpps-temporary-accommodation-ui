@@ -3,6 +3,7 @@ import nock from 'nock'
 import BookingClient from './bookingClient'
 import bookingFactory from '../testutils/factories/booking'
 import newBookingFactory from '../testutils/factories/newBooking'
+import arrivalFactory from '../testutils/factories/arrival'
 import config from '../config'
 
 describe('BookingClient', () => {
@@ -100,6 +101,33 @@ describe('BookingClient', () => {
       const result = await bookingClient.extendBooking('premisesId', booking.id, payload)
 
       expect(result).toEqual(booking)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('markAsArrived', () => {
+    it('should create an arrival', async () => {
+      const arrival = arrivalFactory.build()
+      const payload = {
+        date: arrival.date.toString(),
+        expectedDepartureDate: arrival.expectedDepartureDate.toString(),
+        notes: arrival.notes,
+        name: arrival.name,
+        crn: arrival.crn,
+      }
+
+      fakeApprovedPremisesApi
+        .post(`/premises/premisesId/bookings/bookingId/arrivals`, payload)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, arrival)
+
+      const result = await bookingClient.markAsArrived('premisesId', 'bookingId', payload)
+
+      expect(result).toEqual({
+        ...arrival,
+        date: arrival.date,
+        expectedDepartureDate: arrival.expectedDepartureDate,
+      })
       expect(nock.isDone()).toBeTruthy()
     })
   })

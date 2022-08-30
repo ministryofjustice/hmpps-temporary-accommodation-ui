@@ -19,7 +19,6 @@ export const services = () => {
     nonArrivalClientBuilder,
     departureClientBuilder,
     referenceDataClientBuilder,
-    cancellationClientBuilder,
     lostBedClientBuilder,
   } = dataAccess()
 
@@ -29,7 +28,7 @@ export const services = () => {
   const arrivalService = new ArrivalService(bookingClientBuilder)
   const nonArrivalService = new NonArrivalService(nonArrivalClientBuilder)
   const departureService = new DepartureService(departureClientBuilder, referenceDataClientBuilder)
-  const cancellationService = new CancellationService(cancellationClientBuilder, referenceDataClientBuilder)
+  const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
 
   return {

@@ -1,9 +1,13 @@
 import nock from 'nock'
 
 import BookingClient from './bookingClient'
-import bookingFactory from '../testutils/factories/booking'
-import newBookingFactory from '../testutils/factories/newBooking'
+
 import arrivalFactory from '../testutils/factories/arrival'
+import newBookingFactory from '../testutils/factories/newBooking'
+import bookingFactory from '../testutils/factories/booking'
+import cancellationFactory from '../testutils/factories/cancellation'
+import newCancellationFactory from '../testutils/factories/newCancellation'
+
 import config from '../config'
 
 describe('BookingClient', () => {
@@ -128,6 +132,39 @@ describe('BookingClient', () => {
         date: arrival.date,
         expectedDepartureDate: arrival.expectedDepartureDate,
       })
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('cancel', () => {
+    it('should create a cancellation', async () => {
+      const newCancellation = newCancellationFactory.build()
+      const cancellation = cancellationFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(`/premises/premisesId/bookings/bookingId/cancellations`, newCancellation)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, cancellation)
+
+      const result = await bookingClient.cancel('premisesId', 'bookingId', newCancellation)
+
+      expect(result).toEqual(cancellation)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('findCancellation', () => {
+    it('given a cancellation ID should return a cancellation', async () => {
+      const cancellation = cancellationFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`/premises/premisesId/bookings/bookingId/cancellations/${cancellation.id}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, cancellation)
+
+      const result = await bookingClient.findCancellation('premisesId', 'bookingId', cancellation.id)
+
+      expect(result).toEqual(cancellation)
       expect(nock.isDone()).toBeTruthy()
     })
   })

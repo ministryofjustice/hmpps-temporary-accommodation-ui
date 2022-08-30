@@ -16,7 +16,6 @@ import PremisesClient from './premisesClient'
 import NonArrivalClient from './nonArrivalClient'
 import DepartureClient from './departureClient'
 import ReferenceDataClient from './referenceDataClient'
-import CancellationClient from './cancellationClient'
 
 import { createRedisClient } from './redisClient'
 import TokenStore from './tokenStore'
@@ -32,8 +31,6 @@ export const dataAccess = () => ({
   departureClientBuilder: ((token: string) => new DepartureClient(token)) as RestClientBuilder<DepartureClient>,
   referenceDataClientBuilder: ((token: string) =>
     new ReferenceDataClient(token)) as RestClientBuilder<ReferenceDataClient>,
-  cancellationClientBuilder: ((token: string) =>
-    new CancellationClient(token)) as RestClientBuilder<CancellationClient>,
   lostBedClientBuilder: ((token: string) => new LostBedClient(token)) as RestClientBuilder<LostBedClient>,
 })
 
@@ -47,6 +44,5 @@ export {
   NonArrivalClient,
   DepartureClient,
   ReferenceDataClient,
-  CancellationClient,
   LostBedClient,
 }

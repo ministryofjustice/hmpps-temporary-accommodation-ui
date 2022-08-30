@@ -1,4 +1,4 @@
-import type { Arrival, Booking, BookingExtension, NewBooking } from 'approved-premises'
+import type { Arrival, NewBooking, Booking, BookingExtension, NewCancellation, Cancellation } from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
@@ -39,5 +39,22 @@ export default class BookingClient {
     })
 
     return response as Arrival
+  }
+
+  async cancel(premisesId: string, bookingId: string, cancellation: NewCancellation): Promise<Cancellation> {
+    const response = await this.restClient.post({
+      path: `/premises/${premisesId}/bookings/${bookingId}/cancellations`,
+      data: cancellation,
+    })
+
+    return response as Cancellation
+  }
+
+  async findCancellation(premisesId: string, bookingId: string, departureId: string): Promise<Cancellation> {
+    const response = await this.restClient.get({
+      path: `/premises/${premisesId}/bookings/${bookingId}/cancellations/${departureId}`,
+    })
+
+    return response as Cancellation
   }
 }

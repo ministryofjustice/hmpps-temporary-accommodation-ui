@@ -12,7 +12,7 @@ export default class BookingsController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
 
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
 
       return res.render(`bookings/show`, { booking, premisesId, pageHeading: 'Booking details' })
     }
@@ -44,7 +44,7 @@ export default class BookingsController {
       }
 
       try {
-        const confirmedBooking = await this.bookingService.postBooking(req.user.token, premisesId as string, booking)
+        const confirmedBooking = await this.bookingService.create(req.user.token, premisesId as string, booking)
 
         res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
       } catch (err) {
@@ -56,7 +56,7 @@ export default class BookingsController {
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
 
       return res.render('bookings/confirm', { premisesId, bookingId, pageHeading: 'Booking complete', ...booking })
     }

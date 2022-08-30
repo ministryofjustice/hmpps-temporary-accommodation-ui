@@ -11,18 +11,18 @@ export default class BookingService {
 
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
-  async postBooking(token: string, premisesId: string, booking: NewBooking): Promise<Booking> {
+  async create(token: string, premisesId: string, booking: NewBooking): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)
 
-    const confirmedBooking = await bookingClient.postBooking(premisesId, booking)
+    const confirmedBooking = await bookingClient.create(premisesId, booking)
 
     return confirmedBooking
   }
 
-  async getBooking(token: string, premisesId: string, bookingId: string): Promise<Booking> {
+  async find(token: string, premisesId: string, bookingId: string): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)
 
-    const booking = await bookingClient.getBooking(premisesId, bookingId)
+    const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking
   }

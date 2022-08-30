@@ -33,7 +33,7 @@ describe('cancellationsController', () => {
   const cancellationsController = new CancellationsController(cancellationService, bookingService)
 
   beforeEach(() => {
-    bookingService.getBooking.mockResolvedValue(booking)
+    bookingService.find.mockResolvedValue(booking)
     cancellationService.getCancellationReasons.mockResolvedValue(cancellationReasons)
   })
 
@@ -57,7 +57,7 @@ describe('cancellationsController', () => {
         errorSummary: [],
       })
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, bookingId)
       expect(cancellationService.getCancellationReasons).toHaveBeenCalledWith(token)
     })
 
@@ -172,7 +172,7 @@ describe('cancellationsController', () => {
       )
 
       expect(cancellationService.getCancellation).toHaveBeenCalledWith(token, premisesId, bookingId, cancellation.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, bookingId)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, bookingId)
 
       expect(response.render).toHaveBeenCalledWith('cancellations/confirm', {
         cancellation,

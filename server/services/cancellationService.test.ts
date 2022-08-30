@@ -1,28 +1,28 @@
 import CancellationService from './cancellationService'
-import CancellationClient from '../data/cancellationClient'
+import BookingClient from '../data/bookingClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 
 import newCancellationFactory from '../testutils/factories/newCancellation'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
 
-jest.mock('../data/cancellationClient.ts')
+jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
 
 describe('DepartureService', () => {
-  const cancellationClient = new CancellationClient(null) as jest.Mocked<CancellationClient>
+  const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
-  const CancellationClientFactory = jest.fn()
+  const BookingClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
 
   const token = 'SOME_TOKEN'
 
-  const service = new CancellationService(CancellationClientFactory, ReferenceDataClientFactory)
+  const service = new CancellationService(BookingClientFactory, ReferenceDataClientFactory)
 
   beforeEach(() => {
     jest.resetAllMocks()
-    CancellationClientFactory.mockReturnValue(cancellationClient)
+    BookingClientFactory.mockReturnValue(bookingClient)
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
@@ -31,13 +31,13 @@ describe('DepartureService', () => {
       const newCancellation = newCancellationFactory.build()
       const cancellation = cancellationFactory.build()
 
-      cancellationClient.create.mockResolvedValue(cancellation)
+      bookingClient.cancel.mockResolvedValue(cancellation)
 
       const postedDeparture = await service.createCancellation(token, 'premisesId', 'bookingId', newCancellation)
       expect(postedDeparture).toEqual(cancellation)
 
-      expect(CancellationClientFactory).toHaveBeenCalledWith(token)
-      expect(cancellationClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', newCancellation)
+      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClient.cancel).toHaveBeenCalledWith('premisesId', 'bookingId', newCancellation)
     })
   })
 
@@ -59,14 +59,14 @@ describe('DepartureService', () => {
   describe('getCancellation', () => {
     it('on success returns the cancellation that has been requested', async () => {
       const cancellation = cancellationFactory.build()
-      cancellationClient.get.mockResolvedValue(cancellation)
+      bookingClient.findCancellation.mockResolvedValue(cancellation)
 
       const requestedDeparture = await service.getCancellation(token, 'premisesId', 'bookingId', cancellation.id)
 
       expect(requestedDeparture).toEqual(cancellation)
 
-      expect(CancellationClientFactory).toHaveBeenCalledWith(token)
-      expect(cancellationClient.get).toHaveBeenCalledWith('premisesId', 'bookingId', cancellation.id)
+      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClient.findCancellation).toHaveBeenCalledWith('premisesId', 'bookingId', cancellation.id)
     })
   })
 })

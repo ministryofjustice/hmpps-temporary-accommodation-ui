@@ -1,9 +1,9 @@
 import type { Cancellation, NewCancellation, ReferenceData } from 'approved-premises'
-import type { RestClientBuilder, CancellationClient, ReferenceDataClient } from '../data'
+import type { BookingClient, RestClientBuilder, ReferenceDataClient } from '../data'
 
 export default class CancellationService {
   constructor(
-    private readonly cancellationClientFactory: RestClientBuilder<CancellationClient>,
+    private readonly bookingClientFactory: RestClientBuilder<BookingClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
@@ -13,9 +13,9 @@ export default class CancellationService {
     bookingId: string,
     cancellation: NewCancellation,
   ): Promise<Cancellation> {
-    const cancellationClient = this.cancellationClientFactory(token)
+    const bookingClient = this.bookingClientFactory(token)
 
-    const confirmedCancellation = await cancellationClient.create(premisesId, bookingId, cancellation)
+    const confirmedCancellation = await bookingClient.cancel(premisesId, bookingId, cancellation)
 
     return confirmedCancellation
   }
@@ -26,9 +26,9 @@ export default class CancellationService {
     bookingId: string,
     cancellationId: string,
   ): Promise<Cancellation> {
-    const cancellationClient = this.cancellationClientFactory(token)
+    const bookingClient = this.bookingClientFactory(token)
 
-    const booking = await cancellationClient.get(premisesId, bookingId, cancellationId)
+    const booking = await bookingClient.findCancellation(premisesId, bookingId, cancellationId)
 
     return booking
   }

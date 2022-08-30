@@ -25,18 +25,18 @@ describe('PremisesClient', () => {
     nock.cleanAll()
   })
 
-  describe('getAllPremises', () => {
+  describe('all', () => {
     const premises = premisesFactory.buildList(5)
 
     it('should get all premises', async () => {
       fakeApprovedPremisesApi.get('/premises').matchHeader('authorization', `Bearer ${token}`).reply(200, premises)
 
-      const output = await premisesClient.getAllPremises()
+      const output = await premisesClient.all()
       expect(output).toEqual(premises)
     })
   })
 
-  describe('getPremises', () => {
+  describe('find', () => {
     const premises = premisesFactory.build()
 
     it('should get a single premises', async () => {
@@ -45,7 +45,7 @@ describe('PremisesClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, premises)
 
-      const output = await premisesClient.getPremises(premises.id)
+      const output = await premisesClient.find(premises.id)
       expect(output).toEqual(premises)
     })
   })

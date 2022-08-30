@@ -1,7 +1,7 @@
 import { parseISO } from 'date-fns'
 
 import type { Departure, ReferenceData, NewDeparture } from 'approved-premises'
-import type { RestClientBuilder, DepartureClient, ReferenceDataClient } from '../data'
+import type { RestClientBuilder, BookingClient, ReferenceDataClient } from '../data'
 
 export type DepartureReferenceData = {
   departureReasons: Array<ReferenceData>
@@ -11,7 +11,7 @@ export type DepartureReferenceData = {
 
 export default class DepartureService {
   constructor(
-    private readonly departureClientFactory: RestClientBuilder<DepartureClient>,
+    private readonly bookingClientFactory: RestClientBuilder<BookingClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
@@ -21,17 +21,17 @@ export default class DepartureService {
     bookingId: string,
     departure: NewDeparture,
   ): Promise<Departure> {
-    const departureClient = this.departureClientFactory(token)
+    const bookingClient = this.bookingClientFactory(token)
 
-    const confirmedDeparture = await departureClient.create(premisesId, bookingId, departure)
+    const confirmedDeparture = await bookingClient.markDeparture(premisesId, bookingId, departure)
 
     return confirmedDeparture
   }
 
   async getDeparture(token: string, premisesId: string, bookingId: string, departureId: string): Promise<Departure> {
-    const departureClient = this.departureClientFactory(token)
+    const departureClient = this.bookingClientFactory(token)
 
-    const departure = await departureClient.get(premisesId, bookingId, departureId)
+    const departure = await departureClient.findDeparture(premisesId, bookingId, departureId)
 
     return { ...departure, dateTime: parseISO(departure.dateTime).toLocaleDateString('en-GB') }
   }

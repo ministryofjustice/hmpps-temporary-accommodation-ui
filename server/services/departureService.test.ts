@@ -2,18 +2,18 @@ import type { Departure } from 'approved-premises'
 import { parseISO } from 'date-fns'
 
 import DepartureService from './departureService'
-import DepartureClient from '../data/departureClient'
+import BookingClient from '../data/bookingClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 
 import departureFactory from '../testutils/factories/departure'
 import referenceDataFactory from '../testutils/factories/referenceData'
 import newDepartureFactory from '../testutils/factories/newDeparture'
 
-jest.mock('../data/departureClient.ts')
+jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
 
 describe('DepartureService', () => {
-  const departureClient = new DepartureClient(null) as jest.Mocked<DepartureClient>
+  const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
   const token = 'SOME_TOKEN'
@@ -25,7 +25,7 @@ describe('DepartureService', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
-    DepartureClientFactory.mockReturnValue(departureClient)
+    DepartureClientFactory.mockReturnValue(bookingClient)
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
@@ -34,20 +34,20 @@ describe('DepartureService', () => {
       const newDeparture = newDepartureFactory.build()
       const departure = departureFactory.build()
 
-      departureClient.create.mockResolvedValue(departure)
+      bookingClient.markDeparture.mockResolvedValue(departure)
 
       const postedDeparture = await service.createDeparture(token, 'premisesId', 'bookingId', newDeparture)
       expect(postedDeparture).toEqual(departure)
 
       expect(DepartureClientFactory).toHaveBeenCalledWith(token)
-      expect(departureClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', newDeparture)
+      expect(bookingClient.markDeparture).toHaveBeenCalledWith('premisesId', 'bookingId', newDeparture)
     })
   })
 
   describe('getDeparture', () => {
     it('on success returns the departure that has been requested', async () => {
       const departure: Departure = departureFactory.build()
-      departureClient.get.mockResolvedValue(departure)
+      bookingClient.findDeparture.mockResolvedValue(departure)
 
       const requestedDeparture = await service.getDeparture(token, 'premisesId', 'bookingId', departure.id)
 
@@ -57,7 +57,7 @@ describe('DepartureService', () => {
       })
 
       expect(DepartureClientFactory).toHaveBeenCalledWith(token)
-      expect(departureClient.get).toHaveBeenCalledWith('premisesId', 'bookingId', departure.id)
+      expect(bookingClient.findDeparture).toHaveBeenCalledWith('premisesId', 'bookingId', departure.id)
     })
   })
 

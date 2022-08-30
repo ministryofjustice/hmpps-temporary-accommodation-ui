@@ -25,7 +25,7 @@ describe('PremisesService', () => {
       const premises3 = premisesFactory.build({ name: 'GHI' })
 
       const premises = [premises1, premises2, premises3]
-      premisesClient.getAllPremises.mockResolvedValue(premises)
+      premisesClient.all.mockResolvedValue(premises)
 
       const rows = await service.tableRows(token)
 
@@ -75,7 +75,7 @@ describe('PremisesService', () => {
       ])
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.getAllPremises).toHaveBeenCalled()
+      expect(premisesClient.all).toHaveBeenCalled()
     })
   })
 
@@ -84,7 +84,7 @@ describe('PremisesService', () => {
       const premisesA = premisesFactory.build({ name: 'a' })
       const premisesB = premisesFactory.build({ name: 'b' })
       const premisesC = premisesFactory.build({ name: 'c' })
-      premisesClient.getAllPremises.mockResolvedValue([premisesC, premisesB, premisesA])
+      premisesClient.all.mockResolvedValue([premisesC, premisesB, premisesA])
 
       const result = await service.getPremisesSelectList(token)
 
@@ -95,7 +95,7 @@ describe('PremisesService', () => {
       ])
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.getAllPremises).toHaveBeenCalled()
+      expect(premisesClient.all).toHaveBeenCalled()
     })
   })
 
@@ -108,7 +108,7 @@ describe('PremisesService', () => {
         bedCount: 50,
         availableBedsForToday: 20,
       })
-      premisesClient.getPremises.mockResolvedValue(premises)
+      premisesClient.find.mockResolvedValue(premises)
 
       const result = await service.getPremisesDetails(token, premises.id)
 
@@ -136,10 +136,10 @@ describe('PremisesService', () => {
         },
       })
 
-      expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.getPremises).toHaveBeenCalledWith(premises.id)
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })
   })
 })

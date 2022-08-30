@@ -13,11 +13,7 @@ buildAppInsightsClient()
 
 import HmppsAuthClient from './hmppsAuthClient'
 import PremisesClient from './premisesClient'
-import ArrivalClient from './arrivalClient'
-import NonArrivalClient from './nonArrivalClient'
-import DepartureClient from './departureClient'
 import ReferenceDataClient from './referenceDataClient'
-import CancellationClient from './cancellationClient'
 
 import { createRedisClient } from './redisClient'
 import TokenStore from './tokenStore'
@@ -29,27 +25,11 @@ export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
   approvedPremisesClientBuilder: ((token: string) => new PremisesClient(token)) as RestClientBuilder<PremisesClient>,
   bookingClientBuilder: ((token: string) => new BookingClient(token)) as RestClientBuilder<BookingClient>,
-  arrivalClientBuilder: ((token: string) => new ArrivalClient(token)) as RestClientBuilder<ArrivalClient>,
-  nonArrivalClientBuilder: ((token: string) => new NonArrivalClient(token)) as RestClientBuilder<NonArrivalClient>,
-  departureClientBuilder: ((token: string) => new DepartureClient(token)) as RestClientBuilder<DepartureClient>,
   referenceDataClientBuilder: ((token: string) =>
     new ReferenceDataClient(token)) as RestClientBuilder<ReferenceDataClient>,
-  cancellationClientBuilder: ((token: string) =>
-    new CancellationClient(token)) as RestClientBuilder<CancellationClient>,
   lostBedClientBuilder: ((token: string) => new LostBedClient(token)) as RestClientBuilder<LostBedClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export {
-  BookingClient,
-  PremisesClient,
-  ArrivalClient,
-  HmppsAuthClient,
-  RestClientBuilder,
-  NonArrivalClient,
-  DepartureClient,
-  ReferenceDataClient,
-  CancellationClient,
-  LostBedClient,
-}
+export { BookingClient, PremisesClient, HmppsAuthClient, RestClientBuilder, ReferenceDataClient, LostBedClient }

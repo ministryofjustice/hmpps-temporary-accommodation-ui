@@ -19,7 +19,7 @@ export default class DeparturesController {
       const { premisesId, bookingId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
       const premisesSelectList = await this.premisesService.getPremisesSelectList(req.user.token)
       const referenceData = await this.departureService.getReferenceData(req.user.token)
 
@@ -59,7 +59,7 @@ export default class DeparturesController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId, departureId } = req.params
 
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
       const departure = await this.departureService.getDeparture(req.user.token, premisesId, bookingId, departureId)
 
       return res.render(`departures/confirm`, {

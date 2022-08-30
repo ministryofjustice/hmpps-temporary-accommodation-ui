@@ -12,7 +12,7 @@ export default class BookingExtensionsController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
 
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
       return res.render('bookings/extensions/new', { premisesId, booking, errors, errorSummary, ...userInput })
@@ -46,7 +46,7 @@ export default class BookingExtensionsController {
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const booking = await this.bookingService.getBooking(req.user.token, premisesId, bookingId)
+      const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
 
       return res.render('bookings/extensions/confirm', { premisesId, ...booking })
     }

@@ -25,7 +25,7 @@ describe('bookingExtensionsController', () => {
     const booking = bookingFactory.build()
 
     beforeEach(() => {
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
     })
 
     it('should render the form', async () => {
@@ -42,11 +42,11 @@ describe('bookingExtensionsController', () => {
         errors: {},
         errorSummary: [],
       })
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
       const errorsAndUserInput = createMock<ErrorsAndUserInput>()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
@@ -61,7 +61,7 @@ describe('bookingExtensionsController', () => {
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
       })
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
     })
   })
 
@@ -124,7 +124,7 @@ describe('bookingExtensionsController', () => {
   describe('confirm', () => {
     it('renders the form with the details from the booking that is requested', async () => {
       const booking = bookingFactory.build()
-      bookingService.getBooking.mockResolvedValue(booking)
+      bookingService.find.mockResolvedValue(booking)
 
       const requestHandler = bookingExtensionsController.confirm()
 
@@ -138,7 +138,7 @@ describe('bookingExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
       expect(response.render).toHaveBeenCalledWith('bookings/extensions/confirm', { premisesId, ...booking })
     })
   })

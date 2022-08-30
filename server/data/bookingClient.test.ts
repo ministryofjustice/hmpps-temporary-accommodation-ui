@@ -7,6 +7,8 @@ import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
 import cancellationFactory from '../testutils/factories/cancellation'
 import newCancellationFactory from '../testutils/factories/newCancellation'
+import departureFactory from '../testutils/factories/departure'
+import newDepartureFactory from '../testutils/factories/newDeparture'
 
 import config from '../config'
 
@@ -165,6 +167,38 @@ describe('BookingClient', () => {
       const result = await bookingClient.findCancellation('premisesId', 'bookingId', cancellation.id)
 
       expect(result).toEqual(cancellation)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('markDeparture', () => {
+    it('should create a departure', async () => {
+      const departure = newDepartureFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(`/premises/premisesId/bookings/bookingId/departures`, departure)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, departure)
+
+      const result = await bookingClient.markDeparture('premisesId', 'bookingId', departure)
+
+      expect(result).toEqual(departure)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('findDeparture', () => {
+    it('given a departure ID should return a departure', async () => {
+      const departure = departureFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`/premises/premisesId/bookings/bookingId/departures/${departure.id}`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, departure)
+
+      const result = await bookingClient.findDeparture('premisesId', 'bookingId', departure.id)
+
+      expect(result).toEqual(departure)
       expect(nock.isDone()).toBeTruthy()
     })
   })

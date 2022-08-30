@@ -1,4 +1,13 @@
-import type { Arrival, NewBooking, Booking, BookingExtension, NewCancellation, Cancellation } from 'approved-premises'
+import type {
+  Arrival,
+  NewBooking,
+  Booking,
+  BookingExtension,
+  NewCancellation,
+  Cancellation,
+  NewDeparture,
+  Departure,
+} from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
@@ -56,5 +65,22 @@ export default class BookingClient {
     })
 
     return response as Cancellation
+  }
+
+  async markDeparture(premisesId: string, bookingId: string, departure: NewDeparture): Promise<Departure> {
+    const response = await this.restClient.post({
+      path: `/premises/${premisesId}/bookings/${bookingId}/departures`,
+      data: departure,
+    })
+
+    return response as Departure
+  }
+
+  async findDeparture(premisesId: string, bookingId: string, departureId: string): Promise<Departure> {
+    const response = await this.restClient.get({
+      path: `/premises/${premisesId}/bookings/${bookingId}/departures/${departureId}`,
+    })
+
+    return response as Departure
   }
 }

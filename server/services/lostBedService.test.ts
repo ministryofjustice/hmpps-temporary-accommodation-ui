@@ -1,4 +1,4 @@
-import type { LostBed, LostBedDto } from 'approved-premises'
+import type { LostBed, NewLostBed } from 'approved-premises'
 
 import LostBedService from './lostBedService'
 import LostBedClient from '../data/lostBedClient'
@@ -29,7 +29,7 @@ describe('LostBedService', () => {
   describe('createLostBed', () => {
     it('on success returns the lostBed that has been posted', async () => {
       const lostBed: LostBed = lostBedFactory.build()
-      const lostBedDto: LostBedDto = lostBedDtoFactory.build()
+      const lostBedDto: NewLostBed = lostBedDtoFactory.build()
 
       const token = 'SOME_TOKEN'
       lostBedClient.create.mockResolvedValue(lostBed)

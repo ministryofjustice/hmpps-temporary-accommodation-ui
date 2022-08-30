@@ -1,11 +1,11 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { DepartureDto } from 'approved-premises'
+import type { NewDeparture } from 'approved-premises'
 import referenceDataFactory from './referenceData'
 import premisesFactory from './premises'
 
-export default Factory.define<DepartureDto>(() => {
+export default Factory.define<NewDeparture>(() => {
   const date = faker.date.soon()
   return {
     dateTime: date.toISOString(),

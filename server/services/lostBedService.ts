@@ -1,4 +1,4 @@
-import type { LostBed, LostBedDto, ReferenceData } from 'approved-premises'
+import type { LostBed, NewLostBed, ReferenceData } from 'approved-premises'
 import type { RestClientBuilder, LostBedClient, ReferenceDataClient } from '../data'
 
 export type LostBedReferenceData = Array<ReferenceData>
@@ -8,7 +8,7 @@ export default class LostBedService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async createLostBed(token: string, premisesId: string, lostBed: LostBedDto): Promise<LostBed> {
+  async createLostBed(token: string, premisesId: string, lostBed: NewLostBed): Promise<LostBed> {
     const lostBedClient = this.lostBedClientFactory(token)
 
     const confirmedLostBed = await lostBedClient.create(premisesId, lostBed)

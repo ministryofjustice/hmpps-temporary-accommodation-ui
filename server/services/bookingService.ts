@@ -1,6 +1,6 @@
 import { isSameDay, isWithinInterval, addDays } from 'date-fns'
 
-import type { Booking, BookingDto, TableRow, GroupedListofBookings, BookingExtension } from 'approved-premises'
+import type { Booking, NewBooking, TableRow, GroupedListofBookings, BookingExtension } from 'approved-premises'
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
@@ -11,7 +11,7 @@ export default class BookingService {
 
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
-  async postBooking(token: string, premisesId: string, booking: BookingDto): Promise<Booking> {
+  async postBooking(token: string, premisesId: string, booking: NewBooking): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)
 
     const confirmedBooking = await bookingClient.postBooking(premisesId, booking)

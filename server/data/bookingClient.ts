@@ -1,4 +1,4 @@
-import type { Booking, BookingDto, BookingExtension } from 'approved-premises'
+import type { Booking, NewBooking, BookingExtension } from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
@@ -9,7 +9,7 @@ export default class BookingClient {
     this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async postBooking(premisesId: string, data: BookingDto): Promise<Booking> {
+  async postBooking(premisesId: string, data: NewBooking): Promise<Booking> {
     return (await this.restClient.post({ path: `/premises/${premisesId}/bookings`, data })) as Booking
   }
 

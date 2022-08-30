@@ -1,4 +1,4 @@
-import type { Cancellation, CancellationDto, ReferenceData } from 'approved-premises'
+import type { Cancellation, NewCancellation, ReferenceData } from 'approved-premises'
 import type { RestClientBuilder, CancellationClient, ReferenceDataClient } from '../data'
 
 export default class CancellationService {
@@ -11,7 +11,7 @@ export default class CancellationService {
     token: string,
     premisesId: string,
     bookingId: string,
-    cancellation: CancellationDto,
+    cancellation: NewCancellation,
   ): Promise<Cancellation> {
     const cancellationClient = this.cancellationClientFactory(token)
 

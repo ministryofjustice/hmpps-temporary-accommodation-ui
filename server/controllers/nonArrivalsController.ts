@@ -1,5 +1,5 @@
 import { Response, Request, RequestHandler } from 'express'
-import type { NonArrival, NonArrivalDto } from 'approved-premises'
+import type { NonArrival, NewNonArrival } from 'approved-premises'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import NonArrivalService from '../services/nonArrivalService'
 import { catchValidationErrorOrPropogate } from '../utils/validation'
@@ -10,7 +10,7 @@ export default class NonArrivalsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const body = req.body as NonArrivalDto
+      const body = req.body as NewNonArrival
       const { nonArrivalDate } = convertDateAndTimeInputsToIsoString(body, 'nonArrivalDate')
 
       const nonArrival: Omit<NonArrival, 'id' | 'bookingId'> = {

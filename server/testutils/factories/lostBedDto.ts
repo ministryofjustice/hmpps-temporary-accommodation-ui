@@ -1,10 +1,10 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { LostBedDto } from 'approved-premises'
+import type { NewLostBed } from 'approved-premises'
 import referenceDataFactory from './referenceData'
 
-export default Factory.define<LostBedDto>(() => {
+export default Factory.define<NewLostBed>(() => {
   const startDate = faker.date.soon()
   const endDate = faker.date.future()
   return {

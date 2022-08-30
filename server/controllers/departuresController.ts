@@ -1,5 +1,5 @@
 import type { Response, Request, RequestHandler } from 'express'
-import type { DepartureDto } from 'approved-premises'
+import type { NewDeparture } from 'approved-premises'
 
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import DepartureService from '../services/departureService'
@@ -44,7 +44,7 @@ export default class DeparturesController {
       const departure = {
         ...req.body.departure,
         dateTime,
-      } as DepartureDto
+      } as NewDeparture
 
       try {
         const { id } = await this.departureService.createDeparture(req.user.token, premisesId, bookingId, departure)

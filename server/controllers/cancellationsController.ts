@@ -1,6 +1,6 @@
 import type { Response, Request, RequestHandler } from 'express'
 
-import type { CancellationDto } from 'approved-premises'
+import type { NewCancellation } from 'approved-premises'
 
 import { CancellationService, BookingService } from '../services'
 import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../utils/validation'
@@ -41,7 +41,7 @@ export default class CancellationsController {
       const cancellation = {
         ...req.body.cancellation,
         date,
-      } as CancellationDto
+      } as NewCancellation
 
       try {
         const { id } = await this.cancellationService.createCancellation(

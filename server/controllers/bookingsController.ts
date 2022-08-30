@@ -1,4 +1,4 @@
-import type { BookingDto } from 'approved-premises'
+import type { NewBooking } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
 import BookingService from '../services/bookingService'
@@ -37,7 +37,7 @@ export default class BookingsController {
     return async (req: Request, res: Response) => {
       const { premisesId } = req.params
 
-      const booking: BookingDto = {
+      const booking: NewBooking = {
         ...req.body,
         ...convertDateAndTimeInputsToIsoString(req.body, 'expectedArrivalDate'),
         ...convertDateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),

@@ -3,7 +3,7 @@ import nock from 'nock'
 import CancellationClient from './cancellationClient'
 import config from '../config'
 import cancellationFactory from '../testutils/factories/cancellation'
-import cancellationDtoFactory from '../testutils/factories/cancellationDto'
+import newCancellationFactory from '../testutils/factories/newCancellation'
 
 describe('cancellationClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -28,15 +28,15 @@ describe('cancellationClient', () => {
 
   describe('create', () => {
     it('should create a cancellation', async () => {
-      const cancellationDto = cancellationDtoFactory.build()
+      const newCancellation = newCancellationFactory.build()
       const cancellation = cancellationFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/cancellations`, cancellationDto)
+        .post(`/premises/premisesId/bookings/bookingId/cancellations`, newCancellation)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, cancellation)
 
-      const result = await cancellationClient.create('premisesId', 'bookingId', cancellationDto)
+      const result = await cancellationClient.create('premisesId', 'bookingId', newCancellation)
 
       expect(result).toEqual(cancellation)
       expect(nock.isDone()).toBeTruthy()

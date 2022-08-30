@@ -5,7 +5,7 @@ import LostBedClient from '../data/lostBedClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 
 import lostBedFactory from '../testutils/factories/lostBed'
-import lostBedDtoFactory from '../testutils/factories/lostBedDto'
+import newLostBedFactory from '../testutils/factories/newLostBed'
 import referenceDataFactory from '../testutils/factories/referenceData'
 
 jest.mock('../data/lostBedClient.ts')
@@ -29,16 +29,16 @@ describe('LostBedService', () => {
   describe('createLostBed', () => {
     it('on success returns the lostBed that has been posted', async () => {
       const lostBed: LostBed = lostBedFactory.build()
-      const lostBedDto: NewLostBed = lostBedDtoFactory.build()
+      const newLostBed: NewLostBed = newLostBedFactory.build()
 
       const token = 'SOME_TOKEN'
       lostBedClient.create.mockResolvedValue(lostBed)
 
-      const postedLostBed = await service.createLostBed(token, 'premisesID', lostBedDto)
+      const postedLostBed = await service.createLostBed(token, 'premisesID', newLostBed)
 
       expect(postedLostBed).toEqual(lostBed)
       expect(LostBedClientFactory).toHaveBeenCalledWith(token)
-      expect(lostBedClient.create).toHaveBeenCalledWith('premisesID', lostBedDto)
+      expect(lostBedClient.create).toHaveBeenCalledWith('premisesID', newLostBed)
     })
   })
 

@@ -2,7 +2,7 @@ import CancellationService from './cancellationService'
 import CancellationClient from '../data/cancellationClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 
-import cancellationDtoFactory from '../testutils/factories/cancellationDto'
+import newCancellationFactory from '../testutils/factories/newCancellation'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
 
@@ -28,16 +28,16 @@ describe('DepartureService', () => {
 
   describe('createCancellation', () => {
     it('on success returns the cancellation that has been posted', async () => {
-      const cancellationDto = cancellationDtoFactory.build()
+      const newCancellation = newCancellationFactory.build()
       const cancellation = cancellationFactory.build()
 
       cancellationClient.create.mockResolvedValue(cancellation)
 
-      const postedDeparture = await service.createCancellation(token, 'premisesId', 'bookingId', cancellationDto)
+      const postedDeparture = await service.createCancellation(token, 'premisesId', 'bookingId', newCancellation)
       expect(postedDeparture).toEqual(cancellation)
 
       expect(CancellationClientFactory).toHaveBeenCalledWith(token)
-      expect(cancellationClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', cancellationDto)
+      expect(cancellationClient.create).toHaveBeenCalledWith('premisesId', 'bookingId', newCancellation)
     })
   })
 

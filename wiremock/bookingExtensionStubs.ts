@@ -1,5 +1,5 @@
 import { guidRegex } from './index'
-import bookingDtoFactory from '../server/testutils/factories/bookingDto'
+import newBookingFactory from '../server/testutils/factories/newBooking'
 import { errorStub } from './utils'
 
 export default [
@@ -19,7 +19,7 @@ export default [
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: bookingDtoFactory.build(),
+      jsonBody: newBookingFactory.build(),
     },
   },
 

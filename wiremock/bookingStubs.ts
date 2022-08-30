@@ -1,5 +1,5 @@
 import { guidRegex } from './index'
-import bookingDtoFactory from '../server/testutils/factories/bookingDto'
+import newBookingFactory from '../server/testutils/factories/newBooking'
 import bookingFactory from '../server/testutils/factories/booking'
 import { getCombinations, errorStub } from './utils'
 
@@ -30,7 +30,7 @@ bookingStubs.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: bookingDtoFactory.build(),
+    jsonBody: newBookingFactory.build(),
   },
 })
 

@@ -9,7 +9,7 @@ export default class PremisesClient {
     this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async getAllPremises(): Promise<Array<Premises>> {
+  async all(): Promise<Array<Premises>> {
     return (await this.restClient.get({ path: '/premises' })) as Array<Premises>
   }
 

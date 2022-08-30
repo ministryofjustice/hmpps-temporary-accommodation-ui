@@ -9,6 +9,7 @@ import DeparturesController from './departuresController'
 import CancellationsController from './cancellationsController'
 
 import type { Services } from '../services'
+import LostBedsController from './lostBedsController'
 
 export const controllers = (services: Services) => {
   const applicationController = new ApplicationController()
@@ -22,6 +23,7 @@ export const controllers = (services: Services) => {
     services.bookingService,
   )
   const cancellationsController = new CancellationsController(services.cancellationService, services.bookingService)
+  const lostBedsController = new LostBedsController(services.lostBedService)
 
   return {
     applicationController,
@@ -31,9 +33,17 @@ export const controllers = (services: Services) => {
     nonArrivalsController,
     departuresController,
     cancellationsController,
+    lostBedsController,
   }
 }
 
 export type Controllers = ReturnType<typeof controllers>
 
-export { PremisesController, BookingsController, ArrivalsController, NonArrivalsController, DeparturesController }
+export {
+  PremisesController,
+  BookingsController,
+  ArrivalsController,
+  NonArrivalsController,
+  DeparturesController,
+  LostBedsController,
+}

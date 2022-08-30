@@ -13,6 +13,7 @@ import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 import departureStubs from './departuresStubs'
 import cancellationStubs from './cancellationStubs'
+import lostBedStubs from './lostBedStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
 
@@ -98,6 +99,7 @@ stubs.push(
   ...nonArrivalStubs,
   ...departureStubs,
   ...cancellationStubs,
+  ...lostBedStubs,
   ...Object.values(referenceDataStubs),
 )
 

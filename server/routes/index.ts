@@ -16,6 +16,7 @@ export default function routes(controllers: Controllers): Router {
     nonArrivalsController,
     departuresController,
     cancellationsController,
+    lostBedsController,
   } = controllers
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -42,6 +43,9 @@ export default function routes(controllers: Controllers): Router {
   get('/premises/:premisesId/bookings/:bookingId/departures/new', departuresController.new())
   post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())
   get('/premises/:premisesId/bookings/:bookingId/departures/:departureId/confirmation', departuresController.confirm())
+
+  get('/premises/:premisesId/lostBeds/new', lostBedsController.new())
+  post('/premises/:premisesId/lostBeds', lostBedsController.create())
 
   return router
 }

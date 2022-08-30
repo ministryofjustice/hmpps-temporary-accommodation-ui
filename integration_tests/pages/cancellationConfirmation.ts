@@ -8,7 +8,7 @@ export default class CancellationConfirmPage extends Page {
     super('Cancellation complete')
   }
 
-  verifyConfirmedCancellatiobIsVisible(cancellation: Cancellation, booking: Booking): void {
+  verifyConfirmedCancellationIsVisible(cancellation: Cancellation, booking: Booking): void {
     cy.get('dl').within(() => {
       this.assertDefinition('Name', booking.name)
       this.assertDefinition('CRN', booking.crn)

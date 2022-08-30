@@ -8,6 +8,7 @@ import arrival from './integration_tests/mockApis/arrival'
 import nonArrival from './integration_tests/mockApis/nonArrival'
 import departure from './integration_tests/mockApis/departure'
 import cancellation from './integration_tests/mockApis/cancellation'
+import lostBed from './integration_tests/mockApis/lostBed'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -34,6 +35,7 @@ export default defineConfig({
         ...booking,
         ...departure,
         ...cancellation,
+        ...lostBed,
       })
     },
     baseUrl: 'http://localhost:3007',

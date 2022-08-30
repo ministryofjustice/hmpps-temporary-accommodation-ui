@@ -2,6 +2,7 @@ import departureReasonsJson from './stubs/departure-reasons.json'
 import moveOnCategoriesJson from './stubs/move-on-categories.json'
 import destinationProvidersJson from './stubs/destination-providers.json'
 import cancellationReasonsJson from './stubs/cancellation-reasons.json'
+import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
 
 const departureReasons = {
   request: {
@@ -59,4 +60,18 @@ const cancellationReasons = {
   },
 }
 
-export { departureReasons, moveOnCategories, destinationProviders, cancellationReasons }
+const lostBedReasons = {
+  request: {
+    method: 'GET',
+    url: '/reference-data/lost-bed-reasons',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: lostBedReasonsJson,
+  },
+}
+
+export { departureReasons, moveOnCategories, destinationProviders, cancellationReasons, lostBedReasons }

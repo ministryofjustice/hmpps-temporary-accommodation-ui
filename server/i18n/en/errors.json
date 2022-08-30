@@ -24,5 +24,9 @@
     "blank": "You must enter a valid departure date and time"
   },
   "moveOnCategory": { "blank": "You must enter a move on category" },
-  "destinationProvider": { "blank": "You must enter a destination provider" }
+  "destinationProvider": { "blank": "You must enter a destination provider" },
+  "startDate": { "blank": "You must enter a start date" },
+  "endDate": { "blank": "You must enter a end date" },
+  "numberOfBeds": { "blank": "You must enter the number of beds lost" },
+  "referenceNumber": { "blank": "You must enter a reference number" }
 }

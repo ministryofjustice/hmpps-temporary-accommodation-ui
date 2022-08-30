@@ -4,6 +4,7 @@ declare module 'approved-premises' {
   export type NonArrival = schemas['NonArrival']
   export type Departure = schemas['Departure']
   export type Booking = schemas['Booking']
+  export type LostBed = schemas['LostBed']
   export type ReferenceData = schemas['ReferenceData']
   export type Cancellation = schemas['Cancellation']
   export type KeyWorker = schemas['KeyWorker']
@@ -39,6 +40,12 @@ declare module 'approved-premises' {
 
   export type CancellationDto = Omit<Cancellation, 'id' | 'bookingId' | 'reason'> &
     ObjectWithDateParts<'date'> & {
+      reason: string
+    }
+
+  export type LostBedDto = Omit<LostBed, 'id' | 'reason'> &
+    ObjectWithDateParts<'startDate'> &
+    ObjectWithDateParts<'endDate'> & {
       reason: string
     }
 
@@ -180,6 +187,15 @@ declare module 'approved-premises' {
       date: string
       reason: ReferenceData
       notes: string
+    }
+    LostBed: {
+      id: string
+      startDate: string
+      endDate: string
+      numberOfBeds: number
+      referenceNumber: string
+      notes: string
+      reason: ReferenceData
     }
   }
 }

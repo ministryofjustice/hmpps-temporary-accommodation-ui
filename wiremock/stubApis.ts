@@ -15,6 +15,7 @@ import nonArrivalStubs from './nonArrivalStubs'
 import departureStubs from './departuresStubs'
 import cancellationStubs from './cancellationStubs'
 import lostBedStubs from './lostBedStubs'
+import personStubs from './personStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
 import premisesCapacityItemFactory from '../server/testutils/factories/premisesCapacityItem'
@@ -117,6 +118,7 @@ stubs.push(
   ...cancellationStubs,
   ...boookingExtensionStubs,
   ...lostBedStubs,
+  ...personStubs,
   ...Object.values(referenceDataStubs),
 )
 

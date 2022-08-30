@@ -1,8 +1,8 @@
 import type { NonArrival } from 'approved-premises'
-import type { RestClientBuilder, NonArrivalClient } from '../data'
+import type { RestClientBuilder, BookingClient } from '../data'
 
 export default class NonArrivalService {
-  constructor(private readonly nonArrivalClientFactory: RestClientBuilder<NonArrivalClient>) {}
+  constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
   async createNonArrival(
     token: string,
@@ -10,9 +10,9 @@ export default class NonArrivalService {
     bookingId: string,
     arrival: Omit<NonArrival, 'id' | 'bookingId'>,
   ): Promise<NonArrival> {
-    const nonArrivalClient = this.nonArrivalClientFactory(token)
+    const bookingClient = this.bookingClientFactory(token)
 
-    const confirmedNonArrival = await nonArrivalClient.create(premisesId, bookingId, arrival)
+    const confirmedNonArrival = await bookingClient.markNonArrival(premisesId, bookingId, arrival)
 
     return confirmedNonArrival
   }

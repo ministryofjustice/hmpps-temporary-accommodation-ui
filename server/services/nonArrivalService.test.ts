@@ -1,35 +1,35 @@
 import type { NonArrival } from 'approved-premises'
 
 import NonArrivalService from './nonArrivalService'
-import NonArrivalClient from '../data/nonArrivalClient'
+import BookingClient from '../data/bookingClient'
 import NonArrivalFactory from '../testutils/factories/nonArrival'
 
-jest.mock('../data/nonArrivalClient.ts')
+jest.mock('../data/bookingClient.ts')
 
 describe('NonArrivalService', () => {
-  const nonArrivalClient = new NonArrivalClient(null) as jest.Mocked<NonArrivalClient>
-  const nonArrivalClientFactory = jest.fn()
+  const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
+  const bookingClientFactory = jest.fn()
 
-  const service = new NonArrivalService(nonArrivalClientFactory)
+  const service = new NonArrivalService(bookingClientFactory)
 
   const token = 'SOME_TOKEN'
 
   beforeEach(() => {
     jest.resetAllMocks()
-    nonArrivalClientFactory.mockReturnValue(nonArrivalClient)
+    bookingClientFactory.mockReturnValue(bookingClient)
   })
 
   describe('createNonArrival', () => {
     it('on success returns the arrival that has been posted', async () => {
       const nonArrival: NonArrival = NonArrivalFactory.build()
-      nonArrivalClient.create.mockResolvedValue(nonArrival)
+      bookingClient.markNonArrival.mockResolvedValue(nonArrival)
 
       const postedNonArrival = await service.createNonArrival(token, 'premisesID', 'bookingId', nonArrival)
 
       expect(postedNonArrival).toEqual(nonArrival)
 
-      expect(nonArrivalClientFactory).toHaveBeenCalledWith(token)
-      expect(nonArrivalClient.create).toHaveBeenCalledWith('premisesID', 'bookingId', nonArrival)
+      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClient.markNonArrival).toHaveBeenCalledWith('premisesID', 'bookingId', nonArrival)
     })
   })
 })

@@ -16,7 +16,6 @@ export const services = () => {
     hmppsAuthClient,
     approvedPremisesClientBuilder,
     bookingClientBuilder,
-    nonArrivalClientBuilder,
     referenceDataClientBuilder,
     lostBedClientBuilder,
   } = dataAccess()
@@ -25,7 +24,7 @@ export const services = () => {
   const premisesService = new PremisesService(approvedPremisesClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)
-  const nonArrivalService = new NonArrivalService(nonArrivalClientBuilder)
+  const nonArrivalService = new NonArrivalService(bookingClientBuilder)
   const departureService = new DepartureService(bookingClientBuilder, referenceDataClientBuilder)
   const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)

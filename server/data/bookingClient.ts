@@ -7,6 +7,7 @@ import type {
   Cancellation,
   NewDeparture,
   Departure,
+  NonArrival,
 } from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
@@ -82,5 +83,18 @@ export default class BookingClient {
     })
 
     return response as Departure
+  }
+
+  async markNonArrival(
+    premisesId: string,
+    bookingId: string,
+    nonArrival: Omit<NonArrival, 'id' | 'bookingId'>,
+  ): Promise<NonArrival> {
+    const response = await this.restClient.post({
+      path: `/premises/${premisesId}/bookings/${bookingId}/non-arrivals`,
+      data: nonArrival,
+    })
+
+    return response as NonArrival
   }
 }

@@ -6,6 +6,7 @@ import LostBedService, { LostBedReferenceData } from '../services/lostBedService
 import LostBedsController from './lostBedsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 import lostBedFactory from '../testutils/factories/lostBed'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -101,7 +102,7 @@ describe('LostBedsController', () => {
         endDate: '2022-09-22T00:00:00.000Z',
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Lost bed logged')
-      expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: request.params.premisesId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -123,7 +124,7 @@ describe('LostBedsController', () => {
         request,
         response,
         err,
-        `/premises/${request.params.premisesId}/lostBeds/new`,
+        paths.lostBeds.new({ premisesId: request.params.premisesId }),
       )
     })
   })

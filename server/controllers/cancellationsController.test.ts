@@ -11,6 +11,7 @@ import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../uti
 import bookingFactory from '../testutils/factories/booking'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -121,7 +122,11 @@ describe('cancellationsController', () => {
       )
 
       expect(response.redirect).toHaveBeenCalledWith(
-        `/premises/premisesId/bookings/bookingId/cancellations/${cancellation.id}/confirmation`,
+        paths.bookings.cancellations.confirm({
+          bookingId: request.params.bookingId,
+          premisesId: request.params.premisesId,
+          id: cancellation.id,
+        }),
       )
     })
 
@@ -145,7 +150,10 @@ describe('cancellationsController', () => {
         request,
         response,
         err,
-        `/premises/${premisesId}/bookings/${bookingId}/cancellations/new`,
+        paths.bookings.cancellations.new({
+          bookingId: request.params.bookingId,
+          premisesId: request.params.premisesId,
+        }),
       )
     })
   })

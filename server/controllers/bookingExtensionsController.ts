@@ -4,6 +4,7 @@ import type { BookingExtension } from 'approved-premises'
 import BookingService from '../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
+import paths from '../paths'
 
 export default class BookingExtensionsController {
   constructor(private readonly bookingService: BookingService) {}
@@ -36,9 +37,22 @@ export default class BookingExtensionsController {
           bookingExtension,
         )
 
-        res.redirect(`/premises/${premisesId}/bookings/${extendedBooking.id}/extensions/confirmation`)
+        res.redirect(
+          paths.bookings.extensions.confirm({
+            premisesId,
+            bookingId: extendedBooking.id,
+          }),
+        )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/extensions/new`)
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.extensions.new({
+            premisesId,
+            bookingId,
+          }),
+        )
       }
     }
   }

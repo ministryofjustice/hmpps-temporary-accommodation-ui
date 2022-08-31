@@ -4,6 +4,7 @@ import NonArrivalService from '../services/nonArrivalService'
 
 import NonArrivalsController from './nonArrivalsController'
 import { catchValidationErrorOrPropogate } from '../utils/validation'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -40,7 +41,7 @@ describe('NonArrivalsController', () => {
         date: new Date(2022, 11, 11).toISOString(),
       }
 
-      expect(response.redirect).toHaveBeenCalledWith(`/premises/${request.params.premisesId}`)
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: request.params.premisesId }))
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Non-arrival logged')
       expect(nonArrivalService.createNonArrival).toHaveBeenCalledWith(
@@ -71,7 +72,7 @@ describe('NonArrivalsController', () => {
         request,
         response,
         err,
-        `/premises/${request.params.premisesId}/bookings/${request.params.bookingId}/arrivals/new`,
+        paths.bookings.arrivals.new({ premisesId: request.params.premisesId, bookingId: request.params.bookingId }),
       )
     })
   })

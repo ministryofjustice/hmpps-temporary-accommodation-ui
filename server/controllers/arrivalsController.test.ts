@@ -5,6 +5,7 @@ import type { ErrorsAndUserInput } from 'approved-premises'
 import ArrivalService from '../services/arrivalService'
 import ArrivalsController from './arrivalsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -122,7 +123,10 @@ describe('ArrivalsController', () => {
         request,
         response,
         err,
-        `/premises/${request.params.premisesId}/bookings/${request.params.bookingId}/arrivals/new`,
+        paths.bookings.arrivals.new({
+          premisesId: request.params.premisesId,
+          bookingId: request.params.bookingId,
+        }),
       )
     })
   })

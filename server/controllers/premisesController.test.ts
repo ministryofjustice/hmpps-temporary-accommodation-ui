@@ -39,7 +39,7 @@ describe('PremisesController', () => {
       bookingService.groupedListOfBookingsForPremisesId.mockResolvedValue(bookings)
       bookingService.currentResidents.mockResolvedValue(currentResidents)
 
-      request.params.id = 'some-uuid'
+      request.params.premisesId = 'some-uuid'
 
       const requestHandler = premisesController.show()
       await requestHandler(request, response, next)

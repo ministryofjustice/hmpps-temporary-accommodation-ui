@@ -15,12 +15,15 @@ export default class PremisesController {
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const premises = await this.premisesService.getPremisesDetails(req.user.token, req.params.id)
+      const premises = await this.premisesService.getPremisesDetails(req.user.token, req.params.premisesId)
 
-      const bookings = await this.bookingService.groupedListOfBookingsForPremisesId(req.user.token, req.params.id)
-      const currentResidents = await this.bookingService.currentResidents(req.user.token, req.params.id)
+      const bookings = await this.bookingService.groupedListOfBookingsForPremisesId(
+        req.user.token,
+        req.params.premisesId,
+      )
+      const currentResidents = await this.bookingService.currentResidents(req.user.token, req.params.premisesId)
 
-      return res.render('premises/show', { premises, premisesId: req.params.id, bookings, currentResidents })
+      return res.render('premises/show', { premises, premisesId: req.params.premisesId, bookings, currentResidents })
     }
   }
 }

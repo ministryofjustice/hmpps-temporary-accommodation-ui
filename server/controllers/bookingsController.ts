@@ -4,6 +4,7 @@ import type { Request, Response, RequestHandler } from 'express'
 import BookingService from '../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
+import paths from '../paths'
 
 export default class BookingsController {
   constructor(private readonly bookingService: BookingService) {}
@@ -46,9 +47,21 @@ export default class BookingsController {
       try {
         const confirmedBooking = await this.bookingService.create(req.user.token, premisesId as string, booking)
 
-        res.redirect(`/premises/${premisesId}/bookings/${confirmedBooking.id}/confirmation`)
+        res.redirect(
+          paths.bookings.confirm({
+            premisesId,
+            bookingId: confirmedBooking.id,
+          }),
+        )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/new`)
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.new({
+            premisesId,
+          }),
+        )
       }
     }
   }

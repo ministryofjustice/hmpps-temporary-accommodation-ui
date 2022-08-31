@@ -4,6 +4,7 @@ import type { Arrival, NewArrival } from 'approved-premises'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import ArrivalService from '../services/arrivalService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
+import paths from '../paths'
 
 export default class ArrivalsController {
   constructor(private readonly arrivalService: ArrivalService) {}
@@ -42,9 +43,9 @@ export default class ArrivalsController {
         await this.arrivalService.createArrival(req.user.token, premisesId, bookingId, arrival)
 
         req.flash('success', 'Arrival logged')
-        res.redirect(`/premises/${premisesId}`)
+        res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/arrivals/new`)
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.new({ bookingId, premisesId }))
       }
     }
   }

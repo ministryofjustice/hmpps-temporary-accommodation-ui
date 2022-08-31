@@ -7,6 +7,7 @@ import BookingExtensionsController from './bookingExtensionsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -91,7 +92,10 @@ describe('bookingExtensionsController', () => {
       })
 
       expect(response.redirect).toHaveBeenCalledWith(
-        `/premises/${premisesId}/bookings/${booking.id}/extensions/confirmation`,
+        paths.bookings.extensions.confirm({
+          premisesId,
+          bookingId: booking.id,
+        }),
       )
     })
 
@@ -116,7 +120,10 @@ describe('bookingExtensionsController', () => {
         request,
         response,
         err,
-        `/premises/${premisesId}/bookings/${booking.id}/extensions/new`,
+        paths.bookings.extensions.new({
+          premisesId,
+          bookingId: booking.id,
+        }),
       )
     })
   })

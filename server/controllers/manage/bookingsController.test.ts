@@ -13,6 +13,7 @@ jest.mock('../../utils/validation')
 
 describe('bookingsController', () => {
   const token = 'SOME_TOKEN'
+  const premisesId = 'premisesId'
 
   let request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   const response: DeepMocked<Response> = createMock<Response>({})
@@ -28,10 +29,8 @@ describe('bookingsController', () => {
       bookingService.find.mockResolvedValue(booking)
 
       const requestHandler = bookingController.show()
-      const premisesId = 'premisesId'
-      const bookingId = 'bookingId'
 
-      await requestHandler({ ...request, params: { premisesId, bookingId } }, response, next)
+      await requestHandler({ ...request, params: { premisesId, bookingId: booking.id } }, response, next)
 
       expect(response.render).toHaveBeenCalledWith('bookings/show', {
         booking,
@@ -39,14 +38,14 @@ describe('bookingsController', () => {
         pageHeading: 'Booking details',
       })
 
-      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, bookingId)
+      expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
     })
   })
 
   describe('new', () => {
     it('should render the form', async () => {
       const requestHandler = bookingController.new()
-      const premisesId = 'premisesId'
+
       ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
         return { errors: {}, errorSummary: [], userInput: {} }
       })
@@ -63,7 +62,6 @@ describe('bookingsController', () => {
 
     it('renders the form with errors and user input if an error has been sent to the flash', () => {
       const requestHandler = bookingController.new()
-      const premisesId = 'premisesId'
 
       const errorsAndUserInput = createMock<ErrorsAndUserInput>()
 
@@ -85,7 +83,7 @@ describe('bookingsController', () => {
     it('given the expected form data, the posting of the booking is successful should redirect to the "confirmation" page', async () => {
       const booking = bookingFactory.build()
       bookingService.create.mockResolvedValue(booking)
-      const premisesId = 'premisesId'
+
       const requestHandler = bookingController.create()
 
       request = {
@@ -121,7 +119,6 @@ describe('bookingsController', () => {
       const booking = bookingFactory.build()
       bookingService.create.mockResolvedValue(booking)
       const requestHandler = bookingController.create()
-      const premisesId = 'premisesId'
 
       request = {
         ...request,
@@ -156,7 +153,7 @@ describe('bookingsController', () => {
       const overcapacityMessage = 'The premises is over capacity for the period January 1st 2023 to Feburary 3rd 2023'
       premisesService.getOvercapacityMessage.mockResolvedValue(overcapacityMessage)
       bookingService.find.mockResolvedValue(booking)
-      const premisesId = 'premisesId'
+
       const requestHandler = bookingController.confirm()
 
       request = {

@@ -3,6 +3,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
@@ -23,30 +24,29 @@
         <div class="govuk-grid-column-two-thirds">
             <form action="{{ paths.bookings.create({ premisesId: premisesId }) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+                <input type="hidden" name="crn" value="{{ crn }}"/>
 
                 {{ showErrorSummary(errorSummary) }}
 
-                {{ govukInput({
-                    label: {
-                        text: "CRN",
-                        classes: "govuk-label--m"
+                {{ govukSummaryList({
+                rows: [
+                   {
+                    key: {
+                        text: "Name"
                     },
-                    classes: "govuk-input--width-10",
-                    id: "crn",
-                    name: "crn",
-                    value: crn,
-                    errorMessage: errors.crn
-                }) }}
-
-                {{ govukInput({
-                    label: {
-                        text: "Name",
-                        classes: "govuk-label--m"
+                    value: {
+                        text: name
+                    }
                     },
-                    classes: "govuk-input--width-10",
-                    id: "name",
-                    name: "name",
-                    errorMessage: errors.name
+                    {
+                    key: {
+                        text: "CRN"
+                    },
+                    value: {
+                        text: crn
+                    }
+                    }
+                ]
                 }) }}
 
                 {{ govukDateInput({

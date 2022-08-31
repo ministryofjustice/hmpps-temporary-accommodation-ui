@@ -14,9 +14,9 @@
 {% block content %}
 
   {{ govukBackLink({
-  text: "Back",
-  href: "/premises/" + premisesId + "/bookings/" + bookingId
-}) }}
+    text: "Back",
+	  href: paths.bookings.show({ premisesId: premisesId, bookingId: booking.id })
+  }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -24,7 +24,7 @@
 
       <p>If {{ booking.name }} has not arrived or no longer requires this bed, cancel this booking. Cancelling this booking will make this bed available to another person. </p>
 
-      <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/cancellations" method="post">
+      <form action="{{ paths.bookings.cancellations.create({ premisesId: premisesId, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ govukSummaryList({

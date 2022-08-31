@@ -2,11 +2,13 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
-import { BookingService, PremisesService } from '../../services'
+
+import { BookingService, PremisesService, PersonService } from '../../services'
 import BookingsController from './bookingsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 
 import bookingFactory from '../../testutils/factories/booking'
+import personFactory from '../../testutils/factories/person'
 import paths from '../../paths/manage'
 
 jest.mock('../../utils/validation')
@@ -21,7 +23,12 @@ describe('bookingsController', () => {
 
   const bookingService = createMock<BookingService>({})
   const premisesService = createMock<PremisesService>({})
-  const bookingController = new BookingsController(bookingService, premisesService)
+  const personService = createMock<PersonService>({})
+  const bookingController = new BookingsController(bookingService, premisesService, personService)
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
 
   describe('show', () => {
     it('should fetch the booking and render the show page', async () => {
@@ -43,38 +50,86 @@ describe('bookingsController', () => {
   })
 
   describe('new', () => {
-    it('should render the form', async () => {
-      const requestHandler = bookingController.new()
+    describe('If there is a CRN in the flash', () => {
+      it('it should render the new booking form', async () => {
+        const person = personFactory.build()
+        personService.findByCrn.mockResolvedValue(person)
+        ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
+          return { errors: {}, errorSummary: [], userInput: {} }
+        })
+        const flashSpy = jest.fn().mockImplementation(() => [person.crn])
 
-      ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
-        return { errors: {}, errorSummary: [], userInput: {} }
+        const requestHandler = bookingController.new()
+
+        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('bookings/new', {
+          premisesId,
+          pageHeading: 'Make a booking',
+          ...person,
+          errors: {},
+          errorSummary: [],
+        })
+        expect(personService.findByCrn).toHaveBeenCalledWith(token, person.crn)
+        expect(flashSpy).toHaveBeenCalledWith('crn')
       })
 
-      requestHandler({ ...request, params: { premisesId } }, response, next)
+      it('renders the form with errors and user input if an error has been sent to the flash', async () => {
+        const person = personFactory.build()
+        personService.findByCrn.mockResolvedValue(person)
+        const flashSpy = jest.fn().mockImplementation(() => [person.crn])
+        const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
-      expect(response.render).toHaveBeenCalledWith('bookings/new', {
-        premisesId,
-        pageHeading: 'Make a booking',
-        errors: {},
-        errorSummary: [],
+        const requestHandler = bookingController.new()
+
+        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('bookings/new', {
+          premisesId,
+          pageHeading: 'Make a booking',
+          ...person,
+          errors: errorsAndUserInput.errors,
+          errorSummary: errorsAndUserInput.errorSummary,
+          ...errorsAndUserInput.userInput,
+        })
       })
     })
+    describe('if there is a no CRN in the flash', () => {
+      it('it should render the new booking form', async () => {
+        ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
+          return { errors: {}, errorSummary: [], userInput: {} }
+        })
+        const flashSpy = jest.fn().mockImplementation(() => [])
 
-    it('renders the form with errors and user input if an error has been sent to the flash', () => {
-      const requestHandler = bookingController.new()
+        const requestHandler = bookingController.new()
 
-      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
 
-      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+        expect(response.render).toHaveBeenCalledWith('bookings/find', {
+          premisesId,
+          pageHeading: 'Make a booking - find someone by CRN',
+          errors: {},
+          errorSummary: [],
+        })
+      })
 
-      requestHandler({ ...request, params: { premisesId } }, response, next)
+      it('renders the form with errors and user input if an error has been sent to the flash', async () => {
+        const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+        const flashSpy = jest.fn().mockImplementation(() => [])
 
-      expect(response.render).toHaveBeenCalledWith('bookings/new', {
-        premisesId,
-        pageHeading: 'Make a booking',
-        errors: errorsAndUserInput.errors,
-        errorSummary: errorsAndUserInput.errorSummary,
-        ...errorsAndUserInput.userInput,
+        const requestHandler = bookingController.new()
+
+        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('bookings/find', {
+          premisesId,
+          pageHeading: 'Make a booking - find someone by CRN',
+          errors: errorsAndUserInput.errors,
+          errorSummary: errorsAndUserInput.errorSummary,
+          ...errorsAndUserInput.userInput,
+        })
       })
     })
   })
@@ -118,11 +173,14 @@ describe('bookingsController', () => {
     it('should render the page with errors when the API returns an error', async () => {
       const booking = bookingFactory.build()
       bookingService.create.mockResolvedValue(booking)
+      const flashSpy = jest.fn().mockImplementation(() => ['some-crn'])
+
       const requestHandler = bookingController.create()
 
       request = {
         ...request,
         params: { premisesId },
+        flash: flashSpy,
       }
 
       const err = new Error()

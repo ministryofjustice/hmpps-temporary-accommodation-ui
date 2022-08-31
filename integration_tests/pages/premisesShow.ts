@@ -4,6 +4,7 @@ import type { Premises, Booking } from 'approved-premises'
 
 import Page from './page'
 import { formatDate } from '../../server/utils/utils'
+import paths from '../../server/paths'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
@@ -11,7 +12,7 @@ export default class PremisesShowPage extends Page {
   }
 
   static visit(premises: Premises): PremisesShowPage {
-    cy.visit(`/premises/${premises.id}`)
+    cy.visit(paths.premises.show({ premisesId: premises.id }))
     return new PremisesShowPage(premises)
   }
 

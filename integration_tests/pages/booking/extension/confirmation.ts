@@ -2,6 +2,7 @@ import parseISO from 'date-fns/parseISO'
 import type { Booking } from 'approved-premises'
 import { formatDate } from '../../../../server/utils/utils'
 import Page from '../../page'
+import paths from '../../../../server/paths'
 
 export default class BookingExtensionConfirmationPage extends Page {
   constructor() {
@@ -9,7 +10,7 @@ export default class BookingExtensionConfirmationPage extends Page {
   }
 
   static visit(premisesId: string, bookingId: string): BookingExtensionConfirmationPage {
-    cy.visit(`/premises/${premisesId}/bookings/${bookingId}/extensions/confirmation`)
+    cy.visit(paths.bookings.extensions.confirm({ premisesId, bookingId }))
     return new BookingExtensionConfirmationPage()
   }
 

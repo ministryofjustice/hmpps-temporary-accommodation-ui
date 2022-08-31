@@ -1,5 +1,6 @@
 import type { Cancellation } from 'approved-premises'
 import Page from './page'
+import paths from '../../server/paths'
 
 export default class CancellationCreatePage extends Page {
   constructor() {
@@ -7,7 +8,8 @@ export default class CancellationCreatePage extends Page {
   }
 
   static visit(premisesId: string, bookingId: string): CancellationCreatePage {
-    cy.visit(`/premises/${premisesId}/bookings/${bookingId}/cancellations/new`)
+    cy.visit(paths.bookings.cancellations.new({ premisesId, bookingId }))
+
     return new CancellationCreatePage()
   }
 

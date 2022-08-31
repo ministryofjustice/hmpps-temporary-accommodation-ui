@@ -1,6 +1,7 @@
 import parseISO from 'date-fns/parseISO'
 import type { Departure, Booking } from 'approved-premises'
 import Page from './page'
+import paths from '../../server/paths'
 
 export default class DepartureConfirmation extends Page {
   constructor() {
@@ -8,7 +9,8 @@ export default class DepartureConfirmation extends Page {
   }
 
   static visit(premisesId: string, bookingId: string, departureId: string): DepartureConfirmation {
-    cy.visit(`/premises/${premisesId}/bookings/${bookingId}/departures/${departureId}`)
+    cy.visit(paths.bookings.departures.confirm({ premisesId, bookingId, departureId }))
+
     return new DepartureConfirmation()
   }
 

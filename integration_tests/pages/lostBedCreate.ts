@@ -1,4 +1,5 @@
 import type { LostBed } from 'approved-premises'
+import paths from '../../server/paths'
 
 import Page from './page'
 
@@ -8,7 +9,7 @@ export default class LostBedCreatePage extends Page {
   }
 
   static visit(premisesId: string): LostBedCreatePage {
-    cy.visit(`/premises/${premisesId}/lostBeds/new`)
+    cy.visit(paths.lostBeds.new({ premisesId }))
     return new LostBedCreatePage()
   }
 

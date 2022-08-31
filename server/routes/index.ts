@@ -4,6 +4,7 @@ import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Controllers } from '../controllers'
+import paths from '../paths'
 
 export default function routes(controllers: Controllers): Router {
   const router = Router()
@@ -25,32 +26,33 @@ export default function routes(controllers: Controllers): Router {
 
   get('/', applicationController.index())
 
-  get('/premises', premisesController.index())
-  get('/premises/:id', premisesController.show())
+  get(paths.premises.index.pattern, premisesController.index())
+  get(paths.premises.show.pattern, premisesController.show())
 
-  get('/premises/:premisesId/bookings/new', bookingsController.new())
-  get('/premises/:premisesId/bookings/:bookingId', bookingsController.show())
-  post('/premises/:premisesId/bookings', bookingsController.create())
-  get('/premises/:premisesId/bookings/:bookingId/confirmation', bookingsController.confirm())
+  get(paths.bookings.new.pattern, bookingsController.new())
+  get(paths.bookings.show.pattern, bookingsController.show())
+  post(paths.bookings.create.pattern, bookingsController.create())
+  get(paths.bookings.confirm.pattern, bookingsController.confirm())
 
-  get('/premises/:premisesId/bookings/:bookingId/extensions/new', bookingExtensionsController.new())
-  post('/premises/:premisesId/bookings/:bookingId/extensions', bookingExtensionsController.create())
-  get('/premises/:premisesId/bookings/:bookingId/extensions/confirmation', bookingExtensionsController.confirm())
+  get(paths.bookings.extensions.new.pattern, bookingExtensionsController.new())
+  post(paths.bookings.extensions.create.pattern, bookingExtensionsController.create())
+  get(paths.bookings.extensions.confirm.pattern, bookingExtensionsController.confirm())
 
-  get('/premises/:premisesId/bookings/:bookingId/arrivals/new', arrivalsController.new())
-  post('/premises/:premisesId/bookings/:bookingId/arrivals', arrivalsController.create())
-  post('/premises/:premisesId/bookings/:bookingId/nonArrivals', nonArrivalsController.create())
+  get(paths.bookings.arrivals.new.pattern, arrivalsController.new())
+  post(paths.bookings.arrivals.create.pattern, arrivalsController.create())
 
-  get('/premises/:premisesId/bookings/:bookingId/cancellations/new', cancellationsController.new())
-  post('/premises/:premisesId/bookings/:bookingId/cancellations', cancellationsController.create())
-  get('/premises/:premisesId/bookings/:bookingId/cancellations/:id/confirmation', cancellationsController.confirm())
+  post(paths.bookings.nonArrivals.create.pattern, nonArrivalsController.create())
 
-  get('/premises/:premisesId/bookings/:bookingId/departures/new', departuresController.new())
-  post('/premises/:premisesId/bookings/:bookingId/departures', departuresController.create())
-  get('/premises/:premisesId/bookings/:bookingId/departures/:departureId/confirmation', departuresController.confirm())
+  get(paths.bookings.cancellations.new.pattern, cancellationsController.new())
+  post(paths.bookings.cancellations.create.pattern, cancellationsController.create())
+  get(paths.bookings.cancellations.confirm.pattern, cancellationsController.confirm())
 
-  get('/premises/:premisesId/lostBeds/new', lostBedsController.new())
-  post('/premises/:premisesId/lostBeds', lostBedsController.create())
+  get(paths.bookings.departures.new.pattern, departuresController.new())
+  post(paths.bookings.departures.create.pattern, departuresController.create())
+  get(paths.bookings.departures.confirm.pattern, departuresController.confirm())
+
+  get(paths.lostBeds.new.pattern, lostBedsController.new())
+  post(paths.lostBeds.create.pattern, lostBedsController.create())
 
   return router
 }

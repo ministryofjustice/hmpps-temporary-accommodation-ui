@@ -2,12 +2,12 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
-import ArrivalService from '../services/arrivalService'
+import ArrivalService from '../../services/arrivalService'
 import ArrivalsController from './arrivalsController'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import paths from '../paths'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
+import paths from '../../paths'
 
-jest.mock('../utils/validation')
+jest.mock('../../utils/validation')
 
 describe('ArrivalsController', () => {
   const token = 'SOME_TOKEN'

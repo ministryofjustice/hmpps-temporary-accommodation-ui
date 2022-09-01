@@ -1,10 +1,10 @@
 import type { Request, Response, RequestHandler } from 'express'
 
 import type { BookingExtension } from 'approved-premises'
-import BookingService from '../services/bookingService'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
-import paths from '../paths'
+import BookingService from '../../services/bookingService'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
+import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import paths from '../../paths'
 
 export default class BookingExtensionsController {
   constructor(private readonly bookingService: BookingService) {}

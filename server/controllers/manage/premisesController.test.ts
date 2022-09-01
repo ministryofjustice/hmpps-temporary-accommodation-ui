@@ -2,8 +2,8 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { SummaryListItem, GroupedListofBookings, TableRow } from 'approved-premises'
-import PremisesService from '../services/premisesService'
-import BookingService from '../services/bookingService'
+import PremisesService from '../../services/premisesService'
+import BookingService from '../../services/bookingService'
 import PremisesController from './premisesController'
 
 describe('PremisesController', () => {

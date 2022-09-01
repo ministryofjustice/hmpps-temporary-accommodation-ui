@@ -1,10 +1,10 @@
 import type { Response, Request, RequestHandler } from 'express'
 import type { Arrival, NewArrival } from 'approved-premises'
 
-import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
-import ArrivalService from '../services/arrivalService'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import paths from '../paths'
+import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import ArrivalService from '../../services/arrivalService'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
+import paths from '../../paths'
 
 export default class ArrivalsController {
   constructor(private readonly arrivalService: ArrivalService) {}

@@ -2,14 +2,14 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
-import BookingService from '../services/bookingService'
+import BookingService from '../../services/bookingService'
 import BookingExtensionsController from './bookingExtensionsController'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 
-import bookingFactory from '../testutils/factories/booking'
-import paths from '../paths'
+import bookingFactory from '../../testutils/factories/booking'
+import paths from '../../paths'
 
-jest.mock('../utils/validation')
+jest.mock('../../utils/validation')
 
 describe('bookingExtensionsController', () => {
   const token = 'SOME_TOKEN'

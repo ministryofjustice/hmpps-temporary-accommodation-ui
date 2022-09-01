@@ -1,9 +1,9 @@
 import { Response, Request, RequestHandler } from 'express'
 import type { NonArrival, NewNonArrival } from 'approved-premises'
-import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
-import NonArrivalService from '../services/nonArrivalService'
-import { catchValidationErrorOrPropogate } from '../utils/validation'
-import paths from '../paths'
+import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import NonArrivalService from '../../services/nonArrivalService'
+import { catchValidationErrorOrPropogate } from '../../utils/validation'
+import paths from '../../paths'
 
 export default class NonArrivalsController {
   constructor(private readonly nonArrivalService: NonArrivalService) {}

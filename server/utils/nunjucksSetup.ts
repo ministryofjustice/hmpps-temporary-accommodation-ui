@@ -9,7 +9,7 @@ import type { ErrorMessages } from 'approved-premises'
 import { initialiseName, formatDateString } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems } from './formUtils'
 import bookingActions from './bookingUtils'
-import paths from '../paths'
+import paths from '../paths/manage'
 
 const production = process.env.NODE_ENV === 'production'
 

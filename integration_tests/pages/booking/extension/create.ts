@@ -1,5 +1,5 @@
 import Page, { PageElement } from '../../page'
-import paths from '../../../../server/paths'
+import paths from '../../../../server/paths/manage'
 
 export default class BookingExtensionCreatePage extends Page {
   constructor() {

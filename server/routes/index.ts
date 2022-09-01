@@ -4,7 +4,7 @@ import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Controllers } from '../controllers'
-import paths from '../paths'
+import paths from '../paths/manage'
 
 export default function routes(controllers: Controllers): Router {
   const router = Router()

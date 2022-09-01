@@ -1,5 +1,5 @@
 import type { Booking, IdentityBarMenu } from 'approved-premises'
-import paths from '../paths'
+import paths from '../paths/manage'
 
 export default function bookingActions(booking: Booking, premisesId: string): Array<IdentityBarMenu> {
   if (booking.status === 'awaiting-arrival' || booking.status === 'arrived') {

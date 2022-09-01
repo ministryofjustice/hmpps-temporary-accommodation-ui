@@ -4,7 +4,7 @@ import type { Request, Response, RequestHandler } from 'express'
 import BookingService from '../../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
-import paths from '../../paths'
+import paths from '../../paths/manage'
 
 export default class BookingsController {
   constructor(private readonly bookingService: BookingService) {}

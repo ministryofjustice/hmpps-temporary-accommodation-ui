@@ -5,7 +5,7 @@ import type { NewCancellation } from 'approved-premises'
 import { CancellationService, BookingService } from '../../services'
 import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
-import paths from '../../paths'
+import paths from '../../paths/manage'
 
 export default class CancellationsController {
   constructor(

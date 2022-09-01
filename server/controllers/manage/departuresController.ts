@@ -6,7 +6,7 @@ import DepartureService from '../../services/departureService'
 import PremisesService from '../../services/premisesService'
 import BookingService from '../../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
-import paths from '../../paths'
+import paths from '../../paths/manage'
 
 export default class DeparturesController {
   constructor(

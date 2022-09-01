@@ -6,7 +6,7 @@ import LostBedService, { LostBedReferenceData } from '../../services/lostBedServ
 import LostBedsController from './lostBedsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import lostBedFactory from '../../testutils/factories/lostBed'
-import paths from '../../paths'
+import paths from '../../paths/manage'
 
 jest.mock('../../utils/validation')
 

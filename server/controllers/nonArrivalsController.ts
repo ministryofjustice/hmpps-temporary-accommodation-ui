@@ -3,6 +3,7 @@ import type { NonArrival, NewNonArrival } from 'approved-premises'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
 import NonArrivalService from '../services/nonArrivalService'
 import { catchValidationErrorOrPropogate } from '../utils/validation'
+import paths from '../paths'
 
 export default class NonArrivalsController {
   constructor(private readonly nonArrivalService: NonArrivalService) {}
@@ -22,9 +23,9 @@ export default class NonArrivalsController {
         await this.nonArrivalService.createNonArrival(req.user.token, premisesId, bookingId, nonArrival)
 
         req.flash('success', 'Non-arrival logged')
-        res.redirect(`/premises/${premisesId}`)
+        res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/arrivals/new`)
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.new({ premisesId, bookingId }))
       }
     }
   }

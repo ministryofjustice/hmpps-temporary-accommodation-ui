@@ -15,7 +15,7 @@
 
   {{ govukBackLink({
 		text: "Back",
-		href: "/premises"
+		href: paths.premises.index()
 	}) }}
 
   {% include "../_messages.njk" %}
@@ -84,9 +84,9 @@
   <h2>Log a lost bed</h2>
 
   {{ govukButton({
-            text: "Log", 
+            text: "Log",
             type: 'button',
-            href: '/premises/{{premisesId}}/lostBeds/new'
+            href: paths.lostBeds.new({premisesId: premisesId})
         }) }}
 
 {% endblock %}

@@ -4,6 +4,7 @@ import BookingClient from '../data/bookingClient'
 import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
 import { formatDate } from '../utils/utils'
+import paths from '../paths'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -152,13 +153,13 @@ describe('BookingService', () => {
       expect(results[0][0]).toEqual({ text: bookings[0].crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
+        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
+        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
       })
     })
 
@@ -178,13 +179,13 @@ describe('BookingService', () => {
       expect(results[0][0]).toEqual({ text: bookings[0].crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[0].id}`),
+        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
-        html: expect.stringMatching(`/premises/${premisesId}/bookings/${bookings[1].id}`),
+        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
       })
     })
   })

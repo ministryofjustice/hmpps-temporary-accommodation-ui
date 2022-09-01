@@ -1,6 +1,7 @@
 import type { Premises } from 'approved-premises'
 
 import Page from './page'
+import paths from '../../server/paths'
 
 export default class PremisesListPage extends Page {
   constructor() {
@@ -8,7 +9,7 @@ export default class PremisesListPage extends Page {
   }
 
   static visit(): PremisesListPage {
-    cy.visit('/premises')
+    cy.visit(paths.premises.index({}))
     return new PremisesListPage()
   }
 

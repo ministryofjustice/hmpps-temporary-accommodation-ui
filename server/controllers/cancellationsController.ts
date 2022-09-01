@@ -5,6 +5,7 @@ import type { NewCancellation } from 'approved-premises'
 import { CancellationService, BookingService } from '../services'
 import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
+import paths from '../paths'
 
 export default class CancellationsController {
   constructor(
@@ -50,13 +51,22 @@ export default class CancellationsController {
           bookingId,
           cancellation,
         )
-        res.redirect(`/premises/${premisesId}/bookings/${bookingId}/cancellations/${id}/confirmation`)
+        res.redirect(
+          paths.bookings.cancellations.confirm({
+            bookingId,
+            premisesId,
+            id,
+          }),
+        )
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          `/premises/${premisesId}/bookings/${bookingId}/cancellations/new`,
+          paths.bookings.cancellations.new({
+            bookingId,
+            premisesId,
+          }),
         )
       }
     }

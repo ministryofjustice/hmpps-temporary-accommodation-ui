@@ -4,6 +4,7 @@ import type { NewLostBed } from 'approved-premises'
 import LostBedService from '../services/lostBedService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
+import paths from '../paths'
 
 export default class LostBedsController {
   constructor(private readonly lostBedService: LostBedService) {}
@@ -38,9 +39,9 @@ export default class LostBedsController {
         await this.lostBedService.createLostBed(req.user.token, premisesId, lostBed)
 
         req.flash('success', 'Lost bed logged')
-        res.redirect(`/premises/${premisesId}`)
+        res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/lostBeds/new`)
+        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.new({ premisesId }))
       }
     }
   }

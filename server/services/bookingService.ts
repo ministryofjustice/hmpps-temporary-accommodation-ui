@@ -5,6 +5,7 @@ import type { Booking, NewBooking, TableRow, GroupedListofBookings, BookingExten
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { convertDateString, formatDate } from '../utils/utils'
+import paths from '../paths'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -73,7 +74,7 @@ export default class BookingService {
         ),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
+        html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
           Manage
           <span class="govuk-visually-hidden">
             booking for ${booking.crn}
@@ -101,7 +102,7 @@ export default class BookingService {
         text: formatDate(convertDateString(booking.expectedDepartureDate)),
       },
       {
-        html: `<a href="/premises/${premisesId}/bookings/${booking.id}">
+        html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
         Manage
         <span class="govuk-visually-hidden">
           booking for ${booking.crn}

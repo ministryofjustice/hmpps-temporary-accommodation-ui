@@ -14,7 +14,7 @@
 
   {{ govukBackLink({
 		text: "Back",
-		href: "/premises/" + premisesId + "/bookings/" + bookingId
+		href: paths.bookings.show({ premisesId: premisesId, bookingId: bookingId })
 	}) }}
 
   <div class="govuk-grid-row">

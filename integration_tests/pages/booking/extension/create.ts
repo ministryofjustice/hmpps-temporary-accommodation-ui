@@ -1,4 +1,5 @@
 import Page, { PageElement } from '../../page'
+import paths from '../../../../server/paths'
 
 export default class BookingExtensionCreatePage extends Page {
   constructor() {
@@ -6,7 +7,7 @@ export default class BookingExtensionCreatePage extends Page {
   }
 
   static visit(premisesId: string, bookingId: string): BookingExtensionCreatePage {
-    cy.visit(`/premises/${premisesId}/bookings/${bookingId}/extensions/new`)
+    cy.visit(paths.bookings.extensions.new({ premisesId, bookingId }))
     return new BookingExtensionCreatePage()
   }
 

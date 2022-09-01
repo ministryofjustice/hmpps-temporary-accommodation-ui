@@ -6,6 +6,7 @@ import DepartureService from '../services/departureService'
 import PremisesService from '../services/premisesService'
 import BookingService from '../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
+import paths from '../paths'
 
 export default class DeparturesController {
   constructor(
@@ -48,9 +49,23 @@ export default class DeparturesController {
 
       try {
         const { id } = await this.departureService.createDeparture(req.user.token, premisesId, bookingId, departure)
-        res.redirect(`/premises/${premisesId}/bookings/${bookingId}/departures/${id}/confirmation`)
+        res.redirect(
+          paths.bookings.departures.confirm({
+            premisesId,
+            bookingId,
+            departureId: id,
+          }),
+        )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, `/premises/${premisesId}/bookings/${bookingId}/departures/new`)
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.departures.new({
+            premisesId,
+            bookingId,
+          }),
+        )
       }
     }
   }

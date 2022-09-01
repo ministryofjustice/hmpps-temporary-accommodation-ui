@@ -9,6 +9,7 @@ import BookingService from '../services/bookingService'
 import departureFactory from '../testutils/factories/departure'
 import bookingFactory from '../testutils/factories/booking'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -149,7 +150,11 @@ describe('DeparturesController', () => {
       )
 
       expect(response.redirect).toHaveBeenCalledWith(
-        `/premises/premisesId/bookings/bookingId/departures/${departure.id}/confirmation`,
+        paths.bookings.departures.confirm({
+          premisesId: request.params.premisesId,
+          bookingId: request.params.bookingId,
+          departureId: departure.id,
+        }),
       )
     })
 
@@ -175,7 +180,10 @@ describe('DeparturesController', () => {
         request,
         response,
         err,
-        `/premises/${request.params.premisesId}/bookings/${request.params.bookingId}/departures/new`,
+        paths.bookings.departures.new({
+          premisesId: request.params.premisesId,
+          bookingId: request.params.bookingId,
+        }),
       )
     })
   })

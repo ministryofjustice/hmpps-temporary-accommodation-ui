@@ -7,6 +7,7 @@ import BookingsController from './bookingsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
 
 import bookingFactory from '../testutils/factories/booking'
+import paths from '../paths'
 
 jest.mock('../utils/validation')
 
@@ -107,7 +108,12 @@ describe('bookingsController', () => {
         expectedDepartureDate: '2023-02-01T00:00:00.000Z',
       })
 
-      expect(response.redirect).toHaveBeenCalledWith(`/premises/${premisesId}/bookings/${booking.id}/confirmation`)
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.confirm({
+          premisesId,
+          bookingId: booking.id,
+        }),
+      )
     })
 
     it('should render the page with errors when the API returns an error', async () => {
@@ -133,7 +139,9 @@ describe('bookingsController', () => {
         request,
         response,
         err,
-        `/premises/${premisesId}/bookings/new`,
+        paths.bookings.new({
+          premisesId,
+        }),
       )
     })
   })

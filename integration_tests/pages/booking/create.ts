@@ -1,5 +1,6 @@
 import type { Booking } from 'approved-premises'
 import Page, { PageElement } from '../page'
+import paths from '../../../server/paths'
 
 export default class BookingCreatePage extends Page {
   constructor() {
@@ -7,7 +8,8 @@ export default class BookingCreatePage extends Page {
   }
 
   static visit(premisesId: string): BookingCreatePage {
-    cy.visit(`/premises/${premisesId}/bookings/new`)
+    cy.visit(paths.bookings.new({ premisesId }))
+
     return new BookingCreatePage()
   }
 

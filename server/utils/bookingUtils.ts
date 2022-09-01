@@ -1,4 +1,5 @@
 import type { Booking, IdentityBarMenu } from 'approved-premises'
+import paths from '../paths'
 
 export default function bookingActions(booking: Booking, premisesId: string): Array<IdentityBarMenu> {
   if (booking.status === 'awaiting-arrival' || booking.status === 'arrived') {
@@ -8,22 +9,22 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
       items.push({
         text: 'Mark as arrived',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/arrivals/new`,
+        href: paths.bookings.arrivals.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
         text: 'Mark as not arrived',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/arrivals/new`,
+        href: paths.bookings.arrivals.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
         text: 'Extend booking',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/extensions/new`,
+        href: paths.bookings.extensions.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
         text: 'Cancel booking',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/cancellations/new`,
+        href: paths.bookings.cancellations.new({ premisesId, bookingId: booking.id }),
       })
     }
 
@@ -31,17 +32,17 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
       items.push({
         text: 'Log departure',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/departures/new`,
+        href: paths.bookings.departures.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
         text: 'Extend booking',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/extensions/new`,
+        href: paths.bookings.extensions.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
         text: 'Cancel booking',
         classes: 'govuk-button--secondary',
-        href: `/premises/${premisesId}/bookings/${booking.id}/cancellations/new`,
+        href: paths.bookings.cancellations.new({ premisesId, bookingId: booking.id }),
       })
     }
 

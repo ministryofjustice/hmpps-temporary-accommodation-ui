@@ -12,11 +12,11 @@
 {% block content %}
     {{ govukBackLink({
 		text: "Back",
-		href: "/premises/" + premisesId + "/bookings/" + booking.id
+		href: paths.bookings.show({ premisesId: premisesId, bookingId: booking.id })
 	}) }}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="/premises/{{premisesId}}/bookings/{{booking.id}}/extensions" method="post">
+            <form action="{{ paths.bookings.extensions.create({ premisesId: premisesId, bookingId: booking.id }) }}" method="post">
 
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
                 <h1>Extend booking</h1>
@@ -80,7 +80,7 @@
                     text: "For example, 27 3 2007"
                     },
                     items: dateFieldValues('newDepartureDate', errors),
-                    errorMessage: errors.newDepartureDate  
+                    errorMessage: errors.newDepartureDate
                 }) }}
 
                 {{ govukButton({

@@ -58,7 +58,7 @@
             }) }}
 
             <p class="govuk-body">
-                <a href="/premises/" + premisesId + "/bookings/" + bookingId>Back to dashboard</a>
+                <a href="{{ paths.bookings.show({ premisesId: premisesId, bookingId: id }) }}">Back to dashboard</a>
             </p>
         </div>
     </div>

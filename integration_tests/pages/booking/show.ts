@@ -2,6 +2,7 @@ import type { Booking } from 'approved-premises'
 
 import Page from '../page'
 import { formatDateString } from '../../../server/utils/utils'
+import paths from '../../../server/paths'
 
 export default class BookingShowPage extends Page {
   constructor() {
@@ -9,7 +10,7 @@ export default class BookingShowPage extends Page {
   }
 
   static visit(premisesId: string, booking: Booking): BookingShowPage {
-    cy.visit(`/premises/${premisesId}/bookings/${booking.id}`)
+    cy.visit(paths.bookings.show({ premisesId, bookingId: booking.id }))
     return new BookingShowPage()
   }
 

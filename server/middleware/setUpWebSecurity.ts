@@ -28,6 +28,7 @@ export default function setUpWebSecurity(): Router {
           fontSrc: ["'self'"],
         },
       },
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
       crossOriginEmbedderPolicy: true,
     }),
   )

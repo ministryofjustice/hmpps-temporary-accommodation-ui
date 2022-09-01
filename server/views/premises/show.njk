@@ -6,10 +6,13 @@
 {% from "../bookings/_table.njk" import bookingTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - " + premises.name %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set bodyClasses = "premises-show" %}
 
 {% block content %}
 
@@ -20,7 +23,22 @@
 
   {% include "../_messages.njk" %}
 
-  <h1>{{ premises.name }}</h1>
+  {{ mojIdentityBar({
+      title: {
+        html: "<h1>" + premises.name + "</h1>"
+      },
+      menus: [{
+        items: [{
+          text: "Create a booking",
+          classes: "govuk-button--secondary",
+          href: paths.bookings.new({premisesId: premisesId})
+        }, {
+          text: "Record a lost bed",
+          classes: "govuk-button--secondary",
+          href: paths.lostBeds.new({premisesId: premisesId})
+        }]
+      }]
+    }) }}
 
   {{
 		govukSummaryList(premises.summaryList)
@@ -81,12 +99,10 @@
     rows: currentResidents
   }) }}
 
-  <h2>Log a lost bed</h2>
+{% endblock %}
 
-  {{ govukButton({
-            text: "Log",
-            type: 'button',
-            href: paths.lostBeds.new({premisesId: premisesId})
-        }) }}
-
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+  </script>
 {% endblock %}

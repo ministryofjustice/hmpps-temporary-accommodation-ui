@@ -4,7 +4,7 @@ import BookingClient from '../data/bookingClient'
 import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
 import { formatDate } from '../utils/utils'
-import paths from '../paths'
+import paths from '../paths/manage'
 
 jest.mock('../data/bookingClient.ts')
 

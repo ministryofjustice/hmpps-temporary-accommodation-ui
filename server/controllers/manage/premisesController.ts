@@ -1,7 +1,7 @@
 import type { Request, Response, RequestHandler } from 'express'
 
-import PremisesService from '../services/premisesService'
-import BookingService from '../services/bookingService'
+import PremisesService from '../../services/premisesService'
+import BookingService from '../../services/bookingService'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bookingService: BookingService) {}

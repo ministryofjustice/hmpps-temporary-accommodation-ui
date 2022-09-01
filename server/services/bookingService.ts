@@ -5,7 +5,7 @@ import type { Booking, NewBooking, TableRow, GroupedListofBookings, BookingExten
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { convertDateString, formatDate } from '../utils/utils'
-import paths from '../paths'
+import paths from '../paths/manage'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5

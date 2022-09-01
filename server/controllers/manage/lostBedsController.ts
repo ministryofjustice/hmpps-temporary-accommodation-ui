@@ -1,10 +1,10 @@
 import type { Response, Request, RequestHandler } from 'express'
 
 import type { NewLostBed } from 'approved-premises'
-import LostBedService from '../services/lostBedService'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import { convertDateAndTimeInputsToIsoString } from '../utils/utils'
-import paths from '../paths'
+import LostBedService from '../../services/lostBedService'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
+import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import paths from '../../paths/manage'
 
 export default class LostBedsController {
   constructor(private readonly lostBedService: LostBedService) {}

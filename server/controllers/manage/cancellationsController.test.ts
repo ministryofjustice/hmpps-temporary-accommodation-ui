@@ -3,17 +3,17 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
 
-import CancellationService from '../services/cancellationService'
-import BookingService from '../services/bookingService'
+import CancellationService from '../../services/cancellationService'
+import BookingService from '../../services/bookingService'
 import CancellationsController from './cancellationsController'
-import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../utils/validation'
+import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../utils/validation'
 
-import bookingFactory from '../testutils/factories/booking'
-import cancellationFactory from '../testutils/factories/cancellation'
-import referenceDataFactory from '../testutils/factories/referenceData'
-import paths from '../paths'
+import bookingFactory from '../../testutils/factories/booking'
+import cancellationFactory from '../../testutils/factories/cancellation'
+import referenceDataFactory from '../../testutils/factories/referenceData'
+import paths from '../../paths/manage'
 
-jest.mock('../utils/validation')
+jest.mock('../../utils/validation')
 
 describe('cancellationsController', () => {
   const token = 'SOME_TOKEN'

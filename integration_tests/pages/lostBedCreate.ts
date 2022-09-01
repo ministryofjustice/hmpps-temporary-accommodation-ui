@@ -1,5 +1,5 @@
 import type { LostBed } from 'approved-premises'
-import paths from '../../server/paths'
+import paths from '../../server/paths/manage'
 
 import Page from './page'
 

@@ -2,13 +2,13 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
-import LostBedService, { LostBedReferenceData } from '../services/lostBedService'
+import LostBedService, { LostBedReferenceData } from '../../services/lostBedService'
 import LostBedsController from './lostBedsController'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../utils/validation'
-import lostBedFactory from '../testutils/factories/lostBed'
-import paths from '../paths'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
+import lostBedFactory from '../../testutils/factories/lostBed'
+import paths from '../../paths/manage'
 
-jest.mock('../utils/validation')
+jest.mock('../../utils/validation')
 
 describe('LostBedsController', () => {
   const token = 'SOME_TOKEN'

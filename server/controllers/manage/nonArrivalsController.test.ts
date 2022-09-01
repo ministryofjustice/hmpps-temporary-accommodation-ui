@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
-import NonArrivalService from '../services/nonArrivalService'
+import NonArrivalService from '../../services/nonArrivalService'
 
 import NonArrivalsController from './nonArrivalsController'
-import { catchValidationErrorOrPropogate } from '../utils/validation'
-import paths from '../paths'
+import { catchValidationErrorOrPropogate } from '../../utils/validation'
+import paths from '../../paths/manage'
 
-jest.mock('../utils/validation')
+jest.mock('../../utils/validation')
 
 describe('NonArrivalsController', () => {
   const token = 'SOME_TOKEN'

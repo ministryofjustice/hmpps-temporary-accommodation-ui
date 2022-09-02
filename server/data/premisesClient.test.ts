@@ -3,6 +3,7 @@ import nock from 'nock'
 import premisesFactory from '../testutils/factories/premises'
 import PremisesClient from './premisesClient'
 import config from '../config'
+import paths from '../paths/api'
 
 describe('PremisesClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -29,7 +30,10 @@ describe('PremisesClient', () => {
     const premises = premisesFactory.buildList(5)
 
     it('should get all premises', async () => {
-      fakeApprovedPremisesApi.get('/premises').matchHeader('authorization', `Bearer ${token}`).reply(200, premises)
+      fakeApprovedPremisesApi
+        .get(paths.premises.index({}))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, premises)
 
       const output = await premisesClient.all()
       expect(output).toEqual(premises)
@@ -41,7 +45,7 @@ describe('PremisesClient', () => {
 
     it('should get a single premises', async () => {
       fakeApprovedPremisesApi
-        .get(`/premises/${premises.id}`)
+        .get(paths.premises.show({ premisesId: premises.id }))
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, premises)
 

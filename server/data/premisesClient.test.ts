@@ -4,6 +4,7 @@ import premisesFactory from '../testutils/factories/premises'
 import PremisesClient from './premisesClient'
 import config from '../config'
 import paths from '../paths/api'
+import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
 
 describe('PremisesClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -51,6 +52,21 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.find(premises.id)
       expect(output).toEqual(premises)
+    })
+  })
+
+  describe('capacity', () => {
+    const premisesId = 'premisesId'
+    const premisesCapacityItem = premisesCapacityItemFactory.build()
+
+    it('should get the capacity of a premises for a given date', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.capacity({ premisesId }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, premisesCapacityItem)
+
+      const output = await premisesClient.capacity(premisesId)
+      expect(output).toEqual(premisesCapacityItem)
     })
   })
 })

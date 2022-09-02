@@ -17,6 +17,7 @@ import cancellationStubs from './cancellationStubs'
 import lostBedStubs from './lostBedStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
+import premisesCapacityItemFactory from '../server/testutils/factories/premisesCapacityItem'
 
 const stubs = []
 
@@ -48,6 +49,20 @@ premises.forEach(item => {
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: item,
+    },
+  })
+
+  stubs.push({
+    request: {
+      method: 'GET',
+      url: `/premises/${item.id}/capacity`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: premisesCapacityItemFactory.buildList(20),
     },
   })
 

@@ -1,0 +1,39 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + pageHeading  %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1>Make a booking</h1>
+            <form action="{{ paths.people.find({ premisesId: premisesId }) }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+                {{ showErrorSummary(errorSummary) }}
+
+                {{ govukInput({
+                    label: {
+                        text: "Find someone by CRN",
+                        classes: "govuk-label--m"
+                    },
+                    classes: "govuk-input--width-10",
+                    id: "crn",
+                    name: "crn",
+                    value: crn,
+                    errorMessage: errors.crn
+                    }) }}
+
+                {{ govukButton({
+                    name: 'arrival[submit]',
+                    text: "Submit"
+                }) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

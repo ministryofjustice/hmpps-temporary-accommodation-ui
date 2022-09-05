@@ -36,9 +36,11 @@ export default class PremisesService {
   async getOvercapacityMessage(token: string, premisesId: string): Promise<string[] | string> {
     const premisesClient = this.premisesClientFactory(token)
     const premisesDateCapacities = await premisesClient.capacity(premisesId)
+
     const overcapacityDateRanges = getDateRangesWithNegativeBeds(premisesDateCapacities)
 
     const overcapacityMessage = this.generateOvercapacityMessage(overcapacityDateRanges)
+
     return overcapacityMessage ? [overcapacityMessage] : ''
   }
 

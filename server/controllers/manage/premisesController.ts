@@ -22,8 +22,18 @@ export default class PremisesController {
         req.params.premisesId,
       )
       const currentResidents = await this.bookingService.currentResidents(req.user.token, req.params.premisesId)
+      const overcapacityMessage = await this.premisesService.getOvercapacityMessage(
+        req.user.token,
+        req.params.premisesId,
+      )
 
-      return res.render('premises/show', { premises, premisesId: req.params.premisesId, bookings, currentResidents })
+      return res.render('premises/show', {
+        premises,
+        premisesId: req.params.premisesId,
+        bookings,
+        currentResidents,
+        infoMessages: overcapacityMessage,
+      })
     }
   }
 }

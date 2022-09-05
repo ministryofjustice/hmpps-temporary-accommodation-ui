@@ -3,7 +3,7 @@ import { parseISO } from 'date-fns'
 import type { Premises, Booking } from 'approved-premises'
 
 import Page from './page'
-import { formatDate } from '../../server/utils/utils'
+import { formatDateString, formatDate } from '../../server/utils/utils'
 import paths from '../../server/paths/manage'
 
 export default class PremisesShowPage extends Page {
@@ -103,5 +103,13 @@ export default class PremisesShowPage extends Page {
             .should('have.attr', 'href', `/premises/${this.premises.id}/bookings/${item.id}`)
         })
     })
+  }
+
+  shouldShowOvercapacityMessage(overcapacityStartDate: string, overcapacityEndDate: string) {
+    this.shouldShowBanner(
+      `The premises is over capacity for the period ${formatDateString(overcapacityStartDate)} to ${formatDateString(
+        overcapacityEndDate,
+      )}`,
+    )
   }
 }

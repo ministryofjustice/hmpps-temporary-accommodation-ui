@@ -1,6 +1,6 @@
 import type { Response } from 'superagent'
 
-import type { Premises, Booking } from 'approved-premises'
+import type { Premises, Booking, PremisesCapacity } from 'approved-premises'
 
 import { stubFor } from '../../wiremock'
 import bookingStubs from './booking'
@@ -35,6 +35,21 @@ const stubSinglePremises = (premises: Premises) =>
     },
   })
 
+const stubPremisesCapacity = (args: { premisesId: string; dateCapacities: PremisesCapacity }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: `/premises/${args.premisesId}/capacity`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: args.dateCapacities,
+    },
+  })
+
 export default {
   stubPremises,
   stubSinglePremises: (premises: Premises): Promise<[Response, Response]> =>
@@ -47,4 +62,5 @@ export default {
       stubSinglePremises(args.premises),
       bookingStubs.stubBookingsForPremisesId({ premisesId: args.premises.id, bookings: args.bookings }),
     ]),
+  stubPremisesCapacity,
 }

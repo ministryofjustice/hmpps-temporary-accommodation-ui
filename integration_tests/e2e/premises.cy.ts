@@ -1,5 +1,6 @@
 import premisesFactory from '../../server/testutils/factories/premises'
 import bookingsFactory from '../../server/testutils/factories/booking'
+import premisesCapacityItemFactory from '../../server/testutils/factories/premisesCapacityItem'
 import PremisesListPage from '../pages/premisesList'
 import PremisesShowPage from '../pages/premisesShow'
 
@@ -39,7 +40,20 @@ context('Premises', () => {
       ...bookingsDepartingSoon,
     ]
 
+    const overcapacityStartDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 0, 1).toISOString(),
+      availableBeds: -1,
+    })
+    const overcapacityEndDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 1, 1).toISOString(),
+      availableBeds: -1,
+    })
+
     cy.task('stubPremisesWithBookings', { premises, bookings })
+    cy.task('stubPremisesCapacity', {
+      premisesId: premises.id,
+      dateCapacities: [overcapacityStartDate, overcapacityEndDate],
+    })
 
     // And I am signed in
     cy.signIn()
@@ -55,5 +69,8 @@ context('Premises', () => {
 
     // And I should see all the current residents for that premises listed
     page.shouldShowCurrentResidents(bookingsDepartingSoon)
+
+    // And I should see the overcapacity banner showing the dates that the AP is overcapacity
+    page.shouldShowOvercapacityMessage(overcapacityStartDate.date, overcapacityEndDate.date)
   })
 })

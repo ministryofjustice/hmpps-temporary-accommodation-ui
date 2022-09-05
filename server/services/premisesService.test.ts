@@ -1,9 +1,11 @@
 import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
-
 import premisesFactory from '../testutils/factories/premises'
+import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
+import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 
 jest.mock('../data/premisesClient')
+jest.mock('../utils/premisesUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -12,6 +14,7 @@ describe('PremisesService', () => {
   const service = new PremisesService(premisesClientFactory)
 
   const token = 'SOME_TOKEN'
+  const premisesId = 'premisesId'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -140,6 +143,127 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
+    })
+  })
+
+  describe('getOvercapacityMessage', () => {
+    it('returns an empty string if not passed any dates', async () => {
+      premisesClient.capacity.mockResolvedValue([])
+      ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
+
+      const result = await service.getOvercapacityMessage(token, premisesId)
+
+      expect(result).toBe('')
+    })
+    it('returns an empty string if passed dates that are not overcapacity', async () => {
+      premisesClient.capacity.mockResolvedValue([
+        premisesCapacityItemFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: 1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 1).toISOString(), availableBeds: 2 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 3 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: 4 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: 5 }),
+      ])
+      ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
+
+      const result = await service.getOvercapacityMessage(token, premisesId)
+
+      expect(result).toBe('')
+    })
+
+    it('returns the correct string if passed a single date', async () => {
+      const capacityStub = [
+        premisesCapacityItemFactory.build({
+          date: new Date(2022, 0, 1).toISOString(),
+          availableBeds: -1,
+        }),
+      ]
+      premisesClient.capacity.mockResolvedValue(capacityStub)
+      ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([{ start: capacityStub[0].date }])
+
+      const result = await service.getOvercapacityMessage(token, premisesId)
+
+      expect(result).toEqual([
+        '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on Saturday 1 January 2022</h4>',
+      ])
+    })
+
+    it('returns the correct string if passed a single date range', async () => {
+      const capacityStub = [
+        premisesCapacityItemFactory.build({
+          date: new Date(2022, 0, 1).toISOString(),
+          availableBeds: -1,
+        }),
+        premisesCapacityItemFactory.build({
+          date: new Date(2022, 1, 1).toISOString(),
+          availableBeds: -1,
+        }),
+      ]
+      premisesClient.capacity.mockResolvedValue(capacityStub)
+      ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([
+        {
+          start: capacityStub[0].date,
+          end: capacityStub[1].date,
+        },
+      ])
+
+      const result = await service.getOvercapacityMessage(token, premisesId)
+
+      expect(result).toEqual([
+        '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period Saturday 1 January 2022 to Tuesday 1 February 2022</h4>',
+      ])
+    })
+
+    it('if there are multiple date ranges it returns the correct markup', async () => {
+      const capacityStub = [
+        premisesCapacityItemFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: -1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 1).toISOString(), availableBeds: -1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: -1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: -1 }),
+      ]
+      premisesClient.capacity.mockResolvedValue(capacityStub)
+      ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([
+        {
+          start: capacityStub[0].date,
+          end: capacityStub[1].date,
+        },
+        {
+          start: capacityStub[3].date,
+          end: capacityStub[4].date,
+        },
+      ])
+
+      const result = await service.getOvercapacityMessage(token, premisesId)
+
+      expect(result).toEqual([
+        `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
+        <ul class="govuk-list govuk-list--bullet"><li>Sunday 1 January 2023 to Wednesday 1 February 2023</li><li>Thursday 2 March 2023 to Sunday 2 April 2023</li></ul>`,
+      ])
+    })
+
+    it('if there is a date ranges and a single date it returns the correct markup', async () => {
+      const capacityStub = [
+        premisesCapacityItemFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: -1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: -1 }),
+        premisesCapacityItemFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: -1 }),
+      ]
+      premisesClient.capacity.mockResolvedValue(capacityStub)
+      ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([
+        {
+          start: capacityStub[0].date,
+        },
+        {
+          start: capacityStub[2].date,
+          end: capacityStub[3].date,
+        },
+      ])
+      const result = await service.getOvercapacityMessage(token, premisesId)
+
+      expect(result).toEqual([
+        `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
+        <ul class="govuk-list govuk-list--bullet"><li>Sunday 1 January 2023</li><li>Thursday 2 March 2023 to Sunday 2 April 2023</li></ul>`,
+      ])
     })
   })
 })

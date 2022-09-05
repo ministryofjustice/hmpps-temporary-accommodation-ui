@@ -1,6 +1,7 @@
 import premisesFactory from '../../server/testutils/factories/premises'
 import bookingFactory from '../../server/testutils/factories/booking'
 import keyWorkerFactory from '../../server/testutils/factories/keyWorker'
+import premisesCapacityItemFactory from '../../server/testutils/factories/premisesCapacityItem'
 
 import BookingCreatePage from '../pages/booking/create'
 import BookingShowPage from '../pages/booking/show'
@@ -21,11 +22,41 @@ context('Booking', () => {
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
       keyWorker: keyWorkerFactory.build({ name: 'Alex Evans' }),
     })
+    const firstOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 0, 1).toISOString(),
+      availableBeds: -1,
+    })
+    const firstOvercapacityPeriodEndDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 1, 1).toISOString(),
+      availableBeds: -1,
+    })
+    const atCapacityDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 1, 1).toISOString(),
+      availableBeds: 0,
+    })
+    const secondOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 2, 1).toISOString(),
+      availableBeds: -1,
+    })
+    const secondOvercapacityPeriodEndDate = premisesCapacityItemFactory.build({
+      date: new Date(2023, 3, 1).toISOString(),
+      availableBeds: -1,
+    })
 
     const premises = premisesFactory.build()
     cy.task('stubBookingCreate', { premisesId: premises.id, booking })
     cy.task('stubBookingGet', { premisesId: premises.id, booking })
     cy.task('stubSinglePremises', { premisesId: premises.id, booking })
+    cy.task('stubPremisesCapacity', {
+      premisesId: premises.id,
+      dateCapacities: [
+        firstOvercapacityPeriodStartDate,
+        firstOvercapacityPeriodEndDate,
+        atCapacityDate,
+        secondOvercapacityPeriodStartDate,
+        secondOvercapacityPeriodEndDate,
+      ],
+    })
 
     // Given I am signed in
     cy.signIn()
@@ -37,11 +68,17 @@ context('Booking', () => {
     page.completeForm(booking)
     page.clickSubmit()
 
-    // Then I should be redirected to the confirmation page and the booking should be created in the API
+    // Then I should be redirected to the confirmation page
     Page.verifyOnPage(BookingConfirmation)
     const bookingConfirmationPage = new BookingConfirmation()
     bookingConfirmationPage.verifyBookingIsVisible(booking)
+    // And I should see the overcapacity message
+    bookingConfirmationPage.shouldShowOvercapacityMessage(
+      { start: firstOvercapacityPeriodStartDate.date, end: firstOvercapacityPeriodEndDate.date },
+      { start: secondOvercapacityPeriodStartDate.date, end: secondOvercapacityPeriodEndDate.date },
+    )
 
+    // And the booking should be created in the API
     cy.task('verifyBookingCreate', { premisesId: premises.id }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)

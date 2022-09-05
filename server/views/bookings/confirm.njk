@@ -7,6 +7,8 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
+    {% include "../_messages.njk" %}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {{ govukPanel({

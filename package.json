@@ -127,7 +127,7 @@
     "redis": "^4.3.0",
     "static-path": "^0.0.4",
     "superagent": "^8.0.0",
-    "url-value-parser": "^2.1.0",
+    "url-value-parser": "^2.2.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

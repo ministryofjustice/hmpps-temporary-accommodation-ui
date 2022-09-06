@@ -1,13 +1,13 @@
 import type { NewBooking } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
-import BookingService from '../../services/bookingService'
+import { BookingService, PremisesService } from '../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
 import paths from '../../paths/manage'
 
 export default class BookingsController {
-  constructor(private readonly bookingService: BookingService) {}
+  constructor(private readonly bookingService: BookingService, private readonly premisesService: PremisesService) {}
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -70,8 +70,15 @@ export default class BookingsController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
       const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
+      const overcapacityMessage = await this.premisesService.getOvercapacityMessage(req.user.token, premisesId)
 
-      return res.render('bookings/confirm', { premisesId, bookingId, pageHeading: 'Booking complete', ...booking })
+      return res.render('bookings/confirm', {
+        premisesId,
+        bookingId,
+        pageHeading: 'Booking complete',
+        ...booking,
+        infoMessages: [overcapacityMessage],
+      })
     }
   }
 }

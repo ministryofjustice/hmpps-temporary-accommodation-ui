@@ -16,7 +16,7 @@ export const catchValidationErrorOrPropogate = (
   redirectPath: string,
 ): void => {
   if ('data' in error) {
-    const invalidParams = error.data['invalid-params']
+    const invalidParams = error.data['invalid-params'] || error.data
     const errors = generateErrorMessages(invalidParams)
     const errorSummary = generateErrorSummary(invalidParams)
 

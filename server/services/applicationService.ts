@@ -2,7 +2,7 @@ import type { Request } from 'express'
 import type { TasklistPage } from 'approved-premises'
 
 import type { RestClientBuilder, ApplicationClient } from '../data'
-import { UnknownPageError } from '../utils/errors'
+import { UnknownPageError, ValidationError } from '../utils/errors'
 
 import pages from '../form-pages/apply'
 
@@ -28,5 +28,14 @@ export default class ApplicationService {
       throw new UnknownPageError()
     }
     return new Page(request.body)
+  }
+
+  save(page: TasklistPage) {
+    const errors = page.errors ? page.errors() : []
+    if (errors.length) {
+      throw new ValidationError(errors)
+    } else {
+      // Save
+    }
   }
 }

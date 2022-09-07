@@ -1,7 +1,8 @@
 import type { Request } from 'express'
 import { createMock } from '@golevelup/ts-jest'
 
-import { UnknownPageError } from '../utils/errors'
+import type { TasklistPage, TaskListErrors } from 'approved-premises'
+import { UnknownPageError, ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
 import ApplicationClient from '../data/applicationClient'
 
@@ -85,6 +86,33 @@ describe('ApplicationService', () => {
       expect(() => {
         service.getCurrentPage(request)
       }).toThrow(UnknownPageError)
+    })
+  })
+
+  describe('save', () => {
+    it('throws an error is there is a validation error', () => {
+      const errors = createMock<TaskListErrors>([{ propertyName: 'foo', errorType: 'bar' }])
+      const page = createMock<TasklistPage>({
+        errors: () => errors,
+      })
+
+      expect(() => service.save(page)).toThrow(new ValidationError(errors))
+    })
+
+    it('does not throw an error if there are no validation errors', () => {
+      const page = createMock<TasklistPage>({
+        errors: () => [] as TaskListErrors,
+      })
+
+      expect(() => service.save(page)).not.toThrow(ValidationError)
+    })
+
+    it('does not thow an error when the page has no errors method', () => {
+      const page = createMock<TasklistPage>({
+        errors: undefined,
+      })
+
+      expect(() => service.save(page)).not.toThrow(ValidationError)
     })
   })
 })

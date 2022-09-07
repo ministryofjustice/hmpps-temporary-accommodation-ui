@@ -32,6 +32,7 @@
   "referenceNumber": { "blank": "You must enter a reference number" },
   "sentenceType": { "blank": "You must choose a sentence type" },
   "releaseType": { "blank": "You must choose a release type" },
+  "situation": { "blank": "You must choose a situation" },
   "knowReleaseDate": { "blank": "You must specify if you know the release date" },
   "releaseDate": { "blank": "You must specify the release date", "invalid": "The release date is an invalid date" }
 }

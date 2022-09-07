@@ -5,6 +5,7 @@ import { Router } from 'express'
 import type { Controllers } from '../controllers'
 import actions from './utils'
 
+import applyRoutes from './apply'
 import manageRoutes from './manage'
 
 export default function routes(controllers: Controllers): Router {
@@ -17,6 +18,7 @@ export default function routes(controllers: Controllers): Router {
   get('/', applicationController.index())
 
   manageRoutes(controllers, router)
+  applyRoutes(controllers, router)
 
   return router
 }

@@ -5,6 +5,7 @@ import ConfirmDetails from './confirmDetails'
 import SentenceType from './sentenceType'
 import ReleaseType from './releaseType'
 import Situation from './situation'
+import ReleaseDate from './releaseDate'
 
 const pages = {
   'enter-crn': EnterCRN,
@@ -12,6 +13,7 @@ const pages = {
   'sentence-type': SentenceType,
   'release-type': ReleaseType,
   situation: Situation,
+  'release-date': ReleaseDate,
 }
 
 export default pages

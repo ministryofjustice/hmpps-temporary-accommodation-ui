@@ -77,3 +77,20 @@ export const convertDateAndTimeInputsToIsoString = <K extends string | number>(
 
   return dateInputObj
 }
+
+export const dateAndTimeInputsAreValidDates = <K extends string | number>(
+  dateInputObj: ObjectWithDateParts<K>,
+  key: K,
+): boolean => {
+  const dateString = convertDateAndTimeInputsToIsoString(dateInputObj, key)
+
+  try {
+    convertDateString(dateString[key])
+  } catch (err) {
+    if (err instanceof InvalidDateStringError) {
+      return false
+    }
+  }
+
+  return true
+}

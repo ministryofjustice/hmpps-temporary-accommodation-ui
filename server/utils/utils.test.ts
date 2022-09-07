@@ -1,3 +1,4 @@
+import type { ObjectWithDateParts } from 'approved-premises'
 import {
   convertDateString,
   convertToTitleCase,
@@ -6,6 +7,7 @@ import {
   InvalidDateStringError,
   formatDate,
   formatDateString,
+  dateAndTimeInputsAreValidDates,
 } from './utils'
 
 describe('convert to title case', () => {
@@ -69,13 +71,7 @@ describe('formatDateString', () => {
 
 describe('convertDateInputsToDateObj', () => {
   it('converts a date object', () => {
-    interface MyObjectWithADate {
-      date?: string
-      ['date-year']: string
-      ['date-month']: string
-      ['date-day']: string
-    }
-    const obj: MyObjectWithADate = {
+    const obj: ObjectWithDateParts<'date'> = {
       'date-year': '2022',
       'date-month': '12',
       'date-day': '11',
@@ -87,13 +83,7 @@ describe('convertDateInputsToDateObj', () => {
   })
 
   it('pads the months and days', () => {
-    interface MyObjectWithADate {
-      date?: string
-      ['date-year']: string
-      ['date-month']: string
-      ['date-day']: string
-    }
-    const obj: MyObjectWithADate = {
+    const obj: ObjectWithDateParts<'date'> = {
       'date-year': '2022',
       'date-month': '1',
       'date-day': '1',
@@ -105,14 +95,7 @@ describe('convertDateInputsToDateObj', () => {
   })
 
   it('returns the date with a time if passed one', () => {
-    interface MyObjectWithADate {
-      date?: string
-      ['date-year']: string
-      ['date-month']: string
-      ['date-day']: string
-      ['date-time']: string
-    }
-    const obj: MyObjectWithADate = {
+    const obj: ObjectWithDateParts<'date'> = {
       'date-year': '2022',
       'date-month': '1',
       'date-day': '1',
@@ -125,13 +108,7 @@ describe('convertDateInputsToDateObj', () => {
   })
 
   it('returns an empty string when given empty strings as input', () => {
-    interface MyObjectWithADate {
-      date?: string
-      ['date-year']: string
-      ['date-month']: string
-      ['date-day']: string
-    }
-    const obj: MyObjectWithADate = {
+    const obj: ObjectWithDateParts<'date'> = {
       'date-year': '',
       'date-month': '',
       'date-day': '',
@@ -143,13 +120,7 @@ describe('convertDateInputsToDateObj', () => {
   })
 
   it('returns an invalid ISO string when given invalid strings as input', () => {
-    interface MyObjectWithADate {
-      date?: string
-      ['date-year']: string
-      ['date-month']: string
-      ['date-day']: string
-    }
-    const obj: MyObjectWithADate = {
+    const obj: ObjectWithDateParts<'date'> = {
       'date-year': 'twothousandtwentytwo',
       'date-month': '20',
       'date-day': 'foo',
@@ -178,5 +149,31 @@ describe('convertDateString', () => {
     const date = 'NOT A DATE'
 
     expect(() => convertDateString(date)).toThrow(new InvalidDateStringError(`Invalid Date: ${date}`))
+  })
+})
+
+describe('dateAndTimeInputsAreValidDates', () => {
+  it('returns true when the date is valid', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': '2022',
+      'date-month': '12',
+      'date-day': '11',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(true)
+  })
+
+  it('returns false when the date is invalid', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': '99',
+      'date-month': '99',
+      'date-day': '99',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(false)
   })
 })

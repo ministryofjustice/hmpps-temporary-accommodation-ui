@@ -30,4 +30,5 @@
   "endDate": { "blank": "You must enter a end date" },
   "numberOfBeds": { "blank": "You must enter the number of beds lost" },
   "referenceNumber": { "blank": "You must enter a reference number" }
+  "sentenceType": { "blank": "You must choose a sentence type" },
 }

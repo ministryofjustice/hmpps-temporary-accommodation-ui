@@ -3,6 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import ApplicationsController from './applicationsController'
 import ApplicationService from '../../services/applicationService'
+import paths from '../../paths/apply'
 
 describe('applicationsController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
@@ -26,6 +27,22 @@ describe('applicationsController', () => {
       expect(response.render).toHaveBeenCalledWith('applications/new', {
         pageHeading: 'Apply for an Approved Premises (AP) placement',
       })
+    })
+  })
+
+  describe('create', () => {
+    it('creates an application and redirects to the first page of the first step', async () => {
+      const uuid = 'some-uuid'
+      applicationService.createApplication.mockResolvedValue(uuid)
+
+      const requestHandler = applicationsController.create()
+
+      await requestHandler(request, response, next)
+
+      expect(applicationService.createApplication).toHaveBeenCalled()
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.applications.pages.show({ id: uuid, task: 'basic-information', page: 'enter-crn' }),
+      )
     })
   })
 })

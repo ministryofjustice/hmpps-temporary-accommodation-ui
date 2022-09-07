@@ -29,6 +29,9 @@
   "startDate": { "blank": "You must enter a start date" },
   "endDate": { "blank": "You must enter a end date" },
   "numberOfBeds": { "blank": "You must enter the number of beds lost" },
-  "referenceNumber": { "blank": "You must enter a reference number" }
+  "referenceNumber": { "blank": "You must enter a reference number" },
   "sentenceType": { "blank": "You must choose a sentence type" },
+  "releaseType": { "blank": "You must choose a release type" },
+  "knowReleaseDate": { "blank": "You must specify if you know the release date" },
+  "releaseDate": { "blank": "You must specify the release date", "invalid": "The release date is an invalid date" }
 }

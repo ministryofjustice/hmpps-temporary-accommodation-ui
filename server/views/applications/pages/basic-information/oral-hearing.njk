@@ -1,0 +1,69 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% extends "../layout.njk" %}
+
+{% block questions %}
+
+  {% set oralHearingDateHTML %}
+  {{ govukDateInput({
+      id: "oralHearingDate",
+      namePrefix: "oralHearingDate",
+      errorMessage: errors.oralHearingDate,
+      fieldset: {
+        legend: {
+          text: "Expected oral hearing date"
+        }
+      },
+      hint: {
+        text: "For example, 27 3 2007"
+      },
+      items: dateFieldValues('oralHearingDate', errors)
+    }) }}
+  {% endset -%}
+
+  {% set bannerHTML %}
+  {% set html %}
+  <p>
+        If the oral hearing date is not yet known, this application will be paused once a suitability assessment has been made. The individual will then be matched to an Approved Premises after a direction to release has been made.
+      </p>
+  {% endset %}
+
+  {{ govukNotificationBanner({
+        html: html
+    }) }}
+  {% endset -%}
+
+  {{ govukRadios({
+    idPrefix: "knowOralHearingDate",
+    name: "knowOralHearingDate",
+    errorMessage: errors.knowOralHearingDate,
+    fieldset: {
+      legend: {
+        text: page.title,
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
+    items: [
+      {
+        value: "yes",
+        text: "Yes",
+        checked: knowOralHearingDate == 'yes',
+        conditional: {
+          html: oralHearingDateHTML
+        }
+      },
+      {
+        text: "No",
+        value: "no",
+        checked: knowOralHearingDate == 'no',
+        conditional: {
+          html: bannerHTML
+        }
+      }
+    ]
+    }) }}
+
+{% endblock %}

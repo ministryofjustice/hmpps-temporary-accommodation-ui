@@ -34,5 +34,10 @@
   "releaseType": { "blank": "You must choose a release type" },
   "situation": { "blank": "You must choose a situation" },
   "knowReleaseDate": { "blank": "You must specify if you know the release date" },
-  "releaseDate": { "blank": "You must specify the release date", "invalid": "The release date is an invalid date" }
+  "releaseDate": { "blank": "You must specify the release date", "invalid": "The release date is an invalid date" },
+  "knowOralHearingDate": { "blank": "You must specify if you know the oral hearing date" },
+  "oralHearingDate": {
+    "blank": "You must specify the oral hearing date",
+    "invalid": "The oral hearing date is an invalid date"
+  },
 }

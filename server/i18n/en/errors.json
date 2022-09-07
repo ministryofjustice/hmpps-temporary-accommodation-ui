@@ -26,7 +26,7 @@
   "moveOnCategory": { "blank": "You must enter a move on category" },
   "destinationProvider": { "blank": "You must enter a destination provider" },
   "newDepartureDate": { "blank": "You must enter a new departure date" },
-  "startDate": { "blank": "You must enter a start date" },
+  "startDate": { "blank": "You must enter a start date", "invalid": "The start date is an invalid date" },
   "endDate": { "blank": "You must enter a end date" },
   "numberOfBeds": { "blank": "You must enter the number of beds lost" },
   "referenceNumber": { "blank": "You must enter a reference number" },
@@ -40,4 +40,5 @@
     "blank": "You must specify the oral hearing date",
     "invalid": "The oral hearing date is an invalid date"
   },
+  "startDateSameAsReleaseDate": { "blank": "You must specify if the start date is the same as the release date" }
 }

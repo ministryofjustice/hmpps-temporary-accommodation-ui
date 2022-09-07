@@ -7,6 +7,7 @@ import ReleaseType from './releaseType'
 import Situation from './situation'
 import ReleaseDate from './releaseDate'
 import OralHearing from './oralHearing'
+import PlacementDate from './placementDate'
 
 const pages = {
   'enter-crn': EnterCRN,
@@ -16,6 +17,7 @@ const pages = {
   situation: Situation,
   'release-date': ReleaseDate,
   'oral-hearing': OralHearing,
+  'placement-date': PlacementDate,
 }
 
 export default pages

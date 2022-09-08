@@ -9,6 +9,7 @@ declare module 'approved-premises' {
   export type Cancellation = schemas['Cancellation']
   export type BookingExtension = schemas['BookingExtension']
   export type KeyWorker = schemas['KeyWorker']
+  export type Person = schemas['Person']
   export type PremisesCapacityItem = schemas['PremisesCapacityItem']
   export type PremisesCapacity = Array<PremisesCapacityItem>
 
@@ -203,6 +204,10 @@ declare module 'approved-premises' {
     BookingExtension: {
       newDepartureDate: string
       notes: string
+    }
+    Person: {
+      crn: string
+      name: string
     }
     PremisesCapacityItem: {
       date: string

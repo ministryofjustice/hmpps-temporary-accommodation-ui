@@ -1,16 +1,23 @@
-import type { Booking } from 'approved-premises'
+import type { Booking, Person } from 'approved-premises'
 import Page, { PageElement } from '../page'
 import paths from '../../../server/paths/manage'
 
-export default class BookingCreatePage extends Page {
+export default class BookingNewPage extends Page {
   constructor() {
     super('Make a booking')
   }
 
-  static visit(premisesId: string): BookingCreatePage {
+  static visit(premisesId: string): BookingNewPage {
     cy.visit(paths.bookings.new({ premisesId }))
 
-    return new BookingCreatePage()
+    return new BookingNewPage()
+  }
+
+  verifyPersonIsVisible(person: Person): void {
+    cy.get('dl').within(() => {
+      this.assertDefinition('Name', person.name)
+      this.assertDefinition('CRN', person.crn)
+    })
   }
 
   arrivalDay(): PageElement {
@@ -42,12 +49,6 @@ export default class BookingCreatePage extends Page {
   }
 
   completeForm(booking: Booking): void {
-    this.getLabel('CRN')
-    this.getTextInputByIdAndEnterDetails('crn', booking.crn)
-
-    this.getLabel('Name')
-    this.getTextInputByIdAndEnterDetails('name', booking.name)
-
     this.getLegend('What is the expected arrival date?')
 
     const expectedArrivalDate = new Date(Date.parse(booking.expectedArrivalDate))

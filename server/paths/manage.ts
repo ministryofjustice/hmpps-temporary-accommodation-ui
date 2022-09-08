@@ -6,6 +6,8 @@ const singlePremisesPath = premisesPath.path(':premisesId')
 const bookingsPath = singlePremisesPath.path('bookings')
 const bookingPath = bookingsPath.path(':bookingId')
 
+const peoplePath = bookingsPath.path('people')
+
 const extensionsPath = bookingPath.path('extensions')
 
 const arrivalsPath = bookingPath.path('arrivals')
@@ -51,6 +53,9 @@ const paths = {
       create: departuresPath,
       confirm: departuresPath.path(':departureId/confirmation'),
     },
+  },
+  people: {
+    find: peoplePath,
   },
   lostBeds: {
     new: lostBedsPath.path('new'),

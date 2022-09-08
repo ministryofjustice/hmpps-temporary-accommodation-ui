@@ -1,13 +1,17 @@
 import type { NewBooking } from 'approved-premises'
 import type { Request, Response, RequestHandler } from 'express'
 
-import { BookingService, PremisesService } from '../../services'
+import { BookingService, PremisesService, PersonService } from '../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
 import paths from '../../paths/manage'
 
 export default class BookingsController {
-  constructor(private readonly bookingService: BookingService, private readonly premisesService: PremisesService) {}
+  constructor(
+    private readonly bookingService: BookingService,
+    private readonly premisesService: PremisesService,
+    private readonly personService: PersonService,
+  ) {}
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -20,15 +24,29 @@ export default class BookingsController {
   }
 
   new(): RequestHandler {
-    return (req: Request, res: Response) => {
+    return async (req: Request, res: Response) => {
       const { premisesId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      return res.render(`bookings/new`, {
+      const crnArr = req.flash('crn')
+      if (crnArr.length) {
+        const person = await this.personService.findByCrn(req.user.token, crnArr[0])
+
+        return res.render(`bookings/new`, {
+          pageHeading: 'Make a booking',
+          premisesId,
+          ...person,
+          errors,
+          errorSummary,
+          ...userInput,
+        })
+      }
+
+      return res.render(`bookings/find`, {
+        pageHeading: 'Make a booking - find someone by CRN',
         premisesId,
         errors,
         errorSummary,
-        pageHeading: 'Make a booking',
         ...userInput,
       })
     }
@@ -54,14 +72,8 @@ export default class BookingsController {
           }),
         )
       } catch (err) {
-        catchValidationErrorOrPropogate(
-          req,
-          res,
-          err,
-          paths.bookings.new({
-            premisesId,
-          }),
-        )
+        req.flash('crn', booking.crn)
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.new({ premisesId }))
       }
     }
   }

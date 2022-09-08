@@ -5,6 +5,7 @@ import type { ErrorMessages, ErrorSummary } from 'approved-premises'
 import { SanitisedError } from '../sanitisedError'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from './validation'
 import errorLookups from '../i18n/en/errors.json'
+import { ValidationError } from './errors'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {
@@ -20,20 +21,6 @@ jest.mock('../i18n/en/errors.json', () => {
 describe('catchValidationErrorOrPropogate', () => {
   const request = createMock<Request>({})
   const response = createMock<Response>()
-  const error = createMock<SanitisedError>({
-    data: {
-      'invalid-params': [
-        {
-          propertyName: 'crn',
-          errorType: 'blank',
-        },
-        {
-          propertyName: 'expectedArrivalDate',
-          errorType: 'blank',
-        },
-      ],
-    },
-  })
 
   const expectedErrors = {
     crn: { text: errorLookups.crn.blank, attributes: { 'data-cy-error-crn': true } },
@@ -48,10 +35,50 @@ describe('catchValidationErrorOrPropogate', () => {
     { text: errorLookups.expectedArrivalDate.blank, href: '#expectedArrivalDate' },
   ]
 
-  it('sets the errors and request body as flash messages and redirects back to the form', () => {
+  beforeEach(() => {
     request.body = {
       some: 'field',
     }
+  })
+
+  it('sets the errors and request body as flash messages and redirects back to the form', () => {
+    const error = createMock<SanitisedError>({
+      data: {
+        'invalid-params': [
+          {
+            propertyName: 'crn',
+            errorType: 'blank',
+          },
+          {
+            propertyName: 'expectedArrivalDate',
+            errorType: 'blank',
+          },
+        ],
+      },
+    })
+
+    catchValidationErrorOrPropogate(request, response, error, 'some/url')
+
+    expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
+
+    expect(response.redirect).toHaveBeenCalledWith('some/url')
+  })
+
+  it('gets errors from a ValidationError type', () => {
+    const error = createMock<ValidationError>({
+      data: [
+        {
+          propertyName: 'crn',
+          errorType: 'blank',
+        },
+        {
+          propertyName: 'expectedArrivalDate',
+          errorType: 'blank',
+        },
+      ],
+    })
 
     catchValidationErrorOrPropogate(request, response, error, 'some/url')
 

@@ -1,0 +1,39 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + page.title %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {% if page.previous %}
+    {{ govukBackLink({
+      text: "Back",
+      href: paths.applications.pages.show({ id: applicationId, task: task, page: page.previous() })
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task, page: page.name }) }}?_method=PUT" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ showErrorSummary(errorSummary) }}
+
+        {% block questions %}{% endblock %}
+
+        {{ govukButton({
+            text: "Submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

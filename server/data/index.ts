@@ -19,6 +19,7 @@ import PersonClient from './personClient'
 import { createRedisClient } from './redisClient'
 import TokenStore from './tokenStore'
 import LostBedClient from './lostBedClient'
+import ApplicationClient from './applicationClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
@@ -30,6 +31,7 @@ export const dataAccess = () => ({
     new ReferenceDataClient(token)) as RestClientBuilder<ReferenceDataClient>,
   lostBedClientBuilder: ((token: string) => new LostBedClient(token)) as RestClientBuilder<LostBedClient>,
   personClient: ((token: string) => new PersonClient(token)) as RestClientBuilder<PersonClient>,
+  applicationClientBuilder: ((token: string) => new ApplicationClient(token)) as RestClientBuilder<ApplicationClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
@@ -42,4 +44,5 @@ export {
   ReferenceDataClient,
   LostBedClient,
   PersonClient,
+  ApplicationClient,
 }

@@ -9,7 +9,9 @@ import type { ErrorMessages } from 'approved-premises'
 import { initialiseName, formatDateString } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems } from './formUtils'
 import bookingActions from './bookingUtils'
-import paths from '../paths/manage'
+
+import managePaths from '../paths/manage'
+import applyPaths from '../paths/apply'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -67,5 +69,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('bookingActions', bookingActions)
 
-  njkEnv.addGlobal('paths', paths)
+  njkEnv.addGlobal('paths', { ...managePaths, ...applyPaths })
 }

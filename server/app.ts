@@ -4,6 +4,7 @@ import flash from 'connect-flash'
 
 import path from 'path'
 import createError from 'http-errors'
+import methodOverride from 'method-override'
 
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
@@ -29,6 +30,9 @@ export default function createApp(controllers: Controllers, services: Services):
   app.set('json spaces', 2)
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
+
+  // Add method-override to allow us to use PUT and DELETE methods
+  app.use(methodOverride('_method'))
 
   app.use(metricsMiddleware)
   app.use(setUpHealthChecks())

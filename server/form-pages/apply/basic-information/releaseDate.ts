@@ -9,7 +9,7 @@ export default class ReleaseDate implements TasklistPage {
   constructor(private readonly body: Record<string, unknown>) {}
 
   next() {
-    return 'oral-hearing'
+    return this.body.knowReleaseDate === 'yes' ? 'placement-date' : 'oral-hearing'
   }
 
   previous() {

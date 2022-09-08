@@ -3,7 +3,14 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-e
 import ReleaseDate from './releaseDate'
 
 describe('ReleaseDate', () => {
-  itShouldHaveNextValue(new ReleaseDate({}), 'oral-hearing')
+  describe('when knowReleaseDate is set to yes', () => {
+    itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'yes' }), 'placement-date')
+  })
+
+  describe('when knowReleaseDate is set to no', () => {
+    itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'no' }), 'oral-hearing')
+  })
+
   itShouldHavePreviousValue(new ReleaseDate({}), 'release-type')
 
   describe('errors', () => {

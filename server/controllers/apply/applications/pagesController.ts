@@ -38,7 +38,7 @@ export default class ApplicationFormController {
       const page = this.applicationService.getCurrentPage(req)
 
       try {
-        this.applicationService.save(page)
+        this.applicationService.save(page, req)
 
         res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))
       } catch (err) {

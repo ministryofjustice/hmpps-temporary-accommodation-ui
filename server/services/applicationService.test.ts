@@ -1,5 +1,5 @@
 import type { Request } from 'express'
-import { createMock } from '@golevelup/ts-jest'
+import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { TasklistPage, TaskListErrors } from 'approved-premises'
 import { UnknownPageError, ValidationError } from '../utils/errors'
@@ -90,21 +90,36 @@ describe('ApplicationService', () => {
   })
 
   describe('save', () => {
-    it('throws an error is there is a validation error', () => {
+    const request = createMock<Request>({ params: { id: 'some-uuid', task: 'some-task', page: 'some-page' } })
+
+    describe('when there are no validation errors', () => {
+      let page: DeepMocked<TasklistPage>
+
+      beforeEach(() => {
+        page = createMock<TasklistPage>({
+          errors: () => [] as TaskListErrors,
+          body: { foo: 'bar' },
+        })
+      })
+
+      it('does not throw an error', () => {
+        expect(() => service.save(page, request)).not.toThrow(ValidationError)
+      })
+
+      it('saves data to the session', () => {
+        service.save(page, request)
+
+        expect(request.session.application).toEqual({ 'some-uuid': { 'some-task': { 'some-page': { foo: 'bar' } } } })
+      })
+    })
+
+    it('throws an error if there is a validation error', () => {
       const errors = createMock<TaskListErrors>([{ propertyName: 'foo', errorType: 'bar' }])
       const page = createMock<TasklistPage>({
         errors: () => errors,
       })
 
-      expect(() => service.save(page)).toThrow(new ValidationError(errors))
-    })
-
-    it('does not throw an error if there are no validation errors', () => {
-      const page = createMock<TasklistPage>({
-        errors: () => [] as TaskListErrors,
-      })
-
-      expect(() => service.save(page)).not.toThrow(ValidationError)
+      expect(() => service.save(page, request)).toThrow(new ValidationError(errors))
     })
 
     it('does not thow an error when the page has no errors method', () => {
@@ -112,7 +127,7 @@ describe('ApplicationService', () => {
         errors: undefined,
       })
 
-      expect(() => service.save(page)).not.toThrow(ValidationError)
+      expect(() => service.save(page, request)).not.toThrow(ValidationError)
     })
   })
 })

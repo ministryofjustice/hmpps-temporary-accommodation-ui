@@ -14,7 +14,7 @@ export default class Situation implements TasklistPage {
 
   title = 'Which of the following options best describes the situation?'
 
-  constructor(private readonly body: Record<string, unknown>) {}
+  constructor(readonly body: Record<string, unknown>) {}
 
   next() {
     return 'release-date'

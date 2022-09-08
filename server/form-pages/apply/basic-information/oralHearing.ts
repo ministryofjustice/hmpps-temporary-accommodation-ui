@@ -6,7 +6,7 @@ export default class OralHearing implements TasklistPage {
 
   title = 'Do you know Robert Brown’s oral hearing date?'
 
-  constructor(private readonly body: Record<string, unknown>) {}
+  constructor(readonly body: Record<string, unknown>) {}
 
   next() {
     return 'placement-date'

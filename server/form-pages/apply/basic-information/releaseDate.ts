@@ -6,7 +6,7 @@ export default class ReleaseDate implements TasklistPage {
 
   title = 'Do you know Robert Brown’s release date?'
 
-  constructor(private readonly body: Record<string, unknown>) {}
+  constructor(readonly body: Record<string, unknown>) {}
 
   next() {
     return this.body.knowReleaseDate === 'yes' ? 'placement-date' : 'oral-hearing'

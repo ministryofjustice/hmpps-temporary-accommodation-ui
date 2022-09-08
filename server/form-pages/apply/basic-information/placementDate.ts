@@ -6,7 +6,7 @@ export default class PlacementDate implements TasklistPage {
 
   title = 'Is [release-date] the date you want the placement to start?'
 
-  constructor(private readonly body: Record<string, unknown>) {}
+  constructor(readonly body: Record<string, unknown>) {}
 
   next() {
     return ''

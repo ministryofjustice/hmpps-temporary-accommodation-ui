@@ -134,6 +134,7 @@ declare module 'approved-premises' {
     name: string
     title: string
 
+    body?: Record<string, unknown>
     previous?(): string
     next?(): string
     errors?(): TaskListErrors

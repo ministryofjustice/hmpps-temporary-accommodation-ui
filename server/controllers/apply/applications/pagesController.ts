@@ -32,4 +32,23 @@ export default class ApplicationFormController {
       }
     }
   }
+
+  update() {
+    return (req: Request, res: Response) => {
+      const page = this.applicationService.getCurrentPage(req)
+
+      try {
+        this.applicationService.save(page)
+
+        res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.name }),
+        )
+      }
+    }
+  }
 }

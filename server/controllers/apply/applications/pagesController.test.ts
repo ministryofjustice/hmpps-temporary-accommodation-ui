@@ -5,8 +5,9 @@ import createError from 'http-errors'
 import type { TasklistPage, ErrorsAndUserInput } from 'approved-premises'
 import PagesController from './pagesController'
 import ApplicationService from '../../../services/applicationService'
-import { fetchErrorsAndUserInput } from '../../../utils/validation'
+import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../../utils/validation'
 import { UnknownPageError } from '../../../utils/errors'
+import paths from '../../../paths/apply'
 
 jest.mock('../../../utils/validation')
 
@@ -95,6 +96,53 @@ describe('pagesController', () => {
       const requestHandler = pagesController.show()
 
       expect(() => requestHandler(request, response, next)).toThrow(genericError)
+    })
+  })
+
+  describe('update', () => {
+    const page = createMock<TasklistPage>({
+      name: 'page-name',
+    })
+
+    beforeEach(() => {
+      request.params = {
+        id: 'some-uuid',
+        task: 'some-task',
+      }
+
+      applicationService.getCurrentPage.mockReturnValue(page)
+    })
+
+    it('updates an application and redirects to the next page', () => {
+      page.next.mockReturnValue('next-page')
+
+      applicationService.save.mockReturnValue()
+
+      const requestHandler = pagesController.update()
+
+      requestHandler(request, response)
+
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.applications.pages.show({ id: request.params.id, task: request.params.task, page: 'next-page' }),
+      )
+    })
+
+    it('sets a flash and redirects if there are errors', () => {
+      const err = new Error()
+      applicationService.save.mockImplementation(() => {
+        throw err
+      })
+
+      const requestHandler = pagesController.update()
+
+      requestHandler(request, response)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.applications.pages.show({ id: request.params.id, task: request.params.task, page: page.name }),
+      )
     })
   })
 })

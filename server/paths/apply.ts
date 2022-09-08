@@ -11,6 +11,7 @@ const paths = {
     create: applicationsPath,
     pages: {
       show: pagesPath,
+      update: pagesPath,
     },
   },
 }

@@ -22,6 +22,7 @@ const paths = {
   premises: {
     index: premisesPath,
     show: singlePremisesPath,
+    capacity: singlePremisesPath.path('capacity'),
   },
   bookings: {
     new: bookingsPath.path('new'),

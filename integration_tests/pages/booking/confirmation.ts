@@ -1,9 +1,15 @@
 import parseISO from 'date-fns/parseISO'
+
 import type { Booking } from 'approved-premises'
-import { formatDate } from '../../../server/utils/utils'
+
 import Page from '../page'
+import { formatDate, formatDateString } from '../../../server/utils/utils'
 import paths from '../../../server/paths/manage'
 
+type OvercapacityPeriod = {
+  start: string
+  end: string
+}
 export default class BookingConfirmationPage extends Page {
   constructor() {
     super('Booking complete')
@@ -23,5 +29,18 @@ export default class BookingConfirmationPage extends Page {
       this.assertDefinition('Expected departure date', formatDate(parseISO(booking.expectedDepartureDate)))
       this.assertDefinition('Key worker', booking.keyWorker.name)
     })
+  }
+
+  shouldShowOvercapacityMessage(
+    firstOvercapacityPeriod: OvercapacityPeriod,
+    secondOvercapacityPeriod: OvercapacityPeriod,
+  ) {
+    this.shouldShowBanner(`The premises is over capacity for the periods:`)
+    cy.get('.govuk-list > :nth-child(1)').contains(
+      `${formatDateString(firstOvercapacityPeriod.start)} to ${formatDateString(firstOvercapacityPeriod.end)}`,
+    )
+    cy.get('.govuk-list > :nth-child(2)').contains(
+      `${formatDateString(secondOvercapacityPeriod.start)} to ${formatDateString(secondOvercapacityPeriod.end)}`,
+    )
   }
 }

@@ -1,10 +1,10 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% if infoMessages %}
-
   {% for message in infoMessages %}
     {{ govukNotificationBanner({
-      html: message
+      titleText: 'Important',
+      html: '<div class="govuk-heading-s">' + message + '</div>'
     }) }}
   {% endfor %}
 {% endif %}

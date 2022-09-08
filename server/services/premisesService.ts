@@ -1,6 +1,9 @@
 import type { Premises, TableRow, SummaryList } from 'approved-premises'
 import type { RestClientBuilder, PremisesClient } from '../data'
 
+import { formatDateString } from '../utils/utils'
+import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
+
 export default class PremisesService {
   constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
 
@@ -28,6 +31,43 @@ export default class PremisesService {
     const summaryList = await this.summaryListForPremises(premises)
 
     return { name: premises.name, summaryList }
+  }
+
+  async getOvercapacityMessage(token: string, premisesId: string): Promise<string[] | string> {
+    const premisesClient = this.premisesClientFactory(token)
+    const premisesDateCapacities = await premisesClient.capacity(premisesId)
+
+    const overcapacityDateRanges = getDateRangesWithNegativeBeds(premisesDateCapacities)
+
+    const overcapacityMessage = this.generateOvercapacityMessage(overcapacityDateRanges)
+
+    return overcapacityMessage ? [overcapacityMessage] : ''
+  }
+
+  private generateOvercapacityMessage(overcapacityDateRanges: NegativeDateRange[]) {
+    if (overcapacityDateRanges.length === 1) {
+      if (!overcapacityDateRanges[0].end) {
+        return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on ${formatDateString(
+          overcapacityDateRanges[0].start,
+        )}</h4>`
+      }
+      return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period ${formatDateString(
+        overcapacityDateRanges[0].start,
+      )} to ${formatDateString(overcapacityDateRanges[0].end)}</h4>`
+    }
+
+    if (overcapacityDateRanges.length > 1) {
+      const dateRanges = overcapacityDateRanges
+        .map((dateRange: NegativeDateRange) =>
+          !dateRange.end
+            ? `<li>${formatDateString(dateRange.start)}</li>`
+            : `<li>${formatDateString(dateRange.start)} to ${formatDateString(dateRange.end)}</li>`,
+        )
+        .join('')
+      return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
+        <ul class="govuk-list govuk-list--bullet">${dateRanges}</ul>`
+    }
+    return ''
   }
 
   async getPremisesSelectList(token: string): Promise<Array<{ text: string; value: string }>> {

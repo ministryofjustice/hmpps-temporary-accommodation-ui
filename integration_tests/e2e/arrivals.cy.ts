@@ -4,6 +4,7 @@ import nonArrivalFactory from '../../server/testutils/factories/nonArrival'
 
 import ArrivalCreatePage from '../pages/arrivalCreate'
 import PremisesShowPage from '../pages/premisesShow'
+import premisesCapacityItemFactory from '../../server/testutils/factories/premisesCapacityItem'
 
 context('Arrivals', () => {
   beforeEach(() => {
@@ -26,6 +27,10 @@ context('Arrivals', () => {
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubArrivalCreate', { premisesId: premises.id, bookingId, arrival })
+    cy.task('stubPremisesCapacity', {
+      premisesId: premises.id,
+      dateCapacities: premisesCapacityItemFactory.buildList(5),
+    })
 
     // When I mark the booking as having arrived
     const page = ArrivalCreatePage.visit(premises.id, bookingId)
@@ -87,6 +92,10 @@ context('Arrivals', () => {
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubNonArrivalCreate', { premisesId: premises.id, bookingId, nonArrival })
+    cy.task('stubPremisesCapacity', {
+      premisesId: premises.id,
+      dateCapacities: premisesCapacityItemFactory.buildList(5),
+    })
 
     // When I mark the booking as having not arrived
     const page = ArrivalCreatePage.visit(premises.id, bookingId)

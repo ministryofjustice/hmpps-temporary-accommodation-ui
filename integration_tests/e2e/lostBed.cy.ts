@@ -2,6 +2,7 @@ import premisesFactory from '../../server/testutils/factories/premises'
 import lostBedFactory from '../../server/testutils/factories/lostBed'
 
 import LostBedCreatePage from '../pages/lostBedCreate'
+import premisesCapacityItemFactory from '../../server/testutils/factories/premisesCapacityItem'
 
 context('LostBed', () => {
   beforeEach(() => {
@@ -24,6 +25,10 @@ context('LostBed', () => {
       endDate: new Date(2022, 2, 11, 0, 0).toISOString(),
     })
     cy.task('stubLostBedCreate', { premisesId: premises.id, lostBed })
+    cy.task('stubPremisesCapacity', {
+      premisesId: premises.id,
+      dateCapacities: premisesCapacityItemFactory.buildList(5),
+    })
 
     const page = LostBedCreatePage.visit(premises.id)
 

@@ -29,6 +29,7 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
+// returns a date like 'Tuesday 6 September 2022'
 export const formatDate = (date: Date): string => format(date, 'cccc d MMMM y')
 
 export const formatDateString = (date: string): string => format(convertDateString(date), 'cccc d MMMM y')

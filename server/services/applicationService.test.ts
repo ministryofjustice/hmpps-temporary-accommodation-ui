@@ -3,7 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { TasklistPage, TaskListErrors } from 'approved-premises'
 import { UnknownPageError, ValidationError } from '../utils/errors'
-import ApplicationService from './applicationService'
+import ApplicationService, { type DataServices } from './applicationService'
 import ApplicationClient from '../data/applicationClient'
 
 import pages from '../form-pages/apply'
@@ -53,63 +53,75 @@ describe('ApplicationService', () => {
 
   describe('getCurrentPage', () => {
     let request: DeepMocked<Request>
+    const dataServices = createMock<DataServices>({}) as DataServices
 
     beforeEach(() => {
       request = createMock<Request>({ params: { id: 'some-uuid', task: 'my-task' } })
     })
 
-    it('should return the first page if the page is not defined', () => {
-      const result = service.getCurrentPage(request)
+    it('should return the first page if the page is not defined', async () => {
+      const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
       expect(FirstPage).toHaveBeenCalledWith(request.body)
     })
 
-    it('should return a page from a page list', () => {
+    it('should return a page from a page list', async () => {
       request.params.page = 'second'
 
-      const result = service.getCurrentPage(request)
+      const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(SecondPage)
 
       expect(SecondPage).toHaveBeenCalledWith(request.body)
     })
 
-    it('should initialize the page with the userInput if specified', () => {
+    it('should initialize the page with the userInput if specified', async () => {
       const userInput = { foo: 'bar' }
-      const result = service.getCurrentPage(request, userInput)
+      const result = await service.getCurrentPage(request, dataServices, userInput)
 
       expect(result).toBeInstanceOf(FirstPage)
 
       expect(FirstPage).toHaveBeenCalledWith(userInput)
     })
 
-    it('should load from the session if the body and userInput are blank', () => {
+    it('should load from the session if the body and userInput are blank', async () => {
       request.body = {}
       request.session.application = { 'some-uuid': { 'my-task': { first: { foo: 'bar' } } } }
 
-      const result = service.getCurrentPage(request)
+      const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
       expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' })
     })
 
-    it('should raise an error if the page is not found', () => {
-      request.params.page = 'bar'
+    it("should call a service's setup method if it exists", async () => {
+      const setup = jest.fn()
+      SecondPage.mockReturnValue({ setup })
 
-      expect(() => {
-        service.getCurrentPage(request)
-      }).toThrow(UnknownPageError)
+      request.params.page = 'second'
+
+      await service.getCurrentPage(request, dataServices)
+
+      expect(setup).toHaveBeenCalledWith(request, dataServices)
     })
 
-    it('should raise an error if the task is not specified', () => {
+    it('should raise an error if the page is not found', async () => {
+      request.params.page = 'bar'
+
+      expect(async () => {
+        await service.getCurrentPage(request, dataServices)
+      }).rejects.toThrow(UnknownPageError)
+    })
+
+    it('should raise an error if the task is not specified', async () => {
       request.params.task = undefined
 
-      expect(() => {
-        service.getCurrentPage(request)
-      }).toThrow(UnknownPageError)
+      expect(async () => {
+        await service.getCurrentPage(request, dataServices)
+      }).rejects.toThrow(UnknownPageError)
     })
   })
 

@@ -23,7 +23,11 @@ export default class ApplicationService {
     return uuid
   }
 
-  getCurrentPage(request: Request, userInput?: Record<string, unknown>): TasklistPage {
+  async getCurrentPage(
+    request: Request,
+    dataServices: DataServices,
+    userInput?: Record<string, unknown>,
+  ): Promise<TasklistPage> {
     if (!request.params.task) {
       throw new UnknownPageError()
     }
@@ -39,8 +43,13 @@ export default class ApplicationService {
     }
 
     const body = this.getBody(request, userInput)
+    const page = new Page(body)
 
-    return new Page(body)
+    if (page.setup) {
+      await page.setup(request, dataServices)
+    }
+
+    return page
   }
 
   save(page: TasklistPage, request: Request) {

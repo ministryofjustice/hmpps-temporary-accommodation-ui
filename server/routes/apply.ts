@@ -13,6 +13,7 @@ export default function routes(controllers: Controllers, router: Router): Router
 
   get(paths.applications.new.pattern, applicationsController.new())
   post(paths.applications.create.pattern, applicationsController.create())
+  get(paths.applications.index.pattern, applicationsController.index())
 
   get(paths.applications.pages.show.pattern, pagesController.show())
   put(paths.applications.pages.update.pattern, pagesController.update())

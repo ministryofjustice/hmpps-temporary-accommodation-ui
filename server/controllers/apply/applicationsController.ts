@@ -5,6 +5,14 @@ import paths from '../../paths/apply'
 export default class ApplicationsController {
   constructor(private readonly applicationService: ApplicationService) {}
 
+  index(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const applicationSummaries = await this.applicationService.tableRows(req.user.token)
+
+      res.render('applications/list', { pageHeading: 'Approved Premises applications', applicationSummaries })
+    }
+  }
+
   new(): RequestHandler {
     return (_req: Request, res: Response) => {
       res.render('applications/new', { pageHeading: 'Apply for an Approved Premises (AP) placement' })

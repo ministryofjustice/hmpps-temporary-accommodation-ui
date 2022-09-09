@@ -12,8 +12,8 @@ export default class ApplicationFormController {
   show(): RequestHandler {
     return (req: Request, res: Response, next: NextFunction) => {
       try {
-        const page = this.applicationService.getCurrentPage(req)
         const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+        const page = this.applicationService.getCurrentPage(req, userInput)
 
         res.render(`applications/pages/${req.params.task}/${page.name}`, {
           applicationId: req.params.id,
@@ -21,7 +21,7 @@ export default class ApplicationFormController {
           errorSummary,
           task: req.params.task,
           page,
-          ...userInput,
+          ...page.body,
         })
       } catch (e) {
         if (e instanceof UnknownPageError) {

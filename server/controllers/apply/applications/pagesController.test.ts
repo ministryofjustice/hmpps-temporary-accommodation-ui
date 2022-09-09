@@ -47,12 +47,15 @@ describe('pagesController', () => {
 
       requestHandler(request, response, next)
 
+      expect(applicationService.getCurrentPage).toHaveBeenCalledWith(request, {})
+
       expect(response.render).toHaveBeenCalledWith(`applications/pages/${request.params.task}/${page.name}`, {
         applicationId: request.params.id,
         task: request.params.task,
         page,
         errors: {},
         errorSummary: [],
+        ...page.body,
       })
     })
 
@@ -64,13 +67,15 @@ describe('pagesController', () => {
 
       requestHandler(request, response, next)
 
+      expect(applicationService.getCurrentPage).toHaveBeenCalledWith(request, errorsAndUserInput.userInput)
+
       expect(response.render).toHaveBeenCalledWith(`applications/pages/${request.params.task}/${page.name}`, {
         applicationId: request.params.id,
         task: request.params.task,
         page,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
-        ...errorsAndUserInput.userInput,
+        ...page.body,
       })
     })
 

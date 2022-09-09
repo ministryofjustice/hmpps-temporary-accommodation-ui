@@ -5,7 +5,11 @@ export default class EnterCRN implements TasklistPage {
 
   title = "Enter the individual's CRN"
 
-  constructor(readonly body: Record<string, unknown>) {}
+  body: { crn: string }
+
+  constructor(body: Record<string, string>) {
+    this.body = { crn: body.crn }
+  }
 
   next() {
     return 'confirm-details'

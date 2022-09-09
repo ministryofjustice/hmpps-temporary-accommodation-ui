@@ -1,4 +1,4 @@
-import type { TasklistPage, ObjectWithDateParts } from 'approved-premises'
+import type { TasklistPage, ObjectWithDateParts, YesOrNo } from 'approved-premises'
 import { dateAndTimeInputsAreValidDates } from '../../../utils/utils'
 
 export default class OralHearing implements TasklistPage {
@@ -6,7 +6,18 @@ export default class OralHearing implements TasklistPage {
 
   title = 'Do you know Robert Brown’s oral hearing date?'
 
-  constructor(readonly body: Record<string, unknown>) {}
+  body: ObjectWithDateParts<'oralHearingDate'> & {
+    knowOralHearingDate: YesOrNo
+  }
+
+  constructor(body: Record<string, unknown>) {
+    this.body = {
+      'oralHearingDate-year': body['oralHearingDate-year'] as string,
+      'oralHearingDate-month': body['oralHearingDate-month'] as string,
+      'oralHearingDate-day': body['oralHearingDate-day'] as string,
+      knowOralHearingDate: body.knowOralHearingDate as YesOrNo,
+    }
+  }
 
   next() {
     return 'placement-date'
@@ -32,9 +43,7 @@ export default class OralHearing implements TasklistPage {
           propertyName: 'oralHearingDate',
           errorType: 'blank',
         })
-      } else if (
-        !dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'oralHearingDate'>, 'oralHearingDate')
-      ) {
+      } else if (!dateAndTimeInputsAreValidDates(this.body, 'oralHearingDate')) {
         errors.push({
           propertyName: 'oralHearingDate',
           errorType: 'invalid',

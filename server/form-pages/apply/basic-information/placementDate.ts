@@ -1,4 +1,4 @@
-import type { TasklistPage, ObjectWithDateParts } from 'approved-premises'
+import type { TasklistPage, ObjectWithDateParts, YesOrNo } from 'approved-premises'
 import { dateAndTimeInputsAreValidDates } from '../../../utils/utils'
 
 export default class PlacementDate implements TasklistPage {
@@ -6,7 +6,18 @@ export default class PlacementDate implements TasklistPage {
 
   title = 'Is [release-date] the date you want the placement to start?'
 
-  constructor(readonly body: Record<string, unknown>) {}
+  body: ObjectWithDateParts<'startDate'> & {
+    startDateSameAsReleaseDate: YesOrNo
+  }
+
+  constructor(body: Record<string, unknown>) {
+    this.body = {
+      'startDate-year': body['startDate-year'] as string,
+      'startDate-month': body['startDate-month'] as string,
+      'startDate-day': body['startDate-day'] as string,
+      startDateSameAsReleaseDate: body.startDateSameAsReleaseDate as YesOrNo,
+    }
+  }
 
   next() {
     return ''
@@ -32,7 +43,7 @@ export default class PlacementDate implements TasklistPage {
           propertyName: 'startDate',
           errorType: 'blank',
         })
-      } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'startDate'>, 'startDate')) {
+      } else if (!dateAndTimeInputsAreValidDates(this.body, 'startDate')) {
         errors.push({
           propertyName: 'startDate',
           errorType: 'invalid',

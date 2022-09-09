@@ -15,7 +15,13 @@ export default class ReleaseType implements TasklistPage {
 
   title = 'What type of release will the application support'
 
-  constructor(readonly body: Record<string, unknown>) {}
+  body: { releaseType: keyof ReleaseTypes }
+
+  constructor(body: Record<string, unknown>) {
+    this.body = {
+      releaseType: body.releaseType as keyof ReleaseTypes,
+    }
+  }
 
   next() {
     return 'release-date'

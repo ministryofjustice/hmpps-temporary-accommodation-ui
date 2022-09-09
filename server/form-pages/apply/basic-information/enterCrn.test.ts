@@ -1,6 +1,14 @@
 import EnterCRN from './enterCrn'
 
 describe('EnterCRN', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new EnterCRN({ crn: 'ABC123', something: 'else' })
+
+      expect(page.body).toEqual({ crn: 'ABC123' })
+    })
+  })
+
   describe('next', () => {
     it('should return the confirm-details step', () => {
       const page = new EnterCRN({})

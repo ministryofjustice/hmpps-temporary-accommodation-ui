@@ -3,6 +3,25 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-e
 import OralHearing from './oralHearing'
 
 describe('OralHearing', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new OralHearing({
+        knowOralHearingDate: 'yes',
+        'oralHearingDate-year': 2022,
+        'oralHearingDate-month': 3,
+        'oralHearingDate-day': 3,
+        something: 'else',
+      })
+
+      expect(page.body).toEqual({
+        knowOralHearingDate: 'yes',
+        'oralHearingDate-year': 2022,
+        'oralHearingDate-month': 3,
+        'oralHearingDate-day': 3,
+      })
+    })
+  })
+
   itShouldHaveNextValue(new OralHearing({}), 'placement-date')
   itShouldHavePreviousValue(new OralHearing({}), 'release-date')
 

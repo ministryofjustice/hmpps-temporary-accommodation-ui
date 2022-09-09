@@ -3,6 +3,14 @@ import { itShouldHavePreviousValue, itShouldHaveNextValue } from '../../shared-e
 import ReleaseType from './releaseType'
 
 describe('ReleaseType', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new ReleaseType({ releaseType: 'rotl', something: 'else' })
+
+      expect(page.body).toEqual({ releaseType: 'rotl' })
+    })
+  })
+
   itShouldHavePreviousValue(new ReleaseType({}), 'sentence-type')
   itShouldHaveNextValue(new ReleaseType({}), 'release-date')
 

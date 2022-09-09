@@ -142,6 +142,8 @@ declare module 'approved-premises' {
 
   export type TaskListErrors = Array<{ propertyName: string; errorType: string }>
 
+  export type YesOrNo = 'yes' | 'no'
+
   export interface schemas {
     Premises: {
       id: string

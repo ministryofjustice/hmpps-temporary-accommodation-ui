@@ -3,6 +3,14 @@ import { itShouldHavePreviousValue, itShouldHaveNextValue } from '../../shared-e
 import Situation from './situation'
 
 describe('Situation', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new Situation({ situation: 'riskManagement', something: 'else' })
+
+      expect(page.body).toEqual({ situation: 'riskManagement' })
+    })
+  })
+
   itShouldHavePreviousValue(new Situation({}), 'sentence-type')
   itShouldHaveNextValue(new Situation({}), 'release-date')
 

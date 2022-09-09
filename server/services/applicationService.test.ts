@@ -52,7 +52,11 @@ describe('ApplicationService', () => {
   })
 
   describe('getCurrentPage', () => {
-    const request = createMock<Request>({ params: { task: 'my-task' } })
+    let request: DeepMocked<Request>
+
+    beforeEach(() => {
+      request = createMock<Request>({ params: { id: 'some-uuid', task: 'my-task' } })
+    })
 
     it('should return the first page if the page is not defined', () => {
       const result = service.getCurrentPage(request)
@@ -70,6 +74,26 @@ describe('ApplicationService', () => {
       expect(result).toBeInstanceOf(SecondPage)
 
       expect(SecondPage).toHaveBeenCalledWith(request.body)
+    })
+
+    it('should initialize the page with the userInput if specified', () => {
+      const userInput = { foo: 'bar' }
+      const result = service.getCurrentPage(request, userInput)
+
+      expect(result).toBeInstanceOf(FirstPage)
+
+      expect(FirstPage).toHaveBeenCalledWith(userInput)
+    })
+
+    it('should load from the session if the body and userInput are blank', () => {
+      request.body = {}
+      request.session.application = { 'some-uuid': { 'my-task': { first: { foo: 'bar' } } } }
+
+      const result = service.getCurrentPage(request)
+
+      expect(result).toBeInstanceOf(FirstPage)
+
+      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' })
     })
 
     it('should raise an error if the page is not found', () => {

@@ -18,17 +18,24 @@ export default class ApplicationService {
     return uuid
   }
 
-  getCurrentPage(request: Request): TasklistPage {
+  getCurrentPage(request: Request, userInput?: Record<string, unknown>): TasklistPage {
     if (!request.params.task) {
       throw new UnknownPageError()
     }
+
     const pageList = pages[request.params.task]
-    const Page = request.params.page ? pageList[request.params.page] : Object.values(pageList)[0]
+
+    request.params.page = request.params.page || Object.keys(pageList)[0]
+
+    const Page = pageList[request.params.page]
 
     if (!Page) {
       throw new UnknownPageError()
     }
-    return new Page(request.body)
+
+    const body = this.getBody(request, userInput)
+
+    return new Page(body)
   }
 
   save(page: TasklistPage, request: Request) {
@@ -48,5 +55,21 @@ export default class ApplicationService {
     sessionData.application[id][task] = sessionData.application[id][task] || {}
 
     return sessionData
+  }
+
+  private getBody(request: Request, userInput: Record<string, unknown>) {
+    if (userInput && Object.keys(userInput).length) {
+      return userInput
+    }
+    if (Object.keys(request.body).length) {
+      return request.body
+    }
+    return this.getSessionData(request)
+  }
+
+  private getSessionData(request: Request) {
+    const data = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
+
+    return data.application[request.params.id][request.params.task][request.params.page] || {}
   }
 }

@@ -4,7 +4,9 @@ import createError from 'http-errors'
 
 import type { TasklistPage, ErrorsAndUserInput } from 'approved-premises'
 import PagesController from './pagesController'
-import ApplicationService from '../../../services/applicationService'
+import { ApplicationService } from '../../../services'
+import type { DataServices } from '../../../services/applicationService'
+
 import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../../utils/validation'
 import { UnknownPageError } from '../../../utils/errors'
 import paths from '../../../paths/apply'
@@ -17,11 +19,12 @@ describe('pagesController', () => {
   const next: DeepMocked<NextFunction> = jest.fn()
 
   const applicationService = createMock<ApplicationService>({})
+  const dataServices = createMock<DataServices>({}) as DataServices
 
   let pagesController: PagesController
 
   beforeEach(() => {
-    pagesController = new PagesController(applicationService)
+    pagesController = new PagesController(applicationService, dataServices)
   })
 
   describe('show', () => {

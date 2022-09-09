@@ -1,13 +1,15 @@
 import type { Request, Response, RequestHandler, NextFunction } from 'express'
 import createError from 'http-errors'
 
-import ApplicationService from '../../../services/applicationService'
+import { ApplicationService } from '../../../services'
+import type { DataServices } from '../../../services/applicationService'
+
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import paths from '../../../paths/apply'
 import { UnknownPageError } from '../../../utils/errors'
 
 export default class ApplicationFormController {
-  constructor(private readonly applicationService: ApplicationService) {}
+  constructor(private readonly applicationService: ApplicationService, private readonly dataServices: DataServices) {}
 
   show(): RequestHandler {
     return (req: Request, res: Response, next: NextFunction) => {

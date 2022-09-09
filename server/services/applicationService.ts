@@ -4,8 +4,13 @@ import type { TasklistPage } from 'approved-premises'
 
 import type { RestClientBuilder, ApplicationClient } from '../data'
 import { UnknownPageError, ValidationError } from '../utils/errors'
+import type { PersonService } from './index'
 
 import pages from '../form-pages/apply'
+
+export type DataServices = {
+  personService: PersonService
+}
 
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}

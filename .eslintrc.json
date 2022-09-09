@@ -45,6 +45,7 @@
             "ignoreRestSiblings": true
           }
         ],
+        "no-param-reassign": ["error", { "props": false }],
         "@typescript-eslint/semi": 0,
         "import/no-unresolved": "error",
         "prettier/prettier": [

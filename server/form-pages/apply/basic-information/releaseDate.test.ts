@@ -3,6 +3,25 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-e
 import ReleaseDate from './releaseDate'
 
 describe('ReleaseDate', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new ReleaseDate({
+        knowReleaseDate: 'yes',
+        'releaseDate-year': 2022,
+        'releaseDate-month': 3,
+        'releaseDate-day': 3,
+        something: 'else',
+      })
+
+      expect(page.body).toEqual({
+        knowReleaseDate: 'yes',
+        'releaseDate-year': 2022,
+        'releaseDate-month': 3,
+        'releaseDate-day': 3,
+      })
+    })
+  })
+
   describe('when knowReleaseDate is set to yes', () => {
     itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'yes' }), 'placement-date')
   })

@@ -3,6 +3,14 @@ import { itShouldHavePreviousValue } from '../../shared-examples'
 import SentenceType from './sentenceType'
 
 describe('SentenceType', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new SentenceType({ sentenceType: 'standardDeterminate', something: 'else' })
+
+      expect(page.body).toEqual({ sentenceType: 'standardDeterminate' })
+    })
+  })
+
   itShouldHavePreviousValue(new SentenceType({}), 'confirm-details')
 
   describe('next', () => {

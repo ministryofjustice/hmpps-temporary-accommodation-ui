@@ -14,7 +14,13 @@ export default class Situation implements TasklistPage {
 
   title = 'Which of the following options best describes the situation?'
 
-  constructor(private readonly body: Record<string, unknown>) {}
+  body: { situation: keyof Situations }
+
+  constructor(body: Record<string, unknown>) {
+    this.body = {
+      situation: body.situation as keyof Situations,
+    }
+  }
 
   next() {
     return 'release-date'

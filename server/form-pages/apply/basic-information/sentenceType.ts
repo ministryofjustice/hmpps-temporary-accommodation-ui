@@ -15,7 +15,13 @@ export default class SentenceType implements TasklistPage {
 
   title = 'Which of the following best describes the sentence type?'
 
-  constructor(private readonly body: Record<string, unknown>) {}
+  body: { sentenceType: keyof SentenceTypes }
+
+  constructor(body: Record<string, unknown>) {
+    this.body = {
+      sentenceType: body.sentenceType as keyof SentenceTypes,
+    }
+  }
 
   next() {
     switch (this.body.sentenceType) {

@@ -3,6 +3,25 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-e
 import PlacementDate from './placementDate'
 
 describe('PlacementDate', () => {
+  describe('body', () => {
+    it('should strip unknown attributes from the body', () => {
+      const page = new PlacementDate({
+        startDateSameAsReleaseDate: 'no',
+        'startDate-year': 2020,
+        'startDate-month': 12,
+        'startDate-day': 1,
+        something: 'else',
+      })
+
+      expect(page.body).toEqual({
+        startDateSameAsReleaseDate: 'no',
+        'startDate-year': 2020,
+        'startDate-month': 12,
+        'startDate-day': 1,
+      })
+    })
+  })
+
   itShouldHaveNextValue(new PlacementDate({}), '')
   itShouldHavePreviousValue(new PlacementDate({}), 'oral-hearing')
 

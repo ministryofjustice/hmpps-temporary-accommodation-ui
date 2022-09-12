@@ -1,12 +1,14 @@
 import type { Request } from 'express'
 import type { Session, SessionData } from 'express-session'
-import type { TasklistPage } from 'approved-premises'
+import type { HtmlItem, TasklistPage, TextItem } from 'approved-premises'
 
 import type { RestClientBuilder, ApplicationClient } from '../data'
 import { UnknownPageError, ValidationError } from '../utils/errors'
 import type { PersonService } from './index'
 
 import pages from '../form-pages/apply'
+import { formatDateString } from '../utils/utils'
+import paths from '../paths/apply'
 
 export type DataServices = {
   personService: PersonService
@@ -85,5 +87,50 @@ export default class ApplicationService {
     const data = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
 
     return data.application[request.params.id][request.params.task][request.params.page] || {}
+  }
+
+  async tableRows(token: string): Promise<(TextItem | HtmlItem)[][]> {
+    const applicationClient = this.applicationClientFactory(token)
+
+    const applicationSummaries = await applicationClient.all()
+
+    return applicationSummaries.map(application => {
+      return [
+        this.createNameAnchorElement(application.person.name, application.id),
+        this.textValue(application.person.crn),
+        this.createTierBadge(application.tier.level),
+        this.textValue(formatDateString(application.arrivalDate)),
+        this.createStatusTag(application.status),
+      ]
+    })
+  }
+
+  private textValue(value: string) {
+    return { text: value }
+  }
+
+  private htmlValue(value: string) {
+    return { html: value }
+  }
+
+  private createTierBadge(tier: string) {
+    const colour = { A: 'moj-badge--red', B: 'moj-badge--purple' }[tier[0]]
+
+    return this.htmlValue(`<span class="moj-badge ${colour}">${tier}</span>`)
+  }
+
+  private createNameAnchorElement(name: string, applicationId: string) {
+    return this.htmlValue(`<a href=${paths.applications.show({ id: applicationId })}>${name}</a>`)
+  }
+
+  private createStatusTag(value: string) {
+    const colour = {
+      'In progress': 'govuk-tag--blue',
+      Submitted: '',
+      'Information Requested': 'govuk-tag--yellow',
+      Rejected: 'govuk-tag--red',
+    }[value]
+
+    return this.htmlValue(`<strong class="govuk-tag ${colour}">${value}</strong>`)
   }
 }

@@ -18,6 +18,21 @@ describe('applicationsController', () => {
     applicationsController = new ApplicationsController(applicationService)
   })
 
+  describe('list', () => {
+    it('renders the list view', async () => {
+      applicationService.tableRows.mockResolvedValue([])
+      const requestHandler = applicationsController.index()
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('applications/list', {
+        pageHeading: 'Approved Premises applications',
+        applicationSummaries: [],
+      })
+      expect(applicationService.tableRows).toHaveBeenCalled()
+    })
+  })
+
   describe('new', () => {
     it('renders the start page', () => {
       const requestHandler = applicationsController.new()

@@ -12,6 +12,7 @@ declare module 'approved-premises' {
   export type Person = schemas['Person']
   export type PremisesCapacityItem = schemas['PremisesCapacityItem']
   export type PremisesCapacity = Array<PremisesCapacityItem>
+  export type ApplicationSummary = schemas['ApplicationSummary']
 
   export type NewBooking = Omit<Booking, 'id' | 'status' | 'arrival' | 'keyWorker'> & { keyWorkerId: string }
 
@@ -228,6 +229,19 @@ declare module 'approved-premises' {
     PremisesCapacityItem: {
       date: string
       availableBeds: number
+    }
+    RiskTier: {
+      level: string
+      lastUpdated: string
+    }
+    ApplicationSummary: {
+      id: string
+      person: Person
+      tier: schemas['RiskTier']
+      currentLocation: string
+      arrivalDate: string
+      daysSinceApplicationRecieved: number
+      status: 'In progress' | 'Submitted' | 'Information Requested' | 'Rejected'
     }
   }
 }

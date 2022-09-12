@@ -46,7 +46,8 @@ export default class ApplicationService {
     }
 
     const body = this.getBody(request, userInput)
-    const page = new Page(body)
+    const session = this.getAllSessionData(request)
+    const page = new Page(body, session)
 
     if (page.setup) {
       await page.setup(request, dataServices)
@@ -81,13 +82,17 @@ export default class ApplicationService {
     if (Object.keys(request.body).length) {
       return request.body
     }
-    return this.getSessionData(request)
+    return this.getSessionDataForPage(request)
   }
 
-  private getSessionData(request: Request) {
+  private getAllSessionData(request: Request) {
     const data = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
 
-    return data.application[request.params.id][request.params.task][request.params.page] || {}
+    return data.application[request.params.id] || {}
+  }
+
+  private getSessionDataForPage(request: Request) {
+    return this.getAllSessionData(request)[request.params.task][request.params.page] || {}
   }
 
   async tableRows(token: string): Promise<(TextItem | HtmlItem)[][]> {

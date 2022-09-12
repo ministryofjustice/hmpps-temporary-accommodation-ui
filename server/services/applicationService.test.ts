@@ -137,31 +137,31 @@ describe('ApplicationService', () => {
       request = createMock<Request>({ params: { id: 'some-uuid', task: 'my-task' } })
     })
 
-    it('should return the first page if the page is not defined', async () => {
+    it('should return the session and first page if the page is not defined', async () => {
       const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith(request.body)
+      expect(FirstPage).toHaveBeenCalledWith(request.body, { 'my-task': {} })
     })
 
-    it('should return a page from a page list', async () => {
+    it('should return the session and a page from a page list', async () => {
       request.params.page = 'second'
 
       const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(SecondPage)
 
-      expect(SecondPage).toHaveBeenCalledWith(request.body)
+      expect(SecondPage).toHaveBeenCalledWith(request.body, { 'my-task': {} })
     })
 
-    it('should initialize the page with the userInput if specified', async () => {
+    it('should initialize the page with the session and the userInput if specified', async () => {
       const userInput = { foo: 'bar' }
       const result = await service.getCurrentPage(request, dataServices, userInput)
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith(userInput)
+      expect(FirstPage).toHaveBeenCalledWith(userInput, { 'my-task': {} })
     })
 
     it('should load from the session if the body and userInput are blank', async () => {
@@ -172,7 +172,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' })
+      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' }, { 'my-task': { first: { foo: 'bar' } } })
     })
 
     it("should call a service's setup method if it exists", async () => {

@@ -1,10 +1,10 @@
-import premisesFactory from '../../server/testutils/factories/premises'
-import departureFactory from '../../server/testutils/factories/departure'
-import bookingFactory from '../../server/testutils/factories/booking'
-import referenceDataFactory from '../../server/testutils/factories/referenceData'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import departureFactory from '../../../server/testutils/factories/departure'
+import bookingFactory from '../../../server/testutils/factories/booking'
+import referenceDataFactory from '../../../server/testutils/factories/referenceData'
 
-import DepartureCreatePage from '../pages/departureCreate'
-import DepartureConfirmation from '../pages/departureConfirmation'
+import DepartureCreatePage from '../../pages/departureCreate'
+import DepartureConfirmation from '../../pages/departureConfirmation'
 
 context('Departures', () => {
   beforeEach(() => {

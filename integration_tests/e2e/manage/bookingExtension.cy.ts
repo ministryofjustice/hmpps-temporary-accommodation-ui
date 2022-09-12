@@ -1,8 +1,8 @@
-import premisesFactory from '../../server/testutils/factories/premises'
-import bookingFactory from '../../server/testutils/factories/booking'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import bookingFactory from '../../../server/testutils/factories/booking'
 
-import BookingExtensionsConfirmation from '../pages/booking/extension/confirmation'
-import BookingExtensionCreatePage from '../pages/booking/extension/create'
+import BookingExtensionsConfirmation from '../../pages/booking/extension/confirmation'
+import BookingExtensionCreatePage from '../../pages/booking/extension/create'
 
 context('BookingExtension', () => {
   beforeEach(() => {

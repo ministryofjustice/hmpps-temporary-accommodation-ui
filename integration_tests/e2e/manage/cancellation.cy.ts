@@ -1,9 +1,9 @@
-import premisesFactory from '../../server/testutils/factories/premises'
-import bookingFactory from '../../server/testutils/factories/booking'
-import cancellationFactory from '../../server/testutils/factories/cancellation'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import bookingFactory from '../../../server/testutils/factories/booking'
+import cancellationFactory from '../../../server/testutils/factories/cancellation'
 
-import CancellationCreatePage from '../pages/cancellationCreate'
-import CancellationConfirmPage from '../pages/cancellationConfirmation'
+import CancellationCreatePage from '../../pages/cancellationCreate'
+import CancellationConfirmPage from '../../pages/cancellationConfirmation'
 
 context('Cancellation', () => {
   beforeEach(() => {

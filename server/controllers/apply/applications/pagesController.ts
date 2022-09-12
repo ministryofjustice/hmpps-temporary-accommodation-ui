@@ -4,7 +4,11 @@ import createError from 'http-errors'
 import { ApplicationService } from '../../../services'
 import type { DataServices } from '../../../services/applicationService'
 
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  catchAPIErrorOrPropogate,
+  fetchErrorsAndUserInput,
+} from '../../../utils/validation'
 import paths from '../../../paths/apply'
 import { UnknownPageError } from '../../../utils/errors'
 
@@ -29,7 +33,7 @@ export default class ApplicationFormController {
         if (e instanceof UnknownPageError) {
           next(createError(404, 'Not found'))
         } else {
-          throw e
+          catchAPIErrorOrPropogate(req, res, e)
         }
       }
     }

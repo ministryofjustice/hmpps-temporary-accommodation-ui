@@ -7,7 +7,11 @@ import PagesController from './pagesController'
 import { ApplicationService } from '../../../services'
 import type { DataServices } from '../../../services/applicationService'
 
-import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../../utils/validation'
+import {
+  fetchErrorsAndUserInput,
+  catchValidationErrorOrPropogate,
+  catchAPIErrorOrPropogate,
+} from '../../../utils/validation'
 import { UnknownPageError } from '../../../utils/errors'
 import paths from '../../../paths/apply'
 
@@ -98,7 +102,7 @@ describe('pagesController', () => {
       expect(next).toHaveBeenCalledWith(createError(404, 'Not found'))
     })
 
-    it('throws an error when the error is not an unknown page error', async () => {
+    it('calls catchAPIErrorOrPropogate if the error is not an unknown page error', async () => {
       const genericError = new Error()
 
       applicationService.getCurrentPage.mockImplementation(() => {
@@ -107,7 +111,9 @@ describe('pagesController', () => {
 
       const requestHandler = pagesController.show()
 
-      expect(async () => requestHandler(request, response, next)).rejects.toThrow(genericError)
+      await requestHandler(request, response, next)
+
+      expect(catchAPIErrorOrPropogate).toHaveBeenCalledWith(request, response, genericError)
     })
   })
 

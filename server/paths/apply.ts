@@ -11,6 +11,7 @@ const paths = {
     new: applicationsPath.path('new'),
     create: applicationsPath,
     index: previousApplications,
+    show: applicationPath,
     pages: {
       show: pagesPath,
       update: pagesPath,

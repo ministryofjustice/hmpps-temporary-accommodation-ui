@@ -2,9 +2,9 @@ import parseISO from 'date-fns/parseISO'
 
 import type { Booking } from 'approved-premises'
 
-import Page from '../page'
-import { formatDate, formatDateString } from '../../../server/utils/utils'
-import paths from '../../../server/paths/manage'
+import Page from '../../page'
+import { formatDate, formatDateString } from '../../../../server/utils/utils'
+import paths from '../../../../server/paths/manage'
 
 type OvercapacityPeriod = {
   start: string

@@ -1,8 +1,7 @@
 import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingFactory from '../../../server/testutils/factories/booking'
 
-import BookingExtensionsConfirmation from '../../pages/booking/extension/confirmation'
-import BookingExtensionCreatePage from '../../pages/booking/extension/create'
+import { BookingExtensionConfirmationPage, BookingExtensionCreatePage } from '../../pages/manage'
 
 context('BookingExtension', () => {
   beforeEach(() => {
@@ -33,7 +32,7 @@ context('BookingExtension', () => {
     page.clickSubmit()
 
     // Then I should be redirected to the confirmation page
-    const bookingConfirmationPage = new BookingExtensionsConfirmation()
+    const bookingConfirmationPage = new BookingExtensionConfirmationPage()
     bookingConfirmationPage.verifyBookingIsVisible(booking)
 
     // And the extension should be created in the API

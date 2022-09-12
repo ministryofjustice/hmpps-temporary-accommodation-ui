@@ -1,7 +1,7 @@
 import type { LostBed } from 'approved-premises'
-import paths from '../../server/paths/manage'
+import paths from '../../../server/paths/manage'
 
-import Page from './page'
+import Page from '../page'
 
 export default class LostBedCreatePage extends Page {
   constructor() {

@@ -1,8 +1,8 @@
 import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingsFactory from '../../../server/testutils/factories/booking'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
-import PremisesListPage from '../../pages/premisesList'
-import PremisesShowPage from '../../pages/premisesShow'
+
+import { PremisesListPage, PremisesShowPage } from '../../pages/manage'
 
 context('Premises', () => {
   beforeEach(() => {

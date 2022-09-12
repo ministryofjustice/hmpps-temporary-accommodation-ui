@@ -3,11 +3,10 @@ import bookingFactory from '../../../server/testutils/factories/booking'
 import keyWorkerFactory from '../../../server/testutils/factories/keyWorker'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
-import BookingFindPage from '../../pages/booking/find'
-import BookingNewPage from '../../pages/booking/new'
-import BookingShowPage from '../../pages/booking/show'
+import { BookingFindPage, BookingNewPage, BookingShowPage } from '../../pages/manage'
 import Page from '../../pages/page'
-import BookingConfirmation from '../../pages/booking/confirmation'
+
+import BookingConfirmation from '../../pages/manage/booking/confirmation'
 import personFactory from '../../../server/testutils/factories/person'
 
 context('Booking', () => {

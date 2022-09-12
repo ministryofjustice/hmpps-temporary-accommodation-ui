@@ -1,6 +1,6 @@
 import type { Cancellation } from 'approved-premises'
-import Page from './page'
-import paths from '../../server/paths/manage'
+import Page from '../page'
+import paths from '../../../server/paths/manage'
 
 export default class CancellationCreatePage extends Page {
   constructor() {

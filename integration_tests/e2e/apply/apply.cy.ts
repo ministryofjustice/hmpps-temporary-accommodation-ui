@@ -30,4 +30,25 @@ context('Apply', () => {
     const confirmDetailsPage = new ConfirmDetailsPage(person)
     confirmDetailsPage.verifyPersonIsVisible()
   })
+
+  it('shows an error message if the person is not found', () => {
+    // Given I am logged in
+    cy.signIn()
+
+    // And the person I am about to search for is not in Delius
+    const person = personFactory.build()
+    cy.task('stubPersonNotFound', { person })
+
+    // And I have started an application
+    const startPage = StartPage.visit()
+    startPage.startApplication()
+
+    // When I enter a CRN
+    const crnPage = new EnterCRNPage()
+    crnPage.enterCrn(person.crn)
+    crnPage.clickSubmit()
+
+    // Then I should see an error message
+    crnPage.shouldShowErrorMessage(person)
+  })
 })

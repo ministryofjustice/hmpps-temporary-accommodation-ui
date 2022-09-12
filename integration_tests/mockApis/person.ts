@@ -20,6 +20,17 @@ export default {
     }),
   stubFindPersonErrors: (args: { params: Array<string> }): SuperAgentRequest =>
     stubFor(errorStub(args.params, '/people/search')),
+  stubPersonNotFound: (args: { person: Person }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: '/people/search',
+        bodyPatterns: [{ matchesJsonPath: `$.[?(@.crn === ${args.person.crn})]` }],
+      },
+      response: {
+        status: 404,
+      },
+    }),
   verifyFindPerson: async () =>
     (
       await getMatchingRequests({

@@ -48,6 +48,11 @@
         "functions": 100
       }
     },
+    "globals": {
+      "ts-jest": {
+        "isolatedModules": true
+      }
+    },
     "testMatch": [
       "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}",
       "<rootDir>/wiremock/?(*.)(cy|test).{ts,js,jsx,mjs}"

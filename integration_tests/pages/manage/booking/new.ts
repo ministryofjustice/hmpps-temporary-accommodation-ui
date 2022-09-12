@@ -1,6 +1,6 @@
 import type { Booking, Person } from 'approved-premises'
-import Page, { PageElement } from '../page'
-import paths from '../../../server/paths/manage'
+import Page, { PageElement } from '../../page'
+import paths from '../../../../server/paths/manage'
 
 export default class BookingNewPage extends Page {
   constructor() {

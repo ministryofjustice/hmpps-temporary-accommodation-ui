@@ -1,8 +1,8 @@
 import parseISO from 'date-fns/parseISO'
 import type { Booking } from 'approved-premises'
-import { formatDate } from '../../../../server/utils/utils'
-import Page from '../../page'
-import paths from '../../../../server/paths/manage'
+import { formatDate } from '../../../../../server/utils/utils'
+import Page from '../../../page'
+import paths from '../../../../../server/paths/manage'
 
 export default class BookingExtensionConfirmationPage extends Page {
   constructor() {

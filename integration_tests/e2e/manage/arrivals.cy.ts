@@ -1,10 +1,9 @@
-import premisesFactory from '../../server/testutils/factories/premises'
-import arrivalFactory from '../../server/testutils/factories/arrival'
-import nonArrivalFactory from '../../server/testutils/factories/nonArrival'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import arrivalFactory from '../../../server/testutils/factories/arrival'
+import nonArrivalFactory from '../../../server/testutils/factories/nonArrival'
 
-import ArrivalCreatePage from '../pages/arrivalCreate'
-import PremisesShowPage from '../pages/premisesShow'
-import premisesCapacityItemFactory from '../../server/testutils/factories/premisesCapacityItem'
+import { ArrivalCreatePage, PremisesShowPage } from '../../pages/manage'
+import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
 context('Arrivals', () => {
   beforeEach(() => {

@@ -4,8 +4,14 @@ import createError from 'http-errors'
 
 import type { TasklistPage, ErrorsAndUserInput } from 'approved-premises'
 import PagesController from './pagesController'
-import ApplicationService from '../../../services/applicationService'
-import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../../utils/validation'
+import { ApplicationService } from '../../../services'
+import type { DataServices } from '../../../services/applicationService'
+
+import {
+  fetchErrorsAndUserInput,
+  catchValidationErrorOrPropogate,
+  catchAPIErrorOrPropogate,
+} from '../../../utils/validation'
 import { UnknownPageError } from '../../../utils/errors'
 import paths from '../../../paths/apply'
 
@@ -17,11 +23,12 @@ describe('pagesController', () => {
   const next: DeepMocked<NextFunction> = jest.fn()
 
   const applicationService = createMock<ApplicationService>({})
+  const dataServices = createMock<DataServices>({}) as DataServices
 
   let pagesController: PagesController
 
   beforeEach(() => {
-    pagesController = new PagesController(applicationService)
+    pagesController = new PagesController(applicationService, dataServices)
   })
 
   describe('show', () => {
@@ -35,7 +42,7 @@ describe('pagesController', () => {
         task: 'some-task',
       }
 
-      applicationService.getCurrentPage.mockReturnValue(page)
+      applicationService.getCurrentPage.mockResolvedValue(page)
     })
 
     it('renders a page', async () => {
@@ -45,9 +52,9 @@ describe('pagesController', () => {
 
       const requestHandler = pagesController.show()
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
-      expect(applicationService.getCurrentPage).toHaveBeenCalledWith(request, {})
+      expect(applicationService.getCurrentPage).toHaveBeenCalledWith(request, dataServices, {})
 
       expect(response.render).toHaveBeenCalledWith(`applications/pages/${request.params.task}/${page.name}`, {
         applicationId: request.params.id,
@@ -59,15 +66,19 @@ describe('pagesController', () => {
       })
     })
 
-    it('shows errors and user input when returning from an error state', () => {
+    it('shows errors and user input when returning from an error state', async () => {
       const errorsAndUserInput = createMock<ErrorsAndUserInput>()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
       const requestHandler = pagesController.show()
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
-      expect(applicationService.getCurrentPage).toHaveBeenCalledWith(request, errorsAndUserInput.userInput)
+      expect(applicationService.getCurrentPage).toHaveBeenCalledWith(
+        request,
+        dataServices,
+        errorsAndUserInput.userInput,
+      )
 
       expect(response.render).toHaveBeenCalledWith(`applications/pages/${request.params.task}/${page.name}`, {
         applicationId: request.params.id,
@@ -79,19 +90,19 @@ describe('pagesController', () => {
       })
     })
 
-    it('returns a 404 when the page cannot be found', () => {
+    it('returns a 404 when the page cannot be found', async () => {
       applicationService.getCurrentPage.mockImplementation(() => {
         throw new UnknownPageError()
       })
 
       const requestHandler = pagesController.show()
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       expect(next).toHaveBeenCalledWith(createError(404, 'Not found'))
     })
 
-    it('throws an error when the error is not an unknown page error', () => {
+    it('calls catchAPIErrorOrPropogate if the error is not an unknown page error', async () => {
       const genericError = new Error()
 
       applicationService.getCurrentPage.mockImplementation(() => {
@@ -100,7 +111,9 @@ describe('pagesController', () => {
 
       const requestHandler = pagesController.show()
 
-      expect(() => requestHandler(request, response, next)).toThrow(genericError)
+      await requestHandler(request, response, next)
+
+      expect(catchAPIErrorOrPropogate).toHaveBeenCalledWith(request, response, genericError)
     })
   })
 
@@ -115,17 +128,17 @@ describe('pagesController', () => {
         task: 'some-task',
       }
 
-      applicationService.getCurrentPage.mockReturnValue(page)
+      applicationService.getCurrentPage.mockResolvedValue(page)
     })
 
-    it('updates an application and redirects to the next page', () => {
+    it('updates an application and redirects to the next page', async () => {
       page.next.mockReturnValue('next-page')
 
       applicationService.save.mockReturnValue()
 
       const requestHandler = pagesController.update()
 
-      requestHandler(request, response)
+      await requestHandler(request, response)
 
       expect(applicationService.save).toHaveBeenCalledWith(page, request)
 
@@ -134,7 +147,7 @@ describe('pagesController', () => {
       )
     })
 
-    it('sets a flash and redirects if there are errors', () => {
+    it('sets a flash and redirects if there are errors', async () => {
       const err = new Error()
       applicationService.save.mockImplementation(() => {
         throw err
@@ -142,7 +155,7 @@ describe('pagesController', () => {
 
       const requestHandler = pagesController.update()
 
-      requestHandler(request, response)
+      await requestHandler(request, response)
 
       expect(applicationService.save).toHaveBeenCalledWith(page, request)
 

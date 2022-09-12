@@ -1,4 +1,4 @@
-import PremisesListPage from '../pages/premisesList'
+import { PremisesListPage } from '../pages/manage'
 import AuthSignInPage from '../pages/authSignIn'
 import Page from '../pages/page'
 import AuthManageDetailsPage from '../pages/authManageDetails'

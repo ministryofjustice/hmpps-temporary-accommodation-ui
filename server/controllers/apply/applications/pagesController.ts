@@ -1,19 +1,25 @@
 import type { Request, Response, RequestHandler, NextFunction } from 'express'
 import createError from 'http-errors'
 
-import ApplicationService from '../../../services/applicationService'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { ApplicationService } from '../../../services'
+import type { DataServices } from '../../../services/applicationService'
+
+import {
+  catchValidationErrorOrPropogate,
+  catchAPIErrorOrPropogate,
+  fetchErrorsAndUserInput,
+} from '../../../utils/validation'
 import paths from '../../../paths/apply'
 import { UnknownPageError } from '../../../utils/errors'
 
 export default class ApplicationFormController {
-  constructor(private readonly applicationService: ApplicationService) {}
+  constructor(private readonly applicationService: ApplicationService, private readonly dataServices: DataServices) {}
 
   show(): RequestHandler {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
-        const page = this.applicationService.getCurrentPage(req, userInput)
+        const page = await this.applicationService.getCurrentPage(req, this.dataServices, userInput)
 
         res.render(`applications/pages/${req.params.task}/${page.name}`, {
           applicationId: req.params.id,
@@ -27,15 +33,15 @@ export default class ApplicationFormController {
         if (e instanceof UnknownPageError) {
           next(createError(404, 'Not found'))
         } else {
-          throw e
+          catchAPIErrorOrPropogate(req, res, e)
         }
       }
     }
   }
 
   update() {
-    return (req: Request, res: Response) => {
-      const page = this.applicationService.getCurrentPage(req)
+    return async (req: Request, res: Response) => {
+      const page = await this.applicationService.getCurrentPage(req, this.dataServices)
 
       try {
         this.applicationService.save(page, req)

@@ -2,9 +2,9 @@ import { parseISO } from 'date-fns'
 
 import type { Premises, Booking } from 'approved-premises'
 
-import Page from './page'
-import { formatDateString, formatDate } from '../../server/utils/utils'
-import paths from '../../server/paths/manage'
+import Page from '../page'
+import { formatDateString, formatDate } from '../../../server/utils/utils'
+import paths from '../../../server/paths/manage'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {

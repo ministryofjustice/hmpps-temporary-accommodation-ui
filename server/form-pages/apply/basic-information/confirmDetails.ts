@@ -1,9 +1,31 @@
-import type { TasklistPage } from 'approved-premises'
+import type { Request } from 'express'
+import type { TasklistPage, Person } from 'approved-premises'
+
+import type { DataServices } from '../../../services/applicationService'
+import { TasklistAPIError } from '../../../utils/errors'
 
 export default class ConfirmDetails implements TasklistPage {
   name = 'confirm-details'
 
-  title = `Confirm ${this.details().names}'s details`
+  title: string
+
+  details: Person
+
+  async setup(request: Request, dataServices: DataServices): Promise<void> {
+    const { personService } = dataServices
+    const { crn } = request.session.application[request.params.id]['basic-information']['enter-crn']
+
+    try {
+      this.details = await personService.findByCrn(request.user.token, crn)
+      this.title = `Confirm ${this.details.name}'s details`
+    } catch (err) {
+      if ('status' in err && err.status === 404) {
+        throw new TasklistAPIError(`No person with an CRN of '${crn}' was found`, 'crn')
+      } else {
+        throw err
+      }
+    }
+  }
 
   next() {
     return 'sentence-type'
@@ -11,18 +33,5 @@ export default class ConfirmDetails implements TasklistPage {
 
   previous() {
     return 'enter-crn'
-  }
-
-  // TODO: This should be populated in the CRN step and returned from the session,
-  // once we have session handling in place.
-  details() {
-    return {
-      names: 'Robert Brown',
-      crn: 'DO16821',
-      dateOfBirth: '03/10/1991',
-      sex: 'Male',
-      nationality: 'British',
-      religion: 'Christian',
-    }
   }
 }

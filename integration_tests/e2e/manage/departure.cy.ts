@@ -1,10 +1,9 @@
-import premisesFactory from '../../server/testutils/factories/premises'
-import departureFactory from '../../server/testutils/factories/departure'
-import bookingFactory from '../../server/testutils/factories/booking'
-import referenceDataFactory from '../../server/testutils/factories/referenceData'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import departureFactory from '../../../server/testutils/factories/departure'
+import bookingFactory from '../../../server/testutils/factories/booking'
+import referenceDataFactory from '../../../server/testutils/factories/referenceData'
 
-import DepartureCreatePage from '../pages/departureCreate'
-import DepartureConfirmation from '../pages/departureConfirmation'
+import { DepartureCreatePage, DepartureConfirmationPage } from '../../pages/manage'
 
 context('Departures', () => {
   beforeEach(() => {
@@ -58,7 +57,11 @@ context('Departures', () => {
     })
 
     // And I should be redirected to the confirmation page
-    const departureConfirmationPage = DepartureConfirmation.verifyOnPage(DepartureConfirmation, departure, booking)
+    const departureConfirmationPage = DepartureConfirmationPage.verifyOnPage(
+      DepartureConfirmationPage,
+      departure,
+      booking,
+    )
 
     departureConfirmationPage.verifyConfirmedDepartureIsVisible(departure, booking)
   })

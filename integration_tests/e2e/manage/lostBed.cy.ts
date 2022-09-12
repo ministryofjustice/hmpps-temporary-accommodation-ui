@@ -1,8 +1,9 @@
-import premisesFactory from '../../server/testutils/factories/premises'
-import lostBedFactory from '../../server/testutils/factories/lostBed'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import lostBedFactory from '../../../server/testutils/factories/lostBed'
 
-import LostBedCreatePage from '../pages/lostBedCreate'
-import premisesCapacityItemFactory from '../../server/testutils/factories/premisesCapacityItem'
+import { LostBedCreatePage } from '../../pages/manage'
+
+import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
 context('LostBed', () => {
   beforeEach(() => {

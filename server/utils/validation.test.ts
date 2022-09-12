@@ -3,9 +3,9 @@ import { createMock } from '@golevelup/ts-jest'
 
 import type { ErrorMessages, ErrorSummary } from 'approved-premises'
 import { SanitisedError } from '../sanitisedError'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from './validation'
+import { catchValidationErrorOrPropogate, catchAPIErrorOrPropogate, fetchErrorsAndUserInput } from './validation'
 import errorLookups from '../i18n/en/errors.json'
-import { ValidationError } from './errors'
+import { ValidationError, TasklistAPIError } from './errors'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {
@@ -92,6 +92,29 @@ describe('catchValidationErrorOrPropogate', () => {
   it('throws the error if the error is not the type we expect', () => {
     const err = new Error()
     expect(() => catchValidationErrorOrPropogate(request, response, err, 'some/url')).toThrowError(err)
+  })
+})
+
+describe('catchAPIErrorOrPropogate', () => {
+  const request = createMock<Request>({ headers: { referer: 'foo/bar' } })
+  const response = createMock<Response>()
+
+  it('populates the error and redirects to the previous page if the API finds an error', () => {
+    const error = new TasklistAPIError('some message', 'field')
+
+    catchAPIErrorOrPropogate(request, response, error)
+
+    expect(request.flash).toHaveBeenCalledWith('errors', {
+      crn: { text: error.message, attributes: { 'data-cy-error-field': true } },
+    })
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', [
+      {
+        text: error.message,
+        href: `#${error.field}`,
+      },
+    ])
+
+    expect(response.redirect).toHaveBeenCalledWith(request.headers.referer)
   })
 })
 

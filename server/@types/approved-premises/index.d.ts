@@ -110,13 +110,15 @@ declare module 'approved-premises' {
     [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
   }
 
-  export interface ErrorMessages {
-    [K: string]: {
-      text: string
-      attributes: {
-        [K: string]: boolean
-      }
+  export interface ErrorMessage {
+    text: string
+    attributes: {
+      [K: string]: boolean
     }
+  }
+
+  export interface ErrorMessages {
+    [K: string]: ErrorMessage
   }
 
   export interface ErrorSummary {

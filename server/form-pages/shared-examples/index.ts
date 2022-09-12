@@ -1,4 +1,4 @@
-import type { TasklistPage } from 'approved-premises'
+import type TasklistPage from '../tasklistPage'
 
 const itShouldHaveNextValue = (target: TasklistPage, value: string) => {
   describe('next', () => {

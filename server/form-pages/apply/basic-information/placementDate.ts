@@ -1,4 +1,6 @@
-import type { TasklistPage, ObjectWithDateParts, YesOrNo } from 'approved-premises'
+import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
+
+import TasklistPage from '../../tasklistPage'
 import { dateAndTimeInputsAreValidDates } from '../../../utils/utils'
 
 export default class PlacementDate implements TasklistPage {

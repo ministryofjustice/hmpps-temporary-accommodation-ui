@@ -1,4 +1,4 @@
-import type { TasklistPage } from 'approved-premises'
+import TasklistPage from '../../tasklistPage'
 
 export enum SentenceTypes {
   standardDeterminate = 'Standard determinate custody',

@@ -1,4 +1,4 @@
-import type { TasklistPage } from 'approved-premises'
+import TasklistPage from '../../tasklistPage'
 
 export default class EnterCRN implements TasklistPage {
   name = 'enter-crn'

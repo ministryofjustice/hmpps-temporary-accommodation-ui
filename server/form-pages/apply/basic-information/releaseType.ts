@@ -1,4 +1,4 @@
-import type { TasklistPage } from 'approved-premises'
+import TasklistPage from '../../tasklistPage'
 
 // TODO: The options that appear will depend on the response to the previous question.
 // For now we'll return all options

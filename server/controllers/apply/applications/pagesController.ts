@@ -12,10 +12,10 @@ export default class ApplicationFormController {
   constructor(private readonly applicationService: ApplicationService, private readonly dataServices: DataServices) {}
 
   show(): RequestHandler {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
-        const page = this.applicationService.getCurrentPage(req, userInput)
+        const page = await this.applicationService.getCurrentPage(req, this.dataServices, userInput)
 
         res.render(`applications/pages/${req.params.task}/${page.name}`, {
           applicationId: req.params.id,
@@ -36,8 +36,8 @@ export default class ApplicationFormController {
   }
 
   update() {
-    return (req: Request, res: Response) => {
-      const page = this.applicationService.getCurrentPage(req)
+    return async (req: Request, res: Response) => {
+      const page = await this.applicationService.getCurrentPage(req, this.dataServices)
 
       try {
         this.applicationService.save(page, req)

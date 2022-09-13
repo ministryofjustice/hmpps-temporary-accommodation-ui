@@ -40,8 +40,4 @@ export default class DepartureCreatePage extends Page {
     cy.get('textarea[name="departure[notes]"]').type(departure.notes)
     this.clickSubmit()
   }
-
-  clickSubmit() {
-    cy.get('button').click()
-  }
 }

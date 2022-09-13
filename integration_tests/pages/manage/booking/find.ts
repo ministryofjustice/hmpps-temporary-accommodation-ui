@@ -16,10 +16,6 @@ export default class BookingFindPage extends Page {
     this.getTextInputByIdAndEnterDetails('crn', crn)
   }
 
-  clickSubmit(): void {
-    cy.get('button').click()
-  }
-
   completeForm(crn: string): void {
     this.enterCrn(crn)
     this.clickSubmit()

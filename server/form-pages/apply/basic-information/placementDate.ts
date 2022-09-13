@@ -1,24 +1,32 @@
 import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateAndTimeInputsAreValidDates } from '../../../utils/utils'
+import {
+  dateAndTimeInputsAreValidDates,
+  formatDateString,
+  retrieveQuestionResponseFromSession,
+} from '../../../utils/utils'
 
 export default class PlacementDate implements TasklistPage {
   name = 'placement-date'
 
-  title = 'Is [release-date] the date you want the placement to start?'
+  title: string
 
   body: ObjectWithDateParts<'startDate'> & {
     startDateSameAsReleaseDate: YesOrNo
   }
 
-  constructor(body: Record<string, unknown>) {
+  constructor(body: Record<string, unknown>, session: Record<string, unknown>) {
     this.body = {
       'startDate-year': body['startDate-year'] as string,
       'startDate-month': body['startDate-month'] as string,
       'startDate-day': body['startDate-day'] as string,
       startDateSameAsReleaseDate: body.startDateSameAsReleaseDate as YesOrNo,
     }
+
+    const formattedReleaseDate = formatDateString(retrieveQuestionResponseFromSession(session, 'releaseDate'))
+
+    this.title = `Is ${formattedReleaseDate} the date you want the placement to start?`
   }
 
   next() {

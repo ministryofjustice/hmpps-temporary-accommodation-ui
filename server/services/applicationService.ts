@@ -1,7 +1,8 @@
 import type { Request } from 'express'
 import type { Session, SessionData } from 'express-session'
-import type { HtmlItem, TasklistPage, TextItem } from 'approved-premises'
+import type { HtmlItem, TextItem } from 'approved-premises'
 
+import type TasklistPage from '../form-pages/tasklistPage'
 import type { RestClientBuilder, ApplicationClient } from '../data'
 import { UnknownPageError, ValidationError } from '../utils/errors'
 import type { PersonService } from './index'

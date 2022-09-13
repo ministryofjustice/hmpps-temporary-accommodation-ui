@@ -133,16 +133,6 @@ declare module 'approved-premises' {
     userInput: Record<string, unknown>
   }
 
-  export interface TasklistPage {
-    name: string
-    title: string
-
-    body?: Record<string, unknown>
-    previous?(): string
-    next?(): string
-    errors?(): TaskListErrors
-  }
-
   export type TaskListErrors = Array<{ propertyName: string; errorType: string }>
 
   export type YesOrNo = 'yes' | 'no'

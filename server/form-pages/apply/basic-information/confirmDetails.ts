@@ -1,5 +1,6 @@
 import type { Request } from 'express'
-import type { TasklistPage, Person } from 'approved-premises'
+import type { Person } from 'approved-premises'
+import TasklistPage from '../../tasklistPage'
 
 import type { DataServices } from '../../../services/applicationService'
 import { TasklistAPIError } from '../../../utils/errors'

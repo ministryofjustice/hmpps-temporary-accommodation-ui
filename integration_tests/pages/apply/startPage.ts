@@ -8,7 +8,7 @@ export default class StartPage extends Page {
   }
 
   static visit(): StartPage {
-    cy.visit(paths.applications.new({}))
+    cy.visit(paths.applications.start({}))
     return new StartPage()
   }
 

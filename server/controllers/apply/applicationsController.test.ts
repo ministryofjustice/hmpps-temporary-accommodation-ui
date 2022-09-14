@@ -33,9 +33,9 @@ describe('applicationsController', () => {
     })
   })
 
-  describe('new', () => {
+  describe('start', () => {
     it('renders the start page', () => {
-      const requestHandler = applicationsController.new()
+      const requestHandler = applicationsController.start()
 
       requestHandler(request, response, next)
 

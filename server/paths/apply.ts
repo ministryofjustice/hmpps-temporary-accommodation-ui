@@ -9,6 +9,7 @@ const pagesPath = applicationPath.path('tasks/:task/pages/:page')
 const paths = {
   applications: {
     new: applicationsPath.path('new'),
+    start: applicationsPath.path('start'),
     create: applicationsPath,
     index: previousApplications,
     show: applicationPath,

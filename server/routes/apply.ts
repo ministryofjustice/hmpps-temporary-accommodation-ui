@@ -11,6 +11,7 @@ export default function routes(controllers: Controllers, router: Router): Router
   const { get, post, put } = actions(router)
   const { applicationsController, pagesController } = controllers
 
+  get(paths.applications.start.pattern, applicationsController.start())
   get(paths.applications.new.pattern, applicationsController.new())
   post(paths.applications.create.pattern, applicationsController.create())
   get(paths.applications.index.pattern, applicationsController.index())

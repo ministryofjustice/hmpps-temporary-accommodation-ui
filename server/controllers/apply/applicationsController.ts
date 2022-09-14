@@ -13,9 +13,13 @@ export default class ApplicationsController {
     }
   }
 
-  new(): RequestHandler {
+  start(): RequestHandler {
     return (_req: Request, res: Response) => {
-      res.render('applications/new', { pageHeading: 'Apply for an Approved Premises (AP) placement' })
+      res.render('applications/start', {
+        pageHeading: 'Apply for an Approved Premises (AP) placement',
+      })
+    }
+  }
     }
   }
 

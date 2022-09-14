@@ -221,6 +221,10 @@ declare module 'approved-premises' {
     Person: {
       crn: string
       name: string
+      dateOfBirth: string
+      sex: string
+      nationality: string
+      religion: string
     }
     PremisesCapacityItem: {
       date: string

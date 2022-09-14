@@ -2,7 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% extends "../../../partials/layout.njk" %}
+{% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - " + page.title %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -10,13 +10,19 @@
 {% block content %}
   {{ govukBackLink({
     text: "Back",
-    href: paths.applications.pages.show({ id: applicationId, task: task, page: page.previous() })
+    href: paths.applications.new()
   }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task, page: page.name }) }}?_method=PUT" method="post">
+      <form action="{{ paths.applications.create() }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        <input type="hidden" name="name" value="{{ name }}"/>
+        <input type="hidden" name="crn" value="{{ crn }}"/>
+        <input type="hidden" name="dateOfBirth" value="{{ dateOfBirth }}"/>
+        <input type="hidden" name="sex" value="{{ sex }}"/>
+        <input type="hidden" name="nationality" value="{{ nationality }}"/>
+        <input type="hidden" name="religion" value="{{ religion }}"/>
 
         <h1>{{ page.title }}</h1>
 
@@ -27,7 +33,7 @@
                 text: "Names"
               },
               value: {
-                text: page.details.name
+                text: name
               }
             },
             {
@@ -35,7 +41,7 @@
                 text: "CRN"
               },
               value: {
-                text: page.details.crn
+                text: crn
               }
             },
             {
@@ -43,7 +49,7 @@
                 text: "Date of Birth"
               },
               value: {
-                html: page.details.dateOfBirth
+                html: dateOfBirth
               }
             },
             {
@@ -51,7 +57,7 @@
                 text: "Sex"
               },
               value: {
-                html: page.details.sex
+                html: sex
               }
             },
             {
@@ -59,7 +65,7 @@
                 text: "Nationality"
               },
               value: {
-                html: page.details.nationality
+                html: nationality
               }
             },
             {
@@ -67,7 +73,7 @@
                 text: "Religion"
               },
               value: {
-                html: page.details.religion
+                html: religion
               }
             }
           ]

@@ -32,7 +32,7 @@ describe('LostBedClient', () => {
       const newLostBed = newLostBedFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/lostBeds`, newLostBed)
+        .post(`/premises/premisesId/lost-beds`, newLostBed)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, lostBed)
 

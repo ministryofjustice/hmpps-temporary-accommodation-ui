@@ -6,6 +6,9 @@ export default {
     show: managePaths.premises.show,
     index: managePaths.premises.index,
     capacity: managePaths.premises.show.path('capacity'),
+    lostBeds: {
+      create: managePaths.lostBeds.create,
+    },
   },
   applications: {
     index: applyPaths.applications.index,

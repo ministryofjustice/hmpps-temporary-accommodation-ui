@@ -11,7 +11,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/lostBeds`,
+        url: `/premises/${args.premisesId}/lost-beds`,
       },
       response: {
         status: 201,
@@ -21,7 +21,7 @@ export default {
     }),
 
   stubLostBedErrors: (args: { premisesId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/lostBeds`, ['notes', 'reason'])),
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/lost-beds`, ['notes', 'reason'])),
 
   stubLostBedReferenceData: (): Promise<Response> => stubFor(lostBedReasons),
 
@@ -29,7 +29,7 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: `/premises/${args.premisesId}/lostBeds`,
+        url: `/premises/${args.premisesId}/lost-beds`,
       })
     ).body.requests,
 }

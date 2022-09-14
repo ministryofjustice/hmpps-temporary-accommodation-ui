@@ -10,9 +10,8 @@ export default class PersonClient {
   }
 
   async search(crn: string): Promise<Person> {
-    const response = await this.restClient.post({
-      path: `/people/search`,
-      data: { crn },
+    const response = await this.restClient.get({
+      path: `/people/search?crn=${crn}`,
     })
 
     return response as Person

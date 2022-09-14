@@ -77,13 +77,8 @@ context('Booking', () => {
     const bookingCreatePage = new BookingNewPage()
     bookingCreatePage.verifyPersonIsVisible(person)
 
-    cy.task('verifyFindPerson').then(requests => {
+    cy.task('verifyFindPerson', { person }).then(requests => {
       expect(requests).to.have.length(2)
-
-      const firstRequestBody = JSON.parse(requests[0].body)
-      const secondRequestBody = JSON.parse(requests[0].body)
-      expect(firstRequestBody.crn).equal(person.crn)
-      expect(secondRequestBody.crn).equal(person.crn)
     })
 
     // Given I have entered a CRN and the person has been found
@@ -125,9 +120,8 @@ context('Booking', () => {
     const page = BookingFindPage.visit(premises.id)
 
     // And I miss a required field
-    cy.task('stubFindPersonErrors', {
-      premisesId: premises.id,
-      params: ['crn'],
+    cy.task('stubPersonNotFound', {
+      person,
     })
     page.clickSubmit()
 

@@ -1,16 +1,20 @@
 import personFactory from '../server/testutils/factories/person'
-import { errorStub } from './utils'
 
 const personStubs: Array<Record<string, unknown>> = []
 
 personStubs.push({
   priority: 99,
   request: {
-    method: 'POST',
-    urlPathPattern: `/people/search`,
+    method: 'GET',
+    urlPathPattern: '/people/search',
+    queryParameters: {
+      crn: {
+        matches: '.+',
+      },
+    },
   },
   response: {
-    status: 201,
+    status: 200,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
@@ -18,6 +22,19 @@ personStubs.push({
   },
 })
 
-personStubs.push(errorStub(['crn'], `people/search`))
+personStubs.push({
+  request: {
+    method: 'GET',
+    urlPathPattern: '/people/search',
+    queryParameters: {
+      crn: {
+        equalTo: 'NOT_FOUND',
+      },
+    },
+  },
+  response: {
+    status: 404,
+  },
+})
 
 export default personStubs

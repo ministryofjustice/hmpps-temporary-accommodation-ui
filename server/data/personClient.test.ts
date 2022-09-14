@@ -30,7 +30,7 @@ describe('PersonClient', () => {
       const person = personFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/people/search`, { crn: 'crn' })
+        .get(`/people/search?crn=crn`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, person)
 

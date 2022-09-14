@@ -10,6 +10,7 @@ const paths = {
   applications: {
     new: applicationsPath.path('new'),
     start: applicationsPath.path('start'),
+    people: applicationsPath.path('people').path('find'),
     create: applicationsPath,
     index: previousApplications,
     show: applicationPath,

@@ -1,9 +1,12 @@
 import type { Request, Response, RequestHandler } from 'express'
 import ApplicationService from '../../services/applicationService'
+import { PersonService } from '../../services'
+import { fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/apply'
+import { formatDateString } from '../../utils/utils'
 
 export default class ApplicationsController {
-  constructor(private readonly applicationService: ApplicationService) {}
+  constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -20,6 +23,32 @@ export default class ApplicationsController {
       })
     }
   }
+
+  new(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const crnArr = req.flash('crn')
+
+      if (crnArr.length) {
+        const person = await this.personService.findByCrn(req.user.token, crnArr[0])
+
+        return res.render(`applications/confirm`, {
+          pageHeading: `Confirm ${person.name}'s details`,
+          ...person,
+          dateOfBirth: formatDateString(person.dateOfBirth),
+          errors,
+          errorSummary,
+          ...userInput,
+        })
+      }
+
+      return res.render('applications/new', {
+        pageHeading: "Enter the individual's CRN",
+        errors,
+        errorSummary,
+        ...userInput,
+      })
     }
   }
 

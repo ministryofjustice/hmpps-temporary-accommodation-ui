@@ -4,7 +4,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + page.title %}
+{% set pageTitle = applicationName + " - " + pageHeading %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -16,6 +16,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.applications.create() }}" method="post">
+
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         <input type="hidden" name="name" value="{{ name }}"/>
         <input type="hidden" name="crn" value="{{ crn }}"/>
@@ -24,7 +25,7 @@
         <input type="hidden" name="nationality" value="{{ nationality }}"/>
         <input type="hidden" name="religion" value="{{ religion }}"/>
 
-        <h1>{{ page.title }}</h1>
+        <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
 
         {{ govukSummaryList({
           rows: [

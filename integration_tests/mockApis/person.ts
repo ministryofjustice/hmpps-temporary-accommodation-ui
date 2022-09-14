@@ -9,8 +9,8 @@ export default {
   stubFindPerson: (args: { person: Person }): SuperAgentRequest =>
     stubFor({
       request: {
-        method: 'POST',
-        url: '/people/search',
+        method: 'GET',
+        url: `/people/search?crn=${args.person.crn}`,
       },
       response: {
         status: 201,

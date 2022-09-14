@@ -3,6 +3,7 @@ import personFactory from '../server/testutils/factories/person'
 const personStubs: Array<Record<string, unknown>> = []
 
 personStubs.push({
+  priority: 99,
   request: {
     method: 'GET',
     urlPathPattern: '/people/search',
@@ -18,6 +19,21 @@ personStubs.push({
       'Content-Type': 'application/json;charset=UTF-8',
     },
     jsonBody: personFactory.build(),
+  },
+})
+
+personStubs.push({
+  request: {
+    method: 'GET',
+    urlPathPattern: '/people/search',
+    queryParameters: {
+      crn: {
+        equalTo: 'NOT_FOUND',
+      },
+    },
+  },
+  response: {
+    status: 404,
   },
 })
 

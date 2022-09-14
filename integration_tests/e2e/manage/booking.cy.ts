@@ -120,9 +120,8 @@ context('Booking', () => {
     const page = BookingFindPage.visit(premises.id)
 
     // And I miss a required field
-    cy.task('stubFindPersonErrors', {
-      premisesId: premises.id,
-      params: ['crn'],
+    cy.task('stubPersonNotFound', {
+      person,
     })
     page.clickSubmit()
 

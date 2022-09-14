@@ -52,6 +52,22 @@ export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput =>
   return { errors, errorSummary, userInput }
 }
 
+export const errorSummary = (field: string, text: string): ErrorSummary => {
+  return {
+    text,
+    href: `#${field}`,
+  }
+}
+
+export const errorMessage = (field: string, text: string): ErrorMessage => {
+  return {
+    text,
+    attributes: {
+      [`data-cy-error-${field}`]: true,
+    },
+  }
+}
+
 const firstFlashItem = (request: Request, key: string) => {
   const message = request.flash(key)
   return message ? message[0] : undefined
@@ -72,20 +88,4 @@ const generateErrorSummary = (params: Array<InvalidParams>): Array<ErrorSummary>
 
 const summaryForError = (error: InvalidParams): ErrorSummary => {
   return errorSummary(error.propertyName, errorLookup[error.propertyName][error.errorType])
-}
-
-const errorSummary = (field: string, text: string): ErrorSummary => {
-  return {
-    text,
-    href: `#${field}`,
-  }
-}
-
-const errorMessage = (field: string, text: string): ErrorMessage => {
-  return {
-    text,
-    attributes: {
-      [`data-cy-error-${field}`]: true,
-    },
-  }
 }

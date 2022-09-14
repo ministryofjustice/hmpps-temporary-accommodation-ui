@@ -3,7 +3,6 @@ import { SuperAgentRequest } from 'superagent'
 import type { Person } from 'approved-premises'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
-import { errorStub } from '../../wiremock/utils'
 
 export default {
   stubFindPerson: (args: { person: Person }): SuperAgentRequest =>
@@ -18,24 +17,21 @@ export default {
         jsonBody: args.person,
       },
     }),
-  stubFindPersonErrors: (args: { params: Array<string> }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, '/people/search')),
   stubPersonNotFound: (args: { person: Person }): SuperAgentRequest =>
     stubFor({
       request: {
-        method: 'POST',
-        url: '/people/search',
-        bodyPatterns: [{ matchesJsonPath: `$.[?(@.crn === ${args.person.crn})]` }],
+        method: 'GET',
+        url: `/people/search?crn=${args.person.crn}`,
       },
       response: {
         status: 404,
       },
     }),
-  verifyFindPerson: async () =>
+  verifyFindPerson: async (args: { person: Person }) =>
     (
       await getMatchingRequests({
-        method: 'POST',
-        url: '/people/search',
+        method: 'GET',
+        url: `/people/search?crn=${args.person.crn}`,
       })
     ).body.requests,
 }

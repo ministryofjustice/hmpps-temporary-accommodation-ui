@@ -1,5 +1,6 @@
 import { parseISO, format } from 'date-fns'
 import type { ObjectWithDateParts } from 'approved-premises'
+import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>
@@ -16,8 +17,6 @@ const isBlank = (str: string): boolean => !str || /^\s*$/.test(str)
  */
 const properCaseName = (name: string): string => (isBlank(name) ? '' : name.split('-').map(properCase).join('-'))
 
-export class InvalidDateStringError extends Error {}
-
 export const convertToTitleCase = (sentence: string): string =>
   isBlank(sentence) ? '' : sentence.split(' ').map(properCaseName).join(' ')
 
@@ -29,11 +28,23 @@ export const initialiseName = (fullName?: string): string | null => {
   return `${array[0][0]}. ${array.reverse()[0]}`
 }
 
+/**
+ * Converts a string from any case to kebab-case
+ * @param string string to be converted.
+ * @returns name converted to kebab-case.
+ */
+const kebabCase = (string: string) =>
+  string
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[\s_]+/g, '-')
+    .toLowerCase()
+
 // returns a date like 'Tuesday 6 September 2022'
 export const formatDate = (date: Date): string => format(date, 'cccc d MMMM y')
 
 export const formatDateString = (date: string): string => format(convertDateString(date), 'cccc d MMMM y')
 
+export class InvalidDateStringError extends Error {}
 /**
  * Converts an ISO8601 datetime string into a Javascript Date object.
  * @param date An ISO8601 datetime string
@@ -93,4 +104,17 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   }
 
   return true
+}
+/**
+ * Retrieves response for a given question from the session object.
+ * @param sessionData the session data for an application.
+ * @param question the question that we need the response for in camelCase.
+ * @returns name converted to proper case.
+ */
+export const retrieveQuestionResponseFromSession = <T>(sessionData: Record<string, unknown>, question: string) => {
+  try {
+    return sessionData['basic-information'][kebabCase(question)][question] as T
+  } catch (e) {
+    throw new SessionDataError(`Question ${question} was not found in the session`)
+  }
 }

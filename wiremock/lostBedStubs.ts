@@ -8,7 +8,7 @@ lostBeds.push({
   priority: 99,
   request: {
     method: 'POST',
-    urlPathPattern: `/premises/${guidRegex}/lostBeds`,
+    urlPathPattern: `/premises/${guidRegex}/lost-beds`,
   },
   response: {
     status: 201,
@@ -21,7 +21,7 @@ lostBeds.push({
 const requiredFields = getCombinations(['startDate', 'endDate', 'numberOfBeds', 'reason', 'referenceNumber'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  lostBeds.push(errorStub(fields, `/premises/${guidRegex}/lostBeds`, ['notes', 'reason']))
+  lostBeds.push(errorStub(fields, `/premises/${guidRegex}/lost-beds`, ['notes', 'reason']))
 })
 
 export default lostBeds

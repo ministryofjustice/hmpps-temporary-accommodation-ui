@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# script/tail-logs: Tails the logs for a given instance of the application
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+if ! [ "$(command -v stern)" ];then
+    echo "Stern could not be found. Install with ``brew install stern`` and try again"
+    exit
+fi
+
+if [ -z "$1" ]; then
+  echo "You must specify an environment"
+  exit 1
+else
+  environment=$1
+fi
+
+if [ -z "$2" ]; then
+  app="ui"
+else
+  app=$2
+fi
+
+if [ "$app" = "api" ]; then
+  stern -n "approved-premises-api-$environment" "approved-premises-dev" -t
+elif [ "$app" = "ui" ]; then
+  stern -n "approved-premises-$environment" "approved-premises-ui" -t
+else
+  echo "Unknown application $2"
+  exit 1
+fi

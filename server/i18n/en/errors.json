@@ -46,5 +46,8 @@
   "opdPathwayDate": {
     "blank": "You must enter an OPD Pathway date",
     "invalid": "The OPD Pathway date is an invalid date"
+  },
+  "pipeReferral": {
+    "blank": "You must specify if  a referral for PIPE placement has been recommended in the OPD pathway plan"
   }
 }

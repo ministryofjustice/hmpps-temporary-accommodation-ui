@@ -12,13 +12,17 @@ export default class ReleaseDate implements TasklistPage {
     knowReleaseDate: YesOrNo
   }
 
-  constructor(body: Record<string, unknown>) {
+  previousPage: string
+
+  constructor(body: Record<string, unknown>, _session: Record<string, unknown>, previousPage: string) {
     this.body = {
       'releaseDate-year': body['releaseDate-year'] as string,
       'releaseDate-month': body['releaseDate-month'] as string,
       'releaseDate-day': body['releaseDate-day'] as string,
       knowReleaseDate: body.knowReleaseDate as YesOrNo,
     }
+
+    this.previousPage = previousPage
   }
 
   next() {
@@ -26,7 +30,7 @@ export default class ReleaseDate implements TasklistPage {
   }
 
   previous() {
-    return 'release-type'
+    return this.previousPage
   }
 
   errors() {

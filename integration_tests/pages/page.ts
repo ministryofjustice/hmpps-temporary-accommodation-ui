@@ -69,4 +69,8 @@ export default abstract class Page {
     cy.get(`#${prefix}-month`).type(`${parsedDate.getMonth() + 1}`)
     cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())
   }
+
+  public clickSubmit(): void {
+    cy.get('button').click()
+  }
 }

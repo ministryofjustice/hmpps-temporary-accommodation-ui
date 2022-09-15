@@ -1,4 +1,5 @@
 import type { ObjectWithDateParts } from 'approved-premises'
+import { SessionDataError } from './errors'
 import {
   convertDateString,
   convertToTitleCase,
@@ -8,6 +9,7 @@ import {
   formatDate,
   formatDateString,
   dateAndTimeInputsAreValidDates,
+  retrieveQuestionResponseFromSession,
 } from './utils'
 
 describe('convert to title case', () => {
@@ -175,5 +177,21 @@ describe('dateAndTimeInputsAreValidDates', () => {
     const result = dateAndTimeInputsAreValidDates(obj, 'date')
 
     expect(result).toEqual(false)
+  })
+})
+
+describe('retrieveQuestionResponseFromSession', () => {
+  it("throws a SessionDataError if the property doesn't exist", () => {
+    expect(() => retrieveQuestionResponseFromSession({}, '')).toThrow(SessionDataError)
+  })
+
+  it('returns the property if it does existion', () => {
+    const questionResponse = retrieveQuestionResponseFromSession(
+      {
+        'basic-information': { 'question-response': { questionResponse: 'no' } },
+      },
+      'questionResponse',
+    )
+    expect(questionResponse).toBe('no')
   })
 })

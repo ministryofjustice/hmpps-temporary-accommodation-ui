@@ -1,25 +1,36 @@
+import { SessionDataError } from '../../../utils/errors'
+import { retrieveQuestionResponseFromSession } from '../../../utils/utils'
 import TasklistPage from '../../tasklistPage'
+import { SentenceTypesT } from './sentenceType'
 
-// TODO: The options that appear will depend on the response to the previous question.
-// For now we'll return all options
-export enum ReleaseTypes {
-  rotl = 'Release on Temporary Licence (ROTL)',
-  hdc = 'Home detention curfew (HDC)',
-  licence = 'Licence',
-  pss = 'Post Sentence Supervision (PSS)',
-  reRelase = 'Re-release following recall',
-}
+const allReleaseTypes = {
+  rotl: 'Release on Temporary License (ROTL)',
+  hdc: 'Home detention curfew (HDC)',
+  license: 'License',
+  pss: 'Post Sentence Supervision (PSS)',
+  rerelease: 'Re-release following recall',
+} as const
+
+type AllReleaseTypes = typeof allReleaseTypes
+type ReducedReleaseTypes = Pick<AllReleaseTypes, 'rotl' | 'license' | 'rerelease'>
+type SentenceType = Extract<SentenceTypesT, 'standardDeterminate' | 'extendedDeterminate' | 'ipp' | 'life'>
 
 export default class ReleaseType implements TasklistPage {
   name = 'release-type'
 
   title = 'What type of release will the application support'
 
-  body: { releaseType: keyof ReleaseTypes }
+  body: { releaseType: keyof (AllReleaseTypes | ReducedReleaseTypes) }
 
-  constructor(body: Record<string, unknown>) {
+  releaseTypes: AllReleaseTypes | ReducedReleaseTypes
+
+  constructor(body: Record<string, unknown>, session: Record<string, unknown>) {
+    const sessionSentenceType = retrieveQuestionResponseFromSession<SentenceType>(session, 'sentenceType')
+
+    this.releaseTypes = this.getReleaseTypes(sessionSentenceType)
+
     this.body = {
-      releaseType: body.releaseType as keyof ReleaseTypes,
+      releaseType: body.releaseType as keyof (AllReleaseTypes | ReducedReleaseTypes),
     }
   }
 
@@ -45,12 +56,26 @@ export default class ReleaseType implements TasklistPage {
   }
 
   items() {
-    return Object.keys(ReleaseTypes).map(key => {
+    return Object.keys(this.releaseTypes).map(key => {
       return {
         value: key,
-        text: ReleaseTypes[key],
+        text: this.releaseTypes[key],
         checked: this.body.releaseType === key,
       }
     })
+  }
+
+  getReleaseTypes(sessionReleaseType: SentenceType): AllReleaseTypes | ReducedReleaseTypes {
+    if (sessionReleaseType === 'standardDeterminate') {
+      return allReleaseTypes
+    }
+    if (sessionReleaseType === 'extendedDeterminate' || sessionReleaseType === 'ipp' || sessionReleaseType === 'life') {
+      return {
+        rotl: 'Release on Temporary License (ROTL)',
+        license: 'License',
+        rerelease: 'Re-release following recall',
+      }
+    }
+    throw new SessionDataError(`Unknown release type ${sessionReleaseType}`)
   }
 }

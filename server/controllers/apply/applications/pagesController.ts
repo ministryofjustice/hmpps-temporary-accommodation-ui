@@ -12,7 +12,7 @@ import {
 import paths from '../../../paths/apply'
 import { UnknownPageError } from '../../../utils/errors'
 
-export default class ApplicationFormController {
+export default class PagesController {
   constructor(private readonly applicationService: ApplicationService, private readonly dataServices: DataServices) {}
 
   show(): RequestHandler {
@@ -45,7 +45,7 @@ export default class ApplicationFormController {
 
       try {
         this.applicationService.save(page, req)
-
+        req.flash('previousPage', page.name)
         res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))
       } catch (err) {
         catchValidationErrorOrPropogate(

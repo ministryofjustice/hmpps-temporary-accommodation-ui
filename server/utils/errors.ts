@@ -10,6 +10,7 @@ export class ValidationError extends Error {
   }
 }
 
+export class SessionDataError extends Error {}
 export class UnknownPageError extends Error {}
 
 export class TasklistAPIError extends Error {

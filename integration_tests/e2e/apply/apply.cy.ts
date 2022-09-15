@@ -1,4 +1,4 @@
-import { StartPage, EnterCRNPage, ConfirmDetailsPage } from '../../pages/apply'
+import { StartPage, EnterCRNPage, ConfirmDetailsPage, SentenceTypePage, SituationPage } from '../../pages/apply'
 
 import personFactory from '../../../server/testutils/factories/person'
 
@@ -29,6 +29,25 @@ context('Apply', () => {
     // Then I should see the person's detail
     const confirmDetailsPage = new ConfirmDetailsPage(person)
     confirmDetailsPage.verifyPersonIsVisible()
+
+    // When I click submit
+    confirmDetailsPage.clickSubmit()
+
+    // Then I should be on the Sentence Type page
+    const sentenceTypePage = new SentenceTypePage()
+
+    // When I select 'Bail Placement'
+    sentenceTypePage.checkRadioByNameAndValue('sentenceType', 'bailPlacement')
+    sentenceTypePage.clickSubmit()
+
+    // Then I should be on the Situation Page
+    const situationPage = new SituationPage()
+
+    // When I select 'Bail Sentence'
+    situationPage.checkRadioByNameAndValue('situation', 'bailSentence')
+    situationPage.clickSubmit()
+
+    // Then I should be asked if I know the release date - TODO
   })
 
   it('shows an error message if the person is not found', () => {

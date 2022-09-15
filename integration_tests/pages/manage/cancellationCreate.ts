@@ -13,10 +13,6 @@ export default class CancellationCreatePage extends Page {
     return new CancellationCreatePage()
   }
 
-  clickSubmit(): void {
-    cy.get('button').click()
-  }
-
   completeForm(cancellation: Cancellation): void {
     this.getLegend('Date of Cancellation')
     this.completeDateInputs('date', cancellation.date)

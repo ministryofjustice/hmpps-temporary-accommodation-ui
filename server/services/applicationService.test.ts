@@ -132,36 +132,40 @@ describe('ApplicationService', () => {
   describe('getCurrentPage', () => {
     let request: DeepMocked<Request>
     const dataServices = createMock<DataServices>({}) as DataServices
+    const flashSpy = jest.fn()
 
     beforeEach(() => {
-      request = createMock<Request>({ params: { id: 'some-uuid', task: 'my-task' } })
+      request = createMock<Request>({
+        params: { id: 'some-uuid', task: 'my-task' },
+        flash: flashSpy.mockImplementation((_previousPage: string) => []),
+      })
     })
 
-    it('should return the first page if the page is not defined', async () => {
+    it('should return the session and first page if the page is not defined', async () => {
       const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith(request.body)
+      expect(FirstPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, '')
     })
 
-    it('should return a page from a page list', async () => {
+    it('should return the session and a page from a page list', async () => {
       request.params.page = 'second'
 
       const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(SecondPage)
 
-      expect(SecondPage).toHaveBeenCalledWith(request.body)
+      expect(SecondPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, '')
     })
 
-    it('should initialize the page with the userInput if specified', async () => {
+    it('should initialize the page with the session and the userInput if specified', async () => {
       const userInput = { foo: 'bar' }
       const result = await service.getCurrentPage(request, dataServices, userInput)
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith(userInput)
+      expect(FirstPage).toHaveBeenCalledWith(userInput, { 'my-task': {} }, '')
     })
 
     it('should load from the session if the body and userInput are blank', async () => {
@@ -172,7 +176,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' })
+      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' }, { 'my-task': { first: { foo: 'bar' } } }, '')
     })
 
     it("should call a service's setup method if it exists", async () => {
@@ -184,6 +188,15 @@ describe('ApplicationService', () => {
       await service.getCurrentPage(request, dataServices)
 
       expect(setup).toHaveBeenCalledWith(request, dataServices)
+    })
+
+    it("should call the flash with 'previousPage' and call the Page objects constructor with that value", async () => {
+      flashSpy.mockImplementation((_previousPage: string) => ['previous-page-name'])
+      await service.getCurrentPage(request, dataServices)
+
+      expect(flashSpy).toHaveBeenCalledWith('previousPage')
+
+      expect(FirstPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, 'previous-page-name')
     })
 
     it('should raise an error if the page is not found', async () => {

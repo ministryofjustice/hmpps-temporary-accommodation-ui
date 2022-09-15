@@ -44,10 +44,6 @@ export default class BookingNewPage extends Page {
     return cy.get('#expectedDepartureDate-year')
   }
 
-  clickSubmit(): void {
-    cy.get('button').click()
-  }
-
   completeForm(booking: Booking): void {
     this.getLegend('What is the expected arrival date?')
 

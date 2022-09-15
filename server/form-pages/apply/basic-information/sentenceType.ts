@@ -1,25 +1,27 @@
 import TasklistPage from '../../tasklistPage'
 
-export enum SentenceTypes {
-  standardDeterminate = 'Standard determinate custody',
-  communityOrder = 'Community Order',
-  bailPlacement = 'Bail placement',
-  extendedDeterminate = 'Extended determinate custody',
-  ipp = 'Indeterminate Public Protection',
-  nonStatutory = 'Non-statutory',
-  life = 'Life sentence',
-}
+export const sentenceTypes = {
+  standardDeterminate: 'Standard determinate custody',
+  communityOrder: 'Community Order',
+  bailPlacement: 'Bail placement',
+  extendedDeterminate: 'Extended determinate custody',
+  ipp: 'Indeterminate Public Protection',
+  nonStatutory: 'Non-statutory',
+  life: 'Life sentence',
+} as const
+
+export type SentenceTypesT = keyof typeof sentenceTypes
 
 export default class SentenceType implements TasklistPage {
   name = 'sentence-type'
 
   title = 'Which of the following best describes the sentence type?'
 
-  body: { sentenceType: keyof SentenceTypes }
+  body: { sentenceType: SentenceTypesT }
 
   constructor(body: Record<string, unknown>) {
     this.body = {
-      sentenceType: body.sentenceType as keyof SentenceTypes,
+      sentenceType: body.sentenceType as SentenceTypesT,
     }
   }
 
@@ -60,10 +62,10 @@ export default class SentenceType implements TasklistPage {
   }
 
   items() {
-    return Object.keys(SentenceTypes).map(key => {
+    return Object.keys(sentenceTypes).map(key => {
       return {
         value: key,
-        text: SentenceTypes[key],
+        text: sentenceTypes[key],
         checked: this.body.sentenceType === key,
       }
     })

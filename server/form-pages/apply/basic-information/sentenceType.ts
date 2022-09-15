@@ -44,10 +44,6 @@ export default class SentenceType implements TasklistPage {
     }
   }
 
-  previous() {
-    return 'confirm-details'
-  }
-
   errors() {
     const errors = []
 

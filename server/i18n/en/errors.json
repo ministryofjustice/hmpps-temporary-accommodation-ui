@@ -41,5 +41,10 @@
     "invalid": "The oral hearing date is an invalid date"
   },
   "startDateSameAsReleaseDate": { "blank": "You must specify if the start date is the same as the release date" },
-  "type": { "blank": "You must specify an AP type" }
+  "type": { "blank": "You must specify an AP type" },
+  "opdPathway": { "blank": "You must specify if xxxx has been screened into the OPD pathway" },
+  "opdPathwayDate": {
+    "blank": "You must enter an OPD Pathway date",
+    "invalid": "The OPD Pathway date is an invalid date"
+  }
 }

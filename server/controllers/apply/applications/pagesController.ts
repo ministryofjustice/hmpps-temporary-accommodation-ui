@@ -12,7 +12,7 @@ import {
 import paths from '../../../paths/apply'
 import { UnknownPageError } from '../../../utils/errors'
 
-export default class ApplicationFormController {
+export default class PagesController {
   constructor(private readonly applicationService: ApplicationService, private readonly dataServices: DataServices) {}
 
   show(): RequestHandler {

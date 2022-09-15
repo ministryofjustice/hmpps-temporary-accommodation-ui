@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest'
 
 import type { ErrorMessages } from 'approved-premises'
-import { dateFieldValues, convertObjectsToRadioItems } from './formUtils'
+import { dateFieldValues, convertObjectsToRadioItems, convertKeyValuePairToRadioItems } from './formUtils'
 
 describe('formUtils', () => {
   describe('dateFieldValues', () => {
@@ -113,6 +113,56 @@ describe('formUtils', () => {
           text: 'def',
           value: '345',
           checked: false,
+        },
+      ])
+    })
+  })
+
+  describe('convertKeyValuePairToRadioItems', () => {
+    const obj = {
+      foo: 'Foo',
+      bar: 'Bar',
+    }
+
+    it('should convert a key value pair to radio items', () => {
+      expect(convertKeyValuePairToRadioItems(obj, '')).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: false,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: false,
+        },
+      ])
+    })
+
+    it('should check the checked item', () => {
+      expect(convertKeyValuePairToRadioItems(obj, 'foo')).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: true,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: false,
+        },
+      ])
+
+      expect(convertKeyValuePairToRadioItems(obj, 'bar')).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: false,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: true,
         },
       ])
     })

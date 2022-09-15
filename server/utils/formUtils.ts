@@ -36,3 +36,13 @@ export const convertObjectsToRadioItems = (
     }
   })
 }
+
+export function convertKeyValuePairToRadioItems<T>(object: T, checkedItem: string): Array<RadioItems> {
+  return Object.keys(object).map(key => {
+    return {
+      value: key,
+      text: object[key],
+      checked: checkedItem === key,
+    }
+  })
+}

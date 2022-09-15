@@ -40,5 +40,6 @@
     "blank": "You must specify the oral hearing date",
     "invalid": "The oral hearing date is an invalid date"
   },
-  "startDateSameAsReleaseDate": { "blank": "You must specify if the start date is the same as the release date" }
+  "startDateSameAsReleaseDate": { "blank": "You must specify if the start date is the same as the release date" },
+  "type": { "blank": "You must specify an AP type" }
 }

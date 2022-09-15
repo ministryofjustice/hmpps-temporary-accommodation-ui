@@ -45,9 +45,11 @@ export default class ApplicationService {
       throw new UnknownPageError()
     }
 
+    const previousPage = request.flash('previousPage').length ? request.flash('previousPage')[0] : ''
+
     const body = this.getBody(request, userInput)
     const session = this.getAllSessionData(request)
-    const page = new Page(body, session)
+    const page = new Page(body, session, previousPage)
 
     if (page.setup) {
       await page.setup(request, dataServices)

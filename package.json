@@ -179,7 +179,7 @@
     "lint-staged": "^13.0.3",
     "mocha-junit-reporter": "^2.0.2",
     "nock": "^13.2.9",
-    "nodemon": "^2.0.19",
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
     "sass": "^1.54.9",
     "start-server-and-test": "^1.14.0",

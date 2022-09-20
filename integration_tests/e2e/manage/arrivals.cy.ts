@@ -2,7 +2,7 @@ import premisesFactory from '../../../server/testutils/factories/premises'
 import arrivalFactory from '../../../server/testutils/factories/arrival'
 import nonArrivalFactory from '../../../server/testutils/factories/nonArrival'
 
-import { ArrivalCreatePage, PremisesShowPage } from '../../pages/manage'
+import { ArrivalCreatePage, PremisesShowPage } from '../../../cypress_shared/pages/manage'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
 context('Arrivals', () => {

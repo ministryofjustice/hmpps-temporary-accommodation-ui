@@ -1,7 +1,7 @@
-import { PremisesListPage } from '../pages/manage'
-import AuthSignInPage from '../pages/authSignIn'
-import Page from '../pages/page'
-import AuthManageDetailsPage from '../pages/authManageDetails'
+import { PremisesListPage } from '../../cypress_shared/pages/manage'
+import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
+import Page from '../../cypress_shared/pages/page'
+import AuthManageDetailsPage from '../../cypress_shared/pages/authManageDetails'
 
 context('SignIn', () => {
   beforeEach(() => {

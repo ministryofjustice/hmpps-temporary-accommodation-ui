@@ -2,7 +2,7 @@ import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingsFactory from '../../../server/testutils/factories/booking'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
-import { PremisesListPage, PremisesShowPage } from '../../pages/manage'
+import { PremisesListPage, PremisesShowPage } from '../../../cypress_shared/pages/manage'
 
 context('Premises', () => {
   beforeEach(() => {

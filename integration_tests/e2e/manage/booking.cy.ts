@@ -3,10 +3,10 @@ import bookingFactory from '../../../server/testutils/factories/booking'
 import keyWorkerFactory from '../../../server/testutils/factories/keyWorker'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
-import { BookingFindPage, BookingNewPage, BookingShowPage } from '../../pages/manage'
-import Page from '../../pages/page'
+import { BookingFindPage, BookingNewPage, BookingShowPage } from '../../../cypress_shared/pages/manage'
+import Page from '../../../cypress_shared/pages/page'
 
-import BookingConfirmation from '../../pages/manage/booking/confirmation'
+import BookingConfirmation from '../../../cypress_shared/pages/manage/booking/confirmation'
 import personFactory from '../../../server/testutils/factories/person'
 
 const keyWorkers = keyWorkerFactory.buildList(5)

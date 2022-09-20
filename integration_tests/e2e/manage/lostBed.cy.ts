@@ -1,7 +1,7 @@
 import premisesFactory from '../../../server/testutils/factories/premises'
 import lostBedFactory from '../../../server/testutils/factories/lostBed'
 
-import { LostBedCreatePage } from '../../pages/manage'
+import { LostBedCreatePage } from '../../../cypress_shared/pages/manage'
 
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 

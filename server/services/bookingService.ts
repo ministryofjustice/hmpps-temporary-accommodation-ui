@@ -1,8 +1,15 @@
 import { isSameDay, isWithinInterval, addDays } from 'date-fns'
 
-import type { Booking, NewBooking, TableRow, GroupedListofBookings, BookingExtension } from 'approved-premises'
+import type {
+  Booking,
+  NewBooking,
+  TableRow,
+  GroupedListofBookings,
+  BookingExtension,
+  ReferenceData,
+} from 'approved-premises'
 
-import type { RestClientBuilder } from '../data'
+import type { RestClientBuilder, ReferenceDataClient } from '../data'
 import BookingClient from '../data/bookingClient'
 import { convertDateString, formatDate } from '../utils/utils'
 import paths from '../paths/manage'
@@ -10,7 +17,10 @@ import paths from '../paths/manage'
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
 
-  constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
+  constructor(
+    private readonly bookingClientFactory: RestClientBuilder<BookingClient>,
+    private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
+  ) {}
 
   async create(token: string, premisesId: string, booking: NewBooking): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)
@@ -26,6 +36,14 @@ export default class BookingService {
     const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking
+  }
+
+  async getKeyWorkers(token: string): Promise<Array<ReferenceData>> {
+    const referenceDataClient = this.referenceDataClientFactory(token)
+
+    const keyWorkers = await referenceDataClient.getReferenceData('key-workers')
+
+    return keyWorkers
   }
 
   async listOfBookingsForPremisesId(token: string, premisesId: string): Promise<Array<TableRow>> {

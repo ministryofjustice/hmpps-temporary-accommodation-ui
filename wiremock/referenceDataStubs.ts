@@ -3,6 +3,7 @@ import moveOnCategoriesJson from './stubs/move-on-categories.json'
 import destinationProvidersJson from './stubs/destination-providers.json'
 import cancellationReasonsJson from './stubs/cancellation-reasons.json'
 import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
+import keyWorkersJson from './stubs/keyworkers.json'
 
 const departureReasons = {
   request: {
@@ -74,4 +75,18 @@ const lostBedReasons = {
   },
 }
 
-export { departureReasons, moveOnCategories, destinationProviders, cancellationReasons, lostBedReasons }
+const keyWorkers = {
+  request: {
+    method: 'GET',
+    url: '/reference-data/key-workers',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: keyWorkersJson,
+  },
+}
+
+export { departureReasons, moveOnCategories, destinationProviders, cancellationReasons, lostBedReasons, keyWorkers }

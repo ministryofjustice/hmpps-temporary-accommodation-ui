@@ -9,6 +9,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 
 import bookingFactory from '../../testutils/factories/booking'
 import personFactory from '../../testutils/factories/person'
+import referenceDataFactory from '../../testutils/factories/referenceData'
 import paths from '../../paths/manage'
 
 jest.mock('../../utils/validation')
@@ -51,42 +52,52 @@ describe('bookingsController', () => {
 
   describe('new', () => {
     describe('If there is a CRN in the flash', () => {
-      it('it should render the new booking form', async () => {
-        const person = personFactory.build()
+      const person = personFactory.build()
+      const keyWorkers = referenceDataFactory.buildList(5)
+
+      beforeEach(() => {
+        request = createMock<Request>({
+          user: { token },
+          flash: jest.fn().mockReturnValue([person.crn]),
+          params: { premisesId },
+        })
+
         personService.findByCrn.mockResolvedValue(person)
+        bookingService.getKeyWorkers.mockResolvedValue(keyWorkers)
+      })
+
+      it('it should render the new booking form', async () => {
         ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
           return { errors: {}, errorSummary: [], userInput: {} }
         })
-        const flashSpy = jest.fn().mockImplementation(() => [person.crn])
 
         const requestHandler = bookingController.new()
 
-        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+        await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('bookings/new', {
           premisesId,
+          keyWorkers,
           pageHeading: 'Make a booking',
           ...person,
           errors: {},
           errorSummary: [],
         })
         expect(personService.findByCrn).toHaveBeenCalledWith(token, person.crn)
-        expect(flashSpy).toHaveBeenCalledWith('crn')
+        expect(request.flash).toHaveBeenCalledWith('crn')
       })
 
       it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-        const person = personFactory.build()
-        personService.findByCrn.mockResolvedValue(person)
-        const flashSpy = jest.fn().mockImplementation(() => [person.crn])
         const errorsAndUserInput = createMock<ErrorsAndUserInput>()
         ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
         const requestHandler = bookingController.new()
 
-        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+        await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('bookings/new', {
           premisesId,
+          keyWorkers,
           pageHeading: 'Make a booking',
           ...person,
           errors: errorsAndUserInput.errors,
@@ -95,16 +106,24 @@ describe('bookingsController', () => {
         })
       })
     })
+
     describe('if there is a no CRN in the flash', () => {
+      beforeEach(() => {
+        request = createMock<Request>({
+          user: { token },
+          flash: jest.fn().mockReturnValue([]),
+          params: { premisesId },
+        })
+      })
+
       it('it should render the new booking form', async () => {
         ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
           return { errors: {}, errorSummary: [], userInput: {} }
         })
-        const flashSpy = jest.fn().mockImplementation(() => [])
 
         const requestHandler = bookingController.new()
 
-        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+        await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('bookings/find', {
           premisesId,
@@ -117,11 +136,10 @@ describe('bookingsController', () => {
       it('renders the form with errors and user input if an error has been sent to the flash', async () => {
         const errorsAndUserInput = createMock<ErrorsAndUserInput>()
         ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
-        const flashSpy = jest.fn().mockImplementation(() => [])
 
         const requestHandler = bookingController.new()
 
-        await requestHandler({ ...request, params: { premisesId }, flash: flashSpy }, response, next)
+        await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('bookings/find', {
           premisesId,

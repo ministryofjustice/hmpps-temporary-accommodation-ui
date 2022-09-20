@@ -1,7 +1,12 @@
 import { createMock } from '@golevelup/ts-jest'
 
 import type { ErrorMessages } from 'approved-premises'
-import { dateFieldValues, convertObjectsToRadioItems, convertKeyValuePairToRadioItems } from './formUtils'
+import {
+  dateFieldValues,
+  convertObjectsToRadioItems,
+  convertKeyValuePairToRadioItems,
+  convertObjectsToSelectOptions,
+} from './formUtils'
 
 describe('formUtils', () => {
   describe('dateFieldValues', () => {
@@ -163,6 +168,63 @@ describe('formUtils', () => {
           value: 'bar',
           text: 'Bar',
           checked: true,
+        },
+      ])
+    })
+  })
+
+  describe('convertObjectsToSelectOptions', () => {
+    const objects = [
+      {
+        id: '123',
+        name: 'abc',
+      },
+      {
+        id: '345',
+        name: 'def',
+      },
+    ]
+
+    it('converts objects to an array of select options', () => {
+      const result = convertObjectsToSelectOptions(objects, 'name', 'id', 'field', {})
+
+      expect(result).toEqual([
+        {
+          value: '',
+          text: 'Select a keyworker',
+          selected: true,
+        },
+        {
+          text: 'abc',
+          value: '123',
+          selected: false,
+        },
+        {
+          text: 'def',
+          value: '345',
+          selected: false,
+        },
+      ])
+    })
+
+    it('marks the object that is in the context as selected', () => {
+      const result = convertObjectsToSelectOptions(objects, 'name', 'id', 'field', { field: '123' })
+
+      expect(result).toEqual([
+        {
+          value: '',
+          text: 'Select a keyworker',
+          selected: false,
+        },
+        {
+          text: 'abc',
+          value: '123',
+          selected: true,
+        },
+        {
+          text: 'def',
+          value: '345',
+          selected: false,
         },
       ])
     })

@@ -9,11 +9,14 @@ import Page from '../../pages/page'
 import BookingConfirmation from '../../pages/manage/booking/confirmation'
 import personFactory from '../../../server/testutils/factories/person'
 
+const keyWorkers = keyWorkerFactory.buildList(5)
+
 context('Booking', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    cy.task('stubKeyWorkers', { keyWorkers })
   })
 
   it('should show the CRN form followed by the booking form', () => {
@@ -23,7 +26,7 @@ context('Booking', () => {
       name: person.name,
       expectedArrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
       expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
-      keyWorker: keyWorkerFactory.build({ name: 'Alex Evans' }),
+      keyWorker: keyWorkers[1],
     })
     const firstOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
       date: new Date(2023, 0, 1).toISOString(),
@@ -103,7 +106,7 @@ context('Booking', () => {
 
       expect(requestBody.expectedArrivalDate).equal(booking.expectedArrivalDate)
       expect(requestBody.expectedDepartureDate).equal(booking.expectedDepartureDate)
-      expect(requestBody.keyWorkerId).equal('55126a32-0d27-4044-bc4e-e21c01632e56')
+      expect(requestBody.keyWorkerId).equal(booking.keyWorker.id)
     })
   })
 

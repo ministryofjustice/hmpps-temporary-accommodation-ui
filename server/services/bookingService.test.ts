@@ -1,23 +1,31 @@
 import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
+import ReferenceDataClient from '../data/referenceDataClient'
 
 import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
+import referenceDataFactory from '../testutils/factories/referenceData'
+
 import { formatDate } from '../utils/utils'
 import paths from '../paths/manage'
 
 jest.mock('../data/bookingClient.ts')
+jest.mock('../data/referenceDataClient.ts')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
+  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
   const bookingClientFactory = jest.fn()
-  const service = new BookingService(bookingClientFactory)
+  const referenceDataClientFactory = jest.fn()
+
+  const service = new BookingService(bookingClientFactory, referenceDataClientFactory)
   const token = 'SOME_TOKEN'
 
   beforeEach(() => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
+    referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
   describe('create', () => {
@@ -69,6 +77,20 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
+  describe('getKeyWorkers', () => {
+    it('should return the keyworker data needed', async () => {
+      const keyWorkers = referenceDataFactory.buildList(2)
+
+      referenceDataClient.getReferenceData.mockResolvedValue(keyWorkers)
+
+      const result = await service.getKeyWorkers(token)
+
+      expect(result).toEqual(keyWorkers)
+      expect(referenceDataClientFactory).toHaveBeenCalledWith(token)
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('key-workers')
     })
   })
 

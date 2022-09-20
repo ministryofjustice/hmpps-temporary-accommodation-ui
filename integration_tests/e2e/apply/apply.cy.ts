@@ -1,6 +1,8 @@
 import { StartPage, EnterCRNPage, ConfirmDetailsPage, SentenceTypePage, SituationPage } from '../../pages/apply'
 
 import personFactory from '../../../server/testutils/factories/person'
+import Page from '../../pages/page'
+import ReleaseDatePage from '../../pages/apply/releaseDate'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -47,7 +49,8 @@ context('Apply', () => {
     situationPage.checkRadioByNameAndValue('situation', 'bailSentence')
     situationPage.clickSubmit()
 
-    // Then I should be asked if I know the release date - TODO
+    // Then I should be asked if I know the release date
+    Page.verifyOnPage(ReleaseDatePage)
   })
 
   it('shows an error message if the person is not found', () => {

@@ -97,6 +97,12 @@ declare module 'approved-premises' {
     checked?: boolean
   }
 
+  export interface SelectOptions {
+    text: string
+    value: string
+    selected?: boolean
+  }
+
   export interface IdentityBarMenuItem {
     classes: string
     href: string

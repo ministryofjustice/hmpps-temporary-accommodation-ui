@@ -3,6 +3,7 @@ import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
 import TasklistPage from '../../tasklistPage'
 import {
   dateAndTimeInputsAreValidDates,
+  dateIsBlank,
   formatDateString,
   retrieveQuestionResponseFromSession,
 } from '../../../utils/utils'
@@ -48,7 +49,7 @@ export default class PlacementDate implements TasklistPage {
     }
 
     if (this.body.startDateSameAsReleaseDate === 'no') {
-      if (this.startDateIsBlank()) {
+      if (dateIsBlank(this.body)) {
         errors.push({
           propertyName: 'startDate',
           errorType: 'blank',
@@ -62,9 +63,5 @@ export default class PlacementDate implements TasklistPage {
     }
 
     return errors
-  }
-
-  private startDateIsBlank(): boolean {
-    return !this.body['startDate-year'] && !this.body['startDate-month'] && !this.body['startDate-day']
   }
 }

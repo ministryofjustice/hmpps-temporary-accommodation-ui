@@ -162,7 +162,7 @@ describe('applicationsController', () => {
 
       expect(applicationService.createApplication).toHaveBeenCalled()
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.applications.pages.show({ id: uuid, task: 'basic-information', page: 'enter-crn' }),
+        paths.applications.pages.show({ id: uuid, task: 'basic-information', page: 'sentence-type' }),
       )
     })
   })

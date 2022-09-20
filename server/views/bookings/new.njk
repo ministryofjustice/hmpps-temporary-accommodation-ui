@@ -89,25 +89,7 @@
                     classes: "govuk-input--width-20",
                     id: "keyWorkerId",
                     name: "keyWorkerId",
-                    items: [
-                        {
-                        value: "",
-                        text: "Select a keyworker",
-                        selected: keyWorkerId === ''
-                        },
-                        {
-                        value: "bda42ec2-2435-47da-bb7f-54e90eda78b2",
-                        text: "George Frank"
-                        },
-                        {
-                        value: "55126a32-0d27-4044-bc4e-e21c01632e56",
-                        text: "Alex Evans"
-                        },
-                        {
-                        value: "cddb4be3-f0ef-4889-b987-61e1777ab17c",
-                        text: "Jo Longford"
-                        }
-                    ],
+                    items: convertObjectsToSelectOptions(keyWorkers, 'name', 'id', 'keyWorkerId'),
                     errorMessage: errors.keyWorkerId
                 }) }}
 

@@ -45,7 +45,6 @@ export default class PagesController {
 
       try {
         this.applicationService.save(page, req)
-        req.flash('previousPage', page.name)
         res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))
       } catch (err) {
         catchValidationErrorOrPropogate(

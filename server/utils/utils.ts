@@ -105,6 +105,7 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
 
   return true
 }
+
 /**
  * Retrieves response for a given question from the session object.
  * @param sessionData the session data for an application.
@@ -117,4 +118,9 @@ export const retrieveQuestionResponseFromSession = <T>(sessionData: Record<strin
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }
+}
+
+export const dateIsBlank = <T = ObjectWithDateParts<string | number>>(body: T): boolean => {
+  const fields = Object.keys(body).filter(key => key.match(/-[year|month|day]/))
+  return fields.every(field => !body[field])
 }

@@ -10,6 +10,7 @@ import {
   formatDateString,
   dateAndTimeInputsAreValidDates,
   retrieveQuestionResponseFromSession,
+  dateIsBlank,
 } from './utils'
 
 describe('convert to title case', () => {
@@ -193,5 +194,27 @@ describe('retrieveQuestionResponseFromSession', () => {
       'questionResponse',
     )
     expect(questionResponse).toBe('no')
+  })
+})
+
+describe('dateIsBlank', () => {
+  it('returns false if the date is not blank', () => {
+    const date: ObjectWithDateParts<'field'> = {
+      'field-day': '12',
+      'field-month': '1',
+      'field-year': '2022',
+    }
+
+    expect(dateIsBlank(date)).toEqual(false)
+  })
+
+  it('returns true if the date is blank', () => {
+    const date: ObjectWithDateParts<'field'> = {
+      'field-day': '',
+      'field-month': '',
+      'field-year': '',
+    }
+
+    expect(dateIsBlank(date)).toEqual(true)
   })
 })

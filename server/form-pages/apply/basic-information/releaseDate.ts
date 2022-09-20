@@ -1,7 +1,7 @@
 import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateAndTimeInputsAreValidDates } from '../../../utils/utils'
+import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/utils'
 
 export default class ReleaseDate implements TasklistPage {
   name = 'release-date'
@@ -44,7 +44,7 @@ export default class ReleaseDate implements TasklistPage {
     }
 
     if (this.body.knowReleaseDate === 'yes') {
-      if (this.releaseDateIsBlank()) {
+      if (dateIsBlank(this.body)) {
         errors.push({
           propertyName: 'releaseDate',
           errorType: 'blank',
@@ -58,9 +58,5 @@ export default class ReleaseDate implements TasklistPage {
     }
 
     return errors
-  }
-
-  private releaseDateIsBlank(): boolean {
-    return !this.body['releaseDate-year'] && !this.body['releaseDate-month'] && !this.body['releaseDate-day']
   }
 }

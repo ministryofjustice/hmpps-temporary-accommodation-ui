@@ -1,7 +1,7 @@
 import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateAndTimeInputsAreValidDates } from '../../../utils/utils'
+import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/utils'
 
 export default class OralHearing implements TasklistPage {
   name = 'oral-hearing'
@@ -40,7 +40,7 @@ export default class OralHearing implements TasklistPage {
     }
 
     if (this.body.knowOralHearingDate === 'yes') {
-      if (this.oralHearingDateIsBlank()) {
+      if (dateIsBlank(this.body)) {
         errors.push({
           propertyName: 'oralHearingDate',
           errorType: 'blank',
@@ -54,11 +54,5 @@ export default class OralHearing implements TasklistPage {
     }
 
     return errors
-  }
-
-  private oralHearingDateIsBlank(): boolean {
-    return (
-      !this.body['oralHearingDate-year'] && !this.body['oralHearingDate-month'] && !this.body['oralHearingDate-day']
-    )
   }
 }

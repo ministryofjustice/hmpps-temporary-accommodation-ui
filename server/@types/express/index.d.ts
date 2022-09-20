@@ -8,6 +8,7 @@ declare module 'express-session' {
     returnTo: string
     nowInMinutes: number
     application: Record<string, unknown>
+    previousPage: string
   }
 }
 

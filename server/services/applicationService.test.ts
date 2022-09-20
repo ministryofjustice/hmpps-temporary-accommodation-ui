@@ -132,12 +132,11 @@ describe('ApplicationService', () => {
   describe('getCurrentPage', () => {
     let request: DeepMocked<Request>
     const dataServices = createMock<DataServices>({}) as DataServices
-    const flashSpy = jest.fn()
 
     beforeEach(() => {
       request = createMock<Request>({
         params: { id: 'some-uuid', task: 'my-task' },
-        flash: flashSpy.mockImplementation((_previousPage: string) => []),
+        session: { previousPage: '' },
       })
     })
 
@@ -190,11 +189,9 @@ describe('ApplicationService', () => {
       expect(setup).toHaveBeenCalledWith(request, dataServices)
     })
 
-    it("should call the flash with 'previousPage' and call the Page objects constructor with that value", async () => {
-      flashSpy.mockImplementation((_previousPage: string) => ['previous-page-name'])
+    it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {
+      request.session.previousPage = 'previous-page-name'
       await service.getCurrentPage(request, dataServices)
-
-      expect(flashSpy).toHaveBeenCalledWith('previousPage')
 
       expect(FirstPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, 'previous-page-name')
     })

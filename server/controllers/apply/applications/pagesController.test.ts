@@ -134,14 +134,12 @@ describe('pagesController', () => {
 
     it('updates an application and redirects to the next page', async () => {
       page.next.mockReturnValue('next-page')
-      const flashSpy = jest.fn()
+
       applicationService.save.mockReturnValue()
 
       const requestHandler = pagesController.update()
 
-      await requestHandler({ ...request, flash: flashSpy }, response)
-
-      expect(flashSpy).toHaveBeenCalledWith('previousPage', 'page-name')
+      await requestHandler({ ...request }, response)
 
       expect(applicationService.save).toHaveBeenCalledWith(page, request)
 

@@ -117,15 +117,16 @@ describe('ApplicationService', () => {
     it('calls the create method and returns a uuid', async () => {
       const uuid = 'some-uuid'
       const token = 'SOME_TOKEN'
+      const crn = 'some_crn'
 
       applicationClient.create.mockResolvedValue(uuid)
 
-      const result = await service.createApplication(token)
+      const result = await service.createApplication(token, crn)
 
       expect(result).toBe(uuid)
 
       expect(applicationClientFactory).toHaveBeenCalledWith(token)
-      expect(applicationClient.create).toHaveBeenCalled()
+      expect(applicationClient.create).toHaveBeenCalledWith(crn)
     })
   })
 

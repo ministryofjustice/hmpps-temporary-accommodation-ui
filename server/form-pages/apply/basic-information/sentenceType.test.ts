@@ -1,5 +1,3 @@
-import { itShouldHavePreviousValue } from '../../shared-examples'
-
 import SentenceType from './sentenceType'
 
 describe('SentenceType', () => {
@@ -10,8 +8,6 @@ describe('SentenceType', () => {
       expect(page.body).toEqual({ sentenceType: 'standardDeterminate' })
     })
   })
-
-  itShouldHavePreviousValue(new SentenceType({}), 'confirm-details')
 
   describe('next', () => {
     it('should return release-type for a standardDeterminate sentence', () => {

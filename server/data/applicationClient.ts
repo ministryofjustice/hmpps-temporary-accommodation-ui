@@ -14,7 +14,7 @@ export default class ApplicationClient {
   }
 
   /* istanbul ignore next */
-  async create(): Promise<string> {
+  async create(_crn: string): Promise<string> {
     return crypto.randomUUID()
   }
 

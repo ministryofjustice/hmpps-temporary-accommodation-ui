@@ -101,7 +101,19 @@
       "prettier --write"
     ]
   },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": "e2e/tests/stepDefinitions/**/*.ts",
+    "nonGlobalStepDefinitions": false,
+    "cucumberJson": {
+      "generate": true,
+      "outputFolder": "e2e/cucumber-json",
+      "filePrefix": "",
+      "fileSuffix": ".cucumber"
+    }
+  },
   "dependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^12.2.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.1.3",
     "@ministryofjustice/frontend": "^1.5.0",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.3.5",

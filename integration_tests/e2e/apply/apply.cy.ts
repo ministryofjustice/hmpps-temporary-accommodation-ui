@@ -12,6 +12,7 @@ import {
 
 import personFactory from '../../../server/testutils/factories/person'
 import Page from '../../../cypress_shared/pages/page'
+import applicationFactory from '../../../server/testutils/factories/application'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -21,6 +22,10 @@ context('Apply', () => {
   })
 
   it('shows the details of a person from their CRN', () => {
+    const application = applicationFactory.build()
+    cy.task('stubApplicationCreate', { application })
+    cy.task('stubApplicationUpdate', { application })
+
     // Given I am logged in
     cy.signIn()
 
@@ -60,6 +65,17 @@ context('Apply', () => {
 
     // Then I should be asked if I know the release date
     Page.verifyOnPage(ReleaseDatePage)
+
+    // And the API should have recieved the updated application
+    cy.task('verifyApplicationUpdate', application.id).then(requests => {
+      expect(requests).to.have.length(2)
+
+      const firstRequestData = JSON.parse(requests[0].body).data
+      const secondRequestData = JSON.parse(requests[1].body).data
+
+      expect(firstRequestData['basic-information']['sentence-type'].sentenceType).equal('bailPlacement')
+      expect(secondRequestData['basic-information'].situation.situation).equal('bailSentence')
+    })
   })
 
   it('shows an error message if the person is not found', () => {
@@ -84,6 +100,10 @@ context('Apply', () => {
   })
 
   it('shows a tasklist', () => {
+    const application = applicationFactory.build()
+    cy.task('stubApplicationCreate', { application })
+    cy.task('stubApplicationUpdate', { application })
+
     // Given I am logged in
     cy.signIn()
 

@@ -26,6 +26,8 @@ interface PostRequest {
   raw?: boolean
 }
 
+interface PutRequest extends PostRequest {}
+
 interface StreamRequest {
   path?: string
   headers?: Record<string, string>
@@ -99,6 +101,37 @@ export default class RestClient {
     } catch (error) {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'POST'`)
+      throw sanitisedError
+    }
+  }
+
+  async put({
+    path = null,
+    headers = {},
+    responseType = '',
+    data = {},
+    raw = false,
+  }: PutRequest = {}): Promise<unknown> {
+    logger.info(`Put using user credentials: calling ${this.name}: ${path}`)
+    try {
+      const result = await superagent
+        .put(`${this.apiUrl()}${path}`)
+        .send(data)
+        .agent(this.agent)
+        .use(restClientMetricsMiddleware)
+        .retry(2, (err, res) => {
+          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
+          return undefined // retry handler only for logging retries, not to influence retry logic
+        })
+        .auth(this.token, { type: 'bearer' })
+        .set(headers)
+        .responseType(responseType)
+        .timeout(this.timeoutConfig())
+
+      return raw ? result : result.body
+    } catch (error) {
+      const sanitisedError = sanitiseError(error)
+      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'PUT'`)
       throw sanitisedError
     }
   }

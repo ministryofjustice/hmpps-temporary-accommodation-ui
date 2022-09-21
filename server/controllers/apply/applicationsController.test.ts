@@ -152,6 +152,12 @@ describe('applicationsController', () => {
   })
 
   describe('create', () => {
+    beforeEach(() => {
+      request = createMock<Request>({
+        user: { token },
+      })
+      request.body.crn = 'some-crn'
+    })
     it('creates an application and redirects to the first page of the first step', async () => {
       const uuid = 'some-uuid'
       applicationService.createApplication.mockResolvedValue(uuid)
@@ -160,7 +166,7 @@ describe('applicationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(applicationService.createApplication).toHaveBeenCalled()
+      expect(applicationService.createApplication).toHaveBeenCalledWith('SOME_TOKEN', 'some-crn')
       expect(response.redirect).toHaveBeenCalledWith(
         paths.applications.pages.show({ id: uuid, task: 'basic-information', page: 'sentence-type' }),
       )

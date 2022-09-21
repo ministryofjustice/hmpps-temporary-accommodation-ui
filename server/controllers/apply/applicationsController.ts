@@ -54,7 +54,7 @@ export default class ApplicationsController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const uuid = await this.applicationService.createApplication(req.user.token)
+      const uuid = await this.applicationService.createApplication(req.user.token, req.body.crn)
 
       res.redirect(paths.applications.pages.show({ id: uuid, task: 'basic-information', page: 'sentence-type' }))
     }

@@ -18,10 +18,10 @@ export type DataServices = {
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
-  async createApplication(token: string): Promise<string> {
+  async createApplication(token: string, crn: string): Promise<string> {
     const applicationClient = this.applicationClientFactory(token)
 
-    const uuid = await applicationClient.create()
+    const uuid = await applicationClient.create(crn)
 
     return uuid
   }

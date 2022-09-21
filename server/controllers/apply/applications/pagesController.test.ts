@@ -148,6 +148,20 @@ describe('pagesController', () => {
       )
     })
 
+    it('redirects to the tasklist if there is no next page', async () => {
+      page.next.mockReturnValue(undefined)
+
+      applicationService.save.mockReturnValue()
+
+      const requestHandler = pagesController.update()
+
+      await requestHandler(request, response)
+
+      expect(applicationService.save).toHaveBeenCalledWith(page, request)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.applications.show({ id: request.params.id }))
+    })
+
     it('sets a flash and redirects if there are errors', async () => {
       const err = new Error()
       applicationService.save.mockImplementation(() => {

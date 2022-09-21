@@ -21,45 +21,45 @@ export default class BookingNewPage extends Page {
   }
 
   arrivalDay(): PageElement {
-    return cy.get('#expectedArrivalDate-day')
+    return cy.get('#arrivalDate-day')
   }
 
   arrivalMonth(): PageElement {
-    return cy.get('#expectedArrivalDate-month')
+    return cy.get('#arrivalDate-month')
   }
 
   arrivalYear(): PageElement {
-    return cy.get('#expectedArrivalDate-year')
+    return cy.get('#arrivalDate-year')
   }
 
   expectedDepartureDay(): PageElement {
-    return cy.get('#expectedDepartureDate-day')
+    return cy.get('#departureDate-day')
   }
 
   expectedDepartureMonth(): PageElement {
-    return cy.get('#expectedDepartureDate-month')
+    return cy.get('#departureDate-month')
   }
 
   expectedDepartureYear(): PageElement {
-    return cy.get('#expectedDepartureDate-year')
+    return cy.get('#departureDate-year')
   }
 
   completeForm(booking: Booking): void {
     this.getLegend('What is the expected arrival date?')
 
-    const expectedArrivalDate = new Date(Date.parse(booking.expectedArrivalDate))
+    const arrivalDate = new Date(Date.parse(booking.arrivalDate))
 
-    this.arrivalDay().type(expectedArrivalDate.getDate().toString())
-    this.arrivalMonth().type(`${expectedArrivalDate.getMonth() + 1}`)
-    this.arrivalYear().type(expectedArrivalDate.getFullYear().toString())
+    this.arrivalDay().type(arrivalDate.getDate().toString())
+    this.arrivalMonth().type(`${arrivalDate.getMonth() + 1}`)
+    this.arrivalYear().type(arrivalDate.getFullYear().toString())
 
     this.getLegend('What is the expected departure date?')
 
-    const expectedDepartureDate = new Date(Date.parse(booking.expectedDepartureDate))
+    const departureDate = new Date(Date.parse(booking.departureDate))
 
-    this.expectedDepartureDay().type(expectedDepartureDate.getDate().toString())
-    this.expectedDepartureMonth().type(`${expectedDepartureDate.getMonth() + 1}`)
-    this.expectedDepartureYear().type(expectedDepartureDate.getFullYear().toString())
+    this.expectedDepartureDay().type(departureDate.getDate().toString())
+    this.expectedDepartureMonth().type(`${departureDate.getMonth() + 1}`)
+    this.expectedDepartureYear().type(departureDate.getFullYear().toString())
 
     this.getLabel('Key Worker')
     this.getSelectInputByIdAndSelectAnEntry('keyWorkerId', booking.keyWorker.name)

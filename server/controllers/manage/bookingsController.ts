@@ -61,8 +61,8 @@ export default class BookingsController {
 
       const booking: NewBooking = {
         ...req.body,
-        ...convertDateAndTimeInputsToIsoString(req.body, 'expectedArrivalDate'),
-        ...convertDateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
+        ...convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
+        ...convertDateAndTimeInputsToIsoString(req.body, 'departureDate'),
       }
 
       try {

@@ -32,7 +32,7 @@
         govukSummaryList({
           classes: 'govuk-summary-list--no-border',
           attributes: {
-            'data-cy-expected-dates': true
+            'data-cy-dates': true
           },
           rows: [
             {
@@ -40,7 +40,7 @@
                 text: "Arrival date"
               },
               value: {
-                text: formatDate(booking.expectedArrivalDate)
+                text: formatDate(booking.arrivalDate)
               }
             },
             {
@@ -48,7 +48,7 @@
                 text: "Departure date"
               },
               value: {
-                text: formatDate(booking.expectedDepartureDate)
+                text: formatDate(booking.departureDate)
               }
             },
             {

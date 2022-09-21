@@ -84,18 +84,16 @@ export default class BookingService {
   bookingsToTableRows(bookings: Array<Booking>, premisesId: string, type: 'arrival' | 'departure'): Array<TableRow> {
     return bookings.map(booking => [
       {
-        text: booking.crn,
+        text: booking.person.crn,
       },
       {
-        text: formatDate(
-          convertDateString(type === 'arrival' ? booking.expectedArrivalDate : booking.expectedDepartureDate),
-        ),
+        text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.departureDate)),
       },
       {
         html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
           Manage
           <span class="govuk-visually-hidden">
-            booking for ${booking.crn}
+            booking for ${booking.person.crn}
           </span>
         </a>`,
       },
@@ -114,16 +112,16 @@ export default class BookingService {
   currentResidentsToTableRows(bookings: Array<Booking>, premisesId: string): Array<TableRow> {
     return bookings.map(booking => [
       {
-        text: booking.crn,
+        text: booking.person.crn,
       },
       {
-        text: formatDate(convertDateString(booking.expectedDepartureDate)),
+        text: formatDate(convertDateString(booking.departureDate)),
       },
       {
         html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
         Manage
         <span class="govuk-visually-hidden">
-          booking for ${booking.crn}
+          booking for ${booking.person.crn}
         </span>
       </a>`,
       },
@@ -132,22 +130,20 @@ export default class BookingService {
 
   private bookingsArrivingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
     return this.bookingsAwaitingArrival(bookings).filter(booking =>
-      isSameDay(convertDateString(booking.expectedArrivalDate), today),
+      isSameDay(convertDateString(booking.arrivalDate), today),
     )
   }
 
   private bookingsDepartingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
-    return this.arrivedBookings(bookings).filter(booking =>
-      isSameDay(convertDateString(booking.expectedDepartureDate), today),
-    )
+    return this.arrivedBookings(bookings).filter(booking => isSameDay(convertDateString(booking.departureDate), today))
   }
 
   private upcomingArrivals(bookings: Array<Booking>, today: Date): Array<Booking> {
-    return this.bookingsAwaitingArrival(bookings).filter(booking => this.isUpcoming(booking.expectedArrivalDate, today))
+    return this.bookingsAwaitingArrival(bookings).filter(booking => this.isUpcoming(booking.arrivalDate, today))
   }
 
   private upcomingDepartures(bookings: Array<Booking>, today: Date): Array<Booking> {
-    return this.arrivedBookings(bookings).filter(booking => this.isUpcoming(booking.expectedDepartureDate, today))
+    return this.arrivedBookings(bookings).filter(booking => this.isUpcoming(booking.departureDate, today))
   }
 
   private arrivedBookings(bookings: Array<Booking>): Array<Booking> {

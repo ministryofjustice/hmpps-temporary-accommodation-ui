@@ -50,8 +50,8 @@
                 }) }}
 
                 {{ govukDateInput({
-                    id: "expectedArrivalDate",
-                    namePrefix: "expectedArrivalDate",
+                    id: "arrivalDate",
+                    namePrefix: "arrivalDate",
                     fieldset: {
                     legend: {
                         text: "What is the expected arrival date?",
@@ -61,13 +61,13 @@
                     hint: {
                         text: "For example, 27 3 2007"
                     },
-                    items: dateFieldValues('expectedArrivalDate', errors),
-                    errorMessage: errors.expectedArrivalDate
+                    items: dateFieldValues('arrivalDate', errors),
+                    errorMessage: errors.arrivalDate
                 }) }}
 
                 {{ govukDateInput({
-                    id: "expectedDepartureDate",
-                    namePrefix: "expectedDepartureDate",
+                    id: "departureDate",
+                    namePrefix: "departureDate",
                     fieldset: {
                     legend: {
                         text: "What is the expected departure date?",
@@ -77,8 +77,8 @@
                     hint: {
                     text: "For example, 27 3 2007"
                     },
-                    items: dateFieldValues('expectedDepartureDate', errors),
-                    errorMessage: errors.expectedDepartureDate
+                    items: dateFieldValues('departureDate', errors),
+                    errorMessage: errors.departureDate
                 }) }}
 
                 {{ govukSelect({

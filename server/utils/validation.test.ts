@@ -12,7 +12,7 @@ jest.mock('../i18n/en/errors.json', () => {
     crn: {
       blank: 'You must enter a CRN',
     },
-    expectedArrivalDate: {
+    arrivalDate: {
       blank: 'You must enter a valid arrival date',
     },
   }
@@ -24,15 +24,15 @@ describe('catchValidationErrorOrPropogate', () => {
 
   const expectedErrors = {
     crn: { text: errorLookups.crn.blank, attributes: { 'data-cy-error-crn': true } },
-    expectedArrivalDate: {
-      text: errorLookups.expectedArrivalDate.blank,
-      attributes: { 'data-cy-error-expectedArrivalDate': true },
+    arrivalDate: {
+      text: errorLookups.arrivalDate.blank,
+      attributes: { 'data-cy-error-arrivalDate': true },
     },
   }
 
   const expectedErrorSummary = [
     { text: errorLookups.crn.blank, href: '#crn' },
-    { text: errorLookups.expectedArrivalDate.blank, href: '#expectedArrivalDate' },
+    { text: errorLookups.arrivalDate.blank, href: '#arrivalDate' },
   ]
 
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('catchValidationErrorOrPropogate', () => {
             errorType: 'blank',
           },
           {
-            propertyName: 'expectedArrivalDate',
+            propertyName: 'arrivalDate',
             errorType: 'blank',
           },
         ],
@@ -74,7 +74,7 @@ describe('catchValidationErrorOrPropogate', () => {
           errorType: 'blank',
         },
         {
-          propertyName: 'expectedArrivalDate',
+          propertyName: 'arrivalDate',
           errorType: 'blank',
         },
       ],

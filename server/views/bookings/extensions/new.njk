@@ -36,7 +36,7 @@
                         text: "CRN"
                     },
                     value: {
-                        text: booking.crn
+                        text: booking.person.crn
                     }
                     },
                     {
@@ -44,7 +44,7 @@
                         text: "Expected arrival date"
                     },
                     value: {
-                        text: formatDate(booking.expectedArrivalDate)
+                        text: formatDate(booking.arrivalDate)
                     }
                     },
                     {
@@ -52,7 +52,7 @@
                         text: "Current expected departure date"
                     },
                     value: {
-                        text: formatDate(booking.expectedDepartureDate)
+                        text: formatDate(booking.departureDate)
                     }
                     },
                     {

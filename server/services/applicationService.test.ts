@@ -228,31 +228,42 @@ describe('ApplicationService', () => {
       })
 
       it('does not throw an error', () => {
-        expect(() => service.save(page, request)).not.toThrow(ValidationError)
+        expect(async () => {
+          await service.save(page, request)
+        }).not.toThrow(ValidationError)
       })
 
-      it('saves data to the session', () => {
-        service.save(page, request)
+      it('saves data to the session', async () => {
+        await service.save(page, request)
 
         expect(request.session.application).toEqual({ 'some-uuid': { 'some-task': { 'some-page': { foo: 'bar' } } } })
       })
     })
 
-    it('throws an error if there is a validation error', () => {
-      const errors = createMock<TaskListErrors>([{ propertyName: 'foo', errorType: 'bar' }])
-      const page = createMock<TasklistPage>({
-        errors: () => errors,
+    describe('When there validation errors', () => {
+      it('throws an error if there is a validation error', async () => {
+        const errors = createMock<TaskListErrors>([{ propertyName: 'foo', errorType: 'bar' }])
+        const page = createMock<TasklistPage>({
+          errors: () => errors,
+        })
+
+        expect.assertions(1)
+        try {
+          await service.save(page, request)
+        } catch (e) {
+          expect(e).toEqual(new ValidationError(errors))
+        }
       })
 
-      expect(() => service.save(page, request)).toThrow(new ValidationError(errors))
-    })
+      it('does not thow an error when the page has no errors method', () => {
+        const page = createMock<TasklistPage>({
+          errors: undefined,
+        })
 
-    it('does not thow an error when the page has no errors method', () => {
-      const page = createMock<TasklistPage>({
-        errors: undefined,
+        expect(async () => {
+          await service.save(page, request)
+        }).not.toThrow(ValidationError)
       })
-
-      expect(() => service.save(page, request)).not.toThrow(ValidationError)
     })
   })
 })

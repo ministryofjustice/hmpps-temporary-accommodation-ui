@@ -2,7 +2,7 @@ import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingFactory from '../../../server/testutils/factories/booking'
 import cancellationFactory from '../../../server/testutils/factories/cancellation'
 
-import { CancellationCreatePage, CancellationConfirmPage } from '../../pages/manage'
+import { CancellationCreatePage, CancellationConfirmPage } from '../../../cypress_shared/pages/manage'
 
 context('Cancellation', () => {
   beforeEach(() => {

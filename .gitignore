@@ -127,3 +127,5 @@ integration_tests/videos/
 integration_tests/screenshots/
 */*.iml
 **/Chart.lock
+/e2e/screenshots
+/e2e/videos

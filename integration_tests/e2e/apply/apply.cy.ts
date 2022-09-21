@@ -1,8 +1,14 @@
-import { StartPage, EnterCRNPage, ConfirmDetailsPage, SentenceTypePage, SituationPage } from '../../pages/apply'
+import {
+  StartPage,
+  EnterCRNPage,
+  ConfirmDetailsPage,
+  SentenceTypePage,
+  SituationPage,
+} from '../../../cypress_shared/pages/apply'
 
 import personFactory from '../../../server/testutils/factories/person'
-import Page from '../../pages/page'
-import ReleaseDatePage from '../../pages/apply/releaseDate'
+import Page from '../../../cypress_shared/pages/page'
+import ReleaseDatePage from '../../../cypress_shared/pages/apply/releaseDate'
 
 context('Apply', () => {
   beforeEach(() => {

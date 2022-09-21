@@ -6,7 +6,9 @@
     "types": ["cypress", "approved-premises"],
     "esModuleInterop": true,
     "typeRoots": ["../server/@types", "../node_modules/@types"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "moduleResolution": "node",
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../cypress_shared/**/*.ts"],
 }

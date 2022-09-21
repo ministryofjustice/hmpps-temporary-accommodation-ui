@@ -3,7 +3,7 @@ import departureFactory from '../../../server/testutils/factories/departure'
 import bookingFactory from '../../../server/testutils/factories/booking'
 import referenceDataFactory from '../../../server/testutils/factories/referenceData'
 
-import { DepartureCreatePage, DepartureConfirmationPage } from '../../pages/manage'
+import { DepartureCreatePage, DepartureConfirmationPage } from '../../../cypress_shared/pages/manage'
 
 context('Departures', () => {
   beforeEach(() => {

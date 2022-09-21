@@ -1,7 +1,7 @@
-import { StartPage, ListPage } from '../../pages/apply'
+import { StartPage, ListPage } from '../../../cypress_shared/pages/apply'
 
 import applicationSummaryFactory from '../../../server/testutils/factories/applicationSummary'
-import Page from '../../pages/page'
+import Page from '../../../cypress_shared/pages/page'
 
 context('Applications dashboard', () => {
   beforeEach(() => {

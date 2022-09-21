@@ -22,9 +22,9 @@ echo "==> Running unit tests..."
 
 npm run test
 
-echo "==> Running e2e tests..."
+echo "==> Running integration tests..."
 
-npm run test:e2e
+npm run test:integration
 
 cleanup() {
   docker-compose -f docker-compose-test.yml down --remove-orphans

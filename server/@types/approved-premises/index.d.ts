@@ -13,6 +13,7 @@ declare module 'approved-premises' {
   export type PremisesCapacityItem = schemas['PremisesCapacityItem']
   export type PremisesCapacity = Array<PremisesCapacityItem>
   export type ApplicationSummary = schemas['ApplicationSummary']
+  export type Application = schemas['Application']
 
   // A utility type that allows us to define an object with a date attribute split into
   // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
@@ -248,6 +249,15 @@ declare module 'approved-premises' {
       arrivalDate: string
       daysSinceApplicationRecieved: number
       status: 'In progress' | 'Submitted' | 'Information Requested' | 'Rejected'
+    }
+    Application: {
+      id: string
+      crn: string
+      createdByProbationOfficerId: string
+      schemaVersion: string
+      createdAt: string
+      submittedAt?: string
+      data: Record<string, unknown>
     }
   }
 }

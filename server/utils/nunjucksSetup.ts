@@ -6,8 +6,10 @@ import express from 'express'
 import * as pathModule from 'path'
 
 import type { ErrorMessages } from 'approved-premises'
+import { TaskNames, Application } from '../form-pages/apply'
 import { initialiseName, formatDateString } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems, convertObjectsToSelectOptions } from './formUtils'
+import { getTaskStatus, taskLink } from './applicationUtils'
 import bookingActions from './bookingUtils'
 
 import managePaths from '../paths/manage'
@@ -47,6 +49,11 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     },
   )
 
+  const markAsSafe = (html: string): string => {
+    const safeFilter = njkEnv.getFilter('safe')
+    return safeFilter(html)
+  }
+
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
   njkEnv.addGlobal('formatDate', formatDateString)
@@ -82,4 +89,10 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('bookingActions', bookingActions)
 
   njkEnv.addGlobal('paths', { ...managePaths, ...applyPaths })
+
+  njkEnv.addGlobal('getTaskStatus', (task: TaskNames, application: Application) =>
+    markAsSafe(getTaskStatus(task, application)),
+  )
+
+  njkEnv.addGlobal('taskLink', (task: TaskNames, id: string) => markAsSafe(taskLink(task, id)))
 }

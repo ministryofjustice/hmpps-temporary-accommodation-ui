@@ -75,8 +75,8 @@ export default class PremisesShowPage extends Page {
 
   private tableShouldContainBookings(bookings: Array<Booking>, type: 'arrival' | 'departure') {
     bookings.forEach((item: Booking) => {
-      const date = type === 'arrival' ? parseISO(item.expectedArrivalDate) : parseISO(item.expectedDepartureDate)
-      cy.contains(item.crn)
+      const date = type === 'arrival' ? parseISO(item.arrivalDate) : parseISO(item.departureDate)
+      cy.contains(item.person.crn)
         .parent()
         .within(() => {
           cy.get('td').eq(0).contains(formatDate(date))
@@ -91,12 +91,12 @@ export default class PremisesShowPage extends Page {
   shouldShowCurrentResidents(currentResidents: Array<Booking>) {
     cy.get('h2').should('contain', 'Current Residents')
     currentResidents.forEach((item: Booking) => {
-      cy.contains(item.crn)
+      cy.contains(item.person.crn)
         .parent()
         .within(() => {
           cy.get('td')
             .eq(0)
-            .contains(formatDate(parseISO(item.expectedDepartureDate)))
+            .contains(formatDate(parseISO(item.departureDate)))
           cy.get('td')
             .eq(1)
             .contains('Manage')

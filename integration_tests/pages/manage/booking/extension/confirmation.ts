@@ -16,10 +16,10 @@ export default class BookingExtensionConfirmationPage extends Page {
 
   verifyBookingIsVisible(booking: Booking): void {
     cy.get('dl').within(() => {
-      this.assertDefinition('Name', booking.name)
-      this.assertDefinition('CRN', booking.crn)
-      this.assertDefinition('Expected arrival date', formatDate(parseISO(booking.expectedArrivalDate)))
-      this.assertDefinition('New expected departure date', formatDate(parseISO(booking.expectedDepartureDate)))
+      this.assertDefinition('Name', booking.person.name)
+      this.assertDefinition('CRN', booking.person.crn)
+      this.assertDefinition('Expected arrival date', formatDate(parseISO(booking.arrivalDate)))
+      this.assertDefinition('New expected departure date', formatDate(parseISO(booking.departureDate)))
       this.assertDefinition('Key worker', booking.keyWorker.name)
     })
   }

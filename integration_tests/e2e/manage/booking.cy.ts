@@ -22,10 +22,9 @@ context('Booking', () => {
   it('should show the CRN form followed by the booking form', () => {
     const person = personFactory.build()
     const booking = bookingFactory.build({
-      crn: person.crn,
-      name: person.name,
-      expectedArrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
-      expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
+      person,
+      arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
+      departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
       keyWorker: keyWorkers[1],
     })
     const firstOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
@@ -104,8 +103,8 @@ context('Booking', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.expectedArrivalDate).equal(booking.expectedArrivalDate)
-      expect(requestBody.expectedDepartureDate).equal(booking.expectedDepartureDate)
+      expect(requestBody.arrivalDate).equal(booking.arrivalDate)
+      expect(requestBody.departureDate).equal(booking.departureDate)
       expect(requestBody.keyWorkerId).equal(booking.keyWorker.id)
     })
   })
@@ -141,12 +140,12 @@ context('Booking', () => {
     // And I miss the required fields
     cy.task('stubBookingErrors', {
       premisesId: premises.id,
-      params: ['expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],
+      params: ['arrivalDate', 'departureDate', 'keyWorkerId'],
     })
     bookingCreatePage.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'])
+    page.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate', 'keyWorkerId'])
   })
 
   it('should allow me to see a booking', () => {

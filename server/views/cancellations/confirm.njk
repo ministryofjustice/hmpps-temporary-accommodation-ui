@@ -21,7 +21,7 @@
                     text: "Name"
                 },
                 value: {
-                    text: booking.name
+                    text: booking.person.name
                 }
               },
               {
@@ -29,7 +29,7 @@
                     text: "CRN"
                 },
                 value: {
-                    text: booking.crn
+                    text: booking.person.crn
                 }
               },
               {
@@ -37,7 +37,7 @@
                     text: "Arrival date"
                 },
                 value: {
-                    text: formatDate(booking.expectedArrivalDate)
+                    text: formatDate(booking.arrivalDate)
                 }
               },
               {
@@ -45,7 +45,7 @@
                     text: "Expected departure date"
                 },
                 value: {
-                    text: formatDate(booking.expectedDepartureDate)
+                    text: formatDate(booking.departureDate)
                 }
               },
               {

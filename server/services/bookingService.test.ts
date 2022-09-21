@@ -44,12 +44,12 @@ describe('BookingService', () => {
 
   describe('find', () => {
     it('on success returns the booking that has been requested', async () => {
-      const expectedArrivalDate = new Date(2022, 2, 11)
-      const expectedDepartureDate = new Date(2022, 2, 12)
+      const arrivalDate = new Date(2022, 2, 11)
+      const departureDate = new Date(2022, 2, 12)
 
       const booking = bookingFactory.build({
-        expectedArrivalDate: expectedArrivalDate.toISOString(),
-        expectedDepartureDate: expectedDepartureDate.toISOString(),
+        arrivalDate: arrivalDate.toISOString(),
+        departureDate: departureDate.toISOString(),
       })
 
       bookingClient.find.mockResolvedValue(booking)
@@ -166,19 +166,19 @@ describe('BookingService', () => {
       const booking2Date = new Date(2022, 2, 11)
 
       const bookings = [
-        bookingFactory.build({ expectedArrivalDate: booking1Date.toISOString() }),
-        bookingFactory.build({ expectedArrivalDate: booking2Date.toISOString() }),
+        bookingFactory.build({ arrivalDate: booking1Date.toISOString() }),
+        bookingFactory.build({ arrivalDate: booking2Date.toISOString() }),
       ]
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')
 
-      expect(results[0][0]).toEqual({ text: bookings[0].crn })
+      expect(results[0][0]).toEqual({ text: bookings[0].person.crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
-      expect(results[1][0]).toEqual({ text: bookings[1].crn })
+      expect(results[1][0]).toEqual({ text: bookings[1].person.crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
@@ -192,19 +192,19 @@ describe('BookingService', () => {
       const booking2Date = new Date(2022, 2, 11)
 
       const bookings = [
-        bookingFactory.build({ expectedDepartureDate: booking1Date.toISOString() }),
-        bookingFactory.build({ expectedDepartureDate: booking2Date.toISOString() }),
+        bookingFactory.build({ departureDate: booking1Date.toISOString() }),
+        bookingFactory.build({ departureDate: booking2Date.toISOString() }),
       ]
 
       const results = service.bookingsToTableRows(bookings, premisesId, 'departure')
 
-      expect(results[0][0]).toEqual({ text: bookings[0].crn })
+      expect(results[0][0]).toEqual({ text: bookings[0].person.crn })
       expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
-      expect(results[1][0]).toEqual({ text: bookings[1].crn })
+      expect(results[1][0]).toEqual({ text: bookings[1].person.crn })
       expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),

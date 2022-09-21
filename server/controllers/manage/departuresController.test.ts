@@ -208,8 +208,8 @@ describe('DeparturesController', () => {
         premisesId,
         bookingId,
         pageHeading: 'Departure confirmed',
-        name: booking.name,
-        crn: booking.crn,
+        name: booking.person.name,
+        crn: booking.person.crn,
       })
 
       expect(departureService.getDeparture).toHaveBeenCalledWith(token, premisesId, bookingId, departure.id)

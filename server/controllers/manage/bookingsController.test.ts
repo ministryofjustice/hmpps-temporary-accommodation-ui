@@ -8,6 +8,7 @@ import BookingsController from './bookingsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 
 import bookingFactory from '../../testutils/factories/booking'
+import newBookingFactory from '../../testutils/factories/newBooking'
 import personFactory from '../../testutils/factories/person'
 import referenceDataFactory from '../../testutils/factories/referenceData'
 import paths from '../../paths/manage'
@@ -154,6 +155,7 @@ describe('bookingsController', () => {
 
   describe('create', () => {
     it('given the expected form data, the posting of the booking is successful should redirect to the "confirmation" page', async () => {
+      const newBooking = newBookingFactory.build()
       const booking = bookingFactory.build()
       bookingService.create.mockResolvedValue(booking)
 
@@ -162,23 +164,12 @@ describe('bookingsController', () => {
       request = {
         ...request,
         params: { premisesId },
-        body: {
-          'expectedArrivalDate-day': '01',
-          'expectedArrivalDate-month': '02',
-          'expectedArrivalDate-year': '2022',
-          'expectedDepartureDate-day': '01',
-          'expectedDepartureDate-month': '02',
-          'expectedDepartureDate-year': '2023',
-        },
+        body: newBooking,
       }
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.create).toHaveBeenCalledWith(token, premisesId, {
-        ...request.body,
-        expectedArrivalDate: '2022-02-01T00:00:00.000Z',
-        expectedDepartureDate: '2023-02-01T00:00:00.000Z',
-      })
+      expect(bookingService.create).toHaveBeenCalledWith(token, premisesId, newBooking)
 
       expect(response.redirect).toHaveBeenCalledWith(
         paths.bookings.confirm({
@@ -223,8 +214,8 @@ describe('bookingsController', () => {
   describe('confirm', () => {
     it('renders the form with the details from the booking that is requested', async () => {
       const booking = bookingFactory.build({
-        expectedArrivalDate: new Date('07/27/22').toISOString(),
-        expectedDepartureDate: new Date('07/28/22').toISOString(),
+        arrivalDate: new Date('07/27/22').toISOString(),
+        departureDate: new Date('07/28/22').toISOString(),
       })
       const overcapacityMessage = 'The premises is over capacity for the period January 1st 2023 to Feburary 3rd 2023'
       premisesService.getOvercapacityMessage.mockResolvedValue(overcapacityMessage)

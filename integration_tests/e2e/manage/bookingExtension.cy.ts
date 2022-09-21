@@ -12,7 +12,7 @@ context('BookingExtension', () => {
 
   it('should show booking extension form', () => {
     const booking = bookingFactory.build({
-      expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
+      departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
     })
     const newDepartureDate = new Date(Date.UTC(2022, 6, 3, 0, 0, 0)).toISOString()
     const premises = premisesFactory.build()
@@ -47,7 +47,7 @@ context('BookingExtension', () => {
   it('should show errors', () => {
     const premises = premisesFactory.build()
     const booking = bookingFactory.build({
-      expectedDepartureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
+      departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
     })
 
     cy.task('stubSinglePremises', { premisesId: premises.id })

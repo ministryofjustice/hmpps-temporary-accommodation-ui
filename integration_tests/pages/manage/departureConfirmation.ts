@@ -16,8 +16,8 @@ export default class DepartureConfirmation extends Page {
 
   verifyConfirmedDepartureIsVisible(departure: Departure, booking: Booking): void {
     cy.get('dl').within(() => {
-      this.assertDefinition('Name', booking.name)
-      this.assertDefinition('CRN', booking.crn)
+      this.assertDefinition('Name', booking.person.name)
+      this.assertDefinition('CRN', booking.person.crn)
       this.assertDefinition('Departure date', parseISO(departure.dateTime).toLocaleDateString('en-GB'))
       this.assertDefinition('Reason', departure.reason.name)
       this.assertDefinition('Destination approved premises', departure.destinationAp.name)

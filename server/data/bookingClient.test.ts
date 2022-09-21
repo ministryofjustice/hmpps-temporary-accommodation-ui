@@ -38,11 +38,10 @@ describe('BookingClient', () => {
     it('should return the booking that has been posted', async () => {
       const booking = bookingFactory.build()
       const payload = newBookingFactory.build({
-        expectedArrivalDate: booking.expectedArrivalDate,
-        expectedDepartureDate: booking.expectedDepartureDate,
-        crn: booking.crn,
+        arrivalDate: booking.arrivalDate,
+        departureDate: booking.departureDate,
+        crn: booking.person.crn,
         keyWorkerId: booking.keyWorker.id,
-        name: booking.name,
       })
 
       fakeApprovedPremisesApi

@@ -9,7 +9,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `/applications/previous`,
+        url: `/applications`,
       },
       response: {
         status: 200,

@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
+import createError from 'http-errors'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
 import ApplicationsController from './applicationsController'
@@ -10,6 +11,8 @@ import personFactory from '../../testutils/factories/person'
 import paths from '../../paths/apply'
 import { formatDateString } from '../../utils/utils'
 
+import type { Application } from '../../form-pages/apply'
+
 jest.mock('../../utils/validation')
 
 describe('applicationsController', () => {
@@ -17,7 +20,7 @@ describe('applicationsController', () => {
 
   let request: DeepMocked<Request> = createMock<Request>({ user: { token } })
   let response: DeepMocked<Response> = createMock<Response>({})
-  const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
+  const next: DeepMocked<NextFunction> = jest.fn()
 
   const applicationService = createMock<ApplicationService>({})
   const personService = createMock<PersonService>({})
@@ -54,6 +57,38 @@ describe('applicationsController', () => {
       expect(response.render).toHaveBeenCalledWith('applications/start', {
         pageHeading: 'Apply for an Approved Premises (AP) placement',
       })
+    })
+  })
+
+  describe('show', () => {
+    it('renders the task list if an application exists', () => {
+      const requestHandler = applicationsController.show()
+
+      const application = createMock<Application>()
+      const id = 'some-uuid'
+
+      request = createMock<Request>({
+        params: { id },
+        session: { application: { [id]: application } },
+      })
+
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('applications/show', { application, id })
+    })
+
+    it('404s if the application is not present in the session', () => {
+      const requestHandler = applicationsController.show()
+
+      const id = 'some-uuid'
+
+      request = createMock<Request>({
+        params: { id },
+      })
+
+      requestHandler(request, response, next)
+
+      expect(next).toHaveBeenCalledWith(createError(404, 'Not found'))
     })
   })
 

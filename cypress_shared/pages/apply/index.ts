@@ -4,5 +4,18 @@ import ConfirmDetailsPage from './confirmDetails'
 import ListPage from './list'
 import SentenceTypePage from './sentenceType'
 import SituationPage from './situationPage'
+import PlacementStartPage from './placementStart'
+import ReleaseDatePage from './releaseDate'
+import TaskListPage from './taskListPage'
 
-export { ConfirmDetailsPage, EnterCRNPage, StartPage, ListPage, SentenceTypePage, SituationPage }
+export {
+  ConfirmDetailsPage,
+  EnterCRNPage,
+  StartPage,
+  ListPage,
+  SentenceTypePage,
+  SituationPage,
+  PlacementStartPage,
+  ReleaseDatePage,
+  TaskListPage,
+}

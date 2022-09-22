@@ -1,4 +1,6 @@
-import type { Request, Response, RequestHandler } from 'express'
+import type { Request, Response, RequestHandler, NextFunction } from 'express'
+import createError from 'http-errors'
+
 import ApplicationService from '../../services/applicationService'
 import { PersonService } from '../../services'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
@@ -21,6 +23,18 @@ export default class ApplicationsController {
       res.render('applications/start', {
         pageHeading: 'Apply for an Approved Premises (AP) placement',
       })
+    }
+  }
+
+  show(): RequestHandler {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const application = req.session?.application?.[req.params.id]
+
+      if (!application) {
+        next(createError(404, 'Not found'))
+      }
+
+      res.render('applications/show', { application, id: req.params.id })
     }
   }
 

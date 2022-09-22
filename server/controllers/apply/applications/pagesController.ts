@@ -45,7 +45,12 @@ export default class PagesController {
 
       try {
         this.applicationService.save(page, req)
-        res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))
+        const next = page.next()
+        if (next) {
+          res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))
+        } else {
+          res.redirect(paths.applications.show({ id: req.params.id }))
+        }
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,

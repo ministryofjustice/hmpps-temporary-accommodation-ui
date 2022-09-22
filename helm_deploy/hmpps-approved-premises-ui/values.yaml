@@ -1,11 +1,11 @@
 ---
 generic-service:
-  nameOverride: approved-premises-ui
+  nameOverride: hmpps-approved-premises-ui
 
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/approved-premises-ui
+    repository: quay.io/hmpps/hmpps-approved-premises-ui
     tag: app_version # override at deployment time
     port: 3000
 
@@ -63,4 +63,4 @@ generic-service:
     cloudplatform-live1-3: '35.177.252.54/32'
 
 generic-prometheus-alerts:
-  targetApplication: approved-premises-ui
+  targetApplication: hmpps-approved-premises-ui

@@ -11,7 +11,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <h1>Make a booking</h1>
+            <h1>Create a placement</h1>
             <form action="{{ paths.people.find({ premisesId: premisesId }) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
@@ -19,7 +19,7 @@
 
                 {{ govukInput({
                     label: {
-                        text: "Find someone by CRN",
+                        text: "Enter the individual's CRN",
                         classes: "govuk-label--m"
                     },
                     classes: "govuk-input--width-10",
@@ -30,8 +30,8 @@
                     }) }}
 
                 {{ govukButton({
-                    name: 'submit',
-                    text: "Submit"
+                    name: 'search',
+                    text: "Search"
                 }) }}
             </form>
         </div>

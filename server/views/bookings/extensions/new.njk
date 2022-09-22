@@ -6,7 +6,7 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Extend booking" %}
+{% set pageTitle = applicationName + " - Extend placement" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -19,7 +19,7 @@
             <form action="{{ paths.bookings.extensions.create({ premisesId: premisesId, bookingId: booking.id }) }}" method="post">
 
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                <h1>Extend booking</h1>
+                <h1>Extend placement</h1>
 
                 {{ govukSummaryList({
                 rows: [
@@ -41,14 +41,6 @@
                     },
                     {
                     key: {
-                        text: "Expected arrival date"
-                    },
-                    value: {
-                        text: formatDate(booking.arrivalDate)
-                    }
-                    },
-                    {
-                    key: {
                         text: "Current expected departure date"
                     },
                     value: {
@@ -64,7 +56,7 @@
                     namePrefix: "newDepartureDate",
                     fieldset: {
                     legend: {
-                        text: "What is the extended expected departure date?",
+                        text: "What is the new departure date?",
                         classes: "govuk-fieldset__legend--m"
                         }
                     },

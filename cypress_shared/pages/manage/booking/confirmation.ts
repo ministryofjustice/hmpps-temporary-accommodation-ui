@@ -10,7 +10,7 @@ type OvercapacityPeriod = {
 }
 export default class BookingConfirmationPage extends Page {
   constructor() {
-    super('Booking complete')
+    super('Placement confirmed')
   }
 
   static visit(premisesId: string, bookingId: string): BookingConfirmationPage {

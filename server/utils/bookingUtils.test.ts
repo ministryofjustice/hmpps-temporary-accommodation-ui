@@ -21,24 +21,24 @@ describe('bookingUtils', () => {
         {
           items: [
             {
+              text: 'Mark as arrived',
               classes: 'govuk-button--secondary',
               href: paths.bookings.arrivals.new({ premisesId: 'premisesId', bookingId: booking.id }),
-              text: 'Mark as arrived',
             },
             {
+              text: 'Mark as not arrived',
               classes: 'govuk-button--secondary',
               href: paths.bookings.nonArrivals.new({ premisesId: 'premisesId', bookingId: booking.id }),
-              text: 'Mark as not arrived',
             },
             {
-              text: 'Extend booking',
+              text: 'Extend placement',
               classes: 'govuk-button--secondary',
               href: paths.bookings.extensions.new({ premisesId: 'premisesId', bookingId: booking.id }),
             },
             {
+              text: 'Cancel placement',
               classes: 'govuk-button--secondary',
               href: paths.bookings.cancellations.new({ premisesId: 'premisesId', bookingId: booking.id }),
-              text: 'Cancel booking',
             },
           ],
         },
@@ -52,19 +52,19 @@ describe('bookingUtils', () => {
         {
           items: [
             {
+              text: 'Log departure',
               classes: 'govuk-button--secondary',
               href: paths.bookings.departures.new({ premisesId: 'premisesId', bookingId: booking.id }),
-              text: 'Log departure',
             },
             {
-              text: 'Extend booking',
+              text: 'Extend placement',
               classes: 'govuk-button--secondary',
               href: paths.bookings.extensions.new({ premisesId: 'premisesId', bookingId: booking.id }),
             },
             {
+              text: 'Cancel placement',
               classes: 'govuk-button--secondary',
               href: paths.bookings.cancellations.new({ premisesId: 'premisesId', bookingId: booking.id }),
-              text: 'Cancel booking',
             },
           ],
         },

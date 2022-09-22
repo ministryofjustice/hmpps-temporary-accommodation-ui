@@ -127,7 +127,7 @@ context('Booking', () => {
     page.shouldShowErrorMessagesForFields(['crn'])
     page.completeForm(person.crn)
 
-    // Given I am signed in and I have found someone to make a booking for by CRN
+    // Given I am signed in and I have found someone to create a placement for by CRN
     // When I visit the new booking page
     const bookingCreatePage = new BookingNewPage()
 

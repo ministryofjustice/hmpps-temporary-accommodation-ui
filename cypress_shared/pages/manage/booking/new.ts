@@ -4,7 +4,7 @@ import paths from '../../../../server/paths/manage'
 
 export default class BookingNewPage extends Page {
   constructor() {
-    super('Make a booking')
+    super('Create a placement')
   }
 
   static visit(premisesId: string): BookingNewPage {

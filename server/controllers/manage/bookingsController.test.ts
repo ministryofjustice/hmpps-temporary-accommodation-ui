@@ -43,7 +43,7 @@ describe('bookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('bookings/show', {
         booking,
         premisesId,
-        pageHeading: 'Booking details',
+        pageHeading: 'Placement details',
       })
 
       expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
@@ -75,7 +75,7 @@ describe('bookingsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('bookings/new', {
           premisesId,
-          pageHeading: 'Make a booking',
+          pageHeading: 'Create a placement',
           ...person,
           errors: {},
           errorSummary: [],
@@ -94,7 +94,7 @@ describe('bookingsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('bookings/new', {
           premisesId,
-          pageHeading: 'Make a booking',
+          pageHeading: 'Create a placement',
           ...person,
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,
@@ -123,7 +123,7 @@ describe('bookingsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('bookings/find', {
           premisesId,
-          pageHeading: 'Make a booking - find someone by CRN',
+          pageHeading: 'Create a placement - find someone by CRN',
           errors: {},
           errorSummary: [],
         })
@@ -139,7 +139,7 @@ describe('bookingsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('bookings/find', {
           premisesId,
-          pageHeading: 'Make a booking - find someone by CRN',
+          pageHeading: 'Create a placement - find someone by CRN',
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,
           ...errorsAndUserInput.userInput,
@@ -231,7 +231,7 @@ describe('bookingsController', () => {
       expect(bookingService.find).toHaveBeenCalledWith(token, premisesId, booking.id)
       expect(response.render).toHaveBeenCalledWith('bookings/confirm', {
         premisesId,
-        pageHeading: 'Booking complete',
+        pageHeading: 'Placement confirmed',
         bookingId: booking.id,
         ...booking,
         infoMessages: [overcapacityMessage],

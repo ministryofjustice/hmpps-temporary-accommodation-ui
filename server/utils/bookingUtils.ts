@@ -18,12 +18,12 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
         href: paths.bookings.nonArrivals.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
-        text: 'Extend booking',
+        text: 'Extend placement',
         classes: 'govuk-button--secondary',
         href: paths.bookings.extensions.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
-        text: 'Cancel booking',
+        text: 'Cancel placement',
         classes: 'govuk-button--secondary',
         href: paths.bookings.cancellations.new({ premisesId, bookingId: booking.id }),
       })
@@ -36,12 +36,12 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
         href: paths.bookings.departures.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
-        text: 'Extend booking',
+        text: 'Extend placement',
         classes: 'govuk-button--secondary',
         href: paths.bookings.extensions.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
-        text: 'Cancel booking',
+        text: 'Cancel placement',
         classes: 'govuk-button--secondary',
         href: paths.bookings.cancellations.new({ premisesId, bookingId: booking.id }),
       })

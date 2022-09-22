@@ -3,7 +3,7 @@ import paths from '../../../../../server/paths/manage'
 
 export default class BookingExtensionCreatePage extends Page {
   constructor() {
-    super('Extend booking')
+    super('Extend placement')
   }
 
   static visit(premisesId: string, bookingId: string): BookingExtensionCreatePage {

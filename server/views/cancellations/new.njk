@@ -22,7 +22,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1>{{pageHeading}}</h1>
 
-      <p>If {{ booking.name }} has not arrived or no longer requires this bed, cancel this booking. Cancelling this booking will make this bed available to another person. </p>
+      <p>If {{ booking.name }} has not arrived or no longer requires this bed, cancel this placement. Cancelling this placement will make this bed available to another person. </p>
 
       <form action="{{ paths.bookings.cancellations.create({ premisesId: premisesId, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
@@ -72,7 +72,7 @@
             namePrefix: "date",
             fieldset: {
                 legend: {
-                    text: "Date of Cancellation",
+                    text: "Date of cancellation",
                     classes: "govuk-fieldset__legend--m"
                     }
             },

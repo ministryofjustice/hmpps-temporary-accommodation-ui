@@ -5,7 +5,7 @@ import Page from '../page'
 
 export default class LostBedCreatePage extends Page {
   constructor() {
-    super('Record a lost bed')
+    super('Mark a bed as out of service')
   }
 
   static visit(premisesId: string): LostBedCreatePage {

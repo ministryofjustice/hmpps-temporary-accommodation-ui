@@ -23,7 +23,7 @@ describe('applicationUtils', () => {
   describe('taskLink', () => {
     it('should return a link to a task', () => {
       expect(taskLink('type-of-ap', 'some-uuid')).toEqual(
-        `<a href="/applications/some-uuid/tasks/type-of-ap/pages/ap-type" aria-describedby="eligibility-type-of-ap">Type of Approved Premises required</a>`,
+        `<a href="/applications/some-uuid/tasks/type-of-ap/pages/ap-type" aria-describedby="eligibility-type-of-ap" data-cy-task-name="type-of-ap">Type of Approved Premises required</a>`,
       )
     })
   })

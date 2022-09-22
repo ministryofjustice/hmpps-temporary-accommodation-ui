@@ -7,6 +7,7 @@ import {
   PlacementStartPage,
   ReleaseDatePage,
   TaskListPage,
+  TypeOfApPage,
 } from '../../../cypress_shared/pages/apply'
 
 import personFactory from '../../../server/testutils/factories/person'
@@ -128,5 +129,9 @@ context('Apply', () => {
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('type-of-ap', 'Not started')
+
+    // And I should be able to start the next task
+    cy.get('[data-cy-task-name="type-of-ap"]').click()
+    Page.verifyOnPage(TypeOfApPage)
   })
 })

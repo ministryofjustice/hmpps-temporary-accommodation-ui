@@ -10,7 +10,7 @@ const getTaskStatus = (task: TaskNames, application: Application): string => {
 
 const taskLink = (task: TaskNames, id: string): string => {
   const firstPage = Object.keys(pages[task])[0]
-  return `<a href="/applications/${id}/tasks/${task}/pages/${firstPage}" aria-describedby="eligibility-${task}">${taskLookup[task]}</a>`
+  return `<a href="/applications/${id}/tasks/${task}/pages/${firstPage}" aria-describedby="eligibility-${task}" data-cy-task-name="${task}">${taskLookup[task]}</a>`
 }
 
 export { getTaskStatus, taskLink }

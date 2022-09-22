@@ -1,5 +1,4 @@
-import { Given, And } from '@badeball/cypress-cucumber-preprocessor'
-import { Then } from '@badeball/cypress-cucumber-preprocessor/lib/methods'
+import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
 import { BookingNewPage, BookingConfirmationPage, BookingFindPage } from '../../../cypress_shared/pages/manage'
 
@@ -19,16 +18,16 @@ Given('I am logged in', () => {
   cy.get('.govuk-button').contains('Sign in').click()
 })
 
-And('I see a list of premises', () => {
+Given('I see a list of premises', () => {
   cy.get('h1').should('contain', 'Approved Premises')
   cy.get('.govuk-table tbody tr').its('length').should('be.gt', 0)
 })
 
-And('I choose a premises', () => {
+Given('I choose a premises', () => {
   cy.get('.govuk-table tbody tr a').first().click()
 })
 
-And('I create a booking', () => {
+Given('I create a booking', () => {
   cy.get('.moj-button-menu__toggle-button')
     .click()
     .then(() => cy.get('a').contains('Create a booking').click())

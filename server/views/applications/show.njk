@@ -1,0 +1,198 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% extends "../partials/layout.njk" %}
+
+{% block pageTitle %}
+ Approved Premises - Task list
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">
+        Apply for an approved premises (AP) placement
+      </h1>
+
+      <h2 class="govuk-heading-s govuk-!-margin-bottom-2">Application incomplete</h2>
+      <p class="govuk-body govuk-!-margin-bottom-7">You have completed 3 of 8 sections.</p>
+
+      <ol class="app-task-list">
+        <li>
+          <h2 class="app-task-list__section">
+            <span class="app-task-list__section-number">1. </span> Reasons for placement
+          </h2>
+          <ul class="app-task-list__items">
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                {{ taskLink('basic-information', application.id)  }}
+              </span>
+              {{ getTaskStatus('basic-information', application) }}
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                {{ taskLink('type-of-ap', application.id) }}
+              </span>
+              {{ getTaskStatus('type-of-ap', application) }}
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="release-date.html" aria-describedby="eligibility-status">
+                  Add information about dates of release
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="purpose-of-placement.html" aria-describedby="read-declaration-status">
+                  Confirm the need for an AP
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Section 2 -->
+
+        <li>
+          <h2 class="app-task-list__section">
+            <span class="app-task-list__section-number">2. </span> Risk and need factors
+          </h2>
+          <ul class="app-task-list__items">
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="import-oasys.html" aria-describedby="company-information-status">
+                  Choose sections of OASys to import
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="useful-features-of-ap.html" aria-describedby="contact-details-status">
+                  Add detail about managing risks and needs
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="prison-behaviours.html" aria-describedby="contact-details-status">
+                  Review prison information
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="location-factors.html" aria-describedby="list-convictions-status">
+                  Describe location factors
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="access-needs.html" aria-describedby="list-convictions-status">
+                  Provide access and healthcare information
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="financial-evidence-status">Cannot start yet</strong>
+            </li>
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="further-considerations-room-share.html" aria-describedby="list-convictions-status">
+                Detail further considerations for placement
+              </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="medical-information-status">Cannot start yet</strong>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <h2 class="app-task-list__section">
+            <span class="app-task-list__section-number">3. </span> Considerations for when the placement ends
+          </h2>
+          <ul class="app-task-list__items">
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                <a href="further-considerations-room-share.html" aria-describedby="list-convictions-status">
+                Add move on information
+                </a>
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="submit-pay-status">Cannot start yet</strong>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <h2 class="app-task-list__section">
+            <span class="app-task-list__section-number">4. </span> Add documents
+          </h2>
+          <ul class="app-task-list__items">
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                Attach required documents
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="submit-pay-status">Cannot start yet</strong>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <h2 class="app-task-list__section">
+            <span class="app-task-list__section-number">5. </span> Check your answers
+          </h2>
+          <ul class="app-task-list__items">
+            <li class="app-task-list__item">
+              <span class="app-task-list__task-name">
+                Check your answers
+              </span>
+              <strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="submit-pay-status">Cannot start yet</strong>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <h2 class="app-task-list__section">
+            <span class="app-task-list__section-number">6. </span> Submit your application
+          </h2>
+
+          {{ govukCheckboxes({
+            idPrefix: "waste",
+            name: "waste",
+            items: [
+              {
+                value: "submit",
+                text: "I confirm the information provided is complete, accurate and up to date."
+              }
+            ]
+          }) }}
+        </li>
+      </ol>
+
+      {{ govukButton({
+        text: "Submit application",
+        href: "/index.html"
+      }) }}
+
+      {{ govukButton({
+        text: "Save and come back later",
+        classes: "govuk-button--secondary",
+        href: "/pp-dashboard.html"
+      }) }}
+
+    </div>
+
+    <div class="risk-information">
+      <div class="govuk-grid-column-one-third"></div>
+    </div>
+
+  </div>
+
+{% endblock %}

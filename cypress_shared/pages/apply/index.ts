@@ -7,6 +7,7 @@ import SituationPage from './situationPage'
 import PlacementStartPage from './placementStart'
 import ReleaseDatePage from './releaseDate'
 import TaskListPage from './taskListPage'
+import TypeOfApPage from './typeOfAp'
 
 export {
   ConfirmDetailsPage,
@@ -18,4 +19,5 @@ export {
   PlacementStartPage,
   ReleaseDatePage,
   TaskListPage,
+  TypeOfApPage,
 }

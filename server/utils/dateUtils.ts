@@ -1,8 +1,5 @@
 /* eslint-disable */
 import formatISO from 'date-fns/formatISO'
-import parseISO from 'date-fns/parseISO'
-import format from 'date-fns/format'
-import { ObjectWithDateParts } from 'approved-premises'
 
 export class DateFormats {
   /**
@@ -13,5 +10,11 @@ export class DateFormats {
     return formatISO(date, { representation: 'date' })
   }
 
+  /**
+   * @param date JS Date object.
+   * @returns the date in the format '2019-09-18T19:00:52Z'.
+   */
+  static formatApiDateTime(date: Date) {
+    return formatISO(date)
+  }
 }
-

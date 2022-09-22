@@ -1,7 +1,6 @@
 import { path } from 'static-path'
 
 const applicationsPath = path('/applications')
-const previousApplications = applicationsPath.path('previous')
 const applicationPath = applicationsPath.path(':id')
 
 const pagesPath = applicationPath.path('tasks/:task/pages/:page')
@@ -12,7 +11,7 @@ const paths = {
     start: applicationsPath.path('start'),
     people: applicationsPath.path('people').path('find'),
     create: applicationsPath,
-    index: previousApplications,
+    index: applicationsPath,
     show: applicationPath,
     pages: {
       show: pagesPath,

@@ -18,7 +18,7 @@ export type DataServices = {
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
-  async createApplication(token: string, crn: string): Promise<ApplicationData> {
+  async createApplication(token: string, crn: string): Promise<Application> {
     const applicationClient = this.applicationClientFactory(token)
 
     const application = await applicationClient.create(crn)

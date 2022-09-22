@@ -11,6 +11,7 @@ import ApplicationClient from '../data/applicationClient'
 import pages from '../form-pages/apply'
 import paths from '../paths/apply'
 import { formatDateString } from '../utils/utils'
+import applicationFactory from '../testutils/factories/application'
 
 const FirstPage = jest.fn()
 const SecondPage = jest.fn()
@@ -115,18 +116,17 @@ describe('ApplicationService', () => {
 
   describe('createApplication', () => {
     it('calls the create method and returns a uuid', async () => {
-      const uuid = 'some-uuid'
+      const application = applicationFactory.build()
       const token = 'SOME_TOKEN'
-      const crn = 'some_crn'
 
-      applicationClient.create.mockResolvedValue(uuid)
+      applicationClient.create.mockResolvedValue(application)
 
-      const result = await service.createApplication(token, crn)
+      const result = await service.createApplication(token, application.crn)
 
-      expect(result).toBe(uuid)
+      expect(result).toEqual(application)
 
       expect(applicationClientFactory).toHaveBeenCalledWith(token)
-      expect(applicationClient.create).toHaveBeenCalledWith(crn)
+      expect(applicationClient.create).toHaveBeenCalledWith(application.crn)
     })
   })
 

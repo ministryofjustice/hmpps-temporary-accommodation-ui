@@ -11,9 +11,8 @@ export default class ApplicationClient {
     this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  /* istanbul ignore next */
-  async create(_crn: string): Promise<string> {
-    return crypto.randomUUID()
+  async create(crn: string): Promise<Application> {
+    return (await this.restClient.post({ path: paths.applications.new.pattern, data: { crn } })) as Application
   }
 
   async update(application: Application, applicationId: string): Promise<Application> {

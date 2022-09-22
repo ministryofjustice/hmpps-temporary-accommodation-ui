@@ -36,7 +36,7 @@ describe('ApplicationClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, application)
 
-      const result = await applicationClient.create(application, application.id)
+      const result = await applicationClient.create(application.crn)
 
       expect(result).toEqual(application)
       expect(nock.isDone()).toBeTruthy()
@@ -44,7 +44,7 @@ describe('ApplicationClient', () => {
   })
 
   describe('update', () => {
-    it('should return an application when a crn is posted', async () => {
+    it('should return an application when a PUT request is made', async () => {
       const application = applicationFactory.build()
 
       fakeApprovedPremisesApi

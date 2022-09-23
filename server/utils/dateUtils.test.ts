@@ -1,5 +1,5 @@
 import type { ObjectWithDateParts } from 'approved-premises'
-import { DateFormats, InvalidDateStringError, dateAndTimeInputsAreValidDates } from './dateUtils'
+import { DateFormats, InvalidDateStringError, dateAndTimeInputsAreValidDates, dateIsBlank } from './dateUtils'
 
 describe('DateFormats', () => {
   describe('convertIsoToDateObj', () => {

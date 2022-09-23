@@ -1,8 +1,8 @@
 import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateIsBlank, retrieveQuestionResponseFromSession } from '../../../utils/utils'
-import { dateAndTimeInputsAreValidDates, DateFormats } from '../../../utils/dateUtils'
+import { retrieveQuestionResponseFromSession } from '../../../utils/utils'
+import { dateIsBlank, dateAndTimeInputsAreValidDates, DateFormats } from '../../../utils/dateUtils'
 
 export default class PlacementDate implements TasklistPage {
   name = 'placement-date'

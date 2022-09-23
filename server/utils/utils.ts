@@ -1,4 +1,3 @@
-import type { ObjectWithDateParts } from 'approved-premises'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
@@ -50,9 +49,4 @@ export const retrieveQuestionResponseFromSession = <T>(sessionData: Record<strin
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }
-}
-
-export const dateIsBlank = <T = ObjectWithDateParts<string | number>>(body: T): boolean => {
-  const fields = Object.keys(body).filter(key => key.match(/-[year|month|day]/))
-  return fields.every(field => !body[field])
 }

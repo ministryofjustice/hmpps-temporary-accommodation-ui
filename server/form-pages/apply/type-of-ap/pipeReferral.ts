@@ -1,8 +1,7 @@
 import type { YesOrNo, ObjectWithDateParts } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateIsBlank } from '../../../utils/utils'
-import { dateAndTimeInputsAreValidDates } from '../../../utils/dateUtils'
+import { dateIsBlank, dateAndTimeInputsAreValidDates } from '../../../utils/dateUtils'
 
 export default class PipeReferral implements TasklistPage {
   name = 'pipe-referral'

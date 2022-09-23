@@ -97,4 +97,9 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   return true
 }
 
+export const dateIsBlank = <T = ObjectWithDateParts<string | number>>(body: T): boolean => {
+  const fields = Object.keys(body).filter(key => key.match(/-[year|month|day]/))
+  return fields.every(field => !body[field])
+}
+
 export class InvalidDateStringError extends Error {}

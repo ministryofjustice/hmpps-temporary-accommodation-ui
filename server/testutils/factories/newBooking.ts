@@ -5,7 +5,7 @@ import type { NewBooking } from 'approved-premises'
 
 import keyWorkerFactory from './keyWorker'
 import personFactory from './person'
-import { DateFormats } from '../../utils/dateFormats'
+import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<NewBooking>(() => {
   const arrivalDate = faker.date.soon()

@@ -2,7 +2,7 @@ import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { Arrival } from 'approved-premises'
-import { DateFormats } from '../../utils/dateFormats'
+import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Arrival>(() => ({
   id: faker.datatype.uuid(),

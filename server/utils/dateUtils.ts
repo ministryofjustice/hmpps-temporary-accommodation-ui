@@ -1,5 +1,6 @@
 /* eslint-disable */
 import formatISO from 'date-fns/formatISO'
+import format from 'date-fns/format'
 
 export class DateFormats {
   /**
@@ -16,5 +17,13 @@ export class DateFormats {
    */
   static formatApiDateTime(date: Date) {
     return formatISO(date)
+  }
+
+  /**
+   * @param date JS Date object.
+   * @returns the date in the to be shown in the UI: "Thursday, 20 December 2012".
+   */
+  static dateObjtoUIDate(date: Date) {
+    return format(date, 'cccc d MMMM y')
   }
 }

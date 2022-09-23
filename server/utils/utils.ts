@@ -39,9 +39,6 @@ const kebabCase = (string: string) =>
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
 
-// returns a date like 'Tuesday 6 September 2022'
-export const formatDate = (date: Date): string => format(date, 'cccc d MMMM y')
-
 export const formatDateString = (date: string): string => format(convertDateString(date), 'cccc d MMMM y')
 
 export class InvalidDateStringError extends Error {}

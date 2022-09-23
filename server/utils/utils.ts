@@ -1,6 +1,5 @@
 import type { ObjectWithDateParts } from 'approved-premises'
 import { SessionDataError } from './errors'
-import { DateFormats, InvalidDateStringError } from './dateUtils'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>

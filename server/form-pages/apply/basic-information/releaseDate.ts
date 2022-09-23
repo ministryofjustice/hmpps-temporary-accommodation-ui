@@ -1,7 +1,8 @@
 import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/utils'
+import { dateIsBlank } from '../../../utils/utils'
+import { dateAndTimeInputsAreValidDates } from '../../../utils/dateUtils'
 
 export default class ReleaseDate implements TasklistPage {
   name = 'release-date'

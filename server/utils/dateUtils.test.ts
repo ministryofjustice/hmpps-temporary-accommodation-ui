@@ -1,3 +1,4 @@
+import type { ObjectWithDateParts } from 'approved-premises'
 import { DateFormats, InvalidDateStringError, dateAndTimeInputsAreValidDates } from './dateUtils'
 
 describe('DateFormats', () => {
@@ -102,5 +103,53 @@ describe('DateFormats', () => {
 
       expect(result.date.toString()).toEqual('twothousandtwentytwo-20-ooT00:00:00.000Z')
     })
+  })
+})
+
+describe('dateAndTimeInputsAreValidDates', () => {
+  it('returns true when the date is valid', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': '2022',
+      'date-month': '12',
+      'date-day': '11',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(true)
+  })
+
+  it('returns false when the date is invalid', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': '99',
+      'date-month': '99',
+      'date-day': '99',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(false)
+  })
+})
+
+describe('dateIsBlank', () => {
+  it('returns false if the date is not blank', () => {
+    const date: ObjectWithDateParts<'field'> = {
+      'field-day': '12',
+      'field-month': '1',
+      'field-year': '2022',
+    }
+
+    expect(dateIsBlank(date)).toEqual(false)
+  })
+
+  it('returns true if the date is blank', () => {
+    const date: ObjectWithDateParts<'field'> = {
+      'field-day': '',
+      'field-month': '',
+      'field-year': '',
+    }
+
+    expect(dateIsBlank(date)).toEqual(true)
   })
 })

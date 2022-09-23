@@ -1,4 +1,6 @@
 /* eslint-disable */
+import type { ObjectWithDateParts } from 'approved-premises'
+
 import formatISO from 'date-fns/formatISO'
 import parseISO from 'date-fns/parseISO'
 import format from 'date-fns/format'
@@ -76,6 +78,23 @@ export class DateFormats {
 
     return dateInputObj
   }
+}
+
+export const dateAndTimeInputsAreValidDates = <K extends string | number>(
+  dateInputObj: ObjectWithDateParts<K>,
+  key: K,
+): boolean => {
+  const dateString = DateFormats.convertDateAndTimeInputsToIsoString(dateInputObj, key)
+
+  try {
+    DateFormats.convertIsoToDateObj(dateString[key])
+  } catch (err) {
+    if (err instanceof InvalidDateStringError) {
+      return false
+    }
+  }
+
+  return true
 }
 
 export class InvalidDateStringError extends Error {}

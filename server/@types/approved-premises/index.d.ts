@@ -57,6 +57,10 @@ declare module 'approved-premises' {
 
   export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 
+  export type TaskNames = 'basic-information' | 'type-of-ap'
+
+  export type ApplicationData = Record<TaskNames, unknown>
+
   export interface HtmlAttributes {
     [key: string]: string
   }

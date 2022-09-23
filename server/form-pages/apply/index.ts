@@ -1,14 +1,14 @@
 /* istanbul ignore file */
 
+import type { TaskNames } from 'approved-premises'
 import basicInfomationPages from './basic-information'
 import typeOfApPages from './type-of-ap'
 
-const pages = {
+const pages: {
+  [key in TaskNames]: Record<string, unknown>
+} = {
   'basic-information': basicInfomationPages,
   'type-of-ap': typeOfApPages,
 }
 
 export default pages
-
-export type TaskNames = keyof typeof pages
-export type Application = Record<TaskNames, unknown>

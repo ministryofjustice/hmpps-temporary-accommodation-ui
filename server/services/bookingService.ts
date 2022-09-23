@@ -130,12 +130,14 @@ export default class BookingService {
 
   private bookingsArrivingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
     return this.bookingsAwaitingArrival(bookings).filter(booking =>
-      isSameDay(convertDateString(booking.arrivalDate), today),
+      isSameDay(DateFormats.convertIsoToDateObj(booking.arrivalDate), today),
     )
   }
 
   private bookingsDepartingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
-    return this.arrivedBookings(bookings).filter(booking => isSameDay(convertDateString(booking.departureDate), today))
+    return this.arrivedBookings(bookings).filter(booking =>
+      isSameDay(DateFormats.convertIsoToDateObj(booking.departureDate), today),
+    )
   }
 
   private upcomingArrivals(bookings: Array<Booking>, today: Date): Array<Booking> {
@@ -155,7 +157,7 @@ export default class BookingService {
   }
 
   private isUpcoming(date: string, today: Date) {
-    return isWithinInterval(convertDateString(date), {
+    return isWithinInterval(DateFormats.convertIsoToDateObj(date), {
       start: addDays(today, 1),
       end: addDays(today, this.UPCOMING_WINDOW_IN_DAYS + 1),
     })

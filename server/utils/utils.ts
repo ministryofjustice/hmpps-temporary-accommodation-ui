@@ -1,7 +1,6 @@
-import { format } from 'date-fns'
 import type { ObjectWithDateParts } from 'approved-premises'
 import { SessionDataError } from './errors'
-import { DateFormats, InvalidDateStringError } from './dateFormats'
+import { DateFormats, InvalidDateStringError } from './dateUtils'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>
@@ -39,24 +38,6 @@ const kebabCase = (string: string) =>
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
-
-
-export class InvalidDateStringError extends Error {}
-/**
- * Converts an ISO8601 datetime string into a Javascript Date object.
- * @param date An ISO8601 datetime string
- * @returns A Date object
- * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
- */
-export const convertDateString = (date: string): Date => {
-  const parsedDate = parseISO(date)
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    throw new InvalidDateStringError(`Invalid Date: ${date}`)
-  }
-
-  return parsedDate
-}
 
 /**
  * Converts input for a GDS date input https://design-system.service.gov.uk/components/date-input/

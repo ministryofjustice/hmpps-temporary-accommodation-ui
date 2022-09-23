@@ -3,7 +3,6 @@ import { SessionDataError } from './errors'
 import {
   convertToTitleCase,
   initialiseName,
-  convertDateAndTimeInputsToIsoString,
   dateAndTimeInputsAreValidDates,
   retrieveQuestionResponseFromSession,
   dateIsBlank,
@@ -35,69 +34,6 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string, expected: string) => {
     expect(initialiseName(a)).toEqual(expected)
-  })
-})
-
-describe('convertDateInputsToDateObj', () => {
-  it('converts a date object', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '2022',
-      'date-month': '12',
-      'date-day': '11',
-    }
-
-    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
-
-    expect(result.date).toEqual(new Date(2022, 11, 11).toISOString())
-  })
-
-  it('pads the months and days', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '2022',
-      'date-month': '1',
-      'date-day': '1',
-    }
-
-    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
-
-    expect(result.date).toEqual(new Date(2022, 0, 1).toISOString())
-  })
-
-  it('returns the date with a time if passed one', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '2022',
-      'date-month': '1',
-      'date-day': '1',
-      'date-time': '12:35',
-    }
-
-    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
-
-    expect(result.date).toEqual(new Date(2022, 0, 1, 12, 35).toISOString())
-  })
-
-  it('returns an empty string when given empty strings as input', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '',
-      'date-month': '',
-      'date-day': '',
-    }
-
-    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
-
-    expect(result.date).toEqual('')
-  })
-
-  it('returns an invalid ISO string when given invalid strings as input', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': 'twothousandtwentytwo',
-      'date-month': '20',
-      'date-day': 'foo',
-    }
-
-    const result = convertDateAndTimeInputsToIsoString(obj, 'date')
-
-    expect(result.date.toString()).toEqual('twothousandtwentytwo-20-ooT00:00:00.000Z')
   })
 })
 

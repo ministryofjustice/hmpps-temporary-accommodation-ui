@@ -1,7 +1,7 @@
 import type { Response, Request, RequestHandler } from 'express'
 import type { NewDeparture } from 'approved-premises'
 
-import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import { DateFormats } from '../../utils/dateUtils'
 import DepartureService from '../../services/departureService'
 import PremisesService from '../../services/premisesService'
 import BookingService from '../../services/bookingService'
@@ -40,7 +40,7 @@ export default class DeparturesController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const { dateTime } = convertDateAndTimeInputsToIsoString(req.body, 'dateTime')
+      const { dateTime } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'dateTime')
 
       const departure = {
         ...req.body.departure,

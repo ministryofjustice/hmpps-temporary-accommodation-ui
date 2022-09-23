@@ -3,7 +3,8 @@ import type { Request, Response, RequestHandler } from 'express'
 import type { BookingExtension } from 'approved-premises'
 import BookingService from '../../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
-import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import { DateFormats } from '../../utils/dateUtils'
+
 import paths from '../../paths/manage'
 
 export default class BookingExtensionsController {
@@ -26,7 +27,7 @@ export default class BookingExtensionsController {
 
       const bookingExtension: BookingExtension = {
         ...req.body,
-        ...convertDateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
+        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
       }
 
       try {

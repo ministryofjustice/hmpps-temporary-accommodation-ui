@@ -3,8 +3,8 @@ import type { Response, Request, RequestHandler } from 'express'
 import type { NewLostBed } from 'approved-premises'
 import LostBedService from '../../services/lostBedService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
-import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
 import paths from '../../paths/manage'
+import { DateFormats } from '../../utils/dateUtils'
 
 export default class LostBedsController {
   constructor(private readonly lostBedService: LostBedService) {}
@@ -30,8 +30,8 @@ export default class LostBedsController {
     return async (req: Request, res: Response) => {
       const { premisesId } = req.params
 
-      const { startDate } = convertDateAndTimeInputsToIsoString(req.body, 'startDate')
-      const { endDate } = convertDateAndTimeInputsToIsoString(req.body, 'endDate')
+      const { startDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'startDate')
+      const { endDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'endDate')
 
       const lostBed: NewLostBed = { ...req.body.lostBed, startDate, endDate }
 

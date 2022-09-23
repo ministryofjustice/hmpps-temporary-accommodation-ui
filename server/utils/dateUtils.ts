@@ -51,6 +51,31 @@ export class DateFormats {
   static isoDateToUIDate(isoDate: string) {
     return DateFormats.dateObjtoUIDate(DateFormats.convertIsoToDateObj(isoDate))
   }
+
+  /**
+   * Converts input for a GDS date input https://design-system.service.gov.uk/components/date-input/
+   * into an ISO8601 date string
+   * @param dateInputObj an object with date parts (i.e. `-month` `-day` `-year`), which come from a `govukDateInput`.
+   * @param key the key that prefixes each item in the dateInputObj, also the name of the property which the date object will be returned in the return value.
+   * @returns an ISO8601 date string.
+   */
+  static convertDateAndTimeInputsToIsoString<K extends string | number>(dateInputObj: ObjectWithDateParts<K>, key: K) {
+    const day = `0${dateInputObj[`${key}-day`]}`.slice(-2)
+    const month = `0${dateInputObj[`${key}-month`]}`.slice(-2)
+    const year = dateInputObj[`${key}-year`]
+    const time = dateInputObj[`${key}-time`]
+
+    const timeSegment = time || '00:00'
+
+    const o: { [P in K]?: string } = dateInputObj
+    if (day && month && year) {
+      o[key] = `${year}-${month}-${day}T${timeSegment}:00.000Z`
+    } else {
+      o[key] = ''
+    }
+
+    return dateInputObj
+  }
 }
 
 export class InvalidDateStringError extends Error {}

@@ -1,7 +1,7 @@
 import type { Response, Request, RequestHandler } from 'express'
 import type { Arrival, NewArrival } from 'approved-premises'
 
-import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import { DateFormats } from '../../utils/dateUtils'
 import ArrivalService from '../../services/arrivalService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/manage'
@@ -30,8 +30,8 @@ export default class ArrivalsController {
       const { premisesId, bookingId } = req.params
       const body = req.body as NewArrival
 
-      const { date } = convertDateAndTimeInputsToIsoString(body, 'date')
-      const { expectedDepartureDate } = convertDateAndTimeInputsToIsoString(body, 'expectedDepartureDate')
+      const { date } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'date')
+      const { expectedDepartureDate } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'expectedDepartureDate')
 
       const arrival: Omit<Arrival, 'id' | 'bookingId'> = {
         ...body.arrival,

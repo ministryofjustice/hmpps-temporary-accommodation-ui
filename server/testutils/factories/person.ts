@@ -9,6 +9,9 @@ export default Factory.define<Person>(() => ({
   name: faker.name.fullName(),
   dateOfBirth: DateFormats.formatApiDate(faker.date.past()),
   sex: faker.helpers.arrayElement(['Male', 'Female', 'Other', 'Prefer not to say']),
+  status: faker.helpers.arrayElement(['InCustody', 'InCommunity']),
+  nomsNumber: `NOMS${faker.datatype.number({ min: 100, max: 999 })}`,
   nationality: faker.address.country(),
-  religion: faker.random.word(),
+  religionOrBelief: faker.helpers.arrayElement(['Christian', 'Muslim', 'Jewish', 'Hindu', 'Buddhist', 'Sikh', 'None']),
+  prisonName: `HMP ${faker.address.street()}`,
 }))

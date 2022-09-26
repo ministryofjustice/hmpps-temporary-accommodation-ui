@@ -149,6 +149,8 @@ declare module 'approved-premises' {
 
   export type YesOrNo = 'yes' | 'no'
 
+  export type PersonStatus = 'InCustody' | 'InCommunity'
+
   export interface schemas {
     Premises: {
       id: string
@@ -230,8 +232,12 @@ declare module 'approved-premises' {
       name: string
       dateOfBirth: string
       sex: string
+      status: PersonStatus
+      nomsNumber: string
       nationality: string
-      religion: string
+      religionOrBelief: string
+      genderIdentity?: string
+      prisonName: string
     }
     PremisesCapacityItem: {
       date: string

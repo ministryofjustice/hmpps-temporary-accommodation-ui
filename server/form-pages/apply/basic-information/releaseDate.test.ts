@@ -64,7 +64,7 @@ describe('ReleaseDate', () => {
         )
         expect(page.errors()).toEqual([
           {
-            propertyName: 'releaseDate',
+            propertyName: '$.releaseDate',
             errorType: 'blank',
           },
         ])
@@ -83,7 +83,7 @@ describe('ReleaseDate', () => {
         )
         expect(page.errors()).toEqual([
           {
-            propertyName: 'releaseDate',
+            propertyName: '$.releaseDate',
             errorType: 'invalid',
           },
         ])
@@ -105,7 +105,7 @@ describe('ReleaseDate', () => {
       const page = new ReleaseDate({}, {}, 'somePage')
       expect(page.errors()).toEqual([
         {
-          propertyName: 'knowReleaseDate',
+          propertyName: '$.knowReleaseDate',
           errorType: 'blank',
         },
       ])

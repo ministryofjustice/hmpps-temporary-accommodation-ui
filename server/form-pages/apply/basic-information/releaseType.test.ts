@@ -26,7 +26,7 @@ describe('ReleaseType', () => {
       const page = new ReleaseType({ releaseType: '' }, session)
       expect(page.errors()).toEqual([
         {
-          propertyName: 'releaseType',
+          propertyName: '$.releaseType',
           errorType: 'blank',
         },
       ])

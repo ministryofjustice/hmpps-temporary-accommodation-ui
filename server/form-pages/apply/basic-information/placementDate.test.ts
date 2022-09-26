@@ -69,7 +69,7 @@ describe('PlacementDate', () => {
         )
         expect(page.errors()).toEqual([
           {
-            propertyName: 'startDate',
+            propertyName: '$.startDate',
             errorType: 'blank',
           },
         ])
@@ -87,7 +87,7 @@ describe('PlacementDate', () => {
         )
         expect(page.errors()).toEqual([
           {
-            propertyName: 'startDate',
+            propertyName: '$.startDate',
             errorType: 'invalid',
           },
         ])
@@ -98,7 +98,7 @@ describe('PlacementDate', () => {
       const page = new PlacementDate({}, session)
       expect(page.errors()).toEqual([
         {
-          propertyName: 'startDateSameAsReleaseDate',
+          propertyName: '$.startDateSameAsReleaseDate',
           errorType: 'blank',
         },
       ])

@@ -47,7 +47,7 @@ export default class ReleaseType implements TasklistPage {
 
     if (!this.body.releaseType) {
       errors.push({
-        propertyName: 'releaseType',
+        propertyName: '$.releaseType',
         errorType: 'blank',
       })
     }

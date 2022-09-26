@@ -29,7 +29,7 @@ describe('Situation', () => {
       const page = new Situation({ situation: '' }, session)
       expect(page.errors()).toEqual([
         {
-          propertyName: 'situation',
+          propertyName: '$.situation',
           errorType: 'blank',
         },
       ])

@@ -44,7 +44,7 @@ describe('PipeReferral', () => {
         })
         expect(page.errors()).toEqual([
           {
-            propertyName: 'opdPathwayDate',
+            propertyName: '$.opdPathwayDate',
             errorType: 'blank',
           },
         ])
@@ -59,7 +59,7 @@ describe('PipeReferral', () => {
         })
         expect(page.errors()).toEqual([
           {
-            propertyName: 'opdPathwayDate',
+            propertyName: '$.opdPathwayDate',
             errorType: 'invalid',
           },
         ])
@@ -77,7 +77,7 @@ describe('PipeReferral', () => {
       const page = new PipeReferral({})
       expect(page.errors()).toEqual([
         {
-          propertyName: 'opdPathway',
+          propertyName: '$.opdPathway',
           errorType: 'blank',
         },
       ])

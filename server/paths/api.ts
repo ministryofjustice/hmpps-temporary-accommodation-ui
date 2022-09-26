@@ -12,5 +12,7 @@ export default {
   },
   applications: {
     index: applyPaths.applications.index,
+    update: applyPaths.applications.update,
+    new: applyPaths.applications.create,
   },
 }

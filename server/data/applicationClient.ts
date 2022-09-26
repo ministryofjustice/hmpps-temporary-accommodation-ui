@@ -1,6 +1,4 @@
-import crypto from 'crypto'
-
-import type { ApplicationSummary } from 'approved-premises'
+import type { ApplicationSummary, Application } from 'approved-premises'
 
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
@@ -13,9 +11,15 @@ export default class ApplicationClient {
     this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  /* istanbul ignore next */
-  async create(_crn: string): Promise<string> {
-    return crypto.randomUUID()
+  async create(crn: string): Promise<Application> {
+    return (await this.restClient.post({ path: paths.applications.new.pattern, data: { crn } })) as Application
+  }
+
+  async update(application: Application, applicationId: string): Promise<Application> {
+    return (await this.restClient.put({
+      path: paths.applications.update({ id: applicationId }),
+      data: { data: application },
+    })) as Application
   }
 
   async all(): Promise<ApplicationSummary[]> {

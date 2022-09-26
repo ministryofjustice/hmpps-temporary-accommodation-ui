@@ -13,6 +13,7 @@ const paths = {
     create: applicationsPath,
     index: applicationsPath,
     show: applicationPath,
+    update: applicationPath,
     pages: {
       show: pagesPath,
       update: pagesPath,

@@ -4,10 +4,11 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import type { Departure } from 'approved-premises'
 import referenceDataFactory from './referenceData'
 import premisesFactory from './premises'
+import { DateFormats } from '../../utils/dateFormats'
 
 export default Factory.define<Departure>(() => ({
   id: faker.datatype.uuid(),
-  dateTime: faker.date.soon().toISOString(),
+  dateTime: DateFormats.formatApiDate(faker.date.soon()),
   bookingId: faker.datatype.uuid(),
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),

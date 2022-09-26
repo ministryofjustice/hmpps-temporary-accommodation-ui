@@ -1,7 +1,8 @@
-import pages, { TaskNames, Application } from '../form-pages/apply'
+import type { ApplicationData, TaskNames } from 'approved-premises'
+import pages from '../form-pages/apply'
 import taskLookup from '../i18n/en/tasks.json'
 
-const getTaskStatus = (task: TaskNames, application: Application): string => {
+const getTaskStatus = (task: TaskNames, application: ApplicationData): string => {
   if (!application[task]) {
     return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task}-status">Not started</strong>`
   }

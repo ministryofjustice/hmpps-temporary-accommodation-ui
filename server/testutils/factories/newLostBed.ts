@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { NewLostBed } from 'approved-premises'
 import referenceDataFactory from './referenceData'
+import { DateFormats } from '../../utils/dateFormats'
 
 export default Factory.define<NewLostBed>(() => {
   const startDate = faker.date.soon()
@@ -10,11 +11,11 @@ export default Factory.define<NewLostBed>(() => {
   return {
     id: faker.datatype.uuid(),
     notes: faker.lorem.sentence(),
-    startDate: startDate.toISOString(),
+    startDate: DateFormats.formatApiDate(startDate),
     'startDate-day': startDate.getDate().toString(),
     'startDate-month': startDate.getMonth().toString(),
     'startDate-year': startDate.getFullYear().toString(),
-    endDate: endDate.toISOString(),
+    endDate: DateFormats.formatApiDate(endDate),
     'endDate-day': endDate.getDate().toString(),
     'endDate-month': endDate.getMonth().toString(),
     'endDate-year': endDate.getFullYear().toString(),

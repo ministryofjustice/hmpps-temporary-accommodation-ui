@@ -2,16 +2,15 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import createError from 'http-errors'
 
-import type { ErrorsAndUserInput } from 'approved-premises'
+import type { Application, ErrorsAndUserInput } from 'approved-premises'
 import ApplicationsController from './applicationsController'
 import { ApplicationService, PersonService } from '../../services'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
 import personFactory from '../../testutils/factories/person'
+import applicationFactory from '../../testutils/factories/application'
 
 import paths from '../../paths/apply'
 import { formatDateString } from '../../utils/utils'
-
-import type { Application } from '../../form-pages/apply'
 
 jest.mock('../../utils/validation')
 
@@ -187,15 +186,16 @@ describe('applicationsController', () => {
   })
 
   describe('create', () => {
+    let application: Application
     beforeEach(() => {
       request = createMock<Request>({
         user: { token },
       })
       request.body.crn = 'some-crn'
+      application = applicationFactory.build()
     })
     it('creates an application and redirects to the first page of the first step', async () => {
-      const uuid = 'some-uuid'
-      applicationService.createApplication.mockResolvedValue(uuid)
+      applicationService.createApplication.mockResolvedValue(application)
 
       const requestHandler = applicationsController.create()
 
@@ -203,7 +203,7 @@ describe('applicationsController', () => {
 
       expect(applicationService.createApplication).toHaveBeenCalledWith('SOME_TOKEN', 'some-crn')
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.applications.pages.show({ id: uuid, task: 'basic-information', page: 'sentence-type' }),
+        paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),
       )
     })
   })

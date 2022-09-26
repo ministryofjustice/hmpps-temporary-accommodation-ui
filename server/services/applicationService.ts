@@ -1,6 +1,6 @@
 import type { Request } from 'express'
 import type { Session, SessionData } from 'express-session'
-import type { HtmlItem, TextItem } from 'approved-premises'
+import type { Application, HtmlItem, TextItem } from 'approved-premises'
 
 import type TasklistPage from '../form-pages/tasklistPage'
 import type { RestClientBuilder, ApplicationClient } from '../data'
@@ -18,12 +18,12 @@ export type DataServices = {
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
-  async createApplication(token: string, crn: string): Promise<string> {
+  async createApplication(token: string, crn: string): Promise<Application> {
     const applicationClient = this.applicationClientFactory(token)
 
-    const uuid = await applicationClient.create(crn)
+    const application = await applicationClient.create(crn)
 
-    return uuid
+    return application
   }
 
   async getCurrentPage(
@@ -56,16 +56,27 @@ export default class ApplicationService {
     return page
   }
 
-  save(page: TasklistPage, request: Request) {
+  async save(page: TasklistPage, request: Request) {
     const errors = page.errors ? page.errors() : []
+
     if (errors.length) {
       throw new ValidationError(errors)
     } else {
-      request.session = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
-
-      request.session.application[request.params.id][request.params.task][request.params.page] = page.body
-      request.session.previousPage = page.name
+      this.saveToSession(page, request)
+      await this.saveToApi(request)
     }
+  }
+
+  private saveToSession(page: TasklistPage, request: Request) {
+    request.session = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
+    request.session.application[request.params.id][request.params.task][request.params.page] = page.body
+    request.session.previousPage = page.name
+  }
+
+  private async saveToApi(request: Request) {
+    const client = this.applicationClientFactory(request.user.token)
+
+    await client.update(request.session.application[request.params.id] as Application, request.params.id)
   }
 
   private fetchOrInitializeSessionData(sessionData: Session & Partial<SessionData>, task: string, id: string) {

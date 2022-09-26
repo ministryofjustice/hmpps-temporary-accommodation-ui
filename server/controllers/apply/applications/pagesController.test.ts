@@ -135,7 +135,7 @@ describe('pagesController', () => {
     it('updates an application and redirects to the next page', async () => {
       page.next.mockReturnValue('next-page')
 
-      applicationService.save.mockReturnValue()
+      applicationService.save.mockResolvedValue()
 
       const requestHandler = pagesController.update()
 
@@ -150,8 +150,6 @@ describe('pagesController', () => {
 
     it('redirects to the tasklist if there is no next page', async () => {
       page.next.mockReturnValue(undefined)
-
-      applicationService.save.mockReturnValue()
 
       const requestHandler = pagesController.update()
 

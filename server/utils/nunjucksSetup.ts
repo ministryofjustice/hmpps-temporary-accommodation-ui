@@ -6,7 +6,7 @@ import express from 'express'
 import * as pathModule from 'path'
 
 import type { ErrorMessages, ApplicationData, TaskNames } from 'approved-premises'
-import { initialiseName } from './utils'
+import { initialiseName, removeBlankSummaryListItems } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems, convertObjectsToSelectOptions } from './formUtils'
 import { getTaskStatus, taskLink } from './applicationUtils'
 import bookingActions from './bookingUtils'
@@ -95,4 +95,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   )
 
   njkEnv.addGlobal('taskLink', (task: TaskNames, id: string) => markAsSafe(taskLink(task, id)))
+
+  njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 }

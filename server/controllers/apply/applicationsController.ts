@@ -5,7 +5,7 @@ import ApplicationService from '../../services/applicationService'
 import { PersonService } from '../../services'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/apply'
-import { formatDateString } from '../../utils/utils'
+import { DateFormats } from '../../utils/dateUtils'
 
 export default class ApplicationsController {
   constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
@@ -50,7 +50,7 @@ export default class ApplicationsController {
         return res.render(`applications/confirm`, {
           pageHeading: `Confirm ${person.name}'s details`,
           ...person,
-          dateOfBirth: formatDateString(person.dateOfBirth),
+          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth),
           errors,
           errorSummary,
           ...userInput,

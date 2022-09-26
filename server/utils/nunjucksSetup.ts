@@ -6,10 +6,11 @@ import express from 'express'
 import * as pathModule from 'path'
 
 import type { ErrorMessages, ApplicationData, TaskNames } from 'approved-premises'
-import { initialiseName, formatDateString } from './utils'
+import { initialiseName } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems, convertObjectsToSelectOptions } from './formUtils'
 import { getTaskStatus, taskLink } from './applicationUtils'
 import bookingActions from './bookingUtils'
+import { DateFormats } from './dateUtils'
 
 import managePaths from '../paths/manage'
 import applyPaths from '../paths/apply'
@@ -55,7 +56,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
-  njkEnv.addGlobal('formatDate', formatDateString)
+  njkEnv.addGlobal('formatDate', DateFormats.isoDateToUIDate)
 
   njkEnv.addGlobal('dateFieldValues', function sendContextToDateFieldValues(fieldName: string, errors: ErrorMessages) {
     return dateFieldValues(fieldName, this.ctx, errors)

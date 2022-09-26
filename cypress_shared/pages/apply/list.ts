@@ -1,7 +1,7 @@
 import type { ApplicationSummary } from 'approved-premises'
 import Page from '../page'
 import paths from '../../../server/paths/apply'
-import { formatDateString } from '../../../server/utils/utils'
+import { DateFormats } from '../../../server/utils/dateUtils'
 
 export default class ListPage extends Page {
   constructor() {
@@ -23,7 +23,7 @@ export default class ListPage extends Page {
         .within(() => {
           cy.get('td').eq(0).contains(summary.person.crn)
           cy.get('td').eq(1).contains(summary.tier.level)
-          cy.get('td').eq(2).contains(formatDateString(summary.arrivalDate))
+          cy.get('td').eq(2).contains(DateFormats.isoDateToUIDate(summary.arrivalDate))
           cy.get('td').eq(3).contains(summary.status)
         })
     })

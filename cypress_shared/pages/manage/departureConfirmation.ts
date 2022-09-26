@@ -1,7 +1,7 @@
-import parseISO from 'date-fns/parseISO'
 import type { Departure, Booking } from 'approved-premises'
 import Page from '../page'
 import paths from '../../../server/paths/manage'
+import { DateFormats } from '../../../server/utils/dateUtils'
 
 export default class DepartureConfirmation extends Page {
   constructor() {
@@ -18,7 +18,7 @@ export default class DepartureConfirmation extends Page {
     cy.get('dl').within(() => {
       this.assertDefinition('Name', booking.person.name)
       this.assertDefinition('CRN', booking.person.crn)
-      this.assertDefinition('Departure date', parseISO(departure.dateTime).toLocaleDateString('en-GB'))
+      this.assertDefinition('Departure date', DateFormats.isoDateToUIDate(departure.dateTime))
       this.assertDefinition('Reason', departure.reason.name)
       this.assertDefinition('Destination approved premises', departure.destinationAp.name)
       this.assertDefinition('Destination provider', departure.destinationProvider.name)

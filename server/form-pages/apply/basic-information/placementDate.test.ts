@@ -1,7 +1,7 @@
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-examples'
-import { formatDateString } from '../../../utils/utils'
 
 import PlacementDate from './placementDate'
+import { DateFormats } from '../../../utils/dateUtils'
 
 describe('PlacementDate', () => {
   const releaseDate = new Date().toISOString()
@@ -26,7 +26,9 @@ describe('PlacementDate', () => {
         'startDate-month': 12,
         'startDate-day': 1,
       })
-      expect(page.title).toEqual(`Is ${formatDateString(releaseDate)} the date you want the placement to start?`)
+      expect(page.title).toEqual(
+        `Is ${DateFormats.isoDateToUIDate(releaseDate)} the date you want the placement to start?`,
+      )
     })
   })
 

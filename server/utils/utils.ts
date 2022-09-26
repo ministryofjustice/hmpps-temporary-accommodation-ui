@@ -1,6 +1,7 @@
-import { parseISO, format } from 'date-fns'
+import { format } from 'date-fns'
 import type { ObjectWithDateParts } from 'approved-premises'
 import { SessionDataError } from './errors'
+import { DateFormats, InvalidDateStringError } from './dateFormats'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>
@@ -39,7 +40,6 @@ const kebabCase = (string: string) =>
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
 
-export const formatDateString = (date: string): string => format(convertDateString(date), 'cccc d MMMM y')
 
 export class InvalidDateStringError extends Error {}
 /**
@@ -93,7 +93,7 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   const dateString = convertDateAndTimeInputsToIsoString(dateInputObj, key)
 
   try {
-    convertDateString(dateString[key])
+    DateFormats.convertIsoToDateObj(dateString[key])
   } catch (err) {
     if (err instanceof InvalidDateStringError) {
       return false

@@ -8,8 +8,8 @@ import { UnknownPageError, ValidationError } from '../utils/errors'
 import type { PersonService } from './index'
 
 import pages from '../form-pages/apply'
-import { formatDateString } from '../utils/utils'
 import paths from '../paths/apply'
+import { DateFormats } from '../utils/dateUtils'
 
 export type DataServices = {
   personService: PersonService
@@ -117,7 +117,7 @@ export default class ApplicationService {
         this.createNameAnchorElement(application.person.name, application.id),
         this.textValue(application.person.crn),
         this.createTierBadge(application.tier.level),
-        this.textValue(formatDateString(application.arrivalDate)),
+        this.textValue(DateFormats.isoDateToUIDate(application.arrivalDate)),
         this.createStatusTag(application.status),
       ]
     })

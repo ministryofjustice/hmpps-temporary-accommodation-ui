@@ -1,5 +1,6 @@
 /* eslint-disable */
 import formatISO from 'date-fns/formatISO'
+import parseISO from 'date-fns/parseISO'
 import format from 'date-fns/format'
 
 export class DateFormats {
@@ -25,5 +26,13 @@ export class DateFormats {
    */
   static dateObjtoUIDate(date: Date) {
     return format(date, 'cccc d MMMM y')
+  }
+
+  /**
+   * @param isoDate an ISO date string.
+   * @returns the date in the to be shown in the UI: "Thursday, 20 December 2012".
+   */
+  static isoDateToUIDate(isoDate: string) {
+    return DateFormats.dateObjtoUIDate(DateFormats.convertIsoToDateObj(isoDate))
   }
 }

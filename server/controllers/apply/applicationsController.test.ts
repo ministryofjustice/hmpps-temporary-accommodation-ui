@@ -10,7 +10,7 @@ import personFactory from '../../testutils/factories/person'
 import applicationFactory from '../../testutils/factories/application'
 
 import paths from '../../paths/apply'
-import { formatDateString } from '../../utils/utils'
+import { DateFormats } from '../../utils/dateUtils'
 
 jest.mock('../../utils/validation')
 
@@ -115,7 +115,7 @@ describe('applicationsController', () => {
         expect(response.render).toHaveBeenCalledWith('applications/confirm', {
           pageHeading: `Confirm ${person.name}'s details`,
           ...person,
-          dateOfBirth: formatDateString(person.dateOfBirth),
+          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth),
           errors: {},
           errorSummary: [],
         })
@@ -135,7 +135,7 @@ describe('applicationsController', () => {
         expect(response.render).toHaveBeenCalledWith('applications/confirm', {
           pageHeading: `Confirm ${person.name}'s details`,
           ...person,
-          dateOfBirth: formatDateString(person.dateOfBirth),
+          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth),
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,
           ...errorsAndUserInput.userInput,

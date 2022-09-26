@@ -1,5 +1,4 @@
 import type { Departure } from 'approved-premises'
-import { parseISO } from 'date-fns'
 
 import DepartureService from './departureService'
 import BookingClient from '../data/bookingClient'
@@ -8,6 +7,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import departureFactory from '../testutils/factories/departure'
 import referenceDataFactory from '../testutils/factories/referenceData'
 import newDepartureFactory from '../testutils/factories/newDeparture'
+import { DateFormats } from '../utils/dateUtils'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -53,7 +53,7 @@ describe('DepartureService', () => {
 
       expect(requestedDeparture).toEqual({
         ...departure,
-        dateTime: parseISO(departure.dateTime).toLocaleDateString('en-GB'),
+        dateTime: DateFormats.isoDateToUIDate(departure.dateTime),
       })
 
       expect(DepartureClientFactory).toHaveBeenCalledWith(token)

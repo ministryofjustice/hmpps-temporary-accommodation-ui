@@ -11,8 +11,8 @@ import type {
 
 import type { RestClientBuilder, ReferenceDataClient } from '../data'
 import BookingClient from '../data/bookingClient'
-import { convertDateString, formatDate } from '../utils/utils'
 import paths from '../paths/manage'
+import { DateFormats } from '../utils/dateUtils'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -87,7 +87,7 @@ export default class BookingService {
         text: booking.person.crn,
       },
       {
-        text: formatDate(convertDateString(type === 'arrival' ? booking.arrivalDate : booking.departureDate)),
+        text: DateFormats.isoDateToUIDate(type === 'arrival' ? booking.arrivalDate : booking.departureDate),
       },
       {
         html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
@@ -115,7 +115,7 @@ export default class BookingService {
         text: booking.person.crn,
       },
       {
-        text: formatDate(convertDateString(booking.departureDate)),
+        text: DateFormats.isoDateToUIDate(booking.departureDate),
       },
       {
         html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
@@ -130,12 +130,14 @@ export default class BookingService {
 
   private bookingsArrivingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
     return this.bookingsAwaitingArrival(bookings).filter(booking =>
-      isSameDay(convertDateString(booking.arrivalDate), today),
+      isSameDay(DateFormats.convertIsoToDateObj(booking.arrivalDate), today),
     )
   }
 
   private bookingsDepartingToday(bookings: Array<Booking>, today: Date): Array<Booking> {
-    return this.arrivedBookings(bookings).filter(booking => isSameDay(convertDateString(booking.departureDate), today))
+    return this.arrivedBookings(bookings).filter(booking =>
+      isSameDay(DateFormats.convertIsoToDateObj(booking.departureDate), today),
+    )
   }
 
   private upcomingArrivals(bookings: Array<Booking>, today: Date): Array<Booking> {
@@ -155,7 +157,7 @@ export default class BookingService {
   }
 
   private isUpcoming(date: string, today: Date) {
-    return isWithinInterval(convertDateString(date), {
+    return isWithinInterval(DateFormats.convertIsoToDateObj(date), {
       start: addDays(today, 1),
       end: addDays(today, this.UPCOMING_WINDOW_IN_DAYS + 1),
     })

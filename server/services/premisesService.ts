@@ -1,7 +1,7 @@
 import type { Premises, TableRow, SummaryList } from 'approved-premises'
 import type { RestClientBuilder, PremisesClient } from '../data'
 
-import { formatDateString } from '../utils/utils'
+import { DateFormats } from '../utils/dateUtils'
 import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
 
 export default class PremisesService {
@@ -47,21 +47,23 @@ export default class PremisesService {
   private generateOvercapacityMessage(overcapacityDateRanges: NegativeDateRange[]) {
     if (overcapacityDateRanges.length === 1) {
       if (!overcapacityDateRanges[0].end) {
-        return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on ${formatDateString(
+        return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on ${DateFormats.isoDateToUIDate(
           overcapacityDateRanges[0].start,
         )}</h4>`
       }
-      return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period ${formatDateString(
+      return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period ${DateFormats.isoDateToUIDate(
         overcapacityDateRanges[0].start,
-      )} to ${formatDateString(overcapacityDateRanges[0].end)}</h4>`
+      )} to ${DateFormats.isoDateToUIDate(overcapacityDateRanges[0].end)}</h4>`
     }
 
     if (overcapacityDateRanges.length > 1) {
       const dateRanges = overcapacityDateRanges
         .map((dateRange: NegativeDateRange) =>
           !dateRange.end
-            ? `<li>${formatDateString(dateRange.start)}</li>`
-            : `<li>${formatDateString(dateRange.start)} to ${formatDateString(dateRange.end)}</li>`,
+            ? `<li>${DateFormats.isoDateToUIDate(dateRange.start)}</li>`
+            : `<li>${DateFormats.isoDateToUIDate(dateRange.start)} to ${DateFormats.isoDateToUIDate(
+                dateRange.end,
+              )}</li>`,
         )
         .join('')
       return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>

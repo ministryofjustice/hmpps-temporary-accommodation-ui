@@ -10,8 +10,8 @@ import ApplicationClient from '../data/applicationClient'
 
 import pages from '../form-pages/apply'
 import paths from '../paths/apply'
-import { formatDateString } from '../utils/utils'
 import applicationFactory from '../testutils/factories/application'
+import { DateFormats } from '../utils/dateUtils'
 
 const FirstPage = jest.fn()
 const SecondPage = jest.fn()
@@ -82,7 +82,7 @@ describe('ApplicationService', () => {
             html: `<span class="moj-badge moj-badge--red">${applicationSummaryA.tier.level}</span>`,
           },
           {
-            text: formatDateString(applicationSummaryA.arrivalDate),
+            text: DateFormats.isoDateToUIDate(applicationSummaryA.arrivalDate),
           },
           {
             html: `<strong class="govuk-tag govuk-tag--blue">${applicationSummaryA.status}</strong>`,
@@ -101,7 +101,7 @@ describe('ApplicationService', () => {
             html: `<span class="moj-badge moj-badge--purple">${applicationSummaryB.tier.level}</span>`,
           },
           {
-            text: formatDateString(applicationSummaryB.arrivalDate),
+            text: DateFormats.isoDateToUIDate(applicationSummaryB.arrivalDate),
           },
           {
             html: `<strong class="govuk-tag govuk-tag--yellow">${applicationSummaryB.status}</strong>`,

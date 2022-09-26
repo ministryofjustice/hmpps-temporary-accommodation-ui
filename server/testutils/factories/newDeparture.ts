@@ -4,12 +4,12 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import type { NewDeparture } from 'approved-premises'
 import referenceDataFactory from './referenceData'
 import premisesFactory from './premises'
-import { DateFormats } from '../../utils/dateFormats'
+import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<NewDeparture>(() => {
   const date = faker.date.soon()
   return {
-    dateTime: DateFormats.formatApiDate(date),
+    dateTime: DateFormats.formatApiDateTime(date),
     'dateTime-day': date.getDate().toString(),
     'dateTime-month': date.getMonth().toString(),
     'dateTime-year': date.getFullYear().toString(),

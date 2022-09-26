@@ -1,10 +1,8 @@
-import { parseISO } from 'date-fns'
-
 import type { Premises, Booking } from 'approved-premises'
 
 import Page from '../page'
-import { formatDateString, formatDate } from '../../../server/utils/utils'
 import paths from '../../../server/paths/manage'
+import { DateFormats } from '../../../server/utils/dateUtils'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
@@ -75,11 +73,11 @@ export default class PremisesShowPage extends Page {
 
   private tableShouldContainBookings(bookings: Array<Booking>, type: 'arrival' | 'departure') {
     bookings.forEach((item: Booking) => {
-      const date = type === 'arrival' ? parseISO(item.arrivalDate) : parseISO(item.departureDate)
+      const date = type === 'arrival' ? item.arrivalDate : item.departureDate
       cy.contains(item.person.crn)
         .parent()
         .within(() => {
-          cy.get('td').eq(0).contains(formatDate(date))
+          cy.get('td').eq(0).contains(DateFormats.isoDateToUIDate(date))
           cy.get('td')
             .eq(1)
             .contains('Manage')
@@ -94,9 +92,7 @@ export default class PremisesShowPage extends Page {
       cy.contains(item.person.crn)
         .parent()
         .within(() => {
-          cy.get('td')
-            .eq(0)
-            .contains(formatDate(parseISO(item.departureDate)))
+          cy.get('td').eq(0).contains(DateFormats.isoDateToUIDate(item.departureDate))
           cy.get('td')
             .eq(1)
             .contains('Manage')
@@ -107,9 +103,9 @@ export default class PremisesShowPage extends Page {
 
   shouldShowOvercapacityMessage(overcapacityStartDate: string, overcapacityEndDate: string) {
     this.shouldShowBanner(
-      `The premises is over capacity for the period ${formatDateString(overcapacityStartDate)} to ${formatDateString(
-        overcapacityEndDate,
-      )}`,
+      `The premises is over capacity for the period ${DateFormats.isoDateToUIDate(
+        overcapacityStartDate,
+      )} to ${DateFormats.isoDateToUIDate(overcapacityEndDate)}`,
     )
   }
 }

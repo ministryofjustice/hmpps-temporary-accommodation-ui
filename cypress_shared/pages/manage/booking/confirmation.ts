@@ -1,10 +1,8 @@
-import parseISO from 'date-fns/parseISO'
-
 import type { Booking } from 'approved-premises'
 
 import Page from '../../page'
-import { formatDate, formatDateString } from '../../../../server/utils/utils'
 import paths from '../../../../server/paths/manage'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 type OvercapacityPeriod = {
   start: string
@@ -25,8 +23,8 @@ export default class BookingConfirmationPage extends Page {
     cy.get('dl').within(() => {
       this.assertDefinition('Name', booking.person.name)
       this.assertDefinition('CRN', booking.person.crn)
-      this.assertDefinition('Expected arrival date', formatDate(parseISO(booking.arrivalDate)))
-      this.assertDefinition('Expected departure date', formatDate(parseISO(booking.departureDate)))
+      this.assertDefinition('Expected arrival date', DateFormats.isoDateToUIDate(booking.arrivalDate))
+      this.assertDefinition('Expected departure date', DateFormats.isoDateToUIDate(booking.departureDate))
       this.assertDefinition('Key worker', booking.keyWorker.name)
     })
   }
@@ -37,10 +35,14 @@ export default class BookingConfirmationPage extends Page {
   ) {
     this.shouldShowBanner(`The premises is over capacity for the periods:`)
     cy.get('.govuk-list > :nth-child(1)').contains(
-      `${formatDateString(firstOvercapacityPeriod.start)} to ${formatDateString(firstOvercapacityPeriod.end)}`,
+      `${DateFormats.isoDateToUIDate(firstOvercapacityPeriod.start)} to ${DateFormats.isoDateToUIDate(
+        firstOvercapacityPeriod.end,
+      )}`,
     )
     cy.get('.govuk-list > :nth-child(2)').contains(
-      `${formatDateString(secondOvercapacityPeriod.start)} to ${formatDateString(secondOvercapacityPeriod.end)}`,
+      `${DateFormats.isoDateToUIDate(secondOvercapacityPeriod.start)} to ${DateFormats.isoDateToUIDate(
+        secondOvercapacityPeriod.end,
+      )}`,
     )
   }
 }

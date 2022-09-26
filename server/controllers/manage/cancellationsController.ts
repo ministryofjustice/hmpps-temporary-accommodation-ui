@@ -4,7 +4,8 @@ import type { NewCancellation } from 'approved-premises'
 
 import { CancellationService, BookingService } from '../../services'
 import { fetchErrorsAndUserInput, catchValidationErrorOrPropogate } from '../../utils/validation'
-import { convertDateAndTimeInputsToIsoString } from '../../utils/utils'
+import { DateFormats } from '../../utils/dateUtils'
+
 import paths from '../../paths/manage'
 
 export default class CancellationsController {
@@ -37,7 +38,7 @@ export default class CancellationsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const { date } = convertDateAndTimeInputsToIsoString(req.body, 'date')
+      const { date } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'date')
 
       const cancellation = {
         ...req.body.cancellation,

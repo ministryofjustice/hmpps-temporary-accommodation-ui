@@ -1,5 +1,3 @@
-import { parseISO, format } from 'date-fns'
-import type { ObjectWithDateParts } from 'approved-premises'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
@@ -39,73 +37,6 @@ const kebabCase = (string: string) =>
     .replace(/[\s_]+/g, '-')
     .toLowerCase()
 
-// returns a date like 'Tuesday 6 September 2022'
-export const formatDate = (date: Date): string => format(date, 'cccc d MMMM y')
-
-export const formatDateString = (date: string): string => format(convertDateString(date), 'cccc d MMMM y')
-
-export class InvalidDateStringError extends Error {}
-/**
- * Converts an ISO8601 datetime string into a Javascript Date object.
- * @param date An ISO8601 datetime string
- * @returns A Date object
- * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
- */
-export const convertDateString = (date: string): Date => {
-  const parsedDate = parseISO(date)
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    throw new InvalidDateStringError(`Invalid Date: ${date}`)
-  }
-
-  return parsedDate
-}
-
-/**
- * Converts input for a GDS date input https://design-system.service.gov.uk/components/date-input/
- * into an ISO8601 date string
- * @param dateInputObj an object with date parts (i.e. `-month` `-day` `-year`), which come from a `govukDateInput`.
- * @param key the key that prefixes each item in the dateInputObj, also the name of the property which the date object will be returned in the return value.
- * @returns an ISO8601 date string.
- */
-export const convertDateAndTimeInputsToIsoString = <K extends string | number>(
-  dateInputObj: ObjectWithDateParts<K>,
-  key: K,
-) => {
-  const day = `0${dateInputObj[`${key}-day`]}`.slice(-2)
-  const month = `0${dateInputObj[`${key}-month`]}`.slice(-2)
-  const year = dateInputObj[`${key}-year`]
-  const time = dateInputObj[`${key}-time`]
-
-  const timeSegment = time || '00:00'
-
-  const o: { [P in K]?: string } = dateInputObj
-  if (day && month && year) {
-    o[key] = `${year}-${month}-${day}T${timeSegment}:00.000Z`
-  } else {
-    o[key] = ''
-  }
-
-  return dateInputObj
-}
-
-export const dateAndTimeInputsAreValidDates = <K extends string | number>(
-  dateInputObj: ObjectWithDateParts<K>,
-  key: K,
-): boolean => {
-  const dateString = convertDateAndTimeInputsToIsoString(dateInputObj, key)
-
-  try {
-    convertDateString(dateString[key])
-  } catch (err) {
-    if (err instanceof InvalidDateStringError) {
-      return false
-    }
-  }
-
-  return true
-}
-
 /**
  * Retrieves response for a given question from the session object.
  * @param sessionData the session data for an application.
@@ -118,9 +49,4 @@ export const retrieveQuestionResponseFromSession = <T>(sessionData: Record<strin
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }
-}
-
-export const dateIsBlank = <T = ObjectWithDateParts<string | number>>(body: T): boolean => {
-  const fields = Object.keys(body).filter(key => key.match(/-[year|month|day]/))
-  return fields.every(field => !body[field])
 }

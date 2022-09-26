@@ -6,8 +6,8 @@ import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
 import referenceDataFactory from '../testutils/factories/referenceData'
 
-import { formatDate } from '../utils/utils'
 import paths from '../paths/manage'
+import { DateFormats } from '../utils/dateUtils'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -173,13 +173,13 @@ describe('BookingService', () => {
       const results = service.bookingsToTableRows(bookings, premisesId, 'arrival')
 
       expect(results[0][0]).toEqual({ text: bookings[0].person.crn })
-      expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
+      expect(results[0][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].person.crn })
-      expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
+      expect(results[1][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
       })
@@ -199,13 +199,13 @@ describe('BookingService', () => {
       const results = service.bookingsToTableRows(bookings, premisesId, 'departure')
 
       expect(results[0][0]).toEqual({ text: bookings[0].person.crn })
-      expect(results[0][1]).toEqual({ text: formatDate(booking1Date) })
+      expect(results[0][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking1Date) })
       expect(results[0][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].person.crn })
-      expect(results[1][1]).toEqual({ text: formatDate(booking2Date) })
+      expect(results[1][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking2Date) })
       expect(results[1][2]).toEqual({
         html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
       })

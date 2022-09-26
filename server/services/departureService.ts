@@ -1,7 +1,6 @@
-import { parseISO } from 'date-fns'
-
 import type { Departure, ReferenceData, NewDeparture } from 'approved-premises'
 import type { RestClientBuilder, BookingClient, ReferenceDataClient } from '../data'
+import { DateFormats } from '../utils/dateUtils'
 
 export type DepartureReferenceData = {
   departureReasons: Array<ReferenceData>
@@ -33,7 +32,7 @@ export default class DepartureService {
 
     const departure = await departureClient.findDeparture(premisesId, bookingId, departureId)
 
-    return { ...departure, dateTime: parseISO(departure.dateTime).toLocaleDateString('en-GB') }
+    return { ...departure, dateTime: DateFormats.isoDateToUIDate(departure.dateTime) }
   }
 
   async getReferenceData(token: string): Promise<DepartureReferenceData> {

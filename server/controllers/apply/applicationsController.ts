@@ -50,7 +50,8 @@ export default class ApplicationsController {
         return res.render(`applications/confirm`, {
           pageHeading: `Confirm ${person.name}'s details`,
           ...person,
-          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth),
+          date: DateFormats.dateObjtoUIDate(new Date()),
+          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
           errors,
           errorSummary,
           ...userInput,

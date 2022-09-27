@@ -115,7 +115,8 @@ describe('applicationsController', () => {
         expect(response.render).toHaveBeenCalledWith('applications/confirm', {
           pageHeading: `Confirm ${person.name}'s details`,
           ...person,
-          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth),
+          date: DateFormats.dateObjtoUIDate(new Date()),
+          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
           errors: {},
           errorSummary: [],
         })
@@ -135,7 +136,8 @@ describe('applicationsController', () => {
         expect(response.render).toHaveBeenCalledWith('applications/confirm', {
           pageHeading: `Confirm ${person.name}'s details`,
           ...person,
-          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth),
+          date: DateFormats.dateObjtoUIDate(new Date()),
+          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,
           ...errorsAndUserInput.userInput,

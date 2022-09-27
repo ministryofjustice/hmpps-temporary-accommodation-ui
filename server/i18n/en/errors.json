@@ -14,27 +14,32 @@
     "empty": "You must enter a name"
   },
   "arrivalDate": {
-    "empty": "You must enter a valid arrival date"
+    "empty": "You must enter an arrival date",
+    "invalid": "The arrival date is an invalid date"
   },
   "date": {
-    "empty": "You must enter a valid departure date"
+    "empty": "You must enter a valid departure date",
+    "invalid": "The departure date is an invalid date"
   },
   "reason": {
     "empty": "You must choose a valid reason",
     "doesNotExist": "This reason does not exist"
   },
   "departureDate": {
-    "empty": "You must enter a valid departure date"
+    "empty": "You must enter a departure date",
+    "invalid": "The departure date is an invalid date"
   },
   "expectedDepartureDate": {
-    "empty": "You must enter a valid expected departure date",
+    "empty": "You must enter an expected departure date",
+    "invalid": "The expected departure date is an invalid date",
     "beforeBookingArrivalDate": "The departure date cannot be before the arrival date"
   },
   "keyWorkerId": {
     "empty": "You must choose a keyworker"
   },
   "dateTime": {
-    "empty": "You must enter a valid departure date and time",
+    "empty": "You must enter a departure date and time",
+    "invalid": "The departure date and time is an invalid date and time",
     "beforeBookingArrivalDate": "The departure date and time must be after the booking's arrival date"
   },
   "destinationProviderId": {
@@ -44,10 +49,15 @@
   "destinationProvider": { "empty": "You must enter a destination provider" },
   "newDepartureDate": {
     "empty": "You must enter a new departure date",
+    "invalid": "The departure date is an invalid date",
     "beforeExistingDepartureDate": "The new departure date must be after the Booking's current departure date"
   },
   "startDate": { "empty": "You must enter a start date", "invalid": "The start date is an invalid date" },
-  "endDate": { "empty": "You must enter a end date", "beforeStartDate": "The end date must be before the start date" },
+  "endDate": {
+    "empty": "You must enter a end date",
+    "invalid": "The end date is an invalid date",
+    "beforeStartDate": "The end date must be before the start date"
+  },
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
   "referenceNumber": { "empty": "You must enter a reference number" },
   "sentenceType": { "empty": "You must choose a sentence type" },

@@ -38,7 +38,7 @@ export default class ApType implements TasklistPage {
 
     if (!this.body.type) {
       errors.push({
-        propertyName: 'type',
+        propertyName: '$.type',
         errorType: 'blank',
       })
     }

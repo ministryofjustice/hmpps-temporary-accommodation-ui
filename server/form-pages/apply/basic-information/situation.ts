@@ -46,7 +46,7 @@ export default class Situation implements TasklistPage {
 
     if (!this.body.situation) {
       errors.push({
-        propertyName: 'situation',
+        propertyName: '$.situation',
         errorType: 'blank',
       })
     }

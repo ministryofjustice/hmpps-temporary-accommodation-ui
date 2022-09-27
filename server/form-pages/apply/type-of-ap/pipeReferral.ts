@@ -32,7 +32,7 @@ export default class PipeReferral implements TasklistPage {
 
     if (!this.body.opdPathway) {
       errors.push({
-        propertyName: 'opdPathway',
+        propertyName: '$.opdPathway',
         errorType: 'blank',
       })
     }
@@ -40,12 +40,12 @@ export default class PipeReferral implements TasklistPage {
     if (this.body.opdPathway === 'yes') {
       if (dateIsBlank(this.body)) {
         errors.push({
-          propertyName: 'opdPathwayDate',
+          propertyName: '$.opdPathwayDate',
           errorType: 'blank',
         })
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'opdPathwayDate')) {
         errors.push({
-          propertyName: 'opdPathwayDate',
+          propertyName: '$.opdPathwayDate',
           errorType: 'invalid',
         })
       }

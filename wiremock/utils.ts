@@ -28,7 +28,7 @@ const errorStub = (fields: Array<string>, pattern: string, nullifiedFields: Arra
 
   const invalidParams = fields.map(field => {
     return {
-      propertyName: field,
+      propertyName: `$.${field}`,
       errorType: 'blank',
     }
   })

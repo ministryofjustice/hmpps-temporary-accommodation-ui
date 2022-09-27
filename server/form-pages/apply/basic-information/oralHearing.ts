@@ -34,7 +34,7 @@ export default class OralHearing implements TasklistPage {
 
     if (!this.body.knowOralHearingDate) {
       errors.push({
-        propertyName: 'knowOralHearingDate',
+        propertyName: '$.knowOralHearingDate',
         errorType: 'blank',
       })
     }
@@ -42,12 +42,12 @@ export default class OralHearing implements TasklistPage {
     if (this.body.knowOralHearingDate === 'yes') {
       if (dateIsBlank(this.body)) {
         errors.push({
-          propertyName: 'oralHearingDate',
+          propertyName: '$.oralHearingDate',
           errorType: 'blank',
         })
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'oralHearingDate')) {
         errors.push({
-          propertyName: 'oralHearingDate',
+          propertyName: '$.oralHearingDate',
           errorType: 'invalid',
         })
       }

@@ -49,7 +49,7 @@ export default class SentenceType implements TasklistPage {
 
     if (!this.body.sentenceType) {
       errors.push({
-        propertyName: 'sentenceType',
+        propertyName: '$.sentenceType',
         errorType: 'blank',
       })
     }

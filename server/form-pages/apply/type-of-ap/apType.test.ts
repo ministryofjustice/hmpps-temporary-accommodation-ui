@@ -36,7 +36,7 @@ describe('ApType', () => {
       const page = new ApType({ type: '' })
       expect(page.errors()).toEqual([
         {
-          propertyName: 'type',
+          propertyName: '$.type',
           errorType: 'blank',
         },
       ])

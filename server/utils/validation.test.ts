@@ -46,11 +46,11 @@ describe('catchValidationErrorOrPropogate', () => {
       data: {
         'invalid-params': [
           {
-            propertyName: 'crn',
+            propertyName: '$.crn',
             errorType: 'blank',
           },
           {
-            propertyName: 'arrivalDate',
+            propertyName: '$.arrivalDate',
             errorType: 'blank',
           },
         ],
@@ -70,11 +70,11 @@ describe('catchValidationErrorOrPropogate', () => {
     const error = createMock<ValidationError>({
       data: [
         {
-          propertyName: 'crn',
+          propertyName: '$.crn',
           errorType: 'blank',
         },
         {
-          propertyName: 'arrivalDate',
+          propertyName: '$.arrivalDate',
           errorType: 'blank',
         },
       ],
@@ -92,6 +92,36 @@ describe('catchValidationErrorOrPropogate', () => {
   it('throws the error if the error is not the type we expect', () => {
     const err = new Error()
     expect(() => catchValidationErrorOrPropogate(request, response, err, 'some/url')).toThrowError(err)
+  })
+
+  it('throws an error if the property is not found in the error lookup', () => {
+    const error = createMock<ValidationError>({
+      data: [
+        {
+          propertyName: '$.foo',
+          errorType: 'bar',
+        },
+      ],
+    })
+
+    expect(() => catchValidationErrorOrPropogate(request, response, error, 'some/url')).toThrowError(
+      'Cannot find a translation for an error at the path $.foo',
+    )
+  })
+
+  it('throws an error if the error type is not found in the error lookup', () => {
+    const error = createMock<ValidationError>({
+      data: [
+        {
+          propertyName: '$.crn',
+          errorType: 'invalid',
+        },
+      ],
+    })
+
+    expect(() => catchValidationErrorOrPropogate(request, response, error, 'some/url')).toThrowError(
+      'Cannot find a translation for an error at the path $.crn with the type invalid',
+    )
   })
 })
 

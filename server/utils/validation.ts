@@ -1,4 +1,5 @@
 import type { Response, Request } from 'express'
+import jsonpath from 'jsonpath'
 
 import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from 'approved-premises'
 import { SanitisedError } from '../sanitisedError'
@@ -18,10 +19,13 @@ export const catchValidationErrorOrPropogate = (
 ): void => {
   if ('data' in error) {
     const invalidParams = error.data['invalid-params'] || error.data
-    const errors = generateErrorMessages(invalidParams)
-    const errorSummary = generateErrorSummary(invalidParams)
 
-    request.flash('errors', errors)
+    const errors = generateErrors(invalidParams)
+
+    const errorMessages = generateErrorMessages(errors)
+    const errorSummary = generateErrorSummary(errors)
+
+    request.flash('errors', errorMessages)
     request.flash('errorSummary', errorSummary)
     request.flash('userInput', request.body)
 
@@ -68,24 +72,48 @@ export const errorMessage = (field: string, text: string): ErrorMessage => {
   }
 }
 
+const generateErrors = (params: Array<InvalidParams>): Record<string, string> => {
+  return params.reduce((obj, error) => {
+    const key = error.propertyName.split('.').slice(1).join('_')
+    return {
+      ...obj,
+      [key]: errorText(error),
+    }
+  }, {})
+}
+
+const generateErrorSummary = (errors: Record<string, string>): Array<ErrorSummary> => {
+  return Object.keys(errors).map(k => errorSummary(k, errors[k]))
+}
+
 const firstFlashItem = (request: Request, key: string) => {
   const message = request.flash(key)
   return message ? message[0] : undefined
 }
 
-const generateErrorMessages = (params: Array<InvalidParams>): ErrorMessages => {
-  return params.reduce((obj, error) => {
+const generateErrorMessages = (errors: Record<string, string>): ErrorMessages => {
+  return Object.keys(errors).reduce((obj, key) => {
     return {
       ...obj,
-      [error.propertyName]: errorMessage(error.propertyName, summaryForError(error).text),
+      [key]: errorMessage(key, errors[key]),
     }
   }, {})
 }
 
-const generateErrorSummary = (params: Array<InvalidParams>): Array<ErrorSummary> => {
-  return params.map(obj => summaryForError(obj))
+const errorText = (error: InvalidParams): ErrorSummary => {
+  const errors =
+    jsonpath.value(errorLookup, error.propertyName) ||
+    throwUndefinedError(`Cannot find a translation for an error at the path ${error.propertyName}`)
+
+  const text =
+    errors[error.errorType] ||
+    throwUndefinedError(
+      `Cannot find a translation for an error at the path ${error.propertyName} with the type ${error.errorType}`,
+    )
+
+  return text
 }
 
-const summaryForError = (error: InvalidParams): ErrorSummary => {
-  return errorSummary(error.propertyName, errorLookup[error.propertyName][error.errorType])
+const throwUndefinedError = (message: string) => {
+  throw new Error(message)
 }

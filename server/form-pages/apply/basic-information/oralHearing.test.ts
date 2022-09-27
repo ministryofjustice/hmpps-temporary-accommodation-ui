@@ -43,7 +43,7 @@ describe('OralHearing', () => {
         })
         expect(page.errors()).toEqual([
           {
-            propertyName: 'oralHearingDate',
+            propertyName: '$.oralHearingDate',
             errorType: 'blank',
           },
         ])
@@ -58,7 +58,7 @@ describe('OralHearing', () => {
         })
         expect(page.errors()).toEqual([
           {
-            propertyName: 'oralHearingDate',
+            propertyName: '$.oralHearingDate',
             errorType: 'invalid',
           },
         ])
@@ -76,7 +76,7 @@ describe('OralHearing', () => {
       const page = new OralHearing({})
       expect(page.errors()).toEqual([
         {
-          propertyName: 'knowOralHearingDate',
+          propertyName: '$.knowOralHearingDate',
           errorType: 'blank',
         },
       ])

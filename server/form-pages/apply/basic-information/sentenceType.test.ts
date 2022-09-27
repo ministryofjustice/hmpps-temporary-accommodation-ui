@@ -58,7 +58,7 @@ describe('SentenceType', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.sentenceType',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

@@ -44,7 +44,7 @@ describe('OralHearing', () => {
         expect(page.errors()).toEqual([
           {
             propertyName: '$.oralHearingDate',
-            errorType: 'blank',
+            errorType: 'empty',
           },
         ])
       })
@@ -77,7 +77,7 @@ describe('OralHearing', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.knowOralHearingDate',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

@@ -23,7 +23,11 @@ export default {
     bookingId: string
     params: Array<string>
   }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/extensions`)),
+    stubFor(
+      errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/extensions`, [
+        'newDepartureDate',
+      ]),
+    ),
   verifyBookingExtensionCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({

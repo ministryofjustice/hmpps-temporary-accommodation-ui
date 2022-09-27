@@ -33,7 +33,7 @@ export default class PipeReferral implements TasklistPage {
     if (!this.body.opdPathway) {
       errors.push({
         propertyName: '$.opdPathway',
-        errorType: 'blank',
+        errorType: 'empty',
       })
     }
 
@@ -41,7 +41,7 @@ export default class PipeReferral implements TasklistPage {
       if (dateIsBlank(this.body)) {
         errors.push({
           propertyName: '$.opdPathwayDate',
-          errorType: 'blank',
+          errorType: 'empty',
         })
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'opdPathwayDate')) {
         errors.push({

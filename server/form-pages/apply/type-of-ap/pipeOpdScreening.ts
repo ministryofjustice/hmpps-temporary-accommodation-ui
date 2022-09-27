@@ -26,7 +26,7 @@ export default class PipeOpdReferral implements TasklistPage {
     if (!this.body.pipeReferral) {
       errors.push({
         propertyName: '$.pipeReferral',
-        errorType: 'blank',
+        errorType: 'empty',
       })
     }
 

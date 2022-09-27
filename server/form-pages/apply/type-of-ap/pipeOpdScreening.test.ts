@@ -28,7 +28,7 @@ describe('PipeOpdScreening', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.pipeReferral',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

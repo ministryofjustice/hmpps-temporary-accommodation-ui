@@ -70,7 +70,7 @@ describe('PlacementDate', () => {
         expect(page.errors()).toEqual([
           {
             propertyName: '$.startDate',
-            errorType: 'blank',
+            errorType: 'empty',
           },
         ])
       })
@@ -99,7 +99,7 @@ describe('PlacementDate', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.startDateSameAsReleaseDate',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

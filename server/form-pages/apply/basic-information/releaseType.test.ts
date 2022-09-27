@@ -27,7 +27,7 @@ describe('ReleaseType', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.releaseType',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

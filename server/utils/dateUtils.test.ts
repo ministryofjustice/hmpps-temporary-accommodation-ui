@@ -89,7 +89,7 @@ describe('DateFormats', () => {
 
       const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date')
 
-      expect(result.date).toEqual('')
+      expect(result.date).toBeUndefined()
     })
 
     it('returns an invalid ISO string when given invalid strings as input', () => {

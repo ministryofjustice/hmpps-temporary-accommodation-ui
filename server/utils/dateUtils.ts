@@ -73,7 +73,7 @@ export class DateFormats {
     if (day && month && year) {
       o[key] = `${year}-${month}-${day}T${timeSegment}:00.000Z`
     } else {
-      o[key] = ''
+      o[key] = undefined
     }
 
     return dateInputObj

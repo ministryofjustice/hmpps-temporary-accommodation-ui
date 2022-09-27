@@ -38,6 +38,7 @@ export default {
         'destinationProvider',
         'moveOnCategory',
         'reason',
+        'dateTime',
       ]),
     ),
   stubDepartureReferenceData: (): Promise<[Response, Response, Response]> =>

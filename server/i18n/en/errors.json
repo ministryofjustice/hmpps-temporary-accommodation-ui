@@ -1,56 +1,56 @@
 {
   "crn": {
-    "blank": "You must enter a CRN"
+    "empty": "You must enter a CRN"
   },
   "name": {
-    "blank": "You must enter a name"
+    "empty": "You must enter a name"
   },
   "arrivalDate": {
-    "blank": "You must enter a valid arrival date"
+    "empty": "You must enter a valid arrival date"
   },
   "date": {
-    "blank": "You must enter a valid departure date"
+    "empty": "You must enter a valid departure date"
   },
   "reason": {
-    "blank": "You must choose a valid reason"
+    "empty": "You must choose a valid reason"
   },
   "departureDate": {
-    "blank": "You must enter a valid departure date"
+    "empty": "You must enter a valid departure date"
   },
   "expectedDepartureDate": {
-    "blank": "You must enter a valid expected departure date"
+    "empty": "You must enter a valid expected departure date"
   },
   "keyWorkerId": {
-    "blank": "You must choose a keyworker"
+    "empty": "You must choose a keyworker"
   },
   "dateTime": {
-    "blank": "You must enter a valid departure date and time"
+    "empty": "You must enter a valid departure date and time"
   },
-  "moveOnCategory": { "blank": "You must enter a move on category" },
-  "destinationProvider": { "blank": "You must enter a destination provider" },
-  "newDepartureDate": { "blank": "You must enter a new departure date" },
-  "startDate": { "blank": "You must enter a start date", "invalid": "The start date is an invalid date" },
-  "endDate": { "blank": "You must enter a end date" },
-  "numberOfBeds": { "blank": "You must enter the number of beds lost" },
-  "referenceNumber": { "blank": "You must enter a reference number" },
-  "sentenceType": { "blank": "You must choose a sentence type" },
-  "releaseType": { "blank": "You must choose a release type" },
-  "situation": { "blank": "You must choose a situation" },
-  "knowReleaseDate": { "blank": "You must specify if you know the release date" },
-  "releaseDate": { "blank": "You must specify the release date", "invalid": "The release date is an invalid date" },
-  "knowOralHearingDate": { "blank": "You must specify if you know the oral hearing date" },
+  "moveOnCategory": { "empty": "You must enter a move on category" },
+  "destinationProvider": { "empty": "You must enter a destination provider" },
+  "newDepartureDate": { "empty": "You must enter a new departure date" },
+  "startDate": { "empty": "You must enter a start date", "invalid": "The start date is an invalid date" },
+  "endDate": { "empty": "You must enter a end date" },
+  "numberOfBeds": { "empty": "You must enter the number of beds lost" },
+  "referenceNumber": { "empty": "You must enter a reference number" },
+  "sentenceType": { "empty": "You must choose a sentence type" },
+  "releaseType": { "empty": "You must choose a release type" },
+  "situation": { "empty": "You must choose a situation" },
+  "knowReleaseDate": { "empty": "You must specify if you know the release date" },
+  "releaseDate": { "empty": "You must specify the release date", "invalid": "The release date is an invalid date" },
+  "knowOralHearingDate": { "empty": "You must specify if you know the oral hearing date" },
   "oralHearingDate": {
-    "blank": "You must specify the oral hearing date",
+    "empty": "You must specify the oral hearing date",
     "invalid": "The oral hearing date is an invalid date"
   },
-  "startDateSameAsReleaseDate": { "blank": "You must specify if the start date is the same as the release date" },
-  "type": { "blank": "You must specify an AP type" },
-  "opdPathway": { "blank": "You must specify if xxxx has been screened into the OPD pathway" },
+  "startDateSameAsReleaseDate": { "empty": "You must specify if the start date is the same as the release date" },
+  "type": { "empty": "You must specify an AP type" },
+  "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },
   "opdPathwayDate": {
-    "blank": "You must enter an OPD Pathway date",
+    "empty": "You must enter an OPD Pathway date",
     "invalid": "The OPD Pathway date is an invalid date"
   },
   "pipeReferral": {
-    "blank": "You must specify if  a referral for PIPE placement has been recommended in the OPD pathway plan"
+    "empty": "You must specify if  a referral for PIPE placement has been recommended in the OPD pathway plan"
   }
 }

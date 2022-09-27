@@ -42,7 +42,7 @@ export default class PlacementDate implements TasklistPage {
     if (!this.body.startDateSameAsReleaseDate) {
       errors.push({
         propertyName: '$.startDateSameAsReleaseDate',
-        errorType: 'blank',
+        errorType: 'empty',
       })
     }
 
@@ -50,7 +50,7 @@ export default class PlacementDate implements TasklistPage {
       if (dateIsBlank(this.body)) {
         errors.push({
           propertyName: '$.startDate',
-          errorType: 'blank',
+          errorType: 'empty',
         })
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'startDate')) {
         errors.push({

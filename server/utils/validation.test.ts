@@ -10,10 +10,10 @@ import { ValidationError, TasklistAPIError } from './errors'
 jest.mock('../i18n/en/errors.json', () => {
   return {
     crn: {
-      blank: 'You must enter a CRN',
+      empty: 'You must enter a CRN',
     },
     arrivalDate: {
-      blank: 'You must enter a valid arrival date',
+      empty: 'You must enter a valid arrival date',
     },
   }
 })
@@ -23,16 +23,16 @@ describe('catchValidationErrorOrPropogate', () => {
   const response = createMock<Response>()
 
   const expectedErrors = {
-    crn: { text: errorLookups.crn.blank, attributes: { 'data-cy-error-crn': true } },
+    crn: { text: errorLookups.crn.empty, attributes: { 'data-cy-error-crn': true } },
     arrivalDate: {
-      text: errorLookups.arrivalDate.blank,
+      text: errorLookups.arrivalDate.empty,
       attributes: { 'data-cy-error-arrivalDate': true },
     },
   }
 
   const expectedErrorSummary = [
-    { text: errorLookups.crn.blank, href: '#crn' },
-    { text: errorLookups.arrivalDate.blank, href: '#arrivalDate' },
+    { text: errorLookups.crn.empty, href: '#crn' },
+    { text: errorLookups.arrivalDate.empty, href: '#arrivalDate' },
   ]
 
   beforeEach(() => {
@@ -47,11 +47,11 @@ describe('catchValidationErrorOrPropogate', () => {
         'invalid-params': [
           {
             propertyName: '$.crn',
-            errorType: 'blank',
+            errorType: 'empty',
           },
           {
             propertyName: '$.arrivalDate',
-            errorType: 'blank',
+            errorType: 'empty',
           },
         ],
       },
@@ -71,11 +71,11 @@ describe('catchValidationErrorOrPropogate', () => {
       data: [
         {
           propertyName: '$.crn',
-          errorType: 'blank',
+          errorType: 'empty',
         },
         {
           propertyName: '$.arrivalDate',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ],
     })

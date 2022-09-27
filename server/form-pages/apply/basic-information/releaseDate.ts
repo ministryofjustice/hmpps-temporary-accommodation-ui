@@ -39,7 +39,7 @@ export default class ReleaseDate implements TasklistPage {
     if (!this.body.knowReleaseDate) {
       errors.push({
         propertyName: '$.knowReleaseDate',
-        errorType: 'blank',
+        errorType: 'empty',
       })
     }
 
@@ -47,7 +47,7 @@ export default class ReleaseDate implements TasklistPage {
       if (dateIsBlank(this.body)) {
         errors.push({
           propertyName: '$.releaseDate',
-          errorType: 'blank',
+          errorType: 'empty',
         })
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'releaseDate')) {
         errors.push({

@@ -30,7 +30,7 @@ describe('Situation', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.situation',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

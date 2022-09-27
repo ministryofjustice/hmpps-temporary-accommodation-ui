@@ -29,8 +29,8 @@ export default abstract class Page {
 
   shouldShowErrorMessagesForFields(fields: Array<string>): void {
     fields.forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups[field]?.blank)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[field]?.blank)
+      cy.get('.govuk-error-summary').should('contain', errorLookups[field]?.empty)
+      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[field]?.empty)
     })
   }
 

@@ -65,7 +65,7 @@ describe('ReleaseDate', () => {
         expect(page.errors()).toEqual([
           {
             propertyName: '$.releaseDate',
-            errorType: 'blank',
+            errorType: 'empty',
           },
         ])
       })
@@ -106,7 +106,7 @@ describe('ReleaseDate', () => {
       expect(page.errors()).toEqual([
         {
           propertyName: '$.knowReleaseDate',
-          errorType: 'blank',
+          errorType: 'empty',
         },
       ])
     })

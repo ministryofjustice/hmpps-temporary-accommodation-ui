@@ -89,7 +89,7 @@ export default class BookingsController {
       return res.render('bookings/confirm', {
         premisesId,
         bookingId,
-        pageHeading: 'Booking complete',
+        pageHeading: 'Placement confirmed',
         ...booking,
         infoMessages: overcapacityMessage,
       })

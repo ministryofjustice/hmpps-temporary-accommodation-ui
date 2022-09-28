@@ -31,14 +31,14 @@
 
         {{ govukInput({
         label: {
-          text: "Number of beds out of service",
-          classes: "govuk-input--width-2",
+          text: "Number of beds out of service"
         },
         classes: "govuk-input--width-2",
         id: "numberOfBeds",
         name: "lostBed[numberOfBeds]",
         errorMessage: errors.numberOfBeds
       }) }}
+
 
         {{ govukDateInput({
         id: "startDate",
@@ -83,7 +83,7 @@
 
         {{ govukInput({
         label: {
-          text: "Reference number"
+          text: "Work order reference number"
         },
         classes: "govuk-input--width-6",
         id: "referenceNumber",
@@ -95,7 +95,8 @@
         id: "notes",
         name: "lostBed[notes]",
         label: {
-          text: "Additional notes"
+          text: "Provide  detail about why the bed is out of service. If FM works are required you should update this record with any progress on that work.",
+          classes: "govuk-fieldset__legend--s"
         },
         errorMessage: errors.notes
       }) }}

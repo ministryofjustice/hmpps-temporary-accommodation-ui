@@ -21,9 +21,7 @@ export default {
     }),
 
   stubLostBedErrors: (args: { premisesId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(
-      errorStub(args.params, `/premises/${args.premisesId}/lost-beds`, ['notes', 'reason', 'startDate', 'endDate']),
-    ),
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/lost-beds`)),
 
   stubLostBedReferenceData: (): Promise<Response> => stubFor(lostBedReasons),
 

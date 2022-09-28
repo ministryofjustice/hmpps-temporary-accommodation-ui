@@ -1,6 +1,11 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
-import { BookingNewPage, BookingConfirmationPage, BookingFindPage } from '../../../cypress_shared/pages/manage'
+import {
+  BookingNewPage,
+  BookingConfirmationPage,
+  BookingFindPage,
+  PremisesShowPage,
+} from '../../../cypress_shared/pages/manage'
 
 import bookingFactory from '../../../server/testutils/factories/booking'
 import personFactory from '../../../server/testutils/factories/person'
@@ -11,9 +16,9 @@ const person = personFactory.build({ name: Cypress.env('offender_name'), crn: Cy
 const booking = bookingFactory.build({ keyWorker, person })
 
 Given('I create a booking', () => {
-  cy.get('.moj-button-menu__toggle-button')
-    .click()
-    .then(() => cy.get('a').contains('Create a booking').click())
+  cy.get('@premisesShowPage').then((premisesShowPage: PremisesShowPage) => {
+    premisesShowPage.clickCreateBookingOption()
+  })
 
   const bookingNewPage = new BookingFindPage()
   bookingNewPage.enterCrn(person.crn)

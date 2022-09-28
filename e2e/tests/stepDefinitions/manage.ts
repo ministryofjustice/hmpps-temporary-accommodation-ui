@@ -1,4 +1,6 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
+import premisesFactory from '../../../server/testutils/factories/premises'
+import { PremisesShowPage } from '../../../cypress_shared/pages/manage'
 
 Given('I am logged in', () => {
   cy.visit('/')
@@ -8,15 +10,18 @@ Given('I am logged in', () => {
   cy.get('.govuk-button').contains('Sign in').click()
 })
 
-Given('I access the premises homepage', () => {
+Given("I'm managing a premises", () => {
   cy.visit('/premises')
-})
+  cy.get('.govuk-table tbody tr')
+    .first()
+    .within($row => {
+      cy.wrap($row).get('th').first().invoke('text').as('premisesName')
+      cy.wrap($row).get('a').click()
+    })
 
-Given('I see a list of premises', () => {
-  cy.get('h1').should('contain', 'Approved Premises')
-  cy.get('.govuk-table tbody tr').its('length').should('be.gt', 0)
-})
-
-Given('I choose a premises', () => {
-  cy.get('.govuk-table tbody tr a').first().click()
+  cy.get('@premisesName').then(premisesName => {
+    const premises = premisesFactory.build({ name: premisesName })
+    const premisesShowPage = new PremisesShowPage(premises)
+    cy.wrap(premisesShowPage).as('premisesShowPage')
+  })
 })

@@ -11,18 +11,13 @@ const getCombinations = (arr: Array<string>) => {
   return result.sort((a, b) => b.length - a.length)
 }
 
-const errorStub = (fields: Array<string>, pattern: string, nullifiedFields: Array<string> = []) => {
+const errorStub = (fields: Array<string>, pattern: string) => {
   const bodyPatterns = fields.map(field => {
-    if (nullifiedFields.includes(field)) {
-      return {
-        matchesJsonPath: {
-          expression: `$.${field}`,
-          absent: '(absent)',
-        },
-      }
-    }
     return {
-      matchesJsonPath: `$.[?(@.${field} === '')]`,
+      matchesJsonPath: {
+        expression: `$.${field}`,
+        absent: '(absent)',
+      },
     }
   })
 

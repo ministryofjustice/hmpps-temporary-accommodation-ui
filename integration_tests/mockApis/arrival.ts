@@ -19,12 +19,7 @@ export default {
       },
     }),
   stubArrivalErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(
-      errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`, [
-        'date',
-        'expectedDepartureDate',
-      ]),
-    ),
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`)),
   verifyArrivalCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({

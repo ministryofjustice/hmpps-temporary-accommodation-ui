@@ -74,66 +74,12 @@ export default class RestClient {
     }
   }
 
-  async post({
-    path = null,
-    headers = {},
-    responseType = '',
-    data = {},
-    raw = false,
-  }: PostRequest = {}): Promise<unknown> {
-    logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
-    try {
-      const result = await superagent
-        .post(`${this.apiUrl()}${path}`)
-        .send(data)
-        .agent(this.agent)
-        .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-
-      return raw ? result : result.body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'POST'`)
-      throw sanitisedError
-    }
+  async post(request: PostRequest = {}): Promise<unknown> {
+    return this.postOrPut('post', request)
   }
 
-  async put({
-    path = null,
-    headers = {},
-    responseType = '',
-    data = {},
-    raw = false,
-  }: PutRequest = {}): Promise<unknown> {
-    logger.info(`Put using user credentials: calling ${this.name}: ${path}`)
-    try {
-      const result = await superagent
-        .put(`${this.apiUrl()}${path}`)
-        .send(data)
-        .agent(this.agent)
-        .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
-        .auth(this.token, { type: 'bearer' })
-        .set(headers)
-        .responseType(responseType)
-        .timeout(this.timeoutConfig())
-
-      return raw ? result : result.body
-    } catch (error) {
-      const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'PUT'`)
-      throw sanitisedError
-    }
+  async put(request: PutRequest = {}): Promise<unknown> {
+    return this.postOrPut('put', request)
   }
 
   async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<unknown> {
@@ -164,5 +110,41 @@ export default class RestClient {
           }
         })
     })
+  }
+
+  private async postOrPut(
+    method: 'post' | 'put',
+    { path = null, headers = {}, responseType = '', data = {}, raw = false }: PutRequest | PostRequest = {},
+  ): Promise<unknown> {
+    logger.info(`${method} using user credentials: calling ${this.name}: ${path}`)
+    try {
+      const request =
+        method === 'post' ? superagent.post(`${this.apiUrl()}${path}`) : superagent.put(`${this.apiUrl()}${path}`)
+
+      const result = await request
+        .send(this.filterBlanksFromData(data))
+        .agent(this.agent)
+        .use(restClientMetricsMiddleware)
+        .retry(2, (err, res) => {
+          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
+          return undefined // retry handler only for logging retries, not to influence retry logic
+        })
+        .auth(this.token, { type: 'bearer' })
+        .set(headers)
+        .responseType(responseType)
+        .timeout(this.timeoutConfig())
+
+      return raw ? result : result.body
+    } catch (error) {
+      const sanitisedError = sanitiseError(error)
+      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'PUT'`)
+      throw sanitisedError
+    }
+  }
+
+  private filterBlanksFromData(data: Record<string, unknown>): Record<string, unknown> {
+    Object.keys(data).forEach(k => !data[k] && delete data[k])
+
+    return data
   }
 }

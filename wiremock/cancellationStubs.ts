@@ -37,7 +37,7 @@ cancellationStubs.push(
 const requiredFields = getCombinations(['date', 'reason'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  cancellationStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/cancellations`, ['reason']))
+  cancellationStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/cancellations`))
 })
 
 export default cancellationStubs

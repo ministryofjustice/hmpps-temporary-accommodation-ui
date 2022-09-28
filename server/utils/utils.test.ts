@@ -1,5 +1,11 @@
+import type { SummaryListItem } from 'approved-premises'
 import { SessionDataError } from './errors'
-import { convertToTitleCase, initialiseName, retrieveQuestionResponseFromSession } from './utils'
+import {
+  convertToTitleCase,
+  initialiseName,
+  retrieveQuestionResponseFromSession,
+  removeBlankSummaryListItems,
+} from './utils'
 
 describe('convert to title case', () => {
   it.each([
@@ -43,5 +49,79 @@ describe('retrieveQuestionResponseFromSession', () => {
       'questionResponse',
     )
     expect(questionResponse).toBe('no')
+  })
+})
+
+describe('removeBlankSummaryListItems', () => {
+  it('removes all blank and undefined items', () => {
+    const items = [
+      {
+        key: {
+          text: 'Names',
+        },
+        value: {
+          text: 'Name',
+        },
+      },
+      {
+        key: {
+          text: 'CRN',
+        },
+        value: {
+          text: '',
+        },
+      },
+      {
+        key: {
+          text: 'Date of Birth',
+        },
+        value: {
+          text: undefined,
+        },
+      },
+      {
+        key: {
+          text: 'NOMS Number',
+        },
+        value: {
+          html: '<strong>Some HTML</strong>',
+        },
+      },
+      {
+        key: {
+          text: 'Nationality',
+        },
+        value: {
+          html: undefined,
+        },
+      },
+      {
+        key: {
+          text: 'Religion',
+        },
+        value: {
+          html: '',
+        },
+      },
+    ] as Array<SummaryListItem>
+
+    expect(removeBlankSummaryListItems(items)).toEqual([
+      {
+        key: {
+          text: 'Names',
+        },
+        value: {
+          text: 'Name',
+        },
+      },
+      {
+        key: {
+          text: 'NOMS Number',
+        },
+        value: {
+          html: '<strong>Some HTML</strong>',
+        },
+      },
+    ])
   })
 })

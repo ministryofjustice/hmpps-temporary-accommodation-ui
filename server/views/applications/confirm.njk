@@ -27,8 +27,12 @@
 
         <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
 
+        <p>
+          Taken from NDelius, <strong>{{ date }}</strong>
+        </p>
+
         {{ govukSummaryList({
-          rows: [
+          rows: ([
             {
               key: {
                 text: "Names"
@@ -50,15 +54,15 @@
                 text: "Date of Birth"
               },
               value: {
-                html: dateOfBirth
+                text: dateOfBirth
               }
             },
             {
               key: {
-                text: "Sex"
+                text: "NOMS Number"
               },
               value: {
-                html: sex
+                text: nomsNumber
               }
             },
             {
@@ -66,23 +70,67 @@
                 text: "Nationality"
               },
               value: {
-                html: nationality
+                text: nationality
               }
             },
             {
               key: {
-                text: "Religion"
+                text: "Religion or belief"
               },
               value: {
-                html: religion
+                text: religionOrBelief
+              }
+            },
+            {
+              key: {
+                text: "Sex"
+              },
+              value: {
+                text: sex
+              }
+            },
+            {
+              key: {
+                text: "Gender Identity"
+              },
+              value: {
+                text: genderIdentity
+              }
+            }
+          ] | removeBlankSummaryListItems)
+        }) }}
+
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "Status"
+              },
+              value: {
+                html: statusTag(status)
+              }
+            },
+            {
+              key: {
+                text: "Prison"
+              },
+              value: {
+                text: prisonName
               }
             }
           ]
         }) }}
 
+        <p>If these details are wrong, update this case in nDelius before you continue.</p>
+        <p>If you've entered the wrong CRN, go back to the start.</p>
+
         {{ govukButton({
             text: "Save and continue"
         }) }}
+
+        <p>
+          <a href="{{ paths.applications.new() }}"> Back to CRU screen </a>
+        </p>
 
       </form>
     </div>

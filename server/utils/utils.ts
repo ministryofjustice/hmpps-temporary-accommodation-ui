@@ -1,3 +1,4 @@
+import type { SummaryListItem } from 'approved-premises'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
@@ -49,4 +50,21 @@ export const retrieveQuestionResponseFromSession = <T>(sessionData: Record<strin
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }
+}
+
+/**
+ * Removes any items in an array of summary list items that are blank or undefined
+ * @param items an array of summary list items
+ * @returns all items with non-blank values
+ */
+export const removeBlankSummaryListItems = (items: Array<SummaryListItem>): Array<SummaryListItem> => {
+  return items.filter(item => {
+    if ('html' in item.value) {
+      return item.value.html
+    }
+    if ('text' in item.value) {
+      return item.value.text
+    }
+    return false
+  })
 }

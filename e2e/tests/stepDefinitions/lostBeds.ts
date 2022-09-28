@@ -3,8 +3,11 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import { PremisesShowPage, LostBedCreatePage } from '../../../cypress_shared/pages/manage'
 import lostBedFactory from '../../../server/testutils/factories/lostBed'
 import referenceDataFactory from '../../../server/testutils/factories/referenceData'
+import throwMissingError from './utils'
 
 Given('I create a lost bed', () => {
+  const lostBedReasonId = Cypress.env('lost_bed_reason_id') || throwMissingError('lost_bed_reason_id')
+
   cy.get('@premisesShowPage').then((premisesShowPage: PremisesShowPage) => {
     premisesShowPage.clickLostBedsOption()
   })
@@ -14,7 +17,7 @@ Given('I create a lost bed', () => {
   const lostBed = lostBedFactory.build({
     startDate: new Date(2022, 1, 11, 0, 0).toISOString(),
     endDate: new Date(2022, 2, 11, 0, 0).toISOString(),
-    reason: referenceDataFactory.build({ id: Cypress.env('lost_bed_reason_id') }),
+    reason: referenceDataFactory.build({ id: lostBedReasonId }),
   })
 
   lostBedCreatePage.completeForm(lostBed)

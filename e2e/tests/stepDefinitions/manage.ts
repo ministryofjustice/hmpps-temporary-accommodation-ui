@@ -1,10 +1,7 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
+import throwMissingError from './utils'
 import premisesFactory from '../../../server/testutils/factories/premises'
 import { PremisesShowPage } from '../../../cypress_shared/pages/manage'
-
-const throwMissingError = (field: string) => {
-  throw new Error(`Missing Cypress env variable for '${field}'`)
-}
 
 Given('I am logged in', () => {
   const username = Cypress.env('username') || throwMissingError('username')

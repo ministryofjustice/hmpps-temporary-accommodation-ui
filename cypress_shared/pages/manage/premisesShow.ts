@@ -14,6 +14,18 @@ export default class PremisesShowPage extends Page {
     return new PremisesShowPage(premises)
   }
 
+  clickLostBedsOption() {
+    cy.get('.moj-button-menu__toggle-button')
+      .click()
+      .then(() => cy.get('a').contains('Record a lost bed').click())
+  }
+
+  clickCreateBookingOption() {
+    cy.get('.moj-button-menu__toggle-button')
+      .click()
+      .then(() => cy.get('a').contains('Create a booking').click())
+  }
+
   shouldShowPremisesDetail(): void {
     cy.get('.govuk-summary-list__key')
       .contains('Code')

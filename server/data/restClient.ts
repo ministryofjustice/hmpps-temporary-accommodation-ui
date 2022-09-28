@@ -122,7 +122,7 @@ export default class RestClient {
         method === 'post' ? superagent.post(`${this.apiUrl()}${path}`) : superagent.put(`${this.apiUrl()}${path}`)
 
       const result = await request
-        .send(data)
+        .send(this.filterBlanksFromData(data))
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
@@ -140,5 +140,11 @@ export default class RestClient {
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: 'PUT'`)
       throw sanitisedError
     }
+  }
+
+  private filterBlanksFromData(data: Record<string, unknown>): Record<string, unknown> {
+    Object.keys(data).forEach(k => !data[k] && delete data[k])
+
+    return data
   }
 }

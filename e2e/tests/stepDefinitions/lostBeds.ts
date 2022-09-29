@@ -3,10 +3,10 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import { PremisesShowPage, LostBedCreatePage } from '../../../cypress_shared/pages/manage'
 import lostBedFactory from '../../../server/testutils/factories/lostBed'
 import referenceDataFactory from '../../../server/testutils/factories/referenceData'
-import throwMissingError from './utils'
+import throwMissingCypressEnvError from './utils'
 
 Given('I create a lost bed', () => {
-  const lostBedReasonId = Cypress.env('lost_bed_reason_id') || throwMissingError('lost_bed_reason_id')
+  const lostBedReasonId = Cypress.env('lost_bed_reason_id') || throwMissingCypressEnvError('lost_bed_reason_id')
 
   cy.get('@premisesShowPage').then((premisesShowPage: PremisesShowPage) => {
     premisesShowPage.clickLostBedsOption()

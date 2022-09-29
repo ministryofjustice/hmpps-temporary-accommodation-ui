@@ -3,6 +3,7 @@
 import { Router } from 'express'
 
 import type { Controllers } from '../controllers'
+import { approvedPremisesPath } from '../paths/service'
 import actions from './utils'
 
 import applyRoutes from './apply'
@@ -16,6 +17,7 @@ export default function routes(controllers: Controllers): Router {
   const { get } = actions(router)
 
   get('/', applicationController.index())
+  get(approvedPremisesPath.pattern, applicationController.index())
 
   manageRoutes(controllers, router)
   applyRoutes(controllers, router)

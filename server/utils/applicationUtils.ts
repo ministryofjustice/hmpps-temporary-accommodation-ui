@@ -1,5 +1,7 @@
 import type { Task, FormSections, FormSection } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
+import { Request } from 'express'
+import config from '../config'
 import paths from '../paths/apply'
 
 const taskIsComplete = (task: Task, application: Application): boolean => {
@@ -29,4 +31,33 @@ const taskLink = (task: Task, applicationId: string): string => {
   })}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
 }
 
-export { getTaskStatus, taskLink, getCompleteSectionCount }
+const getService = (req: Request): 'approved-premises' | 'temporary-accommodation' => {
+  if (config.serviceSignifier === 'approved-premises-only') {
+    return 'approved-premises'
+  }
+  if (config.serviceSignifier === 'temporary-accommodation-only') {
+    return 'temporary-accommodation'
+  }
+  if (config.serviceSignifier === 'domain') {
+    const subdomain = req.subdomains[req.subdomains.length - 1]
+
+    if (subdomain === config.approvedPremisesSubdomain) {
+      return 'approved-premises'
+    }
+    if (subdomain === config.temporaryAccommodationSubdomain) {
+      return 'temporary-accommodation'
+    }
+  }
+  if (config.serviceSignifier === 'path') {
+    if (req.path.startsWith(`/${config.approvedPremisesRootPath}`)) {
+      return 'approved-premises'
+    }
+    if (req.path.startsWith(`/${config.temporaryAccommodationRootPath}`)) {
+      return 'temporary-accommodation'
+    }
+  }
+
+  return 'approved-premises'
+}
+
+export { getTaskStatus, taskLink, getCompleteSectionCount, getService }

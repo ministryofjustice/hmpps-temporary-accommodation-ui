@@ -29,15 +29,8 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
     if (service === 'approved-premises') {
       app.locals.applicationName = 'Approved Premises'
-
-      njkEnv.addGlobal('paths', {
-        ...apManagePaths,
-        ...apApplyPaths,
-      })
     } else {
       app.locals.applicationName = 'Temporary Accommodation'
-
-      njkEnv.addGlobal('paths', {})
     }
 
     next()

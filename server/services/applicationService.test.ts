@@ -115,7 +115,7 @@ describe('ApplicationService', () => {
   })
 
   describe('createApplication', () => {
-    it('calls the create method and returns a uuid', async () => {
+    it('calls the create method and returns an application', async () => {
       const application = applicationFactory.build()
       const token = 'SOME_TOKEN'
 
@@ -127,6 +127,22 @@ describe('ApplicationService', () => {
 
       expect(applicationClientFactory).toHaveBeenCalledWith(token)
       expect(applicationClient.create).toHaveBeenCalledWith(application.person.crn)
+    })
+  })
+
+  describe('findApplication', () => {
+    it('calls the find method and returns an application', async () => {
+      const application = applicationFactory.build()
+      const token = 'SOME_TOKEN'
+
+      applicationClient.find.mockResolvedValue(application)
+
+      const result = await service.findApplication(token, application.id)
+
+      expect(result).toEqual(application)
+
+      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClient.find).toHaveBeenCalledWith(application.id)
     })
   })
 

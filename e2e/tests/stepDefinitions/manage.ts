@@ -1,11 +1,15 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
+import throwMissingCypressEnvError from './utils'
 import premisesFactory from '../../../server/testutils/factories/premises'
 import { PremisesShowPage } from '../../../cypress_shared/pages/manage'
 
 Given('I am logged in', () => {
+  const username = Cypress.env('username') || throwMissingCypressEnvError('username')
+  const password = Cypress.env('password') || throwMissingCypressEnvError('password')
+
   cy.visit('/')
-  cy.get('input[name="username"]').type(Cypress.env('username'))
-  cy.get('input[name="password"]').type(Cypress.env('password'))
+  cy.get('input[name="username"]').type(username)
+  cy.get('input[name="password"]').type(password, { log: false })
 
   cy.get('.govuk-button').contains('Sign in').click()
 })

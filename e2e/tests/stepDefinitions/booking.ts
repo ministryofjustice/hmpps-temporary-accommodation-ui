@@ -1,5 +1,7 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
+import throwMissingCypressEnvError from './utils'
+
 import {
   BookingNewPage,
   BookingConfirmationPage,
@@ -11,8 +13,12 @@ import bookingFactory from '../../../server/testutils/factories/booking'
 import personFactory from '../../../server/testutils/factories/person'
 import keyWorkerFactory from '../../../server/testutils/factories/keyWorker'
 
-const keyWorker = keyWorkerFactory.build({ name: Cypress.env('keyworker_name') })
-const person = personFactory.build({ name: Cypress.env('offender_name'), crn: Cypress.env('offender_crn') })
+const keyWorkerName = Cypress.env('keyworker_name') || throwMissingCypressEnvError('keyworker_name')
+const offenderName = Cypress.env('offender_name') || throwMissingCypressEnvError('offender_name')
+const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('offender_crn')
+
+const keyWorker = keyWorkerFactory.build({ name: keyWorkerName })
+const person = personFactory.build({ name: offenderName, crn: offenderCrn })
 const booking = bookingFactory.build({ keyWorker, person })
 
 Given('I create a booking', () => {

@@ -43,6 +43,22 @@ describe('ApplicationClient', () => {
     })
   })
 
+  describe('find', () => {
+    it('should return an application', async () => {
+      const application = applicationFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.applications.show({ id: application.id }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, application)
+
+      const result = await applicationClient.find(application.id)
+
+      expect(result).toEqual(application)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
   describe('update', () => {
     it('should return an application when a PUT request is made', async () => {
       const application = applicationFactory.build()

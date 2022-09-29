@@ -121,12 +121,12 @@ describe('ApplicationService', () => {
 
       applicationClient.create.mockResolvedValue(application)
 
-      const result = await service.createApplication(token, application.crn)
+      const result = await service.createApplication(token, application.person.crn)
 
       expect(result).toEqual(application)
 
       expect(applicationClientFactory).toHaveBeenCalledWith(token)
-      expect(applicationClient.create).toHaveBeenCalledWith(application.crn)
+      expect(applicationClient.create).toHaveBeenCalledWith(application.person.crn)
     })
   })
 

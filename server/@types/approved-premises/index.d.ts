@@ -258,7 +258,7 @@ declare module 'approved-premises' {
     }
     Application: {
       id: string
-      crn: string
+      person: Person
       createdByProbationOfficerId: string
       schemaVersion: string
       createdAt: string

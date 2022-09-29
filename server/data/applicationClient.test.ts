@@ -36,7 +36,7 @@ describe('ApplicationClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, application)
 
-      const result = await applicationClient.create(application.crn)
+      const result = await applicationClient.create(application.person.crn)
 
       expect(result).toEqual(application)
       expect(nock.isDone()).toBeTruthy()

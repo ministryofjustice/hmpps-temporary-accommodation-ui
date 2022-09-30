@@ -1,0 +1,82 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% set pageTitle = applicationName + " - Add a new property" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {% include "../../_messages.njk" %}
+  
+	<h1>Add a new property</h1>
+
+	<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.premises.create() }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ showErrorSummary(errorSummary) }}
+
+        {{ govukInput({
+          label: {
+            text: "Name",
+            classes: "govuk-label--m",
+            isPageHeading: true
+          },
+          classes: "govuk-input--width-10",
+          id: "name",
+          name: "name",
+          value: name,
+          errorMessage: errors.name
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "AP code",
+            classes: "govuk-label--m",
+            isPageHeading: true
+          },
+          classes: "govuk-input--width-10",
+          id: "apCode",
+          name: "apCode",
+          value: apCode,
+          errorMessage: errors.apCode
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Postcode",
+            classes: "govuk-label--m",
+            isPageHeading: true
+          },
+          classes: "govuk-input--width-10",
+          id: "postcode",
+          name: "postcode",
+          value: postcode,
+          errorMessage: errors.postcode
+        }) }}
+
+        {{ govukInput({
+          label: {
+            text: "Bed count",
+            classes: "govuk-label--m",
+            isPageHeading: true
+          },
+          classes: "govuk-input--width-10",
+          inputmode: "numeric",
+          id: "bedCount",
+          name: "bedCount",
+          value: bedCount,
+          errorMessage: errors.bedCount
+        }) }}
+
+        {{ govukButton({
+          name: 'submit',
+          text: "Submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

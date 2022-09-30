@@ -3,6 +3,7 @@ import PremisesClient from '../data/premisesClient'
 import premisesFactory from '../testutils/factories/premises'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
+import newPremisesFactory from '../testutils/factories/newPremises'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import paths from '../paths/manage'
 
@@ -286,6 +287,25 @@ describe('PremisesService', () => {
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
         <ul class="govuk-list govuk-list--bullet"><li>Sunday 1 January 2023</li><li>Thursday 2 March 2023 to Sunday 2 April 2023</li></ul>`,
       ])
+    })
+  })
+
+  describe('create', () => {
+    it('on success returns the premises that has been created', async () => {
+      const premises = premisesFactory.build()
+      const newPremises = newPremisesFactory.build({
+        name: premises.name,
+        apCode: premises.apCode,
+        postcode: premises.postcode,
+        bedCount: premises.bedCount,
+      })
+      premisesClient.create.mockResolvedValue(premises)
+
+      const postedPremises = await service.create(token, newPremises)
+      expect(postedPremises).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
     })
   })
 })

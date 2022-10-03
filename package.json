@@ -147,7 +147,7 @@
     "prom-client": "^14.1.0",
     "redis": "^4.3.1",
     "static-path": "^0.0.4",
-    "superagent": "^8.0.1",
+    "superagent": "^8.0.2",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0"
   },

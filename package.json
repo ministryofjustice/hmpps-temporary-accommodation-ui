@@ -116,7 +116,7 @@
   "dependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^13.0.2",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
-    "@ministryofjustice/frontend": "^1.5.0",
+    "@ministryofjustice/frontend": "^1.6.0",
     "agentkeepalive": "^4.2.1",
     "applicationinsights": "^2.3.5",
     "body-parser": "^1.20.0",

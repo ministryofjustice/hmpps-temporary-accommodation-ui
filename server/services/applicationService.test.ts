@@ -149,20 +149,26 @@ describe('ApplicationService', () => {
   describe('getCurrentPage', () => {
     let request: DeepMocked<Request>
     const dataServices = createMock<DataServices>({}) as DataServices
+    const application = applicationFactory.build()
 
     beforeEach(() => {
       request = createMock<Request>({
-        params: { id: 'some-uuid', task: 'my-task' },
-        session: { previousPage: '' },
+        params: { id: application.id, task: 'my-task' },
+        session: { application, previousPage: '' },
+        user: { token: 'some-token' },
       })
     })
 
-    it('should return the session and first page if the page is not defined', async () => {
+    it('should fetch the application from the API if it is not in the session', async () => {
+      request.session.application = undefined
+      applicationClient.find.mockResolvedValue(application)
+
       const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, '')
+      expect(FirstPage).toHaveBeenCalledWith(request.body, application, '')
+      expect(applicationClient.find).toHaveBeenCalledWith(request.params.id)
     })
 
     it('should return the session and a page from a page list', async () => {
@@ -172,7 +178,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(SecondPage)
 
-      expect(SecondPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, '')
+      expect(SecondPage).toHaveBeenCalledWith(request.body, application, '')
     })
 
     it('should initialize the page with the session and the userInput if specified', async () => {
@@ -181,18 +187,18 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith(userInput, { 'my-task': {} }, '')
+      expect(FirstPage).toHaveBeenCalledWith(userInput, application, '')
     })
 
     it('should load from the session if the body and userInput are blank', async () => {
       request.body = {}
-      request.session.application = { 'some-uuid': { 'my-task': { first: { foo: 'bar' } } } }
+      request.session.application.data = { 'my-task': { first: { foo: 'bar' } } }
 
       const result = await service.getCurrentPage(request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
-      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' }, { 'my-task': { first: { foo: 'bar' } } }, '')
+      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' }, application, '')
     })
 
     it("should call a service's setup method if it exists", async () => {
@@ -210,7 +216,7 @@ describe('ApplicationService', () => {
       request.session.previousPage = 'previous-page-name'
       await service.getCurrentPage(request, dataServices)
 
-      expect(FirstPage).toHaveBeenCalledWith(request.body, { 'my-task': {} }, 'previous-page-name')
+      expect(FirstPage).toHaveBeenCalledWith(request.body, application, 'previous-page-name')
     })
 
     it('should raise an error if the page is not found', async () => {
@@ -231,12 +237,17 @@ describe('ApplicationService', () => {
   })
 
   describe('save', () => {
-    const request = createMock<Request>({ params: { id: 'some-uuid', task: 'some-task', page: 'some-page' } })
+    const application = applicationFactory.build()
+    const request = createMock<Request>({
+      params: { id: application.id, task: 'some-task', page: 'some-page' },
+      session: { application },
+    })
 
     describe('when there are no validation errors', () => {
       let page: DeepMocked<TasklistPage>
 
       beforeEach(() => {
+        application.data = {}
         page = createMock<TasklistPage>({
           errors: () => [] as TaskListErrors,
           body: { foo: 'bar' },
@@ -252,7 +263,8 @@ describe('ApplicationService', () => {
       it('saves data to the session', async () => {
         await service.save(page, request)
 
-        expect(request.session.application).toEqual({ 'some-uuid': { 'some-task': { 'some-page': { foo: 'bar' } } } })
+        expect(request.session.application).toEqual(application)
+        expect(request.session.application.data).toEqual({ 'some-task': { 'some-page': { foo: 'bar' } } })
       })
     })
 

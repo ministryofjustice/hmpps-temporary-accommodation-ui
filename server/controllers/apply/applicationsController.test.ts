@@ -189,6 +189,7 @@ describe('applicationsController', () => {
 
   describe('create', () => {
     let application: Application
+
     beforeEach(() => {
       request = createMock<Request>({
         user: { token },
@@ -196,6 +197,7 @@ describe('applicationsController', () => {
       request.body.crn = 'some-crn'
       application = applicationFactory.build()
     })
+
     it('creates an application and redirects to the first page of the first step', async () => {
       applicationService.createApplication.mockResolvedValue(application)
 
@@ -207,6 +209,16 @@ describe('applicationsController', () => {
       expect(response.redirect).toHaveBeenCalledWith(
         paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),
       )
+    })
+
+    it('saves the application to the session', async () => {
+      applicationService.createApplication.mockResolvedValue(application)
+
+      const requestHandler = applicationsController.create()
+
+      await requestHandler(request, response, next)
+
+      expect(request.session.application).toEqual(application)
     })
   })
 })

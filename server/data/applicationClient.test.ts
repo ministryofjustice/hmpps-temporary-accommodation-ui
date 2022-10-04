@@ -64,7 +64,7 @@ describe('ApplicationClient', () => {
       const application = applicationFactory.build()
 
       fakeApprovedPremisesApi
-        .put(paths.applications.update({ id: application.id }))
+        .put(paths.applications.update({ id: application.id }), JSON.stringify({ data: application.data }))
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, application)
 

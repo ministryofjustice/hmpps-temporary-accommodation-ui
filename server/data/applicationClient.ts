@@ -22,7 +22,7 @@ export default class ApplicationClient {
   async update(application: Application, applicationId: string): Promise<Application> {
     return (await this.restClient.put({
       path: paths.applications.update({ id: applicationId }),
-      data: { data: application },
+      data: { data: application.data },
     })) as Application
   }
 

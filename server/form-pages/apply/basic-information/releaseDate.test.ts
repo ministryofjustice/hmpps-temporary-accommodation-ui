@@ -2,9 +2,21 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-e
 
 import ReleaseDate from './releaseDate'
 import applicationFactory from '../../../testutils/factories/application'
+import personFactory from '../../../testutils/factories/person'
 
 describe('ReleaseDate', () => {
-  const application = applicationFactory.build()
+  let application = applicationFactory.build()
+
+  describe('title', () => {
+    it('shold add the name of the person', () => {
+      const person = personFactory.build({ name: 'John Wayne' })
+      application = applicationFactory.build({ person })
+
+      const page = new ReleaseDate({}, application, 'previousPage')
+
+      expect(page.title).toEqual('Do you know John Wayne’s release date?')
+    })
+  })
 
   describe('body', () => {
     it('should strip unknown attributes from the body', () => {

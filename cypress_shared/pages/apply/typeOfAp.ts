@@ -1,7 +1,9 @@
+import type { Person } from 'approved-premises'
+
 import Page from '../page'
 
 export default class TypeOfApPage extends Page {
-  constructor() {
-    super('Which type of AP does xxxx require?')
+  constructor(person: Person) {
+    super(`Which type of AP does ${person.name} require?`)
   }
 }

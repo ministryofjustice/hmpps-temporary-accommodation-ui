@@ -6,7 +6,7 @@ import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/date
 export default class ReleaseDate implements TasklistPage {
   name = 'release-date'
 
-  title = 'Do you know Robert Brown’s release date?'
+  title = `Do you know ${this.application.person.name}’s release date?`
 
   body: ObjectWithDateParts<'releaseDate'> & {
     knowReleaseDate: YesOrNo
@@ -14,7 +14,7 @@ export default class ReleaseDate implements TasklistPage {
 
   previousPage: string
 
-  constructor(body: Record<string, unknown>, _application: Application, previousPage: string) {
+  constructor(body: Record<string, unknown>, private readonly application: Application, previousPage: string) {
     this.body = {
       'releaseDate-year': body['releaseDate-year'] as string,
       'releaseDate-month': body['releaseDate-month'] as string,

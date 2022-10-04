@@ -44,9 +44,13 @@ const kebabCase = (string: string) =>
  * @param question the question that we need the response for in camelCase.
  * @returns name converted to proper case.
  */
-export const retrieveQuestionResponseFromApplication = <T>(application: Application, question: string) => {
+export const retrieveQuestionResponseFromApplication = <T>(
+  application: Application,
+  task: string,
+  question: string,
+) => {
   try {
-    return application.data['basic-information'][kebabCase(question)][question] as T
+    return application.data[task][kebabCase(question)][question] as T
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }

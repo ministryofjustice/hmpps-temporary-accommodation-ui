@@ -1,3 +1,5 @@
+import type { Application } from 'approved-premises'
+
 import TasklistPage from '../../tasklistPage'
 import { convertKeyValuePairToRadioItems } from '../../../utils/formUtils'
 
@@ -12,11 +14,11 @@ type ApTypes = typeof apTypes
 export default class ApType implements TasklistPage {
   name = 'ap-type'
 
-  title = 'Which type of AP does xxxx require?'
+  title = `Which type of AP does ${this.application.person.name} require?`
 
   body: { type: keyof ApTypes }
 
-  constructor(body: Record<string, unknown>) {
+  constructor(body: Record<string, unknown>, private readonly application: Application) {
     this.body = {
       type: body.type as keyof ApTypes,
     }

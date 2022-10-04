@@ -26,7 +26,11 @@ export default class Situation implements TasklistPage {
   situations: CommunityOrderSituations | BailPlacementSituations
 
   constructor(body: Record<string, unknown>, application: Application) {
-    const sessionSentenceType = retrieveQuestionResponseFromApplication<SentenceType>(application, 'sentenceType')
+    const sessionSentenceType = retrieveQuestionResponseFromApplication<SentenceType>(
+      application,
+      'basic-information',
+      'sentenceType',
+    )
 
     this.situations = this.getSituationsForSentenceType(sessionSentenceType)
 

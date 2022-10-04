@@ -2,38 +2,53 @@ import { itShouldHaveNextValue } from '../../shared-examples'
 import { convertKeyValuePairToRadioItems } from '../../../utils/formUtils'
 
 import ApType from './apType'
+import applicationFactory from '../../../testutils/factories/application'
+import personFactory from '../../../testutils/factories/person'
 
 jest.mock('../../../utils/formUtils')
 
 describe('ApType', () => {
+  let application = applicationFactory.build()
+
+  describe('title', () => {
+    it('shold add the name of the person', () => {
+      const person = personFactory.build({ name: 'John Wayne' })
+      application = applicationFactory.build({ person })
+
+      const page = new ApType({}, application)
+
+      expect(page.title).toEqual('Which type of AP does John Wayne require?')
+    })
+  })
+
   describe('body', () => {
     it('should strip unknown attributes from the body', () => {
-      const page = new ApType({ type: 'standard', something: 'else' })
+      const page = new ApType({ type: 'standard', something: 'else' }, application)
 
       expect(page.body).toEqual({ type: 'standard' })
     })
   })
 
   describe('when type is set to pipe', () => {
-    itShouldHaveNextValue(new ApType({ type: 'pipe' }), 'pipe-referral')
+    itShouldHaveNextValue(new ApType({ type: 'pipe' }, application), 'pipe-referral')
   })
 
   describe('when type is set to esap', () => {
-    itShouldHaveNextValue(new ApType({ type: 'esap' }), 'esap-placement-screening')
+    itShouldHaveNextValue(new ApType({ type: 'esap' }, application), 'esap-placement-screening')
   })
 
   describe('when type is set to standard', () => {
-    itShouldHaveNextValue(new ApType({ type: 'standard' }), null)
+    itShouldHaveNextValue(new ApType({ type: 'standard' }, application), null)
   })
 
   describe('errors', () => {
     it('should return an empty array if the type is populated', () => {
-      const page = new ApType({ type: 'riskManagement' })
+      const page = new ApType({ type: 'riskManagement' }, application)
       expect(page.errors()).toEqual([])
     })
 
     it('should return an errors if the type is not populated', () => {
-      const page = new ApType({ type: '' })
+      const page = new ApType({ type: '' }, application)
       expect(page.errors()).toEqual([
         {
           propertyName: '$.type',
@@ -45,7 +60,7 @@ describe('ApType', () => {
 
   describe('items', () => {
     it('it calls convertKeyValuePairToRadioItems', () => {
-      const page = new ApType({ type: '' })
+      const page = new ApType({ type: '' }, application)
       page.items()
 
       expect(convertKeyValuePairToRadioItems).toHaveBeenCalled()

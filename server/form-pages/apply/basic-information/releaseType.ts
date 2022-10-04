@@ -27,7 +27,11 @@ export default class ReleaseType implements TasklistPage {
   releaseTypes: AllReleaseTypes | ReducedReleaseTypes
 
   constructor(body: Record<string, unknown>, application: Application) {
-    const sessionSentenceType = retrieveQuestionResponseFromApplication<SentenceType>(application, 'sentenceType')
+    const sessionSentenceType = retrieveQuestionResponseFromApplication<SentenceType>(
+      application,
+      'basic-information',
+      'sentenceType',
+    )
 
     this.releaseTypes = this.getReleaseTypes(sessionSentenceType)
 

@@ -1,4 +1,4 @@
-import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
+import type { ObjectWithDateParts, YesOrNo, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
 import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/dateUtils'
@@ -6,13 +6,13 @@ import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/date
 export default class OralHearing implements TasklistPage {
   name = 'oral-hearing'
 
-  title = 'Do you know Robert Brown’s oral hearing date?'
+  title = `Do you know ${this.application.person.name}’s oral hearing date?`
 
   body: ObjectWithDateParts<'oralHearingDate'> & {
     knowOralHearingDate: YesOrNo
   }
 
-  constructor(body: Record<string, unknown>) {
+  constructor(body: Record<string, unknown>, private readonly application: Application) {
     this.body = {
       'oralHearingDate-year': body['oralHearingDate-year'] as string,
       'oralHearingDate-month': body['oralHearingDate-month'] as string,

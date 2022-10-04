@@ -17,7 +17,7 @@ export default class ListPage extends Page {
   shouldShowApplicationSummaries(applicationSummaries: Array<ApplicationSummary>): void {
     applicationSummaries.forEach(summary => {
       cy.contains(summary.person.name)
-        .should('have.attr', 'href', `/applications/${summary.id}`)
+        .should('have.attr', 'href', paths.applications.show({ id: summary.id }))
         .parent()
         .parent()
         .within(() => {

@@ -1,5 +1,6 @@
 import type { Premises, TableRow, SummaryList } from 'approved-premises'
 import type { RestClientBuilder, PremisesClient } from '../data'
+import paths from '../paths/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
@@ -19,7 +20,9 @@ export default class PremisesService {
           this.textValue(p.apCode),
           this.textValue(p.bedCount.toString()),
           this.htmlValue(
-            `<a href="/premises/${p.id}">View<span class="govuk-visually-hidden">about ${p.name}</span></a>`,
+            `<a href="${paths.premises.show({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
+              p.name
+            }</span></a>`,
           ),
         ]
       })

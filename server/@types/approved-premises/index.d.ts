@@ -60,8 +60,6 @@ declare module 'approved-premises' {
 
   export type TaskNames = 'basic-information' | 'type-of-ap'
 
-  export type ApplicationData = Record<TaskNames, unknown>
-
   export interface HtmlAttributes {
     [key: string]: string
   }

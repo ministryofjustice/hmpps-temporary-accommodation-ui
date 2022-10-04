@@ -5,7 +5,7 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
 
-import type { ErrorMessages, ApplicationData, TaskNames, PersonStatus } from 'approved-premises'
+import type { ErrorMessages, Application, TaskNames, PersonStatus } from 'approved-premises'
 import { initialiseName, removeBlankSummaryListItems } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems, convertObjectsToSelectOptions } from './formUtils'
 import { getTaskStatus, taskLink } from './applicationUtils'
@@ -91,7 +91,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('paths', { ...managePaths, ...applyPaths })
 
-  njkEnv.addGlobal('getTaskStatus', (task: TaskNames, application: ApplicationData) =>
+  njkEnv.addGlobal('getTaskStatus', (task: TaskNames, application: Application) =>
     markAsSafe(getTaskStatus(task, application)),
   )
 

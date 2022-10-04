@@ -64,16 +64,15 @@ describe('applicationsController', () => {
       const requestHandler = applicationsController.show()
 
       const application = createMock<Application>()
-      const id = 'some-uuid'
 
       request = createMock<Request>({
-        params: { id },
-        session: { application: { [id]: application } },
+        params: { id: application.id },
+        session: { application },
       })
 
       requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/show', { application, id })
+      expect(response.render).toHaveBeenCalledWith('applications/show', { application })
     })
 
     it('404s if the application is not present in the session', () => {

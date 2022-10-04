@@ -1,10 +1,10 @@
-import type { ApplicationData } from 'approved-premises'
+import applicationFactory from '../testutils/factories/application'
 import { taskLink, getTaskStatus } from './applicationUtils'
 
 describe('applicationUtils', () => {
   describe('getTaskStatus', () => {
     it('returns a not started tag when the task is incomplete', () => {
-      const application = {} as ApplicationData
+      const application = applicationFactory.build()
 
       expect(getTaskStatus('basic-information', application)).toEqual(
         '<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="basic-information-status">Not started</strong>',
@@ -12,7 +12,7 @@ describe('applicationUtils', () => {
     })
 
     it('returns a completed tag when the task is complete', () => {
-      const application = { 'basic-information': { foo: 'bar' } } as ApplicationData
+      const application = applicationFactory.build({ data: { 'basic-information': { foo: 'bar' } } })
 
       expect(getTaskStatus('basic-information', application)).toEqual(
         '<strong class="govuk-tag app-task-list__tag" id="basic-information-status">Completed</strong>',

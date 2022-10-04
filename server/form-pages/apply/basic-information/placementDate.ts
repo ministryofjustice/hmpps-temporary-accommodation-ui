@@ -22,7 +22,7 @@ export default class PlacementDate implements TasklistPage {
     }
 
     const formattedReleaseDate = DateFormats.isoDateToUIDate(
-      retrieveQuestionResponseFromApplication(application, 'releaseDate'),
+      retrieveQuestionResponseFromApplication(application, 'basic-information', 'releaseDate'),
     )
 
     this.title = `Is ${formattedReleaseDate} the date you want the placement to start?`

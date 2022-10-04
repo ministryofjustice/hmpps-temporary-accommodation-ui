@@ -40,7 +40,9 @@ describe('initialise name', () => {
 describe('retrieveQuestionResponseFromApplication', () => {
   it("throws a SessionDataError if the property doesn't exist", () => {
     const application = applicationFactory.build()
-    expect(() => retrieveQuestionResponseFromApplication(application, '')).toThrow(SessionDataError)
+    expect(() => retrieveQuestionResponseFromApplication(application, 'basic-information', '')).toThrow(
+      SessionDataError,
+    )
   })
 
   it('returns the property if it does existion', () => {
@@ -50,7 +52,11 @@ describe('retrieveQuestionResponseFromApplication', () => {
       },
     })
 
-    const questionResponse = retrieveQuestionResponseFromApplication(application, 'questionResponse')
+    const questionResponse = retrieveQuestionResponseFromApplication(
+      application,
+      'basic-information',
+      'questionResponse',
+    )
     expect(questionResponse).toBe('no')
   })
 })

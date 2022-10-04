@@ -19,9 +19,9 @@ export default class ApplicationClient {
     return (await this.restClient.post({ path: paths.applications.new.pattern, data: { crn } })) as Application
   }
 
-  async update(application: Application, applicationId: string): Promise<Application> {
+  async update(application: Application): Promise<Application> {
     return (await this.restClient.put({
-      path: paths.applications.update({ id: applicationId }),
+      path: paths.applications.update({ id: application.id }),
       data: { data: application.data },
     })) as Application
   }

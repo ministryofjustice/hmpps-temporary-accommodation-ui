@@ -238,9 +238,11 @@ describe('ApplicationService', () => {
 
   describe('save', () => {
     const application = applicationFactory.build()
+    const token = 'some-token'
     const request = createMock<Request>({
       params: { id: application.id, task: 'some-task', page: 'some-page' },
       session: { application },
+      user: { token },
     })
 
     describe('when there are no validation errors', () => {
@@ -265,6 +267,13 @@ describe('ApplicationService', () => {
 
         expect(request.session.application).toEqual(application)
         expect(request.session.application.data).toEqual({ 'some-task': { 'some-page': { foo: 'bar' } } })
+      })
+
+      it('saves data to the api', async () => {
+        await service.save(page, request)
+
+        expect(applicationClientFactory).toHaveBeenCalledWith(token)
+        expect(applicationClient.update).toHaveBeenCalledWith(application)
       })
     })
 

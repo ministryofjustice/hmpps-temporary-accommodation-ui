@@ -69,8 +69,13 @@ export default class ApplicationService {
     if (errors.length) {
       throw new ValidationError(errors)
     } else {
-      this.saveToSession(page, request)
-      await this.saveToApi(request)
+      const application = await this.getApplicationFromSessionOrAPI(request)
+
+      application.data[request.params.task] = application.data[request.params.task] || {}
+      application.data[request.params.task][request.params.page] = page.body
+
+      this.saveToSession(application, page, request)
+      await this.saveToApi(application, request)
     }
   }
 
@@ -83,20 +88,15 @@ export default class ApplicationService {
     return this.findApplication(request.user.token, request.params.id)
   }
 
-  private async saveToSession(page: TasklistPage, request: Request) {
-    const application = await this.getApplicationFromSessionOrAPI(request)
-
-    application.data[request.params.task] = application.data[request.params.task] || {}
-    application.data[request.params.task][request.params.page] = page.body
-
+  private async saveToSession(application: Application, page: TasklistPage, request: Request) {
     request.session.application = application
     request.session.previousPage = page.name
   }
 
-  private async saveToApi(request: Request) {
+  private async saveToApi(application: Application, request: Request) {
     const client = this.applicationClientFactory(request.user.token)
 
-    await client.update(request.session.application[request.params.id] as Application, request.params.id)
+    await client.update(application)
   }
 
   private getBody(application: Application, request: Request, userInput: Record<string, unknown>) {

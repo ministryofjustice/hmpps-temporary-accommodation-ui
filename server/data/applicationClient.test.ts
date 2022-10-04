@@ -68,7 +68,7 @@ describe('ApplicationClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, application)
 
-      const result = await applicationClient.update(application, application.id)
+      const result = await applicationClient.update(application)
 
       expect(result).toEqual(application)
       expect(nock.isDone()).toBeTruthy()

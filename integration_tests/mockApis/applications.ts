@@ -36,9 +36,20 @@ export default {
         url: `/applications/${args.application.id}`,
       },
       response: {
-        status: 200,
+        status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.application,
+        body: `
+        {
+          "id": "{{request.pathSegments.[1]}}",
+          "person": ${JSON.stringify(args.application.person)},
+          "createdByProbationOfficerId": "${args.application.createdByProbationOfficerId}",
+          "schemaVersion": "${args.application.schemaVersion}",
+          "createdAt": "${args.application.createdAt}",
+          "submittedAt": "${args.application.submittedAt}",
+          "data": {{{jsonPath request.body '$.data'}}}
+        }
+        `,
+        transformers: ['response-template'],
       },
     }),
   verifyApplicationUpdate: async (applicationId: string) =>

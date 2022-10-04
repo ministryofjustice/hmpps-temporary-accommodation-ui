@@ -3,6 +3,7 @@ import PremisesClient from '../data/premisesClient'
 import premisesFactory from '../testutils/factories/premises'
 import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
+import paths from '../paths/manage'
 
 jest.mock('../data/premisesClient')
 jest.mock('../utils/premisesUtils')
@@ -44,7 +45,9 @@ describe('PremisesService', () => {
             text: premises2.bedCount.toString(),
           },
           {
-            html: `<a href="/premises/${premises2.id}">View<span class="govuk-visually-hidden">about ${premises2.name}</span></a>`,
+            html: `<a href="${paths.premises.show({
+              premisesId: premises2.id,
+            })}">View<span class="govuk-visually-hidden">about ${premises2.name}</span></a>`,
           },
         ],
         [
@@ -58,7 +61,9 @@ describe('PremisesService', () => {
             text: premises3.bedCount.toString(),
           },
           {
-            html: `<a href="/premises/${premises3.id}">View<span class="govuk-visually-hidden">about ${premises3.name}</span></a>`,
+            html: `<a href="${paths.premises.show({
+              premisesId: premises3.id,
+            })}">View<span class="govuk-visually-hidden">about ${premises3.name}</span></a>`,
           },
         ],
         [
@@ -72,7 +77,9 @@ describe('PremisesService', () => {
             text: premises1.bedCount.toString(),
           },
           {
-            html: `<a href="/premises/${premises1.id}">View<span class="govuk-visually-hidden">about ${premises1.name}</span></a>`,
+            html: `<a href="${paths.premises.show({
+              premisesId: premises1.id,
+            })}">View<span class="govuk-visually-hidden">about ${premises1.name}</span></a>`,
           },
         ],
       ])

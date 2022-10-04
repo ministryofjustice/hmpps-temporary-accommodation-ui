@@ -2,6 +2,7 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import ApplicationController from './applicationController'
+import paths from '../paths/manage'
 
 describe('ApplicationController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
@@ -20,7 +21,7 @@ describe('ApplicationController', () => {
 
       requestHandler(request, response, next)
 
-      expect(response.redirect).toHaveBeenCalledWith('/premises')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.index({}))
     })
   })
 })

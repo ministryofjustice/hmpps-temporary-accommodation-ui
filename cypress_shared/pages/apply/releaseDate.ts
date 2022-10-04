@@ -1,7 +1,8 @@
+import type { Person } from 'approved-premises'
 import Page from '../page'
 
 export default class ReleaseDatePage extends Page {
-  constructor() {
-    super('Do you know Robert Brown’s release date?')
+  constructor(person: Person) {
+    super(`Do you know ${person.name}’s release date?`)
   }
 }

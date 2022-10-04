@@ -1,4 +1,4 @@
-import type { YesOrNo, ObjectWithDateParts } from 'approved-premises'
+import type { YesOrNo, ObjectWithDateParts, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
 import { dateIsBlank, dateAndTimeInputsAreValidDates } from '../../../utils/dateUtils'
@@ -8,9 +8,9 @@ export default class PipeReferral implements TasklistPage {
 
   body: ObjectWithDateParts<'opdPathwayDate'> & { opdPathway: YesOrNo }
 
-  title = 'Has xxxx been screened into the OPD pathway?'
+  title = `Has ${this.application.person.name} been screened into the OPD pathway?`
 
-  constructor(body: Record<string, unknown>) {
+  constructor(body: Record<string, unknown>, private readonly application: Application) {
     this.body = {
       'opdPathwayDate-year': body['opdPathwayDate-year'] as string,
       'opdPathwayDate-month': body['opdPathwayDate-month'] as string,

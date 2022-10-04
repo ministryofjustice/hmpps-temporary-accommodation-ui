@@ -64,7 +64,7 @@ context('Apply', () => {
     situationPage.clickSubmit()
 
     // Then I should be asked if I know the release date
-    Page.verifyOnPage(ReleaseDatePage)
+    Page.verifyOnPage(ReleaseDatePage, application.person)
 
     // And the API should have recieved the updated application
     cy.task('verifyApplicationUpdate', application.id).then(requests => {
@@ -132,7 +132,7 @@ context('Apply', () => {
     situationPage.clickSubmit()
 
     const releaseDate = new Date().toISOString()
-    const releaseDatePage = new ReleaseDatePage()
+    const releaseDatePage = new ReleaseDatePage(application.person)
     releaseDatePage.checkRadioByNameAndValue('knowReleaseDate', 'yes')
     releaseDatePage.completeDateInputs('releaseDate', releaseDate)
     situationPage.clickSubmit()
@@ -152,6 +152,6 @@ context('Apply', () => {
 
     // And I should be able to start the next task
     cy.get('[data-cy-task-name="type-of-ap"]').click()
-    Page.verifyOnPage(TypeOfApPage)
+    Page.verifyOnPage(TypeOfApPage, application.person)
   })
 })

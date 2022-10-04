@@ -1,8 +1,11 @@
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-examples'
 
 import ReleaseDate from './releaseDate'
+import applicationFactory from '../../../testutils/factories/application'
 
 describe('ReleaseDate', () => {
+  const application = applicationFactory.build()
+
   describe('body', () => {
     it('should strip unknown attributes from the body', () => {
       const page = new ReleaseDate(
@@ -13,7 +16,7 @@ describe('ReleaseDate', () => {
           'releaseDate-day': 3,
           something: 'else',
         },
-        {},
+        application,
         'previousPage',
       )
 
@@ -27,15 +30,15 @@ describe('ReleaseDate', () => {
   })
 
   describe('when knowReleaseDate is set to yes', () => {
-    itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'yes' }, {}, 'somePage'), 'placement-date')
+    itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'yes' }, application, 'somePage'), 'placement-date')
   })
 
   describe('when knowReleaseDate is set to no', () => {
-    itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'no' }, {}, 'somePage'), 'oral-hearing')
+    itShouldHaveNextValue(new ReleaseDate({ knowReleaseDate: 'no' }, application, 'somePage'), 'oral-hearing')
   })
 
   describe("previous returns the value passed into the previousPage parameter of the object's constructor", () => {
-    itShouldHavePreviousValue(new ReleaseDate({}, {}, 'previousPage'), 'previousPage')
+    itShouldHavePreviousValue(new ReleaseDate({}, application, 'previousPage'), 'previousPage')
   })
 
   describe('errors', () => {
@@ -48,7 +51,7 @@ describe('ReleaseDate', () => {
             'releaseDate-month': 3,
             'releaseDate-day': 3,
           },
-          {},
+          application,
           'somePage',
         )
         expect(page.errors()).toEqual([])
@@ -59,7 +62,7 @@ describe('ReleaseDate', () => {
           {
             knowReleaseDate: 'yes',
           },
-          {},
+          application,
           'somePage',
         )
         expect(page.errors()).toEqual([
@@ -78,7 +81,7 @@ describe('ReleaseDate', () => {
             'releaseDate-month': 99,
             'releaseDate-day': 99,
           },
-          {},
+          application,
           'somePage',
         )
         expect(page.errors()).toEqual([
@@ -95,14 +98,14 @@ describe('ReleaseDate', () => {
         {
           knowReleaseDate: 'no',
         },
-        {},
+        application,
         'somePage',
       )
       expect(page.errors()).toEqual([])
     })
 
     it('should return an error if the knowReleaseDate field is not populated', () => {
-      const page = new ReleaseDate({}, {}, 'somePage')
+      const page = new ReleaseDate({}, application, 'somePage')
       expect(page.errors()).toEqual([
         {
           propertyName: '$.knowReleaseDate',

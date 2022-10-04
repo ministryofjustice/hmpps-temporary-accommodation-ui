@@ -1,7 +1,7 @@
-import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
+import type { ObjectWithDateParts, YesOrNo, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { retrieveQuestionResponseFromSession } from '../../../utils/utils'
+import { retrieveQuestionResponseFromApplication } from '../../../utils/utils'
 import { dateIsBlank, dateAndTimeInputsAreValidDates, DateFormats } from '../../../utils/dateUtils'
 
 export default class PlacementDate implements TasklistPage {
@@ -13,7 +13,7 @@ export default class PlacementDate implements TasklistPage {
     startDateSameAsReleaseDate: YesOrNo
   }
 
-  constructor(body: Record<string, unknown>, session: Record<string, unknown>) {
+  constructor(body: Record<string, unknown>, application: Application) {
     this.body = {
       'startDate-year': body['startDate-year'] as string,
       'startDate-month': body['startDate-month'] as string,
@@ -22,7 +22,7 @@ export default class PlacementDate implements TasklistPage {
     }
 
     const formattedReleaseDate = DateFormats.isoDateToUIDate(
-      retrieveQuestionResponseFromSession(session, 'releaseDate'),
+      retrieveQuestionResponseFromApplication(application, 'releaseDate'),
     )
 
     this.title = `Is ${formattedReleaseDate} the date you want the placement to start?`

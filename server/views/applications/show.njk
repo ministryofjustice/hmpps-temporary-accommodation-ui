@@ -27,13 +27,13 @@
           <ul class="app-task-list__items">
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
-                {{ taskLink('basic-information', id)  }}
+                {{ taskLink('basic-information', application.id)  }}
               </span>
               {{ getTaskStatus('basic-information', application) }}
             </li>
             <li class="app-task-list__item">
               <span class="app-task-list__task-name">
-                {{ taskLink('type-of-ap', id) }}
+                {{ taskLink('type-of-ap', application.id) }}
               </span>
               {{ getTaskStatus('type-of-ap', application) }}
             </li>

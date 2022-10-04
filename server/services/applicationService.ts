@@ -1,5 +1,4 @@
 import type { Request } from 'express'
-import type { Session, SessionData } from 'express-session'
 import type { Application, HtmlItem, TextItem } from 'approved-premises'
 
 import type TasklistPage from '../form-pages/tasklistPage'
@@ -26,6 +25,14 @@ export default class ApplicationService {
     return application
   }
 
+  async findApplication(token: string, id: string): Promise<Application> {
+    const applicationClient = this.applicationClientFactory(token)
+
+    const application = await applicationClient.find(id)
+
+    return application
+  }
+
   async getCurrentPage(
     request: Request,
     dataServices: DataServices,
@@ -45,9 +52,9 @@ export default class ApplicationService {
       throw new UnknownPageError()
     }
 
-    const body = this.getBody(request, userInput)
-    const session = this.getAllSessionData(request)
-    const page = new Page(body, session, request.session.previousPage)
+    const application = await this.getApplicationFromSessionOrAPI(request)
+    const body = this.getBody(application, request, userInput)
+    const page = new Page(body, application, request.session.previousPage)
 
     if (page.setup) {
       await page.setup(request, dataServices)
@@ -62,49 +69,48 @@ export default class ApplicationService {
     if (errors.length) {
       throw new ValidationError(errors)
     } else {
-      this.saveToSession(page, request)
-      await this.saveToApi(request)
+      const application = await this.getApplicationFromSessionOrAPI(request)
+
+      application.data[request.params.task] = application.data[request.params.task] || {}
+      application.data[request.params.task][request.params.page] = page.body
+
+      this.saveToSession(application, page, request)
+      await this.saveToApi(application, request)
     }
   }
 
-  private saveToSession(page: TasklistPage, request: Request) {
-    request.session = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
-    request.session.application[request.params.id][request.params.task][request.params.page] = page.body
+  private getApplicationFromSessionOrAPI(request: Request): Promise<Application> | Application {
+    const { application } = request.session
+
+    if (application && application.id === request.params.id) {
+      return application
+    }
+    return this.findApplication(request.user.token, request.params.id)
+  }
+
+  private async saveToSession(application: Application, page: TasklistPage, request: Request) {
+    request.session.application = application
     request.session.previousPage = page.name
   }
 
-  private async saveToApi(request: Request) {
+  private async saveToApi(application: Application, request: Request) {
     const client = this.applicationClientFactory(request.user.token)
 
-    await client.update(request.session.application[request.params.id] as Application, request.params.id)
+    await client.update(application)
   }
 
-  private fetchOrInitializeSessionData(sessionData: Session & Partial<SessionData>, task: string, id: string) {
-    sessionData.application = sessionData.application || {}
-    sessionData.application[id] = sessionData.application[id] || {}
-    sessionData.application[id][task] = sessionData.application[id][task] || {}
-
-    return sessionData
-  }
-
-  private getBody(request: Request, userInput: Record<string, unknown>) {
+  private getBody(application: Application, request: Request, userInput: Record<string, unknown>) {
     if (userInput && Object.keys(userInput).length) {
       return userInput
     }
     if (Object.keys(request.body).length) {
       return request.body
     }
-    return this.getSessionDataForPage(request)
+    return this.getPageDataFromApplication(application, request)
   }
 
-  private getAllSessionData(request: Request) {
-    const data = this.fetchOrInitializeSessionData(request.session, request.params.task, request.params.id)
-
-    return data.application[request.params.id] || {}
-  }
-
-  private getSessionDataForPage(request: Request) {
-    return this.getAllSessionData(request)[request.params.task][request.params.page] || {}
+  private getPageDataFromApplication(application: Application, request: Request) {
+    return application.data?.[request.params.task]?.[request.params.page] || {}
   }
 
   async tableRows(token: string): Promise<(TextItem | HtmlItem)[][]> {

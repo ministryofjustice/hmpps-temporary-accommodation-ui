@@ -28,13 +28,13 @@ export default class ApplicationsController {
 
   show(): RequestHandler {
     return (req: Request, res: Response, next: NextFunction) => {
-      const application = req.session?.application?.[req.params.id]
+      const { application } = req.session
 
       if (!application) {
         next(createError(404, 'Not found'))
       }
 
-      res.render('applications/show', { application, id: req.params.id })
+      res.render('applications/show', { application })
     }
   }
 
@@ -70,6 +70,7 @@ export default class ApplicationsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const application = await this.applicationService.createApplication(req.user.token, req.body.crn)
+      req.session.application = application
 
       res.redirect(
         paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),

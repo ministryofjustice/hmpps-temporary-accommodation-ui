@@ -2,10 +2,11 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-e
 
 import PlacementDate from './placementDate'
 import { DateFormats } from '../../../utils/dateUtils'
+import applicationFactory from '../../../testutils/factories/application'
 
 describe('PlacementDate', () => {
   const releaseDate = new Date().toISOString()
-  const session = { 'basic-information': { 'release-date': { releaseDate } } }
+  const application = applicationFactory.build({ data: { 'basic-information': { 'release-date': { releaseDate } } } })
 
   describe('title and body', () => {
     it('should strip unknown attributes from the body', () => {
@@ -17,7 +18,7 @@ describe('PlacementDate', () => {
           'startDate-day': 1,
           something: 'else',
         },
-        session,
+        application,
       )
 
       expect(page.body).toEqual({
@@ -32,8 +33,8 @@ describe('PlacementDate', () => {
     })
   })
 
-  itShouldHaveNextValue(new PlacementDate({}, session), '')
-  itShouldHavePreviousValue(new PlacementDate({}, session), 'oral-hearing')
+  itShouldHaveNextValue(new PlacementDate({}, application), '')
+  itShouldHavePreviousValue(new PlacementDate({}, application), 'oral-hearing')
 
   describe('errors', () => {
     it('should return an empty array if the release date is the same as the start date', () => {
@@ -41,7 +42,7 @@ describe('PlacementDate', () => {
         {
           startDateSameAsReleaseDate: 'yes',
         },
-        session,
+        application,
       )
       expect(page.errors()).toEqual([])
     })
@@ -55,7 +56,7 @@ describe('PlacementDate', () => {
             'startDate-month': 12,
             'startDate-day': 1,
           },
-          session,
+          application,
         )
         expect(page.errors()).toEqual([])
       })
@@ -65,7 +66,7 @@ describe('PlacementDate', () => {
           {
             startDateSameAsReleaseDate: 'no',
           },
-          session,
+          application,
         )
         expect(page.errors()).toEqual([
           {
@@ -83,7 +84,7 @@ describe('PlacementDate', () => {
             'startDate-month': 99999,
             'startDate-day': 9999,
           },
-          session,
+          application,
         )
         expect(page.errors()).toEqual([
           {
@@ -95,7 +96,7 @@ describe('PlacementDate', () => {
     })
 
     it('should return an error if the startDateSameAsReleaseDate field is not populated', () => {
-      const page = new PlacementDate({}, session)
+      const page = new PlacementDate({}, application)
       expect(page.errors()).toEqual([
         {
           propertyName: '$.startDateSameAsReleaseDate',

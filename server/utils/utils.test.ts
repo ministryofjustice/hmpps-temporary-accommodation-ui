@@ -1,9 +1,10 @@
 import type { SummaryListItem } from 'approved-premises'
 import { SessionDataError } from './errors'
+import applicationFactory from '../testutils/factories/application'
 import {
   convertToTitleCase,
   initialiseName,
-  retrieveQuestionResponseFromSession,
+  retrieveQuestionResponseFromApplication,
   removeBlankSummaryListItems,
 } from './utils'
 
@@ -36,18 +37,20 @@ describe('initialise name', () => {
   })
 })
 
-describe('retrieveQuestionResponseFromSession', () => {
+describe('retrieveQuestionResponseFromApplication', () => {
   it("throws a SessionDataError if the property doesn't exist", () => {
-    expect(() => retrieveQuestionResponseFromSession({}, '')).toThrow(SessionDataError)
+    const application = applicationFactory.build()
+    expect(() => retrieveQuestionResponseFromApplication(application, '')).toThrow(SessionDataError)
   })
 
   it('returns the property if it does existion', () => {
-    const questionResponse = retrieveQuestionResponseFromSession(
-      {
+    const application = applicationFactory.build({
+      data: {
         'basic-information': { 'question-response': { questionResponse: 'no' } },
       },
-      'questionResponse',
-    )
+    })
+
+    const questionResponse = retrieveQuestionResponseFromApplication(application, 'questionResponse')
     expect(questionResponse).toBe('no')
   })
 })

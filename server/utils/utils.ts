@@ -1,4 +1,4 @@
-import type { SummaryListItem } from 'approved-premises'
+import type { SummaryListItem, Application } from 'approved-premises'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
@@ -39,14 +39,14 @@ const kebabCase = (string: string) =>
     .toLowerCase()
 
 /**
- * Retrieves response for a given question from the session object.
- * @param sessionData the session data for an application.
+ * Retrieves response for a given question from the application object.
+ * @param application the application to fetch the response from.
  * @param question the question that we need the response for in camelCase.
  * @returns name converted to proper case.
  */
-export const retrieveQuestionResponseFromSession = <T>(sessionData: Record<string, unknown>, question: string) => {
+export const retrieveQuestionResponseFromApplication = <T>(application: Application, question: string) => {
   try {
-    return sessionData['basic-information'][kebabCase(question)][question] as T
+    return application.data['basic-information'][kebabCase(question)][question] as T
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }

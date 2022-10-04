@@ -1,4 +1,4 @@
-import type { ErrorMessages } from 'approved-premises'
+import type { ErrorMessages, Application } from 'approved-premises'
 
 export default {}
 
@@ -7,7 +7,7 @@ declare module 'express-session' {
   interface SessionData {
     returnTo: string
     nowInMinutes: number
-    application: Record<string, unknown>
+    application: Application
     previousPage: string
   }
 }

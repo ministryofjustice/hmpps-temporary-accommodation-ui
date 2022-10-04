@@ -36,7 +36,23 @@ describe('ApplicationClient', () => {
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, application)
 
-      const result = await applicationClient.create(application.crn)
+      const result = await applicationClient.create(application.person.crn)
+
+      expect(result).toEqual(application)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('find', () => {
+    it('should return an application', async () => {
+      const application = applicationFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.applications.show({ id: application.id }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, application)
+
+      const result = await applicationClient.find(application.id)
 
       expect(result).toEqual(application)
       expect(nock.isDone()).toBeTruthy()
@@ -48,11 +64,11 @@ describe('ApplicationClient', () => {
       const application = applicationFactory.build()
 
       fakeApprovedPremisesApi
-        .put(paths.applications.update({ id: application.id }))
+        .put(paths.applications.update({ id: application.id }), JSON.stringify({ data: application.data }))
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(200, application)
 
-      const result = await applicationClient.update(application, application.id)
+      const result = await applicationClient.update(application)
 
       expect(result).toEqual(application)
       expect(nock.isDone()).toBeTruthy()

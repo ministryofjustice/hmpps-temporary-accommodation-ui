@@ -44,7 +44,7 @@ export default class PagesController {
       const page = await this.applicationService.getCurrentPage(req, this.dataServices)
 
       try {
-        this.applicationService.save(page, req)
+        await this.applicationService.save(page, req)
         const next = page.next()
         if (next) {
           res.redirect(paths.applications.pages.show({ id: req.params.id, task: req.params.task, page: page.next() }))

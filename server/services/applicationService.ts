@@ -79,11 +79,11 @@ export default class ApplicationService {
     }
   }
 
-  private getApplicationFromSessionOrAPI(request: Request): Promise<Application> {
+  private getApplicationFromSessionOrAPI(request: Request): Promise<Application> | Application {
     const { application } = request.session
 
     if (application && application.id === request.params.id) {
-      return application as unknown as Promise<Application>
+      return application
     }
     return this.findApplication(request.user.token, request.params.id)
   }

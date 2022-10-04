@@ -1,32 +1,37 @@
 import { itShouldHavePreviousValue, itShouldHaveNextValue } from '../../shared-examples'
+import applicationFactory from '../../../testutils/factories/application'
 
 import Situation from './situation'
 
 describe('Situation', () => {
-  let session = { 'basic-information': { 'sentence-type': { sentenceType: 'communityOrder' } } }
+  let application = applicationFactory.build({
+    data: { 'basic-information': { 'sentence-type': { sentenceType: 'communityOrder' } } },
+  })
   beforeEach(() => {
-    session = { 'basic-information': { 'sentence-type': { sentenceType: 'communityOrder' } } }
+    application = applicationFactory.build({
+      data: { 'basic-information': { 'sentence-type': { sentenceType: 'communityOrder' } } },
+    })
   })
 
   describe('body', () => {
     it('should strip unknown attributes from the body', () => {
-      const page = new Situation({ situation: 'riskManagement', something: 'else' }, session)
+      const page = new Situation({ situation: 'riskManagement', something: 'else' }, application)
 
       expect(page.body).toEqual({ situation: 'riskManagement' })
     })
   })
 
-  itShouldHavePreviousValue(new Situation({}, session), 'sentence-type')
-  itShouldHaveNextValue(new Situation({}, session), 'release-date')
+  itShouldHavePreviousValue(new Situation({}, application), 'sentence-type')
+  itShouldHaveNextValue(new Situation({}, application), 'release-date')
 
   describe('errors', () => {
     it('should return an empty array if the situation is populated', () => {
-      const page = new Situation({ situation: 'riskManagement' }, session)
+      const page = new Situation({ situation: 'riskManagement' }, application)
       expect(page.errors()).toEqual([])
     })
 
     it('should return an errors if the situation is not populated', () => {
-      const page = new Situation({ situation: '' }, session)
+      const page = new Situation({ situation: '' }, application)
       expect(page.errors()).toEqual([
         {
           propertyName: '$.situation',
@@ -41,7 +46,9 @@ describe('Situation', () => {
       it('if the sentence type is "communityOrder" then the items should be correct', () => {
         const items = new Situation(
           { situation: 'riskManagement' },
-          { 'basic-information': { 'sentence-type': { sentenceType: 'communityOrder' } } },
+          applicationFactory.build({
+            data: { 'basic-information': { 'sentence-type': { sentenceType: 'communityOrder' } } },
+          }),
         ).items()
 
         expect(items.length).toEqual(2)
@@ -52,7 +59,9 @@ describe('Situation', () => {
       it('if the sentence type is "bailPlacement" then the items should be correct', () => {
         const items = new Situation(
           { situation: 'bailAssessment' },
-          { 'basic-information': { 'sentence-type': { sentenceType: 'bailPlacement' } } },
+          applicationFactory.build({
+            data: { 'basic-information': { 'sentence-type': { sentenceType: 'bailPlacement' } } },
+          }),
         ).items()
 
         expect(items.length).toEqual(2)
@@ -66,7 +75,7 @@ describe('Situation', () => {
     })
 
     it('marks an option as selected when the releaseType is set', () => {
-      const page = new Situation({ situation: 'riskManagement' }, session)
+      const page = new Situation({ situation: 'riskManagement' }, application)
 
       const selectedOptions = page.items().filter(item => item.checked)
 
@@ -75,7 +84,7 @@ describe('Situation', () => {
     })
 
     it('marks no options as selected when the releaseType is not set', () => {
-      const page = new Situation({}, session)
+      const page = new Situation({}, application)
 
       const selectedOptions = page.items().filter(item => item.checked)
 

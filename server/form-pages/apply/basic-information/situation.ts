@@ -1,5 +1,7 @@
+import type { Application } from 'approved-premises'
+
 import { SessionDataError } from '../../../utils/errors'
-import { retrieveQuestionResponseFromSession } from '../../../utils/utils'
+import { retrieveQuestionResponseFromApplication } from '../../../utils/utils'
 import TasklistPage from '../../tasklistPage'
 import { SentenceTypesT } from './sentenceType'
 
@@ -23,8 +25,8 @@ export default class Situation implements TasklistPage {
 
   situations: CommunityOrderSituations | BailPlacementSituations
 
-  constructor(body: Record<string, unknown>, session: Record<string, unknown>) {
-    const sessionSentenceType = retrieveQuestionResponseFromSession<SentenceType>(session, 'sentenceType')
+  constructor(body: Record<string, unknown>, application: Application) {
+    const sessionSentenceType = retrieveQuestionResponseFromApplication<SentenceType>(application, 'sentenceType')
 
     this.situations = this.getSituationsForSentenceType(sessionSentenceType)
 

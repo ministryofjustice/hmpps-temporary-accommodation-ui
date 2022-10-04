@@ -1,4 +1,4 @@
-import type { ObjectWithDateParts, YesOrNo } from 'approved-premises'
+import type { ObjectWithDateParts, YesOrNo, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
 import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/dateUtils'
@@ -14,7 +14,7 @@ export default class ReleaseDate implements TasklistPage {
 
   previousPage: string
 
-  constructor(body: Record<string, unknown>, _session: Record<string, unknown>, previousPage: string) {
+  constructor(body: Record<string, unknown>, _application: Application, previousPage: string) {
     this.body = {
       'releaseDate-year': body['releaseDate-year'] as string,
       'releaseDate-month': body['releaseDate-month'] as string,

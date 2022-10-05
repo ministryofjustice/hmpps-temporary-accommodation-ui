@@ -1,3 +1,5 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
 <form action="{{ paths.bookings.arrivals.create({ premisesId: premisesId, bookingId: bookingId }) }}" method="post">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
   {{ govukDateInput({
@@ -30,6 +32,18 @@
     hint: {
       text: "For example, 27 3 2007"
     }
+  }) }}
+
+  {{ govukSelect({
+      label: {
+          text: "Key Worker",
+          classes: "govuk-label--m"
+      },
+      classes: "govuk-input--width-20",
+      id: "arrival_keyWorkerStaffId",
+      name: "arrival[keyWorkerStaffId]",
+      items: convertObjectsToSelectOptions(staffMembers, 'name', 'id', 'keyWorkerStaffId'),
+      errorMessage: errors.keyWorkerStaffId
   }) }}
 
   {{ govukTextarea({

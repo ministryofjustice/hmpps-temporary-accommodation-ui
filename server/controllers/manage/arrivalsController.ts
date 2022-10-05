@@ -3,22 +3,27 @@ import type { Arrival, NewArrival } from 'approved-premises'
 
 import { DateFormats } from '../../utils/dateUtils'
 import ArrivalService from '../../services/arrivalService'
+import PremisesService from '../../services/premisesService'
+
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/manage'
 
 export default class ArrivalsController {
-  constructor(private readonly arrivalService: ArrivalService) {}
+  constructor(private readonly arrivalService: ArrivalService, private readonly premisesService: PremisesService) {}
 
   new(): RequestHandler {
-    return (req: Request, res: Response) => {
+    return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const staffMembers = await this.premisesService.getStaffMembers(req.user.token, premisesId)
 
       res.render('arrivals/new', {
         premisesId,
         bookingId,
         errors,
         errorSummary,
+        staffMembers,
         pageHeading: 'Did the resident arrive?',
         ...userInput,
       })

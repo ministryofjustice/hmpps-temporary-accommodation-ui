@@ -4,6 +4,9 @@ import nonArrivalFactory from '../../../server/testutils/factories/nonArrival'
 
 import { ArrivalCreatePage, PremisesShowPage } from '../../../cypress_shared/pages/manage'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
+import staffMemberFactory from '../../../server/testutils/factories/staffMember'
+
+const staff = staffMemberFactory.buildList(5)
 
 context('Arrivals', () => {
   beforeEach(() => {
@@ -24,6 +27,7 @@ context('Arrivals', () => {
       expectedDepartureDate: new Date(2022, 11, 11).toISOString(),
     })
 
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
     cy.task('stubSinglePremises', premises)
     cy.task('stubArrivalCreate', { premisesId: premises.id, bookingId, arrival })
     cy.task('stubPremisesCapacity', {
@@ -61,6 +65,7 @@ context('Arrivals', () => {
     const bookingId = 'some-uuid'
 
     cy.task('stubSinglePremises', premises)
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
 
     // When I visit the arrivals page
     const page = ArrivalCreatePage.visit(premises.id, bookingId)
@@ -89,6 +94,7 @@ context('Arrivals', () => {
       reason: 'recalled',
     })
 
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
     cy.task('stubSinglePremises', premises)
     cy.task('stubNonArrivalCreate', { premisesId: premises.id, bookingId, nonArrival })
     cy.task('stubPremisesCapacity', {
@@ -124,6 +130,7 @@ context('Arrivals', () => {
     const bookingId = 'some-uuid'
 
     cy.task('stubSinglePremises', premises)
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
 
     // When I visit the arrivals page
     const page = ArrivalCreatePage.visit(premises.id, bookingId)

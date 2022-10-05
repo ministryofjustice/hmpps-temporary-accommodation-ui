@@ -41,7 +41,6 @@ describe('BookingClient', () => {
         arrivalDate: booking.arrivalDate,
         departureDate: booking.departureDate,
         crn: booking.person.crn,
-        keyWorkerId: booking.keyWorker.id,
       })
 
       fakeApprovedPremisesApi

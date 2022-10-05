@@ -20,7 +20,6 @@ export default class BookingExtensionConfirmationPage extends Page {
       this.assertDefinition('CRN', booking.person.crn)
       this.assertDefinition('Expected arrival date', DateFormats.isoDateToUIDate(booking.arrivalDate))
       this.assertDefinition('New expected departure date', DateFormats.isoDateToUIDate(booking.departureDate))
-      this.assertDefinition('Key worker', booking.keyWorker.name)
     })
   }
 }

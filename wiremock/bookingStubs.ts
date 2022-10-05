@@ -19,9 +19,6 @@ bookingStubs.push({
       {
         matchesJsonPath: "$.[?(@.departureDate != '')]",
       },
-      {
-        matchesJsonPath: "$.[?(@.keyWorkerId != '')]",
-      },
     ],
   },
   response: {

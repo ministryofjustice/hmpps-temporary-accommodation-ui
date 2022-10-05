@@ -18,7 +18,6 @@ export default class BookingShowPage extends Page {
     cy.get('dl[data-cy-dates]').within(() => {
       this.assertDefinition('Arrival date', DateFormats.isoDateToUIDate(booking.arrivalDate))
       this.assertDefinition('Departure date', DateFormats.isoDateToUIDate(booking.departureDate))
-      this.assertDefinition('Key worker', booking.keyWorker.name)
     })
 
     cy.get('dl[data-cy-arrival-information]').within(() => {

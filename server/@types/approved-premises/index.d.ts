@@ -24,8 +24,7 @@ declare module 'approved-premises' {
     [P in K]?: string
   }
 
-  export type NewBooking = ObjectWithDateParts<'arrivalDate'> &
-    ObjectWithDateParts<'departureDate'> & { crn: string; keyWorkerId: string }
+  export type NewBooking = ObjectWithDateParts<'arrivalDate'> & ObjectWithDateParts<'departureDate'> & { crn: string }
 
   export type NewArrival = ObjectWithDateParts<'date'> &
     ObjectWithDateParts<'expectedDepartureDate'> & { arrival: Omit<Arrival, 'id' | 'bookingId'> }
@@ -164,7 +163,6 @@ declare module 'approved-premises' {
       person: Person
       arrivalDate: string
       departureDate: string
-      keyWorker: KeyWorker
       status: BookingStatus
       arrival?: Arrival
       departure?: Departure

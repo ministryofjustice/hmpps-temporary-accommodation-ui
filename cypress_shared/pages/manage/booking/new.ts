@@ -60,8 +60,5 @@ export default class BookingNewPage extends Page {
     this.expectedDepartureDay().type(departureDate.getDate().toString())
     this.expectedDepartureMonth().type(`${departureDate.getMonth() + 1}`)
     this.expectedDepartureYear().type(departureDate.getFullYear().toString())
-
-    this.getLabel('Key Worker')
-    this.getSelectInputByIdAndSelectAnEntry('keyWorkerId', booking.keyWorker.name)
   }
 }

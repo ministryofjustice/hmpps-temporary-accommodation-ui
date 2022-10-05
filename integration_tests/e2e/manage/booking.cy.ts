@@ -1,6 +1,5 @@
 import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingFactory from '../../../server/testutils/factories/booking'
-import keyWorkerFactory from '../../../server/testutils/factories/keyWorker'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
 
 import { BookingFindPage, BookingNewPage, BookingShowPage } from '../../../cypress_shared/pages/manage'
@@ -9,14 +8,11 @@ import Page from '../../../cypress_shared/pages/page'
 import BookingConfirmation from '../../../cypress_shared/pages/manage/booking/confirmation'
 import personFactory from '../../../server/testutils/factories/person'
 
-const keyWorkers = keyWorkerFactory.buildList(5)
-
 context('Booking', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
-    cy.task('stubKeyWorkers', { keyWorkers })
   })
 
   it('should show the CRN form followed by the booking form', () => {
@@ -25,7 +21,6 @@ context('Booking', () => {
       person,
       arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
       departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
-      keyWorker: keyWorkers[1],
     })
     const firstOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
       date: new Date(2023, 0, 1).toISOString(),
@@ -105,7 +100,6 @@ context('Booking', () => {
 
       expect(requestBody.arrivalDate).equal(booking.arrivalDate)
       expect(requestBody.departureDate).equal(booking.departureDate)
-      expect(requestBody.keyWorkerId).equal(booking.keyWorker.id)
     })
   })
 
@@ -140,12 +134,12 @@ context('Booking', () => {
     // And I miss the required fields
     cy.task('stubBookingErrors', {
       premisesId: premises.id,
-      params: ['arrivalDate', 'departureDate', 'keyWorkerId'],
+      params: ['arrivalDate', 'departureDate'],
     })
     bookingCreatePage.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate', 'keyWorkerId'])
+    page.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate'])
   })
 
   it('should allow me to see a booking', () => {

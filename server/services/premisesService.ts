@@ -1,4 +1,4 @@
-import type { Premises, TableRow, SummaryList } from 'approved-premises'
+import type { Premises, TableRow, SummaryList, StaffMember } from 'approved-premises'
 import type { RestClientBuilder, PremisesClient } from '../data'
 import paths from '../paths/manage'
 
@@ -7,6 +7,14 @@ import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premi
 
 export default class PremisesService {
   constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
+
+  async getStaffMembers(token: string, premisesId: string): Promise<Array<StaffMember>> {
+    const premisesClient = this.premisesClientFactory(token)
+
+    const staffMembers = await premisesClient.getStaffMembers(premisesId)
+
+    return staffMembers
+  }
 
   async tableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)

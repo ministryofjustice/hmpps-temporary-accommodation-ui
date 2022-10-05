@@ -20,6 +20,7 @@ import applicationStubs from './applicationStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
 import premisesCapacityItemFactory from '../server/testutils/factories/premisesCapacityItem'
+import staffMemberFactory from '../server/testutils/factories/staffMember'
 
 const stubs = []
 
@@ -65,6 +66,20 @@ premises.forEach(item => {
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: premisesCapacityItemFactory.buildList(20),
+    },
+  })
+
+  stubs.push({
+    request: {
+      method: 'GET',
+      url: `/premises/${item.id}/staff`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: staffMemberFactory.buildList(10),
     },
   })
 

@@ -32,13 +32,11 @@ export default class BookingsController {
       const crnArr = req.flash('crn')
 
       if (crnArr.length) {
-        const keyWorkers = await this.bookingService.getKeyWorkers(req.user.token)
         const person = await this.personService.findByCrn(req.user.token, crnArr[0])
 
         return res.render(`bookings/new`, {
           pageHeading: 'Make a booking',
           premisesId,
-          keyWorkers,
           ...person,
           errors,
           errorSummary,

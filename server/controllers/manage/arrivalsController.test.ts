@@ -3,9 +3,11 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput } from 'approved-premises'
 import ArrivalService from '../../services/arrivalService'
+import PremisesService from '../../services/premisesService'
 import ArrivalsController from './arrivalsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/manage'
+import staffMemberFactory from '../../testutils/factories/staffMember'
 
 jest.mock('../../utils/validation')
 
@@ -17,10 +19,18 @@ describe('ArrivalsController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const arrivalService = createMock<ArrivalService>({})
-  const arrivalsController = new ArrivalsController(arrivalService)
+  const premisesService = createMock<PremisesService>({})
+
+  const arrivalsController = new ArrivalsController(arrivalService, premisesService)
 
   describe('new', () => {
-    it('renders the form', () => {
+    const staffMembers = staffMemberFactory.buildList(5)
+
+    beforeEach(() => {
+      premisesService.getStaffMembers.mockResolvedValue(staffMembers)
+    })
+
+    it('renders the form', async () => {
       const requestHandler = arrivalsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
@@ -29,7 +39,7 @@ describe('ArrivalsController', () => {
         premisesId: 'premisesId',
       }
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('arrivals/new', {
         premisesId: 'premisesId',
@@ -37,10 +47,11 @@ describe('ArrivalsController', () => {
         pageHeading: 'Did the resident arrive?',
         errors: {},
         errorSummary: [],
+        staffMembers,
       })
     })
 
-    it('renders the form with errors and user input if an error has been sent to the flash', () => {
+    it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       const requestHandler = arrivalsController.new()
 
       request.params = {
@@ -52,7 +63,7 @@ describe('ArrivalsController', () => {
 
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('arrivals/new', {
         premisesId: 'premisesId',
@@ -60,6 +71,7 @@ describe('ArrivalsController', () => {
         pageHeading: 'Did the resident arrive?',
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
+        staffMembers,
         ...errorsAndUserInput.userInput,
       })
     })

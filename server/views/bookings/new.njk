@@ -81,18 +81,6 @@
                     errorMessage: errors.departureDate
                 }) }}
 
-                {{ govukSelect({
-                    label: {
-                        text: "Key Worker",
-                        classes: "govuk-label--m"
-                    },
-                    classes: "govuk-input--width-20",
-                    id: "keyWorkerId",
-                    name: "keyWorkerId",
-                    items: convertObjectsToSelectOptions(keyWorkers, 'name', 'id', 'keyWorkerId'),
-                    errorMessage: errors.keyWorkerId
-                }) }}
-
                 {{ govukButton({
                     text: "Submit"
                 }) }}

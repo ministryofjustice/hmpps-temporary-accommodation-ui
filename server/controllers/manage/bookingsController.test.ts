@@ -10,7 +10,6 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 import bookingFactory from '../../testutils/factories/booking'
 import newBookingFactory from '../../testutils/factories/newBooking'
 import personFactory from '../../testutils/factories/person'
-import referenceDataFactory from '../../testutils/factories/referenceData'
 import paths from '../../paths/manage'
 
 jest.mock('../../utils/validation')
@@ -54,7 +53,6 @@ describe('bookingsController', () => {
   describe('new', () => {
     describe('If there is a CRN in the flash', () => {
       const person = personFactory.build()
-      const keyWorkers = referenceDataFactory.buildList(5)
 
       beforeEach(() => {
         request = createMock<Request>({
@@ -64,7 +62,6 @@ describe('bookingsController', () => {
         })
 
         personService.findByCrn.mockResolvedValue(person)
-        bookingService.getKeyWorkers.mockResolvedValue(keyWorkers)
       })
 
       it('it should render the new booking form', async () => {
@@ -78,7 +75,6 @@ describe('bookingsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('bookings/new', {
           premisesId,
-          keyWorkers,
           pageHeading: 'Make a booking',
           ...person,
           errors: {},
@@ -98,7 +94,6 @@ describe('bookingsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('bookings/new', {
           premisesId,
-          keyWorkers,
           pageHeading: 'Make a booking',
           ...person,
           errors: errorsAndUserInput.errors,

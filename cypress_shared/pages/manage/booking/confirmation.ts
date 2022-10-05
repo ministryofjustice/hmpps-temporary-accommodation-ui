@@ -25,7 +25,6 @@ export default class BookingConfirmationPage extends Page {
       this.assertDefinition('CRN', booking.person.crn)
       this.assertDefinition('Expected arrival date', DateFormats.isoDateToUIDate(booking.arrivalDate))
       this.assertDefinition('Expected departure date', DateFormats.isoDateToUIDate(booking.departureDate))
-      this.assertDefinition('Key worker', booking.keyWorker.name)
     })
   }
 

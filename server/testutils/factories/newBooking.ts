@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { NewBooking } from 'approved-premises'
 
-import keyWorkerFactory from './keyWorker'
 import personFactory from './person'
 import { DateFormats } from '../../utils/dateUtils'
 
@@ -13,7 +12,6 @@ export default Factory.define<NewBooking>(() => {
 
   return {
     crn: personFactory.build().crn,
-    keyWorkerId: keyWorkerFactory.build().id,
     arrivalDate: DateFormats.formatApiDate(arrivalDate),
     'arrivalDate-day': arrivalDate.getDate().toString(),
     'arrivalDate-month': arrivalDate.getMonth().toString(),

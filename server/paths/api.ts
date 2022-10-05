@@ -9,6 +9,9 @@ export default {
     lostBeds: {
       create: managePaths.lostBeds.create,
     },
+    staffMembers: {
+      index: managePaths.premises.show.path('staff'),
+    },
   },
   applications: {
     show: applyPaths.applications.show,

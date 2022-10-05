@@ -5,7 +5,6 @@ import { addDays, startOfToday } from 'date-fns'
 import type { Booking } from 'approved-premises'
 import arrivalFactory from './arrival'
 import departureFactory from './departure'
-import keyWorkerFactory from './keyWorker'
 import personFactory from './person'
 import { DateFormats } from '../../utils/dateUtils'
 
@@ -89,7 +88,6 @@ export default BookingFactory.define(() => ({
   person: personFactory.build(),
   arrivalDate: DateFormats.formatApiDate(faker.date.soon()),
   departureDate: DateFormats.formatApiDate(faker.date.future()),
-  keyWorker: keyWorkerFactory.build(),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
   status: 'awaiting-arrival' as const,

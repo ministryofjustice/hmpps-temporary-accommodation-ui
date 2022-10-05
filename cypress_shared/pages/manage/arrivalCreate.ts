@@ -13,7 +13,7 @@ export default class ArrivalCreatePage extends Page {
     return new ArrivalCreatePage(premisesId, bookingId)
   }
 
-  public completeArrivalForm(arrival: Arrival): void {
+  public completeArrivalForm(arrival: Arrival, staffMemberId: string): void {
     cy.get('input[name="arrived"][value="Yes"]').check()
 
     cy.log('arrival', arrival)
@@ -28,6 +28,9 @@ export default class ArrivalCreatePage extends Page {
     cy.get('input[name="expectedDepartureDate-day"]').type(String(expectedDeparture.getDate()))
     cy.get('input[name="expectedDepartureDate-month"]').type(String(expectedDeparture.getMonth() + 1))
     cy.get('input[name="expectedDepartureDate-year"]').type(String(expectedDeparture.getFullYear()))
+
+    this.getLabel('Key Worker')
+    this.getSelectInputByIdAndSelectAnEntry('keyWorkerStaffId', staffMemberId)
 
     cy.get('[name="arrival[notes]"]').type(arrival.notes)
 

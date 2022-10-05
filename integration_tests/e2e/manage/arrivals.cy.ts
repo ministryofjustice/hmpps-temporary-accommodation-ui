@@ -4,6 +4,9 @@ import nonArrivalFactory from '../../../server/testutils/factories/nonArrival'
 
 import { ArrivalCreatePage, PremisesShowPage } from '../../../cypress_shared/pages/manage'
 import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
+import staffMemberFactory from '../../../server/testutils/factories/staffMember'
+
+const staff = staffMemberFactory.buildList(5)
 
 context('Arrivals', () => {
   beforeEach(() => {
@@ -24,6 +27,7 @@ context('Arrivals', () => {
       expectedDepartureDate: new Date(2022, 11, 11).toISOString(),
     })
 
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
     cy.task('stubSinglePremises', premises)
     cy.task('stubArrivalCreate', { premisesId: premises.id, bookingId, arrival })
     cy.task('stubPremisesCapacity', {
@@ -33,7 +37,7 @@ context('Arrivals', () => {
 
     // When I mark the booking as having arrived
     const page = ArrivalCreatePage.visit(premises.id, bookingId)
-    page.completeArrivalForm(arrival)
+    page.completeArrivalForm(arrival, staff[0].id)
 
     // Then an arrival should be created in the API
     cy.task('verifyArrivalCreate', { premisesId: premises.id, bookingId }).then(requests => {
@@ -44,6 +48,7 @@ context('Arrivals', () => {
 
       expect(requestBody.notes).equal(arrival.notes)
       expect(requestBody.date).equal(date)
+      expect(requestBody.keyWorkerStaffId).equal(staff[0].id)
       expect(requestBody.expectedDepartureDate).equal(expectedDepartureDate)
     })
 
@@ -61,6 +66,7 @@ context('Arrivals', () => {
     const bookingId = 'some-uuid'
 
     cy.task('stubSinglePremises', premises)
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
 
     // When I visit the arrivals page
     const page = ArrivalCreatePage.visit(premises.id, bookingId)
@@ -69,7 +75,7 @@ context('Arrivals', () => {
     cy.task('stubArrivalErrors', {
       premisesId: premises.id,
       bookingId,
-      params: ['date', 'expectedDepartureDate'],
+      params: ['date', 'expectedDepartureDate', 'keyWorkerStaffId'],
     })
     page.submitArrivalFormWithoutFields()
 
@@ -89,6 +95,7 @@ context('Arrivals', () => {
       reason: 'recalled',
     })
 
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
     cy.task('stubSinglePremises', premises)
     cy.task('stubNonArrivalCreate', { premisesId: premises.id, bookingId, nonArrival })
     cy.task('stubPremisesCapacity', {
@@ -124,6 +131,7 @@ context('Arrivals', () => {
     const bookingId = 'some-uuid'
 
     cy.task('stubSinglePremises', premises)
+    cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
 
     // When I visit the arrivals page
     const page = ArrivalCreatePage.visit(premises.id, bookingId)

@@ -1,25 +1,9 @@
-import type { Booking, KeyWorker } from 'approved-premises'
+import type { Booking } from 'approved-premises'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
-  stubKeyWorkers: (args: { keyWorkers: Array<KeyWorker> }) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: '/reference-data/key-workers',
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: args.keyWorkers.map(keyWorker => {
-          return { ...keyWorker, isActive: true }
-        }),
-      },
-    }),
   stubBookingCreate: (args: { premisesId: string; booking: Booking }) =>
     stubFor({
       request: {

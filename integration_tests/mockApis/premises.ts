@@ -1,6 +1,6 @@
-import type { Response } from 'superagent'
+import type { Response, SuperAgentRequest } from 'superagent'
 
-import type { Premises, Booking, PremisesCapacity } from 'approved-premises'
+import type { Premises, Booking, PremisesCapacity, StaffMember } from 'approved-premises'
 
 import { stubFor } from '../../wiremock'
 import bookingStubs from './booking'
@@ -63,4 +63,16 @@ export default {
       bookingStubs.stubBookingsForPremisesId({ premisesId: args.premises.id, bookings: args.bookings }),
     ]),
   stubPremisesCapacity,
+  stubPremisesStaff: (args: { premisesId: string; staff: Array<StaffMember> }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/premises/${args.premisesId}/staff`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.staff,
+      },
+    }),
 }

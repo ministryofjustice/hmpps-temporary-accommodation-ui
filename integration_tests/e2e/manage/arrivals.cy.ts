@@ -37,7 +37,7 @@ context('Arrivals', () => {
 
     // When I mark the booking as having arrived
     const page = ArrivalCreatePage.visit(premises.id, bookingId)
-    page.completeArrivalForm(arrival)
+    page.completeArrivalForm(arrival, staff[0].id)
 
     // Then an arrival should be created in the API
     cy.task('verifyArrivalCreate', { premisesId: premises.id, bookingId }).then(requests => {
@@ -48,6 +48,7 @@ context('Arrivals', () => {
 
       expect(requestBody.notes).equal(arrival.notes)
       expect(requestBody.date).equal(date)
+      expect(requestBody.keyWorkerStaffId).equal(staff[0].id)
       expect(requestBody.expectedDepartureDate).equal(expectedDepartureDate)
     })
 
@@ -74,7 +75,7 @@ context('Arrivals', () => {
     cy.task('stubArrivalErrors', {
       premisesId: premises.id,
       bookingId,
-      params: ['date', 'expectedDepartureDate'],
+      params: ['date', 'expectedDepartureDate', 'keyWorkerStaffId'],
     })
     page.submitArrivalFormWithoutFields()
 

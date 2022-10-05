@@ -148,3 +148,10 @@ export type GroupedListofBookings = {
 export type DataServices = {
   personService: PersonService
 }
+
+export type NewPremises = {
+  name: string
+  apCode: string
+  postcode: string
+  bedCount: number
+}

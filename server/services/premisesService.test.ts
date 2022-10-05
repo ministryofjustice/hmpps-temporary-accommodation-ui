@@ -2,6 +2,7 @@ import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 import premisesFactory from '../testutils/factories/premises'
 import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
+import staffMemberFactory from '../testutils/factories/staffMember'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import paths from '../paths/manage'
 
@@ -20,6 +21,20 @@ describe('PremisesService', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
+  })
+
+  describe('getStaffMembers', () => {
+    it('on success returns the person given their CRN', async () => {
+      const staffMembers = staffMemberFactory.buildList(5)
+      premisesClient.getStaffMembers.mockResolvedValue(staffMembers)
+
+      const result = await service.getStaffMembers(token, premisesId)
+
+      expect(result).toEqual(staffMembers)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.getStaffMembers).toHaveBeenCalledWith(premisesId)
+    })
   })
 
   describe('tableRows', () => {

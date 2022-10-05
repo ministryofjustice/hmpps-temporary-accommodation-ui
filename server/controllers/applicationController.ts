@@ -1,5 +1,6 @@
 import type { Response, Request, RequestHandler } from 'express'
 import apManagePaths from '../paths/manage'
+import taManagePaths from '../paths/temporary-accommodation/manage'
 import { getService } from '../utils/applicationUtils'
 
 export default class ApplicationController {
@@ -10,7 +11,7 @@ export default class ApplicationController {
       if (service === 'approved-premises') {
         res.redirect(apManagePaths.premises.index({}))
       } else {
-        res.render('temporary-accommodation/index')
+        res.redirect(taManagePaths.premises.new({}))
       }
     }
   }

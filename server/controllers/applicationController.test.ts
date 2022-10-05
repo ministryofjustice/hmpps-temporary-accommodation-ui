@@ -32,14 +32,14 @@ describe('ApplicationController', () => {
     })
 
     describe('when used in the Temporary Accommodation service', () => {
-      it('should render a stub Temporary Accommodation page', () => {
+      it('should redirect to /properties/new', () => {
         ;(getService as jest.Mock).mockReturnValue('temporary-accommodation')
 
         const requestHandler = applicationController.index()
 
         requestHandler(request, response, next)
 
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/index')
+        expect(response.redirect).toHaveBeenCalledWith(paths.premises.index({}))
       })
     })
   })

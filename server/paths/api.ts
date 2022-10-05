@@ -7,6 +7,7 @@ const lostBedsPath = singlePremisesPath.path('lost-beds')
 
 const managePaths = {
   premises: {
+    create: premisesPath,
     index: premisesPath,
     show: singlePremisesPath,
   },
@@ -33,6 +34,7 @@ const applyPaths = {
 export default {
   premises: {
     show: managePaths.premises.show,
+    create: managePaths.premises.create,
     index: managePaths.premises.index,
     capacity: managePaths.premises.show.path('capacity'),
     lostBeds: {

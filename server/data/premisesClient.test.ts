@@ -1,6 +1,7 @@
 import nock from 'nock'
 
 import premisesFactory from '../testutils/factories/premises'
+import newPremisesFactory from '../testutils/factories/newPremises'
 import PremisesClient from './premisesClient'
 import config from '../config'
 import paths from '../paths/api'
@@ -83,6 +84,26 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.getStaffMembers(premises.id)
       expect(output).toEqual(staffMembers)
+    })
+  })
+
+  describe('create', () => {
+    it('should return the premises that has been created', async () => {
+      const premises = premisesFactory.build()
+      const payload = newPremisesFactory.build({
+        name: premises.name,
+        apCode: premises.apCode,
+        postcode: premises.postcode,
+        bedCount: premises.bedCount,
+      })
+
+      fakeApprovedPremisesApi
+        .post(paths.premises.create({}))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, premises)
+
+      const output = await premisesClient.create(payload)
+      expect(output).toEqual(premises)
     })
   })
 })

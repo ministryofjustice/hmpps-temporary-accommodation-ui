@@ -40,6 +40,20 @@ stubs.push({
   },
 })
 
+stubs.push({
+  request: {
+    method: 'POST',
+    url: '/premises',
+  },
+  response: {
+    status: 201,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: premisesFactory.build(),
+  },
+})
+
 premises.forEach(item => {
   stubs.push({
     request: {

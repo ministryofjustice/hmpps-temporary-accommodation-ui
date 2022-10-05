@@ -2,7 +2,7 @@ import type { Response, SuperAgentRequest } from 'superagent'
 
 import type { Premises, Booking, DateCapacity, StaffMember } from '@approved-premises/api'
 
-import { stubFor } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '../../wiremock'
 import bookingStubs from './booking'
 
 const stubPremises = (premises: Array<Premises>) =>
@@ -75,4 +75,23 @@ export default {
         jsonBody: args.staff,
       },
     }),
+  stubPremisesCreate: (premises: Premises): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/premises`,
+      },
+      response: {
+        status: 201,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: premises,
+      },
+    }),
+  verifyPremisesCreate: async () =>
+    (
+      await getMatchingRequests({
+        method: 'POST',
+        url: `/premises`,
+      })
+    ).body.requests,
 }

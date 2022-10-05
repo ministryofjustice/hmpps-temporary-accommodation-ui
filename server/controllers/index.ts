@@ -3,6 +3,7 @@
 import ApplicationController from './applicationController'
 import { controllers as apManageControllers } from './manage'
 import { controllers as apApplyControllers } from './apply'
+import { controllers as taManageControllers } from './temporary-accommodation/manage'
 
 import type { Services } from '../services'
 
@@ -15,7 +16,9 @@ export const controllers = (services: Services) => {
       ...apManageControllers(services),
       ...apApplyControllers(services),
     },
-    temporaryAccommodation: {},
+    temporaryAccommodation: {
+      ...taManageControllers(services),
+    },
   }
 }
 

@@ -6,6 +6,8 @@ import type { Controllers } from '../../controllers'
 import { temporaryAccommodationPath } from '../../paths/service'
 import actions from '../utils'
 
+import manageRoutes from './manage'
+
 export default function routes(controllers: Controllers): Router {
   const router = Router()
 
@@ -15,6 +17,8 @@ export default function routes(controllers: Controllers): Router {
 
   get('/', applicationController.index())
   get(temporaryAccommodationPath.pattern, applicationController.index())
+
+  manageRoutes(controllers, router)
 
   return router
 }

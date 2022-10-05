@@ -16,6 +16,7 @@ import { DateFormats } from './dateUtils'
 
 import apManagePaths from '../paths/manage'
 import apApplyPaths from '../paths/apply'
+import taManagePaths from '../paths/temporary-accommodation/manage'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -37,7 +38,9 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     } else {
       app.locals.applicationName = 'Temporary Accommodation'
 
-      njkEnv.addGlobal('paths', {})
+      njkEnv.addGlobal('paths', {
+        ...taManagePaths,
+      })
     }
 
     next()

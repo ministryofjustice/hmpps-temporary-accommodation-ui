@@ -15,6 +15,8 @@ declare module 'approved-premises' {
   export type ApplicationSummary = schemas['ApplicationSummary']
   export type Application = schemas['Application']
   export type StaffMember = schemas['StaffMember']
+  export type PersonRisks = schemas['PersonRisks']
+  export type PersonRisksUI = schemas['PersonRisksUI']
 
   // A utility type that allows us to define an object with a date attribute split into
   // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
@@ -150,6 +152,13 @@ declare module 'approved-premises' {
 
   export type PersonStatus = 'InCustody' | 'InCommunity'
 
+  export type RiskLevel = 'Low' | 'Medium' | 'High' | 'Very High'
+
+  export type RiskEnvelopeStatus = 'retrieved' | 'not_found' | 'error'
+
+  export type TierNumber = '1' | '2' | '3' | '4'
+  export type TierLetter = 'A' | 'B' | 'C' | 'D'
+  export type RiskTierLevel = `${TierLetter}${TierNumber}`
   export interface schemas {
     Premises: {
       id: string
@@ -243,7 +252,7 @@ declare module 'approved-premises' {
       availableBeds: number
     }
     RiskTier: {
-      level: string
+      level: RiskTierLevel
       lastUpdated: string
     }
     ApplicationSummary: {
@@ -267,6 +276,47 @@ declare module 'approved-premises' {
     StaffMember: {
       id: string
       name: string
+    }
+    PersonRisks: {
+      crn: string
+      roshRisks: schemas['RoshRisksEnvelope']
+      tier: schemas['RiskTierEnvelope']
+      flags: schemas['FlagsEnvelope']
+      mappa: schemas['MappaEnvelope']
+    }
+    PersonRisksUI: {
+      roshRisks: schemas['RoshRisks']
+      tier: schemas['RiskTier']
+      flags: schemas['FlagsEnvelope']['value']
+      mappa: schemas['Mappa']
+    }
+    RoshRisksEnvelope: {
+      status: RiskEnvelopeStatus
+      value: schemas['RoshRisks']
+    }
+    RoshRisks: {
+      overallRisk: RiskLevel
+      riskToChildren: RiskLevel
+      riskToPublic: RiskLevel
+      riskToKnownAdult: RiskLevel
+      riskToStaff: RiskLevel
+      lastUpdated: string
+    }
+    MappaEnvelope: {
+      status: RiskEnvelopeStatus
+      value: schemas['Mappa']
+    }
+    Mappa: {
+      level: string
+      lastUpdated: string
+    }
+    RiskTierEnvelope: {
+      status: RiskEnvelopeStatus
+      value: schemas['RiskTier']
+    }
+    FlagsEnvelope: {
+      status: RiskEnvelopeStatus
+      value: Array<string>
     }
   }
 }

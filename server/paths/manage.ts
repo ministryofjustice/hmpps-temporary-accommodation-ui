@@ -1,6 +1,6 @@
-import { path } from 'static-path'
+import { approvedPremisesPath } from './service'
 
-const premisesPath = path('/premises')
+const premisesPath = approvedPremisesPath.path('premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const bookingsPath = singlePremisesPath.path('bookings')

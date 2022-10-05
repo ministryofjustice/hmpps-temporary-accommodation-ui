@@ -1,6 +1,6 @@
-import { path } from 'static-path'
+import { approvedPremisesPath } from './service'
 
-const applicationsPath = path('/applications')
+const applicationsPath = approvedPremisesPath.path('applications')
 const applicationPath = applicationsPath.path(':id')
 
 const pagesPath = applicationPath.path('tasks/:task/pages/:page')

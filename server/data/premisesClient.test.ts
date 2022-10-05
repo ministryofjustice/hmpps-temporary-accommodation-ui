@@ -5,6 +5,7 @@ import PremisesClient from './premisesClient'
 import config from '../config'
 import paths from '../paths/api'
 import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
+import staffMemberFactory from '../testutils/factories/staffMember'
 
 describe('PremisesClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -67,6 +68,21 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.capacity(premisesId)
       expect(output).toEqual(premisesCapacityItem)
+    })
+  })
+
+  describe('getStaffMembers', () => {
+    const premises = premisesFactory.build()
+    const staffMembers = staffMemberFactory.buildList(5)
+
+    it('should return a list of staff members', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.staffMembers.index({ premisesId: premises.id }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, staffMembers)
+
+      const output = await premisesClient.getStaffMembers(premises.id)
+      expect(output).toEqual(staffMembers)
     })
   })
 })

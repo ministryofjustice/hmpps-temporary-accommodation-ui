@@ -13,7 +13,7 @@
     },
     {
       "matchDatasources": ["docker"],
-      "allowedVersions": "18.10.0-bullseye-slim"
+      "allowedVersions": "16.15.0-bullseye-slim"
     },
     {
       "matchDatasources": ["docker-compose"],

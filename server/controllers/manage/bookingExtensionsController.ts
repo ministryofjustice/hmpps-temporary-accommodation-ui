@@ -31,17 +31,12 @@ export default class BookingExtensionsController {
       }
 
       try {
-        const extendedBooking = await this.bookingService.extendBooking(
-          req.user.token,
-          premisesId,
-          bookingId,
-          bookingExtension,
-        )
+        await this.bookingService.extendBooking(req.user.token, premisesId, bookingId, bookingExtension)
 
         res.redirect(
           paths.bookings.extensions.confirm({
             premisesId,
-            bookingId: extendedBooking.id,
+            bookingId,
           }),
         )
       } catch (err) {

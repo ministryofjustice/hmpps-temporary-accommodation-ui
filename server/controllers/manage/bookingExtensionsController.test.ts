@@ -22,10 +22,9 @@ describe('bookingExtensionsController', () => {
   const bookingService = createMock<BookingService>({})
   const bookingExtensionsController = new BookingExtensionsController(bookingService)
   const premisesId = 'premisesId'
+  const booking = bookingFactory.build()
 
   describe('new', () => {
-    const booking = bookingFactory.build()
-
     beforeEach(() => {
       bookingService.find.mockResolvedValue(booking)
     })
@@ -68,7 +67,7 @@ describe('bookingExtensionsController', () => {
   })
 
   describe('create', () => {
-    const bookingExtension = bookingExtensionFactory.build()
+    const bookingExtension = bookingExtensionFactory.build({ bookingId: booking.id })
 
     it('given the expected form data, the posting of the booking is successful should redirect to the "confirmation" page', async () => {
       bookingService.extendBooking.mockResolvedValue(bookingExtension)
@@ -77,7 +76,7 @@ describe('bookingExtensionsController', () => {
 
       request = {
         ...request,
-        params: { premisesId, bookingId: bookingExtension.id },
+        params: { premisesId, bookingId: bookingExtension.bookingId },
         body: {
           'newDepartureDate-day': '01',
           'newDepartureDate-month': '02',
@@ -87,7 +86,7 @@ describe('bookingExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.extendBooking).toHaveBeenCalledWith(token, premisesId, bookingExtension.id, {
+      expect(bookingService.extendBooking).toHaveBeenCalledWith(token, premisesId, bookingExtension.bookingId, {
         ...request.body,
         newDepartureDate: '2022-02-01T00:00:00.000Z',
       })
@@ -131,7 +130,6 @@ describe('bookingExtensionsController', () => {
 
   describe('confirm', () => {
     it('renders the form with the details from the booking that is requested', async () => {
-      const booking = bookingFactory.build()
       bookingService.find.mockResolvedValue(booking)
 
       const requestHandler = bookingExtensionsController.confirm()

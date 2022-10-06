@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   hmpps: ministryofjustice/hmpps@5.1
-  slack: circleci/slack@4.4.2
+  slack: circleci/slack@4.10.1
   node: circleci/node@4.5.2
 
 parameters:
@@ -10,12 +10,11 @@ parameters:
     type: string
     # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
     # This is to avoid a general alert dumping ground that no-one then monitors
-    default: approved-premises-team-dev
-
+    default: approved-premises-team-events
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: hmpps_typescript_notifications
+    default: approved-premises-team-events
 
   node-version:
     type: string

@@ -91,7 +91,7 @@ export default class BookingsController {
         bookingId,
         pageHeading: 'Booking complete',
         ...booking,
-        infoMessages: [overcapacityMessage],
+        infoMessages: overcapacityMessage,
       })
     }
   }

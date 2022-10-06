@@ -3,6 +3,7 @@ import BookingClient from '../data/bookingClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 
 import newBookingFactory from '../testutils/factories/newBooking'
+import bookingExtensionFactory from '../testutils/factories/bookingExtension'
 import bookingFactory from '../testutils/factories/booking'
 
 import paths from '../paths/manage'
@@ -125,7 +126,7 @@ describe('BookingService', () => {
 
   describe('extendBooking', () => {
     it('on success returns the booking that has been extended', async () => {
-      const booking = bookingFactory.build()
+      const booking = bookingExtensionFactory.build()
       bookingClient.extendBooking.mockResolvedValue(booking)
       const newDepartureDateObj = {
         newDepartureDate: new Date(2042, 13, 11).toISOString(),

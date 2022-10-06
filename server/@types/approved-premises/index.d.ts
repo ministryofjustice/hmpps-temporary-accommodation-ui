@@ -58,6 +58,8 @@ declare module 'approved-premises' {
       reason: string
     }
 
+  export type NewBookingExtension = Omit<BookingExtension, 'previousDepartureDate' | 'id' | 'bookingId'>
+
   export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 
   export type TaskNames = 'basic-information' | 'type-of-ap'
@@ -223,8 +225,11 @@ declare module 'approved-premises' {
       reason: ReferenceData
     }
     BookingExtension: {
+      id: string
+      bookingId: string
+      previousDepartureDate: string
       newDepartureDate: string
-      notes: string
+      notes?: string
     }
     Person: {
       crn: string

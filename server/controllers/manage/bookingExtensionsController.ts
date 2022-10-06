@@ -1,6 +1,6 @@
 import type { Request, Response, RequestHandler } from 'express'
 
-import type { BookingExtension } from 'approved-premises'
+import type { NewBookingExtension } from 'approved-premises'
 import BookingService from '../../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import { DateFormats } from '../../utils/dateUtils'
@@ -25,7 +25,7 @@ export default class BookingExtensionsController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
 
-      const bookingExtension: BookingExtension = {
+      const bookingExtension: NewBookingExtension = {
         ...req.body,
         ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
       }

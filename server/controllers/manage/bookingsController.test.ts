@@ -213,7 +213,7 @@ describe('bookingsController', () => {
         departureDate: new Date('07/28/22').toISOString(),
       })
       const overcapacityMessage = 'The premises is over capacity for the period January 1st 2023 to Feburary 3rd 2023'
-      premisesService.getOvercapacityMessage.mockResolvedValue(overcapacityMessage)
+      premisesService.getOvercapacityMessage.mockResolvedValue([overcapacityMessage])
       bookingService.find.mockResolvedValue(booking)
 
       const requestHandler = bookingController.confirm()

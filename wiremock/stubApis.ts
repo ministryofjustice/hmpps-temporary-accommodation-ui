@@ -65,7 +65,7 @@ premises.forEach(item => {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: premisesCapacityItemFactory.buildList(20),
+      jsonBody: premisesCapacityItemFactory.buildList(5),
     },
   })
 

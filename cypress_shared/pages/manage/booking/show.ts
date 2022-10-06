@@ -14,6 +14,12 @@ export default class BookingShowPage extends Page {
     return new BookingShowPage()
   }
 
+  clickExtendBooking() {
+    cy.get('.moj-button-menu__toggle-button')
+      .click()
+      .then(() => cy.get('a').contains('Extend booking').click())
+  }
+
   shouldShowBookingDetails(booking: Booking): void {
     cy.get('dl[data-cy-dates]').within(() => {
       this.assertDefinition('Arrival date', DateFormats.isoDateToUIDate(booking.arrivalDate))

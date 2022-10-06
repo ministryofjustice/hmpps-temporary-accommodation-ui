@@ -26,6 +26,10 @@ export default class PremisesShowPage extends Page {
       .then(() => cy.get('a').contains('Create a booking').click())
   }
 
+  selectBooking() {
+    cy.get('#arriving-today > .govuk-table > .govuk-table__body > :nth-child(1) > :nth-child(3) > a').click()
+  }
+
   shouldShowPremisesDetail(): void {
     cy.get('.govuk-summary-list__key')
       .contains('Code')

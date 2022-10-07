@@ -29,3 +29,21 @@ Then('I should see a message on the booking page confirming the extension', () =
   const bookingExtensionCreatePage = new BookingExtensionConfirmationPage()
   bookingExtensionCreatePage.verifyNewExpectedDepartureDate(extensionDate)
 })
+
+Then('I attempt to extend a booking without entering the date', () => {
+  cy.get('@premisesShowPage').then((premisesShowPage: PremisesShowPage) => {
+    premisesShowPage.selectBooking()
+  })
+
+  const bookingShowPage = new BookingShowPage()
+  bookingShowPage.clickExtendBooking()
+
+  const bookingExtensionCreatePage = new BookingExtensionCreatePage()
+
+  bookingExtensionCreatePage.clickSubmit()
+})
+
+Then('I should see an error', () => {
+  const bookingExtensionCreatePage = new BookingExtensionCreatePage()
+  bookingExtensionCreatePage.shouldShowErrorMessagesForFields(['newDepartureDate'])
+})

@@ -22,4 +22,10 @@ export default class BookingExtensionConfirmationPage extends Page {
       this.assertDefinition('New expected departure date', DateFormats.isoDateToUIDate(booking.departureDate))
     })
   }
+
+  verifyNewExpectedDepartureDate(date: string): void {
+    cy.get('dl').within(() => {
+      this.assertDefinition('New expected departure date', DateFormats.isoDateToUIDate(date))
+    })
+  }
 }

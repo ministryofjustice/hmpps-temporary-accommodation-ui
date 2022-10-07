@@ -16,3 +16,13 @@ Feature: Manage an Approved Premises
                 Given I'm managing a premises
                 And I attempt to create a lost bed without the necessary information
                 Then I should see a list of the problems encountered creating the lost bed
+
+        Scenario: Extending a booking
+                Given I'm managing a premises
+                And I extend a booking
+                Then I should see a message on the booking page confirming the extension
+
+        Scenario: Showing booking extension errors
+                Given I'm managing a premises
+                And I attempt to extend a booking without entering the date
+                Then I should see an error

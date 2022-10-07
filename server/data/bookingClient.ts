@@ -8,6 +8,7 @@ import type {
   NewDeparture,
   Departure,
   NonArrival,
+  NewBookingExtension,
 } from 'approved-premises'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
@@ -31,11 +32,15 @@ export default class BookingClient {
     return (await this.restClient.get({ path: this.bookingsPath(premisesId) })) as Array<Booking>
   }
 
-  async extendBooking(premisesId: string, bookingId: string, bookingExtension: BookingExtension): Promise<Booking> {
+  async extendBooking(
+    premisesId: string,
+    bookingId: string,
+    bookingExtension: NewBookingExtension,
+  ): Promise<BookingExtension> {
     return (await this.restClient.post({
       path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
       data: bookingExtension,
-    })) as Booking
+    })) as BookingExtension
   }
 
   async markAsArrived(

@@ -6,6 +6,7 @@ import BookingService from '../../services/bookingService'
 import BookingExtensionsController from './bookingExtensionsController'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 
+import bookingExtensionFactory from '../../testutils/factories/bookingExtension'
 import bookingFactory from '../../testutils/factories/booking'
 import paths from '../../paths/manage'
 
@@ -21,10 +22,9 @@ describe('bookingExtensionsController', () => {
   const bookingService = createMock<BookingService>({})
   const bookingExtensionsController = new BookingExtensionsController(bookingService)
   const premisesId = 'premisesId'
+  const booking = bookingFactory.build()
 
   describe('new', () => {
-    const booking = bookingFactory.build()
-
     beforeEach(() => {
       bookingService.find.mockResolvedValue(booking)
     })
@@ -67,16 +67,16 @@ describe('bookingExtensionsController', () => {
   })
 
   describe('create', () => {
-    const booking = bookingFactory.build()
+    const bookingExtension = bookingExtensionFactory.build({ bookingId: booking.id })
 
     it('given the expected form data, the posting of the booking is successful should redirect to the "confirmation" page', async () => {
-      bookingService.extendBooking.mockResolvedValue(booking)
+      bookingService.extendBooking.mockResolvedValue(bookingExtension)
 
       const requestHandler = bookingExtensionsController.create()
 
       request = {
         ...request,
-        params: { premisesId, bookingId: booking.id },
+        params: { premisesId, bookingId: bookingExtension.bookingId },
         body: {
           'newDepartureDate-day': '01',
           'newDepartureDate-month': '02',
@@ -86,7 +86,7 @@ describe('bookingExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.extendBooking).toHaveBeenCalledWith(token, premisesId, booking.id, {
+      expect(bookingService.extendBooking).toHaveBeenCalledWith(token, premisesId, bookingExtension.bookingId, {
         ...request.body,
         newDepartureDate: '2022-02-01T00:00:00.000Z',
       })
@@ -94,18 +94,18 @@ describe('bookingExtensionsController', () => {
       expect(response.redirect).toHaveBeenCalledWith(
         paths.bookings.extensions.confirm({
           premisesId,
-          bookingId: booking.id,
+          bookingId: bookingExtension.bookingId,
         }),
       )
     })
 
     it('should render the page with errors when the API returns an error', async () => {
-      bookingService.extendBooking.mockResolvedValue(booking)
+      bookingService.extendBooking.mockResolvedValue(bookingExtension)
       const requestHandler = bookingExtensionsController.create()
 
       request = {
         ...request,
-        params: { premisesId, bookingId: booking.id },
+        params: { premisesId, bookingId: bookingExtension.id },
       }
 
       const err = new Error()
@@ -122,7 +122,7 @@ describe('bookingExtensionsController', () => {
         err,
         paths.bookings.extensions.new({
           premisesId,
-          bookingId: booking.id,
+          bookingId: bookingExtension.id,
         }),
       )
     })
@@ -130,7 +130,6 @@ describe('bookingExtensionsController', () => {
 
   describe('confirm', () => {
     it('renders the form with the details from the booking that is requested', async () => {
-      const booking = bookingFactory.build()
       bookingService.find.mockResolvedValue(booking)
 
       const requestHandler = bookingExtensionsController.confirm()

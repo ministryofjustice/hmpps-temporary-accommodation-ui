@@ -20,7 +20,7 @@ export default function routes(controllers: Controllers, router: Router): Router
     cancellationsController,
     lostBedsController,
     peopleController,
-  } = controllers
+  } = controllers.approvedPremises
 
   get(paths.premises.index.pattern, premisesController.index())
   get(paths.premises.show.pattern, premisesController.show())

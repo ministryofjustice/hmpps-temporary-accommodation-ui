@@ -9,7 +9,7 @@ import actions from './utils'
 
 export default function routes(controllers: Controllers, router: Router): Router {
   const { get, post, put } = actions(router)
-  const { applicationsController, pagesController, peopleController } = controllers
+  const { applicationsController, pagesController, peopleController } = controllers.approvedPremises
 
   get(paths.applications.start.pattern, applicationsController.start())
   get(paths.applications.index.pattern, applicationsController.index())

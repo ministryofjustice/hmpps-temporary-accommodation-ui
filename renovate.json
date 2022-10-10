@@ -8,8 +8,7 @@
     {
       "matchManagers": ["npm"],
       "matchPackageNames": ["@types/node"],
-      "matchUpdateTypes": ["major"],
-      "enabled": false
+      "matchUpdateTypes": ["minor"]
     },
     {
       "matchDatasources": ["docker"],

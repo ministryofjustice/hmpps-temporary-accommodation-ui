@@ -21,7 +21,7 @@ import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 import { setUpSentryRequestHandler, setUpSentryErrorHandler } from './middleware/setUpSentry'
 
-import routes from './routes'
+import apRoutes from './routes'
 import type { Controllers } from './controllers'
 import type { Services } from './services'
 
@@ -55,7 +55,7 @@ export default function createApp(controllers: Controllers, services: Services):
     res.app.locals.successMessages = req.flash('success')
     return next()
   })
-  app.use(routes(controllers))
+  app.use(apRoutes(controllers))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   setUpSentryErrorHandler(app)

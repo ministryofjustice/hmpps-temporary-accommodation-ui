@@ -26,7 +26,7 @@ export default {
       response: {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.application,
+        jsonBody: { ...args.application, data: null },
       },
     }),
   stubApplicationUpdate: (args: { application: Application }): SuperAgentRequest =>

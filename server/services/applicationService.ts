@@ -71,6 +71,7 @@ export default class ApplicationService {
     } else {
       const application = await this.getApplicationFromSessionOrAPI(request)
 
+      application.data = application.data || {}
       application.data[request.params.task] = application.data[request.params.task] || {}
       application.data[request.params.task][request.params.page] = page.body
 

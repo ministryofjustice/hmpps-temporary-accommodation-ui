@@ -237,7 +237,7 @@ describe('ApplicationService', () => {
   })
 
   describe('save', () => {
-    const application = applicationFactory.build()
+    const application = applicationFactory.build({ data: null })
     const token = 'some-token'
     const request = createMock<Request>({
       params: { id: application.id, task: 'some-task', page: 'some-page' },
@@ -249,7 +249,6 @@ describe('ApplicationService', () => {
       let page: DeepMocked<TasklistPage>
 
       beforeEach(() => {
-        application.data = {}
         page = createMock<TasklistPage>({
           errors: () => [] as TaskListErrors,
           body: { foo: 'bar' },
@@ -274,6 +273,17 @@ describe('ApplicationService', () => {
 
         expect(applicationClientFactory).toHaveBeenCalledWith(token)
         expect(applicationClient.update).toHaveBeenCalledWith(application)
+      })
+
+      it('updates an in-progress application', async () => {
+        application.data = { 'some-task': { 'other-page': { question: 'answer' } } }
+
+        await service.save(page, request)
+
+        expect(request.session.application).toEqual(application)
+        expect(request.session.application.data).toEqual({
+          'some-task': { 'other-page': { question: 'answer' }, 'some-page': { foo: 'bar' } },
+        })
       })
     })
 

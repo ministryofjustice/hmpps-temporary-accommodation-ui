@@ -1,4 +1,5 @@
-import type { SummaryListItem, Application } from 'approved-premises'
+import type { SummaryListItem, Application, PersonRisksUI, PersonRisks } from 'approved-premises'
+import { DateFormats } from './dateUtils'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
@@ -71,4 +72,23 @@ export const removeBlankSummaryListItems = (items: Array<SummaryListItem>): Arra
     }
     return false
   })
+}
+
+export const mapApiPersonRisksForUi = (risks: PersonRisks): PersonRisksUI => {
+  return {
+    ...risks,
+    roshRisks: {
+      ...risks.roshRisks.value,
+      lastUpdated: DateFormats.isoDateToUIDate(risks.roshRisks.value.lastUpdated),
+    },
+    mappa: {
+      ...risks.mappa.value,
+      lastUpdated: DateFormats.isoDateToUIDate(risks.mappa.value.lastUpdated),
+    },
+    tier: {
+      ...risks.tier.value,
+      lastUpdated: DateFormats.isoDateToUIDate(risks.tier.value.lastUpdated),
+    },
+    flags: risks.flags.value,
+  }
 }

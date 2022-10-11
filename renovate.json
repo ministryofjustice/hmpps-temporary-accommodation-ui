@@ -7,7 +7,6 @@
   "packageRules": [
     {
       "matchManagers": ["npm"],
-      "matchPackageNames": ["@types/node"],
       "matchUpdateTypes": ["minor"]
     },
     {

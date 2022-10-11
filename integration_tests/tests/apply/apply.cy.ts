@@ -10,9 +10,11 @@ import {
   TypeOfApPage,
 } from '../../../cypress_shared/pages/apply'
 
-import personFactory from '../../../server/testutils/factories/person'
 import Page from '../../../cypress_shared/pages/page'
 import applicationFactory from '../../../server/testutils/factories/application'
+import personFactory from '../../../server/testutils/factories/person'
+import risksFactory from '../../../server/testutils/factories/risks'
+import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -101,6 +103,10 @@ context('Apply', () => {
 
   it('shows a tasklist', () => {
     const application = applicationFactory.build()
+    const person = personFactory.build({ crn: application.person.crn })
+    const apiRisks = risksFactory.build({ crn: person.crn })
+    const uiRisks = mapApiPersonRisksForUi(apiRisks)
+
     cy.task('stubApplicationCreate', { application })
     cy.task('stubApplicationUpdate', { application })
 
@@ -108,7 +114,7 @@ context('Apply', () => {
     cy.signIn()
 
     // And a person is in Delius
-    const person = personFactory.build()
+    cy.task('stubPersonRisks', { person, risks: apiRisks })
     cy.task('stubFindPerson', { person })
 
     // And I have started an application
@@ -149,6 +155,9 @@ context('Apply', () => {
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('type-of-ap', 'Not started')
+
+    // And the risk widgets should be visible
+    tasklistPage.shouldShowRiskWidgets(uiRisks)
 
     // And I should be able to start the next task
     cy.get('[data-cy-task-name="type-of-ap"]').click()

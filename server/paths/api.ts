@@ -1,5 +1,31 @@
-import managePaths from './manage'
-import applyPaths from './apply'
+import { path } from 'static-path'
+
+const premisesPath = path('/premises')
+const singlePremisesPath = premisesPath.path(':premisesId')
+
+const lostBedsPath = singlePremisesPath.path('lost-beds')
+
+const managePaths = {
+  premises: {
+    index: premisesPath,
+    show: singlePremisesPath,
+  },
+  lostBeds: {
+    create: lostBedsPath,
+  },
+}
+
+const applicationsPath = path('/applications')
+const singleApplicationPath = applicationsPath.path(':id')
+
+const applyPaths = {
+  applications: {
+    show: singleApplicationPath,
+    create: applicationsPath,
+    index: applicationsPath,
+    update: singleApplicationPath,
+  },
+}
 
 export default {
   premises: {

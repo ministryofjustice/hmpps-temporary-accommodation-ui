@@ -22,7 +22,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'Approved Premises Ui'
+  app.locals.applicationName = 'Approved Premises'
 
   // Cachebusting version string
   if (production) {

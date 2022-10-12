@@ -88,7 +88,7 @@ describe('bookingExtensionsController', () => {
 
       expect(bookingService.extendBooking).toHaveBeenCalledWith(token, premisesId, bookingExtension.bookingId, {
         ...request.body,
-        newDepartureDate: '2022-02-01T00:00:00.000Z',
+        newDepartureDate: '2022-02-01',
       })
 
       expect(response.redirect).toHaveBeenCalledWith(

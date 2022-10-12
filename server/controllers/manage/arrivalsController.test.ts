@@ -104,8 +104,8 @@ describe('ArrivalsController', () => {
       const expectedArrival = {
         notes: request.body.arrival.notes,
         keyWorkerStaffId: request.body.arrival.keyWorkerStaffId,
-        arrivalDate: new Date(2022, 11, 11).toISOString(),
-        expectedDepartureDate: new Date(2022, 10, 12).toISOString(),
+        arrivalDate: '2022-12-11',
+        expectedDepartureDate: '2022-11-12',
       }
 
       expect(arrivalService.createArrival).toHaveBeenCalledWith(

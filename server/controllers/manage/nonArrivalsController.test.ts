@@ -38,7 +38,7 @@ describe('NonArrivalsController', () => {
 
       const expectedNonArrival = {
         ...request.body.nonArrival,
-        date: new Date(2022, 11, 11).toISOString(),
+        date: '2022-12-11',
       }
 
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: request.params.premisesId }))

@@ -12,9 +12,9 @@ context('BookingExtension', () => {
 
   it('should show booking extension form', () => {
     const booking = bookingFactory.build({
-      departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
+      departureDate: '2022-06-03',
     })
-    const newDepartureDate = new Date(Date.UTC(2022, 6, 3, 0, 0, 0)).toISOString()
+    const newDepartureDate = '2022-07-03'
     const premises = premisesFactory.build()
 
     cy.task('stubBookingExtensionCreate', { premisesId: premises.id, booking })

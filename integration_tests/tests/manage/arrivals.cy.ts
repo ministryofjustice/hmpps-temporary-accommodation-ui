@@ -23,8 +23,8 @@ context('Arrivals', () => {
     const premises = premisesFactory.build()
     const bookingId = 'some-uuid'
     const arrival = arrivalFactory.build({
-      arrivalDate: new Date(2022, 1, 11).toISOString(),
-      expectedDepartureDate: new Date(2022, 11, 11).toISOString(),
+      arrivalDate: '2022-11-11',
+      expectedDepartureDate: '2022-12-11',
     })
 
     cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
@@ -91,7 +91,7 @@ context('Arrivals', () => {
     const premises = premisesFactory.build()
     const bookingId = 'some-uuid'
     const nonArrival = nonArrivalFactory.build({
-      date: new Date(2022, 1, 11).toISOString(),
+      date: '2021-11-01',
       reason: 'recalled',
     })
 

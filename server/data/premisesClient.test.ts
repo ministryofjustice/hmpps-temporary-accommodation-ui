@@ -32,13 +32,14 @@ describe('PremisesClient', () => {
   describe('all', () => {
     const premises = premisesFactory.buildList(5)
 
-    it('should get all premises', async () => {
+    it('should get all premises for the given service', async () => {
       fakeApprovedPremisesApi
         .get(paths.premises.index({}))
         .matchHeader('authorization', `Bearer ${token}`)
+        .query({ service: 'approved-premises' })
         .reply(200, premises)
 
-      const output = await premisesClient.all()
+      const output = await premisesClient.all('approved-premises')
       expect(output).toEqual(premises)
     })
   })

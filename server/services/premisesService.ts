@@ -1,7 +1,8 @@
-import type { TableRow, SummaryList, NewPremises } from '@approved-premises/ui'
+import type { TableRow, SummaryList, NewPremises, Service } from '@approved-premises/ui'
 import type { Premises, StaffMember } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient } from '../data'
-import paths from '../paths/manage'
+import apPaths from '../paths/manage'
+import taPaths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
@@ -17,9 +18,11 @@ export default class PremisesService {
     return staffMembers
   }
 
-  async tableRows(token: string): Promise<Array<TableRow>> {
+  async tableRows(token: string, service: Service): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.all('approved-premises')
+    const premises = await premisesClient.all(service)
+
+    const showPath = service === 'approved-premises' ? apPaths.premises.show : taPaths.premises.show
 
     return premises
       .sort((a, b) => a.name.localeCompare(b.name))
@@ -29,7 +32,7 @@ export default class PremisesService {
           this.textValue(p.apCode),
           this.textValue(p.bedCount.toString()),
           this.htmlValue(
-            `<a href="${paths.premises.show({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
+            `<a href="${showPath({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
               p.name
             }</span></a>`,
           ),

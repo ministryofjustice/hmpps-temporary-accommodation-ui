@@ -26,7 +26,7 @@ describe('PremisesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('premises/index', { tableRows: [] })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(token)
+      expect(premisesService.tableRows).toHaveBeenCalledWith(token, 'approved-premises')
     })
   })
 

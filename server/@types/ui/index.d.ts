@@ -149,6 +149,8 @@ export type DataServices = {
   personService: PersonService
 }
 
+export type Service = 'approved-premises' | 'temporary-accommodation'
+
 export type NewPremises = {
   name: string
   apCode: string

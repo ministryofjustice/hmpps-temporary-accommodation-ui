@@ -1,4 +1,4 @@
-import type { Task, FormSections, FormSection } from '@approved-premises/ui'
+import type { Task, FormSections, FormSection, Service } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 import { Request } from 'express'
 import config from '../config'
@@ -31,7 +31,7 @@ const taskLink = (task: Task, applicationId: string): string => {
   })}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
 }
 
-const getService = (req: Request): 'approved-premises' | 'temporary-accommodation' => {
+const getService = (req: Request): Service => {
   if (config.serviceSignifier === 'approved-premises-only') {
     return 'approved-premises'
   }

@@ -1,0 +1,39 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Properties" %}
+
+{% block content %}
+  {% include "../../_messages.njk" %}
+  
+  <main class="app-container govuk-body">
+    <h1>Properties</h1>
+
+    {{ govukButton({
+      text: "Add a new property",
+      href: paths.premises.new()
+    }) }}
+
+    {{ govukTable({
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+        head: [
+        {
+          text: "Name"
+        },
+        {
+          text: "Code"
+        },
+        {
+          text: "Bed Count"
+        },
+        {
+          html: '<span class="govuk-visually-hidden">Actions</span>'
+        }
+      ],
+      rows: tableRows
+    }) }}
+  </main>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# script/bootstrap: Run the End to End tests against a local version of the stack
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+if ! [ "$(command -v ap-tools)" ];then
+    echo "ap-tools not installed, please ensure you have the Approved Premises Toolkit installed (https://github.com/ministryofjustice/hmpps-approved-premises-tools)"
+    exit
+fi
+
+ap-tools server start --local-ui
+
+set -a
+
+# shellcheck source=/dev/null
+. ./e2e.local.env
+
+set +a
+
+npx cypress open -C cypress.config.e2e.ts --config '{"baseUrl":"http://localhost:3000","e2e":{"experimentalSessionAndOrigin": true}}'

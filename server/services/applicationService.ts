@@ -14,6 +14,9 @@ export type DataServices = {
   personService: PersonService
 }
 
+type PageResponse = Record<string, string>
+type ApplicationResponse = Record<string, Array<PageResponse>>
+
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
@@ -42,15 +45,9 @@ export default class ApplicationService {
       throw new UnknownPageError()
     }
 
-    const pageList = pages[request.params.task]
+    request.params.page = request.params.page || this.firstPageForTask(request.params.task)
 
-    request.params.page = request.params.page || Object.keys(pageList)[0]
-
-    const Page = pageList[request.params.page]
-
-    if (!Page) {
-      throw new UnknownPageError()
-    }
+    const Page = this.getPage(request.params.task, request.params.page)
 
     const application = await this.getApplicationFromSessionOrAPI(request)
     const body = this.getBody(application, request, userInput)
@@ -61,6 +58,16 @@ export default class ApplicationService {
     }
 
     return page
+  }
+
+  getResponses(application: Application): ApplicationResponse {
+    const responses = {}
+
+    Object.keys(application.data).forEach(taskName => {
+      responses[taskName] = this.getResponsesForTask(application, taskName)
+    })
+
+    return responses
   }
 
   async save(page: TasklistPage, request: Request) {
@@ -78,6 +85,37 @@ export default class ApplicationService {
       this.saveToSession(application, page, request)
       await this.saveToApi(application, request)
     }
+  }
+
+  private getResponsesForTask(application: Application, taskName: string): Array<PageResponse> {
+    const pageNames = Object.keys(application.data[taskName])
+    const responsesForPages = pageNames.map(pageName => this.getResponseForPage(application, taskName, pageName))
+    return responsesForPages
+  }
+
+  private getResponseForPage(application: Application, taskName: string, pageName: string): PageResponse {
+    const Page = this.getPage(taskName, pageName)
+
+    const body = application?.data?.[taskName]?.[pageName]
+    const page = new Page(body, application)
+
+    return page.response()
+  }
+
+  private getPage(taskName: string, pageName: string) {
+    const pageList = pages[taskName]
+
+    const Page = pageList[pageName]
+
+    if (!Page) {
+      throw new UnknownPageError()
+    }
+
+    return Page
+  }
+
+  private firstPageForTask(taskName: string) {
+    return Object.keys(pages[taskName])[0]
   }
 
   private getApplicationFromSessionOrAPI(request: Request): Promise<Application> | Application {

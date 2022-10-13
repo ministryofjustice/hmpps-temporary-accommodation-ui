@@ -313,4 +313,25 @@ describe('ApplicationService', () => {
       })
     })
   })
+
+  describe('getResponses', () => {
+    it('returns the responses from all answered questions', () => {
+      FirstPage.mockReturnValue({
+        response: () => {
+          return { foo: 'bar' }
+        },
+      })
+
+      SecondPage.mockReturnValue({
+        response: () => {
+          return { bar: 'foo' }
+        },
+      })
+
+      const application = applicationFactory.build()
+      application.data = { 'my-task': { first: '', second: '' } }
+
+      expect(service.getResponses(application)).toEqual({ 'my-task': [{ foo: 'bar' }, { bar: 'foo' }] })
+    })
+  })
 })

@@ -27,10 +27,7 @@ declare module 'approved-premises' {
 
   export type NewBooking = ObjectWithDateParts<'arrivalDate'> & ObjectWithDateParts<'departureDate'> & { crn: string }
 
-  export type NewArrival = ObjectWithDateParts<'date'> &
-    ObjectWithDateParts<'expectedDepartureDate'> & { arrival: Omit<Arrival, 'id' | 'bookingId'> } & {
-      keyWorkerStaffId: string
-    }
+  export type NewArrival = Omit<Arrival, 'id' | 'bookingId'> & { keyWorkerStaffId: string }
 
   export type NewNonArrival = ObjectWithDateParts<'nonArrivalDate'> & {
     nonArrival: Omit<NonArrival, 'id' | 'bookingId'>
@@ -181,11 +178,9 @@ declare module 'approved-premises' {
     Arrival: {
       id: string
       bookingId: string
-      date: string
+      arrivalDate: string
       expectedDepartureDate: string
       notes: string
-      name: string
-      crn: string
     }
     NonArrival: {
       id: string

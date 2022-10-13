@@ -1,8 +1,7 @@
-import type { Arrival } from 'approved-premises'
-
 import ArrivalService from './arrivalService'
 import BookingClient from '../data/bookingClient'
-import ArrivalFactory from '../testutils/factories/arrival'
+import arrivalFactory from '../testutils/factories/arrival'
+import newArrivalFactory from '../testutils/factories/newArrival'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -19,15 +18,18 @@ describe('ArrivalService', () => {
 
   describe('createArrival', () => {
     it('on success returns the arrival that has been posted', async () => {
-      const arrival: Arrival = ArrivalFactory.build()
+      const arrival = arrivalFactory.build()
+      const payload = newArrivalFactory.build()
+
       const token = 'SOME_TOKEN'
+
       bookingClient.markAsArrived.mockResolvedValue(arrival)
 
-      const postedArrival = await service.createArrival(token, 'premisesID', 'bookingId', arrival)
+      const postedArrival = await service.createArrival(token, 'premisesID', 'bookingId', payload)
       expect(postedArrival).toEqual(arrival)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.markAsArrived).toHaveBeenCalledWith('premisesID', 'bookingId', arrival)
+      expect(bookingClient.markAsArrived).toHaveBeenCalledWith('premisesID', 'bookingId', payload)
     })
   })
 })

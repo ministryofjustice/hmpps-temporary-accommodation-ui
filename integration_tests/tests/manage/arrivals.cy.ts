@@ -23,7 +23,7 @@ context('Arrivals', () => {
     const premises = premisesFactory.build()
     const bookingId = 'some-uuid'
     const arrival = arrivalFactory.build({
-      date: new Date(2022, 1, 11).toISOString(),
+      arrivalDate: new Date(2022, 1, 11).toISOString(),
       expectedDepartureDate: new Date(2022, 11, 11).toISOString(),
     })
 
@@ -44,10 +44,10 @@ context('Arrivals', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      const { date, expectedDepartureDate } = arrival
+      const { arrivalDate, expectedDepartureDate } = arrival
 
       expect(requestBody.notes).equal(arrival.notes)
-      expect(requestBody.date).equal(date)
+      expect(requestBody.arrivalDate).equal(arrivalDate)
       expect(requestBody.keyWorkerStaffId).equal(staff[0].id)
       expect(requestBody.expectedDepartureDate).equal(expectedDepartureDate)
     })

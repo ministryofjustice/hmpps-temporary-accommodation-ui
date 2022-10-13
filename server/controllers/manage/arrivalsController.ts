@@ -1,5 +1,5 @@
 import type { Response, Request, RequestHandler } from 'express'
-import type { Arrival, NewArrival } from 'approved-premises'
+import type { NewArrival } from 'approved-premises'
 
 import { DateFormats } from '../../utils/dateUtils'
 import ArrivalService from '../../services/arrivalService'
@@ -33,14 +33,15 @@ export default class ArrivalsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const body = req.body as NewArrival
+      const { body } = req
 
-      const { date } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'date')
+      const { arrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'arrivalDate')
       const { expectedDepartureDate } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'expectedDepartureDate')
 
-      const arrival: Omit<Arrival, 'id' | 'bookingId'> = {
-        ...body.arrival,
-        date,
+      const arrival: NewArrival = {
+        keyWorkerStaffId: body.arrival.keyWorkerStaffId,
+        notes: body.arrival.notes,
+        arrivalDate,
         expectedDepartureDate,
       }
 

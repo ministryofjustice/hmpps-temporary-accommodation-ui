@@ -1,3 +1,4 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% extends "../../partials/layout.njk" %}
@@ -7,11 +8,16 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.premises.index()
+  }) }}
+
   {% include "../../_messages.njk" %}
   
-	<h1>Add a new property</h1>
+  <h1>Add a new property</h1>
 
-	<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.premises.create() }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>

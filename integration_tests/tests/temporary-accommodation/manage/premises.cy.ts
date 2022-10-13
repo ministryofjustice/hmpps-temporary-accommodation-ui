@@ -79,4 +79,22 @@ context('Premises', () => {
     const premisesNewPage = PremisesNewPage.verifyOnPage(PremisesNewPage)
     premisesNewPage.shouldShowBanner('Property created')
   })
+
+  it('should navigate back to the premises list page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const premises = premisesFactory.buildList(5)
+    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+
+    // When I visit the new premises page
+    const page = PremisesNewPage.visit()
+
+    // Add I click back
+    page.clickBack()
+
+    // Then I navigate to the premises list page
+    Page.verifyOnPage(PremisesListPage)
+  })
 })

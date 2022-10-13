@@ -1,12 +1,47 @@
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
+import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
+import Page from '../../../../cypress_shared/pages/page'
 
 context('Premises', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+  })
+
+  it('should list all premises', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const premises = premisesFactory.buildList(5)
+    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+
+    // When I visit the premises page
+    const page = PremisesListPage.visit()
+
+    // Then I should see all of the premises listed
+    page.shouldShowPremises(premises)
+  })
+
+  it('should navigate to the new premises page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const premises = premisesFactory.buildList(5)
+    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+
+    // When I visit the premises page
+    const page = PremisesListPage.visit()
+
+    // Add I click the add a premises button
+    page.clickAddPremisesButton()
+
+    // Then I navigate to the new premises page
+    Page.verifyOnPage(PremisesNewPage)
   })
 
   it('should allow me to create a premises', () => {

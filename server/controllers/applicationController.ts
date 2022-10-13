@@ -11,7 +11,7 @@ export default class ApplicationController {
       if (service === 'approved-premises') {
         res.redirect(apManagePaths.premises.index({}))
       } else {
-        res.redirect(taManagePaths.premises.new({}))
+        res.redirect(taManagePaths.premises.index({}))
       }
     }
   }

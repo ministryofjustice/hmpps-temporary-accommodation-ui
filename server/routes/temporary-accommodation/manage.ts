@@ -12,6 +12,7 @@ export default function routes(controllers: Controllers, router: Router): Router
 
   const { premisesController } = controllers.temporaryAccommodation
 
+  get(paths.premises.index.pattern, premisesController.index())
   get(paths.premises.new.pattern, premisesController.new())
   post(paths.premises.create.pattern, premisesController.create())
 

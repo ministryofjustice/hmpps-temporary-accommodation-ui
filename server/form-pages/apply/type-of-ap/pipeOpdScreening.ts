@@ -1,6 +1,7 @@
-import type { YesOrNo } from 'approved-premises'
+import type { Application, YesOrNo } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
+import { convertToTitleCase } from '../../../utils/utils'
 
 export default class PipeOpdReferral implements TasklistPage {
   name = 'pipe-opd-screening'
@@ -9,7 +10,7 @@ export default class PipeOpdReferral implements TasklistPage {
 
   body: { pipeReferral: YesOrNo; pipeReferralMoreDetail: string }
 
-  constructor(body: Record<string, unknown>) {
+  constructor(body: Record<string, unknown>, private readonly application: Application) {
     this.body = {
       pipeReferral: body.pipeReferral as YesOrNo,
       pipeReferralMoreDetail: body.pipeReferralMoreDetail as string,
@@ -18,6 +19,19 @@ export default class PipeOpdReferral implements TasklistPage {
 
   previous() {
     return 'pipe-referral'
+  }
+
+  response() {
+    const response = {
+      [this.title]: convertToTitleCase(this.body.pipeReferral),
+    } as Record<string, string>
+
+    if (this.body.pipeReferral === 'yes') {
+      response[`Additional detail about why ${this.application.person.name} needs a PIPE placement.`] =
+        this.body.pipeReferralMoreDetail
+    }
+
+    return response
   }
 
   errors() {

@@ -1,7 +1,7 @@
 import type { ObjectWithDateParts, YesOrNo, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { retrieveQuestionResponseFromApplication } from '../../../utils/utils'
+import { retrieveQuestionResponseFromApplication, convertToTitleCase } from '../../../utils/utils'
 import { dateIsBlank, dateAndTimeInputsAreValidDates, DateFormats } from '../../../utils/dateUtils'
 
 export default class PlacementDate implements TasklistPage {
@@ -18,6 +18,7 @@ export default class PlacementDate implements TasklistPage {
       'startDate-year': body['startDate-year'] as string,
       'startDate-month': body['startDate-month'] as string,
       'startDate-day': body['startDate-day'] as string,
+      startDate: body.startDate as string,
       startDateSameAsReleaseDate: body.startDateSameAsReleaseDate as YesOrNo,
     }
 
@@ -34,6 +35,18 @@ export default class PlacementDate implements TasklistPage {
 
   previous() {
     return 'oral-hearing'
+  }
+
+  response() {
+    const response = {
+      [this.title]: convertToTitleCase(this.body.startDateSameAsReleaseDate),
+    } as Record<string, string>
+
+    if (this.body.startDateSameAsReleaseDate === 'no') {
+      response['Placement Start Date'] = DateFormats.isoDateToUIDate(this.body.startDate)
+    }
+
+    return response
   }
 
   errors() {

@@ -126,4 +126,36 @@ describe('ReleaseDate', () => {
       ])
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response when the user does not know the release date', () => {
+      const page = new ReleaseDate(
+        {
+          knowReleaseDate: 'no',
+        },
+        application,
+        'somePage',
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'No',
+      })
+    })
+
+    it('should return a translated version of the response when the user knows the release date', () => {
+      const page = new ReleaseDate(
+        {
+          knowReleaseDate: 'yes',
+          releaseDate: '2022-11-11T00:00:00.000Z',
+        },
+        application,
+        'somePage',
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'Yes',
+        'Release Date': 'Friday 11 November 2022',
+      })
+    })
+  })
 })

@@ -113,4 +113,34 @@ describe('PipeReferral', () => {
       ])
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response when opdPathway is "no"', () => {
+      const page = new PipeReferral(
+        {
+          opdPathway: 'no',
+        },
+        application,
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'No',
+      })
+    })
+
+    it('should return a translated version of the response when opdPathway is "yes"', () => {
+      const page = new PipeReferral(
+        {
+          opdPathway: 'yes',
+          opdPathwayDate: '2022-11-11T00:00:00.000Z',
+        },
+        application,
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'Yes',
+        'OPD Pathway Screening Date': 'Friday 11 November 2022',
+      })
+    })
+  })
 })

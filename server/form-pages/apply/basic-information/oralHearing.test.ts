@@ -112,4 +112,34 @@ describe('OralHearing', () => {
       ])
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response when the user does not know the oral hearing date', () => {
+      const page = new OralHearing(
+        {
+          knowOralHearingDate: 'no',
+        },
+        application,
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'No',
+      })
+    })
+
+    it('should return a translated version of the response when the start date is not the same as the release date', () => {
+      const page = new OralHearing(
+        {
+          knowOralHearingDate: 'yes',
+          oralHearingDate: '2022-11-11T00:00:00.000Z',
+        },
+        application,
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'Yes',
+        'Oral Hearing Date': 'Friday 11 November 2022',
+      })
+    })
+  })
 })

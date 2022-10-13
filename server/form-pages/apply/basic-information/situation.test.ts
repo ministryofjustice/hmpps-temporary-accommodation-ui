@@ -91,4 +91,14 @@ describe('Situation', () => {
       expect(selectedOptions.length).toEqual(0)
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response', () => {
+      const page = new Situation({ situation: 'riskManagement' }, application)
+
+      expect(page.response()).toEqual({
+        [page.title]: 'Referral for risk management',
+      })
+    })
+  })
 })

@@ -105,4 +105,34 @@ describe('PlacementDate', () => {
       ])
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response when the start date is the same as the release date', () => {
+      const page = new PlacementDate(
+        {
+          startDateSameAsReleaseDate: 'yes',
+        },
+        application,
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'Yes',
+      })
+    })
+
+    it('should return a translated version of the response when the start date is not the same as the release date', () => {
+      const page = new PlacementDate(
+        {
+          startDateSameAsReleaseDate: 'no',
+          startDate: '2022-11-11T00:00:00.000Z',
+        },
+        application,
+      )
+
+      expect(page.response()).toEqual({
+        [page.title]: 'No',
+        'Placement Start Date': 'Friday 11 November 2022',
+      })
+    })
+  })
 })

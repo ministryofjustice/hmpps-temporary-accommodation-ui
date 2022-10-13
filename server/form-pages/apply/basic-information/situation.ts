@@ -47,6 +47,10 @@ export default class Situation implements TasklistPage {
     return 'sentence-type'
   }
 
+  response() {
+    return { [`${this.title}`]: situations[this.body.situation] }
+  }
+
   errors() {
     const errors = []
 

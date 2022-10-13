@@ -1,7 +1,8 @@
 import type { YesOrNo, ObjectWithDateParts, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateIsBlank, dateAndTimeInputsAreValidDates } from '../../../utils/dateUtils'
+import { convertToTitleCase } from '../../../utils/utils'
+import { dateIsBlank, dateAndTimeInputsAreValidDates, DateFormats } from '../../../utils/dateUtils'
 
 export default class PipeReferral implements TasklistPage {
   name = 'pipe-referral'
@@ -15,6 +16,7 @@ export default class PipeReferral implements TasklistPage {
       'opdPathwayDate-year': body['opdPathwayDate-year'] as string,
       'opdPathwayDate-month': body['opdPathwayDate-month'] as string,
       'opdPathwayDate-day': body['opdPathwayDate-day'] as string,
+      opdPathwayDate: body.opdPathwayDate as string,
       opdPathway: body.opdPathway as YesOrNo,
     }
   }
@@ -25,6 +27,18 @@ export default class PipeReferral implements TasklistPage {
 
   previous() {
     return 'ap-type'
+  }
+
+  response() {
+    const response = {
+      [this.title]: convertToTitleCase(this.body.opdPathway),
+    } as Record<string, string>
+
+    if (this.body.opdPathway === 'yes') {
+      response['OPD Pathway Screening Date'] = DateFormats.isoDateToUIDate(this.body.opdPathwayDate)
+    }
+
+    return response
   }
 
   errors() {

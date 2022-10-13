@@ -19,8 +19,8 @@ context('Booking', () => {
     const person = personFactory.build()
     const booking = bookingFactory.build({
       person,
-      arrivalDate: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString(),
-      departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
+      arrivalDate: '2022-06-01',
+      departureDate: '2022-06-01',
     })
     const firstOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
       date: new Date(2023, 0, 1).toISOString(),

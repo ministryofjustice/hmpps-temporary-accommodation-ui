@@ -22,8 +22,8 @@ context('LostBed', () => {
 
     // When I navigate to the lost bed form
     const lostBed = lostBedFactory.build({
-      startDate: new Date(2022, 1, 11, 0, 0).toISOString(),
-      endDate: new Date(2022, 2, 11, 0, 0).toISOString(),
+      startDate: '2022-02-11',
+      endDate: '2022-03-11',
     })
     cy.task('stubLostBedCreate', { premisesId: premises.id, lostBed })
     cy.task('stubPremisesCapacity', {

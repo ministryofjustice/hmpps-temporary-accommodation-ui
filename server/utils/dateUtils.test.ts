@@ -58,7 +58,7 @@ describe('DateFormats', () => {
 
       const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date')
 
-      expect(result.date).toEqual(new Date(2022, 11, 11).toISOString())
+      expect(result.date).toEqual('2022-12-11')
     })
 
     it('pads the months and days', () => {
@@ -70,7 +70,7 @@ describe('DateFormats', () => {
 
       const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date')
 
-      expect(result.date).toEqual(new Date(2022, 0, 1).toISOString())
+      expect(result.date).toEqual('2022-01-01')
     })
 
     it('returns the date with a time if passed one', () => {
@@ -83,7 +83,7 @@ describe('DateFormats', () => {
 
       const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date')
 
-      expect(result.date).toEqual(new Date(2022, 0, 1, 12, 35).toISOString())
+      expect(result.date).toEqual('2022-01-01T12:35:00.000Z')
     })
 
     it('returns an empty string when given empty strings as input', () => {
@@ -107,7 +107,7 @@ describe('DateFormats', () => {
 
       const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date')
 
-      expect(result.date.toString()).toEqual('twothousandtwentytwo-20-ooT00:00:00.000Z')
+      expect(result.date.toString()).toEqual('twothousandtwentytwo-20-oo')
     })
   })
 })

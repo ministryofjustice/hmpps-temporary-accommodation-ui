@@ -3,15 +3,15 @@
 <form action="{{ paths.bookings.arrivals.create({ premisesId: premisesId, bookingId: bookingId }) }}" method="post">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
   {{ govukDateInput({
-    id: "arrival[date]",
-    namePrefix: "date",
+    id: "arrival[arrivalDate]",
+    namePrefix: "arrivalDate",
     fieldset: {
     legend: {
         text: "What is the arrival date?",
         classes: "govuk-fieldset__legend--m"
         }
     },
-    items: dateFieldValues('date', errors),
+    items: dateFieldValues('arrivalDate', errors),
     errorMessage: errors.date,
     hint: {
         text: "For example, 27 3 2007"

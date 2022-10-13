@@ -10,6 +10,7 @@ import newCancellationFactory from '../testutils/factories/newCancellation'
 import departureFactory from '../testutils/factories/departure'
 import newDepartureFactory from '../testutils/factories/newDeparture'
 import nonArrivalFactory from '../testutils/factories/nonArrival'
+import newArrivalFactory from '../testutils/factories/newArrival'
 
 import config from '../config'
 
@@ -113,13 +114,11 @@ describe('BookingClient', () => {
   describe('markAsArrived', () => {
     it('should create an arrival', async () => {
       const arrival = arrivalFactory.build()
-      const payload = {
-        date: arrival.date.toString(),
+      const payload = newArrivalFactory.build({
+        arrivalDate: arrival.arrivalDate.toString(),
         expectedDepartureDate: arrival.expectedDepartureDate.toString(),
         notes: arrival.notes,
-        name: arrival.name,
-        crn: arrival.crn,
-      }
+      })
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/arrivals`, payload)
@@ -130,7 +129,7 @@ describe('BookingClient', () => {
 
       expect(result).toEqual({
         ...arrival,
-        date: arrival.date,
+        arrivalDate: arrival.arrivalDate,
         expectedDepartureDate: arrival.expectedDepartureDate,
       })
       expect(nock.isDone()).toBeTruthy()

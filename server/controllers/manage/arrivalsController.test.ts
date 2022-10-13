@@ -87,21 +87,25 @@ describe('ArrivalsController', () => {
       }
 
       request.body = {
-        'date-year': 2022,
-        'date-month': 12,
-        'date-day': 11,
+        'arrivalDate-year': 2022,
+        'arrivalDate-month': 12,
+        'arrivalDate-day': 11,
         'expectedDepartureDate-year': 2022,
         'expectedDepartureDate-month': 11,
         'expectedDepartureDate-day': 12,
-        notes: 'Some notes',
+        arrival: {
+          notes: 'Some notes',
+          keyWorkerStaffId: 'some-staff-id',
+        },
       }
 
       await requestHandler(request, response, next)
 
       const expectedArrival = {
-        ...request.body.arrival,
-        date: new Date(2022, 11, 11).toISOString(),
-        expectedDepartureDate: new Date(2022, 10, 12).toISOString(),
+        notes: request.body.arrival.notes,
+        keyWorkerStaffId: request.body.arrival.keyWorkerStaffId,
+        arrivalDate: '2022-12-11',
+        expectedDepartureDate: '2022-11-12',
       }
 
       expect(arrivalService.createArrival).toHaveBeenCalledWith(

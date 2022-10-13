@@ -98,8 +98,8 @@ describe('LostBedsController', () => {
 
       expect(lostBedService.createLostBed).toHaveBeenCalledWith(token, request.params.premisesId, {
         ...request.body.lostBed,
-        startDate: '2022-08-22T00:00:00.000Z',
-        endDate: '2022-09-22T00:00:00.000Z',
+        startDate: '2022-08-22',
+        endDate: '2022-09-22',
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Lost bed logged')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: request.params.premisesId }))

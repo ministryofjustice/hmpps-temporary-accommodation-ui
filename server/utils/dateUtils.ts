@@ -71,11 +71,13 @@ export class DateFormats {
     const year = dateInputObj[`${key}-year`]
     const time = dateInputObj[`${key}-time`]
 
-    const timeSegment = time || '00:00'
-
     const o: { [P in K]?: string } = dateInputObj
     if (day && month && year) {
-      o[key] = `${year}-${month}-${day}T${timeSegment}:00.000Z`
+      if (time) {
+        o[key] = `${year}-${month}-${day}T${time}:00.000Z`
+      } else {
+        o[key] = `${year}-${month}-${day}`
+      }
     } else {
       o[key] = undefined
     }

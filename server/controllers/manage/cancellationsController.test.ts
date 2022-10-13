@@ -111,7 +111,7 @@ describe('cancellationsController', () => {
 
       const expectedCancellation = {
         ...request.body.cancellation,
-        date: new Date(2022, 11, 11).toISOString(),
+        date: '2022-12-11',
       }
 
       expect(cancellationService.createCancellation).toHaveBeenCalledWith(

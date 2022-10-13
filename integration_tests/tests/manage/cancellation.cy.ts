@@ -22,7 +22,7 @@ context('Cancellation', () => {
     cy.task('stubBookingGet', { premisesId: premises.id, booking })
 
     // When I navigate to the booking's cancellation page
-    const cancellation = cancellationFactory.build({ date: new Date(Date.UTC(2022, 5, 1, 0, 0, 0)).toISOString() })
+    const cancellation = cancellationFactory.build({ date: '2022-06-01' })
     cy.task('stubCancellationCreate', { premisesId: premises.id, bookingId: booking.id, cancellation })
     cy.task('stubCancellationGet', { premisesId: premises.id, bookingId: booking.id, cancellation })
 

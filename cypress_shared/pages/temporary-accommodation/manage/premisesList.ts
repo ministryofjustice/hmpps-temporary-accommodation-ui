@@ -33,4 +33,12 @@ export default class PremisesListPage extends Page {
   clickAddPremisesButton() {
     cy.get('a').contains('Add a property').click()
   }
+
+  clickPremisesViewLink(premises: Premises) {
+    cy.contains(`${premises.address}, ${premises.postcode}`)
+      .parent()
+      .within(() => {
+        cy.get('td').eq(4).contains('Manage').click()
+      })
+  }
 }

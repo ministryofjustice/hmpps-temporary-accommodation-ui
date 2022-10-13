@@ -15,6 +15,7 @@ export default function routes(controllers: Controllers, router: Router): Router
   get(paths.premises.index.pattern, premisesController.index())
   get(paths.premises.new.pattern, premisesController.new())
   post(paths.premises.create.pattern, premisesController.create())
+  get(paths.premises.show.pattern, premisesController.show())
 
   return router
 }

@@ -12,7 +12,7 @@ import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 interface GetRequest {
   path?: string
-  query?: string
+  query?: string | Record<string, string>
   headers?: Record<string, string>
   responseType?: string
   raw?: boolean

@@ -69,7 +69,11 @@ export default abstract class Page {
     cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())
   }
 
-  public clickSubmit(): void {
+  clickSubmit(): void {
     cy.get('button').click()
+  }
+
+  clickBack(): void {
+    cy.get('a').contains('Back').click()
   }
 }

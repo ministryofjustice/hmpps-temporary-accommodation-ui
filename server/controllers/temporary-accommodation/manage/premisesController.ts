@@ -42,10 +42,10 @@ export default class PremisesController {
       }
 
       try {
-        await this.premisesService.create(req.user.token, newPremises)
+        const { id: premisesId } = await this.premisesService.create(req.user.token, newPremises)
 
         req.flash('success', 'Property created')
-        res.redirect(paths.premises.new({}))
+        res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.new({}))
       }

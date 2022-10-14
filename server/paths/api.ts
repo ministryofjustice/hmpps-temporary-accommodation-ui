@@ -24,6 +24,7 @@ const applyPaths = {
     create: applicationsPath,
     index: applicationsPath,
     update: singleApplicationPath,
+    personRisks: applicationsPath.path('people').path(':crn').path('risks'),
   },
 }
 
@@ -44,5 +45,6 @@ export default {
     index: applyPaths.applications.index,
     update: applyPaths.applications.update,
     new: applyPaths.applications.create,
+    personRisks: applyPaths.applications.personRisks,
   },
 }

@@ -8,9 +8,11 @@ import { ApplicationService, PersonService } from '../../services'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
 import personFactory from '../../testutils/factories/person'
 import applicationFactory from '../../testutils/factories/application'
+import risksFactory from '../../testutils/factories/risks'
 
 import paths from '../../paths/apply'
 import { DateFormats } from '../../utils/dateUtils'
+import { mapApiPersonRisksForUi } from '../../utils/utils'
 
 jest.mock('../../utils/validation')
 
@@ -60,22 +62,29 @@ describe('applicationsController', () => {
   })
 
   describe('show', () => {
-    it('renders the task list if an application exists', () => {
+    it('renders the task list if an application exists', async () => {
+      const risks = mapApiPersonRisksForUi(risksFactory.build())
+      personService.getPersonRisks.mockResolvedValue(risks)
+
       const requestHandler = applicationsController.show()
 
       const application = createMock<Application>()
 
       request = createMock<Request>({
         params: { id: application.id },
-        session: { application },
+        session: { application: { person: { crn: 'some-crn' }, ...application } },
+        user: {
+          token,
+        },
       })
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/show', { application })
+      expect(response.render).toHaveBeenCalledWith('applications/show', { application, risks })
+      expect(personService.getPersonRisks).toHaveBeenCalledWith(token, 'some-crn')
     })
 
-    it('404s if the application is not present in the session', () => {
+    it('404s if the application is not present in the session', async () => {
       const requestHandler = applicationsController.show()
 
       const id = 'some-uuid'
@@ -84,7 +93,7 @@ describe('applicationsController', () => {
         params: { id },
       })
 
-      requestHandler(request, response, next)
+      await requestHandler(request, response, next)
 
       expect(next).toHaveBeenCalledWith(createError(404, 'Not found'))
     })

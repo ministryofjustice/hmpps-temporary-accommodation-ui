@@ -27,14 +27,16 @@ export default class ApplicationsController {
   }
 
   show(): RequestHandler {
-    return (req: Request, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       const { application } = req.session
 
-      if (!application) {
+      if (application) {
+        const risks = await this.personService.getPersonRisks(req.user.token, application.person.crn)
+
+        res.render('applications/show', { application, risks })
+      } else {
         next(createError(404, 'Not found'))
       }
-
-      res.render('applications/show', { application })
     }
   }
 

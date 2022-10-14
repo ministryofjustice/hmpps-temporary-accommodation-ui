@@ -3,6 +3,8 @@ import type { Person } from 'approved-premises'
 import PersonService from './personService'
 import PersonClient from '../data/personClient'
 import PersonFactory from '../testutils/factories/person'
+import risksFactory from '../testutils/factories/risks'
+import { mapApiPersonRisksForUi } from '../utils/utils'
 
 jest.mock('../data/personClient.ts')
 
@@ -30,6 +32,21 @@ describe('PersonService', () => {
 
       expect(personClientFactory).toHaveBeenCalledWith(token)
       expect(personClient.search).toHaveBeenCalledWith('crn')
+    })
+  })
+
+  describe('getPersonRisks', () => {
+    it("on success returns the person's risks given their CRN", async () => {
+      const apiRisks = risksFactory.build()
+      const uiRisks = mapApiPersonRisksForUi(apiRisks)
+      personClient.risks.mockResolvedValue(apiRisks)
+
+      const postedPerson = await service.getPersonRisks(token, 'crn')
+
+      expect(postedPerson).toEqual(uiRisks)
+
+      expect(personClientFactory).toHaveBeenCalledWith(token)
+      expect(personClient.risks).toHaveBeenCalledWith('crn')
     })
   })
 })

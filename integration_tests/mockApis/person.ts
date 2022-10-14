@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { Person } from 'approved-premises'
+import type { Person, PersonRisks } from 'approved-premises'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 
@@ -25,6 +25,18 @@ export default {
       },
       response: {
         status: 404,
+      },
+    }),
+  stubPersonRisks: (args: { person: Person; risks: PersonRisks }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/applications/people/${args.person.crn}/risks`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.risks,
       },
     }),
   verifyFindPerson: async (args: { person: Person }) =>

@@ -6,7 +6,10 @@ import {
   initialiseName,
   retrieveQuestionResponseFromApplication,
   removeBlankSummaryListItems,
+  mapApiPersonRisksForUi,
 } from './utils'
+import risksFactory from '../testutils/factories/risks'
+import { DateFormats } from './dateUtils'
 
 describe('convert to title case', () => {
   it.each([
@@ -132,5 +135,32 @@ describe('removeBlankSummaryListItems', () => {
         },
       },
     ])
+  })
+})
+
+describe('mapApiPersonRiskForUI', () => {
+  it('maps the PersonRisks from the API into a shape thats useful for the UI', () => {
+    const risks = risksFactory.build()
+    const actual = mapApiPersonRisksForUi(risks)
+    expect(actual).toEqual({
+      crn: risks.crn,
+      flags: risks.flags.value,
+      mappa: {
+        lastUpdated: DateFormats.isoDateToUIDate(risks.mappa.value.lastUpdated),
+        level: 'CAT 2 / LEVEL 1',
+      },
+      roshRisks: {
+        lastUpdated: DateFormats.isoDateToUIDate(risks.roshRisks.value.lastUpdated),
+        overallRisk: risks.roshRisks.value.overallRisk,
+        riskToChildren: risks.roshRisks.value.riskToChildren,
+        riskToKnownAdult: risks.roshRisks.value.riskToKnownAdult,
+        riskToPublic: risks.roshRisks.value.riskToPublic,
+        riskToStaff: risks.roshRisks.value.riskToStaff,
+      },
+      tier: {
+        lastUpdated: DateFormats.isoDateToUIDate(risks.tier.value.lastUpdated),
+        level: risks.tier.value.level,
+      },
+    })
   })
 })

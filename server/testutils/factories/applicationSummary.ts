@@ -3,19 +3,14 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { ApplicationSummary } from 'approved-premises'
 import personFactory from './person'
+import { riskTierLevel } from './risks'
 
 export default Factory.define<ApplicationSummary>(() => ({
   id: faker.datatype.uuid(),
   person: personFactory.build(),
   arrivalDate: faker.date.future().toISOString(),
   tier: {
-    level: faker.helpers.arrayElement(
-      ['A', 'B', 'C', 'D']
-        .map(letter => {
-          return [0, 1, 2, 3].map(number => `${letter}${number}`)
-        })
-        .flat(),
-    ),
+    level: riskTierLevel,
     lastUpdated: faker.date.recent().toISOString(),
   },
   currentLocation: faker.address.county(),

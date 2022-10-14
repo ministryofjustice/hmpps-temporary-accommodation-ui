@@ -2,7 +2,9 @@ import nock from 'nock'
 
 import PersonClient from './personClient'
 import config from '../config'
+import riskFactory from '../testutils/factories/risks'
 import personFactory from '../testutils/factories/person'
+import paths from '../paths/api'
 
 describe('PersonClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -35,6 +37,23 @@ describe('PersonClient', () => {
         .reply(201, person)
 
       const result = await personClient.search('crn')
+
+      expect(result).toEqual(person)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('risks', () => {
+    it('should return the risks for a person', async () => {
+      const crn = 'crn'
+      const person = riskFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.applications.personRisks({ crn }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, person)
+
+      const result = await personClient.risks(crn)
 
       expect(result).toEqual(person)
       expect(nock.isDone()).toBeTruthy()

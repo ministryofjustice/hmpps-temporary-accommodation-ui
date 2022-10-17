@@ -153,7 +153,6 @@ export type Service = 'approved-premises' | 'temporary-accommodation'
 
 export type NewPremises = {
   name: string
-  apCode: string
   postcode: string
   bedCount: number
   service: Service

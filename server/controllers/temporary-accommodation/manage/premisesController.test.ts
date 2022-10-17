@@ -50,7 +50,6 @@ describe('PremisesController', () => {
 
       request.body = {
         name: premises.name,
-        apCode: premises.apCode,
         postcode: premises.postcode,
         bedCount: premises.bedCount.toString(),
       }
@@ -59,7 +58,6 @@ describe('PremisesController', () => {
 
       expect(premisesService.create).toHaveBeenCalledWith(token, {
         name: premises.name,
-        apCode: premises.apCode,
         postcode: premises.postcode,
         bedCount: premises.bedCount,
         service: 'temporary-accommodation',

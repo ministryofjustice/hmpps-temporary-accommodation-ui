@@ -302,7 +302,6 @@ describe('PremisesService', () => {
       const premises = premisesFactory.build()
       const newPremises = newPremisesFactory.build({
         name: premises.name,
-        apCode: premises.apCode,
         postcode: premises.postcode,
         bedCount: premises.bedCount,
       })

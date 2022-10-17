@@ -52,7 +52,6 @@ context('Premises', () => {
     const premises = premisesFactory.build()
     const newPremises = newPremisesFactory.build({
       name: premises.name,
-      apCode: premises.apCode,
       postcode: premises.postcode,
       bedCount: premises.bedCount,
     })
@@ -70,7 +69,6 @@ context('Premises', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.name).equal(newPremises.name)
-      expect(requestBody.apCode).equal(newPremises.apCode)
       expect(requestBody.postcode).equal(newPremises.postcode)
       expect(requestBody.bedCount).equal(newPremises.bedCount)
     })

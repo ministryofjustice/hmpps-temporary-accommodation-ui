@@ -1,22 +1,3 @@
 {
-  "extends": ["config:base", ":disableDependencyDashboard", ":preserveSemverRanges"],
-  "assigneesFromCodeOwners": true,
-  "timezone": "Europe/London",
-  "schedule": ["after 9am every weekday", "before 5pm every weekday"],
-  "enabledManagers": ["npm", "nvm", "dockerfile", "docker-compose", "helmv3", "helm-values", "circleci"],
-  "packageRules": [
-    {
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["minor"]
-    },
-    {
-      "matchDatasources": ["docker"],
-      "allowedVersions": "16.15.0-bullseye-slim"
-    },
-    {
-      "matchDatasources": ["docker-compose"],
-      "matchPackageNames": ["bitnami/redis"],
-      "allowedVersions": "5.0"
-    }
-  ]
+  "extends": ["github>ministryofjustice/arn-renovate-config"]
 }

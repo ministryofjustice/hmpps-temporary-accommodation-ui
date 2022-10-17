@@ -13,7 +13,7 @@ export default class PremisesNewPage extends Page {
   }
 
   completeForm(newPremises: NewPremises): void {
-    this.getLabel('Name')
+    this.getLabel('Property name (optional)')
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)
 
     this.getLabel('Postcode')

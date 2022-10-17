@@ -26,11 +26,13 @@
 
         {{ govukInput({
           label: {
-            text: "Name",
-            classes: "govuk-label--m",
-            isPageHeading: true
+            text: "Property name (optional)",
+            classes: "govuk-label--m"
           },
-          classes: "govuk-input--width-10",
+          hint: {
+            text: "This will be used to identify the property"
+          },
+          classes: "govuk-input--width-20",
           id: "name",
           name: "name",
           value: name,

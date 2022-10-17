@@ -22,6 +22,9 @@ export default class PremisesNewPage extends Page {
     this.getLabel('Postcode')
     this.getTextInputByIdAndEnterDetails('postcode', newPremises.postcode)
 
+    this.getLabel('Please provide any further property details')
+    this.getTextInputByIdAndEnterDetails('notes', newPremises.notes)
+
     this.clickSubmit()
   }
 }

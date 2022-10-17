@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 
@@ -72,6 +73,19 @@
         }) }}
 
         {% endcall %}
+
+        {{ govukTextarea({
+          label: {
+            text: "Please provide any further property details",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "This information will be used to help find a suitable property for the person on probation"
+          },
+          id: "notes",
+          name: "notes",
+          errorMessage: errors.notes
+        }) }}
 
         {{ govukButton({
           name: 'submit',

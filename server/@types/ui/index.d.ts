@@ -155,5 +155,6 @@ export type NewPremises = {
   name: string
   address: string
   postcode: string
+  notes: string
   service: Service
 }

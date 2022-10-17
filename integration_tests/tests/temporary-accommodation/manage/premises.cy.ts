@@ -70,6 +70,7 @@ context('Premises', () => {
       expect(requestBody.name).equal(newPremises.name)
       expect(requestBody.address).equal(newPremises.address)
       expect(requestBody.postcode).equal(newPremises.postcode)
+      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
     })
 
     // And I should be redirected to the new premises page

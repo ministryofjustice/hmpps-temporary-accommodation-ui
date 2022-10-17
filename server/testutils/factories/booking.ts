@@ -93,4 +93,5 @@ export default BookingFactory.define(() => ({
   status: 'awaiting-arrival' as const,
   arrival: arrivalFactory.build(),
   departure: departureFactory.build(),
+  extensions: [],
 }))

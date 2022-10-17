@@ -58,8 +58,8 @@ export default class BookingService {
     token: string,
     premisesId: string,
     bookingId: string,
-    bookingExtension: NewBookingExtension,
-  ): Promise<BookingExtension> {
+    bookingExtension: NewExtension,
+  ): Promise<Extension> {
     const bookingClient = this.bookingClientFactory(token)
 
     const confirmedBooking = await bookingClient.extendBooking(premisesId, bookingId, bookingExtension)

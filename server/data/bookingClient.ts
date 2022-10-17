@@ -1,11 +1,12 @@
 import type {
+  NewArrival,
   Arrival,
-  NewBooking,
   Booking,
-  BookingExtension,
-  NewCancellation,
+  NewBooking,
+  Extension,
+  NewExtension,
   Cancellation,
-  NewDeparture,
+  NewCancellation,
   Departure,
   Nonarrival,
   NewDeparture,
@@ -32,15 +33,11 @@ export default class BookingClient {
     return (await this.restClient.get({ path: this.bookingsPath(premisesId) })) as Array<Booking>
   }
 
-  async extendBooking(
-    premisesId: string,
-    bookingId: string,
-    bookingExtension: NewBookingExtension,
-  ): Promise<BookingExtension> {
+  async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension): Promise<Extension> {
     return (await this.restClient.post({
       path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
       data: bookingExtension,
-    })) as BookingExtension
+    })) as Extension
   }
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival): Promise<Arrival> {

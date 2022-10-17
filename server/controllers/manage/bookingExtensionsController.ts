@@ -25,7 +25,7 @@ export default class BookingExtensionsController {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
 
-      const bookingExtension: NewBookingExtension = {
+      const bookingExtension: NewExtension = {
         ...req.body,
         ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
       }

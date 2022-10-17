@@ -39,6 +39,7 @@ export const convertObjectsToRadioItems = (
 
 export const convertObjectsToSelectOptions = (
   items: Array<Record<string, string>>,
+  prompt: string,
   textKey: string,
   valueKey: string,
   fieldName: string,
@@ -47,7 +48,7 @@ export const convertObjectsToSelectOptions = (
   const options = [
     {
       value: '',
-      text: 'Select a keyworker',
+      text: prompt,
       selected: !context[fieldName] || context[fieldName] === '',
     },
   ]

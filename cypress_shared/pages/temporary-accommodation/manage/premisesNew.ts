@@ -4,7 +4,7 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 
 export default class PremisesNewPage extends Page {
   constructor() {
-    super('Add a new property')
+    super('Add a property')
   }
 
   static visit(): PremisesNewPage {

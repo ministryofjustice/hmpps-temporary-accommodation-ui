@@ -8,6 +8,7 @@ import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.jso
 import destinationProvidersJson from '../../../wiremock/stubs/destination-providers.json'
 import cancellationReasonsJson from '../../../wiremock/stubs/cancellation-reasons.json'
 import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
+import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
@@ -32,6 +33,11 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
 
   lostBedReasons() {
     const data = faker.helpers.arrayElement(lostBedReasonsJson)
+    return this.params(data)
+  }
+
+  nonArrivalReason() {
+    const data = faker.helpers.arrayElement(nonArrivalReasonsJson)
     return this.params(data)
   }
 }

@@ -86,14 +86,14 @@ export default class BookingClient {
   async markNonArrival(
     premisesId: string,
     bookingId: string,
-    nonArrival: Omit<NonArrival, 'id' | 'bookingId'>,
-  ): Promise<NonArrival> {
+    nonArrival: Omit<Nonarrival, 'id' | 'bookingId'>,
+  ): Promise<Nonarrival> {
     const response = await this.restClient.post({
       path: `${this.bookingPath(premisesId, bookingId)}/non-arrivals`,
       data: nonArrival,
     })
 
-    return response as NonArrival
+    return response as Nonarrival
   }
 
   private bookingsPath(premisesId: string): string {

@@ -1,7 +1,7 @@
 import type { Nonarrival } from '@approved-premises/api'
 import type { RestClientBuilder, BookingClient } from '../data'
 
-export default class NonArrivalService {
+export default class NonarrivalService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
   async createNonArrival(

@@ -13,11 +13,11 @@ export default class NonArrivalsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const body = req.body as NewNonarrival
-      const { nonArrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'nonArrivalDate')
 
-      const nonArrival: Omit<NonArrival, 'id' | 'bookingId'> = {
-        ...body.nonArrival,
+      const { nonArrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'nonArrivalDate')
+
+      const nonArrival: Omit<Nonarrival, 'id' | 'bookingId'> = {
+        ...req.body.nonArrival,
         date: nonArrivalDate,
       }
 

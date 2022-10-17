@@ -79,11 +79,12 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     'convertObjectsToSelectOptions',
     function sendContextConvertObjectsToSelectOptions(
       items: Array<Record<string, string>>,
+      prompt: string,
       textKey: string,
       valueKey: string,
       fieldName: string,
     ) {
-      return convertObjectsToSelectOptions(items, textKey, valueKey, fieldName, this.ctx)
+      return convertObjectsToSelectOptions(items, prompt, textKey, valueKey, fieldName, this.ctx)
     },
   )
 

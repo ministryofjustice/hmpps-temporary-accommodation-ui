@@ -53,6 +53,7 @@ context('Premises', () => {
     const newPremises = newPremisesFactory.build({
       name: premises.name,
       postcode: premises.postcode,
+      localAuthorityId: 'c2892a98-dea6-4a80-9c3e-bf4e5c42ee0a',
     })
 
     cy.task('stubPremisesCreate', premises)
@@ -70,6 +71,7 @@ context('Premises', () => {
       expect(requestBody.name).equal(newPremises.name)
       expect(requestBody.address).equal(newPremises.address)
       expect(requestBody.postcode).equal(newPremises.postcode)
+      expect(requestBody.localAuthorityId).equal(newPremises.localAuthorityId)
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
     })
 

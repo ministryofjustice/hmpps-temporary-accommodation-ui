@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
@@ -73,6 +74,20 @@
         }) }}
 
         {% endcall %}
+
+        {{ govukSelect({
+          label: {
+            text: "What is the local authority?",
+            classes: "govuk-label--m"
+          },
+          hint: {
+            text: "Local authority"
+          },
+          items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', ''),
+          id: "localAuthorityId",
+          name: "localAuthorityId",
+          errorMessage: errors.localAuthorityId
+        }) }}
 
         {{ govukTextarea({
           label: {

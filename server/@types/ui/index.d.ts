@@ -156,4 +156,5 @@ export type NewPremises = {
   apCode: string
   postcode: string
   bedCount: number
+  service: Service
 }

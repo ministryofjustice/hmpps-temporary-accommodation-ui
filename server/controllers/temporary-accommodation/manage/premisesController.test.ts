@@ -62,6 +62,7 @@ describe('PremisesController', () => {
         apCode: premises.apCode,
         postcode: premises.postcode,
         bedCount: premises.bedCount,
+        service: 'temporary-accommodation',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property created')

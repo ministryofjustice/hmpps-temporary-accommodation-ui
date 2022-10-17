@@ -6,15 +6,16 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
 {% set pageTitle = applicationName + " - Add a property" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-  {{ govukBackLink({
-    text: "Back",
-    href: paths.premises.index()
-  }) }}
+
+  {{ breadCrumb('Add a property', [
+    {title: 'List of properties', href: paths.premises.index()}
+  ]) }}
 
   {% include "../../_messages.njk" %}
   

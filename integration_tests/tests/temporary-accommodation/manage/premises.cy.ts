@@ -91,8 +91,8 @@ context('Premises', () => {
     // When I visit the new premises page
     const page = PremisesNewPage.visit()
 
-    // Add I click back
-    page.clickBack()
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
 
     // Then I navigate to the premises list page
     Page.verifyOnPage(PremisesListPage)

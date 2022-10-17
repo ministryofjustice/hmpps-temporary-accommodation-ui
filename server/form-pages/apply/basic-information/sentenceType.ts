@@ -25,6 +25,10 @@ export default class SentenceType implements TasklistPage {
     }
   }
 
+  response() {
+    return { [this.title]: sentenceTypes[this.body.sentenceType] }
+  }
+
   next() {
     switch (this.body.sentenceType) {
       case 'standardDeterminate':

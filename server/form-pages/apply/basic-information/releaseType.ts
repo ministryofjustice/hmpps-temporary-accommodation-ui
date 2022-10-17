@@ -20,7 +20,7 @@ type SentenceType = Extract<SentenceTypesT, 'standardDeterminate' | 'extendedDet
 export default class ReleaseType implements TasklistPage {
   name = 'release-type'
 
-  title = 'What type of release will the application support'
+  title = 'What type of release will the application support?'
 
   body: { releaseType: keyof (AllReleaseTypes | ReducedReleaseTypes) }
 
@@ -46,6 +46,10 @@ export default class ReleaseType implements TasklistPage {
 
   previous() {
     return 'sentence-type'
+  }
+
+  response() {
+    return { [this.title]: allReleaseTypes[this.body.releaseType] }
   }
 
   errors() {

@@ -110,4 +110,14 @@ describe('ReleaseType', () => {
       expect(selectedOptions.length).toEqual(0)
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response', () => {
+      const page = new ReleaseType({ releaseType: 'rotl' }, application)
+
+      expect(page.response()).toEqual({
+        [page.title]: 'Release on Temporary License (ROTL)',
+      })
+    })
+  })
 })

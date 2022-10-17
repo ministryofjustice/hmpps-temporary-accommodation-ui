@@ -1,7 +1,8 @@
 import type { ObjectWithDateParts, YesOrNo, Application } from 'approved-premises'
 
 import TasklistPage from '../../tasklistPage'
-import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/dateUtils'
+import { dateAndTimeInputsAreValidDates, dateIsBlank, DateFormats } from '../../../utils/dateUtils'
+import { convertToTitleCase } from '../../../utils/utils'
 
 export default class OralHearing implements TasklistPage {
   name = 'oral-hearing'
@@ -17,6 +18,7 @@ export default class OralHearing implements TasklistPage {
       'oralHearingDate-year': body['oralHearingDate-year'] as string,
       'oralHearingDate-month': body['oralHearingDate-month'] as string,
       'oralHearingDate-day': body['oralHearingDate-day'] as string,
+      oralHearingDate: body.oralHearingDate as string,
       knowOralHearingDate: body.knowOralHearingDate as YesOrNo,
     }
   }
@@ -27,6 +29,18 @@ export default class OralHearing implements TasklistPage {
 
   previous() {
     return 'release-date'
+  }
+
+  response() {
+    const response = {
+      [this.title]: convertToTitleCase(this.body.knowOralHearingDate),
+    } as Record<string, string>
+
+    if (this.body.knowOralHearingDate === 'yes') {
+      response['Oral Hearing Date'] = DateFormats.isoDateToUIDate(this.body.oralHearingDate)
+    }
+
+    return response
   }
 
   errors() {

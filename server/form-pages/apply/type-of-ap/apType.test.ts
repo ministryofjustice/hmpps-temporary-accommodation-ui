@@ -66,4 +66,14 @@ describe('ApType', () => {
       expect(convertKeyValuePairToRadioItems).toHaveBeenCalled()
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response', () => {
+      const page = new ApType({ type: 'pipe' }, application)
+
+      expect(page.response()).toEqual({
+        [page.title]: 'PIPE (physcologically informed planned environment)',
+      })
+    })
+  })
 })

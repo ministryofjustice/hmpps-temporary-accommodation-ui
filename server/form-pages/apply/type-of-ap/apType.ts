@@ -35,6 +35,10 @@ export default class ApType implements TasklistPage {
     return null
   }
 
+  response() {
+    return { [`${this.title}`]: apTypes[this.body.type] }
+  }
+
   errors() {
     const errors = []
 

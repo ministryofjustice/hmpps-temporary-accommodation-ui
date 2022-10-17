@@ -82,4 +82,12 @@ describe('SentenceType', () => {
       expect(selectedOptions.length).toEqual(0)
     })
   })
+
+  describe('response', () => {
+    it('should return a translated version of the response', () => {
+      const page = new SentenceType({ sentenceType: 'life' })
+
+      expect(page.response()).toEqual({ [page.title]: 'Life sentence' })
+    })
+  })
 })

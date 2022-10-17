@@ -80,4 +80,8 @@ export default abstract class Page {
   clickBack(): void {
     cy.get('a').contains('Back').click()
   }
+
+  clickBreadCrumbUp(): void {
+    cy.get('li.govuk-breadcrumbs__list-item:nth-last-child(2)').click()
+  }
 }

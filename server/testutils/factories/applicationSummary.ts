@@ -1,7 +1,7 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { ApplicationSummary } from 'approved-premises'
+import type { ApplicationSummary } from '@approved-premises-ui'
 import personFactory from './person'
 import { riskTierLevel } from './risks'
 

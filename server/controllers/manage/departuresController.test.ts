@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
-import type { ErrorsAndUserInput } from 'approved-premises'
+import type { ErrorsAndUserInput } from '@approved-premises/ui'
 
 import DepartureService, { DepartureReferenceData } from '../../services/departureService'
 import DeparturesController from './departuresController'

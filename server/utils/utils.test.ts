@@ -1,4 +1,4 @@
-import type { SummaryListItem } from 'approved-premises'
+import type { SummaryListItem } from '@approved-premises/ui'
 import { SessionDataError } from './errors'
 import applicationFactory from '../testutils/factories/application'
 import {

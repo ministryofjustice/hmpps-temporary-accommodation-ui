@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { ObjectWithDateParts } from 'approved-premises'
+import type { ObjectWithDateParts } from '@approved-premises/ui'
 
 import formatISO from 'date-fns/formatISO'
 import parseISO from 'date-fns/parseISO'

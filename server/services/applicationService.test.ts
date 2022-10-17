@@ -1,6 +1,6 @@
 import type { Request } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
-import type { TaskListErrors } from 'approved-premises'
+import type { TaskListErrors } from '@approved-premises/ui'
 
 import applicationSummaryFactory from '../testutils/factories/applicationSummary'
 import type TasklistPage from '../form-pages/tasklistPage'

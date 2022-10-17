@@ -1,7 +1,7 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { Premises } from 'approved-premises'
+import type { ApArea, Premises, ProbationRegion, LocalAuthorityArea } from '@approved-premises/api'
 
 export default Factory.define<Premises>(() => ({
   id: faker.datatype.uuid(),

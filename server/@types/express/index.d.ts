@@ -1,4 +1,5 @@
-import type { ErrorMessages, Application } from 'approved-premises'
+import type { ErrorMessages } from '@approved-premises/ui'
+import type { Application } from '@approved-premises/api'
 
 export default {}
 

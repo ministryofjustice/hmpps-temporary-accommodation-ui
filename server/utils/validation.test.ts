@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { createMock } from '@golevelup/ts-jest'
 
-import type { ErrorMessages, ErrorSummary } from 'approved-premises'
+import type { ErrorMessages, ErrorSummary } from '@approved-premises/ui'
 import { SanitisedError } from '../sanitisedError'
 import { catchValidationErrorOrPropogate, catchAPIErrorOrPropogate, fetchErrorsAndUserInput } from './validation'
 import errorLookups from '../i18n/en/errors.json'

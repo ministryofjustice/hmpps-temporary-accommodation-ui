@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
-import type { ErrorsAndUserInput } from 'approved-premises'
+import type { ErrorsAndUserInput } from '@approved-premises/ui'
 
 import { BookingService, PremisesService, PersonService } from '../../services'
 import BookingsController from './bookingsController'

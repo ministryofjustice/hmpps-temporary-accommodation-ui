@@ -1,4 +1,4 @@
-import type { ObjectWithDateParts } from 'approved-premises'
+import type { ObjectWithDateParts } from '@approved-premises/ui'
 import { DateFormats, InvalidDateStringError, dateAndTimeInputsAreValidDates, dateIsBlank } from './dateUtils'
 
 describe('DateFormats', () => {

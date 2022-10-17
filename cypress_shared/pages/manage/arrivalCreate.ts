@@ -1,4 +1,4 @@
-import type { Arrival, NonArrival } from 'approved-premises'
+import type { Arrival, Nonarrival } from '@approved-premises/api'
 
 import Page from '../page'
 import paths from '../../../server/paths/manage'

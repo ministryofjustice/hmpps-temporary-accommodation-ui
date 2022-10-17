@@ -1,6 +1,8 @@
-import type { SummaryListItem, Application, PersonRisksUI, PersonRisks } from 'approved-premises'
-import { DateFormats } from './dateUtils'
+import type { SummaryListItem, PersonRisksUI } from '@approved-premises/ui'
+import type { Application, PersonRisks } from '@approved-premises/api'
+
 import { SessionDataError } from './errors'
+import { DateFormats } from './dateUtils'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>

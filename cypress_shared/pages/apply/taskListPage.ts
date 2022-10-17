@@ -1,4 +1,4 @@
-import type { PersonRisksUI } from 'approved-premises'
+import type { PersonRisksUI } from '@approved-premises/ui'
 
 import Page from '../page'
 

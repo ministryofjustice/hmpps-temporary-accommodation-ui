@@ -1,4 +1,4 @@
-import type { Premises } from 'approved-premises'
+import type { Premises } from '@approved-premises/api'
 
 import Page from '../page'
 import paths from '../../../server/paths/manage'

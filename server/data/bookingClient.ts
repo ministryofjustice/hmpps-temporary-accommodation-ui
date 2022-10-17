@@ -7,10 +7,9 @@ import type {
   Cancellation,
   NewDeparture,
   Departure,
-  NonArrival,
-  NewBookingExtension,
-  NewArrival,
-} from 'approved-premises'
+  Nonarrival,
+  NewDeparture,
+} from '@approved-premises/api'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 

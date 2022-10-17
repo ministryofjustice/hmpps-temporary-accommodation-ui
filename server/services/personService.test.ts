@@ -1,4 +1,4 @@
-import type { Person } from 'approved-premises'
+import type { Person } from '@approved-premises/api'
 
 import PersonService from './personService'
 import PersonClient from '../data/personClient'

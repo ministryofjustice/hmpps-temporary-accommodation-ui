@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { NonArrival } from 'approved-premises'
+import type { Nonarrival } from '@approved-premises/api'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'

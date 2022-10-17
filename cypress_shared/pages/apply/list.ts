@@ -1,4 +1,4 @@
-import type { ApplicationSummary } from 'approved-premises'
+import type { ApplicationSummary } from '@approved-premises-ui'
 import Page from '../page'
 import paths from '../../../server/paths/apply'
 import { DateFormats } from '../../../server/utils/dateUtils'

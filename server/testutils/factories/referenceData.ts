@@ -1,7 +1,7 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { ReferenceData } from 'approved-premises'
+import type { ReferenceData } from '@approved-premises/ui'
 
 import departureReasonsJson from '../../../wiremock/stubs/departure-reasons.json'
 import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.json'

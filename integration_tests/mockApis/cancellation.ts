@@ -1,5 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import type { Cancellation } from 'approved-premises'
+import type { Cancellation } from '@approved-premises/api'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'

@@ -1,6 +1,6 @@
 import type { Request, Response, RequestHandler } from 'express'
 
-import type { NewBookingExtension } from 'approved-premises'
+import type { NewExtension } from '@approved-premises/api'
 import BookingService from '../../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import { DateFormats } from '../../utils/dateUtils'

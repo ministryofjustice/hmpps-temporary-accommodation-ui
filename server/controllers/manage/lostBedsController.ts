@@ -1,6 +1,6 @@
 import type { Response, Request, RequestHandler } from 'express'
 
-import type { NewLostBed } from 'approved-premises'
+import type { NewLostBed } from '@approved-premises/api'
 import LostBedService from '../../services/lostBedService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/manage'

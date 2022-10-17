@@ -1,4 +1,4 @@
-import type { ReferenceData } from 'approved-premises'
+import type { ReferenceData } from '@approved-premises/ui'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 

@@ -1,4 +1,4 @@
-import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises-shared'
+import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises/api'
 
 // A utility type that allows us to define an object with a date attribute split into
 // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK

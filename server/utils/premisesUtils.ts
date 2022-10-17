@@ -1,8 +1,8 @@
-import type { PremisesCapacityItem } from 'approved-premises'
+import type { DateCapacity } from '@approved-premises/api'
 
 export type NegativeDateRange = { start?: string; end?: string }
 
-export default function getDateRangesWithNegativeBeds(premisesCapacity: PremisesCapacityItem[]): NegativeDateRange[] {
+export default function getDateRangesWithNegativeBeds(premisesCapacity: DateCapacity[]): NegativeDateRange[] {
   let dateRange: NegativeDateRange = {}
   const result: NegativeDateRange[] = []
 

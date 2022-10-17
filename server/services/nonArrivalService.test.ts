@@ -1,4 +1,4 @@
-import type { NonArrival } from 'approved-premises'
+import type { Nonarrival } from '@approved-premises/api'
 
 import NonArrivalService from './nonArrivalService'
 import BookingClient from '../data/bookingClient'
@@ -21,7 +21,7 @@ describe('NonArrivalService', () => {
 
   describe('createNonArrival', () => {
     it('on success returns the arrival that has been posted', async () => {
-      const nonArrival: NonArrival = NonArrivalFactory.build()
+      const nonArrival: Nonarrival = NonArrivalFactory.build()
       bookingClient.markNonArrival.mockResolvedValue(nonArrival)
 
       const postedNonArrival = await service.createNonArrival(token, 'premisesID', 'bookingId', nonArrival)

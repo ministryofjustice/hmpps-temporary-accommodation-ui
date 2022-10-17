@@ -1,4 +1,4 @@
-import type { Application } from 'approved-premises'
+import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
 import { convertKeyValuePairToCheckBoxItems } from '../../../utils/formUtils'

@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import type { PersonStatus } from 'approved-premises'
+import type { PersonStatus } from '@approved-premises/ui'
 
 const statusTag = (status: PersonStatus): string => {
   if (status === 'InCommunity') {

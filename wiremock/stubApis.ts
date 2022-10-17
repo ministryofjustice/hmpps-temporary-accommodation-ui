@@ -19,7 +19,7 @@ import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
-import premisesCapacityItemFactory from '../server/testutils/factories/premisesCapacityItem'
+import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 
 const stubs = []
@@ -65,7 +65,7 @@ premises.forEach(item => {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: premisesCapacityItemFactory.buildList(5),
+      jsonBody: dateCapacityFactory.buildList(5),
     },
   })
 

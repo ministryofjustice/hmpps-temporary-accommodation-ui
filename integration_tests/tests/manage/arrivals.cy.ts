@@ -3,7 +3,7 @@ import arrivalFactory from '../../../server/testutils/factories/arrival'
 import nonArrivalFactory from '../../../server/testutils/factories/nonArrival'
 
 import { ArrivalCreatePage, PremisesShowPage } from '../../../cypress_shared/pages/manage'
-import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
+import dateCapacityFactory from '../../../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../../../server/testutils/factories/staffMember'
 
 const staff = staffMemberFactory.buildList(5)
@@ -32,12 +32,12 @@ context('Arrivals', () => {
     cy.task('stubArrivalCreate', { premisesId: premises.id, bookingId, arrival })
     cy.task('stubPremisesCapacity', {
       premisesId: premises.id,
-      dateCapacities: premisesCapacityItemFactory.buildList(5),
+      dateCapacities: dateCapacityFactory.buildList(5),
     })
 
     // When I mark the booking as having arrived
     const page = ArrivalCreatePage.visit(premises.id, bookingId)
-    page.completeArrivalForm(arrival, staff[0].id)
+    page.completeArrivalForm(arrival, staff[0].id.toString())
 
     // Then an arrival should be created in the API
     cy.task('verifyArrivalCreate', { premisesId: premises.id, bookingId }).then(requests => {
@@ -48,7 +48,7 @@ context('Arrivals', () => {
 
       expect(requestBody.notes).equal(arrival.notes)
       expect(requestBody.arrivalDate).equal(arrivalDate)
-      expect(requestBody.keyWorkerStaffId).equal(staff[0].id)
+      expect(requestBody.keyWorkerStaffId).equal(staff[0].id.toString())
       expect(requestBody.expectedDepartureDate).equal(expectedDepartureDate)
     })
 
@@ -92,7 +92,6 @@ context('Arrivals', () => {
     const bookingId = 'some-uuid'
     const nonArrival = nonArrivalFactory.build({
       date: '2021-11-01',
-      reason: 'recalled',
     })
 
     cy.task('stubPremisesStaff', { premisesId: premises.id, staff })
@@ -100,7 +99,7 @@ context('Arrivals', () => {
     cy.task('stubNonArrivalCreate', { premisesId: premises.id, bookingId, nonArrival })
     cy.task('stubPremisesCapacity', {
       premisesId: premises.id,
-      dateCapacities: premisesCapacityItemFactory.buildList(5),
+      dateCapacities: dateCapacityFactory.buildList(5),
     })
 
     // When I mark the booking as having not arrived
@@ -114,7 +113,7 @@ context('Arrivals', () => {
 
       expect(requestBody.notes).equal(nonArrival.notes)
       expect(requestBody.date).equal(nonArrival.date)
-      expect(requestBody.reason).equal(nonArrival.reason)
+      expect(requestBody.reason).equal('recalled')
     })
 
     // And I should be redirected to the premises page

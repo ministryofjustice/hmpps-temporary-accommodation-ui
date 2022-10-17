@@ -35,7 +35,7 @@ const stubSinglePremises = (premises: Premises) =>
     },
   })
 
-const stubPremisesCapacity = (args: { premisesId: string; dateCapacities: PremisesCapacity }) =>
+const stubPremisesCapacity = (args: { premisesId: string; dateCapacities: DateCapacity }) =>
   stubFor({
     request: {
       method: 'GET',

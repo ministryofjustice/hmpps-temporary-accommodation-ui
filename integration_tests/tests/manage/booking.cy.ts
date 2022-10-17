@@ -1,6 +1,6 @@
 import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingFactory from '../../../server/testutils/factories/booking'
-import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
+import dateCapacityFactory from '../../../server/testutils/factories/dateCapacity'
 
 import { BookingFindPage, BookingNewPage, BookingShowPage } from '../../../cypress_shared/pages/manage'
 import Page from '../../../cypress_shared/pages/page'
@@ -22,23 +22,23 @@ context('Booking', () => {
       arrivalDate: '2022-06-01',
       departureDate: '2022-06-01',
     })
-    const firstOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
+    const firstOvercapacityPeriodStartDate = dateCapacityFactory.build({
       date: new Date(2023, 0, 1).toISOString(),
       availableBeds: -1,
     })
-    const firstOvercapacityPeriodEndDate = premisesCapacityItemFactory.build({
+    const firstOvercapacityPeriodEndDate = dateCapacityFactory.build({
       date: new Date(2023, 1, 1).toISOString(),
       availableBeds: -1,
     })
-    const atCapacityDate = premisesCapacityItemFactory.build({
+    const atCapacityDate = dateCapacityFactory.build({
       date: new Date(2023, 1, 1).toISOString(),
       availableBeds: 0,
     })
-    const secondOvercapacityPeriodStartDate = premisesCapacityItemFactory.build({
+    const secondOvercapacityPeriodStartDate = dateCapacityFactory.build({
       date: new Date(2023, 2, 1).toISOString(),
       availableBeds: -1,
     })
-    const secondOvercapacityPeriodEndDate = premisesCapacityItemFactory.build({
+    const secondOvercapacityPeriodEndDate = dateCapacityFactory.build({
       date: new Date(2023, 3, 1).toISOString(),
       availableBeds: -1,
     })

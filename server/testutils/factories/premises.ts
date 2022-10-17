@@ -11,4 +11,24 @@ export default Factory.define<Premises>(() => ({
   bedCount: 50,
   availableBedsForToday: faker.datatype.number({ min: 0, max: 50 }),
   apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
+  probationRegion: probationRegionFactory.build(),
+  apArea: apAreaFactory.build(),
+  localAuthorityArea: localAuthorityAreaFactory.build(),
+}))
+
+const probationRegionFactory = Factory.define<ProbationRegion>(() => ({
+  id: faker.datatype.uuid(),
+  name: faker.address.cityName(),
+}))
+
+const apAreaFactory = Factory.define<ApArea>(() => ({
+  id: faker.datatype.uuid(),
+  name: faker.address.cityName(),
+  identifier: faker.random.alphaNumeric(),
+}))
+
+const localAuthorityAreaFactory = Factory.define<LocalAuthorityArea>(() => ({
+  id: faker.datatype.uuid(),
+  name: faker.address.county(),
+  identifier: faker.random.alphaNumeric(),
 }))

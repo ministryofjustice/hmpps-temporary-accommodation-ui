@@ -1,6 +1,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 
@@ -39,18 +40,38 @@
           errorMessage: errors.name
         }) }}
 
+        {% call govukFieldset({
+          legend: {
+            text: "What the property address?",
+            classes: "govuk-fieldset__legend--m"
+          }
+        }) %}
+
+        {{ govukInput({
+          label: {
+            text: 'Address line 1',
+            classes: "govuk-label--s"
+          },
+          id: "address",
+          name: "address",
+          autocomplete: "address-line1",
+          errorMessage: errors.address
+        }) }}
+
         {{ govukInput({
           label: {
             text: "Postcode",
-            classes: "govuk-label--m",
-            isPageHeading: true
+            classes: "govuk-label--s"
           },
-          classes: "govuk-input--width-10",
+          classes: "govuk-input--width-20",
           id: "postcode",
           name: "postcode",
+          autocomplete: "postal-code",
           value: postcode,
           errorMessage: errors.postcode
         }) }}
+
+        {% endcall %}
 
         {{ govukButton({
           name: 'submit',

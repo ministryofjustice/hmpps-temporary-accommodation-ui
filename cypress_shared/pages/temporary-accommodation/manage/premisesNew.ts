@@ -16,6 +16,9 @@ export default class PremisesNewPage extends Page {
     this.getLabel('Property name (optional)')
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)
 
+    this.getLabel('Address line 1')
+    this.getTextInputByIdAndEnterDetails('address', newPremises.address)
+
     this.getLabel('Postcode')
     this.getTextInputByIdAndEnterDetails('postcode', newPremises.postcode)
 

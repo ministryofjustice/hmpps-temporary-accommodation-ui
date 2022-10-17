@@ -68,6 +68,7 @@ context('Premises', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.name).equal(newPremises.name)
+      expect(requestBody.address).equal(newPremises.address)
       expect(requestBody.postcode).equal(newPremises.postcode)
     })
 

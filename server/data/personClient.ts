@@ -12,7 +12,7 @@ export default class PersonClient {
 
   async search(crn: string): Promise<Person> {
     const response = await this.restClient.get({
-      path: `/people/search?crn=${crn}`,
+      path: `${paths.people.search({})}?crn=${crn}`,
     })
 
     return response as Person
@@ -20,7 +20,7 @@ export default class PersonClient {
 
   async risks(crn: string): Promise<PersonRisks> {
     const response = await this.restClient.get({
-      path: paths.applications.personRisks({ crn }),
+      path: paths.people.risks.show({ crn }),
     })
 
     return response as PersonRisks

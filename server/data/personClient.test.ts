@@ -4,7 +4,6 @@ import PersonClient from './personClient'
 import config from '../config'
 import riskFactory from '../testutils/factories/risks'
 import personFactory from '../testutils/factories/person'
-import paths from '../paths/api'
 
 describe('PersonClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -49,7 +48,7 @@ describe('PersonClient', () => {
       const person = riskFactory.build()
 
       fakeApprovedPremisesApi
-        .get(paths.applications.personRisks({ crn }))
+        .get(`/people/${crn}/risks`)
         .matchHeader('authorization', `Bearer ${token}`)
         .reply(201, person)
 

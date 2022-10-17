@@ -6,6 +6,7 @@ import {
   convertObjectsToRadioItems,
   convertKeyValuePairToRadioItems,
   convertObjectsToSelectOptions,
+  convertKeyValuePairToCheckBoxItems,
 } from './formUtils'
 
 describe('formUtils', () => {
@@ -118,6 +119,84 @@ describe('formUtils', () => {
           text: 'def',
           value: '345',
           checked: false,
+        },
+      ])
+    })
+  })
+
+  describe('convertKeyValuePairToCheckBoxItems', () => {
+    const obj = {
+      foo: 'Foo',
+      bar: 'Bar',
+    }
+
+    it('should convert a key value pair to checkbox items', () => {
+      expect(convertKeyValuePairToCheckBoxItems(obj, [])).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: false,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: false,
+        },
+      ])
+    })
+
+    it('should handle an undefined checkedItems value', () => {
+      expect(convertKeyValuePairToCheckBoxItems(obj, undefined)).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: false,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: false,
+        },
+      ])
+    })
+
+    it('should check the checked item', () => {
+      expect(convertKeyValuePairToCheckBoxItems(obj, ['foo'])).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: true,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: false,
+        },
+      ])
+
+      expect(convertKeyValuePairToCheckBoxItems(obj, ['bar'])).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: false,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: true,
+        },
+      ])
+
+      expect(convertKeyValuePairToCheckBoxItems(obj, ['foo', 'bar'])).toEqual([
+        {
+          value: 'foo',
+          text: 'Foo',
+          checked: true,
+        },
+        {
+          value: 'bar',
+          text: 'Bar',
+          checked: true,
         },
       ])
     })

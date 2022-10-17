@@ -18,13 +18,15 @@ const managePaths = {
 const applicationsPath = path('/applications')
 const singleApplicationPath = applicationsPath.path(':id')
 
+const peoplePath = path('/people')
+const personPath = peoplePath.path(':crn')
+
 const applyPaths = {
   applications: {
     show: singleApplicationPath,
     create: applicationsPath,
     index: applicationsPath,
     update: singleApplicationPath,
-    personRisks: applicationsPath.path('people').path(':crn').path('risks'),
   },
 }
 
@@ -45,6 +47,11 @@ export default {
     index: applyPaths.applications.index,
     update: applyPaths.applications.update,
     new: applyPaths.applications.create,
-    personRisks: applyPaths.applications.personRisks,
+  },
+  people: {
+    risks: {
+      show: personPath.path('risks'),
+    },
+    search: peoplePath.path('search'),
   },
 }

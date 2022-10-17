@@ -31,7 +31,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `/applications/people/${args.person.crn}/risks`,
+        url: `/people/${args.person.crn}/risks`,
       },
       response: {
         status: 200,

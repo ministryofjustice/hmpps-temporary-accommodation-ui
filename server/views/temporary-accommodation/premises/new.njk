@@ -50,20 +50,6 @@
           errorMessage: errors.postcode
         }) }}
 
-        {{ govukInput({
-          label: {
-            text: "Bed count",
-            classes: "govuk-label--m",
-            isPageHeading: true
-          },
-          classes: "govuk-input--width-10",
-          inputmode: "numeric",
-          id: "bedCount",
-          name: "bedCount",
-          value: bedCount,
-          errorMessage: errors.bedCount
-        }) }}
-
         {{ govukButton({
           name: 'submit',
           text: "Submit"

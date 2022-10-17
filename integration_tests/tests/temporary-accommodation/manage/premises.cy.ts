@@ -53,7 +53,6 @@ context('Premises', () => {
     const newPremises = newPremisesFactory.build({
       name: premises.name,
       postcode: premises.postcode,
-      bedCount: premises.bedCount,
     })
 
     cy.task('stubPremisesCreate', premises)
@@ -70,7 +69,6 @@ context('Premises', () => {
 
       expect(requestBody.name).equal(newPremises.name)
       expect(requestBody.postcode).equal(newPremises.postcode)
-      expect(requestBody.bedCount).equal(newPremises.bedCount)
     })
 
     // And I should be redirected to the new premises page

@@ -94,7 +94,6 @@ describe('PremisesClient', () => {
       const payload = newPremisesFactory.build({
         name: premises.name,
         postcode: premises.postcode,
-        bedCount: premises.bedCount,
       })
 
       fakeApprovedPremisesApi

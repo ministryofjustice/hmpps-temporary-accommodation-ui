@@ -51,7 +51,6 @@ describe('PremisesController', () => {
       request.body = {
         name: premises.name,
         postcode: premises.postcode,
-        bedCount: premises.bedCount.toString(),
       }
 
       await requestHandler(request, response, next)
@@ -59,7 +58,6 @@ describe('PremisesController', () => {
       expect(premisesService.create).toHaveBeenCalledWith(token, {
         name: premises.name,
         postcode: premises.postcode,
-        bedCount: premises.bedCount,
         service: 'temporary-accommodation',
       })
 

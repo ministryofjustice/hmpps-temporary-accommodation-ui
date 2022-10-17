@@ -25,7 +25,6 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const newPremises: NewPremises = {
         ...req.body,
-        bedCount: parseInt(req.body.bedCount, 10),
         service: 'temporary-accommodation',
       }
 

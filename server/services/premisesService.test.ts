@@ -303,7 +303,6 @@ describe('PremisesService', () => {
       const newPremises = newPremisesFactory.build({
         name: premises.name,
         postcode: premises.postcode,
-        bedCount: premises.bedCount,
       })
       premisesClient.create.mockResolvedValue(premises)
 

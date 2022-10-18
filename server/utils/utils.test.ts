@@ -163,4 +163,32 @@ describe('mapApiPersonRiskForUI', () => {
       },
     })
   })
+
+  it('handles the case where roshRisks lastUpdated is null', () => {
+    const risks = risksFactory.build()
+    risks.roshRisks.value.lastUpdated = null
+
+    const actual = mapApiPersonRisksForUi(risks)
+
+    expect(actual).toEqual({
+      crn: risks.crn,
+      flags: risks.flags.value,
+      mappa: {
+        lastUpdated: DateFormats.isoDateToUIDate(risks.mappa.value.lastUpdated),
+        level: 'CAT 2 / LEVEL 1',
+      },
+      roshRisks: {
+        lastUpdated: '',
+        overallRisk: risks.roshRisks.value.overallRisk,
+        riskToChildren: risks.roshRisks.value.riskToChildren,
+        riskToKnownAdult: risks.roshRisks.value.riskToKnownAdult,
+        riskToPublic: risks.roshRisks.value.riskToPublic,
+        riskToStaff: risks.roshRisks.value.riskToStaff,
+      },
+      tier: {
+        lastUpdated: DateFormats.isoDateToUIDate(risks.tier.value.lastUpdated),
+        level: risks.tier.value.level,
+      },
+    })
+  })
 })

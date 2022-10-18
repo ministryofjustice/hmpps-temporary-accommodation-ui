@@ -59,5 +59,14 @@
     "beforeStartDate": "The end date must be before the start date"
   },
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
-  "referenceNumber": { "empty": "You must enter a reference number" }
+  "referenceNumber": { "empty": "You must enter a reference number" },
+  "address": {
+    "empty": "You must enter an address"
+  },
+  "postcode": {
+    "empty": "You must enter a postcode"
+  },
+  "localAuthorityId": {
+    "empty": "You must choose a local authority"
+  }
 }

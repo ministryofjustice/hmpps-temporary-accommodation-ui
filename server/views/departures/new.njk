@@ -110,17 +110,6 @@
                     items: convertObjectsToRadioItems(referenceData.destinationProviders, 'name', 'id', 'departure[destinationProvider]')
                     }) }}
 
-                {{ govukSelect({
-                    name: "departure[destinationAp]",
-                    id: "destinationAp",
-                    label: {
-                        text: "Destination Approved Premises",
-                        classes: "govuk-label govuk-label--m"
-                        },
-                    items: premisesSelectList,
-                    errorMessage: errors.expectedDepartureDate
-                    }) }}
-
                 {{ govukTextarea({
                     name: "departure[notes]",
                     id: "notes",

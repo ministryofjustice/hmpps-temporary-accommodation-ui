@@ -4,7 +4,6 @@ import type { ErrorsAndUserInput } from '@approved-premises/ui'
 
 import DepartureService, { DepartureReferenceData } from '../../services/departureService'
 import DeparturesController from './departuresController'
-import { PremisesService } from '../../services'
 import BookingService from '../../services/bookingService'
 import departureFactory from '../../testutils/factories/departure'
 import bookingFactory from '../../testutils/factories/booking'
@@ -21,10 +20,9 @@ describe('DeparturesController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const departureService = createMock<DepartureService>({})
-  const premisesService = createMock<PremisesService>({})
   const bookingService = createMock<BookingService>({})
 
-  const departuresController = new DeparturesController(departureService, premisesService, bookingService)
+  const departuresController = new DeparturesController(departureService, bookingService)
 
   describe('new', () => {
     const booking = bookingFactory.build()
@@ -32,7 +30,6 @@ describe('DeparturesController', () => {
     const premisesId = 'premisesId'
 
     beforeEach(() => {
-      premisesService.getPremisesSelectList.mockResolvedValue([{ value: 'id', text: 'name' }])
       bookingService.find.mockResolvedValue(booking)
     })
 
@@ -53,19 +50,12 @@ describe('DeparturesController', () => {
       expect(response.render).toHaveBeenCalledWith('departures/new', {
         premisesId,
         booking,
-        premisesSelectList: [
-          {
-            text: 'name',
-            value: 'id',
-          },
-        ],
         referenceData,
         pageHeading: 'Log a departure',
         errorSummary: [],
         errors: {},
       })
 
-      expect(premisesService.getPremisesSelectList).toHaveBeenCalledWith(token)
       expect(bookingService.find).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
       expect(departureService.getReferenceData).toHaveBeenCalledWith(token)
     })
@@ -89,12 +79,6 @@ describe('DeparturesController', () => {
       expect(response.render).toHaveBeenCalledWith('departures/new', {
         premisesId,
         booking,
-        premisesSelectList: [
-          {
-            text: 'name',
-            value: 'id',
-          },
-        ],
         referenceData,
         pageHeading: 'Log a departure',
         errorSummary: errorsAndUserInput.errorSummary,
@@ -102,7 +86,6 @@ describe('DeparturesController', () => {
         ...errorsAndUserInput.userInput,
       })
 
-      expect(premisesService.getPremisesSelectList).toHaveBeenCalledWith(token)
       expect(bookingService.find).toHaveBeenCalledWith(token, 'premisesId', 'bookingId')
     })
   })

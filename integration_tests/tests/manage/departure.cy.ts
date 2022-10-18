@@ -13,7 +13,7 @@ context('Departures', () => {
     cy.task('stubDepartureReferenceData')
   })
 
-  it('creates an departure', () => {
+  it('creates a departure', () => {
     // Given I am logged in
     cy.signIn()
 
@@ -23,14 +23,11 @@ context('Departures', () => {
 
     const departureReason = referenceDataFactory.departureReasons().build()
     const moveOnCategory = referenceDataFactory.moveOnCategories().build()
-    const destinationProvider = referenceDataFactory.destinationProviders().build()
 
     const departure = departureFactory.build({
       dateTime: new Date(2022, 1, 11, 12, 35).toISOString(),
       reason: departureReason,
-      destinationAp: premises[2],
       moveOnCategory,
-      destinationProvider,
     })
 
     cy.task('stubPremises', premises)
@@ -50,7 +47,6 @@ context('Departures', () => {
 
       expect(requestBody.dateTime).equal(departure.dateTime)
       expect(requestBody.reason).equal(departure.reason.id)
-      expect(requestBody.destinationAp).equal(departure.destinationAp.id)
       expect(requestBody.destinationProvider).equal(departure.destinationProvider.id)
       expect(requestBody.moveOnCategory).equal(departure.moveOnCategory.id)
       expect(requestBody.notes).equal(departure.notes)
@@ -71,7 +67,6 @@ context('Departures', () => {
     const booking = bookingFactory.build()
     const departure = departureFactory.build({
       dateTime: new Date(2022, 1, 11, 12, 35).toISOString(),
-      destinationAp: premises[2],
     })
 
     // Given I am signed in

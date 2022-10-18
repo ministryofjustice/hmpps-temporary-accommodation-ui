@@ -22,11 +22,7 @@ export const controllers = (services: Services) => {
   const bookingExtensionsController = new BookingExtensionsController(services.bookingService)
   const arrivalsController = new ArrivalsController(services.arrivalService, services.premisesService)
   const nonArrivalsController = new NonArrivalsController(services.nonArrivalService)
-  const departuresController = new DeparturesController(
-    services.departureService,
-    services.premisesService,
-    services.bookingService,
-  )
+  const departuresController = new DeparturesController(services.departureService, services.bookingService)
   const cancellationsController = new CancellationsController(services.cancellationService, services.bookingService)
   const lostBedsController = new LostBedsController(services.lostBedService)
   const peopleController = new PeopleController(services.personService)

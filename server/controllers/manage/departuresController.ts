@@ -3,17 +3,13 @@ import type { NewDeparture } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 import DepartureService from '../../services/departureService'
-import PremisesService from '../../services/premisesService'
+
 import BookingService from '../../services/bookingService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/manage'
 
 export default class DeparturesController {
-  constructor(
-    private readonly departureService: DepartureService,
-    private readonly premisesService: PremisesService,
-    private readonly bookingService: BookingService,
-  ) {}
+  constructor(private readonly departureService: DepartureService, private readonly bookingService: BookingService) {}
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -21,13 +17,11 @@ export default class DeparturesController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
       const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
-      const premisesSelectList = await this.premisesService.getPremisesSelectList(req.user.token)
       const referenceData = await this.departureService.getReferenceData(req.user.token)
 
       res.render('departures/new', {
         premisesId,
         booking,
-        premisesSelectList,
         referenceData,
         pageHeading: 'Log a departure',
         errors,

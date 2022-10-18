@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { Departure } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
-import premisesFactory from './premises'
 import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Departure>(() => ({
@@ -14,5 +13,4 @@ export default Factory.define<Departure>(() => ({
   notes: faker.lorem.sentence(),
   moveOnCategory: referenceDataFactory.moveOnCategories().build(),
   destinationProvider: referenceDataFactory.destinationProviders().build(),
-  destinationAp: premisesFactory.build(),
 }))

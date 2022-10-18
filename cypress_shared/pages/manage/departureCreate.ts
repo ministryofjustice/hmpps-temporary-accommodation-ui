@@ -29,8 +29,6 @@ export default class DepartureCreatePage extends Page {
     cy.get('input[name="dateTime-year"]').type(String(dateTime.getFullYear()))
     cy.get('input[name="dateTime-time"]').type(`${hours}:${minutes}`)
 
-    cy.get('#destinationAp').select(departure.destinationAp.name)
-
     cy.get(`input[name="departure[reason]"][value="${departure.reason.id}"]`).check()
 
     cy.get(`input[name="departure[moveOnCategory]"][value="${departure.moveOnCategory.id}"]`).check()

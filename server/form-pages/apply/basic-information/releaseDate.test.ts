@@ -55,7 +55,7 @@ describe('ReleaseDate', () => {
 
   describe('errors', () => {
     describe('if the user knows the release date', () => {
-      it('should return an empty array if the date is specified', () => {
+      it('should return an empty object if the date is specified', () => {
         const page = new ReleaseDate(
           {
             knowReleaseDate: 'yes',
@@ -66,10 +66,10 @@ describe('ReleaseDate', () => {
           application,
           'somePage',
         )
-        expect(page.errors()).toEqual([])
+        expect(page.errors()).toEqual({})
       })
 
-      it('should return an error if  the date is not populated', () => {
+      it('should return an error if the date is not populated', () => {
         const page = new ReleaseDate(
           {
             knowReleaseDate: 'yes',
@@ -77,12 +77,7 @@ describe('ReleaseDate', () => {
           application,
           'somePage',
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.releaseDate',
-            errorType: 'empty',
-          },
-        ])
+        expect(page.errors()).toEqual({ releaseDate: 'You must specify the release date' })
       })
 
       it('should return an error if the date is invalid', () => {
@@ -96,16 +91,11 @@ describe('ReleaseDate', () => {
           application,
           'somePage',
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.releaseDate',
-            errorType: 'invalid',
-          },
-        ])
+        expect(page.errors()).toEqual({ releaseDate: 'The release date is an invalid date' })
       })
     })
 
-    it('should return an empty array if the user does not know the release date', () => {
+    it('should return an empty object if the user does not know the release date', () => {
       const page = new ReleaseDate(
         {
           knowReleaseDate: 'no',
@@ -113,17 +103,12 @@ describe('ReleaseDate', () => {
         application,
         'somePage',
       )
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an error if the knowReleaseDate field is not populated', () => {
       const page = new ReleaseDate({}, application, 'somePage')
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.knowReleaseDate',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({ knowReleaseDate: 'You must specify if you know the release date' })
     })
   })
 

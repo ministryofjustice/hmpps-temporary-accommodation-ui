@@ -1,4 +1,4 @@
-import type { ObjectWithDateParts, YesOrNo } from '@approved-premises/ui'
+import type { ObjectWithDateParts, YesOrNo, TaskListErrors } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
@@ -49,26 +49,17 @@ export default class ReleaseDate implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.knowReleaseDate) {
-      errors.push({
-        propertyName: '$.knowReleaseDate',
-        errorType: 'empty',
-      })
+      errors.knowReleaseDate = 'You must specify if you know the release date'
     }
 
     if (this.body.knowReleaseDate === 'yes') {
       if (dateIsBlank(this.body)) {
-        errors.push({
-          propertyName: '$.releaseDate',
-          errorType: 'empty',
-        })
+        errors.releaseDate = 'You must specify the release date'
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'releaseDate')) {
-        errors.push({
-          propertyName: '$.releaseDate',
-          errorType: 'invalid',
-        })
+        errors.releaseDate = 'The release date is an invalid date'
       }
     }
 

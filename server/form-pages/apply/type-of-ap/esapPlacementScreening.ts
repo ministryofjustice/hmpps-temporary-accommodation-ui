@@ -20,8 +20,8 @@ export const esapFactors = {
   corrupter: 'Individual has been identified as a known/suspected corrupter of staff',
 }
 
-type EsapReasons = typeof esapReasons
-type EsapFactors = typeof esapFactors
+export type EsapReasons = typeof esapReasons
+export type EsapFactors = typeof esapFactors
 
 export default class EsapPlacementScreening implements TasklistPage {
   name = 'esap-placement-screening'

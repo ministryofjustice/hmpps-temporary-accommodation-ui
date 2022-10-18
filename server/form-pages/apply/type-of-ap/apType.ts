@@ -1,4 +1,5 @@
 import type { Application } from '@approved-premises/api'
+import type { TaskListErrors } from '@approved-premises/ui'
 
 import TasklistPage from '../../tasklistPage'
 import { convertKeyValuePairToRadioItems } from '../../../utils/formUtils'
@@ -24,6 +25,10 @@ export default class ApType implements TasklistPage {
     }
   }
 
+  previous() {
+    return ''
+  }
+
   next() {
     if (this.body.type === 'pipe') {
       return 'pipe-referral'
@@ -40,13 +45,10 @@ export default class ApType implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.type) {
-      errors.push({
-        propertyName: '$.type',
-        errorType: 'empty',
-      })
+      errors.type = 'You must specify an AP type'
     }
 
     return errors

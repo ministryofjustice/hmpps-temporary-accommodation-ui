@@ -60,7 +60,6 @@
   },
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
   "referenceNumber": { "empty": "You must enter a reference number" },
-  "type": { "empty": "You must specify an AP type" },
   "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },
   "esapReasons": { "empty": "You must specify why xxxx requires an enhanced security placement" },
   "secretingHistory": { "empty": "You must specify what items xxx has a history of secreting" },

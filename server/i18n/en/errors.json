@@ -73,6 +73,7 @@
   "startDateSameAsReleaseDate": { "empty": "You must specify if the start date is the same as the release date" },
   "type": { "empty": "You must specify an AP type" },
   "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },
+  "esapReasons": { "empty": "You must specify why xxxx requires an enhanced security placement" },
   "opdPathwayDate": {
     "empty": "You must enter an OPD Pathway date",
     "invalid": "The OPD Pathway date is an invalid date"

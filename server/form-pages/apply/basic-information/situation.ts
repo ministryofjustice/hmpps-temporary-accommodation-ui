@@ -1,4 +1,5 @@
 import type { Application } from '@approved-premises/api'
+import type { TaskListErrors } from '@approved-premises/ui'
 
 import { SessionDataError } from '../../../utils/errors'
 import { retrieveQuestionResponseFromApplication } from '../../../utils/utils'
@@ -52,13 +53,10 @@ export default class Situation implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.situation) {
-      errors.push({
-        propertyName: '$.situation',
-        errorType: 'empty',
-      })
+      errors.situation = 'You must choose a situation'
     }
 
     return errors

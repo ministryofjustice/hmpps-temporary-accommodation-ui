@@ -12,6 +12,7 @@ import DepartureService from './departureService'
 import CancellationService from './cancellationService'
 import LostBedService from './lostBedService'
 import ApplicationService from './applicationService'
+import LocalAuthorityService from './temporary-accommodation/localAuthorityService'
 
 export const services = () => {
   const {
@@ -22,6 +23,7 @@ export const services = () => {
     lostBedClientBuilder,
     personClient,
     applicationClientBuilder,
+    localAuthorityClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
@@ -34,6 +36,7 @@ export const services = () => {
   const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
   const applicationService = new ApplicationService(applicationClientBuilder)
+  const localAuthorityService = new LocalAuthorityService(localAuthorityClientBuilder)
 
   return {
     userService,
@@ -46,6 +49,7 @@ export const services = () => {
     cancellationService,
     lostBedService,
     applicationService,
+    localAuthorityService,
   }
 }
 
@@ -62,4 +66,5 @@ export {
   BookingService,
   LostBedService,
   ApplicationService,
+  LocalAuthorityService,
 }

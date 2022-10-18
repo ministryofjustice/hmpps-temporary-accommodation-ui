@@ -20,19 +20,14 @@ describe('ReleaseType', () => {
   itShouldHaveNextValue(new ReleaseType({}, application), 'release-date')
 
   describe('errors', () => {
-    it('should return an empty array if the release type is populated', () => {
+    it('should return an empty object if the release type is populated', () => {
       const page = new ReleaseType({ releaseType: 'rotl' }, application)
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an errors if the release type is not populated', () => {
       const page = new ReleaseType({ releaseType: '' }, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.releaseType',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({ releaseType: 'You must choose a release type' })
     })
   })
 

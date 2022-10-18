@@ -1,4 +1,5 @@
 import type { Application } from '@approved-premises/api'
+import type { TaskListErrors } from '@approved-premises/ui'
 
 import { SessionDataError } from '../../../utils/errors'
 import { retrieveQuestionResponseFromApplication } from '../../../utils/utils'
@@ -53,13 +54,10 @@ export default class ReleaseType implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.releaseType) {
-      errors.push({
-        propertyName: '$.releaseType',
-        errorType: 'empty',
-      })
+      errors.releaseType = 'You must choose a release type'
     }
 
     return errors

@@ -14,4 +14,8 @@ export default Factory.define<Application>(() => ({
   createdAt: DateFormats.formatApiDate(faker.date.past()),
   submittedAt: DateFormats.formatApiDate(faker.date.past()),
   data: JSON.parse(faker.datatype.json()),
+  document: JSON.parse(faker.datatype.json()),
+  outdatedSchema: faker.datatype.boolean(),
+  isWomensApplication: faker.datatype.boolean(),
+  isPipeApplication: faker.datatype.boolean(),
 }))

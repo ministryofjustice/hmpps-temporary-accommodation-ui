@@ -3,7 +3,7 @@ import type { Request, Response, RequestHandler } from 'express'
 import type { NewPremises } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
-import { catchValidationErrorOrPropogate } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import LocalAuthorityService from '../../../services/temporary-accommodation/localAuthorityService'
 
 export default class PremisesController {
@@ -21,10 +21,15 @@ export default class PremisesController {
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
       const localAuthorities = await this.localAuthorityService.getLocalAuthorities(req.user.token)
 
       return res.render('temporary-accommodation/premises/new', {
         localAuthorities,
+        errors,
+        errorSummary,
+        ...userInput,
       })
     }
   }

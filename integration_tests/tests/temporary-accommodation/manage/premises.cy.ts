@@ -90,6 +90,25 @@ context('Premises', () => {
     premisesNewPage.shouldShowBanner('Property created')
   })
 
+  it('should show errors when the API returns an error', () => {
+    // Given I am logged in
+    cy.signIn()
+
+    // And there are local authorities in the database
+    const localAuthorities = localAuthorityFactory.buildList(5)
+    cy.task('stubLocalAuthorities', localAuthorities)
+
+    // When I visit the new premises page
+    const page = PremisesNewPage.visit()
+
+    // And I miss required fields
+    cy.task('stubPremisesCreateErrors', ['address', 'postcode', 'localAuthorityId'])
+    page.clickSubmit()
+
+    // Then I should see error messages relating to those fields
+    page.shouldShowErrorMessagesForFields(['address', 'postcode', 'localAuthorityId'])
+  })
+
   it('should navigate back to the premises list page', () => {
     // Given I am signed in
     cy.signIn()

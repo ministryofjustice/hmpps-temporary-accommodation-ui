@@ -1,12 +1,13 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
+import type { ErrorsAndUserInput } from '@approved-premises/ui'
 import premisesFactory from '../../../testutils/factories/premises'
 import localAuthorityFactory from '../../../testutils/factories/localAuthority'
 import PremisesService from '../../../services/premisesService'
 import PremisesController from './premisesController'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { LocalAuthorityService } from '../../../services'
 
 jest.mock('../../../utils/validation')
@@ -23,7 +24,7 @@ describe('PremisesController', () => {
   const premisesController = new PremisesController(premisesService, localAuthorityService)
 
   describe('index', () => {
-    it('should return the table rows to the template', async () => {
+    it('returns the table rows to the template', async () => {
       premisesService.tableRows.mockResolvedValue([])
 
       const requestHandler = premisesController.index()
@@ -36,18 +37,42 @@ describe('PremisesController', () => {
   })
 
   describe('new', () => {
-    it('show render the form', async () => {
+    it('renders the form', async () => {
       const localAuthorities = localAuthorityFactory.buildList(5)
 
       localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
 
       const requestHandler = premisesController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       await requestHandler(request, response, next)
 
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('renders the form with errors and user input if an error has been sent to the flash', async () => {
+      const localAuthorities = localAuthorityFactory.buildList(5)
+
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const requestHandler = premisesController.new()
+
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      await requestHandler(request, response, next)
+
+      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
+        localAuthorities,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
       })
     })
   })

@@ -300,7 +300,7 @@ declare module 'approved-premises' {
       riskToPublic: RiskLevel
       riskToKnownAdult: RiskLevel
       riskToStaff: RiskLevel
-      lastUpdated: string
+      lastUpdated?: string
     }
     MappaEnvelope: {
       status: RiskEnvelopeStatus

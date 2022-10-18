@@ -58,6 +58,7 @@
           id: "address",
           name: "address",
           autocomplete: "address-line1",
+          value: address,
           errorMessage: errors.address
         }) }}
 
@@ -84,7 +85,7 @@
           hint: {
             text: "Local authority"
           },
-          items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', ''),
+          items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityId'),
           id: "localAuthorityId",
           name: "localAuthorityId",
           errorMessage: errors.localAuthorityId
@@ -100,6 +101,7 @@
           },
           id: "notes",
           name: "notes",
+          value: notes,
           errorMessage: errors.notes
         }) }}
 

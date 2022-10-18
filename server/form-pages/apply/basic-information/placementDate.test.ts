@@ -37,18 +37,18 @@ describe('PlacementDate', () => {
   itShouldHavePreviousValue(new PlacementDate({}, application), 'oral-hearing')
 
   describe('errors', () => {
-    it('should return an empty array if the release date is the same as the start date', () => {
+    it('should return an empty object if the release date is the same as the start date', () => {
       const page = new PlacementDate(
         {
           startDateSameAsReleaseDate: 'yes',
         },
         application,
       )
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     describe('if the start date is not the same as the release date', () => {
-      it('should return an empty array if the date is specified', () => {
+      it('should return an empty object if the date is specified', () => {
         const page = new PlacementDate(
           {
             startDateSameAsReleaseDate: 'no',
@@ -58,7 +58,7 @@ describe('PlacementDate', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([])
+        expect(page.errors()).toEqual({})
       })
 
       it('should return an error if the date is not specified', () => {
@@ -68,12 +68,7 @@ describe('PlacementDate', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.startDate',
-            errorType: 'empty',
-          },
-        ])
+        expect(page.errors()).toEqual({ startDate: 'You must enter a start date' })
       })
 
       it('should return an error if the date is invalid', () => {
@@ -86,23 +81,15 @@ describe('PlacementDate', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.startDate',
-            errorType: 'invalid',
-          },
-        ])
+        expect(page.errors()).toEqual({ startDate: 'The start date is an invalid date' })
       })
     })
 
     it('should return an error if the startDateSameAsReleaseDate field is not populated', () => {
       const page = new PlacementDate({}, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.startDateSameAsReleaseDate',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        startDateSameAsReleaseDate: 'You must specify if the start date is the same as the release date',
+      })
     })
   })
 

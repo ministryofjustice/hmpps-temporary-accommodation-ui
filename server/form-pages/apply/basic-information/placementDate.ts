@@ -1,4 +1,4 @@
-import type { ObjectWithDateParts, YesOrNo } from '@approved-premises/ui'
+import type { ObjectWithDateParts, YesOrNo, TaskListErrors } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
@@ -51,26 +51,17 @@ export default class PlacementDate implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.startDateSameAsReleaseDate) {
-      errors.push({
-        propertyName: '$.startDateSameAsReleaseDate',
-        errorType: 'empty',
-      })
+      errors.startDateSameAsReleaseDate = 'You must specify if the start date is the same as the release date'
     }
 
     if (this.body.startDateSameAsReleaseDate === 'no') {
       if (dateIsBlank(this.body)) {
-        errors.push({
-          propertyName: '$.startDate',
-          errorType: 'empty',
-        })
+        errors.startDate = 'You must enter a start date'
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'startDate')) {
-        errors.push({
-          propertyName: '$.startDate',
-          errorType: 'invalid',
-        })
+        errors.startDate = 'The start date is an invalid date'
       }
     }
 

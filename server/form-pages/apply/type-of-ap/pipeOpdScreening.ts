@@ -27,6 +27,10 @@ export default class PipeOpdReferral implements TasklistPage {
     return 'pipe-referral'
   }
 
+  next() {
+    return ''
+  }
+
   response() {
     const response = {
       [this.questions.pipeReferral]: convertToTitleCase(this.body.pipeReferral),

@@ -1,4 +1,4 @@
-import { itShouldHavePreviousValue } from '../../shared-examples'
+import { itShouldHavePreviousValue, itShouldHaveNextValue } from '../../shared-examples'
 
 import PipeOpdScreening from './pipeOpdScreening'
 import applicationFactory from '../../../testutils/factories/application'
@@ -22,6 +22,7 @@ describe('PipeOpdScreening', () => {
   })
 
   itShouldHavePreviousValue(new PipeOpdScreening({}, application), 'pipe-referral')
+  itShouldHaveNextValue(new PipeOpdScreening({}, application), '')
 
   describe('errors', () => {
     it('should return an empty array if the pipeReferral is populated', () => {

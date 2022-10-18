@@ -3,12 +3,16 @@
     "target": "es5",
     "noEmit": true,
     "lib": ["es5", "dom", "es2015.promise"],
-    "types": ["cypress", "approved-premises"],
+    "types": ["cypress"],
     "esModuleInterop": true,
     "typeRoots": ["../server/@types", "../node_modules/@types"],
     "resolveJsonModule": true,
-    "baseUrl": "./",
     "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@approved-premises/ui": ["../server/@types/ui/index.d.ts"],
+      "@approved-premises/api": ["../server/@types/shared/index.d.ts"]
+    }
   },
-  "include": ["**/*.ts", "../cypress_shared/**/*.ts"],
+  "include": ["**/*.ts", "../cypress_shared/**/*.ts"]
 }

@@ -1,4 +1,4 @@
-import type { ObjectWithDateParts, YesOrNo } from '@approved-premises/ui'
+import type { ObjectWithDateParts, YesOrNo, TaskListErrors } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
@@ -45,26 +45,17 @@ export default class OralHearing implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.knowOralHearingDate) {
-      errors.push({
-        propertyName: '$.knowOralHearingDate',
-        errorType: 'empty',
-      })
+      errors.knowOralHearingDate = 'You must specify if you know the oral hearing date'
     }
 
     if (this.body.knowOralHearingDate === 'yes') {
       if (dateIsBlank(this.body)) {
-        errors.push({
-          propertyName: '$.oralHearingDate',
-          errorType: 'empty',
-        })
+        errors.oralHearingDate = 'You must specify the oral hearing date'
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'oralHearingDate')) {
-        errors.push({
-          propertyName: '$.oralHearingDate',
-          errorType: 'invalid',
-        })
+        errors.oralHearingDate = 'The oral hearing date is an invalid date'
       }
     }
 

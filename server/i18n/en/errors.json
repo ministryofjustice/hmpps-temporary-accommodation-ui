@@ -65,11 +65,6 @@
   "situation": { "empty": "You must choose a situation" },
   "knowReleaseDate": { "empty": "You must specify if you know the release date" },
   "releaseDate": { "empty": "You must specify the release date", "invalid": "The release date is an invalid date" },
-  "knowOralHearingDate": { "empty": "You must specify if you know the oral hearing date" },
-  "oralHearingDate": {
-    "empty": "You must specify the oral hearing date",
-    "invalid": "The oral hearing date is an invalid date"
-  },
   "startDateSameAsReleaseDate": { "empty": "You must specify if the start date is the same as the release date" },
   "type": { "empty": "You must specify an AP type" },
   "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },

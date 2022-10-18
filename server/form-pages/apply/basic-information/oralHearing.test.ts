@@ -45,7 +45,7 @@ describe('OralHearing', () => {
 
   describe('errors', () => {
     describe('if the user knows the oral hearing date', () => {
-      it('should return an empty array if the user knows the release date and specifies the date', () => {
+      it('should return an empty object if the user knows the release date and specifies the date', () => {
         const page = new OralHearing(
           {
             knowOralHearingDate: 'yes',
@@ -55,7 +55,7 @@ describe('OralHearing', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([])
+        expect(page.errors()).toEqual({})
       })
 
       it('should return an error if the date is not populated', () => {
@@ -65,12 +65,7 @@ describe('OralHearing', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.oralHearingDate',
-            errorType: 'empty',
-          },
-        ])
+        expect(page.errors()).toEqual({ oralHearingDate: 'You must specify the oral hearing date' })
       })
 
       it('should return an error if the date is invalid', () => {
@@ -83,33 +78,23 @@ describe('OralHearing', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.oralHearingDate',
-            errorType: 'invalid',
-          },
-        ])
+        expect(page.errors()).toEqual({ oralHearingDate: 'The oral hearing date is an invalid date' })
       })
     })
 
-    it('should return an empty array  if the user does not know the release date', () => {
+    it('should return an empty object if the user does not know the release date', () => {
       const page = new OralHearing(
         {
           knowOralHearingDate: 'no',
         },
         application,
       )
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an error if the knowOralHearingDate field is not populated', () => {
       const page = new OralHearing({}, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.knowOralHearingDate',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({ knowOralHearingDate: 'You must specify if you know the oral hearing date' })
     })
   })
 

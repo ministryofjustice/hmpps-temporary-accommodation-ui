@@ -11,6 +11,11 @@ export default class PipeOpdReferral implements TasklistPage {
 
   body: { pipeReferral: YesOrNo; pipeReferralMoreDetail: string }
 
+  questions = {
+    pipeReferral: this.title,
+    pipeReferralMoreDetail: `Additional detail about why ${this.application.person.name} needs a PIPE placement.`,
+  }
+
   constructor(body: Record<string, unknown>, private readonly application: Application) {
     this.body = {
       pipeReferral: body.pipeReferral as YesOrNo,
@@ -24,12 +29,11 @@ export default class PipeOpdReferral implements TasklistPage {
 
   response() {
     const response = {
-      [this.title]: convertToTitleCase(this.body.pipeReferral),
+      [this.questions.pipeReferral]: convertToTitleCase(this.body.pipeReferral),
     } as Record<string, string>
 
     if (this.body.pipeReferral === 'yes') {
-      response[`Additional detail about why ${this.application.person.name} needs a PIPE placement.`] =
-        this.body.pipeReferralMoreDetail
+      response[this.questions.pipeReferralMoreDetail] = this.body.pipeReferralMoreDetail
     }
 
     return response

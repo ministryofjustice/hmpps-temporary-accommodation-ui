@@ -12,6 +12,11 @@ export default class PipeReferral implements TasklistPage {
 
   title = `Has ${this.application.person.name} been screened into the OPD pathway?`
 
+  questions = {
+    opdPathway: this.title,
+    opdPathwayDate: `When was ${this.application.person.name}'s last consultation or formulation?`,
+  }
+
   constructor(body: Record<string, unknown>, private readonly application: Application) {
     this.body = {
       'opdPathwayDate-year': body['opdPathwayDate-year'] as string,
@@ -32,11 +37,11 @@ export default class PipeReferral implements TasklistPage {
 
   response() {
     const response = {
-      [this.title]: convertToTitleCase(this.body.opdPathway),
+      [this.questions.opdPathway]: convertToTitleCase(this.body.opdPathway),
     } as Record<string, string>
 
     if (this.body.opdPathway === 'yes') {
-      response['OPD Pathway Screening Date'] = DateFormats.isoDateToUIDate(this.body.opdPathwayDate)
+      response[this.questions.opdPathwayDate] = DateFormats.isoDateToUIDate(this.body.opdPathwayDate)
     }
 
     return response

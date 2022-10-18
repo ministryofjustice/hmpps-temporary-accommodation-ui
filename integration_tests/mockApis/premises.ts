@@ -5,6 +5,7 @@ import { Service } from '@approved-premises/ui'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import bookingStubs from './booking'
+import { errorStub } from '../../wiremock/utils'
 
 const stubPremises = (args: { premises: Array<Premises>; service: Service }) =>
   stubFor({
@@ -93,6 +94,7 @@ export default {
         jsonBody: premises,
       },
     }),
+  stubPremisesCreateErrors: (params: Array<string>): SuperAgentRequest => stubFor(errorStub(params, '/premises')),
   verifyPremisesCreate: async () =>
     (
       await getMatchingRequests({

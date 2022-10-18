@@ -1,4 +1,4 @@
-import type { ErrorMessages, RadioItems, SelectOptions } from 'approved-premises'
+import type { ErrorMessages, RadioItem, SelectOption, CheckBoxItem } from 'approved-premises'
 
 export const dateFieldValues = (fieldName: string, context: Record<string, unknown>, errors: ErrorMessages = {}) => {
   const errorClass = errors[fieldName] ? 'govuk-input--error' : ''
@@ -27,7 +27,7 @@ export const convertObjectsToRadioItems = (
   valueKey: string,
   fieldName: string,
   context: Record<string, unknown>,
-): Array<RadioItems> => {
+): Array<RadioItem> => {
   return items.map(item => {
     return {
       text: item[textKey],
@@ -44,7 +44,7 @@ export const convertObjectsToSelectOptions = (
   valueKey: string,
   fieldName: string,
   context: Record<string, unknown>,
-): Array<SelectOptions> => {
+): Array<SelectOption> => {
   const options = [
     {
       value: '',
@@ -64,12 +64,25 @@ export const convertObjectsToSelectOptions = (
   return options
 }
 
-export function convertKeyValuePairToRadioItems<T>(object: T, checkedItem: string): Array<RadioItems> {
+export function convertKeyValuePairToRadioItems<T>(object: T, checkedItem: string): Array<RadioItem> {
   return Object.keys(object).map(key => {
     return {
       value: key,
       text: object[key],
       checked: checkedItem === key,
+    }
+  })
+}
+
+export function convertKeyValuePairToCheckBoxItems<T>(
+  object: T,
+  checkedItems: Array<string> = [],
+): Array<CheckBoxItem> {
+  return Object.keys(object).map(key => {
+    return {
+      value: key,
+      text: object[key],
+      checked: checkedItems.includes(key),
     }
   })
 }

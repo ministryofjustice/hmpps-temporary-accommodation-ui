@@ -48,16 +48,28 @@ describe('retrieveQuestionResponseFromApplication', () => {
     )
   })
 
-  it('returns the property if it does existion', () => {
+  it('returns the property if it does exist and a question is not provided', () => {
     const application = applicationFactory.build({
       data: {
-        'basic-information': { 'question-response': { questionResponse: 'no' } },
+        'basic-information': { 'my-page': { myPage: 'no' } },
+      },
+    })
+
+    const questionResponse = retrieveQuestionResponseFromApplication(application, 'basic-information', 'myPage')
+    expect(questionResponse).toBe('no')
+  })
+
+  it('returns the property if it does exist and a question is provided', () => {
+    const application = applicationFactory.build({
+      data: {
+        'basic-information': { 'my-page': { questionResponse: 'no' } },
       },
     })
 
     const questionResponse = retrieveQuestionResponseFromApplication(
       application,
       'basic-information',
+      'myPage',
       'questionResponse',
     )
     expect(questionResponse).toBe('no')

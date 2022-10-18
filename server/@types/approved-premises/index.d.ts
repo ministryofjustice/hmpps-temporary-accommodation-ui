@@ -98,13 +98,19 @@ declare module 'approved-premises' {
     rows: Array<SummaryListItem>
   }
 
-  export interface RadioItems {
+  export interface RadioItem {
     text: string
     value: string
     checked?: boolean
   }
 
-  export interface SelectOptions {
+  export interface CheckBoxItem {
+    text: string
+    value: string
+    checked?: boolean
+  }
+
+  export interface SelectOption {
     text: string
     value: string
     selected?: boolean

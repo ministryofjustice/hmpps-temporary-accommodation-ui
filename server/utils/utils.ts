@@ -42,16 +42,19 @@ const kebabCase = (string: string) =>
 /**
  * Retrieves response for a given question from the application object.
  * @param application the application to fetch the response from.
- * @param question the question that we need the response for in camelCase.
- * @returns name converted to proper case.
+ * @param task the task to retrieve the response for.
+ * @param page the page that we need the response for in camelCase.
+ * @param {string} question [question=page] the page that we need the response for. Defaults to the value of `page`.
+ * @returns the response for the given task/page/question.
  */
 export const retrieveQuestionResponseFromApplication = <T>(
   application: Application,
   task: string,
-  question: string,
+  page: string,
+  question?: string,
 ) => {
   try {
-    return application.data[task][kebabCase(question)][question] as T
+    return application.data[task][kebabCase(page)][question || page] as T
   } catch (e) {
     throw new SessionDataError(`Question ${question} was not found in the session`)
   }

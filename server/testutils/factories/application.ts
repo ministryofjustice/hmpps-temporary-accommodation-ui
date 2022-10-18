@@ -9,7 +9,7 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<Application>(() => ({
   id: faker.datatype.uuid(),
   person: personFactory.build(),
-  createdByProbationOfficerId: faker.datatype.uuid(),
+  createdByUserId: faker.datatype.uuid(),
   schemaVersion: faker.datatype.uuid(),
   createdAt: DateFormats.formatApiDate(faker.date.past()),
   submittedAt: DateFormats.formatApiDate(faker.date.past()),

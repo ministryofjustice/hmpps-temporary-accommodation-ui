@@ -22,6 +22,7 @@ import localAuthorityStubs from './localAuthorityStubs'
 import * as referenceDataStubs from './referenceDataStubs'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
+import { errorStub, getCombinations } from './utils'
 
 const stubs = []
 
@@ -66,6 +67,12 @@ stubs.push({
     },
     jsonBody: taPremises,
   },
+})
+
+const requiredFields = getCombinations(['address', 'postcode', 'localAuthorityId'])
+
+requiredFields.forEach((fields: Array<string>) => {
+  stubs.push(errorStub(fields, `/premises`))
 })
 
 stubs.push({

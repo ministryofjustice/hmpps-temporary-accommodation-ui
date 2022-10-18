@@ -2,10 +2,12 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import premisesFactory from '../../../testutils/factories/premises'
+import localAuthorityFactory from '../../../testutils/factories/localAuthority'
 import PremisesService from '../../../services/premisesService'
 import PremisesController from './premisesController'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate } from '../../../utils/validation'
+import { LocalAuthorityService } from '../../../services'
 
 jest.mock('../../../utils/validation')
 
@@ -17,7 +19,8 @@ describe('PremisesController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const premisesService = createMock<PremisesService>({})
-  const premisesController = new PremisesController(premisesService)
+  const localAuthorityService = createMock<LocalAuthorityService>({})
+  const premisesController = new PremisesController(premisesService, localAuthorityService)
 
   describe('index', () => {
     it('should return the table rows to the template', async () => {
@@ -34,29 +37,17 @@ describe('PremisesController', () => {
 
   describe('new', () => {
     it('show render the form', async () => {
+      const localAuthorities = localAuthorityFactory.buildList(5)
+
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
       const requestHandler = premisesController.new()
 
       await requestHandler(request, response, next)
 
+      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
-        localAuthorities: [
-          {
-            name: 'Aberdeen City',
-            id: '0fb03403-17e8-4b3a-b283-122a18ed8929',
-          },
-          {
-            name: 'Babergh',
-            id: 'c2892a98-dea6-4a80-9c3e-bf4e5c42ee0a',
-          },
-          {
-            name: 'Caerphilly',
-            id: '69fbc53a-a930-4d9f-b218-4c9c6bf3de7b',
-          },
-          {
-            name: 'Dacorum',
-            id: 'bed5ff2d-ee34-4423-967c-4dc50f12843e',
-          },
-        ],
+        localAuthorities,
       })
     })
   })

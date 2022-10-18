@@ -1,5 +1,6 @@
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
+import localAuthorityFactory from '../../../../server/testutils/factories/localAuthority'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import Page from '../../../../cypress_shared/pages/page'
@@ -34,6 +35,10 @@ context('Premises', () => {
     const premises = premisesFactory.buildList(5)
     cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
 
+    // And there are local authorities in the database
+    const localAuthorities = localAuthorityFactory.buildList(5)
+    cy.task('stubLocalAuthorities', localAuthorities)
+
     // When I visit the premises page
     const page = PremisesListPage.visit()
 
@@ -48,12 +53,17 @@ context('Premises', () => {
     // Given I am signed in
     cy.signIn()
 
+    // And there are local authorities in the database
+    const localAuthorities = localAuthorityFactory.buildList(5)
+    cy.task('stubLocalAuthorities', localAuthorities)
+
     // When I visit the new premises page
+    const localAuthority = localAuthorities[2]
     const premises = premisesFactory.build()
     const newPremises = newPremisesFactory.build({
       name: premises.name,
       postcode: premises.postcode,
-      localAuthorityId: 'c2892a98-dea6-4a80-9c3e-bf4e5c42ee0a',
+      localAuthorityId: localAuthority.id,
     })
 
     cy.task('stubPremisesCreate', premises)
@@ -87,6 +97,10 @@ context('Premises', () => {
     // And there are premises in the database
     const premises = premisesFactory.buildList(5)
     cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+
+    // And there are local authorities in the database
+    const localAuthorities = localAuthorityFactory.buildList(5)
+    cy.task('stubLocalAuthorities', localAuthorities)
 
     // When I visit the new premises page
     const page = PremisesNewPage.visit()

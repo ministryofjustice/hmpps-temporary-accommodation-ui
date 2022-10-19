@@ -59,10 +59,5 @@
     "beforeStartDate": "The end date must be before the start date"
   },
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
-  "referenceNumber": { "empty": "You must enter a reference number" },
-  "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },
-  "opdPathwayDate": {
-    "empty": "You must enter an OPD Pathway date",
-    "invalid": "The OPD Pathway date is an invalid date"
-  }
+  "referenceNumber": { "empty": "You must enter a reference number" }
 }

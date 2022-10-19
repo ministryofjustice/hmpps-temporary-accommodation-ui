@@ -46,7 +46,7 @@ describe('PipeReferral', () => {
 
   describe('errors', () => {
     describe('if opdPathway is yes', () => {
-      it('should return an empty array if the date is specified', () => {
+      it('should return an empty object if the date is specified', () => {
         const page = new PipeReferral(
           {
             opdPathway: 'yes',
@@ -56,7 +56,7 @@ describe('PipeReferral', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([])
+        expect(page.errors()).toEqual({})
       })
 
       it('should return an error if  the date is not populated', () => {
@@ -66,12 +66,7 @@ describe('PipeReferral', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.opdPathwayDate',
-            errorType: 'empty',
-          },
-        ])
+        expect(page.errors()).toEqual({ opdPathwayDate: 'You must enter an OPD Pathway date' })
       })
 
       it('should return an error if the date is invalid', () => {
@@ -84,33 +79,25 @@ describe('PipeReferral', () => {
           },
           application,
         )
-        expect(page.errors()).toEqual([
-          {
-            propertyName: '$.opdPathwayDate',
-            errorType: 'invalid',
-          },
-        ])
+        expect(page.errors()).toEqual({ opdPathwayDate: 'The OPD Pathway date is an invalid date' })
       })
     })
 
-    it('should return an empty array if opdPathway in no', () => {
+    it('should return an empty object if opdPathway in no', () => {
       const page = new PipeReferral(
         {
           opdPathway: 'no',
         },
         application,
       )
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an error if the opdPathway field is not populated', () => {
       const page = new PipeReferral({}, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.opdPathway',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        opdPathway: 'You must specify if John Wayne has been screened into the OPD pathway',
+      })
     })
   })
 

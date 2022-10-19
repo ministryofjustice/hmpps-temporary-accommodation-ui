@@ -8,7 +8,7 @@ export default class PremisesController {
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const tableRows = await this.premisesService.tableRows(req.user.token, 'approved-premises')
+      const tableRows = await this.premisesService.approvedPremisesTableRows(req.user.token)
       return res.render('premises/index', { tableRows })
     }
   }

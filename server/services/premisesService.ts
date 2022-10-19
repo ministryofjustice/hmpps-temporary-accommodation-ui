@@ -18,11 +18,9 @@ export default class PremisesService {
     return staffMembers
   }
 
-  async tableRows(token: string, service: Service): Promise<Array<TableRow>> {
+  async approvedPremisesTableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.all(service)
-
-    const showPath = service === 'approved-premises' ? apPaths.premises.show : taPaths.premises.show
+    const premises = await premisesClient.all('approved-premises')
 
     return premises
       .sort((a, b) => a.name.localeCompare(b.name))
@@ -32,7 +30,7 @@ export default class PremisesService {
           this.textValue(p.apCode),
           this.textValue(p.bedCount.toString()),
           this.htmlValue(
-            `<a href="${showPath({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
+            `<a href="${apPaths.premises.show({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
               p.name
             }</span></a>`,
           ),

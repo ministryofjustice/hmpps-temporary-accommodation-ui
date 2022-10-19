@@ -19,14 +19,14 @@ describe('PremisesController', () => {
 
   describe('index', () => {
     it('should return the table rows to the template', async () => {
-      premisesService.tableRows.mockResolvedValue([])
+      premisesService.approvedPremisesTableRows.mockResolvedValue([])
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('premises/index', { tableRows: [] })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(token, 'approved-premises')
+      expect(premisesService.approvedPremisesTableRows).toHaveBeenCalledWith(token)
     })
   })
 

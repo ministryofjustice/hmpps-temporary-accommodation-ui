@@ -27,7 +27,7 @@ describe('bookingUtils', () => {
             },
             {
               classes: 'govuk-button--secondary',
-              href: paths.bookings.arrivals.new({ premisesId: 'premisesId', bookingId: booking.id }),
+              href: paths.bookings.nonArrivals.new({ premisesId: 'premisesId', bookingId: booking.id }),
               text: 'Mark as not arrived',
             },
             {

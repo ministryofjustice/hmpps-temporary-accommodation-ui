@@ -1,4 +1,4 @@
-import type { YesOrNo } from '@approved-premises/ui'
+import type { YesOrNo, TaskListErrors } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
@@ -75,27 +75,20 @@ export default class EsapPlacementCCTV implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.cctvHistory || !this.body.cctvHistory.length) {
-      errors.push({
-        propertyName: '$.cctvHistory',
-        errorType: 'empty',
-      })
+      errors.cctvHistory = `You must specify which behaviours ${this.application.person.name} has demonstrated that require enhanced CCTV provision to monitor`
     }
 
     if (!this.body.cctvIntelligence) {
-      errors.push({
-        propertyName: '$.cctvIntelligence',
-        errorType: 'empty',
-      })
+      errors.cctvIntelligence =
+        'You must specify if partnership agencies requested the sharing of intelligence captured via enhanced CCTV'
     }
 
     if (this.body.cctvIntelligence === 'yes' && !this.body.cctvIntelligenceDetails) {
-      errors.push({
-        propertyName: '$.cctvIntelligenceDetails',
-        errorType: 'empty',
-      })
+      errors.cctvIntelligenceDetails =
+        'You must specify the details if partnership agencies have requested the sharing of intelligence captured via enhanced CCTV'
     }
 
     return errors

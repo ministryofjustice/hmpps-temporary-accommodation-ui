@@ -69,15 +69,6 @@
   "secretingIntelligenceDetails": {
     "empty": "You must specify the details if partnership agencies have requested the sharing of intelligence captured via body worn technology"
   },
-  "cctvHistory": {
-    "empty": "You must specify which behaviours xxx has demonstrated that require enhanced CCTV provision to monitor"
-  },
-  "cctvIntelligence": {
-    "empty": "You must specify if partnership agencies requested the sharing of intelligence captured via enhanced CCTV"
-  },
-  "cctvIntelligenceDetails": {
-    "empty": "You must specify the details if partnership agencies have requested the sharing of intelligence captured via enhanced CCTV"
-  },
   "opdPathwayDate": {
     "empty": "You must enter an OPD Pathway date",
     "invalid": "The OPD Pathway date is an invalid date"

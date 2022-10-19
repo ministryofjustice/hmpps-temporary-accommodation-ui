@@ -1,7 +1,5 @@
 import type { Request } from 'express'
-import type { TaskListErrors } from '@approved-premises/ui'
-
-import type { DataServices } from '../services/applicationService'
+import type { TaskListErrors, DataServices } from '@approved-premises/ui'
 
 export default abstract class TasklistPage {
   abstract name: string

@@ -2,10 +2,9 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import createError from 'http-errors'
 
-import type { ErrorsAndUserInput } from '@approved-premises/ui'
+import type { ErrorsAndUserInput, DataServices } from '@approved-premises/ui'
 import PagesController from './pagesController'
 import { ApplicationService } from '../../../services'
-import type { DataServices } from '../../../services/applicationService'
 import TasklistPage from '../../../form-pages/tasklistPage'
 
 import {

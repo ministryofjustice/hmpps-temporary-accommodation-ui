@@ -1,19 +1,14 @@
 import type { Request } from 'express'
-import type { HtmlItem, TextItem } from '@approved-premises/ui'
+import type { HtmlItem, TextItem, DataServices } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import type TasklistPage from '../form-pages/tasklistPage'
 import type { RestClientBuilder, ApplicationClient } from '../data'
 import { UnknownPageError, ValidationError } from '../utils/errors'
-import type { PersonService } from './index'
 
 import pages from '../form-pages/apply'
 import paths from '../paths/apply'
 import { DateFormats } from '../utils/dateUtils'
-
-export type DataServices = {
-  personService: PersonService
-}
 
 type PageResponse = Record<string, string>
 type ApplicationResponse = Record<string, Array<PageResponse>>

@@ -3,6 +3,7 @@ import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises/ap
 interface TasklistPage {
   body: Record<string, unknown>
 }
+interface PersonService {}
 
 // A utility type that allows us to define an object with a date attribute split into
 // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
@@ -129,4 +130,8 @@ export interface PersonRisksUI {
 
 export type GroupedListofBookings = {
   [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
+}
+
+export type DataServices = {
+  personService: PersonService
 }

@@ -18,6 +18,19 @@ export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'de
 
 export type TaskNames = 'basic-information' | 'type-of-ap'
 
+export type Task = {
+  id: string
+  title: string
+  pages: Record<string, unknown>
+}
+
+export type FormSection = {
+  title: string
+  tasks: Array<Task>
+}
+
+export type FormSections = Array<FormSection>
+
 export interface HtmlAttributes {
   [key: string]: string
 }

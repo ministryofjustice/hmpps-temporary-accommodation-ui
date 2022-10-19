@@ -8,7 +8,7 @@ import { UnknownPageError, ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
 import ApplicationClient from '../data/applicationClient'
 
-import pages from '../form-pages/apply'
+import { pages } from '../form-pages/apply'
 import paths from '../paths/apply'
 import applicationFactory from '../testutils/factories/application'
 import { DateFormats } from '../utils/dateUtils'
@@ -18,7 +18,7 @@ const SecondPage = jest.fn()
 
 jest.mock('../form-pages/apply', () => {
   return {
-    'my-task': {},
+    pages: { 'my-task': {} },
   }
 })
 

@@ -1,3 +1,5 @@
+import type { TaskListErrors } from '@approved-premises/ui'
+
 import TasklistPage from '../../tasklistPage'
 
 export const sentenceTypes = {
@@ -29,6 +31,10 @@ export default class SentenceType implements TasklistPage {
     return { [this.title]: sentenceTypes[this.body.sentenceType] }
   }
 
+  previous() {
+    return ''
+  }
+
   next() {
     switch (this.body.sentenceType) {
       case 'standardDeterminate':
@@ -49,13 +55,10 @@ export default class SentenceType implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.sentenceType) {
-      errors.push({
-        propertyName: '$.sentenceType',
-        errorType: 'empty',
-      })
+      errors.sentenceType = 'You must choose a sentence type'
     }
 
     return errors

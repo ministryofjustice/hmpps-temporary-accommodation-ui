@@ -1,3 +1,5 @@
+import { itShouldHavePreviousValue } from '../../shared-examples'
+
 import SentenceType from './sentenceType'
 
 describe('SentenceType', () => {
@@ -47,20 +49,17 @@ describe('SentenceType', () => {
     })
   })
 
+  itShouldHavePreviousValue(new SentenceType({}), '')
+
   describe('errors', () => {
-    it('should return an empty array if the sentence type is populated', () => {
+    it('should return an empty object if the sentence type is populated', () => {
       const page = new SentenceType({ sentenceType: 'life' })
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an errors if the sentence type is not populated', () => {
       const page = new SentenceType({ sentenceType: '' })
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.sentenceType',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({ sentenceType: 'You must choose a sentence type' })
     })
   })
 

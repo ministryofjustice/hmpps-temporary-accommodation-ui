@@ -1,4 +1,4 @@
-import type { YesOrNo, ObjectWithDateParts } from '@approved-premises/ui'
+import type { YesOrNo, ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
@@ -48,26 +48,17 @@ export default class PipeReferral implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.opdPathway) {
-      errors.push({
-        propertyName: '$.opdPathway',
-        errorType: 'empty',
-      })
+      errors.opdPathway = `You must specify if ${this.application.person.name} has been screened into the OPD pathway`
     }
 
     if (this.body.opdPathway === 'yes') {
       if (dateIsBlank(this.body)) {
-        errors.push({
-          propertyName: '$.opdPathwayDate',
-          errorType: 'empty',
-        })
+        errors.opdPathwayDate = 'You must enter an OPD Pathway date'
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'opdPathwayDate')) {
-        errors.push({
-          propertyName: '$.opdPathwayDate',
-          errorType: 'invalid',
-        })
+        errors.opdPathwayDate = 'The OPD Pathway date is an invalid date'
       }
     }
 

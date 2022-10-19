@@ -87,7 +87,12 @@ describe('EsapPlacementCCTV', () => {
   })
 
   describe('errors', () => {
-    it('should return an empty array when `cctvHistory` and `cctvIntelligence` are defined', () => {
+    beforeEach(() => {
+      const person = personFactory.build({ name: 'John Wayne' })
+      application.person = person
+    })
+
+    it('should return an empty object when `cctvHistory` and `cctvIntelligence` are defined', () => {
       const page = new EsapPlacementCCTV(
         {
           cctvHistory: ['prisonerAssualt'],
@@ -97,31 +102,25 @@ describe('EsapPlacementCCTV', () => {
         },
         application,
       )
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return error messages when `cctvHistory` and `cctvIntelligence` are undefined', () => {
       const page = new EsapPlacementCCTV({}, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.cctvHistory',
-          errorType: 'empty',
-        },
-        {
-          propertyName: '$.cctvIntelligence',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        cctvHistory:
+          'You must specify which behaviours John Wayne has demonstrated that require enhanced CCTV provision to monitor',
+        cctvIntelligence:
+          'You must specify if partnership agencies requested the sharing of intelligence captured via enhanced CCTV',
+      })
     })
 
     it('should return an error message when `cctvHistory` is empty', () => {
       const page = new EsapPlacementCCTV({ cctvHistory: [], cctvIntelligence: 'no' }, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.cctvHistory',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        cctvHistory:
+          'You must specify which behaviours John Wayne has demonstrated that require enhanced CCTV provision to monitor',
+      })
     })
 
     it('should return an empty array when `cctvIntelligence` is yes and no details are given', () => {
@@ -134,12 +133,10 @@ describe('EsapPlacementCCTV', () => {
         },
         application,
       )
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.cctvIntelligenceDetails',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        cctvIntelligenceDetails:
+          'You must specify the details if partnership agencies have requested the sharing of intelligence captured via enhanced CCTV',
+      })
     })
   })
 

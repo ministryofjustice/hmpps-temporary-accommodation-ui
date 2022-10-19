@@ -1,4 +1,5 @@
 import type { Application } from '@approved-premises/api'
+import type { TaskListErrors } from '@approved-premises/ui'
 
 import TasklistPage from '../../tasklistPage'
 import { convertKeyValuePairToCheckBoxItems } from '../../../utils/formUtils'
@@ -62,13 +63,10 @@ export default class EsapPlacementScreening implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.esapReasons || !this.body.esapReasons.length) {
-      errors.push({
-        propertyName: '$.esapReasons',
-        errorType: 'empty',
-      })
+      errors.esapReasons = `You must specify why ${this.application.person.name} requires an enhanced security placement`
     }
 
     return errors

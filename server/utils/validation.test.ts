@@ -6,6 +6,7 @@ import { SanitisedError } from '../sanitisedError'
 import { catchValidationErrorOrPropogate, catchAPIErrorOrPropogate, fetchErrorsAndUserInput } from './validation'
 import errorLookups from '../i18n/en/errors.json'
 import { ValidationError, TasklistAPIError } from './errors'
+import type TaskListPage from '../form-pages/tasklistPage'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {
@@ -67,17 +68,11 @@ describe('catchValidationErrorOrPropogate', () => {
   })
 
   it('gets errors from a ValidationError type', () => {
-    const error = createMock<ValidationError>({
-      data: [
-        {
-          propertyName: '$.crn',
-          errorType: 'empty',
-        },
-        {
-          propertyName: '$.arrivalDate',
-          errorType: 'empty',
-        },
-      ],
+    const error = createMock<ValidationError<TaskListPage>>({
+      data: {
+        crn: 'You must enter a valid crn',
+        error: 'You must enter a valid arrival date',
+      },
     })
 
     catchValidationErrorOrPropogate(request, response, error, 'some/url')
@@ -95,13 +90,15 @@ describe('catchValidationErrorOrPropogate', () => {
   })
 
   it('throws an error if the property is not found in the error lookup', () => {
-    const error = createMock<ValidationError>({
-      data: [
-        {
-          propertyName: '$.foo',
-          errorType: 'bar',
-        },
-      ],
+    const error = createMock<SanitisedError>({
+      data: {
+        'invalid-params': [
+          {
+            propertyName: '$.foo',
+            errorType: 'bar',
+          },
+        ],
+      },
     })
 
     expect(() => catchValidationErrorOrPropogate(request, response, error, 'some/url')).toThrowError(
@@ -110,13 +107,15 @@ describe('catchValidationErrorOrPropogate', () => {
   })
 
   it('throws an error if the error type is not found in the error lookup', () => {
-    const error = createMock<ValidationError>({
-      data: [
-        {
-          propertyName: '$.crn',
-          errorType: 'invalid',
-        },
-      ],
+    const error = createMock<SanitisedError>({
+      data: {
+        'invalid-params': [
+          {
+            propertyName: '$.crn',
+            errorType: 'invalid',
+          },
+        ],
+      },
     })
 
     expect(() => catchValidationErrorOrPropogate(request, response, error, 'some/url')).toThrowError(

@@ -59,42 +59,5 @@
     "beforeStartDate": "The end date must be before the start date"
   },
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
-  "referenceNumber": { "empty": "You must enter a reference number" },
-  "sentenceType": { "empty": "You must choose a sentence type" },
-  "releaseType": { "empty": "You must choose a release type" },
-  "situation": { "empty": "You must choose a situation" },
-  "knowReleaseDate": { "empty": "You must specify if you know the release date" },
-  "releaseDate": { "empty": "You must specify the release date", "invalid": "The release date is an invalid date" },
-  "knowOralHearingDate": { "empty": "You must specify if you know the oral hearing date" },
-  "oralHearingDate": {
-    "empty": "You must specify the oral hearing date",
-    "invalid": "The oral hearing date is an invalid date"
-  },
-  "startDateSameAsReleaseDate": { "empty": "You must specify if the start date is the same as the release date" },
-  "type": { "empty": "You must specify an AP type" },
-  "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },
-  "esapReasons": { "empty": "You must specify why xxxx requires an enhanced security placement" },
-  "secretingHistory": { "empty": "You must specify what items xxx has a history of secreting" },
-  "secretingIntelligence": {
-    "empty": "You must specify if partnership agencies requested the sharing of intelligence captured via body worn technology"
-  },
-  "secretingIntelligenceDetails": {
-    "empty": "You must specify the details if partnership agencies have requested the sharing of intelligence captured via body worn technology"
-  },
-  "cctvHistory": {
-    "empty": "You must specify which behaviours xxx has demonstrated that require enhanced CCTV provision to monitor"
-  },
-  "cctvIntelligence": {
-    "empty": "You must specify if partnership agencies requested the sharing of intelligence captured via enhanced CCTV"
-  },
-  "cctvIntelligenceDetails": {
-    "empty": "You must specify the details if partnership agencies have requested the sharing of intelligence captured via enhanced CCTV"
-  },
-  "opdPathwayDate": {
-    "empty": "You must enter an OPD Pathway date",
-    "invalid": "The OPD Pathway date is an invalid date"
-  },
-  "pipeReferral": {
-    "empty": "You must specify if  a referral for PIPE placement has been recommended in the OPD pathway plan"
-  }
+  "referenceNumber": { "empty": "You must enter a reference number" }
 }

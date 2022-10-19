@@ -1,8 +1,8 @@
 import type { Request, Response, RequestHandler, NextFunction } from 'express'
 import createError from 'http-errors'
 
+import type { DataServices } from '@approved-premises/ui'
 import { ApplicationService } from '../../../services'
-import type { DataServices } from '../../../services/applicationService'
 
 import {
   catchValidationErrorOrPropogate,

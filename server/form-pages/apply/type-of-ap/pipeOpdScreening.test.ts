@@ -25,19 +25,16 @@ describe('PipeOpdScreening', () => {
   itShouldHaveNextValue(new PipeOpdScreening({}, application), '')
 
   describe('errors', () => {
-    it('should return an empty array if the pipeReferral is populated', () => {
+    it('should return an empty object if the pipeReferral is populated', () => {
       const page = new PipeOpdScreening({ pipeReferral: 'yes' }, application)
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an errors if the pipeReferral is not populated', () => {
       const page = new PipeOpdScreening({ pipeReferral: '' }, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.pipeReferral',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        pipeReferral: 'You must specify if  a referral for PIPE placement has been recommended in the OPD pathway plan',
+      })
     })
   })
 

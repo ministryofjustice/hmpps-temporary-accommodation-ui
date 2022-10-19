@@ -1,11 +1,11 @@
 import type { Request } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
-import type { TaskListErrors } from '@approved-premises/ui'
+import type { TaskListErrors, DataServices } from '@approved-premises/ui'
 
 import applicationSummaryFactory from '../testutils/factories/applicationSummary'
 import type TasklistPage from '../form-pages/tasklistPage'
 import { UnknownPageError, ValidationError } from '../utils/errors'
-import ApplicationService, { type DataServices } from './applicationService'
+import ApplicationService from './applicationService'
 import ApplicationClient from '../data/applicationClient'
 
 import pages from '../form-pages/apply'
@@ -250,7 +250,9 @@ describe('ApplicationService', () => {
 
       beforeEach(() => {
         page = createMock<TasklistPage>({
-          errors: () => [] as TaskListErrors,
+          errors: () => {
+            return {} as TaskListErrors<TasklistPage>
+          },
           body: { foo: 'bar' },
         })
       })
@@ -289,7 +291,7 @@ describe('ApplicationService', () => {
 
     describe('When there validation errors', () => {
       it('throws an error if there is a validation error', async () => {
-        const errors = createMock<TaskListErrors>([{ propertyName: 'foo', errorType: 'bar' }])
+        const errors = createMock<TaskListErrors<TasklistPage>>({ knowOralHearingDate: 'error' })
         const page = createMock<TasklistPage>({
           errors: () => errors,
         })
@@ -300,16 +302,6 @@ describe('ApplicationService', () => {
         } catch (e) {
           expect(e).toEqual(new ValidationError(errors))
         }
-      })
-
-      it('does not thow an error when the page has no errors method', () => {
-        const page = createMock<TasklistPage>({
-          errors: undefined,
-        })
-
-        expect(async () => {
-          await service.save(page, request)
-        }).not.toThrow(ValidationError)
       })
     })
   })

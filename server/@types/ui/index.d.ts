@@ -1,5 +1,10 @@
 import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises/api'
 
+interface TasklistPage {
+  body: Record<string, unknown>
+}
+interface PersonService {}
+
 // A utility type that allows us to define an object with a date attribute split into
 // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
 // date input
@@ -104,7 +109,7 @@ export interface ErrorsAndUserInput {
   userInput: Record<string, unknown>
 }
 
-export type TaskListErrors = Array<{ propertyName: string; errorType: string }>
+export type TaskListErrors<K extends TasklistPage> = Partial<Record<keyof K['body'], string>>
 
 export type YesOrNo = 'yes' | 'no'
 
@@ -125,4 +130,8 @@ export interface PersonRisksUI {
 
 export type GroupedListofBookings = {
   [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
+}
+
+export type DataServices = {
+  personService: PersonService
 }

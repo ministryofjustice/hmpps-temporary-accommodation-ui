@@ -25,19 +25,14 @@ describe('Situation', () => {
   itShouldHaveNextValue(new Situation({}, application), 'release-date')
 
   describe('errors', () => {
-    it('should return an empty array if the situation is populated', () => {
+    it('should return an empty object if the situation is populated', () => {
       const page = new Situation({ situation: 'riskManagement' }, application)
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an errors if the situation is not populated', () => {
       const page = new Situation({ situation: '' }, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.situation',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({ situation: 'You must choose a situation' })
     })
   })
 

@@ -1,4 +1,4 @@
-import { itShouldHaveNextValue } from '../../shared-examples'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-examples'
 import { convertKeyValuePairToRadioItems } from '../../../utils/formUtils'
 
 import ApType from './apType'
@@ -29,6 +29,8 @@ describe('ApType', () => {
     })
   })
 
+  itShouldHavePreviousValue(new ApType({}, application), '')
+
   describe('when type is set to pipe', () => {
     itShouldHaveNextValue(new ApType({ type: 'pipe' }, application), 'pipe-referral')
   })
@@ -42,19 +44,14 @@ describe('ApType', () => {
   })
 
   describe('errors', () => {
-    it('should return an empty array if the type is populated', () => {
+    it('should return an empty object if the type is populated', () => {
       const page = new ApType({ type: 'riskManagement' }, application)
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an errors if the type is not populated', () => {
       const page = new ApType({ type: '' }, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.type',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({ type: 'You must specify an AP type' })
     })
   })
 

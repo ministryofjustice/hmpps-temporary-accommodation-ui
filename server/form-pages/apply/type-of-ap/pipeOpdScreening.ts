@@ -1,4 +1,4 @@
-import type { YesOrNo } from '@approved-premises/ui'
+import type { YesOrNo, TaskListErrors } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
@@ -23,12 +23,12 @@ export default class PipeOpdReferral implements TasklistPage {
     }
   }
 
-  previous() {
-    return 'pipe-referral'
-  }
-
   next() {
     return ''
+  }
+
+  previous() {
+    return 'pipe-referral'
   }
 
   response() {
@@ -44,13 +44,11 @@ export default class PipeOpdReferral implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.pipeReferral) {
-      errors.push({
-        propertyName: '$.pipeReferral',
-        errorType: 'empty',
-      })
+      errors.pipeReferral =
+        'You must specify if  a referral for PIPE placement has been recommended in the OPD pathway plan'
     }
 
     return errors

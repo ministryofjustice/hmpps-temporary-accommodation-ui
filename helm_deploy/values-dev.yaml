@@ -5,7 +5,8 @@ generic-service:
   replicaCount: 2
 
   ingress:
-    host: approved-premises-dev.hmpps.service.justice.gov.uk
+    hosts:
+      - approved-premises-dev.hmpps.service.justice.gov.uk
     contextColour: green
     tlsSecretName: hmpps-approved-premises-dev-cert
 

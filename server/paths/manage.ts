@@ -41,6 +41,7 @@ const paths = {
       create: arrivalsPath,
     },
     nonArrivals: {
+      new: nonArrivalsPath.path('new'),
       create: nonArrivalsPath,
     },
     cancellations: {

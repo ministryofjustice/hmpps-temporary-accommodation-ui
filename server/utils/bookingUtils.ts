@@ -15,7 +15,7 @@ export default function bookingActions(booking: Booking, premisesId: string): Ar
       items.push({
         text: 'Mark as not arrived',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.arrivals.new({ premisesId, bookingId: booking.id }),
+        href: paths.bookings.nonArrivals.new({ premisesId, bookingId: booking.id }),
       })
       items.push({
         text: 'Extend booking',

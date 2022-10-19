@@ -18,5 +18,10 @@
     "id": "7f3eb6cd-b3fc-4a8d-b9ce-5959918ffbe8",
     "name": "Staff shortage",
     "isActive": true
+  },
+  {
+    "id": "1f2eb6cd-b3fc-4a8d-b9ce-5959918ffbe8",
+    "name": "Planned FM works required",
+    "isActive": true
   }
 ]

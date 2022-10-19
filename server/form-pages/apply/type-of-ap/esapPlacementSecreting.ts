@@ -1,5 +1,5 @@
 import type { Application } from '@approved-premises/api'
-import type { YesOrNo } from '@approved-premises/ui'
+import type { YesOrNo, TaskListErrors } from '@approved-premises/ui'
 
 import TasklistPage from '../../tasklistPage'
 import { convertToTitleCase, retrieveQuestionResponseFromApplication } from '../../../utils/utils'
@@ -76,27 +76,20 @@ export default class EsapPlacementSecreting implements TasklistPage {
   }
 
   errors() {
-    const errors = []
+    const errors: TaskListErrors<this> = {}
 
     if (!this.body.secretingHistory || !this.body.secretingHistory.length) {
-      errors.push({
-        propertyName: '$.secretingHistory',
-        errorType: 'empty',
-      })
+      errors.secretingHistory = `You must specify what items ${this.application.person.name} has a history of secreting`
     }
 
     if (!this.body.secretingIntelligence) {
-      errors.push({
-        propertyName: '$.secretingIntelligence',
-        errorType: 'empty',
-      })
+      errors.secretingIntelligence =
+        'You must specify if partnership agencies requested the sharing of intelligence captured via body worn technology'
     }
 
     if (this.body.secretingIntelligence === 'yes' && !this.body.secretingIntelligenceDetails) {
-      errors.push({
-        propertyName: '$.secretingIntelligenceDetails',
-        errorType: 'empty',
-      })
+      errors.secretingIntelligenceDetails =
+        'You must specify the details if partnership agencies have requested the sharing of intelligence captured via body worn technology'
     }
 
     return errors

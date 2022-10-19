@@ -61,13 +61,6 @@
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
   "referenceNumber": { "empty": "You must enter a reference number" },
   "opdPathway": { "empty": "You must specify if xxxx has been screened into the OPD pathway" },
-  "secretingHistory": { "empty": "You must specify what items xxx has a history of secreting" },
-  "secretingIntelligence": {
-    "empty": "You must specify if partnership agencies requested the sharing of intelligence captured via body worn technology"
-  },
-  "secretingIntelligenceDetails": {
-    "empty": "You must specify the details if partnership agencies have requested the sharing of intelligence captured via body worn technology"
-  },
   "opdPathwayDate": {
     "empty": "You must enter an OPD Pathway date",
     "invalid": "The OPD Pathway date is an invalid date"

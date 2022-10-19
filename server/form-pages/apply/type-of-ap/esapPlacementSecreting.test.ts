@@ -87,7 +87,12 @@ describe('EsapPlacementSecreting', () => {
   })
 
   describe('errors', () => {
-    it('should return an empty array when `secretingHistory` and `secretingIntelligence` are defined', () => {
+    beforeEach(() => {
+      const person = personFactory.build({ name: 'John Wayne' })
+      application.person = person
+    })
+
+    it('should return an empty object when `secretingHistory` and `secretingIntelligence` are defined', () => {
       const page = new EsapPlacementSecreting(
         {
           secretingHistory: ['radicalisationLiterature'],
@@ -97,31 +102,39 @@ describe('EsapPlacementSecreting', () => {
         },
         application,
       )
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return error messages when `secretingHistory` and `secretingIntelligence` are undefined', () => {
       const page = new EsapPlacementSecreting({}, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.secretingHistory',
-          errorType: 'empty',
-        },
-        {
-          propertyName: '$.secretingIntelligence',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        secretingHistory: 'You must specify what items John Wayne has a history of secreting',
+        secretingIntelligence:
+          'You must specify if partnership agencies requested the sharing of intelligence captured via body worn technology',
+      })
     })
 
     it('should return an error message when `secretingHistory` is empty', () => {
       const page = new EsapPlacementSecreting({ secretingHistory: [], secretingIntelligence: 'no' }, application)
-      expect(page.errors()).toEqual([
+      expect(page.errors()).toEqual({
+        secretingHistory: 'You must specify what items John Wayne has a history of secreting',
+      })
+    })
+
+    it('should return an error message when `secretingIntelligence` is yes and no details are given', () => {
+      const page = new EsapPlacementSecreting(
         {
-          propertyName: '$.secretingHistory',
-          errorType: 'empty',
+          secretingHistory: ['radicalisationLiterature'],
+          secretingIntelligence: 'yes',
+          secretingIntelligenceDetails: '',
+          secretingNotes: 'notes',
         },
-      ])
+        application,
+      )
+      expect(page.errors()).toEqual({
+        secretingIntelligenceDetails:
+          'You must specify the details if partnership agencies have requested the sharing of intelligence captured via body worn technology',
+      })
     })
   })
 
@@ -132,23 +145,5 @@ describe('EsapPlacementSecreting', () => {
 
       expect(convertKeyValuePairToCheckBoxItems).toHaveBeenCalledWith(secretingHistory, page.body.secretingHistory)
     })
-  })
-
-  it('should return an empty array when `secretingIntelligence` is yes and no details are given', () => {
-    const page = new EsapPlacementSecreting(
-      {
-        secretingHistory: ['radicalisationLiterature'],
-        secretingIntelligence: 'yes',
-        secretingIntelligenceDetails: '',
-        secretingNotes: 'notes',
-      },
-      application,
-    )
-    expect(page.errors()).toEqual([
-      {
-        propertyName: '$.secretingIntelligenceDetails',
-        errorType: 'empty',
-      },
-    ])
   })
 })

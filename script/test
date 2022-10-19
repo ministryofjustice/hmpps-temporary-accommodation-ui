@@ -4,6 +4,12 @@
 
 set -e
 
+echo "==> Checking shell scripts"
+
+node_modules/.bin/shellcheck ./script/**/*[^utils] ./script/utils/**
+
+echo "==> Typechecking the code"
+
 script/utils/launch-docker.sh
 
 echo "==> Starting the backing services in Docker..."

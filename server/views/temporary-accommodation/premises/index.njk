@@ -4,6 +4,7 @@
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
 {% set pageTitle = applicationName + " - List of properties" %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
   
@@ -11,35 +12,33 @@
 
   {% include "../../_messages.njk" %}
   
-  <main class="app-container govuk-body">
-    <h1>List of properties</h1>
+  <h1>List of properties</h1>
 
-    {{ govukButton({
-      text: "Add a property",
-      href: paths.premises.new()
-    }) }}
+  {{ govukButton({
+    text: "Add a property",
+    href: paths.premises.new()
+  }) }}
 
-    {{ govukTable({
-      captionClasses: "govuk-table__caption--m",
-      head: [
-        {
-          text: "Address"
-        },
-        {
-          text: "Bedspaces"
-        },
-        {
-          text: "Location"
-        },
-        {
-          text: "Occupancy"
-        },
-        {
-          html: '<span class="govuk-visually-hidden">Actions</span>'
-        }
-      ],
-      rows: tableRows
-    }) }}
-  </main>
+  {{ govukTable({
+    captionClasses: "govuk-table__caption--m",
+    head: [
+      {
+        text: "Address"
+      },
+      {
+        text: "Bedspaces"
+      },
+      {
+        text: "Location"
+      },
+      {
+        text: "Occupancy"
+      },
+      {
+        html: '<span class="govuk-visually-hidden">Actions</span>'
+      }
+    ],
+    rows: tableRows
+  }) }} 
 
 {% endblock %}

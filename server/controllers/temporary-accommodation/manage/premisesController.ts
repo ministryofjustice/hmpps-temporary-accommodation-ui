@@ -14,7 +14,7 @@ export default class PremisesController {
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const tableRows = await this.premisesService.tableRows(req.user.token, 'temporary-accommodation')
+      const tableRows = await this.premisesService.temporaryAccommodationTableRows(req.user.token)
       return res.render('temporary-accommodation/premises/index', { tableRows })
     }
   }

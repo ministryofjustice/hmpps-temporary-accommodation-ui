@@ -112,6 +112,102 @@ describe('PremisesService', () => {
     })
   })
 
+  describe('temporaryAccommodationTableRows', () => {
+    it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
+      const premises1 = premisesFactory.build({ address: 'XYZ', postcode: '123' })
+      const premises2 = premisesFactory.build({ address: 'ABC', postcode: '123' })
+      const premises3 = premisesFactory.build({ address: 'GHI', postcode: '456' })
+      const premises4 = premisesFactory.build({ address: 'GHI', postcode: '123' })
+
+      const premises = [premises1, premises2, premises3, premises4]
+      premisesClient.all.mockResolvedValue(premises)
+
+      const rows = await service.temporaryAccommodationTableRows(token)
+
+      expect(rows).toEqual([
+        [
+          {
+            text: 'ABC, 123',
+          },
+          {
+            text: premises2.bedCount.toString(),
+          },
+          {
+            text: '',
+          },
+          {
+            text: '',
+          },
+          {
+            html: `<a href="${taPaths.premises.show({
+              premisesId: premises2.id,
+            })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
+          },
+        ],
+        [
+          {
+            text: 'GHI, 123',
+          },
+          {
+            text: premises4.bedCount.toString(),
+          },
+          {
+            text: '',
+          },
+          {
+            text: '',
+          },
+          {
+            html: `<a href="${taPaths.premises.show({
+              premisesId: premises4.id,
+            })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
+          },
+        ],
+        [
+          {
+            text: 'GHI, 456',
+          },
+          {
+            text: premises3.bedCount.toString(),
+          },
+          {
+            text: '',
+          },
+          {
+            text: '',
+          },
+          {
+            html: `<a href="${taPaths.premises.show({
+              premisesId: premises3.id,
+            })}">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
+          },
+        ],
+        [
+          {
+            text: 'XYZ, 123',
+          },
+          {
+            text: premises1.bedCount.toString(),
+          },
+          {
+            text: '',
+          },
+          {
+            text: '',
+          },
+          {
+            html: `<a href="${taPaths.premises.show({
+              premisesId: premises1.id,
+            })}">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
+          },
+        ],
+      ])
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.all).toHaveBeenCalledWith('temporary-accommodation')
+    })
+  })
+
   describe('premisesSelectList', () => {
     it('returns the list mapped into the format required by the nunjucks macro and sorted alphabetically', async () => {
       const premisesA = premisesFactory.build({ name: 'a' })

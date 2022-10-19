@@ -1,5 +1,5 @@
-import type { TableRow, SummaryList, NewPremises, Service } from '@approved-premises/ui'
-import type { Premises, StaffMember } from '@approved-premises/api'
+import type { TableRow, SummaryList, NewPremises, Premises } from '@approved-premises/ui'
+import type { StaffMember } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient } from '../data'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
@@ -35,6 +35,28 @@ export default class PremisesService {
             `<a href="${showPath({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
               p.name
             }</span></a>`,
+          ),
+        ]
+      })
+  }
+
+  async temporaryAccommodationTableRows(token: string): Promise<Array<TableRow>> {
+    const premisesClient = this.premisesClientFactory(token)
+    const premises = await premisesClient.all('temporary-accommodation')
+
+    return premises
+      .map(p => ({ premises: p, shortAddress: `${p.address}, ${p.postcode}` }))
+      .sort((a, b) => a.shortAddress.localeCompare(b.shortAddress))
+      .map(entry => {
+        return [
+          this.textValue(entry.shortAddress),
+          this.textValue(`${entry.premises.bedCount}`),
+          this.textValue(''),
+          this.textValue(''),
+          this.htmlValue(
+            `<a href="${taPaths.premises.show({
+              premisesId: entry.premises.id,
+            })}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
           ),
         ]
       })

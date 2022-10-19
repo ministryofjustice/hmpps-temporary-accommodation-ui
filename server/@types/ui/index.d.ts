@@ -1,5 +1,9 @@
 import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises/api'
 
+interface TasklistPage {
+  body: Record<string, unknown>
+}
+
 // A utility type that allows us to define an object with a date attribute split into
 // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
 // date input

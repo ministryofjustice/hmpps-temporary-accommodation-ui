@@ -86,29 +86,23 @@ describe('EsapPlacementScreening', () => {
   })
 
   describe('errors', () => {
-    it('should return an empty array when `esapReasons` is defined', () => {
+    it('should return an empty object when `esapReasons` is defined', () => {
       const page = new EsapPlacementScreening({ esapReasons: ['secreting', 'cctv'] }, application)
-      expect(page.errors()).toEqual([])
+      expect(page.errors()).toEqual({})
     })
 
     it('should return an error message when `esapReasons` is undefined', () => {
       const page = new EsapPlacementScreening({}, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.esapReasons',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        esapReasons: 'You must specify why John Wayne requires an enhanced security placement',
+      })
     })
 
     it('should return an error message when `esapReasons` is empty', () => {
       const page = new EsapPlacementScreening({ esapReasons: [] }, application)
-      expect(page.errors()).toEqual([
-        {
-          propertyName: '$.esapReasons',
-          errorType: 'empty',
-        },
-      ])
+      expect(page.errors()).toEqual({
+        esapReasons: 'You must specify why John Wayne requires an enhanced security placement',
+      })
     })
   })
 

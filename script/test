@@ -10,6 +10,10 @@ echo "==> Starting the backing services in Docker..."
 
 docker-compose -f docker-compose-test.yml up -d
 
+echo "==> Pulling the latest type from the API repo"
+
+npm run generate-types
+
 echo "==> Typechecking the code"
 
 npm run typecheck

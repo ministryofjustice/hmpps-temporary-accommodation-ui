@@ -1,5 +1,7 @@
 import { Response, Request, RequestHandler } from 'express'
-import type { NonArrival, NewNonArrival } from 'approved-premises'
+
+import type { Nonarrival } from '@approved-premises/api'
+
 import { DateFormats } from '../../utils/dateUtils'
 import NonArrivalService from '../../services/nonArrivalService'
 import { catchValidationErrorOrPropogate } from '../../utils/validation'
@@ -11,11 +13,11 @@ export default class NonArrivalsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, bookingId } = req.params
-      const body = req.body as NewNonArrival
-      const { nonArrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'nonArrivalDate')
 
-      const nonArrival: Omit<NonArrival, 'id' | 'bookingId'> = {
-        ...body.nonArrival,
+      const { nonArrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'nonArrivalDate')
+
+      const nonArrival: Omit<Nonarrival, 'id' | 'bookingId'> = {
+        ...req.body.nonArrival,
         date: nonArrivalDate,
       }
 

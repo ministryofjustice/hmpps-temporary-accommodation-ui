@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import type { TaskNames } from 'approved-premises'
+import type { TaskNames } from '@approved-premises/ui'
 import basicInfomationPages from './basic-information'
 import typeOfApPages from './type-of-ap'
 

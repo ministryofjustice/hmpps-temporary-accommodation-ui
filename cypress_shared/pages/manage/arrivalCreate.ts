@@ -1,4 +1,4 @@
-import type { Arrival, NonArrival } from 'approved-premises'
+import type { Arrival, Nonarrival } from '@approved-premises/api'
 
 import Page from '../page'
 import paths from '../../../server/paths/manage'
@@ -37,7 +37,7 @@ export default class ArrivalCreatePage extends Page {
     cy.get('[name="arrival[submit]"]').click()
   }
 
-  public completeNonArrivalForm(nonArrival: NonArrival): void {
+  public completeNonArrivalForm(nonArrival: Nonarrival): void {
     cy.get('input[name="arrived"][value="No"]').check()
 
     cy.log('nonArrival', nonArrival)

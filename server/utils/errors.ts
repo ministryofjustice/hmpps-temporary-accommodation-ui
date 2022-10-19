@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import type { TaskListErrors } from 'approved-premises'
+import type { TaskListErrors } from '@approved-premises/ui'
 
 export class ValidationError extends Error {
   data: TaskListErrors

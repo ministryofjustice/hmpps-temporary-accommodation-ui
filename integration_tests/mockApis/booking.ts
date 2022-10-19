@@ -1,4 +1,4 @@
-import type { Booking } from 'approved-premises'
+import type { Booking } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'

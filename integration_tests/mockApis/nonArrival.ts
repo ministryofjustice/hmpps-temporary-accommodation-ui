@@ -1,12 +1,12 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { NonArrival } from 'approved-premises'
+import type { Nonarrival } from '@approved-premises/api'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
-  stubNonArrivalCreate: (args: { premisesId: string; bookingId: string; nonArrival: NonArrival }): SuperAgentRequest =>
+  stubNonArrivalCreate: (args: { premisesId: string; bookingId: string; nonArrival: Nonarrival }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',

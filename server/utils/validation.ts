@@ -1,7 +1,7 @@
 import type { Response, Request } from 'express'
 import jsonpath from 'jsonpath'
 
-import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from 'approved-premises'
+import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
 import { SanitisedError } from '../sanitisedError'
 import errorLookup from '../i18n/en/errors.json'
 import { TasklistAPIError } from './errors'

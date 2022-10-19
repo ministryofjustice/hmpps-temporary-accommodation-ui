@@ -1,4 +1,4 @@
-import type { Person } from 'approved-premises'
+import type { Person } from '@approved-premises/api'
 import Page from '../page'
 
 export default class ReleaseDatePage extends Page {

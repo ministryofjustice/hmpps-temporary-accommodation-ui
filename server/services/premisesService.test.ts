@@ -1,7 +1,7 @@
 import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 import premisesFactory from '../testutils/factories/premises'
-import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
+import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import paths from '../paths/manage'
@@ -179,11 +179,11 @@ describe('PremisesService', () => {
     })
     it('returns an empty string if passed dates that are not overcapacity', async () => {
       premisesClient.capacity.mockResolvedValue([
-        premisesCapacityItemFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: 1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 1).toISOString(), availableBeds: 2 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 3 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: 4 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: 5 }),
+        dateCapacityFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: 1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 1, 1).toISOString(), availableBeds: 2 }),
+        dateCapacityFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 3 }),
+        dateCapacityFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: 4 }),
+        dateCapacityFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: 5 }),
       ])
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
 
@@ -194,7 +194,7 @@ describe('PremisesService', () => {
 
     it('returns the correct string if passed a single date', async () => {
       const capacityStub = [
-        premisesCapacityItemFactory.build({
+        dateCapacityFactory.build({
           date: new Date(2022, 0, 1).toISOString(),
           availableBeds: -1,
         }),
@@ -211,11 +211,11 @@ describe('PremisesService', () => {
 
     it('returns the correct string if passed a single date range', async () => {
       const capacityStub = [
-        premisesCapacityItemFactory.build({
+        dateCapacityFactory.build({
           date: new Date(2022, 0, 1).toISOString(),
           availableBeds: -1,
         }),
-        premisesCapacityItemFactory.build({
+        dateCapacityFactory.build({
           date: new Date(2022, 1, 1).toISOString(),
           availableBeds: -1,
         }),
@@ -237,11 +237,11 @@ describe('PremisesService', () => {
 
     it('if there are multiple date ranges it returns the correct markup', async () => {
       const capacityStub = [
-        premisesCapacityItemFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: -1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 1).toISOString(), availableBeds: -1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: -1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 1, 1).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: -1 }),
       ]
       premisesClient.capacity.mockResolvedValue(capacityStub)
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([
@@ -265,10 +265,10 @@ describe('PremisesService', () => {
 
     it('if there is a date ranges and a single date it returns the correct markup', async () => {
       const capacityStub = [
-        premisesCapacityItemFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: -1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: -1 }),
-        premisesCapacityItemFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 0, 1).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 1, 2).toISOString(), availableBeds: 1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 2, 2).toISOString(), availableBeds: -1 }),
+        dateCapacityFactory.build({ date: new Date(2023, 3, 2).toISOString(), availableBeds: -1 }),
       ]
       premisesClient.capacity.mockResolvedValue(capacityStub)
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([

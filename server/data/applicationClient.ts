@@ -1,5 +1,5 @@
-import type { ApplicationSummary, Application } from 'approved-premises'
-
+import type { Application } from '@approved-premises/api'
+import { ApplicationSummary } from '../testutils/factories/applicationSummary'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'

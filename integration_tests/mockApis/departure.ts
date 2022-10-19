@@ -1,6 +1,6 @@
 import type { SuperAgentRequest, Response } from 'superagent'
 
-import type { Departure } from 'approved-premises'
+import type { Departure } from '@approved-premises/api'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'

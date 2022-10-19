@@ -31,7 +31,8 @@
     "clean": "rm -rf dist build node_modules stylesheets",
     "api-stubs:create": "npx ts-node --transpile-only ./wiremock/stubApis.ts",
     "api-stubs:reset": "npx ts-node --transpile-only ./wiremock/resetStubs.ts",
-    "start-test-wiremock": "docker-compose -f docker-compose-test.yml up -d"
+    "start-test-wiremock": "docker-compose -f docker-compose-test.yml up -d",
+    "generate-types": "script/generate-types"
   },
   "engines": {
     "node": "^18",
@@ -198,6 +199,7 @@
     "mocha-junit-reporter": "^2.1.0",
     "nock": "^13.2.9",
     "nodemon": "^2.0.20",
+    "openapi-typescript-codegen": "^0.23.0",
     "prettier": "^2.7.1",
     "sass": "^1.55.0",
     "start-server-and-test": "^1.14.0",

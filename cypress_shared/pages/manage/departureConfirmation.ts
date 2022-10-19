@@ -1,4 +1,4 @@
-import type { Departure, Booking } from 'approved-premises'
+import type { Departure, Booking } from '@approved-premises/api'
 import Page from '../page'
 import paths from '../../../server/paths/manage'
 import { DateFormats } from '../../../server/utils/dateUtils'
@@ -20,7 +20,7 @@ export default class DepartureConfirmation extends Page {
       this.assertDefinition('CRN', booking.person.crn)
       this.assertDefinition('Departure date', DateFormats.isoDateToUIDate(departure.dateTime))
       this.assertDefinition('Reason', departure.reason.name)
-      this.assertDefinition('Destination approved premises', departure.destinationAp.name)
+      this.assertDefinition('Destination approved premises', departure.destinationProvider.name)
       this.assertDefinition('Destination provider', departure.destinationProvider.name)
       this.assertDefinition('Move on category', departure.moveOnCategory.name)
       this.assertDefinition('Notes', departure.notes)

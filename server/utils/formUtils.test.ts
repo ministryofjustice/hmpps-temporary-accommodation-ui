@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/ts-jest'
 
-import type { ErrorMessages } from 'approved-premises'
+import type { ErrorMessages } from '@approved-premises/ui'
 import {
   dateFieldValues,
   convertObjectsToRadioItems,

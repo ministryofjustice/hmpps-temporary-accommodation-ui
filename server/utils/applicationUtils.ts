@@ -1,4 +1,5 @@
-import type { Application, TaskNames } from 'approved-premises'
+import type { TaskNames } from '@approved-premises/ui'
+import type { Application } from '@approved-premises/api'
 import pages from '../form-pages/apply'
 import taskLookup from '../i18n/en/tasks.json'
 import paths from '../paths/apply'

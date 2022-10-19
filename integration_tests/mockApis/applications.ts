@@ -1,6 +1,7 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { Application, ApplicationSummary } from 'approved-premises'
+import type { Application } from '@approved-premises/api'
+import type { ApplicationSummary } from '../../server/testutils/factories/applicationSummary'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 
@@ -42,7 +43,7 @@ export default {
         {
           "id": "{{request.pathSegments.[1]}}",
           "person": ${JSON.stringify(args.application.person)},
-          "createdByProbationOfficerId": "${args.application.createdByProbationOfficerId}",
+          "createdByProbationOfficerId": "${args.application.createdByUserId}",
           "schemaVersion": "${args.application.schemaVersion}",
           "createdAt": "${args.application.createdAt}",
           "submittedAt": "${args.application.submittedAt}",

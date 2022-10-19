@@ -1,4 +1,4 @@
-import type { Departure, Booking } from 'approved-premises'
+import type { Departure, Booking } from '@approved-premises/api'
 
 import Page from '../page'
 import paths from '../../../server/paths/manage'
@@ -28,8 +28,6 @@ export default class DepartureCreatePage extends Page {
     cy.get('input[name="dateTime-month"]').type(String(dateTime.getMonth() + 1))
     cy.get('input[name="dateTime-year"]').type(String(dateTime.getFullYear()))
     cy.get('input[name="dateTime-time"]').type(`${hours}:${minutes}`)
-
-    cy.get('#destinationAp').select(departure.destinationAp.name)
 
     cy.get(`input[name="departure[reason]"][value="${departure.reason.id}"]`).check()
 

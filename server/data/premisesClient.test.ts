@@ -4,7 +4,7 @@ import premisesFactory from '../testutils/factories/premises'
 import PremisesClient from './premisesClient'
 import config from '../config'
 import paths from '../paths/api'
-import premisesCapacityItemFactory from '../testutils/factories/premisesCapacityItem'
+import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
 
 describe('PremisesClient', () => {
@@ -58,7 +58,7 @@ describe('PremisesClient', () => {
 
   describe('capacity', () => {
     const premisesId = 'premisesId'
-    const premisesCapacityItem = premisesCapacityItemFactory.build()
+    const premisesCapacityItem = dateCapacityFactory.build()
 
     it('should get the capacity of a premises for a given date', async () => {
       fakeApprovedPremisesApi

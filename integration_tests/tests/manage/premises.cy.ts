@@ -1,6 +1,6 @@
 import premisesFactory from '../../../server/testutils/factories/premises'
 import bookingsFactory from '../../../server/testutils/factories/booking'
-import premisesCapacityItemFactory from '../../../server/testutils/factories/premisesCapacityItem'
+import dateCapacityFactory from '../../../server/testutils/factories/dateCapacity'
 
 import { PremisesListPage, PremisesShowPage } from '../../../cypress_shared/pages/manage'
 
@@ -40,11 +40,11 @@ context('Premises', () => {
       ...bookingsDepartingSoon,
     ]
 
-    const overcapacityStartDate = premisesCapacityItemFactory.build({
+    const overcapacityStartDate = dateCapacityFactory.build({
       date: new Date(2023, 0, 1).toISOString(),
       availableBeds: -1,
     })
-    const overcapacityEndDate = premisesCapacityItemFactory.build({
+    const overcapacityEndDate = dateCapacityFactory.build({
       date: new Date(2023, 1, 1).toISOString(),
       availableBeds: -1,
     })

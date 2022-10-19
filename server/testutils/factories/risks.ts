@@ -1,14 +1,8 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type {
-  PersonRisks,
-  RiskLevel,
-  RiskEnvelopeStatus,
-  TierLetter,
-  TierNumber,
-  RiskTierLevel,
-} from 'approved-premises'
+import type { PersonRisks, RiskEnvelopeStatus } from '@approved-premises/api'
+import { RiskLevel, TierLetter, TierNumber, RiskTierLevel } from '@approved-premises/ui'
 import { DateFormats } from '../../utils/dateUtils'
 
 const riskLevels: RiskLevel[] = ['Low', 'Medium', 'High', 'Very High']

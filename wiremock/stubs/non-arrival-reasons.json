@@ -1,0 +1,17 @@
+[
+  {
+    "id": "78b9c1a4-1d60-11ed-861d-0242ac120002",
+    "name": "Absconded",
+    "isActive": true
+  },
+  {
+    "id": "51b44b8c-f7f3-415d-90c3-61bb7fb96286",
+    "name": "Recalled",
+    "isActive": true
+  },
+  {
+    "id": "9ddc9bfc-72fa-4a25-88c0-cc0ff8c6c00e",
+    "name": "Died",
+    "isActive": true
+  }
+]

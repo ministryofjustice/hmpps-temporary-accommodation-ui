@@ -1,16 +1,16 @@
 import type {
-  Arrival,
-  NewBooking,
-  Booking,
-  BookingExtension,
-  NewCancellation,
-  Cancellation,
-  NewDeparture,
-  Departure,
-  NonArrival,
-  NewBookingExtension,
   NewArrival,
-} from 'approved-premises'
+  Arrival,
+  Booking,
+  NewBooking,
+  Extension,
+  NewExtension,
+  Cancellation,
+  NewCancellation,
+  Departure,
+  Nonarrival,
+  NewDeparture,
+} from '@approved-premises/api'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
@@ -33,15 +33,11 @@ export default class BookingClient {
     return (await this.restClient.get({ path: this.bookingsPath(premisesId) })) as Array<Booking>
   }
 
-  async extendBooking(
-    premisesId: string,
-    bookingId: string,
-    bookingExtension: NewBookingExtension,
-  ): Promise<BookingExtension> {
+  async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension): Promise<Extension> {
     return (await this.restClient.post({
       path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
       data: bookingExtension,
-    })) as BookingExtension
+    })) as Extension
   }
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival): Promise<Arrival> {
@@ -90,14 +86,14 @@ export default class BookingClient {
   async markNonArrival(
     premisesId: string,
     bookingId: string,
-    nonArrival: Omit<NonArrival, 'id' | 'bookingId'>,
-  ): Promise<NonArrival> {
+    nonArrival: Omit<Nonarrival, 'id' | 'bookingId'>,
+  ): Promise<Nonarrival> {
     const response = await this.restClient.post({
       path: `${this.bookingPath(premisesId, bookingId)}/non-arrivals`,
       data: nonArrival,
     })
 
-    return response as NonArrival
+    return response as Nonarrival
   }
 
   private bookingsPath(premisesId: string): string {

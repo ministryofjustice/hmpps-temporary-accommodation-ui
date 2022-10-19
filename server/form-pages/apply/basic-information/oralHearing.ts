@@ -1,4 +1,5 @@
-import type { ObjectWithDateParts, YesOrNo, Application } from 'approved-premises'
+import type { ObjectWithDateParts, YesOrNo } from '@approved-premises/ui'
+import type { Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
 import { dateAndTimeInputsAreValidDates, dateIsBlank, DateFormats } from '../../../utils/dateUtils'

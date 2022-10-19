@@ -139,7 +139,7 @@ describe('PipeReferral', () => {
 
       expect(page.response()).toEqual({
         [page.title]: 'Yes',
-        'OPD Pathway Screening Date': 'Friday 11 November 2022',
+        "When was John Wayne's last consultation or formulation?": 'Friday 11 November 2022',
       })
     })
   })

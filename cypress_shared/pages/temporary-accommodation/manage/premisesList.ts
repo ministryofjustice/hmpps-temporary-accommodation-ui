@@ -5,7 +5,7 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 
 export default class PremisesListPage extends Page {
   constructor() {
-    super('Properties')
+    super('List of properties')
   }
 
   static visit(): PremisesListPage {
@@ -31,6 +31,6 @@ export default class PremisesListPage extends Page {
   }
 
   clickAddPremisesButton() {
-    cy.get('a').contains('Add a new property').click()
+    cy.get('a').contains('Add a property').click()
   }
 }

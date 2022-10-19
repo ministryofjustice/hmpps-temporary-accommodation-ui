@@ -14,10 +14,12 @@
   
   <h1>List of properties</h1>
 
-  {{ govukButton({
-    text: "Add a property",
-    href: paths.premises.new()
-  }) }}
+  <div class="add-property-button-container">
+    {{ govukButton({
+      text: "Add a property",
+      href: paths.premises.new()
+    }) }}
+  </div>
 
   {{ govukTable({
     captionClasses: "govuk-table__caption--m",

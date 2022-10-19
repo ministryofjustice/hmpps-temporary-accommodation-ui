@@ -1,4 +1,4 @@
-import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises/api'
+import { RoshRisks, RiskTier, FlagsEnvelope, Mappa, Premises as ApiPremises } from '@approved-premises/api'
 
 interface TasklistPage {
   body: Record<string, unknown>
@@ -158,4 +158,8 @@ export type NewPremises = {
   localAuthorityId: string
   notes: string
   service: Service
+}
+
+export type Premises = ApiPremises & {
+  address: string
 }

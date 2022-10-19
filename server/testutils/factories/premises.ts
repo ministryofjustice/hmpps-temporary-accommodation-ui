@@ -1,11 +1,13 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { ApArea, Premises, ProbationRegion, LocalAuthorityArea } from '@approved-premises/api'
+import type { ApArea, ProbationRegion, LocalAuthorityArea } from '@approved-premises/api'
+import { Premises } from '../../@types/ui'
 
 export default Factory.define<Premises>(() => ({
   id: faker.datatype.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
+  address: faker.address.streetAddress(),
   apCode: faker.random.alphaNumeric(5, { casing: 'upper' }),
   postcode: faker.address.zipCode(),
   bedCount: 50,

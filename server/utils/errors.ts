@@ -1,10 +1,11 @@
 /* eslint-disable max-classes-per-file */
 import type { TaskListErrors } from '@approved-premises/ui'
+import TaskListPage from '../form-pages/tasklistPage'
 
-export class ValidationError extends Error {
-  data: TaskListErrors
+export class ValidationError<T extends TaskListPage> extends Error {
+  data: TaskListErrors<T>
 
-  constructor(data: TaskListErrors) {
+  constructor(data: TaskListErrors<T>) {
     super('Validation error')
     this.data = data
   }

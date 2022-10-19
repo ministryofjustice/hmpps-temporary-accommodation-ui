@@ -104,7 +104,7 @@ export interface ErrorsAndUserInput {
   userInput: Record<string, unknown>
 }
 
-export type TaskListErrors = Array<{ propertyName: string; errorType: string }>
+export type TaskListErrors<K extends TasklistPage> = Partial<Record<keyof K['body'], string>>
 
 export type YesOrNo = 'yes' | 'no'
 

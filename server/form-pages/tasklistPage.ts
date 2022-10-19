@@ -1,6 +1,6 @@
 import type { Request } from 'express'
-
 import type { TaskListErrors } from '@approved-premises/ui'
+
 import type { DataServices } from '../services/applicationService'
 
 export default abstract class TasklistPage {
@@ -8,13 +8,13 @@ export default abstract class TasklistPage {
 
   abstract title: string
 
-  body?: Record<string, unknown>
+  abstract body: Record<string, unknown>
 
-  previous?(): string
+  abstract previous(): string
 
-  next?(): string
+  abstract next(): string
 
-  errors?(): TaskListErrors
+  abstract errors(): TaskListErrors<this>
 
   async setup?(request: Request, dataServices: DataServices): Promise<void>
 }

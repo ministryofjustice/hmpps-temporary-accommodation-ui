@@ -1,9 +1,9 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% extends "../partials/layout.njk" %}
 
@@ -19,49 +19,70 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      <h1>{{pageHeading}}</h1>
 
-      {{ showErrorSummary(errorSummary) }}
-
-      {% set arrivalHTML %}
-      {% include "./_arrival_form.njk" %}
-      {% endset -%}
-
-      {% set nonArrivalHTML %}
-      {% include "./_non-arrival_form.njk" %}
-      {% endset -%}
-
-      {{ govukRadios({
-            name: "arrived",
-            fieldset: {
-              legend: {
-                text: pageHeading,
-                isPageHeading: true,
-                classes: "govuk-fieldset__legend--l"
+      <form action="{{ paths.bookings.arrivals.create({ premisesId: premisesId, bookingId: bookingId }) }}" method="post">
+        {{ showErrorSummary(errorSummary) }}
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {{ govukDateInput({
+          id: "arrival[arrivalDate]",
+          namePrefix: "arrivalDate",
+          fieldset: {
+          legend: {
+              text: "What is the arrival date?",
+              classes: "govuk-fieldset__legend--m"
               }
-            },
-            hint: {
-              text: "Select one option."
-            },
-            items: [
-              {
-                value: "Yes",
-                text: "Yes",
-                checked: arrival|length,
-                conditional: {
-                  html: arrivalHTML
-                }
-              },
-              {
-                value: "No",
-                text: "No",
-                checked: nonArrival|length,
-                conditional: {
-                  html: nonArrivalHTML
-                }
+          },
+          items: dateFieldValues('arrivalDate', errors),
+          errorMessage: errors.date,
+          hint: {
+              text: "For example, 27 3 2007"
+          }
+        }) }}
+
+        {{ govukDateInput({
+          id: "arrival[expectedDepartureDate]",
+          namePrefix: "expectedDepartureDate",
+          fieldset: {
+          legend: {
+              text: "What is their expected departure date?",
+              classes: "govuk-fieldset__legend--m"
               }
-            ]
-          })
-        }}
+          },
+          items: dateFieldValues('expectedDepartureDate', errors),
+          errorMessage: errors.expectedDepartureDate,
+          hint: {
+            text: "For example, 27 3 2007"
+          }
+        }) }}
+
+        {{ govukSelect({
+          label: {
+              text: "Key Worker",
+              classes: "govuk-label--m"
+          },
+          classes: "govuk-input--width-20",
+          id: "keyWorkerStaffId",
+          name: "arrival[keyWorkerStaffId]",
+          items: convertObjectsToSelectOptions(staffMembers, 'Select a keyworker', 'name', 'id', 'keyWorkerStaffId'),
+          errorMessage: errors.keyWorkerStaffId
+        }) }}
+
+        {{ govukTextarea({
+          name: "arrival[notes]",
+          id: "notes",
+          value: arrival.notes,
+          label: {
+            text: "Any other information"
+          }
+        }) }}
+
+        {{ govukButton({
+          name: 'arrival[submit]',
+          text: "Submit"
+        }) }}
+      </form>
+
     </div>
   </div>
 {% endblock %}

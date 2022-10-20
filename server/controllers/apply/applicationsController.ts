@@ -6,6 +6,7 @@ import { PersonService } from '../../services'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
 import paths from '../../paths/apply'
 import { DateFormats } from '../../utils/dateUtils'
+import { sections } from '../../form-pages/apply'
 
 export default class ApplicationsController {
   constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
@@ -33,7 +34,7 @@ export default class ApplicationsController {
       if (application) {
         const risks = await this.personService.getPersonRisks(req.user.token, application.person.crn)
 
-        res.render('applications/show', { application, risks })
+        res.render('applications/show', { application, risks, sections })
       } else {
         next(createError(404, 'Not found'))
       }

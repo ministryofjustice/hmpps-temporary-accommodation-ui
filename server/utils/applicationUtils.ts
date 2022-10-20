@@ -1,24 +1,32 @@
-import type { TaskNames } from '@approved-premises/ui'
+import type { Task, FormSections, FormSection } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
-import pages from '../form-pages/apply'
-import taskLookup from '../i18n/en/tasks.json'
 import paths from '../paths/apply'
 
-const getTaskStatus = (task: TaskNames, application: Application): string => {
-  if (!application.data[task]) {
-    return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task}-status">Not started</strong>`
-  }
-  return `<strong class="govuk-tag app-task-list__tag" id="${task}-status">Completed</strong>`
+const taskIsComplete = (task: Task, application: Application): boolean => {
+  return application.data[task.id]
 }
 
-const taskLink = (task: TaskNames, id: string): string => {
-  const firstPage = Object.keys(pages[task])[0]
+const getTaskStatus = (task: Task, application: Application): string => {
+  if (!taskIsComplete(task, application)) {
+    return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task.id}-status">Not started</strong>`
+  }
+  return `<strong class="govuk-tag app-task-list__tag" id="${task.id}-status">Completed</strong>`
+}
+
+const getCompleteSectionCount = (sections: FormSections, application: Application): number => {
+  return sections.filter((section: FormSection) => {
+    return section.tasks.filter((task: Task) => taskIsComplete(task, application)).length === section.tasks.length
+  }).length
+}
+
+const taskLink = (task: Task, applicationId: string): string => {
+  const firstPage = Object.keys(task.pages)[0]
 
   return `<a href="${paths.applications.pages.show({
-    id,
-    task,
+    id: applicationId,
+    task: task.id,
     page: firstPage,
-  })}" aria-describedby="eligibility-${task}" data-cy-task-name="${task}">${taskLookup[task]}</a>`
+  })}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
 }
 
-export { getTaskStatus, taskLink }
+export { getTaskStatus, taskLink, getCompleteSectionCount }

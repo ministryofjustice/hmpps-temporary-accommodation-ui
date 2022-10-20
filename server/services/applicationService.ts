@@ -6,7 +6,7 @@ import type TasklistPage from '../form-pages/tasklistPage'
 import type { RestClientBuilder, ApplicationClient } from '../data'
 import { UnknownPageError, ValidationError } from '../utils/errors'
 
-import pages from '../form-pages/apply'
+import { pages } from '../form-pages/apply'
 import paths from '../paths/apply'
 import { DateFormats } from '../utils/dateUtils'
 

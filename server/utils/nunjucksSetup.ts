@@ -5,11 +5,11 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
 
-import type { ErrorMessages, TaskNames, PersonStatus } from '@approved-premises/ui'
+import type { ErrorMessages, PersonStatus, Task } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 import { initialiseName, removeBlankSummaryListItems } from './utils'
 import { dateFieldValues, convertObjectsToRadioItems, convertObjectsToSelectOptions } from './formUtils'
-import { getTaskStatus, taskLink } from './applicationUtils'
+import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationUtils'
 import { statusTag } from './personUtils'
 import bookingActions from './bookingUtils'
 import { DateFormats } from './dateUtils'
@@ -93,11 +93,13 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('paths', { ...managePaths, ...applyPaths })
 
-  njkEnv.addGlobal('getTaskStatus', (task: TaskNames, application: Application) =>
+  njkEnv.addGlobal('getCompleteSectionCount', getCompleteSectionCount)
+
+  njkEnv.addGlobal('getTaskStatus', (task: Task, application: Application) =>
     markAsSafe(getTaskStatus(task, application)),
   )
 
-  njkEnv.addGlobal('taskLink', (task: TaskNames, id: string) => markAsSafe(taskLink(task, id)))
+  njkEnv.addGlobal('taskLink', (task: Task, applicationId: string) => markAsSafe(taskLink(task, applicationId)))
 
   njkEnv.addGlobal('statusTag', (status: PersonStatus) => markAsSafe(statusTag(status)))
 

@@ -93,7 +93,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('paths', { ...managePaths, ...applyPaths })
 
-  njkEnv.addGlobal('getTaskStatus', (task: TaskNames, application: Application) =>
+  njkEnv.addGlobal('getTaskStatus', (task: Task, application: Application) =>
     markAsSafe(getTaskStatus(task, application)),
   )
 

@@ -2,11 +2,16 @@ import type { Task, TaskNames } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 import paths from '../paths/apply'
 
-const getTaskStatus = (task: TaskNames, application: Application): string => {
-  if (!application.data[task]) {
-    return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task}-status">Not started</strong>`
+const taskIsComplete = (task: Task, application: Application): boolean => {
+  return application.data[task.id]
+}
+
+const getTaskStatus = (task: Task, application: Application): string => {
+  if (!taskIsComplete(task, application)) {
+    return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task.id}-status">Not started</strong>`
   }
-  return `<strong class="govuk-tag app-task-list__tag" id="${task}-status">Completed</strong>`
+  return `<strong class="govuk-tag app-task-list__tag" id="${task.id}-status">Completed</strong>`
+}
 }
 
 const taskLink = (task: Task, applicationId: string): string => {

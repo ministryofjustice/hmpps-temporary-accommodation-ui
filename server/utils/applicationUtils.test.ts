@@ -5,32 +5,31 @@ import paths from '../paths/apply'
 import { taskLink, getTaskStatus } from './applicationUtils'
 
 describe('applicationUtils', () => {
+  const task = {
+    id: 'type-of-ap',
+    title: 'Type of Approved Premises required',
+    pages: { foo: 'bar', bar: 'baz' },
+  } as Task
+
   describe('getTaskStatus', () => {
     it('returns a not started tag when the task is incomplete', () => {
       const application = applicationFactory.build()
-
-      expect(getTaskStatus('basic-information', application)).toEqual(
-        '<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="basic-information-status">Not started</strong>',
+      expect(getTaskStatus(task, application)).toEqual(
+        '<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="type-of-ap-status">Not started</strong>',
       )
     })
 
     it('returns a completed tag when the task is complete', () => {
-      const application = applicationFactory.build({ data: { 'basic-information': { foo: 'bar' } } })
+      const application = applicationFactory.build({ data: { 'type-of-ap': { foo: 'bar' } } })
 
-      expect(getTaskStatus('basic-information', application)).toEqual(
-        '<strong class="govuk-tag app-task-list__tag" id="basic-information-status">Completed</strong>',
+      expect(getTaskStatus(task, application)).toEqual(
+        '<strong class="govuk-tag app-task-list__tag" id="type-of-ap-status">Completed</strong>',
       )
     })
   })
 
   describe('taskLink', () => {
     it('should return a link to a task', () => {
-      const task = {
-        id: 'type-of-ap',
-        title: 'Type of Approved Premises required',
-        pages: { foo: 'bar', bar: 'baz' },
-      } as Task
-
       expect(taskLink(task, 'some-uuid')).toEqual(
         `<a href="${paths.applications.pages.show({
           id: 'some-uuid',

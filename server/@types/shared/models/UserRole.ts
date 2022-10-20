@@ -2,4 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type UserRole = 'ASSESSOR' | 'MATCHER' | 'MANAGER' | 'WORKFLOW_MANAGER' | 'APPLICANT' | 'ROLE_ADMIN';
+export type UserRole = 'assessor' | 'matcher' | 'manager' | 'workflow_manager' | 'applicant' | 'admin';

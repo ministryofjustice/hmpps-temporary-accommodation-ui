@@ -10,6 +10,7 @@ import { fetchErrorsAndUserInput } from '../../utils/validation'
 import personFactory from '../../testutils/factories/person'
 import applicationFactory from '../../testutils/factories/application'
 import risksFactory from '../../testutils/factories/risks'
+import { sections } from '../../form-pages/apply'
 
 import paths from '../../paths/apply'
 import { DateFormats } from '../../utils/dateUtils'
@@ -81,7 +82,7 @@ describe('applicationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/show', { application, risks })
+      expect(response.render).toHaveBeenCalledWith('applications/show', { application, risks, sections })
       expect(personService.getPersonRisks).toHaveBeenCalledWith(token, 'some-crn')
     })
 

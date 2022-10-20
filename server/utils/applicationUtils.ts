@@ -1,4 +1,4 @@
-import type { Task, TaskNames } from '@approved-premises/ui'
+import type { Task, FormSections, FormSection } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 import paths from '../paths/apply'
 
@@ -12,6 +12,11 @@ const getTaskStatus = (task: Task, application: Application): string => {
   }
   return `<strong class="govuk-tag app-task-list__tag" id="${task.id}-status">Completed</strong>`
 }
+
+const getCompleteSectionCount = (sections: FormSections, application: Application): number => {
+  return sections.filter((section: FormSection) => {
+    return section.tasks.filter((task: Task) => taskIsComplete(task, application)).length === section.tasks.length
+  }).length
 }
 
 const taskLink = (task: Task, applicationId: string): string => {
@@ -24,4 +29,4 @@ const taskLink = (task: Task, applicationId: string): string => {
   })}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
 }
 
-export { getTaskStatus, taskLink }
+export { getTaskStatus, taskLink, getCompleteSectionCount }

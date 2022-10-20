@@ -1,7 +1,5 @@
-import type { TaskNames } from '@approved-premises/ui'
+import type { Task, TaskNames } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
-import { pages } from '../form-pages/apply'
-import taskLookup from '../i18n/en/tasks.json'
 import paths from '../paths/apply'
 
 const getTaskStatus = (task: TaskNames, application: Application): string => {
@@ -11,14 +9,14 @@ const getTaskStatus = (task: TaskNames, application: Application): string => {
   return `<strong class="govuk-tag app-task-list__tag" id="${task}-status">Completed</strong>`
 }
 
-const taskLink = (task: TaskNames, id: string): string => {
-  const firstPage = Object.keys(pages[task])[0]
+const taskLink = (task: Task, applicationId: string): string => {
+  const firstPage = Object.keys(task.pages)[0]
 
   return `<a href="${paths.applications.pages.show({
-    id,
-    task,
+    id: applicationId,
+    task: task.id,
     page: firstPage,
-  })}" aria-describedby="eligibility-${task}" data-cy-task-name="${task}">${taskLookup[task]}</a>`
+  })}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
 }
 
 export { getTaskStatus, taskLink }

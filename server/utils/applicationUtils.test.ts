@@ -1,3 +1,5 @@
+import type { Task } from '@approved-premises/ui'
+
 import applicationFactory from '../testutils/factories/application'
 import paths from '../paths/apply'
 import { taskLink, getTaskStatus } from './applicationUtils'
@@ -23,11 +25,17 @@ describe('applicationUtils', () => {
 
   describe('taskLink', () => {
     it('should return a link to a task', () => {
-      expect(taskLink('type-of-ap', 'some-uuid')).toEqual(
+      const task = {
+        id: 'type-of-ap',
+        title: 'Type of Approved Premises required',
+        pages: { foo: 'bar', bar: 'baz' },
+      } as Task
+
+      expect(taskLink(task, 'some-uuid')).toEqual(
         `<a href="${paths.applications.pages.show({
           id: 'some-uuid',
           task: 'type-of-ap',
-          page: 'ap-type',
+          page: 'foo',
         })}" aria-describedby="eligibility-type-of-ap" data-cy-task-name="type-of-ap">Type of Approved Premises required</a>`,
       )
     })

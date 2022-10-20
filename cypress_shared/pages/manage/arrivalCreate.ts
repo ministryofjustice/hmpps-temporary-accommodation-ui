@@ -5,7 +5,7 @@ import paths from '../../../server/paths/manage'
 
 export default class ArrivalCreatePage extends Page {
   constructor(private readonly premisesId: string, private readonly bookingId: string) {
-    super('Mark the resident as arrived')
+    super('Record an arrival')
   }
 
   static visit(premisesId: string, bookingId: string): ArrivalCreatePage {

@@ -34,7 +34,7 @@ describe('NonArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('nonarrivals/new', {
         premisesId: 'premisesId',
         bookingId: 'bookingId',
-        pageHeading: 'Mark the resident as not arrived',
+        pageHeading: 'Record a non-arrival',
         errors: {},
         errorSummary: [],
       })
@@ -57,7 +57,7 @@ describe('NonArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('nonarrivals/new', {
         premisesId: 'premisesId',
         bookingId: 'bookingId',
-        pageHeading: 'Mark the resident as not arrived',
+        pageHeading: 'Record a non-arrival',
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,

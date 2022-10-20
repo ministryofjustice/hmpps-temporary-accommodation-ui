@@ -25,7 +25,7 @@ export default class ArrivalsController {
         errors,
         errorSummary,
         staffMembers,
-        pageHeading: 'Mark the resident as arrived',
+        pageHeading: 'Record an arrival',
         ...userInput,
       })
     }

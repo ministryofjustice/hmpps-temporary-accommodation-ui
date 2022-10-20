@@ -2,4 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type UserQualification = 'WOMENS' | 'PIPE';
+export type UserQualification = 'womens' | 'pipe';

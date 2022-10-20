@@ -20,7 +20,7 @@ export default class NonArrivalsController {
         bookingId,
         errors,
         errorSummary,
-        pageHeading: 'Mark the resident as not arrived',
+        pageHeading: 'Record a non-arrival',
         ...userInput,
       })
     }

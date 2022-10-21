@@ -6,6 +6,7 @@ import Situation from './situation'
 import ReleaseDate from './releaseDate'
 import OralHearing from './oralHearing'
 import PlacementDate from './placementDate'
+import PlacementPurpose from './placementPurpose'
 
 const pages = {
   'sentence-type': SentenceType,
@@ -14,6 +15,7 @@ const pages = {
   'release-date': ReleaseDate,
   'oral-hearing': OralHearing,
   'placement-date': PlacementDate,
+  'placement-purpose': PlacementPurpose,
 }
 
 export default pages

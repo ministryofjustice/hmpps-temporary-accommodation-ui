@@ -6,6 +6,7 @@ import taPaths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
+import { escape, formatLines } from '../utils/viewUtils'
 
 export default class PremisesService {
   constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
@@ -71,6 +72,17 @@ export default class PremisesService {
     return { name: premises.name, summaryList }
   }
 
+  async getTemporaryAccommodationPremisesDetails(
+    token: string,
+    id: string,
+  ): Promise<{ premises: Premises; summaryList: SummaryList }> {
+    const premisesClient = this.premisesClientFactory(token)
+    const premises = await premisesClient.find(id)
+    const summaryList = await this.temporaryAccommodationSummaryListForPremises(premises)
+
+    return { premises, summaryList }
+  }
+
   async getOvercapacityMessage(token: string, premisesId: string): Promise<string[] | string> {
     const premisesClient = this.premisesClientFactory(token)
     const premisesDateCapacities = await premisesClient.capacity(premisesId)
@@ -126,6 +138,41 @@ export default class PremisesService {
         {
           key: this.textValue('Available Beds'),
           value: this.textValue(premises.availableBedsForToday.toString()),
+        },
+      ],
+    }
+  }
+
+  private async temporaryAccommodationSummaryListForPremises(premises: Premises): Promise<SummaryList> {
+    return {
+      rows: [
+        {
+          key: this.textValue('Property name'),
+          value: this.textValue(premises.name),
+        },
+        {
+          key: this.textValue('Address'),
+          value: this.htmlValue(`${escape(premises.address)}<br />${escape(premises.postcode)}`),
+        },
+        {
+          key: this.textValue('PDU'),
+          value: this.textValue(''),
+        },
+        {
+          key: this.textValue('Local authority'),
+          value: this.textValue(premises.localAuthorityArea.name),
+        },
+        {
+          key: this.textValue('Occupancy'),
+          value: this.textValue(''),
+        },
+        {
+          key: this.textValue('Attributes'),
+          value: this.textValue(''),
+        },
+        {
+          key: this.textValue('Notes'),
+          value: this.htmlValue(formatLines(premises.notes)),
         },
       ],
     }

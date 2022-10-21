@@ -1,15 +1,18 @@
 import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 import premisesFactory from '../testutils/factories/premises'
+import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
 import newPremisesFactory from '../testutils/factories/newPremises'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
+import { escape, formatLines } from '../utils/viewUtils'
 
 jest.mock('../data/premisesClient')
 jest.mock('../utils/premisesUtils')
+jest.mock('../utils/viewUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -263,6 +266,71 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
+    })
+  })
+
+  describe('getTemporayAccommodationPremisesDetails', () => {
+    it('returns a Premises and a summary list for a given Premises ID', async () => {
+      const premises = premisesFactory.build({
+        name: 'Test',
+        address: '10 Example Street',
+        postcode: 'SW1A 1AA',
+        bedCount: 50,
+        availableBedsForToday: 20,
+        localAuthorityArea: localAuthorityFactory.build({
+          name: 'Test Authority',
+        }),
+        notes: 'Some notes',
+      })
+
+      premisesClient.find.mockResolvedValue(premises)
+      ;(escape as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
+      ;(formatLines as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
+
+      const result = await service.getTemporaryAccommodationPremisesDetails(token, premises.id)
+
+      expect(result).toEqual({
+        premises,
+        summaryList: {
+          rows: [
+            {
+              key: { text: 'Property name' },
+              value: { text: 'Test' },
+            },
+            {
+              key: { text: 'Address' },
+              value: { html: '10 Example Street<br />SW1A 1AA' },
+            },
+            {
+              key: { text: 'PDU' },
+              value: { text: '' },
+            },
+            {
+              key: { text: 'Local authority' },
+              value: { text: 'Test Authority' },
+            },
+            {
+              key: { text: 'Occupancy' },
+              value: { text: '' },
+            },
+            {
+              key: { text: 'Attributes' },
+              value: { text: '' },
+            },
+            {
+              key: { text: 'Notes' },
+              value: { html: 'Some notes' },
+            },
+          ],
+        },
+      })
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
+
+      expect(escape).toHaveBeenCalledWith('10 Example Street')
+      expect(escape).toHaveBeenCalledWith('SW1A 1AA')
+      expect(formatLines).toHaveBeenCalledWith('Some notes')
     })
   })
 

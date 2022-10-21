@@ -162,4 +162,5 @@ export type NewPremises = {
 
 export type Premises = ApiPremises & {
   address: string
+  notes: string
 }

@@ -159,8 +159,3 @@ export type NewPremises = {
   notes: string
   service: Service
 }
-
-export type LocalAuthority = {
-  id: string
-  name: string
-}

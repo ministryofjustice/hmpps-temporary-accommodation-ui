@@ -1,10 +1,10 @@
 import type { SuperAgentRequest } from 'superagent'
+import type { LocalAuthorityArea } from '@approved-premises/api'
 
-import type { LocalAuthority } from '@approved-premises/ui'
 import { stubFor } from '../../wiremock'
 import paths from '../../server/paths/temporary-accommodation/api'
 
-const stubLocalAuthorities = (localAuthorities: LocalAuthority[]): SuperAgentRequest =>
+const stubLocalAuthorities = (localAuthorities: LocalAuthorityArea[]): SuperAgentRequest =>
   stubFor({
     request: {
       method: 'GET',

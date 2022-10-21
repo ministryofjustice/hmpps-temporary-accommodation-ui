@@ -1,7 +1,7 @@
 import { path } from 'static-path'
 import paths from '../api'
 
-const localAuthoritiesPath = path('/local-authorities')
+const localAuthoritiesPath = path('/reference-data/local-authority-areas')
 
 const localAuthoritiesPaths = {
   index: localAuthoritiesPath,

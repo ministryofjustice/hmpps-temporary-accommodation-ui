@@ -60,10 +60,13 @@ export default class PremisesService {
       })
   }
 
-  async getPremisesDetails(token: string, id: string): Promise<{ name: string; summaryList: SummaryList }> {
+  async getApprovedPremisesPremisesDetails(
+    token: string,
+    id: string,
+  ): Promise<{ name: string; summaryList: SummaryList }> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.find(id)
-    const summaryList = await this.summaryListForPremises(premises)
+    const summaryList = await this.approvedPremisesSummaryListForPremises(premises)
 
     return { name: premises.name, summaryList }
   }
@@ -105,7 +108,7 @@ export default class PremisesService {
     return premises
   }
 
-  private async summaryListForPremises(premises: Premises): Promise<SummaryList> {
+  private async approvedPremisesSummaryListForPremises(premises: Premises): Promise<SummaryList> {
     return {
       rows: [
         {

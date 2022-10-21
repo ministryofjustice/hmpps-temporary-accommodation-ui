@@ -222,7 +222,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('getPremisesDetails', () => {
+  describe('getApprovedPremisesPremisesDetails', () => {
     it('returns a title and a summary list for a given Premises ID', async () => {
       const premises = premisesFactory.build({
         name: 'Test',
@@ -233,7 +233,7 @@ describe('PremisesService', () => {
       })
       premisesClient.find.mockResolvedValue(premises)
 
-      const result = await service.getPremisesDetails(token, premises.id)
+      const result = await service.getApprovedPremisesPremisesDetails(token, premises.id)
 
       expect(result).toEqual({
         name: 'Test',

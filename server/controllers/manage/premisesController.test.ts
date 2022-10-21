@@ -36,7 +36,7 @@ describe('PremisesController', () => {
       const bookings = createMock<GroupedListofBookings>()
       const currentResidents = createMock<Array<TableRow>>()
       const overcapacityMessage = 'The premises is over capacity for the period January 1st 2023 to Feburary 3rd 2023'
-      premisesService.getPremisesDetails.mockResolvedValue(premises)
+      premisesService.getApprovedPremisesPremisesDetails.mockResolvedValue(premises)
       premisesService.getOvercapacityMessage.mockResolvedValue([overcapacityMessage])
       bookingService.groupedListOfBookingsForPremisesId.mockResolvedValue(bookings)
       bookingService.currentResidents.mockResolvedValue(currentResidents)
@@ -54,7 +54,7 @@ describe('PremisesController', () => {
         infoMessages: [overcapacityMessage],
       })
 
-      expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(token, 'some-uuid')
+      expect(premisesService.getApprovedPremisesPremisesDetails).toHaveBeenCalledWith(token, 'some-uuid')
       expect(bookingService.groupedListOfBookingsForPremisesId).toHaveBeenCalledWith(token, 'some-uuid')
       expect(bookingService.currentResidents).toHaveBeenCalledWith(token, 'some-uuid')
     })

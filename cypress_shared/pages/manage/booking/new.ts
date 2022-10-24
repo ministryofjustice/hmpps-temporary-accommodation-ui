@@ -4,7 +4,7 @@ import paths from '../../../../server/paths/manage'
 
 export default class BookingNewPage extends Page {
   constructor() {
-    super('Make a booking')
+    super('Create a placement')
   }
 
   static visit(premisesId: string): BookingNewPage {
@@ -45,7 +45,7 @@ export default class BookingNewPage extends Page {
   }
 
   completeForm(booking: Booking): void {
-    this.getLegend('What is the expected arrival date?')
+    this.getLegend('What is their expected arrival date?')
 
     const arrivalDate = new Date(Date.parse(booking.arrivalDate))
 
@@ -53,7 +53,7 @@ export default class BookingNewPage extends Page {
     this.arrivalMonth().type(`${arrivalDate.getMonth() + 1}`)
     this.arrivalYear().type(arrivalDate.getFullYear().toString())
 
-    this.getLegend('What is the expected departure date?')
+    this.getLegend('What is their expected departure date?')
 
     const departureDate = new Date(Date.parse(booking.departureDate))
 

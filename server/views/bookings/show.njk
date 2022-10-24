@@ -9,46 +9,40 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
+
   {{ govukBackLink({
     text: "Back",
     href: paths.premises.show({premisesId: premisesId})
   }) }}
 
   <h1>{{pageHeading}}</h1>
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
       {{ mojIdentityBar({
-        title: {
-          html: booking.name
+         title: {
+          html: "<h2>" + booking.name + "</h2>"
         },
         menus: bookingActions(booking, premisesId)
       }) }}
 
       <br>
-      <h2>Expected dates of stay</h2>
+      <h2>Person details</h2>
 
       {{
         govukSummaryList({
           classes: 'govuk-summary-list--no-border',
           attributes: {
-            'data-cy-dates': true
+            'data-cy-crn': true
           },
           rows: [
             {
               key: {
-                text: "Arrival date"
+                text: "CRN"
               },
               value: {
-                text: formatDate(booking.arrivalDate)
-              }
-            },
-            {
-              key: {
-                text: "Departure date"
-              },
-              value: {
-                text: formatDate(booking.departureDate)
+                text: booking.person.crn
               }
             }
           ]
@@ -67,7 +61,7 @@
             rows: [
               {
                 key: {
-                  text: "Arrival date"
+                  text: "Expected arrival date"
                 },
                 value: {
                   text: formatDate(booking.arrival.arrivalDate)
@@ -75,10 +69,10 @@
               },
               {
                 key: {
-                  text: "Departure date"
+                  text: "Arrival date"
                 },
                 value: {
-                  text: formatDate(booking.arrival.expectedDepartureDate)
+                  text: formatDate(booking.arrival.arrivalDate)
                 }
               },
               {
@@ -105,6 +99,14 @@
               'data-cy-departure-information': true
             },
             rows: [
+              {
+                key: {
+                  text: "Expected departure date"
+                },
+                value: {
+                  text: formatDate(booking.arrival.expectedDepartureDate)
+                }
+              },
               {
                 key: {
                   text: "Actual departure date"

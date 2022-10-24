@@ -44,7 +44,7 @@ describe('ArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('arrivals/new', {
         premisesId: 'premisesId',
         bookingId: 'bookingId',
-        pageHeading: 'Record an arrival',
+        pageHeading: 'Mark the person as arrived',
         errors: {},
         errorSummary: [],
         staffMembers,
@@ -68,7 +68,7 @@ describe('ArrivalsController', () => {
       expect(response.render).toHaveBeenCalledWith('arrivals/new', {
         premisesId: 'premisesId',
         bookingId: 'bookingId',
-        pageHeading: 'Record an arrival',
+        pageHeading: 'Mark the person as arrived',
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         staffMembers,

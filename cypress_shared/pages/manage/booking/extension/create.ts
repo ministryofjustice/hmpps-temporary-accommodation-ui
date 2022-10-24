@@ -3,7 +3,7 @@ import paths from '../../../../../server/paths/manage'
 
 export default class BookingExtensionCreatePage extends Page {
   constructor() {
-    super('Extend booking')
+    super('Extend placement')
   }
 
   static visit(premisesId: string, bookingId: string): BookingExtensionCreatePage {
@@ -24,7 +24,7 @@ export default class BookingExtensionCreatePage extends Page {
   }
 
   completeForm(newDepartureDate: string): void {
-    this.getLegend('What is the extended expected departure date?')
+    this.getLegend('What is the new departure date?')
 
     const parsedNewDepartureDate = new Date(Date.parse(newDepartureDate))
 

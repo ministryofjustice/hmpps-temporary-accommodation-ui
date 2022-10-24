@@ -20,7 +20,7 @@ export default class BookingsController {
 
       const booking = await this.bookingService.find(req.user.token, premisesId, bookingId)
 
-      return res.render(`bookings/show`, { booking, premisesId, pageHeading: 'Booking details' })
+      return res.render(`bookings/show`, { booking, premisesId, pageHeading: 'Placement details' })
     }
   }
 
@@ -35,7 +35,7 @@ export default class BookingsController {
         const person = await this.personService.findByCrn(req.user.token, crnArr[0])
 
         return res.render(`bookings/new`, {
-          pageHeading: 'Make a booking',
+          pageHeading: 'Create a placement',
           premisesId,
           ...person,
           errors,
@@ -45,7 +45,7 @@ export default class BookingsController {
       }
 
       return res.render(`bookings/find`, {
-        pageHeading: 'Make a booking - find someone by CRN',
+        pageHeading: 'Create a placement - find someone by CRN',
         premisesId,
         errors,
         errorSummary,
@@ -89,7 +89,7 @@ export default class BookingsController {
       return res.render('bookings/confirm', {
         premisesId,
         bookingId,
-        pageHeading: 'Booking complete',
+        pageHeading: 'Placement confirmed',
         ...booking,
         infoMessages: overcapacityMessage,
       })

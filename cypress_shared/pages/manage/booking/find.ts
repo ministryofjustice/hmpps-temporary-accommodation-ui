@@ -3,7 +3,7 @@ import paths from '../../../../server/paths/manage'
 
 export default class BookingFindPage extends Page {
   constructor() {
-    super('Make a booking')
+    super('Create a placement')
   }
 
   static visit(premisesId: string): BookingFindPage {
@@ -12,7 +12,7 @@ export default class BookingFindPage extends Page {
   }
 
   enterCrn(crn: string): void {
-    this.getLabel('Find someone by CRN')
+    this.getLabel("Enter the individual's CRN")
     this.getTextInputByIdAndEnterDetails('crn', crn)
   }
 

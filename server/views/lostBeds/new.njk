@@ -8,7 +8,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Record a lost bed" %}
+{% set pageTitle = applicationName + " - Mark a bed as out of service" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -26,18 +26,19 @@
 
         {{ showErrorSummary(errorSummary) }}
 
-        <h1 class="govuk-!-margin-bottom-0">Record a lost bed</h1>
-        <p> Record beds that have been lost within your AP estate.</p>
+        <h1 class="govuk-!-margin-bottom-0">Mark a bed as out of service</h1>
+        <p> Provide details of beds that are out of service within your AP estate</p>
 
         {{ govukInput({
         label: {
-          text: "Number of beds lost"
+          text: "Number of beds out of service"
         },
         classes: "govuk-input--width-2",
         id: "numberOfBeds",
         name: "lostBed[numberOfBeds]",
         errorMessage: errors.numberOfBeds
       }) }}
+
 
         {{ govukDateInput({
         id: "startDate",
@@ -46,7 +47,7 @@
         errorMessage: errors.startDate,
         fieldset: {
           legend: {
-            text: "Start date",
+            text: "Out of service from",
             isPageHeading: true,
             classes: "govuk-fieldset__legend--s"
           }
@@ -82,7 +83,7 @@
 
         {{ govukInput({
         label: {
-          text: "Reference number"
+          text: "Work order reference number"
         },
         classes: "govuk-input--width-6",
         id: "referenceNumber",
@@ -94,7 +95,8 @@
         id: "notes",
         name: "lostBed[notes]",
         label: {
-          text: "Additional notes"
+          text: "Provide  detail about why the bed is out of service. If FM works are required you should update this record with any progress on that work.",
+          classes: "govuk-fieldset__legend--s"
         },
         errorMessage: errors.notes
       }) }}

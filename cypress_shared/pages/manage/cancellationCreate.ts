@@ -14,7 +14,7 @@ export default class CancellationCreatePage extends Page {
   }
 
   completeForm(cancellation: Cancellation): void {
-    this.getLegend('Date of Cancellation')
+    this.getLegend('What date was this placement cancelled?')
     this.completeDateInputs('date', cancellation.date)
 
     this.getLegend('What is the reason for cancelling this placement?')

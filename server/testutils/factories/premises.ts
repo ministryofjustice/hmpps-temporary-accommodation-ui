@@ -14,6 +14,7 @@ export default Factory.define<Premises>(() => ({
   probationRegion: probationRegionFactory.build(),
   apArea: apAreaFactory.build(),
   localAuthorityArea: localAuthorityAreaFactory.build(),
+  addressLine1: faker.address.streetAddress(),
 }))
 
 const probationRegionFactory = Factory.define<ProbationRegion>(() => ({

@@ -10,9 +10,12 @@ export type Premises = {
     id: string;
     name: string;
     apCode: string;
+    addressLine1: string;
     postcode: string;
     bedCount: number;
     availableBedsForToday: number;
+    service?: string;
+    notes?: string;
     probationRegion: ProbationRegion;
     apArea: ApArea;
     localAuthorityArea: LocalAuthorityArea;

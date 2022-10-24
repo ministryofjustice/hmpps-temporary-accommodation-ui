@@ -29,13 +29,17 @@
       },
       menus: [{
         items: [{
-          text: "Create a booking",
+          text: "Create a placement",
           classes: "govuk-button--secondary",
           href: paths.bookings.new({premisesId: premisesId})
         }, {
-          text: "Record a lost bed",
+          text: "Mark bed as out of service",
           classes: "govuk-button--secondary",
           href: paths.lostBeds.new({premisesId: premisesId})
+        },
+        {
+          text: "Manage out of service beds",
+          classes: "govuk-button--secondary"
         }]
       }]
     }) }}

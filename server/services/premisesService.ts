@@ -1,5 +1,5 @@
-import type { TableRow, SummaryList, NewPremises, Premises } from '@approved-premises/ui'
-import type { StaffMember } from '@approved-premises/api'
+import type { TableRow, SummaryList, Premises } from '@approved-premises/ui'
+import type { StaffMember, NewPremises } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient } from '../data'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'

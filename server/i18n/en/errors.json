@@ -60,13 +60,13 @@
   },
   "numberOfBeds": { "empty": "You must enter the number of beds lost" },
   "referenceNumber": { "empty": "You must enter a reference number" },
-  "address": {
+  "addressLine1": {
     "empty": "You must enter an address"
   },
   "postcode": {
     "empty": "You must enter a postcode"
   },
-  "localAuthorityId": {
+  "localAuthorityAreaId": {
     "empty": "You must choose a local authority"
   }
 }

@@ -151,15 +151,6 @@ export type DataServices = {
 
 export type Service = 'approved-premises' | 'temporary-accommodation'
 
-export type NewPremises = {
-  name: string
-  address: string
-  postcode: string
-  localAuthorityId: string
-  notes: string
-  service: Service
-}
-
 export type Premises = ApiPremises & {
   address: string
   notes: string

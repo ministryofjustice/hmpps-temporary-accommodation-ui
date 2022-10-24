@@ -1,6 +1,6 @@
 import type { Request, Response, RequestHandler } from 'express'
 
-import type { NewPremises } from '@approved-premises/ui'
+import type { NewPremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'

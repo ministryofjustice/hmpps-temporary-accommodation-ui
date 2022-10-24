@@ -83,7 +83,7 @@ context('Premises', () => {
     const newPremises = newPremisesFactory.build({
       name: premises.name,
       postcode: premises.postcode,
-      localAuthorityId: localAuthority.id,
+      localAuthorityAreaId: localAuthority.id,
     })
 
     cy.task('stubPremisesCreate', premises)
@@ -100,9 +100,9 @@ context('Premises', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.name).equal(newPremises.name)
-      expect(requestBody.address).equal(newPremises.address)
+      expect(requestBody.addressLine1).equal(newPremises.addressLine1)
       expect(requestBody.postcode).equal(newPremises.postcode)
-      expect(requestBody.localAuthorityId).equal(newPremises.localAuthorityId)
+      expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
     })
 
@@ -123,11 +123,11 @@ context('Premises', () => {
     const page = PremisesNewPage.visit()
 
     // And I miss required fields
-    cy.task('stubPremisesCreateErrors', ['address', 'postcode', 'localAuthorityId'])
+    cy.task('stubPremisesCreateErrors', ['addressLine1', 'postcode', 'localAuthorityAreaId'])
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['address', 'postcode', 'localAuthorityId'])
+    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'localAuthorityAreaId'])
   })
 
   it('should navigate back from the new premises page to the premises list page', () => {

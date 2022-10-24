@@ -55,11 +55,11 @@
             text: 'Address line 1',
             classes: "govuk-label--s"
           },
-          id: "address",
-          name: "address",
+          id: "addressLine1",
+          name: "addressLine1",
           autocomplete: "address-line1",
-          value: address,
-          errorMessage: errors.address
+          value: addressLine1,
+          errorMessage: errors.addressLine1
         }) }}
 
         {{ govukInput({
@@ -85,10 +85,10 @@
           hint: {
             text: "Local authority"
           },
-          items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityId'),
-          id: "localAuthorityId",
-          name: "localAuthorityId",
-          errorMessage: errors.localAuthorityId
+          items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
+          id: "localAuthorityAreaId",
+          name: "localAuthorityAreaId",
+          errorMessage: errors.localAuthorityAreaId
         }) }}
 
         {{ govukTextarea({

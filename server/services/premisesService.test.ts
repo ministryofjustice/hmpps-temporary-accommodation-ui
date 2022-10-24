@@ -111,10 +111,10 @@ describe('PremisesService', () => {
 
   describe('temporaryAccommodationTableRows', () => {
     it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
-      const premises1 = premisesFactory.build({ address: 'XYZ', postcode: '123' })
-      const premises2 = premisesFactory.build({ address: 'ABC', postcode: '123' })
-      const premises3 = premisesFactory.build({ address: 'GHI', postcode: '456' })
-      const premises4 = premisesFactory.build({ address: 'GHI', postcode: '123' })
+      const premises1 = premisesFactory.build({ addressLine1: 'XYZ', postcode: '123' })
+      const premises2 = premisesFactory.build({ addressLine1: 'ABC', postcode: '123' })
+      const premises3 = premisesFactory.build({ addressLine1: 'GHI', postcode: '456' })
+      const premises4 = premisesFactory.build({ addressLine1: 'GHI', postcode: '123' })
 
       const premises = [premises1, premises2, premises3, premises4]
       premisesClient.all.mockResolvedValue(premises)
@@ -273,7 +273,7 @@ describe('PremisesService', () => {
     it('returns a Premises and a summary list for a given Premises ID', async () => {
       const premises = premisesFactory.build({
         name: 'Test',
-        address: '10 Example Street',
+        addressLine1: '10 Example Street',
         postcode: 'SW1A 1AA',
         bedCount: 50,
         availableBedsForToday: 20,

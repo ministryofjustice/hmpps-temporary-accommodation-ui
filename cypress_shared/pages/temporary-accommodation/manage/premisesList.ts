@@ -1,4 +1,4 @@
-import type { Premises } from '@approved-premises/ui'
+import type { Premises } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -15,7 +15,7 @@ export default class PremisesListPage extends Page {
 
   shouldShowPremises(premises: Array<Premises>): void {
     premises.forEach((item: Premises) => {
-      const shortAddress = `${item.address}, ${item.postcode}`
+      const shortAddress = `${item.addressLine1}, ${item.postcode}`
 
       cy.contains(shortAddress)
         .parent()
@@ -35,7 +35,7 @@ export default class PremisesListPage extends Page {
   }
 
   clickPremisesViewLink(premises: Premises) {
-    cy.contains(`${premises.address}, ${premises.postcode}`)
+    cy.contains(`${premises.addressLine1}, ${premises.postcode}`)
       .parent()
       .within(() => {
         cy.get('td').eq(4).contains('Manage').click()

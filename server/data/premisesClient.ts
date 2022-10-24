@@ -1,5 +1,5 @@
-import type { DateCapacity, NewPremises, StaffMember } from '@approved-premises/api'
-import type { Service, Premises } from '@approved-premises/ui'
+import type { DateCapacity, NewPremises, Premises, StaffMember } from '@approved-premises/api'
+import type { Service } from '@approved-premises/ui'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'

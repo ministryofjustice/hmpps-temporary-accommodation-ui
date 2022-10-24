@@ -1,4 +1,4 @@
-import type { Premises } from '@approved-premises/ui'
+import type { Premises } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -22,7 +22,7 @@ export default class PremisesShowPage extends Page {
     cy.get('.govuk-summary-list__key')
       .contains('Address')
       .siblings('.govuk-summary-list__value')
-      .should('contain', this.premises.address)
+      .should('contain', this.premises.addressLine1)
       .should('contain', this.premises.postcode)
 
     cy.get('.govuk-summary-list__key')

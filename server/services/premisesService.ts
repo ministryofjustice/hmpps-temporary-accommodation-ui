@@ -1,5 +1,5 @@
-import type { TableRow, SummaryList, Premises } from '@approved-premises/ui'
-import type { StaffMember, NewPremises } from '@approved-premises/api'
+import type { TableRow, SummaryList } from '@approved-premises/ui'
+import type { StaffMember, NewPremises, Premises } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient } from '../data'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
@@ -44,7 +44,7 @@ export default class PremisesService {
     const premises = await premisesClient.all('temporary-accommodation')
 
     return premises
-      .map(p => ({ premises: p, shortAddress: `${p.address}, ${p.postcode}` }))
+      .map(p => ({ premises: p, shortAddress: `${p.addressLine1}, ${p.postcode}` }))
       .sort((a, b) => a.shortAddress.localeCompare(b.shortAddress))
       .map(entry => {
         return [
@@ -152,7 +152,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('Address'),
-          value: this.htmlValue(`${escape(premises.address)}<br />${escape(premises.postcode)}`),
+          value: this.htmlValue(`${escape(premises.addressLine1)}<br />${escape(premises.postcode)}`),
         },
         {
           key: this.textValue('PDU'),

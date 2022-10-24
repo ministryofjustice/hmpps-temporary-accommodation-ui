@@ -17,13 +17,13 @@ export default class PremisesShowPage extends Page {
   clickLostBedsOption() {
     cy.get('.moj-button-menu__toggle-button')
       .click()
-      .then(() => cy.get('a').contains('Record a lost bed').click())
+      .then(() => cy.get('a').contains('Mark bed as out of service').click())
   }
 
   clickCreateBookingOption() {
     cy.get('.moj-button-menu__toggle-button')
       .click()
-      .then(() => cy.get('a').contains('Create a booking').click())
+      .then(() => cy.get('a').contains('Create a placement').click())
   }
 
   selectBooking() {

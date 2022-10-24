@@ -58,6 +58,10 @@ export default abstract class Page {
     cy.get(`input[name="${name}"][value="${option}"]`).check()
   }
 
+  checkCheckboxByNameAndValue(name: string, option: string): void {
+    cy.get(`input[name="${name}"][value="${option}"]`).check()
+  }
+
   completeTextArea(name: string, value: string): void {
     cy.get(`textarea[name="${name}"]`).type(value)
   }

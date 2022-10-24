@@ -12,7 +12,7 @@ export default class BookingFindPage extends Page {
   }
 
   enterCrn(crn: string): void {
-    this.getLabel('Find someone by CRN')
+    this.getLabel("Enter the individual's CRN")
     this.getTextInputByIdAndEnterDetails('crn', crn)
   }
 

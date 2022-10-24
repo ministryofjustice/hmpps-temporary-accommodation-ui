@@ -15,7 +15,6 @@
     href: paths.premises.show({premisesId: premisesId})
   }) }}
 
- 
   <h1>{{pageHeading}}</h1>
 
   <div class="govuk-grid-row">
@@ -35,7 +34,7 @@
         govukSummaryList({
           classes: 'govuk-summary-list--no-border',
           attributes: {
-            'data-cy-dates': true
+            'data-cy-crn': true
           },
           rows: [
             {
@@ -43,7 +42,7 @@
                 text: "CRN"
               },
               value: {
-                text: formatDate(booking.departureDate)
+                text: booking.person.crn
               }
             }
           ]
@@ -73,7 +72,7 @@
                   text: "Arrival date"
                 },
                 value: {
-                  text: formatDate(booking.arrival.date)
+                  text: formatDate(booking.arrival.arrivalDate)
                 }
               },
               {

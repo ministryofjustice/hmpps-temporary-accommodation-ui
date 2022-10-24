@@ -24,7 +24,7 @@ export default class BookingExtensionCreatePage extends Page {
   }
 
   completeForm(newDepartureDate: string): void {
-    this.getLegend('What is the extended expected departure date?')
+    this.getLegend('What is the new departure date?')
 
     const parsedNewDepartureDate = new Date(Date.parse(newDepartureDate))
 

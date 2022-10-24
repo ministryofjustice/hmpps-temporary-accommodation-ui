@@ -17,7 +17,7 @@ import cancellationStubs from './cancellationStubs'
 import lostBedStubs from './lostBedStubs'
 import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
-import localAuthorityStubs from './localAuthorityStubs'
+import { localAuthorityStubs, localAuthorities } from './localAuthorityStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
@@ -26,7 +26,10 @@ import { errorStub, getCombinations } from './utils'
 
 const stubs = []
 
-const premises = premisesJson.map(item => premisesFactory.build(item as DeepPartial<Premises>))
+const premises = premisesJson.map(item => {
+  const localAuthority = localAuthorities[Math.floor(Math.random() * localAuthorities.length)]
+  return premisesFactory.build({ ...(item as DeepPartial<Premises>), localAuthorityArea: localAuthority })
+})
 
 const apPremises = premises.slice(0, Math.floor(premises.length / 2))
 const taPremises = premises.slice(Math.floor(premises.length / 2), premises.length)

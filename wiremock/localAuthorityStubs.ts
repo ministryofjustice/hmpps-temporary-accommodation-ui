@@ -1,7 +1,9 @@
 import paths from '../server/paths/temporary-accommodation/api'
 import localAuthorityFactory from '../server/testutils/factories/localAuthority'
 
-export default [
+export const localAuthorities = localAuthorityFactory.buildList(20)
+
+export const localAuthorityStubs = [
   {
     request: {
       method: 'GET',
@@ -10,7 +12,7 @@ export default [
     response: {
       status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: localAuthorityFactory.buildList(20),
+      jsonBody: localAuthorities,
     },
   },
 ]

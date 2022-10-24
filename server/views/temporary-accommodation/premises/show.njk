@@ -1,0 +1,57 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Manage a property" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set bodyClasses = "temporary-accommodation-premises-show" %}
+
+{% block content %}
+
+  {{ breadCrumb('Manage a property', [
+    {title: 'List of properties', href: paths.premises.index()}
+  ]) }}
+
+  {% include "../../_messages.njk" %}
+
+    <h1>Manage a property</h1>
+
+    {{ mojIdentityBar({
+      title: {
+        html: '<h2>' + (premises.address | e) + ', ' + (premises.postcode | e) + '</h2>'
+      },
+      menus: [{
+        items: [{
+          text: 'Edit property',
+          classes: 'govuk-button--secondary',
+          href: '#'
+        }, {
+          text: "Add a bedspace",
+          classes: 'govuk-button--secondary',
+          href: '#'
+        }, {
+          text: 'Remove property',
+          classes: 'govuk-button--secondary',
+          href: '#'
+        }]
+      }]
+    }) }}
+
+  {{
+    govukSummaryList({
+      rows: summaryList.rows,
+      classes: 'govuk-summary-list--no-border'
+    })
+  }}
+
+{% endblock %}
+
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+  </script>
+{% endblock %}

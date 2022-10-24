@@ -1,0 +1,16 @@
+.temporary-accommodation-premises-show {
+  .moj-identity-bar {
+    margin: 0.8em 0 2em;
+    &__details {
+      padding: 0;
+      margin: 0;
+    }
+    &__title {
+      h2 {
+        display: inline;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+}

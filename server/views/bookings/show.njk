@@ -15,14 +15,12 @@
     href: paths.premises.show({premisesId: premisesId})
   }) }}
 
-  <h1>{{pageHeading}}</h1>
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
 
       {{ mojIdentityBar({
          title: {
-          html: "<h2>" + booking.name + "</h2>"
+          html: "<h1>" + pageHeading + "</h1>"
         },
         menus: bookingActions(booking, premisesId)
       }) }}
@@ -37,6 +35,14 @@
             'data-cy-crn': true
           },
           rows: [
+            {
+              key: {
+                text: "Name"
+              },
+              value: {
+                text: booking.name
+              }
+            },
             {
               key: {
                 text: "CRN"
@@ -146,3 +152,4 @@
     new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
   </script>
 {% endblock %}
+

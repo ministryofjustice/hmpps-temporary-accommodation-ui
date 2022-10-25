@@ -103,7 +103,7 @@ export default class PremisesShowPage extends Page {
   }
 
   shouldShowCurrentResidents(currentResidents: Array<Booking>) {
-    cy.get('h2').should('contain', 'Current Residents')
+    cy.get('h2').should('contain', 'Current residents')
     currentResidents.forEach((item: Booking) => {
       cy.contains(item.person.crn)
         .parent()

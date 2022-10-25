@@ -33,7 +33,7 @@ describe('PlacementDate', () => {
     })
   })
 
-  itShouldHaveNextValue(new PlacementDate({}, application), '')
+  itShouldHaveNextValue(new PlacementDate({}, application), 'placement-purpose')
   itShouldHavePreviousValue(new PlacementDate({}, application), 'oral-hearing')
 
   describe('errors', () => {

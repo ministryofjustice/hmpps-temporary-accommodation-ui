@@ -31,7 +31,7 @@ export default class PlacementDate implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'placement-purpose'
   }
 
   previous() {

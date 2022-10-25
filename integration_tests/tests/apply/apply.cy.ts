@@ -9,6 +9,7 @@ import {
   TaskListPage,
   TypeOfApPage,
 } from '../../../cypress_shared/pages/apply'
+import PlacementPurposePage from '../../../cypress_shared/pages/apply/placementPurpose'
 
 import Page from '../../../cypress_shared/pages/page'
 import applicationFactory from '../../../server/testutils/factories/application'
@@ -146,6 +147,10 @@ context('Apply', () => {
     const placementStartPage = new PlacementStartPage(releaseDate)
     placementStartPage.checkRadioByNameAndValue('startDateSameAsReleaseDate', 'yes')
     placementStartPage.clickSubmit()
+
+    const placementPurposePage = new PlacementPurposePage()
+    placementPurposePage.completeForm()
+    placementPurposePage.clickSubmit()
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

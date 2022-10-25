@@ -1,6 +1,6 @@
 import nock from 'nock'
 
-import config, { ApiConfig } from '../config'
+import type { ApiConfig } from '../config'
 import RestClient from './restClient'
 
 describe('restClient', () => {
@@ -10,9 +10,17 @@ describe('restClient', () => {
   const token = 'token-1'
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http://localhost:8080'
-    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, token)
+    const apiConfig: ApiConfig = {
+      url: 'http://example.com:8000',
+      timeout: {
+        response: 1000,
+        deadline: 1000,
+      },
+      agent: { timeout: 1000 },
+    }
+
+    fakeApprovedPremisesApi = nock(apiConfig.url)
+    restClient = new RestClient('premisesClient', apiConfig, token)
   })
 
   afterEach(() => {

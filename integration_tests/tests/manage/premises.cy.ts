@@ -17,7 +17,7 @@ context('Premises', () => {
 
     // And there are premises in the database
     const premises = approvedPremisesFactory.buildList(5)
-    cy.task('stubPremises', { premises, service: 'approved-premises' })
+    cy.task('stubPremises', premises)
 
     // When I visit the premises page
     const page = PremisesListPage.visit()

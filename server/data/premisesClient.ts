@@ -1,5 +1,4 @@
 import type { DateCapacity, NewPremises, Premises, StaffMember } from '@approved-premises/api'
-import type { Service } from '@approved-premises/ui'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -11,8 +10,8 @@ export default class PremisesClient {
     this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async all(service: Service): Promise<Array<Premises>> {
-    return (await this.restClient.get({ path: paths.premises.index({}), query: { service } })) as Array<Premises>
+  async all(): Promise<Array<Premises>> {
+    return (await this.restClient.get({ path: paths.premises.index({}) })) as Array<Premises>
   }
 
   async find(id: string): Promise<Premises> {

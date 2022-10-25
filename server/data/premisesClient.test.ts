@@ -36,10 +36,9 @@ describe('PremisesClient', () => {
       fakeApprovedPremisesApi
         .get(paths.premises.index({}))
         .matchHeader('authorization', `Bearer ${token}`)
-        .query({ service: 'approved-premises' })
         .reply(200, premises)
 
-      const output = await premisesClient.all('approved-premises')
+      const output = await premisesClient.all()
       expect(output).toEqual(premises)
     })
   })

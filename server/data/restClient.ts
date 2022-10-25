@@ -37,8 +37,11 @@ interface StreamRequest {
 export default class RestClient {
   agent: Agent
 
+  defaultHeaders: Record<string, string>
+
   constructor(private readonly name: string, private readonly config: ApiConfig, private readonly token: string) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
+    this.defaultHeaders = config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}
   }
 
   private apiUrl() {
@@ -62,7 +65,7 @@ export default class RestClient {
         })
         .query(query)
         .auth(this.token, { type: 'bearer' })
-        .set(headers)
+        .set({ ...this.defaultHeaders, ...headers })
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 
@@ -95,7 +98,7 @@ export default class RestClient {
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
         .timeout(this.timeoutConfig())
-        .set(headers)
+        .set({ ...this.defaultHeaders, ...headers })
         .end((error, response) => {
           if (error) {
             logger.warn(sanitiseError(error), `Error calling ${this.name}`)
@@ -130,7 +133,7 @@ export default class RestClient {
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
         .auth(this.token, { type: 'bearer' })
-        .set(headers)
+        .set({ ...this.defaultHeaders, ...headers })
         .responseType(responseType)
         .timeout(this.timeoutConfig())
 

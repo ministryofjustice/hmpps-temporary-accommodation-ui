@@ -17,7 +17,7 @@ export default class BookingShowPage extends Page {
   clickExtendBooking() {
     cy.get('.moj-button-menu__toggle-button')
       .click()
-      .then(() => cy.get('a').contains('Extend booking').click())
+      .then(() => cy.get('a').contains('Extend placement').click())
   }
 
   shouldShowBookingDetails(booking: Booking): void {

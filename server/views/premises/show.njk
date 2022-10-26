@@ -12,7 +12,6 @@
 
 {% set pageTitle = applicationName + " - " + premises.name %}
 {% set mainClasses = "app-container govuk-body" %}
-{% set bodyClasses = "premises-show" %}
 
 {% block content %}
 
@@ -83,10 +82,10 @@
   ]
 }) }}
 
-  <h2>Current Residents</h2>
+  <h2>Current residents</h2>
 
   {{ govukTable({
-    caption: "Current Residents",
+    caption: "Current residents",
     captionClasses: "govuk-visually-hidden",
     firstCellIsHeader: true,
     head: [

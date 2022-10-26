@@ -3,6 +3,7 @@
 /* eslint-disable */
 
 import type { ApArea } from './ApArea';
+import type { Characteristic } from './Characteristic';
 import type { LocalAuthorityArea } from './LocalAuthorityArea';
 import type { ProbationRegion } from './ProbationRegion';
 
@@ -19,5 +20,6 @@ export type Premises = {
     probationRegion: ProbationRegion;
     apArea: ApArea;
     localAuthorityArea: LocalAuthorityArea;
+    characteristics?: Array<Characteristic>;
 };
 

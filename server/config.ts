@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import 'dotenv/config'
+import { ServiceName } from '@approved-premises/api'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -31,6 +32,7 @@ export interface ApiConfig {
     deadline: number
   }
   agent: AgentConfig
+  serviceName?: ServiceName
 }
 
 export default {
@@ -80,6 +82,7 @@ export default {
         deadline: 10000,
       },
       agent: new AgentConfig(10000),
+      serviceName: get('COMMUNITY_ACCOMMODATION_API_SERVICE_NAME', 'approved-premises', requiredInProduction),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

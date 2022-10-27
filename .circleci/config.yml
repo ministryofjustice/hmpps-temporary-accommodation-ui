@@ -10,11 +10,11 @@ parameters:
     type: string
     # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
     # This is to avoid a general alert dumping ground that no-one then monitors
-    default: approved-premises-team-events
+    default: temporary-accommodation-team-events
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: approved-premises-team-events
+    default: temporary-accommodation-team-events
 
   node-version:
     type: string

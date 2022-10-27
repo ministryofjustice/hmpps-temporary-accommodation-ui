@@ -10,11 +10,11 @@ parameters:
     type: string
     # Normally team specific alert channel e.g. hmpps_tech_alerts, syscon-alerts, dps_sed_alerts
     # This is to avoid a general alert dumping ground that no-one then monitors
-    default: approved-premises-team-events
+    default: temporary-accommodation-team-events
   releases-slack-channel:
     type: string
     # Normally dps-releases for most teams / projects
-    default: approved-premises-team-events
+    default: temporary-accommodation-team-events
 
   node-version:
     type: string
@@ -84,27 +84,27 @@ workflows:
             branches:
               only:
                 - main
-      - hmpps/deploy_env:
-          name: deploy_dev
-          env: 'dev'
-          jira_update: true
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - helm_lint
-            - build_docker
-      - e2e_environment_test:
-          environment: 'dev'
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
+      # - hmpps/deploy_env:
+      #     name: deploy_dev
+      #     env: 'dev'
+      #     jira_update: true
+      #     context: hmpps-common-vars
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - helm_lint
+      #       - build_docker
+      # - e2e_environment_test:
+      #     environment: 'dev'
+      #     context: hmpps-common-vars
+      #     filters:
+      #       branches:
+      #         only:
+      #           - main
+      #     requires:
+      #       - deploy_dev
 
   #      - request-preprod-approval:
   #          type: approval

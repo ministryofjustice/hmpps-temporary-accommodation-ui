@@ -1,4 +1,4 @@
-import { PremisesListPage } from '../../cypress_shared/pages/manage'
+import PremisesListPage from '../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
 import AuthManageDetailsPage from '../../cypress_shared/pages/authManageDetails'

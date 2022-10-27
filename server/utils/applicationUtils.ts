@@ -57,7 +57,7 @@ const getService = (req: Request): Service => {
     }
   }
 
-  return 'approved-premises'
+  return 'temporary-accommodation'
 }
 
 export { getTaskStatus, taskLink, getCompleteSectionCount, getService }

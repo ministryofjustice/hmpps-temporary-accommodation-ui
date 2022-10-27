@@ -1,6 +1,6 @@
-# Approved Premises
+# Temporary Accommodation
 
-Apply for and manage approved premises
+Apply for and manage temporary accommodation
 
 ## Prerequisites
 
@@ -58,7 +58,7 @@ script/test
 ### End to end tests
 
 As well as unit and integration tests, there are also a [smaller suite of
-end-to-end tests](https://github.com/ministryofjustice/hmpps-approved-premises-ui/tree/main/e2e/tests)
+end-to-end tests](https://github.com/ministryofjustice/hmpps-temporary-accommodation-ui/tree/main/e2e/tests)
 that run in [Circle CI](https://circleci.com/) post-deploy to the `dev`
 environment.
 

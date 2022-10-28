@@ -1,0 +1,26 @@
+[
+    {
+        "id": "single-bed",
+        "name": "Single bed",
+        "modelScope": "room",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "double-bed",
+        "name": "Double bed",
+        "modelScope": "room",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "shared-kitchen",
+        "name": "Shared kitchen",
+        "modelScope": "room",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "shared-bathroom",
+        "name": "Shared bathroom",
+        "modelScope": "room",
+        "serviceScope": "temporary-accommodation"
+    }
+]

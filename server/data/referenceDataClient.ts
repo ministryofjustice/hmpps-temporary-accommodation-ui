@@ -9,7 +9,7 @@ export default class ReferenceDataClient {
     this.restClient = new RestClient('referenceDataClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
-  async getReferenceData(objectType: string): Promise<Array<ReferenceData>> {
-    return (await this.restClient.get({ path: `/reference-data/${objectType}` })) as Array<ReferenceData>
+  async getReferenceData<T = ReferenceData>(objectType: string): Promise<Array<T>> {
+    return (await this.restClient.get({ path: `/reference-data/${objectType}` })) as Array<T>
   }
 }

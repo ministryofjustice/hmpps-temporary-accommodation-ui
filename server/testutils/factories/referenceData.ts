@@ -9,6 +9,8 @@ import destinationProvidersJson from '../../../wiremock/stubs/destination-provid
 import cancellationReasonsJson from '../../../wiremock/stubs/cancellation-reasons.json'
 import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
 import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
+import characteristicsJson from '../../../wiremock/stubs/characteristics.json'
+import { Characteristic } from '../../@types/shared'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
@@ -39,6 +41,14 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
   nonArrivalReason() {
     const data = faker.helpers.arrayElement(nonArrivalReasonsJson)
     return this.params(data)
+  }
+
+  characteristic(modelScope: string): Factory<Characteristic> {
+    const data = faker.helpers.arrayElement(
+      characteristicsJson.filter(characteristic => characteristic.modelScope === modelScope),
+    )
+
+    return Factory.define<Characteristic>(() => data)
   }
 }
 

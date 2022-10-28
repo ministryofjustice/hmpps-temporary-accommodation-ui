@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './wiremock'
+import referenceData from './integration_tests/mockApis/referenceData'
 import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import premises from './integration_tests/mockApis/premises'
@@ -29,6 +30,7 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
+        ...referenceData,
         ...arrival,
         ...nonArrival,
         ...auth,

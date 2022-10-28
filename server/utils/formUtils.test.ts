@@ -7,6 +7,7 @@ import {
   convertKeyValuePairToRadioItems,
   convertObjectsToSelectOptions,
   convertKeyValuePairToCheckBoxItems,
+  convertObjectsToCheckboxItems,
 } from './formUtils'
 
 describe('formUtils', () => {
@@ -306,6 +307,53 @@ describe('formUtils', () => {
           text: 'def',
           value: '345',
           selected: false,
+        },
+      ])
+    })
+  })
+
+  describe('convertObjectsToCheckboxItems', () => {
+    const objects = [
+      {
+        id: '123',
+        name: 'abc',
+      },
+      {
+        id: '345',
+        name: 'def',
+      },
+    ]
+
+    it('converts objects to an array of select options', () => {
+      const result = convertObjectsToCheckboxItems(objects, 'name', 'id', 'field', {})
+
+      expect(result).toEqual([
+        {
+          text: 'abc',
+          value: '123',
+          checked: false,
+        },
+        {
+          text: 'def',
+          value: '345',
+          checked: false,
+        },
+      ])
+    })
+
+    it('marks the objects that are in the passed IDs as checked', () => {
+      const result = convertObjectsToCheckboxItems(objects, 'name', 'id', 'field', { field: ['345'] })
+
+      expect(result).toEqual([
+        {
+          text: 'abc',
+          value: '123',
+          checked: false,
+        },
+        {
+          text: 'def',
+          value: '345',
+          checked: true,
         },
       ])
     })

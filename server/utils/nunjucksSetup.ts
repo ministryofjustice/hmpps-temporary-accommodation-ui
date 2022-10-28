@@ -8,7 +8,12 @@ import * as pathModule from 'path'
 import type { ErrorMessages, PersonStatus, Task } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
 import { initialiseName, removeBlankSummaryListItems } from './utils'
-import { dateFieldValues, convertObjectsToRadioItems, convertObjectsToSelectOptions } from './formUtils'
+import {
+  dateFieldValues,
+  convertObjectsToRadioItems,
+  convertObjectsToSelectOptions,
+  convertObjectsToCheckboxItems,
+} from './formUtils'
 import { getTaskStatus, taskLink, getCompleteSectionCount, getService } from './applicationUtils'
 import { statusTag } from './personUtils'
 import bookingActions from './bookingUtils'
@@ -107,6 +112,18 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       fieldName: string,
     ) {
       return convertObjectsToSelectOptions(items, prompt, textKey, valueKey, fieldName, this.ctx)
+    },
+  )
+
+  njkEnv.addGlobal(
+    'convertObjectsToCheckboxItems',
+    function sendConvertObjectsToCheckboxItems(
+      items: Array<Record<string, string>>,
+      textKey: string,
+      valueKey: string,
+      fieldName: string,
+    ) {
+      return convertObjectsToCheckboxItems(items, textKey, valueKey, fieldName, this.ctx)
     },
   )
 

@@ -4,11 +4,13 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
 import premisesFactory from '../../../testutils/factories/premises'
 import localAuthorityFactory from '../../../testutils/factories/localAuthority'
+import roomFactory from '../../../testutils/factories/room'
 import PremisesService from '../../../services/premisesService'
 import PremisesController from './premisesController'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { LocalAuthorityService } from '../../../services'
+import BedspaceService from '../../../services/bedspaceService'
 
 jest.mock('../../../utils/validation')
 
@@ -20,8 +22,9 @@ describe('PremisesController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
   const localAuthorityService = createMock<LocalAuthorityService>({})
-  const premisesController = new PremisesController(premisesService, localAuthorityService)
+  const premisesController = new PremisesController(premisesService, bedspaceService, localAuthorityService)
 
   describe('index', () => {
     it('returns the table rows to the template', async () => {
@@ -126,18 +129,26 @@ describe('PremisesController', () => {
   describe('show', () => {
     it('should return the premises details to the template', async () => {
       const premises = premisesFactory.build()
+      const rooms = roomFactory.buildList(5)
 
       const details = { premises, summaryList: { rows: [] as Array<SummaryListItem> } }
       premisesService.getTemporaryAccommodationPremisesDetails.mockResolvedValue(details)
+
+      const bedspaceDetails = rooms.map(room => ({ room, summaryList: { rows: [] as Array<SummaryListItem> } }))
+      bedspaceService.getRoomDetails.mockResolvedValue(bedspaceDetails)
 
       request.params.premisesId = premises.id
 
       const requestHandler = premisesController.show()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', details)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
+        ...details,
+        bedspaces: bedspaceDetails,
+      })
 
       expect(premisesService.getTemporaryAccommodationPremisesDetails).toHaveBeenCalledWith(token, premises.id)
+      expect(bedspaceService.getRoomDetails).toHaveBeenCalledWith(token, premises.id)
     })
   })
 })

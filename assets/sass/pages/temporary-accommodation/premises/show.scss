@@ -1,4 +1,15 @@
 .temporary-accommodation-premises-show {
+  .details {
+    ul {
+      padding-inline-start: 0px;
+      margin-block-start: 0px;
+      margin-block-end: 0px;
+    }
+    li {
+      list-style-type: none
+    }
+  }
+
   .moj-identity-bar {
     margin: 0.8em 0 2em;
     box-shadow: none;
@@ -35,7 +46,7 @@
     &__title {
       display: inline-block;
       font-size: 1.1875rem;
-      h3 {
+      h3, h4 {
         display: inline;
         margin: 0;
         padding: 0;

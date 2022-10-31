@@ -55,6 +55,28 @@
     }) }}
   </div>
 
+  <h3>Bedspace details</h3>
+
+  {% for bedspace in bedspaces %}
+    <div data-cy-room="{{ bedspace.room.id }}">
+      <div class="edit-bar">
+        <div class="edit-bar__container">
+          <div class="edit-bar__title">
+            <h4>{{ bedspace.room.name }}</h4>
+          </div>
+          <div class="edit-bar__action">
+            <a href="#">Edit</a>
+          </div>
+        </div>
+      </div>
+
+      {{ govukSummaryList({
+        rows: bedspace.summaryList.rows,
+        classes: 'govuk-summary-list--no-border details'
+      }) }}
+    </div>
+  {% endfor %}
+
 {% endblock %}
 
 {% block extraScripts %}

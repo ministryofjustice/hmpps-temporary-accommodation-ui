@@ -78,6 +78,7 @@ export default class PremisesService {
   ): Promise<{ premises: Premises; summaryList: SummaryList }> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.find(id)
+
     const summaryList = await this.temporaryAccommodationSummaryListForPremises(premises)
 
     return { premises, summaryList }
@@ -146,10 +147,6 @@ export default class PremisesService {
   private async temporaryAccommodationSummaryListForPremises(premises: Premises): Promise<SummaryList> {
     return {
       rows: [
-        {
-          key: this.textValue('Property name'),
-          value: this.textValue(premises.name),
-        },
         {
           key: this.textValue('Address'),
           value: this.htmlValue(`${escape(premises.addressLine1)}<br />${escape(premises.postcode)}`),

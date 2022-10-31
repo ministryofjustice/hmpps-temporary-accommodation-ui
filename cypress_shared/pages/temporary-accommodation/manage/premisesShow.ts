@@ -13,28 +13,29 @@ export default class PremisesShowPage extends Page {
     return new PremisesShowPage(premises)
   }
 
-  shouldShowPremisesDetail(): void {
-    cy.get('.govuk-summary-list__key')
-      .contains('Property name')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', this.premises.name)
+  shouldShowPremisesDetails(): void {
+    cy.get('h2').should('contain', `${this.premises.addressLine1}, ${this.premises.postcode}`)
 
-    cy.get('.govuk-summary-list__key')
-      .contains('Address')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', this.premises.addressLine1)
-      .should('contain', this.premises.postcode)
+    cy.get(`[data-cy-premises]`).within(() => {
+      cy.get('h3').should('contain', this.premises.name)
 
-    cy.get('.govuk-summary-list__key')
-      .contains('Local authority')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', this.premises.localAuthorityArea.name)
-
-    this.premises.notes.split('\n').forEach(noteLine => {
       cy.get('.govuk-summary-list__key')
-        .contains('Notes')
+        .contains('Address')
         .siblings('.govuk-summary-list__value')
-        .should('contain', noteLine)
+        .should('contain', this.premises.addressLine1)
+        .should('contain', this.premises.postcode)
+
+      cy.get('.govuk-summary-list__key')
+        .contains('Local authority')
+        .siblings('.govuk-summary-list__value')
+        .should('contain', this.premises.localAuthorityArea.name)
+
+      this.premises.notes.split('\n').forEach(noteLine => {
+        cy.get('.govuk-summary-list__key')
+          .contains('Notes')
+          .siblings('.govuk-summary-list__value')
+          .should('contain', noteLine)
+      })
     })
   }
 }

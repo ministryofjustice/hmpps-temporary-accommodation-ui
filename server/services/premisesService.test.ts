@@ -295,10 +295,6 @@ describe('PremisesService', () => {
         summaryList: {
           rows: [
             {
-              key: { text: 'Property name' },
-              value: { text: 'Test' },
-            },
-            {
               key: { text: 'Address' },
               value: { html: '10 Example Street<br />SW1A 1AA' },
             },

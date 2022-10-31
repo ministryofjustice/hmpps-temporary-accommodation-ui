@@ -65,7 +65,7 @@ Then('I should see a confirmation for my new premises', () => {
     const page = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
     page.shouldShowBanner('Property created')
 
-    page.shouldShowPremisesDetail()
+    page.shouldShowPremisesDetails()
   })
 })
 

@@ -164,7 +164,7 @@ context('Premises', () => {
     const page = PremisesShowPage.visit(premises)
 
     // Then I should see the premises details shown
-    page.shouldShowPremisesDetail()
+    page.shouldShowPremisesDetails()
   })
 
   it('should navigate back from the show page to the premises list page', () => {

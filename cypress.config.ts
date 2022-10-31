@@ -13,6 +13,7 @@ import cancellation from './integration_tests/mockApis/cancellation'
 import lostBed from './integration_tests/mockApis/lostBed'
 import person from './integration_tests/mockApis/person'
 import applications from './integration_tests/mockApis/applications'
+import room from './integration_tests/mockApis/room'
 import localAuthority from './integration_tests/mockApis/localAuthority'
 
 export default defineConfig({
@@ -43,6 +44,7 @@ export default defineConfig({
         ...lostBed,
         ...person,
         ...applications,
+        ...room,
         ...localAuthority,
       })
     },

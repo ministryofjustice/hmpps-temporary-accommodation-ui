@@ -44,11 +44,11 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
   }
 
   characteristic(modelScope: string): Factory<Characteristic> {
-    const data = faker.helpers.arrayElement(
-      characteristicsJson.filter(characteristic => characteristic.modelScope === modelScope),
+    return Factory.define<Characteristic>(() =>
+      faker.helpers.arrayElement(
+        characteristicsJson.filter(characteristic => characteristic.modelScope === modelScope),
+      ),
     )
-
-    return Factory.define<Characteristic>(() => data)
   }
 }
 

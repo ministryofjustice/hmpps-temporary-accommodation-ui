@@ -7,6 +7,7 @@ import {
   retrieveQuestionResponseFromApplication,
   removeBlankSummaryListItems,
   mapApiPersonRisksForUi,
+  unique,
 } from './utils'
 import risksFactory from '../testutils/factories/risks'
 import { DateFormats } from './dateUtils'
@@ -202,5 +203,42 @@ describe('mapApiPersonRiskForUI', () => {
         level: risks.tier.value.level,
       },
     })
+  })
+})
+
+describe('unique', () => {
+  it('returns unique elements of an array, compared by ID', () => {
+    const input = [
+      {
+        id: 'abc',
+      },
+      {
+        id: 'xyz',
+      },
+      {
+        id: 'abc',
+      },
+      {
+        id: 'xyz',
+      },
+      {
+        id: 'xyz',
+      },
+      {
+        id: 'efg',
+      },
+    ]
+
+    expect(unique(input)).toEqual([
+      {
+        id: 'abc',
+      },
+      {
+        id: 'xyz',
+      },
+      {
+        id: 'efg',
+      },
+    ])
   })
 })

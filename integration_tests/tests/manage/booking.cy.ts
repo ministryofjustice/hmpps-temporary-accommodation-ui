@@ -46,7 +46,7 @@ context('Booking', () => {
 
     cy.task('stubBookingCreate', { premisesId: premises.id, booking })
     cy.task('stubBookingGet', { premisesId: premises.id, booking })
-    cy.task('stubSinglePremises', { premisesId: premises.id, booking })
+    cy.task('stubSinglePremises', premises)
     cy.task('stubPremisesCapacity', {
       premisesId: premises.id,
       dateCapacities: [

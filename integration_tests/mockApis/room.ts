@@ -5,6 +5,20 @@ import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
+  stubRoomsForPremisesId: (args: { premisesId: string; rooms: Array<Room> }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: paths.premises.rooms.index({ premisesId: args.premisesId }),
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: args.rooms,
+      },
+    }),
   stubRoomCreate: (args: { premisesId: string; room: Room }): SuperAgentRequest =>
     stubFor({
       request: {

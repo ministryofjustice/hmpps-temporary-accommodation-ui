@@ -19,7 +19,7 @@ context('BookingExtension', () => {
 
     cy.task('stubBookingExtensionCreate', { premisesId: premises.id, booking })
     cy.task('stubBookingGet', { premisesId: premises.id, booking })
-    cy.task('stubSinglePremises', { premisesId: premises.id, booking })
+    cy.task('stubSinglePremises', premises)
 
     // Given I am signed in
     cy.signIn()
@@ -50,7 +50,7 @@ context('BookingExtension', () => {
       departureDate: new Date(Date.UTC(2022, 5, 3, 0, 0, 0)).toISOString(),
     })
 
-    cy.task('stubSinglePremises', { premisesId: premises.id })
+    cy.task('stubSinglePremises', premises)
     cy.task('stubBookingGet', { premisesId: premises.id, booking })
 
     // Given I am signed in

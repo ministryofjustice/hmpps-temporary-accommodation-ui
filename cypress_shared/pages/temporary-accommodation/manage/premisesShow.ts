@@ -1,4 +1,4 @@
-import type { Premises } from '@approved-premises/api'
+import type { Premises, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -31,6 +31,26 @@ export default class PremisesShowPage extends Page {
         .should('contain', this.premises.localAuthorityArea.name)
 
       this.premises.notes.split('\n').forEach(noteLine => {
+        cy.get('.govuk-summary-list__key')
+          .contains('Notes')
+          .siblings('.govuk-summary-list__value')
+          .should('contain', noteLine)
+      })
+    })
+  }
+
+  shouldShowRoomDetails(room: Room): void {
+    cy.get(`[data-cy-room="${room.id}"]`).within(() => {
+      cy.get('h4').should('contain', room.name)
+
+      room.characteristics.forEach(characteristic => {
+        cy.get('.govuk-summary-list__key')
+          .contains('Attributes')
+          .siblings('.govuk-summary-list__value')
+          .should('contain', characteristic.name)
+      })
+
+      room.notes.split('\n').forEach(noteLine => {
         cy.get('.govuk-summary-list__key')
           .contains('Notes')
           .siblings('.govuk-summary-list__value')

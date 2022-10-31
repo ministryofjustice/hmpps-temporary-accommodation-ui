@@ -10,6 +10,10 @@ export default class RoomClient {
     this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, token)
   }
 
+  async all(premisesId: string): Promise<Array<Room>> {
+    return (await this.restClient.get({ path: api.premises.rooms.index({ premisesId }) })) as Promise<Array<Room>>
+  }
+
   async create(premisesId: string, data: NewRoom): Promise<Room> {
     return (await this.restClient.post({ path: api.premises.rooms.create({ premisesId }), data })) as Room
   }

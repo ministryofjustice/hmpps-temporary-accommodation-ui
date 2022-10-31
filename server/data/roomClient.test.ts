@@ -28,6 +28,20 @@ describe('Room Client', () => {
     nock.cleanAll()
   })
 
+  describe('all', () => {
+    it('should get all rooms for the given premises', async () => {
+      const rooms = roomFactory.buildList(5)
+
+      fakeApprovedPremisesApi
+        .get(paths.premises.rooms.index({ premisesId }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, rooms)
+
+      const output = await roomClient.all(premisesId)
+      expect(output).toEqual(rooms)
+    })
+  })
+
   describe('create', () => {
     it('should return the room that has been created', async () => {
       const room = roomFactory.build()

@@ -18,6 +18,22 @@ rooms.push({
     jsonBody: JSON.stringify(roomFactory.build()),
   },
 })
+
+rooms.push({
+  priority: 99,
+  request: {
+    method: 'GET',
+    urlPathPattern: `/premises/${guidRegex}/rooms`,
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: roomFactory.buildList(5),
+  },
+})
+
 const requiredFields = getCombinations(['name'])
 
 requiredFields.forEach((fields: Array<string>) => {

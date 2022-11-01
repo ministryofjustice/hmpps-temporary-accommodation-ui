@@ -1,4 +1,4 @@
-import type { Premises } from '@approved-premises/api'
+import type { ApprovedPremises } from '@approved-premises/api'
 
 import Page from '../page'
 import paths from '../../../server/paths/manage'
@@ -13,8 +13,8 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage()
   }
 
-  shouldShowPremises(premises: Array<Premises>): void {
-    premises.forEach((item: Premises) => {
+  shouldShowPremises(premises: Array<ApprovedPremises>): void {
+    premises.forEach((item: ApprovedPremises) => {
       cy.contains(item.name)
         .parent()
         .within(() => {

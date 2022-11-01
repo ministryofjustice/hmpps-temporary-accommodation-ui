@@ -1,6 +1,7 @@
 import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 import premisesFactory from '../testutils/factories/premises'
+import approvedPremisesFactory from '../testutils/factories/approvedPremises'
 import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
@@ -44,9 +45,9 @@ describe('PremisesService', () => {
 
   describe('approvedPremisesTableRows', () => {
     it('returns a sorted table view of the premises for Approved Premises', async () => {
-      const premises1 = premisesFactory.build({ name: 'XYZ' })
-      const premises2 = premisesFactory.build({ name: 'ABC' })
-      const premises3 = premisesFactory.build({ name: 'GHI' })
+      const premises1 = approvedPremisesFactory.build({ name: 'XYZ' })
+      const premises2 = approvedPremisesFactory.build({ name: 'ABC' })
+      const premises3 = approvedPremisesFactory.build({ name: 'GHI' })
 
       const premises = [premises1, premises2, premises3]
       premisesClient.all.mockResolvedValue(premises)
@@ -227,7 +228,7 @@ describe('PremisesService', () => {
 
   describe('getApprovedPremisesPremisesDetails', () => {
     it('returns a title and a summary list for a given Premises ID', async () => {
-      const premises = premisesFactory.build({
+      const premises = approvedPremisesFactory.build({
         name: 'Test',
         apCode: 'ABC',
         postcode: 'SW1A 1AA',

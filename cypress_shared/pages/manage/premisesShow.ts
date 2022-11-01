@@ -1,15 +1,15 @@
-import type { Premises, Booking } from '@approved-premises/api'
+import type { ApprovedPremises, Booking } from '@approved-premises/api'
 
 import Page from '../page'
 import paths from '../../../server/paths/manage'
 import { DateFormats } from '../../../server/utils/dateUtils'
 
 export default class PremisesShowPage extends Page {
-  constructor(private readonly premises: Premises) {
+  constructor(private readonly premises: ApprovedPremises) {
     super(premises.name)
   }
 
-  static visit(premises: Premises): PremisesShowPage {
+  static visit(premises: ApprovedPremises): PremisesShowPage {
     cy.visit(paths.premises.show({ premisesId: premises.id }))
     return new PremisesShowPage(premises)
   }

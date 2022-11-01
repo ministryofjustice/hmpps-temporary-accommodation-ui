@@ -1,4 +1,4 @@
-import premisesFactory from '../../../server/testutils/factories/premises'
+import approvedPremisesFactory from '../../../server/testutils/factories/approvedPremises'
 import bookingsFactory from '../../../server/testutils/factories/booking'
 import dateCapacityFactory from '../../../server/testutils/factories/dateCapacity'
 
@@ -16,7 +16,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
+    const premises = approvedPremisesFactory.buildList(5)
     cy.task('stubPremises', { premises, service: 'approved-premises' })
 
     // When I visit the premises page
@@ -28,7 +28,7 @@ context('Premises', () => {
 
   it('should show a single premises', () => {
     // Given there is a premises in the database
-    const premises = premisesFactory.build()
+    const premises = approvedPremisesFactory.build()
     const bookingsArrivingToday = bookingsFactory.arrivingToday().buildList(2)
     const bookingsLeavingToday = bookingsFactory.departingToday().buildList(2)
     const bookingsArrivingSoon = bookingsFactory.arrivingSoon().buildList(5)

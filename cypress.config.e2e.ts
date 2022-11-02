@@ -31,7 +31,7 @@ export default defineConfig({
     configFile: 'reporter-config.json',
   },
   videoUploadOnPasses: false,
-  taskTimeout: 60000,
+  taskTimeout: 70000,
   e2e: {
     specPattern: 'e2e/tests/**/*.feature',
     setupNodeEvents,

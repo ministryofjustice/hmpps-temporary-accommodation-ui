@@ -38,22 +38,9 @@ const getService = (req: Request): Service => {
   if (config.serviceSignifier === 'temporary-accommodation-only') {
     return 'temporary-accommodation'
   }
-  if (config.serviceSignifier === 'domain') {
-    const subdomain = req.subdomains[req.subdomains.length - 1]
-
-    if (subdomain === config.approvedPremisesSubdomain) {
-      return 'approved-premises'
-    }
-    if (subdomain === config.temporaryAccommodationSubdomain) {
-      return 'temporary-accommodation'
-    }
-  }
   if (config.serviceSignifier === 'path') {
-    if (req.path.startsWith(`/${config.approvedPremisesRootPath}`)) {
+    if (req.path.startsWith('/approved-premises')) {
       return 'approved-premises'
-    }
-    if (req.path.startsWith(`/${config.temporaryAccommodationRootPath}`)) {
-      return 'temporary-accommodation'
     }
   }
 

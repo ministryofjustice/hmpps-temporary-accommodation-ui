@@ -105,8 +105,6 @@ describe('applicationUtils', () => {
 
   describe('getService', () => {
     beforeAll(() => {
-      config.approvedPremisesRootPath = 'approved-premises-root-path'
-      config.temporaryAccommodationRootPath = 'temporary-accommodation-root-path'
       config.approvedPremisesSubdomain = 'approved-premises-subdomain'
       config.temporaryAccommodationSubdomain = 'temporary-accommodation-subdomain'
     })
@@ -129,39 +127,19 @@ describe('applicationUtils', () => {
       })
     })
 
-    describe('when the app is configured to use the subdomain as the service signifier', () => {
-      it("returns 'approved-premises' when the subdomain matches the approved premises subdomain", () => {
-        const request = createMock<Request>()
-        request.subdomains = ['approved-premises-subdomain']
-
-        config.serviceSignifier = 'domain'
-
-        expect(getService(request)).toEqual('approved-premises')
-      })
-
-      it("returns 'temporary-accommodation' when the subdomain matches the temporary accommodation subdomain", () => {
-        const request = createMock<Request>()
-        request.subdomains = ['temporary-accommodation-subdomain']
-
-        config.serviceSignifier = 'domain'
-
-        expect(getService(request)).toEqual('temporary-accommodation')
-      })
-    })
-
     describe('when the app is configured to use the path as the service signifier', () => {
       it("returns 'approved-premises' when the path matches the approved premises root path", () => {
         const request = createMock<Request>()
-        request.path = '/approved-premises-root-path/some-path'
+        request.path = '/approved-premises/some-path'
 
         config.serviceSignifier = 'path'
 
         expect(getService(request)).toEqual('approved-premises')
       })
 
-      it("returns 'temporary-accommodation' when the subdomain matches the temporary accommodation root path", () => {
+      it("returns 'temporary-accommodation' when the path does not match the approved premises root path", () => {
         const request = createMock<Request>()
-        request.path = '/temporary-accommodation-root-path/some-path'
+        request.path = '/some-path'
 
         config.serviceSignifier = 'path'
 

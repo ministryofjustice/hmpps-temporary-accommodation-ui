@@ -1,29 +1,23 @@
 import type { Response, SuperAgentRequest } from 'superagent'
 
 import type { Premises, Booking, DateCapacity, StaffMember } from '@approved-premises/api'
-import { Service } from '@approved-premises/ui'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import bookingStubs from './booking'
 import { errorStub } from '../../wiremock/utils'
 
-const stubPremises = (args: { premises: Array<Premises>; service: Service }) =>
+const stubPremises = (premises: Array<Premises>) =>
   stubFor({
     request: {
       method: 'GET',
       urlPath: '/premises',
-      queryParameters: {
-        service: {
-          equalTo: args.service,
-        },
-      },
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: args.premises,
+      jsonBody: premises,
     },
   })
 

@@ -19,7 +19,7 @@ context('Premises', () => {
 
     // And there are premises in the database
     const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+    cy.task('stubPremises', premises)
 
     // When I visit the premises page
     const page = PremisesListPage.visit()
@@ -34,7 +34,7 @@ context('Premises', () => {
 
     // And there are premises in the database
     const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+    cy.task('stubPremises', premises)
 
     // And there are local authorities in the database
     const localAuthorities = localAuthorityFactory.buildList(5)
@@ -56,7 +56,7 @@ context('Premises', () => {
 
     // And there are premises in the database
     const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+    cy.task('stubPremises', premises)
     cy.task('stubSinglePremises', premises[0])
 
     // When I visit the premises page
@@ -136,7 +136,7 @@ context('Premises', () => {
 
     // And there are premises in the database
     const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+    cy.task('stubPremises', premises)
 
     // And there are local authorities in the database
     const localAuthorities = localAuthorityFactory.buildList(5)
@@ -173,7 +173,7 @@ context('Premises', () => {
 
     // And there are premises in the database
     const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', { premises, service: 'temporary-accommodation' })
+    cy.task('stubPremises', premises)
     cy.task('stubSinglePremises', premises[0])
 
     // When I visit the show premises page

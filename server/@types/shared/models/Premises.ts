@@ -10,7 +10,6 @@ import type { ProbationRegion } from './ProbationRegion';
 export type Premises = {
     id: string;
     name: string;
-    apCode: string;
     addressLine1: string;
     postcode: string;
     bedCount: number;

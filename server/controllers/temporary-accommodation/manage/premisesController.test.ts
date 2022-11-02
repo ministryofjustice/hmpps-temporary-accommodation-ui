@@ -95,7 +95,6 @@ describe('PremisesController', () => {
       expect(premisesService.create).toHaveBeenCalledWith(token, {
         name: premises.name,
         postcode: premises.postcode,
-        service: 'temporary-accommodation',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property created')

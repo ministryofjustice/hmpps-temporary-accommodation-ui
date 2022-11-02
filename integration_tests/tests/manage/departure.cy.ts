@@ -30,7 +30,7 @@ context('Departures', () => {
       moveOnCategory,
     })
 
-    cy.task('stubPremises', { premises, service: 'approved-premises' })
+    cy.task('stubPremises', premises)
     cy.task('stubBookingGet', { premisesId: premises[0].id, booking })
     cy.task('stubDepartureCreate', { premisesId: premises[0].id, bookingId: booking.id, departure })
     cy.task('stubDepartureGet', { premisesId: premises[0].id, bookingId: booking.id, departure })
@@ -70,7 +70,7 @@ context('Departures', () => {
     })
 
     // Given I am signed in
-    cy.task('stubPremises', { premises, service: 'approved-premises' })
+    cy.task('stubPremises', premises)
     cy.task('stubBookingGet', { premisesId: premises[0].id, booking })
     cy.task('stubDepartureGet', { premisesId: premises[0].id, bookingId: booking.id, departure })
     cy.signIn()

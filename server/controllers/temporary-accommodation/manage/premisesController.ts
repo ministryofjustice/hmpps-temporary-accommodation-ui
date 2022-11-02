@@ -38,7 +38,6 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const newPremises: NewPremises = {
         ...req.body,
-        service: 'temporary-accommodation',
       }
 
       try {

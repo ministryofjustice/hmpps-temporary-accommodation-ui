@@ -31,44 +31,17 @@ const premises = premisesJson.map(item => {
   return premisesFactory.build({ ...(item as DeepPartial<Premises>), localAuthorityArea: localAuthority })
 })
 
-const apPremises = premises.slice(0, Math.floor(premises.length / 2))
-const taPremises = premises.slice(Math.floor(premises.length / 2), premises.length)
-
 stubs.push({
   request: {
     method: 'GET',
     urlPath: '/premises',
-    queryParameters: {
-      service: {
-        equalTo: 'approved-premises',
-      },
-    },
   },
   response: {
     status: 200,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: apPremises,
-  },
-})
-
-stubs.push({
-  request: {
-    method: 'GET',
-    urlPath: '/premises',
-    queryParameters: {
-      service: {
-        equalTo: 'temporary-accommodation',
-      },
-    },
-  },
-  response: {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
-    jsonBody: taPremises,
+    jsonBody: premises,
   },
 })
 

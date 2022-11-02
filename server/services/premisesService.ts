@@ -1,5 +1,5 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
-import type { StaffMember, NewPremises, Premises } from '@approved-premises/api'
+import type { StaffMember, NewPremises, Premises, ApprovedPremises } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient } from '../data'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
@@ -21,11 +21,11 @@ export default class PremisesService {
 
   async approvedPremisesTableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.all('approved-premises')
+    const premises = (await premisesClient.all()) as Array<ApprovedPremises>
 
     return premises
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map((p: Premises) => {
+      .map((p: ApprovedPremises) => {
         return [
           this.textValue(p.name),
           this.textValue(p.apCode),
@@ -41,7 +41,7 @@ export default class PremisesService {
 
   async temporaryAccommodationTableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.all('temporary-accommodation')
+    const premises = await premisesClient.all()
 
     return premises
       .map(p => ({ premises: p, shortAddress: `${p.addressLine1}, ${p.postcode}` }))
@@ -66,7 +66,7 @@ export default class PremisesService {
     id: string,
   ): Promise<{ name: string; summaryList: SummaryList }> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.find(id)
+    const premises = (await premisesClient.find(id)) as ApprovedPremises
     const summaryList = await this.approvedPremisesSummaryListForPremises(premises)
 
     return { name: premises.name, summaryList }
@@ -96,7 +96,7 @@ export default class PremisesService {
 
   async getPremisesSelectList(token: string): Promise<Array<{ text: string; value: string }>> {
     const premisesClient = this.premisesClientFactory(token)
-    const premises = await premisesClient.all('approved-premises')
+    const premises = await premisesClient.all()
 
     return premises
       .map(singlePremises => {
@@ -120,7 +120,7 @@ export default class PremisesService {
     return premises
   }
 
-  private async approvedPremisesSummaryListForPremises(premises: Premises): Promise<SummaryList> {
+  private async approvedPremisesSummaryListForPremises(premises: ApprovedPremises): Promise<SummaryList> {
     return {
       rows: [
         {

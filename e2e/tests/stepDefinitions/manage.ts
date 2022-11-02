@@ -1,7 +1,11 @@
-import { Given } from '@badeball/cypress-cucumber-preprocessor'
+import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import throwMissingCypressEnvError from './utils'
 import premisesFactory from '../../../server/testutils/factories/premises'
-import { PremisesShowPage } from '../../../cypress_shared/pages/manage'
+import newPremisesFactory from '../../../server/testutils/factories/newPremises'
+import localAuthorityFactory from '../../../server/testutils/factories/localAuthority'
+import PremisesNewPage from '../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
+import PremisesListPage from '../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
+import PremisesShowPage from '../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 
 Given('I am logged in', () => {
   const username = Cypress.env('username') || throwMissingCypressEnvError('username')
@@ -14,18 +18,58 @@ Given('I am logged in', () => {
   cy.get('.govuk-button').contains('Sign in').click()
 })
 
-Given("I'm managing a premises", () => {
-  cy.visit('/premises')
-  cy.get('.govuk-table tbody tr')
-    .first()
-    .within($row => {
-      cy.wrap($row).get('th').first().invoke('text').as('premisesName')
-      cy.wrap($row).get('a').click()
+Given("I'm creating a premises", () => {
+  const page = PremisesListPage.visit()
+  page.clickAddPremisesButton()
+})
+
+Given('I create a premises with all necessary details', () => {
+  const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
+
+  cy.get('select[name="localAuthorityAreaId"').within(() => {
+    cy.get('option')
+      .contains('North Lanarkshire')
+      .then(element => {
+        cy.wrap(element.attr('value')).as('localAuthorityAreaId')
+      })
+  })
+
+  cy.get('@localAuthorityAreaId').then(localAuthorityAreaId => {
+    const newPremises = newPremisesFactory.build({
+      localAuthorityAreaId,
     })
 
-  cy.get('@premisesName').then(premisesName => {
-    const premises = premisesFactory.build({ name: premisesName })
-    const premisesShowPage = new PremisesShowPage(premises)
-    cy.wrap(premisesShowPage).as('premisesShowPage')
+    const premises = premisesFactory.build({
+      name: newPremises.name,
+      addressLine1: newPremises.addressLine1,
+      postcode: newPremises.postcode,
+      localAuthorityArea: localAuthorityFactory.build({
+        name: 'North Lanarkshire',
+        id: localAuthorityAreaId,
+      }),
+      notes: newPremises.notes,
+    })
+
+    cy.wrap(premises).as('premises')
+    page.completeForm(newPremises)
   })
+})
+
+Given('I attempt to create a premises with required details missing', () => {
+  const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
+  page.clickSubmit()
+})
+
+Then('I should see a confirmation for my new premises', () => {
+  cy.get('@premises').then(premises => {
+    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    page.shouldShowBanner('Property created')
+
+    page.shouldShowPremisesDetail()
+  })
+})
+
+Then('I should see a list of the problems encountered creating the premises', () => {
+  const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
+  page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'localAuthorityAreaId'])
 })

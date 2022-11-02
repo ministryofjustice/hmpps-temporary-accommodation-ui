@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { DeepPartial } from 'fishery'
 
-import type { Premises } from '@approved-premises/api'
+import type { ApprovedPremises } from '@approved-premises/api'
 import { bulkStub } from './index'
 
 import premisesJson from './stubs/premises.json'
@@ -17,6 +17,7 @@ import cancellationStubs from './cancellationStubs'
 import lostBedStubs from './lostBedStubs'
 import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
+import roomStubs from './roomStub'
 import { localAuthorityStubs, localAuthorities } from './localAuthorityStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
@@ -28,7 +29,7 @@ const stubs = []
 
 const premises = premisesJson.map(item => {
   const localAuthority = localAuthorities[Math.floor(Math.random() * localAuthorities.length)]
-  return premisesFactory.build({ ...(item as DeepPartial<Premises>), localAuthorityArea: localAuthority })
+  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>), localAuthorityArea: localAuthority })
 })
 
 stubs.push({
@@ -161,6 +162,7 @@ stubs.push(
   ...lostBedStubs,
   ...personStubs,
   ...applicationStubs,
+  ...roomStubs,
   ...localAuthorityStubs,
   ...Object.values(referenceDataStubs),
 )

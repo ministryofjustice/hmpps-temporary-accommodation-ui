@@ -4,10 +4,7 @@ import type { Cancellation } from '@approved-premises/api'
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 
-import { cancellationReasons } from '../../wiremock/referenceDataStubs'
-
 export default {
-  stubCancellationReferenceData: (): SuperAgentRequest => stubFor(cancellationReasons),
   stubCancellationCreate: (args: {
     premisesId: string
     bookingId: string

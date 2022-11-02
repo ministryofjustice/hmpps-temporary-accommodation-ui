@@ -4,6 +4,7 @@ import destinationProvidersJson from './stubs/destination-providers.json'
 import cancellationReasonsJson from './stubs/cancellation-reasons.json'
 import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
 import keyWorkersJson from './stubs/keyworkers.json'
+import characteristicsJson from './stubs/characteristics.json'
 
 const departureReasons = {
   request: {
@@ -89,4 +90,26 @@ const keyWorkers = {
   },
 }
 
-export { departureReasons, moveOnCategories, destinationProviders, cancellationReasons, lostBedReasons, keyWorkers }
+const characteristics = {
+  request: {
+    method: 'GET',
+    url: '/reference-data/characteristics',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: characteristicsJson,
+  },
+}
+
+export {
+  departureReasons,
+  moveOnCategories,
+  destinationProviders,
+  cancellationReasons,
+  lostBedReasons,
+  keyWorkers,
+  characteristics,
+}

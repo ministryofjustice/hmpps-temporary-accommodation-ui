@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './wiremock'
+import referenceData from './integration_tests/mockApis/referenceData'
 import auth from './integration_tests/mockApis/auth'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import premises from './integration_tests/mockApis/premises'
@@ -12,6 +13,7 @@ import cancellation from './integration_tests/mockApis/cancellation'
 import lostBed from './integration_tests/mockApis/lostBed'
 import person from './integration_tests/mockApis/person'
 import applications from './integration_tests/mockApis/applications'
+import room from './integration_tests/mockApis/room'
 import localAuthority from './integration_tests/mockApis/localAuthority'
 
 export default defineConfig({
@@ -29,6 +31,7 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
+        ...referenceData,
         ...arrival,
         ...nonArrival,
         ...auth,
@@ -41,6 +44,7 @@ export default defineConfig({
         ...lostBed,
         ...person,
         ...applications,
+        ...room,
         ...localAuthority,
       })
     },

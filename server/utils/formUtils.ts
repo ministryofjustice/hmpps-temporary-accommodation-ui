@@ -64,6 +64,24 @@ export const convertObjectsToSelectOptions = (
   return options
 }
 
+export const convertObjectsToCheckboxItems = (
+  items: Array<Record<string, string>>,
+  textKey: string,
+  valueKey: string,
+  fieldName: string,
+  context: Record<string, unknown>,
+): Array<CheckBoxItem> => {
+  const checkedItemIds = (context[fieldName] || []) as Array<string>
+
+  return items.map(item => {
+    return {
+      text: item[textKey],
+      value: item[valueKey],
+      checked: checkedItemIds.some(checkedItemId => checkedItemId === item[valueKey]),
+    }
+  })
+}
+
 export function convertKeyValuePairToRadioItems<T>(object: T, checkedItem: string): Array<RadioItem> {
   return Object.keys(object).map(key => {
     return {

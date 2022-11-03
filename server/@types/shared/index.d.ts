@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export type { Adjudication } from './models/Adjudication';
 export type { AnyValue } from './models/AnyValue';
 export type { ApArea } from './models/ApArea';
 export type { Application } from './models/Application';

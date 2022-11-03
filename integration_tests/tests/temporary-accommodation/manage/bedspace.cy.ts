@@ -4,7 +4,7 @@ import roomFactory from '../../../../server/testutils/factories/room'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import Page from '../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import BedpsaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
+import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -59,7 +59,7 @@ context('Bedspace', () => {
     cy.task('stubCharacteristicsReferenceData')
 
     const premises = premisesFactory.build()
-    const page = BedpsaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises.id)
 
     // And I miss required fields
     cy.task('stubRoomCreateErrors', { premisesId: premises.id, params: ['name'] })
@@ -79,7 +79,7 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 
-    const page = BedpsaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises.id)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

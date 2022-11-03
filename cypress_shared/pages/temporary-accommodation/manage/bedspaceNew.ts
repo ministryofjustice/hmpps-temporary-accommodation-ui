@@ -2,14 +2,14 @@ import type { NewRoom } from '@approved-premises/api'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 
-export default class BedpsaceNewPage extends Page {
+export default class BedspaceNewPage extends Page {
   constructor() {
     super('Add a bedspace')
   }
 
-  static visit(premisesId: string): BedpsaceNewPage {
+  static visit(premisesId: string): BedspaceNewPage {
     cy.visit(paths.premises.bedspaces.new({ premisesId }))
-    return new BedpsaceNewPage()
+    return new BedspaceNewPage()
   }
 
   completeForm(newRoom: NewRoom): void {

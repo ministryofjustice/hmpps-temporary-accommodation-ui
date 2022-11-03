@@ -12,7 +12,7 @@ import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
-import { filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
@@ -319,12 +319,20 @@ describe('PremisesService', () => {
         localAuthorityArea: localAuthorityFactory.build({
           name: 'Test Authority',
         }),
+        characteristics: [
+          characteristicFactory.build({
+            name: 'A characteristic',
+          }),
+        ],
         notes: 'Some notes',
       })
 
       premisesClient.find.mockResolvedValue(premises)
       ;(escape as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
       ;(formatLines as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
+      ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
+        text: 'Some attributes',
+      }))
 
       const result = await service.getTemporaryAccommodationPremisesDetails(token, premises.id)
 
@@ -350,7 +358,7 @@ describe('PremisesService', () => {
             },
             {
               key: { text: 'Attributes' },
-              value: { text: '' },
+              value: { text: 'Some attributes' },
             },
             {
               key: { text: 'Notes' },
@@ -366,6 +374,11 @@ describe('PremisesService', () => {
       expect(escape).toHaveBeenCalledWith('10 Example Street')
       expect(escape).toHaveBeenCalledWith('SW1A 1AA')
       expect(formatLines).toHaveBeenCalledWith('Some notes')
+      expect(formatCharacteristics).toHaveBeenCalledWith([
+        expect.objectContaining({
+          name: 'A characteristic',
+        }),
+      ])
     })
   })
 

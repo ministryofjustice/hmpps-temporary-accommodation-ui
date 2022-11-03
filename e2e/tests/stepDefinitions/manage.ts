@@ -31,6 +31,7 @@ Given('I create a premises with all necessary details', () => {
   cy.get('@localAuthorityAreaId').then(localAuthorityAreaId => {
     const newPremises = newPremisesFactory.build({
       localAuthorityAreaId,
+      characteristicIds: [],
     })
 
     const premises = premisesFactory.build({
@@ -41,6 +42,7 @@ Given('I create a premises with all necessary details', () => {
         name: 'North Lanarkshire',
         id: localAuthorityAreaId,
       }),
+      characteristics: [],
       notes: newPremises.notes,
     })
 

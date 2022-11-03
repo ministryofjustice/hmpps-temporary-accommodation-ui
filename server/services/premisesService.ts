@@ -7,7 +7,7 @@ import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
-import { filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
 export default class PremisesService {
   constructor(
@@ -177,7 +177,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('Attributes'),
-          value: this.textValue(''),
+          value: formatCharacteristics(premises.characteristics),
         },
         {
           key: this.textValue('Notes'),

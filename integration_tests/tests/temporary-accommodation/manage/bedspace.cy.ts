@@ -17,13 +17,14 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // When I visit the new bedspace page
+    // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')
 
+    // When I visit the new bedspace page
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 
-    const page = BedpsaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises.id)
 
     // And I fill out the form
     const room = roomFactory.build()
@@ -55,9 +56,10 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // When I visit the new bedspace page
+    // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')
 
+    // When I visit the new bedspace page
     const premises = premisesFactory.build()
     const page = BedspaceNewPage.visit(premises.id)
 
@@ -73,9 +75,10 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // When I visit the new bedspace page
+    // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')
 
+    // When I visit the new bedspace page
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 

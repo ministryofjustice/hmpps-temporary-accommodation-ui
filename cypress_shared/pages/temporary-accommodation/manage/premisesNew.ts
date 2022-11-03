@@ -22,6 +22,18 @@ export default class PremisesNewPage extends Page {
     })
   }
 
+  getCharacteristicIdByLabel(label: string, alias: string): void {
+    cy.get('input[name="characteristicIds[]"')
+      .siblings('label')
+      .within(() => {
+        cy.contains(label)
+          .siblings('input')
+          .then(inputElement => {
+            cy.wrap(inputElement.attr('value')).as(alias)
+          })
+      })
+  }
+
   completeForm(newPremises: NewPremises): void {
     this.getLabel('Property name (optional)')
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)

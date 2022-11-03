@@ -3,6 +3,7 @@ import throwMissingCypressEnvError from './utils'
 import premisesFactory from '../../../server/testutils/factories/premises'
 import newPremisesFactory from '../../../server/testutils/factories/newPremises'
 import localAuthorityFactory from '../../../server/testutils/factories/localAuthority'
+import characteristicFactory from '../../../server/testutils/factories/characteristic'
 import PremisesNewPage from '../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesListPage from '../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesShowPage from '../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
@@ -28,10 +29,17 @@ Given('I create a premises with all necessary details', () => {
 
   page.getLocalAuthorityAreaIdByLabel('North Lanarkshire', 'localAuthorityAreaId')
 
-  cy.get('@localAuthorityAreaId').then(localAuthorityAreaId => {
+  page.getCharacteristicIdByLabel('Park nearby', 'parkNearbyCharacteristicId')
+  page.getCharacteristicIdByLabel('Floor level access', 'floorLevelAccessCharacteristicId')
+
+  cy.then(function _() {
+    const { localAuthorityAreaId } = this
+    const { parkNearbyCharacteristicId } = this
+    const { floorLevelAccessCharacteristicId } = this
+
     const newPremises = newPremisesFactory.build({
       localAuthorityAreaId,
-      characteristicIds: [],
+      characteristicIds: [parkNearbyCharacteristicId, floorLevelAccessCharacteristicId],
     })
 
     const premises = premisesFactory.build({
@@ -42,7 +50,16 @@ Given('I create a premises with all necessary details', () => {
         name: 'North Lanarkshire',
         id: localAuthorityAreaId,
       }),
-      characteristics: [],
+      characteristics: [
+        characteristicFactory.build({
+          name: 'Park nearby',
+          id: parkNearbyCharacteristicId,
+        }),
+        characteristicFactory.build({
+          name: 'Floor level access',
+          id: floorLevelAccessCharacteristicId,
+        }),
+      ],
       notes: newPremises.notes,
     })
 

@@ -2,7 +2,7 @@ import type { Characteristic, Room, NewRoom } from '@approved-premises/api'
 import { SummaryList } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import RoomClient from '../data/roomClient'
-import { filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 import { formatLines } from '../utils/viewUtils'
 
 export default class BedspaceService {
@@ -39,19 +39,11 @@ export default class BedspaceService {
   }
 
   private summaryListForRoom(room: Room): SummaryList {
-    const characteristics = room.characteristics
-      .map(characteristic => characteristic.name)
-      .sort((a, b) => a.localeCompare(b))
-      .map(name => escape(name))
-
     return {
       rows: [
         {
           key: this.textValue('Attributes'),
-          value:
-            characteristics.length > 0
-              ? this.htmlValue(`<ul><li>${characteristics.join('</li><li>')}</li></ul>`)
-              : this.textValue(''),
+          value: formatCharacteristics(room.characteristics),
         },
         {
           key: this.textValue('Notes'),

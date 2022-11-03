@@ -5,10 +5,12 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import LocalAuthorityService from '../../../services/temporary-accommodation/localAuthorityService'
+import BedspaceService from '../../../services/bedspaceService'
 
 export default class PremisesController {
   constructor(
     private readonly premisesService: PremisesService,
+    private readonly bedspaceService: BedspaceService,
     private readonly localAuthorityService: LocalAuthorityService,
   ) {}
 
@@ -53,13 +55,16 @@ export default class PremisesController {
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const details = await this.premisesService.getTemporaryAccommodationPremisesDetails(
-        req.user.token,
-        req.params.premisesId,
-      )
+      const { token } = req.user
+      const { premisesId } = req.params
+
+      const details = await this.premisesService.getTemporaryAccommodationPremisesDetails(token, premisesId)
+
+      const bedspaceDetails = await this.bedspaceService.getRoomDetails(token, premisesId)
 
       return res.render('temporary-accommodation/premises/show', {
         ...details,
+        bedspaces: bedspaceDetails,
       })
     }
   }

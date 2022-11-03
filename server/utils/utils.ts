@@ -99,3 +99,9 @@ export const mapApiPersonRisksForUi = (risks: PersonRisks): PersonRisksUI => {
     flags: risks.flags.value,
   }
 }
+
+export function unique<T extends { id: string }>(elements: Array<T>): Array<T> {
+  return elements.filter(
+    (element, index) => elements.findIndex(searchElement => searchElement.id === element.id) === index,
+  )
+}

@@ -1,4 +1,5 @@
 import premisesFactory from '../../../../server/testutils/factories/premises'
+import roomFactory from '../../../../server/testutils/factories/room'
 import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
 import localAuthorityFactory from '../../../../server/testutils/factories/localAuthority'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
@@ -158,13 +159,17 @@ context('Premises', () => {
 
     // And there is a premises in the database
     const premises = premisesFactory.build()
-    cy.task('stubSinglePremises', premises)
+    const rooms = roomFactory.buildList(5)
+    cy.task('stubPremisesWithRooms', { premises, rooms })
 
     // When I visit the show premises page
     const page = PremisesShowPage.visit(premises)
 
     // Then I should see the premises details shown
-    page.shouldShowPremisesDetail()
+    page.shouldShowPremisesDetails()
+
+    // And I should see the room details shown
+    rooms.forEach(room => page.shouldShowRoomDetails(room))
   })
 
   it('should navigate back from the show page to the premises list page', () => {

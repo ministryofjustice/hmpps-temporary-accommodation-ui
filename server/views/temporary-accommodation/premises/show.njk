@@ -18,35 +18,64 @@
 
   {% include "../../_messages.njk" %}
 
-    <h1>Manage a property</h1>
+  <h1>Manage a property</h1>
 
-    {{ mojIdentityBar({
-      title: {
-        html: '<h2>' + (premises.addressLine1 | e) + ', ' + (premises.postcode | e) + '</h2>'
-      },
-      menus: [{
-        items: [{
-          text: 'Edit property',
-          classes: 'govuk-button--secondary',
-          href: '#'
-        }, {
-          text: "Add a bedspace",
-          classes: 'govuk-button--secondary',
-          href: paths.premises.bedspaces.new({ premisesId: premises.id })
-        }, {
-          text: 'Remove property',
-          classes: 'govuk-button--secondary',
-          href: '#'
-        }]
+  {{ mojIdentityBar({
+    title: {
+      html: '<h2>' + (premises.addressLine1 | e) + ', ' + (premises.postcode | e) + '</h2>'
+    },
+    menus: [{
+      items: [{
+        text: "Add a bedspace",
+        classes: 'govuk-button--secondary',
+        href: paths.premises.bedspaces.new({ premisesId: premises.id })
+      }, {
+        text: 'Remove property',
+        classes: 'govuk-button--secondary',
+        href: '#'
       }]
-    }) }}
+    }]
+  }) }}
 
-  {{
-    govukSummaryList({
+  <div data-cy-premises="true">
+    <div class="edit-bar">
+      <div class="edit-bar__container">
+        <div class="edit-bar__title">
+          <h3>{{ premises.name }}</h4>
+        </div>
+        <div class="edit-bar__action">
+          <a href="#">Edit</a>
+        </div>
+      </div>
+    </div>
+
+    {{ govukSummaryList({
       rows: summaryList.rows,
-      classes: 'govuk-summary-list--no-border'
-    })
-  }}
+      classes: 'govuk-summary-list--no-border details'
+    }) }}
+  </div>
+
+  <h3>Bedspace details</h3>
+
+  {% for bedspace in bedspaces %}
+    <div data-cy-room="{{ bedspace.room.id }}">
+      <div class="edit-bar">
+        <div class="edit-bar__container">
+          <div class="edit-bar__title">
+            <h4>{{ bedspace.room.name }}</h4>
+          </div>
+          <div class="edit-bar__action">
+            <a href="#">Edit</a>
+          </div>
+        </div>
+      </div>
+
+      {{ govukSummaryList({
+        rows: bedspace.summaryList.rows,
+        classes: 'govuk-summary-list--no-border details'
+      }) }}
+    </div>
+  {% endfor %}
 
 {% endblock %}
 

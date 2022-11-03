@@ -1,9 +1,10 @@
 import type { Response, SuperAgentRequest } from 'superagent'
 
-import type { Premises, Booking, DateCapacity, StaffMember } from '@approved-premises/api'
+import type { Premises, Booking, DateCapacity, StaffMember, Room } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import bookingStubs from './booking'
+import roomStubs from './room'
 import { errorStub } from '../../wiremock/utils'
 
 const stubPremises = (premises: Array<Premises>) =>
@@ -53,15 +54,21 @@ const stubPremisesCapacity = (args: { premisesId: string; dateCapacities: DateCa
 
 export default {
   stubPremises,
-  stubSinglePremises: (premises: Premises): Promise<[Response, Response]> =>
+  stubSinglePremises: (premises: Premises): Promise<[Response, Response, Response]> =>
     Promise.all([
       stubSinglePremises(premises),
       bookingStubs.stubBookingsForPremisesId({ premisesId: premises.id, bookings: [] }),
+      roomStubs.stubRoomsForPremisesId({ premisesId: premises.id, rooms: [] }),
     ]),
   stubPremisesWithBookings: (args: { premises: Premises; bookings: Array<Booking> }): Promise<[Response, Response]> =>
     Promise.all([
       stubSinglePremises(args.premises),
       bookingStubs.stubBookingsForPremisesId({ premisesId: args.premises.id, bookings: args.bookings }),
+    ]),
+  stubPremisesWithRooms: (args: { premises: Premises; rooms: Array<Room> }): Promise<[Response, Response]> =>
+    Promise.all([
+      stubSinglePremises(args.premises),
+      roomStubs.stubRoomsForPremisesId({ premisesId: args.premises.id, rooms: args.rooms }),
     ]),
   stubPremisesCapacity,
   stubPremisesStaff: (args: { premisesId: string; staff: Array<StaffMember> }): SuperAgentRequest =>

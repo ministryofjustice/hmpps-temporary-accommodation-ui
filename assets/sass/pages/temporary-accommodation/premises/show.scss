@@ -1,6 +1,19 @@
 .temporary-accommodation-premises-show {
+  .details {
+    ul {
+      padding-inline-start: 0px;
+      margin-block-start: 0px;
+      margin-block-end: 0px;
+    }
+    li {
+      list-style-type: none
+    }
+  }
+
   .moj-identity-bar {
     margin: 0.8em 0 2em;
+    box-shadow: none;
+
     &__details {
       padding: 0;
       margin: 0;
@@ -11,6 +24,38 @@
         margin: 0;
         padding: 0;
       }
+    }
+  }
+
+  .edit-bar {
+    background-color: #fff;
+    box-shadow: inset 0 -1px 0 0 #b1b4b6;
+    color: #0b0c0c;
+    padding-bottom: 9px;
+    margin-bottom: 1em;
+
+    &__container {
+      text-align: justify;
+      font-size: 0;
+    }
+    &__container:after {
+      content:"";
+      display: inline-block;
+      width: 100%;
+    }
+    &__title {
+      display: inline-block;
+      font-size: 1.1875rem;
+      h3, h4 {
+        display: inline;
+        margin: 0;
+        padding: 0;
+      }
+    }
+    &__action {
+      display: inline-block;
+      font-size: 1rem;
+      margin-right: 10px
     }
   }
 }

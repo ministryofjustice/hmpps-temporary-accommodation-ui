@@ -26,13 +26,7 @@ Given("I'm creating a premises", () => {
 Given('I create a premises with all necessary details', () => {
   const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
 
-  cy.get('select[name="localAuthorityAreaId"').within(() => {
-    cy.get('option')
-      .contains('North Lanarkshire')
-      .then(element => {
-        cy.wrap(element.attr('value')).as('localAuthorityAreaId')
-      })
-  })
+  page.getLocalAuthorityAreaIdByLabel('North Lanarkshire', 'localAuthorityAreaId')
 
   cy.get('@localAuthorityAreaId').then(localAuthorityAreaId => {
     const newPremises = newPremisesFactory.build({

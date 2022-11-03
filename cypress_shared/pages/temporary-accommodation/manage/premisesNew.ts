@@ -12,6 +12,16 @@ export default class PremisesNewPage extends Page {
     return new PremisesNewPage()
   }
 
+  getLocalAuthorityAreaIdByLabel(label: string, alias: string): void {
+    cy.get('select[name="localAuthorityAreaId"').within(() => {
+      cy.get('option')
+        .contains(label)
+        .then(element => {
+          cy.wrap(element.attr('value')).as(alias)
+        })
+    })
+  }
+
   completeForm(newPremises: NewPremises): void {
     this.getLabel('Property name (optional)')
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)

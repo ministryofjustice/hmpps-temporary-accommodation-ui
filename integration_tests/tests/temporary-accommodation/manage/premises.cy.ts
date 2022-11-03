@@ -41,6 +41,9 @@ context('Premises', () => {
     const localAuthorities = localAuthorityFactory.buildList(5)
     cy.task('stubLocalAuthorities', localAuthorities)
 
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
     // When I visit the premises page
     const page = PremisesListPage.visit()
 
@@ -78,6 +81,9 @@ context('Premises', () => {
     const localAuthorities = localAuthorityFactory.buildList(5)
     cy.task('stubLocalAuthorities', localAuthorities)
 
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
     // When I visit the new premises page
     const localAuthority = localAuthorities[2]
     const premises = premisesFactory.build()
@@ -104,6 +110,7 @@ context('Premises', () => {
       expect(requestBody.addressLine1).equal(newPremises.addressLine1)
       expect(requestBody.postcode).equal(newPremises.postcode)
       expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
+      expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
     })
 
@@ -119,6 +126,9 @@ context('Premises', () => {
     // And there are local authorities in the database
     const localAuthorities = localAuthorityFactory.buildList(5)
     cy.task('stubLocalAuthorities', localAuthorities)
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
 
     // When I visit the new premises page
     const page = PremisesNewPage.visit()
@@ -142,6 +152,9 @@ context('Premises', () => {
     // And there are local authorities in the database
     const localAuthorities = localAuthorityFactory.buildList(5)
     cy.task('stubLocalAuthorities', localAuthorities)
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
 
     // When I visit the new premises page
     const page = PremisesNewPage.visit()

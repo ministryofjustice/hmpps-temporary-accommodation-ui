@@ -3,12 +3,14 @@ import newRoomFactory from '../testutils/factories/newRoom'
 import RoomClient from '../data/roomClient'
 import BedspaceService from './bedspaceService'
 import ReferenceDataClient from '../data/referenceDataClient'
-import characteristic from '../testutils/factories/characteristic'
+import characteristicFactory from '../testutils/factories/characteristic'
 import { escape, formatLines } from '../utils/viewUtils'
+import { filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
 jest.mock('../data/roomClient')
 jest.mock('../data/referenceDataClient')
 jest.mock('../utils/viewUtils')
+jest.mock('../utils/characteristicUtils')
 
 describe('BedspaceService', () => {
   const roomClient = new RoomClient(null) as jest.Mocked<RoomClient>
@@ -32,7 +34,7 @@ describe('BedspaceService', () => {
     it('returns a list of rooms and a summary list for each room, for the given premises ID', async () => {
       const roomWithCharacteristics = roomFactory.build({
         name: 'XYX',
-        characteristics: [characteristic.build({ name: 'HIJ' }), characteristic.build({ name: 'EFG' })],
+        characteristics: [characteristicFactory.build({ name: 'HIJ' }), characteristicFactory.build({ name: 'EFG' })],
         notes: 'Some notes',
       })
 
@@ -110,21 +112,31 @@ describe('BedspaceService', () => {
   })
 
   describe('getRoomCharacteristics', () => {
-    it('returns room characteristics, sorted alphabetically', async () => {
-      const roomCharacteristic1 = characteristic.build({ name: 'XYZ', modelScope: 'room' })
-      const roomCharacteristic2 = characteristic.build({ name: 'ABC', modelScope: 'room' })
-      const genericCharacteristic = characteristic.build({ name: 'EFG', modelScope: '*' })
-      const otherCharacteristic = characteristic.build({ name: 'RST', modelScope: 'other' })
+    it('returns prepared room characteristics', async () => {
+      const roomCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
+      const roomCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
+      const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
+      const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
 
       referenceDataClient.getReferenceData.mockResolvedValue([
+        genericCharacteristic,
+        roomCharacteristic2,
+        roomCharacteristic1,
+        otherCharacteristic,
+      ])
+      ;(filterAndSortCharacteristics as jest.MockedFunction<typeof filterAndSortCharacteristics>).mockReturnValue([
         roomCharacteristic1,
         roomCharacteristic2,
         genericCharacteristic,
-        otherCharacteristic,
       ])
 
       const result = await service.getRoomCharacteristics(token)
-      expect(result).toEqual([roomCharacteristic2, genericCharacteristic, roomCharacteristic1])
+      expect(result).toEqual([roomCharacteristic1, roomCharacteristic2, genericCharacteristic])
+
+      expect(filterAndSortCharacteristics).toHaveBeenCalledWith(
+        [genericCharacteristic, roomCharacteristic2, roomCharacteristic1, otherCharacteristic],
+        'room',
+      )
     })
   })
 })

@@ -1,25 +1,33 @@
 import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
+import ReferenceDataClient from '../data/referenceDataClient'
 import premisesFactory from '../testutils/factories/premises'
 import approvedPremisesFactory from '../testutils/factories/approvedPremises'
 import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
 import newPremisesFactory from '../testutils/factories/newPremises'
+import characteristicFactory from '../testutils/factories/characteristic'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
+import { filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
 jest.mock('../data/premisesClient')
+jest.mock('../data/referenceDataClient')
 jest.mock('../utils/premisesUtils')
 jest.mock('../utils/viewUtils')
+jest.mock('../utils/characteristicUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
-  const premisesClientFactory = jest.fn()
+  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
-  const service = new PremisesService(premisesClientFactory)
+  const premisesClientFactory = jest.fn()
+  const referenceDataFactory = jest.fn()
+
+  const service = new PremisesService(premisesClientFactory, referenceDataFactory)
 
   const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
@@ -27,6 +35,7 @@ describe('PremisesService', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
+    referenceDataFactory.mockReturnValue(referenceDataClient)
   })
 
   describe('getStaffMembers', () => {
@@ -40,6 +49,35 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.getStaffMembers).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
+  describe('getPremisesCharacteristics', () => {
+    it('returns prepared premises characteristics', async () => {
+      const premisesCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'premises' })
+      const premisesCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'premises' })
+      const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
+      const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
+
+      referenceDataClient.getReferenceData.mockResolvedValue([
+        genericCharacteristic,
+        premisesCharacteristic2,
+        premisesCharacteristic1,
+        otherCharacteristic,
+      ])
+      ;(filterAndSortCharacteristics as jest.MockedFunction<typeof filterAndSortCharacteristics>).mockReturnValue([
+        premisesCharacteristic1,
+        premisesCharacteristic2,
+        genericCharacteristic,
+      ])
+
+      const result = await service.getPremisesCharacteristics(token)
+      expect(result).toEqual([premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic])
+
+      expect(filterAndSortCharacteristics).toHaveBeenCalledWith(
+        [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic],
+        'premises',
+      )
     })
   })
 

@@ -32,7 +32,7 @@ export default {
       },
     }),
   stubDepartureErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`)),
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`, 'POST')),
   stubDepartureReferenceData: (): Promise<[Response, Response, Response]> =>
     Promise.all([stubFor(departureReasons), stubFor(moveOnCategories), stubFor(destinationProviders)]),
   verifyDepartureCreate: async (args: { premisesId: string; bookingId: string }) =>

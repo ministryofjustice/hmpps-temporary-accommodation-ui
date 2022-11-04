@@ -95,7 +95,8 @@ export default {
         jsonBody: premises,
       },
     }),
-  stubPremisesCreateErrors: (params: Array<string>): SuperAgentRequest => stubFor(errorStub(params, '/premises')),
+  stubPremisesCreateErrors: (params: Array<string>): SuperAgentRequest =>
+    stubFor(errorStub(params, '/premises', 'POST')),
   verifyPremisesCreate: async () =>
     (
       await getMatchingRequests({

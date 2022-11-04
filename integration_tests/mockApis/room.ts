@@ -39,5 +39,5 @@ export default {
       })
     ).body.requests,
   stubRoomCreateErrors: (args: { premisesId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, paths.premises.rooms.create({ premisesId: args.premisesId }))),
+    stubFor(errorStub(args.params, paths.premises.rooms.create({ premisesId: args.premisesId }), 'POST')),
 }

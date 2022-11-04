@@ -30,7 +30,7 @@ nonArrivalStubs.push({
 const requiredFields = getCombinations(['date', 'reason'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  nonArrivalStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/non-arrivals`))
+  nonArrivalStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/non-arrivals`, 'POST'))
 })
 
 export default nonArrivalStubs

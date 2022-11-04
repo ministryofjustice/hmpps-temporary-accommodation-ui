@@ -21,7 +21,7 @@ lostBeds.push({
 const requiredFields = getCombinations(['startDate', 'endDate', 'numberOfBeds', 'reason', 'referenceNumber'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  lostBeds.push(errorStub(fields, `/premises/${guidRegex}/lost-beds`))
+  lostBeds.push(errorStub(fields, `/premises/${guidRegex}/lost-beds`, 'POST'))
 })
 
 export default lostBeds

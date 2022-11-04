@@ -23,5 +23,5 @@ export default [
     },
   },
 
-  errorStub(['newDepartureDate'], `/premises/${guidRegex}/bookings/${guidRegex}/extensions`),
+  errorStub(['newDepartureDate'], `/premises/${guidRegex}/bookings/${guidRegex}/extensions`, 'POST'),
 ]

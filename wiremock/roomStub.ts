@@ -37,7 +37,7 @@ rooms.push({
 const requiredFields = getCombinations(['name'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  rooms.push(errorStub(fields, `/premises/${guidRegex}/rooms`))
+  rooms.push(errorStub(fields, `/premises/${guidRegex}/rooms`, 'POST'))
 })
 
 export default rooms

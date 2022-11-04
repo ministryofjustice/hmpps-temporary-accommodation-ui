@@ -36,7 +36,7 @@ export default {
       },
     }),
   stubCancellationErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/cancellations`)),
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/cancellations`, 'POST')),
   verifyCancellationCreate: async (args: { premisesId: string; bookingId: string; cancellation: Cancellation }) =>
     (
       await getMatchingRequests({

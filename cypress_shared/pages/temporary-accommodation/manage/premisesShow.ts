@@ -65,4 +65,10 @@ export default class PremisesShowPage extends Page {
       })
     })
   }
+
+  clickPremisesEditLink(): void {
+    cy.get(`[data-cy-premises]`).within(() => {
+      cy.get('a').contains('Edit').click()
+    })
+  }
 }

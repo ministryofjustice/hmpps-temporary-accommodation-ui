@@ -10,6 +10,7 @@ const paths = {
     index: premisesPath,
     new: premisesPath.path('new'),
     create: premisesPath,
+    edit: singlePremisesPath.path('edit'),
     show: singlePremisesPath,
     bedspaces: {
       new: bedspacesPath.path('new'),

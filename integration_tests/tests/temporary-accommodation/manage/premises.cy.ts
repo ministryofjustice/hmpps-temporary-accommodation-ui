@@ -66,7 +66,7 @@ context('Premises', () => {
     // When I visit the premises page
     const page = PremisesListPage.visit()
 
-    // Add I click the add a premises button
+    // Add I click the view a premises link
     page.clickPremisesViewLink(premises[0])
 
     // Then I navigate to the show premises page

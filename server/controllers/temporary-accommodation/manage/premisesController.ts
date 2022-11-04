@@ -59,6 +59,30 @@ export default class PremisesController {
     }
   }
 
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const { premisesId } = req.params
+      const { token } = req.user
+
+      const localAuthorities = await this.localAuthorityService.getLocalAuthorities(token)
+      const allCharacteristics = await this.premisesService.getPremisesCharacteristics(token)
+
+      const updatePremises = await this.premisesService.getUpdatePremises(token, premisesId)
+
+      return res.render('temporary-accommodation/premises/edit', {
+        localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
+        errors,
+        errorSummary,
+        ...updatePremises,
+        ...userInput,
+      })
+    }
+  }
+
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { token } = req.user

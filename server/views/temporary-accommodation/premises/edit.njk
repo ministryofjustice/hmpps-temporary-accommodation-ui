@@ -1,0 +1,36 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% set pageTitle = applicationName + " - Add a property" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ breadCrumb('Edit a property', [
+    {title: 'List of properties', href: paths.premises.index()},
+    {title: 'Manage a property', href: paths.premises.show({ premisesId: id })}
+  ]) }}
+
+  {% include "../../_messages.njk" %}
+  
+  <h1>Edit a property</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="#">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ showErrorSummary(errorSummary) }}
+
+        <h2 class="govuk-label govuk-label--m">Property reference</h2>
+        <p class="govuk-body">{{ name }}</p>
+      
+        {% include "./_editable.njk" %}  
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

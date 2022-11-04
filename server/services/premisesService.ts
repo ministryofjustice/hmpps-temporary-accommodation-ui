@@ -133,6 +133,17 @@ export default class PremisesService {
       })
   }
 
+  async getUpdatePremises(token: string, id: string): Promise<UpdatePremises> {
+    const premisesClient = this.premisesClientFactory(token)
+    const premises = await premisesClient.find(id)
+
+    return {
+      ...premises,
+      localAuthorityAreaId: premises.localAuthorityArea.id,
+      characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+    }
+  }
+
   async create(token: string, newPremises: NewPremises): Promise<Premises> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.create(newPremises)

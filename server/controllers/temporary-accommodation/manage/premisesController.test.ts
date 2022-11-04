@@ -3,6 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
 import premisesFactory from '../../../testutils/factories/premises'
+import updatePremisesFactory from '../../../testutils/factories/newPremises'
 import localAuthorityFactory from '../../../testutils/factories/localAuthority'
 import roomFactory from '../../../testutils/factories/room'
 import PremisesService from '../../../services/premisesService'
@@ -54,6 +55,8 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
         allCharacteristics,
@@ -78,6 +81,8 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
         allCharacteristics,
@@ -133,6 +138,77 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.new({}))
+    })
+  })
+
+  describe('edit', () => {
+    it('renders the form', async () => {
+      const localAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const allCharacteristics = characteristicFactory.buildList(5)
+      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+
+      const premises = premisesFactory.build()
+      const updatePremises = updatePremisesFactory.build({
+        ...premises,
+      })
+      premisesService.getUpdatePremises.mockResolvedValue(updatePremises)
+
+      const requestHandler = premisesController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+      await requestHandler(request, response, next)
+
+      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
+        localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
+        errors: {},
+        errorSummary: [],
+        ...updatePremises,
+      })
+    })
+
+    it('renders the form with errors and user input if an error has been sent to the flash', async () => {
+      const localAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const allCharacteristics = characteristicFactory.buildList(5)
+      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+
+      const premises = premisesFactory.build()
+      const updatePremises = updatePremisesFactory.build({
+        ...premises,
+      })
+      premisesService.getUpdatePremises.mockResolvedValue(updatePremises)
+
+      const requestHandler = premisesController.edit()
+
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      request.params.premisesId = premises.id
+      await requestHandler(request, response, next)
+
+      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
+        localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+        ...updatePremises,
+      })
     })
   })
 

@@ -245,7 +245,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('premisesSelectList', () => {
+  describe('getPremisesSelectList', () => {
     it('returns the list mapped into the format required by the nunjucks macro and sorted alphabetically', async () => {
       const premisesA = premisesFactory.build({ name: 'a' })
       const premisesB = premisesFactory.build({ name: 'b' })
@@ -262,6 +262,38 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.all).toHaveBeenCalled()
+    })
+  })
+
+  describe('getUpdatePremises', () => {
+    it('finds the premises given by the premises ID, and returns the premises as an UpdatePremises', async () => {
+      const premises = premisesFactory.build({
+        localAuthorityArea: localAuthorityFactory.build({
+          name: 'Local authority',
+          id: 'local-authority',
+        }),
+        characteristics: [
+          characteristicFactory.build({
+            name: 'Characteristic A',
+            id: 'characteristic-a',
+          }),
+          characteristicFactory.build({
+            name: 'Characteristic B',
+            id: 'characteristic-b',
+          }),
+        ],
+      })
+
+      premisesClient.find.mockResolvedValue(premises)
+
+      const result = await service.getUpdatePremises(token, premises.id)
+      expect(result).toEqual({
+        ...premises,
+        localAuthorityAreaId: 'local-authority',
+        characteristicIds: ['characteristic-a', 'characteristic-b'],
+      })
+
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })
   })
 

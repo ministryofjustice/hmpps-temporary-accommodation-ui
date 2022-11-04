@@ -23,6 +23,7 @@ import * as referenceDataStubs from './referenceDataStubs'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 import { errorStub, getCombinations } from './utils'
+import path from '../server/paths/api'
 
 const stubs = []
 
@@ -44,9 +45,9 @@ stubs.push({
   },
 })
 
-const requiredFields = getCombinations(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
+const createRequiredFields = getCombinations(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
 
-requiredFields.forEach((fields: Array<string>) => {
+createRequiredFields.forEach((fields: Array<string>) => {
   stubs.push(errorStub(fields, `/premises`, 'POST'))
 })
 
@@ -104,6 +105,26 @@ premises.forEach(item => {
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: staffMemberFactory.buildList(10),
+    },
+  })
+
+  const updateRequiredFields = getCombinations(['addressLine1', 'postcode', 'localAuthorityAreaId'])
+
+  updateRequiredFields.forEach((fields: Array<string>) => {
+    stubs.push(errorStub(fields, path.premises.update({ premisesId: item.id }), 'PUT'))
+  })
+
+  stubs.push({
+    request: {
+      method: 'PUT',
+      url: path.premises.update({ premisesId: item.id }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: item,
     },
   })
 

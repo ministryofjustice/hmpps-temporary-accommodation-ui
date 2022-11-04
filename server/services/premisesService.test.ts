@@ -7,6 +7,7 @@ import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
 import newPremisesFactory from '../testutils/factories/newPremises'
+import updatePremisesFactory from '../testutils/factories/updatePremises'
 import characteristicFactory from '../testutils/factories/characteristic'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import apPaths from '../paths/manage'
@@ -512,11 +513,28 @@ describe('PremisesService', () => {
       })
       premisesClient.create.mockResolvedValue(premises)
 
-      const postedPremises = await service.create(token, newPremises)
-      expect(postedPremises).toEqual(premises)
+      const createdPremises = await service.create(token, newPremises)
+      expect(createdPremises).toEqual(premises)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
+    })
+  })
+
+  describe('update', () => {
+    it('on success updates the premises and returns the updated premises', async () => {
+      const premises = premisesFactory.build()
+      const newPremises = updatePremisesFactory.build({
+        postcode: premises.postcode,
+        notes: premises.notes,
+      })
+      premisesClient.update.mockResolvedValue(premises)
+
+      const updatedPremises = await service.update(token, premises.id, newPremises)
+      expect(updatedPremises).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, newPremises)
     })
   })
 })

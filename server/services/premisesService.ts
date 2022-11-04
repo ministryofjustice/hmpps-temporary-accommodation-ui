@@ -1,5 +1,12 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
-import type { StaffMember, NewPremises, Premises, ApprovedPremises, Characteristic } from '@approved-premises/api'
+import type {
+  StaffMember,
+  NewPremises,
+  Premises,
+  ApprovedPremises,
+  Characteristic,
+  UpdatePremises,
+} from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
@@ -129,6 +136,13 @@ export default class PremisesService {
   async create(token: string, newPremises: NewPremises): Promise<Premises> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.create(newPremises)
+
+    return premises
+  }
+
+  async update(token: string, id: string, updatePremises: UpdatePremises): Promise<Premises> {
+    const premisesClient = this.premisesClientFactory(token)
+    const premises = await premisesClient.update(id, updatePremises)
 
     return premises
   }

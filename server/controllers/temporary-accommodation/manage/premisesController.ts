@@ -1,6 +1,6 @@
 import type { Request, Response, RequestHandler } from 'express'
 
-import type { NewPremises } from '@approved-premises/api'
+import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -80,6 +80,27 @@ export default class PremisesController {
         ...updatePremises,
         ...userInput,
       })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId } = req.params
+      const { token } = req.user
+
+      const updatePremises: UpdatePremises = {
+        characteristicIds: [],
+        ...req.body,
+      }
+
+      try {
+        await this.premisesService.update(token, premisesId, updatePremises)
+
+        req.flash('success', 'Property updated')
+        res.redirect(paths.premises.show({ premisesId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.edit({ premisesId }))
+      }
     }
   }
 

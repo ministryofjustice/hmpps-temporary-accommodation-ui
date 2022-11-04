@@ -19,7 +19,8 @@ jest.mock('../../../utils/validation')
 describe('PremisesController', () => {
   const token = 'SOME_TOKEN'
 
-  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
+  let request: DeepMocked<Request>
+
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -27,6 +28,10 @@ describe('PremisesController', () => {
   const bedspaceService = createMock<BedspaceService>({})
   const localAuthorityService = createMock<LocalAuthorityService>({})
   const premisesController = new PremisesController(premisesService, bedspaceService, localAuthorityService)
+
+  beforeEach(() => {
+    request = createMock<Request>({ user: { token } })
+  })
 
   describe('index', () => {
     it('returns the table rows to the template', async () => {
@@ -122,6 +127,8 @@ describe('PremisesController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = premisesController.create()
 
+      const premises = premisesFactory.build()
+
       const err = new Error()
 
       premisesService.create.mockImplementation(() => {
@@ -129,10 +136,8 @@ describe('PremisesController', () => {
       })
 
       request.body = {
-        county: 'some county',
-        town: 'some town',
-        type: 'single',
-        address: 'some address',
+        name: premises.name,
+        postcode: premises.postcode,
       }
 
       await requestHandler(request, response, next)
@@ -209,6 +214,60 @@ describe('PremisesController', () => {
         ...errorsAndUserInput.userInput,
         ...updatePremises,
       })
+    })
+  })
+
+  describe('update', () => {
+    it('updates a premises and redirects to the show premises page', async () => {
+      const requestHandler = premisesController.update()
+
+      const premises = premisesFactory.build()
+
+      request.params.premisesId = premises.id
+      request.body = {
+        name: premises.name,
+        postcode: premises.postcode,
+      }
+
+      premisesService.update.mockResolvedValue(premises)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.update).toHaveBeenCalledWith(token, premises.id, {
+        name: premises.name,
+        postcode: premises.postcode,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = premisesController.update()
+
+      const premises = premisesFactory.build()
+
+      const err = new Error()
+
+      premisesService.update.mockImplementation(() => {
+        throw err
+      })
+
+      request.params.premisesId = premises.id
+      request.body = {
+        name: premises.name,
+        postcode: premises.postcode,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.edit({ premisesId: premises.id }),
+      )
     })
   })
 

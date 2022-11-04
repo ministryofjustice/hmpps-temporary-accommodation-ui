@@ -46,7 +46,7 @@ stubs.push({
   },
 })
 
-const requiredFields = getCombinations(['address', 'postcode', 'localAuthorityAreaId'])
+const requiredFields = getCombinations(['addressLine1', 'postcode', 'localAuthorityAreaId'])
 
 requiredFields.forEach((fields: Array<string>) => {
   stubs.push(errorStub(fields, `/premises`))

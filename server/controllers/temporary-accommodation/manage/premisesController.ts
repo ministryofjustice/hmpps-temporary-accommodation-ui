@@ -25,10 +25,15 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const localAuthorities = await this.localAuthorityService.getLocalAuthorities(req.user.token)
+      const { token } = req.user
+
+      const localAuthorities = await this.localAuthorityService.getLocalAuthorities(token)
+      const allCharacteristics = await this.premisesService.getPremisesCharacteristics(token)
 
       return res.render('temporary-accommodation/premises/new', {
         localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
         errors,
         errorSummary,
         ...userInput,
@@ -39,6 +44,7 @@ export default class PremisesController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const newPremises: NewPremises = {
+        characteristicIds: [],
         ...req.body,
       }
 

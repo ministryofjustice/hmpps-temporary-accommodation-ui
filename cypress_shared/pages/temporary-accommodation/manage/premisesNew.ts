@@ -12,6 +12,28 @@ export default class PremisesNewPage extends Page {
     return new PremisesNewPage()
   }
 
+  getLocalAuthorityAreaIdByLabel(label: string, alias: string): void {
+    cy.get('select[name="localAuthorityAreaId"').within(() => {
+      cy.get('option')
+        .contains(label)
+        .then(element => {
+          cy.wrap(element.attr('value')).as(alias)
+        })
+    })
+  }
+
+  getCharacteristicIdByLabel(label: string, alias: string): void {
+    cy.get('input[name="characteristicIds[]"')
+      .siblings('label')
+      .within(() => {
+        cy.contains(label)
+          .siblings('input')
+          .then(inputElement => {
+            cy.wrap(inputElement.attr('value')).as(alias)
+          })
+      })
+  }
+
   completeForm(newPremises: NewPremises): void {
     this.getLabel('Property name (optional)')
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)
@@ -24,6 +46,10 @@ export default class PremisesNewPage extends Page {
 
     this.getLabel('What is the local authority?')
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', newPremises.localAuthorityAreaId)
+
+    newPremises.characteristicIds.forEach(characteristicId => {
+      this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)
+    })
 
     this.getLabel('Please provide any further property details')
     this.getTextInputByIdAndEnterDetails('notes', newPremises.notes)

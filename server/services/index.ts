@@ -18,7 +18,7 @@ import BedspaceService from './bedspaceService'
 export const services = () => {
   const {
     hmppsAuthClient,
-    approvedPremisesClientBuilder,
+    premisesClientBuilder,
     bookingClientBuilder,
     referenceDataClientBuilder,
     lostBedClientBuilder,
@@ -29,7 +29,7 @@ export const services = () => {
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
-  const premisesService = new PremisesService(approvedPremisesClientBuilder)
+  const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClient)
   const bookingService = new BookingService(bookingClientBuilder, referenceDataClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)

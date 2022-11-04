@@ -17,7 +17,7 @@ export type Assessment = {
     allocatedAt: string;
     submittedAt?: string;
     decision?: AssessmentDecision;
-    data: AnyValue;
+    data?: AnyValue;
     clarificationNotes: Array<ClarificationNote>;
 };
 

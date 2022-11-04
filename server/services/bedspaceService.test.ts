@@ -3,12 +3,14 @@ import newRoomFactory from '../testutils/factories/newRoom'
 import RoomClient from '../data/roomClient'
 import BedspaceService from './bedspaceService'
 import ReferenceDataClient from '../data/referenceDataClient'
-import characteristic from '../testutils/factories/characteristic'
-import { escape, formatLines } from '../utils/viewUtils'
+import characteristicFactory from '../testutils/factories/characteristic'
+import { formatLines } from '../utils/viewUtils'
+import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
 jest.mock('../data/roomClient')
 jest.mock('../data/referenceDataClient')
 jest.mock('../utils/viewUtils')
+jest.mock('../utils/characteristicUtils')
 
 describe('BedspaceService', () => {
   const roomClient = new RoomClient(null) as jest.Mocked<RoomClient>
@@ -30,51 +32,56 @@ describe('BedspaceService', () => {
 
   describe('getRoomDetails', () => {
     it('returns a list of rooms and a summary list for each room, for the given premises ID', async () => {
-      const roomWithCharacteristics = roomFactory.build({
+      const room1 = roomFactory.build({
         name: 'XYX',
-        characteristics: [characteristic.build({ name: 'HIJ' }), characteristic.build({ name: 'EFG' })],
+        characteristics: [
+          characteristicFactory.build({ name: 'Characteristic 1' }),
+          characteristicFactory.build({ name: 'Characteristic 2' }),
+        ],
         notes: 'Some notes',
       })
 
-      const roomWithoutCharacteristics = roomFactory.build({
+      const room2 = roomFactory.build({
         name: 'ABC',
-        characteristics: [],
+        characteristics: [characteristicFactory.build({ name: 'Characteristic 3' })],
         notes: 'Some more notes',
       })
 
-      roomClient.all.mockResolvedValue([roomWithCharacteristics, roomWithoutCharacteristics])
-      ;(escape as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
-      ;(formatLines as jest.MockedFunction<typeof escape>).mockImplementation(text => text)
+      roomClient.all.mockResolvedValue([room1, room2])
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+      ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
+        text: 'Some attributes',
+      }))
 
       const result = await service.getRoomDetails(token, premisesId)
 
       expect(result).toEqual([
         {
-          room: roomWithoutCharacteristics,
+          room: room2,
           summaryList: {
             rows: [
               {
                 key: { text: 'Attributes' },
-                value: { text: '' },
+                value: { text: 'Some attributes' },
               },
               {
                 key: { text: 'Notes' },
-                value: { html: roomWithoutCharacteristics.notes },
+                value: { html: room2.notes },
               },
             ],
           },
         },
         {
-          room: roomWithCharacteristics,
+          room: room1,
           summaryList: {
             rows: [
               {
                 key: { text: 'Attributes' },
-                value: { html: '<ul><li>EFG</li><li>HIJ</li></ul>' },
+                value: { text: 'Some attributes' },
               },
               {
                 key: { text: 'Notes' },
-                value: { html: roomWithCharacteristics.notes },
+                value: { html: room1.notes },
               },
             ],
           },
@@ -85,10 +92,21 @@ describe('BedspaceService', () => {
       expect(roomClient.all).toHaveBeenCalledWith(premisesId)
 
       expect(formatLines).toHaveBeenCalledWith('Some more notes')
-
       expect(formatLines).toHaveBeenCalledWith('Some notes')
-      expect(escape).toHaveBeenCalledWith('EFG')
-      expect(escape).toHaveBeenCalledWith('HIJ')
+
+      expect(formatCharacteristics).toHaveBeenCalledWith([
+        expect.objectContaining({
+          name: 'Characteristic 1',
+        }),
+        expect.objectContaining({
+          name: 'Characteristic 2',
+        }),
+      ])
+      expect(formatCharacteristics).toHaveBeenCalledWith([
+        expect.objectContaining({
+          name: 'Characteristic 3',
+        }),
+      ])
     })
   })
 
@@ -110,21 +128,31 @@ describe('BedspaceService', () => {
   })
 
   describe('getRoomCharacteristics', () => {
-    it('returns room characteristics, sorted alphabetically', async () => {
-      const roomCharacteristic1 = characteristic.build({ name: 'XYZ', modelScope: 'room' })
-      const roomCharacteristic2 = characteristic.build({ name: 'ABC', modelScope: 'room' })
-      const genericCharacteristic = characteristic.build({ name: 'EFG', modelScope: '*' })
-      const otherCharacteristic = characteristic.build({ name: 'RST', modelScope: 'other' })
+    it('returns prepared room characteristics', async () => {
+      const roomCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
+      const roomCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
+      const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
+      const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
 
       referenceDataClient.getReferenceData.mockResolvedValue([
+        genericCharacteristic,
+        roomCharacteristic2,
+        roomCharacteristic1,
+        otherCharacteristic,
+      ])
+      ;(filterAndSortCharacteristics as jest.MockedFunction<typeof filterAndSortCharacteristics>).mockReturnValue([
         roomCharacteristic1,
         roomCharacteristic2,
         genericCharacteristic,
-        otherCharacteristic,
       ])
 
       const result = await service.getRoomCharacteristics(token)
-      expect(result).toEqual([roomCharacteristic2, genericCharacteristic, roomCharacteristic1])
+      expect(result).toEqual([roomCharacteristic1, roomCharacteristic2, genericCharacteristic])
+
+      expect(filterAndSortCharacteristics).toHaveBeenCalledWith(
+        [genericCharacteristic, roomCharacteristic2, roomCharacteristic1, otherCharacteristic],
+        'room',
+      )
     })
   })
 })

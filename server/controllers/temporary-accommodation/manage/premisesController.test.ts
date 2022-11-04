@@ -11,6 +11,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { LocalAuthorityService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
+import characteristicFactory from '../../../testutils/factories/characteristic'
 
 jest.mock('../../../utils/validation')
 
@@ -42,8 +43,10 @@ describe('PremisesController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       const localAuthorities = localAuthorityFactory.buildList(5)
-
       localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const allCharacteristics = characteristicFactory.buildList(5)
+      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
 
       const requestHandler = premisesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -53,6 +56,8 @@ describe('PremisesController', () => {
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
         errors: {},
         errorSummary: [],
       })
@@ -60,8 +65,10 @@ describe('PremisesController', () => {
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       const localAuthorities = localAuthorityFactory.buildList(5)
-
       localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const allCharacteristics = characteristicFactory.buildList(5)
+      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
 
       const requestHandler = premisesController.new()
 
@@ -73,6 +80,8 @@ describe('PremisesController', () => {
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
@@ -98,6 +107,7 @@ describe('PremisesController', () => {
       expect(premisesService.create).toHaveBeenCalledWith(token, {
         name: premises.name,
         postcode: premises.postcode,
+        characteristicIds: [],
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property created')

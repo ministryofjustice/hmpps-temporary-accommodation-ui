@@ -1,15 +1,19 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
-import type { StaffMember, NewPremises, Premises, ApprovedPremises } from '@approved-premises/api'
-import type { RestClientBuilder, PremisesClient } from '../data'
+import type { StaffMember, NewPremises, Premises, ApprovedPremises, Characteristic } from '@approved-premises/api'
+import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
+import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
 export default class PremisesService {
-  constructor(private readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
+  constructor(
+    private readonly premisesClientFactory: RestClientBuilder<PremisesClient>,
+    private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
+  ) {}
 
   async getStaffMembers(token: string, premisesId: string): Promise<Array<StaffMember>> {
     const premisesClient = this.premisesClientFactory(token)
@@ -17,6 +21,14 @@ export default class PremisesService {
     const staffMembers = await premisesClient.getStaffMembers(premisesId)
 
     return staffMembers
+  }
+
+  async getPremisesCharacteristics(token: string): Promise<Array<Characteristic>> {
+    const referenceDataClient = this.referenceDataClientFactory(token)
+    return filterAndSortCharacteristics(
+      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+      'premises',
+    )
   }
 
   async approvedPremisesTableRows(token: string): Promise<Array<TableRow>> {
@@ -165,7 +177,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('Attributes'),
-          value: this.textValue(''),
+          value: formatCharacteristics(premises.characteristics),
         },
         {
           key: this.textValue('Notes'),

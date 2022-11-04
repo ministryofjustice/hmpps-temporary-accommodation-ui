@@ -22,5 +22,47 @@
         "name": "Shared bathroom",
         "modelScope": "room",
         "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "pub-nearby",
+        "name": "Pub nearby",
+        "modelScope": "premises",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "school-nearby",
+        "name": "School nearby",
+        "modelScope": "premises",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "park-nearby",
+        "name": "Park nearby",
+        "modelScope": "premises",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "men-only",
+        "name": "Men only",
+        "modelScope": "premises",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "women-only",
+        "name": "Women only",
+        "modelScope": "premises",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "floor-level-access",
+        "name": "Floor level access",
+        "modelScope": "*",
+        "serviceScope": "temporary-accommodation"
+    },
+    {
+        "id": "wheelchair-accessible",
+        "name": "Wheelchair accessible",
+        "modelScope": "*",
+        "serviceScope": "temporary-accommodation"
     }
 ]

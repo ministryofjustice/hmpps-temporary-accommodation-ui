@@ -30,6 +30,13 @@ export default class PremisesShowPage extends Page {
         .siblings('.govuk-summary-list__value')
         .should('contain', this.premises.localAuthorityArea.name)
 
+      this.premises.characteristics.forEach(characteristic => {
+        cy.get('.govuk-summary-list__key')
+          .contains('Attributes')
+          .siblings('.govuk-summary-list__value')
+          .should('contain', characteristic.name)
+      })
+
       this.premises.notes.split('\n').forEach(noteLine => {
         cy.get('.govuk-summary-list__key')
           .contains('Notes')

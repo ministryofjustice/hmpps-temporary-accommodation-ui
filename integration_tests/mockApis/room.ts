@@ -54,4 +54,27 @@ export default {
     ).body.requests,
   stubRoomCreateErrors: (args: { premisesId: string; params: Array<string> }): SuperAgentRequest =>
     stubFor(errorStub(args.params, paths.premises.rooms.create({ premisesId: args.premisesId }), 'POST')),
+  stubRoomUpdate: (args: { premisesId: string; room: Room }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        url: paths.premises.rooms.update({ premisesId: args.premisesId, roomId: args.room.id }),
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.room,
+      },
+    }),
+  stubRoomUpdateErrors: (args: { premisesId: string; room: Room; params: Array<string> }): SuperAgentRequest =>
+    stubFor(
+      errorStub(args.params, paths.premises.rooms.update({ premisesId: args.premisesId, roomId: args.room.id }), 'PUT'),
+    ),
+  verifyRoomUpdate: async (args: { premisesId: string; room: Room }) =>
+    (
+      await getMatchingRequests({
+        method: 'PUT',
+        url: paths.premises.rooms.update({ premisesId: args.premisesId, roomId: args.room.id }),
+      })
+    ).body.requests,
 }

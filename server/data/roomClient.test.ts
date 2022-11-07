@@ -4,6 +4,7 @@ import config from '../config'
 import paths from '../paths/api'
 import roomFactory from '../testutils/factories/room'
 import newRoomFactory from '../testutils/factories/newRoom'
+import updateRoomFactory from '../testutils/factories/updateRoom'
 import RoomClient from './roomClient'
 
 describe('Room Client', () => {
@@ -71,6 +72,23 @@ describe('Room Client', () => {
         .reply(200, room)
 
       const output = await roomClient.create(premisesId, payload)
+      expect(output).toEqual(room)
+    })
+  })
+
+  describe('update', () => {
+    it('updates the given room and returns the updated room', async () => {
+      const room = roomFactory.build()
+      const payload = updateRoomFactory.build({
+        ...room,
+      })
+
+      fakeApprovedPremisesApi
+        .put(paths.premises.rooms.update({ premisesId, roomId: room.id }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, room)
+
+      const output = await roomClient.update(premisesId, room.id, payload)
       expect(output).toEqual(room)
     })
   })

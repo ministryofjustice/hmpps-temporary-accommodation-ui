@@ -1,10 +1,12 @@
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
 import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
+import updatePremisesFactory from '../../../../server/testutils/factories/updatePremises'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import Page from '../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
+import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
 
 context('Premises', () => {
   beforeEach(() => {
@@ -71,6 +73,30 @@ context('Premises', () => {
     Page.verifyOnPage(PremisesShowPage, premises[0])
   })
 
+  it('should navigate to the edit premises page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are local authorities in the database
+    cy.task('stubLocalAuthoritiesReferenceData')
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
+    // And there is a premises in the database
+    const premises = premisesFactory.build()
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the show premises page
+    const page = PremisesShowPage.visit(premises)
+
+    // Add I click the edit premises link
+    page.clickPremisesEditLink()
+
+    // Then I navigate to the edit premises page
+    Page.verifyOnPage(PremisesEditPage, premises)
+  })
+
   it('should allow me to create a premises', () => {
     // Given I am signed in
     cy.signIn()
@@ -115,7 +141,7 @@ context('Premises', () => {
     premisesNewPage.shouldShowBanner('Property created')
   })
 
-  it('should show errors when the API returns an error', () => {
+  it('should show errors when the create API returns an error', () => {
     // Given I am logged in
     cy.signIn()
 
@@ -160,6 +186,98 @@ context('Premises', () => {
     Page.verifyOnPage(PremisesListPage)
   })
 
+  it('should allow me to edit a premises', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are local authorities in the database
+    cy.task('stubLocalAuthoritiesReferenceData')
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
+    // And there is a premises in the database
+    const premises = premisesFactory.build()
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the edit premises page
+    const page = PremisesEditPage.visit(premises)
+
+    // Then I should see the premises details
+    page.shouldShowPremisesDetails()
+
+    // And when I fill out the form
+    cy.task('stubPremisesUpdate', premises)
+    const updatePremises = updatePremisesFactory.build()
+    page.completeForm(updatePremises)
+
+    // Then the premises should have been update in the API
+    cy.task('verifyPremisesUpdate', premises).then(requests => {
+      expect(requests).to.have.length(1)
+      const requestBody = JSON.parse(requests[0].body)
+
+      expect(requestBody.addressLine1).equal(updatePremises.addressLine1)
+      expect(requestBody.postcode).equal(updatePremises.postcode)
+      expect(requestBody.localAuthorityAreaId).equal(updatePremises.localAuthorityAreaId)
+      expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
+      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
+    })
+
+    // And I should be redirected to the show premises page
+    const premisesNewPage = PremisesNewPage.verifyOnPage(PremisesShowPage, premises)
+    premisesNewPage.shouldShowBanner('Property updated')
+  })
+
+  it('should show errors when the update API returns an error', () => {
+    // Given I am logged in
+    cy.signIn()
+
+    // And there are local authorities in the database
+    cy.task('stubLocalAuthoritiesReferenceData')
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
+    // And there is a premises in the database
+    const premises = premisesFactory.build()
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the edit premises page
+    const page = PremisesEditPage.visit(premises)
+
+    // And I clear required fields
+    cy.task('stubPremisesUpdateErrors', { premises, params: ['addressLine1', 'postcode', 'localAuthorityAreaId'] })
+    page.clearForm()
+    page.clickSubmit()
+
+    // Then I should see error messages relating to those fields
+    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'localAuthorityAreaId'])
+  })
+
+  it('should navigate back from the edit premises page to the premises show page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are local authorities in the database
+    cy.task('stubLocalAuthoritiesReferenceData')
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
+    // And there is a premises in the database
+    const premises = premisesFactory.build()
+    cy.task('stubSinglePremises', premises)
+
+    // When I visit the edit premises page
+    const page = PremisesEditPage.visit(premises)
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the premises list page
+    Page.verifyOnPage(PremisesShowPage, premises)
+  })
+
   it('should show a single premises', () => {
     // Given I am signed in
     cy.signIn()
@@ -172,10 +290,10 @@ context('Premises', () => {
     // When I visit the show premises page
     const page = PremisesShowPage.visit(premises)
 
-    // Then I should see the premises details shown
+    // Then I should see the premises details
     page.shouldShowPremisesDetails()
 
-    // And I should see the room details shown
+    // And I should see the room details
     rooms.forEach(room => page.shouldShowRoomDetails(room))
   })
 

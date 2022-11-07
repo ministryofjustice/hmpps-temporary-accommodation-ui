@@ -12,6 +12,32 @@ export default class PremisesEditPage extends PremisesEditablePage {
     return new PremisesEditPage(premises)
   }
 
+  shouldShowPremisesDetails(): void {
+    cy.get('label').contains('Address line 1').siblings('input').should('have.value', this.premises.addressLine1)
+    cy.get('label').contains('Postcode').siblings('input').should('have.value', this.premises.postcode)
+
+    cy.get('label')
+      .contains('What is the local authority?')
+      .siblings('select')
+      .children('option')
+      .contains(this.premises.localAuthorityArea.name)
+      .should('be.selected')
+
+    cy.get('legend')
+      .contains('Does the premises have any of the following attributes?')
+      .parent()
+      .within(() => {
+        this.premises.characteristics.forEach(characteristic => {
+          cy.get('label').contains(characteristic.name).siblings('input').should('be.checked')
+        })
+      })
+
+    cy.get('label')
+      .contains('Please provide any further property details')
+      .siblings('textarea')
+      .should('contain', this.premises.notes)
+  }
+
   completeForm(updatePremises: UpdatePremises): void {
     this.clearForm()
 

@@ -45,4 +45,27 @@ export default class BedspacesController {
       }
     }
   }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const { premisesId, roomId } = req.params
+      const { token } = req.user
+
+      const allCharacteristics = await this.bedspaceService.getRoomCharacteristics(token)
+
+      const updateRoom = await this.bedspaceService.getUpdateRoom(token, premisesId, roomId)
+
+      return res.render('temporary-accommodation/bedspaces/edit', {
+        allCharacteristics,
+        characteristicIds: [],
+        premisesId,
+        errors,
+        errorSummary,
+        ...updateRoom,
+        ...userInput,
+      })
+    }
+  }
 }

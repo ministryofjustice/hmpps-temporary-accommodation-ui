@@ -110,6 +110,33 @@ describe('BedspaceService', () => {
     })
   })
 
+  describe('getUpdateRoom', () => {
+    it('finds the room given by the room ID, and returns the room as an UpdatePremises', async () => {
+      const room = roomFactory.build({
+        characteristics: [
+          characteristicFactory.build({
+            name: 'Characteristic A',
+            id: 'characteristic-a',
+          }),
+          characteristicFactory.build({
+            name: 'Characteristic B',
+            id: 'characteristic-b',
+          }),
+        ],
+      })
+
+      roomClient.find.mockResolvedValue(room)
+
+      const result = await service.getUpdateRoom(token, premisesId, room.id)
+      expect(result).toEqual({
+        ...room,
+        characteristicIds: ['characteristic-a', 'characteristic-b'],
+      })
+
+      expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
+    })
+  })
+
   describe('createRoom', () => {
     it('on success returns the room that has been created', async () => {
       const room = roomFactory.build()

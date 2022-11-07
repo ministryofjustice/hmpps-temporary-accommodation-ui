@@ -23,6 +23,16 @@ export default class BedspaceService {
       }))
   }
 
+  async getUpdateRoom(token: string, premisesId: string, roomId: string): Promise<UpdateRoom> {
+    const roomClient = this.roomClientFactory(token)
+    const room = await roomClient.find(premisesId, roomId)
+
+    return {
+      ...room,
+      characteristicIds: room.characteristics.map(characteristic => characteristic.id),
+    }
+  }
+
   async createRoom(token: string, premisesId: string, newRoom: NewRoom): Promise<Room> {
     const roomClient = this.roomClientFactory(token)
     const room = await roomClient.create(premisesId, newRoom)

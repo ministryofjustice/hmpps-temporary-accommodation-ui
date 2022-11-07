@@ -1,8 +1,4 @@
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -43,40 +39,7 @@
           errorMessage: errors.name
         }) }}
 
-        {{ govukCheckboxes({
-          fieldset: {
-            legend: {
-              text: "Does the bedspace have any of the following attributes?",
-              classes: "govuk-fieldset__legend--m"
-            }
-          },
-          hint: {
-            text: "Select all that apply"
-          },
-          items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
-          id: "characteristicIds",
-          name: "characteristicIds[]",
-          errorMessage: errors.characteristicIds
-        }) }}
-
-        {{ govukTextarea({
-          label: {
-            text: "Please provide any further bedspace details",
-            classes: "govuk-label--m"
-          },
-          hint: {
-            text: "This information will be used to help find a suitable bedspace for the person on probation"
-          },
-          id: "notes",
-          name: "notes",
-          value: notes,
-          errorMessage: errors.notes
-        }) }}
-
-        {{ govukButton({
-          name: 'submit',
-          text: "Submit"
-        }) }}
+        {% include "./_editable.njk" %}  
       </form>
     </div>
   </div>

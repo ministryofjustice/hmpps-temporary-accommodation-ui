@@ -1,9 +1,15 @@
 import type { UpdateRoom, Room } from '@approved-premises/api'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceEditablePage from './bedspaceEditable'
 
 export default class BedspaceEditPage extends BedspaceEditablePage {
   constructor(private readonly room: Room) {
     super('Edit a bedspace')
+  }
+
+  static visit(premisesId: string, room: Room): BedspaceEditPage {
+    cy.visit(paths.premises.bedspaces.edit({ premisesId, roomId: room.id }))
+    return new BedspaceEditPage(room)
   }
 
   completeForm(updateRoom: UpdateRoom): void {

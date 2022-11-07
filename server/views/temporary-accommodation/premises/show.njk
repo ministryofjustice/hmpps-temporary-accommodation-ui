@@ -65,7 +65,7 @@
             <h4>{{ bedspace.room.name }}</h4>
           </div>
           <div class="edit-bar__action">
-            <a href="#">Edit</a>
+            <a href="{{ paths.premises.bedspaces.edit({ premisesId: premises.id, roomId: bedspace.room.id }) }}">Edit</a>
           </div>
         </div>
       </div>

@@ -72,4 +72,13 @@ export default class PremisesShowPage extends Page {
       cy.get('a').contains('Edit').click()
     })
   }
+
+  clickBedpaceEditLink(room: Room): void {
+    cy.get('h4')
+      .contains(room.name)
+      .parents('[data-cy-bedspace]')
+      .within(() => {
+        cy.get('a').contains('Edit').click()
+      })
+  }
 }

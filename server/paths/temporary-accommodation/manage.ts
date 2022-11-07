@@ -4,6 +4,7 @@ const premisesPath = temporaryAccommodationPath.path('properties')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const bedspacesPath = singlePremisesPath.path('bedspaces')
+const singleBedspacePath = singlePremisesPath.path('bedspaces').path(':roomId')
 
 const paths = {
   premises: {
@@ -16,6 +17,7 @@ const paths = {
     bedspaces: {
       new: bedspacesPath.path('new'),
       create: bedspacesPath,
+      edit: singleBedspacePath,
     },
   },
 }

@@ -1,7 +1,6 @@
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
 import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
-import localAuthorityFactory from '../../../../server/testutils/factories/localAuthority'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import Page from '../../../../cypress_shared/pages/page'
@@ -38,8 +37,7 @@ context('Premises', () => {
     cy.task('stubPremises', premises)
 
     // And there are local authorities in the database
-    const localAuthorities = localAuthorityFactory.buildList(5)
-    cy.task('stubLocalAuthorities', localAuthorities)
+    cy.task('stubLocalAuthoritiesReferenceData')
 
     // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')
@@ -78,19 +76,17 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are local authorities in the database
-    const localAuthorities = localAuthorityFactory.buildList(5)
-    cy.task('stubLocalAuthorities', localAuthorities)
+    cy.task('stubLocalAuthoritiesReferenceData')
 
     // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')
 
     // When I visit the new premises page
-    const localAuthority = localAuthorities[2]
     const premises = premisesFactory.build()
     const newPremises = newPremisesFactory.build({
       name: premises.name,
       postcode: premises.postcode,
-      localAuthorityAreaId: localAuthority.id,
+      localAuthorityAreaId: premises.localAuthorityArea.id,
     })
 
     cy.task('stubPremisesCreate', premises)
@@ -124,8 +120,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are local authorities in the database
-    const localAuthorities = localAuthorityFactory.buildList(5)
-    cy.task('stubLocalAuthorities', localAuthorities)
+    cy.task('stubLocalAuthoritiesReferenceData')
 
     // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')
@@ -150,8 +145,7 @@ context('Premises', () => {
     cy.task('stubPremises', premises)
 
     // And there are local authorities in the database
-    const localAuthorities = localAuthorityFactory.buildList(5)
-    cy.task('stubLocalAuthorities', localAuthorities)
+    cy.task('stubLocalAuthoritiesReferenceData')
 
     // And there are characteristics in the database
     cy.task('stubCharacteristicsReferenceData')

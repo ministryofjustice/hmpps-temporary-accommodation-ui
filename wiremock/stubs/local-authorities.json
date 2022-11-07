@@ -1,0 +1,42 @@
+[
+  {
+    "id": "Derbyshire",
+    "identifier": "Derbyshire",
+    "name": "Derbyshire"
+  },
+  {
+    "id": "essex",
+    "identifier": "essex",
+    "name": "Essex"
+  },
+  {
+    "id": "humberside",
+    "identifier": "Humberside",
+    "name": "Humberside"
+  },
+  {
+    "id": "fife",
+    "identifier": "fife",
+    "name": "Fife"
+  },
+  {
+    "id": "norfolk",
+    "identifier": "norfolk",
+    "name": "Norfolk"
+  },
+  {
+    "id": "northumberland",
+    "identifier": "northumberland",
+    "name": "Northumberland"
+  },
+  {
+    "id": "powys",
+    "identifier": "powys",
+    "name": "Powys"
+  },
+  {
+    "id": "suffolk",
+    "identifier": "suffolk",
+    "name": "Suffolk"
+  }
+]

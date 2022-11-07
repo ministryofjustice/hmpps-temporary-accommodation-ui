@@ -8,7 +8,7 @@ export default Factory.define<NewPremises>(() => ({
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.address.streetAddress(),
   postcode: faker.address.zipCode(),
-  localAuthorityAreaId: faker.datatype.uuid(),
+  localAuthorityAreaId: referenceDataFactory.localAuthority().build().id,
   characteristicIds: unique([referenceDataFactory.characteristic('premises').build()]).map(
     characteristic => characteristic.id,
   ),

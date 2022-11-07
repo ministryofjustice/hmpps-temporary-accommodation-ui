@@ -18,7 +18,6 @@ import lostBedStubs from './lostBedStubs'
 import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
 import roomStubs from './roomStub'
-import { localAuthorityStubs, localAuthorities } from './localAuthorityStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
@@ -28,8 +27,7 @@ import { errorStub, getCombinations } from './utils'
 const stubs = []
 
 const premises = premisesJson.map(item => {
-  const localAuthority = localAuthorities[Math.floor(Math.random() * localAuthorities.length)]
-  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>), localAuthorityArea: localAuthority })
+  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>) })
 })
 
 stubs.push({
@@ -163,7 +161,6 @@ stubs.push(
   ...personStubs,
   ...applicationStubs,
   ...roomStubs,
-  ...localAuthorityStubs,
   ...Object.values(referenceDataStubs),
 )
 

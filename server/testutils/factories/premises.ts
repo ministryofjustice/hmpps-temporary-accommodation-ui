@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { ApArea, ProbationRegion } from '@approved-premises/api'
 import { Premises } from '@approved-premises/api'
-import localAuthorityFactory from './localAuthority'
 import referenceDataFactory from './referenceData'
 import { unique } from '../../utils/utils'
 
@@ -17,7 +16,7 @@ export default Factory.define<Premises>(() => ({
   apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
   probationRegion: probationRegionFactory.build(),
   apArea: apAreaFactory.build(),
-  localAuthorityArea: localAuthorityFactory.build(),
+  localAuthorityArea: referenceDataFactory.localAuthority().build(),
   characteristics: unique(
     referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
   ),

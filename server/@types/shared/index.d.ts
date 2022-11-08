@@ -66,6 +66,8 @@ export type { SupervisingTeam } from './models/SupervisingTeam';
 export type { TemporaryAccommodationPremises } from './models/TemporaryAccommodationPremises';
 export type { UpdateApplication } from './models/UpdateApplication';
 export type { UpdateAssessment } from './models/UpdateAssessment';
+export type { UpdatePremises } from './models/UpdatePremises';
+export type { UpdateRoom } from './models/UpdateRoom';
 export type { User } from './models/User';
 export type { UserQualification } from './models/UserQualification';
 export type { UserRole } from './models/UserRole';

@@ -20,7 +20,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="#" method="post">
+      <form action="{{ paths.premises.bedspaces.update({ premisesId: premisesId, roomId: id }) }}?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}

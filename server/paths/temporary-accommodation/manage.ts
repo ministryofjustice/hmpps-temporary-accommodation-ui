@@ -18,6 +18,7 @@ const paths = {
       new: bedspacesPath.path('new'),
       create: bedspacesPath,
       edit: singleBedspacePath,
+      update: singleBedspacePath,
     },
   },
 }

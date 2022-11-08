@@ -7,6 +7,7 @@ import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
 import newPremisesFactory from '../testutils/factories/newPremises'
+import updatePremisesFactory from '../testutils/factories/updatePremises'
 import characteristicFactory from '../testutils/factories/characteristic'
 import getDateRangesWithNegativeBeds from '../utils/premisesUtils'
 import apPaths from '../paths/manage'
@@ -244,7 +245,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('premisesSelectList', () => {
+  describe('getPremisesSelectList', () => {
     it('returns the list mapped into the format required by the nunjucks macro and sorted alphabetically', async () => {
       const premisesA = premisesFactory.build({ name: 'a' })
       const premisesB = premisesFactory.build({ name: 'b' })
@@ -261,6 +262,38 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.all).toHaveBeenCalled()
+    })
+  })
+
+  describe('getUpdatePremises', () => {
+    it('finds the premises given by the premises ID, and returns the premises as an UpdatePremises', async () => {
+      const premises = premisesFactory.build({
+        localAuthorityArea: localAuthorityFactory.build({
+          name: 'Local authority',
+          id: 'local-authority',
+        }),
+        characteristics: [
+          characteristicFactory.build({
+            name: 'Characteristic A',
+            id: 'characteristic-a',
+          }),
+          characteristicFactory.build({
+            name: 'Characteristic B',
+            id: 'characteristic-b',
+          }),
+        ],
+      })
+
+      premisesClient.find.mockResolvedValue(premises)
+
+      const result = await service.getUpdatePremises(token, premises.id)
+      expect(result).toEqual({
+        ...premises,
+        localAuthorityAreaId: 'local-authority',
+        characteristicIds: ['characteristic-a', 'characteristic-b'],
+      })
+
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })
   })
 
@@ -512,11 +545,28 @@ describe('PremisesService', () => {
       })
       premisesClient.create.mockResolvedValue(premises)
 
-      const postedPremises = await service.create(token, newPremises)
-      expect(postedPremises).toEqual(premises)
+      const createdPremises = await service.create(token, newPremises)
+      expect(createdPremises).toEqual(premises)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
+    })
+  })
+
+  describe('update', () => {
+    it('on success updates the premises and returns the updated premises', async () => {
+      const premises = premisesFactory.build()
+      const newPremises = updatePremisesFactory.build({
+        postcode: premises.postcode,
+        notes: premises.notes,
+      })
+      premisesClient.update.mockResolvedValue(premises)
+
+      const updatedPremises = await service.update(token, premises.id, newPremises)
+      expect(updatedPremises).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, newPremises)
     })
   })
 })

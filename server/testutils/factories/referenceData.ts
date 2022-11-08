@@ -10,7 +10,8 @@ import cancellationReasonsJson from '../../../wiremock/stubs/cancellation-reason
 import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
 import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 import characteristicsJson from '../../../wiremock/stubs/characteristics.json'
-import { Characteristic } from '../../@types/shared'
+import localAuthoritiesJson from '../../../wiremock/stubs/local-authorities.json'
+import { Characteristic, LocalAuthorityArea } from '../../@types/shared'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
@@ -49,6 +50,10 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
         characteristicsJson.filter(characteristic => characteristic.modelScope === modelScope),
       ),
     )
+  }
+
+  localAuthority(): Factory<LocalAuthorityArea> {
+    return Factory.define<LocalAuthorityArea>(() => faker.helpers.arrayElement(localAuthoritiesJson))
   }
 }
 

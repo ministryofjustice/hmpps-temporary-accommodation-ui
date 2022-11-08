@@ -9,6 +9,7 @@ const roomsPath = singlePremisesPath.path('rooms')
 const managePaths = {
   premises: {
     create: premisesPath,
+    update: singlePremisesPath,
     index: premisesPath,
     show: singlePremisesPath,
     rooms: {
@@ -40,6 +41,7 @@ export default {
   premises: {
     show: managePaths.premises.show,
     create: managePaths.premises.create,
+    update: managePaths.premises.update,
     index: managePaths.premises.index,
     capacity: managePaths.premises.show.path('capacity'),
     lostBeds: {

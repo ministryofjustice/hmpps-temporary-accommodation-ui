@@ -6,6 +6,7 @@ import { getMatchingRequests, stubFor } from '../../wiremock'
 import bookingStubs from './booking'
 import roomStubs from './room'
 import { errorStub } from '../../wiremock/utils'
+import paths from '../../server/paths/api'
 
 const stubPremises = (premises: Array<Premises>) =>
   stubFor({
@@ -95,12 +96,34 @@ export default {
         jsonBody: premises,
       },
     }),
-  stubPremisesCreateErrors: (params: Array<string>): SuperAgentRequest => stubFor(errorStub(params, '/premises')),
+  stubPremisesCreateErrors: (params: Array<string>): SuperAgentRequest =>
+    stubFor(errorStub(params, '/premises', 'POST')),
   verifyPremisesCreate: async () =>
     (
       await getMatchingRequests({
         method: 'POST',
         url: `/premises`,
+      })
+    ).body.requests,
+  stubPremisesUpdate: (premises: Premises): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        url: paths.premises.update({ premisesId: premises.id }),
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: premises,
+      },
+    }),
+  stubPremisesUpdateErrors: (args: { premises: Premises; params: Array<string> }): SuperAgentRequest =>
+    stubFor(errorStub(args.params, paths.premises.update({ premisesId: args.premises.id }), 'PUT')),
+  verifyPremisesUpdate: async (premises: Premises) =>
+    (
+      await getMatchingRequests({
+        method: 'PUT',
+        url: paths.premises.update({ premisesId: premises.id }),
       })
     ).body.requests,
 }

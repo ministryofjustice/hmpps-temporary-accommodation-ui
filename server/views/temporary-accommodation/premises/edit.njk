@@ -9,35 +9,24 @@
 
 {% block content %}
 
-  {{ breadCrumb('Add a property', [
-    {title: 'List of properties', href: paths.premises.index()}
+  {{ breadCrumb('Edit a property', [
+    {title: 'List of properties', href: paths.premises.index()},
+    {title: 'Manage a property', href: paths.premises.show({ premisesId: id })}
   ]) }}
 
   {% include "../../_messages.njk" %}
   
-  <h1>Add a property</h1>
+  <h1>Edit a property</h1>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.premises.create() }}" method="post">
+      <form action="{{ paths.premises.update({ premisesId: id }) }}?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}
 
-        {{ govukInput({
-          label: {
-            text: "Property name",
-            classes: "govuk-label--m"
-          },
-          hint: {
-            text: "This will be used to identify the property"
-          },
-          classes: "govuk-input--width-20",
-          id: "name",
-          name: "name",
-          value: name,
-          errorMessage: errors.name
-        }) }}
+        <h2 class="govuk-label govuk-label--m">Property reference</h2>
+        <p class="govuk-body">{{ name }}</p>
       
         {% include "./_editable.njk" %}  
       </form>

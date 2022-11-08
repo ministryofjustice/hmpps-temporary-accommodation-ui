@@ -3,6 +3,7 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
 import premisesFactory from '../../../testutils/factories/premises'
+import updatePremisesFactory from '../../../testutils/factories/newPremises'
 import localAuthorityFactory from '../../../testutils/factories/localAuthority'
 import roomFactory from '../../../testutils/factories/room'
 import PremisesService from '../../../services/premisesService'
@@ -18,7 +19,8 @@ jest.mock('../../../utils/validation')
 describe('PremisesController', () => {
   const token = 'SOME_TOKEN'
 
-  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
+  let request: DeepMocked<Request>
+
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
@@ -26,6 +28,10 @@ describe('PremisesController', () => {
   const bedspaceService = createMock<BedspaceService>({})
   const localAuthorityService = createMock<LocalAuthorityService>({})
   const premisesController = new PremisesController(premisesService, bedspaceService, localAuthorityService)
+
+  beforeEach(() => {
+    request = createMock<Request>({ user: { token } })
+  })
 
   describe('index', () => {
     it('returns the table rows to the template', async () => {
@@ -54,6 +60,8 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
         allCharacteristics,
@@ -78,6 +86,8 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         localAuthorities,
         allCharacteristics,
@@ -117,6 +127,8 @@ describe('PremisesController', () => {
     it('renders with errors if the API returns an error', async () => {
       const requestHandler = premisesController.create()
 
+      const premises = premisesFactory.build()
+
       const err = new Error()
 
       premisesService.create.mockImplementation(() => {
@@ -124,15 +136,138 @@ describe('PremisesController', () => {
       })
 
       request.body = {
-        county: 'some county',
-        town: 'some town',
-        type: 'single',
-        address: 'some address',
+        name: premises.name,
+        postcode: premises.postcode,
       }
 
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.new({}))
+    })
+  })
+
+  describe('edit', () => {
+    it('renders the form', async () => {
+      const localAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const allCharacteristics = characteristicFactory.buildList(5)
+      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+
+      const premises = premisesFactory.build()
+      const updatePremises = updatePremisesFactory.build({
+        ...premises,
+      })
+      premisesService.getUpdatePremises.mockResolvedValue(updatePremises)
+
+      const requestHandler = premisesController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+      await requestHandler(request, response, next)
+
+      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
+        localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
+        errors: {},
+        errorSummary: [],
+        ...updatePremises,
+      })
+    })
+
+    it('renders the form with errors and user input if an error has been sent to the flash', async () => {
+      const localAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+
+      const allCharacteristics = characteristicFactory.buildList(5)
+      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+
+      const premises = premisesFactory.build()
+      const updatePremises = updatePremisesFactory.build({
+        ...premises,
+      })
+      premisesService.getUpdatePremises.mockResolvedValue(updatePremises)
+
+      const requestHandler = premisesController.edit()
+
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      request.params.premisesId = premises.id
+      await requestHandler(request, response, next)
+
+      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
+      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
+        localAuthorities,
+        allCharacteristics,
+        characteristicIds: [],
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+        ...updatePremises,
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('updates a premises and redirects to the show premises page', async () => {
+      const requestHandler = premisesController.update()
+
+      const premises = premisesFactory.build()
+
+      request.params.premisesId = premises.id
+      request.body = {
+        name: premises.name,
+        postcode: premises.postcode,
+      }
+
+      premisesService.update.mockResolvedValue(premises)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.update).toHaveBeenCalledWith(token, premises.id, {
+        name: premises.name,
+        postcode: premises.postcode,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = premisesController.update()
+
+      const premises = premisesFactory.build()
+
+      const err = new Error()
+
+      premisesService.update.mockImplementation(() => {
+        throw err
+      })
+
+      request.params.premisesId = premises.id
+      request.body = {
+        name: premises.name,
+        postcode: premises.postcode,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.edit({ premisesId: premises.id }),
+      )
     })
   })
 

@@ -2,6 +2,7 @@ import nock from 'nock'
 
 import premisesFactory from '../testutils/factories/premises'
 import newPremisesFactory from '../testutils/factories/newPremises'
+import updatePremisesFactory from '../testutils/factories/updatePremises'
 import PremisesClient from './premisesClient'
 import config from '../config'
 import paths from '../paths/api'
@@ -101,6 +102,24 @@ describe('PremisesClient', () => {
         .reply(200, premises)
 
       const output = await premisesClient.create(payload)
+      expect(output).toEqual(premises)
+    })
+  })
+
+  describe('update', () => {
+    it('updates the given premises and returns the updated premises', async () => {
+      const premises = premisesFactory.build()
+      const payload = updatePremisesFactory.build({
+        postcode: premises.postcode,
+        notes: premises.notes,
+      })
+
+      fakeApprovedPremisesApi
+        .put(paths.premises.update({ premisesId: premises.id }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, premises)
+
+      const output = await premisesClient.update(premises.id, payload)
       expect(output).toEqual(premises)
     })
   })

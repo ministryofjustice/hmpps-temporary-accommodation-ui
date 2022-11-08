@@ -18,18 +18,17 @@ import lostBedStubs from './lostBedStubs'
 import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
 import roomStubs from './roomStub'
-import { localAuthorityStubs, localAuthorities } from './localAuthorityStubs'
 
 import * as referenceDataStubs from './referenceDataStubs'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 import { errorStub, getCombinations } from './utils'
+import path from '../server/paths/api'
 
 const stubs = []
 
 const premises = premisesJson.map(item => {
-  const localAuthority = localAuthorities[Math.floor(Math.random() * localAuthorities.length)]
-  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>), localAuthorityArea: localAuthority })
+  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>) })
 })
 
 stubs.push({
@@ -46,10 +45,10 @@ stubs.push({
   },
 })
 
-const requiredFields = getCombinations(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
+const createRequiredFields = getCombinations(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
 
-requiredFields.forEach((fields: Array<string>) => {
-  stubs.push(errorStub(fields, `/premises`))
+createRequiredFields.forEach((fields: Array<string>) => {
+  stubs.push(errorStub(fields, `/premises`, 'POST'))
 })
 
 stubs.push({
@@ -109,6 +108,26 @@ premises.forEach(item => {
     },
   })
 
+  const updateRequiredFields = getCombinations(['addressLine1', 'postcode', 'localAuthorityAreaId'])
+
+  updateRequiredFields.forEach((fields: Array<string>) => {
+    stubs.push(errorStub(fields, path.premises.update({ premisesId: item.id }), 'PUT'))
+  })
+
+  stubs.push({
+    request: {
+      method: 'PUT',
+      url: path.premises.update({ premisesId: item.id }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: item,
+    },
+  })
+
   const rand = () => Math.floor(Math.random() * 10)
 
   const bookings = [
@@ -163,7 +182,6 @@ stubs.push(
   ...personStubs,
   ...applicationStubs,
   ...roomStubs,
-  ...localAuthorityStubs,
   ...Object.values(referenceDataStubs),
 )
 

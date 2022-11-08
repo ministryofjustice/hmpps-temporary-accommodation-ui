@@ -19,7 +19,7 @@ export default {
       },
     }),
   stubBookingErrors: (args: { premisesId: string; params: Array<string> }) =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings`)),
+    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings`, 'POST')),
   stubBookingGet: (args: { premisesId: string; booking: Booking }) =>
     stubFor({
       request: {

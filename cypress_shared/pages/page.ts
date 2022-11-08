@@ -50,6 +50,10 @@ export default abstract class Page {
     cy.get(`#${id}`).type(details)
   }
 
+  getTextInputByIdAndClear(id: string): void {
+    cy.get(`#${id}`).clear()
+  }
+
   getSelectInputByIdAndSelectAnEntry(id: string, entry: string): void {
     cy.get(`#${id}`).select(entry)
   }

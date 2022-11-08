@@ -48,7 +48,7 @@ bookingStubs.push({
 const requiredFields = getCombinations(['crn', 'arrivalDate', 'departureDate'])
 
 requiredFields.forEach((fields: Array<string>) => {
-  bookingStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings`))
+  bookingStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings`, 'POST'))
 })
 
 export default bookingStubs

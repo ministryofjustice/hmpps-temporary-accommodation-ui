@@ -1,4 +1,4 @@
-import type { DateCapacity, NewPremises, Premises, StaffMember } from '@approved-premises/api'
+import type { DateCapacity, NewPremises, Premises, StaffMember, UpdatePremises } from '@approved-premises/api'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -30,5 +30,9 @@ export default class PremisesClient {
 
   async create(data: NewPremises): Promise<Premises> {
     return (await this.restClient.post({ path: paths.premises.create({}), data })) as Premises
+  }
+
+  async update(id: string, data: UpdatePremises): Promise<Premises> {
+    return (await this.restClient.put({ path: paths.premises.update({ premisesId: id }), data })) as Premises
   }
 }

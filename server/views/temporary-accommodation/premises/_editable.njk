@@ -1,0 +1,89 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% call govukFieldset({
+  legend: {
+    text: "What the property address?",
+    classes: "govuk-fieldset__legend--m"
+  }
+}) %}
+
+{{ govukInput({
+  label: {
+    text: 'Address line 1',
+    classes: "govuk-label--s"
+  },
+  id: "addressLine1",
+  name: "addressLine1",
+  autocomplete: "address-line1",
+  value: addressLine1,
+  errorMessage: errors.addressLine1
+}) }}
+
+{{ govukInput({
+  label: {
+    text: "Postcode",
+    classes: "govuk-label--s"
+  },
+  classes: "govuk-input--width-20",
+  id: "postcode",
+  name: "postcode",
+  autocomplete: "postal-code",
+  value: postcode,
+  errorMessage: errors.postcode
+}) }}
+
+{% endcall %}
+
+{{ govukSelect({
+  label: {
+    text: "What is the local authority?",
+    classes: "govuk-label--m"
+  },
+  hint: {
+    text: "Local authority"
+  },
+  items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
+  id: "localAuthorityAreaId",
+  name: "localAuthorityAreaId",
+  errorMessage: errors.localAuthorityAreaId
+}) }}
+
+{{ govukCheckboxes({
+  fieldset: {
+    legend: {
+      text: "Does the premises have any of the following attributes?",
+      classes: "govuk-fieldset__legend--m"
+    }
+  },
+  hint: {
+    text: "Select all that apply"
+  },
+  items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
+  id: "characteristicIds",
+  name: "characteristicIds[]",
+  errorMessage: errors.characteristicIds
+}) }}
+
+{{ govukTextarea({
+  label: {
+    text: "Please provide any further property details",
+    classes: "govuk-label--m"
+  },
+  hint: {
+    text: "This information will be used to help find a suitable property for the person on probation"
+  },
+  id: "notes",
+  name: "notes",
+  value: notes,
+  errorMessage: errors.notes
+}) }}
+
+{{ govukButton({
+  name: 'submit',
+  text: "Submit"
+}) }}

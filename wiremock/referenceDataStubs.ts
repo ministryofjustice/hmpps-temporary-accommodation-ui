@@ -5,6 +5,7 @@ import cancellationReasonsJson from './stubs/cancellation-reasons.json'
 import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
 import keyWorkersJson from './stubs/keyworkers.json'
 import characteristicsJson from './stubs/characteristics.json'
+import localAuthoritiesJson from './stubs/local-authorities.json'
 
 const departureReasons = {
   request: {
@@ -104,6 +105,20 @@ const characteristics = {
   },
 }
 
+const localAuthorities = {
+  request: {
+    method: 'GET',
+    url: '/reference-data/local-authority-areas',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: localAuthoritiesJson,
+  },
+}
+
 export {
   departureReasons,
   moveOnCategories,
@@ -112,4 +127,5 @@ export {
   lostBedReasons,
   keyWorkers,
   characteristics,
+  localAuthorities,
 }

@@ -14,6 +14,7 @@ const managePaths = {
     show: singlePremisesPath,
     rooms: {
       index: roomsPath,
+      show: singleRoomPath,
       create: roomsPath,
     },
     lostBeds: {
@@ -49,6 +50,7 @@ export default {
     },
     rooms: {
       index: managePaths.premises.rooms.index,
+      show: managePaths.premises.rooms.show,
       create: managePaths.premises.rooms.create,
     },
     staffMembers: {

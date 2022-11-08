@@ -11,7 +11,11 @@ export default class RoomClient {
   }
 
   async all(premisesId: string): Promise<Array<Room>> {
-    return (await this.restClient.get({ path: api.premises.rooms.index({ premisesId }) })) as Promise<Array<Room>>
+    return (await this.restClient.get({ path: api.premises.rooms.index({ premisesId }) })) as Array<Room>
+  }
+
+  async find(premisesId: string, roomId: string): Promise<Room> {
+    return (await this.restClient.get({ path: api.premises.rooms.show({ premisesId, roomId }) })) as Room
   }
 
   async create(premisesId: string, data: NewRoom): Promise<Room> {

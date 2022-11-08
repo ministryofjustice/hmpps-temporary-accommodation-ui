@@ -42,6 +42,20 @@ describe('Room Client', () => {
     })
   })
 
+  describe('find', () => {
+    it('should get a single premises', async () => {
+      const room = roomFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.premises.rooms.show({ premisesId, roomId: room.id }))
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, room)
+
+      const output = await roomClient.find(premisesId, room.id)
+      expect(output).toEqual(room)
+    })
+  })
+
   describe('create', () => {
     it('should return the room that has been created', async () => {
       const room = roomFactory.build()

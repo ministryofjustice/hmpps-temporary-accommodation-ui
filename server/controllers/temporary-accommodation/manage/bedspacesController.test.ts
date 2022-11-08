@@ -174,4 +174,58 @@ describe('BedspacesController', () => {
       })
     })
   })
+
+  describe('update', () => {
+    it('updates a bedspace and redirects to the show premises page', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+        notes: room.notes,
+      }
+
+      bedspaceService.updateRoom.mockResolvedValue(room)
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(token, premisesId, room.id, {
+        name: room.name,
+        notes: room.notes,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      const err = new Error()
+
+      bedspaceService.updateRoom.mockImplementation(() => {
+        throw err
+      })
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+        notes: room.notes,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
+      )
+    })
+  })
 })

@@ -1,4 +1,4 @@
-.temporary-accommodation-premises-show {
+.temporary-accommodation-premises-show, .temporary-accommodation-bedspaces-show {
   .details {
     ul {
       padding-inline-start: 0px;
@@ -19,7 +19,7 @@
       margin: 0;
     }
     &__title {
-      h2 {
+      h1, h2 {
         display: inline;
         margin: 0;
         padding: 0;
@@ -46,7 +46,7 @@
     &__title {
       display: inline-block;
       font-size: 1.1875rem;
-      h3, h4 {
+      h2, h3, h4 {
         display: inline;
         margin: 0;
         padding: 0;

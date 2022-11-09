@@ -96,14 +96,14 @@ Given('I edit the premises details', () => {
       const { parkNearbyCharacteristicId } = this
       const { floorLevelAccessCharacteristicId } = this
 
-      const upadatePremises = updatePremisesFactory.build({
+      const updatePremises = updatePremisesFactory.build({
         localAuthorityAreaId,
         characteristicIds: [parkNearbyCharacteristicId, floorLevelAccessCharacteristicId],
       })
 
       const updatedPremises = premisesFactory.build({
         ...premises,
-        ...upadatePremises,
+        ...updatePremises,
         localAuthorityArea: localAuthorityFactory.build({
           name: 'North Lanarkshire',
           id: localAuthorityAreaId,
@@ -121,7 +121,7 @@ Given('I edit the premises details', () => {
       })
 
       cy.wrap(updatedPremises).as('premises')
-      page.completeForm(upadatePremises)
+      page.completeForm(updatePremises)
     })
   })
 })

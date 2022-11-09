@@ -31,17 +31,17 @@ Given('I create a premises with all necessary details', () => {
 
   page.getLocalAuthorityAreaIdByLabel('North Lanarkshire', 'localAuthorityAreaId')
 
-  page.getCharacteristicIdByLabel('Park nearby', 'parkNearbyCharacteristicId')
-  page.getCharacteristicIdByLabel('Floor level access', 'floorLevelAccessCharacteristicId')
+  page.getCharacteristicIdByLabel('Not suitable for arson offenders', 'arsonCharacteristicId')
+  page.getCharacteristicIdByLabel('School nearby', 'schooNearbyCharacteristicId')
 
   cy.then(function _() {
     const { localAuthorityAreaId } = this
-    const { parkNearbyCharacteristicId } = this
-    const { floorLevelAccessCharacteristicId } = this
+    const { arsonCharacteristicId } = this
+    const { schooNearbyCharacteristicId } = this
 
     const newPremises = newPremisesFactory.build({
       localAuthorityAreaId,
-      characteristicIds: [parkNearbyCharacteristicId, floorLevelAccessCharacteristicId],
+      characteristicIds: [arsonCharacteristicId, schooNearbyCharacteristicId],
     })
 
     const premises = premisesFactory.build({
@@ -52,12 +52,12 @@ Given('I create a premises with all necessary details', () => {
       }),
       characteristics: [
         characteristicFactory.build({
-          name: 'Park nearby',
-          id: parkNearbyCharacteristicId,
+          name: 'Not suitable for arson offenders',
+          id: arsonCharacteristicId,
         }),
         characteristicFactory.build({
-          name: 'Floor level access',
-          id: floorLevelAccessCharacteristicId,
+          name: 'School nearby',
+          id: schooNearbyCharacteristicId,
         }),
       ],
     })

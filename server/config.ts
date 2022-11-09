@@ -86,10 +86,4 @@ export default {
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
-  serviceSignifier: get<'path' | 'domain' | 'approved-premises-only' | 'temporary-accommodation-only'>(
-    'SERVICE_SIGNIFIER',
-    'path',
-    requiredInProduction,
-  ) as 'path' | 'domain' | 'approved-premises-only' | 'temporary-accommodation-only',
-  temporaryAccommodationSubdomain: get('TEMPORARY_ACCOMMODATION_SUBDOMAIN', 'approved-premises', requiredInProduction),
 }

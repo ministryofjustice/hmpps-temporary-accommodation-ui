@@ -110,6 +110,56 @@ describe('BedspaceService', () => {
     })
   })
 
+  describe('getSingleBedspaceDetails', () => {
+    it('returns a room and a summary list, for the given premises ID and room ID', async () => {
+      const room = roomFactory.build({
+        characteristics: [
+          characteristicFactory.build({ name: 'Characteristic 1' }),
+          characteristicFactory.build({ name: 'Characteristic 2' }),
+        ],
+        notes: 'Some notes',
+      })
+
+      roomClient.find.mockResolvedValue(room)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+      ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
+        text: 'Some attributes',
+      }))
+
+      const result = await service.getSingleBedspaceDetails(token, premisesId, room.id)
+
+      expect(result).toEqual({
+        room,
+        summaryList: {
+          rows: [
+            {
+              key: { text: 'Attributes' },
+              value: { text: 'Some attributes' },
+            },
+            {
+              key: { text: 'Notes' },
+              value: { html: room.notes },
+            },
+          ],
+        },
+      })
+
+      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
+
+      expect(formatLines).toHaveBeenCalledWith('Some notes')
+
+      expect(formatCharacteristics).toHaveBeenCalledWith([
+        expect.objectContaining({
+          name: 'Characteristic 1',
+        }),
+        expect.objectContaining({
+          name: 'Characteristic 2',
+        }),
+      ])
+    })
+  })
+
   describe('getUpdateRoom', () => {
     it('finds the room given by the room ID, and returns the room as an UpdatePremises', async () => {
       const room = roomFactory.build({

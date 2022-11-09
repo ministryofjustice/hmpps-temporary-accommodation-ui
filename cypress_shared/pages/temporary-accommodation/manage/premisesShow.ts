@@ -47,23 +47,24 @@ export default class PremisesShowPage extends Page {
   }
 
   shouldShowRoomDetails(room: Room): void {
-    cy.get(`[data-cy-room="${room.id}"]`).within(() => {
-      cy.get('h4').should('contain', room.name)
+    cy.get('h4')
+      .contains(room.name)
+      .parents('[data-cy-bedspace]')
+      .within(() => {
+        room.characteristics.forEach(characteristic => {
+          cy.get('.govuk-summary-list__key')
+            .contains('Attributes')
+            .siblings('.govuk-summary-list__value')
+            .should('contain', characteristic.name)
+        })
 
-      room.characteristics.forEach(characteristic => {
-        cy.get('.govuk-summary-list__key')
-          .contains('Attributes')
-          .siblings('.govuk-summary-list__value')
-          .should('contain', characteristic.name)
+        room.notes.split('\n').forEach(noteLine => {
+          cy.get('.govuk-summary-list__key')
+            .contains('Notes')
+            .siblings('.govuk-summary-list__value')
+            .should('contain', noteLine)
+        })
       })
-
-      room.notes.split('\n').forEach(noteLine => {
-        cy.get('.govuk-summary-list__key')
-          .contains('Notes')
-          .siblings('.govuk-summary-list__value')
-          .should('contain', noteLine)
-      })
-    })
   }
 
   clickPremisesEditLink(): void {

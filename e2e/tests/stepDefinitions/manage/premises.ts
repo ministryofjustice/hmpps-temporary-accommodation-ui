@@ -14,6 +14,15 @@ Given("I'm creating a premises", () => {
   page.clickAddPremisesButton()
 })
 
+Given("I'm viewing an existing premises", () => {
+  const page = PremisesListPage.visit()
+  page.getAnyPremises('premises')
+
+  cy.get('@premises').then(premises => {
+    page.clickPremisesViewLink(premises)
+  })
+})
+
 Given('I create a premises with all necessary details', () => {
   const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
 

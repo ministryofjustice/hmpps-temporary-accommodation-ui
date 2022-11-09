@@ -15,7 +15,7 @@ rooms.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: JSON.stringify(roomFactory.build()),
+    jsonBody: roomFactory.build(),
   },
 })
 

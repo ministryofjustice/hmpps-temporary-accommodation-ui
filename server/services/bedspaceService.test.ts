@@ -30,7 +30,7 @@ describe('BedspaceService', () => {
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
-  describe('getRoomDetails', () => {
+  describe('getBedspaceDetails', () => {
     it('returns a list of rooms and a summary list for each room, for the given premises ID', async () => {
       const room1 = roomFactory.build({
         name: 'XYX',
@@ -53,7 +53,7 @@ describe('BedspaceService', () => {
         text: 'Some attributes',
       }))
 
-      const result = await service.getRoomDetails(token, premisesId)
+      const result = await service.getBedspaceDetails(token, premisesId)
 
       expect(result).toEqual([
         {

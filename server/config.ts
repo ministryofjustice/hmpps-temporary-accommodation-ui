@@ -91,6 +91,5 @@ export default {
     'path',
     requiredInProduction,
   ) as 'path' | 'domain' | 'approved-premises-only' | 'temporary-accommodation-only',
-  approvedPremisesSubdomain: get('APPROVED_PREMISES_SUBDOMAIN', 'approved-premises', requiredInProduction),
   temporaryAccommodationSubdomain: get('TEMPORARY_ACCOMMODATION_SUBDOMAIN', 'approved-premises', requiredInProduction),
 }

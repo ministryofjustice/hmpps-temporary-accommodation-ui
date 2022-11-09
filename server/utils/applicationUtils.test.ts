@@ -105,7 +105,6 @@ describe('applicationUtils', () => {
 
   describe('getService', () => {
     beforeAll(() => {
-      config.approvedPremisesSubdomain = 'approved-premises-subdomain'
       config.temporaryAccommodationSubdomain = 'temporary-accommodation-subdomain'
     })
 

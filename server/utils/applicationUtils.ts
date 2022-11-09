@@ -1,7 +1,5 @@
-import type { Task, FormSections, FormSection, Service } from '@approved-premises/ui'
+import type { Task, FormSections, FormSection } from '@approved-premises/ui'
 import type { Application } from '@approved-premises/api'
-import { Request } from 'express'
-import config from '../config'
 import paths from '../paths/apply'
 
 const taskIsComplete = (task: Task, application: Application): boolean => {
@@ -31,20 +29,4 @@ const taskLink = (task: Task, applicationId: string): string => {
   })}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
 }
 
-const getService = (req: Request): Service => {
-  if (config.serviceSignifier === 'approved-premises-only') {
-    return 'approved-premises'
-  }
-  if (config.serviceSignifier === 'temporary-accommodation-only') {
-    return 'temporary-accommodation'
-  }
-  if (config.serviceSignifier === 'path') {
-    if (req.path.startsWith('/approved-premises')) {
-      return 'approved-premises'
-    }
-  }
-
-  return 'temporary-accommodation'
-}
-
-export { getTaskStatus, taskLink, getCompleteSectionCount, getService }
+export { getTaskStatus, taskLink, getCompleteSectionCount }

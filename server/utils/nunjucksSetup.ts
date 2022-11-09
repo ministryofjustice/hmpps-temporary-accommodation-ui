@@ -14,14 +14,11 @@ import {
   convertObjectsToSelectOptions,
   convertObjectsToCheckboxItems,
 } from './formUtils'
-import { getTaskStatus, taskLink, getCompleteSectionCount, getService } from './applicationUtils'
+import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationUtils'
 import { statusTag } from './personUtils'
 import bookingActions from './bookingUtils'
 import { DateFormats } from './dateUtils'
-
-import apManagePaths from '../paths/manage'
-import apApplyPaths from '../paths/apply'
-import taManagePaths from '../paths/temporary-accommodation/manage'
+import managePaths from '../paths/temporary-accommodation/manage'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -29,27 +26,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-
-  app.use((req, _res, next) => {
-    const service = getService(req)
-
-    if (service === 'approved-premises') {
-      app.locals.applicationName = 'Approved Premises'
-
-      njkEnv.addGlobal('paths', {
-        ...apManagePaths,
-        ...apApplyPaths,
-      })
-    } else {
-      app.locals.applicationName = 'Temporary Accommodation'
-
-      njkEnv.addGlobal('paths', {
-        ...taManagePaths,
-      })
-    }
-
-    next()
-  })
+  app.locals.applicationName = 'Temporary Accommodation'
 
   // Cachebusting version string
   if (production) {
@@ -76,6 +53,10 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       express: app,
     },
   )
+
+  njkEnv.addGlobal('paths', {
+    ...managePaths,
+  })
 
   const markAsSafe = (html: string): string => {
     const safeFilter = njkEnv.getFilter('safe')

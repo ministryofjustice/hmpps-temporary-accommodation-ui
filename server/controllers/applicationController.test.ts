@@ -2,8 +2,7 @@ import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import ApplicationController from './applicationController'
-import paths from '../paths/manage'
-import { getService } from '../utils/applicationUtils'
+import paths from '../paths/temporary-accommodation/manage'
 
 jest.mock('../utils/applicationUtils')
 
@@ -19,28 +18,11 @@ describe('ApplicationController', () => {
   })
 
   describe('index', () => {
-    describe('when used in the Approved Premises service', () => {
-      it('should redirect to /premises', () => {
-        ;(getService as jest.Mock).mockReturnValue('approved-premises')
+    it('should redirect to /properties', () => {
+      const requestHandler = applicationController.index()
+      requestHandler(request, response, next)
 
-        const requestHandler = applicationController.index()
-
-        requestHandler(request, response, next)
-
-        expect(response.redirect).toHaveBeenCalledWith(paths.premises.index({}))
-      })
-    })
-
-    describe('when used in the Temporary Accommodation service', () => {
-      it('should redirect to /properties/new', () => {
-        ;(getService as jest.Mock).mockReturnValue('temporary-accommodation')
-
-        const requestHandler = applicationController.index()
-
-        requestHandler(request, response, next)
-
-        expect(response.redirect).toHaveBeenCalledWith(paths.premises.index({}))
-      })
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.index({}))
     })
   })
 })

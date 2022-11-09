@@ -6,19 +6,19 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Manage a property" %}
+{% set pageTitle = applicationName + " - View a property" %}
 {% set mainClasses = "app-container govuk-body" %}
 {% set bodyClasses = "temporary-accommodation-premises-show" %}
 
 {% block content %}
 
-  {{ breadCrumb('Manage a property', [
+  {{ breadCrumb('View a property', [
     {title: 'List of properties', href: paths.premises.index()}
   ]) }}
 
   {% include "../../_messages.njk" %}
 
-  <h1>Manage a property</h1>
+  <h1>View a property</h1>
 
   {{ mojIdentityBar({
     title: {

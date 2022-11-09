@@ -5,7 +5,7 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
-    super('Manage a property')
+    super('View a property')
   }
 
   static visit(premises: Premises): PremisesShowPage {

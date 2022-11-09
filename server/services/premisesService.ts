@@ -80,6 +80,13 @@ export default class PremisesService {
       })
   }
 
+  async getPremises(token: string, id: string): Promise<Premises> {
+    const premisesClient = this.premisesClientFactory(token)
+    const premises = await premisesClient.find(id)
+
+    return premises
+  }
+
   async getApprovedPremisesPremisesDetails(
     token: string,
     id: string,

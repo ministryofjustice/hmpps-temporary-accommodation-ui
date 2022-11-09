@@ -45,6 +45,7 @@ Given('I create a premises with all necessary details', () => {
     })
 
     const premises = premisesFactory.build({
+      id: 'unknown',
       ...newPremises,
       localAuthorityArea: localAuthorityFactory.build({
         name: 'North Lanarkshire',

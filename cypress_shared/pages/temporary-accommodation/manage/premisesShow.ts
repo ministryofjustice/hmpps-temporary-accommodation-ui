@@ -67,6 +67,13 @@ export default class PremisesShowPage extends Page {
       })
   }
 
+  clickAddBedspaceLink(): void {
+    cy.get('.moj-identity-bar').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Add a bedspace').click()
+    })
+  }
+
   clickPremisesEditLink(): void {
     cy.get(`[data-cy-premises]`).within(() => {
       cy.get('a').contains('Edit').click()

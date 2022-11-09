@@ -12,6 +12,22 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
     return new BedspaceEditPage(room)
   }
 
+  shouldShowBedspaceDetails(): void {
+    cy.get('legend')
+      .contains('Does the bedspace have any of the following attributes?')
+      .parent()
+      .within(() => {
+        this.room.characteristics.forEach(characteristic => {
+          cy.get('label').contains(characteristic.name).siblings('input').should('be.checked')
+        })
+      })
+
+    cy.get('label')
+      .contains('Please provide any further bedspace details')
+      .siblings('textarea')
+      .should('contain', this.room.notes)
+  }
+
   completeForm(updateRoom: UpdateRoom): void {
     this.clearForm()
 

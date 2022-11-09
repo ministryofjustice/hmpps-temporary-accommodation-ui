@@ -36,6 +36,8 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: 'true'
     APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/'
     COMMUNITY_ACCOMMODATION_API_SERVICE_NAME: 'temporary-accommodation'
+    SERVICE_SIGNIFIER: 'temporary-accommodation-only'
+    TEMPORARY_ACCOMMODATION_SUBDOMAIN: 'temporary-accommodation'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:

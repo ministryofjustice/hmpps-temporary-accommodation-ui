@@ -3,7 +3,8 @@
 /* eslint-disable */
 
 export type StaffMember = {
-    id: number;
+    code: string;
+    keyWorker: boolean;
     name: string;
 };
 

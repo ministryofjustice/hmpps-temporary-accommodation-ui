@@ -3,7 +3,8 @@
 /* eslint-disable */
 
 export type PrisonCaseNote = {
-    id: number;
+    id: string;
+    sensitive: boolean;
     createdAt: string;
     occurredAt: string;
     authorName: string;

@@ -44,6 +44,7 @@ export type { NewRoom } from './models/NewRoom';
 export type { Nonarrival } from './models/Nonarrival';
 export type { NonArrivalReason } from './models/NonArrivalReason';
 export type { Person } from './models/Person';
+export type { PersonAcctAlert } from './models/PersonAcctAlert';
 export type { PersonNeed } from './models/PersonNeed';
 export type { PersonNeeds } from './models/PersonNeeds';
 export type { PersonRisks } from './models/PersonRisks';

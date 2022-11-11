@@ -6,6 +6,6 @@ export type NewArrival = {
     arrivalDate: string;
     expectedDepartureDate: string;
     notes?: string;
-    keyWorkerStaffId: number;
+    keyWorkerStaffCode: string;
 };
 

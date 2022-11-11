@@ -334,8 +334,6 @@ describe('PremisesService', () => {
         },
       })
 
-      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
-
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })

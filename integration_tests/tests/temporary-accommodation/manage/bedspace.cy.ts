@@ -2,11 +2,11 @@ import premisesFactory from '../../../../server/testutils/factories/premises'
 import newRoomFactory from '../../../../server/testutils/factories/newRoom'
 import roomFactory from '../../../../server/testutils/factories/room'
 import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
-import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import Page from '../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -87,6 +87,7 @@ context('Bedspace', () => {
       notes: room.notes,
     })
     cy.task('stubRoomCreate', { premisesId: premises.id, room })
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     page.completeForm(newRoom)
 
@@ -100,9 +101,9 @@ context('Bedspace', () => {
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newRoom.notes)
     })
 
-    // And I should be redirected to the show premises page
-    const premisesNewPage = PremisesNewPage.verifyOnPage(PremisesShowPage, premises)
-    premisesNewPage.shouldShowBanner('Bedspace created')
+    // And I should be redirected to the show bedspace page
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, room)
+    bedspaceShowPage.shouldShowBanner('Bedspace created')
   })
 
   it('shows errors when the API returns an error', () => {
@@ -180,9 +181,9 @@ context('Bedspace', () => {
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
     })
 
-    // And I should be redirected to the show premises page
-    const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premisesId, room)
-    premisesShowPage.shouldShowBanner('Bedspace updated')
+    // And I should be redirected to the show bedspace page
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, room)
+    bedspaceShowPage.shouldShowBanner('Bedspace updated')
   })
 
   it('should navigate back from the edit room page to the premises show page', () => {

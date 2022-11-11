@@ -7,6 +7,8 @@ import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommod
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import Page from '../../../../cypress_shared/pages/page'
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {
@@ -97,19 +99,19 @@ Given('I edit the bedspace details', () => {
 })
 
 Then('I should see a confirmation for my new bedspace', () => {
-  cy.then(function _() {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, this.premises)
+  cy.get('@room').then(room => {
+    const page = Page.verifyOnPage(BedspaceShowPage, room)
     page.shouldShowBanner('Bedspace created')
 
-    page.shouldShowRoomDetails(this.room)
+    page.shouldShowBedspaceDetails()
   })
 })
 
 Then('I should see a confirmation for my updated bedspace', () => {
-  cy.then(function _() {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, this.premises)
+  cy.get('@room').then(room => {
+    const page = Page.verifyOnPage(BedspaceShowPage, room)
     page.shouldShowBanner('Bedspace updated')
 
-    page.shouldShowRoomDetails(this.room)
+    page.shouldShowBedspaceDetails()
   })
 })

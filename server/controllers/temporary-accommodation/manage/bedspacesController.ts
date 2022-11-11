@@ -37,10 +37,10 @@ export default class BedspacesController {
       }
 
       try {
-        await this.bedspaceService.createRoom(req.user.token, premisesId, newRoom)
+        const room = await this.bedspaceService.createRoom(req.user.token, premisesId, newRoom)
 
         req.flash('success', 'Bedspace created')
-        res.redirect(paths.premises.show({ premisesId }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.new({ premisesId }))
       }
@@ -84,7 +84,7 @@ export default class BedspacesController {
         await this.bedspaceService.updateRoom(token, premisesId, roomId, updateRoom)
 
         req.flash('success', 'Bedspace updated')
-        res.redirect(paths.premises.show({ premisesId }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, roomId }))
       }

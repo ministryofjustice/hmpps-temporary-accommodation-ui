@@ -58,7 +58,7 @@ describe('BedspacesController', () => {
   })
 
   describe('create', () => {
-    it('creates a premises and redirects to the show premises page', async () => {
+    it('creates a bedspace and redirects to the show bedspace page', async () => {
       const requestHandler = bedspacesController.create()
 
       const room = roomFactory.build()
@@ -82,7 +82,7 @@ describe('BedspacesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace created')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -179,7 +179,7 @@ describe('BedspacesController', () => {
   })
 
   describe('update', () => {
-    it('updates a bedspace and redirects to the show premises page', async () => {
+    it('updates a bedspace and redirects to the show bedspace page', async () => {
       const requestHandler = bedspacesController.update()
 
       const room = roomFactory.build()
@@ -201,7 +201,7 @@ describe('BedspacesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
     })
 
     it('renders with errors if the API returns an error', async () => {

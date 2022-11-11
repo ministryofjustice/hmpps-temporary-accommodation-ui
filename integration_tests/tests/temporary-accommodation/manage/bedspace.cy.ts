@@ -59,11 +59,42 @@ context('Bedspace', () => {
     // When I visit the show premises page
     const premisesShowPage = PremisesShowPage.visit(premises)
 
-    // Add I click an edit bedspace link
-    premisesShowPage.clickBedpaceEditLink(rooms[0])
+    // Add I click a view bedspace link
+    premisesShowPage.clickBedpaceViewLink(rooms[0])
+
+    // And I click the edit bedspace link
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, rooms[0])
+    bedspaceShowPage.clickBedspaceEditLink()
 
     // Then I navigate to the edit bedspace page
     Page.verifyOnPage(BedspaceEditPage, rooms[0])
+  })
+
+  it('should navigate to the show bedspace page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are local authorities in the database
+    cy.task('stubLocalAuthoritiesReferenceData')
+
+    // And there are characteristics in the database
+    cy.task('stubCharacteristicsReferenceData')
+
+    // And there is a premises with rooms in the database
+    const premises = premisesFactory.build()
+    const rooms = roomFactory.buildList(5)
+
+    cy.task('stubPremisesWithRooms', { premises, rooms })
+    cy.task('stubSingleRoom', { premisesId: premises.id, room: rooms[0] })
+
+    // When I visit the show premises page
+    const premisesShowPage = PremisesShowPage.visit(premises)
+
+    // Add I click a view bedspace link
+    premisesShowPage.clickBedpaceViewLink(rooms[0])
+
+    // Then I navigate to the show bedspace page
+    Page.verifyOnPage(BedspaceShowPage, rooms[0])
   })
 
   it('allows me to create a bedspace', () => {
@@ -125,7 +156,7 @@ context('Bedspace', () => {
     page.shouldShowErrorMessagesForFields(['name'])
   })
 
-  it('should navigate back from the new bedspace page to the show premises page', () => {
+  it('navigates back from the new bedspace page to the show premises page', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -186,7 +217,7 @@ context('Bedspace', () => {
     bedspaceShowPage.shouldShowBanner('Bedspace updated')
   })
 
-  it('should navigate back from the edit room page to the premises show page', () => {
+  it('navigates back from the edit bedspace page to the show bedspace page', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -208,8 +239,8 @@ context('Bedspace', () => {
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
-    // Then I navigate to the premises show page
-    Page.verifyOnPage(PremisesShowPage, premises)
+    // Then I navigate to the show bedspace page
+    Page.verifyOnPage(BedspaceShowPage, premises)
   })
 
   it('shows a single bedspace', () => {

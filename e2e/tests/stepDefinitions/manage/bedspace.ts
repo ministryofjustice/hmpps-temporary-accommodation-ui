@@ -57,14 +57,20 @@ Given("I'm editing the bedspace", () => {
   cy.then(function _() {
     premisesListPage.clickPremisesViewLink(this.premises)
 
-    const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, this.premises)
-    premisesShowPage.clickBedpaceEditLink(this.room)
+    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, this.premises)
+    premisesShowPage.clickBedpaceViewLink(this.room)
+
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
+    bedspaceShowPage.clickBedspaceEditLink()
+
+    const bedspaceEditPage = Page.verifyOnPage(BedspaceEditPage, this.room)
+    bedspaceEditPage.shouldShowBedspaceDetails()
   })
 })
 
 Given('I edit the bedspace details', () => {
   cy.get('@room').then(room => {
-    const page = BedspaceEditPage.verifyOnPage(BedspaceEditPage, room)
+    const page = Page.verifyOnPage(BedspaceEditPage, room)
 
     page.getCharacteristicIdByLabel('Park nearby', 'parkNearbyCharacteristicId')
     page.getCharacteristicIdByLabel('Floor level access', 'floorLevelAccessCharacteristicId')

@@ -1,10 +1,16 @@
 import type { Room } from '@approved-premises/api'
 
 import Page from '../../page'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 
 export default class BedspaceShowPage extends Page {
   constructor(private readonly room: Room) {
     super('View a bedspace')
+  }
+
+  static visit(premisesId: string, room: Room): BedspaceShowPage {
+    cy.visit(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
+    return new BedspaceShowPage(room)
   }
 
   shouldShowBedspaceDetails(): void {

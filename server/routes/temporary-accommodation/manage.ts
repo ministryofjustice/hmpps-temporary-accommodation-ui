@@ -23,6 +23,7 @@ export default function routes(controllers: Controllers, router: Router): Router
   post(paths.premises.bedspaces.create.pattern, bedspacesController.create())
   get(paths.premises.bedspaces.edit.pattern, bedspacesController.edit())
   put(paths.premises.bedspaces.update.pattern, bedspacesController.update())
+  get(paths.premises.bedspaces.show.pattern, bedspacesController.show())
 
   return router
 }

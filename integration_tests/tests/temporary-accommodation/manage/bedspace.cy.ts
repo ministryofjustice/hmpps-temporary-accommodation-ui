@@ -210,4 +210,43 @@ context('Bedspace', () => {
     // Then I navigate to the premises show page
     Page.verifyOnPage(PremisesShowPage, premises)
   })
+
+  it('shows a single bedspace', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises and a room in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+    // When I visit the show bedspace page
+    const page = BedspaceShowPage.visit(premises.id, room)
+
+    // Then I should see the bedspace details
+    page.shouldShowBedspaceDetails()
+  })
+
+  it('navigates back from the show bedspace page to the show premises page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises with rooms in the database
+    const premises = premisesFactory.build()
+    const rooms = roomFactory.buildList(5)
+
+    cy.task('stubPremisesWithRooms', { premises, rooms })
+    cy.task('stubSingleRoom', { premisesId: premises.id, room: rooms[0] })
+
+    // When I visit the show bedspace page
+    const page = BedspaceShowPage.visit(premises.id, rooms[0])
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the show premises page
+    Page.verifyOnPage(PremisesShowPage, premises)
+  })
 })

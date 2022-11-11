@@ -40,7 +40,7 @@ export default class ArrivalsController {
       const { expectedDepartureDate } = DateFormats.convertDateAndTimeInputsToIsoString(body, 'expectedDepartureDate')
 
       const arrival: NewArrival = {
-        keyWorkerStaffId: body.arrival.keyWorkerStaffId,
+        keyWorkerStaffCode: body.arrival.keyWorkerStaffId,
         notes: body.arrival.notes,
         arrivalDate,
         expectedDepartureDate,

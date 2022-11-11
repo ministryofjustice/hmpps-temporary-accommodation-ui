@@ -7,6 +7,8 @@ import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
 import roomFactory from '../../../testutils/factories/room'
 import characteristicFactory from '../../../testutils/factories/characteristic'
+import updateRoomFactory from '../../../testutils/factories/updateRoom'
+import { ErrorsAndUserInput } from '../../../@types/ui'
 
 jest.mock('../../../utils/validation')
 
@@ -14,12 +16,17 @@ describe('BedspacesController', () => {
   const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
 
-  const request: DeepMocked<Request> = createMock<Request>({ user: { token } })
+  let request: DeepMocked<Request>
+
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const bedspaceService = createMock<BedspaceService>({})
   const bedspacesController = new BedspacesController(bedspaceService)
+
+  beforeEach(() => {
+    request = createMock<Request>({ user: { token } })
+  })
 
   describe('new', () => {
     it('renders the form', async () => {
@@ -101,6 +108,123 @@ describe('BedspacesController', () => {
         response,
         err,
         paths.premises.bedspaces.new({ premisesId }),
+      )
+    })
+  })
+
+  describe('edit', () => {
+    it('renders the form', async () => {
+      const allCharacteristics = characteristicFactory.buildList(5)
+      bedspaceService.getRoomCharacteristics.mockResolvedValue(allCharacteristics)
+
+      const room = roomFactory.build()
+      const updateRoom = updateRoomFactory.build({
+        ...room,
+      })
+      bedspaceService.getUpdateRoom.mockResolvedValue(updateRoom)
+
+      const requestHandler = bedspacesController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params = { premisesId, roomId: room.id }
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getRoomCharacteristics).toHaveBeenCalledWith(token)
+      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(token, premisesId, room.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
+        allCharacteristics,
+        characteristicIds: [],
+        premisesId,
+        errors: {},
+        errorSummary: [],
+        ...updateRoom,
+      })
+    })
+
+    it('renders the form with errors and user input if an error has been sent to the flash', async () => {
+      const allCharacteristics = characteristicFactory.buildList(5)
+      bedspaceService.getRoomCharacteristics.mockResolvedValue(allCharacteristics)
+
+      const room = roomFactory.build()
+      const updateRoom = updateRoomFactory.build({
+        ...room,
+      })
+      bedspaceService.getUpdateRoom.mockResolvedValue(updateRoom)
+
+      const requestHandler = bedspacesController.edit()
+
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      request.params = { premisesId, roomId: room.id }
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getRoomCharacteristics).toHaveBeenCalledWith(token)
+      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(token, premisesId, room.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
+        allCharacteristics,
+        characteristicIds: [],
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        premisesId,
+        ...errorsAndUserInput.userInput,
+        ...updateRoom,
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('updates a bedspace and redirects to the show premises page', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+        notes: room.notes,
+      }
+
+      bedspaceService.updateRoom.mockResolvedValue(room)
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(token, premisesId, room.id, {
+        name: room.name,
+        notes: room.notes,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      const err = new Error()
+
+      bedspaceService.updateRoom.mockImplementation(() => {
+        throw err
+      })
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+        notes: room.notes,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
       )
     })
   })

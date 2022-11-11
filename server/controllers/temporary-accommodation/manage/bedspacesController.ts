@@ -1,6 +1,6 @@
 import type { Request, Response, RequestHandler } from 'express'
 
-import type { NewRoom } from '@approved-premises/api'
+import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
@@ -42,6 +42,50 @@ export default class BedspacesController {
         res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.new({ premisesId }))
+      }
+    }
+  }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const { premisesId, roomId } = req.params
+      const { token } = req.user
+
+      const allCharacteristics = await this.bedspaceService.getRoomCharacteristics(token)
+
+      const updateRoom = await this.bedspaceService.getUpdateRoom(token, premisesId, roomId)
+
+      return res.render('temporary-accommodation/bedspaces/edit', {
+        allCharacteristics,
+        characteristicIds: [],
+        premisesId,
+        errors,
+        errorSummary,
+        ...updateRoom,
+        ...userInput,
+      })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId } = req.params
+      const { token } = req.user
+
+      const updateRoom: UpdateRoom = {
+        characteristicIds: [],
+        ...req.body,
+      }
+
+      try {
+        await this.bedspaceService.updateRoom(token, premisesId, roomId, updateRoom)
+
+        req.flash('success', 'Bedspace updated')
+        res.redirect(paths.premises.show({ premisesId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, roomId }))
       }
     }
   }

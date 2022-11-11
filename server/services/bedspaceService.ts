@@ -1,4 +1,4 @@
-import type { Characteristic, Room, NewRoom } from '@approved-premises/api'
+import type { Characteristic, Room, NewRoom, UpdateRoom } from '@approved-premises/api'
 import { SummaryList } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import RoomClient from '../data/roomClient'
@@ -23,9 +23,26 @@ export default class BedspaceService {
       }))
   }
 
+  async getUpdateRoom(token: string, premisesId: string, roomId: string): Promise<UpdateRoom> {
+    const roomClient = this.roomClientFactory(token)
+    const room = await roomClient.find(premisesId, roomId)
+
+    return {
+      ...room,
+      characteristicIds: room.characteristics.map(characteristic => characteristic.id),
+    }
+  }
+
   async createRoom(token: string, premisesId: string, newRoom: NewRoom): Promise<Room> {
     const roomClient = this.roomClientFactory(token)
     const room = await roomClient.create(premisesId, newRoom)
+
+    return room
+  }
+
+  async updateRoom(token: string, premisesId: string, roomId: string, updateRoom: UpdateRoom): Promise<Room> {
+    const roomClient = this.roomClientFactory(token)
+    const room = await roomClient.update(premisesId, roomId, updateRoom)
 
     return room
   }

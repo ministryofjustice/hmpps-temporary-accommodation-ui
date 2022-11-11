@@ -1,3 +1,4 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
@@ -8,37 +9,25 @@
 
 {% block content %}
 
-  {{ breadCrumb('Add a bedspace', [
+  {{ breadCrumb('Edit a bedspace', [
     {title: 'List of properties', href: paths.premises.index()},
     {title: 'Manage a property', href: paths.premises.show({ premisesId: premisesId })}
   ]) }}
 
   {% include "../../_messages.njk" %}
   
-  <h1>Add a bedspace</h1>
+  <h1>Edit a bedspace</h1>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.premises.bedspaces.create({ premisesId: premisesId })}}" method="post">
+      <form action="{{ paths.premises.bedspaces.update({ premisesId: premisesId, roomId: id }) }}?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}
 
-        {{ govukInput({
-          label: {
-            text: "Enter a reference name",
-            classes: "govuk-label--m"
-          },
-          hint: {
-            text: "This will be used to identify the room when making books and reporting on the service"
-          },
-          classes: "govuk-input--width-20",
-          id: "name",
-          name: "name",
-          value: name,
-          errorMessage: errors.name
-        }) }}
-
+        <h2 class="govuk-label govuk-label--m">Property reference</h2>
+        <p class="govuk-body">{{ name }}</p>
+      
         {% include "./_editable.njk" %}  
       </form>
     </div>

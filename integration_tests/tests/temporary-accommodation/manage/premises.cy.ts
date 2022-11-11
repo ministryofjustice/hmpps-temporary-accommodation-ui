@@ -224,8 +224,8 @@ context('Premises', () => {
     })
 
     // And I should be redirected to the show premises page
-    const premisesNewPage = PremisesNewPage.verifyOnPage(PremisesShowPage, premises)
-    premisesNewPage.shouldShowBanner('Property updated')
+    const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    premisesShowPage.shouldShowBanner('Property updated')
   })
 
   it('should show errors when the update API returns an error', () => {
@@ -274,7 +274,7 @@ context('Premises', () => {
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
-    // Then I navigate to the premises list page
+    // Then I navigate to the premises show page
     Page.verifyOnPage(PremisesShowPage, premises)
   })
 

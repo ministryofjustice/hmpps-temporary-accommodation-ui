@@ -1,8 +1,8 @@
 import type { NewRoom } from '@approved-premises/api'
-import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import BedspaceEditablePage from './bedspaceEditable'
 
-export default class BedspaceNewPage extends Page {
+export default class BedspaceNewPage extends BedspaceEditablePage {
   constructor() {
     super('Add a bedspace')
   }
@@ -16,13 +16,6 @@ export default class BedspaceNewPage extends Page {
     this.getLabel('Enter a reference name')
     this.getTextInputByIdAndEnterDetails('name', newRoom.name)
 
-    newRoom.characteristicIds.forEach(characteristicId => {
-      this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)
-    })
-
-    this.getLabel('Please provide any further bedspace details')
-    this.getTextInputByIdAndEnterDetails('notes', newRoom.notes)
-
-    this.clickSubmit()
+    super.completeEditableForm(newRoom)
   }
 }

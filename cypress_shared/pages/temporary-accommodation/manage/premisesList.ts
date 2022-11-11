@@ -2,6 +2,7 @@ import type { Premises } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import premisesFactory from '../../../../server/testutils/factories/premises'
 
 export default class PremisesListPage extends Page {
   constructor() {
@@ -11,6 +12,24 @@ export default class PremisesListPage extends Page {
   static visit(): PremisesListPage {
     cy.visit(paths.premises.index({}))
     return new PremisesListPage()
+  }
+
+  getAnyPremises(alias: string): void {
+    cy.get('table')
+      .children('tbody')
+      .children('tr')
+      .eq(0)
+      .get('td')
+      .eq(0)
+      .then(element => {
+        const [addressLine1, postcode] = element.text().split(', ')
+        const premises = premisesFactory.build({
+          id: 'unknown',
+          addressLine1,
+          postcode,
+        })
+        cy.wrap(premises).as(alias)
+      })
   }
 
   shouldShowPremises(premises: Array<Premises>): void {

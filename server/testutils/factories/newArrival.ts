@@ -8,5 +8,5 @@ export default Factory.define<NewArrival>(() => ({
   arrivalDate: DateFormats.formatApiDate(faker.date.soon()),
   expectedDepartureDate: DateFormats.formatApiDate(faker.date.future()),
   notes: faker.lorem.sentence(),
-  keyWorkerStaffId: faker.datatype.number(),
+  keyWorkerStaffCode: faker.datatype.uuid(),
 }))

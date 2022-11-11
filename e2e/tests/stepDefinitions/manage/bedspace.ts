@@ -12,13 +12,13 @@ import Page from '../../../../cypress_shared/pages/page'
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const page = Page.verifyOnPage(PremisesShowPage, premises)
     page.clickAddBedspaceLink()
   })
 })
 
 Given('I create a bedspace with all necessary details', () => {
-  const page = BedspaceNewPage.verifyOnPage(BedspaceNewPage)
+  const page = Page.verifyOnPage(BedspaceNewPage)
 
   page.getCharacteristicIdByLabel('Not suitable for arson offenders', 'arsonCharacteristicId')
   page.getCharacteristicIdByLabel('School nearby', 'schooNearbyCharacteristicId')

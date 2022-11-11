@@ -30,7 +30,7 @@ describe('BedspaceService', () => {
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
-  describe('getRoomDetails', () => {
+  describe('getBedspaceDetails', () => {
     it('returns a list of rooms and a summary list for each room, for the given premises ID', async () => {
       const room1 = roomFactory.build({
         name: 'XYX',
@@ -53,7 +53,7 @@ describe('BedspaceService', () => {
         text: 'Some attributes',
       }))
 
-      const result = await service.getRoomDetails(token, premisesId)
+      const result = await service.getBedspaceDetails(token, premisesId)
 
       expect(result).toEqual([
         {
@@ -105,6 +105,56 @@ describe('BedspaceService', () => {
       expect(formatCharacteristics).toHaveBeenCalledWith([
         expect.objectContaining({
           name: 'Characteristic 3',
+        }),
+      ])
+    })
+  })
+
+  describe('getSingleBedspaceDetails', () => {
+    it('returns a room and a summary list, for the given premises ID and room ID', async () => {
+      const room = roomFactory.build({
+        characteristics: [
+          characteristicFactory.build({ name: 'Characteristic 1' }),
+          characteristicFactory.build({ name: 'Characteristic 2' }),
+        ],
+        notes: 'Some notes',
+      })
+
+      roomClient.find.mockResolvedValue(room)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+      ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
+        text: 'Some attributes',
+      }))
+
+      const result = await service.getSingleBedspaceDetails(token, premisesId, room.id)
+
+      expect(result).toEqual({
+        room,
+        summaryList: {
+          rows: [
+            {
+              key: { text: 'Attributes' },
+              value: { text: 'Some attributes' },
+            },
+            {
+              key: { text: 'Notes' },
+              value: { html: room.notes },
+            },
+          ],
+        },
+      })
+
+      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
+
+      expect(formatLines).toHaveBeenCalledWith('Some notes')
+
+      expect(formatCharacteristics).toHaveBeenCalledWith([
+        expect.objectContaining({
+          name: 'Characteristic 1',
+        }),
+        expect.objectContaining({
+          name: 'Characteristic 2',
         }),
       ])
     })

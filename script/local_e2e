@@ -11,7 +11,7 @@ if ! [ "$(command -v ap-tools)" ];then
     exit
 fi
 
-ap-tools server start --local-ui
+ap-tools server start --local-ui --local-api
 
 set -a
 

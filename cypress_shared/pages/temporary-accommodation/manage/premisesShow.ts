@@ -5,7 +5,7 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
-    super('Manage a property')
+    super('View a property')
   }
 
   static visit(premises: Premises): PremisesShowPage {
@@ -80,12 +80,12 @@ export default class PremisesShowPage extends Page {
     })
   }
 
-  clickBedpaceEditLink(room: Room): void {
+  clickBedpaceViewLink(room: Room): void {
     cy.get('h4')
       .contains(room.name)
       .parents('[data-cy-bedspace]')
       .within(() => {
-        cy.get('a').contains('Edit').click()
+        cy.get('a').contains('View').click()
       })
   }
 }

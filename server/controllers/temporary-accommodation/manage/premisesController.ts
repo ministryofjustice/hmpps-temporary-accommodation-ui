@@ -111,7 +111,7 @@ export default class PremisesController {
 
       const details = await this.premisesService.getTemporaryAccommodationPremisesDetails(token, premisesId)
 
-      const bedspaceDetails = await this.bedspaceService.getRoomDetails(token, premisesId)
+      const bedspaceDetails = await this.bedspaceService.getBedspaceDetails(token, premisesId)
 
       return res.render('temporary-accommodation/premises/show', {
         ...details,

@@ -1,4 +1,3 @@
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
@@ -11,7 +10,7 @@
 
   {{ breadCrumb('Edit a property', [
     {title: 'List of properties', href: paths.premises.index()},
-    {title: 'Manage a property', href: paths.premises.show({ premisesId: id })}
+    {title: 'View a property', href: paths.premises.show({ premisesId: id })}
   ]) }}
 
   {% include "../../_messages.njk" %}

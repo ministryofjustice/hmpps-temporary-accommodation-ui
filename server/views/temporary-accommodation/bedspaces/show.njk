@@ -1,0 +1,68 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - View a bedspace" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set bodyClasses = "temporary-accommodation-bedspaces-show" %}
+
+{% block content %}
+
+  {{ breadCrumb('View a bedspace', [
+    {title: 'List of properties', href: paths.premises.index()},
+    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })}
+  ]) }}
+
+  {% include "../../_messages.njk" %}
+
+  {{ mojIdentityBar({
+    title: {
+      html: '<h1>View a bedspace</h1>'
+    },
+    menus: [{
+      items: [{
+        text: "Book bedspace",
+        classes: 'govuk-button--secondary',
+        href: '#'
+      }, {
+        text: 'Void bedspace',
+        classes: 'govuk-button--secondary',
+        href: '#'
+      }]
+    }]
+  }) }}
+
+  <div class="property-identity">
+    <h2 class="govuk-label govuk-label--m">Property reference</h2>
+    <p class="govuk-body">{{ premises.name }}</p>
+
+    <h2 class="govuk-label govuk-label--m">Property address</h2>
+    <p class="govuk-body">{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+  </div>
+
+  <div class="edit-bar">
+    <div class="edit-bar__container">
+      <div class="edit-bar__title">
+        <h2 class="govuk-label govuk-label--m">{{ bedspace.room.name }}</h2>
+      </div>
+      <div class="edit-bar__action">
+        <a href="{{ paths.premises.bedspaces.edit({ premisesId: premises.id, roomId: bedspace.room.id }) }}">Edit</a>
+      </div>
+    </div>
+  </div>
+
+  {{ govukSummaryList({
+    rows: bedspace.summaryList.rows,
+    classes: 'govuk-summary-list--no-border details'
+  }) }}
+
+{% endblock %}
+
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+  </script>
+{% endblock %}

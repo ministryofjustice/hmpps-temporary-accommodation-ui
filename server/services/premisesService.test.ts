@@ -297,6 +297,20 @@ describe('PremisesService', () => {
     })
   })
 
+  describe('getPremises', () => {
+    it('returns the premises for the given premises ID', async () => {
+      const premises = premisesFactory.build()
+      premisesClient.find.mockResolvedValue(premises)
+
+      const result = await service.getPremises(token, premises.id)
+
+      expect(result).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
+    })
+  })
+
   describe('getApprovedPremisesPremisesDetails', () => {
     it('returns a title and a summary list for a given Premises ID', async () => {
       const premises = approvedPremisesFactory.build({
@@ -333,8 +347,6 @@ describe('PremisesService', () => {
           ],
         },
       })
-
-      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)

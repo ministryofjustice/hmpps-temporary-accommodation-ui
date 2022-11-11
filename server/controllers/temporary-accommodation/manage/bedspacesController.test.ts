@@ -5,10 +5,12 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
+import premisesFactory from '../../../testutils/factories/premises'
 import roomFactory from '../../../testutils/factories/room'
 import characteristicFactory from '../../../testutils/factories/characteristic'
 import updateRoomFactory from '../../../testutils/factories/updateRoom'
-import { ErrorsAndUserInput } from '../../../@types/ui'
+import { ErrorsAndUserInput, SummaryListItem } from '../../../@types/ui'
+import { PremisesService } from '../../../services'
 
 jest.mock('../../../utils/validation')
 
@@ -21,8 +23,9 @@ describe('BedspacesController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
+  const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
-  const bedspacesController = new BedspacesController(bedspaceService)
+  const bedspacesController = new BedspacesController(premisesService, bedspaceService)
 
   beforeEach(() => {
     request = createMock<Request>({ user: { token } })
@@ -55,7 +58,7 @@ describe('BedspacesController', () => {
   })
 
   describe('create', () => {
-    it('creates a premises and redirects to the show premises page', async () => {
+    it('creates a bedspace and redirects to the show bedspace page', async () => {
       const requestHandler = bedspacesController.create()
 
       const room = roomFactory.build()
@@ -79,7 +82,7 @@ describe('BedspacesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace created')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -176,7 +179,7 @@ describe('BedspacesController', () => {
   })
 
   describe('update', () => {
-    it('updates a bedspace and redirects to the show premises page', async () => {
+    it('updates a bedspace and redirects to the show bedspace page', async () => {
       const requestHandler = bedspacesController.update()
 
       const room = roomFactory.build()
@@ -198,7 +201,7 @@ describe('BedspacesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -226,6 +229,31 @@ describe('BedspacesController', () => {
         err,
         paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
       )
+    })
+  })
+
+  describe('show', () => {
+    it('returns the bedspace details to the template', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+
+      premisesService.getPremises.mockResolvedValue(premises)
+
+      const bedspaceDetails = { room, summaryList: { rows: [] as Array<SummaryListItem> } }
+      bedspaceService.getSingleBedspaceDetails.mockResolvedValue(bedspaceDetails)
+
+      request.params = { premisesId: premises.id, roomId: room.id }
+
+      const requestHandler = bedspacesController.show()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/show', {
+        premises,
+        bedspace: bedspaceDetails,
+      })
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
+      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(token, premises.id, room.id)
     })
   })
 })

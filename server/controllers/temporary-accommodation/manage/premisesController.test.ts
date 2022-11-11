@@ -280,7 +280,7 @@ describe('PremisesController', () => {
       premisesService.getTemporaryAccommodationPremisesDetails.mockResolvedValue(details)
 
       const bedspaceDetails = rooms.map(room => ({ room, summaryList: { rows: [] as Array<SummaryListItem> } }))
-      bedspaceService.getRoomDetails.mockResolvedValue(bedspaceDetails)
+      bedspaceService.getBedspaceDetails.mockResolvedValue(bedspaceDetails)
 
       request.params.premisesId = premises.id
 
@@ -293,7 +293,7 @@ describe('PremisesController', () => {
       })
 
       expect(premisesService.getTemporaryAccommodationPremisesDetails).toHaveBeenCalledWith(token, premises.id)
-      expect(bedspaceService.getRoomDetails).toHaveBeenCalledWith(token, premises.id)
+      expect(bedspaceService.getBedspaceDetails).toHaveBeenCalledWith(token, premises.id)
     })
   })
 })

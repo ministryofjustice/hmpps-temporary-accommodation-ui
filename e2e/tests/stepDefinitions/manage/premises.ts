@@ -8,6 +8,7 @@ import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommod
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
+import Page from '../../../../cypress_shared/pages/page'
 
 Given("I'm creating a premises", () => {
   const page = PremisesListPage.visit()
@@ -24,7 +25,7 @@ Given("I'm viewing an existing premises", () => {
 })
 
 Given('I create a premises with all necessary details', () => {
-  const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
+  const page = Page.verifyOnPage(PremisesNewPage)
 
   page.getLocalAuthorityAreaIdByLabel('North Lanarkshire', 'localAuthorityAreaId')
 
@@ -66,7 +67,7 @@ Given('I create a premises with all necessary details', () => {
 })
 
 Given('I attempt to create a premises with required details missing', () => {
-  const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
+  const page = Page.verifyOnPage(PremisesNewPage)
   page.clickSubmit()
 })
 
@@ -75,14 +76,17 @@ Given("I'm editing the premises", () => {
 
   cy.get('@premises').then(premises => {
     listPage.clickPremisesViewLink(premises)
-    const showPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const showPage = Page.verifyOnPage(PremisesShowPage, premises)
     showPage.clickPremisesEditLink()
+
+    const editPage = Page.verifyOnPage(PremisesEditPage, premises)
+    editPage.shouldShowPremisesDetails()
   })
 })
 
 Given('I edit the premises details', () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesEditPage.verifyOnPage(PremisesEditPage, premises)
+    const page = Page.verifyOnPage(PremisesEditPage, premises)
 
     page.getLocalAuthorityAreaIdByLabel('North Lanarkshire', 'localAuthorityAreaId')
 
@@ -126,7 +130,7 @@ Given('I edit the premises details', () => {
 
 Given('I attempt to edit the premise to remove required details', () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesEditPage.verifyOnPage(PremisesEditPage, premises)
+    const page = Page.verifyOnPage(PremisesEditPage, premises)
 
     page.clearForm()
     page.clickSubmit()
@@ -135,7 +139,7 @@ Given('I attempt to edit the premise to remove required details', () => {
 
 Then('I should see a confirmation for my new premises', () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const page = Page.verifyOnPage(PremisesShowPage, premises)
     page.shouldShowBanner('Property created')
 
     page.shouldShowPremisesDetails()
@@ -143,13 +147,13 @@ Then('I should see a confirmation for my new premises', () => {
 })
 
 Then('I should see a list of the problems encountered creating the premises', () => {
-  const page = PremisesNewPage.verifyOnPage(PremisesNewPage)
+  const page = Page.verifyOnPage(PremisesNewPage)
   page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
 })
 
 Then('I should see a confirmation for my updated premises', () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const page = Page.verifyOnPage(PremisesShowPage, premises)
     page.shouldShowBanner('Property updated')
 
     page.shouldShowPremisesDetails()
@@ -158,7 +162,7 @@ Then('I should see a confirmation for my updated premises', () => {
 
 Then('I should see a list of the problems encountered updating the premises', () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesEditPage.verifyOnPage(PremisesEditPage, premises)
+    const page = Page.verifyOnPage(PremisesEditPage, premises)
     page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'localAuthorityAreaId'])
   })
 })

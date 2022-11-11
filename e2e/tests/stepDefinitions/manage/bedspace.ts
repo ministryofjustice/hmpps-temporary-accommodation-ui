@@ -7,16 +7,18 @@ import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommod
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import Page from '../../../../cypress_shared/pages/page'
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+    const page = Page.verifyOnPage(PremisesShowPage, premises)
     page.clickAddBedspaceLink()
   })
 })
 
 Given('I create a bedspace with all necessary details', () => {
-  const page = BedspaceNewPage.verifyOnPage(BedspaceNewPage)
+  const page = Page.verifyOnPage(BedspaceNewPage)
 
   page.getCharacteristicIdByLabel('Not suitable for arson offenders', 'arsonCharacteristicId')
   page.getCharacteristicIdByLabel('School nearby', 'schooNearbyCharacteristicId')
@@ -55,14 +57,20 @@ Given("I'm editing the bedspace", () => {
   cy.then(function _() {
     premisesListPage.clickPremisesViewLink(this.premises)
 
-    const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, this.premises)
-    premisesShowPage.clickBedpaceEditLink(this.room)
+    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, this.premises)
+    premisesShowPage.clickBedpaceViewLink(this.room)
+
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
+    bedspaceShowPage.clickBedspaceEditLink()
+
+    const bedspaceEditPage = Page.verifyOnPage(BedspaceEditPage, this.room)
+    bedspaceEditPage.shouldShowBedspaceDetails()
   })
 })
 
 Given('I edit the bedspace details', () => {
   cy.get('@room').then(room => {
-    const page = BedspaceEditPage.verifyOnPage(BedspaceEditPage, room)
+    const page = Page.verifyOnPage(BedspaceEditPage, room)
 
     page.getCharacteristicIdByLabel('Park nearby', 'parkNearbyCharacteristicId')
     page.getCharacteristicIdByLabel('Floor level access', 'floorLevelAccessCharacteristicId')
@@ -97,19 +105,19 @@ Given('I edit the bedspace details', () => {
 })
 
 Then('I should see a confirmation for my new bedspace', () => {
-  cy.then(function _() {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, this.premises)
+  cy.get('@room').then(room => {
+    const page = Page.verifyOnPage(BedspaceShowPage, room)
     page.shouldShowBanner('Bedspace created')
 
-    page.shouldShowRoomDetails(this.room)
+    page.shouldShowBedspaceDetails()
   })
 })
 
 Then('I should see a confirmation for my updated bedspace', () => {
-  cy.then(function _() {
-    const page = PremisesShowPage.verifyOnPage(PremisesShowPage, this.premises)
+  cy.get('@room').then(room => {
+    const page = Page.verifyOnPage(BedspaceShowPage, room)
     page.shouldShowBanner('Bedspace updated')
 
-    page.shouldShowRoomDetails(this.room)
+    page.shouldShowBedspaceDetails()
   })
 })

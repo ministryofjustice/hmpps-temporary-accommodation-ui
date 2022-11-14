@@ -14,6 +14,27 @@ context('Booking', () => {
     cy.task('stubAuthUser')
   })
 
+  it('navigates to the create booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises and a room the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+    // When I visit the show bedspace page
+    const bedspaceShow = BedspaceShowPage.visit(premises.id, room)
+
+    // Add I click the book bedspace link
+    bedspaceShow.clickBookBedspaceLink()
+
+    // Then I navigate to the new booking page
+    Page.verifyOnPage(BookingNewPage)
+  })
+
   it('allows me to create a booking', () => {
     // Given I am signed in
     cy.signIn()

@@ -26,7 +26,7 @@
       items: [{
         text: "Book bedspace",
         classes: 'govuk-button--secondary',
-        href: '#'
+        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.room.id })
       }, {
         text: 'Void bedspace',
         classes: 'govuk-button--secondary',

@@ -1,6 +1,13 @@
 import { isSameDay, isWithinInterval, addDays } from 'date-fns'
 
-import type { Booking, NewBooking, Extension, NewExtension } from '@approved-premises/api'
+import type {
+  Booking,
+  NewBooking,
+  Extension,
+  NewExtension,
+  Room,
+  NewTemporaryAccommodationBooking,
+} from '@approved-premises/api'
 import type { TableRow, GroupedListofBookings } from '@approved-premises/ui'
 
 import type { RestClientBuilder } from '../data'
@@ -17,6 +24,18 @@ export default class BookingService {
     const bookingClient = this.bookingClientFactory(token)
 
     const confirmedBooking = await bookingClient.create(premisesId, booking)
+
+    return confirmedBooking
+  }
+
+  async createForBedspace(token: string, premisesId: string, room: Room, booking: NewBooking): Promise<Booking> {
+    const bookingClient = this.bookingClientFactory(token)
+
+    const confirmedBooking = await bookingClient.create(premisesId, {
+      serviceName: 'temporary-accommodation',
+      bedId: room.beds[0].id,
+      ...booking,
+    } as NewTemporaryAccommodationBooking)
 
     return confirmedBooking
   }

@@ -7,6 +7,8 @@ import bookingFactory from '../testutils/factories/booking'
 
 import paths from '../paths/manage'
 import { DateFormats } from '../utils/dateUtils'
+import roomFactory from '../testutils/factories/room'
+import bedFactory from '../testutils/factories/bed'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -20,6 +22,7 @@ describe('BookingService', () => {
   const token = 'SOME_TOKEN'
 
   const premisesId = 'premiseId'
+  const bedId = 'bedId'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -36,7 +39,33 @@ describe('BookingService', () => {
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.create).toHaveBeenCalledWith('premisesId', newBooking)
+      expect(bookingClient.create).toHaveBeenCalledWith(premisesId, newBooking)
+    })
+  })
+
+  describe('createForBedspace', () => {
+    it('posts a new booking with a bed ID, and on success returns the created booking', async () => {
+      const booking = bookingFactory.build()
+      const newBooking = newBookingFactory.build()
+      bookingClient.create.mockResolvedValue(booking)
+
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            id: bedId,
+          }),
+        ],
+      })
+
+      const postedBooking = await service.createForBedspace(token, premisesId, room, newBooking)
+      expect(postedBooking).toEqual(booking)
+
+      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
+        serviceName: 'temporary-accommodation',
+        bedId,
+        ...newBooking,
+      })
     })
   })
 

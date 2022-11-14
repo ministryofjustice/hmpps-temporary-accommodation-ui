@@ -52,6 +52,7 @@ export type { Premises } from './models/Premises';
 export type { PrisonCaseNote } from './models/PrisonCaseNote';
 export type { ProbationRegion } from './models/ProbationRegion';
 export type { Problem } from './models/Problem';
+export type { PropertyStatus } from './models/PropertyStatus';
 export type { Reallocation } from './models/Reallocation';
 export type { RiskEnvelopeStatus } from './models/RiskEnvelopeStatus';
 export type { RiskTier } from './models/RiskTier';

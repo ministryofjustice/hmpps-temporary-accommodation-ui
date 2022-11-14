@@ -6,6 +6,7 @@ import type { ApArea } from './ApArea';
 import type { Characteristic } from './Characteristic';
 import type { LocalAuthorityArea } from './LocalAuthorityArea';
 import type { ProbationRegion } from './ProbationRegion';
+import type { PropertyStatus } from './PropertyStatus';
 
 export type Premises = {
     id: string;
@@ -20,5 +21,6 @@ export type Premises = {
     apArea: ApArea;
     localAuthorityArea: LocalAuthorityArea;
     characteristics?: Array<Characteristic>;
+    status: PropertyStatus;
 };
 

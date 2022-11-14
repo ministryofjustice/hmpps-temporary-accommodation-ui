@@ -46,6 +46,7 @@ export default class PremisesController {
       const newPremises: NewPremises = {
         characteristicIds: [],
         ...req.body,
+        status: 'active',
       }
 
       try {
@@ -91,6 +92,7 @@ export default class PremisesController {
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
         ...req.body,
+        status: 'active',
       }
 
       try {

@@ -16,6 +16,7 @@ export default Factory.define<ApprovedPremises>(() => ({
   probationRegion: probationRegionFactory.build(),
   apArea: apAreaFactory.build(),
   localAuthorityArea: localAuthorityFactory.build(),
+  status: faker.helpers.arrayElement(['pending', 'active', 'archived']),
   notes: faker.lorem.lines(5),
 }))
 

@@ -99,7 +99,7 @@ describe('PremisesClient', () => {
       fakeApprovedPremisesApi
         .post(paths.premises.create({}))
         .matchHeader('authorization', `Bearer ${token}`)
-        .reply(200, premises)
+        .reply(201, premises)
 
       const output = await premisesClient.create(payload)
       expect(output).toEqual(premises)

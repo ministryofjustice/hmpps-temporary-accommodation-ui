@@ -2,6 +2,8 @@ import type { Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { Booking } from '../../../../server/@types/shared'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 export default class BedspaceShowPage extends Page {
   constructor(private readonly room: Room) {
@@ -29,6 +31,23 @@ export default class BedspaceShowPage extends Page {
         .siblings('.govuk-summary-list__value')
         .should('contain', noteLine)
     })
+  }
+
+  shouldShowBookingDetails(booking: Booking): void {
+    cy.get('tr')
+      .contains(booking.person.crn)
+      .parent()
+      .within(() => {
+        cy.get('td').eq(0).contains(booking.person.crn)
+        cy.get('td')
+          .eq(1)
+          .contains(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
+        cy.get('td')
+          .eq(2)
+          .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
+        cy.get('td').eq(3).contains('Provisional')
+        cy.get('td').eq(4).contains('View')
+      })
   }
 
   clickBedspaceEditLink(): void {

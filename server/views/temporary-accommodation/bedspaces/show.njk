@@ -1,4 +1,5 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -58,6 +59,30 @@
     rows: bedspace.summaryList.rows,
     classes: 'govuk-summary-list--no-border details'
   }) }}
+
+  <h2>Bookings</h2>
+
+  {{ govukTable({
+    captionClasses: "govuk-table__caption--m",
+    head: [
+      {
+        text: "CRN"
+      },
+      {
+        text: "Start date"
+      },
+      {
+        text: "End date"
+      },
+      {
+        text: "Status"
+      },
+      {
+        html: '<span class="govuk-visually-hidden">Actions</span>'
+      }
+    ],
+    rows: bookingTableRows
+  }) }} 
 
 {% endblock %}
 

@@ -128,7 +128,12 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.new({ premisesId, roomId }),
+      )
     })
 
     it('renders with errors if the API returns a 409 Conflict status', async () => {
@@ -165,7 +170,7 @@ describe('BookingsController', () => {
         request,
         response,
         err,
-        '',
+        paths.bookings.new({ premisesId, roomId }),
       )
     })
   })

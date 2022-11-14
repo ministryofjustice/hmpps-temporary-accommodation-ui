@@ -10,7 +10,7 @@ import actions from '../utils'
 export default function routes(controllers: Controllers, router: Router): Router {
   const { get, post, put } = actions(router)
 
-  const { premisesController, bedspacesController } = controllers.temporaryAccommodation
+  const { premisesController, bedspacesController, bookingsController } = controllers.temporaryAccommodation
 
   get(paths.premises.index.pattern, premisesController.index())
   get(paths.premises.new.pattern, premisesController.new())
@@ -24,6 +24,9 @@ export default function routes(controllers: Controllers, router: Router): Router
   get(paths.premises.bedspaces.edit.pattern, bedspacesController.edit())
   put(paths.premises.bedspaces.update.pattern, bedspacesController.update())
   get(paths.premises.bedspaces.show.pattern, bedspacesController.show())
+
+  get(paths.bookings.new.pattern, bookingsController.new())
+  post(paths.bookings.create.pattern, bookingsController.create())
 
   return router
 }

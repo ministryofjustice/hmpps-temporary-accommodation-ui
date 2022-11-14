@@ -6,6 +6,8 @@ const singlePremisesPath = premisesPath.path(':premisesId')
 const bedspacesPath = singlePremisesPath.path('bedspaces')
 const singleBedspacePath = singlePremisesPath.path('bedspaces').path(':roomId')
 
+const bookingsPath = singleBedspacePath.path('bookings')
+
 const paths = {
   premises: {
     index: premisesPath,
@@ -21,6 +23,10 @@ const paths = {
       update: singleBedspacePath,
       show: singleBedspacePath,
     },
+  },
+  bookings: {
+    new: bookingsPath.path('new'),
+    create: bookingsPath,
   },
 }
 

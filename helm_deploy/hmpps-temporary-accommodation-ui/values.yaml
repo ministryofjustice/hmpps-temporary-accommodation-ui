@@ -14,6 +14,8 @@ generic-service:
     hosts:
       - app-hostname.local # override per environment
     tlsSecretName: temporary-accommodation-ui-cert # override per environment
+    v1_2_enabled: true
+    v0_47_enabled: false
 
   livenessProbe:
     httpGet:

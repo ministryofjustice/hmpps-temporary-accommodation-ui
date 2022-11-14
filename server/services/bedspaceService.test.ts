@@ -30,6 +30,20 @@ describe('BedspaceService', () => {
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
+  describe('getRoom', () => {
+    it('returns the room for the given room ID', async () => {
+      const room = roomFactory.build()
+      roomClient.find.mockResolvedValue(room)
+
+      const result = await service.getRoom(token, premisesId, room.id)
+
+      expect(result).toEqual(room)
+
+      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
+    })
+  })
+
   describe('getBedspaceDetails', () => {
     it('returns a list of rooms and a summary list for each room, for the given premises ID', async () => {
       const room1 = roomFactory.build({

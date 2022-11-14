@@ -11,6 +11,13 @@ export default class BedspaceService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
+  async getRoom(token: string, premisesId: string, roomId: string): Promise<Room> {
+    const roomClient = this.roomClientFactory(token)
+    const room = await roomClient.find(premisesId, roomId)
+
+    return room
+  }
+
   async getBedspaceDetails(
     token: string,
     premisesId: string,

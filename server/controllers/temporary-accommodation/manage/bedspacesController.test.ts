@@ -9,8 +9,8 @@ import premisesFactory from '../../../testutils/factories/premises'
 import roomFactory from '../../../testutils/factories/room'
 import characteristicFactory from '../../../testutils/factories/characteristic'
 import updateRoomFactory from '../../../testutils/factories/updateRoom'
-import { ErrorsAndUserInput, SummaryListItem } from '../../../@types/ui'
-import { PremisesService } from '../../../services'
+import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
+import { PremisesService, BookingService } from '../../../services'
 
 jest.mock('../../../utils/validation')
 
@@ -25,7 +25,8 @@ describe('BedspacesController', () => {
 
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
-  const bedspacesController = new BedspacesController(premisesService, bedspaceService)
+  const bookingService = createMock<BookingService>({})
+  const bedspacesController = new BedspacesController(premisesService, bedspaceService, bookingService)
 
   beforeEach(() => {
     request = createMock<Request>({ user: { token } })
@@ -242,6 +243,9 @@ describe('BedspacesController', () => {
       const bedspaceDetails = { room, summaryList: { rows: [] as Array<SummaryListItem> } }
       bedspaceService.getSingleBedspaceDetails.mockResolvedValue(bedspaceDetails)
 
+      const bookingTableRows: Array<TableRow> = []
+      bookingService.getTableRowsForBedspace.mockResolvedValue([])
+
       request.params = { premisesId: premises.id, roomId: room.id }
 
       const requestHandler = bedspacesController.show()
@@ -250,10 +254,12 @@ describe('BedspacesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/show', {
         premises,
         bedspace: bedspaceDetails,
+        bookingTableRows,
       })
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
       expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(token, premises.id, room.id)
+      expect(bookingService.getTableRowsForBedspace).toHaveBeenCalledWith(token, premises.id, room.id)
     })
   })
 })

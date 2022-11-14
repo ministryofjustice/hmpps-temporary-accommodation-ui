@@ -1,0 +1,40 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% set pageTitle = applicationName + " - Book bedspace" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ breadCrumb('Book bedspace', [
+    {title: 'List of properties', href: paths.premises.index()},
+    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
+    {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
+  ]) }}
+
+  {% include "../../_messages.njk" %}
+  
+  <h1>Book bedspace</h1>
+
+  {{ showErrorSummary(errorSummary) }}
+
+  <div class="property-identity">
+    <h2 class="govuk-label govuk-label--m">Bedspace reference</h2>
+    <p class="govuk-body">{{ room.name }}</p>
+
+    <h2 class="govuk-label govuk-label--m">Property address</h2>
+    <p class="govuk-body">{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="#" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+      
+        {% include "./_editable.njk" %}  
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

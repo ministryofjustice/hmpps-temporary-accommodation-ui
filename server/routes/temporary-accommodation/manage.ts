@@ -27,6 +27,7 @@ export default function routes(controllers: Controllers, router: Router): Router
 
   get(paths.bookings.new.pattern, bookingsController.new())
   post(paths.bookings.create.pattern, bookingsController.create())
+  get(paths.bookings.show.pattern, bookingsController.show())
 
   return router
 }

@@ -1,11 +1,17 @@
 import type { Premises, Room, Booking } from '@approved-premises/api'
 
 import Page from '../../page'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
 export default class BookingShowPage extends Page {
   constructor(private readonly premises: Premises, private readonly room: Room, private readonly booking: Booking) {
     super('View a booking')
+  }
+
+  static visit(premises: Premises, room: Room, booking: Booking): BookingShowPage {
+    cy.visit(paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    return new BookingShowPage(premises, room, booking)
   }
 
   shouldShowBookingDetails(): void {

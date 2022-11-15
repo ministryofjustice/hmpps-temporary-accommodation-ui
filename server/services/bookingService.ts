@@ -8,7 +8,7 @@ import type {
   Room,
   NewTemporaryAccommodationBooking,
 } from '@approved-premises/api'
-import type { TableRow, GroupedListofBookings } from '@approved-premises/ui'
+import type { TableRow, GroupedListofBookings, SummaryList } from '@approved-premises/ui'
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
@@ -72,6 +72,31 @@ export default class BookingService {
           ),
         ]
       })
+  }
+
+  async getBookingDetails(
+    token: string,
+    premisesId: string,
+    bookingId: string,
+  ): Promise<{ booking: Booking; summaryList: SummaryList }> {
+    const bookingClient = this.bookingClientFactory(token)
+    const booking = await bookingClient.find(premisesId, bookingId)
+
+    return {
+      booking,
+      summaryList: {
+        rows: [
+          {
+            key: this.textValue('Start date'),
+            value: this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate)),
+          },
+          {
+            key: this.textValue('End date'),
+            value: this.textValue(DateFormats.isoDateToUIDate(booking.departureDate)),
+          },
+        ],
+      },
+    }
   }
 
   async listOfBookingsForPremisesId(token: string, premisesId: string): Promise<Array<TableRow>> {

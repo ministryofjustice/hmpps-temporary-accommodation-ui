@@ -180,6 +180,43 @@ describe('BookingService', () => {
     })
   })
 
+  describe('getBookingDetails', () => {
+    it('returns a booking and a summary list of details for the booking', async () => {
+      const booking = bookingFactory.build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
+      })
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Start date',
+              },
+              value: {
+                text: '21 March 2022',
+              },
+            },
+            {
+              key: {
+                text: 'End date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+          ],
+        },
+      })
+    })
+  })
+
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
       const bookings = bookingFactory.buildList(3)

@@ -19,6 +19,8 @@ describe('BookingService', () => {
   const service = new BookingService(bookingClientFactory)
   const token = 'SOME_TOKEN'
 
+  const premisesId = 'premiseId'
+
   beforeEach(() => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
@@ -30,7 +32,7 @@ describe('BookingService', () => {
       const newBooking = newBookingFactory.build()
       bookingClient.create.mockResolvedValue(booking)
 
-      const postedBooking = await service.create(token, 'premisesId', newBooking)
+      const postedBooking = await service.create(token, premisesId, newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
@@ -50,17 +52,16 @@ describe('BookingService', () => {
 
       bookingClient.find.mockResolvedValue(booking)
 
-      const retrievedBooking = await service.find(token, 'premisesId', booking.id)
+      const retrievedBooking = await service.find(token, premisesId, booking.id)
       expect(retrievedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.find).toHaveBeenCalledWith('premisesId', booking.id)
+      expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
     })
   })
 
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
-      const premisesId = 'some-uuid'
       const bookings = bookingFactory.buildList(3)
 
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
@@ -99,10 +100,9 @@ describe('BookingService', () => {
         ...cancelledBookingsWithFutureArrivalDate,
         ...bookingsDepartingSoon,
       ]
-      const premisesId = 'some-uuid'
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
 
-      const results = await service.groupedListOfBookingsForPremisesId(token, 'some-uuid')
+      const results = await service.groupedListOfBookingsForPremisesId(token, premisesId)
 
       expect(results.arrivingToday).toEqual(service.bookingsToTableRows(bookingsArrivingToday, premisesId, 'arrival'))
       expect(results.departingToday).toEqual(
@@ -132,18 +132,16 @@ describe('BookingService', () => {
         notes: 'Some notes',
       }
 
-      const extendedBooking = await service.extendBooking(token, 'premisesId', booking.id, newDepartureDateObj)
+      const extendedBooking = await service.extendBooking(token, premisesId, booking.id, newDepartureDateObj)
 
       expect(extendedBooking).toEqual(booking)
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.extendBooking).toHaveBeenCalledWith('premisesId', booking.id, newDepartureDateObj)
+      expect(bookingClient.extendBooking).toHaveBeenCalledWith(premisesId, booking.id, newDepartureDateObj)
     })
   })
 
   describe('bookingsToTableRows', () => {
     it('should convert bookings to table rows with an arrival date', () => {
-      const premisesId = 'some-uuid'
-
       const booking1Date = new Date(2022, 10, 22)
       const booking2Date = new Date(2022, 2, 11)
 
@@ -168,8 +166,6 @@ describe('BookingService', () => {
     })
 
     it('should convert bookings to table rows with a departure date', () => {
-      const premisesId = 'some-uuid'
-
       const booking1Date = new Date(2022, 10, 22)
       const booking2Date = new Date(2022, 2, 11)
 
@@ -199,10 +195,9 @@ describe('BookingService', () => {
       const bookingsArrivingToday = bookingFactory.arrivingToday().buildList(2)
       const currentResidents = bookingFactory.arrived().buildList(2)
 
-      const premisesId = 'some-uuid'
       bookingClient.allBookingsForPremisesId.mockResolvedValue([...currentResidents, ...bookingsArrivingToday])
 
-      const results = await service.currentResidents(token, 'some-uuid')
+      const results = await service.currentResidents(token, premisesId)
 
       expect(results).toEqual(service.currentResidentsToTableRows(currentResidents, premisesId))
 

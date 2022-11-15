@@ -67,4 +67,13 @@ export default class BedspaceShowPage extends Page {
       cy.get('a').contains('Void bedspace').click()
     })
   }
+
+  clickBookingLink(booking: Booking): void {
+    cy.get('tr')
+      .contains(booking.person.crn)
+      .parent()
+      .within(() => {
+        cy.get('a').contains('View').click()
+      })
+  }
 }

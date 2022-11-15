@@ -36,6 +36,36 @@ context('Booking', () => {
     Page.verifyOnPage(BookingNewPage)
   })
 
+  it('navigates to the show booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and bookings in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({
+          id: room.beds[0].id,
+        }),
+      })
+      .buildList(5)
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
+
+    // When I visit the show bedspace page
+    const bedspaceShowPage = BedspaceShowPage.visit(premises.id, room)
+
+    // Add I click the booking link
+    bedspaceShowPage.clickBookingLink(bookings[0])
+
+    // Then I navigate to the booking page
+    Page.verifyOnPage(BookingShowPage, premises, room, bookings[0])
+  })
+
   it('allows me to create a booking', () => {
     // Given I am signed in
     cy.signIn()

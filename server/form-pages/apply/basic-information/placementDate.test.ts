@@ -118,7 +118,7 @@ describe('PlacementDate', () => {
 
       expect(page.response()).toEqual({
         [page.title]: 'No',
-        'Placement Start Date': 'Friday 11 November 2022',
+        'Placement Start Date': '11 November 2022',
       })
     })
   })

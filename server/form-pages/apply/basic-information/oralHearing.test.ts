@@ -123,7 +123,7 @@ describe('OralHearing', () => {
 
       expect(page.response()).toEqual({
         [page.title]: 'Yes',
-        'Oral Hearing Date': 'Friday 11 November 2022',
+        'Oral Hearing Date': '11 November 2022',
       })
     })
   })

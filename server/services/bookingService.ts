@@ -12,7 +12,8 @@ import type { TableRow, GroupedListofBookings, SummaryList } from '@approved-pre
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
-import paths from '../paths/manage'
+import apPaths from '../paths/manage'
+import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 
 export default class BookingService {
@@ -68,7 +69,11 @@ export default class BookingService {
           this.textValue(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })),
           this.htmlValue('<strong class="govuk-tag">Provisional</strong>'),
           this.htmlValue(
-            `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking.person.crn}</span></a>`,
+            `<a href="${taPaths.bookings.show({
+              premisesId,
+              roomId: room.id,
+              bookingId: booking.id,
+            })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking.person.crn}</span></a>`,
           ),
         ]
       })
@@ -143,7 +148,7 @@ export default class BookingService {
         text: DateFormats.isoDateToUIDate(type === 'arrival' ? booking.arrivalDate : booking.departureDate),
       },
       {
-        html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
+        html: `<a href="${apPaths.bookings.show({ premisesId, bookingId: booking.id })}">
           Manage
           <span class="govuk-visually-hidden">
             booking for ${booking.person.crn}
@@ -171,7 +176,7 @@ export default class BookingService {
         text: DateFormats.isoDateToUIDate(booking.departureDate),
       },
       {
-        html: `<a href="${paths.bookings.show({ premisesId, bookingId: booking.id })}">
+        html: `<a href="${apPaths.bookings.show({ premisesId, bookingId: booking.id })}">
         Manage
         <span class="govuk-visually-hidden">
           booking for ${booking.person.crn}

@@ -20,6 +20,7 @@ export default Factory.define<Premises>(() => ({
   characteristics: unique(
     referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
   ),
+  status: faker.helpers.arrayElement(['pending', 'active', 'archived']),
   notes: faker.lorem.lines(5),
 }))
 

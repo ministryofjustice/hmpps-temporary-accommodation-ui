@@ -118,6 +118,7 @@ describe('PremisesController', () => {
         name: premises.name,
         postcode: premises.postcode,
         characteristicIds: [],
+        status: 'active',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property created')
@@ -237,6 +238,7 @@ describe('PremisesController', () => {
         name: premises.name,
         postcode: premises.postcode,
         characteristicIds: [],
+        status: 'active',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')

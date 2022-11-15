@@ -48,6 +48,32 @@ export default class BookingService {
     return booking
   }
 
+  async getTableRowsForBedspace(token: string, premisesId: string, room: Room): Promise<Array<TableRow>> {
+    const bookingClient = this.bookingClientFactory(token)
+    const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
+
+    const bedId = room.beds[0].id
+
+    return bookings
+      .filter(booking => booking?.bed.id === bedId)
+      .sort(
+        (a, b) =>
+          DateFormats.convertIsoToDateObj(b.arrivalDate).getTime() -
+          DateFormats.convertIsoToDateObj(a.arrivalDate).getTime(),
+      )
+      .map(booking => {
+        return [
+          this.textValue(booking.person.crn),
+          this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' })),
+          this.textValue(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })),
+          this.htmlValue('<strong class="govuk-tag">Provisional</strong>'),
+          this.htmlValue(
+            `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking.person.crn}</span></a>`,
+          ),
+        ]
+      })
+  }
+
   async listOfBookingsForPremisesId(token: string, premisesId: string): Promise<Array<TableRow>> {
     const bookingClient = this.bookingClientFactory(token)
 
@@ -163,5 +189,13 @@ export default class BookingService {
       start: addDays(today, 1),
       end: addDays(today, this.UPCOMING_WINDOW_IN_DAYS + 1),
     })
+  }
+
+  private textValue(value: string) {
+    return { text: value }
+  }
+
+  private htmlValue(value: string) {
+    return { html: value }
   }
 }

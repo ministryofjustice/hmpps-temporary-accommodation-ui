@@ -61,6 +61,7 @@ context('Booking', () => {
     })
 
     cy.task('stubBookingCreate', { premisesId: premises.id, booking })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
 
     page.completeForm(newBooking)
 
@@ -76,9 +77,9 @@ context('Booking', () => {
       expect(requestBody.departureDate).equal(newBooking.departureDate)
     })
 
-    // And I should be redirected to the show bedspace page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, room)
-    bedspaceShowPage.shouldShowBanner('Booking created')
+    // And I should be redirected to the show booking page
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    bookingShowPage.shouldShowBanner('Booking created')
   })
 
   it('shows errors when the API returns an error', () => {

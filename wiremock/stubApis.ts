@@ -6,6 +6,7 @@ import { bulkStub } from './index'
 
 import premisesJson from './stubs/premises.json'
 import bookingFactory from '../server/testutils/factories/booking'
+import bedFactory from '../server/testutils/factories/bed'
 import premisesFactory from '../server/testutils/factories/premises'
 
 import bookingStubs from './bookingStubs'
@@ -128,16 +129,22 @@ premises.forEach(item => {
     },
   })
 
-  const rand = () => Math.floor(Math.random() * 10)
+  const rand = () => Math.floor(1 + Math.random() * 2)
+
+  const bedspaceBookingFactory = bookingFactory.params({
+    bed: bedFactory.build({
+      id: 'bedId',
+    }),
+  })
 
   const bookings = [
-    bookingFactory.arrivingToday().buildList(rand()),
-    bookingFactory.arrivedToday().buildList(rand()),
-    bookingFactory.departingToday().buildList(rand()),
-    bookingFactory.departedToday().buildList(rand()),
-    bookingFactory.arrivingSoon().buildList(rand()),
-    bookingFactory.cancelledWithFutureArrivalDate().buildList(rand()),
-    bookingFactory.departingSoon().buildList(rand()),
+    bedspaceBookingFactory.arrivingToday().buildList(rand()),
+    bedspaceBookingFactory.arrivedToday().buildList(rand()),
+    bedspaceBookingFactory.departingToday().buildList(rand()),
+    bedspaceBookingFactory.departedToday().buildList(rand()),
+    bedspaceBookingFactory.arrivingSoon().buildList(rand()),
+    bedspaceBookingFactory.cancelledWithFutureArrivalDate().buildList(rand()),
+    bedspaceBookingFactory.departingSoon().buildList(rand()),
   ].flat()
 
   stubs.push({

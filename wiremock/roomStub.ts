@@ -1,6 +1,7 @@
 import { guidRegex } from './index'
 import roomFactory from '../server/testutils/factories/room'
 import { errorStub, getCombinations } from './utils'
+import bed from '../server/testutils/factories/bed'
 
 const rooms: Array<Record<string, unknown>> = []
 
@@ -51,7 +52,13 @@ rooms.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: roomFactory.build(),
+    jsonBody: roomFactory.build({
+      beds: [
+        bed.build({
+          id: 'bedId',
+        }),
+      ],
+    }),
   },
 })
 

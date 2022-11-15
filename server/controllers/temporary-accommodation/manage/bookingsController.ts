@@ -63,4 +63,23 @@ export default class BookingsController {
       }
     }
   }
+
+  show(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, bookingId } = req.params
+      const { token } = req.user
+
+      const premises = await this.premisesService.getPremises(token, premisesId)
+      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+
+      const { booking, summaryList } = await this.bookingsService.getBookingDetails(token, premisesId, bookingId)
+
+      return res.render('temporary-accommodation/bookings/show', {
+        premises,
+        room,
+        booking,
+        summaryList,
+      })
+    }
+  }
 }

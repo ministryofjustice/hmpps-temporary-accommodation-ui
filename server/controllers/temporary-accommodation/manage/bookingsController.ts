@@ -49,10 +49,10 @@ export default class BookingsController {
       }
 
       try {
-        await this.bookingsService.createForBedspace(token, premisesId, room, newBooking)
+        const booking = await this.bookingsService.createForBedspace(token, premisesId, room, newBooking)
 
         req.flash('success', 'Booking created')
-        res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
+        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
       } catch (err) {
         if (err.status === 409) {
           insertGenericError(err, 'arrivalDate', 'conflict')

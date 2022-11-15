@@ -97,7 +97,7 @@ describe('BookingsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking created')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
     })
 
     it('renders with errors if the API returns an error', async () => {

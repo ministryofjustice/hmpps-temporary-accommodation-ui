@@ -471,7 +471,7 @@ describe('PremisesService', () => {
       const result = await service.getOvercapacityMessage(token, premisesId)
 
       expect(result).toEqual([
-        '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on Saturday 1 January 2022</h4>',
+        '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on 1 January 2022</h4>',
       ])
     })
 
@@ -497,7 +497,7 @@ describe('PremisesService', () => {
       const result = await service.getOvercapacityMessage(token, premisesId)
 
       expect(result).toEqual([
-        '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period Saturday 1 January 2022 to Tuesday 1 February 2022</h4>',
+        '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period 1 January 2022 to 1 February 2022</h4>',
       ])
     })
 
@@ -525,7 +525,7 @@ describe('PremisesService', () => {
 
       expect(result).toEqual([
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
-        <ul class="govuk-list govuk-list--bullet"><li>Sunday 1 January 2023 to Wednesday 1 February 2023</li><li>Thursday 2 March 2023 to Sunday 2 April 2023</li></ul>`,
+        <ul class="govuk-list govuk-list--bullet"><li>1 January 2023 to 1 February 2023</li><li>2 March 2023 to 2 April 2023</li></ul>`,
       ])
     })
 
@@ -550,7 +550,7 @@ describe('PremisesService', () => {
 
       expect(result).toEqual([
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
-        <ul class="govuk-list govuk-list--bullet"><li>Sunday 1 January 2023</li><li>Thursday 2 March 2023 to Sunday 2 April 2023</li></ul>`,
+        <ul class="govuk-list govuk-list--bullet"><li>1 January 2023</li><li>2 March 2023 to 2 April 2023</li></ul>`,
       ])
     })
   })

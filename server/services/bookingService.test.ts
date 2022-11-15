@@ -1,6 +1,5 @@
 import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
-import ReferenceDataClient from '../data/referenceDataClient'
 
 import newBookingFactory from '../testutils/factories/newBooking'
 import bookingExtensionFactory from '../testutils/factories/bookingExtension'
@@ -14,18 +13,15 @@ jest.mock('../data/referenceDataClient.ts')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
-  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
   const bookingClientFactory = jest.fn()
-  const referenceDataClientFactory = jest.fn()
 
-  const service = new BookingService(bookingClientFactory, referenceDataClientFactory)
+  const service = new BookingService(bookingClientFactory)
   const token = 'SOME_TOKEN'
 
   beforeEach(() => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
-    referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
   describe('create', () => {

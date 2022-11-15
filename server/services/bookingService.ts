@@ -3,7 +3,7 @@ import { isSameDay, isWithinInterval, addDays } from 'date-fns'
 import type { Booking, NewBooking, Extension, NewExtension } from '@approved-premises/api'
 import type { TableRow, GroupedListofBookings } from '@approved-premises/ui'
 
-import type { RestClientBuilder, ReferenceDataClient } from '../data'
+import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import paths from '../paths/manage'
 import { DateFormats } from '../utils/dateUtils'
@@ -11,10 +11,7 @@ import { DateFormats } from '../utils/dateUtils'
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
 
-  constructor(
-    private readonly bookingClientFactory: RestClientBuilder<BookingClient>,
-    private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
-  ) {}
+  constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
   async create(token: string, premisesId: string, booking: NewBooking): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)

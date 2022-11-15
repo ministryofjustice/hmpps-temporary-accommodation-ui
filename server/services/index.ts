@@ -31,7 +31,7 @@ export const services = () => {
   const userService = new UserService(hmppsAuthClient)
   const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClient)
-  const bookingService = new BookingService(bookingClientBuilder, referenceDataClientBuilder)
+  const bookingService = new BookingService(bookingClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)
   const nonArrivalService = new NonArrivalService(bookingClientBuilder)
   const departureService = new DepartureService(bookingClientBuilder, referenceDataClientBuilder)

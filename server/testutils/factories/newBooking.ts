@@ -20,5 +20,6 @@ export default Factory.define<NewBooking>(() => {
     'departureDate-day': departureDate.getDate().toString(),
     'departureDate-month': departureDate.getMonth().toString(),
     'departureDate-year': departureDate.getFullYear().toString(),
+    serviceName: 'temporary-accommodation',
   }
 })

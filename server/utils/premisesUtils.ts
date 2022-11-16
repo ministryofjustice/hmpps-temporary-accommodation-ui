@@ -37,3 +37,7 @@ export const allStatuses: Array<{ name: string; id: PropertyStatus }> = [
     id: 'archived',
   },
 ]
+
+export function formatStatus(status: PropertyStatus): string {
+  return allStatuses.find(({ id }) => id === status).name
+}

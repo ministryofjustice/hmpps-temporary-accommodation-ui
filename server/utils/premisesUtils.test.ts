@@ -1,4 +1,4 @@
-import { getDateRangesWithNegativeBeds } from './premisesUtils'
+import { getDateRangesWithNegativeBeds, formatStatus } from './premisesUtils'
 
 describe('premisesUtils', () => {
   describe('getDateRangeWithNegativeBeds', () => {
@@ -82,6 +82,12 @@ describe('premisesUtils', () => {
         { start: dateCapacities[0].date },
         { start: dateCapacities[2].date, end: dateCapacities[3].date },
       ])
+    })
+  })
+
+  describe('formatStatus', () => {
+    it('returns the dislay name of a given status', () => {
+      expect(formatStatus('pending')).toEqual('Pending')
     })
   })
 })

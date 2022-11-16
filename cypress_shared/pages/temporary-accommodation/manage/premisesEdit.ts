@@ -24,7 +24,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .should('be.selected')
 
     cy.get('legend')
-      .contains('Does the premises have any of the following attributes?')
+      .contains('Does the property have any of the following attributes?')
       .parent()
       .within(() => {
         this.premises.characteristics.forEach(characteristic => {
@@ -51,7 +51,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', '')
 
     cy.get('legend')
-      .contains('Does the premises have any of the following attributes?')
+      .contains('Does the property have any of the following attributes?')
       .parent()
       .within(() => {
         cy.get('label').siblings('input').uncheck()

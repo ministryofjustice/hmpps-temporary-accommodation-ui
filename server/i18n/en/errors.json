@@ -71,5 +71,8 @@
   },
   "localAuthorityAreaId": {
     "empty": "You must choose a local authority"
+  },
+  "status": {
+    "empty": "You must choose a status"
   }
 }

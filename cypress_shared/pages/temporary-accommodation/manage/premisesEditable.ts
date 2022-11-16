@@ -38,6 +38,9 @@ export default abstract class PremisesEditablePage extends Page {
       this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)
     })
 
+    this.getLegend('What is the status of this property?')
+    this.checkRadioByNameAndValue('status', newOrUpdatePremises.status)
+
     this.getLabel('Please provide any further property details')
     this.getTextInputByIdAndEnterDetails('notes', newOrUpdatePremises.notes)
 

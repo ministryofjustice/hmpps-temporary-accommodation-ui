@@ -6,6 +6,7 @@ import PremisesService from '../../../services/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import LocalAuthorityService from '../../../services/temporary-accommodation/localAuthorityService'
 import BedspaceService from '../../../services/bedspaceService'
+import { allStatuses } from '../../../utils/premisesUtils'
 
 export default class PremisesController {
   constructor(
@@ -33,6 +34,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
+        allStatuses,
         characteristicIds: [],
         errors,
         errorSummary,
@@ -46,7 +48,6 @@ export default class PremisesController {
       const newPremises: NewPremises = {
         characteristicIds: [],
         ...req.body,
-        status: 'active',
       }
 
       try {
@@ -75,6 +76,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/premises/edit', {
         allLocalAuthorities,
         allCharacteristics,
+        allStatuses,
         characteristicIds: [],
         errors,
         errorSummary,
@@ -92,7 +94,6 @@ export default class PremisesController {
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
         ...req.body,
-        status: 'active',
       }
 
       try {

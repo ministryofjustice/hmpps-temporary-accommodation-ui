@@ -3,7 +3,8 @@ import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
 import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
 import premisesFactory from '../../../testutils/factories/premises'
-import updatePremisesFactory from '../../../testutils/factories/newPremises'
+import newPremisesFactory from '../../../testutils/factories/newPremises'
+import updatePremisesFactory from '../../../testutils/factories/updatePremises'
 import localAuthorityFactory from '../../../testutils/factories/localAuthority'
 import roomFactory from '../../../testutils/factories/room'
 import PremisesService from '../../../services/premisesService'
@@ -13,6 +14,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 import { LocalAuthorityService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import characteristicFactory from '../../../testutils/factories/characteristic'
+import { allStatuses } from '../../../utils/premisesUtils'
 
 jest.mock('../../../utils/validation')
 
@@ -65,6 +67,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
+        allStatuses,
         characteristicIds: [],
         errors: {},
         errorSummary: [],
@@ -91,6 +94,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
+        allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
@@ -104,10 +108,12 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.create()
 
       const premises = premisesFactory.build()
+      const newPremises = newPremisesFactory.build()
+
+      delete newPremises.characteristicIds
 
       request.body = {
-        name: premises.name,
-        postcode: premises.postcode,
+        ...newPremises,
       }
 
       premisesService.create.mockResolvedValue(premises)
@@ -115,10 +121,8 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.create).toHaveBeenCalledWith(token, {
-        name: premises.name,
-        postcode: premises.postcode,
+        ...newPremises,
         characteristicIds: [],
-        status: 'active',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property created')
@@ -174,6 +178,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities,
         allCharacteristics,
+        allStatuses,
         characteristicIds: [],
         errors: {},
         errorSummary: [],
@@ -209,6 +214,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities,
         allCharacteristics,
+        allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
@@ -223,11 +229,13 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.update()
 
       const premises = premisesFactory.build()
+      const newPremises = newPremisesFactory.build({ ...premises })
+
+      delete newPremises.characteristicIds
 
       request.params.premisesId = premises.id
       request.body = {
-        name: premises.name,
-        postcode: premises.postcode,
+        ...newPremises,
       }
 
       premisesService.update.mockResolvedValue(premises)
@@ -235,10 +243,8 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.update).toHaveBeenCalledWith(token, premises.id, {
-        name: premises.name,
-        postcode: premises.postcode,
+        ...newPremises,
         characteristicIds: [],
-        status: 'active',
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')

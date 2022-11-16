@@ -1,5 +1,6 @@
 import type { UpdatePremises, Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { formatStatus } from '../../../../server/utils/premisesUtils'
 import PremisesEditablePage from './premisesEditable'
 
 export default class PremisesEditPage extends PremisesEditablePage {
@@ -30,6 +31,13 @@ export default class PremisesEditPage extends PremisesEditablePage {
         this.premises.characteristics.forEach(characteristic => {
           cy.get('label').contains(characteristic.name).siblings('input').should('be.checked')
         })
+      })
+
+    cy.get('legend')
+      .contains('What is the status of this property?')
+      .parent()
+      .within(() => {
+        cy.get('label').contains(formatStatus(this.premises.status)).siblings('input').should('be.checked')
       })
 
     cy.get('label')

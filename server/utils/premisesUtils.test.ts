@@ -1,4 +1,4 @@
-import getDateRangesWithNegativeBeds from './premisesUtils'
+import { getDateRangesWithNegativeBeds } from './premisesUtils'
 
 describe('premisesUtils', () => {
   describe('getDateRangeWithNegativeBeds', () => {

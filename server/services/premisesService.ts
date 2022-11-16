@@ -12,7 +12,7 @@ import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
-import getDateRangesWithNegativeBeds, { NegativeDateRange } from '../utils/premisesUtils'
+import { getDateRangesWithNegativeBeds, NegativeDateRange } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 

@@ -6,9 +6,6 @@ import type { Controllers } from '../controllers'
 import { approvedPremisesPath } from '../paths/service'
 import actions from './utils'
 
-import applyRoutes from './apply'
-import manageRoutes from './manage'
-
 export default function routes(controllers: Controllers): Router {
   const router = Router()
 
@@ -18,9 +15,6 @@ export default function routes(controllers: Controllers): Router {
 
   get('/', applicationController.index())
   get(approvedPremisesPath.pattern, applicationController.index())
-
-  manageRoutes(controllers, router)
-  applyRoutes(controllers, router)
 
   return router
 }

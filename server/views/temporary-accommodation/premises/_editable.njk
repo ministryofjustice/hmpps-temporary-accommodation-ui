@@ -44,7 +44,7 @@
     text: "What is the local authority?",
     classes: "govuk-label--m"
   },
-  items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
+  items: convertObjectsToSelectOptions(allLocalAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
   id: "localAuthorityAreaId",
   name: "localAuthorityAreaId",
   errorMessage: errors.localAuthorityAreaId

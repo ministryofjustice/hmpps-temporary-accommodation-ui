@@ -48,8 +48,8 @@ describe('PremisesController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      const localAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+      const allLocalAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
 
       const allCharacteristics = characteristicFactory.buildList(5)
       premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
@@ -63,7 +63,7 @@ describe('PremisesController', () => {
       expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
-        localAuthorities,
+        allLocalAuthorities,
         allCharacteristics,
         characteristicIds: [],
         errors: {},
@@ -72,8 +72,8 @@ describe('PremisesController', () => {
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-      const localAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+      const allLocalAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
 
       const allCharacteristics = characteristicFactory.buildList(5)
       premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
@@ -89,7 +89,7 @@ describe('PremisesController', () => {
       expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
-        localAuthorities,
+        allLocalAuthorities,
         allCharacteristics,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
@@ -149,8 +149,8 @@ describe('PremisesController', () => {
 
   describe('edit', () => {
     it('renders the form', async () => {
-      const localAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+      const allLocalAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
 
       const allCharacteristics = characteristicFactory.buildList(5)
       premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
@@ -172,7 +172,7 @@ describe('PremisesController', () => {
       expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
-        localAuthorities,
+        allLocalAuthorities,
         allCharacteristics,
         characteristicIds: [],
         errors: {},
@@ -182,8 +182,8 @@ describe('PremisesController', () => {
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-      const localAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(localAuthorities)
+      const allLocalAuthorities = localAuthorityFactory.buildList(5)
+      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
 
       const allCharacteristics = characteristicFactory.buildList(5)
       premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
@@ -207,7 +207,7 @@ describe('PremisesController', () => {
       expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
-        localAuthorities,
+        allLocalAuthorities,
         allCharacteristics,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,

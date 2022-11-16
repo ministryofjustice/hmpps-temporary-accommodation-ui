@@ -2,6 +2,7 @@ import type { Premises, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { formatStatus } from '../../../../server/utils/premisesUtils'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
@@ -36,6 +37,11 @@ export default class PremisesShowPage extends Page {
           .siblings('.govuk-summary-list__value')
           .should('contain', characteristic.name)
       })
+
+      cy.get('.govuk-summary-list__key')
+        .contains('Status')
+        .siblings('.govuk-summary-list__value')
+        .should('contain', formatStatus(this.premises.status))
 
       this.premises.notes.split('\n').forEach(noteLine => {
         cy.get('.govuk-summary-list__key')

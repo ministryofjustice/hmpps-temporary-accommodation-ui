@@ -9,7 +9,7 @@ import staffMemberFactory from '../testutils/factories/staffMember'
 import newPremisesFactory from '../testutils/factories/newPremises'
 import updatePremisesFactory from '../testutils/factories/updatePremises'
 import characteristicFactory from '../testutils/factories/characteristic'
-import { getDateRangesWithNegativeBeds } from '../utils/premisesUtils'
+import { getDateRangesWithNegativeBeds, formatStatus } from '../utils/premisesUtils'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
@@ -369,6 +369,7 @@ describe('PremisesService', () => {
             name: 'A characteristic',
           }),
         ],
+        status: 'active',
         notes: 'Some notes',
       })
 
@@ -378,6 +379,7 @@ describe('PremisesService', () => {
       ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
         text: 'Some attributes',
       }))
+      ;(formatStatus as jest.MockedFn<typeof formatStatus>).mockReturnValue('Online')
 
       const result = await service.getTemporaryAccommodationPremisesDetails(token, premises.id)
 
@@ -406,6 +408,10 @@ describe('PremisesService', () => {
               value: { text: 'Some attributes' },
             },
             {
+              key: { text: 'Status' },
+              value: { text: 'Online' },
+            },
+            {
               key: { text: 'Notes' },
               value: { html: 'Some notes' },
             },
@@ -424,6 +430,7 @@ describe('PremisesService', () => {
           name: 'A characteristic',
         }),
       ])
+      expect(formatStatus).toHaveBeenCalledWith('active')
     })
   })
 

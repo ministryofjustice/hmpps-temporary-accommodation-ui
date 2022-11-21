@@ -112,6 +112,34 @@ describe('DateFormats', () => {
   })
 })
 
+describe('convertIsoToDateAndTimeInputs', () => {
+  it('converts a ISO8601 date string', () => {
+    const date = '2022-11-23'
+
+    expect(DateFormats.convertIsoToDateAndTimeInputs(date, 'date')).toEqual({
+      'date-day': '23',
+      'date-month': '11',
+      'date-year': '2022',
+    })
+  })
+
+  it('raises an error if the date is not a valid ISO8601 date string', () => {
+    const date = '23/11/2022'
+
+    expect(() => DateFormats.convertIsoToDateAndTimeInputs(date, 'date')).toThrow(
+      new InvalidDateStringError(`Invalid Date: ${date}`),
+    )
+  })
+
+  it('raises an error if the date is not a date string', () => {
+    const date = 'NOT A DATE'
+
+    expect(() => DateFormats.convertIsoToDateAndTimeInputs(date, 'date')).toThrow(
+      new InvalidDateStringError(`Invalid Date: ${date}`),
+    )
+  })
+})
+
 describe('dateAndTimeInputsAreValidDates', () => {
   it('returns true when the date is valid', () => {
     const obj: ObjectWithDateParts<'date'> = {

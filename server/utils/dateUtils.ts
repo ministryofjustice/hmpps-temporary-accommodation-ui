@@ -84,6 +84,16 @@ export class DateFormats {
 
     return dateInputObj
   }
+
+  static convertIsoToDateAndTimeInputs<K extends string | number>(isoDate: string, key: K): ObjectWithDateParts<K> {
+    const date = this.convertIsoToDateObj(isoDate)
+    
+    return {
+      [`${key}-day`]: `${date.getDate()}`,
+      [`${key}-month`]: `${date.getMonth() + 1}`,
+      [`${key}-year`]: `${date.getFullYear()}`,
+    } as ObjectWithDateParts<K>
+  }
 }
 
 export const dateAndTimeInputsAreValidDates = <K extends string | number>(

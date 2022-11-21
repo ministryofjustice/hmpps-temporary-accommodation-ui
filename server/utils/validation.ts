@@ -72,6 +72,20 @@ export const errorMessage = (field: string, text: string): ErrorMessage => {
   }
 }
 
+export const insertGenericError = (error: SanitisedError | Error, propertyName: string, errorType: string): void => {
+  const data = 'data' in error ? error.data : {}
+  const invalidParams = (data['invalid-params'] ? data['invalid-params'] : []) as Array<Record<string, string>>
+
+  invalidParams.push({
+    propertyName: `$.${propertyName}`,
+    errorType,
+  })
+
+  data['invalid-params'] = invalidParams
+  // eslint-disable-next-line dot-notation
+  error['data'] = data
+}
+
 const generateErrors = (params: Array<InvalidParams>): Record<string, string> => {
   return params.reduce((obj, error) => {
     const key = error.propertyName.split('.').slice(1).join('_')

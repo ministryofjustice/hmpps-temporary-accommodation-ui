@@ -30,7 +30,7 @@ export class DateFormats {
     if (options.format === 'long') {
       return format(date, 'cccc d MMMM y')
     } else {
-      return format(date, 'dd/LL/y')
+      return format(date, 'd MMM yy')
     }
   }
 

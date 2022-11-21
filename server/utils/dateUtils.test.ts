@@ -32,7 +32,7 @@ describe('DateFormats', () => {
     it('converts a ISO8601 date string to a short format date', () => {
       const date = '2022-11-11T00:00:00.000Z'
 
-      expect(DateFormats.isoDateToUIDate(date, { format: 'short' })).toEqual('11/11/2022')
+      expect(DateFormats.isoDateToUIDate(date, { format: 'short' })).toEqual('11 Nov 22')
     })
 
     it('raises an error if the date is not a valid ISO8601 date string', () => {

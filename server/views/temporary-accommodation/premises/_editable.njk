@@ -4,6 +4,8 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% call govukFieldset({
   legend: {
@@ -44,10 +46,7 @@
     text: "What is the local authority?",
     classes: "govuk-label--m"
   },
-  hint: {
-    text: "Local authority"
-  },
-  items: convertObjectsToSelectOptions(localAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
+  items: convertObjectsToSelectOptions(allLocalAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
   id: "localAuthorityAreaId",
   name: "localAuthorityAreaId",
   errorMessage: errors.localAuthorityAreaId
@@ -56,7 +55,7 @@
 {{ govukCheckboxes({
   fieldset: {
     legend: {
-      text: "Does the premises have any of the following attributes?",
+      text: "Does the property have any of the following attributes?",
       classes: "govuk-fieldset__legend--m"
     }
   },
@@ -67,6 +66,39 @@
   id: "characteristicIds",
   name: "characteristicIds[]",
   errorMessage: errors.characteristicIds
+}) }}
+
+{% set statusHintText %}
+  <p>Select the relevant property status from the list below. The status will be applied to all bedspaces in this property.</p>
+  <h4 class="govuk-heading-s">Pending</h4>
+  <p>A property has been approved and is in the process of being made ready for bookings.</p>
+  <h4 class="govuk-heading-s">Online</h4>
+  <p>A property is being used by the service. Selecting this status will make any associated bedspaces available to book.</p>
+  <h4 class="govuk-heading-s">Archived</h4>
+  <p>A property is not being used by the service. This status should be selected when a contract has ended, for example.</p> 
+{% endset %}
+
+{% set statusHint %}
+  {{ govukDetails({
+    summaryText: "Guidance on statuses",
+    html: statusHintText
+  }) }}
+{% endset %}
+
+{{ govukRadios({
+  fieldset: {
+    legend: {
+      text: "What is the status of this property?",
+      classes: "govuk-fieldset__legend--m"
+    }
+  },
+  hint: {
+    html: statusHint
+  },
+  items: convertObjectsToRadioItems(allStatuses, 'name', 'id', 'status'),
+  idPrefix: "status",
+  name: "status",
+  errorMessage: errors.status
 }) }}
 
 {{ govukTextarea({

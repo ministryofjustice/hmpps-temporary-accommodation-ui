@@ -148,7 +148,7 @@ Then('I should see a confirmation for my new premises', () => {
 
 Then('I should see a list of the problems encountered creating the premises', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
-  page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
+  page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'status'])
 })
 
 Then('I should see a confirmation for my updated premises', () => {

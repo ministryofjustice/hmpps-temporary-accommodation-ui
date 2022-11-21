@@ -1,5 +1,6 @@
 import type { UpdatePremises, Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { formatStatus } from '../../../../server/utils/premisesUtils'
 import PremisesEditablePage from './premisesEditable'
 
 export default class PremisesEditPage extends PremisesEditablePage {
@@ -24,12 +25,19 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .should('be.selected')
 
     cy.get('legend')
-      .contains('Does the premises have any of the following attributes?')
+      .contains('Does the property have any of the following attributes?')
       .parent()
       .within(() => {
         this.premises.characteristics.forEach(characteristic => {
           cy.get('label').contains(characteristic.name).siblings('input').should('be.checked')
         })
+      })
+
+    cy.get('legend')
+      .contains('What is the status of this property?')
+      .parent()
+      .within(() => {
+        cy.get('label').contains(formatStatus(this.premises.status)).siblings('input').should('be.checked')
       })
 
     cy.get('label')
@@ -51,7 +59,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', '')
 
     cy.get('legend')
-      .contains('Does the premises have any of the following attributes?')
+      .contains('Does the property have any of the following attributes?')
       .parent()
       .within(() => {
         cy.get('label').siblings('input').uncheck()

@@ -72,7 +72,7 @@
   "localAuthorityAreaId": {
     "empty": "You must choose a local authority"
   },
-  "serviceName": {
-    "expectedObject": "This shouldn't happen"
+  "status": {
+    "empty": "You must choose a status"
   }
 }

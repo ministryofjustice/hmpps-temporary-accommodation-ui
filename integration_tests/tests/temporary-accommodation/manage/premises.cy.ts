@@ -155,11 +155,11 @@ context('Premises', () => {
     const page = PremisesNewPage.visit()
 
     // And I miss required fields
-    cy.task('stubPremisesCreateErrors', ['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
+    cy.task('stubPremisesCreateErrors', ['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'status'])
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId'])
+    page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'status'])
   })
 
   it('should navigate back from the new premises page to the premises list page', () => {
@@ -220,6 +220,7 @@ context('Premises', () => {
       expect(requestBody.postcode).equal(updatePremises.postcode)
       expect(requestBody.localAuthorityAreaId).equal(updatePremises.localAuthorityAreaId)
       expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
+      expect(requestBody.status).equal(updatePremises.status)
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
     })
 

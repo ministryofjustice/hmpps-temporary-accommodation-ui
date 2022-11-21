@@ -1,8 +1,8 @@
-import type { DateCapacity } from '@approved-premises/api'
+import type { DateCapacity, PropertyStatus } from '@approved-premises/api'
 
 export type NegativeDateRange = { start?: string; end?: string }
 
-export default function getDateRangesWithNegativeBeds(premisesCapacity: DateCapacity[]): NegativeDateRange[] {
+export function getDateRangesWithNegativeBeds(premisesCapacity: DateCapacity[]): NegativeDateRange[] {
   let dateRange: NegativeDateRange = {}
   const result: NegativeDateRange[] = []
 
@@ -21,4 +21,23 @@ export default function getDateRangesWithNegativeBeds(premisesCapacity: DateCapa
   })
 
   return result
+}
+
+export const allStatuses: Array<{ name: string; id: PropertyStatus }> = [
+  {
+    name: 'Pending',
+    id: 'pending',
+  },
+  {
+    name: 'Online',
+    id: 'active',
+  },
+  {
+    name: 'Archived',
+    id: 'archived',
+  },
+]
+
+export function formatStatus(status: PropertyStatus): string {
+  return allStatuses.find(({ id }) => id === status).name
 }

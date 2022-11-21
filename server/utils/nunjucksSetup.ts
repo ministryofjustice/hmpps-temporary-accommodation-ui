@@ -120,5 +120,13 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('statusTag', (status: PersonStatus) => markAsSafe(statusTag(status)))
 
+  njkEnv.addGlobal('mergeObjects', (obj1: Record<string, unknown>, obj2: Record<string, unknown>) => {
+    return { ...obj1, ...obj2 }
+  })
+
+  njkEnv.addGlobal('fetchContext', function fetchContext() {
+    return this.ctx
+  })
+
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 }

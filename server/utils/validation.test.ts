@@ -3,7 +3,12 @@ import { createMock } from '@golevelup/ts-jest'
 
 import type { ErrorMessages, ErrorSummary } from '@approved-premises/ui'
 import { SanitisedError } from '../sanitisedError'
-import { catchValidationErrorOrPropogate, catchAPIErrorOrPropogate, fetchErrorsAndUserInput } from './validation'
+import {
+  catchValidationErrorOrPropogate,
+  catchAPIErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertGenericError,
+} from './validation'
 import errorLookups from '../i18n/en/errors.json'
 import { ValidationError, TasklistAPIError } from './errors'
 import type TaskListPage from '../form-pages/tasklistPage'
@@ -178,5 +183,55 @@ describe('fetchErrorsAndUserInput', () => {
     const result = fetchErrorsAndUserInput(request)
 
     expect(result).toEqual({ errors, errorSummary, userInput })
+  })
+})
+
+describe('insertGenericError', () => {
+  it('inserts a property error when the error data is empty', () => {
+    const error = {}
+
+    insertGenericError(error as SanitisedError, 'someProperty', 'someErrorType')
+
+    expect(error).toEqual({
+      data: {
+        'invalid-params': [{ propertyName: '$.someProperty', errorType: 'someErrorType' }],
+      },
+    })
+  })
+
+  it('inserts a property error when the error data not empty', () => {
+    const error = {
+      data: {
+        'some-other-data': {},
+      },
+    }
+
+    insertGenericError(error as SanitisedError, 'someProperty', 'someErrorType')
+
+    expect(error).toEqual({
+      data: {
+        'invalid-params': [{ propertyName: '$.someProperty', errorType: 'someErrorType' }],
+        'some-other-data': {},
+      },
+    })
+  })
+
+  it('inserts a property error when there are existing property errors', () => {
+    const error = {
+      data: {
+        'invalid-params': [{ propertyName: '$.someOtherProperty', errorType: 'someOtherErrorType' }],
+      },
+    }
+
+    insertGenericError(error as SanitisedError, 'someProperty', 'someErrorType')
+
+    expect(error).toEqual({
+      data: {
+        'invalid-params': [
+          { propertyName: '$.someOtherProperty', errorType: 'someOtherErrorType' },
+          { propertyName: '$.someProperty', errorType: 'someErrorType' },
+        ],
+      },
+    })
   })
 })

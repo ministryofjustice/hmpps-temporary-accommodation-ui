@@ -32,7 +32,7 @@ describe('DateFormats', () => {
     it('converts a ISO8601 date string to a short format date', () => {
       const date = '2022-11-11T00:00:00.000Z'
 
-      expect(DateFormats.isoDateToUIDate(date, { format: 'short' })).toEqual('11/11/2022')
+      expect(DateFormats.isoDateToUIDate(date, { format: 'short' })).toEqual('11 Nov 22')
     })
 
     it('raises an error if the date is not a valid ISO8601 date string', () => {
@@ -109,6 +109,34 @@ describe('DateFormats', () => {
 
       expect(result.date.toString()).toEqual('twothousandtwentytwo-20-oo')
     })
+  })
+})
+
+describe('convertIsoToDateAndTimeInputs', () => {
+  it('converts a ISO8601 date string', () => {
+    const date = '2022-11-23'
+
+    expect(DateFormats.convertIsoToDateAndTimeInputs(date, 'date')).toEqual({
+      'date-day': '23',
+      'date-month': '11',
+      'date-year': '2022',
+    })
+  })
+
+  it('raises an error if the date is not a valid ISO8601 date string', () => {
+    const date = '23/11/2022'
+
+    expect(() => DateFormats.convertIsoToDateAndTimeInputs(date, 'date')).toThrow(
+      new InvalidDateStringError(`Invalid Date: ${date}`),
+    )
+  })
+
+  it('raises an error if the date is not a date string', () => {
+    const date = 'NOT A DATE'
+
+    expect(() => DateFormats.convertIsoToDateAndTimeInputs(date, 'date')).toThrow(
+      new InvalidDateStringError(`Invalid Date: ${date}`),
+    )
   })
 })
 

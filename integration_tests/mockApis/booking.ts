@@ -18,9 +18,26 @@ export default {
         jsonBody: args.booking,
       },
     }),
-  stubBookingErrors: (args: { premisesId: string; params: Array<string> }) =>
+  stubBookingCreateErrors: (args: { premisesId: string; params: Array<string> }) =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings`, 'POST')),
-  stubBookingGet: (args: { premisesId: string; booking: Booking }) =>
+  stubBookingCreateConflictError: (premisesId: string) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/premises/${premisesId}/bookings`,
+      },
+      response: {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: {
+          title: 'Conflict',
+          status: 409,
+        },
+      },
+    }),
+  stubBooking: (args: { premisesId: string; booking: Booking }) =>
     stubFor({
       request: {
         method: 'GET',

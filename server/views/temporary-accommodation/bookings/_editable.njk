@@ -1,0 +1,54 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-input/macro.njk" import taInput %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
+
+{{ taInput(
+    {
+      label: {
+        text: "What is the person's CRN",
+        classes: "govuk-label--m"
+      },
+      hint: {
+        text: "Enter the CRN for the person you are booking the bedspace for"
+      },
+      classes: "govuk-input--width-10",
+      fieldName: "crn"
+    },
+    fetchContext()
+  )
+}}
+
+{{ taDateInput(
+    {
+      fieldset: {
+        legend: {
+          text: "What is the start date?",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      fieldName: "arrivalDate",
+      items: dateFieldValues('arrivalDate', errors)
+    },
+    fetchContext()
+  )
+}}
+
+{{ taDateInput(
+    {
+      fieldset: {
+        legend: {
+          text: "What is the end date?",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      fieldName: "departureDate",
+      items: dateFieldValues('departureDate', errors)
+    },
+    fetchContext()
+  )
+}}
+
+{{ govukButton({
+  name: 'submit',
+  text: "Submit"
+}) }}

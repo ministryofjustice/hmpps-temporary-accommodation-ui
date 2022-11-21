@@ -14,8 +14,9 @@
     "empty": "You must enter a name"
   },
   "arrivalDate": {
-    "empty": "You must enter an arrival date",
-    "invalid": "The arrival date is an invalid date"
+    "empty": "You must enter a start date",
+    "invalid": "The start date is an invalid date",
+    "conflict": "An existing booking overlaps with these dates"
   },
   "date": {
     "empty": "You must enter a valid departure date",
@@ -26,8 +27,10 @@
     "doesNotExist": "This reason does not exist"
   },
   "departureDate": {
-    "empty": "You must enter a departure date",
-    "invalid": "The departure date is an invalid date"
+    "empty": "You must enter an end date",
+    "invalid": "The end date is an invalid date",
+    "departureBeforeArrival": "The end date cannot be before the start date",
+    "conflict": "An existing booking overlaps with these dates"
   },
   "expectedDepartureDate": {
     "empty": "You must enter an expected departure date",
@@ -68,5 +71,8 @@
   },
   "localAuthorityAreaId": {
     "empty": "You must choose a local authority"
+  },
+  "serviceName": {
+    "expectedObject": "This shouldn't happen"
   }
 }

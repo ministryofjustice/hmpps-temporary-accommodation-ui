@@ -10,6 +10,10 @@ export default abstract class BookingEditablePage extends Page {
     })
   }
 
+  shouldShowEndDateHint(date: string): void {
+    cy.get('#departureDate-hint').should('contain', `The end date for a booking of 84 days is ${date}`)
+  }
+
   protected completeEditableForm(newOrUpdateBooking: NewBooking): void {
     this.getLabel("What is the person's CRN")
     this.getTextInputByIdAndEnterDetails('crn', newOrUpdateBooking.crn)

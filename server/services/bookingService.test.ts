@@ -89,6 +89,97 @@ describe('BookingService', () => {
     })
   })
 
+  describe('getTableRowsForBedspace', () => {
+    it('returns a sorted table view of the bookings for the given room', async () => {
+      const booking1 = bookingFactory.build({
+        bed: bedFactory.build({ id: bedId }),
+        arrivalDate: '2023-07-01',
+      })
+      const booking2 = bookingFactory.build({
+        bed: bedFactory.build({ id: bedId }),
+        arrivalDate: '2022-11-14',
+      })
+      const booking3 = bookingFactory.build({
+        bed: bedFactory.build({ id: bedId }),
+        arrivalDate: '2022-04-19',
+      })
+
+      const otherBedBooking = bookingFactory.build({
+        bed: bedFactory.build({ id: 'other-bed-id' }),
+      })
+
+      const bookings = [booking2, booking1, booking3, otherBedBooking]
+      bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
+
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            id: bedId,
+          }),
+        ],
+      })
+
+      const rows = await service.getTableRowsForBedspace(token, premisesId, room)
+
+      expect(rows).toEqual([
+        [
+          {
+            text: booking1.person.crn,
+          },
+          {
+            text: '1 Jul 23',
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking1.departureDate, { format: 'short' }),
+          },
+          {
+            html: `<strong class="govuk-tag">Provisional</strong>`,
+          },
+          {
+            html: `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking1.person.crn}</span></a>`,
+          },
+        ],
+        [
+          {
+            text: booking2.person.crn,
+          },
+          {
+            text: '14 Nov 22',
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking2.departureDate, { format: 'short' }),
+          },
+          {
+            html: `<strong class="govuk-tag">Provisional</strong>`,
+          },
+          {
+            html: `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking2.person.crn}</span></a>`,
+          },
+        ],
+        [
+          {
+            text: booking3.person.crn,
+          },
+          {
+            text: '19 Apr 22',
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking3.departureDate, { format: 'short' }),
+          },
+          {
+            html: `<strong class="govuk-tag">Provisional</strong>`,
+          },
+          {
+            html: `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking3.person.crn}</span></a>`,
+          },
+        ],
+      ])
+
+      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
   describe('listOfBookingsForPremisesId', () => {
     it('should return table rows of bookings', async () => {
       const bookings = bookingFactory.buildList(3)

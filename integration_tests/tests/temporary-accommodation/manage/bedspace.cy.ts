@@ -2,6 +2,8 @@ import premisesFactory from '../../../../server/testutils/factories/premises'
 import newRoomFactory from '../../../../server/testutils/factories/newRoom'
 import roomFactory from '../../../../server/testutils/factories/room'
 import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
+import bookingFactory from '../../../../server/testutils/factories/booking'
+import bedFactory from '../../../../server/testutils/factories/bed'
 import Page from '../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
@@ -247,18 +249,31 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises and a room in the database
+    // And there is a premises, a room, and bookings in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({
+          id: room.beds[0].id,
+        }),
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
 
     // When I visit the show bedspace page
     const page = BedspaceShowPage.visit(premises.id, room)
 
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
+
+    // And I should see the booking details
+    bookings.forEach(booking => {
+      page.shouldShowBookingDetails(booking)
+    })
   })
 
   it('navigates back from the show bedspace page to the show premises page', () => {

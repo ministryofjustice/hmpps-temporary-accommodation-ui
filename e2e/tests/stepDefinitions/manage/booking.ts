@@ -40,9 +40,11 @@ Given('I attempt to create a booking with required details missing', () => {
 })
 
 Then('I should see a confirmation for my new booking', () => {
-  cy.get('@room').then(room => {
-    const page = Page.verifyOnPage(BedspaceShowPage, room)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BedspaceShowPage, this.room)
     page.shouldShowBanner('Booking created')
+
+    page.shouldShowBookingDetails(this.booking)
   })
 })
 

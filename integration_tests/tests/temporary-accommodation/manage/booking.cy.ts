@@ -80,6 +80,27 @@ context('Booking', () => {
     bedspaceShowPage.shouldShowBanner('Booking created')
   })
 
+  it('shows a suggested end date for the booking', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises and a room the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+    // When I visit the new booking page
+    const page = BookingNewPage.visit(premises.id, room.id)
+
+    // And I enter a start date
+    page.completeDateInputs('arrivalDate', '2022-07-08')
+
+    // Then I should see a suggested end date
+    page.shouldShowEndDateHint('30/9/2022')
+  })
+
   it('shows errors when the API returns an error', () => {
     // Given I am signed in
     cy.signIn()

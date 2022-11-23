@@ -2,9 +2,10 @@ import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { addDays, startOfToday } from 'date-fns'
 
-import type { Booking, ServiceName } from '@approved-premises/api'
+import type { Booking } from '@approved-premises/api'
 import arrivalFactory from './arrival'
 import departureFactory from './departure'
+import confirmationFactory from './confirmation'
 import personFactory from './person'
 import { DateFormats } from '../../utils/dateUtils'
 
@@ -13,6 +14,22 @@ const soon = () => DateFormats.formatApiDate(faker.date.soon(5, addDays(new Date
 const past = () => DateFormats.formatApiDate(faker.date.past())
 const future = () => DateFormats.formatApiDate(faker.date.future())
 class BookingFactory extends Factory<Booking> {
+  provisional() {
+    return this.params({
+      arrivalDate: soon(),
+      departureDate: future(),
+      status: 'provisional',
+    })
+  }
+
+  confirmed() {
+    return this.params({
+      arrivalDate: soon(),
+      departureDate: future(),
+      status: 'confirmed',
+    })
+  }
+
   arrivingToday() {
     return this.params({
       arrivalDate: today,
@@ -32,14 +49,6 @@ class BookingFactory extends Factory<Booking> {
       arrivalDate: past(),
       departureDate: future(),
       status: 'arrived',
-    })
-  }
-
-  notArrived() {
-    return this.params({
-      arrivalDate: past(),
-      departureDate: future(),
-      status: 'not-arrived',
     })
   }
 
@@ -90,9 +99,10 @@ export default BookingFactory.define(() => ({
   departureDate: DateFormats.formatApiDate(faker.date.future()),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
-  status: 'awaiting-arrival' as const,
+  status: 'provisional' as const,
   arrival: arrivalFactory.build(),
   departure: departureFactory.build(),
+  confirmation: confirmationFactory.build(),
   extensions: [],
-  serviceName: 'temporary-accommodation' as ServiceName,
+  serviceName: 'temporary-accommodation' as const,
 }))

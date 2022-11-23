@@ -14,6 +14,7 @@ import LostBedService from './lostBedService'
 import ApplicationService from './applicationService'
 import LocalAuthorityService from './temporary-accommodation/localAuthorityService'
 import BedspaceService from './bedspaceService'
+import ConfirmationService from './confirmationService'
 
 export const services = () => {
   const {
@@ -40,6 +41,7 @@ export const services = () => {
   const applicationService = new ApplicationService(applicationClientBuilder)
   const localAuthorityService = new LocalAuthorityService(localAuthorityClientBuilder)
   const bedspaceService = new BedspaceService(roomClientBuilder, referenceDataClientBuilder)
+  const confirmationService = new ConfirmationService(bookingClientBuilder)
 
   return {
     userService,
@@ -54,6 +56,7 @@ export const services = () => {
     applicationService,
     localAuthorityService,
     bedspaceService,
+    confirmationService,
   }
 }
 

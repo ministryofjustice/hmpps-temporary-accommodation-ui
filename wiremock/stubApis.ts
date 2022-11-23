@@ -25,6 +25,7 @@ import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 import { errorStub, getCombinations } from './utils'
 import path from '../server/paths/api'
+import confirmationStubs from './confirmationStubs'
 
 const stubs = []
 
@@ -184,6 +185,7 @@ stubs.push(
   ...nonArrivalStubs,
   ...departureStubs,
   ...cancellationStubs,
+  ...confirmationStubs,
   ...boookingExtensionStubs,
   ...lostBedStubs,
   ...personStubs,

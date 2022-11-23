@@ -21,23 +21,14 @@
 
   <h1>View a booking</h1>
 
-  <div class="property-identity">
-    <h2 class="govuk-label govuk-label--m">Bedspace reference</h2>
-    <p class="govuk-body">{{ room.name }}</p>
+  <div class="location-header">
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
 
-    <h2 class="govuk-label govuk-label--m">Property address</h2>
-    <p class="govuk-body">{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
-  </div>
+    <h2>Bedspace reference</h2>
+    <p>{{ room.name }}</p>
 
-  <div class="edit-bar">
-    <div class="edit-bar__container">
-      <div class="edit-bar__title">
-        <h2 class="govuk-label govuk-label--m">CRN: {{ booking.person.crn }}</h2>
-      </div>
-      <div class="edit-bar__action">
-        <a href="#">Edit</a>
-      </div>
-    </div>
+    <h2>Property address</h2>
+    <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
   </div>
 
   {{ govukSummaryList({

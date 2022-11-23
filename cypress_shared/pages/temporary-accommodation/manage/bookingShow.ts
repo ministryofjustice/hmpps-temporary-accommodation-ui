@@ -15,14 +15,13 @@ export default class BookingShowPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
-    cy.get('.property-identity').within(() => {
+    cy.get('.location-header').within(() => {
+      cy.get('p').should('contain', this.booking.person.crn)
       cy.get('p').should('contain', this.room.name)
       cy.get('p').should('contain', this.premises.addressLine1)
       cy.get('p').should('contain', this.premises.postcode)
     })
 
-    cy.get('h2').should('contain', this.booking.person.crn)
-    
     this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
     this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
   }

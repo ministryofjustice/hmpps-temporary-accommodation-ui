@@ -29,6 +29,7 @@ export default class BookingShowPage extends Page {
       this.shouldShowKeyAndValue('Status', 'Provisional')
     } else if (this.booking.status === 'confirmed') {
       this.shouldShowKeyAndValue('Status', 'Confirmed')
+      this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
     }
   }
 }

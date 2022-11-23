@@ -113,7 +113,12 @@ describe('ConfirmationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+      )
     })
   })
 })

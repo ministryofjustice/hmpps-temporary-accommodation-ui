@@ -9,6 +9,8 @@ const singleBedspacePath = bedspacesPath.path(':roomId')
 const bookingsPath = singleBedspacePath.path('bookings')
 const singleBookingPath = bookingsPath.path(':bookingId')
 
+const confirmationsPath = singleBookingPath.path('confirmations')
+
 const paths = {
   premises: {
     index: premisesPath,
@@ -29,6 +31,10 @@ const paths = {
     new: bookingsPath.path('new'),
     create: bookingsPath,
     show: singleBookingPath,
+    confirmations: {
+      new: confirmationsPath.path('new'),
+      create: confirmationsPath,
+    },
   },
 }
 

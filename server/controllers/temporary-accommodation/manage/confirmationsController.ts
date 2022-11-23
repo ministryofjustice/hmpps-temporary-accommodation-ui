@@ -48,7 +48,12 @@ export default class ConfirmationsController {
         req.flash('success', 'Booking confirmed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, '')
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+        )
       }
     }
   }

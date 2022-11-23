@@ -4,6 +4,7 @@ import { Services } from '../../../services'
 import PremisesController from './premisesController'
 import BedspacesController from './bedspacesController'
 import BookingsController from './bookingsController'
+import ConfirmationsController from './confirmationsController'
 
 export const controllers = (services: Services) => {
   const premisesController = new PremisesController(
@@ -22,11 +23,14 @@ export const controllers = (services: Services) => {
     services.bookingService,
   )
 
+  const confirmationsController = new ConfirmationsController(services.bookingService, services.confirmationService)
+
   return {
     premisesController,
     bedspacesController,
     bookingsController,
+    confirmationsController,
   }
 }
 
-export { PremisesController, BedspacesController, BookingsController }
+export { PremisesController, BedspacesController, BookingsController, ConfirmationsController }

@@ -16,7 +16,7 @@ import {
 } from './formUtils'
 import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationUtils'
 import { statusTag } from './personUtils'
-import bookingActions from './bookingUtils'
+import { bookingActions } from './bookingUtils'
 import { DateFormats } from './dateUtils'
 import managePaths from '../paths/temporary-accommodation/manage'
 

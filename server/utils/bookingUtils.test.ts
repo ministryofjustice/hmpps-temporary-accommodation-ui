@@ -1,4 +1,4 @@
-import bookingActions from './bookingUtils'
+import { bookingActions, formatStatus } from './bookingUtils'
 import bookingFactory from '../testutils/factories/booking'
 import paths from '../paths/manage'
 
@@ -69,6 +69,12 @@ describe('bookingUtils', () => {
           ],
         },
       ])
+    })
+  })
+
+  describe('formatStatus', () => {
+    it('returns the HTML formatted display name of a given status', () => {
+      expect(formatStatus('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
     })
   })
 })

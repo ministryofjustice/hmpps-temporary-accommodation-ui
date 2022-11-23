@@ -139,13 +139,8 @@ premises.forEach(item => {
   })
 
   const bookings = [
-    bedspaceBookingFactory.arrivingToday().buildList(rand()),
-    bedspaceBookingFactory.arrivedToday().buildList(rand()),
-    bedspaceBookingFactory.departingToday().buildList(rand()),
-    bedspaceBookingFactory.departedToday().buildList(rand()),
-    bedspaceBookingFactory.arrivingSoon().buildList(rand()),
-    bedspaceBookingFactory.cancelledWithFutureArrivalDate().buildList(rand()),
-    bedspaceBookingFactory.departingSoon().buildList(rand()),
+    bedspaceBookingFactory.provisional().buildList(rand()),
+    bedspaceBookingFactory.confirmed().buildList(rand()),
   ].flat()
 
   stubs.push({

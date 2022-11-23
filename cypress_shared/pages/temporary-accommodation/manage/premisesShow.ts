@@ -20,35 +20,14 @@ export default class PremisesShowPage extends Page {
     cy.get(`[data-cy-premises]`).within(() => {
       cy.get('h3').should('contain', this.premises.name)
 
-      cy.get('.govuk-summary-list__key')
-        .contains('Address')
-        .siblings('.govuk-summary-list__value')
-        .should('contain', this.premises.addressLine1)
-        .should('contain', this.premises.postcode)
-
-      cy.get('.govuk-summary-list__key')
-        .contains('Local authority')
-        .siblings('.govuk-summary-list__value')
-        .should('contain', this.premises.localAuthorityArea.name)
-
-      this.premises.characteristics.forEach(characteristic => {
-        cy.get('.govuk-summary-list__key')
-          .contains('Attributes')
-          .siblings('.govuk-summary-list__value')
-          .should('contain', characteristic.name)
-      })
-
-      cy.get('.govuk-summary-list__key')
-        .contains('Status')
-        .siblings('.govuk-summary-list__value')
-        .should('contain', formatStatus(this.premises.status))
-
-      this.premises.notes.split('\n').forEach(noteLine => {
-        cy.get('.govuk-summary-list__key')
-          .contains('Notes')
-          .siblings('.govuk-summary-list__value')
-          .should('contain', noteLine)
-      })
+      this.shouldShowKeyAndValues('Address', [this.premises.addressLine1, this.premises.postcode])
+      this.shouldShowKeyAndValue('Local authority', this.premises.localAuthorityArea.name)
+      this.shouldShowKeyAndValues(
+        'Attributes',
+        this.premises.characteristics.map(({ name }) => name),
+      )
+      this.shouldShowKeyAndValue('Status', formatStatus(this.premises.status))
+      this.shouldShowKeyAndValues('Notes', this.premises.notes.split('\n'))
     })
   }
 
@@ -57,19 +36,11 @@ export default class PremisesShowPage extends Page {
       .contains(room.name)
       .parents('[data-cy-bedspace]')
       .within(() => {
-        room.characteristics.forEach(characteristic => {
-          cy.get('.govuk-summary-list__key')
-            .contains('Attributes')
-            .siblings('.govuk-summary-list__value')
-            .should('contain', characteristic.name)
-        })
-
-        room.notes.split('\n').forEach(noteLine => {
-          cy.get('.govuk-summary-list__key')
-            .contains('Notes')
-            .siblings('.govuk-summary-list__value')
-            .should('contain', noteLine)
-        })
+        this.shouldShowKeyAndValues(
+          'Attributes',
+          room.characteristics.map(({ name }) => name),
+        )
+        this.shouldShowKeyAndValues('Notes', room.notes.split('\n'))
       })
   }
 

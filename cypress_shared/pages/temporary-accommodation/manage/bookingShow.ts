@@ -22,15 +22,8 @@ export default class BookingShowPage extends Page {
     })
 
     cy.get('h2').should('contain', this.booking.person.crn)
-
-    cy.get('.govuk-summary-list__key')
-      .contains('Start date')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-
-    cy.get('.govuk-summary-list__key')
-      .contains('End date')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    
+    this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
+    this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
   }
 }

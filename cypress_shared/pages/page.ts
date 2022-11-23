@@ -38,6 +38,21 @@ export default abstract class Page {
     cy.get('.govuk-notification-banner').contains(copy)
   }
 
+  shouldShowKeyAndValue(key: string, value: string): void {
+    cy.get('.govuk-summary-list__key').contains(key).siblings('.govuk-summary-list__value').should('contain', value)
+  }
+
+  shouldShowKeyAndValues(key: string, values: string[]): void {
+    cy.get('.govuk-summary-list__key')
+      .contains(key)
+      .siblings('.govuk-summary-list__value')
+      .within(elements => {
+        values.forEach(value => {
+          cy.wrap(elements).should('contain', value)
+        })
+      })
+  }
+
   getLabel(labelName: string): void {
     cy.get('label').should('contain', labelName)
   }

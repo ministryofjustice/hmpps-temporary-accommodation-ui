@@ -37,7 +37,11 @@ export default class BedspaceShowPage extends Page {
         cy.get('td')
           .eq(2)
           .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
-        cy.get('td').eq(3).contains('Provisional')
+        if (booking.status === 'provisional') {
+          cy.get('td').eq(3).contains('Provisional')
+        } else if (booking.status === 'confirmed') {
+          cy.get('td').eq(3).contains('Confirmed')
+        }
         cy.get('td').eq(4).contains('View')
       })
   }

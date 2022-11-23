@@ -24,5 +24,11 @@ export default class BookingShowPage extends Page {
 
     this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
     this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+
+    if (this.booking.status === 'provisional') {
+      this.shouldShowKeyAndValue('Status', 'Provisional')
+    } else if (this.booking.status === 'confirmed') {
+      this.shouldShowKeyAndValue('Status', 'Confirmed')
+    }
   }
 }

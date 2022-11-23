@@ -10,9 +10,11 @@ import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
+import { formatStatus } from '../utils/bookingUtils'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
+jest.mock('../utils/bookingUtils')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
@@ -24,6 +26,8 @@ describe('BookingService', () => {
 
   const premisesId = 'premiseId'
   const bedId = 'bedId'
+
+  const statusHtml = '<strong>Some status</strong>'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -109,6 +113,8 @@ describe('BookingService', () => {
         bed: bedFactory.build({ id: 'other-bed-id' }),
       })
 
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+
       const bookings = [booking2, booking1, booking3, otherBedBooking]
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
 
@@ -134,7 +140,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(booking1.departureDate, { format: 'short' }),
           },
           {
-            html: `<strong class="govuk-tag">Provisional</strong>`,
+            html: statusHtml,
           },
           {
             html: `<a href="${taPaths.bookings.show({
@@ -157,7 +163,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(booking2.departureDate, { format: 'short' }),
           },
           {
-            html: `<strong class="govuk-tag">Provisional</strong>`,
+            html: statusHtml,
           },
           {
             html: `<a href="${taPaths.bookings.show({
@@ -180,7 +186,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(booking3.departureDate, { format: 'short' }),
           },
           {
-            html: `<strong class="govuk-tag">Provisional</strong>`,
+            html: statusHtml,
           },
           {
             html: `<a href="${taPaths.bookings.show({
@@ -196,6 +202,8 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+
+      expect(formatStatus).toHaveBeenCalledTimes(3)
     })
   })
 
@@ -206,6 +214,8 @@ describe('BookingService', () => {
         departureDate: '2023-01-07',
       })
 
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+
       bookingClient.find.mockResolvedValue(booking)
 
       const result = await service.getBookingDetails(token, premisesId, booking.id)
@@ -214,6 +224,14 @@ describe('BookingService', () => {
         booking,
         summaryList: {
           rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
             {
               key: {
                 text: 'Start date',
@@ -233,6 +251,8 @@ describe('BookingService', () => {
           ],
         },
       })
+
+      expect(formatStatus).toHaveBeenCalledWith(booking.status)
     })
   })
 

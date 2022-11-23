@@ -15,6 +15,7 @@ import BookingClient from '../data/bookingClient'
 import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
+import { formatStatus } from '../utils/bookingUtils'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -67,7 +68,7 @@ export default class BookingService {
           this.textValue(booking.person.crn),
           this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' })),
           this.textValue(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })),
-          this.htmlValue('<strong class="govuk-tag">Provisional</strong>'),
+          this.htmlValue(formatStatus(booking.status)),
           this.htmlValue(
             `<a href="${taPaths.bookings.show({
               premisesId,
@@ -91,6 +92,10 @@ export default class BookingService {
       booking,
       summaryList: {
         rows: [
+          {
+            key: this.textValue('Status'),
+            value: this.htmlValue(formatStatus(booking.status)),
+          },
           {
             key: this.textValue('Start date'),
             value: this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate)),

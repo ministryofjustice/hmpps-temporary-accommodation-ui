@@ -96,7 +96,7 @@ context('Booking', () => {
     page.completeForm(newBooking)
 
     // Then a booking should have been created in the API
-    cy.task('verifyBookingCreate', { premisesId: premises.id, roomId: room.id }).then(requests => {
+    cy.task('verifyBookingCreate', premises.id).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 

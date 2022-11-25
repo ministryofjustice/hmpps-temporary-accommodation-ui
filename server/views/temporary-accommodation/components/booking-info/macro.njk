@@ -1,0 +1,18 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro bookingInfo(summaryList) %}
+
+<div class="booking-info">
+  <div class="booking-info__header">
+    <h2 class="booking-info__title">
+      Booking status
+    </h2>
+  </div>
+  <div class="booking-info__content">
+    {{ govukSummaryList({
+      rows: summaryList.rows
+    }) }}
+  </div>
+</div>
+
+{% endmacro %}

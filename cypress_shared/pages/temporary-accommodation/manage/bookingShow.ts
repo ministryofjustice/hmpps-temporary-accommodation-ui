@@ -14,6 +14,10 @@ export default class BookingShowPage extends Page {
     return new BookingShowPage(premises, room, booking)
   }
 
+  clickConfirmBookingButton(): void {
+    cy.get('a').contains('Mark as confirmed').click()
+  }
+
   shouldShowBookingDetails(): void {
     cy.get('.location-header').within(() => {
       cy.get('p').should('contain', this.booking.person.crn)

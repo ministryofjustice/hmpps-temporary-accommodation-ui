@@ -10,8 +10,10 @@ import newBookingFactory from '../../../testutils/factories/newBooking'
 import { PremisesService, BookingService } from '../../../services'
 import BookingsController from './bookingsController'
 import { DateFormats } from '../../../utils/dateUtils'
+import { bookingActions } from '../../../utils/bookingUtils'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/bookingUtils')
 
 describe('BookingsController', () => {
   const token = 'SOME_TOKEN'
@@ -189,6 +191,11 @@ describe('BookingsController', () => {
           rows: [],
         },
       })
+      ;(bookingActions as jest.MockedFunction<typeof bookingActions>).mockReturnValue([
+        {
+          items: [],
+        },
+      ])
 
       request.params = {
         premisesId: premises.id,
@@ -206,6 +213,11 @@ describe('BookingsController', () => {
         summaryList: {
           rows: [],
         },
+        actions: [
+          {
+            items: [],
+          },
+        ],
       })
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)

@@ -14,6 +14,29 @@ context('Booking confirmation', () => {
     cy.task('stubAuthUser')
   })
 
+  it('navigates to the confirm booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a booking in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const booking = bookingFactory.provisional().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the confim booking action
+    bookingShow.clickConfirmBookingButton()
+
+    // Then I navigate to the booking confirmation page
+    Page.verifyOnPage(BookingConfirmationNewPage, premises.id, room.id, booking)
+  })
+
   it('allows me to confirm a booking', () => {
     // Given I am signed in
     cy.signIn()

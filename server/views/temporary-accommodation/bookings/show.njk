@@ -19,7 +19,12 @@
 
   {% include "../../_messages.njk" %}
 
-  <h1>View a booking</h1>
+  {{ mojIdentityBar({
+    title: {
+      html: '<h1>View a booking</h1>'
+    },
+    menus: actions
+  }) }}
 
   <div class="location-header">
     <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>

@@ -35,7 +35,8 @@
   "expectedDepartureDate": {
     "empty": "You must enter an expected departure date",
     "invalid": "The expected departure date is an invalid date",
-    "beforeBookingArrivalDate": "The departure date cannot be before the arrival date"
+    "beforeBookingArrivalDate": "The departure date cannot be before the arrival date",
+    "conflict": "An existing booking overlaps with these dates"
   },
   "keyWorkerStaffId": {
     "empty": "You must choose a keyworker"

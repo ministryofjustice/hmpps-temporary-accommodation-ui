@@ -18,8 +18,29 @@ export default {
         jsonBody: args.arrival,
       },
     }),
-  stubArrivalErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }): SuperAgentRequest =>
+  stubArrivalCreateErrors: (args: {
+    premisesId: string
+    bookingId: string
+    params: Array<string>
+  }): SuperAgentRequest =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`, 'POST')),
+  stubArrivalCreateConflictError: (args: { premisesId: string; bookingId: string }) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
+      },
+      response: {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: {
+          title: 'Conflict',
+          status: 409,
+        },
+      },
+    }),
   verifyArrivalCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({

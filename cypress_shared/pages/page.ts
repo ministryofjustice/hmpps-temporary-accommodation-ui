@@ -53,6 +53,13 @@ export default abstract class Page {
       })
   }
 
+  shouldShowDateInputs(prefix: string, date: string): void {
+    const parsedDate = DateFormats.convertIsoToDateObj(date)
+    cy.get(`#${prefix}-day`).should('have.value', parsedDate.getDate().toString())
+    cy.get(`#${prefix}-month`).should('have.value', `${parsedDate.getMonth() + 1}`)
+    cy.get(`#${prefix}-year`).should('have.value', parsedDate.getFullYear().toString())
+  }
+
   getLabel(labelName: string): void {
     cy.get('label').should('contain', labelName)
   }
@@ -83,6 +90,12 @@ export default abstract class Page {
 
   completeTextArea(name: string, value: string): void {
     cy.get(`textarea[name="${name}"]`).type(value)
+  }
+
+  clearDateInputs(prefix: string): void {
+    cy.get(`#${prefix}-day`).clear()
+    cy.get(`#${prefix}-month`).clear()
+    cy.get(`#${prefix}-year`).clear()
   }
 
   completeDateInputs(prefix: string, date: string): void {

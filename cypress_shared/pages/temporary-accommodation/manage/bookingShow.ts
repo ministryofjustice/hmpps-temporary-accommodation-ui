@@ -28,12 +28,17 @@ export default class BookingShowPage extends Page {
 
     this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
     this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    
+    const { status } = this.booking
 
-    if (this.booking.status === 'provisional') {
+    if (status === 'provisional') {
       this.shouldShowKeyAndValue('Status', 'Provisional')
-    } else if (this.booking.status === 'confirmed') {
+    } else if (status === 'confirmed') {
       this.shouldShowKeyAndValue('Status', 'Confirmed')
       this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
+    } else if (status === 'arrived') {
+      this.shouldShowKeyAndValue('Status', 'Active')
+      this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
     }
   }
 }

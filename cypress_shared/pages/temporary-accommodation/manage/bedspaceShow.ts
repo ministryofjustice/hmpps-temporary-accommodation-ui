@@ -26,6 +26,8 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowBookingDetails(booking: Booking): void {
+    const { status } = booking
+
     cy.get('tr')
       .contains(booking.person.crn)
       .parent()
@@ -37,11 +39,14 @@ export default class BedspaceShowPage extends Page {
         cy.get('td')
           .eq(2)
           .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
-        if (booking.status === 'provisional') {
+        if (status === 'provisional') {
           cy.get('td').eq(3).contains('Provisional')
-        } else if (booking.status === 'confirmed') {
+        } else if (status === 'confirmed') {
           cy.get('td').eq(3).contains('Confirmed')
+        } else if (status === 'arrived') {
+          cy.get('td').eq(3).contains('Active')
         }
+
         cy.get('td').eq(4).contains('View')
       })
   }

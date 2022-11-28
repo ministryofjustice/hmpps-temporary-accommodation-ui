@@ -6,6 +6,7 @@ import bedFactory from '../../../../server/testutils/factories/bed'
 import newBookingFactory from '../../../../server/testutils/factories/newBooking'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 
 context('Booking', () => {
   beforeEach(() => {
@@ -35,6 +36,36 @@ context('Booking', () => {
     Page.verifyOnPage(BookingNewPage)
   })
 
+  it('navigates to the show booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and bookings in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({
+          id: room.beds[0].id,
+        }),
+      })
+      .buildList(5)
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
+
+    // When I visit the show bedspace page
+    const bedspaceShowPage = BedspaceShowPage.visit(premises.id, room)
+
+    // Add I click the booking link
+    bedspaceShowPage.clickBookingLink(bookings[0])
+
+    // Then I navigate to the booking page
+    Page.verifyOnPage(BookingShowPage, premises, room, bookings[0])
+  })
+
   it('allows me to create a booking', () => {
     // Given I am signed in
     cy.signIn()
@@ -60,6 +91,7 @@ context('Booking', () => {
     })
 
     cy.task('stubBookingCreate', { premisesId: premises.id, booking })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
 
     page.completeForm(newBooking)
 
@@ -75,9 +107,9 @@ context('Booking', () => {
       expect(requestBody.departureDate).equal(newBooking.departureDate)
     })
 
-    // And I should be redirected to the show bedspace page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, room)
-    bedspaceShowPage.shouldShowBanner('Booking created')
+    // And I should be redirected to the show booking page
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    bookingShowPage.shouldShowBanner('Booking created')
   })
 
   it('shows a suggested end date for the booking', () => {
@@ -177,5 +209,55 @@ context('Booking', () => {
 
     // Then I navigate to the show bedspace page
     Page.verifyOnPage(BedspaceShowPage, premises)
+  })
+
+  it('shows a single booking', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a booking in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const booking = bookingFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // When I visit the show booking page
+    const page = BookingShowPage.visit(premises, room, booking)
+
+    // Then I should see the booking details
+    page.shouldShowBookingDetails()
+  })
+
+  it('navigates back from the show booking page to the show bedspace page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and bookings in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({
+          id: room.beds[0].id,
+        }),
+      })
+      .buildList(5)
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
+
+    // When I visit the show booking page
+    const page = BookingShowPage.visit(premises, room, bookings[0])
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the show bedspace page
+    Page.verifyOnPage(BedspaceShowPage, room)
   })
 })

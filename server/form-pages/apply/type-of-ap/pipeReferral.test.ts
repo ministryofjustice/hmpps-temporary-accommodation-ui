@@ -126,7 +126,7 @@ describe('PipeReferral', () => {
 
       expect(page.response()).toEqual({
         [page.title]: 'Yes',
-        "When was John Wayne's last consultation or formulation?": 'Friday 11 November 2022',
+        "When was John Wayne's last consultation or formulation?": '11 November 2022',
       })
     })
   })

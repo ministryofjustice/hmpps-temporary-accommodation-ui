@@ -49,10 +49,10 @@ export default class BookingsController {
       }
 
       try {
-        await this.bookingsService.createForBedspace(token, premisesId, room, newBooking)
+        const booking = await this.bookingsService.createForBedspace(token, premisesId, room, newBooking)
 
         req.flash('success', 'Booking created')
-        res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
+        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
       } catch (err) {
         if (err.status === 409) {
           insertGenericError(err, 'arrivalDate', 'conflict')
@@ -61,6 +61,25 @@ export default class BookingsController {
 
         catchValidationErrorOrPropogate(req, res, err, paths.bookings.new({ premisesId, roomId }))
       }
+    }
+  }
+
+  show(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, bookingId } = req.params
+      const { token } = req.user
+
+      const premises = await this.premisesService.getPremises(token, premisesId)
+      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+
+      const { booking, summaryList } = await this.bookingsService.getBookingDetails(token, premisesId, bookingId)
+
+      return res.render('temporary-accommodation/bookings/show', {
+        premises,
+        room,
+        booking,
+        summaryList,
+      })
     }
   }
 }

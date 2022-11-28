@@ -139,7 +139,7 @@ describe('ReleaseDate', () => {
 
       expect(page.response()).toEqual({
         [page.title]: 'Yes',
-        'Release Date': 'Friday 11 November 2022',
+        'Release Date': '11 November 2022',
       })
     })
   })

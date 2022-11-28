@@ -97,7 +97,7 @@ describe('BookingsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking created')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -172,6 +172,45 @@ describe('BookingsController', () => {
         err,
         paths.bookings.new({ premisesId, roomId }),
       )
+    })
+  })
+
+  describe('show', () => {
+    it('renders the template for viewing a booking', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.build()
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.getBookingDetails.mockResolvedValue({
+        booking,
+        summaryList: {
+          rows: [],
+        },
+      })
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        bookingId: booking.id,
+      }
+
+      const requestHandler = bookingsController.show()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/show', {
+        premises,
+        room,
+        booking,
+        summaryList: {
+          rows: [],
+        },
+      })
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premises.id, room.id)
+      expect(bookingService.getBookingDetails).toHaveBeenCalledWith(token, premises.id, booking.id)
     })
   })
 })

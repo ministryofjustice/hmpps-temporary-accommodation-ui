@@ -5,7 +5,8 @@ import newBookingFactory from '../testutils/factories/newBooking'
 import bookingExtensionFactory from '../testutils/factories/bookingExtension'
 import bookingFactory from '../testutils/factories/booking'
 
-import paths from '../paths/manage'
+import apPaths from '../paths/manage'
+import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
@@ -136,7 +137,13 @@ describe('BookingService', () => {
             html: `<strong class="govuk-tag">Provisional</strong>`,
           },
           {
-            html: `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking1.person.crn}</span></a>`,
+            html: `<a href="${taPaths.bookings.show({
+              premisesId,
+              roomId: room.id,
+              bookingId: booking1.id,
+            })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
+              booking1.person.crn
+            }</span></a>`,
           },
         ],
         [
@@ -153,7 +160,13 @@ describe('BookingService', () => {
             html: `<strong class="govuk-tag">Provisional</strong>`,
           },
           {
-            html: `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking2.person.crn}</span></a>`,
+            html: `<a href="${taPaths.bookings.show({
+              premisesId,
+              roomId: room.id,
+              bookingId: booking2.id,
+            })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
+              booking2.person.crn
+            }</span></a>`,
           },
         ],
         [
@@ -170,13 +183,56 @@ describe('BookingService', () => {
             html: `<strong class="govuk-tag">Provisional</strong>`,
           },
           {
-            html: `<a href="#">View<span class="govuk-visually-hidden"> booking for person with CRN ${booking3.person.crn}</span></a>`,
+            html: `<a href="${taPaths.bookings.show({
+              premisesId,
+              roomId: room.id,
+              bookingId: booking3.id,
+            })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
+              booking3.person.crn
+            }</span></a>`,
           },
         ],
       ])
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
+  describe('getBookingDetails', () => {
+    it('returns a booking and a summary list of details for the booking', async () => {
+      const booking = bookingFactory.build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
+      })
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Start date',
+              },
+              value: {
+                text: '21 March 2022',
+              },
+            },
+            {
+              key: {
+                text: 'End date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+          ],
+        },
+      })
     })
   })
 
@@ -275,13 +331,13 @@ describe('BookingService', () => {
       expect(results[0][0]).toEqual({ text: bookings[0].person.crn })
       expect(results[0][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking1Date) })
       expect(results[0][2]).toEqual({
-        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
+        html: expect.stringMatching(apPaths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].person.crn })
       expect(results[1][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking2Date) })
       expect(results[1][2]).toEqual({
-        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
+        html: expect.stringMatching(apPaths.bookings.show({ premisesId, bookingId: bookings[1].id })),
       })
     })
 
@@ -299,13 +355,13 @@ describe('BookingService', () => {
       expect(results[0][0]).toEqual({ text: bookings[0].person.crn })
       expect(results[0][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking1Date) })
       expect(results[0][2]).toEqual({
-        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[0].id })),
+        html: expect.stringMatching(apPaths.bookings.show({ premisesId, bookingId: bookings[0].id })),
       })
 
       expect(results[1][0]).toEqual({ text: bookings[1].person.crn })
       expect(results[1][1]).toEqual({ text: DateFormats.dateObjtoUIDate(booking2Date) })
       expect(results[1][2]).toEqual({
-        html: expect.stringMatching(paths.bookings.show({ premisesId, bookingId: bookings[1].id })),
+        html: expect.stringMatching(apPaths.bookings.show({ premisesId, bookingId: bookings[1].id })),
       })
     })
   })

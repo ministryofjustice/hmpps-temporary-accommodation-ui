@@ -16,7 +16,6 @@ import {
 } from './formUtils'
 import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationUtils'
 import { statusTag } from './personUtils'
-import bookingActions from './bookingUtils'
 import { DateFormats } from './dateUtils'
 import managePaths from '../paths/temporary-accommodation/manage'
 
@@ -107,8 +106,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       return convertObjectsToCheckboxItems(items, textKey, valueKey, fieldName, this.ctx)
     },
   )
-
-  njkEnv.addGlobal('bookingActions', bookingActions)
 
   njkEnv.addGlobal('getCompleteSectionCount', getCompleteSectionCount)
 

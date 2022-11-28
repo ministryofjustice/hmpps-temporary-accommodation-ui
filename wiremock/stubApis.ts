@@ -25,6 +25,7 @@ import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 import { errorStub, getCombinations } from './utils'
 import path from '../server/paths/api'
+import confirmationStubs from './confirmationStubs'
 
 const stubs = []
 
@@ -138,13 +139,8 @@ premises.forEach(item => {
   })
 
   const bookings = [
-    bedspaceBookingFactory.arrivingToday().buildList(rand()),
-    bedspaceBookingFactory.arrivedToday().buildList(rand()),
-    bedspaceBookingFactory.departingToday().buildList(rand()),
-    bedspaceBookingFactory.departedToday().buildList(rand()),
-    bedspaceBookingFactory.arrivingSoon().buildList(rand()),
-    bedspaceBookingFactory.cancelledWithFutureArrivalDate().buildList(rand()),
-    bedspaceBookingFactory.departingSoon().buildList(rand()),
+    bedspaceBookingFactory.provisional().buildList(rand()),
+    bedspaceBookingFactory.confirmed().buildList(rand()),
   ].flat()
 
   stubs.push({
@@ -184,6 +180,7 @@ stubs.push(
   ...nonArrivalStubs,
   ...departureStubs,
   ...cancellationStubs,
+  ...confirmationStubs,
   ...boookingExtensionStubs,
   ...lostBedStubs,
   ...personStubs,

@@ -6,6 +6,7 @@ import { PremisesService, BookingService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
+import { bookingActions } from '../../../utils/bookingUtils'
 
 export default class BookingsController {
   constructor(
@@ -79,6 +80,7 @@ export default class BookingsController {
         room,
         booking,
         summaryList,
+        actions: bookingActions(premisesId, roomId, booking),
       })
     }
   }

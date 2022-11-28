@@ -10,6 +10,8 @@ import type {
   Departure,
   Nonarrival,
   NewDeparture,
+  NewConfirmation,
+  Confirmation,
 } from '@approved-premises/api'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
@@ -38,6 +40,15 @@ export default class BookingClient {
       path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
       data: bookingExtension,
     })) as Extension
+  }
+
+  async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation): Promise<Confirmation> {
+    const response = await this.restClient.post({
+      path: `${this.bookingPath(premisesId, bookingId)}/confirmations`,
+      data: confirmation,
+    })
+
+    return response as Confirmation
   }
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival): Promise<Arrival> {

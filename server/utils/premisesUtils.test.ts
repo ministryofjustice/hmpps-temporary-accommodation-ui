@@ -86,7 +86,7 @@ describe('premisesUtils', () => {
   })
 
   describe('formatStatus', () => {
-    it('returns the dislay name of a given status', () => {
+    it('returns the display name of a given status', () => {
       expect(formatStatus('pending')).toEqual('Pending')
     })
   })

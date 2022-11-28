@@ -1,0 +1,51 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Mark booking as confirmed" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.bookings.show({ premisesId: premisesId, roomId: roomId, bookingId: booking.id })
+  }) }}
+
+  {% include "../../_messages.njk" %}
+
+  <h1>Mark booking as confirmed</h1>
+
+  <div class="location-header">
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
+  </div>
+
+  {{ bookingInfo(summaryList) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.bookings.confirmations.create({ premisesId: premisesId, roomId: roomId, bookingId: booking.id }) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ taTextarea(
+          {
+            label: {
+              text: "Please provide any further details"
+            },
+            fieldName: "notes"
+          },
+          fetchContext()
+        ) }}
+
+        {{ govukButton({
+          name: 'submit',
+          text: "Submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

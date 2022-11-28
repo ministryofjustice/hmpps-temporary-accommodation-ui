@@ -13,6 +13,8 @@ import nonArrivalFactory from '../testutils/factories/nonArrival'
 import newArrivalFactory from '../testutils/factories/newArrival'
 
 import config from '../config'
+import confirmationFactory from '../testutils/factories/confirmation'
+import newConfirmationFactory from '../testutils/factories/newConfirmation'
 
 describe('BookingClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -107,6 +109,25 @@ describe('BookingClient', () => {
       const result = await bookingClient.extendBooking('premisesId', booking.id, payload)
 
       expect(result).toEqual(booking)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('markAsConfirmed', () => {
+    it('should create a confirmation', async () => {
+      const confirmation = confirmationFactory.build()
+      const payload = newConfirmationFactory.build({
+        ...confirmation,
+      })
+
+      fakeApprovedPremisesApi
+        .post(`/premises/premisesId/bookings/bookingId/confirmations`, payload)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(201, confirmation)
+
+      const result = await bookingClient.markAsConfirmed('premisesId', 'bookingId', payload)
+
+      expect(result).toEqual(confirmation)
       expect(nock.isDone()).toBeTruthy()
     })
   })

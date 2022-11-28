@@ -9,7 +9,7 @@ import referenceDataFactory from '../testutils/factories/referenceData'
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
 
-describe('DepartureService', () => {
+describe('CancellationService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 

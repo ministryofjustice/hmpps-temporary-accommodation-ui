@@ -65,6 +65,6 @@ export default {
         body: JSON.stringify(args.bookings),
       },
     }),
-  verifyBookingCreate: async (args: { premisesId }) =>
-    (await getMatchingRequests({ method: 'POST', url: `/premises/${args.premisesId}/bookings` })).body.requests,
+  verifyBookingCreate: async (premisesId: string) =>
+    (await getMatchingRequests({ method: 'POST', url: `/premises/${premisesId}/bookings` })).body.requests,
 }

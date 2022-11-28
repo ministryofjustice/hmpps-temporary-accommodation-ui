@@ -1,6 +1,6 @@
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{% from "../components/booking-info/macro.njk" import bookingInfo %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -19,30 +19,23 @@
 
   {% include "../../_messages.njk" %}
 
-  <h1>View a booking</h1>
-
-  <div class="property-identity">
-    <h2 class="govuk-label govuk-label--m">Bedspace reference</h2>
-    <p class="govuk-body">{{ room.name }}</p>
-
-    <h2 class="govuk-label govuk-label--m">Property address</h2>
-    <p class="govuk-body">{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
-  </div>
-
-  <div class="edit-bar">
-    <div class="edit-bar__container">
-      <div class="edit-bar__title">
-        <h2 class="govuk-label govuk-label--m">CRN: {{ booking.person.crn }}</h2>
-      </div>
-      <div class="edit-bar__action">
-        <a href="#">Edit</a>
-      </div>
-    </div>
-  </div>
-
-  {{ govukSummaryList({
-    rows: summaryList.rows,
-    classes: 'govuk-summary-list--no-border details'
+  {{ mojIdentityBar({
+    title: {
+      html: '<h1>View a booking</h1>'
+    },
+    menus: actions
   }) }}
+
+  <div class="location-header">
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
+
+    <h2>Bedspace reference</h2>
+    <p>{{ room.name }}</p>
+
+    <h2>Property address</h2>
+    <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+  </div>
+
+  {{ bookingInfo(summaryList) }}
 
 {% endblock %}

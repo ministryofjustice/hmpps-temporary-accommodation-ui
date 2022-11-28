@@ -10,9 +10,13 @@ import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
+import { formatStatus } from '../utils/bookingUtils'
+import { formatLines } from '../utils/viewUtils'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
+jest.mock('../utils/bookingUtils')
+jest.mock('../utils/viewUtils')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
@@ -24,6 +28,8 @@ describe('BookingService', () => {
 
   const premisesId = 'premiseId'
   const bedId = 'bedId'
+
+  const statusHtml = '<strong>Some status</strong>'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -109,6 +115,8 @@ describe('BookingService', () => {
         bed: bedFactory.build({ id: 'other-bed-id' }),
       })
 
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+
       const bookings = [booking2, booking1, booking3, otherBedBooking]
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
 
@@ -134,7 +142,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(booking1.departureDate, { format: 'short' }),
           },
           {
-            html: `<strong class="govuk-tag">Provisional</strong>`,
+            html: statusHtml,
           },
           {
             html: `<a href="${taPaths.bookings.show({
@@ -157,7 +165,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(booking2.departureDate, { format: 'short' }),
           },
           {
-            html: `<strong class="govuk-tag">Provisional</strong>`,
+            html: statusHtml,
           },
           {
             html: `<a href="${taPaths.bookings.show({
@@ -180,7 +188,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(booking3.departureDate, { format: 'short' }),
           },
           {
-            html: `<strong class="govuk-tag">Provisional</strong>`,
+            html: statusHtml,
           },
           {
             html: `<a href="${taPaths.bookings.show({
@@ -196,15 +204,19 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
+
+      expect(formatStatus).toHaveBeenCalledTimes(3)
     })
   })
 
   describe('getBookingDetails', () => {
-    it('returns a booking and a summary list of details for the booking', async () => {
-      const booking = bookingFactory.build({
+    it('returns a booking and a summary list of details for a provisional booking', async () => {
+      const booking = bookingFactory.provisional().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
       })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
 
       bookingClient.find.mockResolvedValue(booking)
 
@@ -214,6 +226,14 @@ describe('BookingService', () => {
         booking,
         summaryList: {
           rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
             {
               key: {
                 text: 'Start date',
@@ -233,6 +253,65 @@ describe('BookingService', () => {
           ],
         },
       })
+
+      expect(formatStatus).toHaveBeenCalledWith('provisional')
+    })
+
+    it('returns a booking and a summary list of details for a confirmed booking', async () => {
+      const booking = bookingFactory.confirmed().build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
+      })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
+            {
+              key: {
+                text: 'Start date',
+              },
+              value: {
+                text: '21 March 2022',
+              },
+            },
+            {
+              key: {
+                text: 'End date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+            {
+              key: {
+                text: 'Notes',
+              },
+              value: {
+                html: booking.confirmation.notes,
+              },
+            },
+          ],
+        },
+      })
+
+      expect(formatStatus).toHaveBeenCalledWith('confirmed')
+      expect(formatLines).toHaveBeenCalledWith(booking.confirmation.notes)
     })
   })
 

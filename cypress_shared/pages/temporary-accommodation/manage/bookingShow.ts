@@ -14,23 +14,26 @@ export default class BookingShowPage extends Page {
     return new BookingShowPage(premises, room, booking)
   }
 
+  clickConfirmBookingButton(): void {
+    cy.get('a').contains('Mark as confirmed').click()
+  }
+
   shouldShowBookingDetails(): void {
-    cy.get('.property-identity').within(() => {
+    cy.get('.location-header').within(() => {
+      cy.get('p').should('contain', this.booking.person.crn)
       cy.get('p').should('contain', this.room.name)
       cy.get('p').should('contain', this.premises.addressLine1)
       cy.get('p').should('contain', this.premises.postcode)
     })
 
-    cy.get('h2').should('contain', this.booking.person.crn)
+    this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
+    this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
 
-    cy.get('.govuk-summary-list__key')
-      .contains('Start date')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-
-    cy.get('.govuk-summary-list__key')
-      .contains('End date')
-      .siblings('.govuk-summary-list__value')
-      .should('contain', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    if (this.booking.status === 'provisional') {
+      this.shouldShowKeyAndValue('Status', 'Provisional')
+    } else if (this.booking.status === 'confirmed') {
+      this.shouldShowKeyAndValue('Status', 'Confirmed')
+      this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
+    }
   }
 }

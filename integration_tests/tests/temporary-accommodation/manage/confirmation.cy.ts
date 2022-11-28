@@ -18,7 +18,7 @@ context('Booking confirmation', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a booking in the database
+    // And there is a premises, a room, and a provisional booking in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
@@ -41,7 +41,7 @@ context('Booking confirmation', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a booking in the database
+    // And there is a premises, a room, and a provisional booking in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
@@ -52,6 +52,7 @@ context('Booking confirmation', () => {
 
     // When I visit the booking confirmation page
     const page = BookingConfirmationNewPage.visit(premises.id, room.id, booking)
+    page.shouldShowBookingDetails()
 
     // And I fill out the form
     const confirmation = confirmationFactory.build()
@@ -80,7 +81,7 @@ context('Booking confirmation', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a booking in the database
+    // And there is a premises, a room, and a provisional booking in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()

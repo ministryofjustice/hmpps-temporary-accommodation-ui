@@ -26,10 +26,18 @@ export default class BookingShowPage extends Page {
       cy.get('p').should('contain', this.premises.postcode)
     })
 
-    this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-    this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    
     const { status } = this.booking
+
+    if (status === 'provisional' || status === 'confirmed') {
+      this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
+      this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    } else if (status === 'arrived') {
+      this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrival.arrivalDate))
+      this.shouldShowKeyAndValue(
+        'Expected departure date',
+        DateFormats.isoDateToUIDate(this.booking.arrival.expectedDepartureDate),
+      )
+    }
 
     if (status === 'provisional') {
       this.shouldShowKeyAndValue('Status', 'Provisional')

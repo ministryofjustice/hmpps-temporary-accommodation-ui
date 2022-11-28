@@ -59,16 +59,22 @@ export default class BookingService {
 
     return bookings
       .filter(booking => booking?.bed.id === bedId)
-      .sort(
-        (a, b) =>
-          DateFormats.convertIsoToDateObj(b.arrivalDate).getTime() -
-          DateFormats.convertIsoToDateObj(a.arrivalDate).getTime(),
-      )
+      .sort((a, b) => {
+        const arrivalDateA = this.displayDates(a).arrivalDate
+        const arrivalDateB = this.displayDates(b).arrivalDate
+
+        return (
+          DateFormats.convertIsoToDateObj(arrivalDateB).getTime() -
+          DateFormats.convertIsoToDateObj(arrivalDateA).getTime()
+        )
+      })
       .map(booking => {
+        const { arrivalDate, departureDate } = this.displayDates(booking)
+
         return [
           this.textValue(booking.person.crn),
-          this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' })),
-          this.textValue(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })),
+          this.textValue(DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' })),
+          this.textValue(DateFormats.isoDateToUIDate(departureDate, { format: 'short' })),
           this.htmlValue(formatStatus(booking.status)),
           this.htmlValue(
             `<a href="${taPaths.bookings.show({
@@ -89,18 +95,20 @@ export default class BookingService {
     const bookingClient = this.bookingClientFactory(token)
     const booking = await bookingClient.find(premisesId, bookingId)
 
+    const { arrivalDate, departureDate } = this.displayDates(booking)
+
     const rows = [
       {
         key: this.textValue('Status'),
         value: this.htmlValue(formatStatus(booking.status)),
       },
       {
-        key: this.textValue('Start date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate)),
+        key: this.textValue(booking.status === 'arrived' ? 'Arrival date' : 'Start date'),
+        value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
       },
       {
-        key: this.textValue('End date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(booking.departureDate)),
+        key: this.textValue(booking.status === 'arrived' ? 'Expected departure date' : 'End date'),
+        value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
       },
     ]
 
@@ -108,6 +116,11 @@ export default class BookingService {
       rows.push({
         key: this.textValue('Notes'),
         value: this.htmlValue(formatLines(booking.confirmation.notes)),
+      })
+    } else if (booking.status === 'arrived') {
+      rows.push({
+        key: this.textValue('Notes'),
+        value: this.htmlValue(formatLines(booking.arrival.notes)),
       })
     }
 
@@ -242,5 +255,13 @@ export default class BookingService {
 
   private htmlValue(value: string) {
     return { html: value }
+  }
+
+  private displayDates(booking: Booking): { arrivalDate: string; departureDate: string } {
+    if (booking.status === 'arrived') {
+      return { arrivalDate: booking.arrival.arrivalDate, departureDate: booking.arrival.expectedDepartureDate }
+    }
+
+    return { arrivalDate: booking.arrivalDate, departureDate: booking.departureDate }
   }
 }

@@ -29,7 +29,7 @@
   "departureDate": {
     "empty": "You must enter an end date",
     "invalid": "The end date is an invalid date",
-    "departureBeforeArrival": "The end date cannot be before the start date",
+    "beforeBookingArrivalDate": "The end date cannot be before the start date",
     "conflict": "An existing booking overlaps with these dates"
   },
   "expectedDepartureDate": {

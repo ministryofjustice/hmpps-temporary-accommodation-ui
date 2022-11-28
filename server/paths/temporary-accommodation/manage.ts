@@ -10,6 +10,7 @@ const bookingsPath = singleBedspacePath.path('bookings')
 const singleBookingPath = bookingsPath.path(':bookingId')
 
 const confirmationsPath = singleBookingPath.path('confirmations')
+const arrivalsPath = singleBookingPath.path('activations')
 
 const paths = {
   premises: {
@@ -34,6 +35,10 @@ const paths = {
     confirmations: {
       new: confirmationsPath.path('new'),
       create: confirmationsPath,
+    },
+    arrivals: {
+      new: arrivalsPath.path('new'),
+      create: arrivalsPath,
     },
   },
 }

@@ -54,7 +54,7 @@ export default class ArrivalsController {
           insertGenericError(err, 'expectedDepartureDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, '')
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.new({ premisesId, roomId, bookingId }))
       }
     }
   }

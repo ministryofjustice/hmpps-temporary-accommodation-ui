@@ -1,4 +1,5 @@
 import type { Booking, NewArrival } from '@approved-premises/api'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
@@ -6,6 +7,11 @@ import errorLookups from '../../../../server/i18n/en/errors.json'
 export default class BookingArrivalNewPage extends Page {
   constructor(private readonly booking: Booking) {
     super('Mark booking as active')
+  }
+
+  static visit(premisesId: string, roomId: string, booking: Booking): BookingArrivalNewPage {
+    cy.visit(paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }))
+    return new BookingArrivalNewPage(booking)
   }
 
   shouldShowBookingDetails(): void {

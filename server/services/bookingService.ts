@@ -10,7 +10,7 @@ import type { TableRow, SummaryList } from '@approved-premises/ui'
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
-import taPaths from '../paths/temporary-accommodation/manage'
+import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import { formatStatus } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
@@ -74,7 +74,7 @@ export default class BookingService {
           this.textValue(DateFormats.isoDateToUIDate(departureDate, { format: 'short' })),
           this.htmlValue(formatStatus(booking.status)),
           this.htmlValue(
-            `<a href="${taPaths.bookings.show({
+            `<a href="${paths.bookings.show({
               premisesId,
               roomId: room.id,
               bookingId: booking.id,

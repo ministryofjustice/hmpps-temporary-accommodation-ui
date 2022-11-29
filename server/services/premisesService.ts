@@ -1,7 +1,7 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
 import type { StaffMember, NewPremises, Premises, Characteristic, UpdatePremises } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
-import taPaths from '../paths/temporary-accommodation/manage'
+import paths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import { getDateRangesWithNegativeBeds, formatStatus, NegativeDateRange } from '../utils/premisesUtils'
@@ -44,7 +44,7 @@ export default class PremisesService {
           this.textValue(''),
           this.textValue(''),
           this.htmlValue(
-            `<a href="${taPaths.premises.show({
+            `<a href="${paths.premises.show({
               premisesId: entry.premises.id,
             })}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
           ),

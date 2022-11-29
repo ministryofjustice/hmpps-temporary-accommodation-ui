@@ -5,7 +5,7 @@ import newBookingFactory from '../testutils/factories/newBooking'
 import bookingExtensionFactory from '../testutils/factories/bookingExtension'
 import bookingFactory from '../testutils/factories/booking'
 
-import taPaths from '../paths/temporary-accommodation/manage'
+import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
@@ -147,7 +147,7 @@ describe('BookingService', () => {
             html: statusHtml,
           },
           {
-            html: `<a href="${taPaths.bookings.show({
+            html: `<a href="${paths.bookings.show({
               premisesId,
               roomId: room.id,
               bookingId: booking1.id,
@@ -170,7 +170,7 @@ describe('BookingService', () => {
             html: statusHtml,
           },
           {
-            html: `<a href="${taPaths.bookings.show({
+            html: `<a href="${paths.bookings.show({
               premisesId,
               roomId: room.id,
               bookingId: booking2.id,
@@ -193,7 +193,7 @@ describe('BookingService', () => {
             html: statusHtml,
           },
           {
-            html: `<a href="${taPaths.bookings.show({
+            html: `<a href="${paths.bookings.show({
               premisesId,
               roomId: room.id,
               bookingId: booking3.id,

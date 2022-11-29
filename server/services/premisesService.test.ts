@@ -9,7 +9,7 @@ import newPremisesFactory from '../testutils/factories/newPremises'
 import updatePremisesFactory from '../testutils/factories/updatePremises'
 import characteristicFactory from '../testutils/factories/characteristic'
 import { getDateRangesWithNegativeBeds, formatStatus } from '../utils/premisesUtils'
-import taPaths from '../paths/temporary-accommodation/manage'
+import paths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
@@ -107,7 +107,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises2.id,
             })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
           },
@@ -126,7 +126,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises4.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
           },
@@ -145,7 +145,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises3.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
           },
@@ -164,7 +164,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises1.id,
             })}">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
           },

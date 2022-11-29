@@ -1,14 +1,6 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
-import type {
-  StaffMember,
-  NewPremises,
-  Premises,
-  ApprovedPremises,
-  Characteristic,
-  UpdatePremises,
-} from '@approved-premises/api'
+import type { StaffMember, NewPremises, Premises, Characteristic, UpdatePremises } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
-import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
@@ -38,26 +30,6 @@ export default class PremisesService {
     )
   }
 
-  async approvedPremisesTableRows(token: string): Promise<Array<TableRow>> {
-    const premisesClient = this.premisesClientFactory(token)
-    const premises = (await premisesClient.all()) as Array<ApprovedPremises>
-
-    return premises
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map((p: ApprovedPremises) => {
-        return [
-          this.textValue(p.name),
-          this.textValue(p.apCode),
-          this.textValue(p.bedCount.toString()),
-          this.htmlValue(
-            `<a href="${apPaths.premises.show({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
-              p.name
-            }</span></a>`,
-          ),
-        ]
-      })
-  }
-
   async temporaryAccommodationTableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.all()
@@ -85,17 +57,6 @@ export default class PremisesService {
     const premises = await premisesClient.find(id)
 
     return premises
-  }
-
-  async getApprovedPremisesPremisesDetails(
-    token: string,
-    id: string,
-  ): Promise<{ name: string; summaryList: SummaryList }> {
-    const premisesClient = this.premisesClientFactory(token)
-    const premises = (await premisesClient.find(id)) as ApprovedPremises
-    const summaryList = await this.approvedPremisesSummaryListForPremises(premises)
-
-    return { name: premises.name, summaryList }
   }
 
   async getTemporaryAccommodationPremisesDetails(
@@ -163,29 +124,6 @@ export default class PremisesService {
     const premises = await premisesClient.update(id, updatePremises)
 
     return premises
-  }
-
-  private async approvedPremisesSummaryListForPremises(premises: ApprovedPremises): Promise<SummaryList> {
-    return {
-      rows: [
-        {
-          key: this.textValue('Code'),
-          value: this.textValue(premises.apCode),
-        },
-        {
-          key: this.textValue('Postcode'),
-          value: this.textValue(premises.postcode),
-        },
-        {
-          key: this.textValue('Number of Beds'),
-          value: this.textValue(premises.bedCount.toString()),
-        },
-        {
-          key: this.textValue('Available Beds'),
-          value: this.textValue(premises.availableBedsForToday.toString()),
-        },
-      ],
-    }
   }
 
   private async temporaryAccommodationSummaryListForPremises(premises: Premises): Promise<SummaryList> {

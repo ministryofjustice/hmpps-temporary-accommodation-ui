@@ -1,6 +1,6 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import { addDays, startOfToday } from 'date-fns'
+import { addDays } from 'date-fns'
 
 import type { Booking } from '@approved-premises/api'
 import arrivalFactory from './arrival'
@@ -9,7 +9,6 @@ import confirmationFactory from './confirmation'
 import personFactory from './person'
 import { DateFormats } from '../../utils/dateUtils'
 
-const today = DateFormats.formatApiDate(startOfToday())
 const soon = () => DateFormats.formatApiDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
 const past = () => DateFormats.formatApiDate(faker.date.past())
 const future = () => DateFormats.formatApiDate(faker.date.future())
@@ -30,64 +29,10 @@ class BookingFactory extends Factory<Booking> {
     })
   }
 
-  arrivingToday() {
-    return this.params({
-      arrivalDate: today,
-      status: 'awaiting-arrival',
-    })
-  }
-
-  arrivedToday() {
-    return this.params({
-      arrivalDate: today,
-      status: 'arrived',
-    })
-  }
-
   arrived() {
     return this.params({
       arrivalDate: past(),
       departureDate: future(),
-      status: 'arrived',
-    })
-  }
-
-  departingToday() {
-    return this.params({
-      arrivalDate: past(),
-      departureDate: today,
-      status: 'arrived',
-    })
-  }
-
-  departedToday() {
-    return this.params({
-      arrivalDate: past(),
-      departureDate: today,
-      status: 'departed',
-    })
-  }
-
-  arrivingSoon() {
-    return this.params({
-      arrivalDate: soon(),
-      departureDate: future(),
-      status: 'awaiting-arrival',
-    })
-  }
-
-  cancelledWithFutureArrivalDate() {
-    return this.params({
-      arrivalDate: soon(),
-      departureDate: future(),
-      status: 'cancelled',
-    })
-  }
-
-  departingSoon() {
-    return this.params({
-      departureDate: soon(),
-      arrivalDate: past(),
       status: 'arrived',
     })
   }

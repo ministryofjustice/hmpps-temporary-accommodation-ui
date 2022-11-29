@@ -2,7 +2,6 @@ import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import premisesFactory from '../testutils/factories/premises'
-import approvedPremisesFactory from '../testutils/factories/approvedPremises'
 import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
@@ -10,7 +9,6 @@ import newPremisesFactory from '../testutils/factories/newPremises'
 import updatePremisesFactory from '../testutils/factories/updatePremises'
 import characteristicFactory from '../testutils/factories/characteristic'
 import { getDateRangesWithNegativeBeds, formatStatus } from '../utils/premisesUtils'
-import apPaths from '../paths/manage'
 import taPaths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
@@ -79,73 +77,6 @@ describe('PremisesService', () => {
         [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic],
         'premises',
       )
-    })
-  })
-
-  describe('approvedPremisesTableRows', () => {
-    it('returns a sorted table view of the premises for Approved Premises', async () => {
-      const premises1 = approvedPremisesFactory.build({ name: 'XYZ' })
-      const premises2 = approvedPremisesFactory.build({ name: 'ABC' })
-      const premises3 = approvedPremisesFactory.build({ name: 'GHI' })
-
-      const premises = [premises1, premises2, premises3]
-      premisesClient.all.mockResolvedValue(premises)
-
-      const rows = await service.approvedPremisesTableRows(token)
-
-      expect(rows).toEqual([
-        [
-          {
-            text: premises2.name,
-          },
-          {
-            text: premises2.apCode,
-          },
-          {
-            text: premises2.bedCount.toString(),
-          },
-          {
-            html: `<a href="${apPaths.premises.show({
-              premisesId: premises2.id,
-            })}">View<span class="govuk-visually-hidden">about ${premises2.name}</span></a>`,
-          },
-        ],
-        [
-          {
-            text: premises3.name,
-          },
-          {
-            text: premises3.apCode,
-          },
-          {
-            text: premises3.bedCount.toString(),
-          },
-          {
-            html: `<a href="${apPaths.premises.show({
-              premisesId: premises3.id,
-            })}">View<span class="govuk-visually-hidden">about ${premises3.name}</span></a>`,
-          },
-        ],
-        [
-          {
-            text: premises1.name,
-          },
-          {
-            text: premises1.apCode,
-          },
-          {
-            text: premises1.bedCount.toString(),
-          },
-          {
-            html: `<a href="${apPaths.premises.show({
-              premisesId: premises1.id,
-            })}">View<span class="govuk-visually-hidden">about ${premises1.name}</span></a>`,
-          },
-        ],
-      ])
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.all).toHaveBeenCalled()
     })
   })
 
@@ -305,48 +236,6 @@ describe('PremisesService', () => {
       const result = await service.getPremises(token, premises.id)
 
       expect(result).toEqual(premises)
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
-    })
-  })
-
-  describe('getApprovedPremisesPremisesDetails', () => {
-    it('returns a title and a summary list for a given Premises ID', async () => {
-      const premises = approvedPremisesFactory.build({
-        name: 'Test',
-        apCode: 'ABC',
-        postcode: 'SW1A 1AA',
-        bedCount: 50,
-        availableBedsForToday: 20,
-      })
-      premisesClient.find.mockResolvedValue(premises)
-
-      const result = await service.getApprovedPremisesPremisesDetails(token, premises.id)
-
-      expect(result).toEqual({
-        name: 'Test',
-        summaryList: {
-          rows: [
-            {
-              key: { text: 'Code' },
-              value: { text: 'ABC' },
-            },
-            {
-              key: { text: 'Postcode' },
-              value: { text: 'SW1A 1AA' },
-            },
-            {
-              key: { text: 'Number of Beds' },
-              value: { text: '50' },
-            },
-            {
-              key: { text: 'Available Beds' },
-              value: { text: '20' },
-            },
-          ],
-        },
-      })
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)

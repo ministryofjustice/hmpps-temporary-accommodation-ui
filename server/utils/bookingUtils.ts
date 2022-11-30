@@ -17,6 +17,12 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
       classes: '',
       href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
     })
+  } else if (booking.status === 'arrived') {
+    items.push({
+      text: 'Mark as closed',
+      classes: '',
+      href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+    })
   }
 
   return [{ items }]

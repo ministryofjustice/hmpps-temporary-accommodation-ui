@@ -39,8 +39,24 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns an empty list of action items for an arrived booking', () => {
+    it('returns a mark as closed action for an arrived booking', () => {
       const booking = bookingFactory.arrived().build()
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          items: [
+            {
+              text: 'Mark as closed',
+              classes: '',
+              href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+            },
+          ],
+        },
+      ])
+    })
+
+    it('returns an empty list of action items for a departed booking', () => {
+      const booking = bookingFactory.departed().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
         {

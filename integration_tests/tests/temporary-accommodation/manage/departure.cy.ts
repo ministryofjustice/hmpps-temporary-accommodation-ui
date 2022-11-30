@@ -14,6 +14,30 @@ context('Booking departure', () => {
     cy.task('stubAuthUser')
   })
 
+  it('navigates to the booking departure page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and an arrived booking in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const booking = bookingFactory.arrived().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the marked departed booking action
+    cy.task('stubDepartureReferenceData')
+    bookingShow.clickMarkDepartedBookingButton()
+
+    // Then I navigate to the booking departure page
+    Page.verifyOnPage(BookingDepartureNewPage, premises.id, room.id, booking)
+  })
+
   it('allows me to mark a booking as departed', () => {
     // Given I am signed in
     cy.signIn()

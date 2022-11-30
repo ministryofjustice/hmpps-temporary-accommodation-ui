@@ -34,3 +34,19 @@ Feature: Manage Temporary Accommodation - Booking
         And I confirm the booking
         And I attempt to mark the booking as arrived with required details missing
         Then I should see a list of the problems encountered marking the booking as arrived
+
+    Scenario: Marking a booking as departed
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I confirm the booking
+        And I mark the booking as arrived
+        And I mark the booking as departed
+        Then I should see the booking with the departed status
+
+    Scenario: Showing booking departure errors
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I confirm the booking
+        And I mark the booking as arrived
+        And I attempt to mark the booking as departed with required details missing
+        Then I should see a list of the problems encountered marking the booking as departed

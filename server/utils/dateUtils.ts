@@ -24,6 +24,14 @@ export class DateFormats {
 
   /**
    * @param date JS Date object.
+   * @returns the date in the format '2019-09-18T00:00:00.000Z'.
+   */
+  static formatApiDateAsDateTime(date: Date) {
+    return `${formatISO(date, { representation: 'date' })}T00:00:00.000Z`
+  }
+
+  /**
+   * @param date JS Date object.
    * @returns the date in the to be shown in the UI: "20 December 2012".
    */
   static dateObjtoUIDate(date: Date, options: { format: 'short' | 'long' } = { format: 'long' }) {

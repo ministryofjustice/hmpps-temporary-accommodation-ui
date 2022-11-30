@@ -2,6 +2,18 @@ import type { ObjectWithDateParts } from '@approved-premises/ui'
 import { DateFormats, InvalidDateStringError, dateAndTimeInputsAreValidDates, dateIsBlank } from './dateUtils'
 
 describe('DateFormats', () => {
+  describe('formatApiDate', () => {
+    it('converts a date object to a ISO8601 date string', () => {
+      expect(DateFormats.formatApiDate(new Date(2022, 4, 11))).toEqual('2022-05-11')
+    })
+  })
+
+  describe('formatApiDateAsDateTime', () => {
+    it('converts a date object to a ISO8601 date string, with the time as midnight', () => {
+      expect(DateFormats.formatApiDateAsDateTime(new Date(2022, 4, 11))).toEqual('2022-05-11T00:00:00.000Z')
+    })
+  })
+
   describe('convertIsoToDateObj', () => {
     it('converts a ISO8601 date string', () => {
       const date = '2022-11-11T00:00:00.000Z'

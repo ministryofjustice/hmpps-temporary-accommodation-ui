@@ -21,6 +21,7 @@ export default class BookingArrivalNewPage extends Page {
 
     this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
     this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
 
     this.shouldShowDateInputs('arrivalDate', this.booking.arrivalDate)
     this.shouldShowDateInputs('expectedDepartureDate', this.booking.departureDate)

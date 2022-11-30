@@ -6,7 +6,6 @@ import { DateFormats } from '../utils/dateUtils'
 export type DepartureReferenceData = {
   departureReasons: Array<ReferenceData>
   moveOnCategories: Array<ReferenceData>
-  destinationProviders: Array<ReferenceData>
 }
 
 export default class DepartureService {
@@ -39,16 +38,14 @@ export default class DepartureService {
   async getReferenceData(token: string): Promise<DepartureReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(token)
 
-    const [departureReasons, moveOnCategories, destinationProviders] = await Promise.all([
+    const [departureReasons, moveOnCategories] = await Promise.all([
       referenceDataClient.getReferenceData('departure-reasons'),
       referenceDataClient.getReferenceData('move-on-categories'),
-      referenceDataClient.getReferenceData('destination-providers'),
     ])
 
     return {
       departureReasons,
       moveOnCategories,
-      destinationProviders,
     }
   }
 }

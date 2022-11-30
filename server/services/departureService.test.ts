@@ -65,14 +65,12 @@ describe('DepartureService', () => {
     it('should return the reference data needed to create departures', async () => {
       const departureReasons = referenceDataFactory.buildList(2)
       const moveOnCategories = referenceDataFactory.buildList(3)
-      const destinationProviders = referenceDataFactory.buildList(4)
 
       referenceDataClient.getReferenceData.mockImplementation(category => {
         return Promise.resolve(
           {
             'departure-reasons': departureReasons,
             'move-on-categories': moveOnCategories,
-            'destination-providers': destinationProviders,
           }[category],
         )
       })
@@ -82,14 +80,12 @@ describe('DepartureService', () => {
       expect(result).toEqual({
         departureReasons,
         moveOnCategories,
-        destinationProviders,
       })
 
       expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('departure-reasons')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('move-on-categories')
-      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('destination-providers')
     })
   })
 })

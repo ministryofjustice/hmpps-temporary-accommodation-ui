@@ -36,6 +36,14 @@ class BookingFactory extends Factory<Booking> {
       status: 'arrived',
     })
   }
+
+  departed() {
+    return this.params({
+      arrivalDate: past(),
+      departureDate: past(),
+      status: 'departed',
+    })
+  }
 }
 
 export default BookingFactory.define(() => ({

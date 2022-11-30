@@ -105,21 +105,20 @@ workflows:
                 - main
           requires:
             - deploy_dev
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
+            - e2e_environment_test
+      - hmpps/deploy_env:
+          name: deploy_preprod
+          env: 'preprod'
+          context:
+            - hmpps-common-vars
+            - temporary-accommodation-ui-preprod
+          requires:
+            - request-preprod-approval
 
-  #      - request-preprod-approval:
-  #          type: approval
-  #          requires:
-  #            - deploy_dev
-  #      - hmpps/deploy_env:
-  #          name: deploy_preprod
-  #          env: "preprod"
-  #          jira_update: true
-  #          jira_env_type: staging
-  #          context:
-  #            - hmpps-common-vars
-  #            - approved-premises-ui-preprod
-  #          requires:
-  #            - request-preprod-approval
   #      - request-prod-approval:
   #          type: approval
   #          requires:

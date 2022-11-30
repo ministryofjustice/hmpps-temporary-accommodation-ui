@@ -10,9 +10,6 @@ export default Factory.define<NewDeparture>(() => {
   const date = faker.date.soon()
   return {
     dateTime: DateFormats.formatApiDateAsDateTime(date),
-    'dateTime-day': date.getDate().toString(),
-    'dateTime-month': date.getMonth().toString(),
-    'dateTime-year': date.getFullYear().toString(),
     reasonId: referenceDataFactory.departureReasons().build().id,
     notes: faker.lorem.sentence(),
     moveOnCategoryId: referenceDataFactory.moveOnCategories().build().id,

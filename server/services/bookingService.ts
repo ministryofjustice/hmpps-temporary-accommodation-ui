@@ -94,31 +94,68 @@ export default class BookingService {
 
     const { arrivalDate, departureDate } = this.displayDates(booking)
 
+    const { status } = booking
+
     const rows = [
       {
         key: this.textValue('Status'),
-        value: this.htmlValue(formatStatus(booking.status)),
+        value: this.htmlValue(formatStatus(status)),
       },
-      {
-        key: this.textValue(booking.status === 'arrived' ? 'Arrival date' : 'Start date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
-      },
-      {
-        key: this.textValue(booking.status === 'arrived' ? 'Expected departure date' : 'End date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
-      },
-    ]
+    ] as SummaryList['rows']
 
-    if (booking.status === 'confirmed') {
+    if (status === 'provisional' || status === 'confirmed') {
+      rows.push({
+        key: this.textValue('Start date'),
+        value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
+      })
+
+      rows.push({
+        key: this.textValue('End date'),
+        value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
+      })
+    } else if (status === 'arrived') {
+      rows.push(
+        {
+          key: this.textValue('Arrival date'),
+          value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
+        },
+        {
+          key: this.textValue('Expected departure date'),
+          value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
+        },
+      )
+    } else if (status === 'departed') {
+      rows.push({
+        key: this.textValue('Departure date'),
+        value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
+      })
+    }
+
+    if (status === 'confirmed') {
       rows.push({
         key: this.textValue('Notes'),
         value: this.htmlValue(formatLines(booking.confirmation.notes)),
       })
-    } else if (booking.status === 'arrived') {
+    } else if (status === 'arrived') {
       rows.push({
         key: this.textValue('Notes'),
         value: this.htmlValue(formatLines(booking.arrival.notes)),
       })
+    } else if (status === 'departed') {
+      rows.push(
+        {
+          key: this.textValue('Departure reason'),
+          value: this.textValue(booking.departure.reason.name),
+        },
+        {
+          key: this.textValue('Move on category'),
+          value: this.textValue(booking.departure.moveOnCategory.name),
+        },
+        {
+          key: this.textValue('Notes'),
+          value: this.htmlValue(formatLines(booking.departure.notes)),
+        },
+      )
     }
 
     return {
@@ -153,6 +190,9 @@ export default class BookingService {
   private displayDates(booking: Booking): { arrivalDate: string; departureDate: string } {
     if (booking.status === 'arrived') {
       return { arrivalDate: booking.arrival.arrivalDate, departureDate: booking.arrival.expectedDepartureDate }
+    }
+    if (booking.status === 'departed') {
+      return { arrivalDate: booking.arrival.arrivalDate, departureDate: booking.departure.dateTime }
     }
 
     return { arrivalDate: booking.arrivalDate, departureDate: booking.departureDate }

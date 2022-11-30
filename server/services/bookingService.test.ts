@@ -10,6 +10,7 @@ import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
 import arrivalFactory from '../testutils/factories/arrival'
+import departureFactory from '../testutils/factories/departure'
 import { formatStatus } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 
@@ -112,6 +113,12 @@ describe('BookingService', () => {
           arrivalDate: '2022-04-19',
         }),
       })
+      const booking4 = bookingFactory.departed().build({
+        bed: bedFactory.build({ id: bedId }),
+        arrival: arrivalFactory.build({
+          arrivalDate: '2022-01-03',
+        }),
+      })
 
       const otherBedBooking = bookingFactory.build({
         bed: bedFactory.build({ id: 'other-bed-id' }),
@@ -119,7 +126,7 @@ describe('BookingService', () => {
 
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
 
-      const bookings = [booking2, booking1, booking3, otherBedBooking]
+      const bookings = [booking2, booking1, booking4, booking3, otherBedBooking]
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
 
       const room = roomFactory.build({
@@ -202,12 +209,35 @@ describe('BookingService', () => {
             }</span></a>`,
           },
         ],
+        [
+          {
+            text: booking4.person.crn,
+          },
+          {
+            text: '3 Jan 22',
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking4.departure.dateTime, { format: 'short' }),
+          },
+          {
+            html: statusHtml,
+          },
+          {
+            html: `<a href="${paths.bookings.show({
+              premisesId,
+              roomId: room.id,
+              bookingId: booking4.id,
+            })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
+              booking4.person.crn
+            }</span></a>`,
+          },
+        ],
       ])
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
 
-      expect(formatStatus).toHaveBeenCalledTimes(3)
+      expect(formatStatus).toHaveBeenCalledTimes(4)
     })
   })
 
@@ -373,6 +403,75 @@ describe('BookingService', () => {
 
       expect(formatStatus).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
+    })
+
+    it('returns a booking and a summary list of details for a departed booking', async () => {
+      const booking = bookingFactory.departed().build({
+        arrival: arrivalFactory.build({
+          arrivalDate: '2022-03-21',
+        }),
+        departure: departureFactory.build({
+          dateTime: '2023-01-07T00:00:00.000Z',
+        }),
+      })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
+            {
+              key: {
+                text: 'Departure date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+            {
+              key: {
+                text: 'Departure reason',
+              },
+              value: {
+                text: booking.departure.reason.name,
+              },
+            },
+            {
+              key: {
+                text: 'Move on category',
+              },
+              value: {
+                text: booking.departure.moveOnCategory.name,
+              },
+            },
+            {
+              key: {
+                text: 'Notes',
+              },
+              value: {
+                html: booking.departure.notes,
+              },
+            },
+          ],
+        },
+      })
+
+      expect(formatStatus).toHaveBeenCalledWith('departed')
+      expect(formatLines).toHaveBeenCalledWith(booking.departure.notes)
     })
   })
 

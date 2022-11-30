@@ -30,7 +30,7 @@ export default class PremisesService {
     )
   }
 
-  async temporaryAccommodationTableRows(token: string): Promise<Array<TableRow>> {
+  async tableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.all()
 
@@ -59,14 +59,11 @@ export default class PremisesService {
     return premises
   }
 
-  async getTemporaryAccommodationPremisesDetails(
-    token: string,
-    id: string,
-  ): Promise<{ premises: Premises; summaryList: SummaryList }> {
+  async getPremisesDetails(token: string, id: string): Promise<{ premises: Premises; summaryList: SummaryList }> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.find(id)
 
-    const summaryList = await this.temporaryAccommodationSummaryListForPremises(premises)
+    const summaryList = await this.summaryListForPremises(premises)
 
     return { premises, summaryList }
   }
@@ -126,7 +123,7 @@ export default class PremisesService {
     return premises
   }
 
-  private async temporaryAccommodationSummaryListForPremises(premises: Premises): Promise<SummaryList> {
+  private async summaryListForPremises(premises: Premises): Promise<SummaryList> {
     return {
       rows: [
         {

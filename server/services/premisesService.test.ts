@@ -80,7 +80,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('temporaryAccommodationTableRows', () => {
+  describe('tableRows', () => {
     it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
       const premises1 = premisesFactory.build({ addressLine1: 'XYZ', postcode: '123' })
       const premises2 = premisesFactory.build({ addressLine1: 'ABC', postcode: '123' })
@@ -90,7 +90,7 @@ describe('PremisesService', () => {
       const premises = [premises1, premises2, premises3, premises4]
       premisesClient.all.mockResolvedValue(premises)
 
-      const rows = await service.temporaryAccommodationTableRows(token)
+      const rows = await service.tableRows(token)
 
       expect(rows).toEqual([
         [
@@ -270,7 +270,7 @@ describe('PremisesService', () => {
       }))
       ;(formatStatus as jest.MockedFn<typeof formatStatus>).mockReturnValue('Online')
 
-      const result = await service.getTemporaryAccommodationPremisesDetails(token, premises.id)
+      const result = await service.getPremisesDetails(token, premises.id)
 
       expect(result).toEqual({
         premises,

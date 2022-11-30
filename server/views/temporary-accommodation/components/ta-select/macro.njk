@@ -1,0 +1,12 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% macro taSelect(params, context) %}
+  {{
+    govukSelect(
+      mergeObjects(
+        params,
+        { id: params.fieldName, name: params.fieldName, errorMessage: context.errors[params.fieldName] }
+      )
+    )
+  }}
+{% endmacro %}

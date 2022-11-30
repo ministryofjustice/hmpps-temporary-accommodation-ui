@@ -51,7 +51,7 @@ export default class DeparturesController {
         req.flash('success', 'Booking marked as closed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, '')
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.departures.new({ premisesId, roomId, bookingId }))
       }
     }
   }

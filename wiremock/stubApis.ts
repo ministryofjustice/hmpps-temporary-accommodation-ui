@@ -142,6 +142,7 @@ premises.forEach(item => {
     bedspaceBookingFactory.provisional().buildList(rand()),
     bedspaceBookingFactory.confirmed().buildList(rand()),
     bedspaceBookingFactory.arrived().buildList(rand()),
+    bedspaceBookingFactory.departed().buildList(rand()),
   ].flat()
 
   stubs.push({

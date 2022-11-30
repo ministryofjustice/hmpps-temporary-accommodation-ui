@@ -1,74 +1,15 @@
 [
-  {
-    "id": "5c862d3f-e037-4991-ac1b-bb5466609ae7",
-    "name": "B & B / Temp / Short-Term Housing",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "6ea92218-dc6a-46eb-b166-e8d5b9321322",
-    "name": "Custody",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "08130ae9-effb-4797-9897-fb628661f822",
-    "name": "Deported/ Detention Centre/IRC",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "5832ac40-813f-4ffb-af93-3a0df648b08f",
-    "name": "Housing Association - Rented",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "da94bce8-4372-49dd-b6cc-cab19a6245b0",
-    "name": "Living with Family/ Partner/ Other",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "994dc7d6-494b-4540-81c0-e64dbda1e208",
-    "name": "Local Authority - Rented",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "5b413993-1a70-4b93-adeb-1af32d63458e",
-    "name": "No Fixed Abode",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "c12f7498-a3d9-4e0c-a66f-f2d4cf61a3d3",
-    "name": "Not Applicable",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "e1863cc4-dbc8-4c02-8ff7-08c0c9952ba1",
-    "name": "Owner Occupied",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "c6d3c3e3-d05b-4828-b393-9cfddc5daa6b",
-    "name": "Private Rented",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "8f35e009-cdf8-4a70-9ca4-97d99609893e",
-    "name": "Supported Housing",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-  },
-  {
-    "id": "29c0c4e8-6899-4471-832b-883cea522128",
-    "name": "Transferred to different AP",
-    "isActive": true,
-    "serviceScope": "temporary-accommodation"
-   }
+  { "id": "8f35e009-cdf8-4a70-9ca4-97d99609893e", "name": "Supported Housing", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "d8e04fa1-9757-4681-bfab-6c61913c8463", "name": "Approved Premises", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "247ae3f4-7958-4c59-97ed-272a39ad411c", "name": "Friends/Family (settled)", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "2236cd7e-32c5-4784-a461-8f0aead1d386", "name": "Householder (Owner - freehold or leasehold)", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "d3b9f02e-c3a5-475b-a5dd-124c058900d9", "name": "Long Term Residential Healthcare", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "587dc0dc-9073-4992-9d58-5576753050e9", "name": "Rental accommodation - private rental", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "12c739fa-7bb1-416d-bbf2-71362578a7f3", "name": "Rental accommodation - social rental", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "3de4665a-c848-4797-ba80-502cacc6f7d7", "name": "Friends/Family (transient)", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "a90a77a3-5662-4fa8-85ab-07d0c085052f", "name": "Homeless - Shelter/Emergency Hostel/Campsite", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "33244330-87e9-4cc6-9940-f78586585436", "name": "Homeless - Rough Sleeping", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "15fb0af2-3406-49c9-81ed-5e42bddf9fc2", "name": "Homeless - Squat", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "91158ed5-467e-4ee8-90d9-4f17a5dac82f", "name": "Transient/short term accommodation", "isActive": true, "serviceScope": "temporary-accommodation" },
+  { "id": "9e18dc4d-297b-4a9c-86cc-31238d339b3a", "name": "AfEO Funded", "isActive": true }
 ]

@@ -7,7 +7,7 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Departure>(() => ({
   id: faker.datatype.uuid(),
-  dateTime: DateFormats.formatApiDateTime(faker.date.soon()),
+  dateTime: DateFormats.formatApiDateAsDateTime(faker.date.soon()),
   bookingId: faker.datatype.uuid(),
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),

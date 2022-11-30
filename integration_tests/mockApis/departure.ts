@@ -4,7 +4,7 @@ import type { Departure } from '@approved-premises/api'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
-import { departureReasons, moveOnCategories, destinationProviders } from '../../wiremock/referenceDataStubs'
+import { departureReasons, moveOnCategories } from '../../wiremock/referenceDataStubs'
 
 export default {
   stubDepartureGet: (args: { premisesId: string; bookingId: string; departure: Departure }): SuperAgentRequest =>
@@ -33,8 +33,8 @@ export default {
     }),
   stubDepartureErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`, 'POST')),
-  stubDepartureReferenceData: (): Promise<[Response, Response, Response]> =>
-    Promise.all([stubFor(departureReasons), stubFor(moveOnCategories), stubFor(destinationProviders)]),
+  stubDepartureReferenceData: (): Promise<[Response, Response]> =>
+    Promise.all([stubFor(departureReasons), stubFor(moveOnCategories)]),
   verifyDepartureCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({

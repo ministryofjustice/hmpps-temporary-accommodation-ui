@@ -41,6 +41,8 @@ export default class BookingShowPage extends Page {
         'Expected departure date',
         DateFormats.isoDateToUIDate(this.booking.arrival.expectedDepartureDate),
       )
+    } else if (status === 'departed') {
+      this.shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.booking.departure.dateTime))
     }
 
     if (status === 'provisional') {
@@ -51,6 +53,11 @@ export default class BookingShowPage extends Page {
     } else if (status === 'arrived') {
       this.shouldShowKeyAndValue('Status', 'Active')
       this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
+    } else if (status === 'departed') {
+      this.shouldShowKeyAndValue('Status', 'Closed')
+      this.shouldShowKeyAndValue('Departure reason', this.booking.departure.reason.name)
+      this.shouldShowKeyAndValue('Move on category', this.booking.departure.moveOnCategory.name)
+      this.shouldShowKeyAndValues('Notes', this.booking.departure.notes.split('\n'))
     }
   }
 }

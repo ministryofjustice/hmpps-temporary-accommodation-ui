@@ -47,6 +47,13 @@ export default class BedspaceShowPage extends Page {
           cy.get('td')
             .eq(2)
             .contains(DateFormats.isoDateToUIDate(booking.arrival.expectedDepartureDate, { format: 'short' }))
+        } else if (booking.status === 'departed') {
+          cy.get('td')
+            .eq(1)
+            .contains(DateFormats.isoDateToUIDate(booking.arrival.arrivalDate, { format: 'short' }))
+          cy.get('td')
+            .eq(2)
+            .contains(DateFormats.isoDateToUIDate(booking.departure.dateTime, { format: 'short' }))
         }
 
         if (status === 'provisional') {
@@ -55,6 +62,8 @@ export default class BedspaceShowPage extends Page {
           cy.get('td').eq(3).contains('Confirmed')
         } else if (status === 'arrived') {
           cy.get('td').eq(3).contains('Active')
+        } else if (status === 'departed') {
+          cy.get('td').eq(3).contains('Closed')
         }
 
         cy.get('td').eq(4).contains('View')

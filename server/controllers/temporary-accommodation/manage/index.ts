@@ -6,6 +6,7 @@ import BedspacesController from './bedspacesController'
 import BookingsController from './bookingsController'
 import ConfirmationsController from './confirmationsController'
 import ArrivalsController from './arrivalsController'
+import DeparturesController from './departuresController'
 
 export const controllers = (services: Services) => {
   const premisesController = new PremisesController(
@@ -28,12 +29,15 @@ export const controllers = (services: Services) => {
 
   const arrivalsController = new ArrivalsController(services.bookingService, services.arrivalService)
 
+  const departuresController = new DeparturesController(services.bookingService, services.departureService)
+
   return {
     premisesController,
     bedspacesController,
     bookingsController,
     confirmationsController,
     arrivalsController,
+    departuresController,
   }
 }
 

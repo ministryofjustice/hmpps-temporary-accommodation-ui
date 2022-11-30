@@ -22,8 +22,8 @@
     "empty": "You must enter a valid departure date",
     "invalid": "The departure date is an invalid date"
   },
-  "reason": {
-    "empty": "You must choose a valid reason",
+  "reasonId": {
+    "empty": "You must choose a departure reason",
     "doesNotExist": "This reason does not exist"
   },
   "departureDate": {
@@ -49,7 +49,7 @@
   "destinationProviderId": {
     "doesNotExist": "The destination provider does not exist"
   },
-  "moveOnCategory": { "empty": "You must enter a move on category" },
+  "moveOnCategoryId": { "empty": "You must choose a move on category" },
   "destinationProvider": { "empty": "You must enter a destination provider" },
   "newDepartureDate": {
     "empty": "You must enter a new departure date",

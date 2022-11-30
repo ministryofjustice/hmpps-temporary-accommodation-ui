@@ -98,6 +98,31 @@ describe('DateFormats', () => {
       expect(result.date).toEqual('2022-01-01T12:35:00.000Z')
     })
 
+    it('returns the date with a time if passed one and the representation is specified as complete', () => {
+      const obj: ObjectWithDateParts<'date'> = {
+        'date-year': '2022',
+        'date-month': '1',
+        'date-day': '1',
+        'date-time': '12:35',
+      }
+
+      const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date', { representation: 'complete' })
+
+      expect(result.date).toEqual('2022-01-01T12:35:00.000Z')
+    })
+
+    it('returns the date with the time set to midnight if not passed a time and the representation is specified as complete', () => {
+      const obj: ObjectWithDateParts<'date'> = {
+        'date-year': '2022',
+        'date-month': '1',
+        'date-day': '1',
+      }
+
+      const result = DateFormats.convertDateAndTimeInputsToIsoString(obj, 'date', { representation: 'complete' })
+
+      expect(result.date).toEqual('2022-01-01T00:00:00.000Z')
+    })
+
     it('returns an empty string when given empty strings as input', () => {
       const obj: ObjectWithDateParts<'date'> = {
         'date-year': '',

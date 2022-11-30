@@ -65,7 +65,7 @@ export class DateFormats {
    * @param key the key that prefixes each item in the dateInputObj, also the name of the property which the date object will be returned in the return value.
    * @returns an ISO8601 date string.
    */
-  static convertDateAndTimeInputsToIsoString<K extends string | number>(dateInputObj: ObjectWithDateParts<K>, key: K) {
+  static convertDateAndTimeInputsToIsoString<K extends string | number>(dateInputObj: ObjectWithDateParts<K>, key: K, options: { representation: 'auto' | 'complete' } = { representation: 'auto' }) {
     const day = `0${dateInputObj[`${key}-day`]}`.slice(-2)
     const month = `0${dateInputObj[`${key}-month`]}`.slice(-2)
     const year = dateInputObj[`${key}-year`]
@@ -75,6 +75,8 @@ export class DateFormats {
     if (day && month && year) {
       if (time) {
         o[key] = `${year}-${month}-${day}T${time}:00.000Z`
+      } else if (options.representation === 'complete') {
+        o[key] = `${year}-${month}-${day}T00:00:00.000Z`
       } else {
         o[key] = `${year}-${month}-${day}`
       }

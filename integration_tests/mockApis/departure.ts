@@ -31,7 +31,7 @@ export default {
         jsonBody: args.departure,
       },
     }),
-  stubDepartureErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
+  stubDepartureCreateErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`, 'POST')),
   stubDepartureReferenceData: (): Promise<[Response, Response]> =>
     Promise.all([stubFor(departureReasons), stubFor(moveOnCategories)]),

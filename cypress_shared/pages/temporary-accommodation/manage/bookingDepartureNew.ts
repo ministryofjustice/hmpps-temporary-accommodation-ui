@@ -1,10 +1,16 @@
 import type { Booking, NewDeparture } from '@approved-premises/api'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import Page from '../../page'
 
 export default class BookingDepartureNewPage extends Page {
   constructor(private readonly booking: Booking) {
     super('Mark booking as closed')
+  }
+
+  static visit(premisesId: string, roomId: string, booking: Booking): BookingDepartureNewPage {
+    cy.visit(paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }))
+    return new BookingDepartureNewPage(booking)
   }
 
   shouldShowBookingDetails(): void {

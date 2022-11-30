@@ -9,8 +9,9 @@ const singleBedspacePath = bedspacesPath.path(':roomId')
 const bookingsPath = singleBedspacePath.path('bookings')
 const singleBookingPath = bookingsPath.path(':bookingId')
 
-const confirmationsPath = singleBookingPath.path('confirmations')
-const arrivalsPath = singleBookingPath.path('activations')
+const confirmationsPath = singleBookingPath.path('confirm')
+const arrivalsPath = singleBookingPath.path('mark-as-active')
+const departuresPath = singleBookingPath.path('mark-as-closed')
 
 const paths = {
   premises: {
@@ -39,6 +40,10 @@ const paths = {
     arrivals: {
       new: arrivalsPath.path('new'),
       create: arrivalsPath,
+    },
+    departures: {
+      new: departuresPath.path('new'),
+      create: departuresPath,
     },
   },
 }

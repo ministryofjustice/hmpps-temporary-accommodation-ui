@@ -125,7 +125,12 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.departures.new({ premisesId, roomId, bookingId }),
+      )
     })
   })
 })

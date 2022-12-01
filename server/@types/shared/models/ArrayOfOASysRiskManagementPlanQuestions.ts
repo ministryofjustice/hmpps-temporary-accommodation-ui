@@ -4,4 +4,4 @@
 
 import type { OASysQuestion } from './OASysQuestion';
 
-export type ArrayOfOASysOffenceAnalysisQuestions = Array<OASysQuestion>;
+export type ArrayOfOASysRiskManagementPlanQuestions = Array<OASysQuestion>;

@@ -1,16 +1,16 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { ReferenceData } from '@approved-premises/ui'
 
-import departureReasonsJson from '../../../wiremock/stubs/departure-reasons.json'
-import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.json'
-import destinationProvidersJson from '../../../wiremock/stubs/destination-providers.json'
 import cancellationReasonsJson from '../../../wiremock/stubs/cancellation-reasons.json'
-import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
-import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 import characteristicsJson from '../../../wiremock/stubs/characteristics.json'
+import departureReasonsJson from '../../../wiremock/stubs/departure-reasons.json'
+import destinationProvidersJson from '../../../wiremock/stubs/destination-providers.json'
 import localAuthoritiesJson from '../../../wiremock/stubs/local-authorities.json'
+import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
+import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.json'
+import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 import { Characteristic, LocalAuthorityArea } from '../../@types/shared'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
@@ -61,4 +61,5 @@ export default ReferenceDataFactory.define(() => ({
   id: faker.datatype.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   isActive: true,
+  serviceScope: 'temporary-accommodation',
 }))

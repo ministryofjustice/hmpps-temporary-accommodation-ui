@@ -13,6 +13,6 @@ export type Departure = {
     reason: DepartureReason;
     notes?: string;
     moveOnCategory: MoveOnCategory;
-    destinationProvider: DestinationProvider;
+    destinationProvider?: DestinationProvider;
 };
 

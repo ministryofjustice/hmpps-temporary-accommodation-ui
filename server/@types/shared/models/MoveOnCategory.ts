@@ -5,6 +5,7 @@
 export type MoveOnCategory = {
     id: string;
     name: string;
+    serviceScope: string;
     isActive: boolean;
 };
 

@@ -5,6 +5,7 @@
 export type DepartureReason = {
     id: string;
     name: string;
+    serviceScope: string;
     isActive: boolean;
 };
 

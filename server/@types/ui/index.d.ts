@@ -1,4 +1,4 @@
-import { RoshRisks, RiskTier, FlagsEnvelope, Mappa } from '@approved-premises/api'
+import { FlagsEnvelope, Mappa, RiskTier, RoshRisks } from '@approved-premises/api'
 
 interface TasklistPage {
   body: Record<string, unknown>
@@ -132,6 +132,7 @@ export interface ReferenceData {
   id: string
   name: string
   isActive: boolean
+  serviceScope: string
 }
 
 export interface PersonRisksUI {

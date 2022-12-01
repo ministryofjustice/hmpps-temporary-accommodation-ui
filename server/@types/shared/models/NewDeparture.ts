@@ -7,6 +7,6 @@ export type NewDeparture = {
     reasonId: string;
     notes?: string;
     moveOnCategoryId: string;
-    destinationProviderId: string;
+    destinationProviderId?: string;
 };
 

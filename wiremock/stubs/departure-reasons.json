@@ -1,30 +1,98 @@
 [
-  { "id": "f996644b-a561-4525-9fdb-f69fbe451a98", "name": "Admitted to Hospital", "isActive": true },
+  {
+    "id": "f996644b-a561-4525-9fdb-f69fbe451a98",
+    "name": "Admitted to Hospital",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
   {
     "id": "e718e14d-8f8d-41a3-b8f1-25d23955af8f",
     "name": "Arrested, remanded in custody, or sentenced",
-    "isActive": true
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
-  { "id": "c56567a8-dbcd-414a-9427-3ea443ad4dc0", "name": "Bed Withdrawn", "isActive": true },
-  { "id": "7801b1a0-ca4c-4287-8b5b-203b1c3fa4f7", "name": "Breach / recall (abscond)", "isActive": true },
+  {
+    "id": "c56567a8-dbcd-414a-9427-3ea443ad4dc0",
+    "name": "Bed Withdrawn",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "7801b1a0-ca4c-4287-8b5b-203b1c3fa4f7",
+    "name": "Breach / recall (abscond)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
   {
     "id": "905ed7ef-e45d-4f50-91ca-a21ccf9c5af6",
     "name": "Breach / recall (behaviour / increasing risk)",
-    "isActive": true
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
-  { "id": "0bef1bf3-12a2-49b9-9cd2-83fb9af0e71e", "name": "Breach / recall (curfew)", "isActive": true },
-  { "id": "e15aef5f-9153-4dc6-a4dd-1f569acf8d5d", "name": "Breach / recall (house rules)", "isActive": true },
+  {
+    "id": "0bef1bf3-12a2-49b9-9cd2-83fb9af0e71e",
+    "name": "Breach / recall (curfew)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "e15aef5f-9153-4dc6-a4dd-1f569acf8d5d",
+    "name": "Breach / recall (house rules)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
   {
     "id": "bc6eef37-a261-4408-98ef-428925ff6df4",
     "name": "Breach / recall (licence or bail condition)",
-    "isActive": true
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
-  { "id": "6900ffe4-07ff-4da5-bbef-89099c710620", "name": "Breach / recall (other)", "isActive": true },
-  { "id": "70860b69-088d-47e5-a1bd-f19012c99a93", "name": "Breach / recall (positive drugs test)", "isActive": true },
-  { "id": "aade20d8-cd39-404c-b2e6-988ec0c67c03", "name": "Died", "isActive": true },
-  { "id": "28fd41c6-6a25-44ff-aacd-e7ce8748ec6d", "name": "End of ROTL", "isActive": true },
-  { "id": "bab1a71d-52c6-4262-b3fa-4c535559c1c6", "name": "Left of own volition", "isActive": true },
-  { "id": "6071eeb1-69fa-4509-a1b9-1e06b2bee382", "name": "Order / licence expired", "isActive": true },
-  { "id": "5cd283b3-8969-49a4-92db-b44e8bf50cdc", "name": "Other", "isActive": true },
-  { "id": "b77865aa-2f16-4821-80ff-6f1d72c93d61", "name": "Planned move-on", "isActive": true }
+  {
+    "id": "6900ffe4-07ff-4da5-bbef-89099c710620",
+    "name": "Breach / recall (other)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "70860b69-088d-47e5-a1bd-f19012c99a93",
+    "name": "Breach / recall (positive drugs test)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "aade20d8-cd39-404c-b2e6-988ec0c67c03",
+    "name": "Died",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "28fd41c6-6a25-44ff-aacd-e7ce8748ec6d",
+    "name": "End of ROTL",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "bab1a71d-52c6-4262-b3fa-4c535559c1c6",
+    "name": "Left of own volition",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "6071eeb1-69fa-4509-a1b9-1e06b2bee382",
+    "name": "Order / licence expired",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "5cd283b3-8969-49a4-92db-b44e8bf50cdc",
+    "name": "Other",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "b77865aa-2f16-4821-80ff-6f1d72c93d61",
+    "name": "Planned move-on",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+   }
 ]

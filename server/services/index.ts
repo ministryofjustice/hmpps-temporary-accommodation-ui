@@ -12,7 +12,6 @@ import DepartureService from './departureService'
 import CancellationService from './cancellationService'
 import LostBedService from './lostBedService'
 import ApplicationService from './applicationService'
-import LocalAuthorityService from './temporary-accommodation/localAuthorityService'
 import BedspaceService from './bedspaceService'
 import ConfirmationService from './confirmationService'
 
@@ -25,7 +24,6 @@ export const services = () => {
     lostBedClientBuilder,
     personClient,
     applicationClientBuilder,
-    localAuthorityClientBuilder,
     roomClientBuilder,
   } = dataAccess()
 
@@ -39,7 +37,6 @@ export const services = () => {
   const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
   const applicationService = new ApplicationService(applicationClientBuilder)
-  const localAuthorityService = new LocalAuthorityService(localAuthorityClientBuilder)
   const bedspaceService = new BedspaceService(roomClientBuilder, referenceDataClientBuilder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
 
@@ -54,7 +51,6 @@ export const services = () => {
     cancellationService,
     lostBedService,
     applicationService,
-    localAuthorityService,
     bedspaceService,
     confirmationService,
   }
@@ -73,5 +69,4 @@ export {
   BookingService,
   LostBedService,
   ApplicationService,
-  LocalAuthorityService,
 }

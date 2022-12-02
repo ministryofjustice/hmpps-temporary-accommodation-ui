@@ -4,16 +4,11 @@ import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import LocalAuthorityService from '../../../services/temporary-accommodation/localAuthorityService'
 import BedspaceService from '../../../services/bedspaceService'
 import { allStatuses } from '../../../utils/premisesUtils'
 
 export default class PremisesController {
-  constructor(
-    private readonly premisesService: PremisesService,
-    private readonly bedspaceService: BedspaceService,
-    private readonly localAuthorityService: LocalAuthorityService,
-  ) {}
+  constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -28,8 +23,8 @@ export default class PremisesController {
 
       const { token } = req.user
 
-      const allLocalAuthorities = await this.localAuthorityService.getLocalAuthorities(token)
-      const allCharacteristics = await this.premisesService.getPremisesCharacteristics(token)
+      const { localAuthorities: allLocalAuthorities, characteristics: allCharacteristics } =
+        await this.premisesService.getReferenceData(token)
 
       return res.render('temporary-accommodation/premises/new', {
         allLocalAuthorities,
@@ -68,8 +63,8 @@ export default class PremisesController {
       const { premisesId } = req.params
       const { token } = req.user
 
-      const allLocalAuthorities = await this.localAuthorityService.getLocalAuthorities(token)
-      const allCharacteristics = await this.premisesService.getPremisesCharacteristics(token)
+      const { localAuthorities: allLocalAuthorities, characteristics: allCharacteristics } =
+        await this.premisesService.getReferenceData(token)
 
       const updatePremises = await this.premisesService.getUpdatePremises(token, premisesId)
 

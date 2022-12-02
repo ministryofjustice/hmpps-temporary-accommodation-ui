@@ -9,11 +9,7 @@ import ArrivalsController from './arrivalsController'
 import DeparturesController from './departuresController'
 
 export const controllers = (services: Services) => {
-  const premisesController = new PremisesController(
-    services.premisesService,
-    services.bedspaceService,
-    services.localAuthorityService,
-  )
+  const premisesController = new PremisesController(services.premisesService, services.bedspaceService)
   const bedspacesController = new BedspacesController(
     services.premisesService,
     services.bedspaceService,

@@ -5,21 +5,24 @@ import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
 import premisesFactory from '../../../testutils/factories/premises'
 import newPremisesFactory from '../../../testutils/factories/newPremises'
 import updatePremisesFactory from '../../../testutils/factories/updatePremises'
-import localAuthorityFactory from '../../../testutils/factories/localAuthority'
 import roomFactory from '../../../testutils/factories/room'
 import PremisesService from '../../../services/premisesService'
 import PremisesController from './premisesController'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import { LocalAuthorityService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import characteristicFactory from '../../../testutils/factories/characteristic'
 import { allStatuses } from '../../../utils/premisesUtils'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
 
 jest.mock('../../../utils/validation')
 
 describe('PremisesController', () => {
   const token = 'SOME_TOKEN'
+
+  const referenceData = {
+    localAuthorities: referenceDataFactory.localAuthority().buildList(5),
+    characteristics: referenceDataFactory.characteristic('premises').buildList(5),
+  }
 
   let request: DeepMocked<Request>
 
@@ -28,8 +31,7 @@ describe('PremisesController', () => {
 
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
-  const localAuthorityService = createMock<LocalAuthorityService>({})
-  const premisesController = new PremisesController(premisesService, bedspaceService, localAuthorityService)
+  const premisesController = new PremisesController(premisesService, bedspaceService)
 
   beforeEach(() => {
     request = createMock<Request>({ user: { token } })
@@ -50,23 +52,18 @@ describe('PremisesController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      const allLocalAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
-
-      const allCharacteristics = characteristicFactory.buildList(5)
-      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
 
       const requestHandler = premisesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       await requestHandler(request, response, next)
 
-      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
-      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
-        allLocalAuthorities,
-        allCharacteristics,
+        allLocalAuthorities: referenceData.localAuthorities,
+        allCharacteristics: referenceData.characteristics,
         allStatuses,
         characteristicIds: [],
         errors: {},
@@ -75,11 +72,7 @@ describe('PremisesController', () => {
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-      const allLocalAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
-
-      const allCharacteristics = characteristicFactory.buildList(5)
-      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
 
       const requestHandler = premisesController.new()
 
@@ -88,12 +81,11 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
-      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
-        allLocalAuthorities,
-        allCharacteristics,
+        allLocalAuthorities: referenceData.localAuthorities,
+        allCharacteristics: referenceData.characteristics,
         allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
@@ -153,11 +145,7 @@ describe('PremisesController', () => {
 
   describe('edit', () => {
     it('renders the form', async () => {
-      const allLocalAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
-
-      const allCharacteristics = characteristicFactory.buildList(5)
-      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
 
       const premises = premisesFactory.build()
       const updatePremises = updatePremisesFactory.build({
@@ -171,13 +159,12 @@ describe('PremisesController', () => {
       request.params.premisesId = premises.id
       await requestHandler(request, response, next)
 
-      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
-      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
       expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
-        allLocalAuthorities,
-        allCharacteristics,
+        allLocalAuthorities: referenceData.localAuthorities,
+        allCharacteristics: referenceData.characteristics,
         allStatuses,
         characteristicIds: [],
         errors: {},
@@ -187,11 +174,7 @@ describe('PremisesController', () => {
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-      const allLocalAuthorities = localAuthorityFactory.buildList(5)
-      localAuthorityService.getLocalAuthorities.mockResolvedValue(allLocalAuthorities)
-
-      const allCharacteristics = characteristicFactory.buildList(5)
-      premisesService.getPremisesCharacteristics.mockResolvedValue(allCharacteristics)
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
 
       const premises = premisesFactory.build()
       const updatePremises = updatePremisesFactory.build({
@@ -207,13 +190,12 @@ describe('PremisesController', () => {
       request.params.premisesId = premises.id
       await requestHandler(request, response, next)
 
-      expect(localAuthorityService.getLocalAuthorities).toHaveBeenCalledWith(token)
-      expect(premisesService.getPremisesCharacteristics).toHaveBeenCalledWith(token)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
       expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
-        allLocalAuthorities,
-        allCharacteristics,
+        allLocalAuthorities: referenceData.localAuthorities,
+        allCharacteristics: referenceData.characteristics,
         allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,

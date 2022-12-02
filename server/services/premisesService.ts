@@ -1,12 +1,24 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
-import type { StaffMember, NewPremises, Premises, Characteristic, UpdatePremises } from '@approved-premises/api'
+import type {
+  StaffMember,
+  NewPremises,
+  Premises,
+  Characteristic,
+  UpdatePremises,
+  LocalAuthorityArea,
+} from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
 import paths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import { getDateRangesWithNegativeBeds, formatStatus, NegativeDateRange } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
-import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+
+export type PremisesReferenceData = {
+  localAuthorities: Array<LocalAuthorityArea>
+  characteristics: Array<Characteristic>
+}
 
 export default class PremisesService {
   constructor(
@@ -22,12 +34,19 @@ export default class PremisesService {
     return staffMembers
   }
 
-  async getPremisesCharacteristics(token: string): Promise<Array<Characteristic>> {
+  async getReferenceData(token: string): Promise<PremisesReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(token)
-    return filterAndSortCharacteristics(
+
+    const localAuthorities = (
+      (await referenceDataClient.getReferenceData('local-authority-areas')) as Array<LocalAuthorityArea>
+    ).sort((a, b) => a.name.localeCompare(b.name))
+
+    const characteristics = filterCharacteristics(
       await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
       'premises',
-    )
+    ).sort((a, b) => a.name.localeCompare(b.name))
+
+    return { localAuthorities, characteristics }
   }
 
   async tableRows(token: string): Promise<Array<TableRow>> {

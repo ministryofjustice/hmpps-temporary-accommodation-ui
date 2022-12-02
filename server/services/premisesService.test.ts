@@ -2,7 +2,6 @@ import PremisesService from './premisesService'
 import PremisesClient from '../data/premisesClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import premisesFactory from '../testutils/factories/premises'
-import approvedPremisesFactory from '../testutils/factories/approvedPremises'
 import localAuthorityFactory from '../testutils/factories/localAuthority'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
@@ -10,8 +9,7 @@ import newPremisesFactory from '../testutils/factories/newPremises'
 import updatePremisesFactory from '../testutils/factories/updatePremises'
 import characteristicFactory from '../testutils/factories/characteristic'
 import { getDateRangesWithNegativeBeds, formatStatus } from '../utils/premisesUtils'
-import apPaths from '../paths/manage'
-import taPaths from '../paths/temporary-accommodation/manage'
+import paths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
 
@@ -82,74 +80,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('approvedPremisesTableRows', () => {
-    it('returns a sorted table view of the premises for Approved Premises', async () => {
-      const premises1 = approvedPremisesFactory.build({ name: 'XYZ' })
-      const premises2 = approvedPremisesFactory.build({ name: 'ABC' })
-      const premises3 = approvedPremisesFactory.build({ name: 'GHI' })
-
-      const premises = [premises1, premises2, premises3]
-      premisesClient.all.mockResolvedValue(premises)
-
-      const rows = await service.approvedPremisesTableRows(token)
-
-      expect(rows).toEqual([
-        [
-          {
-            text: premises2.name,
-          },
-          {
-            text: premises2.apCode,
-          },
-          {
-            text: premises2.bedCount.toString(),
-          },
-          {
-            html: `<a href="${apPaths.premises.show({
-              premisesId: premises2.id,
-            })}">View<span class="govuk-visually-hidden">about ${premises2.name}</span></a>`,
-          },
-        ],
-        [
-          {
-            text: premises3.name,
-          },
-          {
-            text: premises3.apCode,
-          },
-          {
-            text: premises3.bedCount.toString(),
-          },
-          {
-            html: `<a href="${apPaths.premises.show({
-              premisesId: premises3.id,
-            })}">View<span class="govuk-visually-hidden">about ${premises3.name}</span></a>`,
-          },
-        ],
-        [
-          {
-            text: premises1.name,
-          },
-          {
-            text: premises1.apCode,
-          },
-          {
-            text: premises1.bedCount.toString(),
-          },
-          {
-            html: `<a href="${apPaths.premises.show({
-              premisesId: premises1.id,
-            })}">View<span class="govuk-visually-hidden">about ${premises1.name}</span></a>`,
-          },
-        ],
-      ])
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.all).toHaveBeenCalled()
-    })
-  })
-
-  describe('temporaryAccommodationTableRows', () => {
+  describe('tableRows', () => {
     it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
       const premises1 = premisesFactory.build({ addressLine1: 'XYZ', postcode: '123' })
       const premises2 = premisesFactory.build({ addressLine1: 'ABC', postcode: '123' })
@@ -159,7 +90,7 @@ describe('PremisesService', () => {
       const premises = [premises1, premises2, premises3, premises4]
       premisesClient.all.mockResolvedValue(premises)
 
-      const rows = await service.temporaryAccommodationTableRows(token)
+      const rows = await service.tableRows(token)
 
       expect(rows).toEqual([
         [
@@ -176,7 +107,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises2.id,
             })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
           },
@@ -195,7 +126,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises4.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
           },
@@ -214,7 +145,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises3.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
           },
@@ -233,7 +164,7 @@ describe('PremisesService', () => {
             text: '',
           },
           {
-            html: `<a href="${taPaths.premises.show({
+            html: `<a href="${paths.premises.show({
               premisesId: premises1.id,
             })}">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
           },
@@ -311,48 +242,6 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('getApprovedPremisesPremisesDetails', () => {
-    it('returns a title and a summary list for a given Premises ID', async () => {
-      const premises = approvedPremisesFactory.build({
-        name: 'Test',
-        apCode: 'ABC',
-        postcode: 'SW1A 1AA',
-        bedCount: 50,
-        availableBedsForToday: 20,
-      })
-      premisesClient.find.mockResolvedValue(premises)
-
-      const result = await service.getApprovedPremisesPremisesDetails(token, premises.id)
-
-      expect(result).toEqual({
-        name: 'Test',
-        summaryList: {
-          rows: [
-            {
-              key: { text: 'Code' },
-              value: { text: 'ABC' },
-            },
-            {
-              key: { text: 'Postcode' },
-              value: { text: 'SW1A 1AA' },
-            },
-            {
-              key: { text: 'Number of Beds' },
-              value: { text: '50' },
-            },
-            {
-              key: { text: 'Available Beds' },
-              value: { text: '20' },
-            },
-          ],
-        },
-      })
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
-      expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
-    })
-  })
-
   describe('getTemporayAccommodationPremisesDetails', () => {
     it('returns a Premises and a summary list for a given Premises ID', async () => {
       const premises = premisesFactory.build({
@@ -381,7 +270,7 @@ describe('PremisesService', () => {
       }))
       ;(formatStatus as jest.MockedFn<typeof formatStatus>).mockReturnValue('Online')
 
-      const result = await service.getTemporaryAccommodationPremisesDetails(token, premises.id)
+      const result = await service.getPremisesDetails(token, premises.id)
 
       expect(result).toEqual({
         premises,

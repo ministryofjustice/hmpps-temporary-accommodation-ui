@@ -1,15 +1,7 @@
 import type { TableRow, SummaryList } from '@approved-premises/ui'
-import type {
-  StaffMember,
-  NewPremises,
-  Premises,
-  ApprovedPremises,
-  Characteristic,
-  UpdatePremises,
-} from '@approved-premises/api'
+import type { StaffMember, NewPremises, Premises, Characteristic, UpdatePremises } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
-import apPaths from '../paths/manage'
-import taPaths from '../paths/temporary-accommodation/manage'
+import paths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
 import { getDateRangesWithNegativeBeds, formatStatus, NegativeDateRange } from '../utils/premisesUtils'
@@ -38,27 +30,7 @@ export default class PremisesService {
     )
   }
 
-  async approvedPremisesTableRows(token: string): Promise<Array<TableRow>> {
-    const premisesClient = this.premisesClientFactory(token)
-    const premises = (await premisesClient.all()) as Array<ApprovedPremises>
-
-    return premises
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map((p: ApprovedPremises) => {
-        return [
-          this.textValue(p.name),
-          this.textValue(p.apCode),
-          this.textValue(p.bedCount.toString()),
-          this.htmlValue(
-            `<a href="${apPaths.premises.show({ premisesId: p.id })}">View<span class="govuk-visually-hidden">about ${
-              p.name
-            }</span></a>`,
-          ),
-        ]
-      })
-  }
-
-  async temporaryAccommodationTableRows(token: string): Promise<Array<TableRow>> {
+  async tableRows(token: string): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.all()
 
@@ -72,7 +44,7 @@ export default class PremisesService {
           this.textValue(''),
           this.textValue(''),
           this.htmlValue(
-            `<a href="${taPaths.premises.show({
+            `<a href="${paths.premises.show({
               premisesId: entry.premises.id,
             })}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
           ),
@@ -87,25 +59,11 @@ export default class PremisesService {
     return premises
   }
 
-  async getApprovedPremisesPremisesDetails(
-    token: string,
-    id: string,
-  ): Promise<{ name: string; summaryList: SummaryList }> {
-    const premisesClient = this.premisesClientFactory(token)
-    const premises = (await premisesClient.find(id)) as ApprovedPremises
-    const summaryList = await this.approvedPremisesSummaryListForPremises(premises)
-
-    return { name: premises.name, summaryList }
-  }
-
-  async getTemporaryAccommodationPremisesDetails(
-    token: string,
-    id: string,
-  ): Promise<{ premises: Premises; summaryList: SummaryList }> {
+  async getPremisesDetails(token: string, id: string): Promise<{ premises: Premises; summaryList: SummaryList }> {
     const premisesClient = this.premisesClientFactory(token)
     const premises = await premisesClient.find(id)
 
-    const summaryList = await this.temporaryAccommodationSummaryListForPremises(premises)
+    const summaryList = await this.summaryListForPremises(premises)
 
     return { premises, summaryList }
   }
@@ -165,30 +123,7 @@ export default class PremisesService {
     return premises
   }
 
-  private async approvedPremisesSummaryListForPremises(premises: ApprovedPremises): Promise<SummaryList> {
-    return {
-      rows: [
-        {
-          key: this.textValue('Code'),
-          value: this.textValue(premises.apCode),
-        },
-        {
-          key: this.textValue('Postcode'),
-          value: this.textValue(premises.postcode),
-        },
-        {
-          key: this.textValue('Number of Beds'),
-          value: this.textValue(premises.bedCount.toString()),
-        },
-        {
-          key: this.textValue('Available Beds'),
-          value: this.textValue(premises.availableBedsForToday.toString()),
-        },
-      ],
-    }
-  }
-
-  private async temporaryAccommodationSummaryListForPremises(premises: Premises): Promise<SummaryList> {
+  private async summaryListForPremises(premises: Premises): Promise<SummaryList> {
     return {
       rows: [
         {

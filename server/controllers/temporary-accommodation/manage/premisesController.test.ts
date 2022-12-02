@@ -37,14 +37,14 @@ describe('PremisesController', () => {
 
   describe('index', () => {
     it('returns the table rows to the template', async () => {
-      premisesService.temporaryAccommodationTableRows.mockResolvedValue([])
+      premisesService.tableRows.mockResolvedValue([])
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { tableRows: [] })
 
-      expect(premisesService.temporaryAccommodationTableRows).toHaveBeenCalledWith(token)
+      expect(premisesService.tableRows).toHaveBeenCalledWith(token)
     })
   })
 
@@ -285,7 +285,7 @@ describe('PremisesController', () => {
       const rooms = roomFactory.buildList(5)
 
       const details = { premises, summaryList: { rows: [] as Array<SummaryListItem> } }
-      premisesService.getTemporaryAccommodationPremisesDetails.mockResolvedValue(details)
+      premisesService.getPremisesDetails.mockResolvedValue(details)
 
       const bedspaceDetails = rooms.map(room => ({ room, summaryList: { rows: [] as Array<SummaryListItem> } }))
       bedspaceService.getBedspaceDetails.mockResolvedValue(bedspaceDetails)
@@ -300,7 +300,7 @@ describe('PremisesController', () => {
         bedspaces: bedspaceDetails,
       })
 
-      expect(premisesService.getTemporaryAccommodationPremisesDetails).toHaveBeenCalledWith(token, premises.id)
+      expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(token, premises.id)
       expect(bedspaceService.getBedspaceDetails).toHaveBeenCalledWith(token, premises.id)
     })
   })

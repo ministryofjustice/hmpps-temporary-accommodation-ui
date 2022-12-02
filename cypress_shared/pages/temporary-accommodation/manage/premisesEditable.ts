@@ -16,6 +16,9 @@ export default abstract class PremisesEditablePage extends Page {
       this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)
     })
 
+    this.getLabel('What is the probation region?')
+    this.getSelectInputByIdAndSelectAnEntry('probationRegionId', newOrUpdatePremises.probationRegionId)
+
     this.getLegend('What is the status of this property?')
     this.checkRadioByNameAndValue('status', newOrUpdatePremises.status)
 

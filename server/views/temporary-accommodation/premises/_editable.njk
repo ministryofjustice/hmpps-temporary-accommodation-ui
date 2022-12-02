@@ -53,6 +53,18 @@
   fetchContext()
 ) }}
 
+{{ taSelect(
+  {
+    label: {
+      text: "What is the probation region?",
+      classes: "govuk-label--m"
+    },
+    items: convertObjectsToSelectOptions(allProbationRegions, 'Select a probation region', 'name', 'id', 'probationRegionId'),
+    fieldName: "probationRegionId"
+  },
+  fetchContext()
+) }}
+
 {{ taCheckboxes(
   {
     fieldset: {

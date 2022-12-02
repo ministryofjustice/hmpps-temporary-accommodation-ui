@@ -101,9 +101,10 @@ context('Premises', () => {
     // When I visit the new premises page
     const premises = premisesFactory.build()
     const newPremises = newPremisesFactory.build({
-      name: premises.name,
-      postcode: premises.postcode,
+      ...premises,
       localAuthorityAreaId: premises.localAuthorityArea.id,
+      characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+      probationRegionId: premises.probationRegion.id,
     })
 
     cy.task('stubPremisesCreate', premises)

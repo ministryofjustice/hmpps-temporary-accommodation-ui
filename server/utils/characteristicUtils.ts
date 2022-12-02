@@ -11,6 +11,15 @@ export const filterAndSortCharacteristics = (
     .sort((a, b) => a.name.localeCompare(b.name))
 }
 
+export const filterCharacteristics = (
+  characteristics: Array<Characteristic>,
+  scope: 'room' | 'premises',
+): Array<Characteristic> => {
+  return characteristics.filter(
+    characteristic => characteristic.modelScope === scope || characteristic.modelScope === '*',
+  )
+}
+
 export const formatCharacteristics = (characteristics: Array<Characteristic>): SummaryListItem['value'] => {
   const characteristicNames = (characteristics || [])
     .map(characteristic => characteristic.name)

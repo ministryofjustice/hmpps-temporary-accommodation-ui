@@ -156,16 +156,12 @@ export default class PremisesService {
           value: this.htmlValue(`${escape(premises.addressLine1)}<br />${escape(premises.postcode)}`),
         },
         {
-          key: this.textValue('PDU'),
-          value: this.textValue(''),
-        },
-        {
           key: this.textValue('Local authority'),
           value: this.textValue(premises.localAuthorityArea.name),
         },
         {
-          key: this.textValue('Occupancy'),
-          value: this.textValue(''),
+          key: this.textValue('Probation region'),
+          value: this.textValue(premises.probationRegion.name),
         },
         {
           key: this.textValue('Attributes'),

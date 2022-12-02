@@ -22,6 +22,7 @@ export default class PremisesShowPage extends Page {
 
       this.shouldShowKeyAndValues('Address', [this.premises.addressLine1, this.premises.postcode])
       this.shouldShowKeyAndValue('Local authority', this.premises.localAuthorityArea.name)
+      this.shouldShowKeyAndValue('Probation region', this.premises.probationRegion.name)
       this.shouldShowKeyAndValues(
         'Attributes',
         this.premises.characteristics.map(({ name }) => name),

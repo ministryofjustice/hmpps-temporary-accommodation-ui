@@ -13,6 +13,7 @@ import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.jso
 import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 import probationRegionsJson from '../../../wiremock/stubs/probation-regions.json'
 import { Characteristic, LocalAuthorityArea } from '../../@types/shared'
+import { filterCharacteristics } from '../../utils/characteristicUtils'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
@@ -45,11 +46,9 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
     return this.params(data)
   }
 
-  characteristic(modelScope: string): Factory<Characteristic> {
+  characteristic(modelScope: 'premises' | 'room'): Factory<Characteristic> {
     return Factory.define<Characteristic>(() =>
-      faker.helpers.arrayElement(
-        characteristicsJson.filter(characteristic => characteristic.modelScope === modelScope),
-      ),
+      faker.helpers.arrayElement(filterCharacteristics(characteristicsJson, modelScope)),
     )
   }
 

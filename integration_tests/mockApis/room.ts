@@ -2,6 +2,7 @@ import { Room } from '@approved-premises/api'
 import { SuperAgentRequest } from 'superagent'
 import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
+import { characteristics } from '../../wiremock/referenceDataStubs'
 import { errorStub } from '../../wiremock/utils'
 import booking from './booking'
 
@@ -81,4 +82,5 @@ export default {
         url: paths.premises.rooms.update({ premisesId: args.premisesId, roomId: args.room.id }),
       })
     ).body.requests,
+  stubRoomReferenceData: () => stubFor(characteristics),
 }

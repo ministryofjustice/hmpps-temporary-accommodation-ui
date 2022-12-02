@@ -38,11 +38,8 @@ context('Premises', () => {
     const premises = premisesFactory.buildList(5)
     cy.task('stubPremises', premises)
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // When I visit the premises page
     const page = PremisesListPage.visit()
@@ -77,11 +74,8 @@ context('Premises', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // And there is a premises in the database
     const premises = premisesFactory.build()
@@ -101,11 +95,8 @@ context('Premises', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // When I visit the new premises page
     const premises = premisesFactory.build()
@@ -145,11 +136,8 @@ context('Premises', () => {
     // Given I am logged in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // When I visit the new premises page
     const page = PremisesNewPage.visit()
@@ -170,11 +158,8 @@ context('Premises', () => {
     const premises = premisesFactory.buildList(5)
     cy.task('stubPremises', premises)
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // When I visit the new premises page
     const page = PremisesNewPage.visit()
@@ -190,11 +175,8 @@ context('Premises', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // And there is a premises in the database
     const premises = premisesFactory.build()
@@ -233,11 +215,8 @@ context('Premises', () => {
     // Given I am logged in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // And there is a premises in the database
     const premises = premisesFactory.build()
@@ -259,11 +238,8 @@ context('Premises', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
 
     // And there is a premises in the database
     const premises = premisesFactory.build()

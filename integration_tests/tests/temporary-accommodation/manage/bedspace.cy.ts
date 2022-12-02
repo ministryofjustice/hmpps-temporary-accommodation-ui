@@ -21,11 +21,9 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
+    cy.task('stubRoomReferenceData')
 
     // And there is a premises in the database
     const premises = premisesFactory.build()
@@ -45,11 +43,9 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
+    cy.task('stubRoomReferenceData')
 
     // And there is a premises with rooms in the database
     const premises = premisesFactory.build()
@@ -76,11 +72,9 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are local authorities in the database
-    cy.task('stubLocalAuthoritiesReferenceData')
-
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubPremisesReferenceData')
+    cy.task('stubRoomReferenceData')
 
     // And there is a premises with rooms in the database
     const premises = premisesFactory.build()
@@ -103,8 +97,8 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubRoomReferenceData')
 
     // When I visit the new bedspace page
     const premises = premisesFactory.build()
@@ -143,8 +137,8 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubRoomReferenceData')
 
     // When I visit the new bedspace page
     const premises = premisesFactory.build()
@@ -162,8 +156,8 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubRoomReferenceData')
 
     // When I visit the new bedspace page
     const premises = premisesFactory.build()
@@ -182,8 +176,8 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubRoomReferenceData')
 
     // And there is a premise and a room in the database
     const premises = premisesFactory.build()
@@ -223,8 +217,8 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are characteristics in the database
-    cy.task('stubCharacteristicsReferenceData')
+    // And there is reference data in the database
+    cy.task('stubRoomReferenceData')
 
     // And there is a premise and a room in the database
     const premises = premisesFactory.build()

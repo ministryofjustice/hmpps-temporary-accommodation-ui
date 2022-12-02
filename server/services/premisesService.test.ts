@@ -11,7 +11,8 @@ import characteristicFactory from '../testutils/factories/characteristic'
 import { getDateRangesWithNegativeBeds, formatStatus } from '../utils/premisesUtils'
 import paths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
-import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+import probationRegionFactory from '../testutils/factories/probationRegion'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
@@ -51,29 +52,40 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('getPremisesCharacteristics', () => {
-    it('returns prepared premises characteristics', async () => {
+  describe('getReferenceData', () => {
+    it('returns sorted premises reference data', async () => {
+      const localAuthority1 = localAuthorityFactory.build({ name: 'ABC' })
+      const localAuthority2 = localAuthorityFactory.build({ name: 'HIJ' })
+      const localAuthority3 = localAuthorityFactory.build({ name: 'XYZ' })
+
       const premisesCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'premises' })
       const premisesCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'premises' })
       const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
       const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
 
-      referenceDataClient.getReferenceData.mockResolvedValue([
+      referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
+        if (objectType === 'local-authority-areas') {
+          return [localAuthority3, localAuthority1, localAuthority2]
+        }
+
+        return [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic]
+      })
+      ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         genericCharacteristic,
         premisesCharacteristic2,
         premisesCharacteristic1,
-        otherCharacteristic,
-      ])
-      ;(filterAndSortCharacteristics as jest.MockedFunction<typeof filterAndSortCharacteristics>).mockReturnValue([
-        premisesCharacteristic1,
-        premisesCharacteristic2,
-        genericCharacteristic,
       ])
 
-      const result = await service.getPremisesCharacteristics(token)
-      expect(result).toEqual([premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic])
+      const result = await service.getReferenceData(token)
+      expect(result).toEqual({
+        localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
+        characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
+      })
 
-      expect(filterAndSortCharacteristics).toHaveBeenCalledWith(
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
+
+      expect(filterCharacteristics).toHaveBeenCalledWith(
         [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic],
         'premises',
       )

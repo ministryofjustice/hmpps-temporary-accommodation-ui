@@ -65,6 +65,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
+        allProbationRegions: referenceData.probationRegions,
         allStatuses,
         characteristicIds: [],
         errors: {},
@@ -87,6 +88,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
+        allProbationRegions: referenceData.probationRegions,
         allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
@@ -166,6 +168,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
+        allProbationRegions: referenceData.probationRegions,
         allStatuses,
         characteristicIds: [],
         errors: {},
@@ -197,6 +200,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
+        allProbationRegions: referenceData.probationRegions,
         allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,

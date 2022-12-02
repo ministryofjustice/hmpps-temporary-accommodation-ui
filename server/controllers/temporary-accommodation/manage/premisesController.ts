@@ -23,12 +23,16 @@ export default class PremisesController {
 
       const { token } = req.user
 
-      const { localAuthorities: allLocalAuthorities, characteristics: allCharacteristics } =
-        await this.premisesService.getReferenceData(token)
+      const {
+        localAuthorities: allLocalAuthorities,
+        characteristics: allCharacteristics,
+        probationRegions: allProbationRegions,
+      } = await this.premisesService.getReferenceData(token)
 
       return res.render('temporary-accommodation/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
+        allProbationRegions,
         allStatuses,
         characteristicIds: [],
         errors,
@@ -63,14 +67,18 @@ export default class PremisesController {
       const { premisesId } = req.params
       const { token } = req.user
 
-      const { localAuthorities: allLocalAuthorities, characteristics: allCharacteristics } =
-        await this.premisesService.getReferenceData(token)
+      const {
+        localAuthorities: allLocalAuthorities,
+        characteristics: allCharacteristics,
+        probationRegions: allProbationRegions,
+      } = await this.premisesService.getReferenceData(token)
 
       const updatePremises = await this.premisesService.getUpdatePremises(token, premisesId)
 
       return res.render('temporary-accommodation/premises/edit', {
         allLocalAuthorities,
         allCharacteristics,
+        allProbationRegions,
         allStatuses,
         characteristicIds: [],
         errors,

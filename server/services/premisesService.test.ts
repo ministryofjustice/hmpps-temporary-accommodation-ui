@@ -267,7 +267,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('getTemporayAccommodationPremisesDetails', () => {
+  describe('getPremisesDetails', () => {
     it('returns a Premises and a summary list for a given Premises ID', async () => {
       const premises = premisesFactory.build({
         name: 'Test',
@@ -283,6 +283,9 @@ describe('PremisesService', () => {
             name: 'A characteristic',
           }),
         ],
+        probationRegion: probationRegionFactory.build({
+          name: 'A probation region',
+        }),
         status: 'active',
         notes: 'Some notes',
       })
@@ -306,16 +309,12 @@ describe('PremisesService', () => {
               value: { html: '10 Example Street<br />SW1A 1AA' },
             },
             {
-              key: { text: 'PDU' },
-              value: { text: '' },
-            },
-            {
               key: { text: 'Local authority' },
               value: { text: 'Test Authority' },
             },
             {
-              key: { text: 'Occupancy' },
-              value: { text: '' },
+              key: { text: 'Probation region' },
+              value: { text: 'A probation region' },
             },
             {
               key: { text: 'Attributes' },

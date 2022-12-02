@@ -1,10 +1,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "../components/ta-input/macro.njk" import taInput %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../components/ta-checkboxes/macro.njk" import taCheckboxes %}
+{% from "../components/ta-radios/macro.njk" import taRadios %}
+{% from "../components/ta-select/macro.njk" import taSelect %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% call govukFieldset({
@@ -14,59 +14,61 @@
   }
 }) %}
 
-{{ govukInput({
-  label: {
-    text: 'Address line 1',
-    classes: "govuk-label--s"
+{{ taInput(
+  {
+    label: {
+      text: 'Address line 1',
+      classes: "govuk-label--s"
+    },
+    fieldName: "addressLine1",
+    autocomplete: "address-line1"
   },
-  id: "addressLine1",
-  name: "addressLine1",
-  autocomplete: "address-line1",
-  value: addressLine1,
-  errorMessage: errors.addressLine1
-}) }}
+  fetchContext()
+) }}
 
-{{ govukInput({
-  label: {
-    text: "Postcode",
-    classes: "govuk-label--s"
+{{ taInput(
+  {
+    label: {
+      text: "Postcode",
+      classes: "govuk-label--s"
+    },
+    classes: "govuk-input--width-20",
+    fieldName: "postcode",
+    autocomplete: "postal-code"
   },
-  classes: "govuk-input--width-20",
-  id: "postcode",
-  name: "postcode",
-  autocomplete: "postal-code",
-  value: postcode,
-  errorMessage: errors.postcode
-}) }}
+  fetchContext()
+) }}
 
 {% endcall %}
 
-{{ govukSelect({
-  label: {
-    text: "What is the local authority?",
-    classes: "govuk-label--m"
+{{ taSelect(
+  {
+    label: {
+      text: "What is the local authority?",
+      classes: "govuk-label--m"
+    },
+    items: convertObjectsToSelectOptions(allLocalAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
+    fieldName: "localAuthorityAreaId"
   },
-  items: convertObjectsToSelectOptions(allLocalAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
-  id: "localAuthorityAreaId",
-  name: "localAuthorityAreaId",
-  errorMessage: errors.localAuthorityAreaId
-}) }}
+  fetchContext()
+) }}
 
-{{ govukCheckboxes({
-  fieldset: {
-    legend: {
-      text: "Does the property have any of the following attributes?",
-      classes: "govuk-fieldset__legend--m"
-    }
+{{ taCheckboxes(
+  {
+    fieldset: {
+      legend: {
+        text: "Does the property have any of the following attributes?",
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    hint: {
+      text: "Select all that apply"
+    },
+    items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
+    fieldName: "characteristicIds"
   },
-  hint: {
-    text: "Select all that apply"
-  },
-  items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
-  id: "characteristicIds",
-  name: "characteristicIds[]",
-  errorMessage: errors.characteristicIds
-}) }}
+  fetchContext()
+) }}
 
 {% set statusHintText %}
   <p>Select the relevant property status from the list below. The status will be applied to all bedspaces in this property.</p>
@@ -85,35 +87,34 @@
   }) }}
 {% endset %}
 
-{{ govukRadios({
-  fieldset: {
-    legend: {
-      text: "What is the status of this property?",
-      classes: "govuk-fieldset__legend--m"
-    }
-  },
-  hint: {
-    html: statusHint
-  },
-  items: convertObjectsToRadioItems(allStatuses, 'name', 'id', 'status'),
-  idPrefix: "status",
-  name: "status",
-  errorMessage: errors.status
-}) }}
+{{ taRadios(
+  {
+    fieldset: {
+      legend: {
+        text: "What is the status of this property?",
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    hint: {
+      html: statusHint
+    },
+    items: convertObjectsToRadioItems(allStatuses, 'name', 'id', 'status'),
+    fieldName: "status"
+  }, fetchContext()
+) }}
 
-{{ govukTextarea({
-  label: {
-    text: "Please provide any further property details",
-    classes: "govuk-label--m"
-  },
-  hint: {
-    text: "This information will be used to help find a suitable property for the person on probation"
-  },
-  id: "notes",
-  name: "notes",
-  value: notes,
-  errorMessage: errors.notes
-}) }}
+{{ taTextarea(
+  {
+    label: {
+      text: "Please provide any further property details",
+      classes: "govuk-label--m"
+    },
+    hint: {
+      text: "This information will be used to help find a suitable property for the person on probation"
+    },
+    fieldName: "notes"
+  }, fetchContext()
+) }}
 
 {{ govukButton({
   text: "Submit"

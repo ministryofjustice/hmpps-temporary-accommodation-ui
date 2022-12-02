@@ -1,0 +1,12 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% macro taRadios(params, context) %}
+  {{
+    govukRadios(
+      mergeObjects(
+        params,
+        { idPrefix: params.fieldName, name: params.fieldName, errorMessage: context.errors[params.fieldName] }
+      )
+    )
+  }}
+{% endmacro %}

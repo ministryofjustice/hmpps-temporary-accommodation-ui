@@ -1,68 +1,16 @@
 [
-    {
-        "id": "single-bed",
-        "name": "Single bed",
-        "modelScope": "room",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "double-bed",
-        "name": "Double bed",
-        "modelScope": "room",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "shared-kitchen",
-        "name": "Shared kitchen",
-        "modelScope": "room",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "shared-bathroom",
-        "name": "Shared bathroom",
-        "modelScope": "room",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "pub-nearby",
-        "name": "Pub nearby",
-        "modelScope": "premises",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "school-nearby",
-        "name": "School nearby",
-        "modelScope": "premises",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "park-nearby",
-        "name": "Park nearby",
-        "modelScope": "premises",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "men-only",
-        "name": "Men only",
-        "modelScope": "premises",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "women-only",
-        "name": "Women only",
-        "modelScope": "premises",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "floor-level-access",
-        "name": "Floor level access",
-        "modelScope": "*",
-        "serviceScope": "temporary-accommodation"
-    },
-    {
-        "id": "wheelchair-accessible",
-        "name": "Wheelchair accessible",
-        "modelScope": "*",
-        "serviceScope": "temporary-accommodation"
-    }
+  { "id": "fffb3004-5f0a-4e88-8350-fb89a0168296", "name": "Park nearby", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
+  { "id": "684f919a-4c4a-4e80-9b3a-1dcd35873b3f", "name": "Pub nearby", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
+  { "id": "78c5d99b-9702-4bf2-a23d-c2a0cf3a017d", "name": "School nearby", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
+  { "id": "2fff6ede-7035-4e8d-81ad-5fcd894b99cf", "name": "Men only", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
+  { "id": "8221f1ad-3aaf-406a-b918-dbdef956ea17", "name": "Women only", "serviceScope": "temporary-accommodation", "modelScope": "premises" },
+  { "id": "12e2e689-b3fb-469d-baec-2fb68e15e85b", "name": "Single bed", "serviceScope": "temporary-accommodation", "modelScope": "room" },
+  { "id": "08b756e2-0b82-4f49-a124-35ea4ebb1634", "name": "Double bed", "serviceScope": "temporary-accommodation", "modelScope": "room" },
+  { "id": "7dd3bac5-3d1c-4acb-b110-b1614b2c95d8", "name": "Shared kitchen", "serviceScope": "temporary-accommodation", "modelScope": "room" },
+  { "id": "e730bdea-6157-4910-b1b0-450b29bf0c9f", "name": "Shared bathroom", "serviceScope": "temporary-accommodation", "modelScope": "room" },
+  { "id": "2183d873-8270-4e93-8518-3a668a053689", "name": "Lift access", "serviceScope": "temporary-accommodation", "modelScope": "room" },
+  { "id": "a2dd4661-c7fe-4294-b3fd-3fc877e62aa5", "name": "Not suitable for registered sex offenders (RSO)", "serviceScope": "temporary-accommodation", "modelScope": "*" },
+  { "id": "62c4d8cf-b612-4110-9e27-5c29982f9fcf", "name": "Not suitable for arson offenders", "serviceScope": "temporary-accommodation", "modelScope": "*" },
+  { "id": "99bb0f33-ff92-4606-9d1c-43bcf0c42ef4", "name": "Floor level access", "serviceScope": "temporary-accommodation", "modelScope": "*" },
+  { "id": "d2f7796a-88e5-4e53-ab6d-dabb145b6a60", "name": "Wheelchair accessible", "serviceScope": "temporary-accommodation", "modelScope": "*" }
 ]

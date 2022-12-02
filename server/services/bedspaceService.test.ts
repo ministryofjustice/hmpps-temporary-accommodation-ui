@@ -5,7 +5,7 @@ import BedspaceService from './bedspaceService'
 import ReferenceDataClient from '../data/referenceDataClient'
 import characteristicFactory from '../testutils/factories/characteristic'
 import { formatLines } from '../utils/viewUtils'
-import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
 
 jest.mock('../data/roomClient')
 jest.mock('../data/referenceDataClient')
@@ -233,8 +233,8 @@ describe('BedspaceService', () => {
     })
   })
 
-  describe('getRoomCharacteristics', () => {
-    it('returns prepared room characteristics', async () => {
+  describe('getReferenceData', () => {
+    it('returns sorted room characteristics', async () => {
       const roomCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
       const roomCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
       const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
@@ -246,16 +246,16 @@ describe('BedspaceService', () => {
         roomCharacteristic1,
         otherCharacteristic,
       ])
-      ;(filterAndSortCharacteristics as jest.MockedFunction<typeof filterAndSortCharacteristics>).mockReturnValue([
-        roomCharacteristic1,
+      ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         roomCharacteristic2,
         genericCharacteristic,
+        roomCharacteristic1,
       ])
 
-      const result = await service.getRoomCharacteristics(token)
-      expect(result).toEqual([roomCharacteristic1, roomCharacteristic2, genericCharacteristic])
+      const result = await service.getReferenceData(token)
+      expect(result).toEqual({ characteristics: [roomCharacteristic1, roomCharacteristic2, genericCharacteristic] })
 
-      expect(filterAndSortCharacteristics).toHaveBeenCalledWith(
+      expect(filterCharacteristics).toHaveBeenCalledWith(
         [genericCharacteristic, roomCharacteristic2, roomCharacteristic1, otherCharacteristic],
         'room',
       )

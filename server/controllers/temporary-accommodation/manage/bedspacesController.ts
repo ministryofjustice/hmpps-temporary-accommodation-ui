@@ -18,7 +18,7 @@ export default class BedspacesController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId } = req.params
 
-      const allCharacteristics = await this.bedspaceService.getRoomCharacteristics(req.user.token)
+      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(req.user.token)
 
       return res.render('temporary-accommodation/bedspaces/new', {
         premisesId,
@@ -58,7 +58,7 @@ export default class BedspacesController {
       const { premisesId, roomId } = req.params
       const { token } = req.user
 
-      const allCharacteristics = await this.bedspaceService.getRoomCharacteristics(token)
+      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(token)
 
       const updateRoom = await this.bedspaceService.getUpdateRoom(token, premisesId, roomId)
 

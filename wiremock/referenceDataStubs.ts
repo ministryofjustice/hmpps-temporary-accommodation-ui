@@ -6,6 +6,7 @@ import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
 import keyWorkersJson from './stubs/keyworkers.json'
 import characteristicsJson from './stubs/characteristics.json'
 import localAuthoritiesJson from './stubs/local-authorities.json'
+import probationRegionsJson from './stubs/probation-regions.json'
 
 const departureReasons = {
   request: {
@@ -119,6 +120,20 @@ const localAuthorities = {
   },
 }
 
+const probationRegions = {
+  request: {
+    method: 'GET',
+    url: '/reference-data/probation-regions',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: probationRegionsJson,
+  },
+}
+
 export {
   departureReasons,
   moveOnCategories,
@@ -128,4 +143,5 @@ export {
   keyWorkers,
   characteristics,
   localAuthorities,
+  probationRegions,
 }

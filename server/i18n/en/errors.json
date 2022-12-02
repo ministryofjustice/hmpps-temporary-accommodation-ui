@@ -73,6 +73,9 @@
   "localAuthorityAreaId": {
     "empty": "You must choose a local authority"
   },
+  "probationRegionId": {
+    "empty": "You must choose a probation region"
+  },
   "status": {
     "empty": "You must choose a status"
   }

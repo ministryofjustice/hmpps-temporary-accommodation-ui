@@ -34,6 +34,7 @@ Given('I create a premises with all necessary details', () => {
     ...premises,
     localAuthorityAreaId: premises.localAuthorityArea.id,
     characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+    probationRegionId: premises.probationRegion.id,
   })
 
   cy.wrap(premises).as('premises')
@@ -70,6 +71,7 @@ Given('I edit the premises details', () => {
       ...updatedPremises,
       localAuthorityAreaId: updatedPremises.localAuthorityArea.id,
       characteristicIds: updatedPremises.characteristics.map(characteristic => characteristic.id),
+      probationRegionId: updatedPremises.probationRegion.id,
     })
 
     cy.wrap(updatedPremises).as('premises')

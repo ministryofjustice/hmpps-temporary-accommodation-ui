@@ -2,15 +2,6 @@ import { Characteristic } from '../@types/shared'
 import { SummaryListItem } from '../@types/ui'
 import { escape } from './viewUtils'
 
-export const filterAndSortCharacteristics = (
-  characteristics: Array<Characteristic>,
-  scope: 'room' | 'premises',
-): Array<Characteristic> => {
-  return characteristics
-    .filter(characteristic => characteristic.modelScope === scope || characteristic.modelScope === '*')
-    .sort((a, b) => a.name.localeCompare(b.name))
-}
-
 export const filterCharacteristics = (
   characteristics: Array<Characteristic>,
   scope: 'room' | 'premises',

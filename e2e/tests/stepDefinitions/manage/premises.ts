@@ -99,7 +99,14 @@ Then('I should see a confirmation for my new premises', () => {
 
 Then('I should see a list of the problems encountered creating the premises', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
-  page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'status'])
+  page.shouldShowErrorMessagesForFields([
+    'name',
+    'addressLine1',
+    'postcode',
+    'localAuthorityAreaId',
+    'probationRegionId',
+    'status',
+  ])
 })
 
 Then('I should see a confirmation for my updated premises', () => {
@@ -114,6 +121,6 @@ Then('I should see a confirmation for my updated premises', () => {
 Then('I should see a list of the problems encountered updating the premises', () => {
   cy.get('@premises').then(premises => {
     const page = Page.verifyOnPage(PremisesEditPage, premises)
-    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'localAuthorityAreaId'])
+    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'probationRegionId', 'localAuthorityAreaId'])
   })
 })

@@ -47,7 +47,14 @@ stubs.push({
   },
 })
 
-const createRequiredFields = getCombinations(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'status'])
+const createRequiredFields = getCombinations([
+  'name',
+  'addressLine1',
+  'postcode',
+  'localAuthorityAreaId',
+  'probationRegionId',
+  'status',
+])
 
 createRequiredFields.forEach((fields: Array<string>) => {
   stubs.push(errorStub(fields, `/premises`, 'POST'))
@@ -110,7 +117,13 @@ premises.forEach(item => {
     },
   })
 
-  const updateRequiredFields = getCombinations(['addressLine1', 'postcode', 'localAuthorityAreaId', 'status'])
+  const updateRequiredFields = getCombinations([
+    'addressLine1',
+    'postcode',
+    'localAuthorityAreaId',
+    'probationRegionId',
+    'status',
+  ])
 
   updateRequiredFields.forEach((fields: Array<string>) => {
     stubs.push(errorStub(fields, path.premises.update({ premisesId: item.id }), 'PUT'))

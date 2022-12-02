@@ -1,5 +1,5 @@
 import characteristicFactory from '../testutils/factories/characteristic'
-import { formatCharacteristics, filterAndSortCharacteristics } from './characteristicUtils'
+import { formatCharacteristics, filterAndSortCharacteristics, filterCharacteristics } from './characteristicUtils'
 import { escape } from './viewUtils'
 
 jest.mock('./viewUtils')
@@ -30,6 +30,33 @@ describe('filterAndSortCharacteristics', () => {
       [characteristic2, characteristic4, characteristic3, characteristic1],
       'room',
     )
+    expect(output).toEqual([characteristic1, characteristic2, characteristic4])
+  })
+})
+
+describe('filterCharacteristics', () => {
+  it('filters given characteristics', () => {
+    const characteristic1 = characteristicFactory.build({
+      name: 'ABC',
+      modelScope: 'room',
+    })
+
+    const characteristic2 = characteristicFactory.build({
+      name: 'EFG',
+      modelScope: 'room',
+    })
+
+    const characteristic3 = characteristicFactory.build({
+      name: 'LMN',
+      modelScope: 'premises',
+    })
+
+    const characteristic4 = characteristicFactory.build({
+      name: 'XYZ',
+      modelScope: '*',
+    })
+
+    const output = filterCharacteristics([characteristic1, characteristic2, characteristic3, characteristic4], 'room')
     expect(output).toEqual([characteristic1, characteristic2, characteristic4])
   })
 })

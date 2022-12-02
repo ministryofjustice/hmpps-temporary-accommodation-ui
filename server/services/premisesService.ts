@@ -1,4 +1,4 @@
-import type { TableRow, SummaryList } from '@approved-premises/ui'
+import type { TableRow, SummaryList, ReferenceData } from '@approved-premises/ui'
 import type {
   StaffMember,
   NewPremises,
@@ -18,6 +18,7 @@ import { formatCharacteristics, filterCharacteristics } from '../utils/character
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
   characteristics: Array<Characteristic>
+  probationRegions: Array<ReferenceData>
 }
 
 export default class PremisesService {
@@ -46,7 +47,11 @@ export default class PremisesService {
       'premises',
     ).sort((a, b) => a.name.localeCompare(b.name))
 
-    return { localAuthorities, characteristics }
+    const probationRegions = (await referenceDataClient.getReferenceData('probation-regions')).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )
+
+    return { localAuthorities, characteristics, probationRegions }
   }
 
   async tableRows(token: string): Promise<Array<TableRow>> {

@@ -2,8 +2,12 @@ import type { Characteristic, Room, NewRoom, UpdateRoom } from '@approved-premis
 import { SummaryList } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import RoomClient from '../data/roomClient'
-import { formatCharacteristics, filterAndSortCharacteristics } from '../utils/characteristicUtils'
+import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
 import { formatLines } from '../utils/viewUtils'
+
+export type BedspaceReferenceData = {
+  characteristics: Array<Characteristic>
+}
 
 export default class BedspaceService {
   constructor(
@@ -71,12 +75,15 @@ export default class BedspaceService {
     return room
   }
 
-  async getRoomCharacteristics(token: string): Promise<Array<Characteristic>> {
+  async getReferenceData(token: string): Promise<BedspaceReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(token)
-    return filterAndSortCharacteristics(
+
+    const characteristics = filterCharacteristics(
       await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
       'room',
-    )
+    ).sort((a, b) => a.name.localeCompare(b.name))
+
+    return { characteristics }
   }
 
   private summaryListForRoom(room: Room): SummaryList {

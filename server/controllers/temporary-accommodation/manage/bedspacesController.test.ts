@@ -7,16 +7,20 @@ import BedspaceService from '../../../services/bedspaceService'
 import BedspacesController from './bedspacesController'
 import premisesFactory from '../../../testutils/factories/premises'
 import roomFactory from '../../../testutils/factories/room'
-import characteristicFactory from '../../../testutils/factories/characteristic'
 import updateRoomFactory from '../../../testutils/factories/updateRoom'
 import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
 import { PremisesService, BookingService } from '../../../services'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
 
 jest.mock('../../../utils/validation')
 
 describe('BedspacesController', () => {
   const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
+
+  const referenceData = {
+    characteristics: referenceDataFactory.characteristic('room').buildList(5),
+  }
 
   let request: DeepMocked<Request>
 
@@ -38,19 +42,17 @@ describe('BedspacesController', () => {
         premisesId,
       }
 
-      const allCharacteristics = characteristicFactory.buildList(5)
-
-      bedspaceService.getRoomCharacteristics.mockResolvedValue(allCharacteristics)
+      bedspaceService.getReferenceData.mockResolvedValue(referenceData)
 
       const requestHandler = bedspacesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.getRoomCharacteristics).toHaveBeenCalledWith(token)
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(token)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
         premisesId,
-        allCharacteristics,
+        allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         errors: {},
         errorSummary: [],
@@ -118,8 +120,7 @@ describe('BedspacesController', () => {
 
   describe('edit', () => {
     it('renders the form', async () => {
-      const allCharacteristics = characteristicFactory.buildList(5)
-      bedspaceService.getRoomCharacteristics.mockResolvedValue(allCharacteristics)
+      bedspaceService.getReferenceData.mockResolvedValue(referenceData)
 
       const room = roomFactory.build()
       const updateRoom = updateRoomFactory.build({
@@ -133,11 +134,11 @@ describe('BedspacesController', () => {
       request.params = { premisesId, roomId: room.id }
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.getRoomCharacteristics).toHaveBeenCalledWith(token)
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(token)
       expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(token, premisesId, room.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
-        allCharacteristics,
+        allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         premisesId,
         errors: {},
@@ -147,8 +148,7 @@ describe('BedspacesController', () => {
     })
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
-      const allCharacteristics = characteristicFactory.buildList(5)
-      bedspaceService.getRoomCharacteristics.mockResolvedValue(allCharacteristics)
+      bedspaceService.getReferenceData.mockResolvedValue(referenceData)
 
       const room = roomFactory.build()
       const updateRoom = updateRoomFactory.build({
@@ -164,11 +164,11 @@ describe('BedspacesController', () => {
       request.params = { premisesId, roomId: room.id }
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.getRoomCharacteristics).toHaveBeenCalledWith(token)
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(token)
       expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(token, premisesId, room.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
-        allCharacteristics,
+        allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,

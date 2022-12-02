@@ -63,12 +63,18 @@ describe('PremisesService', () => {
       const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
       const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
 
+      const probationRegion1 = probationRegionFactory.build({ name: 'EFG' })
+      const probationRegion2 = probationRegionFactory.build({ name: 'PQR' })
+      const probationRegion3 = probationRegionFactory.build({ name: 'UVW' })
+
       referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
         if (objectType === 'local-authority-areas') {
           return [localAuthority3, localAuthority1, localAuthority2]
         }
-
-        return [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic]
+        if (objectType === 'characteristics') {
+          return [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic]
+        }
+        return [probationRegion2, probationRegion1, probationRegion3]
       })
       ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         genericCharacteristic,
@@ -80,10 +86,12 @@ describe('PremisesService', () => {
       expect(result).toEqual({
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
+        probationRegions: [probationRegion1, probationRegion2, probationRegion3],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
 
       expect(filterCharacteristics).toHaveBeenCalledWith(
         [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic],

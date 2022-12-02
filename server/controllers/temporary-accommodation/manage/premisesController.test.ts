@@ -22,6 +22,7 @@ describe('PremisesController', () => {
   const referenceData = {
     localAuthorities: referenceDataFactory.localAuthority().buildList(5),
     characteristics: referenceDataFactory.characteristic('premises').buildList(5),
+    probationRegions: referenceDataFactory.probationRegion().buildList(5),
   }
 
   let request: DeepMocked<Request>

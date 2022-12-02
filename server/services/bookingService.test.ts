@@ -10,6 +10,7 @@ import taPaths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
+import arrivalFactory from '../testutils/factories/arrival'
 import { formatStatus } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 
@@ -98,17 +99,19 @@ describe('BookingService', () => {
 
   describe('getTableRowsForBedspace', () => {
     it('returns a sorted table view of the bookings for the given room', async () => {
-      const booking1 = bookingFactory.build({
+      const booking1 = bookingFactory.provisional().build({
         bed: bedFactory.build({ id: bedId }),
         arrivalDate: '2023-07-01',
       })
-      const booking2 = bookingFactory.build({
+      const booking2 = bookingFactory.confirmed().build({
         bed: bedFactory.build({ id: bedId }),
         arrivalDate: '2022-11-14',
       })
-      const booking3 = bookingFactory.build({
+      const booking3 = bookingFactory.arrived().build({
         bed: bedFactory.build({ id: bedId }),
-        arrivalDate: '2022-04-19',
+        arrival: arrivalFactory.build({
+          arrivalDate: '2022-04-19',
+        }),
       })
 
       const otherBedBooking = bookingFactory.build({
@@ -185,7 +188,7 @@ describe('BookingService', () => {
             text: '19 Apr 22',
           },
           {
-            text: DateFormats.isoDateToUIDate(booking3.departureDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking3.arrival.expectedDepartureDate, { format: 'short' }),
           },
           {
             html: statusHtml,
@@ -312,6 +315,65 @@ describe('BookingService', () => {
 
       expect(formatStatus).toHaveBeenCalledWith('confirmed')
       expect(formatLines).toHaveBeenCalledWith(booking.confirmation.notes)
+    })
+
+    it('returns a booking and a summary list of details for an arrived booking', async () => {
+      const booking = bookingFactory.arrived().build({
+        arrival: arrivalFactory.build({
+          arrivalDate: '2022-03-21',
+          expectedDepartureDate: '2023-01-07',
+        }),
+      })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
+            {
+              key: {
+                text: 'Arrival date',
+              },
+              value: {
+                text: '21 March 2022',
+              },
+            },
+            {
+              key: {
+                text: 'Expected departure date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+            {
+              key: {
+                text: 'Notes',
+              },
+              value: {
+                html: booking.arrival.notes,
+              },
+            },
+          ],
+        },
+      })
+
+      expect(formatStatus).toHaveBeenCalledWith('arrived')
+      expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
     })
   })
 

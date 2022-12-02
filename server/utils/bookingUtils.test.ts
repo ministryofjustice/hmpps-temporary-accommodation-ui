@@ -23,8 +23,24 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns an empty list of action items for a confirmed booking', () => {
+    it('returns a mark as active action for a confirmed booking', () => {
       const booking = bookingFactory.confirmed().build()
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          items: [
+            {
+              text: 'Mark as active',
+              classes: '',
+              href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+            },
+          ],
+        },
+      ])
+    })
+
+    it('returns an empty list of action items for an arrived booking', () => {
+      const booking = bookingFactory.arrived().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
         {

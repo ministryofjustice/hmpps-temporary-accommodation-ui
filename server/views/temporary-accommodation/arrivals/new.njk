@@ -1,11 +1,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Mark booking as confirmed" %}
+{% set pageTitle = applicationName + " - Mark booking as active" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -17,7 +19,9 @@
 
   {% include "../../_messages.njk" %}
 
-  <h1>Mark booking as confirmed</h1>
+  <h1>Mark booking as active</h1>
+
+  {{ showErrorSummary(errorSummary) }}
 
   <div class="location-header">
     <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
@@ -27,8 +31,36 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.confirmations.create({ premisesId: premisesId, roomId: roomId, bookingId: booking.id }) }}" method="post">
+      <form action="{{ paths.bookings.arrivals.create({ premisesId: premisesId, roomId: roomId, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ taDateInput(
+          {
+            fieldset: {
+              legend: {
+                text: "What was the arrival date?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            fieldName: "arrivalDate",
+            items: dateFieldValues('arrivalDate', errors)
+          },
+          fetchContext()
+        ) }}
+
+        {{ taDateInput(
+          {
+            fieldset: {
+              legend: {
+                text: "What is the expected departure date?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            fieldName: "expectedDepartureDate",
+            items: dateFieldValues('expectedDepartureDate', errors)
+          },
+          fetchContext()
+        ) }}
 
         {{ taTextarea(
           {

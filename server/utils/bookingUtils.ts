@@ -11,6 +11,12 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
       classes: '',
       href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
     })
+  } else if (booking.status === 'confirmed') {
+    items.push({
+      text: 'Mark as active',
+      classes: '',
+      href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+    })
   }
 
   return [{ items }]

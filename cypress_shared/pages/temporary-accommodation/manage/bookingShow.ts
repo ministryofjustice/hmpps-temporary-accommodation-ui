@@ -18,6 +18,10 @@ export default class BookingShowPage extends Page {
     cy.get('a').contains('Mark as confirmed').click()
   }
 
+  clickMarkArrivedBookingButton(): void {
+    cy.get('a').contains('Mark as active').click()
+  }
+
   shouldShowBookingDetails(): void {
     cy.get('.location-header').within(() => {
       cy.get('p').should('contain', this.booking.person.crn)
@@ -26,14 +30,27 @@ export default class BookingShowPage extends Page {
       cy.get('p').should('contain', this.premises.postcode)
     })
 
-    this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-    this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    const { status } = this.booking
 
-    if (this.booking.status === 'provisional') {
+    if (status === 'provisional' || status === 'confirmed') {
+      this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
+      this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    } else if (status === 'arrived') {
+      this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrival.arrivalDate))
+      this.shouldShowKeyAndValue(
+        'Expected departure date',
+        DateFormats.isoDateToUIDate(this.booking.arrival.expectedDepartureDate),
+      )
+    }
+
+    if (status === 'provisional') {
       this.shouldShowKeyAndValue('Status', 'Provisional')
-    } else if (this.booking.status === 'confirmed') {
+    } else if (status === 'confirmed') {
       this.shouldShowKeyAndValue('Status', 'Confirmed')
       this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
+    } else if (status === 'arrived') {
+      this.shouldShowKeyAndValue('Status', 'Active')
+      this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
     }
   }
 }

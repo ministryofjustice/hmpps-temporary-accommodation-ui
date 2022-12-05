@@ -1,0 +1,21 @@
+---
+# Per environment values which override defaults in approved-premises-ui/values.yaml
+
+generic-service:
+  ingress:
+    hosts:
+      - temporary-accommodation-preprod.hmpps.service.justice.gov.uk
+    contextColour: green
+    tlsSecretName: hmpps-temporary-accommodation-preprod-cert
+
+  env:
+    ENVIRONMENT: preprod
+    APPROVED_PREMISES_API_URL: 'https://approved-premises-api-preprod.hmpps.service.justice.gov.uk'
+    INGRESS_URL: 'https://temporary-accommodation-preprod.hmpps.service.justice.gov.uk'
+    HMPPS_AUTH_URL: 'https://sign-in-preprod.hmpps.service.justice.gov.uk/auth'
+    TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-preprod.prison.service.justice.gov.uk'
+
+  allowlist: null
+
+generic-prometheus-alerts:
+  alertSeverity: digital-prison-service-dev

@@ -115,7 +115,7 @@ workflows:
           env: 'preprod'
           context:
             - hmpps-common-vars
-            - temporary-accommodation-ui-preprod
+            - hmpps-temporary-accommodation-ui-preprod
           requires:
             - request-preprod-approval
 

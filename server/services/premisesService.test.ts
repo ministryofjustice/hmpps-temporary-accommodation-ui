@@ -218,11 +218,13 @@ describe('PremisesService', () => {
       premisesClient.find.mockResolvedValue(premises)
 
       const result = await service.getUpdatePremises(token, premises.id)
-      expect(result).toEqual({
-        ...premises,
-        localAuthorityAreaId: 'local-authority',
-        characteristicIds: ['characteristic-a', 'characteristic-b'],
-      })
+      expect(result).toEqual(
+        expect.objectContaining({
+          ...premises,
+          localAuthorityAreaId: 'local-authority',
+          characteristicIds: ['characteristic-a', 'characteristic-b'],
+        }),
+      )
 
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })

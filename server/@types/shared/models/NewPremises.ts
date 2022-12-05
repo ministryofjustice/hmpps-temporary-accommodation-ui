@@ -10,6 +10,7 @@ export type NewPremises = {
     postcode: string;
     notes?: string;
     localAuthorityAreaId: string;
+    probationRegionId: string;
     characteristicIds: Array<string>;
     status: PropertyStatus;
 };

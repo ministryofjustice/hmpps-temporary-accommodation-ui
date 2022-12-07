@@ -10,7 +10,7 @@ import bedFactory from '../server/testutils/factories/bed'
 import premisesFactory from '../server/testutils/factories/premises'
 
 import bookingStubs from './bookingStubs'
-import boookingExtensionStubs from './bookingExtensionStubs'
+import extensionStubs from './extensionStubs'
 import arrivalStubs from './arrivalStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 import departureStubs from './departuresStubs'
@@ -196,7 +196,7 @@ stubs.push(
   ...departureStubs,
   ...cancellationStubs,
   ...confirmationStubs,
-  ...boookingExtensionStubs,
+  ...extensionStubs,
   ...lostBedStubs,
   ...personStubs,
   ...applicationStubs,

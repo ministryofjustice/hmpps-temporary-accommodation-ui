@@ -123,7 +123,12 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.extensions.new({ premisesId, roomId, bookingId }),
+      )
     })
 
     it('renders with errors if the API returns a 409 Conflict status', async () => {
@@ -152,7 +157,12 @@ describe('DeparturesController', () => {
       await requestHandler(request, response, next)
 
       expect(insertGenericError).toHaveBeenCalledWith(err, 'newDepartureDate', 'conflict')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.extensions.new({ premisesId, roomId, bookingId }),
+      )
     })
   })
 })

@@ -51,7 +51,7 @@ export default class ExtensionsController {
           insertGenericError(err, 'newDepartureDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, '')
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.extensions.new({ premisesId, roomId, bookingId }))
       }
     }
   }

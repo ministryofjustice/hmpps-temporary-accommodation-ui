@@ -76,5 +76,9 @@ export default class BookingShowPage extends Page {
       this.shouldShowKeyAndValue('Move on category', this.booking.departure.moveOnCategory.name)
       this.shouldShowKeyAndValues('Notes', this.booking.departure.notes.split('\n'))
     }
+
+    this.booking.extensions.forEach(extension => {
+      this.shouldShowKeyAndValues('Extension notes', extension.notes.split('\n'))
+    })
   }
 }

@@ -10,6 +10,7 @@ import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
 import { formatStatus } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
+import extension from '../testutils/factories/extension'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -394,6 +395,73 @@ describe('BookingService', () => {
 
       expect(formatStatus).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
+    })
+
+    it('returns a booking and a summary list of details for an arrived and extended booking', async () => {
+      const booking = bookingFactory.arrived().build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
+        extensions: extension.buildList(2),
+      })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
+            {
+              key: {
+                text: 'Arrival date',
+              },
+              value: {
+                text: '21 March 2022',
+              },
+            },
+            {
+              key: {
+                text: 'Expected departure date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+            {
+              key: {
+                text: 'Notes',
+              },
+              value: {
+                html: booking.arrival.notes,
+              },
+            },
+            {
+              key: {
+                text: 'Extension notes',
+              },
+              value: {
+                html: `${booking.extensions[0].notes}\n\n${booking.extensions[1].notes}`,
+              },
+            },
+          ],
+        },
+      })
+
+      expect(formatStatus).toHaveBeenCalledWith('arrived')
+      expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
+      expect(formatLines).toHaveBeenCalledWith(`${booking.extensions[0].notes}\n\n${booking.extensions[1].notes}`)
     })
 
     it('returns a booking and a summary list of details for a departed booking', async () => {

@@ -50,21 +50,16 @@ export default class BookingService {
     return bookings
       .filter(booking => booking?.bed.id === bedId)
       .sort((a, b) => {
-        const arrivalDateA = this.displayDates(a).arrivalDate
-        const arrivalDateB = this.displayDates(b).arrivalDate
-
         return (
-          DateFormats.convertIsoToDateObj(arrivalDateB).getTime() -
-          DateFormats.convertIsoToDateObj(arrivalDateA).getTime()
+          DateFormats.convertIsoToDateObj(b.arrivalDate).getTime() -
+          DateFormats.convertIsoToDateObj(a.arrivalDate).getTime()
         )
       })
       .map(booking => {
-        const { arrivalDate, departureDate } = this.displayDates(booking)
-
         return [
           this.textValue(booking.person.crn),
-          this.textValue(DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' })),
-          this.textValue(DateFormats.isoDateToUIDate(departureDate, { format: 'short' })),
+          this.textValue(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' })),
+          this.textValue(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })),
           this.htmlValue(formatStatus(booking.status)),
           this.htmlValue(
             `<a href="${paths.bookings.show({
@@ -85,9 +80,7 @@ export default class BookingService {
     const bookingClient = this.bookingClientFactory(token)
     const booking = await bookingClient.find(premisesId, bookingId)
 
-    const { arrivalDate, departureDate } = this.displayDates(booking)
-
-    const { status } = booking
+    const { status, arrivalDate, departureDate } = booking
 
     const rows = [
       {
@@ -165,16 +158,5 @@ export default class BookingService {
 
   private htmlValue(value: string) {
     return { html: value }
-  }
-
-  private displayDates(booking: Booking): { arrivalDate: string; departureDate: string } {
-    if (booking.status === 'arrived') {
-      return { arrivalDate: booking.arrival.arrivalDate, departureDate: booking.arrival.expectedDepartureDate }
-    }
-    if (booking.status === 'departed') {
-      return { arrivalDate: booking.arrival.arrivalDate, departureDate: booking.departure.dateTime }
-    }
-
-    return { arrivalDate: booking.arrivalDate, departureDate: booking.departureDate }
   }
 }

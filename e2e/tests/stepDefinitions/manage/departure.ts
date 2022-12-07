@@ -16,7 +16,7 @@ Given('I mark the booking as departed', () => {
 
     const departure = departureFactory.build({
       dateTime: DateFormats.formatApiDate(
-        faker.date.future(1, DateFormats.convertIsoToDateObj(this.booking.arrival.arrivalDate)),
+        faker.date.future(1, DateFormats.convertIsoToDateObj(this.booking.arrivalDate)),
       ),
     })
     const newDeparture = newDepartureFactory.build({
@@ -32,6 +32,7 @@ Given('I mark the booking as departed', () => {
     const departedBooking = bookingFactory.build({
       ...this.booking,
       status: 'departed',
+      departureDate: newDeparture.dateTime,
       departure,
     })
 

@@ -1,27 +1,28 @@
 import { guidRegex } from './index'
-import newBookingFactory from '../server/testutils/factories/newBooking'
-import { errorStub } from './utils'
+import { getCombinations, errorStub } from './utils'
+import extensionFactory from '../server/testutils/factories/extension'
 
-export default [
-  {
-    priority: 99,
-    request: {
-      method: 'POST',
-      urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/extensions`,
-      bodyPatterns: [
-        {
-          matchesJsonPath: "$.[?(@.newDepartureDate != '')]",
-        },
-      ],
-    },
-    response: {
-      status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: newBookingFactory.build(),
-    },
+const extensionStubs: Array<Record<string, unknown>> = []
+
+extensionStubs.push({
+  priority: 99,
+  request: {
+    method: 'POST',
+    urlPathPattern: `/premises/${guidRegex}/bookings/${guidRegex}/extensions`,
   },
+  response: {
+    status: 201,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: extensionFactory.build(),
+  },
+})
 
-  errorStub(['newDepartureDate'], `/premises/${guidRegex}/bookings/${guidRegex}/extensions`, 'POST'),
-]
+const requiredFields = getCombinations(['newDepartureDate'])
+
+requiredFields.forEach((fields: Array<string>) => {
+  extensionStubs.push(errorStub(fields, `/premises/${guidRegex}/bookings/${guidRegex}/extensions`, 'POST'))
+})
+
+export default extensionStubs

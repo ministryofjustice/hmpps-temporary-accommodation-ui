@@ -1,4 +1,5 @@
 import type { Booking, NewExtension } from '@approved-premises/api'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
@@ -6,6 +7,11 @@ import errorLookups from '../../../../server/i18n/en/errors.json'
 export default class BookingExtensionNewPage extends Page {
   constructor(private readonly booking: Booking) {
     super('Extend or shorten booking')
+  }
+
+  static visit(premisesId: string, roomId: string, booking: Booking): BookingExtensionNewPage {
+    cy.visit(paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }))
+    return new BookingExtensionNewPage(booking)
   }
 
   shouldShowBookingDetails(): void {

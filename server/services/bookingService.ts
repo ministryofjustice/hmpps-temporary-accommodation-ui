@@ -144,6 +144,18 @@ export default class BookingService {
       )
     }
 
+    if (booking.extensions.length) {
+      const collatedNotes = booking.extensions
+        .map(extension => extension.notes)
+        .filter(notes => notes?.length > 0)
+        .join('\n\n')
+
+      rows.push({
+        key: this.textValue('Extension notes'),
+        value: this.htmlValue(formatLines(collatedNotes)),
+      })
+    }
+
     return {
       booking,
       summaryList: {

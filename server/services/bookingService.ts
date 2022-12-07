@@ -1,11 +1,4 @@
-import type {
-  Booking,
-  NewBooking,
-  Extension,
-  NewExtension,
-  Room,
-  NewTemporaryAccommodationBooking,
-} from '@approved-premises/api'
+import type { Booking, NewBooking, Room, NewTemporaryAccommodationBooking } from '@approved-premises/api'
 import type { TableRow, SummaryList } from '@approved-premises/ui'
 
 import type { RestClientBuilder } from '../data'
@@ -164,19 +157,6 @@ export default class BookingService {
         rows,
       },
     }
-  }
-
-  async extendBooking(
-    token: string,
-    premisesId: string,
-    bookingId: string,
-    bookingExtension: NewExtension,
-  ): Promise<Extension> {
-    const bookingClient = this.bookingClientFactory(token)
-
-    const confirmedBooking = await bookingClient.extendBooking(premisesId, bookingId, bookingExtension)
-
-    return confirmedBooking
   }
 
   private textValue(value: string) {

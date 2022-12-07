@@ -2,7 +2,6 @@ import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
 
 import newBookingFactory from '../testutils/factories/newBooking'
-import bookingExtensionFactory from '../testutils/factories/bookingExtension'
 import bookingFactory from '../testutils/factories/booking'
 
 import paths from '../paths/temporary-accommodation/manage'
@@ -472,26 +471,6 @@ describe('BookingService', () => {
 
       expect(formatStatus).toHaveBeenCalledWith('departed')
       expect(formatLines).toHaveBeenCalledWith(booking.departure.notes)
-    })
-  })
-
-  describe('extendBooking', () => {
-    it('on success returns the booking that has been extended', async () => {
-      const booking = bookingExtensionFactory.build()
-      bookingClient.extendBooking.mockResolvedValue(booking)
-      const newDepartureDateObj = {
-        newDepartureDate: new Date(2042, 13, 11).toISOString(),
-        'newDepartureDate-year': '2042',
-        'newDepartureDate-month': '12',
-        'newDepartureDate-day': '11',
-        notes: 'Some notes',
-      }
-
-      const extendedBooking = await service.extendBooking(token, premisesId, booking.id, newDepartureDateObj)
-
-      expect(extendedBooking).toEqual(booking)
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.extendBooking).toHaveBeenCalledWith(premisesId, booking.id, newDepartureDateObj)
     })
   })
 })

@@ -60,7 +60,7 @@ describe('DeparturesController', () => {
         allDepartureReasons: [],
         allMoveOnCategories: [],
         errors: {},
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.arrival.expectedDepartureDate, 'dateTime'),
+        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
         errorSummary: [],
       })
     })

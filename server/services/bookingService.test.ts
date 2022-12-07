@@ -8,8 +8,6 @@ import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
-import arrivalFactory from '../testutils/factories/arrival'
-import departureFactory from '../testutils/factories/departure'
 import { formatStatus } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 
@@ -108,15 +106,11 @@ describe('BookingService', () => {
       })
       const booking3 = bookingFactory.arrived().build({
         bed: bedFactory.build({ id: bedId }),
-        arrival: arrivalFactory.build({
-          arrivalDate: '2022-04-19',
-        }),
+        arrivalDate: '2022-04-19',
       })
       const booking4 = bookingFactory.departed().build({
         bed: bedFactory.build({ id: bedId }),
-        arrival: arrivalFactory.build({
-          arrivalDate: '2022-01-03',
-        }),
+        arrivalDate: '2022-01-03',
       })
 
       const otherBedBooking = bookingFactory.build({
@@ -193,7 +187,7 @@ describe('BookingService', () => {
             text: '19 Apr 22',
           },
           {
-            text: DateFormats.isoDateToUIDate(booking3.arrival.expectedDepartureDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking3.departureDate, { format: 'short' }),
           },
           {
             html: statusHtml,
@@ -216,7 +210,7 @@ describe('BookingService', () => {
             text: '3 Jan 22',
           },
           {
-            text: DateFormats.isoDateToUIDate(booking4.departure.dateTime, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking4.departureDate, { format: 'short' }),
           },
           {
             html: statusHtml,
@@ -347,10 +341,8 @@ describe('BookingService', () => {
 
     it('returns a booking and a summary list of details for an arrived booking', async () => {
       const booking = bookingFactory.arrived().build({
-        arrival: arrivalFactory.build({
-          arrivalDate: '2022-03-21',
-          expectedDepartureDate: '2023-01-07',
-        }),
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
       })
 
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
@@ -406,12 +398,8 @@ describe('BookingService', () => {
 
     it('returns a booking and a summary list of details for a departed booking', async () => {
       const booking = bookingFactory.departed().build({
-        arrival: arrivalFactory.build({
-          arrivalDate: '2022-03-21',
-        }),
-        departure: departureFactory.build({
-          dateTime: '2023-01-07T00:00:00.000Z',
-        }),
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07T00:00:00.000Z',
       })
 
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)

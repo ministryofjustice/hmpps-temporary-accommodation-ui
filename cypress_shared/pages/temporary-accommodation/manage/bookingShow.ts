@@ -49,13 +49,10 @@ export default class BookingShowPage extends Page {
       this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
       this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
     } else if (status === 'arrived') {
-      this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrival.arrivalDate))
-      this.shouldShowKeyAndValue(
-        'Expected departure date',
-        DateFormats.isoDateToUIDate(this.booking.arrival.expectedDepartureDate),
-      )
+      this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
+      this.shouldShowKeyAndValue('Expected departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
     } else if (status === 'departed') {
-      this.shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.booking.departure.dateTime))
+      this.shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
     }
 
     if (status === 'provisional') {

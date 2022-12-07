@@ -24,6 +24,8 @@ Given('I mark the booking as arrived', () => {
     const arrivedBooking = bookingFactory.build({
       ...this.booking,
       status: 'arrived',
+      arrivalDate: newArrival.arrivalDate,
+      departureDate: newArrival.expectedDepartureDate,
       arrival,
     })
 

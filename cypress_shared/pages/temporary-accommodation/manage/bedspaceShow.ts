@@ -32,29 +32,12 @@ export default class BedspaceShowPage extends Page {
       .parent()
       .within(() => {
         cy.get('td').eq(0).contains(booking.person.crn)
-
-        if (status === 'provisional' || status === 'confirmed') {
-          cy.get('td')
-            .eq(1)
-            .contains(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
-          cy.get('td')
-            .eq(2)
-            .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
-        } else if (booking.status === 'arrived') {
-          cy.get('td')
-            .eq(1)
-            .contains(DateFormats.isoDateToUIDate(booking.arrival.arrivalDate, { format: 'short' }))
-          cy.get('td')
-            .eq(2)
-            .contains(DateFormats.isoDateToUIDate(booking.arrival.expectedDepartureDate, { format: 'short' }))
-        } else if (booking.status === 'departed') {
-          cy.get('td')
-            .eq(1)
-            .contains(DateFormats.isoDateToUIDate(booking.arrival.arrivalDate, { format: 'short' }))
-          cy.get('td')
-            .eq(2)
-            .contains(DateFormats.isoDateToUIDate(booking.departure.dateTime, { format: 'short' }))
-        }
+        cy.get('td')
+          .eq(1)
+          .contains(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
+        cy.get('td')
+          .eq(2)
+          .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
 
         if (status === 'provisional') {
           cy.get('td').eq(3).contains('Provisional')

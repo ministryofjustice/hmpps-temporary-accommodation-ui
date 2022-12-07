@@ -29,7 +29,7 @@ export default class DeparturesController {
         allMoveOnCategories,
         errors,
         errorSummary: requestErrorSummary,
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.arrival.expectedDepartureDate, 'dateTime'),
+        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
         ...userInput,
       })
     }

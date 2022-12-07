@@ -18,14 +18,11 @@ export default class BookingDepartureNewPage extends Page {
       cy.get('p').should('contain', this.booking.person.crn)
     })
 
-    this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrival.arrivalDate))
-    this.shouldShowKeyAndValue(
-      'Expected departure date',
-      DateFormats.isoDateToUIDate(this.booking.arrival.expectedDepartureDate),
-    )
+    this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
+    this.shouldShowKeyAndValue('Expected departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
     this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
 
-    this.shouldShowDateInputs('dateTime', this.booking.arrival.expectedDepartureDate)
+    this.shouldShowDateInputs('dateTime', this.booking.departureDate)
   }
 
   completeForm(newDeparture: NewDeparture): void {

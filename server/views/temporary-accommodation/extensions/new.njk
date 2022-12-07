@@ -1,0 +1,68 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Extend or shorten booking" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.bookings.show({ premisesId: premisesId, roomId: roomId, bookingId: booking.id })
+  }) }}
+
+  {% include "../../_messages.njk" %}
+
+  <h1>Extend or shorten booking</h1>
+
+  {{ showErrorSummary(errorSummary) }}
+
+  <div class="location-header">
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
+  </div>
+
+  {{ bookingInfo(summaryList) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ taDateInput(
+          {
+            fieldset: {
+              legend: {
+                text: "What is the new departure date?",
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            fieldName: "newDepartureDate",
+            items: dateFieldValues('newDepartureDate', errors)
+          },
+          fetchContext()
+        ) }}
+
+        {{ taTextarea(
+          {
+            label: {
+              text: "Please provide any further details"
+            },
+            fieldName: "notes"
+          },
+          fetchContext()
+        ) }}
+
+        {{ govukButton({
+          text: "Submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

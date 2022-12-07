@@ -1,30 +1,47 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { Booking } from '@approved-premises/api'
+import type { Extension } from '@approved-premises/api'
 
 import { stubFor, getMatchingRequests } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
-  stubBookingExtensionCreate: (args: { premisesId: string; booking: Booking }): SuperAgentRequest =>
+  stubExtensionCreate: (args: { premisesId: string; bookingId: string; extension: Extension }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.booking.id}/extensions`,
+        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/extensions`,
       },
       response: {
         status: 201,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: args.booking,
+        jsonBody: args.extension,
       },
     }),
-  stubBookingExtensionErrors: (args: {
+  stubExtensionCreateErrors: (args: {
     premisesId: string
     bookingId: string
     params: Array<string>
   }): SuperAgentRequest =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/extensions`, 'POST')),
-  verifyBookingExtensionCreate: async (args: { premisesId: string; bookingId: string }) =>
+  stubExtensionCreateConflictError: (args: { premisesId: string; bookingId: string }) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/extensions`,
+      },
+      response: {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: {
+          title: 'Conflict',
+          status: 409,
+        },
+      },
+    }),
+  verifyExtensionCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({
         method: 'POST',

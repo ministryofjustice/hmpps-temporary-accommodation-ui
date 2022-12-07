@@ -39,7 +39,7 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns a mark as closed action for an arrived booking', () => {
+    it('returns mark as closed and extend actions for an arrived booking', () => {
       const booking = bookingFactory.arrived().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
@@ -47,8 +47,13 @@ describe('bookingUtils', () => {
           items: [
             {
               text: 'Mark as closed',
-              classes: '',
+              classes: 'govuk-button--secondary',
               href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+            },
+            {
+              text: 'Extend or shorten booking',
+              classes: 'govuk-button--secondary',
+              href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
             },
           ],
         },

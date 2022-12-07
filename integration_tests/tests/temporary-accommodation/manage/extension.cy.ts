@@ -14,6 +14,29 @@ context('Booking extension', () => {
     cy.task('stubAuthUser')
   })
 
+  it('navigates to the booking extension page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and an arrived booking in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const booking = bookingFactory.arrived().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the extend booking action
+    bookingShow.clickExtendBookingButton()
+
+    // Then I navigate to the booking extension page
+    Page.verifyOnPage(BookingExtensionNewPage, premises.id, room.id, booking)
+  })
+
   it('allows me to extend a booking', () => {
     // Given I am signed in
     cy.signIn()

@@ -35,6 +35,13 @@ export default class BookingShowPage extends Page {
     })
   }
 
+  clickExtendBookingButton(): void {
+    cy.get('.moj-identity-bar').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Extend or shorten booking').click()
+    })
+  }
+
   shouldShowBookingDetails(): void {
     cy.get('.location-header').within(() => {
       cy.get('p').should('contain', this.booking.person.crn)

@@ -18,11 +18,18 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
       href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
     })
   } else if (booking.status === 'arrived') {
-    items.push({
-      text: 'Mark as closed',
-      classes: '',
-      href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
-    })
+    items.push(
+      {
+        text: 'Mark as closed',
+        classes: 'govuk-button--secondary',
+        href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+      },
+      {
+        text: 'Extend or shorten booking',
+        classes: 'govuk-button--secondary',
+        href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+      },
+    )
   }
 
   return [{ items }]

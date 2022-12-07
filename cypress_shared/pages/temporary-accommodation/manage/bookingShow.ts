@@ -15,15 +15,24 @@ export default class BookingShowPage extends Page {
   }
 
   clickConfirmBookingButton(): void {
-    cy.get('a').contains('Mark as confirmed').click()
+    cy.get('.moj-identity-bar').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Mark as confirmed').click()
+    })
   }
 
   clickMarkArrivedBookingButton(): void {
-    cy.get('a').contains('Mark as active').click()
+    cy.get('.moj-identity-bar').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Mark as active').click()
+    })
   }
 
   clickMarkDepartedBookingButton(): void {
-    cy.get('a').contains('Mark as closed').click()
+    cy.get('.moj-identity-bar').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Mark as closed').click()
+    })
   }
 
   shouldShowBookingDetails(): void {

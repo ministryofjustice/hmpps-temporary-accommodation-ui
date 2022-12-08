@@ -11,7 +11,7 @@ export default Factory.define<UpdatePremises>(() => ({
   characteristicIds: unique([referenceDataFactory.characteristic('premises').build()]).map(
     characteristic => characteristic.id,
   ),
-  probationRegionId: faker.datatype.uuid(),
+  probationRegionId: referenceDataFactory.probationRegion().build().id,
   status: faker.helpers.arrayElement(['pending', 'active', 'archived']),
   notes: faker.lorem.lines(),
 }))

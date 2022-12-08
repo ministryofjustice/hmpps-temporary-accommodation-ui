@@ -12,8 +12,6 @@ export type Application = {
     schemaVersion: string;
     outdatedSchema: boolean;
     createdAt: string;
-    isWomensApplication?: boolean;
-    isPipeApplication?: boolean;
     submittedAt?: string;
     data?: AnyValue;
     document?: AnyValue;

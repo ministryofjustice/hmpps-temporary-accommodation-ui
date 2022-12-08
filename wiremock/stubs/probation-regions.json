@@ -1,0 +1,74 @@
+[
+  {
+    "id": "d73ae6b5-041e-4d44-b859-b8c77567d893",
+    "name": "London",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "c5acff6c-d0d2-4b89-9f4d-89a15cfa3891",
+    "name": "North East",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "5e44b880-df20-4751-938f-a14be5fe609d",
+    "name": "Yorkshire & The Humber",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "a02b7727-63aa-46f2-80f1-e0b05b31903c",
+    "name": "North West",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "f6db2e41-040e-47c7-8bba-a345b6d35ca1",
+    "name": "Greater Manchester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "0544d95a-f6bb-43f8-9be7-aae66e3bf244",
+    "name": "East Midlands",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "734261a0-d053-4aed-968d-ffc518cc17f8",
+    "name": "West Midlands",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "ca979718-b15d-4318-9944-69aaff281cad",
+    "name": "East of England",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "db82d408-d440-4eb5-960b-119cb33427cd",
+    "name": "Kent, Surrey & Sussex",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "43606be0-9836-441d-9bc1-5586de9ac931",
+    "name": "South West",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "6b4a1308-17af-4c1a-a330-6005bec9e27b",
+    "name": "South Central",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "afee0696-8df3-4d9f-9d0c-268f17772e2c",
+    "name": "Wales",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  }
+]

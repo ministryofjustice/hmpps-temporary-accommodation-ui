@@ -2,11 +2,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
+export type { ActiveOffence } from './models/ActiveOffence';
 export type { Adjudication } from './models/Adjudication';
 export type { AnyValue } from './models/AnyValue';
 export type { ApArea } from './models/ApArea';
 export type { Application } from './models/Application';
 export type { ApprovedPremises } from './models/ApprovedPremises';
+export type { ApprovedPremisesApplication } from './models/ApprovedPremisesApplication';
 export type { ArrayOfOASysOffenceDetailsQuestions } from './models/ArrayOfOASysOffenceDetailsQuestions';
 export type { ArrayOfOASysRiskContributorsQuestions } from './models/ArrayOfOASysRiskContributorsQuestions';
 export type { ArrayOfOASysRiskManagementPlanQuestions } from './models/ArrayOfOASysRiskManagementPlanQuestions';
@@ -31,6 +33,8 @@ export type { DateCapacity } from './models/DateCapacity';
 export type { Departure } from './models/Departure';
 export type { DepartureReason } from './models/DepartureReason';
 export type { DestinationProvider } from './models/DestinationProvider';
+export type { Document } from './models/Document';
+export type { DocumentLevel } from './models/DocumentLevel';
 export type { Extension } from './models/Extension';
 export type { FlagsEnvelope } from './models/FlagsEnvelope';
 export type { InvalidParam } from './models/InvalidParam';
@@ -83,6 +87,7 @@ export type { SubmitApplication } from './models/SubmitApplication';
 export type { SupervisingOfficer } from './models/SupervisingOfficer';
 export type { SupervisingProvider } from './models/SupervisingProvider';
 export type { SupervisingTeam } from './models/SupervisingTeam';
+export type { TemporaryAccommodationApplication } from './models/TemporaryAccommodationApplication';
 export type { TemporaryAccommodationPremises } from './models/TemporaryAccommodationPremises';
 export type { UpdateApplication } from './models/UpdateApplication';
 export type { UpdateAssessment } from './models/UpdateAssessment';

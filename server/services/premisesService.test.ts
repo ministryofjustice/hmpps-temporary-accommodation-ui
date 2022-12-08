@@ -213,18 +213,21 @@ describe('PremisesService', () => {
             id: 'characteristic-b',
           }),
         ],
+        probationRegion: probationRegionFactory.build({
+          name: 'A probation region',
+          id: 'a-probation-region',
+        }),
       })
 
       premisesClient.find.mockResolvedValue(premises)
 
       const result = await service.getUpdatePremises(token, premises.id)
-      expect(result).toEqual(
-        expect.objectContaining({
-          ...premises,
-          localAuthorityAreaId: 'local-authority',
-          characteristicIds: ['characteristic-a', 'characteristic-b'],
-        }),
-      )
+      expect(result).toEqual({
+        ...premises,
+        localAuthorityAreaId: 'local-authority',
+        characteristicIds: ['characteristic-a', 'characteristic-b'],
+        probationRegionId: 'a-probation-region',
+      })
 
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })

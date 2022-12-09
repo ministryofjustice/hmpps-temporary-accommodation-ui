@@ -41,15 +41,15 @@ describe('CancellationService', () => {
     })
   })
 
-  describe('getCancellationReasons', () => {
+  describe('getReferenceData', () => {
     it('should return the cancellation reasons', async () => {
       const cancellationReasons = referenceDataFactory.buildList(2)
 
       referenceDataClient.getReferenceData.mockResolvedValue(cancellationReasons)
 
-      const result = await service.getCancellationReasons(token)
+      const result = await service.getReferenceData(token)
 
-      expect(result).toEqual(cancellationReasons)
+      expect(result).toEqual({ cancellationReasons })
 
       expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('cancellation-reasons')

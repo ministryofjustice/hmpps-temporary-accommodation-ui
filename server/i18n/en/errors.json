@@ -81,5 +81,15 @@
     "status": {
       "empty": "You must choose a status"
     } 
+  },
+  "bookingCancellation": {
+    "date": {
+      "empty": "You must enter a valid cancellation date",
+      "invalid": "The cancellation date is an invalid date",
+      "beforeBookingArrivalDate": "The cancellation date must be after the arrival date"
+    },
+    "reason": {
+      "empty": "You must choose a cancellation reason"
+    }
   }
 }

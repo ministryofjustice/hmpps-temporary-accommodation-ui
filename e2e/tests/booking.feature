@@ -15,11 +15,30 @@ Feature: Manage Temporary Accommodation - Booking
         And I attempt to create a booking with required details missing
         Then I should see a list of the problems encountered creating the booking
 
+    Scenario: Cancelling a pending booking
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I cancel the booking
+        Then I should see a confirmation for cancellation
+
+    Scenario: Showing booking cancellation errors
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I attempt to cancel the booking with required details missing
+        Then I should see a list of the problems encountered cancelling the booking
+
     Scenario: Confirming a booking
         Given I'm creating a booking
         And I create a booking with all necessary details
         And I confirm the booking
         Then I should see the booking with the confirmed status
+
+    Scenario: Cancelling a confirmed booking
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I confirm the booking
+        And I cancel the booking
+        Then I should see a confirmation for cancellation
 
     Scenario: Marking a booking as arrived
         Given I'm creating a booking

@@ -340,6 +340,71 @@ describe('BookingService', () => {
       expect(formatLines).toHaveBeenCalledWith(booking.confirmation.notes)
     })
 
+    it('returns a booking and a summary list of details for a cancelled booking', async () => {
+      const booking = bookingFactory.cancelled().build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
+      })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      bookingClient.find.mockResolvedValue(booking)
+
+      const result = await service.getBookingDetails(token, premisesId, booking.id)
+
+      expect(result).toEqual({
+        booking,
+        summaryList: {
+          rows: [
+            {
+              key: {
+                text: 'Status',
+              },
+              value: {
+                html: statusHtml,
+              },
+            },
+            {
+              key: {
+                text: 'Start date',
+              },
+              value: {
+                text: '21 March 2022',
+              },
+            },
+            {
+              key: {
+                text: 'End date',
+              },
+              value: {
+                text: '7 January 2023',
+              },
+            },
+            {
+              key: {
+                text: 'Cancellation reason',
+              },
+              value: {
+                text: booking.cancellation.reason.name,
+              },
+            },
+            {
+              key: {
+                text: 'Notes',
+              },
+              value: {
+                html: booking.cancellation.notes,
+              },
+            },
+          ],
+        },
+      })
+
+      expect(formatStatus).toHaveBeenCalledWith('cancelled')
+      expect(formatLines).toHaveBeenCalledWith(booking.cancellation.notes)
+    })
+
     it('returns a booking and a summary list of details for an arrived booking', async () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',

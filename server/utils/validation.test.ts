@@ -15,11 +15,18 @@ import type TaskListPage from '../form-pages/tasklistPage'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {
-    crn: {
-      empty: 'You must enter a CRN',
+    generic: {
+      crn: {
+        empty: 'You must enter a CRN',
+      },
+      arrivalDate: {
+        empty: 'You must enter a valid arrival date',
+      },
     },
-    arrivalDate: {
-      empty: 'You must enter a valid arrival date',
+    cancellation: {
+      date: {
+        empty: 'You must enter a valid cancellation dae',
+      },
     },
   }
 })
@@ -29,16 +36,16 @@ describe('catchValidationErrorOrPropogate', () => {
   const response = createMock<Response>()
 
   const expectedErrors = {
-    crn: { text: errorLookups.crn.empty, attributes: { 'data-cy-error-crn': true } },
+    crn: { text: errorLookups.generic.crn.empty, attributes: { 'data-cy-error-crn': true } },
     arrivalDate: {
-      text: errorLookups.arrivalDate.empty,
+      text: errorLookups.generic.arrivalDate.empty,
       attributes: { 'data-cy-error-arrivalDate': true },
     },
   }
 
   const expectedErrorSummary = [
-    { text: errorLookups.crn.empty, href: '#crn' },
-    { text: errorLookups.arrivalDate.empty, href: '#arrivalDate' },
+    { text: errorLookups.generic.crn.empty, href: '#crn' },
+    { text: errorLookups.generic.arrivalDate.empty, href: '#arrivalDate' },
   ]
 
   beforeEach(() => {
@@ -67,6 +74,36 @@ describe('catchValidationErrorOrPropogate', () => {
 
     expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
     expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
+
+    expect(response.redirect).toHaveBeenCalledWith('some/url')
+  })
+
+  it('using the context parameter when supplied to find error messages in the error lookup', () => {
+    const error = createMock<SanitisedError>({
+      data: {
+        'invalid-params': [
+          {
+            propertyName: '$.date',
+            errorType: 'empty',
+          },
+        ],
+      },
+    })
+
+    const context = 'cancellation'
+
+    catchValidationErrorOrPropogate(request, response, error, 'some/url', context)
+
+    expect(request.flash).toHaveBeenCalledWith('errors', {
+      date: { text: errorLookups[context].date.empty, attributes: { 'data-cy-error-date': true } },
+    })
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', [
+      {
+        text: errorLookups[context].date.empty,
+        href: '#date',
+      },
+    ])
     expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
 
     expect(response.redirect).toHaveBeenCalledWith('some/url')

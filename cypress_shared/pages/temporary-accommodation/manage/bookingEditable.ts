@@ -5,8 +5,8 @@ import errorLookups from '../../../../server/i18n/en/errors.json'
 export default abstract class BookingEditablePage extends Page {
   shouldShowDateConflictErrorMessages(): void {
     ;['arrivalDate', 'departureDate'].forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups[field].conflict)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[field].conflict)
+      cy.get('.govuk-error-summary').should('contain', errorLookups.generic[field].conflict)
+      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
     })
   }
 

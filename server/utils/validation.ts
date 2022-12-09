@@ -16,10 +16,11 @@ export const catchValidationErrorOrPropogate = (
   response: Response,
   error: SanitisedError | Error,
   redirectPath: string,
+  context = 'generic',
 ): void => {
   if ('data' in error) {
     const errors = error.data['invalid-params']
-      ? generateErrors(error.data['invalid-params'])
+      ? generateErrors(error.data['invalid-params'], context)
       : (error.data as Record<string, string>)
 
     const errorMessages = generateErrorMessages(errors)
@@ -86,12 +87,12 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
   error['data'] = data
 }
 
-const generateErrors = (params: Array<InvalidParams>): Record<string, string> => {
+const generateErrors = (params: Array<InvalidParams>, context: string): Record<string, string> => {
   return params.reduce((obj, error) => {
     const key = error.propertyName.split('.').slice(1).join('_')
     return {
       ...obj,
-      [key]: errorText(error),
+      [key]: errorText(error, context),
     }
   }, {})
 }
@@ -114,9 +115,9 @@ const generateErrorMessages = (errors: Record<string, string>): ErrorMessages =>
   }, {})
 }
 
-const errorText = (error: InvalidParams): ErrorSummary => {
+const errorText = (error: InvalidParams, context: string): ErrorSummary => {
   const errors =
-    jsonpath.value(errorLookup, error.propertyName) ||
+    jsonpath.value(errorLookup[context], error.propertyName) ||
     throwUndefinedError(`Cannot find a translation for an error at the path ${error.propertyName}`)
 
   const text =

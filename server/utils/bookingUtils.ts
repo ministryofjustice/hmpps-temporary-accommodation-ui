@@ -5,18 +5,30 @@ import paths from '../paths/temporary-accommodation/manage'
 export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<IdentityBarMenu> {
   const items = []
 
+  const cancelAction = {
+    text: 'Cancel booking',
+    classes: 'govuk-button--secondary',
+    href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
+  }
+
   if (booking.status === 'provisional') {
-    items.push({
-      text: 'Mark as confirmed',
-      classes: '',
-      href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
-    })
+    items.push(
+      {
+        text: 'Mark as confirmed',
+        classes: '',
+        href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
+      },
+      cancelAction,
+    )
   } else if (booking.status === 'confirmed') {
-    items.push({
-      text: 'Mark as active',
-      classes: '',
-      href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
-    })
+    items.push(
+      {
+        text: 'Mark as active',
+        classes: '',
+        href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+      },
+      cancelAction,
+    )
   } else if (booking.status === 'arrived') {
     items.push(
       {
@@ -59,6 +71,11 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
     name: 'Closed',
     id: 'departed',
     tagClass: 'govuk-tag--red',
+  },
+  {
+    name: 'Cancelled',
+    id: 'cancelled',
+    tagClass: 'govuk-tag--orange',
   },
 ]
 

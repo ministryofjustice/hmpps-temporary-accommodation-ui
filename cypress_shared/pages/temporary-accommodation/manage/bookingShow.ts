@@ -46,6 +46,13 @@ export default class BookingShowPage extends Page {
     })
   }
 
+  clickCancelBookingButton(): void {
+    cy.get('.moj-identity-bar').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Cancel booking').click()
+    })
+  }
+
   shouldShowBookingDetails(): void {
     cy.get('.location-header').within(() => {
       cy.get('p').should('contain', this.booking.person.crn)

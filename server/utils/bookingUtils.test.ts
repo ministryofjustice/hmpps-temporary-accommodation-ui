@@ -18,6 +18,11 @@ describe('bookingUtils', () => {
               classes: '',
               href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
             },
+            {
+              text: 'Cancel booking',
+              classes: 'govuk-button--secondary',
+              href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
+            },
           ],
         },
       ])
@@ -33,6 +38,11 @@ describe('bookingUtils', () => {
               text: 'Mark as active',
               classes: '',
               href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+            },
+            {
+              text: 'Cancel booking',
+              classes: 'govuk-button--secondary',
+              href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
             },
           ],
         },
@@ -62,6 +72,12 @@ describe('bookingUtils', () => {
 
     it('returns null for adeparted booking', () => {
       const booking = bookingFactory.departed().build()
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)
+    })
+
+    it('returns null for a cancelled booking', () => {
+      const booking = bookingFactory.cancelled().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)
     })

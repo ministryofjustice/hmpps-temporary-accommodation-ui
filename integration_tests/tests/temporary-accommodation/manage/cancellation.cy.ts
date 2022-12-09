@@ -14,6 +14,30 @@ context('Booking cancellation', () => {
     cy.task('stubAuthUser')
   })
 
+  it('navigates to the booking cancellation page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a provisional booking in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const booking = bookingFactory.provisional().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the cancel booking action
+    cy.task('stubCancellationReferenceData')
+    bookingShow.clickCancelBookingButton()
+
+    // Then I navigate to the booking cancellation page
+    Page.verifyOnPage(BookingCancellationNewPage, premises.id, room.id, booking)
+  })
+
   it('allows me to mark a booking as cancelled', () => {
     // Given I am signed in
     cy.signIn()

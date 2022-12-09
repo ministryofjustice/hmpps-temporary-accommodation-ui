@@ -1,4 +1,5 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { faker } from '@faker-js/faker/locale/en_GB'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
@@ -6,13 +7,18 @@ import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import departureFactory from '../../../../server/testutils/factories/departure'
 import newDepartureFactory from '../../../../server/testutils/factories/newDeparture'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 Given('I mark the booking as departed', () => {
   cy.then(function _() {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
     bookingShowPage.clickMarkDepartedBookingButton()
 
-    const departure = departureFactory.build()
+    const departure = departureFactory.build({
+      dateTime: DateFormats.formatApiDate(
+        faker.date.future(1, DateFormats.convertIsoToDateObj(this.booking.arrival.arrivalDate)),
+      ),
+    })
     const newDeparture = newDepartureFactory.build({
       ...departure,
       reasonId: departure.reason.id,

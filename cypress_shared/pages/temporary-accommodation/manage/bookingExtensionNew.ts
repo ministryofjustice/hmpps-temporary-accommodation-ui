@@ -28,8 +28,8 @@ export default class BookingExtensionNewPage extends Page {
 
   shouldShowDateConflictErrorMessages(): void {
     ;['newDepartureDate'].forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups[field].conflict)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[field].conflict)
+      cy.get('.govuk-error-summary').should('contain', errorLookups.generic[field].conflict)
+      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
     })
   }
 

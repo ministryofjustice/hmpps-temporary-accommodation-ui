@@ -1,13 +1,8 @@
 [
   { "id": "5bb2a91b-a33a-425e-8503-2ba69d7cabe7", "name": "Admitted to Hospital", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "e718e14d-8f8d-41a3-b8f1-25d23955af8f", "name": "Arrested, remanded in custody, or sentenced", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "c56567a8-dbcd-414a-9427-3ea443ad4dc0", "name": "Bed Withdrawn", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "7801b1a0-ca4c-4287-8b5b-203b1c3fa4f7", "name": "Breach / recall (abscond)", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "9a68687d-944b-4960-9de2-7645635910f3", "name": "Bed Withdrawn", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "c81c42fe-f7af-4d16-b67d-93f0b4cbd338", "name": "Breach / recall (abscond)", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "f5b57d36-1b3c-4777-93a2-72ff59cf7674", "name": "Breach / recall (behaviour / increasing risk)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "0bef1bf3-12a2-49b9-9cd2-83fb9af0e71e", "name": "Breach / recall (curfew)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "e15aef5f-9153-4dc6-a4dd-1f569acf8d5d", "name": "Breach / recall (house rules)", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "b80cbd68-c223-40af-b82b-5f7cee6f6fd7", "name": "Breach / recall (curfew)", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "ff751e28-f957-4941-8049-5b44c6da878e", "name": "Breach / recall (house rules)", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "d6e3f1db-01a7-4ce4-b7cb-f1ff5454d62e", "name": "Breach / recall (licence or bail condition)", "isActive": true, "serviceScope": "temporary-accommodation" },

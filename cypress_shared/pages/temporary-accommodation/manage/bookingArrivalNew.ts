@@ -1,12 +1,16 @@
 import type { Booking, NewArrival } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
+import BookingInfoComponent from '../../../components/bookingInfo'
 
 export default class BookingArrivalNewPage extends Page {
+  private readonly bookingInfoComponent: BookingInfoComponent
+
   constructor(private readonly booking: Booking) {
     super('Mark booking as active')
+
+    this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
   static visit(premisesId: string, roomId: string, booking: Booking): BookingArrivalNewPage {
@@ -19,9 +23,7 @@ export default class BookingArrivalNewPage extends Page {
       cy.get('p').should('contain', this.booking.person.crn)
     })
 
-    this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-    this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
+    this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowDateInputs('arrivalDate', this.booking.arrivalDate)
     this.shouldShowDateInputs('expectedDepartureDate', this.booking.departureDate)

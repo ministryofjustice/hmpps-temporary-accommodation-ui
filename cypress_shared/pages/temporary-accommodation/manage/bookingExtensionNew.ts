@@ -1,12 +1,16 @@
 import type { Booking, NewExtension } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
+import BookingInfoComponent from '../../../components/bookingInfo'
 
 export default class BookingExtensionNewPage extends Page {
+  private readonly bookingInfoComponent: BookingInfoComponent
+
   constructor(private readonly booking: Booking) {
     super('Extend or shorten booking')
+
+    this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
   static visit(premisesId: string, roomId: string, booking: Booking): BookingExtensionNewPage {
@@ -19,9 +23,7 @@ export default class BookingExtensionNewPage extends Page {
       cy.get('p').should('contain', this.booking.person.crn)
     })
 
-    this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-    this.shouldShowKeyAndValue('Expected departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
+    this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowDateInputs('newDepartureDate', this.booking.departureDate)
   }

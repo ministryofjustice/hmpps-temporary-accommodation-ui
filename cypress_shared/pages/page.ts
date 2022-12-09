@@ -1,14 +1,17 @@
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
+import Component from '../components/component'
 
 export type PageElement = Cypress.Chainable<JQuery>
 
-export default abstract class Page {
+export default abstract class Page extends Component {
   static verifyOnPage<T>(constructor: new (...args: unknown[]) => T, ...args: unknown[]): T {
     return new constructor(...args)
   }
 
   constructor(private readonly title: string) {
+    super()
+
     this.checkOnPage()
   }
 
@@ -36,21 +39,6 @@ export default abstract class Page {
 
   shouldShowBanner(copy: string): void {
     cy.get('.govuk-notification-banner').contains(copy)
-  }
-
-  shouldShowKeyAndValue(key: string, value: string): void {
-    cy.get('.govuk-summary-list__key').contains(key).siblings('.govuk-summary-list__value').should('contain', value)
-  }
-
-  shouldShowKeyAndValues(key: string, values: string[]): void {
-    cy.get('.govuk-summary-list__key')
-      .contains(key)
-      .siblings('.govuk-summary-list__value')
-      .within(elements => {
-        values.forEach(value => {
-          cy.wrap(elements).should('contain', value)
-        })
-      })
   }
 
   shouldShowDateInputs(prefix: string, date: string): void {

@@ -52,7 +52,13 @@ export default class CanellationsController {
         req.flash('success', 'Booking cancelled')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, '', 'bookingCancellation')
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+          'bookingCancellation',
+        )
       }
     }
   }

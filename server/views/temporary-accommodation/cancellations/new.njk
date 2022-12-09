@@ -32,7 +32,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form>
+      <form action="{{ paths.bookings.cancellations.create({ premisesId: premisesId, roomId: roomId, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ taDateInput(

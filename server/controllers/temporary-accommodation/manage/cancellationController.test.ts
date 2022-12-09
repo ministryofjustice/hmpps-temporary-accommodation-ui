@@ -126,7 +126,13 @@ describe('CancellationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '', 'bookingCancellation')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+        'bookingCancellation',
+      )
     })
   })
 })

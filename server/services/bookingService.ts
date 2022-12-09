@@ -89,7 +89,7 @@ export default class BookingService {
       },
     ] as SummaryList['rows']
 
-    if (status === 'provisional' || status === 'confirmed') {
+    if (status === 'provisional' || status === 'confirmed' || status === 'cancelled') {
       rows.push({
         key: this.textValue('Start date'),
         value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
@@ -122,6 +122,17 @@ export default class BookingService {
         key: this.textValue('Notes'),
         value: this.htmlValue(formatLines(booking.confirmation.notes)),
       })
+    } else if (status === 'cancelled') {
+      rows.push(
+        {
+          key: this.textValue('Cancellation reason'),
+          value: this.textValue(booking.cancellation.reason.name),
+        },
+        {
+          key: this.textValue('Notes'),
+          value: this.htmlValue(formatLines(booking.cancellation.notes)),
+        },
+      )
     } else if (status === 'arrived') {
       rows.push({
         key: this.textValue('Notes'),

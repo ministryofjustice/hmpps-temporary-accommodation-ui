@@ -13,6 +13,7 @@ const confirmationsPath = singleBookingPath.path('confirm')
 const arrivalsPath = singleBookingPath.path('mark-as-active')
 const departuresPath = singleBookingPath.path('mark-as-closed')
 const extensionsPath = singleBookingPath.path('extend')
+const cancellationsPath = singleBookingPath.path('cancellations')
 
 const paths = {
   premises: {
@@ -49,6 +50,10 @@ const paths = {
     extensions: {
       new: extensionsPath.path('new'),
       create: extensionsPath,
+    },
+    cancellations: {
+      new: cancellationsPath.path('new'),
+      create: cancellationsPath,
     },
   },
 }

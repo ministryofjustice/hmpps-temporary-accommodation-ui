@@ -1,4 +1,5 @@
 import type { Booking, NewCancellation } from '@approved-premises/api'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import Page from '../../page'
 
@@ -9,6 +10,11 @@ export default class BookingCancellationNewPage extends Page {
     super('Cancel booking')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
+  }
+
+  static visit(premisesId: string, roomId: string, booking: Booking): BookingCancellationNewPage {
+    cy.visit(paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }))
+    return new BookingCancellationNewPage(booking)
   }
 
   shouldShowBookingDetails(): void {

@@ -6,6 +6,7 @@ import type { Booking } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import arrivalFactory from './arrival'
 import confirmationFactory from './confirmation'
+import cancellationFactory from './cancellation'
 import departureFactory from './departure'
 import personFactory from './person'
 
@@ -44,6 +45,14 @@ class BookingFactory extends Factory<Booking> {
       status: 'departed',
     })
   }
+
+  cancelled() {
+    return this.params({
+      arrivalDate: past(),
+      departureDate: past(),
+      status: 'cancelled',
+    })
+  }
 }
 
 export default BookingFactory.define(() => ({
@@ -58,6 +67,7 @@ export default BookingFactory.define(() => ({
   arrival: arrivalFactory.build(),
   departure: departureFactory.build(),
   confirmation: confirmationFactory.build(),
+  cancellation: cancellationFactory.build(),
   extensions: [],
   serviceName: 'temporary-accommodation' as const,
 }))

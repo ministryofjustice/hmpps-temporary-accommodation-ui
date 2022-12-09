@@ -1,11 +1,15 @@
 import type { Booking, NewConfirmation } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import BookingInfoComponent from '../../../components/bookingInfo'
 import Page from '../../page'
 
 export default class BookingConfirmationNewPage extends Page {
+  private readonly bookingInfoComponent: BookingInfoComponent
+
   constructor(private readonly booking: Booking) {
     super('Mark booking as confirmed')
+
+    this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
   static visit(premisesId: string, roomId: string, booking: Booking): BookingConfirmationNewPage {
@@ -18,8 +22,7 @@ export default class BookingConfirmationNewPage extends Page {
       cy.get('p').should('contain', this.booking.person.crn)
     })
 
-    this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-    this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    this.bookingInfoComponent.shouldShowBookingDetails()
   }
 
   completeForm(newConfirmation: NewConfirmation): void {

@@ -2,11 +2,15 @@ import type { Premises, Room, Booking } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import BookingInfoComponent from '../../../components/bookingInfo'
 
 export default class BookingShowPage extends Page {
+  private readonly bookingInfoComponent: BookingInfoComponent
+
   constructor(private readonly premises: Premises, private readonly room: Room, private readonly booking: Booking) {
     super('View a booking')
+
+    this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
   static visit(premises: Premises, room: Room, booking: Booking): BookingShowPage {
@@ -50,35 +54,6 @@ export default class BookingShowPage extends Page {
       cy.get('p').should('contain', this.premises.postcode)
     })
 
-    const { status } = this.booking
-
-    if (status === 'provisional' || status === 'confirmed') {
-      this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-      this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    } else if (status === 'arrived') {
-      this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-      this.shouldShowKeyAndValue('Expected departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    } else if (status === 'departed') {
-      this.shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    }
-
-    if (status === 'provisional') {
-      this.shouldShowKeyAndValue('Status', 'Provisional')
-    } else if (status === 'confirmed') {
-      this.shouldShowKeyAndValue('Status', 'Confirmed')
-      this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
-    } else if (status === 'arrived') {
-      this.shouldShowKeyAndValue('Status', 'Active')
-      this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
-    } else if (status === 'departed') {
-      this.shouldShowKeyAndValue('Status', 'Closed')
-      this.shouldShowKeyAndValue('Departure reason', this.booking.departure.reason.name)
-      this.shouldShowKeyAndValue('Move on category', this.booking.departure.moveOnCategory.name)
-      this.shouldShowKeyAndValues('Notes', this.booking.departure.notes.split('\n'))
-    }
-
-    this.booking.extensions.forEach(extension => {
-      this.shouldShowKeyAndValues('Extension notes', extension.notes.split('\n'))
-    })
+    this.bookingInfoComponent.shouldShowBookingDetails()
   }
 }

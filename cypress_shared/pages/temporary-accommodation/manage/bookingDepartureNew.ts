@@ -1,11 +1,15 @@
 import type { Booking, NewDeparture } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import BookingInfoComponent from '../../../components/bookingInfo'
 import Page from '../../page'
 
 export default class BookingDepartureNewPage extends Page {
+  private readonly bookingInfoComponent: BookingInfoComponent
+
   constructor(private readonly booking: Booking) {
     super('Mark booking as closed')
+
+    this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
   static visit(premisesId: string, roomId: string, booking: Booking): BookingDepartureNewPage {
@@ -18,9 +22,7 @@ export default class BookingDepartureNewPage extends Page {
       cy.get('p').should('contain', this.booking.person.crn)
     })
 
-    this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-    this.shouldShowKeyAndValue('Expected departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
+    this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowDateInputs('dateTime', this.booking.departureDate)
   }

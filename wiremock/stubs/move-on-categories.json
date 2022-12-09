@@ -1,5 +1,4 @@
 [
-  { "id": "8f35e009-cdf8-4a70-9ca4-97d99609893e", "name": "Supported Housing", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "d8e04fa1-9757-4681-bfab-6c61913c8463", "name": "Approved Premises", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "247ae3f4-7958-4c59-97ed-272a39ad411c", "name": "Friends/Family (settled)", "isActive": true, "serviceScope": "temporary-accommodation" },
   { "id": "2236cd7e-32c5-4784-a461-8f0aead1d386", "name": "Householder (Owner - freehold or leasehold)", "isActive": true, "serviceScope": "temporary-accommodation" },

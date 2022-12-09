@@ -32,6 +32,10 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
     )
   }
 
+  if (items.length === 0) {
+    return null
+  }
+
   return [{ items }]
 }
 

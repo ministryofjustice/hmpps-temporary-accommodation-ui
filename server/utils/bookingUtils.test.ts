@@ -60,14 +60,10 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns an empty list of action items for a departed booking', () => {
+    it('returns null for adeparted booking', () => {
       const booking = bookingFactory.departed().build()
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-        {
-          items: [],
-        },
-      ])
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)
     })
   })
 

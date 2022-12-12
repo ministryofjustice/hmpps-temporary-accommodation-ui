@@ -1,0 +1,28 @@
+name: Generate Types
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_ENV: test
+  API_CLIENT_ID: approved-premises
+  API_CLIENT_SECRET: clientsecret
+
+jobs:
+  generate-types:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+      - name: Generate Types
+        run: ./script/generate-types
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.OPEN_PR_ACCESS_TOKEN }}
+          title: 'API model updates'
+          commit-message: 'Updating hmpps-approved-premises-api models from OpenAPI specification'
+          body: 'Updating hmpps-approved-premises-api models from OpenAPI specification.  This PR was created automatically from the generate-types.yml Workflow'
+          delete-branch: true
+          branch-suffix: timestamp
+          branch: update-api-types

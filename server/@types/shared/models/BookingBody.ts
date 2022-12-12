@@ -11,7 +11,9 @@ export type BookingBody = {
     id: string;
     person: Person;
     arrivalDate: string;
+    originalArrivalDate: string;
     departureDate: string;
+    originalDepartureDate: string;
     keyWorker?: StaffMember;
     serviceName: ServiceName;
     bed?: Bed;

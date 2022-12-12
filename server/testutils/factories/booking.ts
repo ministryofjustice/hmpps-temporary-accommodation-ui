@@ -48,6 +48,8 @@ class BookingFactory extends Factory<Booking> {
 
 export default BookingFactory.define(() => ({
   person: personFactory.build(),
+  originalArrivalDate: DateFormats.formatApiDate(faker.date.soon()),
+  originalDepartureDate: DateFormats.formatApiDate(faker.date.future()),
   arrivalDate: DateFormats.formatApiDate(faker.date.soon()),
   departureDate: DateFormats.formatApiDate(faker.date.future()),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,

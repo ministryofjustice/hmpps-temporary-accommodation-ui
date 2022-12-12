@@ -1,13 +1,13 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { addDays } from 'date-fns'
+import { Factory } from 'fishery'
 
 import type { Booking } from '@approved-premises/api'
-import arrivalFactory from './arrival'
-import departureFactory from './departure'
-import confirmationFactory from './confirmation'
-import personFactory from './person'
 import { DateFormats } from '../../utils/dateUtils'
+import arrivalFactory from './arrival'
+import confirmationFactory from './confirmation'
+import departureFactory from './departure'
+import personFactory from './person'
 
 const soon = () => DateFormats.formatApiDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
 const past = () => DateFormats.formatApiDate(faker.date.past())

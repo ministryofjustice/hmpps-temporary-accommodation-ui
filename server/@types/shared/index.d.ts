@@ -33,8 +33,6 @@ export type { DateCapacity } from './models/DateCapacity';
 export type { Departure } from './models/Departure';
 export type { DepartureReason } from './models/DepartureReason';
 export type { DestinationProvider } from './models/DestinationProvider';
-export type { Document } from './models/Document';
-export type { DocumentLevel } from './models/DocumentLevel';
 export type { Extension } from './models/Extension';
 export type { FlagsEnvelope } from './models/FlagsEnvelope';
 export type { InvalidParam } from './models/InvalidParam';

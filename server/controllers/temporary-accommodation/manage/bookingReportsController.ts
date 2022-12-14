@@ -1,5 +1,6 @@
 import type { Request, Response, RequestHandler } from 'express'
 
+import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BookingReportService from '../../../services/bookingReportService'
 
@@ -35,7 +36,7 @@ export default class BookingReportsController {
           await this.bookingReportService.pipeBookings(token, res)
         }
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, '')
+        catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))
       }
     }
   }

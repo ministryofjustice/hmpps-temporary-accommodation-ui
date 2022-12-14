@@ -1,0 +1,45 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% extends "../../../partials/layout.njk" %}
+{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../../components/ta-select/macro.njk" import taSelect %}
+
+{% set pageTitle = applicationName + " - Booking reports" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ breadCrumb('Booking reports', []) }}
+
+  {% include "../../../_messages.njk" %}
+  
+  <h1>Booking reports</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ showErrorSummary(errorSummary) }}
+
+        {{ taSelect(
+          {
+            label: {
+                text: "Select a probation region",
+                classes: "govuk-label--m"
+            },
+            items: convertObjectsToSelectOptions(allProbationRegions, "All", "name", "id", "probationRegionId"),
+            fieldName: "probationRegionId"
+          },
+          fetchContext()
+        ) }}
+
+        {{ govukButton({
+          text: "Download report"
+        }) }}
+      
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

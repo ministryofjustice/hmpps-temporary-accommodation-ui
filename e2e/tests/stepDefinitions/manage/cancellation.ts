@@ -56,7 +56,7 @@ Then('I should see the booking with the cancelled status', () => {
   })
 })
 
-Then('I should see a list of the problems encountered marking the booking as departed', () => {
+Then('I should see a list of the problems encountered cancelling the booking', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingCancellationNewPage, this.booking)
 

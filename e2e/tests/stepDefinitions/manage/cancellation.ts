@@ -60,6 +60,6 @@ Then('I should see a list of the problems encountered cancelling the booking', (
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingCancellationNewPage, this.booking)
 
-    page.shouldShowErrorMessagesForFields(['date'])
+    page.shouldShowErrorMessagesForFields(['date'], 'bookingCancellation')
   })
 })

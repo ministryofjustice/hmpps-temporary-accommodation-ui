@@ -19,6 +19,7 @@ export default function routes(controllers: Controllers, router: Router): Router
     departuresController,
     extensionsController,
     cancellationsController,
+    bookingReportsController,
   } = controllers.temporaryAccommodation
 
   get(paths.premises.index.pattern, premisesController.index())
@@ -53,6 +54,9 @@ export default function routes(controllers: Controllers, router: Router): Router
 
   get(paths.bookings.cancellations.new.pattern, cancellationsController.new())
   post(paths.bookings.cancellations.create.pattern, cancellationsController.create())
+
+  get(paths.reports.bookings.new.pattern, bookingReportsController.new())
+  post(paths.reports.bookings.create.pattern, bookingReportsController.create())
 
   return router
 }

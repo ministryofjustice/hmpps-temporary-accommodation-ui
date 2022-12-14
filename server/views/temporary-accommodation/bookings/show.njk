@@ -41,7 +41,9 @@
 {% endblock %}
 
 {% block extraScripts %}
-  <script type="text/javascript" nonce="{{ cspNonce }}">
-    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
-  </script>
+  {% if actions %}
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+    </script>
+  {% endif %}
 {% endblock %}

@@ -31,6 +31,8 @@ const singleApplicationPath = applicationsPath.path(':id')
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
 
+const reportsPath = path('/reports')
+
 const applyPaths = {
   applications: {
     show: singleApplicationPath,
@@ -71,5 +73,8 @@ export default {
       show: personPath.path('risks'),
     },
     search: peoplePath.path('search'),
+  },
+  reports: {
+    bookings: reportsPath.path('bookings'),
   },
 }

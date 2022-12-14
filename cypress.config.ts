@@ -14,6 +14,7 @@ import lostBed from './integration_tests/mockApis/lostBed'
 import person from './integration_tests/mockApis/person'
 import applications from './integration_tests/mockApis/applications'
 import room from './integration_tests/mockApis/room'
+import report from './integration_tests/mockApis/report'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -44,6 +45,7 @@ export default defineConfig({
         ...person,
         ...applications,
         ...room,
+        ...report,
       })
     },
     baseUrl: 'http://localhost:3007',

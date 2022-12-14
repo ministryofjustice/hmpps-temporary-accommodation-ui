@@ -26,6 +26,7 @@ import staffMemberFactory from '../server/testutils/factories/staffMember'
 import { errorStub, getCombinations } from './utils'
 import path from '../server/paths/api'
 import confirmationStubs from './confirmationStubs'
+import reportStubs from './reportStubs'
 
 const stubs = []
 
@@ -202,6 +203,7 @@ stubs.push(
   ...personStubs,
   ...applicationStubs,
   ...roomStubs,
+  ...reportStubs,
   ...Object.values(referenceDataStubs),
 )
 

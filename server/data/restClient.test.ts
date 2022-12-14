@@ -1,3 +1,5 @@
+import { createMock } from '@golevelup/ts-jest'
+import { Response } from 'express'
 import nock from 'nock'
 
 import type { ApiConfig } from '../config'
@@ -100,5 +102,37 @@ describe('restClient', () => {
       expect(result).toEqual({ some: 'data' })
       expect(nock.isDone()).toBeTruthy()
     })
+  })
+
+  describe('pipe', () => {
+    it('should make a GET request and pipe the response', async () => {
+      const data = 'some-data'
+
+      fakeApprovedPremisesApi.get(`/some/path`).reply(200, data, { 'content-type': 'some-content-type' })
+
+      const response = createMock<Response>()
+
+      await restClient.pipe(response, 'some-filename', { path: '/some/path' })
+
+      expect(response.set).toHaveBeenCalledWith({
+        'Content-Type': 'some-content-type',
+        'Content-Disposition': `attachment; filename="some-filename"`,
+      })
+
+      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  it('should reject when the API returns an error', async () => {
+    fakeApprovedPremisesApi.get(`/some/path`).reply(500, { some: 'data' })
+
+    const response = createMock<Response>()
+
+    await expect(restClient.pipe(response, 'some-filename', { path: '/some/path' })).rejects.toBeDefined()
+
+    expect(response.set).not.toHaveBeenCalledWith()
+    expect(response.write).not.toHaveBeenCalled()
+    expect(nock.isDone()).toBeTruthy()
   })
 })

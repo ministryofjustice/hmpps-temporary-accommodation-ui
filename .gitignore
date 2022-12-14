@@ -130,3 +130,4 @@ integration_tests/screenshots/
 /e2e/screenshots
 /e2e/videos
 /e2e.env
+cypress/downloads/

@@ -4,6 +4,7 @@ import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
 
+import { Response } from 'express'
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
@@ -111,6 +112,55 @@ export default class RestClient {
             s.push(null)
             resolve(s)
           }
+        })
+    })
+  }
+
+  async pipe(
+    response: Response,
+    filename: string,
+    { path = null, headers = {} }: GetRequest = {},
+    query: Record<string, string> | string = '',
+  ): Promise<void> {
+    logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
+    return new Promise((resolve, reject) => {
+      superagent
+        .get(`${this.apiUrl()}${path}`)
+        .agent(this.agent)
+        .auth(this.token, { type: 'bearer' })
+        .use(restClientMetricsMiddleware)
+        .retry(2, (err, _res) => {
+          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
+          return undefined // retry handler only for logging retries, not to influence retry logic
+        })
+        .query(query)
+        .timeout(this.timeoutConfig())
+        .set({ ...this.defaultHeaders, ...headers })
+        .buffer(false)
+        .parse((apiResponse, callback) => {
+          // We use parse, and the response manually, rather than using Superagent's pipe method, to workaround
+          // pipe ignoring errors. See https://github.com/ladjs/superagent/issues/1575
+          if (apiResponse.statusCode === 200) {
+            response.set({
+              'Content-Type': apiResponse.headers['content-type'],
+              'Content-Disposition': `attachment; filename="${filename}"`,
+            })
+
+            apiResponse.on('data', chunk => {
+              response.write(chunk)
+            })
+
+            apiResponse.on('end', () => {
+              response.end()
+              callback(null, undefined)
+              resolve()
+            })
+          } else {
+            callback(null, undefined)
+          }
+        })
+        .catch(err => {
+          reject(err)
         })
     })
   }

@@ -15,6 +15,7 @@ import ApplicationService from './applicationService'
 import BedspaceService from './bedspaceService'
 import ConfirmationService from './confirmationService'
 import ExtensionService from './extensionService'
+import BookingReportService from './bookingReportService'
 
 export const services = () => {
   const {
@@ -26,6 +27,7 @@ export const services = () => {
     personClient,
     applicationClientBuilder,
     roomClientBuilder,
+    reportClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
@@ -41,6 +43,7 @@ export const services = () => {
   const bedspaceService = new BedspaceService(roomClientBuilder, referenceDataClientBuilder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
+  const bookingReportService = new BookingReportService(reportClientBuilder, referenceDataClientBuilder)
 
   return {
     userService,
@@ -56,6 +59,7 @@ export const services = () => {
     bedspaceService,
     confirmationService,
     extensionService,
+    bookingReportService,
   }
 }
 

@@ -19,7 +19,7 @@ Feature: Manage Temporary Accommodation - Booking
         Given I'm creating a booking
         And I create a booking with all necessary details
         And I cancel the booking
-        Then I should see a confirmation for cancellation
+        Then I should see the booking with the cancelled status
 
     Scenario: Showing booking cancellation errors
         Given I'm creating a booking
@@ -38,7 +38,7 @@ Feature: Manage Temporary Accommodation - Booking
         And I create a booking with all necessary details
         And I confirm the booking
         And I cancel the booking
-        Then I should see a confirmation for cancellation
+        Then I should see the booking with the cancelled status
 
     Scenario: Marking a booking as arrived
         Given I'm creating a booking

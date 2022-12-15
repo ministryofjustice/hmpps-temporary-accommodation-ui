@@ -1,0 +1,24 @@
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Manage estate" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set bodyClasses = "temporary-accommodation-dashboard-index" %}
+
+{% block content %}
+  
+  {% include "../../_messages.njk" %}
+  
+  <h1>Manage estate</h1>
+
+  <div class="card-container">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="govuk-heading-s">
+            <a class="govuk-link" href="{{ paths.premises.index({}) }}">Manage properties, bedspaces, and bookings</a>
+        </h2>
+        <p class="govuk-body">Add new properties, bedspaces, and bookings, and update attributes</p>
+        </div>
+    </div>
+  </div>
+
+{% endblock %}

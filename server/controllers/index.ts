@@ -1,15 +1,15 @@
 /* istanbul ignore file */
 
-import ApplicationController from './applicationController'
 import { controllers as taManageControllers } from './temporary-accommodation/manage'
 
 import type { Services } from '../services'
+import DashboardController from './dashboardController'
 
 export const controllers = (services: Services) => {
-  const applicationController = new ApplicationController()
+  const dashboardController = new DashboardController()
 
   return {
-    applicationController,
+    dashboardController,
     temporaryAccommodation: {
       ...taManageControllers(services),
     },

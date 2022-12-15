@@ -11,12 +11,12 @@ import manageRoutes from './manage'
 export default function routes(controllers: Controllers): Router {
   const router = Router()
 
-  const { applicationController } = controllers
+  const { dashboardController } = controllers
 
   const { get } = actions(router)
 
-  get('/', applicationController.index())
-  get(temporaryAccommodationPath.pattern, applicationController.index())
+  get('/', dashboardController.index())
+  get(temporaryAccommodationPath.pattern, dashboardController.index())
 
   manageRoutes(controllers, router)
 

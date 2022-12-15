@@ -104,4 +104,19 @@ export default abstract class Page extends Component {
   clickBreadCrumbUp(): void {
     cy.get('li.govuk-breadcrumbs__list-item:nth-last-child(2)').click()
   }
+
+  expectDownload() {
+    // This is a workaround for a Cypress bug to prevent it waiting
+    // indefinitely for a new page to load after clicking the download link
+    // See https://github.com/cypress-io/cypress/issues/14857
+    cy.window()
+      .document()
+      .then(doc => {
+        doc.addEventListener('click', () => {
+          setTimeout(() => {
+            doc.location?.reload()
+          }, Cypress.config('defaultCommandTimeout'))
+        })
+      })
+  }
 }

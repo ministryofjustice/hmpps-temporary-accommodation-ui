@@ -13,4 +13,8 @@ export default class DashboardPage extends Page {
   clickPremisesLink(): void {
     cy.get('a').contains('Manage properties, bedspaces, and bookings').click()
   }
+
+  clickReportsLink(): void {
+    cy.get('a').contains('Download data').click()
+  }
 }

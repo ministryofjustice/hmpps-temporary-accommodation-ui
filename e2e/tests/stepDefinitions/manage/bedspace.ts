@@ -5,7 +5,6 @@ import newRoomFactory from '../../../../server/testutils/factories/newRoom'
 import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import Page from '../../../../cypress_shared/pages/page'
@@ -34,14 +33,7 @@ Given('I create a bedspace with all necessary details', () => {
 })
 
 Given("I'm editing the bedspace", () => {
-  const premisesListPage = PremisesListPage.visit()
-
   cy.then(function _() {
-    premisesListPage.clickPremisesViewLink(this.premises)
-
-    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, this.premises)
-    premisesShowPage.clickBedpaceViewLink(this.room)
-
     const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
     bedspaceShowPage.clickBedspaceEditLink()
 

@@ -7,19 +7,26 @@ import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommod
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
+import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import Page from '../../../../cypress_shared/pages/page'
 
 Given("I'm creating a premises", () => {
-  const page = PremisesListPage.visit()
-  page.clickAddPremisesButton()
+  const dashboardPage = Page.verifyOnPage(DashboardPage)
+  dashboardPage.clickPremisesLink()
+
+  const premisesListPage = Page.verifyOnPage(PremisesListPage)
+  premisesListPage.clickAddPremisesButton()
 })
 
 Given("I'm viewing an existing premises", () => {
-  const page = PremisesListPage.visit()
-  page.getAnyPremises('premises')
+  const dashboardPage = Page.verifyOnPage(DashboardPage)
+  dashboardPage.clickPremisesLink()
+
+  const premisesListPage = Page.verifyOnPage(PremisesListPage)
+  premisesListPage.getAnyPremises('premises')
 
   cy.get('@premises').then(premises => {
-    page.clickPremisesViewLink(premises)
+    premisesListPage.clickPremisesViewLink(premises)
   })
 })
 
@@ -47,10 +54,7 @@ Given('I attempt to create a premises with required details missing', () => {
 })
 
 Given("I'm editing the premises", () => {
-  const listPage = PremisesListPage.visit()
-
   cy.get('@premises').then(premises => {
-    listPage.clickPremisesViewLink(premises)
     const showPage = Page.verifyOnPage(PremisesShowPage, premises)
     showPage.clickPremisesEditLink()
 

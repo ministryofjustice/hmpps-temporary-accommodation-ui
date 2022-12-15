@@ -70,3 +70,7 @@ script/local_e2e
 ```
 
 Note: This requires `ap-tools` to be installed (<https://github.com/ministryofjustice/hmpps-approved-premises-tools>)
+
+## Release process
+
+Our release process aligns with the other CAS teams and as such [lives in Confluence](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process)

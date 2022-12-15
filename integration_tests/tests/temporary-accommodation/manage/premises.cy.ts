@@ -7,12 +7,31 @@ import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommo
 import Page from '../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
+import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 
 context('Premises', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+  })
+
+  it('should navigate to the list premises page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const premises = premisesFactory.buildList(5)
+    cy.task('stubPremises', premises)
+
+    // When I visit the dashboard page
+    const page = DashboardPage.visit()
+
+    // Add I click the add a premises link
+    page.clickPremisesLink()
+
+    // Then I navigate to the premises list page
+    Page.verifyOnPage(PremisesListPage)
   })
 
   it('should list all premises', () => {
@@ -28,6 +47,24 @@ context('Premises', () => {
 
     // Then I should see all of the premises listed
     page.shouldShowPremises(premises)
+  })
+
+  it('should navigate back from the premises list page to the dashboard', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const premises = premisesFactory.buildList(5)
+    cy.task('stubPremises', premises)
+
+    // When I visit the premises list page
+    const page = PremisesListPage.visit()
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the dashboard page
+    Page.verifyOnPage(DashboardPage)
   })
 
   it('should navigate to the new premises page', () => {

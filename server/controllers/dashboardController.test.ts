@@ -1,25 +1,25 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 
-import ApplicationController from './applicationController'
+import DashboardController from './dashboardController'
 import paths from '../paths/temporary-accommodation/manage'
 
 jest.mock('../utils/applicationUtils')
 
-describe('ApplicationController', () => {
+describe('DashboardController', () => {
   const request: DeepMocked<Request> = createMock<Request>({})
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  let applicationController: ApplicationController
+  let dashboardController: DashboardController
 
   beforeEach(() => {
-    applicationController = new ApplicationController()
+    dashboardController = new DashboardController()
   })
 
   describe('index', () => {
     it('should redirect to /properties', () => {
-      const requestHandler = applicationController.index()
+      const requestHandler = dashboardController.index()
       requestHandler(request, response, next)
 
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.index({}))

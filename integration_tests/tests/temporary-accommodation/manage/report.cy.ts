@@ -13,6 +13,24 @@ context('Report', () => {
     cy.task('stubAuthUser')
   })
 
+  it('should navigate to the booking report page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBookingReportReferenceData')
+
+    // When I visit the dashboard page
+    const page = DashboardPage.visit()
+
+    // Add I click the reports link
+    cy.task('stubBookingReportReferenceData')
+    page.clickReportsLink()
+
+    // Then I navigate to the booking report page
+    Page.verifyOnPage(BookingReportNewPage)
+  })
+
   it('allows me to download a booking report for all regions', () => {
     // Given I am signed in
     cy.signIn()

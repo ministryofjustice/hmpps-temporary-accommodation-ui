@@ -9,4 +9,5 @@ export default Factory.define<Arrival>(() => ({
   bookingId: faker.datatype.uuid(),
   expectedDepartureDate: DateFormats.formatApiDate(faker.date.future()),
   notes: faker.lorem.sentence(),
+  createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

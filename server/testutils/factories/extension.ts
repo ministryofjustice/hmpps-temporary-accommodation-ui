@@ -10,4 +10,5 @@ export default Factory.define<Extension>(() => ({
   newDepartureDate: DateFormats.formatApiDate(faker.date.future()),
   bookingId: faker.datatype.uuid(),
   notes: faker.lorem.sentence(),
+  createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

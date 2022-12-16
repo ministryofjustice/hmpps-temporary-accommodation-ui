@@ -9,8 +9,8 @@ Accepted
 ## Context
 
 HPTs that are already running CAS3 services have a set of existing data about their properties, people,
-and so on, that they will need to add to the new CAS3 service. This existing data is stored in a set
-of spreadsheets.
+and so on, that they will need to add to the new CAS3 service. This existing data is stored in a set of
+spreadsheets.
 
 To avoid errors, and increase speed of transfer, we want to support conversion of the existing data,
 and avoid rekeying of that data into our new system.
@@ -39,7 +39,7 @@ different formats that will only be used once.
 CSV is chosen as the interim file format because it is simple to parse in code, and forces plain text, removing
 formatting.
 
-Because of the different data structures involved, there are likely to be separate intermediate formats for
+Because of the data structures involved, there are likely to be separate intermediate formats for
 property details, and for people and their placements into those properties.
 
 ## Consequences
@@ -58,3 +58,6 @@ behaviour. Any errors during conversion will thus be able to be corrected later 
 
 We do not anticipate loading past data in, only current state, but this should be checked with stakeholders
 and the data schema designed with the finding in mind.
+
+When the initial property data load is done, the CAS3 system will not yet be supporting tracking of bookings,
+so this will likely be done in a subsequent phase, either automatically or manually if necessary.

@@ -228,7 +228,7 @@ describe('BookingClient', () => {
       const payload = {
         date: nonArrival.date.toString(),
         notes: nonArrival.notes,
-        reason: nonArrival.reason,
+        reason: nonArrival.reason.id,
       }
 
       fakeApprovedPremisesApi

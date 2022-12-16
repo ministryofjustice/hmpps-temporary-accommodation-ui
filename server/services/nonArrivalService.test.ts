@@ -22,14 +22,18 @@ describe('NonarrivalService', () => {
   describe('createNonarrival', () => {
     it('on success returns the arrival that has been posted', async () => {
       const nonArrival: Nonarrival = NonArrivalFactory.build()
+      const newNonArrival = {
+        ...nonArrival,
+        reason: nonArrival.reason.id,
+      }
       bookingClient.markNonArrival.mockResolvedValue(nonArrival)
 
-      const postedNonArrival = await service.createNonArrival(token, 'premisesID', 'bookingId', nonArrival)
+      const postedNonArrival = await service.createNonArrival(token, 'premisesID', 'bookingId', newNonArrival)
 
       expect(postedNonArrival).toEqual(nonArrival)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(token)
-      expect(bookingClient.markNonArrival).toHaveBeenCalledWith('premisesID', 'bookingId', nonArrival)
+      expect(bookingClient.markNonArrival).toHaveBeenCalledWith('premisesID', 'bookingId', newNonArrival)
     })
   })
 })

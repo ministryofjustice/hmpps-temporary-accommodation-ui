@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 import createBundler from '@bahmutov/cypress-esbuild-preprocessor'
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor'
 import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild'
+import NodeModulesPolyfillPlugin from '@esbuild-plugins/node-modules-polyfill'
 
 async function setupNodeEvents(
   on: Cypress.PluginEvents,
@@ -13,7 +14,7 @@ async function setupNodeEvents(
   on(
     'file:preprocessor',
     createBundler({
-      plugins: [createEsbuildPlugin(config)],
+      plugins: [NodeModulesPolyfillPlugin(), createEsbuildPlugin(config)],
     }),
   )
 

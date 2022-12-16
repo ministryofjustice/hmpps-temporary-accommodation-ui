@@ -70,4 +70,5 @@ export default BookingFactory.define(() => ({
   cancellation: cancellationFactory.build(),
   extensions: [],
   serviceName: 'temporary-accommodation' as const,
+  createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

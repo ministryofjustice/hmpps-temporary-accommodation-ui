@@ -13,4 +13,5 @@ export default Factory.define<Departure>(() => ({
   notes: faker.lorem.sentence(),
   moveOnCategory: referenceDataFactory.moveOnCategories().build(),
   destinationProvider: referenceDataFactory.destinationProviders().build(),
+  createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

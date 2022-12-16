@@ -11,4 +11,5 @@ export default Factory.define<Nonarrival>(() => ({
   notes: faker.lorem.sentence(),
   reason: referenceDataFactory.nonArrivalReason().build(),
   date: DateFormats.formatApiDate(faker.date.soon()),
+  createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

@@ -9,4 +9,5 @@ export default Factory.define<Confirmation>(() => ({
   bookingId: faker.datatype.uuid(),
   dateTime: DateFormats.formatApiDate(faker.date.past()),
   notes: faker.lorem.sentence(),
+  createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

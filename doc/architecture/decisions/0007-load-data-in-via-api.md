@@ -11,6 +11,9 @@ Accepted
 We need to import existing data into the CAS3 system in order for HPTs that are currently providing the service
 to be able to carry on doing so with minimal interruption.
 
+The service will cover approximately 2500 bedspaces across 12 regions. We expect to onboard one region at a time,
+with each region having 100-200 bedspaces.
+
 Data needs to be loaded into our production environment quickly and automatically. This data is stored in
 a common intermediate format (see ADR #6), but then needs to be loaded into the correct database structures
 for the live service.

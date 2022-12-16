@@ -51,6 +51,8 @@ The data involved is sensitive, so cannot be simply loaded via a developer's lap
 
 ## Actions
 
-The team should discuss with the HMPPS Security team exactly which sort of device will need to be used for the transfer of data to ensure compliance with data handling.
+[ ] The team should discuss with the HMPPS Security team exactly which sort of device will need to be used for the transfer of data to ensure compliance with data handling.
 
-The team should discuss with the Cloud Platform team how to allow production API access from that device, for instance requirements around VPNs, IP whitelisting, etc.
+[x] The team should discuss with the Cloud Platform team how to allow production API access from that device, for instance requirements around VPNs, IP whitelisting, etc. RESULT: IPs allowed to connect to a service can be specified in the helm deployment charts, so we can do this ourselves without CP tea input.
+
+[x] The team should discuss this approach with the HMPPS technical architecture community for feedback and validation of approach. OUTCOME: no specific concerns raised, approach seems reasonable. Some projects do this, some take a different approach, there is no standard method.

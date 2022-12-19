@@ -53,6 +53,10 @@ export default class BookingShowPage extends Page {
     })
   }
 
+  clickHistoryLink(): void {
+    cy.get('a').contains('View booking history').click()
+  }
+
   shouldShowBookingDetails(): void {
     cy.get('.location-header').within(() => {
       cy.get('p').should('contain', this.booking.person.crn)

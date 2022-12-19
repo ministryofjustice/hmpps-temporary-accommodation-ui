@@ -36,7 +36,7 @@
     <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
   </div>
 
-  {{ bookingInfo(booking) }}
+  {{ bookingInfo(booking, paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })) }}
 
 {% endblock %}
 

@@ -2,7 +2,7 @@ import type { Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
-import { formatStatus } from '../utils/bookingUtils'
+import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
 
 export default (booking: Booking): SummaryList['rows'] => {
   const { status, arrivalDate, departureDate } = booking
@@ -67,6 +67,15 @@ export default (booking: Booking): SummaryList['rows'] => {
       key: textValue('Notes'),
       value: htmlValue(formatLines(booking.arrival.notes)),
     })
+
+    const latestExtension = getLatestExtension(booking)
+
+    if (latestExtension) {
+      rows.push({
+        key: textValue('Extension notes'),
+        value: htmlValue(formatLines(latestExtension.notes)),
+      })
+    }
   } else if (status === 'departed') {
     rows.push(
       {
@@ -82,18 +91,6 @@ export default (booking: Booking): SummaryList['rows'] => {
         value: htmlValue(formatLines(booking.departure.notes)),
       },
     )
-  }
-
-  if (booking.extensions.length) {
-    const collatedNotes = booking.extensions
-      .map(extension => extension.notes)
-      .filter(notes => notes?.length > 0)
-      .join('\n\n')
-
-    rows.push({
-      key: textValue('Extension notes'),
-      value: htmlValue(formatLines(collatedNotes)),
-    })
   }
 
   return rows

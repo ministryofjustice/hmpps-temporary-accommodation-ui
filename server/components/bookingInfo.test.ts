@@ -1,5 +1,5 @@
 import bookingFactory from '../testutils/factories/booking'
-import { formatStatus } from '../utils/bookingUtils'
+import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 import extension from '../testutils/factories/extension'
 import summaryListRows from './bookingInfo'
@@ -231,6 +231,9 @@ describe('BookingInfo', () => {
 
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+      ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
+        bookings => bookings.extensions?.[0],
+      )
 
       const result = summaryListRows(booking)
 
@@ -272,21 +275,21 @@ describe('BookingInfo', () => {
             text: 'Extension notes',
           },
           value: {
-            html: `${booking.extensions[0].notes}\n\n${booking.extensions[1].notes}`,
+            html: `${booking.extensions[0].notes}`,
           },
         },
       ])
 
       expect(formatStatus).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
-      expect(formatLines).toHaveBeenCalledWith(`${booking.extensions[0].notes}\n\n${booking.extensions[1].notes}`)
+      expect(formatLines).toHaveBeenCalledWith(booking.extensions[0].notes)
+      expect(getLatestExtension).toHaveBeenCalledWith(booking)
     })
 
     it('returns summary list rows for a departed booking', async () => {
       const booking = bookingFactory.departed().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07T00:00:00.000Z',
-        extensions: [],
       })
 
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)

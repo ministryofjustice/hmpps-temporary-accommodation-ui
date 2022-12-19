@@ -9,6 +9,7 @@ import confirmationFactory from './confirmation'
 import cancellationFactory from './cancellation'
 import departureFactory from './departure'
 import personFactory from './person'
+import extensionFactory from './extension'
 
 const soon = () => DateFormats.formatApiDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
 const past = () => DateFormats.formatApiDate(faker.date.past())
@@ -19,6 +20,7 @@ class BookingFactory extends Factory<Booking> {
       arrivalDate: soon(),
       departureDate: future(),
       status: 'provisional',
+      extensions: [],
     })
   }
 
@@ -27,6 +29,7 @@ class BookingFactory extends Factory<Booking> {
       arrivalDate: soon(),
       departureDate: future(),
       status: 'confirmed',
+      extensions: [],
     })
   }
 
@@ -51,6 +54,7 @@ class BookingFactory extends Factory<Booking> {
       arrivalDate: past(),
       departureDate: past(),
       status: 'cancelled',
+      extensions: [],
     })
   }
 }
@@ -63,12 +67,12 @@ export default BookingFactory.define(() => ({
   departureDate: DateFormats.formatApiDate(faker.date.future()),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
-  status: 'provisional' as const,
+  status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed', 'cancelled'] as const),
   arrival: arrivalFactory.build(),
   departure: departureFactory.build(),
   confirmation: confirmationFactory.build(),
   cancellation: cancellationFactory.build(),
-  extensions: [],
+  extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
   serviceName: 'temporary-accommodation' as const,
   createdAt: DateFormats.formatApiDate(faker.date.past()),
 }))

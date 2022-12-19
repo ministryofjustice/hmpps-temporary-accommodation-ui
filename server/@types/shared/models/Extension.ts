@@ -8,5 +8,6 @@ export type Extension = {
     previousDepartureDate: string;
     newDepartureDate: string;
     notes?: string;
+    createdAt: string;
 };
 

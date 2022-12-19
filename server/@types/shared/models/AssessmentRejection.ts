@@ -4,7 +4,8 @@
 
 import type { AnyValue } from './AnyValue';
 
-export type UpdateAssessment = {
-    data: Record<string, AnyValue>;
+export type AssessmentRejection = {
+    document: AnyValue;
+    rejectionRationale: string;
 };
 

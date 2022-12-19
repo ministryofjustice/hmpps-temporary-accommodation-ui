@@ -6,7 +6,7 @@ import { PremisesService, BookingService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
-import { bookingActions } from '../../../utils/bookingUtils'
+import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
 
 export default class BookingsController {
   constructor(
@@ -80,6 +80,28 @@ export default class BookingsController {
         room,
         booking,
         actions: bookingActions(premisesId, roomId, booking),
+      })
+    }
+  }
+
+  history(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, bookingId } = req.params
+      const { token } = req.user
+
+      const premises = await this.premisesService.getPremises(token, premisesId)
+      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+
+      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+
+      return res.render('temporary-accommodation/bookings/history', {
+        premises,
+        room,
+        booking,
+        history: deriveBookingHistory(booking).map(({ booking: historicBooking, updatedAt }) => ({
+          booking: historicBooking,
+          updatedAt: DateFormats.isoDateToUIDate(updatedAt, { format: 'short' }),
+        })),
       })
     }
   }

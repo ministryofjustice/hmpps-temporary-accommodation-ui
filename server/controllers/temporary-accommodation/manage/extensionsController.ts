@@ -5,6 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
+import { getLatestExtension } from '../../../utils/bookingUtils'
 
 export default class ExtensionsController {
   constructor(private readonly bookingsService: BookingService, private readonly extensionService: ExtensionService) {}
@@ -24,6 +25,7 @@ export default class ExtensionsController {
         premisesId,
         errors,
         errorSummary: requestErrorSummary,
+        notes: getLatestExtension(booking)?.notes,
         ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
         ...userInput,
       })

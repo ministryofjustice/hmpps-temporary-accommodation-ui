@@ -3,6 +3,7 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import BookingInfoComponent from '../../../components/bookingInfo'
+import { getLatestExtension } from '../../../../server/utils/bookingUtils'
 
 export default class BookingExtensionNewPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent
@@ -26,6 +27,11 @@ export default class BookingExtensionNewPage extends Page {
     this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowDateInputs('newDepartureDate', this.booking.departureDate)
+
+    const latestExtension = getLatestExtension(this.booking)
+    if (latestExtension) {
+      cy.get('#notes').should('contain', latestExtension.notes)
+    }
   }
 
   shouldShowDateConflictErrorMessages(): void {
@@ -49,5 +55,6 @@ export default class BookingExtensionNewPage extends Page {
 
   clearForm(): void {
     this.clearDateInputs('newDepartureDate')
+    this.getTextInputByIdAndClear('notes')
   }
 }

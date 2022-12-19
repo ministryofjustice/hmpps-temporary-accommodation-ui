@@ -10,10 +10,12 @@ import { DateFormats } from '../../../utils/dateUtils'
 import ExtensionsController from './extensionsController'
 import extensionFactory from '../../../testutils/factories/extension'
 import newExtensionFactory from '../../../testutils/factories/newExtension'
+import { getLatestExtension } from '../../../utils/bookingUtils'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/bookingUtils')
 
-describe('DeparturesController', () => {
+describe('ExtensionsController', () => {
   const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
   const roomId = 'roomId'
@@ -35,7 +37,9 @@ describe('DeparturesController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
-      const booking = bookingFactory.build()
+      const booking = bookingFactory.arrived().build({
+        extensions: [],
+      })
 
       request.params = {
         premisesId,
@@ -58,6 +62,40 @@ describe('DeparturesController', () => {
         premisesId,
         errors: {},
         ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
+        errorSummary: [],
+      })
+    })
+
+    it('renders the form prepopulated with the current departure dates and latest extension notes', async () => {
+      const booking = bookingFactory.arrived().build({
+        extensions: extensionFactory.buildList(2),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId: booking.id,
+      }
+
+      bookingService.getBooking.mockResolvedValue(booking)
+      ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
+        bookings => bookings.extensions?.[0],
+      )
+
+      const requestHandler = extensionsController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
+        booking,
+        roomId,
+        premisesId,
+        errors: {},
+        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
+        notes: booking.extensions[0].notes,
         errorSummary: [],
       })
     })

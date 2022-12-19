@@ -35,6 +35,7 @@ const paths = {
     new: bookingsPath.path('new'),
     create: bookingsPath,
     show: singleBookingPath,
+    history: singleBookingPath.path('history'),
     confirmations: {
       new: confirmationsPath.path('new'),
       create: confirmationsPath,

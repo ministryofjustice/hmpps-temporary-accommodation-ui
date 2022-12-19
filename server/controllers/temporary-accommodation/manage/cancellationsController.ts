@@ -19,12 +19,11 @@ export default class CanellationsController {
 
       const { token } = req.user
 
-      const { booking, summaryList } = await this.bookingsService.getBookingDetails(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
       const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(token)
 
       return res.render('temporary-accommodation/cancellations/new', {
         booking,
-        summaryList,
         roomId,
         premisesId,
         allCancellationReasons,

@@ -185,12 +185,7 @@ describe('BookingsController', () => {
 
       premisesService.getPremises.mockResolvedValue(premises)
       bedspaceService.getRoom.mockResolvedValue(room)
-      bookingService.getBookingDetails.mockResolvedValue({
-        booking,
-        summaryList: {
-          rows: [],
-        },
-      })
+      bookingService.getBooking.mockResolvedValue(booking)
       ;(bookingActions as jest.MockedFunction<typeof bookingActions>).mockReturnValue([
         {
           items: [],
@@ -210,9 +205,6 @@ describe('BookingsController', () => {
         premises,
         room,
         booking,
-        summaryList: {
-          rows: [],
-        },
         actions: [
           {
             items: [],
@@ -222,7 +214,7 @@ describe('BookingsController', () => {
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premises.id, room.id)
-      expect(bookingService.getBookingDetails).toHaveBeenCalledWith(token, premises.id, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premises.id, booking.id)
     })
   })
 })

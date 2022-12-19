@@ -41,7 +41,7 @@ describe('DeparturesController', () => {
         bookingId: booking.id,
       }
 
-      bookingService.getBookingDetails.mockResolvedValue({ booking, summaryList: { rows: [] } })
+      bookingService.getBooking.mockResolvedValue(booking)
       departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
 
       const requestHandler = departuresController.new()
@@ -49,12 +49,11 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBookingDetails).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
       expect(departureService.getReferenceData).toHaveBeenCalledWith(token)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/new', {
         booking,
-        summaryList: { rows: [] },
         roomId,
         premisesId,
         allDepartureReasons: [],

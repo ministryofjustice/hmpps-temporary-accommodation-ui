@@ -93,3 +93,119 @@ export const getLatestExtension = (booking: Booking) => {
     return latestTime > testTime ? latestExtension : testExtension
   }, booking.extensions?.[0])
 }
+
+export const deriveBookingHistory = (booking: Booking) => {
+  const extensions = [...booking.extensions].sort((a, b) => {
+    const dateA = DateFormats.convertIsoToDateObj(a.createdAt)
+    const dateB = DateFormats.convertIsoToDateObj(b.createdAt)
+
+    return dateA.getTime() - dateB.getTime()
+  })
+
+  const bookingWithSortedExensions = {
+    ...booking,
+    extensions,
+  }
+
+  const history = []
+
+  for (let previous = bookingWithSortedExensions; previous; previous = getPreviousBookingState(previous)) {
+    history.push({ booking: previous, updatedAt: getUpdatedAt(previous) })
+  }
+  history.reverse()
+
+  return history
+}
+
+const getUpdatedAt = (booking: Booking): string => {
+  if (booking.status === 'departed') {
+    return booking.departure.createdAt
+  }
+  if (booking.status === 'arrived') {
+    if (booking.extensions.length === 0) {
+      return booking.arrival.createdAt
+    }
+    return booking.extensions[booking.extensions.length - 1].createdAt
+  }
+  if (booking.status === 'cancelled') {
+    return booking.cancellation.createdAt
+  }
+  if (booking.status === 'confirmed') {
+    return booking.confirmation.createdAt
+  }
+  return booking.createdAt
+}
+
+const getPreviousBookingState = (booking: Booking): Booking => {
+  switch (booking.status) {
+    case 'departed':
+      return getPreviousDepartedBookingState(booking)
+    case 'arrived':
+      return getPreviousArrivedBookingState(booking)
+    case 'cancelled':
+      return getPreviousCancelledBookingState(booking)
+    case 'confirmed':
+      return getPreviousConfirmedBookingState(booking)
+    default:
+      return undefined
+  }
+}
+
+const getPreviousDepartedBookingState = (booking: Booking): Booking => {
+  if (booking.extensions.length === 0) {
+    return {
+      ...booking,
+      status: 'arrived',
+      arrivalDate: booking.arrival.arrivalDate,
+      departureDate: booking.arrival.expectedDepartureDate,
+    }
+  }
+
+  return {
+    ...booking,
+    status: 'arrived',
+    arrivalDate: booking.arrival.arrivalDate,
+    departureDate: booking.extensions[booking.extensions.length - 1].newDepartureDate,
+  }
+}
+
+const getPreviousArrivedBookingState = (booking: Booking): Booking => {
+  if (booking.extensions.length === 0) {
+    return {
+      ...booking,
+      status: 'confirmed',
+      arrivalDate: booking.originalArrivalDate,
+      departureDate: booking.originalDepartureDate,
+    }
+  }
+
+  if (booking.extensions.length === 1) {
+    return {
+      ...booking,
+      status: 'arrived',
+      extensions: [],
+      departureDate: booking.arrival.expectedDepartureDate,
+    }
+  }
+
+  return {
+    ...booking,
+    status: 'arrived',
+    extensions: booking.extensions.slice(0, -1),
+    departureDate: booking.extensions[booking.extensions.length - 2].newDepartureDate,
+  }
+}
+
+const getPreviousCancelledBookingState = (booking: Booking): Booking => {
+  return {
+    ...booking,
+    status: booking.confirmation ? 'confirmed' : 'provisional',
+  }
+}
+
+const getPreviousConfirmedBookingState = (booking: Booking): Booking => {
+  return {
+    ...booking,
+    status: 'provisional',
+  }
+}

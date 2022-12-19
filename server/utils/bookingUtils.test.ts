@@ -1,7 +1,9 @@
-import { bookingActions, formatStatus, getLatestExtension } from './bookingUtils'
+import { bookingActions, deriveBookingHistory, formatStatus, getLatestExtension } from './bookingUtils'
 import bookingFactory from '../testutils/factories/booking'
 import paths from '../paths/temporary-accommodation/manage'
+import departureFactory from '../testutils/factories/departure'
 import extensionFactory from '../testutils/factories/extension'
+import arrivalFactory from '../testutils/factories/arrival'
 
 const premisesId = 'premisesId'
 const roomId = 'roomId'
@@ -115,6 +117,230 @@ describe('bookingUtils', () => {
       })
 
       expect(getLatestExtension(booking)).toEqual(extension3)
+    })
+  })
+
+  describe('deriveBookingHistory', () => {
+    it('derives the booking history of a departed and extended booking', () => {
+      const extensions = [
+        extensionFactory.build({
+          newDepartureDate: '2022-03-03',
+          createdAt: '2022-04-01',
+        }),
+
+        extensionFactory.build({
+          newDepartureDate: '2022-03-04',
+          createdAt: '2022-04-02',
+        }),
+
+        extensionFactory.build({
+          newDepartureDate: '2022-03-05',
+          createdAt: '2022-04-03',
+        }),
+      ]
+
+      const booking = bookingFactory.departed().build({
+        originalArrivalDate: '2022-01-01',
+        originalDepartureDate: '2022-03-01',
+        arrivalDate: '2022-01-02',
+        departureDate: '2022-03-06',
+        departure: departureFactory.build({
+          dateTime: '2022-03-06',
+        }),
+        extensions: [extensions[2], extensions[0], extensions[1]],
+        arrival: arrivalFactory.build({
+          arrivalDate: '2022-01-02',
+          expectedDepartureDate: '2022-03-02',
+        }),
+      })
+
+      const expected = [
+        {
+          booking: {
+            ...booking,
+            status: 'provisional',
+            extensions: [],
+            arrivalDate: '2022-01-01',
+            departureDate: '2022-03-01',
+          },
+          updatedAt: booking.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'confirmed',
+            extensions: [],
+            arrivalDate: '2022-01-01',
+            departureDate: '2022-03-01',
+          },
+          updatedAt: booking.confirmation.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'arrived',
+            extensions: [],
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-02',
+          },
+          updatedAt: booking.arrival.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'arrived',
+            extensions: [extensions[0]],
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-03',
+          },
+          updatedAt: extensions[0].createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'arrived',
+            extensions: [extensions[0], extensions[1]],
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-04',
+          },
+          updatedAt: extensions[1].createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'arrived',
+            extensions: [extensions[0], extensions[1], extensions[2]],
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-05',
+          },
+          updatedAt: extensions[2].createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            extensions: [extensions[0], extensions[1], extensions[2]],
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-06',
+          },
+          updatedAt: booking.departure.createdAt,
+        },
+      ]
+
+      const result = deriveBookingHistory(booking)
+
+      expect(result).toEqual(expected)
+    })
+
+    it('derives the booking history of a departed booking without extensions', () => {
+      const booking = bookingFactory.departed().build({
+        originalArrivalDate: '2022-01-01',
+        originalDepartureDate: '2022-03-01',
+        arrivalDate: '2022-01-02',
+        departureDate: '2022-03-03',
+        departure: departureFactory.build({
+          dateTime: '2022-03-03',
+        }),
+        extensions: [],
+        arrival: arrivalFactory.build({
+          arrivalDate: '2022-01-02',
+          expectedDepartureDate: '2022-03-02',
+        }),
+      })
+
+      const expected = [
+        {
+          booking: {
+            ...booking,
+            status: 'provisional',
+            arrivalDate: '2022-01-01',
+            departureDate: '2022-03-01',
+          },
+          updatedAt: booking.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'confirmed',
+            arrivalDate: '2022-01-01',
+            departureDate: '2022-03-01',
+          },
+          updatedAt: booking.confirmation.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'arrived',
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-02',
+          },
+          updatedAt: booking.arrival.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            arrivalDate: '2022-01-02',
+            departureDate: '2022-03-03',
+          },
+          updatedAt: booking.departure.createdAt,
+        },
+      ]
+
+      const result = deriveBookingHistory(booking)
+
+      expect(result).toEqual(expected)
+    })
+
+    it('derives the booking history of a cancelled confirmed booking', () => {
+      const booking = bookingFactory.cancelled().build()
+
+      const expected = [
+        {
+          booking: {
+            ...booking,
+            status: 'provisional',
+          },
+          updatedAt: booking.createdAt,
+        },
+        {
+          booking: {
+            ...booking,
+            status: 'confirmed',
+          },
+          updatedAt: booking.confirmation.createdAt,
+        },
+        {
+          booking,
+          updatedAt: booking.cancellation.createdAt,
+        },
+      ]
+
+      const result = deriveBookingHistory(booking)
+
+      expect(result).toEqual(expected)
+    })
+
+    it('derives the booking history of a cancelled provisional booking', () => {
+      const booking = bookingFactory.cancelled().build({
+        confirmation: null,
+      })
+
+      const expected = [
+        {
+          booking: {
+            ...booking,
+            status: 'provisional',
+          },
+          updatedAt: booking.createdAt,
+        },
+        {
+          booking,
+          updatedAt: booking.cancellation.createdAt,
+        },
+      ]
+
+      const result = deriveBookingHistory(booking)
+
+      expect(result).toEqual(expected)
     })
   })
 })

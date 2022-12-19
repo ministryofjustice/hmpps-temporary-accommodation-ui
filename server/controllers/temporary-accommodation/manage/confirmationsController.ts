@@ -19,11 +19,10 @@ export default class ConfirmationsController {
 
       const { token } = req.user
 
-      const { booking, summaryList } = await this.bookingsService.getBookingDetails(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
 
       return res.render('temporary-accommodation/confirmations/new', {
         booking,
-        summaryList,
         roomId,
         premisesId,
         errors,

@@ -73,13 +73,12 @@ export default class BookingsController {
       const premises = await this.premisesService.getPremises(token, premisesId)
       const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
 
-      const { booking, summaryList } = await this.bookingsService.getBookingDetails(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
 
       return res.render('temporary-accommodation/bookings/show', {
         premises,
         room,
         booking,
-        summaryList,
         actions: bookingActions(premisesId, roomId, booking),
       })
     }

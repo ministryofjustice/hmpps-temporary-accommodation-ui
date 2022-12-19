@@ -42,18 +42,17 @@ describe('ArrivalsController', () => {
         bookingId: booking.id,
       }
 
-      bookingService.getBookingDetails.mockResolvedValue({ booking, summaryList: { rows: [] } })
+      bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = arrivalsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBookingDetails).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/new', {
         booking,
-        summaryList: { rows: [] },
         roomId,
         premisesId,
         errors: {},

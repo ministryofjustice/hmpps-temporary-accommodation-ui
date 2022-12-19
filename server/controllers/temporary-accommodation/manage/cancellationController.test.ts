@@ -41,7 +41,7 @@ describe('CancellationsController', () => {
         bookingId: booking.id,
       }
 
-      bookingService.getBookingDetails.mockResolvedValue({ booking, summaryList: { rows: [] } })
+      bookingService.getBooking.mockResolvedValue(booking)
       cancellationService.getReferenceData.mockResolvedValue({ cancellationReasons: [] })
 
       const requestHandler = cancellationsController.new()
@@ -49,12 +49,11 @@ describe('CancellationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBookingDetails).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
       expect(cancellationService.getReferenceData).toHaveBeenCalledWith(token)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/cancellations/new', {
         booking,
-        summaryList: { rows: [] },
         roomId,
         premisesId,
         allCancellationReasons: [],

@@ -1,12 +1,11 @@
 import type { Booking, NewBooking, Room, NewTemporaryAccommodationBooking } from '@approved-premises/api'
-import type { TableRow, SummaryList } from '@approved-premises/ui'
+import type { TableRow } from '@approved-premises/ui'
 
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
 import { formatStatus } from '../utils/bookingUtils'
-import { formatLines } from '../utils/viewUtils'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -72,111 +71,11 @@ export default class BookingService {
       })
   }
 
-  async getBookingDetails(
-    token: string,
-    premisesId: string,
-    bookingId: string,
-  ): Promise<{ booking: Booking; summaryList: SummaryList }> {
+  async getBooking(token: string, premisesId: string, bookingId: string): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(token)
     const booking = await bookingClient.find(premisesId, bookingId)
 
-    const { status, arrivalDate, departureDate } = booking
-
-    const rows = [
-      {
-        key: this.textValue('Status'),
-        value: this.htmlValue(formatStatus(status)),
-      },
-    ] as SummaryList['rows']
-
-    if (status === 'provisional' || status === 'confirmed' || status === 'cancelled') {
-      rows.push({
-        key: this.textValue('Start date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
-      })
-
-      rows.push({
-        key: this.textValue('End date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
-      })
-    } else if (status === 'arrived') {
-      rows.push(
-        {
-          key: this.textValue('Arrival date'),
-          value: this.textValue(DateFormats.isoDateToUIDate(arrivalDate)),
-        },
-        {
-          key: this.textValue('Expected departure date'),
-          value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
-        },
-      )
-    } else if (status === 'departed') {
-      rows.push({
-        key: this.textValue('Departure date'),
-        value: this.textValue(DateFormats.isoDateToUIDate(departureDate)),
-      })
-    }
-
-    if (status === 'confirmed') {
-      rows.push({
-        key: this.textValue('Notes'),
-        value: this.htmlValue(formatLines(booking.confirmation.notes)),
-      })
-    } else if (status === 'cancelled') {
-      rows.push(
-        {
-          key: this.textValue('Cancellation date'),
-          value: this.textValue(DateFormats.isoDateToUIDate(booking.cancellation.date)),
-        },
-        {
-          key: this.textValue('Cancellation reason'),
-          value: this.textValue(booking.cancellation.reason.name),
-        },
-        {
-          key: this.textValue('Notes'),
-          value: this.htmlValue(formatLines(booking.cancellation.notes)),
-        },
-      )
-    } else if (status === 'arrived') {
-      rows.push({
-        key: this.textValue('Notes'),
-        value: this.htmlValue(formatLines(booking.arrival.notes)),
-      })
-    } else if (status === 'departed') {
-      rows.push(
-        {
-          key: this.textValue('Departure reason'),
-          value: this.textValue(booking.departure.reason.name),
-        },
-        {
-          key: this.textValue('Move on category'),
-          value: this.textValue(booking.departure.moveOnCategory.name),
-        },
-        {
-          key: this.textValue('Notes'),
-          value: this.htmlValue(formatLines(booking.departure.notes)),
-        },
-      )
-    }
-
-    if (booking.extensions.length) {
-      const collatedNotes = booking.extensions
-        .map(extension => extension.notes)
-        .filter(notes => notes?.length > 0)
-        .join('\n\n')
-
-      rows.push({
-        key: this.textValue('Extension notes'),
-        value: this.htmlValue(formatLines(collatedNotes)),
-      })
-    }
-
-    return {
-      booking,
-      summaryList: {
-        rows,
-      },
-    }
+    return booking
   }
 
   private textValue(value: string) {

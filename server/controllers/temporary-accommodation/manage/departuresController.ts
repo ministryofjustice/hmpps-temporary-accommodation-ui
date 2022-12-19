@@ -16,13 +16,12 @@ export default class DeparturesController {
 
       const { token } = req.user
 
-      const { booking, summaryList } = await this.bookingsService.getBookingDetails(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
       const { departureReasons: allDepartureReasons, moveOnCategories: allMoveOnCategories } =
         await this.departureService.getReferenceData(token)
 
       return res.render('temporary-accommodation/departures/new', {
         booking,
-        summaryList,
         roomId,
         premisesId,
         allDepartureReasons,

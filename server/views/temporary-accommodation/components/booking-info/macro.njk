@@ -10,7 +10,7 @@
   </div>
   <div class="booking-info__content">
     {{ govukSummaryList({
-      rows: summaryList.rows
+      rows: BookingInfo.summaryListRows(booking)
     }) }}
   </div>
 </div>

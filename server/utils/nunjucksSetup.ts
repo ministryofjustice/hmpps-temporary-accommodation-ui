@@ -18,6 +18,7 @@ import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationU
 import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'
 import managePaths from '../paths/temporary-accommodation/manage'
+import summaryListRows from '../components/bookingInfo'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -126,4 +127,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   })
 
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
+
+  njkEnv.addGlobal('BookingInfo', { summaryListRows })
 }

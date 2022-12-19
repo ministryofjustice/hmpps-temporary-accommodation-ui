@@ -7,5 +7,6 @@ export type Arrival = {
     arrivalDate: string;
     expectedDepartureDate: string;
     notes?: string;
+    createdAt: string;
 };
 

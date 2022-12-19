@@ -6,5 +6,6 @@ export type CancellationReason = {
     id: string;
     name: string;
     isActive: boolean;
+    serviceScope: string;
 };
 

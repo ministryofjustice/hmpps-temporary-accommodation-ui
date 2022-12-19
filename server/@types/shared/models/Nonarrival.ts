@@ -10,5 +10,6 @@ export type Nonarrival = {
     date: string;
     reason: NonArrivalReason;
     notes?: string;
+    createdAt: string;
 };
 

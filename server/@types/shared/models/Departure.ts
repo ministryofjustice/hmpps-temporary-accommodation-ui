@@ -14,5 +14,6 @@ export type Departure = {
     notes?: string;
     moveOnCategory: MoveOnCategory;
     destinationProvider?: DestinationProvider;
+    createdAt: string;
 };
 

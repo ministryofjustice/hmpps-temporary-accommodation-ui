@@ -1,12 +1,17 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% macro bookingInfo(summaryList) %}
+{% macro bookingInfo(booking, historyPath) %}
 
 <div class="booking-info">
   <div class="booking-info__header">
     <h2 class="booking-info__title">
       Booking status
     </h2>
+    {% if historyPath %}
+      <div class="booking-info__history-link">
+        <a href="{{ historyPath }}" class="govuk-body-s">View booking history</a>
+      </div>
+    {% endif %}
   </div>
   <div class="booking-info__content">
     {{ govukSummaryList({

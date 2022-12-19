@@ -13,6 +13,35 @@ context('Booking history', () => {
     cy.task('stubAuthUser')
   })
 
+  it('navigates to the booking history page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a booking in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const booking = bookingFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // When I visit the show booking page
+    const bookingShowPage = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the history link
+    bookingShowPage.clickHistoryLink()
+
+    // Then I navigate to the booking page
+    Page.verifyOnPage(
+      BookingHistoryPage,
+      premises,
+      room,
+      booking,
+      deriveBookingHistory(booking).map(({ booking: historicBooking }) => historicBooking),
+    )
+  })
+
   it('shows booking history page', () => {
     // Given I am signed in
     cy.signIn()

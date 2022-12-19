@@ -11,6 +11,10 @@
 }
 
 .booking-info__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
   padding: 2px govuk-spacing(3) govuk-spacing(1);
 
   // Ensures the notification header appears separate to the notification body text in high contrast mode
@@ -23,7 +27,11 @@
 
 .booking-info__title {
   margin: 0;
+  padding: 0;
+}
 
+.booking-info__history-link {
+  margin: 0;
   padding: 0;
 }
 

@@ -85,3 +85,36 @@ Feature: Manage Temporary Accommodation - Booking
         And I mark the booking as arrived
         And I attempt to mark the booking as departed with required details missing
         Then I should see a list of the problems encountered marking the booking as departed
+
+    Scenario: Showing booking history
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I confirm the booking
+        And I mark the booking as arrived
+        And I view the booking history
+        Then I should see previous booking states
+
+    Scenario: Showing booking history for an extended booking
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I confirm the booking
+        And I mark the booking as arrived
+        And I extend the booking
+        And I extend the booking
+        And I view the booking history
+        Then I should see previous booking states
+    
+    Scenario: Showing booking history for a cancelled provisional booking
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I cancel the booking
+        And I view the booking history
+        Then I should see previous booking states
+
+    Scenario: Showing booking history for a cancelled confirmed booking
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I confirm the booking
+        And I cancel the booking
+        And I view the booking history
+        Then I should see previous booking states

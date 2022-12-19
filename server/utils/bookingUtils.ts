@@ -1,6 +1,7 @@
 import type { IdentityBarMenu } from '@approved-premises/ui'
 import type { Booking } from '@approved-premises/api'
 import paths from '../paths/temporary-accommodation/manage'
+import { DateFormats } from './dateUtils'
 
 export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<IdentityBarMenu> {
   const items = []
@@ -82,4 +83,13 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
 export function formatStatus(statusId: Booking['status']) {
   const status = allStatuses.find(({ id }) => id === statusId)
   return `<strong class="govuk-tag ${status.tagClass}">${status.name}</strong>`
+}
+
+export const getLatestExtension = (booking: Booking) => {
+  return booking.extensions.reduce((latestExtension, testExtension) => {
+    const latestTime = DateFormats.convertIsoToDateObj(latestExtension.createdAt).getTime()
+    const testTime = DateFormats.convertIsoToDateObj(testExtension.createdAt).getTime()
+
+    return latestTime > testTime ? latestExtension : testExtension
+  }, booking.extensions?.[0])
 }

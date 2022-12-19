@@ -1,6 +1,7 @@
-import { bookingActions, formatStatus } from './bookingUtils'
+import { bookingActions, formatStatus, getLatestExtension } from './bookingUtils'
 import bookingFactory from '../testutils/factories/booking'
 import paths from '../paths/temporary-accommodation/manage'
+import extensionFactory from '../testutils/factories/extension'
 
 const premisesId = 'premisesId'
 const roomId = 'roomId'
@@ -86,6 +87,34 @@ describe('bookingUtils', () => {
   describe('formatStatus', () => {
     it('returns the HTML formatted display name of a given status', () => {
       expect(formatStatus('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
+    })
+  })
+
+  describe('getLatestExtension', () => {
+    it('returns undefined when the booking has no extensions', () => {
+      const booking = bookingFactory.arrived().build({
+        extensions: [],
+      })
+
+      expect(getLatestExtension(booking)).toEqual(undefined)
+    })
+
+    it('returns the most recent extension when the booking has extensions', () => {
+      const extension1 = extensionFactory.build({
+        createdAt: '2022-01-03',
+      })
+      const extension2 = extensionFactory.build({
+        createdAt: '2022-09-23',
+      })
+      const extension3 = extensionFactory.build({
+        createdAt: '2023-04-11',
+      })
+
+      const booking = bookingFactory.arrived().build({
+        extensions: [extension2, extension3, extension1],
+      })
+
+      expect(getLatestExtension(booking)).toEqual(extension3)
     })
   })
 })

@@ -10,7 +10,7 @@ import newBookingFactory from '../../../testutils/factories/newBooking'
 import { PremisesService, BookingService } from '../../../services'
 import BookingsController from './bookingsController'
 import { DateFormats } from '../../../utils/dateUtils'
-import { bookingActions } from '../../../utils/bookingUtils'
+import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
@@ -215,6 +215,50 @@ describe('BookingsController', () => {
       expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premises.id, room.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(token, premises.id, booking.id)
+    })
+  })
+
+  describe('history', () => {
+    it('renders the template for viewing booking history', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.build()
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.getBooking.mockResolvedValue(booking)
+      ;(deriveBookingHistory as jest.MockedFunction<typeof deriveBookingHistory>).mockReturnValue([
+        {
+          booking,
+          updatedAt: '2022-02-01',
+        },
+      ])
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        bookingId: booking.id,
+      }
+
+      const requestHandler = bookingsController.history()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/history', {
+        premises,
+        room,
+        booking,
+        history: [
+          {
+            booking,
+            updatedAt: '1 Feb 22',
+          },
+        ],
+      })
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premises.id, booking.id)
+      expect(deriveBookingHistory).toHaveBeenCalledWith(booking)
     })
   })
 })

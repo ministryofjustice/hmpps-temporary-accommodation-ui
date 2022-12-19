@@ -1,0 +1,40 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Booking history" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+  }) }}
+
+  {% include "../../_messages.njk" %}
+
+  <h1>Booking history</h1>
+
+  <div class="location-header">
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
+
+    <h2>Bedspace reference</h2>
+    <p>{{ room.name }}</p>
+
+    <h2>Property address</h2>
+    <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+  </div>
+
+  {% for historicBookingDetail in history | reverse %}
+    <div data-cy-history-index="{{ loop.revindex0 }}">
+      <h2 class="govuk-heading-s">Updated at {{ historicBookingDetail.updatedAt }}</h4>
+      {{ bookingInfo(historicBookingDetail.booking) }}
+    </div>
+  {%endfor%}
+
+
+{% endblock %}

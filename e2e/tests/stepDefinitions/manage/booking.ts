@@ -24,7 +24,7 @@ Given('I create a booking with all necessary details', () => {
     crn: offenderCrn,
   })
 
-  const booking = bookingFactory.build({
+  const booking = bookingFactory.provisional().build({
     ...newBooking,
     person: personFactory.build({
       crn: newBooking.crn,

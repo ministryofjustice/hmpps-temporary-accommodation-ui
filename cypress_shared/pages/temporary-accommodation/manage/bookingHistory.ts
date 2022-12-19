@@ -2,6 +2,7 @@ import type { Premises, Room, Booking } from '@approved-premises/api'
 
 import Page from '../../page'
 import BookingInfoComponent from '../../../components/bookingInfo'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 
 export default class BookingHistoryPage extends Page {
   private readonly bookingInfoComponents: BookingInfoComponent[]
@@ -15,6 +16,11 @@ export default class BookingHistoryPage extends Page {
     super('Booking history')
 
     this.bookingInfoComponents = historicBookings.map(historicBooking => new BookingInfoComponent(historicBooking))
+  }
+
+  static visit(premises: Premises, room: Room, booking: Booking, bookings: Booking[]): BookingHistoryPage {
+    cy.visit(paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    return new BookingHistoryPage(premises, room, booking, bookings)
   }
 
   shouldShowBookingHistory(): void {

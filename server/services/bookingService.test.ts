@@ -11,6 +11,7 @@ import bedFactory from '../testutils/factories/bed'
 import { formatStatus } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 import extension from '../testutils/factories/extension'
+import cancellationFactory from '../testutils/factories/cancellation'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -344,6 +345,9 @@ describe('BookingService', () => {
       const booking = bookingFactory.cancelled().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
+        cancellation: cancellationFactory.build({
+          date: '2022-05-14',
+        }),
       })
 
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
@@ -379,6 +383,14 @@ describe('BookingService', () => {
               },
               value: {
                 text: '7 January 2023',
+              },
+            },
+            {
+              key: {
+                text: 'Cancellation date',
+              },
+              value: {
+                text: '14 May 2022',
               },
             },
             {

@@ -125,6 +125,10 @@ export default class BookingService {
     } else if (status === 'cancelled') {
       rows.push(
         {
+          key: this.textValue('Cancellation date'),
+          value: this.textValue(DateFormats.isoDateToUIDate(booking.cancellation.date)),
+        },
+        {
           key: this.textValue('Cancellation reason'),
           value: this.textValue(booking.cancellation.reason.name),
         },

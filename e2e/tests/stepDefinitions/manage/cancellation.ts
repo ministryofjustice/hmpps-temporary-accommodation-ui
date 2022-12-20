@@ -29,6 +29,7 @@ Given('I cancel the booking', () => {
     })
 
     cy.wrap(cancelledBooking).as('booking')
+    this.historicBookings.push(cancelledBooking)
   })
 })
 

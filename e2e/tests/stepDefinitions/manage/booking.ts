@@ -14,25 +14,29 @@ Given("I'm creating a booking", () => {
   cy.get('@room').then(room => {
     const page = Page.verifyOnPage(BedspaceShowPage, room)
     page.clickBookBedspaceLink()
+    cy.wrap([]).as('historicBookings')
   })
 })
 
 Given('I create a booking with all necessary details', () => {
-  const page = Page.verifyOnPage(BookingNewPage)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BookingNewPage)
 
-  const newBooking = newBookingFactory.build({
-    crn: offenderCrn,
+    const newBooking = newBookingFactory.build({
+      crn: offenderCrn,
+    })
+
+    const booking = bookingFactory.provisional().build({
+      ...newBooking,
+      person: personFactory.build({
+        crn: newBooking.crn,
+      }),
+    })
+
+    cy.wrap(booking).as('booking')
+    this.historicBookings.push(booking)
+    page.completeForm(newBooking)
   })
-
-  const booking = bookingFactory.provisional().build({
-    ...newBooking,
-    person: personFactory.build({
-      crn: newBooking.crn,
-    }),
-  })
-
-  cy.wrap(booking).as('booking')
-  page.completeForm(newBooking)
 })
 
 Given('I attempt to create a booking with required details missing', () => {

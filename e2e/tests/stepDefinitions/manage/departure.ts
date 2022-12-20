@@ -37,6 +37,7 @@ Given('I mark the booking as departed', () => {
     })
 
     cy.wrap(departedBooking).as('booking')
+    this.historicBookings.push(departedBooking)
   })
 })
 

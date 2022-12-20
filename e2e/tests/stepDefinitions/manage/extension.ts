@@ -34,6 +34,7 @@ Given('I extend the booking', () => {
     })
 
     cy.wrap(extendedBooking).as('booking')
+    this.historicBookings.push(extendedBooking)
   })
 })
 

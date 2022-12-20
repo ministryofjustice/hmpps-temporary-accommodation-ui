@@ -28,6 +28,7 @@ Given('I confirm the booking', () => {
     })
 
     cy.wrap(confirmedBooking).as('booking')
+    this.historicBookings.push(confirmedBooking)
   })
 })
 

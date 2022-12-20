@@ -30,6 +30,7 @@ Given('I mark the booking as arrived', () => {
     })
 
     cy.wrap(arrivedBooking).as('booking')
+    this.historicBookings.push(arrivedBooking)
   })
 })
 

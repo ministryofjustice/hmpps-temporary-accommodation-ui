@@ -15,7 +15,7 @@ Feature: Manage Temporary Accommodation - Booking
         And I attempt to create a booking with required details missing
         Then I should see a list of the problems encountered creating the booking
 
-    Scenario: Cancelling a pending booking
+    Scenario: Cancelling a provisional booking
         Given I'm creating a booking
         And I create a booking with all necessary details
         And I cancel the booking

@@ -28,6 +28,7 @@ export default class BookingInfoComponent extends Component {
       this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
     } else if (status === 'cancelled') {
       this.shouldShowKeyAndValue('Status', 'Cancelled')
+      this.shouldShowKeyAndValue('Cancellation date', DateFormats.isoDateToUIDate(this.booking.cancellation.date))
       this.shouldShowKeyAndValue('Cancellation reason', this.booking.cancellation.reason.name)
       this.shouldShowKeyAndValues('Notes', this.booking.cancellation.notes.split('\n'))
     } else if (status === 'arrived') {

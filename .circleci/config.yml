@@ -117,7 +117,9 @@ workflows:
           name: deploy_test
           env: 'test'
           jira_update: true
-          context: hmpps-common-vars
+          context:
+            - hmpps-common-vars
+            - hmpps-temporary-accommodation-ui-stage
           filters:
             branches:
               only:

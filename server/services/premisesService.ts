@@ -8,6 +8,7 @@ import type {
   TemporaryAccommodationPremises as Premises,
 } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
+import pduJson from '../data/pdus.json'
 import paths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
@@ -19,6 +20,7 @@ export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
   characteristics: Array<Characteristic>
   probationRegions: Array<ReferenceData>
+  pdus: Array<ReferenceData>
 }
 
 export default class PremisesService {
@@ -51,7 +53,9 @@ export default class PremisesService {
       a.name.localeCompare(b.name),
     )
 
-    return { localAuthorities, characteristics, probationRegions }
+    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name))
+
+    return { localAuthorities, characteristics, probationRegions, pdus }
   }
 
   async tableRows(token: string): Promise<Array<TableRow>> {

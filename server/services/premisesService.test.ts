@@ -13,12 +13,17 @@ import paths from '../paths/temporary-accommodation/manage'
 import { escape, formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
 import probationRegionFactory from '../testutils/factories/probationRegion'
+import pduFactory from '../testutils/factories/pdu'
+import pduJson from '../data/pdus.json'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
 jest.mock('../utils/premisesUtils')
 jest.mock('../utils/viewUtils')
 jest.mock('../utils/characteristicUtils')
+jest.mock('../data/pdus.json', () => {
+  return []
+})
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -67,6 +72,10 @@ describe('PremisesService', () => {
       const probationRegion2 = probationRegionFactory.build({ name: 'PQR' })
       const probationRegion3 = probationRegionFactory.build({ name: 'UVW' })
 
+      const pdu1 = pduFactory.build({ name: 'HIJ' })
+      const pdu2 = pduFactory.build({ name: 'LMN' })
+      const pdu3 = pduFactory.build({ name: 'PQR' })
+
       referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
         if (objectType === 'local-authority-areas') {
           return [localAuthority3, localAuthority1, localAuthority2]
@@ -76,6 +85,9 @@ describe('PremisesService', () => {
         }
         return [probationRegion2, probationRegion1, probationRegion3]
       })
+
+      pduJson.length = 0
+      pduJson.push(pdu2, pdu3, pdu1)
       ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         genericCharacteristic,
         premisesCharacteristic2,
@@ -87,6 +99,7 @@ describe('PremisesService', () => {
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
         probationRegions: [probationRegion1, probationRegion2, probationRegion3],
+        pdus: [pdu1, pdu2, pdu3],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')

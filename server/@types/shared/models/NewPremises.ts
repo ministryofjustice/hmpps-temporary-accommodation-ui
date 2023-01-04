@@ -13,5 +13,6 @@ export type NewPremises = {
     probationRegionId: string;
     characteristicIds: Array<string>;
     status: PropertyStatus;
+    pdu?: string;
 };
 

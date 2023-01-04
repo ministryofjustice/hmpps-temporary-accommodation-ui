@@ -12,5 +12,6 @@ export type UpdatePremises = {
     probationRegionId: string;
     characteristicIds: Array<string>;
     status: PropertyStatus;
+    pdu?: string;
 };
 

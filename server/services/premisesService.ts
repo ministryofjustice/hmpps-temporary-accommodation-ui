@@ -69,8 +69,7 @@ export default class PremisesService {
         return [
           this.textValue(entry.shortAddress),
           this.textValue(`${entry.premises.bedCount}`),
-          this.textValue(''),
-          this.textValue(''),
+          this.textValue(entry.premises.pdu),
           this.htmlValue(
             `<a href="${paths.premises.show({
               premisesId: entry.premises.id,

@@ -1,4 +1,4 @@
-import type { Premises } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -41,8 +41,9 @@ export default class PremisesListPage extends Page {
         .within(() => {
           cy.get('td').eq(0).contains(shortAddress)
           cy.get('td').eq(1).contains(item.bedCount)
+          cy.get('td').eq(2).contains(item.pdu)
           cy.get('td')
-            .eq(4)
+            .eq(3)
             .contains('Manage')
             .should('have.attr', 'href', paths.premises.show({ premisesId: item.id }))
         })
@@ -57,7 +58,7 @@ export default class PremisesListPage extends Page {
     cy.contains(`${premises.addressLine1}, ${premises.postcode}`)
       .parent()
       .within(() => {
-        cy.get('td').eq(4).contains('Manage').click()
+        cy.get('td').eq(3).contains('Manage').click()
       })
   }
 }

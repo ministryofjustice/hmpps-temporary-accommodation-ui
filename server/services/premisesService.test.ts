@@ -134,10 +134,7 @@ describe('PremisesService', () => {
             text: premises1.bedCount.toString(),
           },
           {
-            text: '',
-          },
-          {
-            text: '',
+            text: premises1.pdu,
           },
           {
             html: `<a href="${paths.premises.show({
@@ -153,10 +150,7 @@ describe('PremisesService', () => {
             text: premises2.bedCount.toString(),
           },
           {
-            text: '',
-          },
-          {
-            text: '',
+            text: premises2.pdu,
           },
           {
             html: `<a href="${paths.premises.show({
@@ -172,10 +166,7 @@ describe('PremisesService', () => {
             text: premises3.bedCount.toString(),
           },
           {
-            text: '',
-          },
-          {
-            text: '',
+            text: premises3.pdu,
           },
           {
             html: `<a href="${paths.premises.show({
@@ -191,10 +182,7 @@ describe('PremisesService', () => {
             text: premises4.bedCount.toString(),
           },
           {
-            text: '',
-          },
-          {
-            text: '',
+            text: premises4.pdu,
           },
           {
             html: `<a href="${paths.premises.show({

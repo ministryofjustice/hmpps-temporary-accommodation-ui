@@ -102,12 +102,12 @@ describe('PremisesService', () => {
 
   describe('tableRows', () => {
     it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
-      const premises1 = premisesFactory.build({ addressLine1: 'XYZ', postcode: '123' })
-      const premises2 = premisesFactory.build({ addressLine1: 'ABC', postcode: '123' })
+      const premises1 = premisesFactory.build({ addressLine1: 'ABC', postcode: '123' })
+      const premises2 = premisesFactory.build({ addressLine1: 'GHI', postcode: '123' })
       const premises3 = premisesFactory.build({ addressLine1: 'GHI', postcode: '456' })
-      const premises4 = premisesFactory.build({ addressLine1: 'GHI', postcode: '123' })
+      const premises4 = premisesFactory.build({ addressLine1: 'XYZ', postcode: '123' })
 
-      const premises = [premises1, premises2, premises3, premises4]
+      const premises = [premises4, premises1, premises3, premises2]
       premisesClient.all.mockResolvedValue(premises)
 
       const rows = await service.tableRows(token)
@@ -116,6 +116,25 @@ describe('PremisesService', () => {
         [
           {
             text: 'ABC, 123',
+          },
+          {
+            text: premises1.bedCount.toString(),
+          },
+          {
+            text: '',
+          },
+          {
+            text: '',
+          },
+          {
+            html: `<a href="${paths.premises.show({
+              premisesId: premises1.id,
+            })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
+          },
+        ],
+        [
+          {
+            text: 'GHI, 123',
           },
           {
             text: premises2.bedCount.toString(),
@@ -129,25 +148,6 @@ describe('PremisesService', () => {
           {
             html: `<a href="${paths.premises.show({
               premisesId: premises2.id,
-            })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
-          },
-        ],
-        [
-          {
-            text: 'GHI, 123',
-          },
-          {
-            text: premises4.bedCount.toString(),
-          },
-          {
-            text: '',
-          },
-          {
-            text: '',
-          },
-          {
-            html: `<a href="${paths.premises.show({
-              premisesId: premises4.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
           },
         ],
@@ -175,7 +175,7 @@ describe('PremisesService', () => {
             text: 'XYZ, 123',
           },
           {
-            text: premises1.bedCount.toString(),
+            text: premises4.bedCount.toString(),
           },
           {
             text: '',
@@ -185,7 +185,7 @@ describe('PremisesService', () => {
           },
           {
             html: `<a href="${paths.premises.show({
-              premisesId: premises1.id,
+              premisesId: premises4.id,
             })}">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
           },
         ],

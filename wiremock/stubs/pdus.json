@@ -1,0 +1,2486 @@
+[
+  {
+    "id": "Aberdeen City",
+    "name": "Aberdeen City",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Aberdeenshire",
+    "name": "Aberdeenshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Adur",
+    "name": "Adur",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Allerdale",
+    "name": "Allerdale",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Amber Valley",
+    "name": "Amber Valley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Angus",
+    "name": "Angus",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Antrim and Newtownabbey",
+    "name": "Antrim and Newtownabbey",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ards and North Down",
+    "name": "Ards and North Down",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Argyll and Bute",
+    "name": "Argyll and Bute",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Armagh City",
+    "name": "Armagh City",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": " Banbridge and Craigavon",
+    "name": " Banbridge and Craigavon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Arun",
+    "name": "Arun",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ashfield",
+    "name": "Ashfield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ashford",
+    "name": "Ashford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Babergh",
+    "name": "Babergh",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Barking and Dagenham",
+    "name": "Barking and Dagenham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Barnet",
+    "name": "Barnet",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Barnsley",
+    "name": "Barnsley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Barrow-in-Furness",
+    "name": "Barrow-in-Furness",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Basildon",
+    "name": "Basildon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Basingstoke and Deane",
+    "name": "Basingstoke and Deane",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bassetlaw",
+    "name": "Bassetlaw",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bath and North East Somerset",
+    "name": "Bath and North East Somerset",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bedford",
+    "name": "Bedford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Belfast",
+    "name": "Belfast",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bexley",
+    "name": "Bexley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Birmingham",
+    "name": "Birmingham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Blaby",
+    "name": "Blaby",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Blackburn with Darwen",
+    "name": "Blackburn with Darwen",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Blackpool",
+    "name": "Blackpool",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Blaenau Gwent",
+    "name": "Blaenau Gwent",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bolsover",
+    "name": "Bolsover",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bolton",
+    "name": "Bolton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Boston",
+    "name": "Boston",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bournemouth",
+    "name": "Bournemouth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": " Christchurch and Poole",
+    "name": " Christchurch and Poole",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bracknell Forest",
+    "name": "Bracknell Forest",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bradford",
+    "name": "Bradford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Braintree",
+    "name": "Braintree",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Breckland",
+    "name": "Breckland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Brent",
+    "name": "Brent",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Brentwood",
+    "name": "Brentwood",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bridgend",
+    "name": "Bridgend",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Brighton and Hove",
+    "name": "Brighton and Hove",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bristol",
+    "name": "Bristol",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": " City of",
+    "name": " City of",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Broadland",
+    "name": "Broadland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bromley",
+    "name": "Bromley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bromsgrove",
+    "name": "Bromsgrove",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Broxbourne",
+    "name": "Broxbourne",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Broxtowe",
+    "name": "Broxtowe",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Buckinghamshire",
+    "name": "Buckinghamshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Burnley",
+    "name": "Burnley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Bury",
+    "name": "Bury",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Caerphilly",
+    "name": "Caerphilly",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Calderdale",
+    "name": "Calderdale",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cambridge",
+    "name": "Cambridge",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cambridgeshire",
+    "name": "Cambridgeshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cambridgeshire and Peterborough",
+    "name": "Cambridgeshire and Peterborough",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Camden",
+    "name": "Camden",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cannock Chase",
+    "name": "Cannock Chase",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Canterbury",
+    "name": "Canterbury",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cardiff",
+    "name": "Cardiff",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Carlisle",
+    "name": "Carlisle",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Carmarthenshire",
+    "name": "Carmarthenshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Castle Point",
+    "name": "Castle Point",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Causeway Coast and Glens",
+    "name": "Causeway Coast and Glens",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Central Bedfordshire",
+    "name": "Central Bedfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ceredigion",
+    "name": "Ceredigion",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Charnwood",
+    "name": "Charnwood",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Chelmsford",
+    "name": "Chelmsford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cheltenham",
+    "name": "Cheltenham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cherwell",
+    "name": "Cherwell",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cheshire East",
+    "name": "Cheshire East",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cheshire West and Chester",
+    "name": "Cheshire West and Chester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Chesterfield",
+    "name": "Chesterfield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Chichester",
+    "name": "Chichester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Chorley",
+    "name": "Chorley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "City of Edinburgh",
+    "name": "City of Edinburgh",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "City of London",
+    "name": "City of London",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Clackmannanshire",
+    "name": "Clackmannanshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Colchester",
+    "name": "Colchester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Conwy",
+    "name": "Conwy",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Copeland",
+    "name": "Copeland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cornwall",
+    "name": "Cornwall",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cotswold",
+    "name": "Cotswold",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "County Durham",
+    "name": "County Durham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Coventry",
+    "name": "Coventry",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Craven",
+    "name": "Craven",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Crawley",
+    "name": "Crawley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Croydon",
+    "name": "Croydon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Cumbria",
+    "name": "Cumbria",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dacorum",
+    "name": "Dacorum",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Darlington",
+    "name": "Darlington",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dartford",
+    "name": "Dartford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Denbighshire",
+    "name": "Denbighshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Derby",
+    "name": "Derby",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Derbyshire",
+    "name": "Derbyshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Derbyshire Dales",
+    "name": "Derbyshire Dales",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Derry City and Strabane",
+    "name": "Derry City and Strabane",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Devon",
+    "name": "Devon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Doncaster",
+    "name": "Doncaster",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dorset",
+    "name": "Dorset",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dover",
+    "name": "Dover",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dudley",
+    "name": "Dudley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dumfries and Galloway",
+    "name": "Dumfries and Galloway",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Dundee City",
+    "name": "Dundee City",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ealing",
+    "name": "Ealing",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Ayrshire",
+    "name": "East Ayrshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Cambridgeshire",
+    "name": "East Cambridgeshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Devon",
+    "name": "East Devon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Dunbartonshire",
+    "name": "East Dunbartonshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Hampshire",
+    "name": "East Hampshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Hertfordshire",
+    "name": "East Hertfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Lindsey",
+    "name": "East Lindsey",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Lothian",
+    "name": "East Lothian",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Renfrewshire",
+    "name": "East Renfrewshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Riding of Yorkshire",
+    "name": "East Riding of Yorkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Staffordshire",
+    "name": "East Staffordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Suffolk",
+    "name": "East Suffolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "East Sussex",
+    "name": "East Sussex",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Eastbourne",
+    "name": "Eastbourne",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Eastleigh",
+    "name": "Eastleigh",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Eden",
+    "name": "Eden",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Elmbridge",
+    "name": "Elmbridge",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Enfield",
+    "name": "Enfield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Epping Forest",
+    "name": "Epping Forest",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Epsom and Ewell",
+    "name": "Epsom and Ewell",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Erewash",
+    "name": "Erewash",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Essex",
+    "name": "Essex",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Exeter",
+    "name": "Exeter",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Falkirk",
+    "name": "Falkirk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Fareham",
+    "name": "Fareham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Fenland",
+    "name": "Fenland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Fermanagh and Omagh",
+    "name": "Fermanagh and Omagh",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Fife",
+    "name": "Fife",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Flintshire",
+    "name": "Flintshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Folkestone and Hythe",
+    "name": "Folkestone and Hythe",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Forest of Dean",
+    "name": "Forest of Dean",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Fylde",
+    "name": "Fylde",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gateshead",
+    "name": "Gateshead",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gedling",
+    "name": "Gedling",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Glasgow City",
+    "name": "Glasgow City",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gloucester",
+    "name": "Gloucester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gloucestershire",
+    "name": "Gloucestershire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gosport",
+    "name": "Gosport",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gravesham",
+    "name": "Gravesham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Great Yarmouth",
+    "name": "Great Yarmouth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Greater Manchester",
+    "name": "Greater Manchester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Greenwich",
+    "name": "Greenwich",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Guildford",
+    "name": "Guildford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Gwynedd",
+    "name": "Gwynedd",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hackney",
+    "name": "Hackney",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Halton",
+    "name": "Halton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hambleton",
+    "name": "Hambleton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hammersmith and Fulham",
+    "name": "Hammersmith and Fulham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hampshire",
+    "name": "Hampshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Harborough",
+    "name": "Harborough",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Haringey",
+    "name": "Haringey",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Harlow",
+    "name": "Harlow",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Harrogate",
+    "name": "Harrogate",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Harrow",
+    "name": "Harrow",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hart",
+    "name": "Hart",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hartlepool",
+    "name": "Hartlepool",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hastings",
+    "name": "Hastings",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Havant",
+    "name": "Havant",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Havering",
+    "name": "Havering",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Herefordshire",
+    "name": "Herefordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": " County of",
+    "name": " County of",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hertfordshire",
+    "name": "Hertfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hertsmere",
+    "name": "Hertsmere",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "High Peak",
+    "name": "High Peak",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Highland",
+    "name": "Highland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hillingdon",
+    "name": "Hillingdon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hinckley and Bosworth",
+    "name": "Hinckley and Bosworth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Horsham",
+    "name": "Horsham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hounslow",
+    "name": "Hounslow",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Huntingdonshire",
+    "name": "Huntingdonshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Hyndburn",
+    "name": "Hyndburn",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Inverclyde",
+    "name": "Inverclyde",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ipswich",
+    "name": "Ipswich",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Isle of Anglesey",
+    "name": "Isle of Anglesey",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Isle of Wight",
+    "name": "Isle of Wight",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Isles of Scilly",
+    "name": "Isles of Scilly",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Islington",
+    "name": "Islington",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Kensington and Chelsea",
+    "name": "Kensington and Chelsea",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Kent",
+    "name": "Kent",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "King's Lynn and West Norfolk",
+    "name": "King's Lynn and West Norfolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Kingston upon Hull",
+    "name": "Kingston upon Hull",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": " City of",
+    "name": " City of",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Kingston upon Thames",
+    "name": "Kingston upon Thames",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Kirklees",
+    "name": "Kirklees",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Knowsley",
+    "name": "Knowsley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lambeth",
+    "name": "Lambeth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lancashire",
+    "name": "Lancashire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lancaster",
+    "name": "Lancaster",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Leeds",
+    "name": "Leeds",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Leicester",
+    "name": "Leicester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Leicestershire",
+    "name": "Leicestershire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lewes",
+    "name": "Lewes",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lewisham",
+    "name": "Lewisham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lichfield",
+    "name": "Lichfield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lincoln",
+    "name": "Lincoln",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lincolnshire",
+    "name": "Lincolnshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Lisburn and Castlereagh",
+    "name": "Lisburn and Castlereagh",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Liverpool",
+    "name": "Liverpool",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Liverpool City Region",
+    "name": "Liverpool City Region",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Luton",
+    "name": "Luton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Maidstone",
+    "name": "Maidstone",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Maldon",
+    "name": "Maldon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Malvern Hills",
+    "name": "Malvern Hills",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Manchester",
+    "name": "Manchester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mansfield",
+    "name": "Mansfield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Medway",
+    "name": "Medway",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Melton",
+    "name": "Melton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mendip",
+    "name": "Mendip",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Merthyr Tydfil",
+    "name": "Merthyr Tydfil",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Merton",
+    "name": "Merton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mid and East Antrim",
+    "name": "Mid and East Antrim",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mid Devon",
+    "name": "Mid Devon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mid Suffolk",
+    "name": "Mid Suffolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mid Sussex",
+    "name": "Mid Sussex",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mid Ulster",
+    "name": "Mid Ulster",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Middlesbrough",
+    "name": "Middlesbrough",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Midlothian",
+    "name": "Midlothian",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Milton Keynes",
+    "name": "Milton Keynes",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Mole Valley",
+    "name": "Mole Valley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Monmouthshire",
+    "name": "Monmouthshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Moray",
+    "name": "Moray",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Na h-Eileanan Siar",
+    "name": "Na h-Eileanan Siar",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Neath Port Talbot",
+    "name": "Neath Port Talbot",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "New Forest",
+    "name": "New Forest",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Newark and Sherwood",
+    "name": "Newark and Sherwood",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Newcastle upon Tyne",
+    "name": "Newcastle upon Tyne",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Newcastle-under-Lyme",
+    "name": "Newcastle-under-Lyme",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Newham",
+    "name": "Newham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Newport",
+    "name": "Newport",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Newry",
+    "name": "Newry",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": " Mourne and Down",
+    "name": " Mourne and Down",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Norfolk",
+    "name": "Norfolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Ayrshire",
+    "name": "North Ayrshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Devon",
+    "name": "North Devon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North East",
+    "name": "North East",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North East Derbyshire",
+    "name": "North East Derbyshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North East Lincolnshire",
+    "name": "North East Lincolnshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Hertfordshire",
+    "name": "North Hertfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Kesteven",
+    "name": "North Kesteven",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Lanarkshire",
+    "name": "North Lanarkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Lincolnshire",
+    "name": "North Lincolnshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Norfolk",
+    "name": "North Norfolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Northamptonshire",
+    "name": "North Northamptonshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North of Tyne",
+    "name": "North of Tyne",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Somerset",
+    "name": "North Somerset",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Tyneside",
+    "name": "North Tyneside",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Warwickshire",
+    "name": "North Warwickshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North West Leicestershire",
+    "name": "North West Leicestershire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "North Yorkshire",
+    "name": "North Yorkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Northumberland",
+    "name": "Northumberland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Norwich",
+    "name": "Norwich",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Nottingham",
+    "name": "Nottingham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Nottinghamshire",
+    "name": "Nottinghamshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Nuneaton and Bedworth",
+    "name": "Nuneaton and Bedworth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Oadby and Wigston",
+    "name": "Oadby and Wigston",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Oldham",
+    "name": "Oldham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Orkney Islands",
+    "name": "Orkney Islands",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Oxford",
+    "name": "Oxford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Oxfordshire",
+    "name": "Oxfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Pembrokeshire",
+    "name": "Pembrokeshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Pendle",
+    "name": "Pendle",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Perth and Kinross",
+    "name": "Perth and Kinross",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Peterborough",
+    "name": "Peterborough",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Plymouth",
+    "name": "Plymouth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Portsmouth",
+    "name": "Portsmouth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Powys",
+    "name": "Powys",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Preston",
+    "name": "Preston",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Reading",
+    "name": "Reading",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Redbridge",
+    "name": "Redbridge",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Redcar and Cleveland",
+    "name": "Redcar and Cleveland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Redditch",
+    "name": "Redditch",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Reigate and Banstead",
+    "name": "Reigate and Banstead",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Renfrewshire",
+    "name": "Renfrewshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rhondda Cynon Taf",
+    "name": "Rhondda Cynon Taf",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ribble Valley",
+    "name": "Ribble Valley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Richmond upon Thames",
+    "name": "Richmond upon Thames",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Richmondshire",
+    "name": "Richmondshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rochdale",
+    "name": "Rochdale",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rochford",
+    "name": "Rochford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rossendale",
+    "name": "Rossendale",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rother",
+    "name": "Rother",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rotherham",
+    "name": "Rotherham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rugby",
+    "name": "Rugby",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Runnymede",
+    "name": "Runnymede",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rushcliffe",
+    "name": "Rushcliffe",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rushmoor",
+    "name": "Rushmoor",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Rutland",
+    "name": "Rutland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Ryedale",
+    "name": "Ryedale",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Salford",
+    "name": "Salford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sandwell",
+    "name": "Sandwell",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Scarborough",
+    "name": "Scarborough",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Scottish Borders",
+    "name": "Scottish Borders",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sedgemoor",
+    "name": "Sedgemoor",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sefton",
+    "name": "Sefton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Selby",
+    "name": "Selby",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sevenoaks",
+    "name": "Sevenoaks",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sheffield",
+    "name": "Sheffield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Shetland Islands",
+    "name": "Shetland Islands",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Shropshire",
+    "name": "Shropshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Slough",
+    "name": "Slough",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Solihull",
+    "name": "Solihull",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Somerset",
+    "name": "Somerset",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Somerset West and Taunton",
+    "name": "Somerset West and Taunton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Ayrshire",
+    "name": "South Ayrshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Cambridgeshire",
+    "name": "South Cambridgeshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Derbyshire",
+    "name": "South Derbyshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Gloucestershire",
+    "name": "South Gloucestershire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Hams",
+    "name": "South Hams",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Holland",
+    "name": "South Holland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Kesteven",
+    "name": "South Kesteven",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Lakeland",
+    "name": "South Lakeland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Lanarkshire",
+    "name": "South Lanarkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Norfolk",
+    "name": "South Norfolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Oxfordshire",
+    "name": "South Oxfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Ribble",
+    "name": "South Ribble",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Somerset",
+    "name": "South Somerset",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Staffordshire",
+    "name": "South Staffordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Tyneside",
+    "name": "South Tyneside",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "South Yorkshire",
+    "name": "South Yorkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Southampton",
+    "name": "Southampton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Southend-on-Sea",
+    "name": "Southend-on-Sea",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Southwark",
+    "name": "Southwark",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Spelthorne",
+    "name": "Spelthorne",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "St Albans",
+    "name": "St Albans",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "St. Helens",
+    "name": "St. Helens",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stafford",
+    "name": "Stafford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Staffordshire",
+    "name": "Staffordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Staffordshire Moorlands",
+    "name": "Staffordshire Moorlands",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stevenage",
+    "name": "Stevenage",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stirling",
+    "name": "Stirling",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stockport",
+    "name": "Stockport",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stockton-on-Tees",
+    "name": "Stockton-on-Tees",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stoke-on-Trent",
+    "name": "Stoke-on-Trent",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stratford-on-Avon",
+    "name": "Stratford-on-Avon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Stroud",
+    "name": "Stroud",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Suffolk",
+    "name": "Suffolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sunderland",
+    "name": "Sunderland",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Surrey",
+    "name": "Surrey",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Surrey Heath",
+    "name": "Surrey Heath",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Sutton",
+    "name": "Sutton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Swale",
+    "name": "Swale",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Swansea",
+    "name": "Swansea",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Swindon",
+    "name": "Swindon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tameside",
+    "name": "Tameside",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tamworth",
+    "name": "Tamworth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tandridge",
+    "name": "Tandridge",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tees Valley",
+    "name": "Tees Valley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Teignbridge",
+    "name": "Teignbridge",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Telford and Wrekin",
+    "name": "Telford and Wrekin",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tendring",
+    "name": "Tendring",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Test Valley",
+    "name": "Test Valley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tewkesbury",
+    "name": "Tewkesbury",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Thanet",
+    "name": "Thanet",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Three Rivers",
+    "name": "Three Rivers",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Thurrock",
+    "name": "Thurrock",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tonbridge and Malling",
+    "name": "Tonbridge and Malling",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Torbay",
+    "name": "Torbay",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Torfaen",
+    "name": "Torfaen",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Torridge",
+    "name": "Torridge",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tower Hamlets",
+    "name": "Tower Hamlets",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Trafford",
+    "name": "Trafford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Tunbridge Wells",
+    "name": "Tunbridge Wells",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Uttlesford",
+    "name": "Uttlesford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Vale of Glamorgan",
+    "name": "Vale of Glamorgan",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Vale of White Horse",
+    "name": "Vale of White Horse",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wakefield",
+    "name": "Wakefield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Walsall",
+    "name": "Walsall",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Waltham Forest",
+    "name": "Waltham Forest",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wandsworth",
+    "name": "Wandsworth",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Warrington",
+    "name": "Warrington",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Warwick",
+    "name": "Warwick",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Warwickshire",
+    "name": "Warwickshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Watford",
+    "name": "Watford",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Waverley",
+    "name": "Waverley",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wealden",
+    "name": "Wealden",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Welwyn Hatfield",
+    "name": "Welwyn Hatfield",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Berkshire",
+    "name": "West Berkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Devon",
+    "name": "West Devon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Dunbartonshire",
+    "name": "West Dunbartonshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Lancashire",
+    "name": "West Lancashire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Lindsey",
+    "name": "West Lindsey",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Lothian",
+    "name": "West Lothian",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Midlands",
+    "name": "West Midlands",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Northamptonshire",
+    "name": "West Northamptonshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West of England",
+    "name": "West of England",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Oxfordshire",
+    "name": "West Oxfordshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Suffolk",
+    "name": "West Suffolk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Sussex",
+    "name": "West Sussex",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "West Yorkshire",
+    "name": "West Yorkshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Westminster",
+    "name": "Westminster",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wigan",
+    "name": "Wigan",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wiltshire",
+    "name": "Wiltshire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Winchester",
+    "name": "Winchester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Windsor and Maidenhead",
+    "name": "Windsor and Maidenhead",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wirral",
+    "name": "Wirral",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Woking",
+    "name": "Woking",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wokingham",
+    "name": "Wokingham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wolverhampton",
+    "name": "Wolverhampton",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Worcester",
+    "name": "Worcester",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Worcestershire",
+    "name": "Worcestershire",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Worthing",
+    "name": "Worthing",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wrexham",
+    "name": "Wrexham",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wychavon",
+    "name": "Wychavon",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wyre",
+    "name": "Wyre",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "Wyre Forest",
+    "name": "Wyre Forest",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "York",
+    "name": "York",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  }
+]

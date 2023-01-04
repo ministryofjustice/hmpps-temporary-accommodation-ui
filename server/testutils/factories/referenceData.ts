@@ -12,6 +12,7 @@ import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
 import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.json'
 import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 import probationRegionsJson from '../../../wiremock/stubs/probation-regions.json'
+import pdusJson from '../../../wiremock/stubs/pdus.json'
 import { Characteristic, LocalAuthorityArea } from '../../@types/shared'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
 
@@ -58,6 +59,10 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
 
   probationRegion(): Factory<ReferenceData> {
     return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(probationRegionsJson))
+  }
+
+  pdu(): Factory<ReferenceData> {
+    return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(pdusJson))
   }
 }
 

@@ -13,6 +13,7 @@ export default Factory.define<NewPremises>(() => ({
     characteristic => characteristic.id,
   ),
   probationRegionId: referenceDataFactory.probationRegion().build().id,
+  pdu: referenceDataFactory.pdu().build().id,
   status: faker.helpers.arrayElement(['pending', 'active', 'archived']),
   notes: faker.lorem.lines(),
 }))

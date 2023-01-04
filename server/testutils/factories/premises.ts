@@ -1,11 +1,11 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { ApArea, TemporaryAccommodationPremises } from '@approved-premises/api'
+import type { ApArea, TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
 import { unique } from '../../utils/utils'
 
-export default Factory.define<TemporaryAccommodationPremises>(() => ({
+export default Factory.define<Premises>(() => ({
   id: faker.datatype.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.address.streetAddress(),
@@ -16,6 +16,7 @@ export default Factory.define<TemporaryAccommodationPremises>(() => ({
   probationRegion: referenceDataFactory.probationRegion().build(),
   apArea: apAreaFactory.build(),
   localAuthorityArea: referenceDataFactory.localAuthority().build(),
+  pdu: referenceDataFactory.pdu().build().id,
   characteristics: unique(
     referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
   ),

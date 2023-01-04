@@ -299,6 +299,7 @@ describe('PremisesService', () => {
         probationRegion: probationRegionFactory.build({
           name: 'A probation region',
         }),
+        pdu: 'A PDU',
         status: 'active',
         notes: 'Some notes',
       })
@@ -328,6 +329,10 @@ describe('PremisesService', () => {
             {
               key: { text: 'Probation region' },
               value: { text: 'A probation region' },
+            },
+            {
+              key: { text: 'PDU' },
+              value: { text: 'A PDU' },
             },
             {
               key: { text: 'Attributes' },

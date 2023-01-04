@@ -169,6 +169,10 @@ export default class PremisesService {
           value: this.textValue(premises.probationRegion.name),
         },
         {
+          key: this.textValue('PDU'),
+          value: this.textValue(premises.pdu),
+        },
+        {
           key: this.textValue('Attributes'),
           value: formatCharacteristics(premises.characteristics),
         },

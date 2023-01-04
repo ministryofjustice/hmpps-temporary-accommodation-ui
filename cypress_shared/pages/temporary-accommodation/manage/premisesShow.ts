@@ -1,4 +1,4 @@
-import type { Premises, Room } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -23,6 +23,7 @@ export default class PremisesShowPage extends Page {
       this.shouldShowKeyAndValues('Address', [this.premises.addressLine1, this.premises.postcode])
       this.shouldShowKeyAndValue('Local authority', this.premises.localAuthorityArea.name)
       this.shouldShowKeyAndValue('Probation region', this.premises.probationRegion.name)
+      this.shouldShowKeyAndValue('PDU', this.premises.pdu)
       this.shouldShowKeyAndValues(
         'Attributes',
         this.premises.characteristics.map(({ name }) => name),

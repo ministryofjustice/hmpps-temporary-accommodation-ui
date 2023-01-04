@@ -25,9 +25,9 @@ describe('PremisesService', () => {
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
   const premisesClientFactory = jest.fn()
-  const referenceDataFactory = jest.fn()
+  const referenceDataClientFactory = jest.fn()
 
-  const service = new PremisesService(premisesClientFactory, referenceDataFactory)
+  const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
 
   const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
@@ -35,7 +35,7 @@ describe('PremisesService', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
-    referenceDataFactory.mockReturnValue(referenceDataClient)
+    referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
   describe('getStaffMembers', () => {

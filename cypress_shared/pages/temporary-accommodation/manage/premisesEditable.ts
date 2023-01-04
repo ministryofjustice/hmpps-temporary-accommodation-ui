@@ -19,6 +19,9 @@ export default abstract class PremisesEditablePage extends Page {
     this.getLabel('What is the probation region?')
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', newOrUpdatePremises.probationRegionId)
 
+    this.getLabel('What is the PDU?')
+    this.getSelectInputByIdAndSelectAnEntry('pdu', newOrUpdatePremises.pdu)
+
     this.getLegend('What is the status of this property?')
     this.checkRadioByNameAndValue('status', newOrUpdatePremises.status)
 

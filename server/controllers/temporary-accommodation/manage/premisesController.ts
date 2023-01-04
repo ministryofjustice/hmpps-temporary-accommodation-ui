@@ -27,12 +27,14 @@ export default class PremisesController {
         localAuthorities: allLocalAuthorities,
         characteristics: allCharacteristics,
         probationRegions: allProbationRegions,
+        pdus: allPdus,
       } = await this.premisesService.getReferenceData(token)
 
       return res.render('temporary-accommodation/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
         allProbationRegions,
+        allPdus,
         allStatuses,
         characteristicIds: [],
         errors,
@@ -71,6 +73,7 @@ export default class PremisesController {
         localAuthorities: allLocalAuthorities,
         characteristics: allCharacteristics,
         probationRegions: allProbationRegions,
+        pdus: allPdus,
       } = await this.premisesService.getReferenceData(token)
 
       const updatePremises = await this.premisesService.getUpdatePremises(token, premisesId)
@@ -79,6 +82,7 @@ export default class PremisesController {
         allLocalAuthorities,
         allCharacteristics,
         allProbationRegions,
+        allPdus,
         allStatuses,
         characteristicIds: [],
         errors,

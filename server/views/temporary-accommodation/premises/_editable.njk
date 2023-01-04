@@ -65,6 +65,18 @@
   fetchContext()
 ) }}
 
+{{ taSelect(
+  {
+    label: {
+      text: "What is the PDU?",
+      classes: "govuk-label--m"
+    },
+    items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'pdu'),
+    fieldName: "pdu"
+  },
+  fetchContext()
+) }}
+
 {{ taCheckboxes(
   {
     fieldset: {

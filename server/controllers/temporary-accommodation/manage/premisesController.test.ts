@@ -23,6 +23,7 @@ describe('PremisesController', () => {
     localAuthorities: referenceDataFactory.localAuthority().buildList(5),
     characteristics: referenceDataFactory.characteristic('premises').buildList(5),
     probationRegions: referenceDataFactory.probationRegion().buildList(5),
+    pdus: referenceDataFactory.pdu().buildList(5),
   }
 
   let request: DeepMocked<Request>
@@ -66,6 +67,7 @@ describe('PremisesController', () => {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
+        allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
         errors: {},
@@ -89,6 +91,7 @@ describe('PremisesController', () => {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
+        allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
@@ -169,6 +172,7 @@ describe('PremisesController', () => {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
+        allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
         errors: {},
@@ -201,6 +205,7 @@ describe('PremisesController', () => {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
+        allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,

@@ -1,4 +1,4 @@
-import type { UpdatePremises, Premises } from '@approved-premises/api'
+import type { UpdatePremises, TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
 import PremisesEditablePage from './premisesEditable'
@@ -29,6 +29,13 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .siblings('select')
       .children('option')
       .contains(this.premises.probationRegion.name)
+      .should('be.selected')
+
+    cy.get('label')
+      .contains('What is the PDU?')
+      .siblings('select')
+      .children('option')
+      .contains(this.premises.pdu)
       .should('be.selected')
 
     cy.get('legend')
@@ -65,6 +72,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
 
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', '')
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
+    this.getSelectInputByIdAndSelectAnEntry('pdu', '')
 
     cy.get('legend')
       .contains('Does the property have any of the following attributes?')

@@ -24,6 +24,13 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .contains(this.premises.localAuthorityArea.name)
       .should('be.selected')
 
+    cy.get('label')
+      .contains('What is the probation region?')
+      .siblings('select')
+      .children('option')
+      .contains(this.premises.probationRegion.name)
+      .should('be.selected')
+
     cy.get('legend')
       .contains('Does the property have any of the following attributes?')
       .parent()

@@ -69,6 +69,9 @@
     "addressLine1": {
       "empty": "You must enter an address"
     },
+    "town": {
+      "empty": "You must enter a town or city"
+    },
     "postcode": {
       "empty": "You must enter a postcode"
     },

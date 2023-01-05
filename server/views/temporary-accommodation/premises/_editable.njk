@@ -29,10 +29,35 @@
 {{ taInput(
   {
     label: {
+      text: 'Address line 2 (optional)',
+      classes: "govuk-label--s"
+    },
+    fieldName: "addressLine2",
+    autocomplete: "address-line2"
+  },
+  fetchContext()
+) }}
+
+{{ taInput(
+  {
+    label: {
+      text: 'Town or city (optional)',
+      classes: "govuk-label--s"
+    },
+    classes: "govuk-!-width-two-thirds",
+    fieldName: "town",
+    autocomplete: "address-level2"
+  },
+  fetchContext()
+) }}
+
+{{ taInput(
+  {
+    label: {
       text: "Postcode",
       classes: "govuk-label--s"
     },
-    classes: "govuk-input--width-20",
+    classes: "govuk-input--width-10",
     fieldName: "postcode",
     autocomplete: "postal-code"
   },

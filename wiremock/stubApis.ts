@@ -48,10 +48,7 @@ stubs.push({
   },
 })
 
-const createRequiredFields = [
-  ...getCombinations(['addressLine1', 'postcode', 'probationRegionId', 'status']),
-  ['pdu'],
-]
+const createRequiredFields = [...getCombinations(['addressLine1', 'postcode', 'probationRegionId', 'status']), ['pdu']]
 
 createRequiredFields.forEach((fields: Array<string>) => {
   stubs.push(errorStub(fields, `/premises`, 'POST'))

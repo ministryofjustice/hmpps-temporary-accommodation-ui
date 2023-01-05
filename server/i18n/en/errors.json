@@ -72,9 +72,6 @@
     "postcode": {
       "empty": "You must enter a postcode"
     },
-    "localAuthorityAreaId": {
-      "empty": "You must choose a local authority"
-    },
     "probationRegionId": {
       "empty": "You must choose a probation region"
     },

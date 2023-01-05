@@ -186,6 +186,7 @@ context('Premises', () => {
     cy.task('stubPremisesCreateErrors', [
       'name',
       'addressLine1',
+      'town',
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',
@@ -198,6 +199,7 @@ context('Premises', () => {
     page.shouldShowErrorMessagesForFields([
       'name',
       'addressLine1',
+      'town',
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',
@@ -286,7 +288,7 @@ context('Premises', () => {
     // And I clear required fields
     cy.task('stubPremisesUpdateErrors', {
       premises,
-      params: ['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'pdu'],
+      params: ['addressLine1', 'town', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'pdu'],
     })
     page.clearForm()
     page.clickSubmit()
@@ -294,6 +296,7 @@ context('Premises', () => {
     // Then I should see error messages relating to those fields
     page.shouldShowErrorMessagesForFields([
       'addressLine1',
+      'town',
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',

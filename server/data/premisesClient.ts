@@ -1,4 +1,10 @@
-import type { DateCapacity, NewPremises, Premises, StaffMember, UpdatePremises } from '@approved-premises/api'
+import type {
+  DateCapacity,
+  NewPremises,
+  TemporaryAccommodationPremises as Premises,
+  StaffMember,
+  UpdatePremises,
+} from '@approved-premises/api'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -15,7 +21,9 @@ export default class PremisesClient {
   }
 
   async find(id: string): Promise<Premises> {
-    return (await this.restClient.get({ path: paths.premises.show({ premisesId: id }) })) as Premises
+    return (await this.restClient.get({
+      path: paths.premises.show({ premisesId: id }),
+    })) as Premises
   }
 
   async capacity(id: string): Promise<DateCapacity[]> {
@@ -33,6 +41,9 @@ export default class PremisesClient {
   }
 
   async update(id: string, data: UpdatePremises): Promise<Premises> {
-    return (await this.restClient.put({ path: paths.premises.update({ premisesId: id }), data })) as Premises
+    return (await this.restClient.put({
+      path: paths.premises.update({ premisesId: id }),
+      data,
+    })) as Premises
   }
 }

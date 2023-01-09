@@ -51,6 +51,27 @@ Given('I create a premises with all necessary details', () => {
 Given('I attempt to create a premises with required details missing', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
   page.clickSubmit()
+
+  cy.wrap(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'status']).as('missing')
+})
+
+Given('I attempt to create a premises with the PDU missing', () => {
+  const page = Page.verifyOnPage(PremisesNewPage)
+  const premises = premisesFactory.build({
+    id: 'unknown',
+    pdu: '',
+  })
+
+  const newPremises = newPremisesFactory.build({
+    ...premises,
+    localAuthorityAreaId: premises.localAuthorityArea.id,
+    characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+    probationRegionId: premises.probationRegion.id,
+  })
+
+  page.completeForm(newPremises)
+
+  cy.wrap(['pdu']).as('missing')
 })
 
 Given("I'm editing the premises", () => {
@@ -83,12 +104,36 @@ Given('I edit the premises details', () => {
   })
 })
 
-Given('I attempt to edit the premise to remove required details', () => {
+Given('I attempt to edit the premises to remove required details', () => {
   cy.get('@premises').then(premises => {
     const page = Page.verifyOnPage(PremisesEditPage, premises)
 
     page.clearForm()
     page.clickSubmit()
+
+    cy.wrap(['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId']).as('missing')
+  })
+})
+
+Given('I attempt to edit the premises to remove the PDU', () => {
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesEditPage, this.premises)
+    const updatedPremises = premisesFactory.build({
+      id: this.premises.id,
+      name: this.premises.name,
+      pdu: '',
+    })
+
+    const updatePremises = updatePremisesFactory.build({
+      ...updatedPremises,
+      localAuthorityAreaId: updatedPremises.localAuthorityArea.id,
+      characteristicIds: updatedPremises.characteristics.map(characteristic => characteristic.id),
+      probationRegionId: updatedPremises.probationRegion.id,
+    })
+
+    page.completeForm(updatePremises)
+
+    cy.wrap(['pdu']).as('missing')
   })
 })
 
@@ -102,15 +147,10 @@ Then('I should see a confirmation for my new premises', () => {
 })
 
 Then('I should see a list of the problems encountered creating the premises', () => {
-  const page = Page.verifyOnPage(PremisesNewPage)
-  page.shouldShowErrorMessagesForFields([
-    'name',
-    'addressLine1',
-    'postcode',
-    'localAuthorityAreaId',
-    'probationRegionId',
-    'status',
-  ])
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesNewPage)
+    page.shouldShowErrorMessagesForFields(this.missing)
+  })
 })
 
 Then('I should see a confirmation for my updated premises', () => {
@@ -123,8 +163,8 @@ Then('I should see a confirmation for my updated premises', () => {
 })
 
 Then('I should see a list of the problems encountered updating the premises', () => {
-  cy.get('@premises').then(premises => {
-    const page = Page.verifyOnPage(PremisesEditPage, premises)
-    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'probationRegionId', 'localAuthorityAreaId'])
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesEditPage, this.premises)
+    page.shouldShowErrorMessagesForFields(this.missing)
   })
 })

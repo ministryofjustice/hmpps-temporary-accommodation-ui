@@ -11,6 +11,8 @@ Feature: Manage Temporary Accommodation - Premieses
         Given I'm creating a premises
         And I attempt to create a premises with required details missing
         Then I should see a list of the problems encountered creating the premises
+        And I attempt to create a premises with the PDU missing
+        Then I should see a list of the problems encountered creating the premises
 
     Scenario: Editing a premises
         Given I'm creating a premises
@@ -23,5 +25,7 @@ Feature: Manage Temporary Accommodation - Premieses
         Given I'm creating a premises
         And I create a premises with all necessary details
         And I'm editing the premises
-        And I attempt to edit the premise to remove required details
+        And I attempt to edit the premises to remove required details
+        Then I should see a list of the problems encountered updating the premises
+        And I attempt to edit the premises to remove the PDU
         Then I should see a list of the problems encountered updating the premises

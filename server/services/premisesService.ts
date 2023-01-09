@@ -2,10 +2,10 @@ import type { TableRow, SummaryList, ReferenceData } from '@approved-premises/ui
 import type {
   StaffMember,
   NewPremises,
-  Premises,
   Characteristic,
   UpdatePremises,
   LocalAuthorityArea,
+  TemporaryAccommodationPremises as Premises,
 } from '@approved-premises/api'
 import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
 import paths from '../paths/temporary-accommodation/manage'

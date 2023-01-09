@@ -34,6 +34,6 @@ Then('I should download a booking report', () => {
   cy.then(function _() {
     const filePath = path.join(Cypress.config('downloadsFolder'), this.filename)
 
-    cy.readFile(filePath).should('have.length.above', 0)
+    cy.readFile(filePath, { timeout: 10000 }).should('have.length.above', 0)
   })
 })

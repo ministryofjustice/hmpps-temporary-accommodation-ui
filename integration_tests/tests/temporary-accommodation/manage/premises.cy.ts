@@ -187,6 +187,7 @@ context('Premises', () => {
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',
+      'pdu',
       'status',
     ])
     page.clickSubmit()
@@ -198,6 +199,7 @@ context('Premises', () => {
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',
+      'pdu',
       'status',
     ])
   })
@@ -280,13 +282,19 @@ context('Premises', () => {
     // And I clear required fields
     cy.task('stubPremisesUpdateErrors', {
       premises,
-      params: ['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId'],
+      params: ['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'pdu'],
     })
     page.clearForm()
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId'])
+    page.shouldShowErrorMessagesForFields([
+      'addressLine1',
+      'postcode',
+      'localAuthorityAreaId',
+      'probationRegionId',
+      'pdu',
+    ])
   })
 
   it('should navigate back from the edit premises page to the premises show page', () => {

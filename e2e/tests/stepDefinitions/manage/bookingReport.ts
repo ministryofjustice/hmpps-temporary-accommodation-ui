@@ -24,7 +24,7 @@ Given('I select a probation region to download a report for', () => {
   const bookingReportPage = Page.verifyOnPage(BookingReportNewPage)
 
   const probationRegion = referenceDataFactory.probationRegion().build()
-  bookingReportPage.expectDownload()
+  bookingReportPage.expectDownload(10000)
   bookingReportPage.completeForm(probationRegion)
 
   cy.wrap(bookingReportForProbationRegionFilename(probationRegion)).as('filename')
@@ -34,6 +34,6 @@ Then('I should download a booking report', () => {
   cy.then(function _() {
     const filePath = path.join(Cypress.config('downloadsFolder'), this.filename)
 
-    cy.readFile(filePath, { timeout: 10000 }).should('have.length.above', 0)
+    cy.readFile(filePath).should('have.length.above', 0)
   })
 })

@@ -105,7 +105,7 @@ export default abstract class Page extends Component {
     cy.get('li.govuk-breadcrumbs__list-item:nth-last-child(2)').click()
   }
 
-  expectDownload() {
+  expectDownload(timeout?: number) {
     // This is a workaround for a Cypress bug to prevent it waiting
     // indefinitely for a new page to load after clicking the download link
     // See https://github.com/cypress-io/cypress/issues/14857
@@ -115,7 +115,7 @@ export default abstract class Page extends Component {
         doc.addEventListener('click', () => {
           setTimeout(() => {
             doc.location?.reload()
-          }, Cypress.config('defaultCommandTimeout'))
+          }, timeout || Cypress.config('defaultCommandTimeout'))
         })
       })
   }

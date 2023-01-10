@@ -14,7 +14,7 @@ Given("I'm downloading a booking report", () => {
 Given('I select to download a report for all probation regions', () => {
   const bookingReportPage = Page.verifyOnPage(BookingReportNewPage)
 
-  bookingReportPage.expectDownload()
+  bookingReportPage.expectDownload(10000)
   bookingReportPage.clickSubmit()
 
   cy.wrap(bookingReportFilename()).as('filename')

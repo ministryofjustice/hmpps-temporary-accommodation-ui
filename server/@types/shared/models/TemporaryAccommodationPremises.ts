@@ -4,5 +4,9 @@
 
 import type { Premises } from './Premises';
 
-export type TemporaryAccommodationPremises = Premises;
+export type TemporaryAccommodationPremises = (Premises & {
+    pdu?: string;
+} & {
+    pdu: string;
+});
 

@@ -2,7 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type NewClarificationNote = {
-    query: string;
-};
-
+export type SeedFileType = 'approved_premises' | 'user';

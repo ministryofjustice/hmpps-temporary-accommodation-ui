@@ -3,6 +3,8 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
 import PremisesEditablePage from './premisesEditable'
 
+const exact = (text: string) => new RegExp(`^${text}$`)
+
 export default class PremisesEditPage extends PremisesEditablePage {
   constructor(private readonly premises: Premises) {
     super('Edit a property')
@@ -21,21 +23,21 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .contains('What is the local authority?')
       .siblings('select')
       .children('option')
-      .contains(this.premises.localAuthorityArea.name)
+      .contains(exact(this.premises.localAuthorityArea.name))
       .should('be.selected')
 
     cy.get('label')
       .contains('What is the probation region?')
       .siblings('select')
       .children('option')
-      .contains(this.premises.probationRegion.name)
+      .contains(exact(this.premises.probationRegion.name))
       .should('be.selected')
 
     cy.get('label')
       .contains('What is the PDU?')
       .siblings('select')
       .children('option')
-      .contains(this.premises.pdu)
+      .contains(exact(this.premises.pdu))
       .should('be.selected')
 
     cy.get('legend')

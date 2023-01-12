@@ -9,7 +9,7 @@ export default abstract class PremisesEditablePage extends Page {
     this.getLabel('Postcode')
     this.getTextInputByIdAndEnterDetails('postcode', newOrUpdatePremises.postcode)
 
-    this.getLabel('What is the local authority?')
+    this.getLabel('What is the local authority (optional)?')
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', newOrUpdatePremises.localAuthorityAreaId)
 
     newOrUpdatePremises.characteristicIds.forEach(characteristicId => {

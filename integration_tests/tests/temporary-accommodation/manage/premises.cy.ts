@@ -181,27 +181,11 @@ context('Premises', () => {
     const page = PremisesNewPage.visit()
 
     // And I miss required fields
-    cy.task('stubPremisesCreateErrors', [
-      'name',
-      'addressLine1',
-      'postcode',
-      'localAuthorityAreaId',
-      'probationRegionId',
-      'pdu',
-      'status',
-    ])
+    cy.task('stubPremisesCreateErrors', ['name', 'addressLine1', 'postcode', 'probationRegionId', 'pdu', 'status'])
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields([
-      'name',
-      'addressLine1',
-      'postcode',
-      'localAuthorityAreaId',
-      'probationRegionId',
-      'pdu',
-      'status',
-    ])
+    page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'probationRegionId', 'pdu', 'status'])
   })
 
   it('should navigate back from the new premises page to the premises list page', () => {
@@ -282,19 +266,13 @@ context('Premises', () => {
     // And I clear required fields
     cy.task('stubPremisesUpdateErrors', {
       premises,
-      params: ['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'pdu'],
+      params: ['addressLine1', 'postcode', 'probationRegionId', 'pdu'],
     })
     page.clearForm()
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields([
-      'addressLine1',
-      'postcode',
-      'localAuthorityAreaId',
-      'probationRegionId',
-      'pdu',
-    ])
+    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'probationRegionId', 'pdu'])
   })
 
   it('should navigate back from the edit premises page to the premises show page', () => {

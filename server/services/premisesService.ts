@@ -153,11 +153,15 @@ export default class PremisesService {
   }
 
   private async summaryListForPremises(premises: Premises): Promise<SummaryList> {
+    const addressLines = [premises.addressLine1, premises.addressLine2, premises.town, premises.postcode]
+      .filter(line => line && line !== '')
+      .map(line => escape(line))
+
     return {
       rows: [
         {
           key: this.textValue('Address'),
-          value: this.htmlValue(`${escape(premises.addressLine1)}<br />${escape(premises.postcode)}`),
+          value: this.htmlValue(addressLines.join('<br />')),
         },
         {
           key: this.textValue('Local authority'),

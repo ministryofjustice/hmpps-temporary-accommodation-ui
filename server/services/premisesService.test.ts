@@ -273,6 +273,8 @@ describe('PremisesService', () => {
       const premises = premisesFactory.build({
         name: 'Test',
         addressLine1: '10 Example Street',
+        addressLine2: '',
+        town: 'Example Town',
         postcode: 'SW1A 1AA',
         bedCount: 50,
         availableBedsForToday: 20,
@@ -308,7 +310,7 @@ describe('PremisesService', () => {
           rows: [
             {
               key: { text: 'Address' },
-              value: { html: '10 Example Street<br />SW1A 1AA' },
+              value: { html: '10 Example Street<br />Example Town<br />SW1A 1AA' },
             },
             {
               key: { text: 'Local authority' },
@@ -342,6 +344,7 @@ describe('PremisesService', () => {
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
 
       expect(escape).toHaveBeenCalledWith('10 Example Street')
+      expect(escape).toHaveBeenCalledWith('Example Town')
       expect(escape).toHaveBeenCalledWith('SW1A 1AA')
       expect(formatLines).toHaveBeenCalledWith('Some notes')
       expect(formatCharacteristics).toHaveBeenCalledWith([

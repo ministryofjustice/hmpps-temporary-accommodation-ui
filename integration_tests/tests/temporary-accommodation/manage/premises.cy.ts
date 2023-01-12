@@ -159,6 +159,8 @@ context('Premises', () => {
 
       expect(requestBody.name).equal(newPremises.name)
       expect(requestBody.addressLine1).equal(newPremises.addressLine1)
+      expect(requestBody.addressLine2).equal(newPremises.addressLine2)
+      expect(requestBody.town).equal(newPremises.town)
       expect(requestBody.postcode).equal(newPremises.postcode)
       expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
       expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
@@ -184,6 +186,7 @@ context('Premises', () => {
     cy.task('stubPremisesCreateErrors', [
       'name',
       'addressLine1',
+      'town',
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',
@@ -196,6 +199,7 @@ context('Premises', () => {
     page.shouldShowErrorMessagesForFields([
       'name',
       'addressLine1',
+      'town',
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',
@@ -253,6 +257,8 @@ context('Premises', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.addressLine1).equal(updatePremises.addressLine1)
+      expect(requestBody.addressLine2).equal(updatePremises.addressLine2)
+      expect(requestBody.town).equal(updatePremises.town)
       expect(requestBody.postcode).equal(updatePremises.postcode)
       expect(requestBody.localAuthorityAreaId).equal(updatePremises.localAuthorityAreaId)
       expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
@@ -282,7 +288,7 @@ context('Premises', () => {
     // And I clear required fields
     cy.task('stubPremisesUpdateErrors', {
       premises,
-      params: ['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'pdu'],
+      params: ['addressLine1', 'town', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'pdu'],
     })
     page.clearForm()
     page.clickSubmit()
@@ -290,6 +296,7 @@ context('Premises', () => {
     // Then I should see error messages relating to those fields
     page.shouldShowErrorMessagesForFields([
       'addressLine1',
+      'town',
       'postcode',
       'localAuthorityAreaId',
       'probationRegionId',

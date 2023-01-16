@@ -44,10 +44,10 @@
 {{ taSelect(
   {
     label: {
-      text: "What is the local authority?",
+      text: "What is the local authority (optional)?",
       classes: "govuk-label--m"
     },
-    items: convertObjectsToSelectOptions(allLocalAuthorities, 'Select a local authority', 'name', 'id', 'localAuthorityAreaId'),
+    items: convertObjectsToSelectOptions(allLocalAuthorities, '', 'name', 'id', 'localAuthorityAreaId'),
     fieldName: "localAuthorityAreaId"
   },
   fetchContext()

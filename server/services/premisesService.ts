@@ -131,7 +131,7 @@ export default class PremisesService {
 
     return {
       ...premises,
-      localAuthorityAreaId: premises.localAuthorityArea.id,
+      localAuthorityAreaId: premises.localAuthorityArea?.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
       pdu: premises.pdu,
@@ -161,7 +161,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('Local authority'),
-          value: this.textValue(premises.localAuthorityArea.name),
+          value: this.textValue(premises.localAuthorityArea?.name),
         },
         {
           key: this.textValue('Probation region'),

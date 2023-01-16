@@ -20,7 +20,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
     cy.get('label').contains('Postcode').siblings('input').should('have.value', this.premises.postcode)
 
     cy.get('label')
-      .contains('What is the local authority?')
+      .contains('What is the local authority (optional)?')
       .siblings('select')
       .children('option')
       .contains(exact(this.premises.localAuthorityArea.name))

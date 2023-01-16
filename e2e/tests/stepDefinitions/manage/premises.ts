@@ -52,7 +52,7 @@ Given('I attempt to create a premises with required details missing', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
   page.clickSubmit()
 
-  cy.wrap(['name', 'addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'status']).as('missing')
+  cy.wrap(['name', 'addressLine1', 'postcode', 'probationRegionId', 'status']).as('missing')
 })
 
 Given('I attempt to create a premises with the PDU missing', () => {
@@ -111,7 +111,7 @@ Given('I attempt to edit the premises to remove required details', () => {
     page.clearForm()
     page.clickSubmit()
 
-    cy.wrap(['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId']).as('missing')
+    cy.wrap(['addressLine1', 'postcode', 'probationRegionId']).as('missing')
   })
 })
 

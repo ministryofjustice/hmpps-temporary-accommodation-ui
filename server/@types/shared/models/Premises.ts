@@ -19,7 +19,7 @@ export type Premises = {
     notes?: string;
     probationRegion: ProbationRegion;
     apArea: ApArea;
-    localAuthorityArea: LocalAuthorityArea;
+    localAuthorityArea?: LocalAuthorityArea;
     characteristics?: Array<Characteristic>;
     status: PropertyStatus;
 };

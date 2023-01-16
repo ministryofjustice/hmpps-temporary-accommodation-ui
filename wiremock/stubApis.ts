@@ -49,7 +49,7 @@ stubs.push({
 })
 
 const createRequiredFields = [
-  ...getCombinations(['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'status']),
+  ...getCombinations(['addressLine1', 'town', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'status']),
   ['pdu'],
 ]
 
@@ -115,7 +115,7 @@ premises.forEach(item => {
   })
 
   const updateRequiredFields = [
-    ...getCombinations(['addressLine1', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'status']),
+    ...getCombinations(['addressLine1', 'town', 'postcode', 'localAuthorityAreaId', 'probationRegionId', 'status']),
     ['pdu'],
   ]
 

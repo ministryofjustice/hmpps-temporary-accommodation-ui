@@ -17,6 +17,8 @@ export default class PremisesEditPage extends PremisesEditablePage {
 
   shouldShowPremisesDetails(): void {
     cy.get('label').contains('Address line 1').siblings('input').should('have.value', this.premises.addressLine1)
+    cy.get('label').contains('Address line 2').siblings('input').should('have.value', this.premises.addressLine2)
+    cy.get('label').contains('Town or city').siblings('input').should('have.value', this.premises.town)
     cy.get('label').contains('Postcode').siblings('input').should('have.value', this.premises.postcode)
 
     cy.get('label')
@@ -70,6 +72,8 @@ export default class PremisesEditPage extends PremisesEditablePage {
 
   clearForm(): void {
     this.getTextInputByIdAndClear('addressLine1')
+    this.getTextInputByIdAndClear('addressLine2')
+    this.getTextInputByIdAndClear('town')
     this.getTextInputByIdAndClear('postcode')
 
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', '')

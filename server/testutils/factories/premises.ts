@@ -9,6 +9,8 @@ export default Factory.define<Premises>(() => ({
   id: faker.datatype.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.address.streetAddress(),
+  addressLine2: faker.address.secondaryAddress(),
+  town: faker.address.cityName(),
   postcode: faker.address.zipCode(),
   bedCount: 50,
   availableBedsForToday: faker.datatype.number({ min: 0, max: 50 }),

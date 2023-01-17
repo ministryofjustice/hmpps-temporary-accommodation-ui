@@ -6,6 +6,12 @@ export default abstract class PremisesEditablePage extends Page {
     this.getLabel('Address line 1')
     this.getTextInputByIdAndEnterDetails('addressLine1', newOrUpdatePremises.addressLine1)
 
+    this.getLabel('Address line 2 (optional)')
+    this.getTextInputByIdAndEnterDetails('addressLine2', newOrUpdatePremises.addressLine2)
+
+    this.getLabel('Town or city (optional)')
+    this.getTextInputByIdAndEnterDetails('town', newOrUpdatePremises.town)
+
     this.getLabel('Postcode')
     this.getTextInputByIdAndEnterDetails('postcode', newOrUpdatePremises.postcode)
 

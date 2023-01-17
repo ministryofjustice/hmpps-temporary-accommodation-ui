@@ -159,6 +159,8 @@ context('Premises', () => {
 
       expect(requestBody.name).equal(newPremises.name)
       expect(requestBody.addressLine1).equal(newPremises.addressLine1)
+      expect(requestBody.addressLine2).equal(newPremises.addressLine2)
+      expect(requestBody.town).equal(newPremises.town)
       expect(requestBody.postcode).equal(newPremises.postcode)
       expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
       expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
@@ -181,11 +183,27 @@ context('Premises', () => {
     const page = PremisesNewPage.visit()
 
     // And I miss required fields
-    cy.task('stubPremisesCreateErrors', ['name', 'addressLine1', 'postcode', 'probationRegionId', 'pdu', 'status'])
+    cy.task('stubPremisesCreateErrors', [
+      'name',
+      'addressLine1',
+      'town',
+      'postcode',
+      'probationRegionId',
+      'pdu',
+      'status',
+    ])
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['name', 'addressLine1', 'postcode', 'probationRegionId', 'pdu', 'status'])
+    page.shouldShowErrorMessagesForFields([
+      'name',
+      'addressLine1',
+      'town',
+      'postcode',
+      'probationRegionId',
+      'pdu',
+      'status',
+    ])
   })
 
   it('should navigate back from the new premises page to the premises list page', () => {
@@ -237,6 +255,8 @@ context('Premises', () => {
       const requestBody = JSON.parse(requests[0].body)
 
       expect(requestBody.addressLine1).equal(updatePremises.addressLine1)
+      expect(requestBody.addressLine2).equal(updatePremises.addressLine2)
+      expect(requestBody.town).equal(updatePremises.town)
       expect(requestBody.postcode).equal(updatePremises.postcode)
       expect(requestBody.localAuthorityAreaId).equal(updatePremises.localAuthorityAreaId)
       expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
@@ -266,13 +286,13 @@ context('Premises', () => {
     // And I clear required fields
     cy.task('stubPremisesUpdateErrors', {
       premises,
-      params: ['addressLine1', 'postcode', 'probationRegionId', 'pdu'],
+      params: ['addressLine1', 'town', 'postcode', 'probationRegionId', 'pdu'],
     })
     page.clearForm()
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['addressLine1', 'postcode', 'probationRegionId', 'pdu'])
+    page.shouldShowErrorMessagesForFields(['addressLine1', 'town', 'postcode', 'probationRegionId', 'pdu'])
   })
 
   it('should navigate back from the edit premises page to the premises show page', () => {

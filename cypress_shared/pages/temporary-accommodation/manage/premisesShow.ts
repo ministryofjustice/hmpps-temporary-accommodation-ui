@@ -20,7 +20,12 @@ export default class PremisesShowPage extends Page {
     cy.get(`[data-cy-premises]`).within(() => {
       cy.get('h3').should('contain', this.premises.name)
 
-      this.shouldShowKeyAndValues('Address', [this.premises.addressLine1, this.premises.postcode])
+      this.shouldShowKeyAndValues('Address', [
+        this.premises.addressLine1,
+        this.premises.addressLine2,
+        this.premises.town,
+        this.premises.postcode,
+      ])
       this.shouldShowKeyAndValue('Local authority', this.premises.localAuthorityArea.name)
       this.shouldShowKeyAndValue('Probation region', this.premises.probationRegion.name)
       this.shouldShowKeyAndValue('PDU', this.premises.pdu)

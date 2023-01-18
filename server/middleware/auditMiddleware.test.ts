@@ -68,4 +68,55 @@ describe('auditMiddleware', () => {
     expect(handler).toHaveBeenCalled()
     expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, requestParams)
   })
+
+  it('returns an audited request handler, that sends an audit message that includes selected request body parameters', async () => {
+    const handler = jest.fn()
+    const response = createMock<Response>({ locals: { user: { uuid: userUuid } } })
+    const request = createMock<Request>({
+      params: requestParams,
+      body: { bodyParam1: 'body-value-1', bodyParam2: 'body-value-2', bodyParam3: 'body-value-3' },
+    })
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, {
+      auditEvent,
+      auditBodyParams: ['bodyParam1', 'bodyParam2'],
+    })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
+      ...requestParams,
+      bodyParam1: 'body-value-1',
+      bodyParam2: 'body-value-2',
+    })
+  })
+
+  it('ignores empty request body parameters', async () => {
+    const handler = jest.fn()
+    const response = createMock<Response>({ locals: { user: { uuid: userUuid } } })
+    const request = createMock<Request>({
+      params: requestParams,
+      body: { bodyParam1: 'body-value-1', bodyParam2: '' },
+    })
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, {
+      auditEvent,
+      auditBodyParams: ['bodyParam1', 'bodyParam2'],
+    })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
+      ...requestParams,
+      bodyParam1: 'body-value-1',
+    })
+  })
 })

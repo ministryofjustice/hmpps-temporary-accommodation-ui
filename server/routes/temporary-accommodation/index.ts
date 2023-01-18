@@ -15,7 +15,7 @@ export default function routes(controllers: Controllers, services: Services): Ro
 
   const { get } = actions(router, services.auditService)
 
-  get('/', dashboardController.index())
+  get('/', dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
 
   manageRoutes(controllers, services, router)
 

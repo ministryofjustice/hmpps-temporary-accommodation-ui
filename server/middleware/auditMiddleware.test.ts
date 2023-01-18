@@ -1,5 +1,6 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Request, Response } from 'express'
+import logger from '../../logger'
 import AuditService from '../services/auditService'
 import { auditMiddleware } from './auditMiddleware'
 
@@ -33,6 +34,23 @@ describe('auditMiddleware', () => {
     await auditedhandler(request, response, next)
 
     expect(handler).toHaveBeenCalled()
+  })
+
+  it('returns an audited request handler, the redirects to /authError if there is no user UUID', async () => {
+    const handler = jest.fn()
+    const response = createMock<Response>({ locals: { user: {} } })
+    const request = createMock<Request>()
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, { auditEvent })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).not.toHaveBeenCalled()
+    expect(response.redirect).toHaveBeenCalledWith('/authError')
+    expect(logger.error).toHaveBeenCalledWith('User without a UUID is attempt to access an audited path')
   })
 
   it('returns an audited request handler, that sends an audit message that includes the request parameters', async () => {

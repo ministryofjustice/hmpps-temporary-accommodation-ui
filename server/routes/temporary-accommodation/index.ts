@@ -3,7 +3,6 @@
 import { Router } from 'express'
 
 import type { Controllers } from '../../controllers'
-import { temporaryAccommodationPath } from '../../paths/service'
 import actions from '../utils'
 
 import manageRoutes from './manage'
@@ -16,7 +15,6 @@ export default function routes(controllers: Controllers): Router {
   const { get } = actions(router)
 
   get('/', dashboardController.index())
-  get(temporaryAccommodationPath.pattern, dashboardController.index())
 
   manageRoutes(controllers, router)
 

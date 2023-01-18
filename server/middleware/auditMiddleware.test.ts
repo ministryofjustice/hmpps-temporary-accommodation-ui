@@ -1,5 +1,6 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Request, Response } from 'express'
+import { path } from 'static-path'
 import logger from '../../logger'
 import AuditService from '../services/auditService'
 import { auditMiddleware } from './auditMiddleware'
@@ -117,6 +118,67 @@ describe('auditMiddleware', () => {
     expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
       ...requestParams,
       bodyParam1: 'body-value-1',
+    })
+  })
+
+  it('returns an audited request handler, that sends an audit message based on the redirect destination of the given request handler', async () => {
+    const somePath = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
+
+    const handler = jest.fn()
+    const response = createMock<Response>({
+      locals: { user: { uuid: userUuid } },
+      get: field => {
+        return field === 'Location' ? somePath({ premisesId: 'some-premises', roomId: 'some-room' }) : undefined
+      },
+    })
+    const request = createMock<Request>()
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, {
+      redirectAuditEventSpecs: [{ auditEvent, path: somePath.pattern }],
+    })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
+      premisesId: 'some-premises',
+      roomId: 'some-room',
+    })
+  })
+
+  it('sends an audit message only for the first matching RedirectAuditEventSpec', async () => {
+    const nonMatchingPath = path('/').path('some-path-component')
+    const matchingPath1 = path('/').path('premises').path(':premisesId').path('room').path('new')
+    const matchingPath2 = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
+
+    const handler = jest.fn()
+    const response = createMock<Response>({
+      locals: { user: { uuid: userUuid } },
+      get: field => {
+        return field === 'Location' ? matchingPath1({ premisesId: 'some-premises' }) : undefined
+      },
+    })
+    const request = createMock<Request>()
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, {
+      redirectAuditEventSpecs: [
+        { auditEvent: 'NON_MATCHING_PATH_AUDIT_EVENT', path: nonMatchingPath.pattern },
+        { auditEvent: 'MATCHING_PATH_1_AUDIT_EVENT', path: matchingPath1.pattern },
+        { auditEvent: 'MATCHING_PATH_2_AUDIT_EVENT', path: matchingPath2.pattern },
+      ],
+    })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith('MATCHING_PATH_1_AUDIT_EVENT', userUuid, {
+      premisesId: 'some-premises',
     })
   })
 })

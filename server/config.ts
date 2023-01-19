@@ -40,7 +40,7 @@ export interface AuditConfig {
   accessKeyId: string
   secretAccessKey: string
   queueUrl: string
-  serviceName: ServiceName
+  serviceName: string
   logErrors: boolean
 }
 
@@ -98,8 +98,8 @@ export default {
       accessKeyId: get('AUDIT_SQS_ACCESS_KEY_ID', ''),
       secretAccessKey: get('AUDIT_SQS_SECRET_ACCESS_KEY', ''),
       queueUrl: get('AUDIT_SQS_QUEUE_URL', ''),
-      serviceName: get('AUDIT_SERVICE_NAME', 'temporary-accommodation-ui'),
-      logErrors: false,
+      serviceName: get('AUDIT_SERVICE_NAME', 'hmpps-temporary-accommodation-ui'),
+      logErrors: get('AUDIT_LOG_ERRORS', 'false') === 'true',
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

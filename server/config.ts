@@ -35,6 +35,15 @@ export interface ApiConfig {
   serviceName?: ServiceName
 }
 
+export interface AuditConfig {
+  region: string
+  accessKeyId: string
+  secretAccessKey: string
+  queueUrl: string
+  serviceName: ServiceName
+  logErrors: boolean
+}
+
 export default {
   https: production,
   staticResourceCacheDuration: 20,
@@ -83,6 +92,14 @@ export default {
       },
       agent: new AgentConfig(10000),
       serviceName: get('COMMUNITY_ACCOMMODATION_API_SERVICE_NAME', 'approved-premises', requiredInProduction),
+    },
+    audit: {
+      region: get('AUDIT_SQS_REGION', 'eu-west-2'),
+      accessKeyId: get('AUDIT_SQS_ACCESS_KEY_ID', ''),
+      secretAccessKey: get('AUDIT_SQS_SECRET_ACCESS_KEY', ''),
+      queueUrl: get('AUDIT_SQS_QUEUE_URL', ''),
+      serviceName: get('AUDIT_SERVICE_NAME', 'temporary-accommodation-ui'),
+      logErrors: false,
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

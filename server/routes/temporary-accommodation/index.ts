@@ -3,22 +3,21 @@
 import { Router } from 'express'
 
 import type { Controllers } from '../../controllers'
-import { temporaryAccommodationPath } from '../../paths/service'
+import { Services } from '../../services'
 import actions from '../utils'
 
 import manageRoutes from './manage'
 
-export default function routes(controllers: Controllers): Router {
+export default function routes(controllers: Controllers, services: Services): Router {
   const router = Router()
 
   const { dashboardController } = controllers
 
-  const { get } = actions(router)
+  const { get } = actions(router, services.auditService)
 
-  get('/', dashboardController.index())
-  get(temporaryAccommodationPath.pattern, dashboardController.index())
+  get('/', dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
 
-  manageRoutes(controllers, router)
+  manageRoutes(controllers, services, router)
 
   return router
 }

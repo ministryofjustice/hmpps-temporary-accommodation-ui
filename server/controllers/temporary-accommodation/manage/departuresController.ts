@@ -14,11 +14,9 @@ export default class DeparturesController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
-
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(req, premisesId, bookingId)
       const { departureReasons: allDepartureReasons, moveOnCategories: allMoveOnCategories } =
-        await this.departureService.getReferenceData(token)
+        await this.departureService.getReferenceData(req)
 
       return res.render('temporary-accommodation/departures/new', {
         booking,
@@ -37,7 +35,6 @@ export default class DeparturesController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
 
       const newDeparture: NewDeparture = {
         ...req.body,
@@ -45,7 +42,7 @@ export default class DeparturesController {
       }
 
       try {
-        await this.departureService.createDeparture(token, premisesId, bookingId, newDeparture)
+        await this.departureService.createDeparture(req, premisesId, bookingId, newDeparture)
 
         req.flash('success', 'Booking marked as closed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

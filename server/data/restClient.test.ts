@@ -3,13 +3,14 @@ import { Response } from 'express'
 import nock from 'nock'
 
 import type { ApiConfig } from '../config'
+import { createMockRequest } from '../testutils/createMockRequest'
 import RestClient from './restClient'
 
 describe('restClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let restClient: RestClient
 
-  const token = 'token-1'
+  const request = createMockRequest()
 
   beforeEach(() => {
     const apiConfig: ApiConfig = {
@@ -24,11 +25,11 @@ describe('restClient', () => {
 
     fakeApprovedPremisesApi = nock(apiConfig.url, {
       reqheaders: {
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${request.user.token}`,
         'X-SERVICE-NAME': 'approved-premises',
       },
     })
-    restClient = new RestClient('premisesClient', apiConfig, token)
+    restClient = new RestClient('premisesClient', apiConfig, request)
   })
 
   afterEach(() => {
@@ -62,11 +63,11 @@ describe('restClient', () => {
 
       fakeApprovedPremisesApi = nock(apiConfig.url, {
         reqheaders: {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${request.user.token}`,
         },
         badheaders: ['X-SERVICE-NAME'],
       })
-      restClient = new RestClient('premisesClient', apiConfig, token)
+      restClient = new RestClient('premisesClient', apiConfig, request)
 
       fakeApprovedPremisesApi.get(`/some/path`).reply(200, { some: 'data' })
 

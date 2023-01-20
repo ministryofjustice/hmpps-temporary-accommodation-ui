@@ -6,6 +6,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import characteristicFactory from '../testutils/factories/characteristic'
 import { formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 jest.mock('../data/roomClient')
 jest.mock('../data/referenceDataClient')
@@ -21,7 +22,7 @@ describe('BedspaceService', () => {
 
   const service = new BedspaceService(roomClientFactory, referenceDataClientFactory)
 
-  const token = 'SOME_TOKEN'
+  const request = createMockRequest()
   const premisesId = 'premisesId'
 
   beforeEach(() => {
@@ -35,11 +36,11 @@ describe('BedspaceService', () => {
       const room = roomFactory.build()
       roomClient.find.mockResolvedValue(room)
 
-      const result = await service.getRoom(token, premisesId, room.id)
+      const result = await service.getRoom(request, premisesId, room.id)
 
       expect(result).toEqual(room)
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(request)
       expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
     })
   })
@@ -67,7 +68,7 @@ describe('BedspaceService', () => {
         text: 'Some attributes',
       }))
 
-      const result = await service.getBedspaceDetails(token, premisesId)
+      const result = await service.getBedspaceDetails(request, premisesId)
 
       expect(result).toEqual([
         {
@@ -102,7 +103,7 @@ describe('BedspaceService', () => {
         },
       ])
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(request)
       expect(roomClient.all).toHaveBeenCalledWith(premisesId)
 
       expect(formatLines).toHaveBeenCalledWith('Some more notes')
@@ -140,7 +141,7 @@ describe('BedspaceService', () => {
         text: 'Some attributes',
       }))
 
-      const result = await service.getSingleBedspaceDetails(token, premisesId, room.id)
+      const result = await service.getSingleBedspaceDetails(request, premisesId, room.id)
 
       expect(result).toEqual({
         room,
@@ -158,7 +159,7 @@ describe('BedspaceService', () => {
         },
       })
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(request)
       expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
 
       expect(formatLines).toHaveBeenCalledWith('Some notes')
@@ -191,7 +192,7 @@ describe('BedspaceService', () => {
 
       roomClient.find.mockResolvedValue(room)
 
-      const result = await service.getUpdateRoom(token, premisesId, room.id)
+      const result = await service.getUpdateRoom(request, premisesId, room.id)
       expect(result).toEqual({
         ...room,
         characteristicIds: ['characteristic-a', 'characteristic-b'],
@@ -209,10 +210,10 @@ describe('BedspaceService', () => {
       })
       roomClient.create.mockResolvedValue(room)
 
-      const postedRoom = await service.createRoom(token, premisesId, newRoom)
+      const postedRoom = await service.createRoom(request, premisesId, newRoom)
       expect(postedRoom).toEqual(room)
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(request)
       expect(roomClient.create).toHaveBeenCalledWith(premisesId, newRoom)
     })
   })
@@ -225,10 +226,10 @@ describe('BedspaceService', () => {
       })
       roomClient.update.mockResolvedValue(room)
 
-      const updatedRoom = await service.updateRoom(token, premisesId, room.id, newRoom)
+      const updatedRoom = await service.updateRoom(request, premisesId, room.id, newRoom)
       expect(updatedRoom).toEqual(room)
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(request)
       expect(roomClient.update).toHaveBeenCalledWith(premisesId, room.id, newRoom)
     })
   })
@@ -252,7 +253,7 @@ describe('BedspaceService', () => {
         roomCharacteristic1,
       ])
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(request)
       expect(result).toEqual({ characteristics: [roomCharacteristic1, roomCharacteristic2, genericCharacteristic] })
 
       expect(filterCharacteristics).toHaveBeenCalledWith(

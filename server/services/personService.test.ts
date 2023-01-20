@@ -5,6 +5,7 @@ import PersonClient from '../data/personClient'
 import PersonFactory from '../testutils/factories/person'
 import risksFactory from '../testutils/factories/risks'
 import { mapApiPersonRisksForUi } from '../utils/utils'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 jest.mock('../data/personClient.ts')
 
@@ -14,7 +15,7 @@ describe('PersonService', () => {
 
   const service = new PersonService(personClientFactory)
 
-  const token = 'SOME_TOKEN'
+  const request = createMockRequest()
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -26,11 +27,11 @@ describe('PersonService', () => {
       const person: Person = PersonFactory.build()
       personClient.search.mockResolvedValue(person)
 
-      const postedPerson = await service.findByCrn(token, 'crn')
+      const postedPerson = await service.findByCrn(request, 'crn')
 
       expect(postedPerson).toEqual(person)
 
-      expect(personClientFactory).toHaveBeenCalledWith(token)
+      expect(personClientFactory).toHaveBeenCalledWith(request)
       expect(personClient.search).toHaveBeenCalledWith('crn')
     })
   })
@@ -41,11 +42,11 @@ describe('PersonService', () => {
       const uiRisks = mapApiPersonRisksForUi(apiRisks)
       personClient.risks.mockResolvedValue(apiRisks)
 
-      const postedPerson = await service.getPersonRisks(token, 'crn')
+      const postedPerson = await service.getPersonRisks(request, 'crn')
 
       expect(postedPerson).toEqual(uiRisks)
 
-      expect(personClientFactory).toHaveBeenCalledWith(token)
+      expect(personClientFactory).toHaveBeenCalledWith(request)
       expect(personClient.risks).toHaveBeenCalledWith('crn')
     })
   })

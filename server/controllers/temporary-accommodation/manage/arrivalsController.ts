@@ -14,9 +14,7 @@ export default class ArrivalsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
-
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(req, premisesId, bookingId)
 
       return res.render('temporary-accommodation/arrivals/new', {
         booking,
@@ -34,7 +32,6 @@ export default class ArrivalsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
 
       const newArrival: NewArrival = {
         ...req.body,
@@ -43,7 +40,7 @@ export default class ArrivalsController {
       }
 
       try {
-        await this.arrivalService.createArrival(token, premisesId, bookingId, newArrival)
+        await this.arrivalService.createArrival(req, premisesId, bookingId, newArrival)
 
         req.flash('success', 'Booking marked as active')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

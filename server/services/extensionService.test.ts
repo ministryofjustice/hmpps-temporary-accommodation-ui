@@ -1,4 +1,5 @@
 import BookingClient from '../data/bookingClient'
+import { createMockRequest } from '../testutils/createMockRequest'
 import extensionFactory from '../testutils/factories/extension'
 import newExtensionFactory from '../testutils/factories/newExtension'
 import ExtensionService from './extensionService'
@@ -6,7 +7,7 @@ import ExtensionService from './extensionService'
 jest.mock('../data/bookingClient.ts')
 
 describe('ExtensionService', () => {
-  const token = 'SOME_TOKEN'
+  const request = createMockRequest()
   const premiseId = 'premisesId'
   const bookingId = 'bookingId'
 
@@ -27,10 +28,10 @@ describe('ExtensionService', () => {
 
       bookingClient.extendBooking.mockResolvedValue(extension)
 
-      const postedExtension = await service.createExtension(token, premiseId, bookingId, payload)
+      const postedExtension = await service.createExtension(request, premiseId, bookingId, payload)
       expect(postedExtension).toEqual(extension)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(request)
       expect(bookingClient.extendBooking).toHaveBeenCalledWith(premiseId, bookingId, payload)
     })
   })

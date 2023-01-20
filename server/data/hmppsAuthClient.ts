@@ -1,6 +1,7 @@
 import superagent from 'superagent'
 import { URLSearchParams } from 'url'
 
+import { Request } from 'express'
 import type TokenStore from './tokenStore'
 import logger from '../../logger'
 import config from '../config'
@@ -43,17 +44,17 @@ export interface UserRole {
 export default class HmppsAuthClient {
   constructor(private readonly tokenStore: TokenStore) {}
 
-  private static restClient(token: string): RestClient {
-    return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, token)
+  private static restClient(req: Request): RestClient {
+    return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, req)
   }
 
-  getUser(token: string): Promise<User> {
+  getUser(req: Request): Promise<User> {
     logger.info(`Getting user details: calling HMPPS Auth`)
-    return HmppsAuthClient.restClient(token).get({ path: '/api/user/me' }) as Promise<User>
+    return HmppsAuthClient.restClient(req).get({ path: '/api/user/me' }) as Promise<User>
   }
 
-  getUserRoles(token: string): Promise<string[]> {
-    return HmppsAuthClient.restClient(token)
+  getUserRoles(req: Request): Promise<string[]> {
+    return HmppsAuthClient.restClient(req)
       .get({ path: '/api/user/me/roles' })
       .then(roles => (<UserRole[]>roles).map(role => role.roleCode))
   }

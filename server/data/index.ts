@@ -5,6 +5,7 @@
  */
 /* istanbul ignore file */
 
+import { Request } from 'express'
 import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
 import BookingClient from './bookingClient'
 
@@ -23,19 +24,19 @@ import ApplicationClient from './applicationClient'
 import RoomClient from './roomClient'
 import ReportClient from './reportClient'
 
-type RestClientBuilder<T> = (token: string) => T
+type RestClientBuilder<T> = (req: Request) => T
 
 export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
-  premisesClientBuilder: ((token: string) => new PremisesClient(token)) as RestClientBuilder<PremisesClient>,
-  bookingClientBuilder: ((token: string) => new BookingClient(token)) as RestClientBuilder<BookingClient>,
-  referenceDataClientBuilder: ((token: string) =>
-    new ReferenceDataClient(token)) as RestClientBuilder<ReferenceDataClient>,
-  lostBedClientBuilder: ((token: string) => new LostBedClient(token)) as RestClientBuilder<LostBedClient>,
-  personClient: ((token: string) => new PersonClient(token)) as RestClientBuilder<PersonClient>,
-  applicationClientBuilder: ((token: string) => new ApplicationClient(token)) as RestClientBuilder<ApplicationClient>,
-  roomClientBuilder: ((token: string) => new RoomClient(token)) as RestClientBuilder<RoomClient>,
-  reportClientBuilder: ((token: string) => new ReportClient(token)) as RestClientBuilder<ReportClient>,
+  premisesClientBuilder: ((req: Request) => new PremisesClient(req)) as RestClientBuilder<PremisesClient>,
+  bookingClientBuilder: ((req: Request) => new BookingClient(req)) as RestClientBuilder<BookingClient>,
+  referenceDataClientBuilder: ((req: Request) =>
+    new ReferenceDataClient(req)) as RestClientBuilder<ReferenceDataClient>,
+  lostBedClientBuilder: ((req: Request) => new LostBedClient(req)) as RestClientBuilder<LostBedClient>,
+  personClient: ((req: Request) => new PersonClient(req)) as RestClientBuilder<PersonClient>,
+  applicationClientBuilder: ((req: Request) => new ApplicationClient(req)) as RestClientBuilder<ApplicationClient>,
+  roomClientBuilder: ((req: Request) => new RoomClient(req)) as RestClientBuilder<RoomClient>,
+  reportClientBuilder: ((req: Request) => new ReportClient(req)) as RestClientBuilder<ReportClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>

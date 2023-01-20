@@ -1,4 +1,5 @@
 import type { Application } from '@approved-premises/api'
+import { Request } from 'express'
 import { ApplicationSummary } from '../testutils/factories/applicationSummary'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
@@ -7,8 +8,8 @@ import paths from '../paths/api'
 export default class ApplicationClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(req: Request) {
+    this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, req)
   }
 
   async find(applicationId: string): Promise<Application> {

@@ -17,9 +17,7 @@ export default class ConfirmationsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
-
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(req, premisesId, bookingId)
 
       return res.render('temporary-accommodation/confirmations/new', {
         booking,
@@ -35,14 +33,13 @@ export default class ConfirmationsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
 
       const newConfirmation: NewConfirmation = {
         ...req.body,
       }
 
       try {
-        await this.confirmationService.createConfirmation(token, premisesId, bookingId, newConfirmation)
+        await this.confirmationService.createConfirmation(req, premisesId, bookingId, newConfirmation)
 
         req.flash('success', 'Booking confirmed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

@@ -1,9 +1,10 @@
 import UserService from './userService'
 import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 jest.mock('../data/hmppsAuthClient')
 
-const token = 'some token'
+const request = createMockRequest()
 
 describe('User service', () => {
   let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
@@ -17,14 +18,14 @@ describe('User service', () => {
     it('Retrieves and formats user name', async () => {
       hmppsAuthClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
 
-      const result = await userService.getUser(token)
+      const result = await userService.getUser(request)
 
       expect(result.displayName).toEqual('John Smith')
     })
     it('Propagates error', async () => {
       hmppsAuthClient.getUser.mockRejectedValue(new Error('some error'))
 
-      await expect(userService.getUser(token)).rejects.toEqual(new Error('some error'))
+      await expect(userService.getUser(request)).rejects.toEqual(new Error('some error'))
     })
   })
 })

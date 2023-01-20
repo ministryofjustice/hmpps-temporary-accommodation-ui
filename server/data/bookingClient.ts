@@ -14,14 +14,15 @@ import type {
   Confirmation,
   NewNonarrival,
 } from '@approved-premises/api'
+import { Request } from 'express'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 
 export default class BookingClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(req: Request) {
+    this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, req)
   }
 
   async create(premisesId: string, data: NewBooking): Promise<Booking> {

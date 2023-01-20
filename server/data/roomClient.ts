@@ -1,4 +1,5 @@
 import type { Room, NewRoom } from '@approved-premises/api'
+import { Request } from 'express'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import api from '../paths/api'
@@ -7,8 +8,8 @@ import { UpdateRoom } from '../@types/shared/models/UpdateRoom'
 export default class RoomClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(req: Request) {
+    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, req)
   }
 
   async all(premisesId: string): Promise<Array<Room>> {

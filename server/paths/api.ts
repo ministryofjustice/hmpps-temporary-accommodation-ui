@@ -77,4 +77,9 @@ export default {
   reports: {
     bookings: reportsPath.path('bookings'),
   },
+  users: {
+    actingUser: {
+      show: path('/profile'),
+    },
+  },
 }

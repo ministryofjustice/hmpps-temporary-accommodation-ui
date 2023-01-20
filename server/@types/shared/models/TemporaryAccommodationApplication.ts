@@ -4,6 +4,7 @@
 
 import type { AnyValue } from './AnyValue';
 import type { Application } from './Application';
+import type { ApplicationStatus } from './ApplicationStatus';
 
 export type TemporaryAccommodationApplication = (Application & {
     createdByUserId: string;
@@ -11,5 +12,6 @@ export type TemporaryAccommodationApplication = (Application & {
     outdatedSchema: boolean;
     data?: AnyValue;
     document?: AnyValue;
+    status: ApplicationStatus;
 });
 

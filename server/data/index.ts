@@ -23,6 +23,7 @@ import LostBedClient from './lostBedClient'
 import ApplicationClient from './applicationClient'
 import RoomClient from './roomClient'
 import ReportClient from './reportClient'
+import UserClient from './userClient'
 
 type RestClientBuilder<T> = (req: Request) => T
 
@@ -37,6 +38,7 @@ export const dataAccess = () => ({
   applicationClientBuilder: ((req: Request) => new ApplicationClient(req)) as RestClientBuilder<ApplicationClient>,
   roomClientBuilder: ((req: Request) => new RoomClient(req)) as RestClientBuilder<RoomClient>,
   reportClientBuilder: ((req: Request) => new ReportClient(req)) as RestClientBuilder<ReportClient>,
+  userClientBuilder: ((req: Request) => new UserClient(req)) as RestClientBuilder<UserClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>

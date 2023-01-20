@@ -1,5 +1,6 @@
 import type { ReferenceData } from '@approved-premises/ui'
 import type { Cancellation, NewCancellation } from '@approved-premises/api'
+import { Request } from 'express'
 import type { BookingClient, RestClientBuilder, ReferenceDataClient } from '../data'
 
 export type CancellationReferenceData = {
@@ -13,12 +14,12 @@ export default class CancellationService {
   ) {}
 
   async createCancellation(
-    token: string,
+    req: Request,
     premisesId: string,
     bookingId: string,
     cancellation: NewCancellation,
   ): Promise<Cancellation> {
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(req)
 
     const confirmedCancellation = await bookingClient.cancel(premisesId, bookingId, cancellation)
 
@@ -26,20 +27,20 @@ export default class CancellationService {
   }
 
   async getCancellation(
-    token: string,
+    req: Request,
     premisesId: string,
     bookingId: string,
     cancellationId: string,
   ): Promise<Cancellation> {
-    const bookingClient = this.bookingClientFactory(token)
+    const bookingClient = this.bookingClientFactory(req)
 
     const booking = await bookingClient.findCancellation(premisesId, bookingId, cancellationId)
 
     return booking
   }
 
-  async getReferenceData(token: string): Promise<CancellationReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(token)
+  async getReferenceData(req: Request): Promise<CancellationReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(req)
 
     const cancellationReasons = await referenceDataClient.getReferenceData('cancellation-reasons')
 

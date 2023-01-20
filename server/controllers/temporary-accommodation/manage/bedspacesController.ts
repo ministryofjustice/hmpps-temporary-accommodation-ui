@@ -18,7 +18,7 @@ export default class BedspacesController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId } = req.params
 
-      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(req.user.token)
+      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(req)
 
       return res.render('temporary-accommodation/bedspaces/new', {
         premisesId,
@@ -41,7 +41,7 @@ export default class BedspacesController {
       }
 
       try {
-        const room = await this.bedspaceService.createRoom(req.user.token, premisesId, newRoom)
+        const room = await this.bedspaceService.createRoom(req, premisesId, newRoom)
 
         req.flash('success', 'Bedspace created')
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
@@ -56,11 +56,10 @@ export default class BedspacesController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
       const { premisesId, roomId } = req.params
-      const { token } = req.user
 
-      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(token)
+      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(req)
 
-      const updateRoom = await this.bedspaceService.getUpdateRoom(token, premisesId, roomId)
+      const updateRoom = await this.bedspaceService.getUpdateRoom(req, premisesId, roomId)
 
       return res.render('temporary-accommodation/bedspaces/edit', {
         allCharacteristics,
@@ -77,7 +76,6 @@ export default class BedspacesController {
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId } = req.params
-      const { token } = req.user
 
       const updateRoom: UpdateRoom = {
         characteristicIds: [],
@@ -85,7 +83,7 @@ export default class BedspacesController {
       }
 
       try {
-        await this.bedspaceService.updateRoom(token, premisesId, roomId, updateRoom)
+        await this.bedspaceService.updateRoom(req, premisesId, roomId, updateRoom)
 
         req.flash('success', 'Bedspace updated')
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
@@ -97,14 +95,13 @@ export default class BedspacesController {
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { token } = req.user
       const { premisesId, roomId } = req.params
 
-      const premises = await this.premisesService.getPremises(token, premisesId)
-      const room = await this.bedspaceService.getRoom(token, premisesId, roomId)
+      const premises = await this.premisesService.getPremises(req, premisesId)
+      const room = await this.bedspaceService.getRoom(req, premisesId, roomId)
 
-      const bedspaceDetails = await this.bedspaceService.getSingleBedspaceDetails(token, premisesId, roomId)
-      const bookingTableRows = await this.bookingService.getTableRowsForBedspace(token, premisesId, room)
+      const bedspaceDetails = await this.bedspaceService.getSingleBedspaceDetails(req, premisesId, roomId)
+      const bookingTableRows = await this.bookingService.getTableRowsForBedspace(req, premisesId, room)
 
       return res.render('temporary-accommodation/bedspaces/show', {
         premises,

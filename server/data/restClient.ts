@@ -4,7 +4,7 @@ import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
 
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
@@ -40,9 +40,12 @@ export default class RestClient {
 
   defaultHeaders: Record<string, string>
 
-  constructor(private readonly name: string, private readonly config: ApiConfig, private readonly token: string) {
+  private readonly token: string
+
+  constructor(private readonly name: string, private readonly config: ApiConfig, req: Request) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
     this.defaultHeaders = config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}
+    this.token = req.user.token
   }
 
   private apiUrl() {

@@ -17,10 +17,8 @@ export default class CanellationsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
-
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
-      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(token)
+      const booking = await this.bookingsService.getBooking(req, premisesId, bookingId)
+      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(req)
 
       return res.render('temporary-accommodation/cancellations/new', {
         booking,
@@ -38,7 +36,6 @@ export default class CanellationsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
 
       const newCancellation: NewCancellation = {
         ...req.body,
@@ -46,7 +43,7 @@ export default class CanellationsController {
       }
 
       try {
-        await this.cancellationService.createCancellation(token, premisesId, bookingId, newCancellation)
+        await this.cancellationService.createCancellation(req, premisesId, bookingId, newCancellation)
 
         req.flash('success', 'Booking cancelled')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

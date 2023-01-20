@@ -15,9 +15,7 @@ export default class ExtensionsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
-
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(req, premisesId, bookingId)
 
       return res.render('temporary-accommodation/extensions/new', {
         booking,
@@ -35,7 +33,6 @@ export default class ExtensionsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
 
       const newExtension: NewExtension = {
         ...req.body,
@@ -43,7 +40,7 @@ export default class ExtensionsController {
       }
 
       try {
-        await this.extensionService.createExtension(token, premisesId, bookingId, newExtension)
+        await this.extensionService.createExtension(req, premisesId, bookingId, newExtension)
 
         req.flash('success', 'Booking departure date changed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

@@ -12,7 +12,7 @@ export default class PremisesController {
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const tableRows = await this.premisesService.tableRows(req.user.token)
+      const tableRows = await this.premisesService.tableRows(req)
       return res.render('temporary-accommodation/premises/index', { tableRows })
     }
   }
@@ -21,14 +21,12 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const { token } = req.user
-
       const {
         localAuthorities: allLocalAuthorities,
         characteristics: allCharacteristics,
         probationRegions: allProbationRegions,
         pdus: allPdus,
-      } = await this.premisesService.getReferenceData(token)
+      } = await this.premisesService.getReferenceData(req)
 
       return res.render('temporary-accommodation/premises/new', {
         allLocalAuthorities,
@@ -52,7 +50,7 @@ export default class PremisesController {
       }
 
       try {
-        const { id: premisesId } = await this.premisesService.create(req.user.token, newPremises)
+        const { id: premisesId } = await this.premisesService.create(req, newPremises)
 
         req.flash('success', 'Property created')
         res.redirect(paths.premises.show({ premisesId }))
@@ -67,16 +65,15 @@ export default class PremisesController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
       const { premisesId } = req.params
-      const { token } = req.user
 
       const {
         localAuthorities: allLocalAuthorities,
         characteristics: allCharacteristics,
         probationRegions: allProbationRegions,
         pdus: allPdus,
-      } = await this.premisesService.getReferenceData(token)
+      } = await this.premisesService.getReferenceData(req)
 
-      const updatePremises = await this.premisesService.getUpdatePremises(token, premisesId)
+      const updatePremises = await this.premisesService.getUpdatePremises(req, premisesId)
 
       return res.render('temporary-accommodation/premises/edit', {
         allLocalAuthorities,
@@ -96,7 +93,6 @@ export default class PremisesController {
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId } = req.params
-      const { token } = req.user
 
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
@@ -104,7 +100,7 @@ export default class PremisesController {
       }
 
       try {
-        await this.premisesService.update(token, premisesId, updatePremises)
+        await this.premisesService.update(req, premisesId, updatePremises)
 
         req.flash('success', 'Property updated')
         res.redirect(paths.premises.show({ premisesId }))
@@ -116,12 +112,11 @@ export default class PremisesController {
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { token } = req.user
       const { premisesId } = req.params
 
-      const details = await this.premisesService.getPremisesDetails(token, premisesId)
+      const details = await this.premisesService.getPremisesDetails(req, premisesId)
 
-      const bedspaceDetails = await this.bedspaceService.getBedspaceDetails(token, premisesId)
+      const bedspaceDetails = await this.bedspaceService.getBedspaceDetails(req, premisesId)
 
       return res.render('temporary-accommodation/premises/show', {
         ...details,

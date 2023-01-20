@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -8,16 +8,16 @@ import departureFactory from '../../../testutils/factories/departure'
 import newDepartureFactory from '../../../testutils/factories/newDeparture'
 import { DateFormats } from '../../../utils/dateUtils'
 import DeparturesController from './departuresController'
+import { createMockRequest, MockRequest } from '../../../testutils/createMockRequest'
 
 jest.mock('../../../utils/validation')
 
 describe('DeparturesController', () => {
-  const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
   const roomId = 'roomId'
   const bookingId = 'bookingId'
 
-  let request: DeepMocked<Request>
+  let request: MockRequest
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -28,7 +28,7 @@ describe('DeparturesController', () => {
   const departuresController = new DeparturesController(bookingService, departureService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMockRequest()
   })
 
   describe('new', () => {
@@ -49,8 +49,8 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
-      expect(departureService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(request, premisesId, booking.id)
+      expect(departureService.getReferenceData).toHaveBeenCalledWith(request)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/new', {
         booking,
@@ -89,7 +89,7 @@ describe('DeparturesController', () => {
       await requestHandler(request, response, next)
 
       expect(departureService.createDeparture).toHaveBeenCalledWith(
-        token,
+        request,
         premisesId,
         bookingId,
         expect.objectContaining(newDeparture),

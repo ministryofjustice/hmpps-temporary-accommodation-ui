@@ -15,17 +15,18 @@ import newArrivalFactory from '../testutils/factories/newArrival'
 import config from '../config'
 import confirmationFactory from '../testutils/factories/confirmation'
 import newConfirmationFactory from '../testutils/factories/newConfirmation'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 describe('BookingClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let bookingClient: BookingClient
 
-  const token = 'token-1'
+  const request = createMockRequest()
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    bookingClient = new BookingClient(token)
+    bookingClient = new BookingClient(request)
   })
 
   afterEach(() => {
@@ -48,7 +49,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/some-uuid/bookings`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, booking)
 
       const result = await bookingClient.create('some-uuid', payload)
@@ -64,7 +65,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .get(`/premises/premisesId/bookings/bookingId`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(200, booking)
 
       const result = await bookingClient.find('premisesId', 'bookingId')
@@ -80,7 +81,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .get(`/premises/some-uuid/bookings`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(200, bookings)
 
       const result = await bookingClient.allBookingsForPremisesId('some-uuid')
@@ -103,7 +104,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/${booking.id}/extensions`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, booking)
 
       const result = await bookingClient.extendBooking('premisesId', booking.id, payload)
@@ -122,7 +123,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/confirmations`, payload)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, confirmation)
 
       const result = await bookingClient.markAsConfirmed('premisesId', 'bookingId', payload)
@@ -143,7 +144,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/arrivals`, payload)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, arrival)
 
       const result = await bookingClient.markAsArrived('premisesId', 'bookingId', payload)
@@ -164,7 +165,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/cancellations`, newCancellation)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, cancellation)
 
       const result = await bookingClient.cancel('premisesId', 'bookingId', newCancellation)
@@ -180,7 +181,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .get(`/premises/premisesId/bookings/bookingId/cancellations/${cancellation.id}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(200, cancellation)
 
       const result = await bookingClient.findCancellation('premisesId', 'bookingId', cancellation.id)
@@ -196,7 +197,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/departures`, departure)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, departure)
 
       const result = await bookingClient.markDeparture('premisesId', 'bookingId', departure)
@@ -212,7 +213,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .get(`/premises/premisesId/bookings/bookingId/departures/${departure.id}`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(200, departure)
 
       const result = await bookingClient.findDeparture('premisesId', 'bookingId', departure.id)
@@ -233,7 +234,7 @@ describe('BookingClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/bookings/bookingId/non-arrivals`, payload)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${request.user.token}`)
         .reply(201, nonArrival)
 
       const result = await bookingClient.markNonArrival('premisesId', 'bookingId', payload)

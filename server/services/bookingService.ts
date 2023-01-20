@@ -1,6 +1,7 @@
 import type { Booking, NewBooking, Room, NewTemporaryAccommodationBooking } from '@approved-premises/api'
 import type { TableRow } from '@approved-premises/ui'
 
+import { Request } from 'express'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import paths from '../paths/temporary-accommodation/manage'
@@ -12,16 +13,16 @@ export default class BookingService {
 
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
-  async create(token: string, premisesId: string, booking: NewBooking): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(token)
+  async create(req: Request, premisesId: string, booking: NewBooking): Promise<Booking> {
+    const bookingClient = this.bookingClientFactory(req)
 
     const confirmedBooking = await bookingClient.create(premisesId, booking)
 
     return confirmedBooking
   }
 
-  async createForBedspace(token: string, premisesId: string, room: Room, booking: NewBooking): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(token)
+  async createForBedspace(req: Request, premisesId: string, room: Room, booking: NewBooking): Promise<Booking> {
+    const bookingClient = this.bookingClientFactory(req)
 
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
@@ -32,16 +33,16 @@ export default class BookingService {
     return confirmedBooking
   }
 
-  async find(token: string, premisesId: string, bookingId: string): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(token)
+  async find(req: Request, premisesId: string, bookingId: string): Promise<Booking> {
+    const bookingClient = this.bookingClientFactory(req)
 
     const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking
   }
 
-  async getTableRowsForBedspace(token: string, premisesId: string, room: Room): Promise<Array<TableRow>> {
-    const bookingClient = this.bookingClientFactory(token)
+  async getTableRowsForBedspace(req: Request, premisesId: string, room: Room): Promise<Array<TableRow>> {
+    const bookingClient = this.bookingClientFactory(req)
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
 
     const bedId = room.beds[0].id
@@ -71,8 +72,8 @@ export default class BookingService {
       })
   }
 
-  async getBooking(token: string, premisesId: string, bookingId: string): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(token)
+  async getBooking(req: Request, premisesId: string, bookingId: string): Promise<Booking> {
+    const bookingClient = this.bookingClientFactory(req)
     const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking

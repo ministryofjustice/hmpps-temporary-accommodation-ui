@@ -15,6 +15,7 @@ import { formatCharacteristics, filterCharacteristics } from '../utils/character
 import probationRegionFactory from '../testutils/factories/probationRegion'
 import pduFactory from '../testutils/factories/pdu'
 import pduJson from '../data/pdus.json'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
@@ -34,7 +35,7 @@ describe('PremisesService', () => {
 
   const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
 
-  const token = 'SOME_TOKEN'
+  const request = createMockRequest()
   const premisesId = 'premisesId'
 
   beforeEach(() => {
@@ -48,11 +49,11 @@ describe('PremisesService', () => {
       const staffMembers = staffMemberFactory.buildList(5)
       premisesClient.getStaffMembers.mockResolvedValue(staffMembers)
 
-      const result = await service.getStaffMembers(token, premisesId)
+      const result = await service.getStaffMembers(request, premisesId)
 
       expect(result).toEqual(staffMembers)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.getStaffMembers).toHaveBeenCalledWith(premisesId)
     })
   })
@@ -94,7 +95,7 @@ describe('PremisesService', () => {
         premisesCharacteristic1,
       ])
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(request)
       expect(result).toEqual({
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
@@ -123,7 +124,7 @@ describe('PremisesService', () => {
       const premises = [premises4, premises1, premises3, premises2]
       premisesClient.all.mockResolvedValue(premises)
 
-      const rows = await service.tableRows(token)
+      const rows = await service.tableRows(request)
 
       expect(rows).toEqual([
         [
@@ -192,7 +193,7 @@ describe('PremisesService', () => {
         ],
       ])
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.all).toHaveBeenCalled()
     })
   })
@@ -204,7 +205,7 @@ describe('PremisesService', () => {
       const premisesC = premisesFactory.build({ name: 'c' })
       premisesClient.all.mockResolvedValue([premisesC, premisesB, premisesA])
 
-      const result = await service.getPremisesSelectList(token)
+      const result = await service.getPremisesSelectList(request)
 
       expect(result).toEqual([
         { text: premisesA.name, value: premisesA.id },
@@ -212,7 +213,7 @@ describe('PremisesService', () => {
         { text: premisesC.name, value: premisesC.id },
       ])
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.all).toHaveBeenCalled()
     })
   })
@@ -242,7 +243,7 @@ describe('PremisesService', () => {
 
       premisesClient.find.mockResolvedValue(premises)
 
-      const result = await service.getUpdatePremises(token, premises.id)
+      const result = await service.getUpdatePremises(request, premises.id)
       expect(result).toEqual({
         ...premises,
         localAuthorityAreaId: 'local-authority',
@@ -259,11 +260,11 @@ describe('PremisesService', () => {
       const premises = premisesFactory.build()
       premisesClient.find.mockResolvedValue(premises)
 
-      const result = await service.getPremises(token, premises.id)
+      const result = await service.getPremises(request, premises.id)
 
       expect(result).toEqual(premises)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })
   })
@@ -302,7 +303,7 @@ describe('PremisesService', () => {
       }))
       ;(formatStatus as jest.MockedFn<typeof formatStatus>).mockReturnValue('Online')
 
-      const result = await service.getPremisesDetails(token, premises.id)
+      const result = await service.getPremisesDetails(request, premises.id)
 
       expect(result).toEqual({
         premises,
@@ -340,7 +341,7 @@ describe('PremisesService', () => {
         },
       })
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
 
       expect(escape).toHaveBeenCalledWith('10 Example Street')
@@ -361,7 +362,7 @@ describe('PremisesService', () => {
       premisesClient.capacity.mockResolvedValue([])
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(request, premisesId)
 
       expect(result).toBe('')
     })
@@ -375,7 +376,7 @@ describe('PremisesService', () => {
       ])
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(request, premisesId)
 
       expect(result).toBe('')
     })
@@ -390,7 +391,7 @@ describe('PremisesService', () => {
       premisesClient.capacity.mockResolvedValue(capacityStub)
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([{ start: capacityStub[0].date }])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(request, premisesId)
 
       expect(result).toEqual([
         '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on 1 January 2022</h4>',
@@ -416,7 +417,7 @@ describe('PremisesService', () => {
         },
       ])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(request, premisesId)
 
       expect(result).toEqual([
         '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period 1 January 2022 to 1 February 2022</h4>',
@@ -443,7 +444,7 @@ describe('PremisesService', () => {
         },
       ])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(request, premisesId)
 
       expect(result).toEqual([
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
@@ -468,7 +469,7 @@ describe('PremisesService', () => {
           end: capacityStub[3].date,
         },
       ])
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(request, premisesId)
 
       expect(result).toEqual([
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
@@ -486,10 +487,10 @@ describe('PremisesService', () => {
       })
       premisesClient.create.mockResolvedValue(premises)
 
-      const createdPremises = await service.create(token, newPremises)
+      const createdPremises = await service.create(request, newPremises)
       expect(createdPremises).toEqual(premises)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
     })
   })
@@ -503,10 +504,10 @@ describe('PremisesService', () => {
       })
       premisesClient.update.mockResolvedValue(premises)
 
-      const updatedPremises = await service.update(token, premises.id, newPremises)
+      const updatedPremises = await service.update(request, premises.id, newPremises)
       expect(updatedPremises).toEqual(premises)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(request)
       expect(premisesClient.update).toHaveBeenCalledWith(premises.id, newPremises)
     })
   })

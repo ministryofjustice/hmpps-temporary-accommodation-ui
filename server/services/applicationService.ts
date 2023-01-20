@@ -16,16 +16,16 @@ type ApplicationResponse = Record<string, Array<PageResponse>>
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
-  async createApplication(token: string, crn: string): Promise<Application> {
-    const applicationClient = this.applicationClientFactory(token)
+  async createApplication(req: Request, crn: string): Promise<Application> {
+    const applicationClient = this.applicationClientFactory(req)
 
     const application = await applicationClient.create(crn)
 
     return application
   }
 
-  async findApplication(token: string, id: string): Promise<Application> {
-    const applicationClient = this.applicationClientFactory(token)
+  async findApplication(req: Request, id: string): Promise<Application> {
+    const applicationClient = this.applicationClientFactory(req)
 
     const application = await applicationClient.find(id)
 
@@ -120,7 +120,7 @@ export default class ApplicationService {
     if (application && application.id === request.params.id) {
       return application
     }
-    return this.findApplication(request.user.token, request.params.id)
+    return this.findApplication(request, request.params.id)
   }
 
   private async saveToSession(application: Application, page: TasklistPage, request: Request) {
@@ -129,7 +129,7 @@ export default class ApplicationService {
   }
 
   private async saveToApi(application: Application, request: Request) {
-    const client = this.applicationClientFactory(request.user.token)
+    const client = this.applicationClientFactory(request)
 
     await client.update(application)
   }
@@ -148,8 +148,8 @@ export default class ApplicationService {
     return application.data?.[request.params.task]?.[request.params.page] || {}
   }
 
-  async tableRows(token: string): Promise<(TextItem | HtmlItem)[][]> {
-    const applicationClient = this.applicationClientFactory(token)
+  async tableRows(req: Request): Promise<(TextItem | HtmlItem)[][]> {
+    const applicationClient = this.applicationClientFactory(req)
 
     const applicationSummaries = await applicationClient.all()
 

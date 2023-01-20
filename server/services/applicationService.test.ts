@@ -12,6 +12,7 @@ import { pages } from '../form-pages/apply'
 import paths from '../paths/apply'
 import applicationFactory from '../testutils/factories/application'
 import { DateFormats } from '../utils/dateUtils'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 const FirstPage = jest.fn()
 const SecondPage = jest.fn()
@@ -62,11 +63,11 @@ describe('ApplicationService', () => {
       })
 
       const applicationSummaries = [applicationSummaryA, applicationSummaryB]
-      const token = 'SOME_TOKEN'
+      const request = createMockRequest()
 
       applicationClient.all.mockResolvedValue(applicationSummaries)
 
-      const result = await service.tableRows(token)
+      const result = await service.tableRows(request)
 
       expect(result).toEqual([
         [
@@ -109,7 +110,7 @@ describe('ApplicationService', () => {
         ],
       ])
 
-      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClientFactory).toHaveBeenCalledWith(request)
       expect(applicationClient.all).toHaveBeenCalled()
     })
   })
@@ -117,15 +118,15 @@ describe('ApplicationService', () => {
   describe('createApplication', () => {
     it('calls the create method and returns an application', async () => {
       const application = applicationFactory.build()
-      const token = 'SOME_TOKEN'
+      const request = createMockRequest()
 
       applicationClient.create.mockResolvedValue(application)
 
-      const result = await service.createApplication(token, application.person.crn)
+      const result = await service.createApplication(request, application.person.crn)
 
       expect(result).toEqual(application)
 
-      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClientFactory).toHaveBeenCalledWith(request)
       expect(applicationClient.create).toHaveBeenCalledWith(application.person.crn)
     })
   })
@@ -133,21 +134,21 @@ describe('ApplicationService', () => {
   describe('findApplication', () => {
     it('calls the find method and returns an application', async () => {
       const application = applicationFactory.build()
-      const token = 'SOME_TOKEN'
+      const request = createMockRequest()
 
       applicationClient.find.mockResolvedValue(application)
 
-      const result = await service.findApplication(token, application.id)
+      const result = await service.findApplication(request, application.id)
 
       expect(result).toEqual(application)
 
-      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClientFactory).toHaveBeenCalledWith(request)
       expect(applicationClient.find).toHaveBeenCalledWith(application.id)
     })
   })
 
   describe('getCurrentPage', () => {
-    let request: DeepMocked<Request>
+    let request: Request
     const dataServices = createMock<DataServices>({}) as DataServices
     const application = applicationFactory.build()
 
@@ -273,7 +274,7 @@ describe('ApplicationService', () => {
       it('saves data to the api', async () => {
         await service.save(page, request)
 
-        expect(applicationClientFactory).toHaveBeenCalledWith(token)
+        expect(applicationClientFactory).toHaveBeenCalledWith(request)
         expect(applicationClient.update).toHaveBeenCalledWith(application)
       })
 

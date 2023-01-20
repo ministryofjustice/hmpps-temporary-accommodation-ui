@@ -1,16 +1,15 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { BookingReportsController } from '.'
 import BookingReportService from '../../../services/bookingReportService'
+import { createMockRequest, MockRequest } from '../../../testutils/createMockRequest'
 
 jest.mock('../../../utils/validation')
 
 describe('BookingReportsController', () => {
-  const token = 'SOME_TOKEN'
-
-  let request: DeepMocked<Request>
+  let request: MockRequest
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -20,7 +19,7 @@ describe('BookingReportsController', () => {
   const bookingReportsController = new BookingReportsController(bookingReportService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMockRequest()
   })
 
   describe('new', () => {
@@ -32,7 +31,7 @@ describe('BookingReportsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingReportService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(bookingReportService.getReferenceData).toHaveBeenCalledWith(request)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/bookings/new', {
         allProbationRegions: [],
@@ -52,7 +51,7 @@ describe('BookingReportsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingReportService.pipeBookings).toHaveBeenCalledWith(token, response)
+      expect(bookingReportService.pipeBookings).toHaveBeenCalledWith(request, response)
     })
 
     it('when the probationRegionId is not empty, creates a booking report for the probation region and pipes it into the express response', async () => {
@@ -65,7 +64,7 @@ describe('BookingReportsController', () => {
       await requestHandler(request, response, next)
 
       expect(bookingReportService.pipeBookingsForProbationRegion).toHaveBeenCalledWith(
-        token,
+        request,
         response,
         'probation-region',
       )

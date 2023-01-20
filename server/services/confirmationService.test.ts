@@ -2,6 +2,7 @@ import BookingClient from '../data/bookingClient'
 import ConfirmationService from './confirmationService'
 import newConfirmationFactory from '../testutils/factories/newConfirmation'
 import confirmationFactory from '../testutils/factories/confirmation'
+import { createMockRequest } from '../testutils/createMockRequest'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -10,7 +11,7 @@ describe('ConfirmationService', () => {
 
   const BookingClientFactory = jest.fn()
 
-  const token = 'SOME_TOKEN'
+  const request = createMockRequest()
   const premisesId = 'premisesId'
   const bookingId = 'bookingId'
 
@@ -28,10 +29,10 @@ describe('ConfirmationService', () => {
 
       bookingClient.markAsConfirmed.mockResolvedValue(confirmation)
 
-      const returnedConfirmation = await service.createConfirmation(token, premisesId, bookingId, newConfirmation)
+      const returnedConfirmation = await service.createConfirmation(request, premisesId, bookingId, newConfirmation)
       expect(returnedConfirmation).toEqual(confirmation)
 
-      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(BookingClientFactory).toHaveBeenCalledWith(request)
       expect(bookingClient.markAsConfirmed).toHaveBeenCalledWith(premisesId, bookingId, newConfirmation)
     })
   })

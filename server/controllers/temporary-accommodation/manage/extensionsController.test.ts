@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
@@ -11,17 +11,17 @@ import ExtensionsController from './extensionsController'
 import extensionFactory from '../../../testutils/factories/extension'
 import newExtensionFactory from '../../../testutils/factories/newExtension'
 import { getLatestExtension } from '../../../utils/bookingUtils'
+import { createMockRequest, MockRequest } from '../../../testutils/createMockRequest'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
 
 describe('ExtensionsController', () => {
-  const token = 'SOME_TOKEN'
   const premisesId = 'premisesId'
   const roomId = 'roomId'
   const bookingId = 'bookingId'
 
-  let request: DeepMocked<Request>
+  let request: MockRequest
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -32,7 +32,7 @@ describe('ExtensionsController', () => {
   const extensionsController = new ExtensionsController(bookingService, extensionService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMockRequest()
   })
 
   describe('new', () => {
@@ -54,7 +54,7 @@ describe('ExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(request, premisesId, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
         booking,
@@ -87,7 +87,7 @@ describe('ExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(request, premisesId, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
         booking,
@@ -125,7 +125,7 @@ describe('ExtensionsController', () => {
       await requestHandler(request, response, next)
 
       expect(extensionService.createExtension).toHaveBeenCalledWith(
-        token,
+        request,
         premisesId,
         bookingId,
         expect.objectContaining(newExtension),

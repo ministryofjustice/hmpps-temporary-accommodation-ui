@@ -11,9 +11,7 @@ export default class BookingReportsController {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const { token } = req.user
-
-      const { probationRegions: allProbationRegions } = await this.bookingReportService.getReferenceData(token)
+      const { probationRegions: allProbationRegions } = await this.bookingReportService.getReferenceData(req)
 
       return res.render('temporary-accommodation/reports/bookings/new', {
         allProbationRegions,
@@ -28,12 +26,11 @@ export default class BookingReportsController {
     return async (req: Request, res: Response) => {
       try {
         const { probationRegionId } = req.body
-        const { token } = req.user
 
         if (probationRegionId?.length) {
-          await this.bookingReportService.pipeBookingsForProbationRegion(token, res, probationRegionId)
+          await this.bookingReportService.pipeBookingsForProbationRegion(req, res, probationRegionId)
         } else {
-          await this.bookingReportService.pipeBookings(token, res)
+          await this.bookingReportService.pipeBookings(req, res)
         }
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))

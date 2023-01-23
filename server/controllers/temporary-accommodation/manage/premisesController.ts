@@ -7,6 +7,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 import BedspaceService from '../../../services/bedspaceService'
 import { allStatuses } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import filterProbationRegions from '../../../utils/userUtils'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}
@@ -36,12 +37,13 @@ export default class PremisesController {
       return res.render('temporary-accommodation/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
-        allProbationRegions,
+        allProbationRegions: filterProbationRegions(allProbationRegions, req),
         allPdus,
         allStatuses,
         characteristicIds: [],
         errors,
         errorSummary,
+        probationRegionId: req.session.probationRegion.id,
         ...userInput,
       })
     }
@@ -86,7 +88,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/premises/edit', {
         allLocalAuthorities,
         allCharacteristics,
-        allProbationRegions,
+        allProbationRegions: filterProbationRegions(allProbationRegions, req),
         allPdus,
         allStatuses,
         characteristicIds: [],

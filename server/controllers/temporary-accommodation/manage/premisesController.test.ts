@@ -15,9 +15,12 @@ import { allStatuses } from '../../../utils/premisesUtils'
 import referenceDataFactory from '../../../testutils/factories/referenceData'
 import extractCallConfig from '../../../utils/restUtils'
 import { CallConfig } from '../../../data/restClient'
+import filterProbationRegions from '../../../utils/userUtils'
+import probationRegionFactory from '../../../testutils/factories/probationRegion'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/userUtils')
 
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -29,6 +32,12 @@ describe('PremisesController', () => {
     pdus: referenceDataFactory.pdu().buildList(5),
   }
 
+  const filteredRegions = [
+    probationRegionFactory.build({
+      name: 'filtered-region',
+    }),
+  ]
+
   let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
@@ -39,7 +48,11 @@ describe('PremisesController', () => {
   const premisesController = new PremisesController(premisesService, bedspaceService)
 
   beforeEach(() => {
-    request = createMock<Request>()
+    request = createMock<Request>({
+      session: {
+        probationRegion: probationRegionFactory.build(),
+      },
+    })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
@@ -59,6 +72,7 @@ describe('PremisesController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const requestHandler = premisesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -70,10 +84,11 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
-        allProbationRegions: referenceData.probationRegions,
+        allProbationRegions: filteredRegions,
         allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
+        probationRegionId: request.session.probationRegion.id,
         errors: {},
         errorSummary: [],
       })
@@ -81,6 +96,7 @@ describe('PremisesController', () => {
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const requestHandler = premisesController.new()
 
@@ -94,10 +110,11 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
-        allProbationRegions: referenceData.probationRegions,
+        allProbationRegions: filteredRegions,
         allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
+        probationRegionId: request.session.probationRegion.id,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
@@ -156,6 +173,7 @@ describe('PremisesController', () => {
   describe('edit', () => {
     it('renders the form', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const premises = premisesFactory.build()
       const updatePremises = updatePremisesFactory.build({
@@ -175,10 +193,11 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
-        allProbationRegions: referenceData.probationRegions,
+        allProbationRegions: filteredRegions,
         allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
+        probationRegionId: request.session.probationRegion.id,
         errors: {},
         errorSummary: [],
         ...updatePremises,
@@ -187,6 +206,7 @@ describe('PremisesController', () => {
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const premises = premisesFactory.build()
       const updatePremises = updatePremisesFactory.build({
@@ -208,10 +228,11 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
-        allProbationRegions: referenceData.probationRegions,
+        allProbationRegions: filteredRegions,
         allPdus: referenceData.pdus,
         allStatuses,
         characteristicIds: [],
+        probationRegionId: request.session.probationRegion.id,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,

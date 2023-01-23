@@ -44,7 +44,11 @@ export default class RestClient {
 
   constructor(private readonly name: string, private readonly config: ApiConfig, req: Request) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
-    this.defaultHeaders = config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}
+    this.defaultHeaders = {
+      ...(config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}),
+      ...(req.session.actingUserProbationRegion ? { 'X-USER-REGION': req.session.actingUserProbationRegion.id } : {}),
+    }
+
     this.token = req.user.token
   }
 

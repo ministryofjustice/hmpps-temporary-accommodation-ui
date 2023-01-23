@@ -12,25 +12,24 @@ describe('restClient', () => {
 
   const request = createMockRequest()
 
-  beforeEach(() => {
-    const apiConfig: ApiConfig = {
-      url: 'http://example.com:8000',
-      timeout: {
-        response: 1000,
-        deadline: 1000,
-      },
-      agent: { timeout: 1000 },
-      serviceName: 'approved-premises',
-    }
+  const apiConfig: ApiConfig = {
+    url: 'http://example.com:8000',
+    timeout: {
+      response: 1000,
+      deadline: 1000,
+    },
+    agent: { timeout: 1000 },
+    serviceName: 'approved-premises',
+  }
 
-    fakeApprovedPremisesApi = nock(apiConfig.url, {
-      reqheaders: {
-        authorization: `Bearer ${request.user.token}`,
-        'X-SERVICE-NAME': 'approved-premises',
-      },
-    })
-    restClient = new RestClient('premisesClient', apiConfig, request)
+  fakeApprovedPremisesApi = nock(apiConfig.url, {
+    reqheaders: {
+      authorization: `Bearer ${request.user.token}`,
+      'X-SERVICE-NAME': 'approved-premises',
+      'X-USER-REGION': request.session.actingUserProbationRegion.id,
+    },
   })
+  restClient = new RestClient('premisesClient', apiConfig, request)
 
   afterEach(() => {
     if (!nock.isDone()) {
@@ -52,14 +51,10 @@ describe('restClient', () => {
     })
 
     it('should omit the X-SERVICE-NAME header when the configuration does not include a service name', async () => {
-      const apiConfig: ApiConfig = {
-        url: 'http://example.com:8000',
-        timeout: {
-          response: 1000,
-          deadline: 1000,
-        },
-        agent: { timeout: 1000 },
+      const apiConfigWithoutServiceName: ApiConfig = {
+        ...apiConfig,
       }
+      delete apiConfigWithoutServiceName.serviceName
 
       fakeApprovedPremisesApi = nock(apiConfig.url, {
         reqheaders: {
@@ -67,7 +62,26 @@ describe('restClient', () => {
         },
         badheaders: ['X-SERVICE-NAME'],
       })
-      restClient = new RestClient('premisesClient', apiConfig, request)
+      restClient = new RestClient('premisesClient', apiConfigWithoutServiceName, request)
+
+      fakeApprovedPremisesApi.get(`/some/path`).reply(200, { some: 'data' })
+
+      await restClient.get({ path: '/some/path' })
+
+      expect(nock.isDone()).toBeTruthy()
+    })
+
+    it('should omit the X-USER-REGION header when the session does not include a user region', async () => {
+      const requestWithoutUserRegion = createMockRequest()
+      delete requestWithoutUserRegion.session.actingUserProbationRegion
+
+      fakeApprovedPremisesApi = nock(apiConfig.url, {
+        reqheaders: {
+          authorization: `Bearer ${request.user.token}`,
+        },
+        badheaders: ['X-USER-REGION'],
+      })
+      restClient = new RestClient('premisesClient', apiConfig, requestWithoutUserRegion)
 
       fakeApprovedPremisesApi.get(`/some/path`).reply(200, { some: 'data' })
 

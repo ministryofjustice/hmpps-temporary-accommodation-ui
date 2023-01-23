@@ -8,12 +8,14 @@ import Page from '../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
+import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
 
 context('Premises', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('should navigate to the list premises page', () => {

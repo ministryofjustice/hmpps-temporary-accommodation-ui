@@ -6,9 +6,12 @@ import { BookingReportsController } from '.'
 import BookingReportService from '../../../services/bookingReportService'
 import { CallConfig } from '../../../data/restClient'
 import extractCallConfig from '../../../utils/restUtils'
+import probationRegionFactory from '../../../testutils/factories/probationRegion'
+import filterProbationRegions from '../../../utils/userUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/userUtils')
 
 describe('BookingReportsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -23,13 +26,32 @@ describe('BookingReportsController', () => {
   const bookingReportsController = new BookingReportsController(bookingReportService)
 
   beforeEach(() => {
-    request = createMock<Request>()
+    request = createMock<Request>({
+      session: {
+        probationRegion: probationRegionFactory.build(),
+      },
+    })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('new', () => {
     it('renders the form', async () => {
-      bookingReportService.getReferenceData.mockResolvedValue({ probationRegions: [] })
+      const unfilteredRegions = [
+        probationRegionFactory.build({
+          name: 'unfiltered-region',
+        }),
+      ]
+
+      const filteredRegions = [
+        probationRegionFactory.build({
+          name: 'filtered-region',
+        }),
+      ]
+
+      bookingReportService.getReferenceData.mockResolvedValue({
+        probationRegions: unfilteredRegions,
+      })
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
       const requestHandler = bookingReportsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -37,29 +59,19 @@ describe('BookingReportsController', () => {
       await requestHandler(request, response, next)
 
       expect(bookingReportService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(filterProbationRegions).toHaveBeenCalledWith(unfilteredRegions, request)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/bookings/new', {
-        allProbationRegions: [],
+        allProbationRegions: filteredRegions,
         errors: {},
         errorSummary: [],
+        probationRegionId: request.session.probationRegion.id,
       })
     })
   })
 
   describe('create', () => {
-    it('when the probationRegionId is empty, creates a booking report and pipes it into the express response', async () => {
-      const requestHandler = bookingReportsController.create()
-
-      request.body = {
-        probationRegionId: '',
-      }
-
-      await requestHandler(request, response, next)
-
-      expect(bookingReportService.pipeBookings).toHaveBeenCalledWith(callConfig, response)
-    })
-
-    it('when the probationRegionId is not empty, creates a booking report for the probation region and pipes it into the express response', async () => {
+    it('creates a booking report for the probation region and pipes it into the express response', async () => {
       const requestHandler = bookingReportsController.create()
 
       request.body = {
@@ -79,11 +91,11 @@ describe('BookingReportsController', () => {
       const requestHandler = bookingReportsController.create()
 
       request.body = {
-        probationRegionId: '',
+        probationRegionId: 'some-region',
       }
 
       const err = new Error()
-      bookingReportService.pipeBookings.mockImplementation(() => {
+      bookingReportService.pipeBookingsForProbationRegion.mockImplementation(() => {
         throw err
       })
 

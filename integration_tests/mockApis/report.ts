@@ -17,15 +17,20 @@ export default {
         body: data,
       },
     }),
-  stubBookingReportError: (data: string) =>
+  stubBookingReportError: (args: { data: string; probationRegionId: string }) =>
     stubFor({
       request: {
         method: 'GET',
-        url: api.reports.bookings({}),
+        urlPath: api.reports.bookings({}),
+        queryParameters: {
+          probationRegionId: {
+            equalTo: args.probationRegionId,
+          },
+        },
       },
       response: {
         status: 500,
-        body: data,
+        body: args.data,
       },
     }),
   stubBookingReportForRegion: (args: { data: string; probationRegionId: string }) =>

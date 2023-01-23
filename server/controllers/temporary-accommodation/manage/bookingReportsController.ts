@@ -3,6 +3,7 @@ import type { Request, Response, RequestHandler } from 'express'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BookingReportService from '../../../services/bookingReportService'
+import filterProbationRegions from '../../../utils/userUtils'
 
 export default class BookingReportsController {
   constructor(private readonly bookingReportService: BookingReportService) {}
@@ -14,9 +15,10 @@ export default class BookingReportsController {
       const { probationRegions: allProbationRegions } = await this.bookingReportService.getReferenceData(req)
 
       return res.render('temporary-accommodation/reports/bookings/new', {
-        allProbationRegions,
+        allProbationRegions: filterProbationRegions(allProbationRegions, req),
         errors,
         errorSummary: requestErrorSummary,
+        probationRegionId: req.session.actingUserProbationRegion.id,
         ...userInput,
       })
     }
@@ -27,11 +29,7 @@ export default class BookingReportsController {
       try {
         const { probationRegionId } = req.body
 
-        if (probationRegionId?.length) {
-          await this.bookingReportService.pipeBookingsForProbationRegion(req, res, probationRegionId)
-        } else {
-          await this.bookingReportService.pipeBookings(req, res)
-        }
+        await this.bookingReportService.pipeBookingsForProbationRegion(req, res, probationRegionId)
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))
       }

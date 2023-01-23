@@ -1,4 +1,5 @@
 {% extends "govuk/template.njk" %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
 
 {% block head %}
   <!--[if !IE 8]><!-->
@@ -35,4 +36,17 @@
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
   {% block extraScripts %}{% endblock %}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: paths.static.cookies({}),
+          text: "Cookies"
+        }
+      ]
+    }
+  }) }}
 {% endblock %}

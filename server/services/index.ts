@@ -17,7 +17,7 @@ import ConfirmationService from './confirmationService'
 import ExtensionService from './extensionService'
 import BookingReportService from './bookingReportService'
 import AuditService from './auditService'
-import config, { AuditConfig } from '../config'
+import config from '../config'
 
 export const services = () => {
   const {
@@ -33,7 +33,7 @@ export const services = () => {
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
-  const auditService = new AuditService(config.apis.audit as AuditConfig)
+  const auditService = new AuditService(config.apis.audit)
   const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClient)
   const bookingService = new BookingService(bookingClientBuilder)

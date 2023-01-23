@@ -9,12 +9,14 @@ import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
 
 context('Bedspace', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('should navigate to the create bedspace page', () => {

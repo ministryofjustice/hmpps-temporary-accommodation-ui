@@ -6,12 +6,14 @@ import newConfirmationFactory from '../../../../server/testutils/factories/newCo
 import Page from '../../../../cypress_shared/pages/page'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
+import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
 
 context('Booking confirmation', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('navigates to the confirm booking page', () => {

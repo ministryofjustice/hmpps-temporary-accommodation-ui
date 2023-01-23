@@ -6,12 +6,14 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import BookingCancellationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationNew'
 import cancellationFactory from '../../../../server/testutils/factories/cancellation'
 import newCancellationFactory from '../../../../server/testutils/factories/newCancellation'
+import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
 
 context('Booking cancellation', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('navigates to the booking cancellation page', () => {

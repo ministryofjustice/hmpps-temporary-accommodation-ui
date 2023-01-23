@@ -1,8 +1,11 @@
+import stubActingUser from '../../../cypress_shared/utils/stubActingUser'
+
 context('Cookies', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('should navigate to the cookie policy page', () => {

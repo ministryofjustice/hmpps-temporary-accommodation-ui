@@ -1,5 +1,5 @@
 import type { ErrorMessages } from '@approved-premises/ui'
-import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application, ProbationRegion } from '@approved-premises/api'
 
 export default {}
 
@@ -10,6 +10,7 @@ declare module 'express-session' {
     nowInMinutes: number
     application: Application
     previousPage: string
+    probationRegion: ProbationRegion
   }
 }
 

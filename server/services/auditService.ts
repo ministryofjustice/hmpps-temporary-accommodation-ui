@@ -25,12 +25,12 @@ export default class AuditService {
     this.logErrors = config.logErrors
   }
 
-  async sendAuditMessage(action: string, userUuid: string, details: Record<string, string>) {
+  async sendAuditMessage(action: string, username: string, details: Record<string, string>) {
     const jsonDetails = JSON.stringify(details)
 
     const jsonMessage = JSON.stringify({
       what: action,
-      who: userUuid,
+      who: username,
       when: new Date(),
       service: this.serviceName,
       details: jsonDetails,

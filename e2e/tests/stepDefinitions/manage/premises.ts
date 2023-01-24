@@ -49,6 +49,8 @@ Given('I create a premises with all necessary details', () => {
     probationRegion,
   })
 
+  page.shouldPreselectProbationRegion(probationRegion)
+
   const newPremises = newPremisesFactory.build({
     ...premises,
     localAuthorityAreaId: premises.localAuthorityArea.id,

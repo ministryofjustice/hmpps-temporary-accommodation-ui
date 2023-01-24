@@ -28,6 +28,15 @@ context('SignIn', () => {
     indexPage.headerUserName().should('contain.text', 'J. Smith')
   })
 
+  it('Probation region visible in header', () => {
+    cy.signIn()
+    const indexPage = Page.verifyOnPage(DashboardPage)
+
+    cy.then(function _() {
+      indexPage.headerProbationRegion().should('contain.text', this.actingUserProbationRegion.name)
+    })
+  })
+
   it('User can log out', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(DashboardPage)

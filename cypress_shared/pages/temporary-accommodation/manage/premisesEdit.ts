@@ -1,9 +1,8 @@
 import type { UpdatePremises, TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
+import { exact } from '../../../../server/utils/utils'
 import PremisesEditablePage from './premisesEditable'
-
-const exact = (text: string) => new RegExp(`^${text}$`)
 
 export default class PremisesEditPage extends PremisesEditablePage {
   constructor(private readonly premises: Premises) {

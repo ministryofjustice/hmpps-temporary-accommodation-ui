@@ -31,6 +31,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .contains('What is the probation region?')
       .siblings('select')
       .children('option')
+      .should('have.length', 2)
       .contains(exact(this.premises.probationRegion.name))
       .should('be.selected')
 

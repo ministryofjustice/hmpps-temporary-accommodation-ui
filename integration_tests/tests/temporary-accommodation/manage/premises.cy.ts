@@ -154,7 +154,10 @@ context('Premises', () => {
 
       const page = PremisesNewPage.visit()
 
-      // And I fill out the form
+      // Then I should see the user's probation region preselected
+      page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
+
+      // And when I fill out the form
       page.completeForm(newPremises)
 
       // Then a premises should have been created in the API

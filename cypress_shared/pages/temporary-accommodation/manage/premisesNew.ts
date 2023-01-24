@@ -1,6 +1,7 @@
-import type { NewPremises } from '@approved-premises/api'
+import type { NewPremises, ProbationRegion } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import PremisesEditablePage from './premisesEditable'
+import { exact } from '../../../../server/utils/utils'
 
 export default class PremisesNewPage extends PremisesEditablePage {
   constructor() {
@@ -17,5 +18,15 @@ export default class PremisesNewPage extends PremisesEditablePage {
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)
 
     super.completeEditableForm(newPremises)
+  }
+
+  shouldPreselectProbationRegion(probationRegion: ProbationRegion): void {
+    cy.get('label')
+      .contains('What is the probation region?')
+      .siblings('select')
+      .children('option')
+      .should('have.length', 2)
+      .contains(exact(probationRegion.name))
+      .should('be.selected')
   }
 }

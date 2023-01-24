@@ -8,6 +8,7 @@ import {
   removeBlankSummaryListItems,
   mapApiPersonRisksForUi,
   unique,
+  exact,
 } from './utils'
 import risksFactory from '../testutils/factories/risks'
 import { DateFormats } from './dateUtils'
@@ -240,5 +241,18 @@ describe('unique', () => {
         id: 'efg',
       },
     ])
+  })
+
+  describe('exact', () => {
+    it('returns a RegExp that only matches the exact given string', () => {
+      const regExp = exact('some-string')
+
+      expect(regExp.exec('some-string')).toBeTruthy()
+      expect(regExp.exec('some-string-inside-another-string')).toBeFalsy()
+      expect(regExp.exec('a-string-containg-some-string')).toBeFalsy()
+      expect(regExp.exec('Some-String')).toBeFalsy()
+      expect(regExp.exec('some string')).toBeFalsy()
+      expect(regExp.exec(' some-string ')).toBeFalsy()
+    })
   })
 })

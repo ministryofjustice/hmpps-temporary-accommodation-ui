@@ -105,3 +105,5 @@ export function unique<T extends { id: string }>(elements: Array<T>): Array<T> {
     (element, index) => elements.findIndex(searchElement => searchElement.id === element.id) === index,
   )
 }
+
+export const exact = (text: string) => new RegExp(`^${text}$`)

@@ -41,6 +41,11 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     })
   }
 
+  app.use((req, res, next) => {
+    res.locals.actingUserProbationRegion = req?.session?.probationRegion
+    return next()
+  })
+
   const njkEnv = nunjucks.configure(
     [
       path.join(__dirname, '../../server/views'),

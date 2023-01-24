@@ -45,11 +45,11 @@ export default function createApp(controllers: Controllers, services: Services):
   app.use(setUpStaticResources())
 
   app.use(flash())
-  nunjucksSetup(app, path)
   app.use(setUpAuthentication())
   app.use(authorisationMiddleware())
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
+  nunjucksSetup(app, path)
   app.use((req, res, next) => {
     res.app.locals.infoMessages = req.flash('info')
     res.app.locals.successMessages = req.flash('success')

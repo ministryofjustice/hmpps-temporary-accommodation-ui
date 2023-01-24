@@ -22,10 +22,14 @@ context('SignIn', () => {
     Page.verifyOnPage(AuthSignInPage)
   })
 
-  it('User name visible in header', () => {
+  it('User name and probation region visible in header', () => {
     cy.signIn()
     const indexPage = Page.verifyOnPage(DashboardPage)
     indexPage.headerUserName().should('contain.text', 'J. Smith')
+
+    cy.then(function _() {
+      indexPage.headerProbationRegion().should('contain.text', this.actingUserProbationRegion.name)
+    })
   })
 
   it('User can log out', () => {

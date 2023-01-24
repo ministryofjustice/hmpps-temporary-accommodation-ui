@@ -14,6 +14,7 @@ const actingUserProbationRegionName =
 
 Given("I'm downloading a booking report", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
+
   dashboardPage.clickReportsLink()
 })
 
@@ -24,6 +25,8 @@ Given('I select a probation region to download a report for', () => {
     id: actingUserProbationRegionId,
     name: actingUserProbationRegionName,
   })
+
+  bookingReportPage.shouldPreselectProbationRegion(probationRegion)
   bookingReportPage.expectDownload(10000)
   bookingReportPage.completeForm(probationRegion)
 

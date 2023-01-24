@@ -60,8 +60,11 @@ context('Report', () => {
     cy.task('stubBookingReportReferenceData')
     const page = BookingReportNewPage.visit()
 
-    // And I fill out the form
     cy.then(function _() {
+      // Then I should see the user's probation region preselected
+      page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
+
+      // And when I fill out the form
       const probationRegion = this.actingUserProbationRegion
 
       cy.task('stubBookingReportForRegion', { data: 'some-data', probationRegionId: probationRegion.id })

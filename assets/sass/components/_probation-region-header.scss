@@ -1,0 +1,10 @@
+.region-header-container {
+  background-color: govuk-colour('light-grey');
+}
+  
+.region-header {
+  @include govuk-font($size: 16, $weight: 'bold');
+  text-align: right;
+  padding-top: govuk-spacing(3);
+  padding-bottom: govuk-spacing(3);
+}

@@ -1,5 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -11,15 +13,17 @@
   {{ breadCrumb('List of properties', []) }}
 
   {% include "../../_messages.njk" %}
-  
-  <h1>List of properties</h1>
 
-  <div class="add-property-button-container">
-    {{ govukButton({
-      text: "Add a property",
-      href: paths.premises.new()
-    }) }}
-  </div>
+  {{ mojPageHeaderActions({
+    heading: {
+      text: 'List of properties',
+      classes: 'govuk-heading-l'
+    },
+    items: [{
+        text: "Add a property",
+        href: paths.premises.new()
+      }]
+  }) }}
 
   {{ govukTable({
     captionClasses: "govuk-table__caption--m",

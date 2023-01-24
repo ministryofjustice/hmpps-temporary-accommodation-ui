@@ -52,7 +52,7 @@ export default class PremisesShowPage extends Page {
   }
 
   clickAddBedspaceLink(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Add a bedspace').click()
     })

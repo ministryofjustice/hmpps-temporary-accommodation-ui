@@ -94,6 +94,12 @@ export interface IdentityBarMenuItem {
   text: string
 }
 
+export interface PageHeadingBarItem {
+  classes: string
+  href: string
+  text: string
+}
+
 export type RiskLevel = 'Low' | 'Medium' | 'High' | 'Very High'
 
 export type TierNumber = '1' | '2' | '3' | '4'

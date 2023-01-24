@@ -1,9 +1,9 @@
-import type { IdentityBarMenu } from '@approved-premises/ui'
+import type { PageHeadingBarItem } from '@approved-premises/ui'
 import type { Booking } from '@approved-premises/api'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 
-export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<IdentityBarMenu> {
+export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<PageHeadingBarItem> {
   const items = []
 
   const cancelAction = {
@@ -49,7 +49,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
     return null
   }
 
-  return [{ items }]
+  return items
 }
 
 export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass: string }> = [

@@ -48,10 +48,10 @@ const wrapHandler =
     let redirectAuditEvent: string
     let redirectParams: Record<string, string>
 
-    const userUuid = res?.locals?.user?.uuid
+    const userUuid = res?.locals?.user?.username
 
     if (!userUuid) {
-      logger.error('User without a UUID is attempt to access an audited path')
+      logger.error('User without a username is attempt to access an audited path')
       res.redirect('/authError')
       return
     }

@@ -7,7 +7,7 @@ import { auditMiddleware } from './auditMiddleware'
 
 jest.mock('../../logger')
 
-const userUuid = 'some-user-uuid'
+const username = 'some-username'
 const requestParams = { param1: 'value-1', param2: 'value-2' }
 const auditEvent = 'SOME_AUDIT_EVENT'
 
@@ -24,7 +24,7 @@ describe('auditMiddleware', () => {
 
   it('returns an audited request handler, that forwards call on to the given request handler', async () => {
     const handler = jest.fn()
-    const response = createMock<Response>({ locals: { user: { uuid: userUuid } } })
+    const response = createMock<Response>({ locals: { user: { username } } })
     const request = createMock<Request>()
     const next = jest.fn()
 
@@ -51,12 +51,12 @@ describe('auditMiddleware', () => {
 
     expect(handler).not.toHaveBeenCalled()
     expect(response.redirect).toHaveBeenCalledWith('/authError')
-    expect(logger.error).toHaveBeenCalledWith('User without a UUID is attempt to access an audited path')
+    expect(logger.error).toHaveBeenCalledWith('User without a username is attempt to access an audited path')
   })
 
   it('returns an audited request handler, that sends an audit message that includes the request parameters', async () => {
     const handler = jest.fn()
-    const response = createMock<Response>({ locals: { user: { uuid: userUuid } } })
+    const response = createMock<Response>({ locals: { user: { username } } })
     const request = createMock<Request>({ params: requestParams })
     const next = jest.fn()
 
@@ -67,12 +67,12 @@ describe('auditMiddleware', () => {
     await auditedhandler(request, response, next)
 
     expect(handler).toHaveBeenCalled()
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, requestParams)
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, requestParams)
   })
 
   it('returns an audited request handler, that sends an audit message that includes selected request body parameters', async () => {
     const handler = jest.fn()
-    const response = createMock<Response>({ locals: { user: { uuid: userUuid } } })
+    const response = createMock<Response>({ locals: { user: { username } } })
     const request = createMock<Request>({
       params: requestParams,
       body: { bodyParam1: 'body-value-1', bodyParam2: 'body-value-2', bodyParam3: 'body-value-3' },
@@ -89,7 +89,7 @@ describe('auditMiddleware', () => {
     await auditedhandler(request, response, next)
 
     expect(handler).toHaveBeenCalled()
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
       ...requestParams,
       bodyParam1: 'body-value-1',
       bodyParam2: 'body-value-2',
@@ -98,7 +98,7 @@ describe('auditMiddleware', () => {
 
   it('ignores empty request body parameters', async () => {
     const handler = jest.fn()
-    const response = createMock<Response>({ locals: { user: { uuid: userUuid } } })
+    const response = createMock<Response>({ locals: { user: { username } } })
     const request = createMock<Request>({
       params: requestParams,
       body: { bodyParam1: 'body-value-1', bodyParam2: '' },
@@ -115,7 +115,7 @@ describe('auditMiddleware', () => {
     await auditedhandler(request, response, next)
 
     expect(handler).toHaveBeenCalled()
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
       ...requestParams,
       bodyParam1: 'body-value-1',
     })
@@ -126,7 +126,7 @@ describe('auditMiddleware', () => {
 
     const handler = jest.fn()
     const response = createMock<Response>({
-      locals: { user: { uuid: userUuid } },
+      locals: { user: { username } },
       get: field => {
         return field === 'Location' ? somePath({ premisesId: 'some-premises', roomId: 'some-room' }) : undefined
       },
@@ -143,7 +143,7 @@ describe('auditMiddleware', () => {
     await auditedhandler(request, response, next)
 
     expect(handler).toHaveBeenCalled()
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, userUuid, {
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
       premisesId: 'some-premises',
       roomId: 'some-room',
     })
@@ -156,7 +156,7 @@ describe('auditMiddleware', () => {
 
     const handler = jest.fn()
     const response = createMock<Response>({
-      locals: { user: { uuid: userUuid } },
+      locals: { user: { username } },
       get: field => {
         return field === 'Location' ? matchingPath1({ premisesId: 'some-premises' }) : undefined
       },
@@ -177,7 +177,7 @@ describe('auditMiddleware', () => {
     await auditedhandler(request, response, next)
 
     expect(handler).toHaveBeenCalled()
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith('MATCHING_PATH_1_AUDIT_EVENT', userUuid, {
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith('MATCHING_PATH_1_AUDIT_EVENT', username, {
       premisesId: 'some-premises',
     })
   })

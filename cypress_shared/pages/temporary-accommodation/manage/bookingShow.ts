@@ -19,35 +19,35 @@ export default class BookingShowPage extends Page {
   }
 
   clickConfirmBookingButton(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Mark as confirmed').click()
     })
   }
 
   clickMarkArrivedBookingButton(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Mark as active').click()
     })
   }
 
   clickMarkDepartedBookingButton(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Mark as closed').click()
     })
   }
 
   clickExtendBookingButton(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Extend or shorten booking').click()
     })
   }
 
   clickCancelBookingButton(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Cancel booking').click()
     })

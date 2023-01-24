@@ -15,18 +15,14 @@ describe('bookingUtils', () => {
 
       expect(bookingActions(premisesId, roomId, booking)).toEqual([
         {
-          items: [
-            {
-              text: 'Mark as confirmed',
-              classes: '',
-              href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
-            },
-            {
-              text: 'Cancel booking',
-              classes: 'govuk-button--secondary',
-              href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
-            },
-          ],
+          text: 'Mark as confirmed',
+          classes: '',
+          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Cancel booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
         },
       ])
     })
@@ -36,18 +32,14 @@ describe('bookingUtils', () => {
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
         {
-          items: [
-            {
-              text: 'Mark as active',
-              classes: '',
-              href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
-            },
-            {
-              text: 'Cancel booking',
-              classes: 'govuk-button--secondary',
-              href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
-            },
-          ],
+          text: 'Mark as active',
+          classes: '',
+          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Cancel booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
         },
       ])
     })
@@ -57,18 +49,14 @@ describe('bookingUtils', () => {
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
         {
-          items: [
-            {
-              text: 'Mark as closed',
-              classes: 'govuk-button--secondary',
-              href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
-            },
-            {
-              text: 'Extend or shorten booking',
-              classes: 'govuk-button--secondary',
-              href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
-            },
-          ],
+          text: 'Mark as closed',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Extend or shorten booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
         },
       ])
     })

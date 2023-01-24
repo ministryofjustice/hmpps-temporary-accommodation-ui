@@ -1,5 +1,5 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -19,12 +19,13 @@
 
   <h1>View a property</h1>
 
-  {{ mojIdentityBar({
-    title: {
-      html: '<h2>' + (premises.addressLine1 | e) + ', ' + (premises.postcode | e) + '</h2>'
+  {{ mojPageHeaderActions({
+    heading: {
+      text: (premises.addressLine1 | e) + ', ' + (premises.postcode | e),
+      classes: 'govuk-heading-m',
+      level: 2
     },
-    menus: [{
-      items: [{
+    items: [{
         text: "Add a bedspace",
         classes: 'govuk-button--secondary',
         href: paths.premises.bedspaces.new({ premisesId: premises.id })
@@ -33,7 +34,6 @@
         classes: 'govuk-button--secondary',
         href: '#'
       }]
-    }]
   }) }}
 
   <div data-cy-premises="true">

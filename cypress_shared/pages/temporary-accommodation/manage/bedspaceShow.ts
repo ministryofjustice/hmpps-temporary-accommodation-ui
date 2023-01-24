@@ -58,14 +58,14 @@ export default class BedspaceShowPage extends Page {
   }
 
   clickBookBedspaceLink(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Book bedspace').click()
     })
   }
 
   clickVoidBedspaceLink(): void {
-    cy.get('.moj-identity-bar').within(() => {
+    cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Void bedspace').click()
     })

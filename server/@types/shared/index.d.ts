@@ -30,7 +30,6 @@ export type { Booking } from './models/Booking';
 export type { BookingBody } from './models/BookingBody';
 export type { Cancellation } from './models/Cancellation';
 export type { CancellationReason } from './models/CancellationReason';
-export type { CaseLoadPerson } from './models/CaseLoadPerson';
 export type { Characteristic } from './models/Characteristic';
 export type { ClarificationNote } from './models/ClarificationNote';
 export type { Confirmation } from './models/Confirmation';

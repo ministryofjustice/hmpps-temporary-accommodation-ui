@@ -1,5 +1,5 @@
 import type { Task, FormSections, FormSection } from '@approved-premises/ui'
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 import paths from '../paths/apply'
 
 const taskIsComplete = (task: Task, application: Application): boolean => {

@@ -1,10 +1,11 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 
 import personFactory from './person'
 import { DateFormats } from '../../utils/dateUtils'
+import risks from './risks'
 
 export default Factory.define<Application>(() => ({
   id: faker.datatype.uuid(),
@@ -18,4 +19,5 @@ export default Factory.define<Application>(() => ({
   outdatedSchema: faker.datatype.boolean(),
   isWomensApplication: faker.datatype.boolean(),
   isPipeApplication: faker.datatype.boolean(),
+  risks: risks.build(),
 }))

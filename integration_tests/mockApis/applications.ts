@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 import type { ApplicationSummary } from '../../server/testutils/factories/applicationSummary'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'

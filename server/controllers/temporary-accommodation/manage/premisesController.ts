@@ -5,7 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../services/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
-import { allStatuses } from '../../../utils/premisesUtils'
+import { allStatuses, getActiveStatuses } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 
 export default class PremisesController {
@@ -38,7 +38,7 @@ export default class PremisesController {
         allCharacteristics,
         allProbationRegions,
         allPdus,
-        allStatuses,
+        allStatuses: getActiveStatuses(allStatuses),
         characteristicIds: [],
         errors,
         errorSummary,
@@ -88,7 +88,7 @@ export default class PremisesController {
         allCharacteristics,
         allProbationRegions,
         allPdus,
-        allStatuses,
+        allStatuses: getActiveStatuses(allStatuses),
         characteristicIds: [],
         errors,
         errorSummary,

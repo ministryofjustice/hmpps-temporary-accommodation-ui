@@ -2,4 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type AssessmentStatus = 'pending' | 'active' | 'completed';
+export type AssessmentStatus = 'pending' | 'active' | 'completed' | 'reallocated';

@@ -157,7 +157,7 @@
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^15.0.0",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.1.5",
-    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.0",
     "@faker-js/faker": "^7.5.0",
     "@golevelup/ts-jest": "^0.3.3",
     "@types/bunyan": "^1.8.8",

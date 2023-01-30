@@ -1,4 +1,4 @@
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 import type { YesOrNo, TaskListErrors } from '@approved-premises/ui'
 
 import TasklistPage from '../../tasklistPage'

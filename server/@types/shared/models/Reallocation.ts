@@ -3,6 +3,6 @@
 /* eslint-disable */
 
 export type Reallocation = {
-    userId?: string;
+    userId: string;
 };
 

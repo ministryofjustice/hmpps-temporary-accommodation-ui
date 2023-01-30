@@ -6,7 +6,7 @@ import express from 'express'
 import * as pathModule from 'path'
 
 import type { ErrorMessages, PersonStatus, Task } from '@approved-premises/ui'
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 import { initialiseName, removeBlankSummaryListItems } from './utils'
 import {
   dateFieldValues,

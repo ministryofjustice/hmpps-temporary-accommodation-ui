@@ -1,4 +1,4 @@
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 import { ApplicationSummary } from '../testutils/factories/applicationSummary'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'

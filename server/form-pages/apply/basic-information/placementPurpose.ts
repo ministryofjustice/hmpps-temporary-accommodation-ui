@@ -1,5 +1,5 @@
 import type { TaskListErrors } from '@approved-premises/ui'
-import type { Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 
 import TasklistPage from '../../tasklistPage'
 import { convertKeyValuePairToCheckBoxItems } from '../../../utils/formUtils'

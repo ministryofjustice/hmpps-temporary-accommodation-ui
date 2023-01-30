@@ -1,5 +1,5 @@
 import type { SummaryListItem, PersonRisksUI } from '@approved-premises/ui'
-import type { Application, PersonRisks } from '@approved-premises/api'
+import type { ApprovedPremisesApplication as Application, PersonRisks } from '@approved-premises/api'
 
 import { SessionDataError } from './errors'
 import { DateFormats } from './dateUtils'

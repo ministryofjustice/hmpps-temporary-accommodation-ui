@@ -40,11 +40,18 @@ export interface CallConfig {
 }
 
 export default class RestClient {
-  agent: Agent
+  private readonly token: string
 
-  defaultHeaders: Record<string, string>
+  private readonly agent: Agent
 
-  constructor(private readonly name: string, private readonly config: ApiConfig, private readonly token: string) {
+  private readonly defaultHeaders: Record<string, string>
+
+  constructor(
+    private readonly name: string,
+    private readonly config: ApiConfig,
+    private readonly callConfig: CallConfig,
+  ) {
+    this.token = callConfig.token
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
     this.defaultHeaders = config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}
   }

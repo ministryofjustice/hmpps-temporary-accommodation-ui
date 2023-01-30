@@ -7,7 +7,7 @@ export default class PersonClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async search(crn: string): Promise<Person> {

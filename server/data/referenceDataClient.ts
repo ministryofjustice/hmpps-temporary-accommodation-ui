@@ -6,7 +6,7 @@ export default class ReferenceDataClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('referenceDataClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('referenceDataClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async getReferenceData<T = ReferenceData>(objectType: string): Promise<Array<T>> {

@@ -3,13 +3,13 @@ import { Response } from 'express'
 import nock from 'nock'
 
 import type { ApiConfig } from '../config'
-import RestClient from './restClient'
+import RestClient, { CallConfig } from './restClient'
 
 describe('restClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let restClient: RestClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     const apiConfig: ApiConfig = {
@@ -24,11 +24,11 @@ describe('restClient', () => {
 
     fakeApprovedPremisesApi = nock(apiConfig.url, {
       reqheaders: {
-        authorization: `Bearer ${token}`,
+        authorization: `Bearer ${callConfig.token}`,
         'X-SERVICE-NAME': 'approved-premises',
       },
     })
-    restClient = new RestClient('premisesClient', apiConfig, token)
+    restClient = new RestClient('premisesClient', apiConfig, callConfig)
   })
 
   afterEach(() => {
@@ -62,11 +62,11 @@ describe('restClient', () => {
 
       fakeApprovedPremisesApi = nock(apiConfig.url, {
         reqheaders: {
-          authorization: `Bearer ${token}`,
+          authorization: `Bearer ${callConfig.token}`,
         },
         badheaders: ['X-SERVICE-NAME'],
       })
-      restClient = new RestClient('premisesClient', apiConfig, token)
+      restClient = new RestClient('premisesClient', apiConfig, callConfig)
 
       fakeApprovedPremisesApi.get(`/some/path`).reply(200, { some: 'data' })
 

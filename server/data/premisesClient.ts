@@ -13,7 +13,7 @@ export default class PremisesClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async all(): Promise<Array<Premises>> {

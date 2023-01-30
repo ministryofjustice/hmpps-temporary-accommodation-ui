@@ -7,7 +7,7 @@ export default class LostBedClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('lostBedClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('lostBedClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async create(premisesId: string, lostBed: NewLostBed): Promise<LostBed> {

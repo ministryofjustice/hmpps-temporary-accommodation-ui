@@ -8,7 +8,7 @@ export default class RoomClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async all(premisesId: string): Promise<Array<Room>> {

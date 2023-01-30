@@ -8,7 +8,7 @@ export default class ApplicationClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async find(applicationId: string): Promise<Application> {

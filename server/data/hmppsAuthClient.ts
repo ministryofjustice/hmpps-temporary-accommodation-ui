@@ -44,7 +44,7 @@ export default class HmppsAuthClient {
   constructor(private readonly tokenStore: TokenStore) {}
 
   private static restClient(callConfig: CallConfig): RestClient {
-    return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, callConfig.token)
+    return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, callConfig)
   }
 
   getUser(callConfig: CallConfig): Promise<User> {
@@ -53,7 +53,7 @@ export default class HmppsAuthClient {
   }
 
   getUserRoles(callConfig: CallConfig): Promise<string[]> {
-    return HmppsAuthClient.restClient(callConfig.token)
+    return HmppsAuthClient.restClient(callConfig)
       .get({ path: '/api/user/me/roles' })
       .then(roles => (<UserRole[]>roles).map(role => role.roleCode))
   }

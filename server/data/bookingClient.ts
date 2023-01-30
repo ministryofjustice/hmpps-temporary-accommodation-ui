@@ -21,7 +21,7 @@ export default class BookingClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
+    this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async create(premisesId: string, data: NewBooking): Promise<Booking> {

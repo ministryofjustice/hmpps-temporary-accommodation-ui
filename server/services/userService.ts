@@ -1,6 +1,9 @@
 import { convertToTitleCase } from '../utils/utils'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { CallConfig } from '../data/restClient'
+import UserClient from '../data/userClient'
+import { User } from '../@types/shared'
+import { RestClientBuilder } from '../data'
 
 interface UserDetails {
   name: string
@@ -8,10 +11,20 @@ interface UserDetails {
 }
 
 export default class UserService {
-  constructor(private readonly hmppsAuthClient: HmppsAuthClient) {}
+  constructor(
+    private readonly hmppsAuthClient: HmppsAuthClient,
+    private readonly userClientFactory: RestClientBuilder<UserClient>,
+  ) {}
 
   async getUser(callConfig: CallConfig): Promise<UserDetails> {
     const user = await this.hmppsAuthClient.getUser(callConfig)
     return { ...user, displayName: convertToTitleCase(user.name) }
+  }
+
+  async getActingUser(callConfig: CallConfig): Promise<User> {
+    const userClient = this.userClientFactory(callConfig)
+    const user = await userClient.getActingUser()
+
+    return user
   }
 }

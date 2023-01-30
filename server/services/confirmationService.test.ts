@@ -11,8 +11,7 @@ describe('ConfirmationService', () => {
 
   const BookingClientFactory = jest.fn()
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
   const premisesId = 'premisesId'
   const bookingId = 'bookingId'
 
@@ -33,7 +32,7 @@ describe('ConfirmationService', () => {
       const returnedConfirmation = await service.createConfirmation(callConfig, premisesId, bookingId, newConfirmation)
       expect(returnedConfirmation).toEqual(confirmation)
 
-      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(BookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markAsConfirmed).toHaveBeenCalledWith(premisesId, bookingId, newConfirmation)
     })
   })

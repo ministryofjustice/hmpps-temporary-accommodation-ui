@@ -22,15 +22,14 @@ describe('ArrivalService', () => {
       const arrival = arrivalFactory.build()
       const payload = newArrivalFactory.build()
 
-      const token = 'some-token'
-      const callConfig = { token } as CallConfig
+      const callConfig = { token: 'some-token' } as CallConfig
 
       bookingClient.markAsArrived.mockResolvedValue(arrival)
 
       const postedArrival = await service.createArrival(callConfig, 'premisesID', 'bookingId', payload)
       expect(postedArrival).toEqual(arrival)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markAsArrived).toHaveBeenCalledWith('premisesID', 'bookingId', payload)
     })
   })

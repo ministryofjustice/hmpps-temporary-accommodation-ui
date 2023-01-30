@@ -11,7 +11,7 @@ export default class ExtensionService {
     bookingId: string,
     extension: NewExtension,
   ): Promise<Extension> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedExtension = await bookingClient.extendBooking(premisesId, bookingId, extension)
 

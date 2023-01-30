@@ -5,17 +5,18 @@ import config from '../config'
 import applicationSummaryFactory from '../testutils/factories/applicationSummary'
 import applicationFactory from '../testutils/factories/application'
 import paths from '../paths/api'
+import { CallConfig } from './restClient'
 
 describe('ApplicationClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let applicationClient: ApplicationClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    applicationClient = new ApplicationClient(token)
+    applicationClient = new ApplicationClient(callConfig)
   })
 
   afterEach(() => {
@@ -33,7 +34,7 @@ describe('ApplicationClient', () => {
 
       fakeApprovedPremisesApi
         .post(paths.applications.new.pattern)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, application)
 
       const result = await applicationClient.create(application.person.crn)
@@ -49,7 +50,7 @@ describe('ApplicationClient', () => {
 
       fakeApprovedPremisesApi
         .get(paths.applications.show({ id: application.id }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, application)
 
       const result = await applicationClient.find(application.id)
@@ -65,7 +66,7 @@ describe('ApplicationClient', () => {
 
       fakeApprovedPremisesApi
         .put(paths.applications.update({ id: application.id }), JSON.stringify({ data: application.data }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, application)
 
       const result = await applicationClient.update(application)
@@ -81,7 +82,7 @@ describe('ApplicationClient', () => {
 
       fakeApprovedPremisesApi
         .get(paths.applications.index.pattern)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, previousApplications)
 
       const result = await applicationClient.all()

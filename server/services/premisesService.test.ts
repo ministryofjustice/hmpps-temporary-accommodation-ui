@@ -35,8 +35,7 @@ describe('PremisesService', () => {
 
   const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
   const premisesId = 'premisesId'
 
   beforeEach(() => {
@@ -54,7 +53,7 @@ describe('PremisesService', () => {
 
       expect(result).toEqual(staffMembers)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.getStaffMembers).toHaveBeenCalledWith(premisesId)
     })
   })
@@ -194,7 +193,7 @@ describe('PremisesService', () => {
         ],
       ])
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.all).toHaveBeenCalled()
     })
   })
@@ -214,7 +213,7 @@ describe('PremisesService', () => {
         { text: premisesC.name, value: premisesC.id },
       ])
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.all).toHaveBeenCalled()
     })
   })
@@ -265,7 +264,7 @@ describe('PremisesService', () => {
 
       expect(result).toEqual(premises)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
     })
   })
@@ -342,7 +341,7 @@ describe('PremisesService', () => {
         },
       })
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
 
       expect(escape).toHaveBeenCalledWith('10 Example Street')
@@ -491,7 +490,7 @@ describe('PremisesService', () => {
       const createdPremises = await service.create(callConfig, newPremises)
       expect(createdPremises).toEqual(premises)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
     })
   })
@@ -508,7 +507,7 @@ describe('PremisesService', () => {
       const updatedPremises = await service.update(callConfig, premises.id, newPremises)
       expect(updatedPremises).toEqual(premises)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(token)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.update).toHaveBeenCalledWith(premises.id, newPremises)
     })
   })

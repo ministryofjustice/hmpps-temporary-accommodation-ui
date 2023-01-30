@@ -7,8 +7,7 @@ import ExtensionService from './extensionService'
 jest.mock('../data/bookingClient.ts')
 
 describe('ExtensionService', () => {
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
   const premiseId = 'premisesId'
   const bookingId = 'bookingId'
 
@@ -32,7 +31,7 @@ describe('ExtensionService', () => {
       const postedExtension = await service.createExtension(callConfig, premiseId, bookingId, payload)
       expect(postedExtension).toEqual(extension)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.extendBooking).toHaveBeenCalledWith(premiseId, bookingId, payload)
     })
   })

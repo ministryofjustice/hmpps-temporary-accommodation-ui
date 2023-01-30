@@ -22,8 +22,7 @@ describe('BedspaceService', () => {
 
   const service = new BedspaceService(roomClientFactory, referenceDataClientFactory)
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
   const premisesId = 'premisesId'
 
   beforeEach(() => {
@@ -41,7 +40,7 @@ describe('BedspaceService', () => {
 
       expect(result).toEqual(room)
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(callConfig)
       expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
     })
   })
@@ -104,7 +103,7 @@ describe('BedspaceService', () => {
         },
       ])
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(callConfig)
       expect(roomClient.all).toHaveBeenCalledWith(premisesId)
 
       expect(formatLines).toHaveBeenCalledWith('Some more notes')
@@ -160,7 +159,7 @@ describe('BedspaceService', () => {
         },
       })
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(callConfig)
       expect(roomClient.find).toHaveBeenCalledWith(premisesId, room.id)
 
       expect(formatLines).toHaveBeenCalledWith('Some notes')
@@ -214,7 +213,7 @@ describe('BedspaceService', () => {
       const postedRoom = await service.createRoom(callConfig, premisesId, newRoom)
       expect(postedRoom).toEqual(room)
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(callConfig)
       expect(roomClient.create).toHaveBeenCalledWith(premisesId, newRoom)
     })
   })
@@ -230,7 +229,7 @@ describe('BedspaceService', () => {
       const updatedRoom = await service.updateRoom(callConfig, premisesId, room.id, newRoom)
       expect(updatedRoom).toEqual(room)
 
-      expect(roomClientFactory).toHaveBeenCalledWith(token)
+      expect(roomClientFactory).toHaveBeenCalledWith(callConfig)
       expect(roomClient.update).toHaveBeenCalledWith(premisesId, room.id, newRoom)
     })
   })

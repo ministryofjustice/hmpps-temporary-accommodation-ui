@@ -9,6 +9,7 @@ import { UnknownPageError, ValidationError } from '../utils/errors'
 import { pages } from '../form-pages/apply'
 import paths from '../paths/apply'
 import { DateFormats } from '../utils/dateUtils'
+import { CallConfig } from '../data/restClient'
 
 type PageResponse = Record<string, string>
 type ApplicationResponse = Record<string, Array<PageResponse>>
@@ -16,16 +17,16 @@ type ApplicationResponse = Record<string, Array<PageResponse>>
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
-  async createApplication(token: string, crn: string): Promise<Application> {
-    const applicationClient = this.applicationClientFactory(token)
+  async createApplication(callConfig: CallConfig, crn: string): Promise<Application> {
+    const applicationClient = this.applicationClientFactory(callConfig)
 
     const application = await applicationClient.create(crn)
 
     return application
   }
 
-  async findApplication(token: string, id: string): Promise<Application> {
-    const applicationClient = this.applicationClientFactory(token)
+  async findApplication(callConfig: CallConfig, id: string): Promise<Application> {
+    const applicationClient = this.applicationClientFactory(callConfig)
 
     const application = await applicationClient.find(id)
 
@@ -33,6 +34,7 @@ export default class ApplicationService {
   }
 
   async getCurrentPage(
+    callConfig: CallConfig,
     request: Request,
     dataServices: DataServices,
     userInput?: Record<string, unknown>,
@@ -45,7 +47,7 @@ export default class ApplicationService {
 
     const Page = this.getPage(request.params.task, request.params.page)
 
-    const application = await this.getApplicationFromSessionOrAPI(request)
+    const application = await this.getApplicationFromSessionOrAPI(callConfig, request)
     const body = this.getBody(application, request, userInput)
     const page = new Page(body, application, request.session.previousPage)
 
@@ -66,20 +68,20 @@ export default class ApplicationService {
     return responses
   }
 
-  async save(page: TasklistPage, request: Request) {
+  async save(callConfig: CallConfig, page: TasklistPage, request: Request) {
     const errors = page.errors()
 
     if (errors.length) {
       throw new ValidationError<typeof page>(errors)
     } else {
-      const application = await this.getApplicationFromSessionOrAPI(request)
+      const application = await this.getApplicationFromSessionOrAPI(callConfig, request)
 
       application.data = application.data || {}
       application.data[request.params.task] = application.data[request.params.task] || {}
       application.data[request.params.task][request.params.page] = page.body
 
       this.saveToSession(application, page, request)
-      await this.saveToApi(application, request)
+      await this.saveToApi(callConfig, application)
     }
   }
 
@@ -114,13 +116,13 @@ export default class ApplicationService {
     return Object.keys(pages[taskName])[0]
   }
 
-  private getApplicationFromSessionOrAPI(request: Request): Promise<Application> | Application {
+  private getApplicationFromSessionOrAPI(callConfig: CallConfig, request: Request): Promise<Application> | Application {
     const { application } = request.session
 
     if (application && application.id === request.params.id) {
       return application
     }
-    return this.findApplication(request.user.token, request.params.id)
+    return this.findApplication(callConfig, request.params.id)
   }
 
   private async saveToSession(application: Application, page: TasklistPage, request: Request) {
@@ -128,8 +130,8 @@ export default class ApplicationService {
     request.session.previousPage = page.name
   }
 
-  private async saveToApi(application: Application, request: Request) {
-    const client = this.applicationClientFactory(request.user.token)
+  private async saveToApi(callConfig: CallConfig, application: Application) {
+    const client = this.applicationClientFactory(callConfig)
 
     await client.update(application)
   }
@@ -148,8 +150,8 @@ export default class ApplicationService {
     return application.data?.[request.params.task]?.[request.params.page] || {}
   }
 
-  async tableRows(token: string): Promise<(TextItem | HtmlItem)[][]> {
-    const applicationClient = this.applicationClientFactory(token)
+  async tableRows(callConfig: CallConfig): Promise<(TextItem | HtmlItem)[][]> {
+    const applicationClient = this.applicationClientFactory(callConfig)
 
     const applicationSummaries = await applicationClient.all()
 

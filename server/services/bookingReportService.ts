@@ -16,7 +16,7 @@ export default class BookingReportService {
   ) {}
 
   async pipeBookings(callConfig: CallConfig, response: Response): Promise<void> {
-    const reportClient = this.reportClientFactory(callConfig.token)
+    const reportClient = this.reportClientFactory(callConfig)
 
     const filename = bookingReportFilename()
 
@@ -28,7 +28,7 @@ export default class BookingReportService {
     response: Response,
     probationRegionId: string,
   ): Promise<void> {
-    const reportClient = this.reportClientFactory(callConfig.token)
+    const reportClient = this.reportClientFactory(callConfig)
 
     const probationRegion = (await this.getReferenceData(callConfig)).probationRegions.find(
       region => region.id === probationRegionId,
@@ -40,7 +40,7 @@ export default class BookingReportService {
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BookingReportReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const probationRegions = await referenceDataClient.getReferenceData('probation-regions')
 

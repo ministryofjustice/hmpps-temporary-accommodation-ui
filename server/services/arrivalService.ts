@@ -11,7 +11,7 @@ export default class ArrivalService {
     bookingId: string,
     arrival: NewArrival,
   ): Promise<Arrival> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedArrival = await bookingClient.markAsArrived(premisesId, bookingId, arrival)
 

@@ -21,8 +21,7 @@ describe('BookingService', () => {
   const bookingClientFactory = jest.fn()
 
   const service = new BookingService(bookingClientFactory)
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const premisesId = 'premiseId'
   const bedId = 'bedId'
@@ -43,7 +42,7 @@ describe('BookingService', () => {
       const postedBooking = await service.create(callConfig, premisesId, newBooking)
       expect(postedBooking).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, newBooking)
     })
   })
@@ -65,7 +64,7 @@ describe('BookingService', () => {
       const postedBooking = await service.createForBedspace(callConfig, premisesId, room, newBooking)
       expect(postedBooking).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
         bedId,
@@ -89,7 +88,7 @@ describe('BookingService', () => {
       const retrievedBooking = await service.find(callConfig, premisesId, booking.id)
       expect(retrievedBooking).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
     })
   })
@@ -227,7 +226,7 @@ describe('BookingService', () => {
         ],
       ])
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
 
       expect(formatStatus).toHaveBeenCalledTimes(4)
@@ -243,7 +242,7 @@ describe('BookingService', () => {
 
       expect(result).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
     })
   })

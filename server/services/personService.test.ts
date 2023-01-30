@@ -15,8 +15,7 @@ describe('PersonService', () => {
 
   const service = new PersonService(personClientFactory)
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -32,7 +31,7 @@ describe('PersonService', () => {
 
       expect(postedPerson).toEqual(person)
 
-      expect(personClientFactory).toHaveBeenCalledWith(token)
+      expect(personClientFactory).toHaveBeenCalledWith(callConfig)
       expect(personClient.search).toHaveBeenCalledWith('crn')
     })
   })
@@ -47,7 +46,7 @@ describe('PersonService', () => {
 
       expect(postedPerson).toEqual(uiRisks)
 
-      expect(personClientFactory).toHaveBeenCalledWith(token)
+      expect(personClientFactory).toHaveBeenCalledWith(callConfig)
       expect(personClient.risks).toHaveBeenCalledWith('crn')
     })
   })

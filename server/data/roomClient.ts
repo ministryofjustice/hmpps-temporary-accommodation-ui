@@ -1,5 +1,5 @@
 import type { Room, NewRoom } from '@approved-premises/api'
-import RestClient from './restClient'
+import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import api from '../paths/api'
 import { UpdateRoom } from '../@types/shared/models/UpdateRoom'
@@ -7,8 +7,8 @@ import { UpdateRoom } from '../@types/shared/models/UpdateRoom'
 export default class RoomClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(callConfig: CallConfig) {
+    this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, callConfig.token)
   }
 
   async all(premisesId: string): Promise<Array<Room>> {

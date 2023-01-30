@@ -14,7 +14,7 @@ export default class BookingService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
   async create(callConfig: CallConfig, premisesId: string, booking: NewBooking): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedBooking = await bookingClient.create(premisesId, booking)
 
@@ -27,7 +27,7 @@ export default class BookingService {
     room: Room,
     booking: NewBooking,
   ): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
@@ -39,7 +39,7 @@ export default class BookingService {
   }
 
   async find(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const booking = await bookingClient.find(premisesId, bookingId)
 
@@ -47,7 +47,7 @@ export default class BookingService {
   }
 
   async getTableRowsForBedspace(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<TableRow>> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
 
     const bedId = room.beds[0].id
@@ -78,7 +78,7 @@ export default class BookingService {
   }
 
   async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
     const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking

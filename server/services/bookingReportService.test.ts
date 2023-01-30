@@ -18,8 +18,7 @@ describe('BookingReportService', () => {
   const ReportClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const service = new BookingReportService(ReportClientFactory, ReferenceDataClientFactory)
 
@@ -36,7 +35,7 @@ describe('BookingReportService', () => {
 
       await service.pipeBookings(callConfig, response)
 
-      expect(ReportClientFactory).toHaveBeenCalledWith(token)
+      expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingReportFilename).toHaveBeenCalled()
       expect(reportClient.bookings).toHaveBeenCalledWith(response, 'some-filename')
     })
@@ -53,7 +52,7 @@ describe('BookingReportService', () => {
 
       await service.pipeBookingsForProbationRegion(callConfig, response, probationRegions[0].id)
 
-      expect(ReportClientFactory).toHaveBeenCalledWith(token)
+      expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingReportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0])
       expect(reportClient.bookingsForProbationRegion).toHaveBeenCalledWith(
         response,
@@ -73,7 +72,7 @@ describe('BookingReportService', () => {
 
       expect(result).toEqual({ probationRegions })
 
-      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
     })
   })

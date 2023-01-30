@@ -11,7 +11,7 @@ export default class NonarrivalService {
     bookingId: string,
     nonArrival: NewNonarrival,
   ): Promise<Nonarrival> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedNonArrival = await bookingClient.markNonArrival(premisesId, bookingId, nonArrival)
 

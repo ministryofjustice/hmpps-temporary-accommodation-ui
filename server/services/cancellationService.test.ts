@@ -17,8 +17,7 @@ describe('CancellationService', () => {
   const BookingClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const service = new CancellationService(BookingClientFactory, ReferenceDataClientFactory)
 
@@ -38,7 +37,7 @@ describe('CancellationService', () => {
       const postedDeparture = await service.createCancellation(callConfig, 'premisesId', 'bookingId', newCancellation)
       expect(postedDeparture).toEqual(cancellation)
 
-      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(BookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.cancel).toHaveBeenCalledWith('premisesId', 'bookingId', newCancellation)
     })
   })
@@ -53,7 +52,7 @@ describe('CancellationService', () => {
 
       expect(result).toEqual({ cancellationReasons })
 
-      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('cancellation-reasons')
     })
   })
@@ -67,7 +66,7 @@ describe('CancellationService', () => {
 
       expect(requestedDeparture).toEqual(cancellation)
 
-      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(BookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.findCancellation).toHaveBeenCalledWith('premisesId', 'bookingId', cancellation.id)
     })
   })

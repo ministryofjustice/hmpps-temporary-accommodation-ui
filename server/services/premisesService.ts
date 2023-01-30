@@ -31,7 +31,7 @@ export default class PremisesService {
   ) {}
 
   async getStaffMembers(callConfig: CallConfig, premisesId: string): Promise<Array<StaffMember>> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
 
     const staffMembers = await premisesClient.getStaffMembers(premisesId)
 
@@ -39,7 +39,7 @@ export default class PremisesService {
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<PremisesReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const localAuthorities = (
       (await referenceDataClient.getReferenceData('local-authority-areas')) as Array<LocalAuthorityArea>
@@ -60,7 +60,7 @@ export default class PremisesService {
   }
 
   async tableRows(callConfig: CallConfig): Promise<Array<TableRow>> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.all()
 
     return premises
@@ -81,7 +81,7 @@ export default class PremisesService {
   }
 
   async getPremises(callConfig: CallConfig, id: string): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.find(id)
 
     return premises
@@ -91,7 +91,7 @@ export default class PremisesService {
     callConfig: CallConfig,
     id: string,
   ): Promise<{ premises: Premises; summaryList: SummaryList }> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.find(id)
 
     const summaryList = await this.summaryListForPremises(premises)
@@ -100,7 +100,7 @@ export default class PremisesService {
   }
 
   async getOvercapacityMessage(callConfig: CallConfig, premisesId: string): Promise<string[] | string> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premisesDateCapacities = await premisesClient.capacity(premisesId)
 
     const overcapacityDateRanges = getDateRangesWithNegativeBeds(premisesDateCapacities)
@@ -111,7 +111,7 @@ export default class PremisesService {
   }
 
   async getPremisesSelectList(callConfig: CallConfig): Promise<Array<{ text: string; value: string }>> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.all()
 
     return premises
@@ -130,7 +130,7 @@ export default class PremisesService {
   }
 
   async getUpdatePremises(callConfig: CallConfig, id: string): Promise<UpdatePremises> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.find(id)
 
     return {
@@ -143,14 +143,14 @@ export default class PremisesService {
   }
 
   async create(callConfig: CallConfig, newPremises: NewPremises): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.create(newPremises)
 
     return premises
   }
 
   async update(callConfig: CallConfig, id: string, updatePremises: UpdatePremises): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(callConfig.token)
+    const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.update(id, updatePremises)
 
     return premises

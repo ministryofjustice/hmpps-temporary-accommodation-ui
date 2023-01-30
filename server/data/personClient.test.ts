@@ -4,17 +4,18 @@ import PersonClient from './personClient'
 import config from '../config'
 import riskFactory from '../testutils/factories/risks'
 import personFactory from '../testutils/factories/person'
+import { CallConfig } from './restClient'
 
 describe('PersonClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let personClient: PersonClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    personClient = new PersonClient(token)
+    personClient = new PersonClient(callConfig)
   })
 
   afterEach(() => {
@@ -32,7 +33,7 @@ describe('PersonClient', () => {
 
       fakeApprovedPremisesApi
         .get(`/people/search?crn=crn`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, person)
 
       const result = await personClient.search('crn')
@@ -49,7 +50,7 @@ describe('PersonClient', () => {
 
       fakeApprovedPremisesApi
         .get(`/people/${crn}/risks`)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, person)
 
       const result = await personClient.risks(crn)

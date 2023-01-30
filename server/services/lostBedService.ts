@@ -11,7 +11,7 @@ export default class LostBedService {
   ) {}
 
   async createLostBed(callConfig: CallConfig, premisesId: string, lostBed: NewLostBed): Promise<LostBed> {
-    const lostBedClient = this.lostBedClientFactory(callConfig.token)
+    const lostBedClient = this.lostBedClientFactory(callConfig)
 
     const confirmedLostBed = await lostBedClient.create(premisesId, lostBed)
 
@@ -19,7 +19,7 @@ export default class LostBedService {
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<LostBedReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const reasons = await referenceDataClient.getReferenceData('lost-bed-reasons')
 

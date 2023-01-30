@@ -17,7 +17,7 @@ export default class BedspaceService {
   ) {}
 
   async getRoom(callConfig: CallConfig, premisesId: string, roomId: string): Promise<Room> {
-    const roomClient = this.roomClientFactory(callConfig.token)
+    const roomClient = this.roomClientFactory(callConfig)
     const room = await roomClient.find(premisesId, roomId)
 
     return room
@@ -27,7 +27,7 @@ export default class BedspaceService {
     callConfig: CallConfig,
     premisesId: string,
   ): Promise<Array<{ room: Room; summaryList: SummaryList }>> {
-    const roomClient = this.roomClientFactory(callConfig.token)
+    const roomClient = this.roomClientFactory(callConfig)
     const rooms = await roomClient.all(premisesId)
 
     return rooms
@@ -43,7 +43,7 @@ export default class BedspaceService {
     premisesId: string,
     roomId: string,
   ): Promise<{ room: Room; summaryList: SummaryList }> {
-    const roomClient = this.roomClientFactory(callConfig.token)
+    const roomClient = this.roomClientFactory(callConfig)
     const room = await roomClient.find(premisesId, roomId)
 
     return {
@@ -53,7 +53,7 @@ export default class BedspaceService {
   }
 
   async getUpdateRoom(callConfig: CallConfig, premisesId: string, roomId: string): Promise<UpdateRoom> {
-    const roomClient = this.roomClientFactory(callConfig.token)
+    const roomClient = this.roomClientFactory(callConfig)
     const room = await roomClient.find(premisesId, roomId)
 
     return {
@@ -63,21 +63,21 @@ export default class BedspaceService {
   }
 
   async createRoom(callConfig: CallConfig, premisesId: string, newRoom: NewRoom): Promise<Room> {
-    const roomClient = this.roomClientFactory(callConfig.token)
+    const roomClient = this.roomClientFactory(callConfig)
     const room = await roomClient.create(premisesId, newRoom)
 
     return room
   }
 
   async updateRoom(callConfig: CallConfig, premisesId: string, roomId: string, updateRoom: UpdateRoom): Promise<Room> {
-    const roomClient = this.roomClientFactory(callConfig.token)
+    const roomClient = this.roomClientFactory(callConfig)
     const room = await roomClient.update(premisesId, roomId, updateRoom)
 
     return room
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const characteristics = filterCharacteristics(
       await referenceDataClient.getReferenceData<Characteristic>('characteristics'),

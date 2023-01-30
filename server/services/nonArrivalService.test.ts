@@ -13,8 +13,7 @@ describe('NonarrivalService', () => {
 
   const service = new NonarrivalService(bookingClientFactory)
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -34,7 +33,7 @@ describe('NonarrivalService', () => {
 
       expect(postedNonArrival).toEqual(nonArrival)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markNonArrival).toHaveBeenCalledWith('premisesID', 'bookingId', newNonArrival)
     })
   })

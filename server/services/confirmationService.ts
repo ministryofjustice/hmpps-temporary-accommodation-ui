@@ -11,7 +11,7 @@ export default class ConfirmationService {
     bookingId: string,
     confirmation: NewConfirmation,
   ): Promise<Confirmation> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     return bookingClient.markAsConfirmed(premisesId, bookingId, confirmation)
   }

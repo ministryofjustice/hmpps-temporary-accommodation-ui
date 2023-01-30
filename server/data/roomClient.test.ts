@@ -6,18 +6,19 @@ import roomFactory from '../testutils/factories/room'
 import newRoomFactory from '../testutils/factories/newRoom'
 import updateRoomFactory from '../testutils/factories/updateRoom'
 import RoomClient from './roomClient'
+import { CallConfig } from './restClient'
 
 describe('Room Client', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let roomClient: RoomClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
   const premisesId = 'premisesId'
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    roomClient = new RoomClient(token)
+    roomClient = new RoomClient(callConfig)
   })
 
   afterEach(() => {
@@ -35,7 +36,7 @@ describe('Room Client', () => {
 
       fakeApprovedPremisesApi
         .get(paths.premises.rooms.index({ premisesId }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, rooms)
 
       const output = await roomClient.all(premisesId)
@@ -49,7 +50,7 @@ describe('Room Client', () => {
 
       fakeApprovedPremisesApi
         .get(paths.premises.rooms.show({ premisesId, roomId: room.id }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, room)
 
       const output = await roomClient.find(premisesId, room.id)
@@ -68,7 +69,7 @@ describe('Room Client', () => {
 
       fakeApprovedPremisesApi
         .post(paths.premises.rooms.create({ premisesId }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, room)
 
       const output = await roomClient.create(premisesId, payload)
@@ -85,7 +86,7 @@ describe('Room Client', () => {
 
       fakeApprovedPremisesApi
         .put(paths.premises.rooms.update({ premisesId, roomId: room.id }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, room)
 
       const output = await roomClient.update(premisesId, room.id, payload)

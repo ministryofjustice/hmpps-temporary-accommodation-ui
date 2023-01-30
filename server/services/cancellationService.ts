@@ -19,7 +19,7 @@ export default class CancellationService {
     bookingId: string,
     cancellation: NewCancellation,
   ): Promise<Cancellation> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedCancellation = await bookingClient.cancel(premisesId, bookingId, cancellation)
 
@@ -32,7 +32,7 @@ export default class CancellationService {
     bookingId: string,
     cancellationId: string,
   ): Promise<Cancellation> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const booking = await bookingClient.findCancellation(premisesId, bookingId, cancellationId)
 
@@ -40,7 +40,7 @@ export default class CancellationService {
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<CancellationReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const cancellationReasons = await referenceDataClient.getReferenceData('cancellation-reasons')
 

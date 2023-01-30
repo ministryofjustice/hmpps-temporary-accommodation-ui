@@ -17,8 +17,7 @@ describe('DepartureService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
-  const token = 'some-token'
-  const callConfig = { token } as CallConfig
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const DepartureClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
@@ -41,7 +40,7 @@ describe('DepartureService', () => {
       const postedDeparture = await service.createDeparture(callConfig, 'premisesId', 'bookingId', newDeparture)
       expect(postedDeparture).toEqual(departure)
 
-      expect(DepartureClientFactory).toHaveBeenCalledWith(token)
+      expect(DepartureClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markDeparture).toHaveBeenCalledWith('premisesId', 'bookingId', newDeparture)
     })
   })
@@ -58,7 +57,7 @@ describe('DepartureService', () => {
         dateTime: DateFormats.isoDateToUIDate(departure.dateTime),
       })
 
-      expect(DepartureClientFactory).toHaveBeenCalledWith(token)
+      expect(DepartureClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.findDeparture).toHaveBeenCalledWith('premisesId', 'bookingId', departure.id)
     })
   })
@@ -84,7 +83,7 @@ describe('DepartureService', () => {
         moveOnCategories,
       })
 
-      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('departure-reasons')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('move-on-categories')

@@ -2,6 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import HmppsAuthClient from './hmppsAuthClient'
+import { CallConfig } from './restClient'
 import TokenStore from './tokenStore'
 
 jest.mock('./tokenStore')
@@ -10,6 +11,7 @@ const tokenStore = new TokenStore(null) as jest.Mocked<TokenStore>
 
 const username = 'Bob'
 const token = { access_token: 'token-1', expires_in: 300 }
+const callConfig = { token: 'some-token' } as CallConfig
 
 describe('hmppsAuthClient', () => {
   let fakeHmppsAuthApi: nock.Scope
@@ -31,10 +33,10 @@ describe('hmppsAuthClient', () => {
 
       fakeHmppsAuthApi
         .get('/api/user/me')
-        .matchHeader('authorization', `Bearer ${token.access_token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, response)
 
-      const output = await hmppsAuthClient.getUser(token.access_token)
+      const output = await hmppsAuthClient.getUser(callConfig)
       expect(output).toEqual(response)
     })
   })
@@ -43,10 +45,10 @@ describe('hmppsAuthClient', () => {
     it('should return data from api', async () => {
       fakeHmppsAuthApi
         .get('/api/user/me/roles')
-        .matchHeader('authorization', `Bearer ${token.access_token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, [{ roleCode: 'role1' }, { roleCode: 'role2' }])
 
-      const output = await hmppsAuthClient.getUserRoles(token.access_token)
+      const output = await hmppsAuthClient.getUserRoles(callConfig)
       expect(output).toEqual(['role1', 'role2'])
     })
   })

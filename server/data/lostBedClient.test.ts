@@ -4,17 +4,18 @@ import LostBedClient from './lostBedClient'
 import config from '../config'
 import lostBedFactory from '../testutils/factories/lostBed'
 import newLostBedFactory from '../testutils/factories/newLostBed'
+import { CallConfig } from './restClient'
 
 describe('LostBedClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let lostBedClient: LostBedClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    lostBedClient = new LostBedClient(token)
+    lostBedClient = new LostBedClient(callConfig)
   })
 
   afterEach(() => {
@@ -33,7 +34,7 @@ describe('LostBedClient', () => {
 
       fakeApprovedPremisesApi
         .post(`/premises/premisesId/lost-beds`, newLostBed)
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, lostBed)
 
       const result = await lostBedClient.create('premisesId', newLostBed)

@@ -21,7 +21,7 @@ export default class DepartureService {
     bookingId: string,
     departure: NewDeparture,
   ): Promise<Departure> {
-    const bookingClient = this.bookingClientFactory(callConfig.token)
+    const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedDeparture = await bookingClient.markDeparture(premisesId, bookingId, departure)
 
@@ -34,7 +34,7 @@ export default class DepartureService {
     bookingId: string,
     departureId: string,
   ): Promise<Departure> {
-    const departureClient = this.bookingClientFactory(callConfig.token)
+    const departureClient = this.bookingClientFactory(callConfig)
 
     const departure = await departureClient.findDeparture(premisesId, bookingId, departureId)
 
@@ -42,7 +42,7 @@ export default class DepartureService {
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<DepartureReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const [departureReasons, moveOnCategories] = await Promise.all([
       referenceDataClient.getReferenceData('departure-reasons'),

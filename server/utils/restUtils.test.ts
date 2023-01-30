@@ -4,7 +4,7 @@ import probationRegionFactory from '../testutils/factories/probationRegion'
 import extractCallConfig from './restUtils'
 
 describe('extractCallConfig', () => {
-  it('extracts the token from the given request', () => {
+  it('extracts the token and from the given request', () => {
     const request = createMock<Request>({
       user: { token: 'some-token' },
     })

@@ -48,14 +48,15 @@ export default class RestClient {
 
   private readonly defaultHeaders: Record<string, string>
 
-  constructor(
-    private readonly name: string,
-    private readonly config: ApiConfig,
-    private readonly callConfig: CallConfig,
-  ) {
+  constructor(private readonly name: string, private readonly config: ApiConfig, callConfig: CallConfig) {
     this.token = callConfig.token
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
-    this.defaultHeaders = config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}
+    this.defaultHeaders = {
+      ...(config.serviceName ? { 'X-SERVICE-NAME': config.serviceName } : {}),
+      ...(callConfig.probationRegion ? { 'X-USER-REGION': callConfig.probationRegion.id } : {}),
+    }
+
+    this.token = callConfig.token
   }
 
   private apiUrl() {

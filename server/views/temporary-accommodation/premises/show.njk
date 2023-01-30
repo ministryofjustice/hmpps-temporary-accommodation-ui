@@ -21,7 +21,7 @@
 
   {{ mojPageHeaderActions({
     heading: {
-      text: (premises.addressLine1 | e) + ', ' + (premises.postcode | e),
+      text: premises.addressLine1 + ', ' + premises.postcode,
       classes: 'govuk-heading-m',
       level: 2
     },

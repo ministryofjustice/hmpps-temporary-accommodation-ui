@@ -10,6 +10,7 @@ import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
+import { ProbationRegion } from '../@types/shared'
 
 interface GetRequest {
   path?: string
@@ -37,6 +38,7 @@ interface StreamRequest {
 
 export interface CallConfig {
   token: string
+  probationRegion?: ProbationRegion
 }
 
 export default class RestClient {

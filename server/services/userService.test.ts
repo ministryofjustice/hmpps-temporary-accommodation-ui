@@ -1,20 +1,28 @@
 import UserService from './userService'
 import HmppsAuthClient, { User } from '../data/hmppsAuthClient'
 import { CallConfig } from '../data/restClient'
+import userFactory from '../testutils/factories/user'
+import UserClient from '../data/userClient'
 
 jest.mock('../data/hmppsAuthClient')
+jest.mock('../data/userClient')
 
 const callConfig = { token: 'some-token' } as CallConfig
 
 describe('User service', () => {
-  let hmppsAuthClient: jest.Mocked<HmppsAuthClient>
-  let userService: UserService
+  const hmppsAuthClient = new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
+  const userClient = new UserClient(null) as jest.Mocked<UserClient>
+
+  const userClientFactory = jest.fn()
+
+  const userService = new UserService(hmppsAuthClient, userClientFactory)
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    userClientFactory.mockReturnValue(userClient)
+  })
 
   describe('getUser', () => {
-    beforeEach(() => {
-      hmppsAuthClient = new HmppsAuthClient(null) as jest.Mocked<HmppsAuthClient>
-      userService = new UserService(hmppsAuthClient)
-    })
     it('Retrieves and formats user name', async () => {
       hmppsAuthClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
 
@@ -26,6 +34,20 @@ describe('User service', () => {
       hmppsAuthClient.getUser.mockRejectedValue(new Error('some error'))
 
       await expect(userService.getUser(callConfig)).rejects.toEqual(new Error('some error'))
+    })
+  })
+
+  describe('getActingUser', () => {
+    it('gets the acting user', async () => {
+      const user = userFactory.build()
+      userClient.getActingUser.mockResolvedValue(user)
+
+      const result = await userService.getActingUser(callConfig)
+
+      expect(result).toEqual(user)
+
+      expect(userClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(userClient.getActingUser).toHaveBeenCalledWith()
     })
   })
 })

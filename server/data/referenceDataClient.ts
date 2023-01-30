@@ -1,12 +1,12 @@
 import type { ReferenceData } from '@approved-premises/ui'
-import RestClient from './restClient'
+import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 
 export default class ReferenceDataClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('referenceDataClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(callConfig: CallConfig) {
+    this.restClient = new RestClient('referenceDataClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async getReferenceData<T = ReferenceData>(objectType: string): Promise<Array<T>> {

@@ -5,6 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, CancellationService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
+import extractCallConfig from '../../../utils/restUtils'
 
 export default class CanellationsController {
   constructor(
@@ -17,10 +18,12 @@ export default class CanellationsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
-      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(token)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(
+        callConfig,
+      )
 
       return res.render('temporary-accommodation/cancellations/new', {
         booking,
@@ -38,7 +41,7 @@ export default class CanellationsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
       const newCancellation: NewCancellation = {
         ...req.body,
@@ -46,7 +49,7 @@ export default class CanellationsController {
       }
 
       try {
-        await this.cancellationService.createCancellation(token, premisesId, bookingId, newCancellation)
+        await this.cancellationService.createCancellation(callConfig, premisesId, bookingId, newCancellation)
 
         req.flash('success', 'Booking cancelled')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

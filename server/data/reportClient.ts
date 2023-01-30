@@ -1,13 +1,13 @@
 import { Response } from 'express'
-import RestClient from './restClient'
+import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 
 export default class ReportClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(callConfig: CallConfig) {
+    this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async bookings(response: Response, filename: string): Promise<void> {

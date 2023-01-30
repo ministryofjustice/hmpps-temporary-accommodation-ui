@@ -22,20 +22,23 @@ import LostBedClient from './lostBedClient'
 import ApplicationClient from './applicationClient'
 import RoomClient from './roomClient'
 import ReportClient from './reportClient'
+import { CallConfig } from './restClient'
 
-type RestClientBuilder<T> = (token: string) => T
+type RestClientBuilder<T> = (callConfig: CallConfig) => T
 
 export const dataAccess = () => ({
   hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
-  premisesClientBuilder: ((token: string) => new PremisesClient(token)) as RestClientBuilder<PremisesClient>,
-  bookingClientBuilder: ((token: string) => new BookingClient(token)) as RestClientBuilder<BookingClient>,
-  referenceDataClientBuilder: ((token: string) =>
-    new ReferenceDataClient(token)) as RestClientBuilder<ReferenceDataClient>,
-  lostBedClientBuilder: ((token: string) => new LostBedClient(token)) as RestClientBuilder<LostBedClient>,
-  personClient: ((token: string) => new PersonClient(token)) as RestClientBuilder<PersonClient>,
-  applicationClientBuilder: ((token: string) => new ApplicationClient(token)) as RestClientBuilder<ApplicationClient>,
-  roomClientBuilder: ((token: string) => new RoomClient(token)) as RestClientBuilder<RoomClient>,
-  reportClientBuilder: ((token: string) => new ReportClient(token)) as RestClientBuilder<ReportClient>,
+  premisesClientBuilder: ((callConfig: CallConfig) =>
+    new PremisesClient(callConfig)) as RestClientBuilder<PremisesClient>,
+  bookingClientBuilder: ((callConfig: CallConfig) => new BookingClient(callConfig)) as RestClientBuilder<BookingClient>,
+  referenceDataClientBuilder: ((callConfig: CallConfig) =>
+    new ReferenceDataClient(callConfig)) as RestClientBuilder<ReferenceDataClient>,
+  lostBedClientBuilder: ((callConfig: CallConfig) => new LostBedClient(callConfig)) as RestClientBuilder<LostBedClient>,
+  personClient: ((callConfig: CallConfig) => new PersonClient(callConfig)) as RestClientBuilder<PersonClient>,
+  applicationClientBuilder: ((callConfig: CallConfig) =>
+    new ApplicationClient(callConfig)) as RestClientBuilder<ApplicationClient>,
+  roomClientBuilder: ((callConfig: CallConfig) => new RoomClient(callConfig)) as RestClientBuilder<RoomClient>,
+  reportClientBuilder: ((callConfig: CallConfig) => new ReportClient(callConfig)) as RestClientBuilder<ReportClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>

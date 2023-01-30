@@ -1,12 +1,14 @@
 import { RequestHandler } from 'express'
 import logger from '../../logger'
 import UserService from '../services/userService'
+import extractCallConfig from '../utils/restUtils'
 
 export default function populateCurrentUser(userService: UserService): RequestHandler {
   return async (req, res, next) => {
     try {
-      if (res.locals.user) {
-        const user = res.locals.user && (await userService.getUser(res.locals.user.token))
+      if (req.user) {
+        const callConfig = extractCallConfig(req)
+        const user = res.locals.user && (await userService.getUser(callConfig))
         if (user) {
           res.locals.user = { ...user, ...res.locals.user }
         } else {

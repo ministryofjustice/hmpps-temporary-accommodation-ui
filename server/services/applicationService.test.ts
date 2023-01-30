@@ -12,6 +12,7 @@ import { pages } from '../form-pages/apply'
 import paths from '../paths/apply'
 import applicationFactory from '../testutils/factories/application'
 import { DateFormats } from '../utils/dateUtils'
+import { CallConfig } from '../data/restClient'
 
 const FirstPage = jest.fn()
 const SecondPage = jest.fn()
@@ -62,11 +63,11 @@ describe('ApplicationService', () => {
       })
 
       const applicationSummaries = [applicationSummaryA, applicationSummaryB]
-      const token = 'SOME_TOKEN'
+      const callConfig = { token: 'some-token' } as CallConfig
 
       applicationClient.all.mockResolvedValue(applicationSummaries)
 
-      const result = await service.tableRows(token)
+      const result = await service.tableRows(callConfig)
 
       expect(result).toEqual([
         [
@@ -109,7 +110,7 @@ describe('ApplicationService', () => {
         ],
       ])
 
-      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
       expect(applicationClient.all).toHaveBeenCalled()
     })
   })
@@ -117,15 +118,15 @@ describe('ApplicationService', () => {
   describe('createApplication', () => {
     it('calls the create method and returns an application', async () => {
       const application = applicationFactory.build()
-      const token = 'SOME_TOKEN'
+      const callConfig = { token: 'some-token' } as CallConfig
 
       applicationClient.create.mockResolvedValue(application)
 
-      const result = await service.createApplication(token, application.person.crn)
+      const result = await service.createApplication(callConfig, application.person.crn)
 
       expect(result).toEqual(application)
 
-      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
       expect(applicationClient.create).toHaveBeenCalledWith(application.person.crn)
     })
   })
@@ -133,15 +134,15 @@ describe('ApplicationService', () => {
   describe('findApplication', () => {
     it('calls the find method and returns an application', async () => {
       const application = applicationFactory.build()
-      const token = 'SOME_TOKEN'
+      const callConfig = { token: 'some-token' } as CallConfig
 
       applicationClient.find.mockResolvedValue(application)
 
-      const result = await service.findApplication(token, application.id)
+      const result = await service.findApplication(callConfig, application.id)
 
       expect(result).toEqual(application)
 
-      expect(applicationClientFactory).toHaveBeenCalledWith(token)
+      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
       expect(applicationClient.find).toHaveBeenCalledWith(application.id)
     })
   })
@@ -150,6 +151,7 @@ describe('ApplicationService', () => {
     let request: DeepMocked<Request>
     const dataServices = createMock<DataServices>({}) as DataServices
     const application = applicationFactory.build()
+    const callConfig = { token: 'some-token' } as CallConfig
 
     beforeEach(() => {
       request = createMock<Request>({
@@ -163,7 +165,7 @@ describe('ApplicationService', () => {
       request.session.application = undefined
       applicationClient.find.mockResolvedValue(application)
 
-      const result = await service.getCurrentPage(request, dataServices)
+      const result = await service.getCurrentPage(callConfig, request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
@@ -174,7 +176,7 @@ describe('ApplicationService', () => {
     it('should return the session and a page from a page list', async () => {
       request.params.page = 'second'
 
-      const result = await service.getCurrentPage(request, dataServices)
+      const result = await service.getCurrentPage(callConfig, request, dataServices)
 
       expect(result).toBeInstanceOf(SecondPage)
 
@@ -183,7 +185,7 @@ describe('ApplicationService', () => {
 
     it('should initialize the page with the session and the userInput if specified', async () => {
       const userInput = { foo: 'bar' }
-      const result = await service.getCurrentPage(request, dataServices, userInput)
+      const result = await service.getCurrentPage(callConfig, request, dataServices, userInput)
 
       expect(result).toBeInstanceOf(FirstPage)
 
@@ -194,7 +196,7 @@ describe('ApplicationService', () => {
       request.body = {}
       request.session.application.data = { 'my-task': { first: { foo: 'bar' } } }
 
-      const result = await service.getCurrentPage(request, dataServices)
+      const result = await service.getCurrentPage(callConfig, request, dataServices)
 
       expect(result).toBeInstanceOf(FirstPage)
 
@@ -207,14 +209,14 @@ describe('ApplicationService', () => {
 
       request.params.page = 'second'
 
-      await service.getCurrentPage(request, dataServices)
+      await service.getCurrentPage(callConfig, request, dataServices)
 
       expect(setup).toHaveBeenCalledWith(request, dataServices)
     })
 
     it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {
       request.session.previousPage = 'previous-page-name'
-      await service.getCurrentPage(request, dataServices)
+      await service.getCurrentPage(callConfig, request, dataServices)
 
       expect(FirstPage).toHaveBeenCalledWith(request.body, application, 'previous-page-name')
     })
@@ -223,7 +225,7 @@ describe('ApplicationService', () => {
       request.params.page = 'bar'
 
       expect(async () => {
-        await service.getCurrentPage(request, dataServices)
+        await service.getCurrentPage(callConfig, request, dataServices)
       }).rejects.toThrow(UnknownPageError)
     })
 
@@ -231,18 +233,17 @@ describe('ApplicationService', () => {
       request.params.task = undefined
 
       expect(async () => {
-        await service.getCurrentPage(request, dataServices)
+        await service.getCurrentPage(callConfig, request, dataServices)
       }).rejects.toThrow(UnknownPageError)
     })
   })
 
   describe('save', () => {
     const application = applicationFactory.build({ data: null })
-    const token = 'some-token'
+    const callConfig = { token: 'some-token' } as CallConfig
     const request = createMock<Request>({
       params: { id: application.id, task: 'some-task', page: 'some-page' },
       session: { application },
-      user: { token },
     })
 
     describe('when there are no validation errors', () => {
@@ -259,28 +260,28 @@ describe('ApplicationService', () => {
 
       it('does not throw an error', () => {
         expect(async () => {
-          await service.save(page, request)
+          await service.save(callConfig, page, request)
         }).not.toThrow(ValidationError)
       })
 
       it('saves data to the session', async () => {
-        await service.save(page, request)
+        await service.save(callConfig, page, request)
 
         expect(request.session.application).toEqual(application)
         expect(request.session.application.data).toEqual({ 'some-task': { 'some-page': { foo: 'bar' } } })
       })
 
       it('saves data to the api', async () => {
-        await service.save(page, request)
+        await service.save(callConfig, page, request)
 
-        expect(applicationClientFactory).toHaveBeenCalledWith(token)
+        expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
         expect(applicationClient.update).toHaveBeenCalledWith(application)
       })
 
       it('updates an in-progress application', async () => {
         application.data = { 'some-task': { 'other-page': { question: 'answer' } } }
 
-        await service.save(page, request)
+        await service.save(callConfig, page, request)
 
         expect(request.session.application).toEqual(application)
         expect(request.session.application.data).toEqual({
@@ -298,7 +299,7 @@ describe('ApplicationService', () => {
 
         expect.assertions(1)
         try {
-          await service.save(page, request)
+          await service.save(callConfig, page, request)
         } catch (e) {
           expect(e).toEqual(new ValidationError(errors))
         }

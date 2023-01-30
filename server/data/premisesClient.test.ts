@@ -8,17 +8,18 @@ import config from '../config'
 import paths from '../paths/api'
 import dateCapacityFactory from '../testutils/factories/dateCapacity'
 import staffMemberFactory from '../testutils/factories/staffMember'
+import { CallConfig } from './restClient'
 
 describe('PremisesClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let premisesClient: PremisesClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    premisesClient = new PremisesClient(token)
+    premisesClient = new PremisesClient(callConfig)
   })
 
   afterEach(() => {
@@ -36,7 +37,7 @@ describe('PremisesClient', () => {
     it('should get all premises for the given service', async () => {
       fakeApprovedPremisesApi
         .get(paths.premises.index({}))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, premises)
 
       const output = await premisesClient.all()
@@ -50,7 +51,7 @@ describe('PremisesClient', () => {
     it('should get a single premises', async () => {
       fakeApprovedPremisesApi
         .get(paths.premises.show({ premisesId: premises.id }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, premises)
 
       const output = await premisesClient.find(premises.id)
@@ -65,7 +66,7 @@ describe('PremisesClient', () => {
     it('should get the capacity of a premises for a given date', async () => {
       fakeApprovedPremisesApi
         .get(paths.premises.capacity({ premisesId }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, premisesCapacityItem)
 
       const output = await premisesClient.capacity(premisesId)
@@ -80,7 +81,7 @@ describe('PremisesClient', () => {
     it('should return a list of staff members', async () => {
       fakeApprovedPremisesApi
         .get(paths.premises.staffMembers.index({ premisesId: premises.id }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, staffMembers)
 
       const output = await premisesClient.getStaffMembers(premises.id)
@@ -98,7 +99,7 @@ describe('PremisesClient', () => {
 
       fakeApprovedPremisesApi
         .post(paths.premises.create({}))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, premises)
 
       const output = await premisesClient.create(payload)
@@ -116,7 +117,7 @@ describe('PremisesClient', () => {
 
       fakeApprovedPremisesApi
         .put(paths.premises.update({ premisesId: premises.id }))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, premises)
 
       const output = await premisesClient.update(premises.id, payload)

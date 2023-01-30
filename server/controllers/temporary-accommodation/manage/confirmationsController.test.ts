@@ -8,16 +8,19 @@ import ConfirmationsController from './confirmationsController'
 import ConfirmationService from '../../../services/confirmationService'
 import confirmationFactory from '../../../testutils/factories/confirmation'
 import newConfirmationFactory from '../../../testutils/factories/newConfirmation'
+import extractCallConfig from '../../../utils/restUtils'
+import { CallConfig } from '../../../data/restClient'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
 
 describe('ConfirmationsController', () => {
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
   const roomId = 'roomId'
   const bookingId = 'bookingId'
 
-  let request: DeepMocked<Request>
+  let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -28,7 +31,8 @@ describe('ConfirmationsController', () => {
   const confirmationsController = new ConfirmationsController(bookingService, confirmationService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('new', () => {
@@ -48,7 +52,7 @@ describe('ConfirmationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/confirmations/new', {
         booking,
@@ -82,7 +86,12 @@ describe('ConfirmationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(confirmationService.createConfirmation).toHaveBeenCalledWith(token, premisesId, bookingId, newConfirmation)
+      expect(confirmationService.createConfirmation).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bookingId,
+        newConfirmation,
+      )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking confirmed')
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))

@@ -6,17 +6,18 @@ import config from '../config'
 import paths from '../paths/api'
 import ReportClient from './reportClient'
 import probationRegionFactory from '../testutils/factories/probationRegion'
+import { CallConfig } from './restClient'
 
 describe('ReportClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let reportClient: ReportClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    reportClient = new ReportClient(token)
+    reportClient = new ReportClient(callConfig)
   })
 
   afterEach(() => {
@@ -34,7 +35,7 @@ describe('ReportClient', () => {
 
       fakeApprovedPremisesApi
         .get(paths.reports.bookings({}))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
@@ -55,7 +56,7 @@ describe('ReportClient', () => {
 
       fakeApprovedPremisesApi
         .get(paths.reports.bookings({}))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
@@ -78,7 +79,7 @@ describe('ReportClient', () => {
 
       fakeApprovedPremisesApi
         .get(paths.reports.bookings({}))
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({ probationRegionId: probationRegion.id })
         .reply(200, data, { 'content-type': 'some-content-type' })
 

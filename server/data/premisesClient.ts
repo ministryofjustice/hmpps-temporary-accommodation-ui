@@ -5,15 +5,15 @@ import type {
   StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
-import RestClient from './restClient'
+import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 
 export default class PremisesClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(callConfig: CallConfig) {
+    this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async all(): Promise<Array<Premises>> {

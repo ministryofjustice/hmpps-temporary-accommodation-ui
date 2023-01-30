@@ -6,6 +6,7 @@ import { BookingService, ExtensionService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
 import { getLatestExtension } from '../../../utils/bookingUtils'
+import extractCallConfig from '../../../utils/restUtils'
 
 export default class ExtensionsController {
   constructor(private readonly bookingsService: BookingService, private readonly extensionService: ExtensionService) {}
@@ -15,9 +16,9 @@ export default class ExtensionsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/extensions/new', {
         booking,
@@ -35,7 +36,7 @@ export default class ExtensionsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
       const newExtension: NewExtension = {
         ...req.body,
@@ -43,7 +44,7 @@ export default class ExtensionsController {
       }
 
       try {
-        await this.extensionService.createExtension(token, premisesId, bookingId, newExtension)
+        await this.extensionService.createExtension(callConfig, premisesId, bookingId, newExtension)
 
         req.flash('success', 'Booking departure date changed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

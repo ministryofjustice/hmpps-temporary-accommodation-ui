@@ -3,17 +3,18 @@ import nock from 'nock'
 import ReferenceDataClient from './referenceDataClient'
 import referenceDataFactory from '../testutils/factories/referenceData'
 import config from '../config'
+import { CallConfig } from './restClient'
 
 describe('PremisesClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let referenceDataClient: ReferenceDataClient
 
-  const token = 'token-1'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    referenceDataClient = new ReferenceDataClient(token)
+    referenceDataClient = new ReferenceDataClient(callConfig)
   })
 
   afterEach(() => {
@@ -31,7 +32,7 @@ describe('PremisesClient', () => {
     it('should return an array of reference data', async () => {
       fakeApprovedPremisesApi
         .get('/reference-data/some-reference-data')
-        .matchHeader('authorization', `Bearer ${token}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, referenceData)
 
       const output = await referenceDataClient.getReferenceData('some-reference-data')

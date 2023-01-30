@@ -8,16 +8,19 @@ import { DateFormats } from '../../../utils/dateUtils'
 import { CancellationsController } from '.'
 import cancellationFactory from '../../../testutils/factories/cancellation'
 import newCancellationFactory from '../../../testutils/factories/newCancellation'
+import extractCallConfig from '../../../utils/restUtils'
+import { CallConfig } from '../../../data/restClient'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
 
 describe('CancellationsController', () => {
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
   const roomId = 'roomId'
   const bookingId = 'bookingId'
 
-  let request: DeepMocked<Request>
+  let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -28,7 +31,8 @@ describe('CancellationsController', () => {
   const cancellationsController = new CancellationsController(bookingService, cancellationService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('new', () => {
@@ -49,8 +53,8 @@ describe('CancellationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
-      expect(cancellationService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(cancellationService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/cancellations/new', {
         booking,
@@ -89,7 +93,7 @@ describe('CancellationsController', () => {
       await requestHandler(request, response, next)
 
       expect(cancellationService.createCancellation).toHaveBeenCalledWith(
-        token,
+        callConfig,
         premisesId,
         bookingId,
         expect.objectContaining(newCancellation),

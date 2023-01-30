@@ -5,6 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
 import { PremisesService, BookingService } from '../../../services'
+import extractCallConfig from '../../../utils/restUtils'
 
 export default class BedspacesController {
   constructor(
@@ -16,9 +17,11 @@ export default class BedspacesController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
 
-      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(req.user.token)
+      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/bedspaces/new', {
         premisesId,
@@ -41,7 +44,9 @@ export default class BedspacesController {
       }
 
       try {
-        const room = await this.bedspaceService.createRoom(req.user.token, premisesId, newRoom)
+        const callConfig = extractCallConfig(req)
+
+        const room = await this.bedspaceService.createRoom(callConfig, premisesId, newRoom)
 
         req.flash('success', 'Bedspace created')
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
@@ -56,11 +61,11 @@ export default class BedspacesController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
       const { premisesId, roomId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(token)
+      const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
 
-      const updateRoom = await this.bedspaceService.getUpdateRoom(token, premisesId, roomId)
+      const updateRoom = await this.bedspaceService.getUpdateRoom(callConfig, premisesId, roomId)
 
       return res.render('temporary-accommodation/bedspaces/edit', {
         allCharacteristics,
@@ -77,7 +82,7 @@ export default class BedspacesController {
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
       const updateRoom: UpdateRoom = {
         characteristicIds: [],
@@ -85,7 +90,7 @@ export default class BedspacesController {
       }
 
       try {
-        await this.bedspaceService.updateRoom(token, premisesId, roomId, updateRoom)
+        await this.bedspaceService.updateRoom(callConfig, premisesId, roomId, updateRoom)
 
         req.flash('success', 'Bedspace updated')
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
@@ -97,14 +102,14 @@ export default class BedspacesController {
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
       const { premisesId, roomId } = req.params
 
-      const premises = await this.premisesService.getPremises(token, premisesId)
-      const room = await this.bedspaceService.getRoom(token, premisesId, roomId)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
 
-      const bedspaceDetails = await this.bedspaceService.getSingleBedspaceDetails(token, premisesId, roomId)
-      const bookingTableRows = await this.bookingService.getTableRowsForBedspace(token, premisesId, room)
+      const bedspaceDetails = await this.bedspaceService.getSingleBedspaceDetails(callConfig, premisesId, roomId)
+      const bookingTableRows = await this.bookingService.getTableRowsForBedspace(callConfig, premisesId, room)
 
       return res.render('temporary-accommodation/bedspaces/show', {
         premises,

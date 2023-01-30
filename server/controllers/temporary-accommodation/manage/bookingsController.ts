@@ -7,6 +7,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGeneric
 import BedspaceService from '../../../services/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
+import extractCallConfig from '../../../utils/restUtils'
 
 export default class BookingsController {
   constructor(
@@ -20,10 +21,10 @@ export default class BookingsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId } = req.params
 
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(token, premisesId)
-      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
       return res.render('temporary-accommodation/bookings/new', {
         premises,
@@ -38,9 +39,9 @@ export default class BookingsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
@@ -50,7 +51,7 @@ export default class BookingsController {
       }
 
       try {
-        const booking = await this.bookingsService.createForBedspace(token, premisesId, room, newBooking)
+        const booking = await this.bookingsService.createForBedspace(callConfig, premisesId, room, newBooking)
 
         req.flash('success', 'Booking created')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
@@ -68,12 +69,12 @@ export default class BookingsController {
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(token, premisesId)
-      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/bookings/show', {
         premises,
@@ -87,12 +88,12 @@ export default class BookingsController {
   history(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const premises = await this.premisesService.getPremises(token, premisesId)
-      const room = await this.bedspacesService.getRoom(token, premisesId, roomId)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/bookings/history', {
         premises,

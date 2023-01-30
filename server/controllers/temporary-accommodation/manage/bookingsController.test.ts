@@ -11,16 +11,19 @@ import { PremisesService, BookingService } from '../../../services'
 import BookingsController from './bookingsController'
 import { DateFormats } from '../../../utils/dateUtils'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
+import { CallConfig } from '../../../data/restClient'
+import extractCallConfig from '../../../utils/restUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
+jest.mock('../../../utils/restUtils')
 
 describe('BookingsController', () => {
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
   const roomId = 'roomId'
 
-  let request: DeepMocked<Request>
+  let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -32,7 +35,8 @@ describe('BookingsController', () => {
   const bookingsController = new BookingsController(premisesService, bedspaceService, bookingService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('new', () => {
@@ -53,8 +57,8 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premisesId)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premisesId, roomId)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/new', {
         premises,
@@ -92,7 +96,7 @@ describe('BookingsController', () => {
       await requestHandler(request, response, next)
 
       expect(bookingService.createForBedspace).toHaveBeenCalledWith(
-        token,
+        callConfig,
         premisesId,
         room,
         expect.objectContaining(newBooking),
@@ -204,9 +208,9 @@ describe('BookingsController', () => {
         actions: [],
       })
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premises.id, room.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premises.id, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
     })
   })
 
@@ -247,9 +251,9 @@ describe('BookingsController', () => {
         ],
       })
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(token, premises.id, room.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premises.id, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
       expect(deriveBookingHistory).toHaveBeenCalledWith(booking)
     })
   })

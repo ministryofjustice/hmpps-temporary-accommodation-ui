@@ -5,6 +5,7 @@ import BookingReportService from './bookingReportService'
 import { ReportClient } from '../data'
 import { bookingReportFilename, bookingReportForProbationRegionFilename } from '../utils/reportUtils'
 import probationRegionFactory from '../testutils/factories/probationRegion'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/reportClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -17,7 +18,7 @@ describe('BookingReportService', () => {
   const ReportClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
 
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const service = new BookingReportService(ReportClientFactory, ReferenceDataClientFactory)
 
@@ -32,9 +33,9 @@ describe('BookingReportService', () => {
       const response = createMock<Response>()
       ;(bookingReportFilename as jest.MockedFunction<typeof bookingReportFilename>).mockReturnValue('some-filename')
 
-      await service.pipeBookings(token, response)
+      await service.pipeBookings(callConfig, response)
 
-      expect(ReportClientFactory).toHaveBeenCalledWith(token)
+      expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingReportFilename).toHaveBeenCalled()
       expect(reportClient.bookings).toHaveBeenCalledWith(response, 'some-filename')
     })
@@ -49,9 +50,9 @@ describe('BookingReportService', () => {
         bookingReportForProbationRegionFilename as jest.MockedFunction<typeof bookingReportForProbationRegionFilename>
       ).mockReturnValue('some-filename')
 
-      await service.pipeBookingsForProbationRegion(token, response, probationRegions[0].id)
+      await service.pipeBookingsForProbationRegion(callConfig, response, probationRegions[0].id)
 
-      expect(ReportClientFactory).toHaveBeenCalledWith(token)
+      expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingReportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0])
       expect(reportClient.bookingsForProbationRegion).toHaveBeenCalledWith(
         response,
@@ -67,11 +68,11 @@ describe('BookingReportService', () => {
 
       referenceDataClient.getReferenceData.mockResolvedValue(probationRegions)
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(callConfig)
 
       expect(result).toEqual({ probationRegions })
 
-      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
     })
   })

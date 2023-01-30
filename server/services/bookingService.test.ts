@@ -9,6 +9,7 @@ import { DateFormats } from '../utils/dateUtils'
 import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
 import { formatStatus } from '../utils/bookingUtils'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
@@ -20,7 +21,7 @@ describe('BookingService', () => {
   const bookingClientFactory = jest.fn()
 
   const service = new BookingService(bookingClientFactory)
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const premisesId = 'premiseId'
   const bedId = 'bedId'
@@ -38,10 +39,10 @@ describe('BookingService', () => {
       const newBooking = newBookingFactory.build()
       bookingClient.create.mockResolvedValue(booking)
 
-      const postedBooking = await service.create(token, premisesId, newBooking)
+      const postedBooking = await service.create(callConfig, premisesId, newBooking)
       expect(postedBooking).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, newBooking)
     })
   })
@@ -60,10 +61,10 @@ describe('BookingService', () => {
         ],
       })
 
-      const postedBooking = await service.createForBedspace(token, premisesId, room, newBooking)
+      const postedBooking = await service.createForBedspace(callConfig, premisesId, room, newBooking)
       expect(postedBooking).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
         bedId,
@@ -84,10 +85,10 @@ describe('BookingService', () => {
 
       bookingClient.find.mockResolvedValue(booking)
 
-      const retrievedBooking = await service.find(token, premisesId, booking.id)
+      const retrievedBooking = await service.find(callConfig, premisesId, booking.id)
       expect(retrievedBooking).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
     })
   })
@@ -128,7 +129,7 @@ describe('BookingService', () => {
         ],
       })
 
-      const rows = await service.getTableRowsForBedspace(token, premisesId, room)
+      const rows = await service.getTableRowsForBedspace(callConfig, premisesId, room)
 
       expect(rows).toEqual([
         [
@@ -225,7 +226,7 @@ describe('BookingService', () => {
         ],
       ])
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
 
       expect(formatStatus).toHaveBeenCalledTimes(4)
@@ -237,11 +238,11 @@ describe('BookingService', () => {
       const booking = bookingFactory.build()
       bookingClient.find.mockResolvedValue(booking)
 
-      const result = await service.getBooking(token, premisesId, booking.id)
+      const result = await service.getBooking(callConfig, premisesId, booking.id)
 
       expect(result).toEqual(booking)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
     })
   })

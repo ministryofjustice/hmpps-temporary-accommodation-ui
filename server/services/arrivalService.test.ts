@@ -2,6 +2,7 @@ import ArrivalService from './arrivalService'
 import BookingClient from '../data/bookingClient'
 import arrivalFactory from '../testutils/factories/arrival'
 import newArrivalFactory from '../testutils/factories/newArrival'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -21,14 +22,14 @@ describe('ArrivalService', () => {
       const arrival = arrivalFactory.build()
       const payload = newArrivalFactory.build()
 
-      const token = 'SOME_TOKEN'
+      const callConfig = { token: 'some-token' } as CallConfig
 
       bookingClient.markAsArrived.mockResolvedValue(arrival)
 
-      const postedArrival = await service.createArrival(token, 'premisesID', 'bookingId', payload)
+      const postedArrival = await service.createArrival(callConfig, 'premisesID', 'bookingId', payload)
       expect(postedArrival).toEqual(arrival)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markAsArrived).toHaveBeenCalledWith('premisesID', 'bookingId', payload)
     })
   })

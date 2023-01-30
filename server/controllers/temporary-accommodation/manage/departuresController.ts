@@ -5,6 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
+import extractCallConfig from '../../../utils/restUtils'
 
 export default class DeparturesController {
   constructor(private readonly bookingsService: BookingService, private readonly departureService: DepartureService) {}
@@ -14,11 +15,11 @@ export default class DeparturesController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
       const { departureReasons: allDepartureReasons, moveOnCategories: allMoveOnCategories } =
-        await this.departureService.getReferenceData(token)
+        await this.departureService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/departures/new', {
         booking,
@@ -37,7 +38,7 @@ export default class DeparturesController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
       const newDeparture: NewDeparture = {
         ...req.body,
@@ -45,7 +46,7 @@ export default class DeparturesController {
       }
 
       try {
-        await this.departureService.createDeparture(token, premisesId, bookingId, newDeparture)
+        await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
         req.flash('success', 'Booking marked as closed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

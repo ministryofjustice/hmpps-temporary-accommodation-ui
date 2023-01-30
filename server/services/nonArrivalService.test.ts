@@ -3,6 +3,7 @@ import type { Nonarrival } from '@approved-premises/api'
 import NonarrivalService from './nonArrivalService'
 import BookingClient from '../data/bookingClient'
 import NonArrivalFactory from '../testutils/factories/nonArrival'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -12,7 +13,7 @@ describe('NonarrivalService', () => {
 
   const service = new NonarrivalService(bookingClientFactory)
 
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -28,11 +29,11 @@ describe('NonarrivalService', () => {
       }
       bookingClient.markNonArrival.mockResolvedValue(nonArrival)
 
-      const postedNonArrival = await service.createNonArrival(token, 'premisesID', 'bookingId', newNonArrival)
+      const postedNonArrival = await service.createNonArrival(callConfig, 'premisesID', 'bookingId', newNonArrival)
 
       expect(postedNonArrival).toEqual(nonArrival)
 
-      expect(bookingClientFactory).toHaveBeenCalledWith(token)
+      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.markNonArrival).toHaveBeenCalledWith('premisesID', 'bookingId', newNonArrival)
     })
   })

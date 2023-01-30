@@ -1,14 +1,14 @@
 import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
 import { ApplicationSummary } from '../testutils/factories/applicationSummary'
-import RestClient from './restClient'
+import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 
 export default class ApplicationClient {
   restClient: RestClient
 
-  constructor(token: string) {
-    this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, token)
+  constructor(callConfig: CallConfig) {
+    this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
   async find(applicationId: string): Promise<Application> {

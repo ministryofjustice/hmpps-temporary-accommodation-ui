@@ -5,6 +5,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import newCancellationFactory from '../testutils/factories/newCancellation'
 import cancellationFactory from '../testutils/factories/cancellation'
 import referenceDataFactory from '../testutils/factories/referenceData'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -16,7 +17,7 @@ describe('CancellationService', () => {
   const BookingClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
 
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-token' } as CallConfig
 
   const service = new CancellationService(BookingClientFactory, ReferenceDataClientFactory)
 
@@ -33,10 +34,10 @@ describe('CancellationService', () => {
 
       bookingClient.cancel.mockResolvedValue(cancellation)
 
-      const postedDeparture = await service.createCancellation(token, 'premisesId', 'bookingId', newCancellation)
+      const postedDeparture = await service.createCancellation(callConfig, 'premisesId', 'bookingId', newCancellation)
       expect(postedDeparture).toEqual(cancellation)
 
-      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(BookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.cancel).toHaveBeenCalledWith('premisesId', 'bookingId', newCancellation)
     })
   })
@@ -47,11 +48,11 @@ describe('CancellationService', () => {
 
       referenceDataClient.getReferenceData.mockResolvedValue(cancellationReasons)
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(callConfig)
 
       expect(result).toEqual({ cancellationReasons })
 
-      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('cancellation-reasons')
     })
   })
@@ -61,11 +62,11 @@ describe('CancellationService', () => {
       const cancellation = cancellationFactory.build()
       bookingClient.findCancellation.mockResolvedValue(cancellation)
 
-      const requestedDeparture = await service.getCancellation(token, 'premisesId', 'bookingId', cancellation.id)
+      const requestedDeparture = await service.getCancellation(callConfig, 'premisesId', 'bookingId', cancellation.id)
 
       expect(requestedDeparture).toEqual(cancellation)
 
-      expect(BookingClientFactory).toHaveBeenCalledWith(token)
+      expect(BookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.findCancellation).toHaveBeenCalledWith('premisesId', 'bookingId', cancellation.id)
     })
   })

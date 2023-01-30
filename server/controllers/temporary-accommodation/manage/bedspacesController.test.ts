@@ -11,18 +11,22 @@ import updateRoomFactory from '../../../testutils/factories/updateRoom'
 import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
 import { PremisesService, BookingService } from '../../../services'
 import referenceDataFactory from '../../../testutils/factories/referenceData'
+import { CallConfig } from '../../../data/restClient'
+import extractCallConfig from '../../../utils/restUtils'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/restUtils')
 
 describe('BedspacesController', () => {
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
 
   const referenceData = {
     characteristics: referenceDataFactory.characteristic('room').buildList(5),
   }
 
-  let request: DeepMocked<Request>
+  let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -33,7 +37,8 @@ describe('BedspacesController', () => {
   const bedspacesController = new BedspacesController(premisesService, bedspaceService, bookingService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('new', () => {
@@ -49,7 +54,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
         premisesId,
         allCharacteristics: referenceData.characteristics,
@@ -78,7 +83,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.createRoom).toHaveBeenCalledWith(token, premisesId, {
+      expect(bedspaceService.createRoom).toHaveBeenCalledWith(callConfig, premisesId, {
         name: room.name,
         characteristicIds: [],
         notes: room.notes,
@@ -134,8 +139,8 @@ describe('BedspacesController', () => {
       request.params = { premisesId, roomId: room.id }
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(token)
-      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(token, premisesId, room.id)
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(callConfig, premisesId, room.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         allCharacteristics: referenceData.characteristics,
@@ -164,8 +169,8 @@ describe('BedspacesController', () => {
       request.params = { premisesId, roomId: room.id }
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(token)
-      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(token, premisesId, room.id)
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(callConfig, premisesId, room.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         allCharacteristics: referenceData.characteristics,
@@ -195,7 +200,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(token, premisesId, room.id, {
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premisesId, room.id, {
         name: room.name,
         notes: room.notes,
         characteristicIds: [],
@@ -257,9 +262,9 @@ describe('BedspacesController', () => {
         bookingTableRows,
       })
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(token, premises.id)
-      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(token, premises.id, room.id)
-      expect(bookingService.getTableRowsForBedspace).toHaveBeenCalledWith(token, premises.id, room.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getTableRowsForBedspace).toHaveBeenCalledWith(callConfig, premises.id, room.id)
     })
   })
 })

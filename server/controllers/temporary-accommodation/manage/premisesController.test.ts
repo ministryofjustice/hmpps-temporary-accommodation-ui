@@ -13,11 +13,14 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 import BedspaceService from '../../../services/bedspaceService'
 import { allStatuses } from '../../../utils/premisesUtils'
 import referenceDataFactory from '../../../testutils/factories/referenceData'
+import extractCallConfig from '../../../utils/restUtils'
+import { CallConfig } from '../../../data/restClient'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
 
 describe('PremisesController', () => {
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-call-config-token' } as CallConfig
 
   const referenceData = {
     localAuthorities: referenceDataFactory.localAuthority().buildList(5),
@@ -26,7 +29,7 @@ describe('PremisesController', () => {
     pdus: referenceDataFactory.pdu().buildList(5),
   }
 
-  let request: DeepMocked<Request>
+  let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -36,7 +39,8 @@ describe('PremisesController', () => {
   const premisesController = new PremisesController(premisesService, bedspaceService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('index', () => {
@@ -48,7 +52,7 @@ describe('PremisesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { tableRows: [] })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(token)
+      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig)
     })
   })
 
@@ -61,7 +65,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
@@ -85,7 +89,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
@@ -118,7 +122,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.create).toHaveBeenCalledWith(token, {
+      expect(premisesService.create).toHaveBeenCalledWith(callConfig, {
         ...newPremises,
         characteristicIds: [],
       })
@@ -165,8 +169,8 @@ describe('PremisesController', () => {
       request.params.premisesId = premises.id
       await requestHandler(request, response, next)
 
-      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
-      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(callConfig, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
@@ -198,8 +202,8 @@ describe('PremisesController', () => {
       request.params.premisesId = premises.id
       await requestHandler(request, response, next)
 
-      expect(premisesService.getReferenceData).toHaveBeenCalledWith(token)
-      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(token, premises.id)
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(callConfig, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
@@ -234,7 +238,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(premisesService.update).toHaveBeenCalledWith(token, premises.id, {
+      expect(premisesService.update).toHaveBeenCalledWith(callConfig, premises.id, {
         ...newPremises,
         characteristicIds: [],
       })
@@ -292,8 +296,8 @@ describe('PremisesController', () => {
         bedspaces: bedspaceDetails,
       })
 
-      expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(token, premises.id)
-      expect(bedspaceService.getBedspaceDetails).toHaveBeenCalledWith(token, premises.id)
+      expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getBedspaceDetails).toHaveBeenCalledWith(callConfig, premises.id)
     })
   })
 })

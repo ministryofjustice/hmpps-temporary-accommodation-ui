@@ -7,6 +7,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import lostBedFactory from '../testutils/factories/lostBed'
 import newLostBedFactory from '../testutils/factories/newLostBed'
 import referenceDataFactory from '../testutils/factories/referenceData'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/lostBedClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -31,10 +32,11 @@ describe('LostBedService', () => {
       const lostBed: LostBed = lostBedFactory.build()
       const newLostBed: NewLostBed = newLostBedFactory.build()
 
-      const token = 'SOME_TOKEN'
+      const token = 'some-token'
+      const callConfig = { token } as CallConfig
       lostBedClient.create.mockResolvedValue(lostBed)
 
-      const postedLostBed = await service.createLostBed(token, 'premisesID', newLostBed)
+      const postedLostBed = await service.createLostBed(callConfig, 'premisesID', newLostBed)
 
       expect(postedLostBed).toEqual(lostBed)
       expect(LostBedClientFactory).toHaveBeenCalledWith(token)
@@ -45,7 +47,8 @@ describe('LostBedService', () => {
   describe('getReferenceData', () => {
     it('should return the lost bed reasons data needed', async () => {
       const lostBedReasons = referenceDataFactory.buildList(2)
-      const token = 'SOME_TOKEN'
+      const token = 'some-token'
+      const callConfig = { token } as CallConfig
 
       referenceDataClient.getReferenceData.mockImplementation(category => {
         return Promise.resolve(
@@ -55,7 +58,7 @@ describe('LostBedService', () => {
         )
       })
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(callConfig)
 
       expect(result).toEqual(lostBedReasons)
       expect(ReferenceDataClientFactory).toHaveBeenCalledWith(token)

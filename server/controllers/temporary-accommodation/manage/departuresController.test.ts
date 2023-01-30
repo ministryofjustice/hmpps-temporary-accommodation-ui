@@ -8,16 +8,19 @@ import departureFactory from '../../../testutils/factories/departure'
 import newDepartureFactory from '../../../testutils/factories/newDeparture'
 import { DateFormats } from '../../../utils/dateUtils'
 import DeparturesController from './departuresController'
+import { CallConfig } from '../../../data/restClient'
+import extractCallConfig from '../../../utils/restUtils'
 
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/restUtils')
 
 describe('DeparturesController', () => {
-  const token = 'SOME_TOKEN'
+  const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
   const roomId = 'roomId'
   const bookingId = 'bookingId'
 
-  let request: DeepMocked<Request>
+  let request: Request
 
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
@@ -28,7 +31,8 @@ describe('DeparturesController', () => {
   const departuresController = new DeparturesController(bookingService, departureService)
 
   beforeEach(() => {
-    request = createMock<Request>({ user: { token } })
+    request = createMock<Request>()
+    ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
   describe('new', () => {
@@ -49,8 +53,8 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(token, premisesId, booking.id)
-      expect(departureService.getReferenceData).toHaveBeenCalledWith(token)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(departureService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/new', {
         booking,
@@ -89,7 +93,7 @@ describe('DeparturesController', () => {
       await requestHandler(request, response, next)
 
       expect(departureService.createDeparture).toHaveBeenCalledWith(
-        token,
+        callConfig,
         premisesId,
         bookingId,
         expect.objectContaining(newDeparture),

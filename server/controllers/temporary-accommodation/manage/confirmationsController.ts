@@ -5,6 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import ConfirmationService from '../../../services/confirmationService'
+import extractCallConfig from '../../../utils/restUtils'
 
 export default class ConfirmationsController {
   constructor(
@@ -17,9 +18,9 @@ export default class ConfirmationsController {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
-      const booking = await this.bookingsService.getBooking(token, premisesId, bookingId)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/confirmations/new', {
         booking,
@@ -35,14 +36,14 @@ export default class ConfirmationsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
-      const { token } = req.user
+      const callConfig = extractCallConfig(req)
 
       const newConfirmation: NewConfirmation = {
         ...req.body,
       }
 
       try {
-        await this.confirmationService.createConfirmation(token, premisesId, bookingId, newConfirmation)
+        await this.confirmationService.createConfirmation(callConfig, premisesId, bookingId, newConfirmation)
 
         req.flash('success', 'Booking confirmed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))

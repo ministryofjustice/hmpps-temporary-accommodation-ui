@@ -15,6 +15,7 @@ import { formatCharacteristics, filterCharacteristics } from '../utils/character
 import probationRegionFactory from '../testutils/factories/probationRegion'
 import pduFactory from '../testutils/factories/pdu'
 import pduJson from '../data/pdus.json'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/premisesClient')
 jest.mock('../data/referenceDataClient')
@@ -34,7 +35,8 @@ describe('PremisesService', () => {
 
   const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
 
-  const token = 'SOME_TOKEN'
+  const token = 'some-token'
+  const callConfig = { token } as CallConfig
   const premisesId = 'premisesId'
 
   beforeEach(() => {
@@ -48,7 +50,7 @@ describe('PremisesService', () => {
       const staffMembers = staffMemberFactory.buildList(5)
       premisesClient.getStaffMembers.mockResolvedValue(staffMembers)
 
-      const result = await service.getStaffMembers(token, premisesId)
+      const result = await service.getStaffMembers(callConfig, premisesId)
 
       expect(result).toEqual(staffMembers)
 
@@ -94,7 +96,7 @@ describe('PremisesService', () => {
         premisesCharacteristic1,
       ])
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(callConfig)
       expect(result).toEqual({
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
@@ -123,7 +125,7 @@ describe('PremisesService', () => {
       const premises = [premises4, premises1, premises3, premises2]
       premisesClient.all.mockResolvedValue(premises)
 
-      const rows = await service.tableRows(token)
+      const rows = await service.tableRows(callConfig)
 
       expect(rows).toEqual([
         [
@@ -204,7 +206,7 @@ describe('PremisesService', () => {
       const premisesC = premisesFactory.build({ name: 'c' })
       premisesClient.all.mockResolvedValue([premisesC, premisesB, premisesA])
 
-      const result = await service.getPremisesSelectList(token)
+      const result = await service.getPremisesSelectList(callConfig)
 
       expect(result).toEqual([
         { text: premisesA.name, value: premisesA.id },
@@ -242,7 +244,7 @@ describe('PremisesService', () => {
 
       premisesClient.find.mockResolvedValue(premises)
 
-      const result = await service.getUpdatePremises(token, premises.id)
+      const result = await service.getUpdatePremises(callConfig, premises.id)
       expect(result).toEqual({
         ...premises,
         localAuthorityAreaId: 'local-authority',
@@ -259,7 +261,7 @@ describe('PremisesService', () => {
       const premises = premisesFactory.build()
       premisesClient.find.mockResolvedValue(premises)
 
-      const result = await service.getPremises(token, premises.id)
+      const result = await service.getPremises(callConfig, premises.id)
 
       expect(result).toEqual(premises)
 
@@ -302,7 +304,7 @@ describe('PremisesService', () => {
       }))
       ;(formatStatus as jest.MockedFn<typeof formatStatus>).mockReturnValue('Online')
 
-      const result = await service.getPremisesDetails(token, premises.id)
+      const result = await service.getPremisesDetails(callConfig, premises.id)
 
       expect(result).toEqual({
         premises,
@@ -361,7 +363,7 @@ describe('PremisesService', () => {
       premisesClient.capacity.mockResolvedValue([])
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(callConfig, premisesId)
 
       expect(result).toBe('')
     })
@@ -375,7 +377,7 @@ describe('PremisesService', () => {
       ])
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(callConfig, premisesId)
 
       expect(result).toBe('')
     })
@@ -390,7 +392,7 @@ describe('PremisesService', () => {
       premisesClient.capacity.mockResolvedValue(capacityStub)
       ;(getDateRangesWithNegativeBeds as jest.Mock).mockReturnValue([{ start: capacityStub[0].date }])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(callConfig, premisesId)
 
       expect(result).toEqual([
         '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on 1 January 2022</h4>',
@@ -416,7 +418,7 @@ describe('PremisesService', () => {
         },
       ])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(callConfig, premisesId)
 
       expect(result).toEqual([
         '<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period 1 January 2022 to 1 February 2022</h4>',
@@ -443,7 +445,7 @@ describe('PremisesService', () => {
         },
       ])
 
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(callConfig, premisesId)
 
       expect(result).toEqual([
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
@@ -468,7 +470,7 @@ describe('PremisesService', () => {
           end: capacityStub[3].date,
         },
       ])
-      const result = await service.getOvercapacityMessage(token, premisesId)
+      const result = await service.getOvercapacityMessage(callConfig, premisesId)
 
       expect(result).toEqual([
         `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
@@ -486,7 +488,7 @@ describe('PremisesService', () => {
       })
       premisesClient.create.mockResolvedValue(premises)
 
-      const createdPremises = await service.create(token, newPremises)
+      const createdPremises = await service.create(callConfig, newPremises)
       expect(createdPremises).toEqual(premises)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)
@@ -503,7 +505,7 @@ describe('PremisesService', () => {
       })
       premisesClient.update.mockResolvedValue(premises)
 
-      const updatedPremises = await service.update(token, premises.id, newPremises)
+      const updatedPremises = await service.update(callConfig, premises.id, newPremises)
       expect(updatedPremises).toEqual(premises)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(token)

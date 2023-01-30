@@ -8,6 +8,7 @@ import departureFactory from '../testutils/factories/departure'
 import referenceDataFactory from '../testutils/factories/referenceData'
 import newDepartureFactory from '../testutils/factories/newDeparture'
 import { DateFormats } from '../utils/dateUtils'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')
@@ -16,7 +17,8 @@ describe('DepartureService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
   const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
-  const token = 'SOME_TOKEN'
+  const token = 'some-token'
+  const callConfig = { token } as CallConfig
 
   const DepartureClientFactory = jest.fn()
   const ReferenceDataClientFactory = jest.fn()
@@ -36,7 +38,7 @@ describe('DepartureService', () => {
 
       bookingClient.markDeparture.mockResolvedValue(departure)
 
-      const postedDeparture = await service.createDeparture(token, 'premisesId', 'bookingId', newDeparture)
+      const postedDeparture = await service.createDeparture(callConfig, 'premisesId', 'bookingId', newDeparture)
       expect(postedDeparture).toEqual(departure)
 
       expect(DepartureClientFactory).toHaveBeenCalledWith(token)
@@ -49,7 +51,7 @@ describe('DepartureService', () => {
       const departure: Departure = departureFactory.build()
       bookingClient.findDeparture.mockResolvedValue(departure)
 
-      const requestedDeparture = await service.getDeparture(token, 'premisesId', 'bookingId', departure.id)
+      const requestedDeparture = await service.getDeparture(callConfig, 'premisesId', 'bookingId', departure.id)
 
       expect(requestedDeparture).toEqual({
         ...departure,
@@ -75,7 +77,7 @@ describe('DepartureService', () => {
         )
       })
 
-      const result = await service.getReferenceData(token)
+      const result = await service.getReferenceData(callConfig)
 
       expect(result).toEqual({
         departureReasons,

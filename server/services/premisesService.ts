@@ -15,6 +15,7 @@ import { DateFormats } from '../utils/dateUtils'
 import { getDateRangesWithNegativeBeds, formatStatus, NegativeDateRange } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+import { CallConfig } from '../data/restClient'
 
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
@@ -29,16 +30,16 @@ export default class PremisesService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async getStaffMembers(token: string, premisesId: string): Promise<Array<StaffMember>> {
-    const premisesClient = this.premisesClientFactory(token)
+  async getStaffMembers(callConfig: CallConfig, premisesId: string): Promise<Array<StaffMember>> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
 
     const staffMembers = await premisesClient.getStaffMembers(premisesId)
 
     return staffMembers
   }
 
-  async getReferenceData(token: string): Promise<PremisesReferenceData> {
-    const referenceDataClient = this.referenceDataClientFactory(token)
+  async getReferenceData(callConfig: CallConfig): Promise<PremisesReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(callConfig.token)
 
     const localAuthorities = (
       (await referenceDataClient.getReferenceData('local-authority-areas')) as Array<LocalAuthorityArea>
@@ -58,8 +59,8 @@ export default class PremisesService {
     return { localAuthorities, characteristics, probationRegions, pdus }
   }
 
-  async tableRows(token: string): Promise<Array<TableRow>> {
-    const premisesClient = this.premisesClientFactory(token)
+  async tableRows(callConfig: CallConfig): Promise<Array<TableRow>> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.all()
 
     return premises
@@ -79,15 +80,18 @@ export default class PremisesService {
       })
   }
 
-  async getPremises(token: string, id: string): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(token)
+  async getPremises(callConfig: CallConfig, id: string): Promise<Premises> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.find(id)
 
     return premises
   }
 
-  async getPremisesDetails(token: string, id: string): Promise<{ premises: Premises; summaryList: SummaryList }> {
-    const premisesClient = this.premisesClientFactory(token)
+  async getPremisesDetails(
+    callConfig: CallConfig,
+    id: string,
+  ): Promise<{ premises: Premises; summaryList: SummaryList }> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.find(id)
 
     const summaryList = await this.summaryListForPremises(premises)
@@ -95,8 +99,8 @@ export default class PremisesService {
     return { premises, summaryList }
   }
 
-  async getOvercapacityMessage(token: string, premisesId: string): Promise<string[] | string> {
-    const premisesClient = this.premisesClientFactory(token)
+  async getOvercapacityMessage(callConfig: CallConfig, premisesId: string): Promise<string[] | string> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premisesDateCapacities = await premisesClient.capacity(premisesId)
 
     const overcapacityDateRanges = getDateRangesWithNegativeBeds(premisesDateCapacities)
@@ -106,8 +110,8 @@ export default class PremisesService {
     return overcapacityMessage ? [overcapacityMessage] : ''
   }
 
-  async getPremisesSelectList(token: string): Promise<Array<{ text: string; value: string }>> {
-    const premisesClient = this.premisesClientFactory(token)
+  async getPremisesSelectList(callConfig: CallConfig): Promise<Array<{ text: string; value: string }>> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.all()
 
     return premises
@@ -125,8 +129,8 @@ export default class PremisesService {
       })
   }
 
-  async getUpdatePremises(token: string, id: string): Promise<UpdatePremises> {
-    const premisesClient = this.premisesClientFactory(token)
+  async getUpdatePremises(callConfig: CallConfig, id: string): Promise<UpdatePremises> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.find(id)
 
     return {
@@ -138,15 +142,15 @@ export default class PremisesService {
     }
   }
 
-  async create(token: string, newPremises: NewPremises): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(token)
+  async create(callConfig: CallConfig, newPremises: NewPremises): Promise<Premises> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.create(newPremises)
 
     return premises
   }
 
-  async update(token: string, id: string, updatePremises: UpdatePremises): Promise<Premises> {
-    const premisesClient = this.premisesClientFactory(token)
+  async update(callConfig: CallConfig, id: string, updatePremises: UpdatePremises): Promise<Premises> {
+    const premisesClient = this.premisesClientFactory(callConfig.token)
     const premises = await premisesClient.update(id, updatePremises)
 
     return premises

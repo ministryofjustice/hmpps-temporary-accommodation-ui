@@ -5,6 +5,7 @@ import PersonClient from '../data/personClient'
 import PersonFactory from '../testutils/factories/person'
 import risksFactory from '../testutils/factories/risks'
 import { mapApiPersonRisksForUi } from '../utils/utils'
+import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/personClient.ts')
 
@@ -14,7 +15,8 @@ describe('PersonService', () => {
 
   const service = new PersonService(personClientFactory)
 
-  const token = 'SOME_TOKEN'
+  const token = 'some-token'
+  const callConfig = { token } as CallConfig
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -26,7 +28,7 @@ describe('PersonService', () => {
       const person: Person = PersonFactory.build()
       personClient.search.mockResolvedValue(person)
 
-      const postedPerson = await service.findByCrn(token, 'crn')
+      const postedPerson = await service.findByCrn(callConfig, 'crn')
 
       expect(postedPerson).toEqual(person)
 
@@ -41,7 +43,7 @@ describe('PersonService', () => {
       const uiRisks = mapApiPersonRisksForUi(apiRisks)
       personClient.risks.mockResolvedValue(apiRisks)
 
-      const postedPerson = await service.getPersonRisks(token, 'crn')
+      const postedPerson = await service.getPersonRisks(callConfig, 'crn')
 
       expect(postedPerson).toEqual(uiRisks)
 

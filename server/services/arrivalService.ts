@@ -1,11 +1,17 @@
 import type { Arrival, NewArrival } from '@approved-premises/api'
 import type { RestClientBuilder, BookingClient } from '../data'
+import { CallConfig } from '../data/restClient'
 
 export default class ArrivalService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
-  async createArrival(token: string, premisesId: string, bookingId: string, arrival: NewArrival): Promise<Arrival> {
-    const bookingClient = this.bookingClientFactory(token)
+  async createArrival(
+    callConfig: CallConfig,
+    premisesId: string,
+    bookingId: string,
+    arrival: NewArrival,
+  ): Promise<Arrival> {
+    const bookingClient = this.bookingClientFactory(callConfig.token)
 
     const confirmedArrival = await bookingClient.markAsArrived(premisesId, bookingId, arrival)
 

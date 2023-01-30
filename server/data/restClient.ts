@@ -35,6 +35,10 @@ interface StreamRequest {
   errorLogger?: (e: UnsanitisedError) => void
 }
 
+export interface CallConfig {
+  token: string
+}
+
 export default class RestClient {
   agent: Agent
 

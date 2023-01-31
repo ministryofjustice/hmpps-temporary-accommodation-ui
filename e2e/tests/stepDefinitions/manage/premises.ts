@@ -17,6 +17,17 @@ const actingUserProbationRegionId =
 const actingUserProbationRegionName =
   Cypress.env('acting_user_probation_region_name') || throwMissingCypressEnvError('acting_user_probation_region_name')
 
+Given("Given I'm viewing the list of premises", () => {
+  const dashboardPage = Page.verifyOnPage(DashboardPage)
+  dashboardPage.clickPremisesLink()
+
+  const premisesListPage = Page.verifyOnPage(PremisesListPage)
+
+  premisesListPage.getPremises(0, 'premises0')
+  premisesListPage.getPremises(1, 'premises1')
+  premisesListPage.getPremises(2, 'premises2')
+})
+
 Given("I'm creating a premises", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
   dashboardPage.clickPremisesLink()
@@ -166,6 +177,24 @@ Given('I attempt to edit the premises to remove the PDU', () => {
     page.completeForm(updatePremises)
 
     cy.wrap(['pdu']).as('missing')
+  })
+})
+
+Then('Then I should see only premises for my region', () => {
+  const probationRegion = probationRegionFactory.build({
+    id: actingUserProbationRegionId,
+    name: actingUserProbationRegionName,
+  })
+
+  cy.then(function _() {
+    ;[this.premises0, this.premises1, this.premises2].forEach(premises => {
+      const premisesListPage = Page.verifyOnPage(PremisesListPage)
+      premisesListPage.clickPremisesViewLink(premises)
+
+      const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises)
+      premisesShowPage.shouldShowProbationRegion(probationRegion)
+      premisesShowPage.clickBreadCrumbUp()
+    })
   })
 })
 

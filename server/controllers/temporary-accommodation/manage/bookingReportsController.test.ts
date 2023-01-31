@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { BookingReportsController } from '.'
 import BookingReportService from '../../../services/bookingReportService'
 import { CallConfig } from '../../../data/restClient'
@@ -105,6 +105,22 @@ describe('BookingReportsController', () => {
         request,
         response,
         err,
+        paths.reports.bookings.new({}),
+      )
+    })
+
+    it('renders with errors if the probation region is not specified', async () => {
+      const requestHandler = bookingReportsController.create()
+
+      request.body = {}
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'probationRegionId', 'empty')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
         paths.reports.bookings.new({}),
       )
     })

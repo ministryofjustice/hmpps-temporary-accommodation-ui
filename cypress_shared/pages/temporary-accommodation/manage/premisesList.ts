@@ -32,6 +32,24 @@ export default class PremisesListPage extends Page {
       })
   }
 
+  getPremises(index: number, alias: string): void {
+    cy.get('table')
+      .children('tbody')
+      .children('tr')
+      .eq(indexpage)
+      .get('td')
+      .eq(0)
+      .then(element => {
+        const [addressLine1, postcode] = element.text().split(', ')
+        const premises = premisesFactory.build({
+          id: 'unknown',
+          addressLine1,
+          postcode,
+        })
+        cy.wrap(premises).as(alias)
+      })
+  }
+
   shouldShowPremises(premises: Array<Premises>): void {
     premises.forEach((item: Premises) => {
       const shortAddress = `${item.addressLine1}, ${item.postcode}`

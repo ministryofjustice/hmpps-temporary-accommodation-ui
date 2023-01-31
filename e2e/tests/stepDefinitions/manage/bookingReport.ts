@@ -34,10 +34,26 @@ Given('I download a report for the preselected probation region', () => {
   cy.wrap(bookingReportForProbationRegionFilename(probationRegion)).as('filename')
 })
 
+Given('I clear the preselected probation region and attempt to download a report', () => {
+  const bookingReportPage = Page.verifyOnPage(BookingReportNewPage)
+
+  bookingReportPage.clearForm()
+  bookingReportPage.clickSubmit()
+
+  cy.wrap(['probationRegionId']).as('missing')
+})
+
 Then('I should download a booking report', () => {
   cy.then(function _() {
     const filePath = path.join(Cypress.config('downloadsFolder'), this.filename)
 
     cy.readFile(filePath).should('have.length.above', 0)
+  })
+})
+
+Then('I should see a list of the problems encountered downloading the report', () => {
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BookingReportNewPage)
+    page.shouldShowErrorMessagesForFields(this.missing)
   })
 })

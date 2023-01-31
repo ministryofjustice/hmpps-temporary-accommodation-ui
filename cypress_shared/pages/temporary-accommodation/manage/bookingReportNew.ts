@@ -22,4 +22,8 @@ export default class BookingReportNewPage extends Page {
       .contains(exact(probationRegion.name))
       .should('be.selected')
   }
+
+  clearForm(): void {
+    this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
+  }
 }

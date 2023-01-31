@@ -88,6 +88,22 @@ context('Report', () => {
     })
   })
 
+  it('should show an error when the user does not select a probation region', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the booking report page
+    cy.task('stubBookingReportReferenceData')
+    const page = BookingReportNewPage.visit()
+
+    // And I clear the probation region
+    page.clearForm()
+    page.clickSubmit()
+
+    // Then I should see an messages relating to the probation region
+    page.shouldShowErrorMessagesForFields(['probationRegionId'])
+  })
+
   it('navigates back from the booking report page to the dashboard page', () => {
     // Given I am signed in
     cy.signIn()

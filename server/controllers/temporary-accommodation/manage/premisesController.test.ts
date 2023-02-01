@@ -11,13 +11,22 @@ import PremisesController from './premisesController'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
-import { allStatuses } from '../../../utils/premisesUtils'
+import { allStatuses, getActiveStatuses } from '../../../utils/premisesUtils'
 import referenceDataFactory from '../../../testutils/factories/referenceData'
 import extractCallConfig from '../../../utils/restUtils'
 import { CallConfig } from '../../../data/restClient'
+import { PropertyStatus } from '../../../@types/shared'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/premisesUtils', () => {
+  const originalModule = jest.requireActual('../../../utils/premisesUtils')
+
+  return {
+    ...originalModule,
+    getActiveStatuses: jest.fn(),
+  }
+})
 
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -28,6 +37,19 @@ describe('PremisesController', () => {
     probationRegions: referenceDataFactory.probationRegion().buildList(5),
     pdus: referenceDataFactory.pdu().buildList(5),
   }
+
+  const allActiveStatuses: Array<{ name: string; id: PropertyStatus; isActive: boolean }> = [
+    {
+      name: 'Online',
+      id: 'active',
+      isActive: true,
+    },
+    {
+      name: 'Archived',
+      id: 'archived',
+      isActive: true,
+    },
+  ]
 
   let request: Request
 
@@ -59,6 +81,7 @@ describe('PremisesController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(getActiveStatuses as jest.Mock).mockReturnValue(allActiveStatuses)
 
       const requestHandler = premisesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -66,13 +89,14 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(getActiveStatuses).toHaveBeenCalledWith(allStatuses)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
         allPdus: referenceData.pdus,
-        allStatuses,
+        allStatuses: allActiveStatuses,
         characteristicIds: [],
         errors: {},
         errorSummary: [],
@@ -81,6 +105,7 @@ describe('PremisesController', () => {
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(getActiveStatuses as jest.Mock).mockReturnValue(allActiveStatuses)
 
       const requestHandler = premisesController.new()
 
@@ -90,13 +115,14 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(getActiveStatuses).toHaveBeenCalledWith(allStatuses)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/new', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
         allPdus: referenceData.pdus,
-        allStatuses,
+        allStatuses: allActiveStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
@@ -156,6 +182,7 @@ describe('PremisesController', () => {
   describe('edit', () => {
     it('renders the form', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(getActiveStatuses as jest.Mock).mockReturnValue(allActiveStatuses)
 
       const premises = premisesFactory.build()
       const updatePremises = updatePremisesFactory.build({
@@ -171,13 +198,14 @@ describe('PremisesController', () => {
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(getActiveStatuses).toHaveBeenCalledWith(allStatuses)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
         allPdus: referenceData.pdus,
-        allStatuses,
+        allStatuses: allActiveStatuses,
         characteristicIds: [],
         errors: {},
         errorSummary: [],
@@ -187,6 +215,7 @@ describe('PremisesController', () => {
 
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(getActiveStatuses as jest.Mock).mockReturnValue(allActiveStatuses)
 
       const premises = premisesFactory.build()
       const updatePremises = updatePremisesFactory.build({
@@ -204,13 +233,14 @@ describe('PremisesController', () => {
 
       expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(premisesService.getUpdatePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(getActiveStatuses).toHaveBeenCalledWith(allStatuses)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/edit', {
         allLocalAuthorities: referenceData.localAuthorities,
         allCharacteristics: referenceData.characteristics,
         allProbationRegions: referenceData.probationRegions,
         allPdus: referenceData.pdus,
-        allStatuses,
+        allStatuses: allActiveStatuses,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,

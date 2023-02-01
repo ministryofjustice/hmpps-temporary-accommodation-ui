@@ -15,6 +15,6 @@ export default Factory.define<UpdatePremises>(() => ({
   ),
   probationRegionId: referenceDataFactory.probationRegion().build().id,
   pdu: referenceDataFactory.pdu().build().id,
-  status: faker.helpers.arrayElement(['pending', 'active', 'archived']),
+  status: faker.helpers.arrayElement(['active', 'archived']),
   notes: faker.lorem.lines(),
 }))

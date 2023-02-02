@@ -4,14 +4,12 @@ import { bookingReportForProbationRegionFilename } from '../../../../server/util
 import Page from '../../../../cypress_shared/pages/page'
 import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 
 context('Report', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubAuthUser')
-    stubActingUser()
+    setupTestUser()
   })
 
   it('should navigate to the booking report page', () => {

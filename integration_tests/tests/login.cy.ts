@@ -2,14 +2,14 @@ import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/da
 import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
 import AuthManageDetailsPage from '../../cypress_shared/pages/authManageDetails'
-import stubActingUser from '../../cypress_shared/utils/stubActingUser'
+import setupTestUser from '../../cypress_shared/utils/setupTestUser'
+import referenceDataFactory from '../../server/testutils/factories/referenceData'
+import userFactory from '../../server/testutils/factories/user'
 
 context('SignIn', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubAuthUser')
-    stubActingUser()
+    setupTestUser()
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -63,7 +63,11 @@ context('SignIn', () => {
 
     cy.task('stubVerifyToken', true)
     cy.task('stubAuthUser', 'bobby brown')
-    stubActingUser()
+
+    const probationRegion = referenceDataFactory.probationRegion().build()
+    const actingUser = userFactory.build({ region: probationRegion })
+
+    cy.task('stubActingUser', actingUser)
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')

@@ -1,11 +1,9 @@
-import stubActingUser from '../../../cypress_shared/utils/stubActingUser'
+import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
 
 context('Cookies', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubAuthUser')
-    stubActingUser()
+    setupTestUser()
   })
 
   it('should navigate to the cookie policy page', () => {

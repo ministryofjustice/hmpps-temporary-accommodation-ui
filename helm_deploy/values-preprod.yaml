@@ -1,5 +1,5 @@
 ---
-# Per environment values which override defaults in approved-premises-ui/values.yaml
+# Per environment values which override defaults in hmpps-temporary-accommodation-ui/values.yaml
 
 generic-service:
   ingress:

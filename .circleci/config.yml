@@ -64,7 +64,7 @@ jobs:
           name: E2E Check - << parameters.environment >>
           command: |
             npm run test:e2e --\
-              --env "username=${CYPRESS_USERNAME_<< parameters.environment >>},password=${CYPRESS_PASSWORD_<< parameters.environment >>},offender_crn=${OFFENDER_CRN_<< parameters.environment >>},acting_user_probation_region_id=${CYPRESS_ACTING_USER_PROBATION_REGION_ID<< parameters.environment >>},acting_user_probation_region_name=${CYPRESS_ACTING_USER_PROBATION_REGION_NAME<< parameters.environment >>}"  \
+              --env "username=${CYPRESS_USERNAME_<< parameters.environment >>},password=${CYPRESS_PASSWORD_<< parameters.environment >>},offender_crn=${OFFENDER_CRN_<< parameters.environment >>},acting_user_probation_region_id=${CYPRESS_ACTING_USER_PROBATION_REGION_ID_<< parameters.environment >>},acting_user_probation_region_name=${CYPRESS_ACTING_USER_PROBATION_REGION_NAME_<< parameters.environment >>}"  \
               --config baseUrl=https://temporary-accommodation-<< parameters.environment >>.hmpps.service.justice.gov.uk
       - store_artifacts:
           path: e2e/screenshots

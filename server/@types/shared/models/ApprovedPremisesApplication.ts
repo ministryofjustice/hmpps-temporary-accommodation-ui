@@ -4,6 +4,7 @@
 
 import type { AnyValue } from './AnyValue';
 import type { Application } from './Application';
+import type { ApplicationStatus } from './ApplicationStatus';
 import type { PersonRisks } from './PersonRisks';
 
 export type ApprovedPremisesApplication = (Application & {
@@ -15,5 +16,6 @@ export type ApprovedPremisesApplication = (Application & {
     outdatedSchema: boolean;
     data?: AnyValue;
     document?: AnyValue;
+    status: ApplicationStatus;
 });
 

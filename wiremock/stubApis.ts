@@ -19,6 +19,7 @@ import lostBedStubs from './lostBedStubs'
 import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
 import roomStubs from './roomStub'
+import userStub from './userStub'
 
 import * as referenceDataStubs from './referenceDataStubs'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
@@ -193,6 +194,7 @@ stubs.push(
   ...personStubs,
   ...applicationStubs,
   ...roomStubs,
+  ...userStub,
   ...reportStubs,
   ...Object.values(referenceDataStubs),
 )

@@ -20,4 +20,5 @@ export default Factory.define<Application>(() => ({
   isWomensApplication: faker.datatype.boolean(),
   isPipeApplication: faker.datatype.boolean(),
   risks: risks.build(),
+  status: faker.helpers.arrayElement(['inProgress', 'submitted', 'requestedFurtherInformation']),
 }))

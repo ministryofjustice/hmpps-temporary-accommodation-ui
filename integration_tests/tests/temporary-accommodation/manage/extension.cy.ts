@@ -6,12 +6,14 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import extensionFactory from '../../../../server/testutils/factories/extension'
 import newExtensionFactory from '../../../../server/testutils/factories/newExtension'
 import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingExtensionNew'
+import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
 
 context('Booking extension', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('navigates to the booking extension page', () => {

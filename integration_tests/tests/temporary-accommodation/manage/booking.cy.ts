@@ -7,12 +7,14 @@ import newBookingFactory from '../../../../server/testutils/factories/newBooking
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
 
 context('Booking', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn')
     cy.task('stubAuthUser')
+    stubActingUser()
   })
 
   it('navigates to the create booking page', () => {

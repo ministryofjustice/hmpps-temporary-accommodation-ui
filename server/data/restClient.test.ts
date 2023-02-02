@@ -1,31 +1,31 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
 import nock from 'nock'
-
 import type { ApiConfig } from '../config'
 import RestClient, { CallConfig } from './restClient'
+import probationRegionFactory from '../testutils/factories/probationRegion'
 
 describe('restClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let restClient: RestClient
 
-  const callConfig = { token: 'some-token' } as CallConfig
+  const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
+  const apiConfig: ApiConfig = {
+    url: 'http://example.com:8000',
+    timeout: {
+      response: 1000,
+      deadline: 1000,
+    },
+    agent: { timeout: 1000 },
+    serviceName: 'approved-premises',
+  }
 
   beforeEach(() => {
-    const apiConfig: ApiConfig = {
-      url: 'http://example.com:8000',
-      timeout: {
-        response: 1000,
-        deadline: 1000,
-      },
-      agent: { timeout: 1000 },
-      serviceName: 'approved-premises',
-    }
-
     fakeApprovedPremisesApi = nock(apiConfig.url, {
       reqheaders: {
         authorization: `Bearer ${callConfig.token}`,
         'X-SERVICE-NAME': 'approved-premises',
+        'X-USER-REGION': callConfig.probationRegion.id,
       },
     })
     restClient = new RestClient('premisesClient', apiConfig, callConfig)
@@ -51,14 +51,10 @@ describe('restClient', () => {
     })
 
     it('should omit the X-SERVICE-NAME header when the configuration does not include a service name', async () => {
-      const apiConfig: ApiConfig = {
-        url: 'http://example.com:8000',
-        timeout: {
-          response: 1000,
-          deadline: 1000,
-        },
-        agent: { timeout: 1000 },
+      const apiConfigWithoutServiceName: ApiConfig = {
+        ...apiConfig,
       }
+      delete apiConfigWithoutServiceName.serviceName
 
       fakeApprovedPremisesApi = nock(apiConfig.url, {
         reqheaders: {
@@ -66,7 +62,25 @@ describe('restClient', () => {
         },
         badheaders: ['X-SERVICE-NAME'],
       })
-      restClient = new RestClient('premisesClient', apiConfig, callConfig)
+      restClient = new RestClient('premisesClient', apiConfigWithoutServiceName, callConfig)
+
+      fakeApprovedPremisesApi.get(`/some/path`).reply(200, { some: 'data' })
+
+      await restClient.get({ path: '/some/path' })
+
+      expect(nock.isDone()).toBeTruthy()
+    })
+
+    it('should omit the X-USER-REGION header when the call config does not include a user region', async () => {
+      const callConfigWithoutUserRegion = { token: 'some-token' } as CallConfig
+
+      fakeApprovedPremisesApi = nock(apiConfig.url, {
+        reqheaders: {
+          authorization: `Bearer ${callConfig.token}`,
+        },
+        badheaders: ['X-USER-REGION'],
+      })
+      restClient = new RestClient('premisesClient', apiConfig, callConfigWithoutUserRegion)
 
       fakeApprovedPremisesApi.get(`/some/path`).reply(200, { some: 'data' })
 

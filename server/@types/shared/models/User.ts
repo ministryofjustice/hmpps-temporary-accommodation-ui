@@ -2,15 +2,13 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { UserQualification } from './UserQualification';
+import type { ProbationRegion } from './ProbationRegion';
 import type { UserRole } from './UserRole';
 
 export type User = {
-    name: string;
-    deliusUsername: string;
-    email?: string;
-    telephoneNumber?: string;
+    id: string;
+    region: ProbationRegion;
     roles: Array<UserRole>;
-    qualifications: Array<UserQualification>;
+    service: string;
 };
 

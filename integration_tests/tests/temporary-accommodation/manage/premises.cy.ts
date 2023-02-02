@@ -138,40 +138,47 @@ context('Premises', () => {
     cy.task('stubPremisesReferenceData')
 
     // When I visit the new premises page
-    const premises = premisesFactory.build()
-    const newPremises = newPremisesFactory.build({
-      ...premises,
-      localAuthorityAreaId: premises.localAuthorityArea.id,
-      characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
-      probationRegionId: premises.probationRegion.id,
+    cy.then(function _() {
+      const premises = premisesFactory.build({
+        probationRegion: this.actingUserProbationRegion,
+      })
+      const newPremises = newPremisesFactory.build({
+        ...premises,
+        localAuthorityAreaId: premises.localAuthorityArea.id,
+        characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+        probationRegionId: premises.probationRegion.id,
+      })
+
+      cy.task('stubPremisesCreate', premises)
+      cy.task('stubSinglePremises', premises)
+
+      const page = PremisesNewPage.visit()
+
+      // Then I should see the user's probation region preselected
+      page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
+
+      // And when I fill out the form
+      page.completeForm(newPremises)
+
+      // Then a premises should have been created in the API
+      cy.task('verifyPremisesCreate').then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+
+        expect(requestBody.name).equal(newPremises.name)
+        expect(requestBody.addressLine1).equal(newPremises.addressLine1)
+        expect(requestBody.addressLine2).equal(newPremises.addressLine2)
+        expect(requestBody.town).equal(newPremises.town)
+        expect(requestBody.postcode).equal(newPremises.postcode)
+        expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
+        expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
+        expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
+      })
+
+      // And I should be redirected to the show premises page
+      const premisesNewPage = PremisesNewPage.verifyOnPage(PremisesShowPage, premises)
+      premisesNewPage.shouldShowBanner('Property created')
     })
-
-    cy.task('stubPremisesCreate', premises)
-    cy.task('stubSinglePremises', premises)
-
-    const page = PremisesNewPage.visit()
-
-    // And I fill out the form
-    page.completeForm(newPremises)
-
-    // Then a premises should have been created in the API
-    cy.task('verifyPremisesCreate').then(requests => {
-      expect(requests).to.have.length(1)
-      const requestBody = JSON.parse(requests[0].body)
-
-      expect(requestBody.name).equal(newPremises.name)
-      expect(requestBody.addressLine1).equal(newPremises.addressLine1)
-      expect(requestBody.addressLine2).equal(newPremises.addressLine2)
-      expect(requestBody.town).equal(newPremises.town)
-      expect(requestBody.postcode).equal(newPremises.postcode)
-      expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
-      expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
-      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
-    })
-
-    // And I should be redirected to the show premises page
-    const premisesNewPage = PremisesNewPage.verifyOnPage(PremisesShowPage, premises)
-    premisesNewPage.shouldShowBanner('Property created')
   })
 
   it('should show errors when the create API returns an error', () => {
@@ -194,6 +201,7 @@ context('Premises', () => {
       'pdu',
       'status',
     ])
+    page.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
@@ -236,39 +244,46 @@ context('Premises', () => {
     // And there is reference data in the database
     cy.task('stubPremisesReferenceData')
 
-    // And there is a premises in the database
-    const premises = premisesFactory.build()
-    cy.task('stubSinglePremises', premises)
+    cy.then(function _() {
+      // And there is a premises in the database
+      const premises = premisesFactory.build({
+        probationRegion: this.actingUserProbationRegion,
+      })
+      cy.task('stubSinglePremises', premises)
 
-    // When I visit the edit premises page
-    const page = PremisesEditPage.visit(premises)
+      // When I visit the edit premises page
+      const page = PremisesEditPage.visit(premises)
 
-    // Then I should see the premises details
-    page.shouldShowPremisesDetails()
+      // Then I should see the premises details
+      page.shouldShowPremisesDetails()
 
-    // And when I fill out the form
-    cy.task('stubPremisesUpdate', premises)
-    const updatePremises = updatePremisesFactory.build()
-    page.completeForm(updatePremises)
+      // And when I fill out the form
+      cy.task('stubPremisesUpdate', premises)
 
-    // Then the premises should have been update in the API
-    cy.task('verifyPremisesUpdate', premises).then(requests => {
-      expect(requests).to.have.length(1)
-      const requestBody = JSON.parse(requests[0].body)
+      const updatePremises = updatePremisesFactory.build({
+        probationRegionId: this.actingUserProbationRegion.id,
+      })
+      page.completeForm(updatePremises)
 
-      expect(requestBody.addressLine1).equal(updatePremises.addressLine1)
-      expect(requestBody.addressLine2).equal(updatePremises.addressLine2)
-      expect(requestBody.town).equal(updatePremises.town)
-      expect(requestBody.postcode).equal(updatePremises.postcode)
-      expect(requestBody.localAuthorityAreaId).equal(updatePremises.localAuthorityAreaId)
-      expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
-      expect(requestBody.status).equal(updatePremises.status)
-      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
+      // Then the premises should have been update in the API
+      cy.task('verifyPremisesUpdate', premises).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+
+        expect(requestBody.addressLine1).equal(updatePremises.addressLine1)
+        expect(requestBody.addressLine2).equal(updatePremises.addressLine2)
+        expect(requestBody.town).equal(updatePremises.town)
+        expect(requestBody.postcode).equal(updatePremises.postcode)
+        expect(requestBody.localAuthorityAreaId).equal(updatePremises.localAuthorityAreaId)
+        expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
+        expect(requestBody.status).equal(updatePremises.status)
+        expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
+      })
+
+      // And I should be redirected to the show premises page
+      const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+      premisesShowPage.shouldShowBanner('Property updated')
     })
-
-    // And I should be redirected to the show premises page
-    const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
-    premisesShowPage.shouldShowBanner('Property updated')
   })
 
   it('should show errors when the update API returns an error', () => {

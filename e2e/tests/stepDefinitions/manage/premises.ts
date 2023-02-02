@@ -3,12 +3,19 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
 import updatePremisesFactory from '../../../../server/testutils/factories/updatePremises'
+import probationRegionFactory from '../../../../server/testutils/factories/probationRegion'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import Page from '../../../../cypress_shared/pages/page'
+import throwMissingCypressEnvError from '../utils'
+
+const actingUserProbationRegionId =
+  Cypress.env('acting_user_probation_region_id') || throwMissingCypressEnvError('acting_user_probation_region_id')
+const actingUserProbationRegionName =
+  Cypress.env('acting_user_probation_region_name') || throwMissingCypressEnvError('acting_user_probation_region_name')
 
 Given("I'm creating a premises", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
@@ -33,9 +40,16 @@ Given("I'm viewing an existing premises", () => {
 Given('I create a premises with all necessary details', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
 
+  const probationRegion = probationRegionFactory.build({
+    id: actingUserProbationRegionId,
+    name: actingUserProbationRegionName,
+  })
   const premises = premisesFactory.build({
     id: 'unknown',
+    probationRegion,
   })
+
+  page.shouldPreselectProbationRegion(probationRegion)
 
   const newPremises = newPremisesFactory.build({
     ...premises,
@@ -57,8 +71,14 @@ Given('I attempt to create a premises with required details missing', () => {
 
 Given('I attempt to create a premises with the PDU missing', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
+
+  const probationRegion = probationRegionFactory.build({
+    id: actingUserProbationRegionId,
+    name: actingUserProbationRegionName,
+  })
   const premises = premisesFactory.build({
     id: 'unknown',
+    probationRegion,
     pdu: '',
   })
 
@@ -87,9 +107,15 @@ Given("I'm editing the premises", () => {
 Given('I edit the premises details', () => {
   cy.get('@premises').then((premises: Premises) => {
     const page = Page.verifyOnPage(PremisesEditPage, premises)
+
+    const probationRegion = probationRegionFactory.build({
+      id: actingUserProbationRegionId,
+      name: actingUserProbationRegionName,
+    })
     const updatedPremises = premisesFactory.build({
       id: premises.id,
       name: premises.name,
+      probationRegion,
     })
 
     const updatePremises = updatePremisesFactory.build({
@@ -118,9 +144,15 @@ Given('I attempt to edit the premises to remove required details', () => {
 Given('I attempt to edit the premises to remove the PDU', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(PremisesEditPage, this.premises)
+
+    const probationRegion = probationRegionFactory.build({
+      id: actingUserProbationRegionId,
+      name: actingUserProbationRegionName,
+    })
     const updatedPremises = premisesFactory.build({
       id: this.premises.id,
       name: this.premises.name,
+      probationRegion,
       pdu: '',
     })
 

@@ -66,7 +66,7 @@ Given('I attempt to create a premises with required details missing', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
   page.clickSubmit()
 
-  cy.wrap(['name', 'addressLine1', 'postcode', 'probationRegionId', 'status']).as('missing')
+  cy.wrap(['name', 'addressLine1', 'postcode', 'status']).as('missing')
 })
 
 Given('I attempt to create a premises with the PDU missing', () => {

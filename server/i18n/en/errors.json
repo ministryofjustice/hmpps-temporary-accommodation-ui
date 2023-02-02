@@ -12,7 +12,8 @@
       "isInFuture": "The submitted at date must be in the past"
     },
     "name": {
-      "empty": "You must enter a name"
+      "empty": "You must enter a name",
+      "notUnique": "The name must be unique to this property"
     },
     "arrivalDate": {
       "empty": "You must enter a start date",

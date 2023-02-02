@@ -1,3 +1,5 @@
+import 'cypress-axe'
+import { Result } from 'axe-core'
 import { PersonRisksUI, PlaceContext, ReferenceData } from '../../server/@types/ui'
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
@@ -28,6 +30,8 @@ export default abstract class Page extends Component {
 
   checkOnPage(): void {
     cy.get('h1').contains(this.title)
+    cy.injectAxe()
+    cy.checkA11y(undefined, undefined, this.logAccessibilityViolations)
   }
 
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
@@ -312,5 +316,19 @@ export default abstract class Page extends Component {
         })
         cy.wrap(items).as(alias)
       })
+  }
+
+  logAccessibilityViolations(violations: Result[]): void {
+    cy.task('logAccessibilityViolationsSummary', `Accessibility violations detected: ${violations.length}`)
+
+    const violationData = violations.map(({ id, impact, description, nodes }) => ({
+      id,
+      impact,
+      description,
+      nodes: nodes.length,
+      nodeTargets: nodes.map(node => node.target).join(' - '),
+    }))
+
+    cy.task('logAccessibilityViolationsTable', violationData)
   }
 }

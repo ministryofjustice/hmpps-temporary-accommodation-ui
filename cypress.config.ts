@@ -20,6 +20,7 @@ import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import turnaround from './integration_tests/mockApis/turnaround'
 import user from './integration_tests/mockApis/user'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
+import accessibilityViolations from './integration_tests/tasks/accessibilityViolations'
 import { resetStubs } from './wiremock'
 
 export default defineConfig({
@@ -59,6 +60,7 @@ export default defineConfig({
         ...schemaValidator,
         ...bookingSearch,
         ...bedspaceSearch,
+        ...accessibilityViolations,
       })
     },
     baseUrl: 'http://localhost:3007',

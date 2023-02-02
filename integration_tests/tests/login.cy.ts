@@ -73,12 +73,15 @@ context('SignIn', () => {
     cy.task('stubVerifyToken', true)
     cy.task('stubAuthUser', 'bobby brown')
 
-    const probationRegion = referenceDataFactory.probationRegion().build()
+    const probationRegion = referenceDataFactory.probationRegion().build({
+      name: 'Another region',
+    })
     const actingUser = userFactory.build({ region: probationRegion })
 
     cy.task('stubActingUser', actingUser)
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')
+    indexPage.headerProbationRegion().contains('Another region')
   })
 })

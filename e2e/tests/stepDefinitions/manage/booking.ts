@@ -6,7 +6,7 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import newBookingFactory from '../../../../server/testutils/factories/newBooking'
 import personFactory from '../../../../server/testutils/factories/person'
-import throwMissingCypressEnvError from '../utils'
+import { throwMissingCypressEnvError } from '../utils'
 
 const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('offender_crn')
 

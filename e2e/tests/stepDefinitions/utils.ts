@@ -4,5 +4,5 @@ export const throwMissingCypressEnvError = (field: string) => {
 
 export const getUrlEncodedCypressEnv = (field: string) => {
   const value = Cypress.env(field)
-  return value && decodeURI(value)
+  return value && decodeURIComponent(value)
 }

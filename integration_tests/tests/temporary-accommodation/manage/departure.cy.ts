@@ -6,14 +6,12 @@ import Page from '../../../../cypress_shared/pages/page'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import departureFactory from '../../../../server/testutils/factories/departure'
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
-import stubActingUser from '../../../../cypress_shared/utils/stubActingUser'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 
 context('Booking departure', () => {
   beforeEach(() => {
     cy.task('reset')
-    cy.task('stubSignIn')
-    cy.task('stubAuthUser')
-    stubActingUser()
+    setupTestUser()
   })
 
   it('navigates to the booking departure page', () => {

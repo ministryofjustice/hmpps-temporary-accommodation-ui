@@ -10,12 +10,13 @@ import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import Page from '../../../../cypress_shared/pages/page'
-import { throwMissingCypressEnvError } from '../utils'
+import { throwMissingCypressEnvError, getUrlEncodedCypressEnv } from '../utils'
 
 const actingUserProbationRegionId =
   Cypress.env('acting_user_probation_region_id') || throwMissingCypressEnvError('acting_user_probation_region_id')
 const actingUserProbationRegionName =
-  Cypress.env('acting_user_probation_region_name') || throwMissingCypressEnvError('acting_user_probation_region_name')
+  getUrlEncodedCypressEnv('acting_user_probation_region_name') ||
+  throwMissingCypressEnvError('acting_user_probation_region_name')
 
 Given("I'm creating a premises", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)

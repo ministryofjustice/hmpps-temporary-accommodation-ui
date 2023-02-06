@@ -1,5 +1,5 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
-import throwMissingCypressEnvError from './utils'
+import { throwMissingCypressEnvError } from './utils'
 
 Given('I am logged in', () => {
   const username = Cypress.env('username') || throwMissingCypressEnvError('username')

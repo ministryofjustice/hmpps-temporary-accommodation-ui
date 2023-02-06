@@ -10,7 +10,7 @@ import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import Page from '../../../../cypress_shared/pages/page'
-import throwMissingCypressEnvError from '../utils'
+import { throwMissingCypressEnvError } from '../utils'
 
 const actingUserProbationRegionId =
   Cypress.env('acting_user_probation_region_id') || throwMissingCypressEnvError('acting_user_probation_region_id')

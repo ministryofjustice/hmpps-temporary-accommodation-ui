@@ -73,7 +73,7 @@ export type TaskWithStatus = Task & { status: TaskStatus }
 
 export type FormSection = {
   title: string
-  name?: string
+  name: string
   tasks: Array<Task>
 }
 

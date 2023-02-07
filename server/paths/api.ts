@@ -30,6 +30,7 @@ const singleApplicationPath = applicationsPath.path(':id')
 
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
+const oasysPath = personPath.path('oasys')
 
 const reportsPath = path('/reports')
 
@@ -76,6 +77,14 @@ export default {
       show: personPath.path('risks'),
     },
     search: peoplePath.path('search'),
+    prisonCaseNotes: personPath.path('prison-case-notes'),
+    adjudications: personPath.path('adjudications'),
+    offences: personPath.path('offences'),
+    documents: path('/documents/:crn/:documentId'),
+    oasys: {
+      selection: oasysPath.path('selection'),
+      sections: oasysPath.path('sections'),
+    },
   },
   reports: {
     bookings: reportsPath.path('bookings'),

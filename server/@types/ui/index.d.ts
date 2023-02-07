@@ -38,7 +38,16 @@ export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'ye
 
 export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
 
-export type TaskNames = 'basic-information' | 'type-of-ap'
+export type TaskNames =
+  | 'basic-information'
+  | 'type-of-ap'
+  | 'risk-management-features'
+  | 'prison-information'
+  | 'location-factors'
+  | 'access-and-healthcare'
+  | 'further-considerations'
+  | 'move-on'
+  | 'check-your-answers'
 
 export type YesOrNoWithDetail<T extends string> = {
   [K in T]: YesOrNo

@@ -47,6 +47,9 @@ export interface AuditConfig {
 export default {
   https: production,
   staticResourceCacheDuration: 20,
+  flags: {
+    oasysDisabled: process.env.OASYS_DISABLED || false,
+  },
   environment: process.env.ENVIRONMENT || 'local',
   sentry: {
     dsn: get('SENTRY_DSN', null, requiredInProduction),

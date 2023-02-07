@@ -11,7 +11,6 @@ import NonArrivalService from './nonArrivalService'
 import DepartureService from './departureService'
 import CancellationService from './cancellationService'
 import LostBedService from './lostBedService'
-import ApplicationService from './applicationService'
 import BedspaceService from './bedspaceService'
 import ConfirmationService from './confirmationService'
 import ExtensionService from './extensionService'
@@ -27,7 +26,6 @@ export const services = () => {
     referenceDataClientBuilder,
     lostBedClientBuilder,
     personClient,
-    applicationClientBuilder,
     roomClientBuilder,
     reportClientBuilder,
     userClientBuilder,
@@ -43,7 +41,6 @@ export const services = () => {
   const departureService = new DepartureService(bookingClientBuilder, referenceDataClientBuilder)
   const cancellationService = new CancellationService(bookingClientBuilder, referenceDataClientBuilder)
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
-  const applicationService = new ApplicationService(applicationClientBuilder)
   const bedspaceService = new BedspaceService(roomClientBuilder, referenceDataClientBuilder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
@@ -60,7 +57,6 @@ export const services = () => {
     departureService,
     cancellationService,
     lostBedService,
-    applicationService,
     bedspaceService,
     confirmationService,
     extensionService,
@@ -81,5 +77,4 @@ export {
   CancellationService,
   BookingService,
   LostBedService,
-  ApplicationService,
 }

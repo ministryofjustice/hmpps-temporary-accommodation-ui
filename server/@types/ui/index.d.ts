@@ -1,4 +1,26 @@
-import { FlagsEnvelope, Mappa, RiskTier, RoshRisks } from '@approved-premises/api'
+import {
+  RoshRisks,
+  RiskTier,
+  FlagsEnvelope,
+  Mappa,
+  ApprovedPremisesApplication,
+  ApprovedPremisesAssessment as Assessment,
+  Person,
+  OASysSection,
+  Document,
+  ArrayOfOASysOffenceDetailsQuestions,
+  ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
+  ArrayOfOASysSupportingInformationQuestions,
+  ArrayOfOASysRiskToSelfQuestions,
+  ArrayOfOASysRiskManagementPlanQuestions,
+  Booking,
+  Application,
+  PrisonCaseNote,
+  Adjudication,
+  OASysSections,
+  PersonRisks,
+  User,
+} from '@approved-premises/api'
 
 interface TasklistPage {
   body: Record<string, unknown>
@@ -18,18 +40,39 @@ export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'de
 
 export type TaskNames = 'basic-information' | 'type-of-ap'
 
+export type YesOrNoWithDetail<T extends string> = {
+  [K in T]: YesOrNo
+} & {
+  [K in `${T}Detail`]: string
+}
+
+export type YesNoOrIDKWithDetail<T extends string> = {
+  [K in T]: YesNoOrIDK
+} & {
+  [K in `${T}Detail`]: string
+}
+
 export type Task = {
   id: string
   title: string
   pages: Record<string, unknown>
 }
 
+export type TaskStatus = 'not_started' | 'in_progress' | 'complete' | 'cannot_start'
+
+export type TaskWithStatus = Task & { status: TaskStatus }
+
 export type FormSection = {
   title: string
+  name?: string
   tasks: Array<Task>
 }
 
 export type FormSections = Array<FormSection>
+
+export type FormPages = { [key in TaskNames]: Record<string, unknown> }
+
+export type PageResponse = Record<string, string | Array<string> | Array<Record<string, unknown>>>
 
 export interface HtmlAttributes {
   [key: string]: string
@@ -43,7 +86,7 @@ export interface HtmlItem {
   html: string
 }
 
-export type TableCell = { text: string; attributes?: HtmlAttributes } | { html: string }
+export type TableCell = { text: string; attributes?: HtmlAttributes; classes?: string } | { html: string }
 export interface TableRow {
   [index: number]: TableCell
 }
@@ -54,11 +97,15 @@ export interface RadioItem {
   checked?: boolean
 }
 
-export interface CheckBoxItem {
-  text: string
-  value: string
-  checked?: boolean
-}
+export type CheckBoxItem =
+  | {
+      text: string
+      value: string
+      checked?: boolean
+    }
+  | CheckBoxDivider
+
+export type CheckBoxDivider = { divider: string }
 
 export interface SelectOption {
   text: string
@@ -128,9 +175,10 @@ export interface ErrorsAndUserInput {
   userInput: Record<string, unknown>
 }
 
-export type TaskListErrors<K extends TasklistPage> = Partial<Record<keyof K['body'], string>>
+export type TaskListErrors<K extends TasklistPage> = Partial<Record<keyof K['body'], unknown>>
 
 export type YesOrNo = 'yes' | 'no'
+export type YesNoOrIDK = YesOrNo | 'iDontKnow'
 
 export type PersonStatus = 'InCustody' | 'InCommunity'
 
@@ -149,11 +197,50 @@ export interface PersonRisksUI {
 }
 
 export type GroupedListofBookings = {
-  [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<TableRow>
+  [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<Booking>
 }
 
-export type DataServices = {
-  personService: PersonService
+export type DataServices = Partial<{
+  personService: {
+    getPrisonCaseNotes: (token: string, crn: string) => Promise<Array<PrisonCaseNote>>
+    getAdjudications: (token: string, crn: string) => Promise<Array<Adjudication>>
+    getOasysSelections: (token: string, crn: string) => Promise<Array<OASysSection>>
+    getOasysSections: (token: string, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
+    getPersonRisks: (token: string, crn: string) => Promise<PersonRisksUI>
+  }
+  applicationService: {
+    getDocuments: (token: string, application: ApprovedPremisesApplication) => Promise<Array<Document>>
+  }
+  userService: {
+    getUserById: (token: string, id: string) => Promise<User>
+  }
+}>
+
+export interface GroupedAssessments {
+  completed: Array<Assessment>
+  requestedFurtherInformation: Array<Assessment>
+  awaiting: Array<Assessment>
 }
 
-export type Service = 'approved-premises' | 'temporary-accommodation'
+export interface GroupedApplications {
+  inProgress: Array<Application>
+  requestedFurtherInformation: Array<Application>
+  submitted: Array<Application>
+}
+
+export interface ApplicationWithRisks extends Application {
+  person: PersonWithRisks
+}
+
+export interface PersonWithRisks extends Person {
+  risks: PersonRisks
+}
+
+export type OasysImportArrays =
+  | ArrayOfOASysOffenceDetailsQuestions
+  | ArrayOfOASysRiskOfSeriousHarmSummaryQuestions
+  | ArrayOfOASysSupportingInformationQuestions
+  | ArrayOfOASysRiskToSelfQuestions
+  | ArrayOfOASysRiskManagementPlanQuestions
+
+export type JourneyType = 'applications' | 'assessments'

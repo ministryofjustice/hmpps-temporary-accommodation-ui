@@ -1,0 +1,21 @@
+{% extends "../partials/layout.njk" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">This application is not eligible</h1>
+
+      <p>
+        From the information you've provided this person is not eligible for an Approved Premises (AP) placement.
+      </p>
+
+      <p>
+        Consider referring the person to other accommodation providers.
+      </p>
+
+      <p>
+        <a href="{{ paths.applications.index() }}">Back to dashboard</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

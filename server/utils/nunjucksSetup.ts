@@ -6,7 +6,7 @@ import express from 'express'
 import * as pathModule from 'path'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
-import { initialiseName, removeBlankSummaryListItems } from './utils'
+import { initialiseName, removeBlankSummaryListItems, mapApiPersonRisksForUi } from './utils'
 import {
   dateFieldValues,
   convertObjectsToRadioItems,
@@ -16,8 +16,10 @@ import {
 import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'
 import managePaths from '../paths/temporary-accommodation/manage'
+import applyPaths from '../paths/apply'
 import staticPaths from '../paths/temporary-accommodation/static'
 import summaryListRows from '../components/bookingInfo'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -60,6 +62,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('paths', {
     ...managePaths,
+    ...applyPaths,
     ...staticPaths,
   })
 
@@ -122,6 +125,10 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('fetchContext', function fetchContext() {
     return this.ctx
   })
+
+  njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)
+
+  njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
 
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 

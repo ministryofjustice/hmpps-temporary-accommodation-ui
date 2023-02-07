@@ -125,6 +125,7 @@
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
+    "case": "^1.6.3",
     "compression": "^1.7.4",
     "connect-flash": "^0.1.1",
     "connect-redis": "^6.1.3",

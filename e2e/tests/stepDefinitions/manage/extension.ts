@@ -15,7 +15,7 @@ Given('I extend the booking', () => {
     bookingShowPage.clickExtendBookingButton()
 
     const newExtension = newExtensionFactory.build({
-      newDepartureDate: DateFormats.formatApiDate(
+      newDepartureDate: DateFormats.dateObjToIsoDate(
         faker.date.future(1, DateFormats.convertIsoToDateObj(this.booking.arrivalDate)),
       ),
     })

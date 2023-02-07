@@ -11,9 +11,10 @@ import departureFactory from './departure'
 import personFactory from './person'
 import extensionFactory from './extension'
 
-const soon = () => DateFormats.formatApiDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
-const past = () => DateFormats.formatApiDate(faker.date.past())
-const future = () => DateFormats.formatApiDate(faker.date.future())
+const soon = () =>
+  DateFormats.dateObjToIsoDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
+const past = () => DateFormats.dateObjToIsoDate(faker.date.past())
+const future = () => DateFormats.dateObjToIsoDate(faker.date.future())
 class BookingFactory extends Factory<Booking> {
   provisional() {
     return this.params({
@@ -61,10 +62,10 @@ class BookingFactory extends Factory<Booking> {
 
 export default BookingFactory.define(() => ({
   person: personFactory.build(),
-  originalArrivalDate: DateFormats.formatApiDate(faker.date.soon()),
-  originalDepartureDate: DateFormats.formatApiDate(faker.date.future()),
-  arrivalDate: DateFormats.formatApiDate(faker.date.soon()),
-  departureDate: DateFormats.formatApiDate(faker.date.future()),
+  originalArrivalDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
+  originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
+  arrivalDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
+  departureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   name: `${faker.name.firstName()} ${faker.name.lastName()}`,
   id: faker.datatype.uuid(),
   status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed', 'cancelled'] as const),
@@ -74,5 +75,5 @@ export default BookingFactory.define(() => ({
   cancellation: cancellationFactory.build(),
   extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
   serviceName: 'temporary-accommodation' as const,
-  createdAt: DateFormats.formatApiDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

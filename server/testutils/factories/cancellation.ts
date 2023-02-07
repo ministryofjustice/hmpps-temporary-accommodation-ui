@@ -7,9 +7,9 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Cancellation>(() => ({
   id: faker.datatype.uuid(),
-  date: DateFormats.formatApiDate(faker.date.soon()),
+  date: DateFormats.dateObjToIsoDate(faker.date.soon()),
   bookingId: faker.datatype.uuid(),
   reason: referenceDataFactory.cancellationReasons().build(),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.formatApiDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

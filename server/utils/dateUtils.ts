@@ -10,7 +10,7 @@ export class DateFormats {
    * @param date JS Date object.
    * @returns the date in the format '2019-09-18'.
    */
-  static formatApiDate(date: Date) {
+  static dateObjToIsoDate(date: Date) {
     return formatISO(date, { representation: 'date' })
   }
 
@@ -18,7 +18,7 @@ export class DateFormats {
    * @param date JS Date object.
    * @returns the date in the format '2019-09-18T00:00:00.000Z'.
    */
-  static formatApiDateAsDateTime(date: Date) {
+  static dateObjToIsoDateTime(date: Date) {
     return `${formatISO(date, { representation: 'date' })}T00:00:00.000Z`
   }
 

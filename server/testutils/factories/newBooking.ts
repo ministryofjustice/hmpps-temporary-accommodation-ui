@@ -12,8 +12,8 @@ export default Factory.define<NewBooking>(() => {
 
   return {
     crn: personFactory.build().crn,
-    arrivalDate: DateFormats.formatApiDate(arrivalDate),
-    departureDate: DateFormats.formatApiDate(departureDate),
+    arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
+    departureDate: DateFormats.dateObjToIsoDate(departureDate),
     serviceName: 'temporary-accommodation',
   }
 })

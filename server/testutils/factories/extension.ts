@@ -6,9 +6,9 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Extension>(() => ({
   id: faker.datatype.uuid(),
-  previousDepartureDate: DateFormats.formatApiDate(faker.date.soon()),
-  newDepartureDate: DateFormats.formatApiDate(faker.date.future()),
+  previousDepartureDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
+  newDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   bookingId: faker.datatype.uuid(),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.formatApiDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

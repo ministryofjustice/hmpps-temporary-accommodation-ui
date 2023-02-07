@@ -24,13 +24,13 @@ const roshRisksFactory = Factory.define<PersonRisks['roshRisks']>(() => ({
     riskToPublic: faker.helpers.arrayElement(riskLevels),
     riskToKnownAdult: faker.helpers.arrayElement(riskLevels),
     riskToStaff: faker.helpers.arrayElement(riskLevels),
-    lastUpdated: DateFormats.formatApiDate(faker.date.past()),
+    lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()),
   },
 }))
 
 const mappaFactory = Factory.define<PersonRisks['mappa']>(() => ({
   status: faker.helpers.arrayElement(riskEnvelopeStatuses),
-  value: { level: 'CAT 2 / LEVEL 1', lastUpdated: DateFormats.formatApiDate(faker.date.past()) },
+  value: { level: 'CAT 2 / LEVEL 1', lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()) },
 }))
 
 const flagsFactory = Factory.define<PersonRisks['flags']>(() => {
@@ -58,6 +58,6 @@ const tierEnvelopeFactory = Factory.define<PersonRisks['tier']>(() => ({
   status: faker.helpers.arrayElement(riskEnvelopeStatuses),
   value: {
     level: riskTierLevel,
-    lastUpdated: DateFormats.formatApiDate(faker.date.past()),
+    lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()),
   },
 }))

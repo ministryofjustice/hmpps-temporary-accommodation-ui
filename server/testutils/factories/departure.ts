@@ -7,11 +7,11 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Departure>(() => ({
   id: faker.datatype.uuid(),
-  dateTime: DateFormats.formatApiDateAsDateTime(faker.date.soon()),
+  dateTime: DateFormats.dateObjToIsoDateTime(faker.date.soon()),
   bookingId: faker.datatype.uuid(),
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),
   moveOnCategory: referenceDataFactory.moveOnCategories().build(),
   destinationProvider: referenceDataFactory.destinationProviders().build(),
-  createdAt: DateFormats.formatApiDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

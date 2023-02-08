@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationPremises as Premises, Room } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises, Room, ProbationRegion } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -36,6 +36,10 @@ export default class PremisesShowPage extends Page {
       this.shouldShowKeyAndValue('Status', formatStatus(this.premises.status))
       this.shouldShowKeyAndValues('Notes', this.premises.notes.split('\n'))
     })
+  }
+
+  shouldShowProbationRegion(probationRegion: ProbationRegion): void {
+    this.shouldShowKeyAndValue('Probation region', probationRegion.name)
   }
 
   shouldShowRoomDetails(room: Room): void {

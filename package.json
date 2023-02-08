@@ -32,7 +32,8 @@
     "api-stubs:create": "npx ts-node --transpile-only ./wiremock/stubApis.ts",
     "api-stubs:reset": "npx ts-node --transpile-only ./wiremock/resetStubs.ts",
     "start-test-wiremock": "docker-compose -f docker-compose-test.yml up -d",
-    "generate-types": "script/generate-types"
+    "generate-types": "script/generate-types",
+    "generate:schema:apply": "npx ts-node --transpile-only ./server/form-pages/apply/generateSchema.ts"
   },
   "engines": {
     "node": "^18",
@@ -157,6 +158,7 @@
     "reflect-metadata": "^0.1.13",
     "static-path": "^0.0.4",
     "superagent": "^8.0.2",
+    "typescript-json-schema": "^0.55.0",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0"
   },

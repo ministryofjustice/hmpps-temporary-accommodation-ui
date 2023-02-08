@@ -60,6 +60,9 @@
       "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}",
       "<rootDir>/wiremock/?(*.)(cy|test).{ts,js,jsx,mjs}"
     ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/server/testutils/jest.setup.ts"
+    ],
     "testEnvironment": "node",
     "reporters": [
       "default",

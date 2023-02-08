@@ -5,8 +5,7 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
 
-import type { ErrorMessages, PersonStatus, Task } from '@approved-premises/ui'
-import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
+import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
 import { initialiseName, removeBlankSummaryListItems } from './utils'
 import {
   dateFieldValues,
@@ -14,7 +13,6 @@ import {
   convertObjectsToSelectOptions,
   convertObjectsToCheckboxItems,
 } from './formUtils'
-import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationUtils'
 import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'
 import managePaths from '../paths/temporary-accommodation/manage'
@@ -114,14 +112,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       return convertObjectsToCheckboxItems(items, textKey, valueKey, fieldName, this.ctx)
     },
   )
-
-  njkEnv.addGlobal('getCompleteSectionCount', getCompleteSectionCount)
-
-  njkEnv.addGlobal('getTaskStatus', (task: Task, application: Application) =>
-    markAsSafe(getTaskStatus(task, application)),
-  )
-
-  njkEnv.addGlobal('taskLink', (task: Task, applicationId: string) => markAsSafe(taskLink(task, applicationId)))
 
   njkEnv.addGlobal('statusTag', (status: PersonStatus) => markAsSafe(statusTag(status)))
 

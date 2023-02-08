@@ -15,6 +15,9 @@ import {
 } from './formUtils'
 import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'
+
+import * as OffenceUtils from './offenceUtils'
+
 import managePaths from '../paths/temporary-accommodation/manage'
 import applyPaths from '../paths/apply'
 import staticPaths from '../paths/temporary-accommodation/static'
@@ -133,4 +136,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows })
+  njkEnv.addGlobal('OffenceUtils', OffenceUtils)
 }

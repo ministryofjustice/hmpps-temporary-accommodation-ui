@@ -31,10 +31,10 @@ Given("I'm viewing an existing premises", () => {
   dashboardPage.clickPremisesLink()
 
   const premisesListPage = Page.verifyOnPage(PremisesListPage)
-  premisesListPage.getAnyPremises('premises')
+  premisesListPage.samplePremises(1, 'premisesList')
 
-  cy.get('@premises').then(premises => {
-    premisesListPage.clickPremisesViewLink(premises)
+  cy.then(function _() {
+    premisesListPage.clickPremisesViewLink(this.premisesList[0])
   })
 })
 

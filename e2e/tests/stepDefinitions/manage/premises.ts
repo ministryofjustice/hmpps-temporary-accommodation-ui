@@ -43,7 +43,9 @@ Given("I'm viewing an existing premises", () => {
   premisesListPage.samplePremises(1, 'premisesList')
 
   cy.then(function _() {
-    premisesListPage.clickPremisesViewLink(this.premisesList[0])
+    const premises = this.premisesList[0]
+    cy.wrap(premises).as('premises')
+    premisesListPage.clickPremisesViewLink(premises)
   })
 })
 

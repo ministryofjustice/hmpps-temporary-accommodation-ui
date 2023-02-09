@@ -14,22 +14,35 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage()
   }
 
-  getAnyPremises(alias: string): void {
+  samplePremises(count: number, alias: string): void {
     cy.get('table')
       .children('tbody')
       .children('tr')
-      .eq(0)
-      .get('td')
-      .eq(0)
-      .then(element => {
-        const [addressLine1, postcode] = element.text().split(', ')
-        const premises = premisesFactory.build({
-          id: 'unknown',
-          addressLine1,
-          postcode,
-        })
-        cy.wrap(premises).as(alias)
-      })
+      .then($items => Cypress._.sampleSize($items.toArray(), count))
+      .each((row, index) =>
+        cy.wrap(row).within(_row =>
+          cy
+            .get('td')
+            .eq(0)
+            .then(element => {
+              const [addressLine1, postcode] = element.text().split(', ')
+              const premises = premisesFactory.build({
+                id: 'unknown',
+                addressLine1,
+                postcode,
+              })
+
+              if (index === 0) {
+                cy.wrap([premises]).as(alias)
+              } else {
+                cy.then(function _() {
+                  const samples = this[alias]
+                  cy.wrap([...samples, premises]).as(alias)
+                })
+              }
+            }),
+        ),
+      )
   }
 
   shouldShowPremises(premises: Array<Premises>): void {

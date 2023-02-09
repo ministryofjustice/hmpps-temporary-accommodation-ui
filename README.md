@@ -76,3 +76,8 @@ Note: This requires `ap-tools` to be installed (<https://github.com/ministryofju
 Our release process aligns with the other CAS teams and as such [lives in
 Confluence](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process).
 The steps are also available in the [PULL_REQUEST_TEMPLATE](/.github/PULL_REQUEST_TEMPLATE.md#release-checklist).
+
+## Manage infrastructure & view logs
+
+This application is hosted on the MoJ Cloud Platform. For further details
+head over to [our infrastructure documentation](/doc/how-to/manage-infrastructure.md).

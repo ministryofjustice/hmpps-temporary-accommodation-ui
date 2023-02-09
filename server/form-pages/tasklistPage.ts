@@ -1,9 +1,23 @@
-import type { Request } from 'express'
-import type { TaskListErrors, DataServices } from '@approved-premises/ui'
+/* istanbul ignore file */
+
+import type { TaskListErrors, DataServices, PageResponse } from '@approved-premises/ui'
+import { ApprovedPremisesApplication, ApprovedPremisesAssessment } from '@approved-premises/api'
+
+export interface TasklistPageInterface {
+  new (
+    body: Record<string, unknown>,
+    document?: ApprovedPremisesApplication | ApprovedPremisesAssessment,
+    previousPage?: string,
+  ): TasklistPage
+  initialize?(
+    body: Record<string, unknown>,
+    document: ApprovedPremisesApplication | ApprovedPremisesAssessment,
+    token: string,
+    dataServices: DataServices,
+  ): Promise<TasklistPage>
+}
 
 export default abstract class TasklistPage {
-  abstract name: string
-
   abstract title: string
 
   abstract body: Record<string, unknown>
@@ -14,5 +28,5 @@ export default abstract class TasklistPage {
 
   abstract errors(): TaskListErrors<this>
 
-  async setup?(request: Request, dataServices: DataServices): Promise<void>
+  abstract response(): PageResponse
 }

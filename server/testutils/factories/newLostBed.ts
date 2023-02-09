@@ -11,11 +11,11 @@ export default Factory.define<NewLostBed>(() => {
   return {
     id: faker.datatype.uuid(),
     notes: faker.lorem.sentence(),
-    startDate: DateFormats.formatApiDate(startDate),
+    startDate: DateFormats.dateObjToIsoDate(startDate),
     'startDate-day': startDate.getDate().toString(),
     'startDate-month': startDate.getMonth().toString(),
     'startDate-year': startDate.getFullYear().toString(),
-    endDate: DateFormats.formatApiDate(endDate),
+    endDate: DateFormats.dateObjToIsoDate(endDate),
     'endDate-day': endDate.getDate().toString(),
     'endDate-month': endDate.getMonth().toString(),
     'endDate-year': endDate.getFullYear().toString(),

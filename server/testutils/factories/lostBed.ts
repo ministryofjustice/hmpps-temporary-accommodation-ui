@@ -8,8 +8,8 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<LostBed>(() => ({
   id: faker.datatype.uuid(),
   notes: faker.lorem.sentence(),
-  startDate: DateFormats.formatApiDate(faker.date.soon()),
-  endDate: DateFormats.formatApiDate(faker.date.future()),
+  startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
+  endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   numberOfBeds: faker.datatype.number({ max: 10 }),
   referenceNumber: faker.datatype.uuid(),
   reason: referenceDataFactory.lostBedReasons().build(),

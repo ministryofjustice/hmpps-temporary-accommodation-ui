@@ -5,8 +5,8 @@ import type { NewArrival } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<NewArrival>(() => ({
-  arrivalDate: DateFormats.formatApiDate(faker.date.soon()),
-  expectedDepartureDate: DateFormats.formatApiDate(faker.date.future()),
+  arrivalDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
+  expectedDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   notes: faker.lorem.sentence(),
   keyWorkerStaffCode: faker.datatype.uuid(),
 }))

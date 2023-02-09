@@ -1,0 +1,58 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + pageHeading  %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1>{{ pageHeading}}</h1>
+
+      <p class="govuk-body">
+        {{ person.name }} has more than one offence identified against their CRN.
+
+      <p class="govuk-body">
+        Please select the main offence that will be used to assess their sutability
+        for an Approved Premises (the 'index offence') below:
+      </p>
+
+        <form action="{{ paths.applications.create() }}" method="post">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+          <input type="hidden" name="crn" value="{{ person.crn }}"/>
+
+          {{
+            govukTable({
+              firstCellIsHeader: false,
+              head: [
+                {
+                  html: '<span class="govuk-visually-hidden">Select offence</span>'
+                },
+                {
+                  text: "Offence ID"
+                },
+                {
+                  text: "Offence description"
+                },
+                {
+                  text: "Date"
+                },
+                {
+                  text: "Conviction ID"
+                }
+              ],
+              rows: OffenceUtils.offenceTableRows(offences)
+            })
+          }}
+
+          {{ govukButton({
+            text: "Save and continue"
+        }) }}
+
+        </form>
+      </div>
+    </div>
+  {% endblock %}

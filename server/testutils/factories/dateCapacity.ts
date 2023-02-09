@@ -6,5 +6,5 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<DateCapacity>(() => ({
   availableBeds: faker.datatype.number({ min: -1, max: 2 }),
-  date: DateFormats.formatApiDate(faker.date.soon()),
+  date: DateFormats.dateObjToIsoDate(faker.date.soon()),
 }))

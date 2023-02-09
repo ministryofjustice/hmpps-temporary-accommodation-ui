@@ -7,7 +7,7 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<Confirmation>(() => ({
   id: faker.datatype.uuid(),
   bookingId: faker.datatype.uuid(),
-  dateTime: DateFormats.formatApiDate(faker.date.past()),
+  dateTime: DateFormats.dateObjToIsoDate(faker.date.past()),
   notes: faker.lorem.sentence(),
-  createdAt: DateFormats.formatApiDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

@@ -30,6 +30,7 @@ const singleApplicationPath = applicationsPath.path(':id')
 
 const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
+const oasysPath = personPath.path('oasys')
 
 const reportsPath = path('/reports')
 
@@ -39,6 +40,7 @@ const applyPaths = {
     create: applicationsPath,
     index: applicationsPath,
     update: singleApplicationPath,
+    submission: singleApplicationPath.path('submission'),
   },
 }
 
@@ -67,12 +69,22 @@ export default {
     index: applyPaths.applications.index,
     update: applyPaths.applications.update,
     new: applyPaths.applications.create,
+    submission: applyPaths.applications.submission,
+    documents: applyPaths.applications.show.path('documents'),
   },
   people: {
     risks: {
       show: personPath.path('risks'),
     },
     search: peoplePath.path('search'),
+    prisonCaseNotes: personPath.path('prison-case-notes'),
+    adjudications: personPath.path('adjudications'),
+    offences: personPath.path('offences'),
+    documents: path('/documents/:crn/:documentId'),
+    oasys: {
+      selection: oasysPath.path('selection'),
+      sections: oasysPath.path('sections'),
+    },
   },
   reports: {
     bookings: reportsPath.path('bookings'),

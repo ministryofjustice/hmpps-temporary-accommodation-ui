@@ -1,5 +1,13 @@
+import type { Response } from 'express'
 import type { PersonRisksUI } from '@approved-premises/ui'
-import type { Person } from '@approved-premises/api'
+import type {
+  ActiveOffence,
+  Adjudication,
+  Person,
+  PrisonCaseNote,
+  OASysSection,
+  OASysSections,
+} from '@approved-premises/api'
 import type { RestClientBuilder, PersonClient } from '../data'
 
 import { mapApiPersonRisksForUi } from '../utils/utils'
@@ -15,11 +23,60 @@ export default class PersonService {
     return person
   }
 
+  async getOffences(callConfig: CallConfig, crn: string): Promise<Array<ActiveOffence>> {
+    const personClient = this.personClientFactory(callConfig)
+
+    const offences = await personClient.offences(crn)
+    return offences
+  }
+
   async getPersonRisks(callConfig: CallConfig, crn: string): Promise<PersonRisksUI> {
     const personClient = this.personClientFactory(callConfig)
 
     const risks = await personClient.risks(crn)
 
     return mapApiPersonRisksForUi(risks)
+  }
+
+  async getPrisonCaseNotes(callConfig: CallConfig, crn: string): Promise<Array<PrisonCaseNote>> {
+    const personClient = this.personClientFactory(callConfig)
+
+    const prisonCaseNotes = await personClient.prisonCaseNotes(crn)
+
+    return prisonCaseNotes
+  }
+
+  async getAdjudications(callConfig: CallConfig, crn: string): Promise<Array<Adjudication>> {
+    const personClient = this.personClientFactory(callConfig)
+
+    const adjudications = await personClient.adjudications(crn)
+
+    return adjudications
+  }
+
+  async getOasysSelections(callConfig: CallConfig, crn: string): Promise<Array<OASysSection>> {
+    const personClient = this.personClientFactory(callConfig)
+
+    const oasysSections = await personClient.oasysSelections(crn)
+
+    return oasysSections
+  }
+
+  async getOasysSections(
+    callConfig: CallConfig,
+    crn: string,
+    selectedSections: Array<number> = [],
+  ): Promise<OASysSections> {
+    const personClient = this.personClientFactory(callConfig)
+
+    const oasysSections = await personClient.oasysSections(crn, selectedSections)
+
+    return oasysSections
+  }
+
+  async getDocument(callConfig: CallConfig, crn: string, documentId: string, response: Response): Promise<void> {
+    const personClient = this.personClientFactory(callConfig)
+
+    return personClient.document(crn, documentId, response)
   }
 }

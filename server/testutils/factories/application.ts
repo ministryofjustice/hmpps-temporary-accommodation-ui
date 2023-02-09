@@ -1,24 +1,38 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
 
-import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
+import type { ApprovedPremisesApplication } from '@approved-premises/api'
 
 import personFactory from './person'
+import risksFactory from './risks'
 import { DateFormats } from '../../utils/dateUtils'
-import risks from './risks'
 
-export default Factory.define<Application>(() => ({
+class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
+  withReleaseDate(releaseDate = DateFormats.dateObjToIsoDate(faker.date.soon())) {
+    return this.params({
+      data: {
+        ...JSON.parse(faker.datatype.json()),
+        'basic-information': {
+          'release-date': { releaseDate, knowReleaseDate: 'yes' },
+          'placement-date': { startDateSameAsReleaseDate: 'yes' },
+        },
+      },
+    })
+  }
+}
+
+export default ApplicationFactory.define(() => ({
   id: faker.datatype.uuid(),
   person: personFactory.build(),
   createdByUserId: faker.datatype.uuid(),
   schemaVersion: faker.datatype.uuid(),
-  createdAt: DateFormats.formatApiDate(faker.date.past()),
-  submittedAt: DateFormats.formatApiDate(faker.date.past()),
+  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   data: JSON.parse(faker.datatype.json()),
   document: JSON.parse(faker.datatype.json()),
   outdatedSchema: faker.datatype.boolean(),
   isWomensApplication: faker.datatype.boolean(),
   isPipeApplication: faker.datatype.boolean(),
-  risks: risks.build(),
-  status: faker.helpers.arrayElement(['inProgress', 'submitted', 'requestedFurtherInformation']),
+  risks: risksFactory.build(),
+  status: 'inProgress' as const,
 }))

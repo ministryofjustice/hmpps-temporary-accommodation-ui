@@ -9,7 +9,7 @@ import { DateFormats } from '../../utils/dateUtils'
 export default Factory.define<NewDeparture>(() => {
   const date = faker.date.soon()
   return {
-    dateTime: DateFormats.formatApiDateAsDateTime(date),
+    dateTime: DateFormats.dateObjToIsoDateTime(date),
     reasonId: referenceDataFactory.departureReasons().build().id,
     notes: faker.lorem.sentence(),
     moveOnCategoryId: referenceDataFactory.moveOnCategories().build().id,

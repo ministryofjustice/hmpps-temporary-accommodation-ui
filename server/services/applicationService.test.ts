@@ -2,16 +2,18 @@ import type { Request } from 'express'
 import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import type { TaskListErrors, DataServices } from '@approved-premises/ui'
 
-import applicationSummaryFactory from '../testutils/factories/applicationSummary'
 import type TasklistPage from '../form-pages/tasklistPage'
-import { UnknownPageError, ValidationError } from '../utils/errors'
+import { ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
 import ApplicationClient from '../data/applicationClient'
+import { getBody, getPageName, getTaskName } from '../form-pages/utils'
 
-import { pages } from '../form-pages/apply'
-import paths from '../paths/apply'
+import Apply from '../form-pages/apply'
 import applicationFactory from '../testutils/factories/application'
-import { DateFormats } from '../utils/dateUtils'
+import activeOffenceFactory from '../testutils/factories/activeOffence'
+import documentFactory from '../testutils/factories/document'
+import { TasklistPageInterface } from '../form-pages/tasklistPage'
+import { isUnapplicable } from '../utils/applicationUtils'
 import { CallConfig } from '../data/restClient'
 
 const FirstPage = jest.fn()
@@ -23,12 +25,16 @@ jest.mock('../form-pages/apply', () => {
   }
 })
 
-pages['my-task'] = {
+Apply.pages['my-task'] = {
   first: FirstPage,
   second: SecondPage,
 }
 
 jest.mock('../data/applicationClient.ts')
+jest.mock('../data/personClient.ts')
+jest.mock('../utils/applicationUtils')
+jest.mock('../form-pages/utils')
+jest.mock('../utils/applicationUtils')
 
 describe('ApplicationService', () => {
   const applicationClient = new ApplicationClient(null) as jest.Mocked<ApplicationClient>
@@ -41,93 +47,62 @@ describe('ApplicationService', () => {
     applicationClientFactory.mockReturnValue(applicationClient)
   })
 
-  describe('getApplications', () => {
-    it('calls the all method on the client and returns the data in the correct format for the table in the view', async () => {
-      const applicationSummaryA = applicationSummaryFactory.build({
-        arrivalDate: new Date(2022, 0, 1).toISOString(),
-        person: { name: 'A', crn: '1' },
-        currentLocation: 'Location 1',
-        daysSinceApplicationRecieved: 1,
-        id: 'some-id',
-        status: 'In progress',
-        tier: { lastUpdated: '', level: 'A1' },
+  describe('getAllForLoggedInUser', () => {
+    const callConfig = { token: 'some-token' } as CallConfig
+    const submittedApplications = applicationFactory.buildList(5, { status: 'submitted' })
+    const inProgressApplications = applicationFactory.buildList(2, { status: 'inProgress' })
+    const requestedFurtherInformationApplications = applicationFactory.buildList(1, {
+      status: 'requestedFurtherInformation',
+    })
+
+    const applications = [submittedApplications, inProgressApplications, requestedFurtherInformationApplications].flat()
+
+    it('fetches all applications', async () => {
+      applicationClient.all.mockResolvedValue(applications)
+
+      const result = await service.getAllForLoggedInUser(callConfig)
+
+      expect(result).toEqual({
+        inProgress: inProgressApplications,
+        requestedFurtherInformation: requestedFurtherInformationApplications,
+        submitted: submittedApplications,
       })
-      const applicationSummaryB = applicationSummaryFactory.build({
-        arrivalDate: new Date(2022, 1, 1).toISOString(),
-        person: { name: 'B', crn: '2' },
-        currentLocation: 'Location 2',
-        daysSinceApplicationRecieved: 2,
-        id: 'some-id',
-        status: 'Information Requested',
-        tier: { lastUpdated: '', level: 'B1' },
-      })
-
-      const applicationSummaries = [applicationSummaryA, applicationSummaryB]
-      const callConfig = { token: 'some-token' } as CallConfig
-
-      applicationClient.all.mockResolvedValue(applicationSummaries)
-
-      const result = await service.tableRows(callConfig)
-
-      expect(result).toEqual([
-        [
-          {
-            html: `<a href=${paths.applications.show({ id: applicationSummaryA.id })}>${
-              applicationSummaryA.person.name
-            }</a>`,
-          },
-          {
-            text: applicationSummaryA.person.crn,
-          },
-          {
-            html: `<span class="moj-badge moj-badge--red">${applicationSummaryA.tier.level}</span>`,
-          },
-          {
-            text: DateFormats.isoDateToUIDate(applicationSummaryA.arrivalDate),
-          },
-          {
-            html: `<strong class="govuk-tag govuk-tag--blue">${applicationSummaryA.status}</strong>`,
-          },
-        ],
-        [
-          {
-            html: `<a href=${paths.applications.show({ id: applicationSummaryB.id })}>${
-              applicationSummaryB.person.name
-            }</a>`,
-          },
-          {
-            text: applicationSummaryB.person.crn,
-          },
-          {
-            html: `<span class="moj-badge moj-badge--purple">${applicationSummaryB.tier.level}</span>`,
-          },
-          {
-            text: DateFormats.isoDateToUIDate(applicationSummaryB.arrivalDate),
-          },
-          {
-            html: `<strong class="govuk-tag govuk-tag--yellow">${applicationSummaryB.status}</strong>`,
-          },
-        ],
-      ])
 
       expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
       expect(applicationClient.all).toHaveBeenCalled()
+    })
+
+    it('should filter out unapplicable applications', async () => {
+      const unapplicableApplication = applicationFactory.build()
+      ;(isUnapplicable as jest.Mock).mockImplementation(application => application === unapplicableApplication)
+
+      applicationClient.all.mockResolvedValue([applications, unapplicableApplication].flat())
+
+      const result = await service.getAllForLoggedInUser(callConfig)
+
+      expect(result).toEqual({
+        inProgress: inProgressApplications,
+        requestedFurtherInformation: requestedFurtherInformationApplications,
+        submitted: submittedApplications,
+      })
     })
   })
 
   describe('createApplication', () => {
     it('calls the create method and returns an application', async () => {
       const application = applicationFactory.build()
+      const offence = activeOffenceFactory.build()
+
       const callConfig = { token: 'some-token' } as CallConfig
 
       applicationClient.create.mockResolvedValue(application)
 
-      const result = await service.createApplication(callConfig, application.person.crn)
+      const result = await service.createApplication(callConfig, application.person.crn, offence)
 
       expect(result).toEqual(application)
 
       expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(applicationClient.create).toHaveBeenCalledWith(application.person.crn)
+      expect(applicationClient.create).toHaveBeenCalledWith(application.person.crn, offence)
     })
   })
 
@@ -147,17 +122,33 @@ describe('ApplicationService', () => {
     })
   })
 
-  describe('getCurrentPage', () => {
+  describe('getDocuments', () => {
+    it('calls the documents method and returns a list of documents', async () => {
+      const application = applicationFactory.build()
+      const documents = documentFactory.buildList(5)
+
+      const callConfig = { token: 'some-token' } as CallConfig
+
+      applicationClient.documents.mockResolvedValue(documents)
+
+      const result = await service.getDocuments(callConfig, application)
+
+      expect(result).toEqual(documents)
+
+      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(applicationClient.documents).toHaveBeenCalledWith(application)
+    })
+  })
+
+  describe('getApplicationFromSessionOrAPI', () => {
     let request: DeepMocked<Request>
-    const dataServices = createMock<DataServices>({}) as DataServices
-    const application = applicationFactory.build()
+
     const callConfig = { token: 'some-token' } as CallConfig
+    const application = applicationFactory.build()
 
     beforeEach(() => {
       request = createMock<Request>({
-        params: { id: application.id, task: 'my-task' },
-        session: { application, previousPage: '' },
-        user: { token: 'some-token' },
+        params: { id: application.id },
       })
     })
 
@@ -165,76 +156,112 @@ describe('ApplicationService', () => {
       request.session.application = undefined
       applicationClient.find.mockResolvedValue(application)
 
-      const result = await service.getCurrentPage(callConfig, request, dataServices)
+      const result = await service.getApplicationFromSessionOrAPI(callConfig, request)
 
-      expect(result).toBeInstanceOf(FirstPage)
+      expect(result).toEqual(application)
 
-      expect(FirstPage).toHaveBeenCalledWith(request.body, application, '')
+      expect(applicationClient.find).toHaveBeenCalledWith(request.params.id)
+    })
+
+    it('should fetch the application from the session if it is present', async () => {
+      request.session.application = application
+
+      const result = await service.getApplicationFromSessionOrAPI(callConfig, request)
+
+      expect(result).toEqual(application)
+
+      expect(applicationClient.find).not.toHaveBeenCalled()
+    })
+
+    it('should fetch the application from the API if and application is in the session but it is not the same application as the one being requested', async () => {
+      request.session.application = applicationFactory.build()
+      applicationClient.find.mockResolvedValue(application)
+
+      const result = await service.getApplicationFromSessionOrAPI(callConfig, request)
+
+      expect(result).toEqual(application)
+
+      expect(applicationClient.find).toHaveBeenCalledWith(request.params.id)
+    })
+  })
+
+  describe('initializePage', () => {
+    let request: DeepMocked<Request>
+
+    const callConfig = { token: 'some-token' } as CallConfig
+    const dataServices = createMock<DataServices>({}) as DataServices
+    const application = applicationFactory.build()
+    const Page = jest.fn()
+
+    beforeEach(() => {
+      request = createMock<Request>({
+        params: { id: application.id, task: 'my-task', page: 'first' },
+        session: { application, previousPage: '' },
+      })
+    })
+
+    it('should fetch the application from the API if it is not in the session', async () => {
+      request.session.application = undefined
+      applicationClient.find.mockResolvedValue(application)
+      ;(getBody as jest.Mock).mockReturnValue(request.body)
+
+      const result = await service.initializePage(callConfig, Page, request, dataServices)
+
+      expect(result).toBeInstanceOf(Page)
+
+      expect(Page).toHaveBeenCalledWith(request.body, application, '')
       expect(applicationClient.find).toHaveBeenCalledWith(request.params.id)
     })
 
     it('should return the session and a page from a page list', async () => {
-      request.params.page = 'second'
+      ;(getBody as jest.Mock).mockReturnValue(request.body)
 
-      const result = await service.getCurrentPage(callConfig, request, dataServices)
+      const result = await service.initializePage(callConfig, Page, request, dataServices)
 
-      expect(result).toBeInstanceOf(SecondPage)
+      expect(result).toBeInstanceOf(Page)
 
-      expect(SecondPage).toHaveBeenCalledWith(request.body, application, '')
+      expect(Page).toHaveBeenCalledWith(request.body, application, '')
     })
 
     it('should initialize the page with the session and the userInput if specified', async () => {
       const userInput = { foo: 'bar' }
-      const result = await service.getCurrentPage(callConfig, request, dataServices, userInput)
+      ;(getBody as jest.Mock).mockReturnValue(userInput)
 
-      expect(result).toBeInstanceOf(FirstPage)
+      const result = await service.initializePage(callConfig, Page, request, dataServices, userInput)
 
-      expect(FirstPage).toHaveBeenCalledWith(userInput, application, '')
+      expect(result).toBeInstanceOf(Page)
+
+      expect(Page).toHaveBeenCalledWith(userInput, application, '')
     })
 
     it('should load from the session if the body and userInput are blank', async () => {
       request.body = {}
       request.session.application.data = { 'my-task': { first: { foo: 'bar' } } }
+      ;(getBody as jest.Mock).mockReturnValue(request.session.application.data['my-task'].first)
 
-      const result = await service.getCurrentPage(callConfig, request, dataServices)
+      const result = await service.initializePage(callConfig, Page, request, dataServices)
 
-      expect(result).toBeInstanceOf(FirstPage)
+      expect(result).toBeInstanceOf(Page)
 
-      expect(FirstPage).toHaveBeenCalledWith({ foo: 'bar' }, application, '')
+      expect(Page).toHaveBeenCalledWith({ foo: 'bar' }, application, '')
     })
 
-    it("should call a service's setup method if it exists", async () => {
-      const setup = jest.fn()
-      SecondPage.mockReturnValue({ setup })
+    it("should call a service's initialize method if it exists", async () => {
+      const OtherPage = { initialize: jest.fn() } as unknown as TasklistPageInterface
+      ;(getBody as jest.Mock).mockReturnValue(request.body)
 
-      request.params.page = 'second'
+      await service.initializePage(callConfig, OtherPage, request, dataServices)
 
-      await service.getCurrentPage(callConfig, request, dataServices)
-
-      expect(setup).toHaveBeenCalledWith(request, dataServices)
+      expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, request.user.token, dataServices)
     })
 
     it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {
+      ;(getBody as jest.Mock).mockReturnValue(request.body)
+
       request.session.previousPage = 'previous-page-name'
-      await service.getCurrentPage(callConfig, request, dataServices)
+      await service.initializePage(callConfig, Page, request, dataServices)
 
-      expect(FirstPage).toHaveBeenCalledWith(request.body, application, 'previous-page-name')
-    })
-
-    it('should raise an error if the page is not found', async () => {
-      request.params.page = 'bar'
-
-      expect(async () => {
-        await service.getCurrentPage(callConfig, request, dataServices)
-      }).rejects.toThrow(UnknownPageError)
-    })
-
-    it('should raise an error if the task is not specified', async () => {
-      request.params.task = undefined
-
-      expect(async () => {
-        await service.getCurrentPage(callConfig, request, dataServices)
-      }).rejects.toThrow(UnknownPageError)
+      expect(Page).toHaveBeenCalledWith(request.body, application, 'previous-page-name')
     })
   })
 
@@ -256,6 +283,8 @@ describe('ApplicationService', () => {
           },
           body: { foo: 'bar' },
         })
+        ;(getPageName as jest.Mock).mockReturnValue('some-page')
+        ;(getTaskName as jest.Mock).mockReturnValue('some-task')
       })
 
       it('does not throw an error', () => {
@@ -307,24 +336,15 @@ describe('ApplicationService', () => {
     })
   })
 
-  describe('getResponses', () => {
-    it('returns the responses from all answered questions', () => {
-      FirstPage.mockReturnValue({
-        response: () => {
-          return { foo: 'bar' }
-        },
-      })
+  describe('submit', () => {
+    const callConfig = { token: 'some-token' } as CallConfig
+    const application = applicationFactory.build()
 
-      SecondPage.mockReturnValue({
-        response: () => {
-          return { bar: 'foo' }
-        },
-      })
+    it('saves data to the session', async () => {
+      await service.submit(callConfig, application)
 
-      const application = applicationFactory.build()
-      application.data = { 'my-task': { first: '', second: '' } }
-
-      expect(service.getResponses(application)).toEqual({ 'my-task': [{ foo: 'bar' }, { bar: 'foo' }] })
+      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(applicationClient.submit).toHaveBeenCalledWith(application)
     })
   })
 })

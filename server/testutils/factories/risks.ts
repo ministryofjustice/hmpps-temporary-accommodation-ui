@@ -5,8 +5,8 @@ import type { PersonRisks, RiskEnvelopeStatus } from '@approved-premises/api'
 import { RiskLevel, TierLetter, TierNumber, RiskTierLevel } from '@approved-premises/ui'
 import { DateFormats } from '../../utils/dateUtils'
 
-const riskLevels: RiskLevel[] = ['Low', 'Medium', 'High', 'Very High']
-const riskEnvelopeStatuses: RiskEnvelopeStatus[] = ['retrieved', 'not_found', 'error']
+const riskLevels: Array<RiskLevel> = ['Low', 'Medium', 'High', 'Very High']
+const riskEnvelopeStatuses: Array<RiskEnvelopeStatus> = ['retrieved', 'not_found', 'error']
 
 export default Factory.define<PersonRisks>(() => ({
   crn: `C${faker.datatype.number({ min: 100000, max: 999999 })}`,
@@ -24,13 +24,13 @@ const roshRisksFactory = Factory.define<PersonRisks['roshRisks']>(() => ({
     riskToPublic: faker.helpers.arrayElement(riskLevels),
     riskToKnownAdult: faker.helpers.arrayElement(riskLevels),
     riskToStaff: faker.helpers.arrayElement(riskLevels),
-    lastUpdated: DateFormats.formatApiDate(faker.date.past()),
+    lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()),
   },
 }))
 
 const mappaFactory = Factory.define<PersonRisks['mappa']>(() => ({
   status: faker.helpers.arrayElement(riskEnvelopeStatuses),
-  value: { level: 'CAT 2 / LEVEL 1', lastUpdated: DateFormats.formatApiDate(faker.date.past()) },
+  value: { level: 'CAT 2 / LEVEL 1', lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()) },
 }))
 
 const flagsFactory = Factory.define<PersonRisks['flags']>(() => {
@@ -54,10 +54,10 @@ const numbersFactory: () => TierNumber = () => faker.helpers.arrayElement<TierNu
 
 export const riskTierLevel: RiskTierLevel = `${lettersFactory()}${numbersFactory()}`
 
-const tierEnvelopeFactory = Factory.define<PersonRisks['tier']>(() => ({
+export const tierEnvelopeFactory = Factory.define<PersonRisks['tier']>(() => ({
   status: faker.helpers.arrayElement(riskEnvelopeStatuses),
   value: {
     level: riskTierLevel,
-    lastUpdated: DateFormats.formatApiDate(faker.date.past()),
+    lastUpdated: DateFormats.dateObjToIsoDate(faker.date.past()),
   },
 }))

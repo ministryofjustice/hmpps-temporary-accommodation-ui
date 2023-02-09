@@ -1,12 +1,11 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
-import type { ApplicationSummary } from '../../server/testutils/factories/applicationSummary'
+import type { ApprovedPremisesApplication } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 
 export default {
-  stubApplications: (applicationSummaries: ApplicationSummary): SuperAgentRequest =>
+  stubApplications: (applications: ApprovedPremisesApplication): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -15,14 +14,14 @@ export default {
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: applicationSummaries,
+        jsonBody: applications,
       },
     }),
-  stubApplicationCreate: (args: { application: Application }): SuperAgentRequest =>
+  stubApplicationCreate: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
-        url: `/applications`,
+        url: `/applications?createWithRisks=true`,
       },
       response: {
         status: 201,
@@ -30,7 +29,7 @@ export default {
         jsonBody: { ...args.application, data: null },
       },
     }),
-  stubApplicationUpdate: (args: { application: Application }): SuperAgentRequest =>
+  stubApplicationUpdate: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',
@@ -53,11 +52,63 @@ export default {
         transformers: ['response-template'],
       },
     }),
+  stubApplicationGet: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/applications/${args.application.id}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.application,
+      },
+    }),
+  stubApplicationDocuments: (args: {
+    application: ApprovedPremisesApplication
+    documents: Array<Document>
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/applications/${args.application.id}/documents`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.documents,
+      },
+    }),
+  stubApplicationSubmit: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/applications/${args.application.id}/submission`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      },
+    }),
+  verifyApplicationCreate: async () =>
+    (
+      await getMatchingRequests({
+        method: 'POST',
+        url: `/applications?createWithRisks=true`,
+      })
+    ).body.requests,
   verifyApplicationUpdate: async (applicationId: string) =>
     (
       await getMatchingRequests({
         method: 'PUT',
         url: `/applications/${applicationId}`,
+      })
+    ).body.requests,
+  verifyApplicationSubmit: async (applicationId: string) =>
+    (
+      await getMatchingRequests({
+        method: 'POST',
+        url: `/applications/${applicationId}/submission`,
       })
     ).body.requests,
 }

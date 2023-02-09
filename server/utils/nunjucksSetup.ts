@@ -5,21 +5,24 @@ import nunjucks from 'nunjucks'
 import express from 'express'
 import * as pathModule from 'path'
 
-import type { ErrorMessages, PersonStatus, Task } from '@approved-premises/ui'
-import type { ApprovedPremisesApplication as Application } from '@approved-premises/api'
-import { initialiseName, removeBlankSummaryListItems } from './utils'
+import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
+import { initialiseName, removeBlankSummaryListItems, mapApiPersonRisksForUi } from './utils'
 import {
   dateFieldValues,
   convertObjectsToRadioItems,
   convertObjectsToSelectOptions,
   convertObjectsToCheckboxItems,
 } from './formUtils'
-import { getTaskStatus, taskLink, getCompleteSectionCount } from './applicationUtils'
 import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'
+
+import * as OffenceUtils from './offenceUtils'
+
 import managePaths from '../paths/temporary-accommodation/manage'
+import applyPaths from '../paths/apply'
 import staticPaths from '../paths/temporary-accommodation/static'
 import summaryListRows from '../components/bookingInfo'
+import config from '../config'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -62,6 +65,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('paths', {
     ...managePaths,
+    ...applyPaths,
     ...staticPaths,
   })
 
@@ -115,14 +119,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     },
   )
 
-  njkEnv.addGlobal('getCompleteSectionCount', getCompleteSectionCount)
-
-  njkEnv.addGlobal('getTaskStatus', (task: Task, application: Application) =>
-    markAsSafe(getTaskStatus(task, application)),
-  )
-
-  njkEnv.addGlobal('taskLink', (task: Task, applicationId: string) => markAsSafe(taskLink(task, applicationId)))
-
   njkEnv.addGlobal('statusTag', (status: PersonStatus) => markAsSafe(statusTag(status)))
 
   njkEnv.addGlobal('mergeObjects', (obj1: Record<string, unknown>, obj2: Record<string, unknown>) => {
@@ -133,7 +129,12 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     return this.ctx
   })
 
+  njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)
+
+  njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
+
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows })
+  njkEnv.addGlobal('OffenceUtils', OffenceUtils)
 }

@@ -25,6 +25,7 @@ import applyPaths from '../paths/apply'
 import staticPaths from '../paths/temporary-accommodation/static'
 import summaryListRows from '../components/bookingInfo'
 import config from '../config'
+import { checkYourAnswersSections } from './checkYourAnswersUtils'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -137,6 +138,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 
+  njkEnv.addGlobal('checkYourAnswersSections', checkYourAnswersSections)
   njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows })

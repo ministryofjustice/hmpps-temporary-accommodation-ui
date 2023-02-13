@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
-import { controllers as taManageControllers } from './temporary-accommodation/manage'
+import { controllers as manageControllers } from './temporary-accommodation/manage'
+import { controllers as applyControllers } from './apply'
 
 import type { Services } from '../services'
 import DashboardController from './dashboardController'
@@ -14,8 +15,9 @@ export const controllers = (services: Services) => {
     dashboardController,
     staticController,
     temporaryAccommodation: {
-      ...taManageControllers(services),
+      ...manageControllers(services),
     },
+    ...applyControllers(services),
   }
 }
 

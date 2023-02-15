@@ -1,0 +1,49 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    Example page
+  </h1>
+
+  {% set detailsHTML %}
+  <p>An example question</p>
+  {% endset %}
+
+  {% set hintHTML %}
+  {{ govukDetails({
+    summaryText: "Yes or no?",
+    html: detailsHTML
+  }) }}
+  {% endset %}
+
+  {{
+    formPageRadios(
+      {
+        fieldName: "exampleAnswer",
+        fieldset: {
+          legend: {
+            text: page.title,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        hint: {
+          html: hintHTML
+        },
+        items: [
+          {
+            value: "yes",
+            text: "Yes"
+          },
+          {
+            text: "No",
+            value: "no"
+          }
+        ]
+      },
+      fetchContext()
+    )
+  }}
+
+{% endblock %}

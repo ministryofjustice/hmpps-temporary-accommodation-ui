@@ -29,12 +29,34 @@ export default [
   {
     request: {
       method: 'POST',
-      url: paths.applications.index({}),
+      urlPath: paths.applications.index({}),
     },
     response: {
       status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: applicationFactory.build(),
+    },
+  },
+  {
+    request: {
+      method: 'PUT',
+      urlPathPattern: paths.applications.show({ id: guidRegex }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: applicationFactory.build(),
+    },
+  },
+  {
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.applications.submission({ id: guidRegex }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
     },
   },
 ]

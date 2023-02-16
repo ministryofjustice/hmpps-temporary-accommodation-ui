@@ -16,10 +16,11 @@ import applications from './integration_tests/mockApis/applications'
 import room from './integration_tests/mockApis/room'
 import report from './integration_tests/mockApis/report'
 import user from './integration_tests/mockApis/user'
+import schemaValidator from './integration_tests/tasks/schemaValidator'
 
 export default defineConfig({
   chromeWebSecurity: false,
-  fixturesFolder: 'integration_tests/fixtures',
+  fixturesFolder: 'cypress_shared/fixtures',
   screenshotsFolder: 'integration_tests/screenshots',
   videosFolder: 'integration_tests/videos',
   reporter: 'cypress-multi-reporters',
@@ -48,6 +49,7 @@ export default defineConfig({
         ...room,
         ...report,
         ...user,
+        ...schemaValidator,
       })
     },
     baseUrl: 'http://localhost:3007',

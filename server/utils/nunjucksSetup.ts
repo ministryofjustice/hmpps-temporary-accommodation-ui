@@ -17,12 +17,15 @@ import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'
 
 import * as OffenceUtils from './offenceUtils'
+import * as TasklistUtils from './taskListUtils'
+import { dashboardTableRows } from './applicationUtils'
 
 import managePaths from '../paths/temporary-accommodation/manage'
 import applyPaths from '../paths/apply'
 import staticPaths from '../paths/temporary-accommodation/static'
 import summaryListRows from '../components/bookingInfo'
 import config from '../config'
+import { checkYourAnswersSections } from './checkYourAnswersUtils'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -135,6 +138,10 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
 
+  njkEnv.addGlobal('checkYourAnswersSections', checkYourAnswersSections)
+  njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)
+
   njkEnv.addGlobal('BookingInfo', { summaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
+  njkEnv.addGlobal('TasklistUtils', TasklistUtils)
 }

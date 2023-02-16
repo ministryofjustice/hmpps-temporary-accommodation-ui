@@ -6,7 +6,7 @@ import type {
 import paths from '../paths/apply'
 import Apply from '../form-pages/apply'
 import { SessionDataError, UnknownPageError } from './errors'
-import { isApplicableTier, tierBadge } from './personUtils'
+import { tierBadge } from './personUtils'
 import { DateFormats } from './dateUtils'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
 import Assess from '../form-pages/assess'
@@ -149,11 +149,7 @@ const isUnapplicable = (application: Application): boolean => {
 }
 
 const firstPageOfApplicationJourney = (application: Application) => {
-  if (isApplicableTier(application.person.sex, application.risks.tier.value.level)) {
-    return paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' })
-  }
-
-  return paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'is-exceptional-case' })
+  return paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'example-page' })
 }
 
 export {

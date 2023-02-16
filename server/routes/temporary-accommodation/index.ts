@@ -7,6 +7,8 @@ import { Services } from '../../services'
 import actions from '../utils'
 
 import manageRoutes from './manage'
+import applyRoutes from '../apply'
+import config from '../../config'
 
 export default function routes(controllers: Controllers, services: Services): Router {
   const router = Router()
@@ -19,6 +21,10 @@ export default function routes(controllers: Controllers, services: Services): Ro
   get(paths.static.cookies.pattern, staticController.cookies(), { auditEvent: 'VIEW_COOKIES' })
 
   manageRoutes(controllers, services, router)
+
+  if (['local', 'dev', 'test'].includes(config.environment)) {
+    applyRoutes(controllers, services, router)
+  }
 
   return router
 }

@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "baseUrl": ".",
+    "experimentalDecorators": true,
     "paths": {
       "@approved-premises/ui": ["../server/@types/ui/index.d.ts"],
       "@approved-premises/api": ["../server/@types/shared/index.d.ts"]

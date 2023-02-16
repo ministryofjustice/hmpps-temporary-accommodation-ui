@@ -3,6 +3,40 @@
   "type": "object",
   "title": "Apply Schema",
   "additionalProperties": false,
-  "required": [],
-  "properties": {}
+  "required": [
+    "example-task",
+    "check-your-answers"
+  ],
+  "properties": {
+    "example-task": {
+      "type": "object",
+      "properties": {
+        "example-page": {
+          "type": "object",
+          "properties": {
+            "exampleAnswer": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "check-your-answers": {
+      "type": "object",
+      "properties": {
+        "review": {
+          "type": "object",
+          "properties": {
+            "reviewed": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
 }

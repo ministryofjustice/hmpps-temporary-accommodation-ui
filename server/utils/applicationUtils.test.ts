@@ -197,21 +197,12 @@ describe('applicationUtils', () => {
   })
 
   describe('firstPageOfApplicationJourney', () => {
-    it('returns the sentence type page for an applicable application', () => {
+    it('returns the example page', () => {
       ;(isApplicableTier as jest.Mock).mockReturnValue(true)
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(
-        paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),
-      )
-    })
-
-    it('returns the is exceptional case page for an unapplicable application', () => {
-      ;(isApplicableTier as jest.Mock).mockReturnValue(false)
-      const application = applicationFactory.build()
-
-      expect(firstPageOfApplicationJourney(application)).toEqual(
-        paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'is-exceptional-case' }),
+        paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'example-page' }),
       )
     })
   })

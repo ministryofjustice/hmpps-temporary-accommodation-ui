@@ -21,6 +21,7 @@ import {
   PersonRisks,
   User,
 } from '@approved-premises/api'
+import { CallConfig } from '../../data/restClient'
 
 interface TasklistPage {
   body: Record<string, unknown>
@@ -211,17 +212,17 @@ export type GroupedListofBookings = {
 
 export type DataServices = Partial<{
   personService: {
-    getPrisonCaseNotes: (token: string, crn: string) => Promise<Array<PrisonCaseNote>>
-    getAdjudications: (token: string, crn: string) => Promise<Array<Adjudication>>
-    getOasysSelections: (token: string, crn: string) => Promise<Array<OASysSection>>
-    getOasysSections: (token: string, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
-    getPersonRisks: (token: string, crn: string) => Promise<PersonRisksUI>
+    getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>
+    getAdjudications: (callConfig: CallConfig, crn: string) => Promise<Array<Adjudication>>
+    getOasysSelections: (callConfig: CallConfig, crn: string) => Promise<Array<OASysSection>>
+    getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
+    getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>
   }
   applicationService: {
-    getDocuments: (token: string, application: ApprovedPremisesApplication) => Promise<Array<Document>>
+    getDocuments: (callConfig: CallConfig, application: ApprovedPremisesApplication) => Promise<Array<Document>>
   }
   userService: {
-    getUserById: (token: string, id: string) => Promise<User>
+    getUserById: (callConfig: CallConfig, id: string) => Promise<User>
   }
 }>
 

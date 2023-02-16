@@ -1,0 +1,144 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + page.title %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {{ govukBackLink({
+      text: "Back",
+      href: paths.applications.show({ id: page.application.id })
+  }) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-width-container">
+      <h1 class="govuk-heading-xl">
+        {{ page.title }}
+      </h1>
+
+      <div class="main-box">
+        <h3 class="box-title govuk-heading-m">
+          Person Details
+        </h3>
+        <div class="box-content" data-cy-check-your-answers-section="person-details">
+          {{ govukSummaryList({
+          rows: ([
+            {
+              key: {
+                text: "Name"
+              },
+              value: {
+                text: page.application.person.name
+              }
+            },
+            {
+              key: {
+                text: "CRN"
+              },
+              value: {
+                text: page.application.person.crn
+              }
+            },
+            {
+              key: {
+                text: "Date of Birth"
+              },
+              value: {
+                text: formatDate(page.application.person.dateOfBirth, { format: 'short' })
+              }
+            },
+            {
+              key: {
+                text: "NOMS Number"
+              },
+              value: {
+                text: page.application.person.nomsNumber
+              }
+            },
+            {
+              key: {
+                text: "Nationality"
+              },
+              value: {
+                text: page.application.person.nationality
+              }
+            },
+            {
+              key: {
+                text: "Religion or Belief"
+              },
+              value: {
+                text: page.application.person.religionOrBelief
+              }
+            },
+            {
+              key: {
+                text: "Sex"
+              },
+              value: {
+                text: page.application.person.sex
+              }
+            },
+            {
+              key: {
+                text: "Gender Identity"
+              },
+              value: {
+                text: page.application.person.genderIdentity
+              }
+            },
+            {
+              key: {
+                text: "Status"
+              },
+              value: {
+                html: statusTag(page.application.person.status)
+              }
+            },
+            {
+              key: {
+                text: "Prison"
+              },
+              value: {
+                text: page.application.person.prisonName
+              }
+            }
+          ])
+        }) }}
+        </div>
+      </div>
+
+      {% for section in checkYourAnswersSections(page.application) %}
+        <h2 class="govuk-heading-l">{{ section.title }}</h2>
+        {% for task in section.tasks %}
+          <div class="main-box" data-cy-check-your-answers-section="{{ task.id }}">
+            <h3 class="box-title govuk-heading-m">
+              {{ task.title }}
+            </h3>
+            <div class="box-content">
+              {{
+                govukSummaryList({
+                  rows: task.rows
+                })
+              }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+
+      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task, page: page.name }) }}?_method=PUT" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        <input type="hidden" name="reviewed" value="1"/>
+
+        {{ govukButton({
+            text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

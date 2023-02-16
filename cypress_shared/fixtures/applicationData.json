@@ -1,0 +1,12 @@
+{
+  "example-task": {
+    "example-page": {
+      "exampleAnswer": "yes"
+    }
+  },
+  "check-your-answers": {
+    "review": {
+      "reviewed": "1"
+    }
+  }
+}

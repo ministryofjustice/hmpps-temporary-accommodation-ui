@@ -49,6 +49,8 @@ export type { LostBed } from './models/LostBed';
 export type { LostBedReason } from './models/LostBedReason';
 export type { Mappa } from './models/Mappa';
 export type { MappaEnvelope } from './models/MappaEnvelope';
+export type { MigrationJobRequest } from './models/MigrationJobRequest';
+export type { MigrationJobType } from './models/MigrationJobType';
 export type { MoveOnCategory } from './models/MoveOnCategory';
 export type { NewApplication } from './models/NewApplication';
 export type { NewApprovedPremisesBooking } from './models/NewApprovedPremisesBooking';

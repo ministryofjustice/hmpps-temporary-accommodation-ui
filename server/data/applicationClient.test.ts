@@ -96,7 +96,7 @@ describe('ApplicationClient', () => {
 
   describe('update', () => {
     it('should return an application when a PUT request is made', async () => {
-      const application = applicationFactory.build()
+      const application = applicationFactory.withData().build()
 
       fakeApprovedPremisesApi
         .put(paths.applications.update({ id: application.id }), JSON.stringify({ data: application.data }))
@@ -128,10 +128,13 @@ describe('ApplicationClient', () => {
 
   describe('submit', () => {
     it('should submit the application', async () => {
-      const application = applicationFactory.build()
+      const application = applicationFactory.withData().build()
 
       fakeApprovedPremisesApi
-        .post(paths.applications.submission({ id: application.id }))
+        .post(
+          paths.applications.submission({ id: application.id }),
+          JSON.stringify({ translatedDocument: application.document }),
+        )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201)
 

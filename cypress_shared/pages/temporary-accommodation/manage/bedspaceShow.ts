@@ -1,8 +1,8 @@
-import type { Room, Booking } from '@approved-premises/api'
+import type { Booking, Room } from '@approved-premises/api'
 
-import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
+import Page from '../../page'
 
 export default class BedspaceShowPage extends Page {
   constructor(private readonly room: Room) {
@@ -61,13 +61,6 @@ export default class BedspaceShowPage extends Page {
     cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Book bedspace').click()
-    })
-  }
-
-  clickVoidBedspaceLink(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Void bedspace').click()
     })
   }
 

@@ -19,6 +19,13 @@ class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
       },
     })
   }
+
+  withData() {
+    return this.params({
+      data: JSON.parse(faker.datatype.json()),
+      document: JSON.parse(faker.datatype.json()),
+    })
+  }
 }
 
 export default ApplicationFactory.define(() => ({
@@ -28,8 +35,8 @@ export default ApplicationFactory.define(() => ({
   schemaVersion: faker.datatype.uuid(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-  data: JSON.parse(faker.datatype.json()),
-  document: JSON.parse(faker.datatype.json()),
+  data: {},
+  document: {},
   outdatedSchema: faker.datatype.boolean(),
   isWomensApplication: faker.datatype.boolean(),
   isPipeApplication: faker.datatype.boolean(),

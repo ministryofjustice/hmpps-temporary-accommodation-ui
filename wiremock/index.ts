@@ -5,6 +5,7 @@ const wiremockEndpoint = process.env.CYPRESS ? 'http://localhost:9999' : 'http:/
 const url = `${wiremockEndpoint}/__admin`
 
 export const guidRegex = '([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
+export const crnRegex = '([0-9A-Z]{7})'
 
 const stubFor = (mapping: Record<string, unknown>): SuperAgentRequest =>
   superagent.post(`${url}/mappings`).send(mapping)

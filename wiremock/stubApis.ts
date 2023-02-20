@@ -28,6 +28,7 @@ import { errorStub, getCombinations } from './utils'
 import path from '../server/paths/api'
 import confirmationStubs from './confirmationStubs'
 import reportStubs from './reportStubs'
+import offenceStubs from './offenceStubs'
 
 const stubs = []
 
@@ -196,6 +197,7 @@ stubs.push(
   ...roomStubs,
   ...userStub,
   ...reportStubs,
+  ...offenceStubs,
   ...Object.values(referenceDataStubs),
 )
 

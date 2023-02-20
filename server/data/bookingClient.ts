@@ -1,18 +1,18 @@
 import type {
-  NewArrival,
   Arrival,
   Booking,
-  NewBooking,
-  Extension,
-  NewExtension,
   Cancellation,
-  NewCancellation,
-  Departure,
-  Nonarrival,
-  NewDeparture,
-  NewConfirmation,
   Confirmation,
+  Departure,
+  Extension,
+  NewArrival,
+  NewBooking,
+  NewCancellation,
+  NewConfirmation,
+  NewDeparture,
+  NewExtension,
   NewNonarrival,
+  Nonarrival,
 } from '@approved-premises/api'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'

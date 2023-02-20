@@ -4,11 +4,11 @@ import qs from 'qs'
 import type {
   ActiveOffence,
   Adjudication,
+  OASysSection,
+  OASysSections,
   Person,
   PersonRisks,
   PrisonCaseNote,
-  OASysSection,
-  OASysSections,
 } from '@approved-premises/api'
 
 import RestClient, { CallConfig } from './restClient'

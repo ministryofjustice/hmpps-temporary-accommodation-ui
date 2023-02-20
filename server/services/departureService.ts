@@ -1,6 +1,6 @@
 import type { ReferenceData } from '@approved-premises/ui'
 import type { Departure, NewDeparture } from '@approved-premises/api'
-import type { RestClientBuilder, BookingClient, ReferenceDataClient } from '../data'
+import type { BookingClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { DateFormats } from '../utils/dateUtils'
 import { CallConfig } from '../data/restClient'
 

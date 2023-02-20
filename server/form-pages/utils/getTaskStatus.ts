@@ -1,4 +1,4 @@
-import type { TaskStatus, Task } from '@approved-premises/ui'
+import type { Task, TaskStatus } from '@approved-premises/ui'
 import {
   ApprovedPremisesApplication as Application,
   ApprovedPremisesAssessment as Assessment,

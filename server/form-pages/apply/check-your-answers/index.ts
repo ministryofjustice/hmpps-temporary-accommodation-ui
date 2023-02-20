@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import Review from './review'
-import { Task, Section } from '../../utils/decorators'
+import { Section, Task } from '../../utils/decorators'
 
 @Task({
   name: 'Check your answers',

@@ -1,4 +1,4 @@
-import type { TableRow, PageResponse } from '@approved-premises/ui'
+import type { PageResponse, TableRow } from '@approved-premises/ui'
 import type {
   ApprovedPremisesApplication as Application,
   ApprovedPremisesAssessment as Assessment,

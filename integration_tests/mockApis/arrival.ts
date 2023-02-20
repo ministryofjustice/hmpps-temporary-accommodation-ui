@@ -2,7 +2,7 @@ import { SuperAgentRequest } from 'superagent'
 
 import type { Arrival } from '@approved-premises/api'
 
-import { stubFor, getMatchingRequests } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 
 export default {

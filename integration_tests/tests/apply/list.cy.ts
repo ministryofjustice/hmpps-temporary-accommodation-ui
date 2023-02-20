@@ -1,4 +1,4 @@
-import { StartPage, ListPage } from '../../../cypress_shared/pages/apply'
+import { ListPage, StartPage } from '../../../cypress_shared/pages/apply'
 
 import applicationFactory from '../../../server/testutils/factories/application'
 import Page from '../../../cypress_shared/pages/page'

@@ -4,7 +4,7 @@
 import fs from 'fs'
 import path from 'path'
 
-import { pascalCase, camelCase } from '../../utils/utils'
+import { camelCase, pascalCase } from '../../utils/utils'
 
 import pageTemplate from './templates/page'
 import testTemplate from './templates/test'

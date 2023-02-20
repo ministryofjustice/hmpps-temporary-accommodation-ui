@@ -1,6 +1,6 @@
 import Case from 'case'
 
-import type { SummaryListItem, PersonRisksUI } from '@approved-premises/ui'
+import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 import type { ApprovedPremisesApplication, PersonRisks } from '@approved-premises/api'
 
 import { SessionDataError } from './errors'

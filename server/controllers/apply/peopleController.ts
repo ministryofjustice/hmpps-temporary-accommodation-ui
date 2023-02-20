@@ -1,4 +1,4 @@
-import type { Request, Response, RequestHandler } from 'express'
+import type { Request, RequestHandler, Response } from 'express'
 
 import PersonService from '../../services/personService'
 import extractCallConfig from '../../utils/restUtils'

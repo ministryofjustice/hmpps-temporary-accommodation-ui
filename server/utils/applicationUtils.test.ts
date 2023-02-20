@@ -4,16 +4,16 @@ import paths from '../paths/apply'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import { DateFormats } from './dateUtils'
-import { tierBadge, isApplicableTier } from './personUtils'
+import { isApplicableTier, tierBadge } from './personUtils'
 
 import {
-  getResponses,
-  getPage,
-  getArrivalDate,
   dashboardTableRows,
   firstPageOfApplicationJourney,
-  isUnapplicable,
+  getArrivalDate,
+  getPage,
+  getResponses,
   getStatus,
+  isUnapplicable,
 } from './applicationUtils'
 import { SessionDataError, UnknownPageError } from './errors'
 

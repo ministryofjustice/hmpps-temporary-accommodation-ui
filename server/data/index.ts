@@ -5,7 +5,7 @@
  */
 /* istanbul ignore file */
 
-import { initialiseAppInsights, buildAppInsightsClient } from '../utils/azureAppInsights'
+import { buildAppInsightsClient, initialiseAppInsights } from '../utils/azureAppInsights'
 import BookingClient from './bookingClient'
 
 initialiseAppInsights()

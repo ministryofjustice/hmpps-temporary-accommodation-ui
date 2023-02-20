@@ -1,5 +1,5 @@
 import characteristicFactory from '../testutils/factories/characteristic'
-import { formatCharacteristics, filterCharacteristics } from './characteristicUtils'
+import { filterCharacteristics, formatCharacteristics } from './characteristicUtils'
 import { escape } from './viewUtils'
 
 jest.mock('./viewUtils')

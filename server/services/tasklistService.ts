@@ -2,7 +2,7 @@ import {
   ApprovedPremisesApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
-import { TaskStatus, FormSections, TaskWithStatus, Task } from '@approved-premises/ui'
+import { FormSections, Task, TaskStatus, TaskWithStatus } from '@approved-premises/ui'
 import getSections from '../utils/assessments/getSections'
 import Apply from '../form-pages/apply'
 import isAssessment from '../utils/assessments/isAssessment'

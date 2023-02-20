@@ -1,5 +1,5 @@
-import type { Request, Response, NextFunction } from 'express'
-import { createMock, DeepMocked } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import bookingFactory from '../../../testutils/factories/booking'

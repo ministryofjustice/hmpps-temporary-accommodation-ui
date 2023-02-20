@@ -5,7 +5,7 @@ import BedspaceService from './bedspaceService'
 import ReferenceDataClient from '../data/referenceDataClient'
 import characteristicFactory from '../testutils/factories/characteristic'
 import { formatLines } from '../utils/viewUtils'
-import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/roomClient')

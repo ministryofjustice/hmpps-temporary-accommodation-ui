@@ -1,4 +1,4 @@
-import type { Room, NewRoom } from '@approved-premises/api'
+import type { NewRoom, Room } from '@approved-premises/api'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import api from '../paths/api'

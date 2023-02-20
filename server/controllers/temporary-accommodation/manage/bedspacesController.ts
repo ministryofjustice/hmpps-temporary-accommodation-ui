@@ -1,10 +1,10 @@
-import type { Request, Response, RequestHandler } from 'express'
+import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
-import { PremisesService, BookingService } from '../../../services'
+import { BookingService, PremisesService } from '../../../services'
 import extractCallConfig from '../../../utils/restUtils'
 
 export default class BedspacesController {

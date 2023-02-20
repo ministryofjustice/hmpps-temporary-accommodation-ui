@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import 'reflect-metadata'
-import { getSection, getPagesForSections } from '../index'
+import { getPagesForSections, getSection } from '../index'
 
 type Constructor = new (...args: Array<any>) => {}
 

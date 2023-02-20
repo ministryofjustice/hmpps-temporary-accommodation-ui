@@ -1,6 +1,6 @@
 import type { Response, SuperAgentRequest } from 'superagent'
 
-import type { Premises, Booking, DateCapacity, StaffMember, Room } from '@approved-premises/api'
+import type { Booking, DateCapacity, Premises, Room, StaffMember } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import bookingStubs from './booking'

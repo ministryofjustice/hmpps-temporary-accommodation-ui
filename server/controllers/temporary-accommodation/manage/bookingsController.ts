@@ -1,8 +1,8 @@
-import type { Request, Response, RequestHandler } from 'express'
+import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewBooking } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { PremisesService, BookingService } from '../../../services'
+import { BookingService, PremisesService } from '../../../services'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'

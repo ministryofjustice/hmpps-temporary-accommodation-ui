@@ -1,22 +1,22 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
 import bookingFactory from '../../../testutils/factories/booking'
 import newBookingFactory from '../../../testutils/factories/newBooking'
-import { BookingService, PremisesService } from '../../../services'
-import BookingsController from './bookingsController'
-import { DateFormats } from '../../../utils/dateUtils'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
-import { CallConfig } from '../../../data/restClient'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import BookingsController from './bookingsController'
 
-jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/validation')
 
 describe('BookingsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig

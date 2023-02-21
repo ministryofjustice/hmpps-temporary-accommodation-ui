@@ -1,17 +1,17 @@
-import { Request, Response } from 'express'
 import { createMock } from '@golevelup/ts-jest'
+import { Request, Response } from 'express'
 
 import type { ErrorMessages, ErrorSummary } from '@approved-premises/ui'
+import type TaskListPage from '../form-pages/tasklistPage'
+import errorLookups from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
+import { TasklistAPIError, ValidationError } from './errors'
 import {
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   insertGenericError,
 } from './validation'
-import errorLookups from '../i18n/en/errors.json'
-import { TasklistAPIError, ValidationError } from './errors'
-import type TaskListPage from '../form-pages/tasklistPage'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {

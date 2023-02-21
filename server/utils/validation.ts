@@ -2,8 +2,8 @@ import type { Request, Response } from 'express'
 import jsonpath from 'jsonpath'
 
 import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
-import { SanitisedError } from '../sanitisedError'
 import errorLookup from '../i18n/en/errors.json'
+import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError } from './errors'
 
 interface InvalidParams {

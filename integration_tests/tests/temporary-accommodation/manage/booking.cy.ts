@@ -3,7 +3,6 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bedFactory from '../../../../server/testutils/factories/bed'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import newBookingFactory from '../../../../server/testutils/factories/newBooking'
 import premisesFactory from '../../../../server/testutils/factories/premises'
@@ -45,9 +44,7 @@ context('Booking', () => {
     const room = roomFactory.build()
     const bookings = bookingFactory
       .params({
-        bed: bedFactory.build({
-          id: room.beds[0].id,
-        }),
+        bed: room.beds[0],
       })
       .buildList(5)
 
@@ -81,11 +78,7 @@ context('Booking', () => {
     const page = BookingNewPage.visit(premises.id, room.id)
 
     // And I fill out the form
-    const booking = bookingFactory.build({
-      bed: bedFactory.build({
-        id: room.beds[0].id,
-      }),
-    })
+    const booking = bookingFactory.build()
     const newBooking = newBookingFactory.build({
       ...booking,
     })
@@ -173,11 +166,7 @@ context('Booking', () => {
     const page = BookingNewPage.visit(premises.id, room.id)
 
     // And I fill out the form with dates that conflict with an existing booking
-    const booking = bookingFactory.build({
-      bed: bedFactory.build({
-        id: room.beds[0].id,
-      }),
-    })
+    const booking = bookingFactory.build()
     const newBooking = newBookingFactory.build({
       ...booking,
     })
@@ -240,9 +229,7 @@ context('Booking', () => {
     const room = roomFactory.build()
     const bookings = bookingFactory
       .params({
-        bed: bedFactory.build({
-          id: room.beds[0].id,
-        }),
+        bed: room.beds[0],
       })
       .buildList(5)
 

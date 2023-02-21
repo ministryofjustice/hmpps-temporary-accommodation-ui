@@ -3,7 +3,13 @@ import arrivalFactory from '../testutils/factories/arrival'
 import bookingFactory from '../testutils/factories/booking'
 import departureFactory from '../testutils/factories/departure'
 import extensionFactory from '../testutils/factories/extension'
-import { bookingActions, deriveBookingHistory, formatStatus, getLatestExtension } from './bookingUtils'
+import {
+  bookingActions,
+  deriveBookingHistory,
+  formatStatus,
+  getLatestExtension,
+  shortenedOrExtended,
+} from './bookingUtils'
 
 const premisesId = 'premisesId'
 const roomId = 'roomId'
@@ -329,6 +335,35 @@ describe('bookingUtils', () => {
       const result = deriveBookingHistory(booking)
 
       expect(result).toEqual(expected)
+    })
+  })
+
+  describe('shortenedOrExtended', () => {
+    it("returns 'shortened' for an extension that sets an earlier departure date", () => {
+      const extension = extensionFactory.build({
+        newDepartureDate: '2021-06-18',
+        previousDepartureDate: '2021-06-24',
+      })
+
+      expect(shortenedOrExtended(extension)).toEqual('shortened')
+    })
+
+    it("returns 'extended' for an extension that sets a later departure date", () => {
+      const extension = extensionFactory.build({
+        newDepartureDate: '2024-08-01',
+        previousDepartureDate: '2024-07-15',
+      })
+
+      expect(shortenedOrExtended(extension)).toEqual('extended')
+    })
+
+    it("returns 'extended' for an extension that leaves the departure date unchanged", () => {
+      const extension = extensionFactory.build({
+        newDepartureDate: '2017-11-04',
+        previousDepartureDate: '2017-11-04',
+      })
+
+      expect(shortenedOrExtended(extension)).toEqual('extended')
     })
   })
 })

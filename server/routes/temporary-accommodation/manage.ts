@@ -81,6 +81,9 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.premises.bedspaces.show.pattern, bedspacesController.show(), { auditEvent: 'VIEW_BEDSPACE' })
 
   get(paths.bookings.new.pattern, bookingsController.new(), { auditEvent: 'VIEW_BOOKING_CREATE' })
+  post(paths.bookings.confirm.pattern, bookingsController.confirm(), {
+    auditEvent: 'VIEW_BOOKING_CONFIRM',
+  })
   post(paths.bookings.create.pattern, bookingsController.create(), {
     redirectAuditEventSpecs: [
       {

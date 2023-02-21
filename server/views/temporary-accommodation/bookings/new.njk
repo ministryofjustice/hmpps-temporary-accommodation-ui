@@ -29,7 +29,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.create({ premisesId: premises.id, roomId: room.id }) }}" method="post">
+      <form action="{{ paths.bookings.confirm({ premisesId: premises.id, roomId: room.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
       
         {% include "./_editable.njk" %}  

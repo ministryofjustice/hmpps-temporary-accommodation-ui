@@ -128,8 +128,6 @@ describe('BookingsController', () => {
       }
       request.body = {
         ...newBooking,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
       }
 
       bedspaceService.getRoom.mockResolvedValue(room)

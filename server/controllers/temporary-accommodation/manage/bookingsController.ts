@@ -76,8 +76,6 @@ export default class BookingsController {
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'departureDate'),
       }
 
       try {

@@ -176,6 +176,7 @@ context('Booking', () => {
     page.completeForm(newBooking)
 
     // Then I should see error messages for the date fields
+    page.shouldShowPrefilledBookingDetails(newBooking)
     page.shouldShowDateConflictErrorMessages()
   })
 

@@ -1,6 +1,6 @@
 import type { Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
-import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
+import { formatStatus, getLatestExtension, shortenedOrExtended } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
 
@@ -71,8 +71,13 @@ export default (booking: Booking): SummaryList['rows'] => {
     const latestExtension = getLatestExtension(booking)
 
     if (latestExtension) {
+      const text =
+        shortenedOrExtended(latestExtension) === 'shortened'
+          ? 'Notes on shortened booking'
+          : 'Notes on extended booking'
+
       rows.push({
-        key: textValue('Extension notes'),
+        key: textValue(text),
         value: htmlValue(formatLines(latestExtension.notes)),
       })
     }

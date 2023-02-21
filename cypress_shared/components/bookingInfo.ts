@@ -1,5 +1,5 @@
 import type { Booking } from '@approved-premises/api'
-import { getLatestExtension } from '../../server/utils/bookingUtils'
+import { getLatestExtension, shortenedOrExtended } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
 import Component from './component'
 
@@ -37,7 +37,11 @@ export default class BookingInfoComponent extends Component {
 
       const latestExtension = getLatestExtension(this.booking)
       if (latestExtension) {
-        this.shouldShowKeyAndValues('Extension notes', latestExtension.notes.split('\n'))
+        const keyText =
+          shortenedOrExtended(latestExtension) === 'shortened'
+            ? 'Notes on shortened booking'
+            : 'Notes on extended booking'
+        this.shouldShowKeyAndValues(keyText, latestExtension.notes.split('\n'))
       }
     } else if (status === 'departed') {
       this.shouldShowKeyAndValue('Status', 'Closed')

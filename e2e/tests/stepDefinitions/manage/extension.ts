@@ -21,6 +21,7 @@ Given('I extend the booking', () => {
     })
     const extension = extensionFactory.build({
       ...newExtension,
+      previousDepartureDate: this.booking.departureDate,
     })
 
     const bookingExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, this.booking)

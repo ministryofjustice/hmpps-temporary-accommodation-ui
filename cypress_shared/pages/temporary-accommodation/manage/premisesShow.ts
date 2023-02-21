@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationPremises as Premises, Room, ProbationRegion } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'

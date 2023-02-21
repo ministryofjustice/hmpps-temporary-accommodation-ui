@@ -4,7 +4,7 @@ import type { ActiveOffence, ApprovedPremisesApplication, Document } from '@appr
 
 import { isUnapplicable } from '../utils/applicationUtils'
 import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
-import type { RestClientBuilder, ApplicationClient } from '../data'
+import type { ApplicationClient, RestClientBuilder } from '../data'
 import { ValidationError } from '../utils/errors'
 
 import { getBody, getPageName, getTaskName } from '../form-pages/utils'

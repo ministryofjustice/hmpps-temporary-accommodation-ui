@@ -1,4 +1,4 @@
-import type { UpdatePremises, TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
 import { exact } from '../../../../server/utils/utils'

@@ -1,7 +1,7 @@
 import type { SuperAgentRequest } from 'superagent'
 import type { Confirmation } from '@approved-premises/api'
 
-import { stubFor, getMatchingRequests } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '../../wiremock'
 
 export default {
   stubConfirmationCreate: (args: {

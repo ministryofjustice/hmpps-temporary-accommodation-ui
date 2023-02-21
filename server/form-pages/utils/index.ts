@@ -1,4 +1,4 @@
-import type { YesOrNoWithDetail, YesOrNo, Task, JourneyType } from '@approved-premises/ui'
+import type { JourneyType, Task, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
 import type { Request } from 'express'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import { ApprovedPremisesApplication, ApprovedPremisesAssessment } from '../../@types/shared'

@@ -1,6 +1,6 @@
 import superagent from 'superagent'
 import nock from 'nock'
-import { restClientMetricsMiddleware, normalizePath, requestHistogram } from './restClientMetricsMiddleware'
+import { normalizePath, requestHistogram, restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 describe('restClientMetricsMiddleware', () => {
   afterEach(() => {

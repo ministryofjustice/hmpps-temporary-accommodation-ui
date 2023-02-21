@@ -1,6 +1,6 @@
 import type { ProbationRegion } from '@approved-premises/api'
 import { Response } from 'express'
-import type { RestClientBuilder, ReferenceDataClient } from '../data'
+import type { ReferenceDataClient, RestClientBuilder } from '../data'
 import ReportClient from '../data/reportClient'
 import { CallConfig } from '../data/restClient'
 import { bookingReportFilename, bookingReportForProbationRegionFilename } from '../utils/reportUtils'

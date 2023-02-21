@@ -1,4 +1,4 @@
-import { getDateRangesWithNegativeBeds, formatStatus, getActiveStatuses } from './premisesUtils'
+import { formatStatus, getActiveStatuses, getDateRangesWithNegativeBeds } from './premisesUtils'
 
 describe('premisesUtils', () => {
   describe('getDateRangeWithNegativeBeds', () => {

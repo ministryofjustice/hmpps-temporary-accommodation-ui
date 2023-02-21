@@ -4,17 +4,17 @@ import path from 'path'
 import qs from 'qs'
 
 import type {
+  ActiveOffence,
+  Adjudication,
+  Document,
+  OASysSection,
+  OASysSections,
   Person,
   PersonRisks,
   PrisonCaseNote,
-  Adjudication,
-  ActiveOffence,
-  OASysSection,
-  OASysSections,
-  Document,
 } from '@approved-premises/api'
 
-import { stubFor, getMatchingRequests } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '../../wiremock'
 
 export default {
   stubFindPerson: (args: { person: Person }): SuperAgentRequest =>

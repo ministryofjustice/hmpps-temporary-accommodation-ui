@@ -1,8 +1,8 @@
-import { SuperAgentRequest, Response } from 'superagent'
+import { Response, SuperAgentRequest } from 'superagent'
 
 import type { LostBed } from '@approved-premises/api'
 
-import { stubFor, getMatchingRequests } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 import { lostBedReasons } from '../../wiremock/referenceDataStubs'
 

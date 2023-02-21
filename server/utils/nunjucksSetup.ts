@@ -6,12 +6,12 @@ import express from 'express'
 import * as pathModule from 'path'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
-import { initialiseName, removeBlankSummaryListItems, mapApiPersonRisksForUi } from './utils'
+import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems } from './utils'
 import {
-  dateFieldValues,
+  convertObjectsToCheckboxItems,
   convertObjectsToRadioItems,
   convertObjectsToSelectOptions,
-  convertObjectsToCheckboxItems,
+  dateFieldValues,
 } from './formUtils'
 import { statusTag } from './personUtils'
 import { DateFormats } from './dateUtils'

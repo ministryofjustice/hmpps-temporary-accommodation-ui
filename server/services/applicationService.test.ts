@@ -1,6 +1,6 @@
 import type { Request } from 'express'
-import { createMock, DeepMocked } from '@golevelup/ts-jest'
-import type { TaskListErrors, DataServices } from '@approved-premises/ui'
+import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { DataServices, TaskListErrors } from '@approved-premises/ui'
 
 import type TasklistPage from '../form-pages/tasklistPage'
 import { ValidationError } from '../utils/errors'

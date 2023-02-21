@@ -66,6 +66,12 @@
   "extends": ["airbnb-base", "plugin:prettier/recommended"],
 
   "rules": {
+    "sort-imports": [
+      "error",
+      {
+        "ignoreDeclarationSort": true
+      }
+    ],
     "no-unused-vars": [
       1,
       {

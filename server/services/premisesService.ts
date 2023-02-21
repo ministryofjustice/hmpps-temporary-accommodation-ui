@@ -1,20 +1,20 @@
-import type { TableRow, SummaryList, ReferenceData } from '@approved-premises/ui'
+import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type {
-  StaffMember,
-  NewPremises,
   Characteristic,
-  UpdatePremises,
   LocalAuthorityArea,
+  NewPremises,
   TemporaryAccommodationPremises as Premises,
+  StaffMember,
+  UpdatePremises,
 } from '@approved-premises/api'
-import type { RestClientBuilder, PremisesClient, ReferenceDataClient } from '../data'
+import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import pduJson from '../data/pdus.json'
 import paths from '../paths/temporary-accommodation/manage'
 
 import { DateFormats } from '../utils/dateUtils'
-import { getDateRangesWithNegativeBeds, formatStatus, NegativeDateRange } from '../utils/premisesUtils'
+import { NegativeDateRange, formatStatus, getDateRangesWithNegativeBeds } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
-import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
 
 export type PremisesReferenceData = {

@@ -1,9 +1,9 @@
-import type { Characteristic, Room, NewRoom, UpdateRoom } from '@approved-premises/api'
+import type { Characteristic, NewRoom, Room, UpdateRoom } from '@approved-premises/api'
 import { SummaryList } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import RoomClient from '../data/roomClient'
-import { formatCharacteristics, filterCharacteristics } from '../utils/characteristicUtils'
+import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { formatLines } from '../utils/viewUtils'
 
 export type BedspaceReferenceData = {

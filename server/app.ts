@@ -19,7 +19,7 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
-import { setUpSentryRequestHandler, setUpSentryErrorHandler } from './middleware/setUpSentry'
+import { setUpSentryErrorHandler, setUpSentryRequestHandler } from './middleware/setUpSentry'
 
 import routes from './routes/temporary-accommodation'
 import type { Controllers } from './controllers'

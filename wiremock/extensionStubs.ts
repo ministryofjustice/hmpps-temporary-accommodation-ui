@@ -1,5 +1,5 @@
 import { guidRegex } from './index'
-import { getCombinations, errorStub } from './utils'
+import { errorStub, getCombinations } from './utils'
 import extensionFactory from '../server/testutils/factories/extension'
 
 const extensionStubs: Array<Record<string, unknown>> = []

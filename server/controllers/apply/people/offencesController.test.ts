@@ -1,5 +1,5 @@
-import type { Request, Response, NextFunction } from 'express'
-import { createMock, DeepMocked } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { DeepMocked, createMock } from '@golevelup/ts-jest'
 
 import OffencesController from './offencesController'
 import PersonService from '../../../services/personService'

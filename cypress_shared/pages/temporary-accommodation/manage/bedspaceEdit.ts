@@ -1,4 +1,4 @@
-import type { UpdateRoom, Room } from '@approved-premises/api'
+import type { Room, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceEditablePage from './bedspaceEditable'
 

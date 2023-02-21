@@ -1,8 +1,8 @@
-import type { Request, Response, NextFunction } from 'express'
-import { createMock, DeepMocked } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import createError from 'http-errors'
 
-import type { ErrorsAndUserInput, DataServices, FormPages } from '@approved-premises/ui'
+import type { DataServices, ErrorsAndUserInput, FormPages } from '@approved-premises/ui'
 import PagesController from './pagesController'
 import { ApplicationService } from '../../../services'
 import TasklistPage from '../../../form-pages/tasklistPage'
@@ -10,9 +10,9 @@ import Apply from '../../../form-pages/apply'
 import { getPage } from '../../../utils/applicationUtils'
 
 import {
-  fetchErrorsAndUserInput,
-  catchValidationErrorOrPropogate,
   catchAPIErrorOrPropogate,
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
 } from '../../../utils/validation'
 import { UnknownPageError } from '../../../utils/errors'
 import paths from '../../../paths/apply'

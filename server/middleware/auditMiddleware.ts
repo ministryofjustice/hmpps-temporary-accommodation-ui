@@ -1,4 +1,4 @@
-import { RequestHandler, Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
 import { Key, pathToRegexp } from 'path-to-regexp'
 import logger from '../../logger'
 import AuditService from '../services/auditService'

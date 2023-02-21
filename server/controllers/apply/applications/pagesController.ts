@@ -1,4 +1,4 @@
-import type { Request, Response, RequestHandler, NextFunction } from 'express'
+import type { NextFunction, Request, RequestHandler, Response } from 'express'
 import createError from 'http-errors'
 
 import type { DataServices } from '@approved-premises/ui'
@@ -6,8 +6,8 @@ import { getPage } from '../../../utils/applicationUtils'
 import { ApplicationService } from '../../../services'
 
 import {
-  catchValidationErrorOrPropogate,
   catchAPIErrorOrPropogate,
+  catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
 } from '../../../utils/validation'
 import paths from '../../../paths/apply'

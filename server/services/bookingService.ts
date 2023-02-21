@@ -1,4 +1,4 @@
-import type { Booking, NewBooking, Room, NewTemporaryAccommodationBooking } from '@approved-premises/api'
+import type { Booking, NewBooking, NewTemporaryAccommodationBooking, Room } from '@approved-premises/api'
 import type { TableRow } from '@approved-premises/ui'
 
 import type { RestClientBuilder } from '../data'

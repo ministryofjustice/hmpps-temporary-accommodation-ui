@@ -1,4 +1,4 @@
-import type { Premises, Room, Booking } from '@approved-premises/api'
+import type { Booking, Premises, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'

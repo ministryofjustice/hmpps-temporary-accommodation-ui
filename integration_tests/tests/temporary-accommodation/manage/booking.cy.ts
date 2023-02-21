@@ -222,6 +222,38 @@ context('Booking', () => {
     Page.verifyOnPage(BedspaceShowPage, premises)
   })
 
+  it('navigates back from the confirm booking page to the new booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises and a room the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises.id, room.id)
+
+    // And I fill out the form
+    const booking = bookingFactory.build()
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    // And I click the back link
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
+    bookingConfirmPage.clickBack()
+
+    // Then I navigate to the new booking page
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage)
+    returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
+  })
+
   it('shows a single booking', () => {
     // Given I am signed in
     cy.signIn()

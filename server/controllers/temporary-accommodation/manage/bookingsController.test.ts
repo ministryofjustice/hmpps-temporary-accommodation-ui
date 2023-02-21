@@ -11,7 +11,12 @@ import roomFactory from '../../../testutils/factories/room'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertGenericError,
+  setUserInput,
+} from '../../../utils/validation'
 import BookingsController from './bookingsController'
 
 jest.mock('../../../utils/bookingUtils')
@@ -65,6 +70,43 @@ describe('BookingsController', () => {
         room,
         errors: {},
         errorSummary: [],
+      })
+    })
+  })
+
+  describe('confirm', () => {
+    it('renders the confirmation page', async () => {
+      const newBooking = newBookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.body = {
+        ...newBooking,
+        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+
+      const requestHandler = bookingsController.confirm()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(setUserInput).toHaveBeenCalledWith(request)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/confirm', {
+        premises,
+        room,
+        crn: newBooking.crn,
+        arrivalDate: newBooking.arrivalDate,
+        departureDate: newBooking.departureDate,
       })
     })
   })

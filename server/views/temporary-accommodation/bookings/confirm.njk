@@ -1,0 +1,53 @@
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Book bedspace" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.bookings.new({ premisesId: premises.id, roomId: room.id })
+  }) }}
+  
+  <h1>Confirm CRN</h1>
+
+  <p>Confirm that the CRN is correct. This information cannot be changed once a bedspace has been booked.</p>
+
+  <div class="location-header">
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ crn }}</p>
+
+    <h2>Bedspace reference</h2>
+    <p>{{ room.name }}</p>
+
+    <h2>Property address</h2>
+    <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.bookings.create({ premisesId: premises.id, roomId: room.id }) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        <input type="hidden" name="crn" value="{{ crn }}"/>
+        <input type="hidden" name="arrivalDate" value="{{ arrivalDate }}"/>
+        <input type="hidden" name="departureDate" value="{{ departureDate }}"/>
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Back",
+            classes: "govuk-button--secondary",
+            href: paths.bookings.new({ premisesId: premises.id, roomId: room.id })
+          }) }}
+          {{ govukButton({
+            text: "Submit"
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

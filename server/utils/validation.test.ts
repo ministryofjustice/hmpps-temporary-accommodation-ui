@@ -11,6 +11,7 @@ import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   insertGenericError,
+  setUserInput,
 } from './validation'
 
 jest.mock('../i18n/en/errors.json', () => {
@@ -220,6 +221,20 @@ describe('fetchErrorsAndUserInput', () => {
     const result = fetchErrorsAndUserInput(request)
 
     expect(result).toEqual({ errors, errorSummary, userInput })
+  })
+})
+
+describe('setUserInput', () => {
+  const request = createMock<Request>({})
+
+  it('sets the request body as the user input flash message', () => {
+    request.body = {
+      some: 'field',
+    }
+
+    setUserInput(request)
+
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
   })
 })
 

@@ -1,9 +1,9 @@
-import { bookingActions, deriveBookingHistory, formatStatus, getLatestExtension } from './bookingUtils'
-import bookingFactory from '../testutils/factories/booking'
 import paths from '../paths/temporary-accommodation/manage'
+import arrivalFactory from '../testutils/factories/arrival'
+import bookingFactory from '../testutils/factories/booking'
 import departureFactory from '../testutils/factories/departure'
 import extensionFactory from '../testutils/factories/extension'
-import arrivalFactory from '../testutils/factories/arrival'
+import { bookingActions, deriveBookingHistory, formatStatus, getLatestExtension } from './bookingUtils'
 
 const premisesId = 'premisesId'
 const roomId = 'roomId'

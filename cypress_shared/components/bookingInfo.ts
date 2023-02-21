@@ -1,7 +1,7 @@
 import type { Booking } from '@approved-premises/api'
+import { getLatestExtension } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
 import Component from './component'
-import { getLatestExtension } from '../../server/utils/bookingUtils'
 
 export default class BookingInfoComponent extends Component {
   constructor(private readonly booking: Booking) {

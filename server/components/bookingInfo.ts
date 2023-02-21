@@ -1,8 +1,8 @@
 import type { Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
+import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
-import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
 
 export default (booking: Booking): SummaryList['rows'] => {
   const { status, arrivalDate, departureDate } = booking

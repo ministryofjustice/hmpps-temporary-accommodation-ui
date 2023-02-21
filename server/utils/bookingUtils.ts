@@ -1,5 +1,5 @@
-import type { PageHeadingBarItem } from '@approved-premises/ui'
 import type { Booking } from '@approved-premises/api'
+import type { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 

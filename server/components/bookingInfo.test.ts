@@ -1,9 +1,9 @@
 import bookingFactory from '../testutils/factories/booking'
+import cancellationFactory from '../testutils/factories/cancellation'
+import extension from '../testutils/factories/extension'
 import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
-import extension from '../testutils/factories/extension'
 import summaryListRows from './bookingInfo'
-import cancellationFactory from '../testutils/factories/cancellation'
 
 jest.mock('../utils/viewUtils')
 jest.mock('../utils/bookingUtils')

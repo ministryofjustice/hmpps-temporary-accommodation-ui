@@ -36,7 +36,7 @@ context('Bedspace', () => {
     premisesShowPage.clickAddBedspaceLink()
 
     // Then I navigate to the new bedspace page
-    Page.verifyOnPage(BedspaceNewPage)
+    Page.verifyOnPage(BedspaceNewPage, premises)
   })
 
   it('should navigate to the edit bedspace page', () => {
@@ -104,9 +104,12 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 
-    const page = BedspaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises)
 
-    // And I fill out the form
+    // Then I should see the bedspace details
+    page.shouldShowBedspaceDetails()
+
+    // And when I fill out the form
     const room = roomFactory.build()
     const newRoom = newRoomFactory.build({
       name: room.name,
@@ -142,7 +145,9 @@ context('Bedspace', () => {
 
     // When I visit the new bedspace page
     const premises = premisesFactory.build()
-    const page = BedspaceNewPage.visit(premises.id)
+    cy.task('stubSinglePremises', premises)
+
+    const page = BedspaceNewPage.visit(premises)
 
     // And I miss required fields
     cy.task('stubRoomCreateErrors', { premisesId: premises.id, params: ['name'] })
@@ -163,7 +168,7 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 
-    const page = BedspaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

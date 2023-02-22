@@ -10,25 +10,30 @@ import updateRoomFactory from '../../../../server/testutils/factories/updateRoom
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {
-    const page = Page.verifyOnPage(PremisesShowPage, premises)
-    page.clickAddBedspaceLink()
+    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises)
+    premisesShowPage.clickAddBedspaceLink()
+
+    const bedspaceNewPage = Page.verifyOnPage(BedspaceNewPage, premises)
+    bedspaceNewPage.shouldShowBedspaceDetails()
   })
 })
 
 Given('I create a bedspace with all necessary details', () => {
-  const page = Page.verifyOnPage(BedspaceNewPage)
+  cy.get('@premises').then(premises => {
+    const page = Page.verifyOnPage(BedspaceNewPage, premises)
 
-  const room = roomFactory.build({
-    id: 'unknown',
+    const room = roomFactory.build({
+      id: 'unknown',
+    })
+
+    const newRoom = newRoomFactory.build({
+      ...room,
+      characteristicIds: room.characteristics.map(characteristic => characteristic.id),
+    })
+
+    cy.wrap(room).as('room')
+    page.completeForm(newRoom)
   })
-
-  const newRoom = newRoomFactory.build({
-    ...room,
-    characteristicIds: room.characteristics.map(characteristic => characteristic.id),
-  })
-
-  cy.wrap(room).as('room')
-  page.completeForm(newRoom)
 })
 
 Given("I'm editing the bedspace", () => {

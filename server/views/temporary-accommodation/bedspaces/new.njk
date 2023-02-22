@@ -24,6 +24,14 @@
 
         {{ showErrorSummary(errorSummary) }}
 
+        <div class="location-header">
+          <h2>Property reference</h2>
+          <p>{{ premises.name }}</p>
+
+          <h2>Property address</h2>
+          <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+        </div>
+
         {{ govukInput({
           label: {
             text: "Enter a reference name",

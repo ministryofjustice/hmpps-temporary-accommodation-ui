@@ -22,11 +22,12 @@ export default class BedspacesController {
       const { premisesId } = req.params
 
       const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
 
       return res.render('temporary-accommodation/bedspaces/new', {
-        premisesId,
         allCharacteristics,
         characteristicIds: [],
+        premises,
         errors,
         errorSummary,
         ...userInput,
@@ -64,13 +65,14 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
 
       const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
 
       const updateRoom = await this.bedspaceService.getUpdateRoom(callConfig, premisesId, roomId)
 
       return res.render('temporary-accommodation/bedspaces/edit', {
         allCharacteristics,
         characteristicIds: [],
-        premisesId,
+        premises,
         errors,
         errorSummary,
         ...updateRoom,

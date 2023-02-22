@@ -44,8 +44,10 @@ Given("I'm viewing an existing premises", () => {
 
   cy.then(function _() {
     const premises = this.premisesList[0]
-    cy.wrap(premises).as('premises')
     premisesListPage.clickPremisesViewLink(premises)
+
+    const premisesShowPage = Page.verifyOnPage(PremisesShowPage, premises)
+    premisesShowPage.getPremises('premises')
   })
 })
 

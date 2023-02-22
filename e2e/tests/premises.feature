@@ -1,4 +1,4 @@
-Feature: Manage Temporary Accommodation - Premieses
+Feature: Manage Temporary Accommodation - Premises
     Background:
         Given I am logged in
 

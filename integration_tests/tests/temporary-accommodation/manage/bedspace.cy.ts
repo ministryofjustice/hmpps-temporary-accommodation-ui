@@ -65,7 +65,7 @@ context('Bedspace', () => {
     bedspaceShowPage.clickBedspaceEditLink()
 
     // Then I navigate to the edit bedspace page
-    Page.verifyOnPage(BedspaceEditPage, rooms[0])
+    Page.verifyOnPage(BedspaceEditPage, premises, rooms[0])
   })
 
   it('should navigate to the show bedspace page', () => {
@@ -194,7 +194,7 @@ context('Bedspace', () => {
     cy.task('stubSingleRoom', { premisesId, room })
 
     // When I visit the edit bedspace page
-    const page = BedspaceEditPage.visit(premisesId, room)
+    const page = BedspaceEditPage.visit(premises, room)
 
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
@@ -229,13 +229,11 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     const room = roomFactory.build()
 
-    const premisesId = premises.id
-
     cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId, room })
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the edit bedspace page
-    const page = BedspaceEditPage.visit(premisesId, room)
+    const page = BedspaceEditPage.visit(premises, room)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

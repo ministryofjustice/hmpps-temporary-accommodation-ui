@@ -1,18 +1,25 @@
-import type { Room, UpdateRoom } from '@approved-premises/api'
+import type { Premises, Room, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceEditablePage from './bedspaceEditable'
 
 export default class BedspaceEditPage extends BedspaceEditablePage {
-  constructor(private readonly room: Room) {
+  constructor(private readonly premises: Premises, private readonly room: Room) {
     super('Edit a bedspace')
   }
 
-  static visit(premisesId: string, room: Room): BedspaceEditPage {
-    cy.visit(paths.premises.bedspaces.edit({ premisesId, roomId: room.id }))
-    return new BedspaceEditPage(room)
+  static visit(premises: Premises, room: Room): BedspaceEditPage {
+    cy.visit(paths.premises.bedspaces.edit({ premisesId: premises.id, roomId: room.id }))
+    return new BedspaceEditPage(premises, room)
   }
 
   shouldShowBedspaceDetails(): void {
+    cy.get('.location-header').within(() => {
+      cy.get('p').should('contain', this.room.name)
+      cy.get('p').should('contain', this.premises.name)
+      cy.get('p').should('contain', this.premises.addressLine1)
+      cy.get('p').should('contain', this.premises.postcode)
+    })
+
     cy.get('legend')
       .contains('Does the bedspace have any of the following attributes?')
       .parent()

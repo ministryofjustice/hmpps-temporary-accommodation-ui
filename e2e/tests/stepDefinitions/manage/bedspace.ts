@@ -41,18 +41,18 @@ Given("I'm editing the bedspace", () => {
     const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
     bedspaceShowPage.clickBedspaceEditLink()
 
-    const bedspaceEditPage = Page.verifyOnPage(BedspaceEditPage, this.room)
+    const bedspaceEditPage = Page.verifyOnPage(BedspaceEditPage, this.premises, this.room)
     bedspaceEditPage.shouldShowBedspaceDetails()
   })
 })
 
 Given('I edit the bedspace details', () => {
-  cy.get('@room').then((room: Room) => {
-    const page = Page.verifyOnPage(BedspaceEditPage, room)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BedspaceEditPage, this.premises, this.room)
 
     const updatedRoom = roomFactory.build({
-      id: room.id,
-      name: room.name,
+      id: this.room.id,
+      name: this.room.name,
     })
 
     const updateRoom = updateRoomFactory.build({

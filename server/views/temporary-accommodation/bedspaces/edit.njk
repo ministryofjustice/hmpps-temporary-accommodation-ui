@@ -24,8 +24,16 @@
 
         {{ showErrorSummary(errorSummary) }}
 
-        <h2 class="govuk-label govuk-label--m">Property reference</h2>
-        <p class="govuk-body">{{ name }}</p>
+        <div class="location-header">
+          <h2>Bedspace reference</h2>
+          <p>{{ name }}</p>
+
+          <h2>Property reference</h2>
+          <p>{{ premises.name }}</p>
+
+          <h2>Property address</h2>
+          <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+        </div>
       
         {% include "./_editable.njk" %}  
       </form>

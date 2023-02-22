@@ -1,13 +1,12 @@
-import type { Room } from '@approved-premises/api'
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
-import roomFactory from '../../../../server/testutils/factories/room'
-import newRoomFactory from '../../../../server/testutils/factories/newRoom'
-import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
-import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
-import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
-import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import Page from '../../../../cypress_shared/pages/page'
+import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
+import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
+import newRoomFactory from '../../../../server/testutils/factories/newRoom'
+import roomFactory from '../../../../server/testutils/factories/room'
+import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {

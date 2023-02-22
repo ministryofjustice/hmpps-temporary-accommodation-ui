@@ -1,18 +1,18 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
 
+import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import BedspacesController from './bedspacesController'
 import premisesFactory from '../../../testutils/factories/premises'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
 import roomFactory from '../../../testutils/factories/room'
 import updateRoomFactory from '../../../testutils/factories/updateRoom'
-import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
-import { BookingService, PremisesService } from '../../../services'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
-import { CallConfig } from '../../../data/restClient'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import BedspacesController from './bedspacesController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')

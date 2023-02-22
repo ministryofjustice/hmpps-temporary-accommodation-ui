@@ -1,8 +1,8 @@
 import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room } from '@approved-premises/api'
 
-import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
+import Page from '../../page'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {

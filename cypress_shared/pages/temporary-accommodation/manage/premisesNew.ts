@@ -1,7 +1,7 @@
 import type { NewPremises, ProbationRegion } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import PremisesEditablePage from './premisesEditable'
 import { exact } from '../../../../server/utils/utils'
+import PremisesEditablePage from './premisesEditable'
 
 export default class PremisesNewPage extends PremisesEditablePage {
   constructor() {

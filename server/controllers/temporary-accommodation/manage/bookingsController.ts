@@ -3,11 +3,16 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewBooking } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
-import { DateFormats } from '../../../utils/dateUtils'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertGenericError,
+  setUserInput,
+} from '../../../utils/validation'
 
 export default class BookingsController {
   constructor(
@@ -36,6 +41,31 @@ export default class BookingsController {
     }
   }
 
+  confirm(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId } = req.params
+      const { crn } = req.body
+
+      const { arrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate')
+      const { departureDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'departureDate')
+
+      const callConfig = extractCallConfig(req)
+
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+
+      setUserInput(req)
+
+      return res.render('temporary-accommodation/bookings/confirm', {
+        premises,
+        room,
+        crn,
+        arrivalDate,
+        departureDate,
+      })
+    }
+  }
+
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId } = req.params
@@ -46,8 +76,6 @@ export default class BookingsController {
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'departureDate'),
       }
 
       try {

@@ -1,22 +1,27 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
 import bookingFactory from '../../../testutils/factories/booking'
 import newBookingFactory from '../../../testutils/factories/newBooking'
-import { BookingService, PremisesService } from '../../../services'
-import BookingsController from './bookingsController'
-import { DateFormats } from '../../../utils/dateUtils'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
-import { CallConfig } from '../../../data/restClient'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertGenericError,
+  setUserInput,
+} from '../../../utils/validation'
+import BookingsController from './bookingsController'
 
-jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/validation')
 
 describe('BookingsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -69,6 +74,43 @@ describe('BookingsController', () => {
     })
   })
 
+  describe('confirm', () => {
+    it('renders the confirmation page', async () => {
+      const newBooking = newBookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.body = {
+        ...newBooking,
+        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+
+      const requestHandler = bookingsController.confirm()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(setUserInput).toHaveBeenCalledWith(request)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/confirm', {
+        premises,
+        room,
+        crn: newBooking.crn,
+        arrivalDate: newBooking.arrivalDate,
+        departureDate: newBooking.departureDate,
+      })
+    })
+  })
+
   describe('create', () => {
     it('creates a booking and redirects to the show room page', async () => {
       const requestHandler = bookingsController.create()
@@ -86,8 +128,6 @@ describe('BookingsController', () => {
       }
       request.body = {
         ...newBooking,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
       }
 
       bedspaceService.getRoom.mockResolvedValue(room)

@@ -2,8 +2,8 @@ import type { Request, Response } from 'express'
 import jsonpath from 'jsonpath'
 
 import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
-import { SanitisedError } from '../sanitisedError'
 import errorLookup from '../i18n/en/errors.json'
+import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError } from './errors'
 
 interface InvalidParams {
@@ -55,6 +55,10 @@ export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput =>
   const userInput = firstFlashItem(request, 'userInput') || {}
 
   return { errors, errorSummary, userInput }
+}
+
+export const setUserInput = (request: Request): void => {
+  request.flash('userInput', request.body)
 }
 
 export const errorSummary = (field: string, text: string): ErrorSummary => {

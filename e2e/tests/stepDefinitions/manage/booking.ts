@@ -1,6 +1,7 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import BookingConfirmPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirm'
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import bookingFactory from '../../../../server/testutils/factories/booking'
@@ -20,7 +21,7 @@ Given("I'm creating a booking", () => {
 
 Given('I create a booking with all necessary details', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingNewPage)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage)
 
     const newBooking = newBookingFactory.build({
       crn: offenderCrn,
@@ -33,15 +34,28 @@ Given('I create a booking with all necessary details', () => {
       }),
     })
 
+    bookingNewPage.completeForm(newBooking)
+
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, booking)
+    bookingConfirmPage.shouldShowBookingDetails()
+
+    bookingConfirmPage.clickSubmit()
+
     cy.wrap(booking).as('booking')
     this.historicBookings.push(booking)
-    page.completeForm(newBooking)
   })
 })
 
 Given('I attempt to create a booking with required details missing', () => {
-  const page = Page.verifyOnPage(BookingNewPage)
-  page.clickSubmit()
+  cy.then(function _() {
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage)
+    bookingNewPage.clickSubmit()
+
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room)
+    bookingConfirmPage.shouldShowBookingDetails()
+
+    bookingConfirmPage.clickSubmit()
+  })
 })
 
 Then('I should see a confirmation for my new booking', () => {

@@ -1,17 +1,18 @@
-import { Request, Response } from 'express'
 import { createMock } from '@golevelup/ts-jest'
+import { Request, Response } from 'express'
 
 import type { ErrorMessages, ErrorSummary } from '@approved-premises/ui'
+import type TaskListPage from '../form-pages/tasklistPage'
+import errorLookups from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
+import { TasklistAPIError, ValidationError } from './errors'
 import {
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   insertGenericError,
+  setUserInput,
 } from './validation'
-import errorLookups from '../i18n/en/errors.json'
-import { TasklistAPIError, ValidationError } from './errors'
-import type TaskListPage from '../form-pages/tasklistPage'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {
@@ -220,6 +221,20 @@ describe('fetchErrorsAndUserInput', () => {
     const result = fetchErrorsAndUserInput(request)
 
     expect(result).toEqual({ errors, errorSummary, userInput })
+  })
+})
+
+describe('setUserInput', () => {
+  const request = createMock<Request>({})
+
+  it('sets the request body as the user input flash message', () => {
+    request.body = {
+      some: 'field',
+    }
+
+    setUserInput(request)
+
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
   })
 })
 

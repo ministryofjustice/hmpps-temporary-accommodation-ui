@@ -15,4 +15,11 @@ export default class BookingNewPage extends BookingEditablePage {
   completeForm(newBooking: NewBooking): void {
     super.completeEditableForm(newBooking)
   }
+
+  shouldShowPrefilledBookingDetails(newBooking: NewBooking): void {
+    this.shouldShowDateInputs('arrivalDate', newBooking.arrivalDate)
+    this.shouldShowDateInputs('departureDate', newBooking.departureDate)
+
+    cy.get('#crn').should('have.value', newBooking.crn)
+  }
 }

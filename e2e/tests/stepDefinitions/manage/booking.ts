@@ -12,8 +12,8 @@ import { throwMissingCypressEnvError } from '../utils'
 const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('offender_crn')
 
 Given("I'm creating a booking", () => {
-  cy.get('@room').then(room => {
-    const page = Page.verifyOnPage(BedspaceShowPage, room)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BedspaceShowPage, this.premise, this.room)
     page.clickBookBedspaceLink()
     cy.wrap([]).as('historicBookings')
   })
@@ -21,7 +21,7 @@ Given("I'm creating a booking", () => {
 
 Given('I create a booking with all necessary details', () => {
   cy.then(function _() {
-    const bookingNewPage = Page.verifyOnPage(BookingNewPage)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
 
     const newBooking = newBookingFactory.build({
       crn: offenderCrn,
@@ -66,12 +66,14 @@ Then('I should see a confirmation for my new booking', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
   })
 })
 
 Then('I should see a list of the problems encountered creating the booking', () => {
-  const page = Page.verifyOnPage(BookingNewPage)
-  page.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+    page.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
+  })
 })

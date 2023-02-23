@@ -27,7 +27,7 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the show bedspace page
-    const bedspaceShow = BedspaceShowPage.visit(premises.id, room)
+    const bedspaceShow = BedspaceShowPage.visit(premises, room)
 
     // Add I click the book bedspace link
     bedspaceShow.clickBookBedspaceLink()
@@ -55,7 +55,7 @@ context('Booking', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
 
     // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises.id, room)
+    const bedspaceShowPage = BedspaceShowPage.visit(premises, room)
 
     // Add I click the booking link
     bedspaceShowPage.clickBookingLink(bookings[0])
@@ -219,7 +219,7 @@ context('Booking', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, room)
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 
   it('navigates back from the confirm booking page to the new booking page', () => {
@@ -299,6 +299,6 @@ context('Booking', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, room)
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 })

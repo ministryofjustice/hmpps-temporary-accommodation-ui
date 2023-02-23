@@ -34,7 +34,7 @@ context('Booking confirmation', () => {
     bookingShow.clickConfirmBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingConfirmationNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingConfirmationNewPage, booking)
   })
 
   it('allows me to confirm a booking', () => {
@@ -97,6 +97,6 @@ context('Booking confirmation', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

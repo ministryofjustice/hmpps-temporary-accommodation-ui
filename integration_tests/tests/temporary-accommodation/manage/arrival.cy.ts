@@ -34,7 +34,7 @@ context('Booking arrival', () => {
     bookingShow.clickMarkArrivedBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingArrivalNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingArrivalNewPage, booking)
   })
 
   it('allows me to mark a booking as arrived', () => {
@@ -152,6 +152,6 @@ context('Booking arrival', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

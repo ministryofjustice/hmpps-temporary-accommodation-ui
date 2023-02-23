@@ -219,7 +219,7 @@ context('Booking', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises)
+    Page.verifyOnPage(BedspaceShowPage, room)
   })
 
   it('navigates back from the confirm booking page to the new booking page', () => {

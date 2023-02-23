@@ -7,7 +7,7 @@ import Page from '../../page'
 export default class BookingShowPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(private readonly premises: Premises, private readonly room: Room, private readonly booking: Booking) {
+  constructor(premises: Premises, room: Room, booking: Booking) {
     super('View a booking')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)

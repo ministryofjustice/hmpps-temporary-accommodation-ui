@@ -69,10 +69,10 @@ context('Apply', () => {
       expect(body.convictionId).equal(selectedOffence.convictionId)
       expect(body.deliusEventNumber).equal(selectedOffence.deliusEventNumber)
       expect(body.offenceId).equal(selectedOffence.offenceId)
-    })
 
-    // Then I should be on the Sentence Type page
-    Page.verifyOnPage(ExamplePage, this.application)
+      // Then I should be on the Sentence Type page
+      Page.verifyOnPage(ExamplePage, body, this.application)
+    })
   })
 
   it("creates and updates an application given a person's CRN", function test() {
@@ -167,6 +167,6 @@ context('Apply', () => {
     confirmationPage.clickBackToDashboard()
 
     // Then I am taken back to the dashboard
-    Page.verifyOnPage(ListPage)
+    Page.verifyOnPage(ListPage, applications, [], [])
   })
 })

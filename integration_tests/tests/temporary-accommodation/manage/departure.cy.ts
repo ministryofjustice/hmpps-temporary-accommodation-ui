@@ -35,7 +35,7 @@ context('Booking departure', () => {
     bookingShow.clickMarkDepartedBookingButton()
 
     // Then I navigate to the booking departure page
-    Page.verifyOnPage(BookingDepartureNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingDepartureNewPage, booking)
   })
 
   it('allows me to mark a booking as departed', () => {
@@ -132,6 +132,6 @@ context('Booking departure', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

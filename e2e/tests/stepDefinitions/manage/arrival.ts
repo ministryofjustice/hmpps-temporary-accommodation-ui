@@ -39,7 +39,7 @@ Given('I attempt to mark the booking as arrived with required details missing', 
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
     bookingShowPage.clickMarkArrivedBookingButton()
 
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalNewPage, this.premises.id, this.room.id, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalNewPage, this.booking)
     bookingArrivalPage.clearForm()
     bookingArrivalPage.clickSubmit()
   })
@@ -60,7 +60,7 @@ Then('I should see the booking with the arrived status', () => {
 
 Then('I should see a list of the problems encountered marking the booking as arrived', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingArrivalNewPage, this.premises.id, this.room.id, this.booking)
+    const page = Page.verifyOnPage(BookingArrivalNewPage, this.booking)
 
     page.shouldShowErrorMessagesForFields(['arrivalDate', 'expectedDepartureDate'])
   })

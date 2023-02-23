@@ -34,7 +34,7 @@ context('Booking extension', () => {
     bookingShow.clickExtendBookingButton()
 
     // Then I navigate to the booking extension page
-    Page.verifyOnPage(BookingExtensionNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingExtensionNewPage, booking)
   })
 
   it('allows me to extend a booking', () => {
@@ -151,6 +151,6 @@ context('Booking extension', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

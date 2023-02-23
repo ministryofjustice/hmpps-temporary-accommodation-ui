@@ -239,7 +239,7 @@ context('Bedspace', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises)
+    Page.verifyOnPage(BedspaceShowPage, room)
   })
 
   it('shows a single bedspace', () => {

@@ -35,7 +35,7 @@ context('Booking cancellation', () => {
     bookingShow.clickCancelBookingButton()
 
     // Then I navigate to the booking cancellation page
-    Page.verifyOnPage(BookingCancellationNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingCancellationNewPage, booking)
   })
 
   it('allows me to mark a booking as cancelled', () => {
@@ -130,6 +130,6 @@ context('Booking cancellation', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

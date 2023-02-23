@@ -80,4 +80,4 @@ The steps are also available in the [PULL_REQUEST_TEMPLATE](/.github/PULL_REQUES
 ## Manage infrastructure & view logs
 
 This application is hosted on the MoJ Cloud Platform. For further details
-head over to [our infrastructure documentation](/doc/how-to/manage-infrastructure.md).
+head over to [our infrastructure documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4325244964/Manage+infrastructure).

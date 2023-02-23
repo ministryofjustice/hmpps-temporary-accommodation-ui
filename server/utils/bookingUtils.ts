@@ -1,5 +1,5 @@
+import type { Booking, Extension } from '@approved-premises/api'
 import type { PageHeadingBarItem } from '@approved-premises/ui'
-import type { Booking } from '@approved-premises/api'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 
@@ -115,6 +115,13 @@ export const deriveBookingHistory = (booking: Booking) => {
   history.reverse()
 
   return history
+}
+
+export const shortenedOrExtended = (extension: Extension): 'shortened' | 'extended' => {
+  const previousDepartureDate = DateFormats.convertIsoToDateObj(extension.previousDepartureDate)
+  const newDepartureDate = DateFormats.convertIsoToDateObj(extension.newDepartureDate)
+
+  return previousDepartureDate.getTime() > newDepartureDate.getTime() ? 'shortened' : 'extended'
 }
 
 const getUpdatedAt = (booking: Booking): string => {

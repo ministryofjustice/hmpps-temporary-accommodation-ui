@@ -1,9 +1,9 @@
 import bookingFactory from '../testutils/factories/booking'
-import { formatStatus, getLatestExtension } from '../utils/bookingUtils'
-import { formatLines } from '../utils/viewUtils'
-import extension from '../testutils/factories/extension'
-import summaryListRows from './bookingInfo'
 import cancellationFactory from '../testutils/factories/cancellation'
+import extension from '../testutils/factories/extension'
+import { formatStatus, getLatestExtension, shortenedOrExtended } from '../utils/bookingUtils'
+import { formatLines } from '../utils/viewUtils'
+import summaryListRows from './bookingInfo'
 
 jest.mock('../utils/viewUtils')
 jest.mock('../utils/bookingUtils')
@@ -234,6 +234,7 @@ describe('BookingInfo', () => {
       ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
         bookings => bookings.extensions?.[0],
       )
+      ;(shortenedOrExtended as jest.MockedFunction<typeof shortenedOrExtended>).mockReturnValue('extended')
 
       const result = summaryListRows(booking)
 
@@ -272,7 +273,7 @@ describe('BookingInfo', () => {
         },
         {
           key: {
-            text: 'Extension notes',
+            text: 'Notes on extended booking',
           },
           value: {
             html: `${booking.extensions[0].notes}`,
@@ -284,6 +285,73 @@ describe('BookingInfo', () => {
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
       expect(formatLines).toHaveBeenCalledWith(booking.extensions[0].notes)
       expect(getLatestExtension).toHaveBeenCalledWith(booking)
+      expect(shortenedOrExtended).toHaveBeenCalledWith(booking.extensions[0])
+    })
+
+    it('returns summary list rows for an arrived and shortended booking', async () => {
+      const booking = bookingFactory.arrived().build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07',
+        extensions: extension.buildList(2),
+      })
+
+      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+      ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
+        bookings => bookings.extensions?.[0],
+      )
+      ;(shortenedOrExtended as jest.MockedFunction<typeof shortenedOrExtended>).mockReturnValue('shortened')
+
+      const result = summaryListRows(booking)
+
+      expect(result).toEqual([
+        {
+          key: {
+            text: 'Status',
+          },
+          value: {
+            html: statusHtml,
+          },
+        },
+        {
+          key: {
+            text: 'Arrival date',
+          },
+          value: {
+            text: '21 March 2022',
+          },
+        },
+        {
+          key: {
+            text: 'Expected departure date',
+          },
+          value: {
+            text: '7 January 2023',
+          },
+        },
+        {
+          key: {
+            text: 'Notes',
+          },
+          value: {
+            html: booking.arrival.notes,
+          },
+        },
+        {
+          key: {
+            text: 'Notes on shortened booking',
+          },
+          value: {
+            html: `${booking.extensions[0].notes}`,
+          },
+        },
+      ])
+
+      expect(formatStatus).toHaveBeenCalledWith('arrived')
+      expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
+      expect(formatLines).toHaveBeenCalledWith(booking.extensions[0].notes)
+      expect(getLatestExtension).toHaveBeenCalledWith(booking)
+      expect(shortenedOrExtended).toHaveBeenCalledWith(booking.extensions[0])
     })
 
     it('returns summary list rows for a departed booking', async () => {

@@ -1,8 +1,8 @@
 import type { Booking, Premises, Room } from '@approved-premises/api'
 
-import Page from '../../page'
-import BookingInfoComponent from '../../../components/bookingInfo'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import BookingInfoComponent from '../../../components/bookingInfo'
+import Page from '../../page'
 
 export default class BookingHistoryPage extends Page {
   private readonly bookingInfoComponents: BookingInfoComponent[]

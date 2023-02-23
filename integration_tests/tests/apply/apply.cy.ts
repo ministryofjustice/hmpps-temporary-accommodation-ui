@@ -2,15 +2,15 @@ import { EnterCRNPage, ListPage, SelectOffencePage, StartPage } from '../../../c
 
 import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
-import activeOffenceFactory from '../../../server/testutils/factories/activeOffence'
-import applicationFactory from '../../../server/testutils/factories/application'
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
-import Page from '../../../cypress_shared/pages/page'
-import personFactory from '../../../server/testutils/factories/person'
-import risksFactory, { tierEnvelopeFactory } from '../../../server/testutils/factories/risks'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
+import Page from '../../../cypress_shared/pages/page'
 import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
 import ExamplePage from '../../../server/form-pages/apply/example-page/example-task/examplePage'
+import activeOffenceFactory from '../../../server/testutils/factories/activeOffence'
+import applicationFactory from '../../../server/testutils/factories/application'
+import personFactory from '../../../server/testutils/factories/person'
+import risksFactory, { tierEnvelopeFactory } from '../../../server/testutils/factories/risks'
 
 context('Apply', () => {
   beforeEach(() => {

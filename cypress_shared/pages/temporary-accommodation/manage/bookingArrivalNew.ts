@@ -1,8 +1,8 @@
 import type { Booking, NewArrival } from '@approved-premises/api'
-import paths from '../../../../server/paths/temporary-accommodation/manage'
-import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
+import Page from '../../page'
 
 export default class BookingArrivalNewPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent

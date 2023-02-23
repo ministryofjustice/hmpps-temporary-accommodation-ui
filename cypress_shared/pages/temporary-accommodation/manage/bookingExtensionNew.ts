@@ -1,9 +1,9 @@
 import type { Booking, NewExtension } from '@approved-premises/api'
-import paths from '../../../../server/paths/temporary-accommodation/manage'
-import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
-import BookingInfoComponent from '../../../components/bookingInfo'
+import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { getLatestExtension } from '../../../../server/utils/bookingUtils'
+import BookingInfoComponent from '../../../components/bookingInfo'
+import Page from '../../page'
 
 export default class BookingExtensionNewPage extends Page {
   private readonly bookingInfoComponent: BookingInfoComponent

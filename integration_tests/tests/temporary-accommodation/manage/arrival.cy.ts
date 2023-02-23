@@ -1,12 +1,12 @@
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
+import Page from '../../../../cypress_shared/pages/page'
+import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import arrivalFactory from '../../../../server/testutils/factories/arrival'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import newArrivalFactory from '../../../../server/testutils/factories/newArrival'
-import Page from '../../../../cypress_shared/pages/page'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
-import arrivalFactory from '../../../../server/testutils/factories/arrival'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import premisesFactory from '../../../../server/testutils/factories/premises'
+import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Booking arrival', () => {
   beforeEach(() => {

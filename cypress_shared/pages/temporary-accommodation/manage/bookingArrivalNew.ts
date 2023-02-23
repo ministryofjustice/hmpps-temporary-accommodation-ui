@@ -2,15 +2,19 @@ import type { Booking, NewArrival } from '@approved-premises/api'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import Page from '../../page'
 
 export default class BookingArrivalNewPage extends Page {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
   private readonly bookingInfoComponent: BookingInfoComponent
 
   constructor(private readonly booking: Booking) {
     super('Mark booking as active')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
+    this.locationHeaderComponent = new LocationHeaderComponent({ crn: this.booking.person.crn })
   }
 
   static visit(premisesId: string, roomId: string, booking: Booking): BookingArrivalNewPage {
@@ -19,10 +23,7 @@ export default class BookingArrivalNewPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
-    cy.get('.location-header').within(() => {
-      cy.get('p').should('contain', this.booking.person.crn)
-    })
-
+    this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowDateInputs('arrivalDate', this.booking.arrivalDate)

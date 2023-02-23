@@ -1,11 +1,16 @@
 import type { NewRoom } from '@approved-premises/api'
 import { Premises } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import BedspaceEditablePage from './bedspaceEditable'
 
 export default class BedspaceNewPage extends BedspaceEditablePage {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
   constructor(private readonly premises: Premises) {
     super('Add a bedspace')
+
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises })
   }
 
   static visit(premises: Premises): BedspaceNewPage {
@@ -14,11 +19,7 @@ export default class BedspaceNewPage extends BedspaceEditablePage {
   }
 
   shouldShowBedspaceDetails(): void {
-    cy.get('.location-header').within(() => {
-      cy.get('p').should('contain', this.premises.name)
-      cy.get('p').should('contain', this.premises.addressLine1)
-      cy.get('p').should('contain', this.premises.postcode)
-    })
+    this.locationHeaderComponent.shouldShowLocationDetails()
   }
 
   completeForm(newRoom: NewRoom): void {

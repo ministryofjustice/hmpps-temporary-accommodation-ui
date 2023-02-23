@@ -1,15 +1,19 @@
 import type { Booking, NewCancellation } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import Page from '../../page'
 
 export default class BookingCancellationNewPage extends Page {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
   private readonly bookingInfoComponent: BookingInfoComponent
 
   constructor(private readonly booking: Booking) {
     super('Cancel booking')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
+    this.locationHeaderComponent = new LocationHeaderComponent({ crn: booking.person.crn })
   }
 
   static visit(premisesId: string, roomId: string, booking: Booking): BookingCancellationNewPage {
@@ -18,10 +22,7 @@ export default class BookingCancellationNewPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
-    cy.get('.location-header').within(() => {
-      cy.get('p').should('contain', this.booking.person.crn)
-    })
-
+    this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowDateInputs('date', this.booking.departureDate)

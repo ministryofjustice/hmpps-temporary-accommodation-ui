@@ -1,11 +1,16 @@
 import type { Booking, Premises, Room } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import Page from '../../page'
 
 export default class BookingConfirmPage extends Page {
-  constructor(private readonly premises: Premises, private readonly room: Room, private readonly booking?: Booking) {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
+  constructor(premises: Premises, room: Room, booking?: Booking) {
     super('Confirm CRN')
+
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking?.person.crn })
   }
 
   static visit(premises: Premises, room: Room, booking: Booking): BookingConfirmPage {
@@ -14,13 +19,6 @@ export default class BookingConfirmPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
-    cy.get('.location-header').within(() => {
-      if (this.booking) {
-        cy.get('p').should('contain', this.booking.person.crn)
-      }
-      cy.get('p').should('contain', this.room.name)
-      cy.get('p').should('contain', this.premises.addressLine1)
-      cy.get('p').should('contain', this.premises.postcode)
-    })
+    this.locationHeaderComponent.shouldShowLocationDetails()
   }
 }

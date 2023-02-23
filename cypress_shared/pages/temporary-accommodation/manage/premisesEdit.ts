@@ -2,11 +2,16 @@ import type { TemporaryAccommodationPremises as Premises, UpdatePremises } from 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
 import { exact } from '../../../../server/utils/utils'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import PremisesEditablePage from './premisesEditable'
 
 export default class PremisesEditPage extends PremisesEditablePage {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
   constructor(private readonly premises: Premises) {
     super('Edit a property')
+
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises }, true)
   }
 
   static visit(premises: Premises): PremisesEditPage {
@@ -15,9 +20,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
   }
 
   shouldShowPremisesDetails(): void {
-    cy.get('.location-header').within(() => {
-      cy.get('p').should('contain', this.premises.name)
-    })
+    this.locationHeaderComponent.shouldShowLocationDetails()
 
     cy.get('label').contains('Address line 1').siblings('input').should('have.value', this.premises.addressLine1)
     cy.get('label').contains('Address line 2').siblings('input').should('have.value', this.premises.addressLine2)

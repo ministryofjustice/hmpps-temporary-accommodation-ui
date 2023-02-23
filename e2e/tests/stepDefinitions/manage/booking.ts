@@ -13,8 +13,12 @@ const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('
 
 Given("I'm creating a booking", () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BedspaceShowPage, this.premise, this.room)
-    page.clickBookBedspaceLink()
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premise, this.room)
+    bedspaceShowPage.clickBookBedspaceLink()
+
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+    bookingNewPage.shouldShowBookingDetails()
+
     cy.wrap([]).as('historicBookings')
   })
 })
@@ -48,7 +52,7 @@ Given('I create a booking with all necessary details', () => {
 
 Given('I attempt to create a booking with required details missing', () => {
   cy.then(function _() {
-    const bookingNewPage = Page.verifyOnPage(BookingNewPage)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
     bookingNewPage.clickSubmit()
 
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room)

@@ -2,6 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../components/ta-textarea/macro.njk" import taTextarea %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -19,9 +20,7 @@
 
   <h1>Mark booking as confirmed</h1>
 
-  <div class="location-header">
-    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
-  </div>
+  {{ locationHeader({ crn: booking.person.crn }) }}
 
   {{ bookingInfo(booking) }}
 

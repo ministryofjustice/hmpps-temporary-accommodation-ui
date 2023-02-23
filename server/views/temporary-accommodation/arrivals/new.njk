@@ -4,6 +4,7 @@
 {% from "../components/ta-textarea/macro.njk" import taTextarea %}
 {% from "../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -23,9 +24,7 @@
 
   {{ showErrorSummary(errorSummary) }}
 
-  <div class="location-header">
-    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
-  </div>
+  {{ locationHeader({ crn: booking.person.crn }) }}
 
   {{ bookingInfo(booking) }}
 

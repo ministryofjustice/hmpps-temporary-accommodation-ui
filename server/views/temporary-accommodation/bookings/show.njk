@@ -1,6 +1,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -28,15 +29,7 @@
     items: actions
   }) }}
 
-  <div class="location-header">
-    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ booking.person.crn }}</p>
-
-    <h2>Bedspace reference</h2>
-    <p>{{ room.name }}</p>
-
-    <h2>Property address</h2>
-    <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
-  </div>
+  {{ locationHeader({ room: room, premises: premises, crn: booking.person.crn }) }}
 
   {{ bookingInfo(booking, paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })) }}
 

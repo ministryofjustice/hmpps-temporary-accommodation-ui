@@ -1,6 +1,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -25,13 +26,7 @@
 
         {{ showErrorSummary(errorSummary) }}
 
-        <div class="location-header">
-          <h2>Property reference</h2>
-          <p>{{ premises.name }}</p>
-
-          <h2>Property address</h2>
-          <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
-        </div>
+        {{ locationHeader({ premises: premises }) }}
 
         {{ govukInput({
           label: {

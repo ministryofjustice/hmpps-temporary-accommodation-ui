@@ -22,7 +22,7 @@ export default class BedspaceNewPage extends BedspaceEditablePage {
   }
 
   completeForm(newRoom: NewRoom): void {
-    this.getLabel('Enter a reference name')
+    this.getLabel('Enter a reference')
     this.getTextInputByIdAndEnterDetails('name', newRoom.name)
 
     super.completeEditableForm(newRoom)

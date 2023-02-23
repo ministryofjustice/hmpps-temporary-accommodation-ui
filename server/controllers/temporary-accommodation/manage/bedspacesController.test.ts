@@ -1,18 +1,18 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
 
+import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import BedspacesController from './bedspacesController'
 import premisesFactory from '../../../testutils/factories/premises'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
 import roomFactory from '../../../testutils/factories/room'
 import updateRoomFactory from '../../../testutils/factories/updateRoom'
-import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
-import { BookingService, PremisesService } from '../../../services'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
-import { CallConfig } from '../../../data/restClient'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import BedspacesController from './bedspacesController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -43,22 +43,23 @@ describe('BedspacesController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      request.params = {
-        premisesId,
-      }
+      const premises = premisesFactory.build()
 
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
+      premisesService.getPremises.mockResolvedValue(premises)
 
       const requestHandler = bedspacesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
+      request.params = { premisesId: premises.id }
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/new', {
-        premisesId,
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
+        premises,
         errors: {},
         errorSummary: [],
       })
@@ -127,25 +128,29 @@ describe('BedspacesController', () => {
     it('renders the form', async () => {
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
 
+      const premises = premisesFactory.build()
       const room = roomFactory.build()
       const updateRoom = updateRoomFactory.build({
         ...room,
       })
+
       bedspaceService.getUpdateRoom.mockResolvedValue(updateRoom)
+      premisesService.getPremises.mockResolvedValue(premises)
 
       const requestHandler = bedspacesController.edit()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
-      request.params = { premisesId, roomId: room.id }
+      request.params = { premisesId: premises.id, roomId: room.id }
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(callConfig, premisesId, room.id)
+      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
-        premisesId,
+        premises,
         errors: {},
         errorSummary: [],
         ...updateRoom,
@@ -155,29 +160,32 @@ describe('BedspacesController', () => {
     it('renders the form with errors and user input if an error has been sent to the flash', async () => {
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
 
+      const premises = premisesFactory.build()
       const room = roomFactory.build()
       const updateRoom = updateRoomFactory.build({
         ...room,
       })
+
       bedspaceService.getUpdateRoom.mockResolvedValue(updateRoom)
+      premisesService.getPremises.mockResolvedValue(premises)
 
       const requestHandler = bedspacesController.edit()
 
       const errorsAndUserInput = createMock<ErrorsAndUserInput>()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
-      request.params = { premisesId, roomId: room.id }
+      request.params = { premisesId: premises.id, roomId: room.id }
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(callConfig, premisesId, room.id)
+      expect(bedspaceService.getUpdateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/edit', {
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
-        premisesId,
+        premises,
         ...errorsAndUserInput.userInput,
         ...updateRoom,
       })

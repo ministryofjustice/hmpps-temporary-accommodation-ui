@@ -9,8 +9,8 @@
 
   {{ breadCrumb('Edit a bedspace', [
     {title: 'List of properties', href: paths.premises.index()},
-    {title: 'View a property', href: paths.premises.show({ premisesId: premisesId })},
-    {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premisesId, roomId: id })}
+    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
+    {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: id })}
   ]) }}
 
   {% include "../../_messages.njk" %}
@@ -19,13 +19,21 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.premises.bedspaces.update({ premisesId: premisesId, roomId: id }) }}?_method=PUT" method="post">
+      <form action="{{ paths.premises.bedspaces.update({ premisesId: premises.id, roomId: id }) }}?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}
 
-        <h2 class="govuk-label govuk-label--m">Property reference</h2>
-        <p class="govuk-body">{{ name }}</p>
+        <div class="location-header">
+          <h2>Bedspace reference</h2>
+          <p>{{ name }}</p>
+
+          <h2>Property reference</h2>
+          <p>{{ premises.name }}</p>
+
+          <h2>Property address</h2>
+          <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+        </div>
       
         {% include "./_editable.njk" %}  
       </form>

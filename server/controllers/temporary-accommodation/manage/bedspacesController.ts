@@ -2,10 +2,10 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import BedspaceService from '../../../services/bedspaceService'
 import { BookingService, PremisesService } from '../../../services'
+import BedspaceService from '../../../services/bedspaceService'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class BedspacesController {
   constructor(
@@ -22,11 +22,12 @@ export default class BedspacesController {
       const { premisesId } = req.params
 
       const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
 
       return res.render('temporary-accommodation/bedspaces/new', {
-        premisesId,
         allCharacteristics,
         characteristicIds: [],
+        premises,
         errors,
         errorSummary,
         ...userInput,
@@ -64,13 +65,14 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
 
       const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
 
       const updateRoom = await this.bedspaceService.getUpdateRoom(callConfig, premisesId, roomId)
 
       return res.render('temporary-accommodation/bedspaces/edit', {
         allCharacteristics,
         characteristicIds: [],
-        premisesId,
+        premises,
         errors,
         errorSummary,
         ...updateRoom,

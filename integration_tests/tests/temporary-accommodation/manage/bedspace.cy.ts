@@ -1,15 +1,15 @@
-import premisesFactory from '../../../../server/testutils/factories/premises'
+import Page from '../../../../cypress_shared/pages/page'
+import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
+import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import bedFactory from '../../../../server/testutils/factories/bed'
+import bookingFactory from '../../../../server/testutils/factories/booking'
 import newRoomFactory from '../../../../server/testutils/factories/newRoom'
+import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
 import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import bedFactory from '../../../../server/testutils/factories/bed'
-import Page from '../../../../cypress_shared/pages/page'
-import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
-import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
-import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -36,7 +36,7 @@ context('Bedspace', () => {
     premisesShowPage.clickAddBedspaceLink()
 
     // Then I navigate to the new bedspace page
-    Page.verifyOnPage(BedspaceNewPage)
+    Page.verifyOnPage(BedspaceNewPage, premises)
   })
 
   it('should navigate to the edit bedspace page', () => {
@@ -65,7 +65,7 @@ context('Bedspace', () => {
     bedspaceShowPage.clickBedspaceEditLink()
 
     // Then I navigate to the edit bedspace page
-    Page.verifyOnPage(BedspaceEditPage, rooms[0])
+    Page.verifyOnPage(BedspaceEditPage, premises, rooms[0])
   })
 
   it('should navigate to the show bedspace page', () => {
@@ -104,9 +104,12 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 
-    const page = BedspaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises)
 
-    // And I fill out the form
+    // Then I should see the bedspace details
+    page.shouldShowBedspaceDetails()
+
+    // And when I fill out the form
     const room = roomFactory.build()
     const newRoom = newRoomFactory.build({
       name: room.name,
@@ -142,7 +145,9 @@ context('Bedspace', () => {
 
     // When I visit the new bedspace page
     const premises = premisesFactory.build()
-    const page = BedspaceNewPage.visit(premises.id)
+    cy.task('stubSinglePremises', premises)
+
+    const page = BedspaceNewPage.visit(premises)
 
     // And I miss required fields
     cy.task('stubRoomCreateErrors', { premisesId: premises.id, params: ['name'] })
@@ -163,7 +168,7 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     cy.task('stubSinglePremises', premises)
 
-    const page = BedspaceNewPage.visit(premises.id)
+    const page = BedspaceNewPage.visit(premises)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
@@ -189,7 +194,7 @@ context('Bedspace', () => {
     cy.task('stubSingleRoom', { premisesId, room })
 
     // When I visit the edit bedspace page
-    const page = BedspaceEditPage.visit(premisesId, room)
+    const page = BedspaceEditPage.visit(premises, room)
 
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
@@ -224,13 +229,11 @@ context('Bedspace', () => {
     const premises = premisesFactory.build()
     const room = roomFactory.build()
 
-    const premisesId = premises.id
-
     cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId, room })
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the edit bedspace page
-    const page = BedspaceEditPage.visit(premisesId, room)
+    const page = BedspaceEditPage.visit(premises, room)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

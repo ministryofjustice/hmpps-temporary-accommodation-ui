@@ -24,8 +24,10 @@
 
         {{ showErrorSummary(errorSummary) }}
 
-        <h2 class="govuk-label govuk-label--m">Property reference</h2>
-        <p class="govuk-body">{{ name }}</p>
+        <div class="location-header">
+          <h2>Property reference</h2>
+          <p>{{ name }}</p>
+        </div>
       
         {% include "./_editable.njk" %}  
       </form>

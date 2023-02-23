@@ -1,8 +1,9 @@
 import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room } from '@approved-premises/api'
 
-import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import premisesFactory from '../../../../server/testutils/factories/premises'
 import { formatStatus } from '../../../../server/utils/premisesUtils'
+import Page from '../../page'
 
 export default class PremisesShowPage extends Page {
   constructor(private readonly premises: Premises) {
@@ -12,6 +13,35 @@ export default class PremisesShowPage extends Page {
   static visit(premises: Premises): PremisesShowPage {
     cy.visit(paths.premises.show({ premisesId: premises.id }))
     return new PremisesShowPage(premises)
+  }
+
+  getPremises(alias: string): void {
+    cy.url().then(url => {
+      const id = url.match(/properties\/(.+)/)[1]
+
+      cy.get('[data-cy-premises] h3').then(nameElement => {
+        const name = nameElement.text()
+
+        cy.get('.govuk-summary-list__key')
+          .contains('Address')
+          .siblings('.govuk-summary-list__value')
+          .then(addressElement => {
+            const addressLines = addressElement
+              .html()
+              .split('<br>')
+              .map(text => text.trim())
+
+            const premises = premisesFactory.build({
+              id,
+              name,
+              addressLine1: addressLines[0],
+              postcode: addressLines[addressLines.length - 1],
+            })
+
+            cy.wrap(premises).as(alias)
+          })
+      })
+    })
   }
 
   shouldShowPremisesDetails(): void {

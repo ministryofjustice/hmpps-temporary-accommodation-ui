@@ -1,7 +1,7 @@
 import type { NewPremises, ProbationRegion } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import PremisesEditablePage from './premisesEditable'
 import { exact } from '../../../../server/utils/utils'
+import PremisesEditablePage from './premisesEditable'
 
 export default class PremisesNewPage extends PremisesEditablePage {
   constructor() {
@@ -14,7 +14,7 @@ export default class PremisesNewPage extends PremisesEditablePage {
   }
 
   completeForm(newPremises: NewPremises): void {
-    this.getLabel('Property name')
+    this.getLabel('Enter a reference name')
     this.getTextInputByIdAndEnterDetails('name', newPremises.name)
 
     super.completeEditableForm(newPremises)

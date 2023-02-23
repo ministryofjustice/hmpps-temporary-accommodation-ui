@@ -10,7 +10,7 @@
 
   {{ breadCrumb('Add a bedspace', [
     {title: 'List of properties', href: paths.premises.index()},
-    {title: 'View a property', href: paths.premises.show({ premisesId: premisesId })}
+    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })}
   ]) }}
 
   {% include "../../_messages.njk" %}
@@ -19,10 +19,18 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.premises.bedspaces.create({ premisesId: premisesId })}}" method="post">
+      <form action="{{ paths.premises.bedspaces.create({ premisesId: premises.id })}}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}
+
+        <div class="location-header">
+          <h2>Property reference</h2>
+          <p>{{ premises.name }}</p>
+
+          <h2>Property address</h2>
+          <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+        </div>
 
         {{ govukInput({
           label: {
@@ -30,7 +38,7 @@
             classes: "govuk-label--m"
           },
           hint: {
-            text: "This will be used to identify the room when making books and reporting on the service"
+            text: "This will be used to identify the bedspace when making bookings and reporting on the service"
           },
           classes: "govuk-input--width-20",
           id: "name",

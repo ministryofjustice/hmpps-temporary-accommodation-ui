@@ -15,6 +15,10 @@ export default class PremisesEditPage extends PremisesEditablePage {
   }
 
   shouldShowPremisesDetails(): void {
+    cy.get('.location-header').within(() => {
+      cy.get('p').should('contain', this.premises.name)
+    })
+
     cy.get('label').contains('Address line 1').siblings('input').should('have.value', this.premises.addressLine1)
     cy.get('label').contains('Address line 2').siblings('input').should('have.value', this.premises.addressLine2)
     cy.get('label').contains('Town or city').siblings('input').should('have.value', this.premises.town)

@@ -4,7 +4,7 @@ import jsonpath from 'jsonpath'
 import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
 import errorLookup from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
-import { TasklistAPIError } from './errors'
+import { TasklistAPIError, ValidationError } from './errors'
 
 interface InvalidParams {
   propertyName: string
@@ -18,22 +18,16 @@ export const catchValidationErrorOrPropogate = (
   redirectPath: string,
   context = 'generic',
 ): void => {
-  if ('data' in error) {
-    const errors = error.data['invalid-params']
-      ? generateErrors(error.data['invalid-params'], context)
-      : (error.data as Record<string, string>)
+  const errors = extractValidationErrors(error, context)
 
-    const errorMessages = generateErrorMessages(errors)
-    const errorSummary = generateErrorSummary(errors)
+  const errorMessages = generateErrorMessages(errors)
+  const errorSummary = generateErrorSummary(errors)
 
-    request.flash('errors', errorMessages)
-    request.flash('errorSummary', errorSummary)
-    request.flash('userInput', request.body)
+  request.flash('errors', errorMessages)
+  request.flash('errorSummary', errorSummary)
+  request.flash('userInput', request.body)
 
-    response.redirect(redirectPath)
-  } else {
-    throw error
-  }
+  response.redirect(redirectPath)
 }
 
 export const catchAPIErrorOrPropogate = (request: Request, response: Response, error: SanitisedError | Error): void => {
@@ -89,6 +83,19 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
   data['invalid-params'] = invalidParams
   // eslint-disable-next-line dot-notation
   error['data'] = data
+}
+
+const extractValidationErrors = (error: SanitisedError | Error, context: string) => {
+  if ('data' in error) {
+    if (error.data['invalid-params']) {
+      return generateErrors(error.data['invalid-params'], context)
+    }
+    if (error instanceof ValidationError) {
+      return error.data as Record<string, string>
+    }
+  }
+
+  throw error
 }
 
 const generateErrors = (params: Array<InvalidParams>, context: string): Record<string, string> => {

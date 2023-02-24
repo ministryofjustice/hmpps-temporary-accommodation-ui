@@ -111,11 +111,9 @@ describe('catchValidationErrorOrPropogate', () => {
   })
 
   it('gets errors from a ValidationError type', () => {
-    const error = createMock<ValidationError<TaskListPage>>({
-      data: {
-        crn: 'You must enter a valid crn',
-        error: 'You must enter a valid arrival date',
-      },
+    const error = new ValidationError<TaskListPage>({
+      crn: 'You must enter a valid crn',
+      error: 'You must enter a valid arrival date',
     })
 
     catchValidationErrorOrPropogate(request, response, error, 'some/url')

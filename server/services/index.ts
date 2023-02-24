@@ -82,4 +82,5 @@ export {
   BookingService,
   LostBedService,
   ApplicationService,
+  BedspaceService,
 }

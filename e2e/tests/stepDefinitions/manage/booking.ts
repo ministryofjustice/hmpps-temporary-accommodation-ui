@@ -13,7 +13,7 @@ const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('
 
 Given("I'm creating a booking", () => {
   cy.then(function _() {
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premise, this.room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     bedspaceShowPage.clickBookBedspaceLink()
 
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)

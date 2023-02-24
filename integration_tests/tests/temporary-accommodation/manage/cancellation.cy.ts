@@ -35,7 +35,7 @@ context('Booking cancellation', () => {
     bookingShow.clickCancelBookingButton()
 
     // Then I navigate to the booking cancellation page
-    Page.verifyOnPage(BookingCancellationNewPage, booking)
+    Page.verifyOnPage(BookingCancellationNewPage, premises, room, booking)
   })
 
   it('allows me to mark a booking as cancelled', () => {
@@ -53,7 +53,7 @@ context('Booking cancellation', () => {
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationNewPage.visit(premises.id, room.id, booking)
+    const page = BookingCancellationNewPage.visit(premises, room, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -90,11 +90,13 @@ context('Booking cancellation', () => {
     const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
 
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationNewPage.visit(premises.id, room.id, booking)
+    const page = BookingCancellationNewPage.visit(premises, room, booking)
 
     // And I miss required fields
     cy.task('stubCancellationCreateErrors', {
@@ -124,7 +126,7 @@ context('Booking cancellation', () => {
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationNewPage.visit(premises.id, room.id, booking)
+    const page = BookingCancellationNewPage.visit(premises, room, booking)
 
     // And I click the back link
     page.clickBack()

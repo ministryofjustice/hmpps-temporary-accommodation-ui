@@ -48,7 +48,12 @@ export const controllers = (services: Services) => {
     services.bookingService,
     services.extensionService,
   )
-  const cancellationsController = new CancellationsController(services.bookingService, services.cancellationService)
+  const cancellationsController = new CancellationsController(
+    services.premisesService,
+    services.bedspaceService,
+    services.bookingService,
+    services.cancellationService,
+  )
 
   const bookingReportsController = new BookingReportsController(services.bookingReportService)
 

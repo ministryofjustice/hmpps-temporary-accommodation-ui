@@ -1,13 +1,15 @@
 import type { Request, RequestHandler, Response } from 'express'
 import type { NewCancellation } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, CancellationService } from '../../../services'
+import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class CanellationsController {
   constructor(
+    private readonly premisesService: PremisesService,
+    private readonly bedspacesService: BedspaceService,
     private readonly bookingsService: BookingService,
     private readonly cancellationService: CancellationService,
   ) {}
@@ -19,15 +21,18 @@ export default class CanellationsController {
 
       const callConfig = extractCallConfig(req)
 
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
       const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(
         callConfig,
       )
 
       return res.render('temporary-accommodation/cancellations/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         allCancellationReasons,
         errors,
         errorSummary: requestErrorSummary,

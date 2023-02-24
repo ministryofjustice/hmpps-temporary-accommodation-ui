@@ -40,7 +40,7 @@ Then('I should see the booking with the confirmed status', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
   })
 })

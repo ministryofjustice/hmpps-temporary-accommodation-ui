@@ -1,12 +1,12 @@
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
+import Page from '../../../../cypress_shared/pages/page'
+import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import confirmationFactory from '../../../../server/testutils/factories/confirmation'
 import newConfirmationFactory from '../../../../server/testutils/factories/newConfirmation'
-import Page from '../../../../cypress_shared/pages/page'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import premisesFactory from '../../../../server/testutils/factories/premises'
+import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Booking confirmation', () => {
   beforeEach(() => {
@@ -34,7 +34,7 @@ context('Booking confirmation', () => {
     bookingShow.clickConfirmBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingConfirmationNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingConfirmationNewPage, booking)
   })
 
   it('allows me to confirm a booking', () => {
@@ -97,6 +97,6 @@ context('Booking confirmation', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

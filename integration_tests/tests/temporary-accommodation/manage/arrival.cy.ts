@@ -1,12 +1,12 @@
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
+import Page from '../../../../cypress_shared/pages/page'
+import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import arrivalFactory from '../../../../server/testutils/factories/arrival'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import newArrivalFactory from '../../../../server/testutils/factories/newArrival'
-import Page from '../../../../cypress_shared/pages/page'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
-import arrivalFactory from '../../../../server/testutils/factories/arrival'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import premisesFactory from '../../../../server/testutils/factories/premises'
+import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Booking arrival', () => {
   beforeEach(() => {
@@ -34,7 +34,7 @@ context('Booking arrival', () => {
     bookingShow.clickMarkArrivedBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingArrivalNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingArrivalNewPage, booking)
   })
 
   it('allows me to mark a booking as arrived', () => {
@@ -152,6 +152,6 @@ context('Booking arrival', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

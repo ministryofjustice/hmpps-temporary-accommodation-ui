@@ -2,15 +2,15 @@ import { EnterCRNPage, ListPage, SelectOffencePage, StartPage } from '../../../c
 
 import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
-import activeOffenceFactory from '../../../server/testutils/factories/activeOffence'
-import applicationFactory from '../../../server/testutils/factories/application'
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
-import Page from '../../../cypress_shared/pages/page'
-import personFactory from '../../../server/testutils/factories/person'
-import risksFactory, { tierEnvelopeFactory } from '../../../server/testutils/factories/risks'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
+import Page from '../../../cypress_shared/pages/page'
 import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
 import ExamplePage from '../../../server/form-pages/apply/example-page/example-task/examplePage'
+import activeOffenceFactory from '../../../server/testutils/factories/activeOffence'
+import applicationFactory from '../../../server/testutils/factories/application'
+import personFactory from '../../../server/testutils/factories/person'
+import risksFactory, { tierEnvelopeFactory } from '../../../server/testutils/factories/risks'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -69,10 +69,10 @@ context('Apply', () => {
       expect(body.convictionId).equal(selectedOffence.convictionId)
       expect(body.deliusEventNumber).equal(selectedOffence.deliusEventNumber)
       expect(body.offenceId).equal(selectedOffence.offenceId)
-    })
 
-    // Then I should be on the Sentence Type page
-    Page.verifyOnPage(ExamplePage, this.application)
+      // Then I should be on the Sentence Type page
+      Page.verifyOnPage(ExamplePage, body, this.application)
+    })
   })
 
   it("creates and updates an application given a person's CRN", function test() {
@@ -167,6 +167,6 @@ context('Apply', () => {
     confirmationPage.clickBackToDashboard()
 
     // Then I am taken back to the dashboard
-    Page.verifyOnPage(ListPage)
+    Page.verifyOnPage(ListPage, applications, [], [])
   })
 })

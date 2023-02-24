@@ -1,20 +1,19 @@
 import type { Booking, Premises, Room } from '@approved-premises/api'
 
-import Page from '../../page'
-import BookingInfoComponent from '../../../components/bookingInfo'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import BookingInfoComponent from '../../../components/bookingInfo'
+import LocationHeaderComponent from '../../../components/locationHeader'
+import Page from '../../page'
 
 export default class BookingHistoryPage extends Page {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
   private readonly bookingInfoComponents: BookingInfoComponent[]
 
-  constructor(
-    private readonly premises: Premises,
-    private readonly room: Room,
-    private readonly booking: Booking,
-    historicBookings: Booking[],
-  ) {
+  constructor(premises: Premises, room: Room, booking: Booking, historicBookings: Booking[]) {
     super('Booking history')
 
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking.person.crn })
     this.bookingInfoComponents = historicBookings.map(historicBooking => new BookingInfoComponent(historicBooking))
   }
 
@@ -24,12 +23,7 @@ export default class BookingHistoryPage extends Page {
   }
 
   shouldShowBookingHistory(): void {
-    cy.get('.location-header').within(() => {
-      cy.get('p').should('contain', this.booking.person.crn)
-      cy.get('p').should('contain', this.room.name)
-      cy.get('p').should('contain', this.premises.addressLine1)
-      cy.get('p').should('contain', this.premises.postcode)
-    })
+    this.locationHeaderComponent.shouldShowLocationDetails()
 
     this.bookingInfoComponents.forEach((bookingInfoComponent, index) => {
       cy.get(`[data-cy-history-index="${index}"]`).within(() => {

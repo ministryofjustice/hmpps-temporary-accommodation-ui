@@ -6,7 +6,7 @@ import Component from '../components/component'
 export type PageElement = Cypress.Chainable<JQuery>
 
 export default abstract class Page extends Component {
-  static verifyOnPage<T>(constructor: new (...args: unknown[]) => T, ...args: unknown[]): T {
+  static verifyOnPage<T, Args extends unknown[]>(constructor: new (...args: Args) => T, ...args: Args): T {
     return new constructor(...args)
   }
 

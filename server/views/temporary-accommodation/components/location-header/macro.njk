@@ -1,0 +1,30 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro locationHeader(locationDetails, hideAddress = false) %}
+
+<div class="location-header">
+  {% set premises = locationDetails.premises %}
+  {% set room = locationDetails.room %}
+  {% set crn = locationDetails.crn %}
+
+  {%if crn %}
+    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ crn }}</p>
+  {% endif %}
+
+  {% if room %}
+    <h2>Bedspace reference</h2>
+    <p>{{ room.name }}</p>
+  {% endif %}
+
+  {% if premises %}
+    <h2>Property reference</h2>
+    <p>{{ premises.name }}</p>
+
+    {% if not hideAddress %}
+      <h2>Property address</h2>
+      <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+    {% endif %}
+  {% endif %}
+</div>
+
+{% endmacro %}

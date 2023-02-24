@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import type { Router } from 'express'
+import config from '../../config'
 
 import type { Controllers } from '../../controllers'
 import paths from '../../paths/temporary-accommodation/manage'

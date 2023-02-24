@@ -1,4 +1,4 @@
-import type { Booking, NewExtension } from '@approved-premises/api'
+import type { Booking, NewExtension, Premises, Room } from '@approved-premises/api'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { getLatestExtension } from '../../../../server/utils/bookingUtils'
@@ -11,16 +11,16 @@ export default class BookingExtensionNewPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(private readonly booking: Booking) {
+  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
     super('Extend or shorten booking')
 
-    this.locationHeaderComponent = new LocationHeaderComponent({ crn: booking.person.crn })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking.person.crn })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premisesId: string, roomId: string, booking: Booking): BookingExtensionNewPage {
-    cy.visit(paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }))
-    return new BookingExtensionNewPage(booking)
+  static visit(premises: Premises, room: Room, booking: Booking): BookingExtensionNewPage {
+    cy.visit(paths.bookings.extensions.new({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    return new BookingExtensionNewPage(premises, room, booking)
   }
 
   shouldShowBookingDetails(): void {

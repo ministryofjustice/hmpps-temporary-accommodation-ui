@@ -34,7 +34,7 @@ context('Booking extension', () => {
     bookingShow.clickExtendBookingButton()
 
     // Then I navigate to the booking extension page
-    Page.verifyOnPage(BookingExtensionNewPage, booking)
+    Page.verifyOnPage(BookingExtensionNewPage, premises, room, booking)
   })
 
   it('allows me to extend a booking', () => {
@@ -51,7 +51,7 @@ context('Booking extension', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises.id, room.id, booking)
+    const page = BookingExtensionNewPage.visit(premises, room, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -86,10 +86,12 @@ context('Booking extension', () => {
     const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
 
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises.id, room.id, booking)
+    const page = BookingExtensionNewPage.visit(premises, room, booking)
 
     // And I miss required fields
     cy.task('stubExtensionCreateErrors', {
@@ -113,10 +115,12 @@ context('Booking extension', () => {
     const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
 
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises.id, room.id, booking)
+    const page = BookingExtensionNewPage.visit(premises, room, booking)
 
     // And I fill out the form with dates that conflict with an existing booking
     const extension = extensionFactory.build()
@@ -145,7 +149,7 @@ context('Booking extension', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises.id, room.id, booking)
+    const page = BookingExtensionNewPage.visit(premises, room, booking)
 
     // And I click the back link
     page.clickBack()

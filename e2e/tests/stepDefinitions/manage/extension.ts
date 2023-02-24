@@ -24,7 +24,7 @@ Given('I extend the booking', () => {
       previousDepartureDate: this.booking.departureDate,
     })
 
-    const bookingExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, this.booking)
+    const bookingExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, this.premises, this.room, this.booking)
     bookingExtensionPage.shouldShowBookingDetails()
     bookingExtensionPage.completeForm(newExtension)
 
@@ -44,7 +44,7 @@ Given('I attempt to extend the booking with required details missing', () => {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
     bookingShowPage.clickExtendBookingButton()
 
-    const bookingExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, this.booking)
+    const bookingExtensionPage = Page.verifyOnPage(BookingExtensionNewPage, this.premises, this.room, this.booking)
     bookingExtensionPage.clearForm()
     bookingExtensionPage.clickSubmit()
   })
@@ -65,7 +65,7 @@ Then('I should see the booking with the extended departure date', () => {
 
 Then('I should see a list of the problems encountered extending the booking', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingExtensionNewPage, this.booking)
+    const page = Page.verifyOnPage(BookingExtensionNewPage, this.premises, this.room, this.booking)
 
     page.shouldShowErrorMessagesForFields(['newDepartureDate'])
   })

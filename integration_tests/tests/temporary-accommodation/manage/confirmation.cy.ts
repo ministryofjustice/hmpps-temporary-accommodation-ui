@@ -34,7 +34,7 @@ context('Booking confirmation', () => {
     bookingShow.clickConfirmBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingConfirmationNewPage, booking)
+    Page.verifyOnPage(BookingConfirmationNewPage, premises, room, booking)
   })
 
   it('allows me to confirm a booking', () => {
@@ -51,7 +51,7 @@ context('Booking confirmation', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking confirmation page
-    const page = BookingConfirmationNewPage.visit(premises.id, room.id, booking)
+    const page = BookingConfirmationNewPage.visit(premises, room, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -91,7 +91,7 @@ context('Booking confirmation', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking confirmation page
-    const page = BookingConfirmationNewPage.visit(premises.id, room.id, booking)
+    const page = BookingConfirmationNewPage.visit(premises, room, booking)
 
     // And I click the back link
     page.clickBack()

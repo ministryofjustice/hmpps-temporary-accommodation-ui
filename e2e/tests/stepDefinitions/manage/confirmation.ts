@@ -17,7 +17,12 @@ Given('I confirm the booking', () => {
       ...newConfirmation,
     })
 
-    const bookingConfirmationPage = Page.verifyOnPage(BookingConfirmationNewPage, this.booking)
+    const bookingConfirmationPage = Page.verifyOnPage(
+      BookingConfirmationNewPage,
+      this.premises,
+      this.room,
+      this.booking,
+    )
     bookingConfirmationPage.shouldShowBookingDetails()
     bookingConfirmationPage.completeForm(newConfirmation)
 

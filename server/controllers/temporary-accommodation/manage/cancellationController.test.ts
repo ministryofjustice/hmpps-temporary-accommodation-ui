@@ -1,15 +1,15 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import bookingFactory from '../../../testutils/factories/booking'
-import { BookingService, CancellationService } from '../../../services'
-import { DateFormats } from '../../../utils/dateUtils'
+import type { NextFunction, Request, Response } from 'express'
 import { CancellationsController } from '.'
+import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
+import { BookingService, CancellationService } from '../../../services'
+import bookingFactory from '../../../testutils/factories/booking'
 import cancellationFactory from '../../../testutils/factories/cancellation'
 import newCancellationFactory from '../../../testutils/factories/newCancellation'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')

@@ -3,10 +3,10 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewExtension } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, ExtensionService } from '../../../services'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import { DateFormats } from '../../../utils/dateUtils'
 import { getLatestExtension } from '../../../utils/bookingUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 
 export default class ExtensionsController {
   constructor(private readonly bookingsService: BookingService, private readonly extensionService: ExtensionService) {}

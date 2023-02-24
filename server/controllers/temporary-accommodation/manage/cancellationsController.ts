@@ -1,11 +1,10 @@
 import type { Request, RequestHandler, Response } from 'express'
-
 import type { NewCancellation } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, CancellationService } from '../../../services'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class CanellationsController {
   constructor(

@@ -1,15 +1,15 @@
+import { createMock, DeepMocked } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
-import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import bookingFactory from '../../../testutils/factories/booking'
 import { BookingService } from '../../../services'
-import ConfirmationsController from './confirmationsController'
 import ConfirmationService from '../../../services/confirmationService'
+import bookingFactory from '../../../testutils/factories/booking'
 import confirmationFactory from '../../../testutils/factories/confirmation'
 import newConfirmationFactory from '../../../testutils/factories/newConfirmation'
 import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import ConfirmationsController from './confirmationsController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')

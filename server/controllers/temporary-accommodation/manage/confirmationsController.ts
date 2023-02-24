@@ -3,9 +3,9 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewConfirmation } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService } from '../../../services'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import ConfirmationService from '../../../services/confirmationService'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class ConfirmationsController {
   constructor(

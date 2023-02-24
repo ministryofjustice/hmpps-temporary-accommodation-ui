@@ -1,15 +1,15 @@
 /* istanbul ignore file */
 
 import { Services } from '../../../services'
-import PremisesController from './premisesController'
-import BedspacesController from './bedspacesController'
-import BookingsController from './bookingsController'
-import ConfirmationsController from './confirmationsController'
 import ArrivalsController from './arrivalsController'
+import BedspacesController from './bedspacesController'
+import BookingReportsController from './bookingReportsController'
+import BookingsController from './bookingsController'
+import CancellationsController from './cancellationsController'
+import ConfirmationsController from './confirmationsController'
 import DeparturesController from './departuresController'
 import ExtensionsController from './extensionsController'
-import CancellationsController from './cancellationsController'
-import BookingReportsController from './bookingReportsController'
+import PremisesController from './premisesController'
 
 export const controllers = (services: Services) => {
   const premisesController = new PremisesController(services.premisesService, services.bedspaceService)

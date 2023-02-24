@@ -1,10 +1,10 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
-import bookingFactory from '../../../../server/testutils/factories/booking'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import arrivalFactory from '../../../../server/testutils/factories/arrival'
+import bookingFactory from '../../../../server/testutils/factories/booking'
 import newArrivalFactory from '../../../../server/testutils/factories/newArrival'
 
 Given('I mark the booking as arrived', () => {

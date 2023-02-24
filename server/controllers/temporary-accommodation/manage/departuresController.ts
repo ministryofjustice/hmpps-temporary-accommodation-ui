@@ -1,11 +1,10 @@
-import type { Request, RequestHandler, Response } from 'express'
-
 import type { NewDeparture } from '@approved-premises/api'
+import type { Request, RequestHandler, Response } from 'express'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, DepartureService } from '../../../services'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class DeparturesController {
   constructor(private readonly bookingsService: BookingService, private readonly departureService: DepartureService) {}

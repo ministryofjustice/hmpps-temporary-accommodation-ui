@@ -35,8 +35,8 @@ This starts the backing services using Docker, and runs the server on `localhost
 
 ### Authentication in development
 
-- username: `AP_TEST_PROBATION_1`
-- password: `password123456`
+* username: `AP_TEST_PROBATION_1`
+* password: `password123456`
 
 See development seeding in [HMPPS-Auth](https://github.com/ministryofjustice/hmpps-auth/commit/ae4ea22c4da72725dd6814abc70187dd534d24c8).
 
@@ -80,4 +80,4 @@ The steps are also available in the [PULL_REQUEST_TEMPLATE](/.github/PULL_REQUES
 ## Manage infrastructure & view logs
 
 This application is hosted on the MoJ Cloud Platform. For further details
-head over to [our infrastructure documentation](/doc/how-to/manage-infrastructure.md).
+head over to [our infrastructure documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4325244964/Manage+infrastructure).

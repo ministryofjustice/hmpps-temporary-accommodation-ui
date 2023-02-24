@@ -1,12 +1,12 @@
+import Page from '../../../../cypress_shared/pages/page'
+import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import bookingFactory from '../../../../server/testutils/factories/booking'
+import departureFactory from '../../../../server/testutils/factories/departure'
+import newDepartureFactory from '../../../../server/testutils/factories/newDeparture'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import newDepartureFactory from '../../../../server/testutils/factories/newDeparture'
-import Page from '../../../../cypress_shared/pages/page'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import departureFactory from '../../../../server/testutils/factories/departure'
-import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 
 context('Booking departure', () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ context('Booking departure', () => {
     bookingShow.clickMarkDepartedBookingButton()
 
     // Then I navigate to the booking departure page
-    Page.verifyOnPage(BookingDepartureNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingDepartureNewPage, booking)
   })
 
   it('allows me to mark a booking as departed', () => {
@@ -132,6 +132,6 @@ context('Booking departure', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

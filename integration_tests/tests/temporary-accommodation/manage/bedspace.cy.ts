@@ -61,7 +61,7 @@ context('Bedspace', () => {
     premisesShowPage.clickBedpaceViewLink(rooms[0])
 
     // And I click the edit bedspace link
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, rooms[0])
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, rooms[0])
     bedspaceShowPage.clickBedspaceEditLink()
 
     // Then I navigate to the edit bedspace page
@@ -90,7 +90,7 @@ context('Bedspace', () => {
     premisesShowPage.clickBedpaceViewLink(rooms[0])
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, rooms[0])
+    Page.verifyOnPage(BedspaceShowPage, premises, rooms[0])
   })
 
   it('allows me to create a bedspace', () => {
@@ -132,7 +132,7 @@ context('Bedspace', () => {
     })
 
     // And I should be redirected to the show bedspace page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
     bedspaceShowPage.shouldShowBanner('Bedspace created')
   })
 
@@ -214,7 +214,7 @@ context('Bedspace', () => {
     })
 
     // And I should be redirected to the show bedspace page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
     bedspaceShowPage.shouldShowBanner('Bedspace updated')
   })
 
@@ -239,7 +239,7 @@ context('Bedspace', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises)
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 
   it('shows a single bedspace', () => {
@@ -262,7 +262,7 @@ context('Bedspace', () => {
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
 
     // When I visit the show bedspace page
-    const page = BedspaceShowPage.visit(premises.id, room)
+    const page = BedspaceShowPage.visit(premises, room)
 
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
@@ -285,7 +285,7 @@ context('Bedspace', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room: rooms[0] })
 
     // When I visit the show bedspace page
-    const page = BedspaceShowPage.visit(premises.id, rooms[0])
+    const page = BedspaceShowPage.visit(premises, rooms[0])
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

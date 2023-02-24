@@ -1,10 +1,15 @@
 import type { Premises, Room, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import BedspaceEditablePage from './bedspaceEditable'
 
 export default class BedspaceEditPage extends BedspaceEditablePage {
-  constructor(private readonly premises: Premises, private readonly room: Room) {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
+  constructor(premises: Premises, private readonly room: Room) {
     super('Edit a bedspace')
+
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }
 
   static visit(premises: Premises, room: Room): BedspaceEditPage {
@@ -13,12 +18,7 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
   }
 
   shouldShowBedspaceDetails(): void {
-    cy.get('.location-header').within(() => {
-      cy.get('p').should('contain', this.room.name)
-      cy.get('p').should('contain', this.premises.name)
-      cy.get('p').should('contain', this.premises.addressLine1)
-      cy.get('p').should('contain', this.premises.postcode)
-    })
+    this.locationHeaderComponent.shouldShowLocationDetails()
 
     cy.get('legend')
       .contains('Does the bedspace have any of the following attributes?')

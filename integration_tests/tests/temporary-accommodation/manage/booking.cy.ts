@@ -27,13 +27,13 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the show bedspace page
-    const bedspaceShow = BedspaceShowPage.visit(premises.id, room)
+    const bedspaceShow = BedspaceShowPage.visit(premises, room)
 
     // Add I click the book bedspace link
     bedspaceShow.clickBookBedspaceLink()
 
     // Then I navigate to the new booking page
-    Page.verifyOnPage(BookingNewPage)
+    Page.verifyOnPage(BookingNewPage, premises, room)
   })
 
   it('navigates to the show booking page', () => {
@@ -55,7 +55,7 @@ context('Booking', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
 
     // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises.id, room)
+    const bedspaceShowPage = BedspaceShowPage.visit(premises, room)
 
     // Add I click the booking link
     bedspaceShowPage.clickBookingLink(bookings[0])
@@ -76,9 +76,12 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the new booking page
-    const bookingNewPage = BookingNewPage.visit(premises.id, room.id)
+    const bookingNewPage = BookingNewPage.visit(premises, room)
 
-    // And I fill out the form
+    // Then I should see the booking details
+    bookingNewPage.shouldShowBookingDetails()
+
+    // And when I fill out the form
     const booking = bookingFactory.build()
     const newBooking = newBookingFactory.build({
       ...booking,
@@ -125,7 +128,7 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the new booking page
-    const page = BookingNewPage.visit(premises.id, room.id)
+    const page = BookingNewPage.visit(premises, room)
 
     // And I enter a start date
     page.completeDateInputs('arrivalDate', '2022-07-08')
@@ -146,7 +149,7 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the new booking page
-    const bookingNewPage = BookingNewPage.visit(premises.id, room.id)
+    const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I miss required fields
     bookingNewPage.clickSubmit()
@@ -161,7 +164,7 @@ context('Booking', () => {
     bookingConfirmPage.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage)
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
     returnedBookingNewPage.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
   })
 
@@ -177,7 +180,7 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the new booking page
-    const bookingNewPage = BookingNewPage.visit(premises.id, room.id)
+    const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I fill out the form with dates that conflict with an existing booking
     const booking = bookingFactory.build()
@@ -195,7 +198,7 @@ context('Booking', () => {
     bookingConfirmPage.clickSubmit()
 
     // Then I should see error messages for the date fields
-    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage)
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
 
     returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
     returnedBookingNewPage.shouldShowDateConflictErrorMessages()
@@ -213,13 +216,13 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the new booking page
-    const page = BookingNewPage.visit(premises.id, room.id)
+    const page = BookingNewPage.visit(premises, room)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises)
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 
   it('navigates back from the confirm booking page to the new booking page', () => {
@@ -234,7 +237,7 @@ context('Booking', () => {
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
     // When I visit the new booking page
-    const bookingNewPage = BookingNewPage.visit(premises.id, room.id)
+    const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I fill out the form
     const booking = bookingFactory.build()
@@ -250,7 +253,7 @@ context('Booking', () => {
     bookingConfirmPage.clickBack()
 
     // Then I navigate to the new booking page
-    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage)
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
     returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
   })
 
@@ -299,6 +302,6 @@ context('Booking', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, room)
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 })

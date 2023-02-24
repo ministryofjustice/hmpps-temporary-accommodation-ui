@@ -38,7 +38,7 @@ Given('I create a bedspace with all necessary details', () => {
 
 Given("I'm editing the bedspace", () => {
   cy.then(function _() {
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     bedspaceShowPage.clickBedspaceEditLink()
 
     const bedspaceEditPage = Page.verifyOnPage(BedspaceEditPage, this.premises, this.room)
@@ -66,8 +66,8 @@ Given('I edit the bedspace details', () => {
 })
 
 Then('I should see a confirmation for my new bedspace', () => {
-  cy.get('@room').then(room => {
-    const page = Page.verifyOnPage(BedspaceShowPage, room)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     page.shouldShowBanner('Bedspace created')
 
     page.shouldShowBedspaceDetails()
@@ -75,8 +75,8 @@ Then('I should see a confirmation for my new bedspace', () => {
 })
 
 Then('I should see a confirmation for my updated bedspace', () => {
-  cy.get('@room').then(room => {
-    const page = Page.verifyOnPage(BedspaceShowPage, room)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     page.shouldShowBanner('Bedspace updated')
 
     page.shouldShowBedspaceDetails()

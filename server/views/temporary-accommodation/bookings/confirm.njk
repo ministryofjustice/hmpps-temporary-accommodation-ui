@@ -1,7 +1,9 @@
-{% extends "../../partials/layout.njk" %}
-{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
+
+{% extends "../../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - Book bedspace" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -17,15 +19,7 @@
 
   <p>Confirm that the CRN is correct. This information cannot be changed once a bedspace has been booked.</p>
 
-  <div class="location-header">
-    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ crn }}</p>
-
-    <h2>Bedspace reference</h2>
-    <p>{{ room.name }}</p>
-
-    <h2>Property address</h2>
-    <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
-  </div>
+  {{ locationHeader({ premises: premises, room: room, crn: crn }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">

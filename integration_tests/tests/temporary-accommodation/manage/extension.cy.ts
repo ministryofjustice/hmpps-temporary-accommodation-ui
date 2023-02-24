@@ -1,12 +1,12 @@
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import bookingFactory from '../../../../server/testutils/factories/booking'
 import Page from '../../../../cypress_shared/pages/page'
+import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingExtensionNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import bookingFactory from '../../../../server/testutils/factories/booking'
 import extensionFactory from '../../../../server/testutils/factories/extension'
 import newExtensionFactory from '../../../../server/testutils/factories/newExtension'
-import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingExtensionNew'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import premisesFactory from '../../../../server/testutils/factories/premises'
+import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Booking extension', () => {
   beforeEach(() => {
@@ -34,7 +34,7 @@ context('Booking extension', () => {
     bookingShow.clickExtendBookingButton()
 
     // Then I navigate to the booking extension page
-    Page.verifyOnPage(BookingExtensionNewPage, premises.id, room.id, booking)
+    Page.verifyOnPage(BookingExtensionNewPage, booking)
   })
 
   it('allows me to extend a booking', () => {
@@ -151,6 +151,6 @@ context('Booking extension', () => {
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, booking)
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 })

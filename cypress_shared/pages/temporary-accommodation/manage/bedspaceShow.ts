@@ -1,20 +1,28 @@
 import type { Booking, Room } from '@approved-premises/api'
 
+import { Premises } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
+import LocationHeaderComponent from '../../../components/locationHeader'
 import Page from '../../page'
 
 export default class BedspaceShowPage extends Page {
-  constructor(private readonly room: Room) {
+  private readonly locationHeaderComponent: LocationHeaderComponent
+
+  constructor(premises: Premises, private readonly room: Room) {
     super('View a bedspace')
+
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises })
   }
 
-  static visit(premisesId: string, room: Room): BedspaceShowPage {
-    cy.visit(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
-    return new BedspaceShowPage(room)
+  static visit(premises: Premises, room: Room): BedspaceShowPage {
+    cy.visit(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))
+    return new BedspaceShowPage(premises, room)
   }
 
   shouldShowBedspaceDetails(): void {
+    this.locationHeaderComponent.shouldShowLocationDetails()
+
     cy.get('h2').should('contain', this.room.name)
 
     this.shouldShowKeyAndValues(

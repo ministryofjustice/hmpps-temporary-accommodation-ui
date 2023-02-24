@@ -35,7 +35,7 @@ context('Booking departure', () => {
     bookingShow.clickMarkDepartedBookingButton()
 
     // Then I navigate to the booking departure page
-    Page.verifyOnPage(BookingDepartureNewPage, booking)
+    Page.verifyOnPage(BookingDepartureNewPage, premises, room, booking)
   })
 
   it('allows me to mark a booking as departed', () => {
@@ -53,7 +53,7 @@ context('Booking departure', () => {
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureNewPage.visit(premises.id, room.id, booking)
+    const page = BookingDepartureNewPage.visit(premises, room, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -92,11 +92,13 @@ context('Booking departure', () => {
     const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
 
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureNewPage.visit(premises.id, room.id, booking)
+    const page = BookingDepartureNewPage.visit(premises, room, booking)
 
     // And I miss required fields
     cy.task('stubDepartureCreateErrors', {
@@ -126,7 +128,7 @@ context('Booking departure', () => {
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureNewPage.visit(premises.id, room.id, booking)
+    const page = BookingDepartureNewPage.visit(premises, room, booking)
 
     // And I click the back link
     page.clickBack()

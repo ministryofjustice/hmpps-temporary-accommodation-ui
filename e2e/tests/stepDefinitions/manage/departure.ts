@@ -25,7 +25,7 @@ Given('I mark the booking as departed', () => {
       moveOnCategoryId: departure.moveOnCategory.id,
     })
 
-    const bookingDeparturePage = Page.verifyOnPage(BookingDepartureNewPage, this.booking)
+    const bookingDeparturePage = Page.verifyOnPage(BookingDepartureNewPage, this.premises, this.room, this.booking)
     bookingDeparturePage.shouldShowBookingDetails()
     bookingDeparturePage.completeForm(newDeparture)
 
@@ -46,7 +46,7 @@ Given('I attempt to mark the booking as departed with required details missing',
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
     bookingShowPage.clickMarkDepartedBookingButton()
 
-    const bookingDeparturePage = Page.verifyOnPage(BookingDepartureNewPage, this.booking)
+    const bookingDeparturePage = Page.verifyOnPage(BookingDepartureNewPage, this.premises, this.room, this.booking)
     bookingDeparturePage.clearForm()
     bookingDeparturePage.clickSubmit()
   })
@@ -67,7 +67,7 @@ Then('I should see the booking with the departed status', () => {
 
 Then('I should see a list of the problems encountered marking the booking as departed', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingDepartureNewPage, this.booking)
+    const page = Page.verifyOnPage(BookingDepartureNewPage, this.premises, this.room, this.booking)
 
     page.shouldShowErrorMessagesForFields(['dateTime', 'reasonId', 'moveOnCategoryId'])
   })

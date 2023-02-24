@@ -2,10 +2,12 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, DepartureService } from '../../../services'
+import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
 import bookingFactory from '../../../testutils/factories/booking'
 import departureFactory from '../../../testutils/factories/departure'
 import newDepartureFactory from '../../../testutils/factories/newDeparture'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -25,10 +27,17 @@ describe('DeparturesController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
+  const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
   const departureService = createMock<DepartureService>({})
 
-  const departuresController = new DeparturesController(bookingService, departureService)
+  const departuresController = new DeparturesController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    departureService,
+  )
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -37,15 +46,20 @@ describe('DeparturesController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
       const booking = bookingFactory.build()
 
       request.params = {
-        premisesId,
-        roomId,
+        premisesId: premises.id,
+        roomId: room.id,
         bookingId: booking.id,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
       bookingService.getBooking.mockResolvedValue(booking)
+
       departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
 
       const requestHandler = departuresController.new()
@@ -53,13 +67,16 @@ describe('DeparturesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
       expect(departureService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         allDepartureReasons: [],
         allMoveOnCategories: [],
         errors: {},

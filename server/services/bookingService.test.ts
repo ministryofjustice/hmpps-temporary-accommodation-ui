@@ -203,7 +203,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(lostBed1.endDate, { format: 'short' }),
           },
           {
-            html: lostBedStatusTag(lostBed1.status),
+            html: lostBedStatusTag(lostBed1.status, 'bookingsAndVoids'),
           },
           {
             html: `<a href="${paths.lostBeds.show({
@@ -247,7 +247,7 @@ describe('BookingService', () => {
             text: DateFormats.isoDateToUIDate(lostBed2.endDate, { format: 'short' }),
           },
           {
-            html: lostBedStatusTag(lostBed2.status),
+            html: lostBedStatusTag(lostBed2.status, 'bookingsAndVoids'),
           },
           {
             html: `<a href="${paths.lostBeds.show({

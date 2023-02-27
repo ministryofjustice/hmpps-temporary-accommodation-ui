@@ -61,7 +61,7 @@ export default class BookingService {
 
     const bedId = room.beds[0].id
 
-    const sortedBookings = bookings
+    const bookingRowArr = bookings
       .filter(b => b.bed.id === bedId)
       .map(b => ({
         sortingValue: DateFormats.convertIsoToDateObj(b.arrivalDate).getTime(),
@@ -80,7 +80,7 @@ export default class BookingService {
         ],
       }))
 
-    const sortedLostBeds = lostBeds
+    const lostBedRowArr = lostBeds
       .filter(lostBed => lostBed.bedId === bedId)
       .map(lostBed => ({
         sortingValue: DateFormats.convertIsoToDateObj(lostBed.startDate).getTime(),
@@ -88,7 +88,7 @@ export default class BookingService {
           this.textValue('-'),
           this.textValue(DateFormats.isoDateToUIDate(lostBed.startDate, { format: 'short' })),
           this.textValue(DateFormats.isoDateToUIDate(lostBed.endDate, { format: 'short' })),
-          this.htmlValue(lostBedStatusTag(lostBed.status)),
+          this.htmlValue(lostBedStatusTag(lostBed.status, 'bookingsAndVoids')),
           this.htmlValue(
             `<a href="${paths.lostBeds.show({
               premisesId,
@@ -99,7 +99,7 @@ export default class BookingService {
         ],
       }))
 
-    return [...sortedBookings, ...sortedLostBeds]
+    return [...bookingRowArr, ...lostBedRowArr]
       .sort((a, b) => {
         return b.sortingValue - a.sortingValue
       })

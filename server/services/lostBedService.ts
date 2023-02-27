@@ -13,12 +13,20 @@ export default class LostBedService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async createLostBed(callConfig: CallConfig, premisesId: string, lostBed: NewLostBed): Promise<LostBed> {
+  async create(callConfig: CallConfig, premisesId: string, lostBed: NewLostBed): Promise<LostBed> {
     const lostBedClient = this.lostBedClientFactory(callConfig)
 
     const confirmedLostBed = await lostBedClient.create(premisesId, lostBed)
 
     return confirmedLostBed
+  }
+
+  async find(callConfig: CallConfig, premisesID: string, lostBedId: string): Promise<LostBed> {
+    const lostBedClient = this.lostBedClientFactory(callConfig)
+
+    const lostBed = await lostBedClient.find(premisesID, lostBedId)
+
+    return lostBed
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<LostBedReferenceData> {

@@ -23,6 +23,7 @@ describe('LostBedService', () => {
   const ReferenceDataClientFactory = jest.fn()
 
   const service = new LostBedService(LostBedClientFactory, ReferenceDataClientFactory)
+  const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -30,15 +31,14 @@ describe('LostBedService', () => {
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
-  describe('createLostBed', () => {
+  describe('create', () => {
     it('on success returns the lostBed that has been posted', async () => {
       const lostBed: LostBed = lostBedFactory.build()
       const newLostBed: NewLostBed = newLostBedFactory.build()
 
-      const callConfig = { token: 'some-token' } as CallConfig
       lostBedClient.create.mockResolvedValue(lostBed)
 
-      const postedLostBed = await service.createLostBed(callConfig, 'premisesID', newLostBed)
+      const postedLostBed = await service.create(callConfig, 'premisesID', newLostBed)
 
       expect(postedLostBed).toEqual(lostBed)
       expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
@@ -49,7 +49,6 @@ describe('LostBedService', () => {
   describe('getReferenceData', () => {
     it('should return the lost bed reasons data needed', async () => {
       const lostBedReasons = referenceDataFactory.buildList(2)
-      const callConfig = { token: 'some-token' } as CallConfig
 
       referenceDataClient.getReferenceData.mockImplementation(category => {
         return Promise.resolve(
@@ -64,6 +63,20 @@ describe('LostBedService', () => {
       expect(result).toEqual(lostBedReasons)
       expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('lost-bed-reasons')
+    })
+  })
+
+  describe('find', () => {
+    it('on success returns the lostBed that has been requested', async () => {
+      const lostBed = lostBedFactory.build()
+
+      lostBedClient.find.mockResolvedValue(lostBed)
+
+      const retrievedLostBed = await service.find(callConfig, 'premisesId', lostBed.id)
+      expect(retrievedLostBed).toEqual(lostBed)
+
+      expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(lostBedClient.find).toHaveBeenCalledWith('premisesId', lostBed.id)
     })
   })
 })

@@ -28,6 +28,10 @@
         text: "Book bedspace",
         classes: 'govuk-button--secondary',
         href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.room.id })
+      }, {
+        text: 'Void bedspace',
+        classes: 'govuk-button--secondary',
+        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.room.id })
       }]
   }) }}
 

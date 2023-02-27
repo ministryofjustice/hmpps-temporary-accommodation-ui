@@ -22,6 +22,7 @@ import * as OffenceUtils from './offenceUtils'
 import * as TasklistUtils from './taskListUtils'
 
 import summaryListRows from '../components/bookingInfo'
+import lostBedSummaryListRows from '../components/lostBedInfo'
 import config from '../config'
 import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
@@ -146,4 +147,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
+  njkEnv.addGlobal('LostBedInfo', { lostBedSummaryListRows })
 }

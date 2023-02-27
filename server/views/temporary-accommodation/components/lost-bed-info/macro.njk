@@ -1,0 +1,15 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% macro lostBedInfo(lostBed) %}
+    <div class="booking-info">
+        <div class="booking-info__header">
+            <h2 class="booking-info__title">
+                Void details
+            </h2>
+        </div>
+        <div class="booking-info__content">
+            {{ govukSummaryList({
+                rows: LostBedInfo.lostBedSummaryListRows(lostBed)
+            }) }}
+        </div>
+    </div>
+{% endmacro %}

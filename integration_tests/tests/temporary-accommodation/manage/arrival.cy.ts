@@ -34,7 +34,7 @@ context('Booking arrival', () => {
     bookingShow.clickMarkArrivedBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingArrivalNewPage, booking)
+    Page.verifyOnPage(BookingArrivalNewPage, premises, room, booking)
   })
 
   it('allows me to mark a booking as arrived', () => {
@@ -51,7 +51,7 @@ context('Booking arrival', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking confirmation page
-    const page = BookingArrivalNewPage.visit(premises.id, room.id, booking)
+    const page = BookingArrivalNewPage.visit(premises, room, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -87,10 +87,12 @@ context('Booking arrival', () => {
     const room = roomFactory.build()
     const booking = bookingFactory.confirmed().build()
 
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking confirmation page
-    const page = BookingArrivalNewPage.visit(premises.id, room.id, booking)
+    const page = BookingArrivalNewPage.visit(premises, room, booking)
 
     // And I miss required fields
     cy.task('stubArrivalCreateErrors', {
@@ -114,10 +116,12 @@ context('Booking arrival', () => {
     const room = roomFactory.build()
     const booking = bookingFactory.confirmed().build()
 
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking confirmation page
-    const page = BookingArrivalNewPage.visit(premises.id, room.id, booking)
+    const page = BookingArrivalNewPage.visit(premises, room, booking)
 
     // And I fill out the form with dates that conflict with an existing booking
     const arrival = arrivalFactory.build()
@@ -146,7 +150,7 @@ context('Booking arrival', () => {
     cy.task('stubBooking', { premisesId: premises.id, booking })
 
     // When I visit the booking arrival page
-    const page = BookingArrivalNewPage.visit(premises.id, room.id, booking)
+    const page = BookingArrivalNewPage.visit(premises, room, booking)
 
     // And I click the back link
     page.clickBack()

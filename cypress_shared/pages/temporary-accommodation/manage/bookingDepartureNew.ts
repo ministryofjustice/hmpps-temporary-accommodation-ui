@@ -1,4 +1,4 @@
-import type { Booking, NewDeparture } from '@approved-premises/api'
+import type { Booking, NewDeparture, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -9,16 +9,16 @@ export default class BookingDepartureNewPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(private readonly booking: Booking) {
+  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
     super('Mark booking as closed')
 
-    this.locationHeaderComponent = new LocationHeaderComponent({ crn: booking.person.crn })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking.person.crn })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premisesId: string, roomId: string, booking: Booking): BookingDepartureNewPage {
-    cy.visit(paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }))
-    return new BookingDepartureNewPage(booking)
+  static visit(premises: Premises, room: Room, booking: Booking): BookingDepartureNewPage {
+    cy.visit(paths.bookings.departures.new({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    return new BookingDepartureNewPage(premises, room, booking)
   }
 
   shouldShowBookingDetails(): void {

@@ -1,14 +1,18 @@
-import type { Request, RequestHandler, Response } from 'express'
-
 import type { NewDeparture } from '@approved-premises/api'
+import type { Request, RequestHandler, Response } from 'express'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, DepartureService } from '../../../services'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class DeparturesController {
-  constructor(private readonly bookingsService: BookingService, private readonly departureService: DepartureService) {}
+  constructor(
+    private readonly premisesService: PremisesService,
+    private readonly bedspacesService: BedspaceService,
+    private readonly bookingsService: BookingService,
+    private readonly departureService: DepartureService,
+  ) {}
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -17,14 +21,17 @@ export default class DeparturesController {
 
       const callConfig = extractCallConfig(req)
 
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
       const { departureReasons: allDepartureReasons, moveOnCategories: allMoveOnCategories } =
         await this.departureService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/departures/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         allDepartureReasons,
         allMoveOnCategories,
         errors,

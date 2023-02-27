@@ -1,15 +1,17 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import bookingFactory from '../../../testutils/factories/booking'
-import { BookingService, CancellationService } from '../../../services'
-import { DateFormats } from '../../../utils/dateUtils'
+import type { NextFunction, Request, Response } from 'express'
 import { CancellationsController } from '.'
+import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
+import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
+import bookingFactory from '../../../testutils/factories/booking'
 import cancellationFactory from '../../../testutils/factories/cancellation'
 import newCancellationFactory from '../../../testutils/factories/newCancellation'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -25,10 +27,17 @@ describe('CancellationsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
+  const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
   const cancellationService = createMock<CancellationService>({})
 
-  const cancellationsController = new CancellationsController(bookingService, cancellationService)
+  const cancellationsController = new CancellationsController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    cancellationService,
+  )
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -37,15 +46,22 @@ describe('CancellationsController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current departure date', async () => {
-      const booking = bookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.arrived().build({
+        extensions: [],
+      })
 
       request.params = {
-        premisesId,
-        roomId,
+        premisesId: premises.id,
+        roomId: room.id,
         bookingId: booking.id,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
       bookingService.getBooking.mockResolvedValue(booking)
+
       cancellationService.getReferenceData.mockResolvedValue({ cancellationReasons: [] })
 
       const requestHandler = cancellationsController.new()
@@ -53,13 +69,16 @@ describe('CancellationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
       expect(cancellationService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/cancellations/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         allCancellationReasons: [],
         errors: {},
         ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'date'),

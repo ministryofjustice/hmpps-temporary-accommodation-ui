@@ -1,8 +1,8 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingCancellationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationNew'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import cancellationFactory from '../../../../server/testutils/factories/cancellation'
 import newCancellationFactory from '../../../../server/testutils/factories/newCancellation'
@@ -18,7 +18,12 @@ Given('I cancel the booking', () => {
       reason: cancellation.reason.id,
     })
 
-    const bookingCancellationPage = Page.verifyOnPage(BookingCancellationNewPage, this.booking)
+    const bookingCancellationPage = Page.verifyOnPage(
+      BookingCancellationNewPage,
+      this.premises,
+      this.room,
+      this.booking,
+    )
     bookingCancellationPage.shouldShowBookingDetails()
     bookingCancellationPage.completeForm(newCancellation)
 
@@ -38,7 +43,12 @@ Given('I attempt to cancel the booking with required details missing', () => {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
     bookingShowPage.clickCancelBookingButton()
 
-    const bookingCancellationPage = Page.verifyOnPage(BookingCancellationNewPage, this.booking)
+    const bookingCancellationPage = Page.verifyOnPage(
+      BookingCancellationNewPage,
+      this.premises,
+      this.room,
+      this.booking,
+    )
     bookingCancellationPage.clearForm()
     bookingCancellationPage.clickSubmit()
   })
@@ -59,7 +69,7 @@ Then('I should see the booking with the cancelled status', () => {
 
 Then('I should see a list of the problems encountered cancelling the booking', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingCancellationNewPage, this.booking)
+    const page = Page.verifyOnPage(BookingCancellationNewPage, this.premises, this.room, this.booking)
 
     page.shouldShowErrorMessagesForFields(['date'], 'bookingCancellation')
   })

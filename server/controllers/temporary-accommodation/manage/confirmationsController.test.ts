@@ -1,15 +1,17 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import bookingFactory from '../../../testutils/factories/booking'
-import { BookingService } from '../../../services'
-import ConfirmationsController from './confirmationsController'
+import { BedspaceService, BookingService, PremisesService } from '../../../services'
 import ConfirmationService from '../../../services/confirmationService'
+import bookingFactory from '../../../testutils/factories/booking'
 import confirmationFactory from '../../../testutils/factories/confirmation'
 import newConfirmationFactory from '../../../testutils/factories/newConfirmation'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
 import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import ConfirmationsController from './confirmationsController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -25,10 +27,17 @@ describe('ConfirmationsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
+  const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
   const confirmationService = createMock<ConfirmationService>({})
 
-  const confirmationsController = new ConfirmationsController(bookingService, confirmationService)
+  const confirmationsController = new ConfirmationsController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    confirmationService,
+  )
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -37,14 +46,20 @@ describe('ConfirmationsController', () => {
 
   describe('new', () => {
     it('renders the form', async () => {
-      const booking = bookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.arrived().build({
+        extensions: [],
+      })
 
       request.params = {
-        premisesId,
-        roomId,
+        premisesId: premises.id,
+        roomId: room.id,
         bookingId: booking.id,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = confirmationsController.new()
@@ -52,12 +67,14 @@ describe('ConfirmationsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/confirmations/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         errors: {},
         errorSummary: [],
       })

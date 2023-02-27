@@ -184,7 +184,7 @@ context('Bedspace', () => {
     // And there is reference data in the database
     cy.task('stubRoomReferenceData')
 
-    // And there is a premise and a room in the database
+    // And there is a premises and a room in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
 
@@ -225,7 +225,7 @@ context('Bedspace', () => {
     // And there is reference data in the database
     cy.task('stubRoomReferenceData')
 
-    // And there is a premise and a room in the database
+    // And there is a premises and a room in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
 

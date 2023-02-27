@@ -1,16 +1,18 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
+import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
+import arrivalFactory from '../../../testutils/factories/arrival'
 import bookingFactory from '../../../testutils/factories/booking'
-import { ArrivalService, BookingService } from '../../../services'
 import confirmationFactory from '../../../testutils/factories/confirmation'
 import newArrivalFactory from '../../../testutils/factories/newArrival'
-import ArrivalsController from './arrivalsController'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
 import { DateFormats } from '../../../utils/dateUtils'
-import arrivalFactory from '../../../testutils/factories/arrival'
-import { CallConfig } from '../../../data/restClient'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import ArrivalsController from './arrivalsController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -26,10 +28,12 @@ describe('ArrivalsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
+  const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
   const arrivalService = createMock<ArrivalService>({})
 
-  const arrivalsController = new ArrivalsController(bookingService, arrivalService)
+  const arrivalsController = new ArrivalsController(premisesService, bedspaceService, bookingService, arrivalService)
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -38,14 +42,20 @@ describe('ArrivalsController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current booking dates', async () => {
-      const booking = bookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.arrived().build({
+        extensions: [],
+      })
 
       request.params = {
-        premisesId,
-        roomId,
+        premisesId: premises.id,
+        roomId: room.id,
         bookingId: booking.id,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = arrivalsController.new()
@@ -53,12 +63,14 @@ describe('ArrivalsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         errors: {},
         errorSummary: [],
         ...DateFormats.convertIsoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),

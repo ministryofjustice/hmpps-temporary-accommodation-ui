@@ -1,8 +1,8 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import confirmationFactory from '../../../../server/testutils/factories/confirmation'
 import newConfirmationFactory from '../../../../server/testutils/factories/newConfirmation'
@@ -17,7 +17,12 @@ Given('I confirm the booking', () => {
       ...newConfirmation,
     })
 
-    const bookingConfirmationPage = Page.verifyOnPage(BookingConfirmationNewPage, this.booking)
+    const bookingConfirmationPage = Page.verifyOnPage(
+      BookingConfirmationNewPage,
+      this.premises,
+      this.room,
+      this.booking,
+    )
     bookingConfirmationPage.shouldShowBookingDetails()
     bookingConfirmationPage.completeForm(newConfirmation)
 

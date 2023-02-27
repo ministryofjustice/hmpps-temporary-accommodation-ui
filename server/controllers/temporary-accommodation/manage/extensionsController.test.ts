@@ -1,18 +1,20 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import bookingFactory from '../../../testutils/factories/booking'
-import { BookingService, ExtensionService } from '../../../services'
-import departureFactory from '../../../testutils/factories/departure'
-import newDepartureFactory from '../../../testutils/factories/newDeparture'
-import { DateFormats } from '../../../utils/dateUtils'
-import ExtensionsController from './extensionsController'
-import extensionFactory from '../../../testutils/factories/extension'
-import newExtensionFactory from '../../../testutils/factories/newExtension'
-import { getLatestExtension } from '../../../utils/bookingUtils'
+import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
+import { BedspaceService, BookingService, ExtensionService, PremisesService } from '../../../services'
+import bookingFactory from '../../../testutils/factories/booking'
+import departureFactory from '../../../testutils/factories/departure'
+import extensionFactory from '../../../testutils/factories/extension'
+import newDepartureFactory from '../../../testutils/factories/newDeparture'
+import newExtensionFactory from '../../../testutils/factories/newExtension'
+import premisesFactory from '../../../testutils/factories/premises'
+import roomFactory from '../../../testutils/factories/room'
+import { getLatestExtension } from '../../../utils/bookingUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import ExtensionsController from './extensionsController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
@@ -29,10 +31,17 @@ describe('ExtensionsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
+  const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
   const extensionService = createMock<ExtensionService>({})
 
-  const extensionsController = new ExtensionsController(bookingService, extensionService)
+  const extensionsController = new ExtensionsController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    extensionService,
+  )
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -41,16 +50,20 @@ describe('ExtensionsController', () => {
 
   describe('new', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
       const booking = bookingFactory.arrived().build({
         extensions: [],
       })
 
       request.params = {
-        premisesId,
-        roomId,
+        premisesId: premises.id,
+        roomId: room.id,
         bookingId: booking.id,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = extensionsController.new()
@@ -58,12 +71,12 @@ describe('ExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         errors: {},
         ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
         errorSummary: [],
@@ -71,16 +84,20 @@ describe('ExtensionsController', () => {
     })
 
     it('renders the form prepopulated with the current departure dates and latest extension notes', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
       const booking = bookingFactory.arrived().build({
         extensions: extensionFactory.buildList(2),
       })
 
       request.params = {
-        premisesId,
-        roomId,
+        premisesId: premises.id,
+        roomId: room.id,
         bookingId: booking.id,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
       bookingService.getBooking.mockResolvedValue(booking)
       ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
         bookings => bookings.extensions?.[0],
@@ -91,12 +108,14 @@ describe('ExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premisesId, booking.id)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
+        premises,
+        room,
         booking,
-        roomId,
-        premisesId,
         errors: {},
         ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
         notes: booking.extensions[0].notes,

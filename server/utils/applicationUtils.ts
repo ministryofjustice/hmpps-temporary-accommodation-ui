@@ -1,16 +1,16 @@
-import type { PageResponse, TableRow } from '@approved-premises/ui'
 import type {
   ApprovedPremisesApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
-import paths from '../paths/apply'
+import type { PageResponse, TableRow } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
+import Assess from '../form-pages/assess'
+import { TasklistPageInterface } from '../form-pages/tasklistPage'
+import paths from '../paths/apply'
+import isAssessment from './assessments/isAssessment'
+import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError } from './errors'
 import { tierBadge } from './personUtils'
-import { DateFormats } from './dateUtils'
-import { TasklistPageInterface } from '../form-pages/tasklistPage'
-import Assess from '../form-pages/assess'
-import isAssessment from './assessments/isAssessment'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {

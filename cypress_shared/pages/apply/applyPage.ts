@@ -1,6 +1,6 @@
 import { ApprovedPremisesApplication } from '@approved-premises/api'
-import Page from '../page'
 import TasklistPage from '../../../server/form-pages/tasklistPage'
+import Page from '../page'
 
 import Apply from '../../../server/form-pages/apply'
 

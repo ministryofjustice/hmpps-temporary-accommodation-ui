@@ -7,15 +7,11 @@ import {
   Person,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
-
-import { CheckYourAnswersPage, ConfirmDetailsPage, EnterCRNPage, StartPage, TaskListPage } from '../pages/apply'
-
-import Page from '../pages'
-
 import documentFactory from '../../server/testutils/factories/document'
-
-import ApplyPage from '../pages/apply/applyPage'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
+import Page from '../pages'
+import { CheckYourAnswersPage, ConfirmDetailsPage, EnterCRNPage, StartPage, TaskListPage } from '../pages/apply'
+import ApplyPage from '../pages/apply/applyPage'
 import ExamplePage from '../pages/apply/example'
 
 export default class ApplyHelper {

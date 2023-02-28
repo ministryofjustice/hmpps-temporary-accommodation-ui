@@ -1,5 +1,5 @@
-import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import applicationFactory from '../../../../testutils/factories/application'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ExamplePage from './examplePage'
 
 describe('ExamplePage', () => {

@@ -1,8 +1,8 @@
-import applicationFactory from '../testutils/factories/application'
-import { tierEnvelopeFactory } from '../testutils/factories/risks'
-import paths from '../paths/apply'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
+import paths from '../paths/apply'
+import applicationFactory from '../testutils/factories/application'
+import { tierEnvelopeFactory } from '../testutils/factories/risks'
 import { DateFormats } from './dateUtils'
 import { isApplicableTier, tierBadge } from './personUtils'
 

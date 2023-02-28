@@ -4,11 +4,11 @@
   "title": "Apply Schema",
   "additionalProperties": false,
   "required": [
-    "example-task",
+    "basic-information",
     "check-your-answers"
   ],
   "properties": {
-    "example-task": {
+    "basic-information": {
       "type": "object",
       "properties": {
         "sentence-type": {

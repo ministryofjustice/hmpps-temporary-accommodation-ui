@@ -149,7 +149,7 @@ const isUnapplicable = (application: Application): boolean => {
 }
 
 const firstPageOfApplicationJourney = (application: Application) => {
-  return paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'sentence-type' })
+  return paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' })
 }
 
 export {

@@ -202,7 +202,7 @@ describe('applicationUtils', () => {
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(
-        paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'sentence-type' }),
+        paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),
       )
     })
   })

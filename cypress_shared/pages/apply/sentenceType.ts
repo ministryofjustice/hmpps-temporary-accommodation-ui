@@ -7,7 +7,7 @@ export default class SentenceTypePage extends ApplyPage {
     super(
       'Which of the following best describes the sentence type the person is on?',
       application,
-      'example-task',
+      'basic-information',
       'sentence-type',
     )
   }

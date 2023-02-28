@@ -11,18 +11,6 @@
     "example-task": {
       "type": "object",
       "properties": {
-        "example-page": {
-          "type": "object",
-          "properties": {
-            "exampleAnswer": {
-              "enum": [
-                "no",
-                "yes"
-              ],
-              "type": "string"
-            }
-          }
-        },
         "sentence-type": {
           "type": "object",
           "properties": {

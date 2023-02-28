@@ -197,12 +197,12 @@ describe('applicationUtils', () => {
   })
 
   describe('firstPageOfApplicationJourney', () => {
-    it('returns the example page', () => {
+    it('returns the sentence type page', () => {
       ;(isApplicableTier as jest.Mock).mockReturnValue(true)
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(
-        paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'example-page' }),
+        paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'sentence-type' }),
       )
     })
   })

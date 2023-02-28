@@ -1,4 +1,10 @@
-import { EnterCRNPage, ListPage, SelectOffencePage, StartPage } from '../../../cypress_shared/pages/apply'
+import {
+  EnterCRNPage,
+  ListPage,
+  SelectOffencePage,
+  SentenceTypePage,
+  StartPage,
+} from '../../../cypress_shared/pages/apply'
 
 import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
@@ -6,7 +12,6 @@ import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
 import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
-import ExamplePage from '../../../server/form-pages/apply/example-section/example-task/examplePage'
 import activeOffenceFactory from '../../../server/testutils/factories/activeOffence'
 import applicationFactory from '../../../server/testutils/factories/application'
 import personFactory from '../../../server/testutils/factories/person'
@@ -71,7 +76,7 @@ context('Apply', () => {
       expect(body.offenceId).equal(selectedOffence.offenceId)
 
       // Then I should be on the Sentence Type page
-      Page.verifyOnPage(ExamplePage, body, this.application)
+      Page.verifyOnPage(SentenceTypePage, this.application)
     })
   })
 
@@ -99,10 +104,8 @@ context('Apply', () => {
     // Then the API should have recieved the updated application
     cy.task('verifyApplicationUpdate', this.application.id).then(requests => {
       const firstRequestData = JSON.parse(requests[0].body).data
-      const secondRequestData = JSON.parse(requests[1].body).data
 
-      expect(firstRequestData['example-task']['example-page'].exampleAnswer).equal('yes')
-      expect(secondRequestData['example-task']['sentence-type'].sentenceType).equal('communityOrder')
+      expect(firstRequestData['example-task']['sentence-type'].sentenceType).equal('communityOrder')
     })
   })
 

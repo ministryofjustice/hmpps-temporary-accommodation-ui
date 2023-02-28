@@ -1,7 +1,6 @@
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
-import ExamplePage from './example'
 import ListPage from './list'
 import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
@@ -13,7 +12,6 @@ export {
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
-  ExamplePage,
   ListPage,
   SelectOffencePage,
   StartPage,

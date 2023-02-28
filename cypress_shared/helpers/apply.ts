@@ -19,7 +19,6 @@ import {
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
-import ExamplePage from '../pages/apply/example'
 
 export default class ApplyHelper {
   pages = {
@@ -117,15 +116,11 @@ export default class ApplyHelper {
   }
 
   completeExampleSection() {
-    const examplePage = new ExamplePage(this.application)
-    examplePage.completeForm()
-    examplePage.clickSubmit()
-
     const sentenceTypePage = new SentenceTypePage(this.application)
     sentenceTypePage.completeForm()
     sentenceTypePage.clickSubmit()
 
-    this.pages.exampleSection = [examplePage, sentenceTypePage]
+    this.pages.exampleSection = [sentenceTypePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

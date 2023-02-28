@@ -1,8 +1,5 @@
 {
   "example-task": {
-    "example-page": {
-      "exampleAnswer": "yes"
-    },
     "sentence-type": {
       "sentenceType": "communityOrder"
     }

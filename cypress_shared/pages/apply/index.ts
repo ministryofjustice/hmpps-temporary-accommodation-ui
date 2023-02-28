@@ -4,6 +4,7 @@ import EnterCRNPage from './enterCrn'
 import ExamplePage from './example'
 import ListPage from './list'
 import SelectOffencePage from './selectOffence'
+import SentenceTypePage from './sentenceType'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
 import TaskListPage from './taskListPage'
@@ -18,4 +19,5 @@ export {
   StartPage,
   SubmissionConfirmation,
   TaskListPage,
+  SentenceTypePage,
 }

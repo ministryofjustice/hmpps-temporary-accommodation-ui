@@ -15,7 +15,7 @@ describe('SentenceType', () => {
   })
 
   itShouldHaveNextValue(new SentenceType({}, application), '')
-  itShouldHavePreviousValue(new SentenceType({}, application), '')
+  itShouldHavePreviousValue(new SentenceType({}, application), 'example-page')
 
   describe('errors', () => {
     it('should return an empty object if the sentence type is populated', () => {

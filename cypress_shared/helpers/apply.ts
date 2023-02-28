@@ -10,7 +10,14 @@ import { PersonRisksUI } from '@approved-premises/ui'
 import documentFactory from '../../server/testutils/factories/document'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
-import { CheckYourAnswersPage, ConfirmDetailsPage, EnterCRNPage, StartPage, TaskListPage } from '../pages/apply'
+import {
+  CheckYourAnswersPage,
+  ConfirmDetailsPage,
+  EnterCRNPage,
+  SentenceTypePage,
+  StartPage,
+  TaskListPage,
+} from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
 import ExamplePage from '../pages/apply/example'
 
@@ -114,7 +121,11 @@ export default class ApplyHelper {
     examplePage.completeForm()
     examplePage.clickSubmit()
 
-    this.pages.exampleSection = [examplePage]
+    const sentenceTypePage = new SentenceTypePage(this.application)
+    sentenceTypePage.completeForm()
+    sentenceTypePage.clickSubmit()
+
+    this.pages.exampleSection = [examplePage, sentenceTypePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

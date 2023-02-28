@@ -14,7 +14,7 @@ describe('ExamplePage', () => {
   })
 
   itShouldHavePreviousValue(new ExamplePage({}, application), '')
-  itShouldHaveNextValue(new ExamplePage({}, application), '')
+  itShouldHaveNextValue(new ExamplePage({}, application), 'sentence-type')
 
   describe('errors', () => {
     it('should return an empty object if exampleAnswer is populated', () => {

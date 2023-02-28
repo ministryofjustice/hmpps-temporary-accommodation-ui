@@ -20,7 +20,7 @@ export default class ExamplePage implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'sentence-type'
   }
 
   errors() {

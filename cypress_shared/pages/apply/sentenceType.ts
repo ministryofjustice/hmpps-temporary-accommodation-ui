@@ -9,6 +9,7 @@ export default class SentenceTypePage extends ApplyPage {
       application,
       'example-task',
       'sentence-type',
+      'example-page',
     )
   }
 

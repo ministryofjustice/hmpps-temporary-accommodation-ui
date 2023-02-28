@@ -99,10 +99,10 @@ context('Apply', () => {
     // Then the API should have recieved the updated application
     cy.task('verifyApplicationUpdate', this.application.id).then(requests => {
       const firstRequestData = JSON.parse(requests[0].body).data
-      // const secondRequestData = JSON.parse(requests[1].body).data
+      const secondRequestData = JSON.parse(requests[1].body).data
 
       expect(firstRequestData['example-task']['example-page'].exampleAnswer).equal('yes')
-      // expect(secondRequestData['basic-information'].situation.situation).equal('bailSentence')
+      expect(secondRequestData['example-task']['sentence-type'].sentenceType).equal('communityOrder')
     })
   })
 

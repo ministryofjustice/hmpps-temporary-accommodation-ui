@@ -27,7 +27,7 @@ export default class SentenceType implements TasklistPage {
   }
 
   previous() {
-    return ''
+    return 'example-page'
   }
 
   next() {

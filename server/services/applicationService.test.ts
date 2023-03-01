@@ -252,7 +252,7 @@ describe('ApplicationService', () => {
 
       await service.initializePage(callConfig, OtherPage, request, dataServices)
 
-      expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, request.user.token, dataServices)
+      expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, callConfig, dataServices)
     })
 
     it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {

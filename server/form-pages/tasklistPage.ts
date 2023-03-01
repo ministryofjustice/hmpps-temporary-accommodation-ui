@@ -2,6 +2,7 @@
 
 import { ApprovedPremisesApplication, ApprovedPremisesAssessment } from '@approved-premises/api'
 import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
+import { CallConfig } from '../data/restClient'
 
 export interface TasklistPageInterface {
   new (
@@ -12,7 +13,7 @@ export interface TasklistPageInterface {
   initialize?(
     body: Record<string, unknown>,
     document: ApprovedPremisesApplication | ApprovedPremisesAssessment,
-    token: string,
+    callConfig: CallConfig,
     dataServices: DataServices,
   ): Promise<TasklistPage>
 }

@@ -81,3 +81,7 @@ The steps are also available in the [PULL_REQUEST_TEMPLATE](/.github/PULL_REQUES
 
 This application is hosted on the MoJ Cloud Platform. For further details
 head over to [our infrastructure documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4325244964/Manage+infrastructure).
+
+## Environments
+
+[Details of the different environments and their roles can be found in Confluence](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4330226204/Environments).

@@ -78,7 +78,7 @@ export default class OptionalOasysSections implements TasklistPage {
   }
 
   previous() {
-    return ''
+    return 'dashboard'
   }
 
   next() {

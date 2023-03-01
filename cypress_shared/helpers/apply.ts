@@ -15,6 +15,7 @@ import {
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
+  OptionalOasysSectionsPage,
   SentenceTypePage,
   StartPage,
   TaskListPage,
@@ -24,6 +25,7 @@ import ApplyPage from '../pages/apply/applyPage'
 export default class ApplyHelper {
   pages = {
     reasonsForPlacement: [] as Array<ApplyPage>,
+    riskAndNeedFactors: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -79,12 +81,13 @@ export default class ApplyHelper {
 
   completeApplication() {
     this.completeBasicInformation()
+    this.completeOasysImport()
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.reasonsForPlacement].length
+    return [...this.pages.reasonsForPlacement, ...this.pages.riskAndNeedFactors].length
   }
 
   private stubPersonEndpoints() {
@@ -164,12 +167,33 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('basic-information', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
 
     // And the risk widgets should be visible
     if (this.uiRisks) {
       tasklistPage.shouldShowRiskWidgets(this.uiRisks)
     }
+  }
+
+  private completeOasysImport() {
+    // Given I click the 'Import Oasys' task
+    cy.get('[data-cy-task-name="oasys-import"]').click()
+    const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
+
+    // When I complete the form
+    optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
+    optionalOasysImportPage.clickSubmit()
+
+    this.pages.riskAndNeedFactors = [optionalOasysImportPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // Then I should be taken back to the tasklist
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
+
+    // And the Risk Management Features task should show as not started
+    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
   }
 
   private completeCheckYourAnswersSection() {

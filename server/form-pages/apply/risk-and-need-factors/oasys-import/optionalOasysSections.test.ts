@@ -104,7 +104,7 @@ describe('OptionalOasysSections', () => {
 
   itShouldHaveNextValue(new OptionalOasysSections({}), '')
 
-  itShouldHavePreviousValue(new OptionalOasysSections({}), '')
+  itShouldHavePreviousValue(new OptionalOasysSections({}), 'dashboard')
 
   describe('errors', () => {
     it('should return an empty object', () => {

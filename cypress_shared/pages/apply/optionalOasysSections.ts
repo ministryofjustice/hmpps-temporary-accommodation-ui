@@ -1,4 +1,5 @@
 import { ApprovedPremisesApplication, OASysSection } from '@approved-premises/api'
+import paths from '../../../server/paths/apply'
 
 import ApplyPage from './applyPage'
 
@@ -9,6 +10,7 @@ export default class OptionalOasysSectionsPage extends ApplyPage {
       application,
       'oasys-import',
       'optional-oasys-sections',
+      paths.applications.show({ id: application.id }),
     )
   }
 

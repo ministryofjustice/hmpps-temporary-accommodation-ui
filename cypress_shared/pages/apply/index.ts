@@ -4,6 +4,7 @@ import EnterCRNPage from './enterCrn'
 import ListPage from './list'
 import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
+import RiskManagementPlanPage from './riskManagementPlan'
 import RoshSummaryPage from './roshSummary'
 import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
@@ -26,4 +27,5 @@ export {
   RoshSummaryPage,
   OffenceDetailsPage,
   SupportingInformationPage,
+  RiskManagementPlanPage,
 }

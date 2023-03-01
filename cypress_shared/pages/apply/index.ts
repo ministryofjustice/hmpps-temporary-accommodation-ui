@@ -2,6 +2,7 @@ import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
+import OptionalOasysSectionsPage from './optionalOasysSections'
 import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
 import StartPage from './startPage'
@@ -18,4 +19,5 @@ export {
   SubmissionConfirmation,
   TaskListPage,
   SentenceTypePage,
+  OptionalOasysSectionsPage,
 }

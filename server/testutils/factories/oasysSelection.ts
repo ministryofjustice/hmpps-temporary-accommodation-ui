@@ -3,7 +3,21 @@ import { Factory } from 'fishery'
 
 import type { OASysSection } from '@approved-premises/api'
 
-export default Factory.define<OASysSection>(() => ({
+class OasysSelectionFactory extends Factory<OASysSection> {
+  needsLinkedToHarm() {
+    return this.params({ linkedToHarm: true, linkedToReOffending: true })
+  }
+
+  needsLinkedToReoffending() {
+    return this.params({ linkedToHarm: false, linkedToReOffending: true })
+  }
+
+  needsNotLinkedToReoffending() {
+    return this.params({ linkedToHarm: false, linkedToReOffending: false })
+  }
+}
+
+export default OasysSelectionFactory.define(() => ({
   section: faker.datatype.number({ min: 1, max: 20 }),
   name: faker.helpers.arrayElement([
     'accommodation',

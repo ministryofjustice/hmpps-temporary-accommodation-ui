@@ -5,6 +5,7 @@ import { getMatchingRequests, stubFor } from '../../wiremock'
 import { characteristics } from '../../wiremock/referenceDataStubs'
 import { errorStub } from '../../wiremock/utils'
 import booking from './booking'
+import lostBed from './lostBed'
 
 export default {
   stubRoomsForPremisesId: (args: { premisesId: string; rooms: Array<Room> }) =>
@@ -37,6 +38,7 @@ export default {
         },
       }),
       booking.stubBookingsForPremisesId({ premisesId: args.premisesId, bookings: [] }),
+      lostBed.stubLostBedsForPremisesId({ premisesId: args.premisesId, lostBeds: [] }),
     ]),
   stubRoomCreate: (args: { premisesId: string; room: Room }): SuperAgentRequest =>
     stubFor({

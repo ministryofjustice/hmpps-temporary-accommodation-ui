@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication } from '@approved-premises/api'
+import { ApprovedPremisesApplication, OASysQuestion } from '@approved-premises/api'
 import TasklistPage from '../../../server/form-pages/tasklistPage'
 import Page from '../page'
 
@@ -51,5 +51,14 @@ export default class ApplyPage extends Page {
 
   checkForBackButton(path: string) {
     cy.get('.govuk-back-link').should('have.attr', 'href').and('include', path)
+  }
+
+  completeOasysImportQuestions(questions: Array<OASysQuestion>, sectionName: string): void {
+    questions.forEach(question => {
+      cy.get('.govuk-label').contains(question.label)
+      cy.get(`textarea[name="${sectionName}[${question.questionNumber}]"]`)
+        .should('contain', question.answer)
+        .type(`. With an extra comment ${question.questionNumber}`)
+    })
   }
 }

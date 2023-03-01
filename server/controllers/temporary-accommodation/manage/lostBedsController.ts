@@ -5,13 +5,13 @@ import type {
   NewLostBedCancellation,
   UpdateTemporaryAccommodationLostBed as UpdateLostBed,
 } from '@approved-premises/api'
+import paths from '../../../paths/temporary-accommodation/manage'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import extractCallConfig from '../../../utils/restUtils'
 import { DateFormats } from '../../../utils/dateUtils'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
+import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 
 export default class LostBedsController {
   constructor(

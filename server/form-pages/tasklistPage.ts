@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
-import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { ApprovedPremisesApplication, ApprovedPremisesAssessment } from '@approved-premises/api'
+import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 
 export interface TasklistPageInterface {
   new (

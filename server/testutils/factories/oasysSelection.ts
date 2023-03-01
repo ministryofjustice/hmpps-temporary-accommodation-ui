@@ -1,5 +1,5 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { OASysSection } from '@approved-premises/api'
 

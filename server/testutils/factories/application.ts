@@ -1,11 +1,11 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { ApprovedPremisesApplication } from '@approved-premises/api'
 
+import { DateFormats } from '../../utils/dateUtils'
 import personFactory from './person'
 import risksFactory from './risks'
-import { DateFormats } from '../../utils/dateUtils'
 
 class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
   withReleaseDate(releaseDate = DateFormats.dateObjToIsoDate(faker.date.soon())) {

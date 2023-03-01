@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
-import type { ApprovedPremisesApplication } from '@approved-premises/api'
+import type { ApprovedPremisesApplication, OASysSection } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 import personFactory from './person'
@@ -15,6 +15,20 @@ class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
         'basic-information': {
           'release-date': { releaseDate, knowReleaseDate: 'yes' },
           'placement-date': { startDateSameAsReleaseDate: 'yes' },
+        },
+      },
+    })
+  }
+
+  withOptionalOasysSectionsSelected(needsLinkedToReoffending: Array<OASysSection>, otherNeeds: Array<OASysSection>) {
+    return this.params({
+      data: {
+        ...JSON.parse(faker.datatype.json()),
+        'oasys-import': {
+          'optional-oasys-sections': {
+            needsLinkedToReoffending,
+            otherNeeds,
+          },
         },
       },
     })

@@ -8,6 +8,7 @@ import {
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import documentFactory from '../../server/testutils/factories/document'
+import oasysSelectionFactory from '../../server/testutils/factories/oasysSelection'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
 import {
@@ -53,6 +54,7 @@ export default class ApplyHelper {
     this.uiRisks = uiRisks
     this.stubPersonEndpoints()
     this.stubApplicationEndpoints()
+    this.stubOasysEndpoints()
     this.stubDocumentEndpoints()
     this.stubOffences()
   }
@@ -99,6 +101,39 @@ export default class ApplyHelper {
     cy.task('stubApplicationCreate', { application: this.application })
     cy.task('stubApplicationUpdate', { application: this.application })
     cy.task('stubApplicationGet', { application: this.application })
+  }
+
+  private stubOasysEndpoints() {
+    // And there are OASys sections in the db
+    const oasysSelectionA = oasysSelectionFactory.needsLinkedToReoffending().build({
+      section: 1,
+      name: 'accommodation',
+    })
+    const oasysSelectionB = oasysSelectionFactory.needsLinkedToReoffending().build({
+      section: 2,
+      name: 'relationships',
+      linkedToHarm: false,
+      linkedToReOffending: true,
+    })
+    const oasysSelectionC = oasysSelectionFactory.needsNotLinkedToReoffending().build({
+      section: 3,
+      name: 'emotional',
+      linkedToHarm: false,
+      linkedToReOffending: false,
+    })
+    const oasysSelectionD = oasysSelectionFactory.needsNotLinkedToReoffending().build({
+      section: 4,
+      name: 'thinking',
+      linkedToHarm: false,
+      linkedToReOffending: false,
+    })
+
+    this.oasysSectionsLinkedToReoffending = [oasysSelectionA, oasysSelectionB]
+    this.otherOasysSections = [oasysSelectionC, oasysSelectionD]
+
+    const oasysSelection = [...this.oasysSectionsLinkedToReoffending, ...this.otherOasysSections]
+
+    cy.task('stubOasysSelection', { person: this.person, oasysSelection })
   }
 
   private stubDocumentEndpoints() {

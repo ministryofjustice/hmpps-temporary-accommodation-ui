@@ -2,6 +2,7 @@ import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
+import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
 import RoshSummaryPage from './roshSummary'
 import SelectOffencePage from './selectOffence'
@@ -22,4 +23,5 @@ export {
   SentenceTypePage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
+  OffenceDetailsPage,
 }

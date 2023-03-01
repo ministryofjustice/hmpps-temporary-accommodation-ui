@@ -9,7 +9,6 @@ import type { ClarificationNote } from './ClarificationNote';
 
 export type Assessment = {
     id: string;
-    allocatedToStaffMemberId?: string;
     schemaVersion: string;
     outdatedSchema: boolean;
     createdAt: string;

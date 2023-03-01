@@ -9,6 +9,7 @@ import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
+import SupportingInformationPage from './supportingInformation'
 import TaskListPage from './taskListPage'
 
 export {
@@ -24,4 +25,5 @@ export {
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,
+  SupportingInformationPage,
 }

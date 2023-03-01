@@ -17,6 +17,7 @@ import { statusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems } from './utils'
 
 import { dashboardTableRows } from './applicationUtils'
+import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as TasklistUtils from './taskListUtils'
 
@@ -144,4 +145,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('BookingInfo', { summaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
+  njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
 }

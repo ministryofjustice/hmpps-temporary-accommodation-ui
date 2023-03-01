@@ -6,5 +6,6 @@ export type LostBedReason = {
     id: string;
     name: string;
     isActive: boolean;
+    serviceScope: string;
 };
 

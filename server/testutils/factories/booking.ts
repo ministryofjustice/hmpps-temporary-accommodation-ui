@@ -5,11 +5,11 @@ import { Factory } from 'fishery'
 import type { Booking } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import arrivalFactory from './arrival'
-import confirmationFactory from './confirmation'
 import cancellationFactory from './cancellation'
+import confirmationFactory from './confirmation'
 import departureFactory from './departure'
-import personFactory from './person'
 import extensionFactory from './extension'
+import personFactory from './person'
 
 const soon = () =>
   DateFormats.dateObjToIsoDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
@@ -60,20 +60,25 @@ class BookingFactory extends Factory<Booking> {
   }
 }
 
-export default BookingFactory.define(() => ({
-  person: personFactory.build(),
-  originalArrivalDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
-  originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
-  arrivalDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
-  departureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
-  name: `${faker.name.firstName()} ${faker.name.lastName()}`,
-  id: faker.datatype.uuid(),
-  status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed', 'cancelled'] as const),
-  arrival: arrivalFactory.build(),
-  departure: departureFactory.build(),
-  confirmation: confirmationFactory.build(),
-  cancellation: cancellationFactory.build(),
-  extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
-  serviceName: 'temporary-accommodation' as const,
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-}))
+export default BookingFactory.define(() => {
+  const originalArrivalDate = faker.date.soon()
+  const arrivalDate = faker.date.soon()
+
+  return {
+    person: personFactory.build(),
+    originalArrivalDate: DateFormats.dateObjToIsoDate(originalArrivalDate),
+    originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, originalArrivalDate)),
+    arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
+    departureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, arrivalDate)),
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    id: faker.datatype.uuid(),
+    status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed', 'cancelled'] as const),
+    arrival: arrivalFactory.build(),
+    departure: departureFactory.build(),
+    confirmation: confirmationFactory.build(),
+    cancellation: cancellationFactory.build(),
+    extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
+    serviceName: 'temporary-accommodation' as const,
+    createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+  }
+})

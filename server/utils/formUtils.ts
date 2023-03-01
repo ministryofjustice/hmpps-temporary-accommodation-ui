@@ -1,4 +1,6 @@
-import type { CheckBoxItem, ErrorMessages, RadioItem, SelectOption } from '@approved-premises/ui'
+import type { CheckBoxItem, ErrorMessages, RadioItem, SelectOption, SummaryListItem } from '@approved-premises/ui'
+import postcodeAreas from '../etc/postcodeAreas.json'
+import { sentenceCase } from './utils'
 
 export const dateFieldValues = (fieldName: string, context: Record<string, unknown>, errors: ErrorMessages = {}) => {
   const errorClass = errors[fieldName] ? 'govuk-input--error' : ''
@@ -103,4 +105,63 @@ export function convertKeyValuePairToCheckBoxItems<T>(
       checked: checkedItems.includes(key),
     }
   })
+}
+
+export function convertArrayToRadioItems(array: Array<string>, checkedItem: string): Array<RadioItem> {
+  return array.map(key => {
+    return {
+      value: key,
+      text: sentenceCase(key),
+      checked: checkedItem === key,
+    }
+  })
+}
+
+export function convertKeyValuePairsToSummaryListItems<T>(
+  values: T,
+  titles: Record<string, string>,
+): Array<SummaryListItem> {
+  return Object.keys(values).map(key => {
+    return {
+      key: {
+        text: titles[key],
+      },
+      value: {
+        text: values[key],
+      },
+    }
+  })
+}
+
+/**
+ * Performs validation on the area of a postcode (IE the first three or four characters)
+ * @param string string to be validated.
+ * @returns true if the string is valid, false otherwise.
+ */
+export function validPostcodeArea(potentialPostcode: string) {
+  return postcodeAreas.includes(potentialPostcode.toUpperCase())
+}
+
+/**
+ * Returns the input if it is an array other.
+ * If the input is truthy and not an array it returns the input in an array
+ * Useful for checkboxes where if a single value is returned it is string but when multiple values are selected they are an array of strings.
+ * @param input input to be put into a flat array.
+ * @returns a flat array or an empty array.
+ */
+export function flattenCheckboxInput<T extends string | Array<T>>(input: T | Array<T>) {
+  if (Array.isArray(input)) return input
+  if (input) return [input].flat()
+  return []
+}
+
+/**
+ * @param input any
+ * @returns true if the input is an empty array, an array of strings or a string otherwise false
+ */
+export function isStringOrArrayOfStrings(input: unknown) {
+  return (
+    (Array.isArray(input) && input.every((element: unknown) => typeof element === 'string')) ||
+    typeof input === 'string'
+  )
 }

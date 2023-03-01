@@ -57,7 +57,7 @@ describe('RoshSummary', () => {
 
     itShouldHaveNextValue(new RoshSummary({}), 'offence-details')
 
-    itShouldHavePreviousValue(new RoshSummary({}), '')
+    itShouldHavePreviousValue(new RoshSummary({}), 'optional-oasys-sections')
 
     describe('errors', () => {
       it('should return an empty object', () => {

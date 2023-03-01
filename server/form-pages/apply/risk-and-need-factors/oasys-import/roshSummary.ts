@@ -59,7 +59,7 @@ export default class RoshSummary implements TasklistPage {
   }
 
   previous() {
-    return ''
+    return 'optional-oasys-sections'
   }
 
   next() {

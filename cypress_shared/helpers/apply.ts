@@ -21,9 +21,14 @@ import {
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
+  OffenceDetailsPage,
   OptionalOasysSectionsPage,
+  RiskManagementPlanPage,
+  RiskToSelfPage,
+  RoshSummaryPage,
   SentenceTypePage,
   StartPage,
+  SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
@@ -236,7 +241,48 @@ export default class ApplyHelper {
     optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
     optionalOasysImportPage.clickSubmit()
 
-    this.pages.riskAndNeedFactors = [optionalOasysImportPage]
+    const roshSummaryPage = new RoshSummaryPage(this.application, this.roshSummaries)
+
+    if (this.uiRisks) {
+      roshSummaryPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+
+    roshSummaryPage.completeForm()
+
+    roshSummaryPage.clickSubmit()
+
+    const offenceDetailsPage = new OffenceDetailsPage(this.application, this.offenceDetailSummaries)
+
+    if (this.uiRisks) {
+      offenceDetailsPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+
+    offenceDetailsPage.completeForm()
+    offenceDetailsPage.clickSubmit()
+
+    const supportingInformationPage = new SupportingInformationPage(
+      this.application,
+      this.supportingInformationSummaries,
+    )
+    supportingInformationPage.completeForm()
+    supportingInformationPage.clickSubmit()
+
+    const riskManagementPlanPage = new RiskManagementPlanPage(this.application, this.riskManagementPlanSummaries)
+    riskManagementPlanPage.completeForm()
+    riskManagementPlanPage.clickSubmit()
+
+    const riskToSelfPage = new RiskToSelfPage(this.application, this.riskToSelfSummaries)
+    riskToSelfPage.completeForm()
+    riskToSelfPage.clickSubmit()
+
+    this.pages.riskAndNeedFactors = [
+      optionalOasysImportPage,
+      roshSummaryPage,
+      offenceDetailsPage,
+      supportingInformationPage,
+      riskManagementPlanPage,
+      riskToSelfPage,
+    ]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
@@ -244,7 +290,7 @@ export default class ApplyHelper {
     // Then I should be taken back to the tasklist
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
 
-    // And the Risk Management Features task should show as not started
+    // And the Check Your Answers task should show as not started
     tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
   }
 

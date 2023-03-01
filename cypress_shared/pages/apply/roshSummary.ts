@@ -13,6 +13,7 @@ export default class RoshSummary extends ApplyPage {
       application,
       'oasys-import',
       'rosh-summary',
+      paths.applications.pages.show({ id: application.id, task: 'oasys-import', page: 'optional-oasys-sections' }),
     )
   }
 

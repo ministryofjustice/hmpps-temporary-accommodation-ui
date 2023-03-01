@@ -87,8 +87,8 @@ export const statusTag = (statusId: Booking['status']) => {
 
 export const getLatestExtension = (booking: Booking) => {
   return booking.extensions.reduce((latestExtension, testExtension) => {
-    const latestTime = DateFormats.convertIsoToDateObj(latestExtension.createdAt).getTime()
-    const testTime = DateFormats.convertIsoToDateObj(testExtension.createdAt).getTime()
+    const latestTime = DateFormats.isoToDateObj(latestExtension.createdAt).getTime()
+    const testTime = DateFormats.isoToDateObj(testExtension.createdAt).getTime()
 
     return latestTime > testTime ? latestExtension : testExtension
   }, booking.extensions?.[0])
@@ -96,8 +96,8 @@ export const getLatestExtension = (booking: Booking) => {
 
 export const deriveBookingHistory = (booking: Booking) => {
   const extensions = [...booking.extensions].sort((a, b) => {
-    const dateA = DateFormats.convertIsoToDateObj(a.createdAt)
-    const dateB = DateFormats.convertIsoToDateObj(b.createdAt)
+    const dateA = DateFormats.isoToDateObj(a.createdAt)
+    const dateB = DateFormats.isoToDateObj(b.createdAt)
 
     return dateA.getTime() - dateB.getTime()
   })
@@ -118,8 +118,8 @@ export const deriveBookingHistory = (booking: Booking) => {
 }
 
 export const shortenedOrExtended = (extension: Extension): 'shortened' | 'extended' => {
-  const previousDepartureDate = DateFormats.convertIsoToDateObj(extension.previousDepartureDate)
-  const newDepartureDate = DateFormats.convertIsoToDateObj(extension.newDepartureDate)
+  const previousDepartureDate = DateFormats.isoToDateObj(extension.previousDepartureDate)
+  const newDepartureDate = DateFormats.isoToDateObj(extension.newDepartureDate)
 
   return previousDepartureDate.getTime() > newDepartureDate.getTime() ? 'shortened' : 'extended'
 }

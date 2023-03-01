@@ -40,7 +40,7 @@ export class DateFormats {
    * @returns A Date object
    * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
    */
-  static convertIsoToDateObj(date: string) {
+  static isoToDateObj(date: string) {
     const parsedDate = parseISO(date)
 
     if (Number.isNaN(parsedDate.getTime())) {
@@ -55,7 +55,7 @@ export class DateFormats {
    * @returns the date in the to be shown in the UI: "20 December 2012".
    */
   static isoDateToUIDate(isoDate: string, options: { format: 'short' | 'long' } = { format: 'long' }) {
-    return DateFormats.dateObjtoUIDate(DateFormats.convertIsoToDateObj(isoDate), options)
+    return DateFormats.dateObjtoUIDate(DateFormats.isoToDateObj(isoDate), options)
   }
 
   /**
@@ -65,7 +65,11 @@ export class DateFormats {
    * @param key the key that prefixes each item in the dateInputObj, also the name of the property which the date object will be returned in the return value.
    * @returns an ISO8601 date string.
    */
-  static convertDateAndTimeInputsToIsoString<K extends string | number>(dateInputObj: ObjectWithDateParts<K>, key: K, options: { representation: 'auto' | 'complete' } = { representation: 'auto' }) {
+  static dateAndTimeInputsToIsoString<K extends string | number>(
+    dateInputObj: ObjectWithDateParts<K>,
+    key: K,
+    options: { representation: 'auto' | 'complete' } = { representation: 'auto' },
+  ) {
     const day = `0${dateInputObj[`${key}-day`]}`.slice(-2)
     const month = `0${dateInputObj[`${key}-month`]}`.slice(-2)
     const year = dateInputObj[`${key}-year`]
@@ -87,9 +91,9 @@ export class DateFormats {
     return dateInputObj
   }
 
-  static convertIsoToDateAndTimeInputs<K extends string | number>(isoDate: string, key: K): ObjectWithDateParts<K> {
-    const date = this.convertIsoToDateObj(isoDate)
-    
+  static isoToDateAndTimeInputs<K extends string | number>(isoDate: string, key: K): ObjectWithDateParts<K> {
+    const date = this.isoToDateObj(isoDate)
+
     return {
       [`${key}-day`]: `${date.getDate()}`,
       [`${key}-month`]: `${date.getMonth() + 1}`,
@@ -102,10 +106,10 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   dateInputObj: ObjectWithDateParts<K>,
   key: K,
 ): boolean => {
-  const dateString = DateFormats.convertDateAndTimeInputsToIsoString(dateInputObj, key)
+  const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)
 
   try {
-    DateFormats.convertIsoToDateObj(dateString[key])
+    DateFormats.isoToDateObj(dateString[key])
   } catch (err) {
     if (err instanceof InvalidDateStringError) {
       return false

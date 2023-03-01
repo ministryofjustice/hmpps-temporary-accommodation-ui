@@ -45,7 +45,7 @@ export default abstract class Page extends Component {
   }
 
   shouldShowDateInputs(prefix: string, date: string): void {
-    const parsedDate = DateFormats.convertIsoToDateObj(date)
+    const parsedDate = DateFormats.isoToDateObj(date)
     cy.get(`#${prefix}-day`).should('have.value', parsedDate.getDate().toString())
     cy.get(`#${prefix}-month`).should('have.value', `${parsedDate.getMonth() + 1}`)
     cy.get(`#${prefix}-year`).should('have.value', parsedDate.getFullYear().toString())
@@ -94,7 +94,7 @@ export default abstract class Page extends Component {
   }
 
   completeDateInputs(prefix: string, date: string): void {
-    const parsedDate = DateFormats.convertIsoToDateObj(date)
+    const parsedDate = DateFormats.isoToDateObj(date)
     cy.get(`#${prefix}-day`).type(parsedDate.getDate().toString())
     cy.get(`#${prefix}-month`).type(`${parsedDate.getMonth() + 1}`)
     cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())

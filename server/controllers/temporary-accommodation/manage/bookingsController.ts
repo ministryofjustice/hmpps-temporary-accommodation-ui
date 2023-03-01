@@ -46,8 +46,8 @@ export default class BookingsController {
       const { premisesId, roomId } = req.params
       const { crn } = req.body
 
-      const { arrivalDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate')
-      const { departureDate } = DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'departureDate')
+      const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
+      const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
 
       const callConfig = extractCallConfig(req)
 

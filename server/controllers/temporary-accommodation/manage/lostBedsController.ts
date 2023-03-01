@@ -51,8 +51,8 @@ export default class LostBedsController {
       const newLostBed: NewLostBed = {
         serviceName: 'temporary-accommodation',
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'startDate'),
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'endDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'startDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate'),
       }
 
       try {
@@ -99,8 +99,8 @@ export default class LostBedsController {
       const lostBedUpdate: UpdateLostBed = {
         serviceName: 'temporary-accommodation',
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'startDate'),
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'endDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'startDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate'),
       }
 
       try {
@@ -141,8 +141,8 @@ export default class LostBedsController {
         room,
         lostBedId,
         ...updateLostBed,
-        ...DateFormats.convertIsoToDateAndTimeInputs(updateLostBed.startDate, 'startDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(updateLostBed.endDate, 'endDate'),
+        ...DateFormats.isoToDateAndTimeInputs(updateLostBed.startDate, 'startDate'),
+        ...DateFormats.isoToDateAndTimeInputs(updateLostBed.endDate, 'endDate'),
         ...userInput,
       })
     }

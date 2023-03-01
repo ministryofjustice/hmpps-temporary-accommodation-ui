@@ -90,8 +90,8 @@ describe('LostBedsController', () => {
 
         request.body = {
           ...newLostBed,
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
         }
 
         await requestHandler(request, response, next)
@@ -194,8 +194,8 @@ describe('LostBedsController', () => {
         request.params.lostBedId = lostBed.id
         request.body = {
           ...lostBedUpdate,
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBedUpdate.startDate, 'startDate'),
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBedUpdate.endDate, 'endDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBedUpdate.startDate, 'startDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBedUpdate.endDate, 'endDate'),
         }
 
         const requestHandler = lostBedsController.update()
@@ -299,8 +299,8 @@ describe('LostBedsController', () => {
         room,
         lostBedId: lostBed.id,
         ...updateLostBed,
-        ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
+        ...DateFormats.isoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
+        ...DateFormats.isoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
       })
     })
   })

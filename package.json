@@ -24,7 +24,7 @@
     "test": "jest",
     "test:e2e": "cypress run -C cypress.config.e2e.ts",
     "test:e2e:ui": "set -a && source e2e.env && set +a && cypress open --e2e --browser electron -C cypress.config.e2e.ts --config baseUrl=https://approved-premises-dev.hmpps.service.justice.gov.uk",
-    "test:integration": "start-server-and-test start-feature http://localhost:3007/ping int-test",
+    "test:integration": "npm run start-test-wiremock && start-server-and-test start-feature http://localhost:3007/ping int-test",
     "test:integration:ui": "npm run start-test-wiremock && start-server-and-test start-feature:dev http://localhost:3007/ping int-test-ui",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",

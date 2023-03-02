@@ -37,7 +37,8 @@
             href: paths.bookings.new({ premisesId: premises.id, roomId: room.id })
           }) }}
           {{ govukButton({
-            text: "Submit"
+            text: "Submit",
+            preventDoubleClick: true
           }) }}
         </div>
       </form>

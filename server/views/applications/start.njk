@@ -27,8 +27,9 @@
         <p class="govuk-body">You can leave and return to your application at any time. Your progress will be saved.</p>
 
         {{ govukButton({
-            text: "Start now",
-            isStartButton: true
+          text: "Start now",
+          isStartButton: true,
+          preventDoubleClick: true
         }) }}
 
         <h2>Before you start</h2>

@@ -125,6 +125,23 @@ describe('catchValidationErrorOrPropogate', () => {
     expect(response.redirect).toHaveBeenCalledWith('some/url')
   })
 
+  it('throws the error if the invalid-params array is empty', () => {
+    const error = createMock<SanitisedError>({
+      data: {
+        'invalid-params': [],
+      },
+    })
+
+    let thrownError = null
+    try {
+      catchValidationErrorOrPropogate(request, response, error, 'some/url')
+    } catch (e) {
+      thrownError = e
+    }
+
+    expect(thrownError).toEqual(error)
+  })
+
   it('throws the error if the error is not the type we expect', () => {
     const err = new Error()
     expect(() => catchValidationErrorOrPropogate(request, response, err, 'some/url')).toThrowError(err)

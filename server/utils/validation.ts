@@ -87,7 +87,7 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
 
 const extractValidationErrors = (error: SanitisedError | Error, context: string) => {
   if ('data' in error) {
-    if (error.data['invalid-params']) {
+    if (error.data['invalid-params'] && error.data['invalid-params'].length) {
       return generateErrors(error.data['invalid-params'], context)
     }
     if (error instanceof ValidationError) {

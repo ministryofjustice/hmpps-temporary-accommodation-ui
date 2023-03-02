@@ -11,9 +11,9 @@ import type {
   PrisonCaseNote,
 } from '@approved-premises/api'
 
-import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
+import RestClient, { CallConfig } from './restClient'
 
 import oasysStubs from './stubs/oasysStubs.json'
 

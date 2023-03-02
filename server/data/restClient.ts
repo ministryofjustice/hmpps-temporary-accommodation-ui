@@ -1,16 +1,16 @@
 /* istanbul ignore file */
 
-import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
+import superagent from 'superagent'
 
 import { Response } from 'express'
 import logger from '../../logger'
-import sanitiseError from '../sanitisedError'
+import { ProbationRegion } from '../@types/shared'
 import { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
+import sanitiseError from '../sanitisedError'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
-import { ProbationRegion } from '../@types/shared'
 
 interface GetRequest {
   path?: string

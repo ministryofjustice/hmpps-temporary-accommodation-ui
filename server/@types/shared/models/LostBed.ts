@@ -8,7 +8,6 @@ export type LostBed = {
     id: string;
     startDate: string;
     endDate: string;
-    numberOfBeds: number;
     reason: LostBedReason;
     referenceNumber?: string;
     notes?: string;

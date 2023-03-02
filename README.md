@@ -27,7 +27,42 @@ script/bootstrap
 
 ## Running the application
 
-To run the server, from the root directory, run:
+To run the application there are two options.
+
+### 1. Using AP Tools
+
+In order to spin up a full stack of a working API and other [dependant
+services](./docker-compose.yml) we recommend using the [AP
+Tools](https://github.com/ministryofjustice/hmpps-approved-premises-tools).
+
+NB. The approach AP Tools takes solves a critical limitation for working in
+development. Due to how the frontend and API authenticate requests they both
+require access to _the same_ instance of hmpps-auth. This project is the focus
+of our development tooling across all CAS services and is most likely to receive
+future updates.
+
+After following the set up the common commands are:
+
+```bash
+ap-tools server start --local-ui --local-api
+```
+
+```bash
+ap-tools server stop
+```
+
+The service should then be available at <http://localhost:3000>
+
+[Log in credentials are documented within AP
+tools](https://github.com/ministryofjustice/hmpps-approved-premises-tools#start-server).
+
+### 2. Manually
+
+This option has the benefit of a quicker initial startup and enables us to
+develop features that aren't yet supported by the API through the use of
+Wiremock.
+
+To run the server against a fake API go to the root directory and run:
 
 ```bash
 script/server

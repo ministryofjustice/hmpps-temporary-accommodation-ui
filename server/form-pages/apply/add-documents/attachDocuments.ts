@@ -51,7 +51,7 @@ export default class AttachDocuments implements TasklistPage {
   }
 
   previous() {
-    return ''
+    return 'dashboard'
   }
 
   next() {

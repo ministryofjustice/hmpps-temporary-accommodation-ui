@@ -88,7 +88,7 @@ describe('attachDocuments', () => {
 
   itShouldHaveNextValue(new AttachDocuments({}, application), '')
 
-  itShouldHavePreviousValue(new AttachDocuments({}, application), '')
+  itShouldHavePreviousValue(new AttachDocuments({}, application), 'dashboard')
 
   describe('errors', () => {
     it('should return an error if a document does not have a description', () => {

@@ -1,4 +1,5 @@
 import { ApprovedPremisesApplication, Document } from '@approved-premises/api'
+import paths from '../../../server/paths/apply'
 
 import { DateFormats } from '../../../server/utils/dateUtils'
 
@@ -19,6 +20,7 @@ export default class AttachDocumentsPage extends ApplyPage {
       application,
       'attach-required-documents',
       'attach-documents',
+      paths.applications.show({ id: application.id }),
     )
 
     this.documents = documents

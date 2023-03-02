@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication, OASysQuestion } from '@approved-premises/api'
+import { ApprovedPremisesApplication, Document, OASysQuestion } from '@approved-premises/api'
 import TasklistPage from '../../../server/form-pages/tasklistPage'
 import Page from '../page'
 
@@ -59,6 +59,18 @@ export default class ApplyPage extends Page {
       cy.get(`textarea[name="${sectionName}[${question.questionNumber}]"]`)
         .should('contain', question.answer)
         .type(`. With an extra comment ${question.questionNumber}`)
+    })
+  }
+
+  shouldBeAbleToDownloadDocuments(documents: Array<Document>) {
+    documents.forEach(document => {
+      this.expectDownload()
+
+      cy.get(`a[data-cy-documentId="${document.id}"]`).click()
+
+      const downloadsFolder = Cypress.config('downloadsFolder')
+      const downloadedFilename = `${downloadsFolder}/${document.fileName}`
+      cy.readFile(downloadedFilename, 'binary', { timeout: 300 })
     })
   }
 }

@@ -56,8 +56,9 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ govukButton({
-          text: "Submit application"
-          }) }}
+          text: "Submit application",
+          preventDoubleClick: true
+        }) }}
       </form>
 
       {{ govukButton({

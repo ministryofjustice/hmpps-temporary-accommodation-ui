@@ -43,7 +43,8 @@
         {% block questions %}{% endblock %}
 
         {{ govukButton({
-            text: "Submit"
+          text: "Submit",
+          preventDoubleClick: true
         }) }}
       </form>
     </div>

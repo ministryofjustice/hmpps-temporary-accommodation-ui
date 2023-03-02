@@ -11,10 +11,10 @@ export default class ReportClient {
   }
 
   async bookings(response: Response, filename: string): Promise<void> {
-    await this.restClient.pipe(response, filename, { path: paths.reports.bookings({}) })
+    await this.restClient.pipe(response, { path: paths.reports.bookings({}), filename })
   }
 
   async bookingsForProbationRegion(response: Response, filename: string, probationRegionId: string): Promise<void> {
-    await this.restClient.pipe(response, filename, { path: paths.reports.bookings({}) }, { probationRegionId })
+    await this.restClient.pipe(response, { path: paths.reports.bookings({}), query: { probationRegionId }, filename })
   }
 }

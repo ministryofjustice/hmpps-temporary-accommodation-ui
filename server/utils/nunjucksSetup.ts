@@ -17,6 +17,7 @@ import { statusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems } from './utils'
 
 import { dashboardTableRows } from './applicationUtils'
+import * as AttachDocumentsUtils from './attachDocumentsUtils'
 import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as TasklistUtils from './taskListUtils'
@@ -149,4 +150,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('LostBedInfo', { lostBedSummaryListRows })
+  njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
 }

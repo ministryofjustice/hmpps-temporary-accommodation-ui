@@ -22,5 +22,6 @@ export default Factory.define<NewLostBed>(() => {
     numberOfBeds: faker.datatype.number({ max: 10 }),
     referenceNumber: faker.datatype.uuid(),
     reason: referenceDataFactory.lostBedReasons().build().id,
+    serviceName: 'temporary-accommodation',
   }
 })

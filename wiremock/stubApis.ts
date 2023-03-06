@@ -26,6 +26,7 @@ import path from '../server/paths/api'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 import confirmationStubs from './confirmationStubs'
+import oasysSectionsStubs from './oasysSectionsStubs'
 import oasysSelectionStubs from './oasysSelectionStubs'
 import offenceStubs from './offenceStubs'
 import * as referenceDataStubs from './referenceDataStubs'
@@ -241,6 +242,7 @@ stubs.push(
   ...reportStubs,
   ...offenceStubs,
   ...oasysSelectionStubs,
+  ...oasysSectionsStubs,
   ...Object.values(referenceDataStubs),
 )
 

@@ -2,12 +2,18 @@ import {
   ActiveOffence,
   Adjudication,
   ApprovedPremisesApplication as Application,
+  ArrayOfOASysOffenceDetailsQuestions,
+  ArrayOfOASysRiskManagementPlanQuestions,
+  ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
+  ArrayOfOASysRiskToSelfQuestions,
+  ArrayOfOASysSupportingInformationQuestions,
   Document,
   OASysSection,
   Person,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import documentFactory from '../../server/testutils/factories/document'
+import oasysSectionsFactory from '../../server/testutils/factories/oasysSections'
 import oasysSelectionFactory from '../../server/testutils/factories/oasysSelection'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
@@ -21,6 +27,13 @@ import {
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
+import {
+  offenceDetailSummariesFromApplication,
+  riskManagementPlanFromApplication,
+  riskToSelfSummariesFromApplication,
+  roshSummariesFromApplication,
+  supportInformationFromApplication,
+} from './index'
 
 export default class ApplyHelper {
   pages = {
@@ -33,6 +46,16 @@ export default class ApplyHelper {
   oasysSectionsLinkedToReoffending: Array<OASysSection> = []
 
   otherOasysSections: Array<OASysSection> = []
+
+  roshSummaries: ArrayOfOASysRiskOfSeriousHarmSummaryQuestions = []
+
+  offenceDetailSummaries: ArrayOfOASysOffenceDetailsQuestions = []
+
+  supportingInformationSummaries: ArrayOfOASysSupportingInformationQuestions = []
+
+  riskManagementPlanSummaries: ArrayOfOASysRiskManagementPlanQuestions = []
+
+  riskToSelfSummaries: ArrayOfOASysRiskToSelfQuestions = []
 
   adjudications: Array<Adjudication> = []
 
@@ -137,6 +160,35 @@ export default class ApplyHelper {
     const oasysSelection = [...this.oasysSectionsLinkedToReoffending, ...this.otherOasysSections]
 
     cy.task('stubOasysSelection', { person: this.person, oasysSelection })
+
+    const oasysSections = oasysSectionsFactory.build()
+
+    this.roshSummaries = roshSummariesFromApplication(this.application)
+    this.offenceDetailSummaries = offenceDetailSummariesFromApplication(this.application)
+    this.supportingInformationSummaries = supportInformationFromApplication(this.application)
+    this.riskManagementPlanSummaries = riskManagementPlanFromApplication(this.application)
+    this.riskToSelfSummaries = riskToSelfSummariesFromApplication(this.application)
+
+    cy.task('stubOasysSections', {
+      person: this.person,
+      oasysSections: {
+        ...oasysSections,
+        roshSummary: this.roshSummaries,
+        offenceDetails: this.offenceDetailSummaries,
+        riskManagementPlan: this.riskManagementPlanSummaries,
+        riskToSelf: this.riskToSelfSummaries,
+      },
+    })
+    cy.task('stubOasysSectionsWithSelectedSections', {
+      person: this.person,
+      oasysSections: {
+        ...oasysSections,
+        roshSummary: this.roshSummaries,
+        offenceDetails: this.offenceDetailSummaries,
+        supportingInformation: this.supportingInformationSummaries,
+      },
+      selectedSections: [1, 2, 3, 4],
+    })
   }
 
   private stubDocumentEndpoints() {

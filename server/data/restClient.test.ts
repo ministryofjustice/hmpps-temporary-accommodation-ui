@@ -2,8 +2,8 @@ import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
 import nock from 'nock'
 import type { ApiConfig } from '../config'
-import RestClient, { CallConfig } from './restClient'
 import probationRegionFactory from '../testutils/factories/probationRegion'
+import RestClient, { CallConfig } from './restClient'
 
 describe('restClient', () => {
   let fakeApprovedPremisesApi: nock.Scope

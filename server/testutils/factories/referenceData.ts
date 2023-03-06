@@ -12,8 +12,8 @@ import lostBedReasonsJson from '../../../wiremock/stubs/lost-bed-reasons.json'
 import moveOnCategoriesJson from '../../../wiremock/stubs/move-on-categories.json'
 import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.json'
 import probationRegionsJson from '../../../wiremock/stubs/probation-regions.json'
-import pdusJson from '../../data/pdus.json'
 import { Characteristic, LocalAuthorityArea } from '../../@types/shared'
+import pdusJson from '../../data/pdus.json'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {

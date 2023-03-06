@@ -1,12 +1,12 @@
-import roomFactory from '../testutils/factories/room'
-import newRoomFactory from '../testutils/factories/newRoom'
-import RoomClient from '../data/roomClient'
-import BedspaceService from './bedspaceService'
 import ReferenceDataClient from '../data/referenceDataClient'
-import characteristicFactory from '../testutils/factories/characteristic'
-import { formatLines } from '../utils/viewUtils'
-import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
+import RoomClient from '../data/roomClient'
+import characteristicFactory from '../testutils/factories/characteristic'
+import newRoomFactory from '../testutils/factories/newRoom'
+import roomFactory from '../testutils/factories/room'
+import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
+import { formatLines } from '../utils/viewUtils'
+import BedspaceService from './bedspaceService'
 
 jest.mock('../data/roomClient')
 jest.mock('../data/referenceDataClient')

@@ -210,7 +210,7 @@ export default class RestClient {
   }
 
   private filterBlanksFromData(data: Record<string, unknown>): Record<string, unknown> {
-    Object.keys(data).forEach(k => !data[k] && delete data[k])
+    Object.keys(data).forEach(k => typeof data[k] !== 'boolean' && !data[k] && delete data[k])
 
     return data
   }

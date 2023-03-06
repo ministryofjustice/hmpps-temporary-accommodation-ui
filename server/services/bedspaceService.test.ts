@@ -239,13 +239,13 @@ describe('BedspaceService', () => {
       const roomCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })
       const roomCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'room' })
       const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
-      const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
+      const premisesCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'premises' })
 
       referenceDataClient.getReferenceData.mockResolvedValue([
         genericCharacteristic,
         roomCharacteristic2,
         roomCharacteristic1,
-        otherCharacteristic,
+        premisesCharacteristic,
       ])
       ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         roomCharacteristic2,
@@ -257,7 +257,7 @@ describe('BedspaceService', () => {
       expect(result).toEqual({ characteristics: [roomCharacteristic1, roomCharacteristic2, genericCharacteristic] })
 
       expect(filterCharacteristics).toHaveBeenCalledWith(
-        [genericCharacteristic, roomCharacteristic2, roomCharacteristic1, otherCharacteristic],
+        [genericCharacteristic, roomCharacteristic2, roomCharacteristic1, premisesCharacteristic],
         'room',
       )
     })

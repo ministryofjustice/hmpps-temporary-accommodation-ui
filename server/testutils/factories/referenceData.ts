@@ -49,7 +49,7 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
 
   characteristic(modelScope: 'premises' | 'room'): Factory<Characteristic> {
     return Factory.define<Characteristic>(() =>
-      faker.helpers.arrayElement(filterCharacteristics(characteristicsJson, modelScope)),
+      faker.helpers.arrayElement(filterCharacteristics(characteristicsJson as Characteristic[], modelScope)),
     )
   }
 

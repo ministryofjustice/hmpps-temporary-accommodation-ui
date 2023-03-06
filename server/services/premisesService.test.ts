@@ -67,7 +67,7 @@ describe('PremisesService', () => {
       const premisesCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'premises' })
       const premisesCharacteristic2 = characteristicFactory.build({ name: 'EFG', modelScope: 'premises' })
       const genericCharacteristic = characteristicFactory.build({ name: 'HIJ', modelScope: '*' })
-      const otherCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'other' })
+      const roomCharacteristic = characteristicFactory.build({ name: 'LMN', modelScope: 'room' })
 
       const probationRegion1 = probationRegionFactory.build({ name: 'EFG' })
       const probationRegion2 = probationRegionFactory.build({ name: 'PQR' })
@@ -82,7 +82,7 @@ describe('PremisesService', () => {
           return [localAuthority3, localAuthority1, localAuthority2]
         }
         if (objectType === 'characteristics') {
-          return [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic]
+          return [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, roomCharacteristic]
         }
         return [probationRegion2, probationRegion1, probationRegion3]
       })
@@ -108,7 +108,7 @@ describe('PremisesService', () => {
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
 
       expect(filterCharacteristics).toHaveBeenCalledWith(
-        [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, otherCharacteristic],
+        [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, roomCharacteristic],
         'premises',
       )
     })

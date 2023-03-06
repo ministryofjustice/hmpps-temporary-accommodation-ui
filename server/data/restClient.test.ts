@@ -93,13 +93,15 @@ describe('restClient', () => {
   describe('post', () => {
     it('should filter out blank values', async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = { some: 'data', empty: '', undefinedItem: undefined, nullItem: null } as any
+      const data = { some: 'data', empty: '', undefinedItem: undefined, nullItem: null, falseItem: false } as any
 
-      fakeApprovedPremisesApi.post(`/some/path`, { some: 'data' }).reply(201, { some: 'data' })
+      fakeApprovedPremisesApi
+        .post(`/some/path`, { some: 'data', falseItem: false })
+        .reply(201, { some: 'data', falseItem: false })
 
       const result = await restClient.post({ path: '/some/path', data })
 
-      expect(result).toEqual({ some: 'data' })
+      expect(result).toEqual({ some: 'data', falseItem: false })
       expect(nock.isDone()).toBeTruthy()
     })
   })
@@ -107,13 +109,15 @@ describe('restClient', () => {
   describe('put', () => {
     it('should filter out blank values', async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data = { some: 'data', empty: '', undefinedItem: undefined, nullItem: null } as any
+      const data = { some: 'data', empty: '', undefinedItem: undefined, nullItem: null, falseItem: false } as any
 
-      fakeApprovedPremisesApi.put(`/some/path`, { some: 'data' }).reply(201, { some: 'data' })
+      fakeApprovedPremisesApi
+        .put(`/some/path`, { some: 'data', falseItem: false })
+        .reply(201, { some: 'data', falseItem: false })
 
       const result = await restClient.put({ path: '/some/path', data })
 
-      expect(result).toEqual({ some: 'data' })
+      expect(result).toEqual({ some: 'data', falseItem: false })
       expect(nock.isDone()).toBeTruthy()
     })
   })

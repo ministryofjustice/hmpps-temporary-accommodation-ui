@@ -7,20 +7,22 @@ import {
   Person,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
-
-import { CheckYourAnswersPage, ConfirmDetailsPage, EnterCRNPage, StartPage, TaskListPage } from '../pages/apply'
-
-import Page from '../pages'
-
 import documentFactory from '../../server/testutils/factories/document'
-
-import ApplyPage from '../pages/apply/applyPage'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
-import ExamplePage from '../pages/apply/example'
+import Page from '../pages'
+import {
+  CheckYourAnswersPage,
+  ConfirmDetailsPage,
+  EnterCRNPage,
+  SentenceTypePage,
+  StartPage,
+  TaskListPage,
+} from '../pages/apply'
+import ApplyPage from '../pages/apply/applyPage'
 
 export default class ApplyHelper {
   pages = {
-    exampleSection: [] as Array<ApplyPage>,
+    reasonsForPlacement: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -74,13 +76,13 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
-    this.completeExampleSection()
+    this.completeBasicInformation()
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.exampleSection].length
+    return [...this.pages.reasonsForPlacement].length
   }
 
   private stubPersonEndpoints() {
@@ -113,18 +115,18 @@ export default class ApplyHelper {
     cy.task('stubApplicationSubmit', { application: this.application })
   }
 
-  completeExampleSection() {
-    const examplePage = new ExamplePage(this.application)
-    examplePage.completeForm()
-    examplePage.clickSubmit()
+  completeBasicInformation() {
+    const sentenceTypePage = new SentenceTypePage(this.application)
+    sentenceTypePage.completeForm()
+    sentenceTypePage.clickSubmit()
 
-    this.pages.exampleSection = [examplePage]
+    this.pages.reasonsForPlacement = [sentenceTypePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
     // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('example-task', 'Completed')
+    tasklistPage.shouldShowTaskStatus('basic-information', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
@@ -143,7 +145,7 @@ export default class ApplyHelper {
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
 
     // And the page should be populated with my answers
-    checkYourAnswersPage.shouldShowExampleTask(this.pages.exampleSection)
+    checkYourAnswersPage.shouldShowBasicInformationAnswers(this.pages.reasonsForPlacement)
 
     // When I have checked my answers
     checkYourAnswersPage.clickSubmit()

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
-import { Form } from '../utils/decorators'
 import BaseForm from '../baseForm'
-import ExampleSection from './example-page'
+import { Form } from '../utils/decorators'
 import CheckYourAnswers from './check-your-answers'
+import ReasonsForPlacement from './reasons-for-placement'
 
-@Form({ sections: [ExampleSection, CheckYourAnswers] })
+@Form({ sections: [ReasonsForPlacement, CheckYourAnswers] })
 export default class Apply extends BaseForm {}

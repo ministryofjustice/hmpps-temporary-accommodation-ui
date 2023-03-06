@@ -1,7 +1,7 @@
 {
-  "example-task": {
-    "example-page": {
-      "exampleAnswer": "yes"
+  "basic-information": {
+    "sentence-type": {
+      "sentenceType": "communityOrder"
     }
   },
   "check-your-answers": {

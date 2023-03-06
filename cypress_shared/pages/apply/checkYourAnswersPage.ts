@@ -14,9 +14,9 @@ export default class CheckYourAnswersPage extends ApplyPage {
     )
   }
 
-  shouldShowExampleTask(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('example-task', 'Example task')
-    this.shouldShowAnswersForTask('example-task', pages)
+  shouldShowBasicInformationAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('basic-information', 'Basic information')
+    this.shouldShowAnswersForTask('basic-information', pages)
   }
 
   private shouldShowAnswersForTask(taskName: string, pages: Array<ApplyPage>) {

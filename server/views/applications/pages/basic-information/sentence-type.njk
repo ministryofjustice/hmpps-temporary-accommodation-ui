@@ -1,0 +1,25 @@
+{% extends "../layout.njk" %}
+
+{% block questions %}
+
+  {{
+    formPageRadios(
+      {
+        fieldName: "sentenceType",
+        fieldset: {
+          legend: {
+            text: page.title,
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        hint: {
+        text: "Select the option which best describes the situation"
+      },
+        items: page.items()
+      },
+      fetchContext()
+    )
+  }}
+
+{% endblock %}

@@ -1,8 +1,8 @@
-import applicationFactory from '../testutils/factories/application'
-import { tierEnvelopeFactory } from '../testutils/factories/risks'
-import paths from '../paths/apply'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
+import paths from '../paths/apply'
+import applicationFactory from '../testutils/factories/application'
+import { tierEnvelopeFactory } from '../testutils/factories/risks'
 import { DateFormats } from './dateUtils'
 import { isApplicableTier, tierBadge } from './personUtils'
 
@@ -197,12 +197,12 @@ describe('applicationUtils', () => {
   })
 
   describe('firstPageOfApplicationJourney', () => {
-    it('returns the example page', () => {
+    it('returns the sentence type page', () => {
       ;(isApplicableTier as jest.Mock).mockReturnValue(true)
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(
-        paths.applications.pages.show({ id: application.id, task: 'example-task', page: 'example-page' }),
+        paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),
       )
     })
   })

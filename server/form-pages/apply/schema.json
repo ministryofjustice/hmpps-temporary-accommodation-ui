@@ -4,20 +4,25 @@
   "title": "Apply Schema",
   "additionalProperties": false,
   "required": [
-    "example-task",
+    "basic-information",
     "check-your-answers"
   ],
   "properties": {
-    "example-task": {
+    "basic-information": {
       "type": "object",
       "properties": {
-        "example-page": {
+        "sentence-type": {
           "type": "object",
           "properties": {
-            "exampleAnswer": {
+            "sentenceType": {
               "enum": [
-                "no",
-                "yes"
+                "bailPlacement",
+                "communityOrder",
+                "extendedDeterminate",
+                "ipp",
+                "life",
+                "nonStatutory",
+                "standardDeterminate"
               ],
               "type": "string"
             }

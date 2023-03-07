@@ -10,7 +10,7 @@ import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import bedFactory from '../testutils/factories/bed'
 import roomFactory from '../testutils/factories/room'
-import { formatStatus } from '../utils/bookingUtils'
+import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
@@ -18,7 +18,7 @@ jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
 jest.mock('../utils/bookingUtils', () => ({
   ...jest.requireActual('../utils/bookingUtils'),
-  formatStatus: jest.fn(),
+  statusTag: jest.fn(),
 }))
 jest.mock('../data/lostBedClient')
 jest.mock('../utils/lostBedUtils')
@@ -149,7 +149,7 @@ describe('BookingService', () => {
         bedId: 'other-bed-id',
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(lostBedStatusTag as jest.MockedFunction<typeof lostBedStatusTag>).mockReturnValue(statusHtml)
 
       const bookings = [booking2, booking1, booking4, booking3, otherBedBooking]
@@ -308,6 +308,7 @@ describe('BookingService', () => {
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
 
+      expect(statusTag).toHaveBeenCalledTimes(4)
       expect(lostBedStatusTag).toHaveBeenCalledTimes(4)
     })
   })

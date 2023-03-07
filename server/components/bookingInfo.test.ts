@@ -1,7 +1,7 @@
 import bookingFactory from '../testutils/factories/booking'
 import cancellationFactory from '../testutils/factories/cancellation'
 import extension from '../testutils/factories/extension'
-import { formatStatus, getLatestExtension, shortenedOrExtended } from '../utils/bookingUtils'
+import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './bookingInfo'
 
@@ -18,7 +18,7 @@ describe('BookingInfo', () => {
         departureDate: '2023-01-07',
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
 
       const result = await summaryListRows(booking)
 
@@ -49,7 +49,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('provisional')
+      expect(statusTag).toHaveBeenCalledWith('provisional')
     })
 
     it('returns summary list rows for a confirmed booking', async () => {
@@ -58,7 +58,7 @@ describe('BookingInfo', () => {
         departureDate: '2023-01-07',
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
 
       const result = summaryListRows(booking)
@@ -98,7 +98,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('confirmed')
+      expect(statusTag).toHaveBeenCalledWith('confirmed')
       expect(formatLines).toHaveBeenCalledWith(booking.confirmation.notes)
     })
 
@@ -111,7 +111,7 @@ describe('BookingInfo', () => {
         }),
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
 
       const result = summaryListRows(booking)
@@ -167,7 +167,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('cancelled')
+      expect(statusTag).toHaveBeenCalledWith('cancelled')
       expect(formatLines).toHaveBeenCalledWith(booking.cancellation.notes)
     })
 
@@ -178,7 +178,7 @@ describe('BookingInfo', () => {
         extensions: [],
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
 
       const result = summaryListRows(booking)
@@ -218,7 +218,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('arrived')
+      expect(statusTag).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
     })
 
@@ -229,7 +229,7 @@ describe('BookingInfo', () => {
         extensions: extension.buildList(2),
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
       ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
         bookings => bookings.extensions?.[0],
@@ -281,7 +281,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('arrived')
+      expect(statusTag).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
       expect(formatLines).toHaveBeenCalledWith(booking.extensions[0].notes)
       expect(getLatestExtension).toHaveBeenCalledWith(booking)
@@ -295,7 +295,7 @@ describe('BookingInfo', () => {
         extensions: extension.buildList(2),
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
       ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
         bookings => bookings.extensions?.[0],
@@ -347,7 +347,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('arrived')
+      expect(statusTag).toHaveBeenCalledWith('arrived')
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
       expect(formatLines).toHaveBeenCalledWith(booking.extensions[0].notes)
       expect(getLatestExtension).toHaveBeenCalledWith(booking)
@@ -360,7 +360,7 @@ describe('BookingInfo', () => {
         departureDate: '2023-01-07T00:00:00.000Z',
       })
 
-      ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
       ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
 
       const result = summaryListRows(booking)
@@ -408,7 +408,7 @@ describe('BookingInfo', () => {
         },
       ])
 
-      expect(formatStatus).toHaveBeenCalledWith('departed')
+      expect(statusTag).toHaveBeenCalledWith('departed')
       expect(formatLines).toHaveBeenCalledWith(booking.departure.notes)
     })
   })

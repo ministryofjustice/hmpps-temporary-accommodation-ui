@@ -5,7 +5,7 @@ import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { formatStatus } from '../utils/bookingUtils'
+import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
@@ -69,7 +69,7 @@ export default class BookingService {
           this.textValue(b.person.crn),
           this.textValue(DateFormats.isoDateToUIDate(b.arrivalDate, { format: 'short' })),
           this.textValue(DateFormats.isoDateToUIDate(b.departureDate, { format: 'short' })),
-          this.htmlValue(formatStatus(b.status)),
+          this.htmlValue(statusTag(b.status)),
           this.htmlValue(
             `<a href="${paths.bookings.show({
               premisesId,

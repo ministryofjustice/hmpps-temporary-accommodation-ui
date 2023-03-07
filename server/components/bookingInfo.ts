@@ -1,6 +1,6 @@
 import type { Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
-import { formatStatus, getLatestExtension, shortenedOrExtended } from '../utils/bookingUtils'
+import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
 
@@ -10,7 +10,7 @@ export default (booking: Booking): SummaryList['rows'] => {
   const rows = [
     {
       key: textValue('Status'),
-      value: htmlValue(formatStatus(status)),
+      value: htmlValue(statusTag(status)),
     },
   ] as SummaryList['rows']
 

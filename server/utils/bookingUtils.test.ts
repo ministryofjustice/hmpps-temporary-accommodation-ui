@@ -1,9 +1,9 @@
 import {
   bookingActions,
   deriveBookingHistory,
-  formatStatus,
   getLatestExtension,
   shortenedOrExtended,
+  statusTag,
 } from './bookingUtils'
 import bookingFactory from '../testutils/factories/booking'
 import paths from '../paths/temporary-accommodation/manage'
@@ -80,9 +80,9 @@ describe('bookingUtils', () => {
     })
   })
 
-  describe('formatStatus', () => {
+  describe('statusTag', () => {
     it('returns the HTML formatted display name of a given status', () => {
-      expect(formatStatus('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
+      expect(statusTag('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
     })
   })
 

@@ -80,7 +80,7 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
   },
 ]
 
-export function formatStatus(statusId: Booking['status']) {
+export const statusTag = (statusId: Booking['status']) => {
   const status = allStatuses.find(({ id }) => id === statusId)
   return `<strong class="govuk-tag ${status.tagClass}">${status.name}</strong>`
 }

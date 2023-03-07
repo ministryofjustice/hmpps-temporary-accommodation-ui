@@ -120,16 +120,16 @@
 ) }}
 
 {% set statusHintText %}
-  <p>Select the relevant property status from the list below. The status will be applied to all bedspaces in this property.</p>
   <h4 class="govuk-heading-s">Online</h4>
-  <p>A property is being used by the service. Selecting this status will make any associated bedspaces available to book.</p>
+  <p>The service can use this property. Selecting this status will make all bedspaces in this property available for bookings.</p>
   <h4 class="govuk-heading-s">Archived</h4>
-  <p>A property is not being used by the service. This status should be selected when a contract has ended, for example.</p> 
+  <p>The service cannot use this property. For example, when the contract has expired. Selecting this status will make all bedspaces in this property unavailable for bookings.</p> 
 {% endset %}
 
 {% set statusHint %}
+  <p>Select the relevant property status from the list below. The status will be applied to all bedspaces in this property.</p>
   {{ govukDetails({
-    summaryText: "Guidance on statuses",
+    summaryText: "View guidance on statuses",
     html: statusHintText
   }) }}
 {% endset %}

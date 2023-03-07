@@ -202,11 +202,17 @@ Then('I should see only premises for my region', () => {
 })
 
 Then('I should see a confirmation for my new premises', () => {
-  cy.get('@premises').then(premises => {
-    const page = Page.verifyOnPage(PremisesShowPage, premises)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesShowPage, this.premises)
     page.shouldShowBanner('Property created')
 
     page.shouldShowPremisesDetails()
+
+    if (this.premises.status === 'archived') {
+      page.shouldShowAsArchived()
+    } else {
+      page.shouldShowAsActive()
+    }
   })
 })
 
@@ -218,11 +224,17 @@ Then('I should see a list of the problems encountered creating the premises', ()
 })
 
 Then('I should see a confirmation for my updated premises', () => {
-  cy.get('@premises').then(premises => {
-    const page = Page.verifyOnPage(PremisesShowPage, premises)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesShowPage, this.premises)
     page.shouldShowBanner('Property updated')
 
     page.shouldShowPremisesDetails()
+
+    if (this.premises.status === 'archived') {
+      page.shouldShowAsArchived()
+    } else {
+      page.shouldShowAsActive()
+    }
   })
 })
 

@@ -25,8 +25,8 @@ context('Bedspace', () => {
     cy.task('stubPremisesReferenceData')
     cy.task('stubRoomReferenceData')
 
-    // And there is a premises in the database
-    const premises = premisesFactory.build()
+    // And there is an active premises in the database
+    const premises = premisesFactory.active().build()
     cy.task('stubSinglePremises', premises)
 
     // When I visit the show premises page

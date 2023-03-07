@@ -75,6 +75,19 @@ export default class PremisesShowPage extends Page {
     })
   }
 
+  shouldShowAsActive(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').should('contain', 'Add a bedspace')
+    })
+  }
+
+  shouldShowAsArchived(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.root().should('not.contain', 'Actions')
+    })
+  }
+
   shouldShowProbationRegion(probationRegion: ProbationRegion): void {
     this.shouldShowKeyAndValue('Probation region', probationRegion.name)
   }

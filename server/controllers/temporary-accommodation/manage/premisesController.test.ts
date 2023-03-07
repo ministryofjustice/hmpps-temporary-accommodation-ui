@@ -13,7 +13,7 @@ import probationRegionFactory from '../../../testutils/factories/probationRegion
 import referenceDataFactory from '../../../testutils/factories/referenceData'
 import roomFactory from '../../../testutils/factories/room'
 import updatePremisesFactory from '../../../testutils/factories/updatePremises'
-import { allStatuses, getActiveStatuses } from '../../../utils/premisesUtils'
+import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -27,6 +27,7 @@ jest.mock('../../../utils/premisesUtils', () => {
   return {
     ...originalModule,
     getActiveStatuses: jest.fn(),
+    premisesActions: jest.fn(),
   }
 })
 jest.mock('../../../utils/userUtils')
@@ -336,6 +337,7 @@ describe('PremisesController', () => {
 
       const bedspaceDetails = rooms.map(room => ({ room, summaryList: { rows: [] as Array<SummaryListItem> } }))
       bedspaceService.getBedspaceDetails.mockResolvedValue(bedspaceDetails)
+      ;(premisesActions as jest.MockedFunction<typeof premisesActions>).mockReturnValue([])
 
       request.params.premisesId = premises.id
 
@@ -345,6 +347,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
         ...details,
         bedspaces: bedspaceDetails,
+        actions: [],
       })
 
       expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(callConfig, premises.id)

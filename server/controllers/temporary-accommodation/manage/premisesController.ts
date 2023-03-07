@@ -4,7 +4,7 @@ import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
-import { allStatuses, getActiveStatuses } from '../../../utils/premisesUtils'
+import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -133,6 +133,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/premises/show', {
         ...details,
         bedspaces: bedspaceDetails,
+        actions: premisesActions(details.premises),
       })
     }
   }

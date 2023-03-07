@@ -1,6 +1,28 @@
-import { getActiveStatuses, statusInfo, statusTag } from './premisesUtils'
+import paths from '../paths/temporary-accommodation/manage'
+import premisesFactory from '../testutils/factories/premises'
+import { getActiveStatuses, premisesActions, statusInfo, statusTag } from './premisesUtils'
 
 describe('premisesUtils', () => {
+  describe('premisesActions', () => {
+    it('returns add a bedspace for an active premises', () => {
+      const premises = premisesFactory.active().build()
+
+      expect(premisesActions(premises)).toEqual([
+        {
+          text: 'Add a bedspace',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.bedspaces.new({ premisesId: premises.id }),
+        },
+      ])
+    })
+
+    it('returns null for an archived premises', () => {
+      const premises = premisesFactory.archived().build()
+
+      expect(premisesActions(premises)).toEqual(null)
+    })
+  })
+
   describe('getActiveStatuses', () => {
     it('returns only active statuses', () => {
       const activeStatus1 = {

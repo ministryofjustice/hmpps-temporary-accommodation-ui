@@ -16,7 +16,6 @@ import BedspacesController from './bedspacesController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
-jest.mock('../../../utils/restUtils')
 
 describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig

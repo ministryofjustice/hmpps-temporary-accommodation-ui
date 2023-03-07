@@ -84,6 +84,6 @@ export default class PersonClient {
   }
 
   async document(crn: string, documentId: string, response: Response): Promise<void> {
-    await this.restClient.pipe(response, { path: paths.people.documents({ crn, documentId }), filename: documentId })
+    await this.restClient.pipe(response, { path: paths.people.documents({ crn, documentId }) })
   }
 }

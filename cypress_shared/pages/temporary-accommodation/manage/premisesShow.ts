@@ -80,12 +80,16 @@ export default class PremisesShowPage extends Page {
       cy.get('button').contains('Actions').click()
       cy.get('a').should('contain', 'Add a bedspace')
     })
+
+    cy.root().should('not.contain', 'This is an archived property.')
   }
 
   shouldShowAsArchived(): void {
     cy.get('.moj-page-header-actions').within(() => {
       cy.root().should('not.contain', 'Actions')
     })
+
+    cy.root().should('contain', 'This is an archived property.')
   }
 
   shouldShowProbationRegion(probationRegion: ProbationRegion): void {

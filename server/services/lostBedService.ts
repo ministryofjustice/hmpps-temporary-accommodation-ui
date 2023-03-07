@@ -1,5 +1,8 @@
 import type { ReferenceData } from '@approved-premises/ui'
-import type { LostBed, NewLostBed } from '@approved-premises/api'
+import type {
+  TemporaryAccommodationLostBed as LostBed,
+  NewTemporaryAccommodationLostBed as NewLostBed,
+} from '@approved-premises/api'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 

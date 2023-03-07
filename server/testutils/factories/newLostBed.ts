@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
-import type { NewLostBed } from '@approved-premises/api'
+import type { NewTemporaryAccommodationLostBed as NewLostBed } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 import referenceDataFactory from './referenceData'
 
@@ -23,5 +23,6 @@ export default Factory.define<NewLostBed>(() => {
     referenceNumber: faker.datatype.uuid(),
     reason: referenceDataFactory.lostBedReasons().build().id,
     serviceName: 'temporary-accommodation',
+    bedId: faker.datatype.uuid(),
   }
 })

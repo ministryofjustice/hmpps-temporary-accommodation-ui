@@ -1,4 +1,7 @@
-import type { LostBed, NewLostBed } from '@approved-premises/api'
+import type {
+  TemporaryAccommodationLostBed as LostBed,
+  NewTemporaryAccommodationLostBed as NewLostBed,
+} from '@approved-premises/api'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'

@@ -2,12 +2,12 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import PremisesService from '../../../services/premisesService'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspaceService from '../../../services/bedspaceService'
+import PremisesService from '../../../services/premisesService'
 import { allStatuses, getActiveStatuses } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}

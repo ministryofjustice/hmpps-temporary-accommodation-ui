@@ -3,11 +3,11 @@ import type { TableRow } from '@approved-premises/ui'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
-import paths from '../paths/temporary-accommodation/manage'
-import { DateFormats } from '../utils/dateUtils'
-import { formatStatus } from '../utils/bookingUtils'
-import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 import { CallConfig } from '../data/restClient'
+import paths from '../paths/temporary-accommodation/manage'
+import { formatStatus } from '../utils/bookingUtils'
+import { DateFormats } from '../utils/dateUtils'
+import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5

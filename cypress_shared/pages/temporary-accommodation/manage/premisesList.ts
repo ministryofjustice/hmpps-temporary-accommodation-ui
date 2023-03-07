@@ -1,8 +1,8 @@
 import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 
-import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import premisesFactory from '../../../../server/testutils/factories/premises'
+import Page from '../../page'
 
 export default class PremisesListPage extends Page {
   constructor() {

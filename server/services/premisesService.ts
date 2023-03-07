@@ -1,4 +1,3 @@
-import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type {
   Characteristic,
   LocalAuthorityArea,
@@ -7,15 +6,16 @@ import type {
   StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
+import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import pduJson from '../data/pdus.json'
 import paths from '../paths/temporary-accommodation/manage'
 
-import { DateFormats } from '../utils/dateUtils'
-import { NegativeDateRange, formatStatus, getDateRangesWithNegativeBeds } from '../utils/premisesUtils'
-import { escape, formatLines } from '../utils/viewUtils'
-import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
+import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
+import { DateFormats } from '../utils/dateUtils'
+import { formatStatus, getDateRangesWithNegativeBeds, NegativeDateRange } from '../utils/premisesUtils'
+import { escape, formatLines } from '../utils/viewUtils'
 
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>

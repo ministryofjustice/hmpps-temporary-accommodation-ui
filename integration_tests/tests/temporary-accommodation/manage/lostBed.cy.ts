@@ -1,12 +1,12 @@
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import lostBedFactory from '../../../../server/testutils/factories/lostBed'
-import newLostBedFactory from '../../../../server/testutils/factories/newLostBed'
-import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import Page from '../../../../cypress_shared/pages/page'
+import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import lostBedFactory from '../../../../server/testutils/factories/lostBed'
+import newLostBedFactory from '../../../../server/testutils/factories/newLostBed'
+import premisesFactory from '../../../../server/testutils/factories/premises'
+import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Lost bed', () => {
   beforeEach(() => {

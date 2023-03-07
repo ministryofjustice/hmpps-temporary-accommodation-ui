@@ -1,14 +1,14 @@
+import Page from '../../../../cypress_shared/pages/page'
+import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
+import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
+import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
+import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
+import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
-import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
 import updatePremisesFactory from '../../../../server/testutils/factories/updatePremises'
-import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
-import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
-import Page from '../../../../cypress_shared/pages/page'
-import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'
-import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 
 context('Premises', () => {
   beforeEach(() => {

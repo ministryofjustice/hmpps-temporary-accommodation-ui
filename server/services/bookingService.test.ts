@@ -1,17 +1,17 @@
-import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
 import LostBedClient from '../data/lostBedClient'
+import BookingService from './bookingService'
 
-import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
 import lostBedFactory from '../testutils/factories/lostBed'
+import newBookingFactory from '../testutils/factories/newBooking'
 
-import paths from '../paths/temporary-accommodation/manage'
-import { DateFormats } from '../utils/dateUtils'
-import roomFactory from '../testutils/factories/room'
-import bedFactory from '../testutils/factories/bed'
-import { formatStatus } from '../utils/bookingUtils'
 import { CallConfig } from '../data/restClient'
+import paths from '../paths/temporary-accommodation/manage'
+import bedFactory from '../testutils/factories/bed'
+import roomFactory from '../testutils/factories/room'
+import { formatStatus } from '../utils/bookingUtils'
+import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
 jest.mock('../data/bookingClient')

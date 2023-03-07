@@ -1,6 +1,7 @@
 import type { Booking, TemporaryAccommodationLostBed as LostBed, Room } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
+import config from '../../../../server/config'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -74,6 +75,22 @@ export default class BedspaceShowPage extends Page {
           .eq(2)
           .contains(DateFormats.isoDateToUIDate(lostBed.endDate, { format: 'short' }))
       })
+  }
+
+  shouldShowAsActive(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').should('contain', 'Book bedspace')
+      if (!config.flags.voidsDisabled) {
+        cy.get('a').should('contain', 'Void bedspace')
+      }
+    })
+  }
+
+  shouldShowAsArchived(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.root().should('not.contain', 'Actions')
+    })
   }
 
   clickBedspaceEditLink(): void {

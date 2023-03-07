@@ -10,12 +10,14 @@ import premisesFactory from '../../../testutils/factories/premises'
 import referenceDataFactory from '../../../testutils/factories/referenceData'
 import roomFactory from '../../../testutils/factories/room'
 import updateRoomFactory from '../../../testutils/factories/updateRoom'
+import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspacesController from './bedspacesController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/bedspaceUtils')
 
 describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -257,6 +259,7 @@ describe('BedspacesController', () => {
 
       const bookingTableRows: Array<TableRow> = []
       bookingService.getTableRowsForBedspace.mockResolvedValue([])
+      ;(bedspaceActions as jest.MockedFunction<typeof bedspaceActions>).mockReturnValue([])
 
       request.params = { premisesId: premises.id, roomId: room.id }
 
@@ -267,6 +270,7 @@ describe('BedspacesController', () => {
         premises,
         bedspace: bedspaceDetails,
         bookingTableRows,
+        actions: [],
       })
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)

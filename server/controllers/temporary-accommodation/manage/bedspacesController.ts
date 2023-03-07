@@ -4,6 +4,7 @@ import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
+import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
@@ -117,6 +118,7 @@ export default class BedspacesController {
         premises,
         bedspace: bedspaceDetails,
         bookingTableRows,
+        actions: bedspaceActions(premises, room),
       })
     }
   }

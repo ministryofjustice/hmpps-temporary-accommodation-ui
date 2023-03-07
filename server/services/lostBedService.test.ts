@@ -1,4 +1,7 @@
-import type { LostBed, NewLostBed } from '@approved-premises/api'
+import type {
+  TemporaryAccommodationLostBed as LostBed,
+  NewTemporaryAccommodationLostBed as NewLostBed,
+} from '@approved-premises/api'
 
 import LostBedService from './lostBedService'
 import LostBedClient from '../data/lostBedClient'

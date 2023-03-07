@@ -2,6 +2,7 @@ import type { TemporaryAccommodationPremises as Premises } from '@approved-premi
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import premisesFactory from '../../../../server/testutils/factories/premises'
+import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 
 export default class PremisesListPage extends Page {
@@ -55,8 +56,9 @@ export default class PremisesListPage extends Page {
           cy.get('td').eq(0).contains(shortAddress)
           cy.get('td').eq(1).contains(item.bedCount)
           cy.get('td').eq(2).contains(item.pdu)
+          cy.get('td').eq(3).contains(statusInfo(item.status).name)
           cy.get('td')
-            .eq(3)
+            .eq(4)
             .contains('Manage')
             .should('have.attr', 'href', paths.premises.show({ premisesId: item.id }))
         })
@@ -71,7 +73,7 @@ export default class PremisesListPage extends Page {
     cy.contains(`${premises.addressLine1}, ${premises.postcode}`)
       .parent()
       .within(() => {
-        cy.get('td').eq(3).contains('Manage').click()
+        cy.get('td').eq(4).contains('Manage').click()
       })
   }
 }

@@ -122,6 +122,7 @@ describe('PremisesService', () => {
 
       const premises = [premises4, premises1, premises3, premises2]
       premisesClient.all.mockResolvedValue(premises)
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
 
       const rows = await service.tableRows(callConfig)
 
@@ -135,6 +136,9 @@ describe('PremisesService', () => {
           },
           {
             text: premises1.pdu,
+          },
+          {
+            html: `<strong>${premises1.status}</strong>`,
           },
           {
             html: `<a href="${paths.premises.show({
@@ -153,6 +157,9 @@ describe('PremisesService', () => {
             text: premises2.pdu,
           },
           {
+            html: `<strong>${premises2.status}</strong>`,
+          },
+          {
             html: `<a href="${paths.premises.show({
               premisesId: premises2.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
@@ -169,6 +176,9 @@ describe('PremisesService', () => {
             text: premises3.pdu,
           },
           {
+            html: `<strong>${premises3.status}</strong>`,
+          },
+          {
             html: `<a href="${paths.premises.show({
               premisesId: premises3.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
@@ -183,6 +193,9 @@ describe('PremisesService', () => {
           },
           {
             text: premises4.pdu,
+          },
+          {
+            html: `<strong>${premises4.status}</strong>`,
           },
           {
             html: `<a href="${paths.premises.show({

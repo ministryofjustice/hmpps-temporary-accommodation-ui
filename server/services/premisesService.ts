@@ -63,16 +63,17 @@ export default class PremisesService {
     const premises = await premisesClient.all()
 
     return premises
-      .map(p => ({ premises: p, shortAddress: `${p.addressLine1}, ${p.postcode}` }))
+      .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
       .sort((a, b) => a.shortAddress.localeCompare(b.shortAddress))
       .map(entry => {
         return [
           this.textValue(entry.shortAddress),
-          this.textValue(`${entry.premises.bedCount}`),
-          this.textValue(entry.premises.pdu),
+          this.textValue(`${entry.bedCount}`),
+          this.textValue(entry.pdu),
+          this.htmlValue(statusTag(entry.status)),
           this.htmlValue(
             `<a href="${paths.premises.show({
-              premisesId: entry.premises.id,
+              premisesId: entry.id,
             })}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
           ),
         ]

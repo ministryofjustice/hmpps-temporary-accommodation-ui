@@ -67,7 +67,7 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns null for adeparted booking', () => {
+    it('returns null for a departed booking', () => {
       const booking = bookingFactory.departed().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)

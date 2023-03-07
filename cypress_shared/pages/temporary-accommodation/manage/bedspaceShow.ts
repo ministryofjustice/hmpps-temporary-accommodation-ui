@@ -85,12 +85,16 @@ export default class BedspaceShowPage extends Page {
         cy.get('a').should('contain', 'Void bedspace')
       }
     })
+
+    cy.root().should('not.contain', 'This bedspace is in an archived property.')
   }
 
   shouldShowAsArchived(): void {
     cy.get('.moj-page-header-actions').within(() => {
       cy.root().should('not.contain', 'Actions')
     })
+
+    cy.root().should('contain', 'This bedspace is in an archived property.')
   }
 
   clickBedspaceEditLink(): void {

@@ -13,7 +13,7 @@ import paths from '../paths/temporary-accommodation/manage'
 
 import { CallConfig } from '../data/restClient'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
-import { formatStatus } from '../utils/premisesUtils'
+import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 
 export type PremisesReferenceData = {
@@ -173,7 +173,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('Status'),
-          value: this.textValue(formatStatus(premises.status)),
+          value: this.htmlValue(statusTag(premises.status)),
         },
         {
           key: this.textValue('Notes'),

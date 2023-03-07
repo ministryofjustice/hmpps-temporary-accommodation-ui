@@ -1,6 +1,6 @@
 import type { TemporaryAccommodationPremises as Premises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { formatStatus } from '../../../../server/utils/premisesUtils'
+import { statusInfo } from '../../../../server/utils/premisesUtils'
 import { exact } from '../../../../server/utils/utils'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PremisesEditablePage from './premisesEditable'
@@ -62,7 +62,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .contains('What is the status of this property?')
       .parent()
       .within(() => {
-        cy.get('label').contains(formatStatus(this.premises.status)).siblings('input').should('be.checked')
+        cy.get('label').contains(statusInfo(this.premises.status).name).siblings('input').should('be.checked')
       })
 
     cy.get('label')

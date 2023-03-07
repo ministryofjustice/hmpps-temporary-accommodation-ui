@@ -12,7 +12,7 @@ import probationRegionFactory from '../testutils/factories/probationRegion'
 import staffMemberFactory from '../testutils/factories/staffMember'
 import updatePremisesFactory from '../testutils/factories/updatePremises'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
-import { formatStatus } from '../utils/premisesUtils'
+import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 import PremisesService from './premisesService'
 
@@ -300,7 +300,7 @@ describe('PremisesService', () => {
       ;(formatCharacteristics as jest.MockedFunction<typeof formatCharacteristics>).mockImplementation(() => ({
         text: 'Some attributes',
       }))
-      ;(formatStatus as jest.MockedFn<typeof formatStatus>).mockReturnValue('Online')
+      ;(statusTag as jest.MockedFn<typeof statusTag>).mockReturnValue('<strong>Online</strong>')
 
       const result = await service.getPremisesDetails(callConfig, premises.id)
 
@@ -330,7 +330,7 @@ describe('PremisesService', () => {
             },
             {
               key: { text: 'Status' },
-              value: { text: 'Online' },
+              value: { html: '<strong>Online</strong>' },
             },
             {
               key: { text: 'Notes' },
@@ -352,7 +352,7 @@ describe('PremisesService', () => {
           name: 'A characteristic',
         }),
       ])
-      expect(formatStatus).toHaveBeenCalledWith('active')
+      expect(statusTag).toHaveBeenCalledWith('active')
     })
   })
 

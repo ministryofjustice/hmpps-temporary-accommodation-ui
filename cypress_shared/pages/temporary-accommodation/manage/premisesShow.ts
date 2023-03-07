@@ -2,7 +2,7 @@ import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room 
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import premisesFactory from '../../../../server/testutils/factories/premises'
-import { formatStatus } from '../../../../server/utils/premisesUtils'
+import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 
 export default class PremisesShowPage extends Page {
@@ -63,7 +63,7 @@ export default class PremisesShowPage extends Page {
         'Attributes',
         this.premises.characteristics.map(({ name }) => name),
       )
-      this.shouldShowKeyAndValue('Status', formatStatus(this.premises.status))
+      this.shouldShowKeyAndValue('Status', statusInfo(this.premises.status).name)
       this.shouldShowKeyAndValues('Notes', this.premises.notes.split('\n'))
     })
   }

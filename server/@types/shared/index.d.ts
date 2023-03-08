@@ -105,6 +105,7 @@ export type { SubmitApplication } from './models/SubmitApplication';
 export type { SupervisingOfficer } from './models/SupervisingOfficer';
 export type { SupervisingProvider } from './models/SupervisingProvider';
 export type { SupervisingTeam } from './models/SupervisingTeam';
+export type { Task } from './models/Task';
 export type { TemporaryAccommodationApplication } from './models/TemporaryAccommodationApplication';
 export type { TemporaryAccommodationAssessment } from './models/TemporaryAccommodationAssessment';
 export type { TemporaryAccommodationLostBed } from './models/TemporaryAccommodationLostBed';

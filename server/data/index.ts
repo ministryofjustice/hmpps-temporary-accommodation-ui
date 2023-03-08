@@ -12,23 +12,23 @@ initialiseAppInsights()
 buildAppInsightsClient()
 
 import HmppsAuthClient from './hmppsAuthClient'
+import PersonClient from './personClient'
 import PremisesClient from './premisesClient'
 import ReferenceDataClient from './referenceDataClient'
-import PersonClient from './personClient'
 
-import { createRedisClient } from './redisClient'
-import TokenStore from './tokenStore'
-import LostBedClient from './lostBedClient'
 import ApplicationClient from './applicationClient'
-import RoomClient from './roomClient'
+import LostBedClient from './lostBedClient'
+import { createRedisClient } from './redisClient'
 import ReportClient from './reportClient'
-import UserClient from './userClient'
 import { CallConfig } from './restClient'
+import RoomClient from './roomClient'
+import TokenStore from './tokenStore'
+import UserClient from './userClient'
 
 type RestClientBuilder<T> = (callConfig: CallConfig) => T
 
 export const dataAccess = () => ({
-  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient({ legacyMode: false }))),
+  hmppsAuthClient: new HmppsAuthClient(new TokenStore(createRedisClient())),
   premisesClientBuilder: ((callConfig: CallConfig) =>
     new PremisesClient(callConfig)) as RestClientBuilder<PremisesClient>,
   bookingClientBuilder: ((callConfig: CallConfig) => new BookingClient(callConfig)) as RestClientBuilder<BookingClient>,

@@ -15,11 +15,16 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage()
   }
 
-  samplePremises(count: number, alias: string): void {
+  sampleActivePremises(count: number, alias: string): void {
     cy.get('table')
       .children('tbody')
       .children('tr')
-      .then($items => Cypress._.sampleSize($items.toArray(), count))
+      .then(items => {
+        return Cypress._.sampleSize(
+          items.toArray().filter($item => $item.children[3].textContent === 'Online'),
+          count,
+        )
+      })
       .each((row, index) =>
         cy.wrap(row).within(_row =>
           cy
@@ -31,6 +36,7 @@ export default class PremisesListPage extends Page {
                 id: 'unknown',
                 addressLine1,
                 postcode,
+                status: 'active',
               })
 
               if (index === 0) {

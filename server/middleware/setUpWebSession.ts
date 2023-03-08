@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from 'uuid'
-import session from 'express-session'
 import connectRedis, { Client } from 'connect-redis'
 import express, { Router } from 'express'
-import { createRedisClient } from '../data/redisClient'
-import config from '../config'
+import session from 'express-session'
+import { v4 as uuidv4 } from 'uuid'
 import logger from '../../logger'
+import config from '../config'
+import { createRedisClient } from '../data/redisClient'
 
 const RedisStore = connectRedis(session)
 

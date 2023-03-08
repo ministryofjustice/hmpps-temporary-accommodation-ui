@@ -8,12 +8,14 @@ import {
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import documentFactory from '../../server/testutils/factories/document'
+import oasysSelectionFactory from '../../server/testutils/factories/oasysSelection'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
 import {
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
+  OptionalOasysSectionsPage,
   SentenceTypePage,
   StartPage,
   TaskListPage,
@@ -23,6 +25,7 @@ import ApplyPage from '../pages/apply/applyPage'
 export default class ApplyHelper {
   pages = {
     reasonsForPlacement: [] as Array<ApplyPage>,
+    riskAndNeedFactors: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -53,6 +56,7 @@ export default class ApplyHelper {
     this.uiRisks = uiRisks
     this.stubPersonEndpoints()
     this.stubApplicationEndpoints()
+    this.stubOasysEndpoints()
     this.stubDocumentEndpoints()
     this.stubOffences()
   }
@@ -77,12 +81,13 @@ export default class ApplyHelper {
 
   completeApplication() {
     this.completeBasicInformation()
+    this.completeOasysImport()
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.reasonsForPlacement].length
+    return [...this.pages.reasonsForPlacement, ...this.pages.riskAndNeedFactors].length
   }
 
   private stubPersonEndpoints() {
@@ -99,6 +104,39 @@ export default class ApplyHelper {
     cy.task('stubApplicationCreate', { application: this.application })
     cy.task('stubApplicationUpdate', { application: this.application })
     cy.task('stubApplicationGet', { application: this.application })
+  }
+
+  private stubOasysEndpoints() {
+    // And there are OASys sections in the db
+    const oasysSelectionA = oasysSelectionFactory.needsLinkedToReoffending().build({
+      section: 1,
+      name: 'accommodation',
+    })
+    const oasysSelectionB = oasysSelectionFactory.needsLinkedToReoffending().build({
+      section: 2,
+      name: 'relationships',
+      linkedToHarm: false,
+      linkedToReOffending: true,
+    })
+    const oasysSelectionC = oasysSelectionFactory.needsNotLinkedToReoffending().build({
+      section: 3,
+      name: 'emotional',
+      linkedToHarm: false,
+      linkedToReOffending: false,
+    })
+    const oasysSelectionD = oasysSelectionFactory.needsNotLinkedToReoffending().build({
+      section: 4,
+      name: 'thinking',
+      linkedToHarm: false,
+      linkedToReOffending: false,
+    })
+
+    this.oasysSectionsLinkedToReoffending = [oasysSelectionA, oasysSelectionB]
+    this.otherOasysSections = [oasysSelectionC, oasysSelectionD]
+
+    const oasysSelection = [...this.oasysSectionsLinkedToReoffending, ...this.otherOasysSections]
+
+    cy.task('stubOasysSelection', { person: this.person, oasysSelection })
   }
 
   private stubDocumentEndpoints() {
@@ -129,12 +167,33 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('basic-information', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
 
     // And the risk widgets should be visible
     if (this.uiRisks) {
       tasklistPage.shouldShowRiskWidgets(this.uiRisks)
     }
+  }
+
+  private completeOasysImport() {
+    // Given I click the 'Import Oasys' task
+    cy.get('[data-cy-task-name="oasys-import"]').click()
+    const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
+
+    // When I complete the form
+    optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
+    optionalOasysImportPage.clickSubmit()
+
+    this.pages.riskAndNeedFactors = [optionalOasysImportPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // Then I should be taken back to the tasklist
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
+
+    // And the Risk Management Features task should show as not started
+    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
   }
 
   private completeCheckYourAnswersSection() {

@@ -5,6 +5,7 @@
   "additionalProperties": false,
   "required": [
     "basic-information",
+    "oasys-import",
     "check-your-answers"
   ],
   "properties": {
@@ -25,6 +26,56 @@
                 "standardDeterminate"
               ],
               "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "oasys-import": {
+      "type": "object",
+      "properties": {
+        "optional-oasys-sections": {
+          "type": "object",
+          "properties": {
+            "needsLinkedToReoffending": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "section": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "linkedToHarm": {
+                    "type": "boolean"
+                  },
+                  "linkedToReOffending": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            },
+            "otherNeeds": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "section": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "linkedToHarm": {
+                    "type": "boolean"
+                  },
+                  "linkedToReOffending": {
+                    "type": "boolean"
+                  }
+                }
+              }
             }
           }
         }

@@ -4,6 +4,28 @@
       "sentenceType": "communityOrder"
     }
   },
+  "oasys-import": {
+    "optional-oasys-sections": {
+      "needsLinkedToReoffending": [
+        { "section": 1, "name": "accommodation", "linkedToHarm": false, "linkedToReOffending": true },
+        { "section": 2, "name": "relationships", "linkedToHarm": false, "linkedToReOffending": true }
+      ],
+      "otherNeeds": [
+        {
+          "section": 3,
+          "name": "emotional",
+          "linkedToHarm": false,
+          "linkedToReOffending": false
+        },
+        {
+          "section": 4,
+          "name": "thinking",
+          "linkedToHarm": false,
+          "linkedToReOffending": false
+        }
+      ]
+    }
+  },
   "check-your-answers": {
     "review": {
       "reviewed": "1"

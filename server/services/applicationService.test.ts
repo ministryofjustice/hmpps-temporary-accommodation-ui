@@ -1,20 +1,20 @@
-import type { Request } from 'express'
-import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { DataServices, TaskListErrors } from '@approved-premises/ui'
+import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { Request } from 'express'
 
+import ApplicationClient from '../data/applicationClient'
 import type TasklistPage from '../form-pages/tasklistPage'
+import { getBody, getPageName, getTaskName } from '../form-pages/utils'
 import { ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
-import ApplicationClient from '../data/applicationClient'
-import { getBody, getPageName, getTaskName } from '../form-pages/utils'
 
-import Apply from '../form-pages/apply'
-import applicationFactory from '../testutils/factories/application'
-import activeOffenceFactory from '../testutils/factories/activeOffence'
-import documentFactory from '../testutils/factories/document'
-import { TasklistPageInterface } from '../form-pages/tasklistPage'
-import { isUnapplicable } from '../utils/applicationUtils'
 import { CallConfig } from '../data/restClient'
+import Apply from '../form-pages/apply'
+import { TasklistPageInterface } from '../form-pages/tasklistPage'
+import activeOffenceFactory from '../testutils/factories/activeOffence'
+import applicationFactory from '../testutils/factories/application'
+import documentFactory from '../testutils/factories/document'
+import { isUnapplicable } from '../utils/applicationUtils'
 
 const FirstPage = jest.fn()
 const SecondPage = jest.fn()
@@ -252,7 +252,7 @@ describe('ApplicationService', () => {
 
       await service.initializePage(callConfig, OtherPage, request, dataServices)
 
-      expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, request.user.token, dataServices)
+      expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, callConfig, dataServices)
     })
 
     it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {

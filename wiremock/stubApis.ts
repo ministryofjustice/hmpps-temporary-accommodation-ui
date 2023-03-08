@@ -4,31 +4,32 @@ import { DeepPartial } from 'fishery'
 import type { ApprovedPremises } from '@approved-premises/api'
 import { bulkStub } from './index'
 
-import premisesJson from './stubs/premises.json'
-import bookingFactory from '../server/testutils/factories/booking'
 import bedFactory from '../server/testutils/factories/bed'
+import bookingFactory from '../server/testutils/factories/booking'
 import premisesFactory from '../server/testutils/factories/premises'
+import premisesJson from './stubs/premises.json'
 
-import bookingStubs from './bookingStubs'
-import extensionStubs from './extensionStubs'
-import arrivalStubs from './arrivalStubs'
-import nonArrivalStubs from './nonArrivalStubs'
-import departureStubs from './departuresStubs'
-import cancellationStubs from './cancellationStubs'
-import lostBedStubs from './lostBedStubs'
-import personStubs from './personStubs'
 import applicationStubs from './applicationStubs'
+import arrivalStubs from './arrivalStubs'
+import bookingStubs from './bookingStubs'
+import cancellationStubs from './cancellationStubs'
+import departureStubs from './departuresStubs'
+import extensionStubs from './extensionStubs'
+import lostBedStubs from './lostBedStubs'
+import nonArrivalStubs from './nonArrivalStubs'
+import personStubs from './personStubs'
 import roomStubs from './roomStub'
 import userStub from './userStub'
 
-import * as referenceDataStubs from './referenceDataStubs'
+import path from '../server/paths/api'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
-import { errorStub, getCombinations } from './utils'
-import path from '../server/paths/api'
 import confirmationStubs from './confirmationStubs'
-import reportStubs from './reportStubs'
+import oasysSelectionStubs from './oasysSelectionStubs'
 import offenceStubs from './offenceStubs'
+import * as referenceDataStubs from './referenceDataStubs'
+import reportStubs from './reportStubs'
+import { errorStub, getCombinations } from './utils'
 
 const stubs = []
 
@@ -198,6 +199,7 @@ stubs.push(
   ...userStub,
   ...reportStubs,
   ...offenceStubs,
+  ...oasysSelectionStubs,
   ...Object.values(referenceDataStubs),
 )
 

@@ -2,12 +2,17 @@ import { createMock } from '@golevelup/ts-jest'
 
 import type { ErrorMessages } from '@approved-premises/ui'
 import {
+  convertArrayToRadioItems,
   convertKeyValuePairToCheckBoxItems,
   convertKeyValuePairToRadioItems,
+  convertKeyValuePairsToSummaryListItems,
   convertObjectsToCheckboxItems,
   convertObjectsToRadioItems,
   convertObjectsToSelectOptions,
   dateFieldValues,
+  flattenCheckboxInput,
+  isStringOrArrayOfStrings,
+  validPostcodeArea,
 } from './formUtils'
 
 describe('formUtils', () => {
@@ -354,6 +359,68 @@ describe('formUtils', () => {
           text: 'def',
           value: '345',
           checked: true,
+        },
+      ])
+    })
+  })
+
+  describe('validPostcodeArea', () => {
+    it('when passed a postcode area it returns true', () => {
+      expect(validPostcodeArea('HR1')).toBe(true)
+    })
+
+    it('when passed a lowercase postcode area it returns true', () => {
+      expect(validPostcodeArea('hr1')).toBe(true)
+    })
+
+    it('when passed a non-postcode string returns false', () => {
+      expect(validPostcodeArea('foo')).toBe(false)
+    })
+  })
+
+  describe('flattenCheckboxInput', () => {
+    it('returns the input in an array', () => {
+      expect(flattenCheckboxInput('test')).toEqual(['test'])
+    })
+    it('returns the input if it is already an array', () => {
+      expect(flattenCheckboxInput(['test'])).toEqual(['test'])
+    })
+    it('returns an empty array if the value is falsy', () => {
+      expect(flattenCheckboxInput(null)).toEqual([])
+    })
+  })
+
+  describe('isStringOrArrayOfStrings', () => {
+    it('returns true if the input is a string', () => {
+      expect(isStringOrArrayOfStrings('test')).toEqual(true)
+    })
+    it('returns true if the input is an array of strings', () => {
+      expect(isStringOrArrayOfStrings(['test', 'test'])).toEqual(true)
+    })
+    it('returns false if array contains a non-string value ', () => {
+      expect(isStringOrArrayOfStrings(['test', 1, 'test'])).toEqual(false)
+    })
+  })
+
+  describe('convertArrayToRadioItems', () => {
+    it('returns the array as radio items with the value in sentence case', () => {
+      expect(convertArrayToRadioItems(['one', 'two'], 'two')).toEqual([
+        { text: 'One', value: 'one', checked: false },
+        { text: 'Two', value: 'two', checked: true },
+      ])
+    })
+  })
+
+  describe('convertKeyValuePairsToSummaryListItems', () => {
+    it('returns the key value pairs as summary list items', () => {
+      expect(convertKeyValuePairsToSummaryListItems({ itemOne: 'someValue' }, { itemOne: 'First title' })).toEqual([
+        {
+          key: {
+            text: 'First title',
+          },
+          value: {
+            text: 'someValue',
+          },
         },
       ])
     })

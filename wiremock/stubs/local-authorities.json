@@ -183,7 +183,7 @@
   { "id": "89faa462-7ea6-45ba-b169-93d947d20cae", "name": "Islington", "identifier": "E09000019", "isActive": true, "serviceScope": "*" },
   { "id": "187b168e-3afb-41b8-993b-4f92fe5aa62f", "name": "Kensington and Chelsea", "identifier": "E09000020", "isActive": true, "serviceScope": "*" },
   { "id": "97119da3-ccef-4b40-bdc0-97dce365bd30", "name": "Kent", "identifier": "E10000016", "isActive": true, "serviceScope": "*" },
-  { "id": "6a27166f-8957-4b76-b5ab-08892220648a", "name": "King''s Lynn and West Norfolk", "identifier": "E07000146", "isActive": true, "serviceScope": "*" },
+  { "id": "6a27166f-8957-4b76-b5ab-08892220648a", "name": "King's Lynn and West Norfolk", "identifier": "E07000146", "isActive": true, "serviceScope": "*" },
   { "id": "fa76f53e-4127-4bdf-8584-475e586cf3c2", "name": "Kingston upon Hu", "identifier": "E06000010", "isActive": true, "serviceScope": "*" },
   { "id": "6e733c95-fce9-4af5-aa63-5c25c7785d89", "name": "Kingston upon Thames", "identifier": "E09000021", "isActive": true, "serviceScope": "*" },
   { "id": "e93a30ad-dacd-46bf-8955-fb105312372f", "name": "Kirklees", "identifier": "E08000034", "isActive": true, "serviceScope": "*" },

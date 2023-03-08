@@ -26,19 +26,26 @@ export default class PremisesShowPage extends Page {
           .contains('Address')
           .siblings('.govuk-summary-list__value')
           .then(addressElement => {
-            const addressLines = addressElement
-              .html()
-              .split('<br>')
-              .map(text => text.trim())
+            cy.get('.govuk-summary-list__key')
+              .contains('Status')
+              .siblings('.govuk-summary-list__value')
+              .then(statusElement => {
+                const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
+                const addressLines = addressElement
+                  .html()
+                  .split('<br>')
+                  .map(text => text.trim())
 
-            const premises = premisesFactory.build({
-              id,
-              name,
-              addressLine1: addressLines[0],
-              postcode: addressLines[addressLines.length - 1],
-            })
+                const premises = premisesFactory.build({
+                  id,
+                  name,
+                  addressLine1: addressLines[0],
+                  postcode: addressLines[addressLines.length - 1],
+                  status,
+                })
 
-            cy.wrap(premises).as(alias)
+                cy.wrap(premises).as(alias)
+              })
           })
       })
     })

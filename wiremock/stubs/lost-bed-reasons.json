@@ -1,27 +1,44 @@
 [
   {
-    "id": "78b9c1a4-1d60-11ed-861d-0242ac120002",
-    "name": "Fire",
-    "isActive": true
+    "id": "040dce03-24f8-4fc4-8536-c1a311a307b3",
+    "name": "Deep clean",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
   {
-    "id": "51b44b8c-f7f3-415d-90c3-61bb7fb96286",
-    "name": "Damaged",
-    "isActive": true
+    "id": "1cfd451c-afde-4dba-a157-c1cf3289299f",
+    "name": "Needle sweep",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
   {
-    "id": "9ddc9bfc-72fa-4a25-88c0-cc0ff8c6c00e",
-    "name": "Refurbishment",
-    "isActive": true
+    "id": "6697bb59-5b2b-48c7-82b1-d73013018602",
+    "name": "PoP damage/repairs",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
   {
-    "id": "7f3eb6cd-b3fc-4a8d-b9ce-5959918ffbe8",
-    "name": "Staff shortage",
-    "isActive": true
+    "id": "ae8cfadf-b556-4119-a471-baa87d316ef9",
+    "name": "Supplier maintenance/repairs",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
   },
   {
-    "id": "1f2eb6cd-b3fc-4a8d-b9ce-5959918ffbe8",
-    "name": "Planned FM works required",
-    "isActive": true
+    "id": "479e8765-a978-4343-9eba-34f5e055bd30",
+    "name": "Stolen goods/furniture replacement",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "607c5526-e101-4b8b-b26d-dfefb4173e1d",
+    "name": "Cooling off (e.g. following an incident)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "1cefd7a4-e3ab-4908-9db8-aed0739e7ac3",
+    "name": "Other",
+    "isActive": true,
+    "serviceScope": "*"
   }
 ]

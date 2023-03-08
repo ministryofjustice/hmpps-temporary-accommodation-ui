@@ -5,6 +5,7 @@ import config from '../config'
 import lostBedFactory from '../testutils/factories/lostBed'
 import newLostBedFactory from '../testutils/factories/newLostBed'
 import { CallConfig } from './restClient'
+import paths from '../paths/api'
 
 describe('LostBedClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -33,13 +34,45 @@ describe('LostBedClient', () => {
       const newLostBed = newLostBedFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/lost-beds`, newLostBed)
+        .post(paths.premises.lostBeds.create({ premisesId: 'premisesId' }), newLostBed)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, lostBed)
 
       const result = await lostBedClient.create('premisesId', newLostBed)
 
       expect(result).toEqual(lostBed)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('find', () => {
+    it('should return the lost bed that has been requested', async () => {
+      const lostBed = lostBedFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.premises.lostBeds.show({ premisesId: 'premisesId', lostBedId: 'lostBedId' }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, lostBed)
+
+      const result = await lostBedClient.find('premisesId', 'lostBedId')
+
+      expect(result).toEqual(lostBed)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('allLostBedsForPremisesId', () => {
+    it('should return all lost beds for a given premises ID', async () => {
+      const lostBeds = lostBedFactory.buildList(5)
+
+      fakeApprovedPremisesApi
+        .get(paths.premises.lostBeds.index({ premisesId: 'premisesId' }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, lostBeds)
+
+      const result = await lostBedClient.allLostBedsForPremisesId('premisesId')
+
+      expect(result).toEqual(lostBeds)
       expect(nock.isDone()).toBeTruthy()
     })
   })

@@ -5,14 +5,33 @@ import type { TemporaryAccommodationLostBed as LostBed } from '@approved-premise
 import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
 
-export default Factory.define<LostBed>(() => ({
+class LostBedFactory extends Factory<LostBed> {
+  active() {
+    return this.params({
+      status: 'active',
+    })
+  }
+
+  cancelled() {
+    return this.params({
+      status: 'cancelled',
+    })
+  }
+
+  past() {
+    return this.params({
+      startDate: DateFormats.dateObjToIsoDate(faker.date.past()),
+    })
+  }
+}
+
+export default LostBedFactory.define(() => ({
   id: faker.datatype.uuid(),
   notes: faker.lorem.sentence(),
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
-  numberOfBeds: faker.datatype.number({ max: 10 }),
   referenceNumber: faker.datatype.uuid(),
   reason: referenceDataFactory.lostBedReasons().build(),
-  status: faker.helpers.arrayElement(['active', 'cancelled']),
+  status: faker.helpers.arrayElement(['active', 'cancelled'] as const),
   bedId: faker.datatype.uuid(),
 }))

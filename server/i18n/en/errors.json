@@ -65,6 +65,9 @@
       "invalid": "The end date is an invalid date",
       "beforeStartDate": "The end date must be before the start date"
     },
+    "reason": {
+      "empty": "You must choose a reason"
+    },
     "numberOfBeds": { "empty": "You must enter the number of beds lost" },
     "referenceNumber": { "empty": "You must enter a reference number" },
     "addressLine1": {

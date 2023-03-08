@@ -44,13 +44,15 @@ export interface AuditConfig {
   logErrors: boolean
 }
 
+const environment = process.env.ENVIRONMENT || 'local'
+
 export default {
   https: production,
   staticResourceCacheDuration: 20,
   flags: {
     oasysDisabled: process.env.OASYS_DISABLED || false,
   },
-  environment: process.env.ENVIRONMENT || 'local',
+  environment,
   sentry: {
     dsn: get('SENTRY_DSN', null, requiredInProduction),
   },
@@ -90,8 +92,8 @@ export default {
     approvedPremises: {
       url: get('APPROVED_PREMISES_API_URL', 'http://localhost:9092', requiredInProduction),
       timeout: {
-        response: 10000,
-        deadline: 10000,
+        response: environment === 'dev' ? 30000 : 10000,
+        deadline: environment === 'dev' ? 30000 : 10000,
       },
       agent: new AgentConfig(10000),
       serviceName: get('COMMUNITY_ACCOMMODATION_API_SERVICE_NAME', 'approved-premises', requiredInProduction),

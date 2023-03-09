@@ -45,7 +45,6 @@ Given('I attempt to mark the booking as departed with required details missing',
     bookingShowPage.clickMarkDepartedBookingButton()
 
     const bookingDeparturePage = Page.verifyOnPage(BookingDepartureNewPage, this.premises, this.room, this.booking)
-    bookingDeparturePage.clearForm()
     bookingDeparturePage.clickSubmit()
   })
 })

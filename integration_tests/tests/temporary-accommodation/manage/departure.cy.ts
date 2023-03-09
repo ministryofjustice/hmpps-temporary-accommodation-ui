@@ -106,7 +106,6 @@ context('Booking departure', () => {
       bookingId: booking.id,
       params: ['dateTime', 'reasonId', 'moveOnCategoryId'],
     })
-    page.clearForm()
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields

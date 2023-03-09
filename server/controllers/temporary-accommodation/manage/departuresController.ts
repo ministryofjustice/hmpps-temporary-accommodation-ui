@@ -36,7 +36,6 @@ export default class DeparturesController {
         allMoveOnCategories,
         errors,
         errorSummary: requestErrorSummary,
-        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
         ...userInput,
       })
     }

@@ -29,13 +29,9 @@ export default class BookingDepartureNewPage extends Page {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
-
-    this.shouldShowDateInputs('dateTime', this.booking.departureDate)
   }
 
   completeForm(newDeparture: NewDeparture): void {
-    this.clearForm()
-
     this.getLegend('What was the departure date?')
     this.completeDateInputs('dateTime', newDeparture.dateTime)
 
@@ -49,9 +45,5 @@ export default class BookingDepartureNewPage extends Page {
     this.getTextInputByIdAndEnterDetails('notes', newDeparture.notes)
 
     this.clickSubmit()
-  }
-
-  clearForm(): void {
-    this.clearDateInputs('dateTime')
   }
 }

@@ -49,7 +49,6 @@ Given('I attempt to cancel the booking with required details missing', () => {
       this.room,
       this.booking,
     )
-    bookingCancellationPage.clearForm()
     bookingCancellationPage.clickSubmit()
   })
 })

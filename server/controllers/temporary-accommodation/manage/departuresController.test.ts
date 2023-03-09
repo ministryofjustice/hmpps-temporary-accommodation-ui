@@ -45,7 +45,7 @@ describe('DeparturesController', () => {
   })
 
   describe('new', () => {
-    it('renders the form prepopulated with the current departure dates', async () => {
+    it('renders the form', async () => {
       const premises = premisesFactory.build()
       const room = roomFactory.build()
       const booking = bookingFactory.build()
@@ -80,7 +80,6 @@ describe('DeparturesController', () => {
         allDepartureReasons: [],
         allMoveOnCategories: [],
         errors: {},
-        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
         errorSummary: [],
       })
     })

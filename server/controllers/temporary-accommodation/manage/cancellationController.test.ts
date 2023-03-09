@@ -45,7 +45,7 @@ describe('CancellationsController', () => {
   })
 
   describe('new', () => {
-    it('renders the form prepopulated with the current departure date', async () => {
+    it('renders the form', async () => {
       const premises = premisesFactory.build()
       const room = roomFactory.build()
       const booking = bookingFactory.arrived().build({
@@ -81,7 +81,6 @@ describe('CancellationsController', () => {
         booking,
         allCancellationReasons: [],
         errors: {},
-        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'date'),
         errorSummary: [],
       })
     })

@@ -36,7 +36,6 @@ export default class CanellationsController {
         allCancellationReasons,
         errors,
         errorSummary: requestErrorSummary,
-        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'date'),
         ...userInput,
       })
     }

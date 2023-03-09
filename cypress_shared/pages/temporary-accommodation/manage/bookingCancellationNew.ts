@@ -29,13 +29,9 @@ export default class BookingCancellationNewPage extends Page {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
-
-    this.shouldShowDateInputs('date', this.booking.departureDate)
   }
 
   completeForm(newCancellation: NewCancellation): void {
-    this.clearForm()
-
     this.getLegend('When was this booking cancelled?')
     this.completeDateInputs('date', newCancellation.date)
 
@@ -46,9 +42,5 @@ export default class BookingCancellationNewPage extends Page {
     this.getTextInputByIdAndEnterDetails('notes', newCancellation.notes)
 
     this.clickSubmit()
-  }
-
-  clearForm(): void {
-    this.clearDateInputs('date')
   }
 }

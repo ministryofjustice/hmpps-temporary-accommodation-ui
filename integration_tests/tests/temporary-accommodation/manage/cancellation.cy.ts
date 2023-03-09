@@ -104,7 +104,6 @@ context('Booking cancellation', () => {
       bookingId: booking.id,
       params: ['date'],
     })
-    page.clearForm()
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields

@@ -1,4 +1,4 @@
-import type { Booking, Room } from '@approved-premises/api'
+import type { Booking, TemporaryAccommodationLostBed as LostBed, Room } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -61,6 +61,21 @@ export default class BedspaceShowPage extends Page {
       })
   }
 
+  shouldShowLostBedDetails(lostBed: LostBed): void {
+    cy.get('tr')
+      .contains('Void')
+      .parent()
+      .parent()
+      .within(() => {
+        cy.get('td')
+          .eq(1)
+          .contains(DateFormats.isoDateToUIDate(lostBed.startDate, { format: 'short' }))
+        cy.get('td')
+          .eq(2)
+          .contains(DateFormats.isoDateToUIDate(lostBed.endDate, { format: 'short' }))
+      })
+  }
+
   clickBedspaceEditLink(): void {
     cy.get('a').contains('Edit').click()
   }
@@ -72,6 +87,13 @@ export default class BedspaceShowPage extends Page {
     })
   }
 
+  clickVoidBedspaceLink(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Void bedspace').click()
+    })
+  }
+
   clickBookingLink(booking: Booking): void {
     cy.get('tr')
       .contains(booking.person.crn)
@@ -79,5 +101,9 @@ export default class BedspaceShowPage extends Page {
       .within(() => {
         cy.get('a').contains('View').click()
       })
+  }
+
+  clickLostBedLink(premisesId: string, roomId: string, lostBedId: string): void {
+    cy.get(`[href="${paths.lostBeds.show({ premisesId, roomId, lostBedId })}"]`).click()
   }
 }

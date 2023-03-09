@@ -15,6 +15,9 @@ const departuresPath = singleBookingPath.path('mark-as-closed')
 const extensionsPath = singleBookingPath.path('extend')
 const cancellationsPath = singleBookingPath.path('cancellations')
 
+const lostBedsPath = singleBedspacePath.path('void')
+const singleLostBedPath = lostBedsPath.path(':lostBedId')
+
 const reportsPath = temporaryAccommodationPath.path('reports')
 
 const paths = {
@@ -59,6 +62,11 @@ const paths = {
       new: cancellationsPath.path('new'),
       create: cancellationsPath,
     },
+  },
+  lostBeds: {
+    new: lostBedsPath.path('new'),
+    create: lostBedsPath,
+    show: singleLostBedPath,
   },
   reports: {
     bookings: {

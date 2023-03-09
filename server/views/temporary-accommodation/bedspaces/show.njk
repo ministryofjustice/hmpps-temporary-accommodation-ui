@@ -19,17 +19,35 @@
 
   {% include "../../_messages.njk" %}
 
+  {% if not voidsDisabled %}  
   {{ mojPageHeaderActions({
     heading: {
       text: 'View a bedspace',
       classes: 'govuk-heading-l'
     },
-    items: [{
+    items:  [{
+        text: "Book bedspace",
+        classes: 'govuk-button--secondary',
+        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.room.id })
+      }, {
+        text: 'Void bedspace',
+        classes: 'govuk-button--secondary',
+        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.room.id })
+      }]
+  }) }}
+  {% else %}
+  {{ mojPageHeaderActions({
+    heading: {
+      text: 'View a bedspace',
+      classes: 'govuk-heading-l'
+    },
+    items:  [{
         text: "Book bedspace",
         classes: 'govuk-button--secondary',
         href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.room.id })
       }]
   }) }}
+  {% endif %}
 
   {{ locationHeader({ premises: premises }) }}
 

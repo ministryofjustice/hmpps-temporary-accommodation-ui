@@ -8,6 +8,7 @@ import bedFactory from '../server/testutils/factories/bed'
 import bookingFactory from '../server/testutils/factories/booking'
 import premisesFactory from '../server/testutils/factories/premises'
 import premisesJson from './stubs/premises.json'
+import lostBedFactory from '../server/testutils/factories/lostBed'
 
 import applicationStubs from './applicationStubs'
 import arrivalStubs from './arrivalStubs'
@@ -179,6 +180,46 @@ premises.forEach(item => {
           'Content-Type': 'application/json;charset=UTF-8',
         },
         jsonBody: booking,
+      },
+    })
+  })
+
+  const bedspaceLostBedFactory = lostBedFactory.params({
+    bedId: 'bedId',
+  })
+
+  const lostBeds = [
+    bedspaceLostBedFactory.active().buildList(rand()),
+    bedspaceLostBedFactory.cancelled().buildList(rand()),
+    bedspaceLostBedFactory.past().buildList(rand()),
+  ].flat()
+
+  stubs.push({
+    request: {
+      method: 'GET',
+      url: `/premises/${item.id}/lost-beds`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: lostBeds,
+    },
+  })
+
+  lostBeds.forEach(lostBed => {
+    stubs.push({
+      request: {
+        method: 'GET',
+        url: `/premises/${item.id}/lost-beds/${lostBed.id}`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: lostBed,
       },
     })
   })

@@ -59,11 +59,19 @@
       "beforeBookingArrivalDate": "The new departure date must be after the arrival date",
       "conflict": "An existing booking overlaps with this date"
     },
-    "startDate": { "empty": "You must enter a start date", "invalid": "The start date is an invalid date" },
+    "startDate": {
+      "empty": "You must enter a start date",
+      "invalid": "The start date is an invalid date",
+      "conflict": "An existing booking overlaps with these dates"
+    },
     "endDate": {
       "empty": "You must enter a end date",
       "invalid": "The end date is an invalid date",
+      "conflict": "An existing booking overlaps with these dates",
       "beforeStartDate": "The end date must be before the start date"
+    },
+    "reason": {
+      "empty": "You must choose a reason"
     },
     "numberOfBeds": { "empty": "You must enter the number of beds lost" },
     "referenceNumber": { "empty": "You must enter a reference number" },
@@ -84,7 +92,7 @@
     },
     "status": {
       "empty": "You must choose a status"
-    } 
+    }
   },
   "bookingCancellation": {
     "date": {

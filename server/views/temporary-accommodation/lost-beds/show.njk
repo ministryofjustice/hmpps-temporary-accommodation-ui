@@ -1,0 +1,44 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{% from "../components/lost-bed-info/macro.njk" import lostBedInfo %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Void booking" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {{ breadCrumb('View a void booking', [
+    {title: 'List of bedspaces', href: paths.premises.show({ premisesId: premises.id })},
+    {title: 'View bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
+  ]) }}
+
+  {% include "../../_messages.njk" %}
+
+  {{ mojPageHeaderActions({
+    heading: {
+      text: 'Void booking',
+      classes: 'govuk-heading-l'
+    },
+    items: actions
+  }) }}
+
+  {{ locationHeader({ premises: premises, room: room }) }}
+
+  {{ lostBedInfo(lostBed) }}
+
+{% endblock %}
+
+{% block extraScripts %}
+
+  {% if actions %}
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      new MOJFrontend.ButtonMenu(
+        {container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"}
+      );
+    </script>
+  {% endif %}
+
+{% endblock %}

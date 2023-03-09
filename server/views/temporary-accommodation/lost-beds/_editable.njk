@@ -1,0 +1,56 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-input/macro.njk" import taInput %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../components/ta-select/macro.njk" import taSelect %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
+
+{{ taDateInput(
+    {
+      fieldset: {
+        legend: {
+          text: "What is the start date?",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      fieldName: "startDate",
+      items: dateFieldValues('startDate', errors)
+    },
+    fetchContext()
+  ) }}
+{{ taDateInput(
+    {
+      fieldset: {
+        legend: {
+          text: "What is the expected end date?",
+          classes: "govuk-fieldset__legend--m"
+        }
+      },
+      fieldName: "endDate",
+      items: dateFieldValues('endDate', errors)
+    },
+    fetchContext()
+  ) }}
+{{ taSelect(
+    {
+        label: {
+            text: "What is the reason for this void?",
+                classes: "govuk-label--m"
+            },
+        items: convertObjectsToSelectOptions(lostBedReasons, "Select a reason", "name", "id", "reason"),
+        fieldName: "reason"
+          },
+          fetchContext()
+        ) }}
+{{ taTextarea(
+          {
+            label: {
+              text: "Please provide further details"
+            },
+            fieldName: "notes"
+          },
+          fetchContext()
+        ) }}
+
+{{ govukButton({
+  text: "Submit"
+}) }}

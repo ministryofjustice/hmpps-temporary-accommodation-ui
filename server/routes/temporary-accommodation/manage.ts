@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import type { Router } from 'express'
+import config from '../../config'
 
 import type { Controllers } from '../../controllers'
 import paths from '../../paths/temporary-accommodation/manage'
@@ -21,6 +22,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     extensionsController,
     cancellationsController,
     bookingReportsController,
+    lostBedsController,
   } = controllers.temporaryAccommodation
 
   get(paths.premises.index.pattern, premisesController.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
@@ -182,6 +184,23 @@ export default function routes(controllers: Controllers, services: Services, rou
     auditEvent: 'REPORT_CREATED_SUCCESS',
     auditBodyParams: ['probationRegionId'],
   })
+
+  if (!config.flags.voidsDisabled) {
+    get(paths.lostBeds.new.pattern, lostBedsController.new(), { auditEvent: 'VIEW_LOST_BED_CREATE' })
+    post(paths.lostBeds.create.pattern, lostBedsController.create(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.lostBeds.new.pattern,
+          auditEvent: 'CREATE_LOST_BED_FAILURE',
+        },
+        {
+          path: paths.lostBeds.show.pattern,
+          auditEvent: 'CREATE_LOST_BED_SUCCESS',
+        },
+      ],
+    })
+    get(paths.lostBeds.show.pattern, lostBedsController.show(), { auditEvent: 'VIEW_LOST_BED' })
+  }
 
   return router
 }

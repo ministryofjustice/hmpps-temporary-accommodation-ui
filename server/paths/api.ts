@@ -4,6 +4,7 @@ const premisesPath = path('/premises')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
+const singleLostBedPath = lostBedsPath.path(':lostBedId')
 const roomsPath = singlePremisesPath.path('rooms')
 const singleRoomPath = singlePremisesPath.path('rooms').path(':roomId')
 
@@ -20,7 +21,9 @@ const managePaths = {
       update: singleRoomPath,
     },
     lostBeds: {
+      show: singleLostBedPath,
       create: lostBedsPath,
+      index: lostBedsPath,
     },
   },
 }
@@ -52,7 +55,9 @@ export default {
     index: managePaths.premises.index,
     capacity: managePaths.premises.show.path('capacity'),
     lostBeds: {
+      show: managePaths.premises.lostBeds.show,
       create: managePaths.premises.lostBeds.create,
+      index: managePaths.premises.lostBeds.index,
     },
     rooms: {
       index: managePaths.premises.rooms.index,

@@ -21,4 +21,16 @@ export default class LostBedClient {
 
     return response as LostBed
   }
+
+  async find(premisesId: string, lostBedId: string): Promise<LostBed> {
+    return (await this.restClient.get({
+      path: paths.premises.lostBeds.show({ premisesId, lostBedId }),
+    })) as LostBed
+  }
+
+  async allLostBedsForPremisesId(premisesId: string): Promise<Array<LostBed>> {
+    return (await this.restClient.get({
+      path: paths.premises.lostBeds.index({ premisesId }),
+    })) as Array<LostBed>
+  }
 }

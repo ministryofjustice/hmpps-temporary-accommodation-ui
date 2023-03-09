@@ -1,8 +1,10 @@
 import BookingService from './bookingService'
 import BookingClient from '../data/bookingClient'
+import LostBedClient from '../data/lostBedClient'
 
 import newBookingFactory from '../testutils/factories/newBooking'
 import bookingFactory from '../testutils/factories/booking'
+import lostBedFactory from '../testutils/factories/lostBed'
 
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
@@ -10,17 +12,25 @@ import roomFactory from '../testutils/factories/room'
 import bedFactory from '../testutils/factories/bed'
 import { formatStatus } from '../utils/bookingUtils'
 import { CallConfig } from '../data/restClient'
+import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
-jest.mock('../utils/bookingUtils')
+jest.mock('../utils/bookingUtils', () => ({
+  ...jest.requireActual('../utils/bookingUtils'),
+  formatStatus: jest.fn(),
+}))
+jest.mock('../data/lostBedClient')
+jest.mock('../utils/lostBedUtils')
 
 describe('BookingService', () => {
   const bookingClient = new BookingClient(null) as jest.Mocked<BookingClient>
+  const lostBedClient = new LostBedClient(null) as jest.Mocked<LostBedClient>
 
   const bookingClientFactory = jest.fn()
+  const lostBedClientFactory = jest.fn()
 
-  const service = new BookingService(bookingClientFactory)
+  const service = new BookingService(bookingClientFactory, lostBedClientFactory)
   const callConfig = { token: 'some-token' } as CallConfig
 
   const premisesId = 'premiseId'
@@ -31,6 +41,7 @@ describe('BookingService', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
+    lostBedClientFactory.mockReturnValue(lostBedClient)
   })
 
   describe('create', () => {
@@ -116,10 +127,36 @@ describe('BookingService', () => {
         bed: bedFactory.build({ id: 'other-bed-id' }),
       })
 
+      const lostBed1 = lostBedFactory.build({
+        bedId,
+        startDate: '2023-04-07',
+        status: 'active',
+      })
+
+      const lostBed2 = lostBedFactory.build({
+        bedId,
+        startDate: '2022-10-07',
+        status: 'active',
+      })
+
+      const lostBed3 = lostBedFactory.build({
+        bedId,
+        startDate: '2023-01-07',
+        status: 'cancelled',
+      })
+
+      const otherLostBed = lostBedFactory.past().build({
+        bedId: 'other-bed-id',
+      })
+
       ;(formatStatus as jest.MockedFunction<typeof formatStatus>).mockReturnValue(statusHtml)
+      ;(lostBedStatusTag as jest.MockedFunction<typeof lostBedStatusTag>).mockReturnValue(statusHtml)
 
       const bookings = [booking2, booking1, booking4, booking3, otherBedBooking]
       bookingClient.allBookingsForPremisesId.mockResolvedValue(bookings)
+
+      const lostBeds = [lostBed1, lostBed2, lostBed3, otherLostBed]
+      lostBedClient.allLostBedsForPremisesId.mockResolvedValue(lostBeds)
 
       const room = roomFactory.build({
         beds: [
@@ -157,6 +194,27 @@ describe('BookingService', () => {
         ],
         [
           {
+            text: '-',
+          },
+          {
+            text: '7 Apr 23',
+          },
+          {
+            text: DateFormats.isoDateToUIDate(lostBed1.endDate, { format: 'short' }),
+          },
+          {
+            html: lostBedStatusTag(lostBed1.status),
+          },
+          {
+            html: `<a href="${paths.lostBeds.show({
+              premisesId,
+              roomId: room.id,
+              lostBedId: lostBed1.id,
+            })}">View<span class="govuk-visually-hidden"> void booking</span></a>`,
+          },
+        ],
+        [
+          {
             text: booking2.person.crn,
           },
           {
@@ -176,6 +234,27 @@ describe('BookingService', () => {
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking2.person.crn
             }</span></a>`,
+          },
+        ],
+        [
+          {
+            text: '-',
+          },
+          {
+            text: '7 Oct 22',
+          },
+          {
+            text: DateFormats.isoDateToUIDate(lostBed2.endDate, { format: 'short' }),
+          },
+          {
+            html: lostBedStatusTag(lostBed2.status),
+          },
+          {
+            html: `<a href="${paths.lostBeds.show({
+              premisesId,
+              roomId: room.id,
+              lostBedId: lostBed2.id,
+            })}">View<span class="govuk-visually-hidden"> void booking</span></a>`,
           },
         ],
         [
@@ -229,7 +308,7 @@ describe('BookingService', () => {
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.allBookingsForPremisesId).toHaveBeenCalledWith(premisesId)
 
-      expect(formatStatus).toHaveBeenCalledTimes(4)
+      expect(lostBedStatusTag).toHaveBeenCalledTimes(4)
     })
   })
 

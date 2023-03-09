@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
-import 'dotenv/config'
 import { ServiceName } from '@approved-premises/api'
+import 'dotenv/config'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -97,7 +97,7 @@ export default {
         deadline: environment === 'dev' ? 30000 : 10000,
       },
       agent: new AgentConfig(10000),
-      serviceName: get('COMMUNITY_ACCOMMODATION_API_SERVICE_NAME', 'approved-premises', requiredInProduction),
+      serviceName: 'temporary-accommodation',
     },
     audit: {
       region: get('AUDIT_SQS_REGION', 'eu-west-2'),

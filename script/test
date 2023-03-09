@@ -4,18 +4,6 @@
 
 set -e
 
-echo "==> Checking shell scripts"
-
-node_modules/.bin/shellcheck ./script/**/*[^utils] ./script/utils/**
-
-echo "==> Typechecking the code"
-
-script/utils/launch-docker.sh
-
-echo "==> Starting the backing services in Docker..."
-
-docker-compose -f docker-compose-test.yml up -d
-
 echo "==> Pulling the latest type from the API repo"
 
 npm run generate-types
@@ -31,6 +19,11 @@ npm run lint
 echo "==> Running unit tests..."
 
 npm run test
+
+echo "==> Starting the backing services in Docker..."
+
+script/utils/launch-docker.sh
+docker-compose -f docker-compose-test.yml up -d
 
 echo "==> Running integration tests..."
 

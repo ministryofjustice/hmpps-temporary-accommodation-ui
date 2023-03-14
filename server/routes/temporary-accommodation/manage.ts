@@ -200,6 +200,35 @@ export default function routes(controllers: Controllers, services: Services, rou
       ],
     })
     get(paths.lostBeds.show.pattern, lostBedsController.show(), { auditEvent: 'VIEW_LOST_BED' })
+    get(paths.lostBeds.edit.pattern, lostBedsController.edit(), { auditEvent: 'VIEW_LOST_BED_EDIT' })
+    put(paths.lostBeds.update.pattern, lostBedsController.update(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.lostBeds.edit.pattern,
+          auditEvent: 'UPDATE_LOST_BED_FAILURE',
+        },
+        {
+          path: paths.lostBeds.show.pattern,
+          auditEvent: 'UPDATE_LOST_BED_SUCCESS',
+        },
+      ],
+    })
+    get(paths.lostBeds.show.pattern, lostBedsController.show(), { auditEvent: 'VIEW_LOST_BED' })
+    get(paths.lostBeds.cancellations.new.pattern, lostBedsController.newCancellation(), {
+      auditEvent: 'VIEW_LOST_BED_CANCEL',
+    })
+    post(paths.lostBeds.cancellations.create.pattern, lostBedsController.createCancellation(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.lostBeds.cancellations.new.pattern,
+          auditEvent: 'CANCEL_LOST_BED_FAILURE',
+        },
+        {
+          path: paths.lostBeds.show.pattern,
+          auditEvent: 'CANCEL_LOST_BED_SUCCESS',
+        },
+      ],
+    })
   }
 
   return router

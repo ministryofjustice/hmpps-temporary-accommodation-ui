@@ -18,13 +18,13 @@ const actingUserProbationRegionName =
   getUrlEncodedCypressEnv('acting_user_probation_region_name') ||
   throwMissingCypressEnvError('acting_user_probation_region_name')
 
-Given("I'm viewing the list of premises", () => {
+Given('I view the list of premises', () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
   dashboardPage.clickPremisesLink()
 
   const premisesListPage = Page.verifyOnPage(PremisesListPage)
 
-  premisesListPage.samplePremises(3, 'premisesList')
+  premisesListPage.sampleActivePremises(3, 'premisesList')
 })
 
 Given("I'm creating a premises", () => {
@@ -35,12 +35,12 @@ Given("I'm creating a premises", () => {
   premisesListPage.clickAddPremisesButton()
 })
 
-Given("I'm viewing an existing premises", () => {
+Given('I view an existing active premises', () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
   dashboardPage.clickPremisesLink()
 
   const premisesListPage = Page.verifyOnPage(PremisesListPage)
-  premisesListPage.samplePremises(1, 'premisesList')
+  premisesListPage.sampleActivePremises(1, 'premisesList')
 
   cy.then(function _() {
     const premises = this.premisesList[0]
@@ -202,11 +202,17 @@ Then('I should see only premises for my region', () => {
 })
 
 Then('I should see a confirmation for my new premises', () => {
-  cy.get('@premises').then(premises => {
-    const page = Page.verifyOnPage(PremisesShowPage, premises)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesShowPage, this.premises)
     page.shouldShowBanner('Property created')
 
     page.shouldShowPremisesDetails()
+
+    if (this.premises.status === 'archived') {
+      page.shouldShowAsArchived()
+    } else {
+      page.shouldShowAsActive()
+    }
   })
 })
 
@@ -218,11 +224,17 @@ Then('I should see a list of the problems encountered creating the premises', ()
 })
 
 Then('I should see a confirmation for my updated premises', () => {
-  cy.get('@premises').then(premises => {
-    const page = Page.verifyOnPage(PremisesShowPage, premises)
+  cy.then(function _() {
+    const page = Page.verifyOnPage(PremisesShowPage, this.premises)
     page.shouldShowBanner('Property updated')
 
     page.shouldShowPremisesDetails()
+
+    if (this.premises.status === 'archived') {
+      page.shouldShowAsArchived()
+    } else {
+      page.shouldShowAsActive()
+    }
   })
 })
 

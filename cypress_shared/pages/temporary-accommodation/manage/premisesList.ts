@@ -1,8 +1,9 @@
 import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 
-import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import premisesFactory from '../../../../server/testutils/factories/premises'
+import { statusInfo } from '../../../../server/utils/premisesUtils'
+import Page from '../../page'
 
 export default class PremisesListPage extends Page {
   constructor() {
@@ -14,11 +15,16 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage()
   }
 
-  samplePremises(count: number, alias: string): void {
+  sampleActivePremises(count: number, alias: string): void {
     cy.get('table')
       .children('tbody')
       .children('tr')
-      .then($items => Cypress._.sampleSize($items.toArray(), count))
+      .then(items => {
+        return Cypress._.sampleSize(
+          items.toArray().filter($item => $item.children[3].textContent === 'Online'),
+          count,
+        )
+      })
       .each((row, index) =>
         cy.wrap(row).within(_row =>
           cy
@@ -30,6 +36,7 @@ export default class PremisesListPage extends Page {
                 id: 'unknown',
                 addressLine1,
                 postcode,
+                status: 'active',
               })
 
               if (index === 0) {
@@ -55,8 +62,9 @@ export default class PremisesListPage extends Page {
           cy.get('td').eq(0).contains(shortAddress)
           cy.get('td').eq(1).contains(item.bedCount)
           cy.get('td').eq(2).contains(item.pdu)
+          cy.get('td').eq(3).contains(statusInfo(item.status).name)
           cy.get('td')
-            .eq(3)
+            .eq(4)
             .contains('Manage')
             .should('have.attr', 'href', paths.premises.show({ premisesId: item.id }))
         })
@@ -71,7 +79,7 @@ export default class PremisesListPage extends Page {
     cy.contains(`${premises.addressLine1}, ${premises.postcode}`)
       .parent()
       .within(() => {
-        cy.get('td').eq(3).contains('Manage').click()
+        cy.get('td').eq(4).contains('Manage').click()
       })
   }
 }

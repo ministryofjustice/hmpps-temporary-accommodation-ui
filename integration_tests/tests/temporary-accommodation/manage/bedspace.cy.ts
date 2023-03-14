@@ -25,8 +25,8 @@ context('Bedspace', () => {
     cy.task('stubPremisesReferenceData')
     cy.task('stubRoomReferenceData')
 
-    // And there is a premises in the database
-    const premises = premisesFactory.build()
+    // And there is an active premises in the database
+    const premises = premisesFactory.active().build()
     cy.task('stubSinglePremises', premises)
 
     // When I visit the show premises page
@@ -242,12 +242,12 @@ context('Bedspace', () => {
     Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 
-  it('shows a single bedspace', () => {
+  it('shows a single bedspace in an active premises', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and bookings in the database
-    const premises = premisesFactory.build()
+    // And there is an active premises, a room, and bookings in the database
+    const premises = premisesFactory.active().build()
     const room = roomFactory.build()
     const bookings = bookingFactory
       .params({
@@ -266,6 +266,39 @@ context('Bedspace', () => {
 
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
+    page.shouldShowAsActive()
+
+    // And I should see the booking details
+    bookings.forEach(booking => {
+      page.shouldShowBookingDetails(booking)
+    })
+  })
+
+  it('shows a single bedspace in an archived premises', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is an archived premises, a room, and bookings in the database
+    const premises = premisesFactory.archived().build()
+    const room = roomFactory.build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({
+          id: room.beds[0].id,
+        }),
+      })
+      .buildList(5)
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+
+    // When I visit the show bedspace page
+    const page = BedspaceShowPage.visit(premises, room)
+
+    // Then I should see the bedspace details
+    page.shouldShowBedspaceDetails()
+    page.shouldShowAsArchived()
 
     // And I should see the booking details
     bookings.forEach(booking => {

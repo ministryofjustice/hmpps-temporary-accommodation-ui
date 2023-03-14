@@ -71,6 +71,12 @@ Then('I should see a confirmation for my new bedspace', () => {
     page.shouldShowBanner('Bedspace created')
 
     page.shouldShowBedspaceDetails()
+
+    if (this.premises.status === 'archived') {
+      page.shouldShowAsArchived()
+    } else {
+      page.shouldShowAsActive()
+    }
   })
 })
 
@@ -80,5 +86,11 @@ Then('I should see a confirmation for my updated bedspace', () => {
     page.shouldShowBanner('Bedspace updated')
 
     page.shouldShowBedspaceDetails()
+
+    if (this.premises.status === 'archived') {
+      page.shouldShowAsArchived()
+    } else {
+      page.shouldShowAsActive()
+    }
   })
 })

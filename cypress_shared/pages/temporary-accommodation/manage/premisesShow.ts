@@ -2,7 +2,7 @@ import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room 
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import premisesFactory from '../../../../server/testutils/factories/premises'
-import { formatStatus } from '../../../../server/utils/premisesUtils'
+import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 
 export default class PremisesShowPage extends Page {
@@ -26,19 +26,26 @@ export default class PremisesShowPage extends Page {
           .contains('Address')
           .siblings('.govuk-summary-list__value')
           .then(addressElement => {
-            const addressLines = addressElement
-              .html()
-              .split('<br>')
-              .map(text => text.trim())
+            cy.get('.govuk-summary-list__key')
+              .contains('Status')
+              .siblings('.govuk-summary-list__value')
+              .then(statusElement => {
+                const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
+                const addressLines = addressElement
+                  .html()
+                  .split('<br>')
+                  .map(text => text.trim())
 
-            const premises = premisesFactory.build({
-              id,
-              name,
-              addressLine1: addressLines[0],
-              postcode: addressLines[addressLines.length - 1],
-            })
+                const premises = premisesFactory.build({
+                  id,
+                  name,
+                  addressLine1: addressLines[0],
+                  postcode: addressLines[addressLines.length - 1],
+                  status,
+                })
 
-            cy.wrap(premises).as(alias)
+                cy.wrap(premises).as(alias)
+              })
           })
       })
     })
@@ -63,9 +70,26 @@ export default class PremisesShowPage extends Page {
         'Attributes',
         this.premises.characteristics.map(({ name }) => name),
       )
-      this.shouldShowKeyAndValue('Status', formatStatus(this.premises.status))
+      this.shouldShowKeyAndValue('Status', statusInfo(this.premises.status).name)
       this.shouldShowKeyAndValues('Notes', this.premises.notes.split('\n'))
     })
+  }
+
+  shouldShowAsActive(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').should('contain', 'Add a bedspace')
+    })
+
+    cy.root().should('not.contain', 'This is an archived property.')
+  }
+
+  shouldShowAsArchived(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.root().should('not.contain', 'Actions')
+    })
+
+    cy.root().should('contain', 'This is an archived property.')
   }
 
   shouldShowProbationRegion(probationRegion: ProbationRegion): void {

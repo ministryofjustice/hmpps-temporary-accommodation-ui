@@ -1,4 +1,3 @@
-import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type {
   Characteristic,
   LocalAuthorityArea,
@@ -7,15 +6,15 @@ import type {
   StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
+import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import pduJson from '../data/pdus.json'
 import paths from '../paths/temporary-accommodation/manage'
 
-import { DateFormats } from '../utils/dateUtils'
-import { NegativeDateRange, formatStatus, getDateRangesWithNegativeBeds } from '../utils/premisesUtils'
-import { escape, formatLines } from '../utils/viewUtils'
-import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { CallConfig } from '../data/restClient'
+import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
+import { statusTag } from '../utils/premisesUtils'
+import { escape, formatLines } from '../utils/viewUtils'
 
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
@@ -64,16 +63,17 @@ export default class PremisesService {
     const premises = await premisesClient.all()
 
     return premises
-      .map(p => ({ premises: p, shortAddress: `${p.addressLine1}, ${p.postcode}` }))
+      .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
       .sort((a, b) => a.shortAddress.localeCompare(b.shortAddress))
       .map(entry => {
         return [
           this.textValue(entry.shortAddress),
-          this.textValue(`${entry.premises.bedCount}`),
-          this.textValue(entry.premises.pdu),
+          this.textValue(`${entry.bedCount}`),
+          this.textValue(entry.pdu),
+          this.htmlValue(statusTag(entry.status)),
           this.htmlValue(
             `<a href="${paths.premises.show({
-              premisesId: entry.premises.id,
+              premisesId: entry.id,
             })}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
           ),
         ]
@@ -97,17 +97,6 @@ export default class PremisesService {
     const summaryList = await this.summaryListForPremises(premises)
 
     return { premises, summaryList }
-  }
-
-  async getOvercapacityMessage(callConfig: CallConfig, premisesId: string): Promise<string[] | string> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-    const premisesDateCapacities = await premisesClient.capacity(premisesId)
-
-    const overcapacityDateRanges = getDateRangesWithNegativeBeds(premisesDateCapacities)
-
-    const overcapacityMessage = this.generateOvercapacityMessage(overcapacityDateRanges)
-
-    return overcapacityMessage ? [overcapacityMessage] : ''
   }
 
   async getPremisesSelectList(callConfig: CallConfig): Promise<Array<{ text: string; value: string }>> {
@@ -185,7 +174,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('Status'),
-          value: this.textValue(formatStatus(premises.status)),
+          value: this.htmlValue(statusTag(premises.status)),
         },
         {
           key: this.textValue('Notes'),
@@ -193,34 +182,6 @@ export default class PremisesService {
         },
       ],
     }
-  }
-
-  private generateOvercapacityMessage(overcapacityDateRanges: NegativeDateRange[]) {
-    if (overcapacityDateRanges.length === 1) {
-      if (!overcapacityDateRanges[0].end) {
-        return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity on ${DateFormats.isoDateToUIDate(
-          overcapacityDateRanges[0].start,
-        )}</h4>`
-      }
-      return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the period ${DateFormats.isoDateToUIDate(
-        overcapacityDateRanges[0].start,
-      )} to ${DateFormats.isoDateToUIDate(overcapacityDateRanges[0].end)}</h4>`
-    }
-
-    if (overcapacityDateRanges.length > 1) {
-      const dateRanges = overcapacityDateRanges
-        .map((dateRange: NegativeDateRange) =>
-          !dateRange.end
-            ? `<li>${DateFormats.isoDateToUIDate(dateRange.start)}</li>`
-            : `<li>${DateFormats.isoDateToUIDate(dateRange.start)} to ${DateFormats.isoDateToUIDate(
-                dateRange.end,
-              )}</li>`,
-        )
-        .join('')
-      return `<h4 class="govuk-!-margin-top-0 govuk-!-margin-bottom-2">The premises is over capacity for the periods:</h4>
-        <ul class="govuk-list govuk-list--bullet">${dateRanges}</ul>`
-    }
-    return ''
   }
 
   private textValue(value: string) {

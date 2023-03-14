@@ -1,11 +1,25 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { ApArea, TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
 import { unique } from '../../utils/utils'
+import referenceDataFactory from './referenceData'
 
-export default Factory.define<Premises>(() => ({
+class PremisesFactory extends Factory<Premises> {
+  active() {
+    return this.params({
+      status: 'active',
+    })
+  }
+
+  archived() {
+    return this.params({
+      status: 'archived',
+    })
+  }
+}
+
+export default PremisesFactory.define(() => ({
   id: faker.datatype.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.address.streetAddress(),
@@ -22,7 +36,7 @@ export default Factory.define<Premises>(() => ({
   characteristics: unique(
     referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
   ),
-  status: faker.helpers.arrayElement(['active', 'archived']),
+  status: faker.helpers.arrayElement(['active', 'archived'] as const),
   notes: faker.lorem.lines(5),
 }))
 

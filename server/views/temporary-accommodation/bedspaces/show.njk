@@ -1,3 +1,4 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
@@ -19,35 +20,24 @@
 
   {% include "../../_messages.njk" %}
 
-  {% if not voidsDisabled %}  
-  {{ mojPageHeaderActions({
-    heading: {
-      text: 'View a bedspace',
-      classes: 'govuk-heading-l'
-    },
-    items:  [{
-        text: "Book bedspace",
-        classes: 'govuk-button--secondary',
-        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.room.id })
-      }, {
-        text: 'Void bedspace',
-        classes: 'govuk-button--secondary',
-        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.room.id })
-      }]
-  }) }}
-  {% else %}
-  {{ mojPageHeaderActions({
-    heading: {
-      text: 'View a bedspace',
-      classes: 'govuk-heading-l'
-    },
-    items:  [{
-        text: "Book bedspace",
-        classes: 'govuk-button--secondary',
-        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.room.id })
-      }]
-  }) }}
+  {% if premises.status === 'archived' %}
+    {% set archivedBannerHtml %}
+      <p class="govuk-notification-banner__heading">This bedspace is in an archived property.</p>
+      <p class="govuk-body">You cannot make a new booking.</p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+      html: archivedBannerHtml
+    }) }}
   {% endif %}
+
+  {{ mojPageHeaderActions({
+    heading: {
+      text: 'View a bedspace',
+      classes: 'govuk-heading-l'
+    },
+    items: actions
+  }) }}
 
   {{ locationHeader({ premises: premises }) }}
 
@@ -94,7 +84,9 @@
 {% endblock %}
 
 {% block extraScripts %}
-  <script type="text/javascript" nonce="{{ cspNonce }}">
-    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
-  </script>
+  {% if actions %}
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+    </script>
+  {% endif %}
 {% endblock %}

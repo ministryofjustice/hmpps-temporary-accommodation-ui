@@ -1,23 +1,23 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
 
 import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
-import premisesFactory from '../../../testutils/factories/premises'
-import newPremisesFactory from '../../../testutils/factories/newPremises'
-import updatePremisesFactory from '../../../testutils/factories/updatePremises'
-import roomFactory from '../../../testutils/factories/room'
-import PremisesService from '../../../services/premisesService'
-import PremisesController from './premisesController'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import BedspaceService from '../../../services/bedspaceService'
-import { allStatuses, getActiveStatuses } from '../../../utils/premisesUtils'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
-import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
 import { PropertyStatus } from '../../../@types/shared'
-import filterProbationRegions from '../../../utils/userUtils'
+import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
+import BedspaceService from '../../../services/bedspaceService'
+import PremisesService from '../../../services/premisesService'
+import newPremisesFactory from '../../../testutils/factories/newPremises'
+import premisesFactory from '../../../testutils/factories/premises'
 import probationRegionFactory from '../../../testutils/factories/probationRegion'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
+import roomFactory from '../../../testutils/factories/room'
+import updatePremisesFactory from '../../../testutils/factories/updatePremises'
+import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
+import extractCallConfig from '../../../utils/restUtils'
+import filterProbationRegions from '../../../utils/userUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import PremisesController from './premisesController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -27,6 +27,7 @@ jest.mock('../../../utils/premisesUtils', () => {
   return {
     ...originalModule,
     getActiveStatuses: jest.fn(),
+    premisesActions: jest.fn(),
   }
 })
 jest.mock('../../../utils/userUtils')
@@ -336,6 +337,7 @@ describe('PremisesController', () => {
 
       const bedspaceDetails = rooms.map(room => ({ room, summaryList: { rows: [] as Array<SummaryListItem> } }))
       bedspaceService.getBedspaceDetails.mockResolvedValue(bedspaceDetails)
+      ;(premisesActions as jest.MockedFunction<typeof premisesActions>).mockReturnValue([])
 
       request.params.premisesId = premises.id
 
@@ -345,6 +347,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/show', {
         ...details,
         bedspaces: bedspaceDetails,
+        actions: [],
       })
 
       expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(callConfig, premises.id)

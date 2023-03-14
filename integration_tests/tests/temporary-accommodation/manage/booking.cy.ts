@@ -19,8 +19,8 @@ context('Booking', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises and a room the database
-    const premises = premisesFactory.build()
+    // And there is an active premises and a room the database
+    const premises = premisesFactory.active().build()
     const room = roomFactory.build()
 
     cy.task('stubSinglePremises', premises)

@@ -1,3 +1,4 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 
@@ -17,6 +18,17 @@
 
   {% include "../../_messages.njk" %}
 
+  {% if premises.status === 'archived' %}
+    {% set archivedBannerHtml %}
+      <p class="govuk-notification-banner__heading">This is an archived property.</p>
+      <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+      html: archivedBannerHtml
+    }) }}
+  {% endif %}
+
   <h1>View a property</h1>
 
   {{ mojPageHeaderActions({
@@ -25,15 +37,7 @@
       classes: 'govuk-heading-m',
       level: 2
     },
-    items: [{
-        text: "Add a bedspace",
-        classes: 'govuk-button--secondary',
-        href: paths.premises.bedspaces.new({ premisesId: premises.id })
-      }, {
-        text: 'Remove property',
-        classes: 'govuk-button--secondary',
-        href: '#'
-      }]
+    items: actions
   }) }}
 
   <div data-cy-premises="true">
@@ -79,7 +83,9 @@
 {% endblock %}
 
 {% block extraScripts %}
-  <script type="text/javascript" nonce="{{ cspNonce }}">
-    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
-  </script>
+  {% if actions %}
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
+    </script>
+  {% endif %}
 {% endblock %}

@@ -3,7 +3,7 @@ Feature: Manage Temporary Accommodation - Premises
         Given I am logged in
 
     Scenario: Listing premises
-        Given I'm viewing the list of premises
+        Given I view the list of premises
         Then I should see only premises for my region
 
     Scenario: Creating a premises

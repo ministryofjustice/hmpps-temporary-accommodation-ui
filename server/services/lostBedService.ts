@@ -1,7 +1,10 @@
 import type { ReferenceData } from '@approved-premises/ui'
 import type {
   TemporaryAccommodationLostBed as LostBed,
+  LostBedCancellation,
   NewTemporaryAccommodationLostBed as NewLostBed,
+  NewLostBedCancellation,
+  UpdateTemporaryAccommodationLostBed as UpdateLostBed,
 } from '@approved-premises/api'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
@@ -27,6 +30,44 @@ export default class LostBedService {
     const lostBed = await lostBedClient.find(premisesID, lostBedId)
 
     return lostBed
+  }
+
+  async update(
+    callConfig: CallConfig,
+    premisesId: string,
+    lostBedId: string,
+    lostBedUpdate: UpdateLostBed,
+  ): Promise<LostBed> {
+    const lostBedClient = this.lostBedClientFactory(callConfig)
+
+    const updatedLostBed = await lostBedClient.update(premisesId, lostBedId, lostBedUpdate)
+
+    return updatedLostBed
+  }
+
+  async getUpdateLostBed(callConfig: CallConfig, premisesId: string, lostBedId: string): Promise<UpdateLostBed> {
+    const lostBedClient = this.lostBedClientFactory(callConfig)
+
+    const lostBed = await lostBedClient.find(premisesId, lostBedId)
+
+    return {
+      ...lostBed,
+      reason: lostBed.reason.id,
+      serviceName: 'temporary-accommodation',
+    }
+  }
+
+  async cancel(
+    callConfig: CallConfig,
+    premisesId: string,
+    lostBedId: string,
+    newLostBedCancellation: NewLostBedCancellation,
+  ): Promise<LostBedCancellation> {
+    const lostBedClient = this.lostBedClientFactory(callConfig)
+
+    const lostBedCancellation = await lostBedClient.cancel(premisesId, lostBedId, newLostBedCancellation)
+
+    return lostBedCancellation
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<LostBedReferenceData> {

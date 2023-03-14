@@ -1,3 +1,5 @@
+import newLostBedCancellationFactory from '../../../../server/testutils/factories/newLostBedCancellation'
+import updateLostBedFactory from '../../../../server/testutils/factories/updateLostBed'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
@@ -7,6 +9,8 @@ import lostBedFactory from '../../../../server/testutils/factories/lostBed'
 import newLostBedFactory from '../../../../server/testutils/factories/newLostBed'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
+import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedEdit'
+import LostBedCancelPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedCancel'
 
 context('Lost bed', () => {
   beforeEach(() => {
@@ -117,7 +121,7 @@ context('Lost bed', () => {
     lostBedShowPage.shouldShowBanner('Void created')
   })
 
-  it('shows errors when the API returns an error', () => {
+  it('shows create errors when the API returns an error', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -143,7 +147,7 @@ context('Lost bed', () => {
     page.shouldShowErrorMessagesForFields(['startDate', 'endDate'])
   })
 
-  it('shows errors when the API returns a 409 conflict error', () => {
+  it('shows create errors when the API returns a 409 conflict error', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -197,14 +201,34 @@ context('Lost bed', () => {
     Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 
-  it('shows a single lost bed', () => {
+  it('shows a single active lost bed', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a lost bed in the database
+    // And there is a premises, a room, and an active lost bed in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
-    const lostBed = lostBedFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the show lost bed page
+    const page = LostBedShowPage.visit(premises, room, lostBed)
+
+    // Then I should see the booking details
+    page.shouldShowLostBedDetails()
+  })
+
+  it('shows a single cancelled lost bed', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a cancelled lost bed in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.build({ status: 'cancelled' })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
@@ -243,5 +267,201 @@ context('Lost bed', () => {
 
     // Then I navigate to the show bedspace page
     Page.verifyOnPage(BedspaceShowPage, premises, room)
+  })
+
+  it('navigates to the update void bedspace page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the show lost bed page
+    const page = LostBedShowPage.visit(premises, room, lostBed)
+
+    // Add I click the 'Edit this void' link
+    cy.task('stubLostBedReferenceData')
+    page.clickEditVoidLink()
+
+    // Then I navigate to the edit void booking page
+    Page.verifyOnPage(LostBedEditPage, premises, room, lostBed)
+  })
+
+  it('navigates back from the update void booking page to the view void booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the edit void booking page
+    cy.task('stubLostBedReferenceData')
+    const page = LostBedEditPage.visit(premises, room, lostBed)
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the view bedspace page
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
+  })
+
+  it('allows me to update a void booking', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the edit void booking page
+    cy.task('stubLostBedReferenceData')
+    const page = LostBedEditPage.visit(premises, room, lostBed)
+
+    // I should see the bedspace details
+    page.shouldShowBedspaceDetails()
+
+    // And when I fill out the form
+    cy.task('stubLostBedUpdate', { premisesId: premises.id, lostBed })
+    const updateLostBed = updateLostBedFactory.build()
+    page.clearForm()
+    page.completeForm(updateLostBed)
+
+    // Then the lost bed should have been updated in the API
+    cy.task('verifyLostBedUpdate', { premisesId: premises.id, lostBedId: lostBed.id }).then(requests => {
+      expect(requests).to.have.length(1)
+      const requestBody = JSON.parse(requests[0].body)
+
+      expect(requestBody.serviceName).equal('temporary-accommodation')
+      expect(requestBody.reason).equal(updateLostBed.reason)
+      expect(requestBody.startDate).equal(updateLostBed.startDate)
+      expect(requestBody.endDate).equal(updateLostBed.endDate)
+      expect(requestBody.notes).equal(updateLostBed.notes)
+    })
+  })
+
+  it('shows update errors when the API returns an error', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the edit void booking page
+    cy.task('stubLostBedReferenceData')
+    const page = LostBedEditPage.visit(premises, room, lostBed)
+
+    // And I miss required fields
+    page.clearForm()
+    cy.task('stubLostBedUpdateErrors', {
+      premisesId: premises.id,
+      lostBedId: lostBed.id,
+      params: ['startDate', 'endDate'],
+    })
+    page.clickSubmit()
+
+    // Then I should see error messages relating to those fields
+    page.shouldShowErrorMessagesForFields(['startDate', 'endDate'])
+  })
+
+  it('navigates to the cancel void booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the show lost bed page
+    const page = LostBedShowPage.visit(premises, room, lostBed)
+
+    // Add I click the 'Cancel this void' link
+    page.clickCancelVoidLink()
+
+    // Then I navigate to the edit void booking page
+    Page.verifyOnPage(LostBedCancelPage, premises, room, lostBed)
+  })
+
+  it('navigates back from the cancel void booking page to the view void booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the cancel void booking page
+    const page = LostBedCancelPage.visit(premises, room, lostBed)
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the view bedspace page
+    Page.verifyOnPage(BedspaceShowPage, premises, room)
+  })
+
+  it('allows me to cancel a void booking', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const lostBed = lostBedFactory.active().build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+
+    // When I visit the cancel void booking page
+    const page = LostBedCancelPage.visit(premises, room, lostBed)
+
+    // I should see the bedspace details
+    page.shouldShowBedspaceDetails()
+
+    // And when I fill out the form
+    cy.task('stubLostBedCancel', { premisesId: premises.id, lostBed })
+    const cancelLostBed = newLostBedCancellationFactory.build()
+    page.completeForm(cancelLostBed)
+
+    // Then the lost bed should have been cancelled in the API
+    cy.task('verifyLostBedCancel', { premisesId: premises.id, lostBedId: lostBed.id }).then(requests => {
+      expect(requests).to.have.length(1)
+      const requestBody = JSON.parse(requests[0].body)
+
+      expect(requestBody.notes).equal(cancelLostBed.notes)
+    })
   })
 })

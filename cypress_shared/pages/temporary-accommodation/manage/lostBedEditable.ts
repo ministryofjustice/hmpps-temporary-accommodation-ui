@@ -1,4 +1,4 @@
-import { NewTemporaryAccommodationLostBed as NewLostBed } from '@approved-premises/api'
+import { NewTemporaryAccommodationLostBed as NewLostBed, UpdateLostBed } from '@approved-premises/api'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 
@@ -10,7 +10,7 @@ export default abstract class LostBedEditablePage extends Page {
     })
   }
 
-  protected completeEditableForm(newOrUpdateLostBed: NewLostBed): void {
+  protected completeEditableForm(newOrUpdateLostBed: NewLostBed | UpdateLostBed): void {
     this.getLegend('What is the start date?')
     this.completeDateInputs('startDate', newOrUpdateLostBed.startDate)
 

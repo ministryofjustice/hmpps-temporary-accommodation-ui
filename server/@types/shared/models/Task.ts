@@ -4,6 +4,7 @@
 
 import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
 import type { Person } from './Person';
+import type { TaskType } from './TaskType';
 
 export type Task = {
     applicationId?: string;
@@ -11,6 +12,6 @@ export type Task = {
     dueDate?: string;
     allocatedToStaffMember?: ApprovedPremisesUser;
     status?: 'not_started' | 'in_progress' | 'complete';
-    taskType?: 'Assessment' | 'PlacementRequest' | 'PlacementRequestReview' | 'BookingAppeal';
+    taskType?: TaskType;
 };
 

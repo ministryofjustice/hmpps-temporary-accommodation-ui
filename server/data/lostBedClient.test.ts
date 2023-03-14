@@ -4,6 +4,9 @@ import LostBedClient from './lostBedClient'
 import config from '../config'
 import lostBedFactory from '../testutils/factories/lostBed'
 import newLostBedFactory from '../testutils/factories/newLostBed'
+import updateLostBedFactory from '../testutils/factories/updateLostBed'
+import lostBedCancellationFactory from '../testutils/factories/lostBedCancellation'
+import newLostBedCancellationFactory from '../testutils/factories/newLostBedCancellation'
 import { CallConfig } from './restClient'
 import paths from '../paths/api'
 
@@ -73,6 +76,41 @@ describe('LostBedClient', () => {
       const result = await lostBedClient.allLostBedsForPremisesId('premisesId')
 
       expect(result).toEqual(lostBeds)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('update', () => {
+    it('updates and returns the given lost bed', async () => {
+      const lostBed = lostBedFactory.build()
+      const payload = updateLostBedFactory.build({
+        ...lostBed,
+        reason: lostBed.reason.id,
+      })
+
+      fakeApprovedPremisesApi
+        .put(paths.premises.lostBeds.update({ premisesId: 'premisesId', lostBedId: lostBed.id }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, lostBed)
+
+      const result = await lostBedClient.update('premisesId', lostBed.id, payload)
+      expect(result).toEqual(lostBed)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('cancel', () => {
+    it('should create a cancellation', async () => {
+      const newLostBedCancellation = newLostBedCancellationFactory.build()
+      const cancellation = lostBedCancellationFactory.build({ id: 'lostBedId' })
+
+      fakeApprovedPremisesApi
+        .post(paths.premises.lostBeds.cancel({ premisesId: 'premisesId', lostBedId: 'lostBedId' }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(201, cancellation)
+
+      const result = await lostBedClient.cancel('premisesId', 'lostBedId', newLostBedCancellation)
+      expect(result).toEqual(cancellation)
       expect(nock.isDone()).toBeTruthy()
     })
   })

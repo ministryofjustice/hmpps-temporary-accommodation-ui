@@ -1,6 +1,9 @@
 import type {
   TemporaryAccommodationLostBed as LostBed,
+  LostBedCancellation,
   NewTemporaryAccommodationLostBed as NewLostBed,
+  NewLostBedCancellation,
+  UpdateLostBed,
 } from '@approved-premises/api'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
@@ -28,9 +31,23 @@ export default class LostBedClient {
     })) as LostBed
   }
 
+  async update(premisesId: string, lostBedId: string, data: UpdateLostBed): Promise<LostBed> {
+    return (await this.restClient.put({
+      path: paths.premises.lostBeds.update({ premisesId, lostBedId }),
+      data,
+    })) as LostBed
+  }
+
   async allLostBedsForPremisesId(premisesId: string): Promise<Array<LostBed>> {
     return (await this.restClient.get({
       path: paths.premises.lostBeds.index({ premisesId }),
     })) as Array<LostBed>
+  }
+
+  async cancel(premisesId: string, lostBedId: string, data: NewLostBedCancellation): Promise<LostBedCancellation> {
+    return (await this.restClient.post({
+      path: paths.premises.lostBeds.cancel({ premisesId, lostBedId }),
+      data,
+    })) as LostBedCancellation
   }
 }

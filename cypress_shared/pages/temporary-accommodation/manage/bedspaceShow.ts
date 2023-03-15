@@ -1,4 +1,4 @@
-import type { Booking, TemporaryAccommodationLostBed as LostBed, Room } from '@approved-premises/api'
+import type { Booking, TemporaryAccommodationLostBed as LostBed, Room, UpdateLostBed } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
 import config from '../../../../server/config'
@@ -62,7 +62,7 @@ export default class BedspaceShowPage extends Page {
       })
   }
 
-  shouldShowLostBedDetails(lostBed: LostBed): void {
+  shouldShowLostBedDetails(lostBedOrLostBedUpdate: LostBed | UpdateLostBed): void {
     cy.get('tr')
       .contains('Void')
       .parent()
@@ -70,10 +70,10 @@ export default class BedspaceShowPage extends Page {
       .within(() => {
         cy.get('td')
           .eq(1)
-          .contains(DateFormats.isoDateToUIDate(lostBed.startDate, { format: 'short' }))
+          .contains(DateFormats.isoDateToUIDate(lostBedOrLostBedUpdate.startDate, { format: 'short' }))
         cy.get('td')
           .eq(2)
-          .contains(DateFormats.isoDateToUIDate(lostBed.endDate, { format: 'short' }))
+          .contains(DateFormats.isoDateToUIDate(lostBedOrLostBedUpdate.endDate, { format: 'short' }))
       })
   }
 

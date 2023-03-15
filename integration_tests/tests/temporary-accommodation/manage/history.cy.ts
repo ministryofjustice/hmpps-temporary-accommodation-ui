@@ -1,11 +1,11 @@
+import Page from '../../../../cypress_shared/pages/page'
+import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingHistory'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import bookingFactory from '../../../../server/testutils/factories/booking'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import Page from '../../../../cypress_shared/pages/page'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingHistory'
 import { deriveBookingHistory } from '../../../../server/utils/bookingUtils'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 
 context('Booking history', () => {
   beforeEach(() => {

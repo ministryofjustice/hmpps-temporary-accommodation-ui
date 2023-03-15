@@ -1,10 +1,10 @@
 import Case from 'case'
 
-import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 import type { ApprovedPremisesApplication, PersonRisks } from '@approved-premises/api'
+import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 
-import { SessionDataError } from './errors'
 import { DateFormats } from './dateUtils'
+import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>

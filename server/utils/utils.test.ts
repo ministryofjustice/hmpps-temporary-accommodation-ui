@@ -1,7 +1,9 @@
-import type { SummaryListItem } from '@approved-premises/ui'
 import { PersonRisks } from '@approved-premises/api'
-import { SessionDataError } from './errors'
+import type { SummaryListItem } from '@approved-premises/ui'
 import applicationFactory from '../testutils/factories/application'
+import risksFactory from '../testutils/factories/risks'
+import { DateFormats } from './dateUtils'
+import { SessionDataError } from './errors'
 import {
   camelCase,
   convertToTitleCase,
@@ -16,8 +18,6 @@ import {
   sentenceCase,
   unique,
 } from './utils'
-import risksFactory from '../testutils/factories/risks'
-import { DateFormats } from './dateUtils'
 
 describe('convert to title case', () => {
   it.each([

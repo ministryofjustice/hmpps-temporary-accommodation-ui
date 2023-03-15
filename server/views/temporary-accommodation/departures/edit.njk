@@ -1,0 +1,39 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - EdUpdateit closed booking" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+  }) }}
+
+  {% include "../../_messages.njk" %}
+
+  <h1>Update closed booking</h1>
+
+  {{ showErrorSummary(errorSummary) }}
+
+  {{ popDetailsHeader(booking.person) }}
+  {{ locationHeader({ premises: premises, room: room }) }}
+  
+  {{ bookingInfo(booking) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.bookings.departures.update({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}?_method=PUT" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>      
+        {% include "./_editable.njk" %}  
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,4 +1,5 @@
 import type { NewDeparture } from '@approved-premises/api'
+import { Departure } from '../../../../server/@types/shared'
 import Page from '../../page'
 
 export default class BookingDepartureEditablePage extends Page {
@@ -16,5 +17,19 @@ export default class BookingDepartureEditablePage extends Page {
     this.getTextInputByIdAndEnterDetails('notes', newDeparture.notes)
 
     this.clickSubmit()
+  }
+
+  clearForm() {
+    this.clearDateInputs('dateTime')
+    this.getSelectInputByIdAndSelectAnEntry('reasonId', '')
+    this.getSelectInputByIdAndSelectAnEntry('moveOnCategoryId', '')
+    this.getTextInputByIdAndClear('notes')
+  }
+
+  protected shouldShowFormContents(departure: Departure) {
+    this.shouldShowDateInputs('dateTime', departure.dateTime)
+    this.shouldShowSelectInput('reasonId', departure.reason.name)
+    this.shouldShowSelectInput('moveOnCategoryId', departure.moveOnCategory.name)
+    this.shouldShowTextareaInput('notes', departure.notes)
   }
 }

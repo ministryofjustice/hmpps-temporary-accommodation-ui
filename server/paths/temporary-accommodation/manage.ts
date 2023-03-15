@@ -53,6 +53,8 @@ const paths = {
     departures: {
       new: departuresPath.path('new'),
       create: departuresPath,
+      edit: departuresPath.path('edit'),
+      update: departuresPath,
     },
     extensions: {
       new: extensionsPath.path('new'),

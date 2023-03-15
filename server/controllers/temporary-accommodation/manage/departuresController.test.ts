@@ -152,4 +152,117 @@ describe('DeparturesController', () => {
       )
     })
   })
+
+  describe('edit', () => {
+    it('renders the form', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.build()
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        bookingId: booking.id,
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
+
+      const requestHandler = departuresController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
+      expect(departureService.getReferenceData).toHaveBeenCalledWith(callConfig)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/edit', {
+        premises,
+        room,
+        booking,
+        allDepartureReasons: [],
+        allMoveOnCategories: [],
+        errors: {},
+        errorSummary: [],
+        ...DateFormats.isoToDateAndTimeInputs(booking.departure.dateTime, 'dateTime'),
+        reasonId: booking.departure.reason.id,
+        moveOnCategoryId: booking.departure.moveOnCategory.id,
+        notes: booking.departure.notes,
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('creates a new departure and redirects to the show booking page', async () => {
+      const requestHandler = departuresController.update()
+
+      const departure = departureFactory.build()
+      const newDeparture = newDepartureFactory.build({
+        ...departure,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      departureService.createDeparture.mockResolvedValue(departure)
+
+      await requestHandler(request, response, next)
+
+      expect(departureService.createDeparture).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bookingId,
+        expect.objectContaining(newDeparture),
+      )
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Closed booking updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = departuresController.update()
+
+      const departure = departureFactory.build()
+      const newDeparture = newDepartureFactory.build({
+        ...departure,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      const err = new Error()
+      departureService.createDeparture.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
+      )
+    })
+  })
 })

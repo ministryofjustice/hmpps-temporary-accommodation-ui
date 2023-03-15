@@ -146,6 +146,22 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
+  get(paths.bookings.departures.edit.pattern, departuresController.edit(), {
+    auditEvent: 'VIEW_BOOKING_EDIT_DEPARTURE',
+  })
+  put(paths.bookings.departures.update.pattern, departuresController.update(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.bookings.departures.edit.pattern,
+        auditEvent: 'EDIT_BOOKING_DEPARTURE_FAILURE',
+      },
+      {
+        path: paths.bookings.show.pattern,
+        auditEvent: 'EDIT_BOOKING_DEPARTURE_SUCCESS',
+      },
+    ],
+  })
+
   get(paths.bookings.extensions.new.pattern, extensionsController.new(), {
     auditEvent: 'VIEW_BOOKING_CREATE_EXTENSION',
   })

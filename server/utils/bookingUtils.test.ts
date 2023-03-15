@@ -79,10 +79,16 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns null for a cancelled booking', () => {
+    it('returns edit cancelled booking for a cancelled booking', () => {
       const booking = bookingFactory.cancelled().build()
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Update cancelled booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+        },
+      ])
     })
   })
 

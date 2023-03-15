@@ -33,6 +33,25 @@ context('Booking cancellation', () => {
     Page.verifyOnPage(BookingCancellationNewPage, premises, room, booking)
   })
 
+  it('navigates to the edit booking cancellation page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a cancelled booking in the database
+    const booking = bookingFactory.cancelled().build()
+    const { premises, room } = setupBookingStateStubs(booking)
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the cancel booking action
+    cy.task('stubCancellationReferenceData')
+    bookingShow.clickEditCancelledBookingButton()
+
+    // Then I navigate to the edit cancelled booking page
+    Page.verifyOnPage(BookingCancellationEditPage, premises, room, booking)
+  })
+
   it('allows me to mark a booking as cancelled', () => {
     // Given I am signed in
     cy.signIn()

@@ -68,6 +68,13 @@ export default class BookingShowPage extends Page {
     })
   }
 
+  clickEditCancelledBookingButton(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Update cancelled booking').click()
+    })
+  }
+
   clickHistoryLink(): void {
     cy.get('a').contains('View booking history').click()
   }

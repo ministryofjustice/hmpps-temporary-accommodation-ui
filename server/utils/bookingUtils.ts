@@ -54,6 +54,13 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
       })
       break
+    case 'cancelled':
+      items.push({
+        text: 'Update cancelled booking',
+        classes: 'govuk-button--secondary',
+        href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+      })
+      break
     default:
       break
   }

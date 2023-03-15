@@ -109,10 +109,12 @@ export const getLatestExtension = (booking: Booking) => {
 
 export const deriveBookingHistory = (booking: Booking) => {
   const extensions = [...booking.extensions].sort(compareBookingState)
+  const departures = [...booking.departures].sort(compareBookingState)
 
   const bookingWithSortedExensions = {
     ...booking,
     extensions,
+    departures,
   }
 
   const history = []
@@ -167,6 +169,15 @@ const getPredecessorForBooking = (booking: Booking): Booking => {
 }
 
 const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
+  if (booking.departures.length > 1) {
+    return {
+      ...booking,
+      departures: booking.departures.slice(0, -1),
+      departure: booking.departures[booking.departures.length - 2],
+      departureDate: booking.departures[booking.departures.length - 2].dateTime,
+    }
+  }
+
   if (booking.extensions.length > 0) {
     return {
       ...booking,

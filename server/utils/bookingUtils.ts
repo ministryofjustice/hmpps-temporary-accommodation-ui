@@ -1,4 +1,4 @@
-import type { Booking, Extension } from '@approved-premises/api'
+import type { Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
 import type { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
@@ -101,12 +101,7 @@ export const getLatestExtension = (booking: Booking) => {
 }
 
 export const deriveBookingHistory = (booking: Booking) => {
-  const extensions = [...booking.extensions].sort((a, b) => {
-    const dateA = DateFormats.isoToDateObj(a.createdAt)
-    const dateB = DateFormats.isoToDateObj(b.createdAt)
-
-    return dateA.getTime() - dateB.getTime()
-  })
+  const extensions = [...booking.extensions].sort(compareBookingState)
 
   const bookingWithSortedExensions = {
     ...booking,
@@ -165,12 +160,12 @@ const getPredecessorForBooking = (booking: Booking): Booking => {
 }
 
 const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
-  if (booking.extensions.length === 0) {
+  if (booking.extensions.length > 0) {
     return {
       ...booking,
       status: 'arrived',
       arrivalDate: booking.arrival.arrivalDate,
-      departureDate: booking.arrival.expectedDepartureDate,
+      departureDate: booking.extensions[booking.extensions.length - 1].newDepartureDate,
     }
   }
 
@@ -178,24 +173,22 @@ const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
     ...booking,
     status: 'arrived',
     arrivalDate: booking.arrival.arrivalDate,
-    departureDate: booking.extensions[booking.extensions.length - 1].newDepartureDate,
+    departureDate: booking.arrival.expectedDepartureDate,
   }
 }
 
 const getPredecessorForArrivedBooking = (booking: Booking): Booking => {
-  if (booking.extensions.length === 0) {
+  if (booking.extensions.length > 1) {
     return {
       ...booking,
-      status: 'confirmed',
-      arrivalDate: booking.originalArrivalDate,
-      departureDate: booking.originalDepartureDate,
+      extensions: booking.extensions.slice(0, -1),
+      departureDate: booking.extensions[booking.extensions.length - 2].newDepartureDate,
     }
   }
 
   if (booking.extensions.length === 1) {
     return {
       ...booking,
-      status: 'arrived',
       extensions: [],
       departureDate: booking.arrival.expectedDepartureDate,
     }
@@ -203,9 +196,9 @@ const getPredecessorForArrivedBooking = (booking: Booking): Booking => {
 
   return {
     ...booking,
-    status: 'arrived',
-    extensions: booking.extensions.slice(0, -1),
-    departureDate: booking.extensions[booking.extensions.length - 2].newDepartureDate,
+    status: 'confirmed',
+    arrivalDate: booking.originalArrivalDate,
+    departureDate: booking.originalDepartureDate,
   }
 }
 
@@ -221,4 +214,11 @@ const getPredecessorForConfirmedBooking = (booking: Booking): Booking => {
     ...booking,
     status: 'provisional',
   }
+}
+
+const compareBookingState = (a: Extension | Departure | Cancellation, b: Extension | Departure | Cancellation) => {
+  const dateA = DateFormats.isoToDateObj(a.createdAt)
+  const dateB = DateFormats.isoToDateObj(b.createdAt)
+
+  return dateA.getTime() - dateB.getTime()
 }

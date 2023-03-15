@@ -33,6 +33,25 @@ context('Booking departure', () => {
     Page.verifyOnPage(BookingDepartureNewPage, premises, room, booking)
   })
 
+  it('navigates to the edit booking departure page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a departed booking in the database
+    const booking = bookingFactory.departed().build()
+    const { premises, room } = setupBookingStateStubs(booking)
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the marked departed booking action
+    cy.task('stubDepartureReferenceData')
+    bookingShow.clickEditDepartedBookingButton()
+
+    // Then I navigate to the booking departure page
+    Page.verifyOnPage(BookingDepartureEditPage, premises, room, booking)
+  })
+
   it('allows me to mark a booking as departed', () => {
     // Given I am signed in
     cy.signIn()

@@ -47,6 +47,13 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         },
       )
       break
+    case 'departed':
+      items.push({
+        text: 'Update closed booking',
+        classes: 'govuk-button--secondary',
+        href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+      })
+      break
     default:
       break
   }

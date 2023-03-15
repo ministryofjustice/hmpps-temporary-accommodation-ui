@@ -67,4 +67,61 @@ export default class CanellationsController {
       }
     }
   }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const { premisesId, roomId, bookingId } = req.params
+
+      const callConfig = extractCallConfig(req)
+
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(
+        callConfig,
+      )
+
+      return res.render('temporary-accommodation/cancellations/edit', {
+        premises,
+        room,
+        booking,
+        allCancellationReasons,
+        errors,
+        errorSummary: requestErrorSummary,
+        ...DateFormats.isoToDateAndTimeInputs(booking.cancellation.date, 'date'),
+        reason: booking.cancellation.reason.id,
+        notes: booking.cancellation.notes,
+        ...userInput,
+      })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, bookingId } = req.params
+      const callConfig = extractCallConfig(req)
+
+      const newCancellation: NewCancellation = {
+        ...req.body,
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'date'),
+      }
+
+      try {
+        await this.cancellationService.createCancellation(callConfig, premisesId, bookingId, newCancellation)
+
+        req.flash('success', 'Cancelled booking updated')
+        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
+          'bookingCancellation',
+        )
+      }
+    }
+  }
 }

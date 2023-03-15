@@ -63,6 +63,8 @@ const paths = {
     cancellations: {
       new: cancellationsPath.path('new'),
       create: cancellationsPath,
+      edit: cancellationsPath.path('edit'),
+      update: cancellationsPath,
     },
   },
   lostBeds: {

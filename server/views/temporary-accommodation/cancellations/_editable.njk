@@ -1,0 +1,45 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../components/ta-select/macro.njk" import taSelect %}
+
+{{ taDateInput(
+  {
+    fieldset: {
+      legend: {
+        text: "When was this booking cancelled?",
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    fieldName: "date",
+    items: dateFieldValues('date', errors)
+  },
+  fetchContext()
+) }}
+
+{{ taSelect(
+  {
+    label: {
+        text: "What was the reason for cancellation?",
+        classes: "govuk-label--m"
+    },
+    items: convertObjectsToSelectOptions(allCancellationReasons, "Select a cancellation reason", "name", "id", "reason"),
+    fieldName: "reason"
+  },
+  fetchContext()
+) }}
+
+{{ taTextarea(
+  {
+    label: {
+      text: "Please provide any further details"
+    },
+    fieldName: "notes"
+  },
+  fetchContext()
+) }}
+
+{{ govukButton({
+  text: "Submit",
+  preventDoubleClick: true
+}) }}

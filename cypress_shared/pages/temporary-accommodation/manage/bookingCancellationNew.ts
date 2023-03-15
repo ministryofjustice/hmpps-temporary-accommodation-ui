@@ -1,18 +1,18 @@
-import type { Booking, NewCancellation, Premises, Room } from '@approved-premises/api'
+import type { Booking, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
-import Page from '../../page'
+import BookingCancellationEditablePage from './bookingCancellationEditable'
 
-export default class BookingCancellationNewPage extends Page {
+export default class BookingCancellationNewPage extends BookingCancellationEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
+  constructor(premises: Premises, room: Room, booking: Booking) {
     super('Cancel booking')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
@@ -29,18 +29,5 @@ export default class BookingCancellationNewPage extends Page {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
-  }
-
-  completeForm(newCancellation: NewCancellation): void {
-    this.getLegend('When was this booking cancelled?')
-    this.completeDateInputs('date', newCancellation.date)
-
-    this.getLabel('What was the reason for cancellation?')
-    this.getSelectInputByIdAndSelectAnEntry('reason', newCancellation.reason)
-
-    this.getLabel('Please provide any further details')
-    this.getTextInputByIdAndEnterDetails('notes', newCancellation.notes)
-
-    this.clickSubmit()
   }
 }

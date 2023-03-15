@@ -1,18 +1,18 @@
-import type { Booking, NewDeparture, Premises, Room } from '@approved-premises/api'
+import type { Booking, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
-import Page from '../../page'
+import BookingDepartureEditablePage from './bookingDepartureEditable'
 
-export default class BookingDepartureNewPage extends Page {
+export default class BookingDepartureNewPage extends BookingDepartureEditablePage {
   private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
 
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
+  constructor(premises: Premises, room: Room, booking: Booking) {
     super('Mark booking as closed')
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
@@ -29,21 +29,5 @@ export default class BookingDepartureNewPage extends Page {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
-  }
-
-  completeForm(newDeparture: NewDeparture): void {
-    this.getLegend('What was the departure date?')
-    this.completeDateInputs('dateTime', newDeparture.dateTime)
-
-    this.getLabel('What was the departure reason?')
-    this.getSelectInputByIdAndSelectAnEntry('reasonId', newDeparture.reasonId)
-
-    this.getLabel('What was the move on category?')
-    this.getSelectInputByIdAndSelectAnEntry('moveOnCategoryId', newDeparture.moveOnCategoryId)
-
-    this.getLabel('Please provide any further details')
-    this.getTextInputByIdAndEnterDetails('notes', newDeparture.notes)
-
-    this.clickSubmit()
   }
 }

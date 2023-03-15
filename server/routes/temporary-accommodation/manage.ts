@@ -194,6 +194,22 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
+  get(paths.bookings.cancellations.edit.pattern, cancellationsController.edit(), {
+    auditEvent: 'VIEW_BOOKING_EDIT_CANCELLATION',
+  })
+  put(paths.bookings.cancellations.update.pattern, cancellationsController.update(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.bookings.cancellations.edit.pattern,
+        auditEvent: 'EDIT_BOOKING_CANCELLATION_FAILURE',
+      },
+      {
+        path: paths.bookings.show.pattern,
+        auditEvent: 'EDIT_BOOKING_CANCELLATION_SUCCESS',
+      },
+    ],
+  })
+
   get(paths.reports.bookings.new.pattern, bookingReportsController.new(), { auditEvent: 'VIEW_REPORT_CREATE' })
   post(paths.reports.bookings.create.pattern, bookingReportsController.create(), {
     auditEvent: 'REPORT_CREATED_SUCCESS',

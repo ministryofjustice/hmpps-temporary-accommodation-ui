@@ -3,7 +3,11 @@ import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './lostBedInfo'
 import { statusTag } from '../utils/lostBedUtils'
 
-jest.mock('../utils/viewUtils')
+jest.mock('../utils/viewUtils', () => {
+  return {
+    formatLines: (text: string) => text,
+  }
+})
 
 describe('LostBedInfo', () => {
   describe('lostBed summaryListRows', () => {
@@ -88,7 +92,7 @@ describe('LostBedInfo', () => {
             text: 'Notes',
           },
           value: {
-            html: formatLines(lostBed.notes),
+            html: formatLines(lostBed.cancellation.notes),
           },
         },
       ])

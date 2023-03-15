@@ -10,6 +10,9 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import lostBedFactory from '../testutils/factories/lostBed'
 import newLostBedFactory from '../testutils/factories/newLostBed'
 import referenceDataFactory from '../testutils/factories/referenceData'
+import updateLostBedFactory from '../testutils/factories/updateLostBed'
+import lostBedCancellationFactory from '../testutils/factories/lostBedCancellation'
+import newLostBedCancellationFactory from '../testutils/factories/newLostBedCancellation'
 import { CallConfig } from '../data/restClient'
 
 jest.mock('../data/lostBedClient.ts')
@@ -77,6 +80,54 @@ describe('LostBedService', () => {
 
       expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
       expect(lostBedClient.find).toHaveBeenCalledWith('premisesId', lostBed.id)
+    })
+  })
+
+  describe('update', () => {
+    it('on success returns the updated lostBed', async () => {
+      const lostBed = lostBedFactory.build()
+      const lostBedUpdate = updateLostBedFactory.build({
+        ...lostBed,
+        reason: lostBed.reason.id,
+      })
+
+      lostBedClient.update.mockResolvedValue(lostBed)
+
+      const updatedLostBed = await service.update(callConfig, 'premisesId', lostBed.id, lostBedUpdate)
+      expect(updatedLostBed).toEqual(lostBed)
+
+      expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(lostBedClient.update).toHaveBeenCalledWith('premisesId', lostBed.id, lostBedUpdate)
+    })
+  })
+
+  describe('cancel', () => {
+    it('on success returns lostBedCancellation', async () => {
+      const lostBedCancellation = lostBedCancellationFactory.build()
+      const newLostBedCancellation = newLostBedCancellationFactory.build({ ...lostBedCancellation })
+
+      lostBedClient.cancel.mockResolvedValue(lostBedCancellation)
+
+      const cancelledLostBed = await service.cancel(callConfig, 'premisesId', 'lostBedId', newLostBedCancellation)
+      expect(cancelledLostBed).toEqual(lostBedCancellation)
+
+      expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(lostBedClient.cancel).toHaveBeenCalledWith('premisesId', 'lostBedId', newLostBedCancellation)
+    })
+  })
+
+  describe('getUpdateLostBed', () => {
+    it('on success returns lostBed', async () => {
+      const lostBed = lostBedFactory.build()
+
+      lostBedClient.find.mockResolvedValue(lostBed)
+
+      const updatedLostBed = await service.getUpdateLostBed(callConfig, 'premisesId', 'lostBedId')
+
+      expect(updatedLostBed).toEqual({ ...lostBed, reason: lostBed.reason.id })
+
+      expect(LostBedClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(lostBedClient.find).toHaveBeenCalledWith('premisesId', 'lostBedId')
     })
   })
 })

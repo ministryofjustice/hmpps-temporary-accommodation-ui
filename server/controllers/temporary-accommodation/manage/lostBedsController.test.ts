@@ -2,6 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import lostBedFactory from '../../../testutils/factories/lostBed'
 import newLostBedFactory from '../../../testutils/factories/newLostBed'
+import updateLostBedFactory from '../../../testutils/factories/updateLostBed'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { CallConfig } from '../../../data/restClient'
@@ -11,16 +12,21 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import premisesFactory from '../../../testutils/factories/premises'
 import roomFactory from '../../../testutils/factories/room'
-import { allStatuses } from '../../../utils/lostBedUtils'
+import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
 import { DateFormats } from '../../../utils/dateUtils'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
+import newLostBedCancellationFactory from '../../../testutils/factories/newLostBedCancellation'
+import lostBedCancellationFactory from '../../../testutils/factories/lostBedCancellation'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/lostBedUtils')
 
 describe('LostBedsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
   const roomId = 'roomId'
+  const lostBedId = 'lostBedId'
 
   let request: Request
 
@@ -150,10 +156,12 @@ describe('LostBedsController', () => {
         const premises = premisesFactory.build()
         const room = roomFactory.build()
         const lostBed = lostBedFactory.build()
+        const mockActions = [{ classes: 'mock', href: '', text: 'mock' }]
 
         premisesService.getPremises.mockResolvedValue(premises)
         bedspaceService.getRoom.mockResolvedValue(room)
         lostBedService.find.mockResolvedValue(lostBed)
+        ;(lostBedActions as jest.MockedFn<typeof lostBedActions>).mockReturnValue(mockActions)
 
         request.params = {
           premisesId: premises.id,
@@ -168,9 +176,218 @@ describe('LostBedsController', () => {
           premises,
           room,
           lostBed,
+          actions: mockActions,
           allStatuses,
         })
       })
+    })
+
+    describe('update', () => {
+      it('updates a lostBed and redirects to the show lostBed page', async () => {
+        const premises = premisesFactory.build()
+        const room = roomFactory.build()
+        const lostBed = lostBedFactory.build()
+        const lostBedUpdate = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
+
+        request.params.premisesId = premises.id
+        request.params.roomId = room.id
+        request.params.lostBedId = lostBed.id
+        request.body = {
+          ...lostBedUpdate,
+          ...DateFormats.convertIsoToDateAndTimeInputs(lostBedUpdate.startDate, 'startDate'),
+          ...DateFormats.convertIsoToDateAndTimeInputs(lostBedUpdate.endDate, 'endDate'),
+        }
+
+        const requestHandler = lostBedsController.update()
+        lostBedService.update.mockResolvedValue(lostBed)
+
+        await requestHandler(request, response, next)
+
+        expect(lostBedService.update).toHaveBeenCalledWith(
+          callConfig,
+          premises.id,
+          lostBed.id,
+          expect.objectContaining(lostBedUpdate),
+        )
+
+        expect(request.flash).toHaveBeenCalledWith('success', 'Void booking updated')
+        expect(response.redirect).toHaveBeenCalledWith(
+          paths.lostBeds.show({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }),
+        )
+      })
+
+      it('renders with errors if the API returns an error', async () => {
+        const requestHandler = lostBedsController.update()
+
+        request.params = {
+          premisesId,
+          roomId,
+          lostBedId,
+        }
+
+        const err = new Error()
+
+        lostBedService.update.mockImplementation(() => {
+          throw err
+        })
+
+        await requestHandler(request, response, next)
+
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.lostBeds.edit({ premisesId, roomId, lostBedId }),
+        )
+      })
+
+      it('renders with errors if the API returns a 409 Conflict status', async () => {
+        const requestHandler = lostBedsController.update()
+
+        request.params = {
+          premisesId,
+          roomId,
+          lostBedId,
+        }
+
+        const err = { status: 409 }
+        lostBedService.update.mockImplementation(() => {
+          throw err
+        })
+
+        await requestHandler(request, response, next)
+
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.lostBeds.edit({ premisesId, roomId, lostBedId }),
+        )
+      })
+    })
+  })
+
+  describe('edit', () => {
+    it('renders the template for updating a lost bed', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const lostBed = lostBedFactory.build()
+      const updateLostBed = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
+      const lostBedReasons = referenceDataFactory.lostBedReasons().buildList(2)
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      lostBedService.getUpdateLostBed.mockResolvedValue(updateLostBed)
+      lostBedService.getReferenceData.mockResolvedValue(lostBedReasons)
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        lostBedId: lostBed.id,
+      }
+
+      const requestHandler = lostBedsController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/lost-beds/edit', {
+        lostBedReasons,
+        errors: {},
+        errorSummary: [],
+        premises,
+        room,
+        lostBedId: lostBed.id,
+        ...updateLostBed,
+        ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
+        ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
+      })
+    })
+  })
+
+  describe('newCancellation', () => {
+    it('renders the template for cancelling a lost bed', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const lostBed = lostBedFactory.active().build()
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      lostBedService.find.mockResolvedValue(lostBed)
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        lostBedId: lostBed.id,
+      }
+
+      const requestHandler = lostBedsController.newCancellation()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/lost-beds/cancel', {
+        errors: {},
+        errorSummary: [],
+        premises,
+        room,
+        lostBed,
+        notes: lostBed.notes,
+        allStatuses,
+      })
+    })
+  })
+
+  describe('createCancellation', () => {
+    it('cancels a lost bed and redirects to the show lost bed page', async () => {
+      const requestHandler = lostBedsController.createCancellation()
+
+      const lostBed = lostBedFactory.build()
+      const newLostBedCancellation = newLostBedCancellationFactory.build()
+      const lostBedCancellation = lostBedCancellationFactory.build()
+
+      lostBedService.cancel.mockResolvedValue(lostBedCancellation)
+
+      request.params = {
+        premisesId,
+        roomId,
+        lostBedId: lostBed.id,
+      }
+
+      request.body = {
+        ...newLostBedCancellation,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(lostBedService.cancel).toHaveBeenCalledWith(callConfig, premisesId, lostBed.id, newLostBedCancellation)
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Void booking cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.lostBeds.show({ premisesId, roomId, lostBedId: lostBed.id }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = lostBedsController.createCancellation()
+
+      const err = new Error()
+      lostBedService.cancel.mockImplementation(() => {
+        throw err
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        lostBedId,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId }),
+      )
     })
   })
 })

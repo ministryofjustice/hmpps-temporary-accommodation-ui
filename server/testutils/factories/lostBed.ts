@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 
 import type { TemporaryAccommodationLostBed as LostBed } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
+import lostBedCancellationFactory from './lostBedCancellation'
 import { DateFormats } from '../../utils/dateUtils'
 
 class LostBedFactory extends Factory<LostBed> {
@@ -34,4 +35,6 @@ export default LostBedFactory.define(() => ({
   reason: referenceDataFactory.lostBedReasons().build(),
   status: faker.helpers.arrayElement(['active', 'cancelled'] as const),
   bedId: faker.datatype.uuid(),
+  serviceName: 'temporary-accommodation' as const,
+  cancellation: lostBedCancellationFactory.build(),
 }))

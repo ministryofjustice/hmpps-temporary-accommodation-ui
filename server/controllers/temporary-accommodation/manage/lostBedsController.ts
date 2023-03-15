@@ -1,13 +1,17 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import type { NewTemporaryAccommodationLostBed as NewLostBed } from '@approved-premises/api'
+import type {
+  NewTemporaryAccommodationLostBed as NewLostBed,
+  NewLostBedCancellation,
+  UpdateTemporaryAccommodationLostBed as UpdateLostBed,
+} from '@approved-premises/api'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import extractCallConfig from '../../../utils/restUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import { allStatuses } from '../../../utils/lostBedUtils'
+import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
 
 export default class LostBedsController {
   constructor(
@@ -81,8 +85,116 @@ export default class LostBedsController {
         premises,
         room,
         lostBed,
+        actions: lostBedActions(premisesId, roomId, lostBed),
         allStatuses,
       })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, lostBedId } = req.params
+      const callConfig = extractCallConfig(req)
+
+      const lostBedUpdate: UpdateLostBed = {
+        serviceName: 'temporary-accommodation',
+        ...req.body,
+        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'startDate'),
+        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'endDate'),
+      }
+
+      try {
+        const updatedLostBed = await this.lostBedsService.update(callConfig, premisesId, lostBedId, lostBedUpdate)
+
+        req.flash('success', 'Void booking updated')
+        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: updatedLostBed.id }))
+      } catch (err) {
+        if (err.status === 409) {
+          insertGenericError(err, 'startDate', 'conflict')
+          insertGenericError(err, 'endDate', 'conflict')
+        }
+
+        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.edit({ premisesId, roomId, lostBedId }))
+      }
+    }
+  }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const { premisesId, roomId, lostBedId } = req.params
+      const callConfig = extractCallConfig(req)
+
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+
+      const lostBedReasons = await this.lostBedsService.getReferenceData(callConfig)
+
+      const updateLostBed = await this.lostBedsService.getUpdateLostBed(callConfig, premisesId, lostBedId)
+
+      return res.render('temporary-accommodation/lost-beds/edit', {
+        lostBedReasons,
+        errors,
+        errorSummary,
+        premises,
+        room,
+        lostBedId,
+        ...updateLostBed,
+        ...DateFormats.convertIsoToDateAndTimeInputs(updateLostBed.startDate, 'startDate'),
+        ...DateFormats.convertIsoToDateAndTimeInputs(updateLostBed.endDate, 'endDate'),
+        ...userInput,
+      })
+    }
+  }
+
+  newCancellation(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const { premisesId, roomId, lostBedId } = req.params
+      const callConfig = extractCallConfig(req)
+
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+
+      const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)
+
+      return res.render('temporary-accommodation/lost-beds/cancel', {
+        errors,
+        errorSummary,
+        premises,
+        room,
+        lostBed,
+        allStatuses,
+        notes: lostBed.notes,
+        ...userInput,
+      })
+    }
+  }
+
+  createCancellation(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, lostBedId } = req.params
+      const callConfig = extractCallConfig(req)
+
+      const lostBedCancellation: NewLostBedCancellation = {
+        ...req.body,
+      }
+
+      try {
+        await this.lostBedsService.cancel(callConfig, premisesId, lostBedId, lostBedCancellation)
+
+        req.flash('success', 'Void booking cancelled')
+        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId }),
+        )
+      }
     }
   }
 }

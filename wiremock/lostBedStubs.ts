@@ -1,5 +1,6 @@
 import { guidRegex } from './index'
 import lostBedFactory from '../server/testutils/factories/lostBed'
+import lostBedCancellationFactory from '../server/testutils/factories/lostBedCancellation'
 import { errorStub, getCombinations } from './utils'
 import paths from '../server/paths/api'
 
@@ -31,7 +32,7 @@ lostBeds.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: lostBedFactory.build(),
+    jsonBody: lostBedFactory.active().build(),
   },
 })
 
@@ -50,10 +51,65 @@ lostBeds.push({
   },
 })
 
+lostBeds.push({
+  priority: 99,
+  request: {
+    method: 'PUT',
+    urlPathPattern: paths.premises.lostBeds.update({ premisesId: guidRegex, lostBedId: guidRegex }),
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: lostBedFactory.build(),
+  },
+})
+
+lostBeds.push({
+  priority: 99,
+  request: {
+    method: 'POST',
+    urlPathPattern: paths.premises.lostBeds.cancel({ premisesId: guidRegex, lostBedId: guidRegex }),
+  },
+  response: {
+    status: 201,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: lostBedCancellationFactory.build(),
+  },
+})
+
+lostBeds.push({
+  priority: 99,
+  request: {
+    method: 'GET',
+    urlPathPattern: paths.premises.lostBeds.update({ premisesId: guidRegex, lostBedId: guidRegex }),
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: lostBedFactory.active().build(),
+  },
+})
+
 const requiredFields = getCombinations(['startDate', 'endDate', 'bedId', 'reason', 'serviceName'])
 
 requiredFields.forEach((fields: Array<string>) => {
   lostBeds.push(errorStub(fields, paths.premises.lostBeds.create({ premisesId: guidRegex }), 'POST'))
+  lostBeds.push(
+    errorStub(
+      fields,
+      paths.premises.lostBeds.update({
+        premisesId: guidRegex,
+        lostBedId: guidRegex,
+      }),
+      'PUT',
+    ),
+  )
 })
 
 export default lostBeds

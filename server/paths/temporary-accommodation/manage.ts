@@ -67,6 +67,9 @@ const paths = {
     new: lostBedsPath.path('new'),
     create: lostBedsPath,
     show: singleLostBedPath,
+    edit: singleLostBedPath.path('edit'),
+    update: singleLostBedPath,
+    cancellations: { new: singleLostBedPath.path('cancel'), create: singleLostBedPath.path('cancellations') },
   },
   reports: {
     bookings: {

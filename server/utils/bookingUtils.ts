@@ -12,37 +12,43 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
     href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
   }
 
-  if (booking.status === 'provisional') {
-    items.push(
-      {
-        text: 'Mark as confirmed',
-        classes: '',
-        href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-      cancelAction,
-    )
-  } else if (booking.status === 'confirmed') {
-    items.push(
-      {
-        text: 'Mark as active',
-        classes: '',
-        href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-      cancelAction,
-    )
-  } else if (booking.status === 'arrived') {
-    items.push(
-      {
-        text: 'Mark as closed',
-        classes: 'govuk-button--secondary',
-        href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-      {
-        text: 'Extend or shorten booking',
-        classes: 'govuk-button--secondary',
-        href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-    )
+  switch (booking.status) {
+    case 'provisional':
+      items.push(
+        {
+          text: 'Mark as confirmed',
+          classes: '',
+          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        cancelAction,
+      )
+      break
+    case 'confirmed':
+      items.push(
+        {
+          text: 'Mark as active',
+          classes: '',
+          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        cancelAction,
+      )
+      break
+    case 'arrived':
+      items.push(
+        {
+          text: 'Mark as closed',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Extend or shorten booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+      )
+      break
+    default:
+      break
   }
 
   if (items.length === 0) {

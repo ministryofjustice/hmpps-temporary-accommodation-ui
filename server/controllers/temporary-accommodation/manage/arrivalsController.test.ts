@@ -44,9 +44,7 @@ describe('ArrivalsController', () => {
     it('renders the form prepopulated with the current booking dates', async () => {
       const premises = premisesFactory.build()
       const room = roomFactory.build()
-      const booking = bookingFactory.arrived().build({
-        extensions: [],
-      })
+      const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,

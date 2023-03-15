@@ -88,9 +88,7 @@ describe('bookingUtils', () => {
 
   describe('getLatestExtension', () => {
     it('returns undefined when the booking has no extensions', () => {
-      const booking = bookingFactory.arrived().build({
-        extensions: [],
-      })
+      const booking = bookingFactory.arrived().build()
 
       expect(getLatestExtension(booking)).toEqual(undefined)
     })
@@ -234,7 +232,6 @@ describe('bookingUtils', () => {
         departure: departureFactory.build({
           dateTime: '2022-03-03',
         }),
-        extensions: [],
         arrival: arrivalFactory.build({
           arrivalDate: '2022-01-02',
           expectedDepartureDate: '2022-03-02',
@@ -285,7 +282,7 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a cancelled confirmed booking', () => {
-      const booking = bookingFactory.cancelled().build()
+      const booking = bookingFactory.cancelled('confirmed').build()
 
       const expected = [
         {
@@ -314,9 +311,7 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a cancelled provisional booking', () => {
-      const booking = bookingFactory.cancelled().build({
-        confirmation: null,
-      })
+      const booking = bookingFactory.cancelled('provisional').build()
 
       const expected = [
         {

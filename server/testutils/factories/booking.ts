@@ -22,40 +22,57 @@ class BookingFactory extends Factory<Booking> {
       departureDate: future(),
       status: 'provisional',
       extensions: [],
+      confirmation: null,
+      arrival: null,
+      departure: null,
+      departures: [],
+      cancellation: null,
+      cancellations: [],
     })
   }
 
   confirmed() {
-    return this.params({
-      arrivalDate: soon(),
-      departureDate: future(),
+    return this.provisional().params({
       status: 'confirmed',
-      extensions: [],
+      confirmation: confirmationFactory.build(),
     })
   }
 
   arrived() {
-    return this.params({
+    return this.confirmed().params({
       arrivalDate: past(),
       departureDate: future(),
       status: 'arrived',
+      arrival: arrivalFactory.build(),
     })
   }
 
   departed() {
-    return this.params({
+    const departure = departureFactory.build()
+
+    return this.arrived().params({
       arrivalDate: past(),
       departureDate: past(),
       status: 'departed',
+      departure,
+      departures: [departure],
     })
   }
 
-  cancelled() {
-    return this.params({
-      arrivalDate: past(),
-      departureDate: past(),
+  cancelled(source: 'provisional' | 'confirmed' = 'provisional') {
+    const cancellation = cancellationFactory.build()
+
+    if (source === 'provisional') {
+      return this.provisional().params({
+        status: 'cancelled',
+        cancellation,
+        cancellations: [cancellation],
+      })
+    }
+    return this.confirmed().params({
       status: 'cancelled',
-      extensions: [],
+      cancellation,
+      cancellations: [cancellation],
     })
   }
 }

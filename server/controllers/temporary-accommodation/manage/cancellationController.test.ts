@@ -48,9 +48,7 @@ describe('CancellationsController', () => {
     it('renders the form', async () => {
       const premises = premisesFactory.build()
       const room = roomFactory.build()
-      const booking = bookingFactory.arrived().build({
-        extensions: [],
-      })
+      const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,

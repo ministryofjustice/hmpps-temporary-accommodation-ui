@@ -26,7 +26,10 @@ export default (lostBed: LostBed): SummaryList['rows'] => {
 
   rows.push({
     key: textValue('Notes'),
-    value: htmlValue(formatLines(lostBed.notes)),
+    value:
+      lostBed.status === 'active'
+        ? htmlValue(formatLines(lostBed.notes))
+        : htmlValue(formatLines(lostBed.cancellation.notes)),
   })
 
   return rows

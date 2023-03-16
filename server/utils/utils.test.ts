@@ -368,5 +368,14 @@ describe('unique', () => {
       expect(regExp.exec('some string')).toBeFalsy()
       expect(regExp.exec(' some-string ')).toBeFalsy()
     })
+
+    it('properly escapes special characters', () => {
+      const evilString = '.+*?^$()[]{}|\\'
+
+      const regExp = exact(evilString)
+
+      expect(regExp.exec(evilString)).toBeTruthy()
+      expect(regExp.exec(evilString.replace('$', '£'))).toBeFalsy()
+    })
   })
 })

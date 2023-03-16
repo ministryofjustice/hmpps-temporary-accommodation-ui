@@ -34,7 +34,7 @@ export default class ExtensionsController {
         errors,
         errorSummary: requestErrorSummary,
         notes: getLatestExtension(booking)?.notes,
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
         ...userInput,
       })
     }
@@ -47,7 +47,7 @@ export default class ExtensionsController {
 
       const newExtension: NewExtension = {
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'newDepartureDate'),
       }
 
       try {

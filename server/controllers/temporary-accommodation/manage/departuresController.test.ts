@@ -80,7 +80,7 @@ describe('DeparturesController', () => {
         allDepartureReasons: [],
         allMoveOnCategories: [],
         errors: {},
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
         errorSummary: [],
       })
     })
@@ -102,7 +102,7 @@ describe('DeparturesController', () => {
       }
       request.body = {
         ...newDeparture,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
       }
 
       departureService.createDeparture.mockResolvedValue(departure)
@@ -135,7 +135,7 @@ describe('DeparturesController', () => {
       }
       request.body = {
         ...newDeparture,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
       }
 
       const err = new Error()

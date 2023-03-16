@@ -32,8 +32,8 @@ export default class ArrivalsController {
         booking,
         errors,
         errorSummary: requestErrorSummary,
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
         ...userInput,
       })
     }
@@ -46,8 +46,8 @@ export default class ArrivalsController {
 
       const newArrival: NewArrival = {
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
       }
 
       try {

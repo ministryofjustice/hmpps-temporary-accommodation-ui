@@ -2,11 +2,16 @@ import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
+import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
+import RiskManagementPlanPage from './riskManagementPlan'
+import RiskToSelfPage from './riskToSelf'
+import RoshSummaryPage from './roshSummary'
 import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
+import SupportingInformationPage from './supportingInformation'
 import TaskListPage from './taskListPage'
 
 export {
@@ -20,4 +25,9 @@ export {
   TaskListPage,
   SentenceTypePage,
   OptionalOasysSectionsPage,
+  RoshSummaryPage,
+  OffenceDetailsPage,
+  SupportingInformationPage,
+  RiskManagementPlanPage,
+  RiskToSelfPage,
 }

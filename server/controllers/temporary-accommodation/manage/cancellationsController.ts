@@ -1,5 +1,5 @@
-import type { Request, RequestHandler, Response } from 'express'
 import type { NewCancellation } from '@approved-premises/api'
+import type { Request, RequestHandler, Response } from 'express'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -36,7 +36,7 @@ export default class CanellationsController {
         allCancellationReasons,
         errors,
         errorSummary: requestErrorSummary,
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'date'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'date'),
         ...userInput,
       })
     }
@@ -49,7 +49,7 @@ export default class CanellationsController {
 
       const newCancellation: NewCancellation = {
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString(req.body, 'date'),
+        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'date'),
       }
 
       try {

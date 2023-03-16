@@ -1,0 +1,67 @@
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "../../../components/riskWidgets/macro.njk" import widgets %}
+
+{% extends "../layout.njk" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+
+{% block questions %}
+  <div class="govuk-grid-row">
+    <div>
+      {% if oasysDisabled %}
+        <h1 class="govuk-heading-l">Input risk information</h1>
+      {% else %}
+        <h1 class="govuk-heading-l">{{page.title}}</h1>
+        <p>OASys last updated: {{formatDate(page.oasysCompleted)}}</p>
+      {% endif %}
+    </div>
+
+    {{ mojSubNavigation({
+        label: 'Sub navigation',
+        attributes: {
+          'role': 'tablist'
+        },
+        items: [{
+          text: 'RoSH summary',
+          active: (pageName === "roshSummary"),
+          href: paths.applications.pages.show({ id: applicationId, task: 'oasys-import', page: 'rosh-summary' })
+        },
+        {
+          text: 'Offence details',
+          active: (pageName === "offenceDetails"),
+          href: paths.applications.pages.show({ id: applicationId, task: 'oasys-import', page: 'offence-details' })
+        },
+        {
+          text: 'Supporting information',
+          active: (pageName === "supportingInformation"),
+          href: paths.applications.pages.show({ id: applicationId, task: 'oasys-import', page: 'supporting-information' })
+        },
+         {
+          text: 'Risk management plan',
+          active: (pageName === "riskManagementPlan"),
+          href: paths.applications.pages.show({ id: applicationId, task: 'oasys-import', page: 'risk-management-plan' })
+        },
+        {
+          text: 'Risk to self',
+          active: (pageName === "riskToSelf"),
+          href: paths.applications.pages.show({ id: applicationId, task: 'oasys-import', page: 'risk-to-self' })
+        }]
+      }) }}
+  </div>
+
+  <div class="govuk-grid-row">
+    {% if oasysDisabled %}
+      <div class="govuk-grid-column-full" id="{{ pageName }}">
+        {{OasysImportUtils.textareas(questions, key) | safe}}
+      </div>
+    {% else %}
+      <div class="govuk-grid-column-two-thirds" id="{{ pageName }}">
+        {{OasysImportUtils.textareas(questions, key) | safe}}
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        {{ widgets(page.risks) }}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -16,7 +16,7 @@ Given('I extend the booking', () => {
 
     const newExtension = newExtensionFactory.build({
       newDepartureDate: DateFormats.dateObjToIsoDate(
-        faker.date.future(1, DateFormats.convertIsoToDateObj(this.booking.arrivalDate)),
+        faker.date.future(1, DateFormats.isoToDateObj(this.booking.arrivalDate)),
       ),
     })
     const extension = extensionFactory.build({

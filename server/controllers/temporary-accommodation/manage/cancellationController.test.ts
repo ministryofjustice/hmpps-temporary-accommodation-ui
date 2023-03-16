@@ -81,7 +81,7 @@ describe('CancellationsController', () => {
         booking,
         allCancellationReasons: [],
         errors: {},
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'date'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'date'),
         errorSummary: [],
       })
     })
@@ -104,7 +104,7 @@ describe('CancellationsController', () => {
       }
       request.body = {
         ...newCancellation,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newCancellation.date, 'date'),
+        ...DateFormats.isoToDateAndTimeInputs(newCancellation.date, 'date'),
       }
 
       cancellationService.createCancellation.mockResolvedValue(cancellation)
@@ -138,7 +138,7 @@ describe('CancellationsController', () => {
       }
       request.body = {
         ...newCancellation,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newCancellation.date, 'date'),
+        ...DateFormats.isoToDateAndTimeInputs(newCancellation.date, 'date'),
       }
 
       const err = new Error()

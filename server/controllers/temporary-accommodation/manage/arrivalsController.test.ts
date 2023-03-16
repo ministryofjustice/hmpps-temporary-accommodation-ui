@@ -73,8 +73,8 @@ describe('ArrivalsController', () => {
         booking,
         errors: {},
         errorSummary: [],
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
       })
     })
   })
@@ -95,8 +95,8 @@ describe('ArrivalsController', () => {
       }
       request.body = {
         ...newArrival,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
       }
 
       arrivalService.createArrival.mockResolvedValue(arrival)
@@ -129,8 +129,8 @@ describe('ArrivalsController', () => {
       }
       request.body = {
         ...newArrival,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
       }
 
       const err = new Error()
@@ -163,8 +163,8 @@ describe('ArrivalsController', () => {
       }
       request.body = {
         ...newArrival,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
       }
 
       const err = { status: 409 }

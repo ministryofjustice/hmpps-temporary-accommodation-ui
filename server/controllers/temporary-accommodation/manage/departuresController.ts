@@ -36,7 +36,7 @@ export default class DeparturesController {
         allMoveOnCategories,
         errors,
         errorSummary: requestErrorSummary,
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'dateTime'),
         ...userInput,
       })
     }
@@ -49,7 +49,7 @@ export default class DeparturesController {
 
       const newDeparture: NewDeparture = {
         ...req.body,
-        ...DateFormats.convertDateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
+        ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
       }
 
       try {

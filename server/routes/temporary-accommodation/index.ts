@@ -6,9 +6,9 @@ import paths from '../../paths/temporary-accommodation/static'
 import { Services } from '../../services'
 import actions from '../utils'
 
-import manageRoutes from './manage'
-import applyRoutes from '../apply'
 import config from '../../config'
+import applyRoutes from '../apply'
+import manageRoutes from './manage'
 
 export default function routes(controllers: Controllers, services: Services): Router {
   const router = Router()
@@ -22,7 +22,7 @@ export default function routes(controllers: Controllers, services: Services): Ro
 
   manageRoutes(controllers, services, router)
 
-  if (['local', 'dev', 'test'].includes(config.environment)) {
+  if (!config.flags.applyDisabled) {
     applyRoutes(controllers, services, router)
   }
 

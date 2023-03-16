@@ -86,8 +86,8 @@ describe('BookingsController', () => {
       }
       request.body = {
         ...newBooking,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
@@ -168,8 +168,8 @@ describe('BookingsController', () => {
       }
       request.body = {
         ...newBooking,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'departureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'departureDate'),
       }
 
       await requestHandler(request, response, next)
@@ -204,8 +204,8 @@ describe('BookingsController', () => {
       }
       request.body = {
         ...newBooking,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(newBooking.arrivalDate, 'departureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'departureDate'),
       }
 
       await requestHandler(request, response, next)

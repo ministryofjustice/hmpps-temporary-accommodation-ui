@@ -1,22 +1,22 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
-import lostBedFactory from '../../../testutils/factories/lostBed'
-import newLostBedFactory from '../../../testutils/factories/newLostBed'
-import updateLostBedFactory from '../../../testutils/factories/updateLostBed'
+import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { CallConfig } from '../../../data/restClient'
-import LostBedsController from './lostBedsController'
-import extractCallConfig from '../../../utils/restUtils'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
-import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
-import { DateFormats } from '../../../utils/dateUtils'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
-import newLostBedCancellationFactory from '../../../testutils/factories/newLostBedCancellation'
+import lostBedFactory from '../../../testutils/factories/lostBed'
 import lostBedCancellationFactory from '../../../testutils/factories/lostBedCancellation'
+import newLostBedFactory from '../../../testutils/factories/newLostBed'
+import newLostBedCancellationFactory from '../../../testutils/factories/newLostBedCancellation'
+import premisesFactory from '../../../testutils/factories/premises'
+import referenceDataFactory from '../../../testutils/factories/referenceData'
+import roomFactory from '../../../testutils/factories/room'
+import updateLostBedFactory from '../../../testutils/factories/updateLostBed'
+import { DateFormats } from '../../../utils/dateUtils'
+import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
+import extractCallConfig from '../../../utils/restUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import LostBedsController from './lostBedsController'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
@@ -90,8 +90,8 @@ describe('LostBedsController', () => {
 
         request.body = {
           ...newLostBed,
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
         }
 
         await requestHandler(request, response, next)
@@ -194,8 +194,8 @@ describe('LostBedsController', () => {
         request.params.lostBedId = lostBed.id
         request.body = {
           ...lostBedUpdate,
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBedUpdate.startDate, 'startDate'),
-          ...DateFormats.convertIsoToDateAndTimeInputs(lostBedUpdate.endDate, 'endDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBedUpdate.startDate, 'startDate'),
+          ...DateFormats.isoToDateAndTimeInputs(lostBedUpdate.endDate, 'endDate'),
         }
 
         const requestHandler = lostBedsController.update()
@@ -299,8 +299,8 @@ describe('LostBedsController', () => {
         room,
         lostBedId: lostBed.id,
         ...updateLostBed,
-        ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
-        ...DateFormats.convertIsoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
+        ...DateFormats.isoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
+        ...DateFormats.isoToDateAndTimeInputs(lostBed.endDate, 'endDate'),
       })
     })
   })

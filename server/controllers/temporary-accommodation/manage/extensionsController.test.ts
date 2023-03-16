@@ -78,7 +78,7 @@ describe('ExtensionsController', () => {
         room,
         booking,
         errors: {},
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
         errorSummary: [],
       })
     })
@@ -117,7 +117,7 @@ describe('ExtensionsController', () => {
         room,
         booking,
         errors: {},
-        ...DateFormats.convertIsoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
         notes: booking.extensions[0].notes,
         errorSummary: [],
       })
@@ -140,7 +140,7 @@ describe('ExtensionsController', () => {
       }
       request.body = {
         ...newExtension,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newExtension.newDepartureDate, 'newDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newExtension.newDepartureDate, 'newDepartureDate'),
       }
 
       extensionService.createExtension.mockResolvedValue(extension)
@@ -173,7 +173,7 @@ describe('ExtensionsController', () => {
       }
       request.body = {
         ...newDeparture,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newDeparture.dateTime, 'newDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'newDepartureDate'),
       }
 
       const err = new Error()
@@ -206,7 +206,7 @@ describe('ExtensionsController', () => {
       }
       request.body = {
         ...newDeparture,
-        ...DateFormats.convertIsoToDateAndTimeInputs(newDeparture.dateTime, 'newDepartureDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'newDepartureDate'),
       }
 
       const err = { status: 409 }

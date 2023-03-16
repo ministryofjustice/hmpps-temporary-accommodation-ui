@@ -64,7 +64,7 @@ export default class BookingService {
     const bookingRowArr = bookings
       .filter(b => b.bed.id === bedId)
       .map(b => ({
-        sortingValue: DateFormats.convertIsoToDateObj(b.arrivalDate).getTime(),
+        sortingValue: DateFormats.isoToDateObj(b.arrivalDate).getTime(),
         rows: [
           this.textValue(b.person.crn),
           this.textValue(DateFormats.isoDateToUIDate(b.arrivalDate, { format: 'short' })),
@@ -83,7 +83,7 @@ export default class BookingService {
     const lostBedRowArr = lostBeds
       .filter(lostBed => lostBed.bedId === bedId)
       .map(lostBed => ({
-        sortingValue: DateFormats.convertIsoToDateObj(lostBed.startDate).getTime(),
+        sortingValue: DateFormats.isoToDateObj(lostBed.startDate).getTime(),
         rows: [
           this.textValue('-'),
           this.textValue(DateFormats.isoDateToUIDate(lostBed.startDate, { format: 'short' })),

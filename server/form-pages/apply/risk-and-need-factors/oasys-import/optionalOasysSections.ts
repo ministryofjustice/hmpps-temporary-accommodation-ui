@@ -82,7 +82,7 @@ export default class OptionalOasysSections implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'rosh-summary'
   }
 
   response() {

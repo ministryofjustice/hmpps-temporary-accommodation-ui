@@ -1,12 +1,11 @@
 import Page from '../../../../cypress_shared/pages/page'
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import departureFactory from '../../../../server/testutils/factories/departure'
 import newDepartureFactory from '../../../../server/testutils/factories/newDeparture'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Booking departure', () => {
   beforeEach(() => {
@@ -19,13 +18,8 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a room, and an arrived booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
     const bookingShow = BookingShowPage.visit(premises, room, booking)
@@ -43,13 +37,8 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a room, and an arrived booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
@@ -84,17 +73,13 @@ context('Booking departure', () => {
   })
 
   it('shows errors when the API returns an error', () => {
+  it('shows errors when the API returns an error when marking a booking as departed', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there is an arrived booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
@@ -117,13 +102,8 @@ context('Booking departure', () => {
     cy.signIn()
 
     // And there is a premises, a room, and an arrived booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.arrived().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')

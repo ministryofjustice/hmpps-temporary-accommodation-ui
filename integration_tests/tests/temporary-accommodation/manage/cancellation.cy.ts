@@ -1,12 +1,11 @@
 import Page from '../../../../cypress_shared/pages/page'
 import BookingCancellationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import bookingFactory from '../../../../server/testutils/factories/booking'
 import cancellationFactory from '../../../../server/testutils/factories/cancellation'
 import newCancellationFactory from '../../../../server/testutils/factories/newCancellation'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
 
 context('Booking cancellation', () => {
   beforeEach(() => {
@@ -19,13 +18,8 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a provisional booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
     const bookingShow = BookingShowPage.visit(premises, room, booking)
@@ -43,13 +37,8 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a provisional booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
@@ -86,13 +75,8 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a provisional booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
@@ -115,13 +99,8 @@ context('Booking cancellation', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a provisional booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.provisional().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')

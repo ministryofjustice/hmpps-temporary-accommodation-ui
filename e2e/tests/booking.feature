@@ -35,6 +35,8 @@ Feature: Manage Temporary Accommodation - Booking
         Then I should see the booking with the extended departure date
         And I mark the booking as departed
         Then I should see the booking with the departed status
+        And I edit the departed booking
+        Then I should see the booking with the edited departure details
         And I should see previous booking states in the booking history
 
     Scenario: Showing booking creation errors
@@ -70,3 +72,6 @@ Feature: Manage Temporary Accommodation - Booking
         And I mark the booking as arrived
         And I attempt to mark the booking as departed with required details missing
         Then I should see a list of the problems encountered marking the booking as departed
+        And I mark the booking as departed
+        And I attempt to edit the departed booking with required details missing
+        Then I should see a list of the problems encountered editing the departed booking

@@ -60,13 +60,15 @@ Then('I should see the booking with the extended departure date', () => {
 
     const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
+    bedspaceShowPage.clickBookingLink(this.booking)
   })
 })
 
 Then('I should see a list of the problems encountered extending the booking', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingExtensionNewPage, this.premises, this.room, this.booking)
-
     page.shouldShowErrorMessagesForFields(['newDepartureDate'])
+
+    page.clickBack()
   })
 })

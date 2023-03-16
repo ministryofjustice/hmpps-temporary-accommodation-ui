@@ -47,5 +47,6 @@ Then('I should see the booking with the confirmed status', () => {
 
     const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
+    bedspaceShowPage.clickBookingLink(this.booking)
   })
 })

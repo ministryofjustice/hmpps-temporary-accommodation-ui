@@ -123,18 +123,38 @@ describe('restClient', () => {
   })
 
   describe('pipe', () => {
-    it('should make a GET request and pipe the response', async () => {
+    it('should make a GET request and pipe the response, using the specified filename', async () => {
       const data = 'some-data'
 
       fakeApprovedPremisesApi.get(`/some/path`).reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
 
-      await restClient.pipe(response, 'some-filename', { path: '/some/path' })
+      await restClient.pipe(response, { path: '/some/path', filename: 'some-filename' })
 
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
-        'Content-Disposition': `attachment; filename="some-filename"`,
+        'Content-Disposition': 'attachment; filename="some-filename"',
+      })
+
+      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
+      expect(nock.isDone()).toBeTruthy()
+    })
+
+    it('should make a GET request and pipe the response, using the filename from the API when none is specified', async () => {
+      const data = 'some-data'
+      fakeApprovedPremisesApi.get(`/some/path`).reply(200, data, {
+        'content-type': 'some-content-type',
+        'content-disposition': 'attachment; filename="some-filename"',
+      })
+
+      const response = createMock<Response>()
+
+      await restClient.pipe(response, { path: '/some/path' })
+
+      expect(response.set).toHaveBeenCalledWith({
+        'Content-Type': 'some-content-type',
+        'Content-Disposition': 'attachment; filename="some-filename"',
       })
 
       expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
@@ -147,7 +167,7 @@ describe('restClient', () => {
 
     const response = createMock<Response>()
 
-    await expect(restClient.pipe(response, 'some-filename', { path: '/some/path' })).rejects.toBeDefined()
+    await expect(restClient.pipe(response, { path: '/some/path' })).rejects.toBeDefined()
 
     expect(response.set).not.toHaveBeenCalledWith()
     expect(response.write).not.toHaveBeenCalled()

@@ -18,6 +18,7 @@ import oasysSelectionFactory from '../../server/testutils/factories/oasysSelecti
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
 import {
+  AttachDocumentsPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
@@ -44,6 +45,7 @@ export default class ApplyHelper {
   pages = {
     reasonsForPlacement: [] as Array<ApplyPage>,
     riskAndNeedFactors: [] as Array<ApplyPage>,
+    addDocuments: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -110,12 +112,13 @@ export default class ApplyHelper {
   completeApplication() {
     this.completeBasicInformation()
     this.completeOasysImport()
+    this.completeAttachDocuments()
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.reasonsForPlacement, ...this.pages.riskAndNeedFactors].length
+    return [...this.pages.reasonsForPlacement, ...this.pages.riskAndNeedFactors, this.pages.addDocuments].length
   }
 
   private stubPersonEndpoints() {
@@ -289,6 +292,31 @@ export default class ApplyHelper {
 
     // Then I should be taken back to the tasklist
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
+
+    // And the Attach Documents task should show as not started
+    tasklistPage.shouldShowTaskStatus('attach-required-documents', 'Not started')
+  }
+
+  private completeAttachDocuments() {
+    // Given I click on the Attach Documents task
+    cy.get('[data-cy-task-name="attach-required-documents"]').click()
+    const attachDocumentsPage = new AttachDocumentsPage(this.documents, this.selectedDocuments, this.application)
+
+    // Then I should be able to download the documents
+    attachDocumentsPage.shouldBeAbleToDownloadDocuments(this.documents)
+
+    // And I attach the relevant documents
+    attachDocumentsPage.shouldDisplayDocuments()
+    attachDocumentsPage.completeForm()
+    attachDocumentsPage.clickSubmit()
+
+    this.pages.addDocuments = [attachDocumentsPage]
+
+    // Then I should be taken back to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the Attach Documents task should show a completed status
+    tasklistPage.shouldShowTaskStatus('attach-required-documents', 'Completed')
 
     // And the Check Your Answers task should show as not started
     tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')

@@ -27,6 +27,10 @@ export default class LostBedCancelPage extends Page {
     this.locationHeaderComponent.shouldShowLocationDetails()
   }
 
+  clearForm(): void {
+    super.getTextInputByIdAndClear('notes')
+  }
+
   completeForm(cancelLostBed: NewLostBedCancellation): void {
     super.getTextInputByIdAndClear('notes')
     this.getLabel('Notes')

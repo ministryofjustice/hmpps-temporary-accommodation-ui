@@ -23,6 +23,7 @@ export const controllers = (services: Services) => {
     services.premisesService,
     services.bedspaceService,
     services.bookingService,
+    services.personService,
   )
 
   const confirmationsController = new ConfirmationsController(

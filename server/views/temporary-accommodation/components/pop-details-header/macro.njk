@@ -1,0 +1,13 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro popDetailsHeader(person) %}
+
+<div class="pop-details-header">
+  {% if person %}
+    <p><span class="govuk-!-font-weight-bold">Name:</span> {{ person.name }}<br />
+    <span class="govuk-!-font-weight-bold">CRN:</span> {{ person.crn }}<br />
+    <span class="govuk-!-font-weight-bold">Date of birth:</span> {{formatDate(person.dateOfBirth)}}</p>
+  {% endif %}
+</div>
+
+{% endmacro %}

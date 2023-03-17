@@ -2,6 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -19,7 +20,8 @@
 
   <h1>Booking history</h1>
 
-  {{ locationHeader({ room: room, premises: premises, crn: booking.person.crn }) }}
+  {{ popDetailsHeader(booking.person) }}
+  {{ locationHeader({ room: room, premises: premises }) }}
 
   {% for historicBookingDetail in history | reverse %}
     <div data-cy-history-index="{{ loop.revindex0 }}">

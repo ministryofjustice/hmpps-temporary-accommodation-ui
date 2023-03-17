@@ -2,6 +2,7 @@
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -29,7 +30,8 @@
     items: actions
   }) }}
 
-  {{ locationHeader({ room: room, premises: premises, crn: booking.person.crn }) }}
+  {{ popDetailsHeader(booking.person) }}
+  {{ locationHeader({ room: room, premises: premises }) }}
 
   {{ bookingInfo(booking, paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })) }}
 

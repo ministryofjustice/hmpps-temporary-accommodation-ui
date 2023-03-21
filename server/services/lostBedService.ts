@@ -1,4 +1,3 @@
-import type { ReferenceData } from '@approved-premises/ui'
 import type {
   TemporaryAccommodationLostBed as LostBed,
   LostBedCancellation,
@@ -6,6 +5,7 @@ import type {
   NewLostBedCancellation,
   UpdateTemporaryAccommodationLostBed as UpdateLostBed,
 } from '@approved-premises/api'
+import type { ReferenceData } from '@approved-premises/ui'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 

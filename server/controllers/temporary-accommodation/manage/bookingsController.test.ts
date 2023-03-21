@@ -219,6 +219,43 @@ describe('BookingsController', () => {
         paths.bookings.new({ premisesId, roomId }),
       )
     })
+
+    it('renders with errors if the API returns a 403 Forbidden status', async () => {
+      const requestHandler = bookingsController.create()
+
+      const room = roomFactory.build()
+      bedspaceService.getRoom.mockResolvedValue(room)
+
+      const err = { status: 403 }
+      bookingService.createForBedspace.mockImplementation(() => {
+        throw err
+      })
+
+      const booking = bookingFactory.build()
+      const newBooking = newBookingFactory.build({
+        ...booking,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.body = {
+        ...newBooking,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'departureDate'),
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.new({ premisesId, roomId }),
+      )
+    })
   })
 
   describe('show', () => {

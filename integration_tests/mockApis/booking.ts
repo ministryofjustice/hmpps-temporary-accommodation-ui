@@ -20,20 +20,20 @@ export default {
     }),
   stubBookingCreateErrors: (args: { premisesId: string; params: Array<string> }) =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings`, 'POST')),
-  stubBookingCreateConflictError: (premisesId: string) =>
+  stubBookingCreateApiError: (args: { premisesId: string; errorCode: number; errorTitle: string }) =>
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${premisesId}/bookings`,
+        url: `/premises/${args.premisesId}/bookings`,
       },
       response: {
-        status: 409,
+        status: args.errorCode,
         headers: {
           'Content-Type': 'application/problem+json;charset=UTF-8',
         },
         jsonBody: {
-          title: 'Conflict',
-          status: 409,
+          title: args.errorTitle,
+          status: args.errorCode,
         },
       },
     }),

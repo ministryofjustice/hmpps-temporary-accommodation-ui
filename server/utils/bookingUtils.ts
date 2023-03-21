@@ -115,7 +115,7 @@ export const deriveBookingHistory = (booking: Booking) => {
 
   const history = []
 
-  for (let previous = bookingWithSortedExensions; previous; previous = getPreviousBookingState(previous)) {
+  for (let previous = bookingWithSortedExensions; previous; previous = getPredecessorForBooking(previous)) {
     history.push({ booking: previous, updatedAt: getUpdatedAt(previous) })
   }
   history.reverse()
@@ -149,22 +149,22 @@ const getUpdatedAt = (booking: Booking): string => {
   return booking.createdAt
 }
 
-const getPreviousBookingState = (booking: Booking): Booking => {
+const getPredecessorForBooking = (booking: Booking): Booking => {
   switch (booking.status) {
     case 'departed':
-      return getPreviousDepartedBookingState(booking)
+      return getPredecessorForDepartedBooking(booking)
     case 'arrived':
-      return getPreviousArrivedBookingState(booking)
+      return getPredecessorForArrivedBooking(booking)
     case 'cancelled':
-      return getPreviousCancelledBookingState(booking)
+      return getPredecessorForCancelledBooking(booking)
     case 'confirmed':
-      return getPreviousConfirmedBookingState(booking)
+      return getPredecessorForConfirmedBooking(booking)
     default:
       return undefined
   }
 }
 
-const getPreviousDepartedBookingState = (booking: Booking): Booking => {
+const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
   if (booking.extensions.length === 0) {
     return {
       ...booking,
@@ -182,7 +182,7 @@ const getPreviousDepartedBookingState = (booking: Booking): Booking => {
   }
 }
 
-const getPreviousArrivedBookingState = (booking: Booking): Booking => {
+const getPredecessorForArrivedBooking = (booking: Booking): Booking => {
   if (booking.extensions.length === 0) {
     return {
       ...booking,
@@ -209,14 +209,14 @@ const getPreviousArrivedBookingState = (booking: Booking): Booking => {
   }
 }
 
-const getPreviousCancelledBookingState = (booking: Booking): Booking => {
+const getPredecessorForCancelledBooking = (booking: Booking): Booking => {
   return {
     ...booking,
     status: booking.confirmation ? 'confirmed' : 'provisional',
   }
 }
 
-const getPreviousConfirmedBookingState = (booking: Booking): Booking => {
+const getPredecessorForConfirmedBooking = (booking: Booking): Booking => {
   return {
     ...booking,
     status: 'provisional',

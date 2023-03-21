@@ -14,6 +14,7 @@ export default Factory.define<NewBooking>(() => {
     crn: personFactory.build().crn,
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
     departureDate: DateFormats.dateObjToIsoDate(departureDate),
+    bedId: faker.datatype.uuid(),
     serviceName: 'temporary-accommodation',
   }
 })

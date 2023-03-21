@@ -108,7 +108,6 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.serviceName).equal('temporary-accommodation')
       expect(requestBody.bedId).equal(newLostBed.bedId)
       expect(requestBody.reason).equal(newLostBed.reason)
       expect(requestBody.startDate).equal(newLostBed.startDate)
@@ -348,7 +347,6 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.serviceName).equal('temporary-accommodation')
       expect(requestBody.reason).equal(updateLostBed.reason)
       expect(requestBody.startDate).equal(updateLostBed.startDate)
       expect(requestBody.endDate).equal(updateLostBed.endDate)

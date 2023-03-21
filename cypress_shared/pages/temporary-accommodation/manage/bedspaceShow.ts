@@ -1,4 +1,4 @@
-import type { Booking, TemporaryAccommodationLostBed as LostBed, Room, UpdateLostBed } from '@approved-premises/api'
+import type { Booking, LostBed, Room, UpdateLostBed } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
 import config from '../../../../server/config'

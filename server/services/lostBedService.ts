@@ -1,9 +1,9 @@
 import type {
-  TemporaryAccommodationLostBed as LostBed,
+  LostBed,
   LostBedCancellation,
-  NewTemporaryAccommodationLostBed as NewLostBed,
+  NewLostBed,
   NewLostBedCancellation,
-  UpdateTemporaryAccommodationLostBed as UpdateLostBed,
+  UpdateLostBed,
 } from '@approved-premises/api'
 import type { ReferenceData } from '@approved-premises/ui'
 import type { LostBedClient, ReferenceDataClient, RestClientBuilder } from '../data'
@@ -53,7 +53,6 @@ export default class LostBedService {
     return {
       ...lostBed,
       reason: lostBed.reason.id,
-      serviceName: 'temporary-accommodation',
     }
   }
 

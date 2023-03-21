@@ -2,19 +2,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { ApType } from './ApType';
-import type { Gender } from './Gender';
-import type { PlacementCriteria } from './PlacementCriteria';
+import type { NewPlacementRequest } from './NewPlacementRequest';
+import type { Person } from './Person';
+import type { PersonRisks } from './PersonRisks';
 
-export type PlacementRequest = {
-    gender: Gender;
-    type: ApType;
-    expectedArrival: string;
-    duration: number;
-    location: string;
-    radius: number;
-    essentialCriteria: Array<PlacementCriteria>;
-    desirableCriteria: Array<PlacementCriteria>;
-    mentalHealthSupport: boolean;
-};
+export type PlacementRequest = (NewPlacementRequest & {
+    person?: Person;
+    risks?: PersonRisks;
+} & {
+    person: Person;
+    risks: PersonRisks;
+});
 

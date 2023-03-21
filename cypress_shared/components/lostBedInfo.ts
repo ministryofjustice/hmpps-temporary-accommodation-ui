@@ -1,4 +1,4 @@
-import { TemporaryAccommodationLostBed as LostBed } from '@approved-premises/api'
+import { LostBed } from '@approved-premises/api'
 import Component from './component'
 import { DateFormats } from '../../server/utils/dateUtils'
 import { allStatuses } from '../../server/utils/lostBedUtils'

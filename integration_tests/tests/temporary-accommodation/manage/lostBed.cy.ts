@@ -1,16 +1,16 @@
-import newLostBedCancellationFactory from '../../../../server/testutils/factories/newLostBedCancellation'
-import updateLostBedFactory from '../../../../server/testutils/factories/updateLostBed'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import LostBedCancelPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedCancel'
+import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedEdit'
 import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import lostBedFactory from '../../../../server/testutils/factories/lostBed'
 import newLostBedFactory from '../../../../server/testutils/factories/newLostBed'
+import newLostBedCancellationFactory from '../../../../server/testutils/factories/newLostBedCancellation'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
-import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedEdit'
-import LostBedCancelPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedCancel'
+import updateLostBedFactory from '../../../../server/testutils/factories/updateLostBed'
 
 context('Lost bed', () => {
   beforeEach(() => {
@@ -108,7 +108,6 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.serviceName).equal('temporary-accommodation')
       expect(requestBody.bedId).equal(newLostBed.bedId)
       expect(requestBody.reason).equal(newLostBed.reason)
       expect(requestBody.startDate).equal(newLostBed.startDate)
@@ -348,7 +347,6 @@ context('Lost bed', () => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.serviceName).equal('temporary-accommodation')
       expect(requestBody.reason).equal(updateLostBed.reason)
       expect(requestBody.startDate).equal(updateLostBed.startDate)
       expect(requestBody.endDate).equal(updateLostBed.endDate)

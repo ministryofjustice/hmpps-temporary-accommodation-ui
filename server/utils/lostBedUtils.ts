@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationLostBed as LostBed } from '@approved-premises/api'
+import type { LostBed } from '@approved-premises/api'
 import type { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 

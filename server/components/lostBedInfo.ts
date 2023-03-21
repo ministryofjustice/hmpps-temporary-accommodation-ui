@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationLostBed as LostBed } from '@approved-premises/api'
+import type { LostBed } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'

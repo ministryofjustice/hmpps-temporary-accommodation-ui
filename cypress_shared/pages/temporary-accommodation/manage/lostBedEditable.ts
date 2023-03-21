@@ -1,4 +1,4 @@
-import { NewTemporaryAccommodationLostBed as NewLostBed, UpdateLostBed } from '@approved-premises/api'
+import { NewLostBed, UpdateLostBed } from '@approved-premises/api'
 import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 

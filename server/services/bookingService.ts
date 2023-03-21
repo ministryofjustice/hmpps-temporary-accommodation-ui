@@ -1,4 +1,4 @@
-import type { Booking, NewBooking, NewTemporaryAccommodationBooking, Room } from '@approved-premises/api'
+import type { Booking, NewBooking, Room } from '@approved-premises/api'
 import type { TableRow } from '@approved-premises/ui'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
@@ -37,7 +37,7 @@ export default class BookingService {
       serviceName: 'temporary-accommodation',
       bedId: room.beds[0].id,
       ...booking,
-    } as NewTemporaryAccommodationBooking)
+    })
 
     return confirmedBooking
   }

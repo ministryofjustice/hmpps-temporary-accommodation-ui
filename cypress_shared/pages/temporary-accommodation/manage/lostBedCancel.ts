@@ -1,9 +1,4 @@
-import type {
-  TemporaryAccommodationLostBed as LostBed,
-  NewLostBedCancellation,
-  Premises,
-  Room,
-} from '@approved-premises/api'
+import type { LostBed, NewLostBedCancellation, Premises, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import LocationHeaderComponent from '../../../components/locationHeader'

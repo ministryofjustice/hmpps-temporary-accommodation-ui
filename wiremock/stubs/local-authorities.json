@@ -164,7 +164,7 @@
   { "id": "dd0736b1-2908-437a-ba0c-c651d08b492b", "name": "Hastings", "identifier": "E07000062", "isActive": true, "serviceScope": "*" },
   { "id": "3b9982a6-faca-4640-8a9c-9b85f8185519", "name": "Havant", "identifier": "E07000090", "isActive": true, "serviceScope": "*" },
   { "id": "67c9ee45-8af7-4746-b74b-04bf83a3ac4c", "name": "Havering", "identifier": "E09000016", "isActive": true, "serviceScope": "*" },
-  { "id": "bb70ce1e-5b06-4be7-bb05-6e5356086459", "name": "Herefordshi", "identifier": "E06000019", "isActive": true, "serviceScope": "*" },
+  { "id": "bb70ce1e-5b06-4be7-bb05-6e5356086459", "name": "Herefordshire, County of", "identifier": "E06000019", "isActive": true, "serviceScope": "*" },
   { "id": "ac8b1c47-c391-47a1-a5f5-e4a5447be6e5", "name": "Hertfordshire", "identifier": "E10000015", "isActive": true, "serviceScope": "*" },
   { "id": "a209757a-3c90-4a8c-9f22-2e6f97683cb1", "name": "Hertsmere", "identifier": "E07000098", "isActive": true, "serviceScope": "*" },
   { "id": "39e09f14-6c0c-4576-bb7d-cd65cdee32ce", "name": "High Peak", "identifier": "E07000037", "isActive": true, "serviceScope": "*" },

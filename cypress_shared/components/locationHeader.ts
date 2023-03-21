@@ -3,14 +3,14 @@ import Component from './component'
 
 export default class LocationHeaderComponent extends Component {
   constructor(
-    private readonly details: { premises?: Premises; room?: Room; crn?: string },
+    private readonly details: { premises?: Premises; room?: Room },
     private readonly hideAddress: boolean = false,
   ) {
     super()
   }
 
   shouldShowLocationDetails(): void {
-    const { premises, room, crn } = this.details
+    const { premises, room } = this.details
 
     cy.get('.location-header').within(() => {
       if (room) {
@@ -33,12 +33,6 @@ export default class LocationHeaderComponent extends Component {
           .should('contain', premises.postcode)
       } else {
         cy.contains('Property address').should('not.exist')
-      }
-
-      if (crn) {
-        cy.get('p').should('contain', `CRN: ${crn}`)
-      } else {
-        cy.contains(`CRN: ${crn}`).should('not.exist')
       }
     })
   }

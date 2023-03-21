@@ -39,6 +39,16 @@ export default {
         status: 404,
       },
     }),
+  stubFindPersonForbidden: (args: { person: Person }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/people/search?crn=${args.person.crn}`,
+      },
+      response: {
+        status: 403,
+      },
+    }),
   stubPersonRisks: (args: { person: Person; risks: PersonRisks }): SuperAgentRequest =>
     stubFor({
       request: {

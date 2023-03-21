@@ -2,10 +2,13 @@ import type { Booking, NewCancellation, Premises, Room } from '@approved-premise
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
 
 export default class BookingCancellationNewPage extends Page {
   private readonly locationHeaderComponent: LocationHeaderComponent
+
+  private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
@@ -13,7 +16,8 @@ export default class BookingCancellationNewPage extends Page {
     super('Cancel booking')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking.person.crn })
+    this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }
 
   static visit(premises: Premises, room: Room, booking: Booking): BookingCancellationNewPage {
@@ -22,6 +26,7 @@ export default class BookingCancellationNewPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
+    this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
 

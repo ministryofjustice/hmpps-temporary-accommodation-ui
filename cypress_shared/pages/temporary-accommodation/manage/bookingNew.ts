@@ -3,6 +3,7 @@ import { Premises, Room } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import BookingEditablePage from './bookingEditable'
+import errorLookups from '../../../../server/i18n/en/errors.json'
 
 export default class BookingNewPage extends BookingEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
@@ -20,6 +21,15 @@ export default class BookingNewPage extends BookingEditablePage {
 
   completeForm(newBooking: NewBooking): void {
     super.completeEditableForm(newBooking)
+  }
+
+  enterCrn(crn: string): void {
+    super.getTextInputByIdAndEnterDetails('crn', crn)
+  }
+
+  shouldShowCrnDoesNotExistErrorMessage(): void {
+    cy.get('.govuk-error-summary').should('contain', errorLookups.generic.crn.doesNotExist)
+    cy.get(`[data-cy-error-crn]`).should('contain', errorLookups.generic.crn.doesNotExist)
   }
 
   shouldShowBookingDetails(): void {

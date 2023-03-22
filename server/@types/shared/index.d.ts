@@ -42,6 +42,7 @@ export type { BookingBody } from './models/BookingBody';
 export type { Cancellation } from './models/Cancellation';
 export type { CancellationReason } from './models/CancellationReason';
 export type { Characteristic } from './models/Characteristic';
+export type { CharacteristicPair } from './models/CharacteristicPair';
 export type { ClarificationNote } from './models/ClarificationNote';
 export type { Confirmation } from './models/Confirmation';
 export type { DateCapacity } from './models/DateCapacity';

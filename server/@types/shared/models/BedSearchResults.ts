@@ -8,15 +8,15 @@ export type BedSearchResults = {
     /**
      * How many distinct Rooms the Beds in the results belong to
      */
-    results_room_count?: number;
+    resultsRoomCount: number;
     /**
      * How many distinct Premises the Beds in the results belong to
      */
-    results_premises_count?: number;
+    resultsPremisesCount: number;
     /**
      * How many Beds are in the results
      */
-    results_bed_count?: number;
-    results?: Array<BedSearchResult>;
+    resultsBedCount: number;
+    results: Array<BedSearchResult>;
 };
 

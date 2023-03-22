@@ -8,11 +8,6 @@ export type TemporaryAccommodationBedSearchParameters = (BedSearchParameters & {
     /**
      * The pdu to search within
      */
-    probation_delivery_unit?: string;
-} & {
-    /**
-     * The pdu to search within
-     */
-    probation_delivery_unit: string;
+    probationDeliveryUnit: string;
 });
 

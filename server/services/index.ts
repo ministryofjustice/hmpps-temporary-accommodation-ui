@@ -6,6 +6,7 @@ import config from '../config'
 import ApplicationService from './applicationService'
 import ArrivalService from './arrivalService'
 import AuditService from './auditService'
+import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
 import BookingReportService from './bookingReportService'
 import BookingService from './bookingService'
@@ -31,6 +32,7 @@ export const services = () => {
     roomClientBuilder,
     reportClientBuilder,
     userClientBuilder,
+    bedClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient, userClientBuilder)
@@ -48,6 +50,7 @@ export const services = () => {
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
   const bookingReportService = new BookingReportService(reportClientBuilder, referenceDataClientBuilder)
+  const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder)
 
   return {
     userService,
@@ -65,6 +68,7 @@ export const services = () => {
     confirmationService,
     extensionService,
     bookingReportService,
+    bedspaceSearchService,
   }
 }
 

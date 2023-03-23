@@ -23,6 +23,7 @@ import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as TasklistUtils from './taskListUtils'
 
+import bedspaceSearchResultSummaryListRows from '../components/bedspaceSearchResult'
 import bookingSummaryListRows from '../components/bookingInfo'
 import lostBedSummaryListRows from '../components/lostBedInfo'
 import config from '../config'
@@ -147,6 +148,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows: bookingSummaryListRows })
+  njkEnv.addGlobal('BedspaceSearchResult', { summaryListRows: bedspaceSearchResultSummaryListRows })
   njkEnv.addGlobal('LostBedInfo', { summaryListRows: lostBedSummaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)

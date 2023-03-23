@@ -51,6 +51,12 @@
     "destinationProviderId": {
       "doesNotExist": "The destination provider does not exist"
     },
+    "durationDays": {
+      "empty": "You must enter a duration in days",
+      "invalid": "The duration is not a valid number of days",
+      "expectedNumber": "The duration is not a valid number of days",
+      "mustBeAtLeast1": "The duration is not a valid number of days"
+    },
     "moveOnCategoryId": { "empty": "You must choose a move on category" },
     "destinationProvider": { "empty": "You must enter a destination provider" },
     "newDepartureDate": {
@@ -88,6 +94,9 @@
       "empty": "You must choose a probation region"
     },
     "pdu": {
+      "empty": "You must choose a PDU"
+    },
+    "probationDeliveryUnit": {
       "empty": "You must choose a PDU"
     },
     "status": {

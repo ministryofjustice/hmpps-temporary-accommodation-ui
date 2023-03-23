@@ -3,6 +3,7 @@
 import { Services } from '../../../services'
 import ArrivalsController from './arrivalsController'
 import BedspacesController from './bedspacesController'
+import BedspaceSearchController from './bedspaceSearchController'
 import BookingReportsController from './bookingReportsController'
 import BookingsController from './bookingsController'
 import CancellationsController from './cancellationsController'
@@ -65,6 +66,8 @@ export const controllers = (services: Services) => {
     services.bedspaceService,
   )
 
+  const bedspaceSearchController = new BedspaceSearchController(services.bedspaceSearchService)
+
   return {
     premisesController,
     bedspacesController,
@@ -76,6 +79,7 @@ export const controllers = (services: Services) => {
     cancellationsController,
     bookingReportsController,
     lostBedsController,
+    bedspaceSearchController,
   }
 }
 
@@ -89,4 +93,5 @@ export {
   CancellationsController,
   BookingReportsController,
   LostBedsController,
+  BedspaceSearchController,
 }

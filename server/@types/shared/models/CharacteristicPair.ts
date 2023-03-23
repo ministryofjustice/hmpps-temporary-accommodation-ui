@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type BedSearchResultBedSummary = {
-    id: string;
+export type CharacteristicPair = {
+    propertyName?: string;
     name: string;
 };
 

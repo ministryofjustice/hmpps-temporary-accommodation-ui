@@ -5,5 +5,6 @@
 export type Bed = {
     id: string;
     name: string;
+    code?: string;
 };
 

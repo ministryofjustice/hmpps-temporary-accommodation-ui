@@ -1,4 +1,5 @@
 import Page from '../../../../cypress_shared/pages/page'
+import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
@@ -12,6 +13,20 @@ context('Bedspace Search', () => {
   beforeEach(() => {
     cy.task('reset')
     setupTestUser()
+  })
+
+  it('navigates to the bedspace search page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the dashboard page
+    const page = DashboardPage.visit()
+
+    // Add I click the search bedspaces link
+    page.clickSearchBedspacesLink()
+
+    // Then I navigate to the bedspace search page
+    Page.verifyOnPage(BedspaceSearchPage)
   })
 
   it('shows search results', () => {

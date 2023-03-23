@@ -14,6 +14,6 @@ export type ApprovedPremisesBedSearchParameters = (BedSearchParameters & {
      */
     maxDistanceMiles: number;
     requiredPremisesCharacteristics: Array<string>;
-    requiredBedCharacteristics: Array<string>;
+    requiredRoomCharacteristics: Array<string>;
 });
 

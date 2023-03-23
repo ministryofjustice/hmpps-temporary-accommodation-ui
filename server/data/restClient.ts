@@ -1,16 +1,16 @@
 /* istanbul ignore file */
 
-import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import { Readable } from 'stream'
+import superagent from 'superagent'
 
 import { Response } from 'express'
 import logger from '../../logger'
-import sanitiseError from '../sanitisedError'
+import { ProbationRegion } from '../@types/shared'
 import { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
+import sanitiseError from '../sanitisedError'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
-import { ProbationRegion } from '../@types/shared'
 
 interface GetRequest {
   path?: string
@@ -29,6 +29,13 @@ interface PostRequest {
 }
 
 interface PutRequest extends PostRequest {}
+
+interface PipeRequest {
+  path?: string
+  headers?: Record<string, string>
+  query?: string | Record<string, string>
+  filename?: string
+}
 
 interface StreamRequest {
   path?: string
@@ -132,9 +139,7 @@ export default class RestClient {
 
   async pipe(
     response: Response,
-    filename: string,
-    { path = null, headers = {} }: GetRequest = {},
-    query: Record<string, string> | string = '',
+    { path = null, headers = {}, query = '', filename = null }: PipeRequest,
   ): Promise<void> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
     return new Promise((resolve, reject) => {
@@ -157,7 +162,9 @@ export default class RestClient {
           if (apiResponse.statusCode === 200) {
             response.set({
               'Content-Type': apiResponse.headers['content-type'],
-              'Content-Disposition': `attachment; filename="${filename}"`,
+              'Content-Disposition': filename
+                ? `attachment; filename="${filename}"`
+                : apiResponse.headers['content-disposition'],
             })
 
             apiResponse.on('data', chunk => {

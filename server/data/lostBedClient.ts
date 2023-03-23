@@ -1,7 +1,7 @@
 import type {
-  TemporaryAccommodationLostBed as LostBed,
+  LostBed,
   LostBedCancellation,
-  NewTemporaryAccommodationLostBed as NewLostBed,
+  NewLostBed,
   NewLostBedCancellation,
   UpdateLostBed,
 } from '@approved-premises/api'

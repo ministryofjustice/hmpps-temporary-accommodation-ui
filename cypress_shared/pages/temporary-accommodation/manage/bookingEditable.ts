@@ -1,6 +1,6 @@
 import type { NewBooking } from '@approved-premises/api'
-import Page from '../../page'
 import errorLookups from '../../../../server/i18n/en/errors.json'
+import Page from '../../page'
 
 export default abstract class BookingEditablePage extends Page {
   shouldShowDateConflictErrorMessages(): void {
@@ -8,6 +8,11 @@ export default abstract class BookingEditablePage extends Page {
       cy.get('.govuk-error-summary').should('contain', errorLookups.generic[field].conflict)
       cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
     })
+  }
+
+  shouldShowUserPermissionErrorMessage(): void {
+    cy.get('.govuk-error-summary').should('contain', errorLookups.generic.crn.userPermission)
+    cy.get(`[data-cy-error-crn]`).should('contain', errorLookups.generic.crn.userPermission)
   }
 
   shouldShowEndDateHint(date: string): void {

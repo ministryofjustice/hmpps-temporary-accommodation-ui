@@ -1,7 +1,6 @@
-import type { Booking, TemporaryAccommodationLostBed as LostBed, Room, UpdateLostBed } from '@approved-premises/api'
+import type { Booking, LostBed, Room, UpdateLostBed } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
-import config from '../../../../server/config'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -81,9 +80,7 @@ export default class BedspaceShowPage extends Page {
     cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').should('contain', 'Book bedspace')
-      if (!config.flags.voidsDisabled) {
-        cy.get('a').should('contain', 'Void bedspace')
-      }
+      cy.get('a').should('contain', 'Void bedspace')
     })
 
     cy.root().should('not.contain', 'This bedspace is in an archived property.')

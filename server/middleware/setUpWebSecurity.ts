@@ -1,6 +1,7 @@
+import crypto from 'crypto'
 import express, { NextFunction, Request, Response, Router } from 'express'
 import helmet from 'helmet'
-import crypto from 'crypto'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -26,6 +27,7 @@ export default function setUpWebSecurity(): Router {
           scriptSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           styleSrc: ["'self'", (_req: Request, res: Response) => `'nonce-${res.locals.cspNonce}'`],
           fontSrc: ["'self'"],
+          formAction: [`'self' ${config.apis.hmppsAuth.externalUrl}`],
         },
       },
       referrerPolicy: { policy: 'strict-origin-when-cross-origin' },

@@ -1,3 +1,4 @@
+import AttachDocumentsPage from './attachDocumentsPage'
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
@@ -30,4 +31,5 @@ export {
   SupportingInformationPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
+  AttachDocumentsPage,
 }

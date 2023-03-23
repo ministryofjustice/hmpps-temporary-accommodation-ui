@@ -1,6 +1,6 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { TemporaryAccommodationLostBed as LostBed, LostBedCancellation } from '@approved-premises/api'
+import type { LostBed, LostBedCancellation } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'

@@ -168,7 +168,7 @@ context('Booking', () => {
     returnedBookingNewPage.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
   })
 
-  it('shows errors when the API returns a 409 conflict error', () => {
+  it('shows errors when the API returns a 409 Conflict error', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -194,7 +194,7 @@ context('Booking', () => {
     // And I confirm the booking
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
 
-    cy.task('stubBookingCreateConflictError', premises.id)
+    cy.task('stubBookingCreateApiError', { premisesId: premises.id, errorCode: 409, errorTitle: 'Conflict' })
     bookingConfirmPage.clickSubmit()
 
     // Then I should see error messages for the date fields
@@ -202,6 +202,42 @@ context('Booking', () => {
 
     returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
     returnedBookingNewPage.shouldShowDateConflictErrorMessages()
+  })
+
+  it('shows errors when the API returns a 403 Forbidden error', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises and a room the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises, room)
+
+    // And I fill out the form with a CRN the user does not have permission to access
+    const booking = bookingFactory.build()
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    // And I confirm the booking
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
+
+    cy.task('stubBookingCreateApiError', { premisesId: premises.id, errorCode: 403, errorTitle: 'Forbidden' })
+    bookingConfirmPage.clickSubmit()
+
+    // Then I should see error messages for the date fields
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
+
+    returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
+    returnedBookingNewPage.shouldShowUserPermissionErrorMessage()
   })
 
   it('navigates back from the new booking page to the show bedspace page', () => {

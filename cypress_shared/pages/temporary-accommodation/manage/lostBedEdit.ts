@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationLostBed as LostBed, Premises, Room, UpdateLostBed } from '@approved-premises/api'
+import type { LostBed, Premises, Room, UpdateLostBed } from '@approved-premises/api'
 import LostBedEditablePage from './lostBedEditable'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import paths from '../../../../server/paths/temporary-accommodation/manage'

@@ -87,6 +87,8 @@ export default class BookingsController {
         if (err.status === 409) {
           insertGenericError(err, 'arrivalDate', 'conflict')
           insertGenericError(err, 'departureDate', 'conflict')
+        } else if (err.status === 403) {
+          insertGenericError(err, 'crn', 'userPermission')
         }
 
         catchValidationErrorOrPropogate(req, res, err, paths.bookings.new({ premisesId, roomId }))

@@ -51,7 +51,6 @@ export default {
   staticResourceCacheDuration: 20,
   flags: {
     oasysDisabled: process.env.OASYS_DISABLED || false,
-    voidsDisabled: !['local', 'dev', 'test'].includes(environment),
     applyDisabled: !['local', 'dev', 'test'].includes(environment),
   },
   environment,

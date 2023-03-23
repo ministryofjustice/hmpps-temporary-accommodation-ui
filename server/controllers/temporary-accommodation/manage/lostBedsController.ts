@@ -1,10 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import type {
-  NewTemporaryAccommodationLostBed as NewLostBed,
-  NewLostBedCancellation,
-  UpdateTemporaryAccommodationLostBed as UpdateLostBed,
-} from '@approved-premises/api'
+import type { NewLostBed, NewLostBedCancellation, UpdateLostBed } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
@@ -49,7 +45,6 @@ export default class LostBedsController {
       const callConfig = extractCallConfig(req)
 
       const newLostBed: NewLostBed = {
-        serviceName: 'temporary-accommodation',
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'startDate'),
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate'),
@@ -97,7 +92,6 @@ export default class LostBedsController {
       const callConfig = extractCallConfig(req)
 
       const lostBedUpdate: UpdateLostBed = {
-        serviceName: 'temporary-accommodation',
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'startDate'),
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate'),

@@ -1,6 +1,6 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import type { UpdateTemporaryAccommodationLostBed as UpdateLostBed } from '@approved-premises/api'
+import type { UpdateLostBed } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
 
@@ -11,5 +11,4 @@ export default Factory.define<UpdateLostBed>(() => ({
   notes: faker.lorem.sentence(),
   referenceNumber: faker.datatype.uuid(),
   id: faker.datatype.uuid(),
-  serviceName: 'temporary-accommodation',
 }))

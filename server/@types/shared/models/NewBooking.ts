@@ -8,6 +8,7 @@ export type NewBooking = {
     crn: string;
     arrivalDate: string;
     departureDate: string;
+    bedId: string;
     serviceName: ServiceName;
 };
 

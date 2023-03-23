@@ -11,9 +11,9 @@ import type {
   PrisonCaseNote,
 } from '@approved-premises/api'
 
-import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
+import RestClient, { CallConfig } from './restClient'
 
 import oasysStubs from './stubs/oasysStubs.json'
 
@@ -84,6 +84,6 @@ export default class PersonClient {
   }
 
   async document(crn: string, documentId: string, response: Response): Promise<void> {
-    await this.restClient.pipe(response, documentId, { path: paths.people.documents({ crn, documentId }) })
+    await this.restClient.pipe(response, { path: paths.people.documents({ crn, documentId }) })
   }
 }

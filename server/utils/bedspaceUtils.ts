@@ -1,6 +1,5 @@
 import { Premises, Room } from '../@types/shared'
 import { PageHeadingBarItem } from '../@types/ui'
-import config from '../config'
 import paths from '../paths/temporary-accommodation/manage'
 
 export function bedspaceActions(premises: Premises, room: Room): Array<PageHeadingBarItem> {
@@ -15,13 +14,11 @@ export function bedspaceActions(premises: Premises, room: Room): Array<PageHeadi
     },
   ]
 
-  if (!config.flags.voidsDisabled) {
-    items.push({
-      text: 'Void bedspace',
-      classes: 'govuk-button--secondary',
-      href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
-    })
-  }
+  items.push({
+    text: 'Void bedspace',
+    classes: 'govuk-button--secondary',
+    href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
+  })
 
   return items
 }

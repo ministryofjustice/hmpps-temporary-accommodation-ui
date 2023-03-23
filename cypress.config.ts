@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 import applications from './integration_tests/mockApis/applications'
 import arrival from './integration_tests/mockApis/arrival'
 import auth from './integration_tests/mockApis/auth'
+import bed from './integration_tests/mockApis/bed'
 import booking from './integration_tests/mockApis/booking'
 import cancellation from './integration_tests/mockApis/cancellation'
 import confirmation from './integration_tests/mockApis/confirmation'
@@ -50,6 +51,7 @@ export default defineConfig({
         ...report,
         ...user,
         ...schemaValidator,
+        ...bed,
       })
     },
     baseUrl: 'http://localhost:3007',

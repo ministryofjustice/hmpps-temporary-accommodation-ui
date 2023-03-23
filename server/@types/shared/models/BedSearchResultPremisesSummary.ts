@@ -12,5 +12,9 @@ export type BedSearchResultPremisesSummary = {
     town?: string;
     postcode: string;
     characteristics: Array<CharacteristicPair>;
+    /**
+     * the total number of Beds in the Premises
+     */
+    bedCount: number;
 };
 

@@ -9,8 +9,8 @@ import CancellationsController from './cancellationsController'
 import ConfirmationsController from './confirmationsController'
 import DeparturesController from './departuresController'
 import ExtensionsController from './extensionsController'
-import PremisesController from './premisesController'
 import LostBedsController from './lostBedsController'
+import PremisesController from './premisesController'
 
 export const controllers = (services: Services) => {
   const premisesController = new PremisesController(services.premisesService, services.bedspaceService)

@@ -17,6 +17,7 @@
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "typeRoots": ["./server/@types", "./node_modules/@types"],
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@approved-premises/api": ["server/@types/shared/index.d.ts"],

@@ -11,6 +11,10 @@ export default abstract class Page extends Component {
     return new constructor(...args)
   }
 
+  static clickDashboardLink() {
+    cy.get('.govuk-breadcrumbs a').contains('Home').click()
+  }
+
   constructor(private readonly title: string) {
     super()
 

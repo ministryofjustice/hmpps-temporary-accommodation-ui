@@ -8,10 +8,10 @@ import type { TaskType } from './TaskType';
 
 export type Task = {
     applicationId: string;
-    person?: Person;
-    dueDate?: string;
-    allocatedToStaffMember?: ApprovedPremisesUser;
-    status?: 'not_started' | 'in_progress' | 'complete';
-    taskType?: TaskType;
+    person: Person;
+    dueDate: string;
+    allocatedToStaffMember: ApprovedPremisesUser;
+    status: 'not_started' | 'in_progress' | 'complete';
+    taskType: TaskType;
 };
 

@@ -1,5 +1,6 @@
 import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room } from '@approved-premises/api'
 
+import pduJson from '../../../../server/data/pdus.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import { statusInfo } from '../../../../server/utils/premisesUtils'
@@ -30,21 +31,30 @@ export default class PremisesShowPage extends Page {
               .contains('Status')
               .siblings('.govuk-summary-list__value')
               .then(statusElement => {
-                const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
-                const addressLines = addressElement
-                  .html()
-                  .split('<br>')
-                  .map(text => text.trim())
+                cy.get('.govuk-summary-list__key')
+                  .contains('PDU')
+                  .siblings('.govuk-summary-list__value')
+                  .then(pduElement => {
+                    const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
+                    const addressLines = addressElement
+                      .html()
+                      .split('<br>')
+                      .map(text => text.trim())
 
-                const premises = premisesFactory.build({
-                  id,
-                  name,
-                  addressLine1: addressLines[0],
-                  postcode: addressLines[addressLines.length - 1],
-                  status,
-                })
+                    const pduName = pduElement.text().trim()
+                    const pdu = pduJson.find(p => p.name === pduName)?.id as string
 
-                cy.wrap(premises).as(alias)
+                    const premises = premisesFactory.build({
+                      id,
+                      name,
+                      addressLine1: addressLines[0],
+                      postcode: addressLines[addressLines.length - 1],
+                      status,
+                      pdu,
+                    })
+
+                    cy.wrap(premises).as(alias)
+                  })
               })
           })
       })

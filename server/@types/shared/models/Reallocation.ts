@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
 import type { TaskType } from './TaskType';
-import type { User } from './User';
 
 export type Reallocation = {
-    user?: User;
+    user: ApprovedPremisesUser;
     taskType: TaskType;
 };
 

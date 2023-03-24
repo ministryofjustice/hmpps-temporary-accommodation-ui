@@ -93,8 +93,8 @@ export default {
     approvedPremises: {
       url: get('APPROVED_PREMISES_API_URL', 'http://localhost:9092', requiredInProduction),
       timeout: {
-        response: 10000,
-        deadline: 10000,
+        response: environment === 'dev' ? 30000 : 10000,
+        deadline: environment === 'dev' ? 30000 : 10000,
       },
       agent: new AgentConfig(10000),
       serviceName: 'temporary-accommodation',

@@ -51,8 +51,8 @@ export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput =>
   return { errors, errorSummary, userInput }
 }
 
-export const setUserInput = (request: Request): void => {
-  request.flash('userInput', request.body)
+export const setUserInput = (request: Request, source: 'get' | 'post' = 'post'): void => {
+  request.flash('userInput', source === 'post' ? request.body : request.query)
 }
 
 export const errorSummary = (field: string, text: string): ErrorSummary => {

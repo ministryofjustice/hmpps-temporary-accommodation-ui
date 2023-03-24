@@ -8,8 +8,13 @@ import bookingFactory from '../../../../server/testutils/factories/booking'
 import newBookingFactory from '../../../../server/testutils/factories/newBooking'
 import personFactory from '../../../../server/testutils/factories/person'
 import { throwMissingCypressEnvError } from '../utils'
+import devPersonData from '../../../../cypress_shared/fixtures/person-dev.json'
+import localPersonData from '../../../../cypress_shared/fixtures/person-local.json'
 
+const environment = Cypress.env('environment') || throwMissingCypressEnvError('environment')
 const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('offender_crn')
+
+const person = personFactory.build(environment === 'local' ? localPersonData : devPersonData)
 
 Given("I'm creating a booking", () => {
   cy.then(function _() {
@@ -33,14 +38,12 @@ Given('I create a booking with all necessary details', () => {
 
     const booking = bookingFactory.provisional().build({
       ...newBooking,
-      person: personFactory.build({
-        crn: newBooking.crn,
-      }),
+      person,
     })
 
     bookingNewPage.completeForm(newBooking)
 
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, booking)
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
     bookingConfirmPage.shouldShowBookingDetails()
 
     bookingConfirmPage.clickSubmit()
@@ -53,9 +56,10 @@ Given('I create a booking with all necessary details', () => {
 Given('I attempt to create a booking with required details missing', () => {
   cy.then(function _() {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+    bookingNewPage.enterCrn(person.crn)
     bookingNewPage.clickSubmit()
 
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room)
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
     bookingConfirmPage.shouldShowBookingDetails()
 
     bookingConfirmPage.clickSubmit()
@@ -78,6 +82,6 @@ Then('I should see a confirmation for my new booking', () => {
 Then('I should see a list of the problems encountered creating the booking', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
-    page.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
+    page.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate'])
   })
 })

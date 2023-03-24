@@ -5,11 +5,6 @@
 <div class="location-header">
   {% set premises = locationDetails.premises %}
   {% set room = locationDetails.room %}
-  {% set crn = locationDetails.crn %}
-
-  {%if crn %}
-    <p><span class="govuk-!-font-weight-bold">CRN:</span> {{ crn }}</p>
-  {% endif %}
 
   {% if room %}
     <h2>Bedspace reference</h2>

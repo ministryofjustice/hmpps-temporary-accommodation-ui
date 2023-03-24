@@ -3,9 +3,12 @@ import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
 
 export default class BookingArrivalNewPage extends Page {
+  private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
+
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   private readonly bookingInfoComponent: BookingInfoComponent
@@ -14,7 +17,8 @@ export default class BookingArrivalNewPage extends Page {
     super('Mark booking as active')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: this.booking.person.crn })
+    this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }
 
   static visit(premises: Premises, room: Room, booking: Booking): BookingArrivalNewPage {
@@ -23,6 +27,7 @@ export default class BookingArrivalNewPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
+    this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
 

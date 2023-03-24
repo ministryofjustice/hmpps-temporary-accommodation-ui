@@ -2,9 +2,12 @@ import type { Booking, NewDeparture, Premises, Room } from '@approved-premises/a
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
 
 export default class BookingDepartureNewPage extends Page {
+  private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
+
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   private readonly bookingInfoComponent: BookingInfoComponent
@@ -12,7 +15,8 @@ export default class BookingDepartureNewPage extends Page {
   constructor(premises: Premises, room: Room, private readonly booking: Booking) {
     super('Mark booking as closed')
 
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking.person.crn })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
+    this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
@@ -22,6 +26,7 @@ export default class BookingDepartureNewPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
+    this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
 

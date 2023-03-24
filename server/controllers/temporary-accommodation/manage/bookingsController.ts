@@ -2,7 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewBooking } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, PremisesService } from '../../../services'
+import { BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -19,6 +19,7 @@ export default class BookingsController {
     private readonly premisesService: PremisesService,
     private readonly bedspacesService: BedspaceService,
     private readonly bookingsService: BookingService,
+    private readonly personsService: PersonService,
   ) {}
 
   new(): RequestHandler {
@@ -53,16 +54,32 @@ export default class BookingsController {
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      try {
+        const person = await this.personsService.findByCrn(callConfig, crn)
 
-      setUserInput(req)
+        setUserInput(req)
 
-      return res.render('temporary-accommodation/bookings/confirm', {
-        premises,
-        room,
-        crn,
-        arrivalDate,
-        departureDate,
-      })
+        return res.render('temporary-accommodation/bookings/confirm', {
+          premises,
+          room,
+          person,
+          arrivalDate,
+          departureDate,
+        })
+      } catch (err) {
+        if (err.status === 404) {
+          insertGenericError(err, 'crn', 'doesNotExist')
+        } else if (err.status === 403) {
+          insertGenericError(err, 'crn', 'userPermission')
+        }
+
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        )
+      }
     }
   }
 

@@ -8,6 +8,7 @@ import bookingFactory from '../../../../server/testutils/factories/booking'
 import newBookingFactory from '../../../../server/testutils/factories/newBooking'
 import premisesFactory from '../../../../server/testutils/factories/premises'
 import roomFactory from '../../../../server/testutils/factories/room'
+import personFactory from '../../../../server/testutils/factories/person'
 
 context('Booking', () => {
   beforeEach(() => {
@@ -68,9 +69,10 @@ context('Booking', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises and a room the database
+    // And there is a premises, a room and a person in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
+    const person = personFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
@@ -82,16 +84,17 @@ context('Booking', () => {
     bookingNewPage.shouldShowBookingDetails()
 
     // And when I fill out the form
-    const booking = bookingFactory.build()
+    const booking = bookingFactory.build({ person: personFactory.build({ crn: person.crn }) })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
     })
+    cy.task('stubFindPerson', { person })
 
     bookingNewPage.completeForm(newBooking)
 
     // And I confirm the booking
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
     bookingConfirmPage.shouldShowBookingDetails()
 
     cy.task('stubBookingCreate', { premisesId: premises.id, booking })
@@ -137,7 +140,7 @@ context('Booking', () => {
     page.shouldShowEndDateHint('30/9/2022')
   })
 
-  it('shows errors when the API returns an error', () => {
+  it('shows error when the API returns a person not found 404', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -151,21 +154,49 @@ context('Booking', () => {
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
+    // And I enter a CRN that is not found in the API
+    const person = personFactory.build()
+    cy.task('stubPersonNotFound', { person })
+    bookingNewPage.enterCrn(person.crn)
+    bookingNewPage.clickSubmit()
+
+    // Then I should see the relevant error message
+    const page = Page.verifyOnPage(BookingNewPage, premises, room)
+    page.shouldShowCrnDoesNotExistErrorMessage()
+  })
+
+  it('shows errors when the API returns missing field errors', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and a person in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const person = personFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises, room)
+
     // And I miss required fields
+    bookingNewPage.enterCrn(person.crn)
+    cy.task('stubFindPerson', { person })
     bookingNewPage.clickSubmit()
 
     // And I confirm the booking
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room)
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
 
     cy.task('stubBookingCreateErrors', {
       premisesId: premises.id,
-      params: ['crn', 'arrivalDate', 'departureDate'],
+      params: ['arrivalDate', 'departureDate'],
     })
     bookingConfirmPage.clickSubmit()
 
     // Then I should see error messages relating to those fields
     const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
-    returnedBookingNewPage.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
+    returnedBookingNewPage.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate'])
   })
 
   it('shows errors when the API returns a 409 Conflict error', () => {
@@ -188,11 +219,14 @@ context('Booking', () => {
       ...booking,
       crn: booking.person.crn,
     })
+    const person = personFactory.build({ crn: booking.person.crn })
+
+    cy.task('stubFindPerson', { person })
 
     bookingNewPage.completeForm(newBooking)
 
     // And I confirm the booking
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
 
     cy.task('stubBookingCreateApiError', { premisesId: premises.id, errorCode: 409, errorTitle: 'Conflict' })
     bookingConfirmPage.clickSubmit()
@@ -225,19 +259,14 @@ context('Booking', () => {
       crn: booking.person.crn,
     })
 
+    const person = personFactory.build({ crn: booking.person.crn })
+    cy.task('stubFindPersonForbidden', { person })
+
     bookingNewPage.completeForm(newBooking)
 
-    // And I confirm the booking
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
-
-    cy.task('stubBookingCreateApiError', { premisesId: premises.id, errorCode: 403, errorTitle: 'Forbidden' })
-    bookingConfirmPage.clickSubmit()
-
     // Then I should see error messages for the date fields
-    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
-
-    returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
-    returnedBookingNewPage.shouldShowUserPermissionErrorMessage()
+    bookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
+    bookingNewPage.shouldShowUserPermissionErrorMessage()
   })
 
   it('navigates back from the new booking page to the show bedspace page', () => {
@@ -265,9 +294,10 @@ context('Booking', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises and a room the database
+    // And there is a premises, a room and a person in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
+    const person = personFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
@@ -276,16 +306,18 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I fill out the form
-    const booking = bookingFactory.build()
+    const booking = bookingFactory.build({ person: personFactory.build({ crn: person.crn }) })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
     })
 
+    cy.task('stubFindPerson', { person })
+
     bookingNewPage.completeForm(newBooking)
 
     // And I click the back link
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, booking)
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
     bookingConfirmPage.clickBack()
 
     // Then I navigate to the new booking page

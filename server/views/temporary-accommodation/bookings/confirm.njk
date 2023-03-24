@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -19,14 +20,15 @@
 
   <p>Confirm that the CRN is correct. This information cannot be changed once a bedspace has been booked.</p>
 
-  {{ locationHeader({ premises: premises, room: room, crn: crn }) }}
+  {{ popDetailsHeader(person) }}
+  {{ locationHeader({ premises: premises, room: room }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.bookings.create({ premisesId: premises.id, roomId: room.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-        <input type="hidden" name="crn" value="{{ crn }}"/>
+        <input type="hidden" name="crn" value="{{ person.crn }}"/>
         <input type="hidden" name="arrivalDate" value="{{ arrivalDate }}"/>
         <input type="hidden" name="departureDate" value="{{ departureDate }}"/>
 

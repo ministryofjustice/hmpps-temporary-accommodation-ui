@@ -4,9 +4,12 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { getLatestExtension } from '../../../../server/utils/bookingUtils'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
 
 export default class BookingExtensionNewPage extends Page {
+  private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
+
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   private readonly bookingInfoComponent: BookingInfoComponent
@@ -14,7 +17,8 @@ export default class BookingExtensionNewPage extends Page {
   constructor(premises: Premises, room: Room, private readonly booking: Booking) {
     super('Extend or shorten booking')
 
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, crn: booking.person.crn })
+    this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
@@ -24,6 +28,7 @@ export default class BookingExtensionNewPage extends Page {
   }
 
   shouldShowBookingDetails(): void {
+    this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
 

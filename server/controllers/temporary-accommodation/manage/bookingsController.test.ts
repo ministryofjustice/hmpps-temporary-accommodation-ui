@@ -2,12 +2,13 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, PremisesService } from '../../../services'
+import { BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import bookingFactory from '../../../testutils/factories/booking'
 import newBookingFactory from '../../../testutils/factories/newBooking'
 import premisesFactory from '../../../testutils/factories/premises'
 import roomFactory from '../../../testutils/factories/room'
+import personFactory from '../../../testutils/factories/person'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -36,8 +37,9 @@ describe('BookingsController', () => {
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
+  const personService = createMock<PersonService>({})
 
-  const bookingsController = new BookingsController(premisesService, bedspaceService, bookingService)
+  const bookingsController = new BookingsController(premisesService, bedspaceService, bookingService, personService)
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -79,6 +81,7 @@ describe('BookingsController', () => {
       const newBooking = newBookingFactory.build()
       const premises = premisesFactory.build()
       const room = roomFactory.build()
+      const person = personFactory.build()
 
       request.params = {
         premisesId,
@@ -92,6 +95,7 @@ describe('BookingsController', () => {
 
       premisesService.getPremises.mockResolvedValue(premises)
       bedspaceService.getRoom.mockResolvedValue(room)
+      personService.findByCrn.mockResolvedValue(person)
 
       const requestHandler = bookingsController.confirm()
 
@@ -104,10 +108,60 @@ describe('BookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/confirm', {
         premises,
         room,
-        crn: newBooking.crn,
+        person,
         arrivalDate: newBooking.arrivalDate,
         departureDate: newBooking.departureDate,
       })
+    })
+
+    it('renders with an error if the API returns a 404 person not found status', async () => {
+      const requestHandler = bookingsController.confirm()
+
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+
+      const err = { status: 404 }
+      personService.findByCrn.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'doesNotExist')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+      )
+    })
+
+    it('renders with an error if the API returns a 403 forbidden status', async () => {
+      const requestHandler = bookingsController.confirm()
+
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+
+      const err = { status: 403 }
+      personService.findByCrn.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+      )
     })
   })
 

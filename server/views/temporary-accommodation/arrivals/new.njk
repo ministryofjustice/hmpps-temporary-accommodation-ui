@@ -5,6 +5,7 @@
 {% from "../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -24,7 +25,8 @@
 
   {{ showErrorSummary(errorSummary) }}
 
-  {{ locationHeader({ premises: premises, room: room, crn: booking.person.crn }) }}
+  {{ popDetailsHeader(booking.person) }}
+  {{ locationHeader({ premises: premises, room: room }) }}
 
   {{ bookingInfo(booking) }}
 

@@ -196,7 +196,7 @@ export default class RestClient {
         method === 'post' ? superagent.post(`${this.apiUrl()}${path}`) : superagent.put(`${this.apiUrl()}${path}`)
 
       const result = await request
-        .send(this.filterBlanksFromData(data))
+        .send(this.prepareDataForTransport(data))
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
@@ -216,8 +216,19 @@ export default class RestClient {
     }
   }
 
-  private filterBlanksFromData(data: Record<string, unknown>): Record<string, unknown> {
-    Object.keys(data).forEach(k => typeof data[k] !== 'boolean' && !data[k] && delete data[k])
+  private prepareDataForTransport(data: Record<string, unknown>): Record<string, unknown> {
+    Object.keys(data).forEach(k => {
+      const value = data[k]
+      const valueType = typeof value
+
+      if (valueType === 'number' && Number.isNaN(value)) {
+        data[k] = 'not-a-number'
+      }
+
+      if (valueType !== 'boolean' && valueType !== 'number' && !value) {
+        delete data[k]
+      }
+    })
 
     return data
   }

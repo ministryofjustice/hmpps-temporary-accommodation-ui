@@ -12,7 +12,6 @@ import devPersonData from '../../../../cypress_shared/fixtures/person-dev.json'
 import localPersonData from '../../../../cypress_shared/fixtures/person-local.json'
 
 const environment = Cypress.env('environment') || throwMissingCypressEnvError('environment')
-const offenderCrn = Cypress.env('offender_crn') || throwMissingCypressEnvError('offender_crn')
 
 const person = personFactory.build(environment === 'local' ? localPersonData : devPersonData)
 
@@ -33,7 +32,7 @@ Given('I create a booking with all necessary details', () => {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
 
     const newBooking = newBookingFactory.build({
-      crn: offenderCrn,
+      crn: person.crn,
     })
 
     const booking = bookingFactory.provisional().build({

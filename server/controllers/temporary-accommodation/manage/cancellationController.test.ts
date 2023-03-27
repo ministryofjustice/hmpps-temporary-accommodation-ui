@@ -45,12 +45,10 @@ describe('CancellationsController', () => {
   })
 
   describe('new', () => {
-    it('renders the form prepopulated with the current departure date', async () => {
+    it('renders the form', async () => {
       const premises = premisesFactory.build()
       const room = roomFactory.build()
-      const booking = bookingFactory.arrived().build({
-        extensions: [],
-      })
+      const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
@@ -81,7 +79,6 @@ describe('CancellationsController', () => {
         booking,
         allCancellationReasons: [],
         errors: {},
-        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'date'),
         errorSummary: [],
       })
     })
@@ -153,6 +150,120 @@ describe('CancellationsController', () => {
         response,
         err,
         paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+        'bookingCancellation',
+      )
+    })
+  })
+
+  describe('edit', () => {
+    it('renders the form', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.cancelled().build()
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        bookingId: booking.id,
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      cancellationService.getReferenceData.mockResolvedValue({ cancellationReasons: [] })
+
+      const requestHandler = cancellationsController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
+      expect(cancellationService.getReferenceData).toHaveBeenCalledWith(callConfig)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/cancellations/edit', {
+        premises,
+        room,
+        booking,
+        allCancellationReasons: [],
+        errors: {},
+        errorSummary: [],
+        ...DateFormats.isoToDateAndTimeInputs(booking.cancellation.date, 'date'),
+        reason: booking.cancellation.reason.id,
+        notes: booking.cancellation.notes,
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('creates a new cancellation and redirects to the show booking page', async () => {
+      const requestHandler = cancellationsController.update()
+
+      const cancellation = cancellationFactory.build()
+      const newCancellation = newCancellationFactory.build({
+        ...cancellation,
+        reason: cancellation.reason.id,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId,
+      }
+      request.body = {
+        ...newCancellation,
+        ...DateFormats.isoToDateAndTimeInputs(newCancellation.date, 'date'),
+      }
+
+      cancellationService.createCancellation.mockResolvedValue(cancellation)
+
+      await requestHandler(request, response, next)
+
+      expect(cancellationService.createCancellation).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bookingId,
+        expect.objectContaining(newCancellation),
+      )
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Cancelled booking updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = cancellationsController.update()
+
+      const cancellation = cancellationFactory.build()
+      const newCancellation = newCancellationFactory.build({
+        ...cancellation,
+        reason: cancellation.reason.id,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId,
+      }
+      request.body = {
+        ...newCancellation,
+        ...DateFormats.isoToDateAndTimeInputs(newCancellation.date, 'date'),
+      }
+
+      const err = new Error()
+      cancellationService.createCancellation.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
         'bookingCancellation',
       )
     })

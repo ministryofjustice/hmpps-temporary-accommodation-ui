@@ -175,7 +175,6 @@ describe('BookingInfo', () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
-        extensions: [],
       })
 
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)

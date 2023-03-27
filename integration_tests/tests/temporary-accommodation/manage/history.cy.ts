@@ -1,11 +1,10 @@
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import bookingFactory from '../../../../server/testutils/factories/booking'
 import Page from '../../../../cypress_shared/pages/page'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingHistory'
-import { deriveBookingHistory } from '../../../../server/utils/bookingUtils'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import bookingFactory from '../../../../server/testutils/factories/booking'
+import { deriveBookingHistory } from '../../../../server/utils/bookingUtils'
 
 context('Booking history', () => {
   beforeEach(() => {
@@ -18,13 +17,8 @@ context('Booking history', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
     const bookingShowPage = BookingShowPage.visit(premises, room, booking)
@@ -47,13 +41,8 @@ context('Booking history', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking history page
     const bookingHistoryPage = BookingHistoryPage.visit(
@@ -72,13 +61,8 @@ context('Booking history', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking history page
     const bookingHistoryPage = BookingHistoryPage.visit(

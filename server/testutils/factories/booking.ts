@@ -22,40 +22,57 @@ class BookingFactory extends Factory<Booking> {
       departureDate: future(),
       status: 'provisional',
       extensions: [],
+      confirmation: null,
+      arrival: null,
+      departure: null,
+      departures: [],
+      cancellation: null,
+      cancellations: [],
     })
   }
 
   confirmed() {
-    return this.params({
-      arrivalDate: soon(),
-      departureDate: future(),
+    return this.provisional().params({
       status: 'confirmed',
-      extensions: [],
+      confirmation: confirmationFactory.build(),
     })
   }
 
   arrived() {
-    return this.params({
+    return this.confirmed().params({
       arrivalDate: past(),
       departureDate: future(),
       status: 'arrived',
+      arrival: arrivalFactory.build(),
     })
   }
 
   departed() {
-    return this.params({
+    const departure = departureFactory.build()
+
+    return this.arrived().params({
       arrivalDate: past(),
       departureDate: past(),
       status: 'departed',
+      departure,
+      departures: [departure],
     })
   }
 
-  cancelled() {
-    return this.params({
-      arrivalDate: past(),
-      departureDate: past(),
+  cancelled(source: 'provisional' | 'confirmed' = 'provisional') {
+    const cancellation = cancellationFactory.build()
+
+    if (source === 'provisional') {
+      return this.provisional().params({
+        status: 'cancelled',
+        cancellation,
+        cancellations: [cancellation],
+      })
+    }
+    return this.confirmed().params({
       status: 'cancelled',
-      extensions: [],
+      cancellation,
+      cancellations: [cancellation],
     })
   }
 }
@@ -63,6 +80,9 @@ class BookingFactory extends Factory<Booking> {
 export default BookingFactory.define(() => {
   const originalArrivalDate = faker.date.soon()
   const arrivalDate = faker.date.soon()
+
+  const cancellations = faker.helpers.arrayElements(cancellationFactory.buildList(5))
+  const departures = faker.helpers.arrayElements(departureFactory.buildList(5))
 
   return {
     person: personFactory.build(),
@@ -74,9 +94,11 @@ export default BookingFactory.define(() => {
     id: faker.datatype.uuid(),
     status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed', 'cancelled'] as const),
     arrival: arrivalFactory.build(),
-    departure: departureFactory.build(),
+    departure: departures[0],
+    departures,
     confirmation: confirmationFactory.build(),
-    cancellation: cancellationFactory.build(),
+    cancellation: cancellations[0],
+    cancellations,
     extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
     serviceName: 'temporary-accommodation' as const,
     createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),

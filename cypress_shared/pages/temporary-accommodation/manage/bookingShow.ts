@@ -47,6 +47,13 @@ export default class BookingShowPage extends Page {
     })
   }
 
+  clickEditDepartedBookingButton(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Update closed booking').click()
+    })
+  }
+
   clickExtendBookingButton(): void {
     cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
@@ -58,6 +65,13 @@ export default class BookingShowPage extends Page {
     cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
       cy.get('a').contains('Cancel booking').click()
+    })
+  }
+
+  clickEditCancelledBookingButton(): void {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains('Update cancelled booking').click()
     })
   }
 

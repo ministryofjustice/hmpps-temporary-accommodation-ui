@@ -1,6 +1,7 @@
 import { PersonRisksUI } from '../../server/@types/ui'
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
+import { exact } from '../../server/utils/utils'
 import Component from '../components/component'
 
 export type PageElement = Cypress.Chainable<JQuery>
@@ -49,6 +50,14 @@ export default abstract class Page extends Component {
     cy.get(`#${prefix}-day`).should('have.value', parsedDate.getDate().toString())
     cy.get(`#${prefix}-month`).should('have.value', `${parsedDate.getMonth() + 1}`)
     cy.get(`#${prefix}-year`).should('have.value', parsedDate.getFullYear().toString())
+  }
+
+  shouldShowTextareaInput(id: string, contents: string) {
+    cy.get(`textarea[id="${id}"]`).should('contain', contents)
+  }
+
+  shouldShowSelectInput(id: string, contents: string) {
+    cy.get(`select[id="${id}"]`).children('option').contains(exact(contents)).should('be.selected')
   }
 
   getLabel(labelName: string): void {

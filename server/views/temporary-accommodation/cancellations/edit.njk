@@ -6,7 +6,7 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Cancel booking" %}
+{% set pageTitle = applicationName + " - Update cancelled booking" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -18,18 +18,18 @@
 
   {% include "../../_messages.njk" %}
 
-  <h1>Cancel booking</h1>
+  <h1>Update cancelled booking</h1>
 
   {{ showErrorSummary(errorSummary) }}
 
   {{ popDetailsHeader(booking.person) }}
   {{ locationHeader({ premises: premises, room: room }) }}
-
+  
   {{ bookingInfo(booking) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.cancellations.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
+      <form action="{{ paths.bookings.cancellations.update({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         {% include "./_editable.njk" %}  
       </form>

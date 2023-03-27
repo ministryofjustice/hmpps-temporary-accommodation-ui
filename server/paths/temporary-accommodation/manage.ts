@@ -53,6 +53,8 @@ const paths = {
     departures: {
       new: departuresPath.path('new'),
       create: departuresPath,
+      edit: departuresPath.path('edit'),
+      update: departuresPath,
     },
     extensions: {
       new: extensionsPath.path('new'),
@@ -61,6 +63,8 @@ const paths = {
     cancellations: {
       new: cancellationsPath.path('new'),
       create: cancellationsPath,
+      edit: cancellationsPath.path('edit'),
+      update: cancellationsPath,
     },
   },
   lostBeds: {

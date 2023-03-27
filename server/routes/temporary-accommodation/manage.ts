@@ -146,6 +146,22 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
+  get(paths.bookings.departures.edit.pattern, departuresController.edit(), {
+    auditEvent: 'VIEW_BOOKING_EDIT_DEPARTURE',
+  })
+  put(paths.bookings.departures.update.pattern, departuresController.update(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.bookings.departures.edit.pattern,
+        auditEvent: 'EDIT_BOOKING_DEPARTURE_FAILURE',
+      },
+      {
+        path: paths.bookings.show.pattern,
+        auditEvent: 'EDIT_BOOKING_DEPARTURE_SUCCESS',
+      },
+    ],
+  })
+
   get(paths.bookings.extensions.new.pattern, extensionsController.new(), {
     auditEvent: 'VIEW_BOOKING_CREATE_EXTENSION',
   })
@@ -174,6 +190,22 @@ export default function routes(controllers: Controllers, services: Services, rou
       {
         path: paths.bookings.show.pattern,
         auditEvent: 'CREATE_BOOKING_CANCELLATION_SUCCESS',
+      },
+    ],
+  })
+
+  get(paths.bookings.cancellations.edit.pattern, cancellationsController.edit(), {
+    auditEvent: 'VIEW_BOOKING_EDIT_CANCELLATION',
+  })
+  put(paths.bookings.cancellations.update.pattern, cancellationsController.update(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.bookings.cancellations.edit.pattern,
+        auditEvent: 'EDIT_BOOKING_CANCELLATION_FAILURE',
+      },
+      {
+        path: paths.bookings.show.pattern,
+        auditEvent: 'EDIT_BOOKING_CANCELLATION_SUCCESS',
       },
     ],
   })

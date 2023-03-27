@@ -1,4 +1,4 @@
-import type { Booking, Extension } from '@approved-premises/api'
+import type { Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
 import type { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
@@ -12,37 +12,57 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
     href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
   }
 
-  if (booking.status === 'provisional') {
-    items.push(
-      {
-        text: 'Mark as confirmed',
-        classes: '',
-        href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-      cancelAction,
-    )
-  } else if (booking.status === 'confirmed') {
-    items.push(
-      {
-        text: 'Mark as active',
-        classes: '',
-        href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-      cancelAction,
-    )
-  } else if (booking.status === 'arrived') {
-    items.push(
-      {
-        text: 'Mark as closed',
+  switch (booking.status) {
+    case 'provisional':
+      items.push(
+        {
+          text: 'Mark as confirmed',
+          classes: '',
+          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        cancelAction,
+      )
+      break
+    case 'confirmed':
+      items.push(
+        {
+          text: 'Mark as active',
+          classes: '',
+          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        cancelAction,
+      )
+      break
+    case 'arrived':
+      items.push(
+        {
+          text: 'Mark as closed',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Extend or shorten booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+      )
+      break
+    case 'departed':
+      items.push({
+        text: 'Update closed booking',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-      {
-        text: 'Extend or shorten booking',
+        href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+      })
+      break
+    case 'cancelled':
+      items.push({
+        text: 'Update cancelled booking',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
-      },
-    )
+        href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+      })
+      break
+    default:
+      break
   }
 
   if (items.length === 0) {
@@ -95,21 +115,20 @@ export const getLatestExtension = (booking: Booking) => {
 }
 
 export const deriveBookingHistory = (booking: Booking) => {
-  const extensions = [...booking.extensions].sort((a, b) => {
-    const dateA = DateFormats.isoToDateObj(a.createdAt)
-    const dateB = DateFormats.isoToDateObj(b.createdAt)
-
-    return dateA.getTime() - dateB.getTime()
-  })
+  const extensions = [...booking.extensions].sort(compareBookingState)
+  const departures = [...booking.departures].sort(compareBookingState)
+  const cancellations = [...booking.cancellations].sort(compareBookingState)
 
   const bookingWithSortedExensions = {
     ...booking,
     extensions,
+    departures,
+    cancellations,
   }
 
   const history = []
 
-  for (let previous = bookingWithSortedExensions; previous; previous = getPreviousBookingState(previous)) {
+  for (let previous = bookingWithSortedExensions; previous; previous = getPredecessorForBooking(previous)) {
     history.push({ booking: previous, updatedAt: getUpdatedAt(previous) })
   }
   history.reverse()
@@ -143,28 +162,37 @@ const getUpdatedAt = (booking: Booking): string => {
   return booking.createdAt
 }
 
-const getPreviousBookingState = (booking: Booking): Booking => {
+const getPredecessorForBooking = (booking: Booking): Booking => {
   switch (booking.status) {
     case 'departed':
-      return getPreviousDepartedBookingState(booking)
+      return getPredecessorForDepartedBooking(booking)
     case 'arrived':
-      return getPreviousArrivedBookingState(booking)
+      return getPredecessorForArrivedBooking(booking)
     case 'cancelled':
-      return getPreviousCancelledBookingState(booking)
+      return getPredecessorForCancelledBooking(booking)
     case 'confirmed':
-      return getPreviousConfirmedBookingState(booking)
+      return getPredecessorForConfirmedBooking(booking)
     default:
       return undefined
   }
 }
 
-const getPreviousDepartedBookingState = (booking: Booking): Booking => {
-  if (booking.extensions.length === 0) {
+const getPredecessorForDepartedBooking = (booking: Booking): Booking => {
+  if (booking.departures.length > 1) {
+    return {
+      ...booking,
+      departures: booking.departures.slice(0, -1),
+      departure: booking.departures[booking.departures.length - 2],
+      departureDate: booking.departures[booking.departures.length - 2].dateTime,
+    }
+  }
+
+  if (booking.extensions.length > 0) {
     return {
       ...booking,
       status: 'arrived',
       arrivalDate: booking.arrival.arrivalDate,
-      departureDate: booking.arrival.expectedDepartureDate,
+      departureDate: booking.extensions[booking.extensions.length - 1].newDepartureDate,
     }
   }
 
@@ -172,24 +200,22 @@ const getPreviousDepartedBookingState = (booking: Booking): Booking => {
     ...booking,
     status: 'arrived',
     arrivalDate: booking.arrival.arrivalDate,
-    departureDate: booking.extensions[booking.extensions.length - 1].newDepartureDate,
+    departureDate: booking.arrival.expectedDepartureDate,
   }
 }
 
-const getPreviousArrivedBookingState = (booking: Booking): Booking => {
-  if (booking.extensions.length === 0) {
+const getPredecessorForArrivedBooking = (booking: Booking): Booking => {
+  if (booking.extensions.length > 1) {
     return {
       ...booking,
-      status: 'confirmed',
-      arrivalDate: booking.originalArrivalDate,
-      departureDate: booking.originalDepartureDate,
+      extensions: booking.extensions.slice(0, -1),
+      departureDate: booking.extensions[booking.extensions.length - 2].newDepartureDate,
     }
   }
 
   if (booking.extensions.length === 1) {
     return {
       ...booking,
-      status: 'arrived',
       extensions: [],
       departureDate: booking.arrival.expectedDepartureDate,
     }
@@ -197,22 +223,37 @@ const getPreviousArrivedBookingState = (booking: Booking): Booking => {
 
   return {
     ...booking,
-    status: 'arrived',
-    extensions: booking.extensions.slice(0, -1),
-    departureDate: booking.extensions[booking.extensions.length - 2].newDepartureDate,
+    status: 'confirmed',
+    arrivalDate: booking.originalArrivalDate,
+    departureDate: booking.originalDepartureDate,
   }
 }
 
-const getPreviousCancelledBookingState = (booking: Booking): Booking => {
+const getPredecessorForCancelledBooking = (booking: Booking): Booking => {
+  if (booking.cancellations.length > 1) {
+    return {
+      ...booking,
+      cancellations: booking.cancellations.slice(0, -1),
+      cancellation: booking.cancellations[booking.cancellations.length - 2],
+    }
+  }
+
   return {
     ...booking,
     status: booking.confirmation ? 'confirmed' : 'provisional',
   }
 }
 
-const getPreviousConfirmedBookingState = (booking: Booking): Booking => {
+const getPredecessorForConfirmedBooking = (booking: Booking): Booking => {
   return {
     ...booking,
     status: 'provisional',
   }
+}
+
+const compareBookingState = (a: Extension | Departure | Cancellation, b: Extension | Departure | Cancellation) => {
+  const dateA = DateFormats.isoToDateObj(a.createdAt)
+  const dateB = DateFormats.isoToDateObj(b.createdAt)
+
+  return dateA.getTime() - dateB.getTime()
 }

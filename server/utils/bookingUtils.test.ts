@@ -1,3 +1,8 @@
+import paths from '../paths/temporary-accommodation/manage'
+import arrivalFactory from '../testutils/factories/arrival'
+import bookingFactory from '../testutils/factories/booking'
+import departureFactory from '../testutils/factories/departure'
+import extensionFactory from '../testutils/factories/extension'
 import {
   bookingActions,
   deriveBookingHistory,
@@ -5,11 +10,6 @@ import {
   shortenedOrExtended,
   statusTag,
 } from './bookingUtils'
-import bookingFactory from '../testutils/factories/booking'
-import paths from '../paths/temporary-accommodation/manage'
-import arrivalFactory from '../testutils/factories/arrival'
-import departureFactory from '../testutils/factories/departure'
-import extensionFactory from '../testutils/factories/extension'
 
 const premisesId = 'premisesId'
 const roomId = 'roomId'
@@ -67,16 +67,28 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns null for a departed booking', () => {
+    it('returns edit closed booking for a departed booking', () => {
       const booking = bookingFactory.departed().build()
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Update closed booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+        },
+      ])
     })
 
-    it('returns null for a cancelled booking', () => {
+    it('returns edit cancelled booking for a cancelled booking', () => {
       const booking = bookingFactory.cancelled().build()
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual(null)
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Update cancelled booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+        },
+      ])
     })
   })
 
@@ -88,9 +100,7 @@ describe('bookingUtils', () => {
 
   describe('getLatestExtension', () => {
     it('returns undefined when the booking has no extensions', () => {
-      const booking = bookingFactory.arrived().build({
-        extensions: [],
-      })
+      const booking = bookingFactory.arrived().build()
 
       expect(getLatestExtension(booking)).toEqual(undefined)
     })
@@ -234,7 +244,6 @@ describe('bookingUtils', () => {
         departure: departureFactory.build({
           dateTime: '2022-03-03',
         }),
-        extensions: [],
         arrival: arrivalFactory.build({
           arrivalDate: '2022-01-02',
           expectedDepartureDate: '2022-03-02',
@@ -285,7 +294,7 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a cancelled confirmed booking', () => {
-      const booking = bookingFactory.cancelled().build()
+      const booking = bookingFactory.cancelled('confirmed').build()
 
       const expected = [
         {
@@ -314,9 +323,7 @@ describe('bookingUtils', () => {
     })
 
     it('derives the booking history of a cancelled provisional booking', () => {
-      const booking = bookingFactory.cancelled().build({
-        confirmation: null,
-      })
+      const booking = bookingFactory.cancelled('provisional').build()
 
       const expected = [
         {

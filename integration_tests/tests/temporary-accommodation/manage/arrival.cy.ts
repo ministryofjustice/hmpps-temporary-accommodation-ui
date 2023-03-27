@@ -1,6 +1,7 @@
 import Page from '../../../../cypress_shared/pages/page'
 import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
+import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import arrivalFactory from '../../../../server/testutils/factories/arrival'
 import bookingFactory from '../../../../server/testutils/factories/booking'
@@ -19,13 +20,8 @@ context('Booking arrival', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a confirmed booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.confirmed().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
     const bookingShow = BookingShowPage.visit(premises, room, booking)
@@ -42,13 +38,8 @@ context('Booking arrival', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a confirmed booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.confirmed().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page
     const page = BookingArrivalNewPage.visit(premises, room, booking)
@@ -141,13 +132,8 @@ context('Booking arrival', () => {
     cy.signIn()
 
     // And there is a premises, a room, and a confirmed booking in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
     const booking = bookingFactory.confirmed().build()
-
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    const { premises, room } = setupBookingStateStubs(booking)
 
     // When I visit the booking arrival page
     const page = BookingArrivalNewPage.visit(premises, room, booking)

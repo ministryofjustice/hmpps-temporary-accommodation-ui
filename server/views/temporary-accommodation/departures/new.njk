@@ -1,9 +1,5 @@
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../components/ta-textarea/macro.njk" import taTextarea %}
-{% from "../components/ta-date-input/macro.njk" import taDateInput %}
-{% from "../components/ta-select/macro.njk" import taSelect %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
 {% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
@@ -34,60 +30,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.bookings.departures.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-        {{ taDateInput(
-          {
-            fieldset: {
-              legend: {
-                text: "What was the departure date?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
-            fieldName: "dateTime",
-            items: dateFieldValues('dateTime', errors)
-          },
-          fetchContext()
-        ) }}
-
-        {{ taSelect(
-          {
-            label: {
-                text: "What was the departure reason?",
-                classes: "govuk-label--m"
-            },
-            items: convertObjectsToSelectOptions(allDepartureReasons, "Select a departure reason", "name", "id", "reasonId"),
-            fieldName: "reasonId"
-          },
-          fetchContext()
-        ) }}
-
-        {{ taSelect(
-          {
-            label: {
-                text: "What was the move on category?",
-                classes: "govuk-label--m"
-            },
-            items: convertObjectsToSelectOptions(allMoveOnCategories, "Select a move on category", "name", "id", "moveOnCategoryId"),
-            fieldName: "moveOnCategoryId"
-          },
-          fetchContext()
-        ) }}
-
-        {{ taTextarea(
-          {
-            label: {
-              text: "Please provide any further details"
-            },
-            fieldName: "notes"
-          },
-          fetchContext()
-        ) }}
-
-        {{ govukButton({
-          text: "Submit",
-          preventDoubleClick: true
-        }) }}
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>      
+        {% include "./_editable.njk" %}  
       </form>
     </div>
   </div>

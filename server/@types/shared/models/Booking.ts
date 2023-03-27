@@ -14,9 +14,23 @@ export type Booking = (BookingBody & {
     status: 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled' | 'provisional' | 'confirmed';
     extensions: Array<Extension>;
     arrival?: Arrival | null;
+    /**
+     * The latest version of the departure, if it exists
+     */
     departure?: Departure | null;
+    /**
+     * The full history of the departure
+     */
+    departures: Array<Departure>;
     nonArrival?: Nonarrival | null;
+    /**
+     * The latest version of the cancellation, if it exists
+     */
     cancellation?: Cancellation | null;
+    /**
+     * The full history of the cancellation
+     */
+    cancellations: Array<Cancellation>;
     confirmation?: Confirmation | null;
 });
 

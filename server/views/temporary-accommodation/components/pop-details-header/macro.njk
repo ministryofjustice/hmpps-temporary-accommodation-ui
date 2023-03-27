@@ -5,8 +5,8 @@
 <div class="pop-details-header">
   {% if person %}
     <p><span class="govuk-!-font-weight-bold">Name:</span> {{ person.name }}<br />
-    <span class="govuk-!-font-weight-bold">CRN:</span> {{ person.crn }}<br />
-    <span class="govuk-!-font-weight-bold">Date of birth:</span> {{formatDate(person.dateOfBirth)}}</p>
+    <span class="govuk-!-font-weight-bold">Date of birth:</span> {{formatDate(person.dateOfBirth)}}<br />
+    <span class="govuk-!-font-weight-bold">CRN:</span> {{ person.crn }}</p>
   {% endif %}
 </div>
 

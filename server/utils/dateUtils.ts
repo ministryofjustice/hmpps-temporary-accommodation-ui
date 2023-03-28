@@ -120,7 +120,7 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
 }
 
 export const dateIsBlank = <T = ObjectWithDateParts<string | number>>(body: T): boolean => {
-  const fields = Object.keys(body).filter(key => key.match(/-[year|month|day]/))
+  const fields = Object.keys(body).filter(key => key.match(/-[year|month|day]/)) as Array<keyof T>
   return fields.every(field => !body[field])
 }
 

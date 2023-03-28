@@ -44,6 +44,13 @@ import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
 import updateRoomFactory from './updateRoom'
 import userFactory from './user'
+import bookingSearchResultPersonSummaryFactory from './bookingSearchResultPersonSummary'
+import bookingSearchResultBookingSummaryFactory from './bookingSearchResultBookingSummary'
+import bookingSearchResultPremisesSummaryFactory from './bookingSearchResultPremisesSummary'
+import bookingSearchResultRoomSummaryFactory from './bookingSearchResultRoomSummary'
+import bookingSearchResultBedSummaryFactory from './bookingSearchResultBedSummary'
+import bookingSearchResultFactory from './bookingSearchResult'
+import bookingSearchResultsFactory from './bookingSearchResults'
 
 export {
   activeOffenceFactory,
@@ -94,4 +101,11 @@ export {
   updatePremisesFactory,
   updateRoomFactory,
   userFactory,
+  bookingSearchResultPersonSummaryFactory,
+  bookingSearchResultBookingSummaryFactory,
+  bookingSearchResultPremisesSummaryFactory,
+  bookingSearchResultRoomSummaryFactory,
+  bookingSearchResultBedSummaryFactory,
+  bookingSearchResultFactory,
+  bookingSearchResultsFactory,
 }

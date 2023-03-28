@@ -11,6 +11,7 @@ const singleRoomPath = singlePremisesPath.path('rooms').path(':roomId')
 
 const bedsPath = path('/beds')
 const searchBedsPath = bedsPath.path('search')
+const bookingsPath = path('/bookings')
 
 const managePaths = {
   premises: {
@@ -34,6 +35,9 @@ const managePaths = {
   },
   beds: {
     search: searchBedsPath,
+  },
+  bookings: {
+    search: bookingsPath.path('search'),
   },
 }
 
@@ -82,6 +86,9 @@ export default {
   },
   beds: {
     search: managePaths.beds.search,
+  },
+  bookings: {
+    search: managePaths.bookings.search,
   },
   applications: {
     show: applyPaths.applications.show,

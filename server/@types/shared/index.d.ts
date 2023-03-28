@@ -117,6 +117,7 @@ export type { SupervisingProvider } from './models/SupervisingProvider';
 export type { SupervisingTeam } from './models/SupervisingTeam';
 export type { Task } from './models/Task';
 export type { TaskType } from './models/TaskType';
+export type { TaskWrapper } from './models/TaskWrapper';
 export type { TemporaryAccommodationApplication } from './models/TemporaryAccommodationApplication';
 export type { TemporaryAccommodationAssessment } from './models/TemporaryAccommodationAssessment';
 export type { TemporaryAccommodationBedSearchParameters } from './models/TemporaryAccommodationBedSearchParameters';

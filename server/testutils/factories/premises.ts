@@ -2,7 +2,11 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
 import type { ApArea, TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
+import { ReferenceData } from '../../@types/ui'
 import { unique } from '../../utils/utils'
+import characteristicFactory from './characteristic'
+import localAuthorityFactory from './localAuthority'
+import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
 
 class PremisesFactory extends Factory<Premises> {
@@ -15,6 +19,32 @@ class PremisesFactory extends Factory<Premises> {
   archived() {
     return this.params({
       status: 'archived',
+    })
+  }
+
+  /* istanbul ignore next */
+  forEnvironment(
+    probationRegion: ReferenceData,
+    pdus: ReferenceData[],
+    localAuthorities: ReferenceData[],
+    characteristics: ReferenceData[],
+  ) {
+    return this.params({
+      probationRegion: probationRegionFactory.build({
+        ...probationRegion,
+      }),
+      localAuthorityArea: localAuthorityFactory.build({
+        ...faker.helpers.arrayElement(localAuthorities),
+      }),
+      pdu: faker.helpers.arrayElement(pdus).id,
+      characteristics: faker.helpers
+        .arrayElements(characteristics, faker.datatype.number({ min: 1, max: 5 }))
+        .map(characteristic =>
+          characteristicFactory.build({
+            ...characteristic,
+            modelScope: 'premises',
+          }),
+        ),
     })
   }
 }

@@ -24,7 +24,7 @@ jest.mock('../i18n/en/errors.json', () => {
         empty: 'You must enter a valid arrival date',
       },
     },
-    cancellation: {
+    bookingCancellation: {
       date: {
         empty: 'You must enter a valid cancellation dae',
       },
@@ -92,7 +92,7 @@ describe('catchValidationErrorOrPropogate', () => {
       },
     })
 
-    const context = 'cancellation'
+    const context = 'bookingCancellation'
 
     catchValidationErrorOrPropogate(request, response, error, 'some/url', context)
 

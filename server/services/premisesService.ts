@@ -56,9 +56,7 @@ export default class PremisesService {
       await referenceDataClient.getReferenceData('probation-delivery-units', {
         probationRegionId: callConfig.probationRegion.id,
       })
-    )
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(pdu => ({ ...pdu, id: pdu.name }))
+    ).sort((a, b) => a.name.localeCompare(b.name))
 
     return { localAuthorities, characteristics, probationRegions, pdus }
   }

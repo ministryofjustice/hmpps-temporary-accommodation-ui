@@ -30,9 +30,7 @@ export default class BedspaceSearchService {
       await referenceDataClient.getReferenceData('probation-delivery-units', {
         probationRegionId: callConfig.probationRegion.id,
       })
-    )
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(pdu => ({ ...pdu, id: pdu.name }))
+    ).sort((a, b) => a.name.localeCompare(b.name))
 
     return { pdus }
   }

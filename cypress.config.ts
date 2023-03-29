@@ -51,6 +51,7 @@ export default defineConfig({
         ...room,
         ...report,
         ...user,
+        ...bookingSearch,
         ...schemaValidator,
         ...bed,
         ...bookingSearch,

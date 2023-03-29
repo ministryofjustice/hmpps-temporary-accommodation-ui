@@ -19,30 +19,18 @@ export default class BookingSearchPage extends Page {
     cy.get('h2').contains(`${capitalisedStatus} bookings`)
   }
 
-  checkBookingDetails(premises: Premises, room: Room, booking: Booking) {
+  checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
     cy.get('tr')
-      .contains(booking.person.crn)
-      .parent()
-      .within(() => {
-        cy.get('td').eq(0).contains(booking.person.name)
-        cy.get('td').eq(1).contains(booking.person.crn)
-        cy.get('td').eq(2).contains(premises.addressLine1)
-        cy.get('td')
-          .eq(3)
-          .contains(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
-        cy.get('td')
-          .eq(4)
-          .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
-        cy.get('td').eq(5).contains('View')
-      })
-  }
-
-  clickViewBookingLink(crn: string) {
-    cy.contains(crn)
-      .parent()
-      .within(() => {
-        cy.get('td').eq(5).contains('View').click()
-      })
+      .children()
+      .should('contain', booking.person.name)
+      .and('contain', booking.person.crn)
+      .and('contain', premises.addressLine1)
+      .and('contain', DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
+      .and('contain', DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
+      .get('td')
+      .eq(5)
+      .contains('View')
+      .click()
   }
 
   clickOtherBookingStatusLink(status: BookingSearchUiStatus) {

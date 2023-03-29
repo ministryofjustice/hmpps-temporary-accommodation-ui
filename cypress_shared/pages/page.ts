@@ -250,4 +250,20 @@ export default abstract class Page extends Component {
         cy.wrap(items).as(alias)
       })
   }
+
+  getCheckboxItemsAsReferenceData(legend: string, alias: string): void {
+    cy.get('legend')
+      .contains(legend)
+      .siblings('.govuk-checkboxes')
+      .children('.govuk-checkboxes__item')
+      .then(elements => {
+        const items: ReferenceData[] = elements.toArray().map(element => {
+          const id = Cypress.$(element).children('input').attr('value')
+          const name = Cypress.$(element).children('label').text().trim()
+
+          return { id, name, isActive: true, serviceScope: 'temporary-accommodation' }
+        })
+        cy.wrap(items).as(alias)
+      })
+  }
 }

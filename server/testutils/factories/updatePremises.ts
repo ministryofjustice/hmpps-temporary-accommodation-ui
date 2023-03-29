@@ -1,10 +1,22 @@
-import type { UpdatePremises } from '@approved-premises/api'
+import type { Premises, UpdatePremises } from '@approved-premises/api'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 import { unique } from '../../utils/utils'
 import referenceDataFactory from './referenceData'
 
-export default Factory.define<UpdatePremises>(() => ({
+class UpdatePremisesFactory extends Factory<UpdatePremises> {
+  /* istanbul ignore next */
+  fromPremises(premises: Premises) {
+    return this.params({
+      ...premises,
+      localAuthorityAreaId: premises.localAuthorityArea.id,
+      characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
+      probationRegionId: premises.probationRegion.id,
+    })
+  }
+}
+
+export default UpdatePremisesFactory.define(() => ({
   addressLine1: faker.address.streetAddress(),
   addressLine2: faker.address.secondaryAddress(),
   town: faker.address.city(),
@@ -15,6 +27,6 @@ export default Factory.define<UpdatePremises>(() => ({
   ),
   probationRegionId: referenceDataFactory.probationRegion().build().id,
   pdu: referenceDataFactory.pdu().build().id,
-  status: faker.helpers.arrayElement(['active', 'archived']),
+  status: faker.helpers.arrayElement(['active', 'archived'] as const),
   notes: faker.lorem.lines(),
 }))

@@ -53,6 +53,7 @@ export default class PremisesShowPage extends Page {
                       postcode: addressLines[addressLines.length - 1],
                       status,
                       pdu: pdu.name,
+                      probationDeliveryUnit: pdu,
                     })
 
                     cy.wrap(premises).as(alias)

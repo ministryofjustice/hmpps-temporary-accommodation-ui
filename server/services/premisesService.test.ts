@@ -139,7 +139,7 @@ describe('PremisesService', () => {
             text: premises1.bedCount.toString(),
           },
           {
-            text: premises1.pdu,
+            text: premises1.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises1.status}</strong>`,
@@ -158,7 +158,7 @@ describe('PremisesService', () => {
             text: premises2.bedCount.toString(),
           },
           {
-            text: premises2.pdu,
+            text: premises2.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises2.status}</strong>`,
@@ -177,7 +177,7 @@ describe('PremisesService', () => {
             text: premises3.bedCount.toString(),
           },
           {
-            text: premises3.pdu,
+            text: premises3.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises3.status}</strong>`,
@@ -196,7 +196,7 @@ describe('PremisesService', () => {
             text: premises4.bedCount.toString(),
           },
           {
-            text: premises4.pdu,
+            text: premises4.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises4.status}</strong>`,
@@ -255,6 +255,10 @@ describe('PremisesService', () => {
           name: 'A probation region',
           id: 'a-probation-region',
         }),
+        probationDeliveryUnit: pduFactory.build({
+          name: 'A probation delivery unit',
+          id: 'a-probation-delivery-unit',
+        }),
       })
 
       premisesClient.find.mockResolvedValue(premises)
@@ -265,6 +269,7 @@ describe('PremisesService', () => {
         localAuthorityAreaId: 'local-authority',
         characteristicIds: ['characteristic-a', 'characteristic-b'],
         probationRegionId: 'a-probation-region',
+        pdu: 'a-probation-delivery-unit',
       })
 
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
@@ -306,7 +311,7 @@ describe('PremisesService', () => {
         probationRegion: probationRegionFactory.build({
           name: 'A probation region',
         }),
-        pdu: 'A PDU',
+        probationDeliveryUnit: pduFactory.build({ name: 'A PDU' }),
         status: 'active',
         notes: 'Some notes',
       })

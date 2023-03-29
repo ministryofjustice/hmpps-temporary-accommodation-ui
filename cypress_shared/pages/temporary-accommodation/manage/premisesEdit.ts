@@ -46,7 +46,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .contains('What is the PDU?')
       .siblings('select')
       .children('option')
-      .contains(exact(this.premises.pdu))
+      .contains(exact(this.premises.probationDeliveryUnit.name))
       .should('be.selected')
 
     cy.get('legend')

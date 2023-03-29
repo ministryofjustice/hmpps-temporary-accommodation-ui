@@ -1,4 +1,4 @@
-import type { Premises, UpdatePremises } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises, UpdatePremises } from '@approved-premises/api'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 import { unique } from '../../utils/utils'
@@ -12,6 +12,7 @@ class UpdatePremisesFactory extends Factory<UpdatePremises> {
       localAuthorityAreaId: premises.localAuthorityArea.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
+      pdu: premises.probationDeliveryUnit.id,
     })
   }
 }

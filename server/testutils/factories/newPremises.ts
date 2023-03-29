@@ -1,8 +1,8 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import { NewPremises } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
+import { Factory } from 'fishery'
+import { NewPremises } from '../../@types/shared'
 import { unique } from '../../utils/utils'
+import referenceDataFactory from './referenceData'
 
 export default Factory.define<NewPremises>(() => ({
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,

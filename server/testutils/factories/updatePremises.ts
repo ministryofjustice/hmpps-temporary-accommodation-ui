@@ -1,8 +1,8 @@
-import { Factory } from 'fishery'
-import { faker } from '@faker-js/faker/locale/en_GB'
 import type { UpdatePremises } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
+import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 import { unique } from '../../utils/utils'
+import referenceDataFactory from './referenceData'
 
 export default Factory.define<UpdatePremises>(() => ({
   addressLine1: faker.address.streetAddress(),

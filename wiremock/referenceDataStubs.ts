@@ -6,6 +6,7 @@ import keyWorkersJson from './stubs/keyworkers.json'
 import localAuthoritiesJson from './stubs/local-authorities.json'
 import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
 import moveOnCategoriesJson from './stubs/move-on-categories.json'
+import pdusJson from './stubs/pdus.json'
 import probationRegionsJson from './stubs/probation-regions.json'
 
 const departureReasons = {
@@ -134,6 +135,20 @@ const probationRegions = {
   },
 }
 
+const pdus = {
+  request: {
+    method: 'GET',
+    urlPath: '/reference-data/probation-delivery-units',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: pdusJson,
+  },
+}
+
 export {
   departureReasons,
   moveOnCategories,
@@ -144,4 +159,5 @@ export {
   characteristics,
   localAuthorities,
   probationRegions,
+  pdus,
 }

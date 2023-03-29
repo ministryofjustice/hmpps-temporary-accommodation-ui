@@ -12,6 +12,7 @@ import {
   convertObjectsToRadioItems,
   convertObjectsToSelectOptions,
   dateFieldValues,
+  parseNaturalNumber,
 } from './formUtils'
 import { statusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems } from './utils'
@@ -22,7 +23,8 @@ import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as TasklistUtils from './taskListUtils'
 
-import summaryListRows from '../components/bookingInfo'
+import bedspaceSearchResultSummaryListRows from '../components/bedspaceSearchResult'
+import bookingSummaryListRows from '../components/bookingInfo'
 import lostBedSummaryListRows from '../components/lostBedInfo'
 import config from '../config'
 import applyPaths from '../paths/apply'
@@ -83,6 +85,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
   njkEnv.addGlobal('formatDate', DateFormats.isoDateToUIDate)
+  njkEnv.addGlobal('parseNaturalNumber', parseNaturalNumber)
 
   njkEnv.addGlobal('dateFieldValues', function sendContextToDateFieldValues(fieldName: string, errors: ErrorMessages) {
     return dateFieldValues(fieldName, this.ctx, errors)
@@ -144,10 +147,11 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('checkYourAnswersSections', checkYourAnswersSections)
   njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)
 
-  njkEnv.addGlobal('BookingInfo', { summaryListRows })
+  njkEnv.addGlobal('BookingInfo', { summaryListRows: bookingSummaryListRows })
+  njkEnv.addGlobal('BedspaceSearchResult', { summaryListRows: bedspaceSearchResultSummaryListRows })
+  njkEnv.addGlobal('LostBedInfo', { summaryListRows: lostBedSummaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
-  njkEnv.addGlobal('LostBedInfo', { lostBedSummaryListRows })
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
 }

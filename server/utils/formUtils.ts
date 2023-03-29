@@ -165,3 +165,13 @@ export function isStringOrArrayOfStrings(input: unknown) {
     typeof input === 'string'
   )
 }
+
+export const parseNaturalNumber = (input: string): number => {
+  if (!input) {
+    return undefined
+  }
+  if (!/^[0-9]+$/.test(input)) {
+    return Number.NaN
+  }
+  return Number.parseInt(input, 10)
+}

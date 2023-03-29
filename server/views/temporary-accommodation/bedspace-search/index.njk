@@ -1,0 +1,84 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/bedspace-search-result/macro.njk" import bedspaceSearchResult %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../components/ta-input/macro.njk" import taInput %}
+{% from "../components/ta-select/macro.njk" import taSelect %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Find a bedspace" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ breadCrumb('Find a bedspace', []) }}
+
+  {% include "../../_messages.njk" %}
+  
+  <h1>List of available bedspaces</h1>
+  <form action="{{ paths.bedspaces.search({}) }}" method="get">
+    {{ showErrorSummary(errorSummary) }}
+
+    {{ taDateInput(
+      {
+        fieldset: {
+          legend: {
+          text: "Available on",
+          classes: "govuk-fieldset__legend--s"
+          }
+        },
+        fieldName: "startDate",
+        items: dateFieldValues('startDate', errors)
+      },
+      fetchContext()
+    ) }}
+
+    {{ taInput(
+      {
+        label: {
+        text: 'Days available for',
+        classes: "govuk-label--s"
+      },
+        classes: "govuk-input--width-2",
+        fieldName: "durationDays",
+        inputmode: "numeric",
+        spellcheck: false
+      },
+      fetchContext()
+    ) }}
+
+    {{ taSelect(
+      {
+        label: {
+          text: "PDU",
+          classes: "govuk-label--s"
+        },
+        items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnit'),
+        fieldName: "probationDeliveryUnit"
+      },
+      fetchContext()
+    ) }}
+
+    {{ govukButton({
+      text: "Update" if results else "Search",
+      preventDoubleClick: true
+    }) }}
+  </form>      
+
+  {% if results %}
+    <p>
+      {% if results.results.length === 0 %}
+        No bedspaces found available for {{ parseNaturalNumber(durationDays) }} {{ 'day' if parseNaturalNumber(durationDays) === 1 else 'days' }} from {{ formatDate(startDate) }}
+      {% else  %}
+        Showing {{ results.results.length }} {{ 'result' if results.results.length === 1 else 'results' }}
+      {% endif %}
+    </p>
+  {% endif %}
+
+  {% for result in results.results %}
+    {{ bedspaceSearchResult(result) }}
+  {% endfor%}
+
+{% endblock %}

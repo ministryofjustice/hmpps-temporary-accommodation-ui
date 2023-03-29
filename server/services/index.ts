@@ -6,6 +6,7 @@ import config from '../config'
 import ApplicationService from './applicationService'
 import ArrivalService from './arrivalService'
 import AuditService from './auditService'
+import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
 import BookingReportService from './bookingReportService'
 import BookingService from './bookingService'
@@ -26,17 +27,18 @@ export const services = () => {
     bookingClientBuilder,
     referenceDataClientBuilder,
     lostBedClientBuilder,
-    personClient,
+    personClientBuilder,
     applicationClientBuilder,
     roomClientBuilder,
     reportClientBuilder,
     userClientBuilder,
+    bedClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient, userClientBuilder)
   const auditService = new AuditService(config.apis.audit)
   const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
-  const personService = new PersonService(personClient)
+  const personService = new PersonService(personClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder, lostBedClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)
   const nonArrivalService = new NonArrivalService(bookingClientBuilder)
@@ -48,6 +50,7 @@ export const services = () => {
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
   const bookingReportService = new BookingReportService(reportClientBuilder, referenceDataClientBuilder)
+  const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder)
 
   return {
     userService,
@@ -65,6 +68,7 @@ export const services = () => {
     confirmationService,
     extensionService,
     bookingReportService,
+    bedspaceSearchService,
   }
 }
 

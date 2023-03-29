@@ -11,6 +11,10 @@ export default abstract class Page extends Component {
     return new constructor(...args)
   }
 
+  static clickDashboardLink() {
+    cy.get('.govuk-breadcrumbs a').contains('Home').click()
+  }
+
   constructor(private readonly title: string) {
     super()
 
@@ -58,6 +62,54 @@ export default abstract class Page extends Component {
 
   shouldShowSelectInput(id: string, contents: string) {
     cy.get(`select[id="${id}"]`).children('option').contains(exact(contents)).should('be.selected')
+  }
+
+  shouldShowDateInputsByLegend(legend: string, date: string): void {
+    const parsedDate = DateFormats.isoToDateObj(date)
+
+    cy.get('legend')
+      .contains(legend)
+      .siblings()
+      .within(() => {
+        cy.get('label').contains('Day').siblings('input').should('have.value', parsedDate.getDate().toString())
+        cy.get('label')
+          .contains('Month')
+          .siblings('input')
+          .should('have.value', `${parsedDate.getMonth() + 1}`)
+        cy.get('label').contains('Year').siblings('input').should('have.value', parsedDate.getFullYear().toString())
+      })
+  }
+
+  shouldShowTextInputByLabel(label: string, value: string): void {
+    cy.get('label').contains(label).siblings('input').should('have.value', value)
+  }
+
+  shouldShowSelectInputByLabel(label: string, value: string): void {
+    cy.get('label').contains(label).siblings('select').children('option').contains(exact(value)).should('be.selected')
+  }
+
+  completeDateInputsByLegend(legend: string, date: string): void {
+    const parsedDate = DateFormats.isoToDateObj(date)
+
+    cy.get('legend')
+      .contains(legend)
+      .siblings()
+      .within(() => {
+        cy.get('label').contains('Day').siblings('input').type(parsedDate.getDate().toString())
+        cy.get('label')
+          .contains('Month')
+          .siblings('input')
+          .type(`${parsedDate.getMonth() + 1}`)
+        cy.get('label').contains('Year').siblings('input').type(parsedDate.getFullYear().toString())
+      })
+  }
+
+  completeTextInputByLabel(label: string, value: string): void {
+    cy.get('label').contains(label).siblings('input').type(value)
+  }
+
+  completeSelectInputByLabel(label: string, value: string): void {
+    cy.get('label').contains(label).siblings('select').select(value)
   }
 
   getLabel(labelName: string): void {

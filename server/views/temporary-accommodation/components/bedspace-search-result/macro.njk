@@ -1,0 +1,23 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro bedspaceSearchResult(result) %}
+
+<div data-cy-result="true">
+  <div class="edit-bar">
+    <div class="edit-bar__container">
+      <div class="edit-bar__title">
+        <h4>{{ result.room.name }}</h4>
+      </div>
+      <div class="edit-bar__action">
+        <a href="{{ paths.premises.bedspaces.show({ premisesId: result.premises.id, roomId: result.room.id }) }}">View</a>
+      </div>
+    </div>
+  </div>
+
+  {{ govukSummaryList({
+  rows: BedspaceSearchResult.summaryListRows(result),
+  classes: 'govuk-summary-list--no-border details'
+  }) }}
+</div>
+
+{% endmacro %}

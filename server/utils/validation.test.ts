@@ -242,14 +242,24 @@ describe('fetchErrorsAndUserInput', () => {
 describe('setUserInput', () => {
   const request = createMock<Request>({})
 
-  it('sets the request body as the user input flash message', () => {
+  it("sets the request body as the user input flash message when the source is given as 'post'", () => {
     request.body = {
-      some: 'field',
+      some: 'post-field',
     }
 
-    setUserInput(request)
+    setUserInput(request, 'post')
 
     expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
+  })
+
+  it("sets the request query as the user input flash message when the source is given as 'get'", () => {
+    request.query = {
+      some: 'get-field',
+    }
+
+    setUserInput(request, 'get')
+
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.query)
   })
 })
 

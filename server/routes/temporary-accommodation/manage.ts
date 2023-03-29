@@ -22,6 +22,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     cancellationsController,
     bookingReportsController,
     lostBedsController,
+    bedspaceSearchController,
   } = controllers.temporaryAccommodation
 
   get(paths.premises.index.pattern, premisesController.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
@@ -259,6 +260,8 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+
+  get(paths.bedspaces.search.pattern, bedspaceSearchController.index(), { auditEvent: 'VIEW_SEARCH_BEDSPACES ' })
 
   return router
 }

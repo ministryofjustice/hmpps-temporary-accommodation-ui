@@ -17,6 +17,7 @@ import PremisesClient from './premisesClient'
 import ReferenceDataClient from './referenceDataClient'
 
 import ApplicationClient from './applicationClient'
+import BedClient from './bedClient'
 import LostBedClient from './lostBedClient'
 import { createRedisClient } from './redisClient'
 import ReportClient from './reportClient'
@@ -35,12 +36,13 @@ export const dataAccess = () => ({
   referenceDataClientBuilder: ((callConfig: CallConfig) =>
     new ReferenceDataClient(callConfig)) as RestClientBuilder<ReferenceDataClient>,
   lostBedClientBuilder: ((callConfig: CallConfig) => new LostBedClient(callConfig)) as RestClientBuilder<LostBedClient>,
-  personClient: ((callConfig: CallConfig) => new PersonClient(callConfig)) as RestClientBuilder<PersonClient>,
+  personClientBuilder: ((callConfig: CallConfig) => new PersonClient(callConfig)) as RestClientBuilder<PersonClient>,
   applicationClientBuilder: ((callConfig: CallConfig) =>
     new ApplicationClient(callConfig)) as RestClientBuilder<ApplicationClient>,
   roomClientBuilder: ((callConfig: CallConfig) => new RoomClient(callConfig)) as RestClientBuilder<RoomClient>,
   reportClientBuilder: ((callConfig: CallConfig) => new ReportClient(callConfig)) as RestClientBuilder<ReportClient>,
   userClientBuilder: ((callConfig: CallConfig) => new UserClient(callConfig)) as RestClientBuilder<UserClient>,
+  bedClientBuilder: ((callConfig: CallConfig) => new BedClient(callConfig)) as RestClientBuilder<BedClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
@@ -56,4 +58,5 @@ export {
   ApplicationClient,
   ReportClient,
   UserClient,
+  BedClient,
 }

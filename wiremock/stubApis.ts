@@ -6,9 +6,9 @@ import { bulkStub } from './index'
 
 import bedFactory from '../server/testutils/factories/bed'
 import bookingFactory from '../server/testutils/factories/booking'
+import lostBedFactory from '../server/testutils/factories/lostBed'
 import premisesFactory from '../server/testutils/factories/premises'
 import premisesJson from './stubs/premises.json'
-import lostBedFactory from '../server/testutils/factories/lostBed'
 
 import applicationStubs from './applicationStubs'
 import arrivalStubs from './arrivalStubs'
@@ -23,6 +23,7 @@ import roomStubs from './roomStub'
 import userStub from './userStub'
 
 import path from '../server/paths/api'
+import bedSearchResults from '../server/testutils/factories/bedSearchResults'
 import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
 import staffMemberFactory from '../server/testutils/factories/staffMember'
 import confirmationStubs from './confirmationStubs'
@@ -224,6 +225,26 @@ premises.forEach(item => {
       },
     })
   })
+})
+
+const bedSerchRequiredFields = [...getCombinations(['startDate', 'durationDays', 'probationDeliveryUnit'])]
+
+bedSerchRequiredFields.forEach((fields: Array<string>) => {
+  stubs.push(errorStub(fields, path.beds.search({}), 'POST'))
+})
+
+stubs.push({
+  request: {
+    method: 'POST',
+    url: path.beds.search({}),
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: bedSearchResults.forPremises(premises).build(),
+  },
 })
 
 stubs.push(

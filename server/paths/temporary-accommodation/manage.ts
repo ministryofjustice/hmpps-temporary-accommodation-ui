@@ -81,6 +81,9 @@ const paths = {
       create: reportsPath.path('bookings'),
     },
   },
+  bedspaces: {
+    search: temporaryAccommodationPath.path('/find-a-bedspace'),
+  },
 }
 
 export default paths

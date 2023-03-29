@@ -196,7 +196,7 @@ export interface ReferenceData {
   id: string
   name: string
   isActive: boolean
-  serviceScope: string
+  serviceScope: 'approved-premises' | 'temporary-accommodation' | '*'
 }
 
 export interface PersonRisksUI {

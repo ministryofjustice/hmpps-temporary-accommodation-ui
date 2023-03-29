@@ -4,7 +4,7 @@ import type { Booking, DateCapacity, Premises, Room, StaffMember } from '@approv
 
 import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
-import { characteristics, localAuthorities, probationRegions } from '../../wiremock/referenceDataStubs'
+import { characteristics, localAuthorities, pdus, probationRegions } from '../../wiremock/referenceDataStubs'
 import { errorStub } from '../../wiremock/utils'
 import bookingStubs from './booking'
 import roomStubs from './room'
@@ -127,6 +127,6 @@ export default {
         url: paths.premises.update({ premisesId: premises.id }),
       })
     ).body.requests,
-  stubPremisesReferenceData: (): Promise<[Response, Response, Response]> =>
-    Promise.all([stubFor(localAuthorities), stubFor(characteristics), stubFor(probationRegions)]),
+  stubPremisesReferenceData: (): Promise<[Response, Response, Response, Response]> =>
+    Promise.all([stubFor(localAuthorities), stubFor(characteristics), stubFor(probationRegions), stubFor(pdus)]),
 }

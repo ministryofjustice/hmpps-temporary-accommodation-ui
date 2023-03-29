@@ -8,7 +8,6 @@ import type {
 } from '@approved-premises/api'
 import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
-import pduJson from '../data/pdus.json'
 import paths from '../paths/temporary-accommodation/manage'
 
 import { CallConfig } from '../data/restClient'
@@ -53,7 +52,13 @@ export default class PremisesService {
       a.name.localeCompare(b.name),
     )
 
-    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name)) as Array<ReferenceData>
+    const pdus = (
+      await referenceDataClient.getReferenceData('probation-delivery-units', {
+        probationRegionId: callConfig.probationRegion.id,
+      })
+    )
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(pdu => ({ ...pdu, id: pdu.name }))
 
     return { localAuthorities, characteristics, probationRegions, pdus }
   }

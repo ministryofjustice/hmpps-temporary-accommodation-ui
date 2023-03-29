@@ -21,6 +21,9 @@ context('Bedspace Search', () => {
     // Given I am signed in
     cy.signIn()
 
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
+
     // When I visit the dashboard page
     const page = DashboardPage.visit()
 
@@ -34,6 +37,9 @@ context('Bedspace Search', () => {
   it('shows search results', () => {
     // Given I am signed in
     cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
 
     // When I visit the search bedspaces page
     const preSearchPage = BedspaceSearchPage.visit()
@@ -65,6 +71,9 @@ context('Bedspace Search', () => {
   it('shows empty search results', () => {
     // Given I am signed in
     cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
 
     // When I visit the search bedspaces page
     const preSearchPage = BedspaceSearchPage.visit()
@@ -102,6 +111,9 @@ context('Bedspace Search', () => {
     // Given I am signed in
     cy.signIn()
 
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
+
     // When I visit the search bedspaces page
     const preSearchPage = BedspaceSearchPage.visit()
 
@@ -131,6 +143,9 @@ context('Bedspace Search', () => {
     // Given I am signed in
     cy.signIn()
 
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
+
     // When I visit the search bedspaces page
     const page = BedspaceSearchPage.visit()
 
@@ -145,6 +160,9 @@ context('Bedspace Search', () => {
   it('navigates back from the bedspace search page to the dashboard', () => {
     // Given I am signed in
     cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
 
     // When I visit the search bedspaces page
     const page = BedspaceSearchPage.visit()

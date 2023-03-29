@@ -1,26 +1,32 @@
+import { ReferenceDataClient } from '../data'
 import BedClient from '../data/bedClient'
-import pduJson from '../data/pdus.json'
 import { CallConfig } from '../data/restClient'
-import { bedSearchParametersFactory, bedSearchResultsFactory, pduFactory } from '../testutils/factories'
+import {
+  bedSearchParametersFactory,
+  bedSearchResultsFactory,
+  pduFactory,
+  probationRegionFactory,
+} from '../testutils/factories'
 import BedspaceSearchService from './bedspaceSearchService'
 
 jest.mock('../data/bedClient')
-jest.mock('../data/pdus.json', () => {
-  return [...jest.requireActual('../data/pdus.json')]
-})
+jest.mock('../data/referenceDataClient')
 
 describe('BedspaceSearchService', () => {
   const bedClient = new BedClient(null) as jest.Mocked<BedClient>
+  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
   const bedClientFactory = jest.fn()
+  const referenceDataClientFactory = jest.fn()
 
-  const service = new BedspaceSearchService(bedClientFactory)
+  const service = new BedspaceSearchService(bedClientFactory, referenceDataClientFactory)
 
-  const callConfig = { token: 'some-token' } as CallConfig
+  const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
 
   beforeEach(() => {
     jest.restoreAllMocks()
     bedClientFactory.mockReturnValue(bedClient)
+    referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
   describe('search', () => {
@@ -43,22 +49,24 @@ describe('BedspaceSearchService', () => {
   })
 
   describe('getReferenceData', () => {
-    afterEach(() => {
-      pduJson.length = 0
-      pduJson.push(...jest.requireActual('../data/pdus.json'))
-    })
-
     it('returns sorted PDUs', async () => {
       const pdu1 = pduFactory.build({ name: 'HIJ' })
       const pdu2 = pduFactory.build({ name: 'LMN' })
       const pdu3 = pduFactory.build({ name: 'PQR' })
 
-      pduJson.length = 0
-      pduJson.push(pdu2, pdu3, pdu1)
+      referenceDataClient.getReferenceData.mockResolvedValue([pdu2, pdu3, pdu1])
 
-      const result = await service.getReferenceData()
+      const result = await service.getReferenceData(callConfig)
       expect(result).toEqual({
-        pdus: [pdu1, pdu2, pdu3],
+        pdus: [
+          { ...pdu1, id: pdu1.name },
+          { ...pdu2, id: pdu2.name },
+          { ...pdu3, id: pdu3.name },
+        ],
+      })
+
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
+        probationRegionId: callConfig.probationRegion.id,
       })
     })
   })

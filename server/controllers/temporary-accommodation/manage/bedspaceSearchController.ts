@@ -21,7 +21,7 @@ export default class BedspaceSearchController {
 
       const callConfig = extractCallConfig(req)
 
-      const { pdus: allPdus } = await this.searchService.getReferenceData()
+      const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
 
       const query = Object.keys(req.query).length ? (req.query as Record<string, string>) : undefined
       let results: BedSearchResults

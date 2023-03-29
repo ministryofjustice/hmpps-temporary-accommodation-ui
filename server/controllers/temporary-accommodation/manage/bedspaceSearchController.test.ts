@@ -44,7 +44,7 @@ describe('BedspaceSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith()
+      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(bedspaceSearchService.search).not.toHaveBeenCalled()
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
@@ -73,7 +73,7 @@ describe('BedspaceSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith()
+      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(bedspaceSearchService.search).toHaveBeenCalledWith(callConfig, expect.objectContaining(searchParameters))
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
@@ -106,7 +106,7 @@ describe('BedspaceSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith()
+      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(bedspaceSearchService.search).toHaveBeenCalledWith(callConfig, expect.objectContaining(searchParameters))
 
       expect(setUserInput).toHaveBeenCalledWith(request.query, 'get')

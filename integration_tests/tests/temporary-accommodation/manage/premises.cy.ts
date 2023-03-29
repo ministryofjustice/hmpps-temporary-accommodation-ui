@@ -142,12 +142,7 @@ context('Premises', () => {
       const premises = premisesFactory.build({
         probationRegion: this.actingUserProbationRegion,
       })
-      const newPremises = newPremisesFactory.build({
-        ...premises,
-        localAuthorityAreaId: premises.localAuthorityArea.id,
-        characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
-        probationRegionId: premises.probationRegion.id,
-      })
+      const newPremises = newPremisesFactory.fromPremises(premises).build()
 
       cy.task('stubPremisesCreate', premises)
       cy.task('stubSinglePremises', premises)
@@ -260,9 +255,10 @@ context('Premises', () => {
       // And when I fill out the form
       cy.task('stubPremisesUpdate', premises)
 
-      const updatePremises = updatePremisesFactory.build({
-        probationRegionId: this.actingUserProbationRegion.id,
+      const updatedPremises = premisesFactory.build({
+        probationRegion: this.actingUserProbationRegion,
       })
+      const updatePremises = updatePremisesFactory.fromPremises(updatedPremises).build()
       page.completeForm(updatePremises)
 
       // Then the premises should have been update in the API
@@ -281,7 +277,7 @@ context('Premises', () => {
       })
 
       // And I should be redirected to the show premises page
-      const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, premises)
+      const premisesShowPage = PremisesShowPage.verifyOnPage(PremisesShowPage, updatedPremises)
       premisesShowPage.shouldShowBanner('Property updated')
     })
   })

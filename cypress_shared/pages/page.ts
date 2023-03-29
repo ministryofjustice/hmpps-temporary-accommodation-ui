@@ -1,4 +1,4 @@
-import { PersonRisksUI } from '../../server/@types/ui'
+import { PersonRisksUI, ReferenceData } from '../../server/@types/ui'
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
 import { exact } from '../../server/utils/utils'
@@ -230,5 +230,24 @@ export default abstract class Page extends Component {
     cy.get(`[data-cy-check-your-answers-section="${taskName}"]`).within(() => {
       cy.get('.box-title').should('contain', taskTitle)
     })
+  }
+
+  getSelectOptionsAsReferenceData(label: string, alias: string): void {
+    cy.get('label')
+      .contains(label)
+      .siblings('select')
+      .children('option')
+      .then(elements => {
+        const items: ReferenceData[] = elements
+          .toArray()
+          .filter(element => element.value !== '')
+          .map(element => ({
+            id: element.value,
+            name: element.text,
+            isActive: true,
+            serviceScope: 'temporary-accommodation',
+          }))
+        cy.wrap(items).as(alias)
+      })
   }
 }

@@ -74,7 +74,7 @@ export default class PremisesService {
         return [
           this.textValue(entry.shortAddress),
           this.textValue(`${entry.bedCount}`),
-          this.textValue(entry.pdu),
+          this.textValue(entry.probationDeliveryUnit.name),
           this.htmlValue(statusTag(entry.status)),
           this.htmlValue(
             `<a href="${paths.premises.show({
@@ -132,7 +132,7 @@ export default class PremisesService {
       localAuthorityAreaId: premises.localAuthorityArea?.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
-      pdu: premises.pdu,
+      pdu: premises.probationDeliveryUnit.id,
     }
   }
 
@@ -171,7 +171,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('PDU'),
-          value: this.textValue(premises.pdu),
+          value: this.textValue(premises.probationDeliveryUnit.name),
         },
         {
           key: this.textValue('Attributes'),

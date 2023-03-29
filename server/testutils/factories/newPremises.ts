@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
-import { NewPremises, Premises } from '../../@types/shared'
+import { NewPremises, TemporaryAccommodationPremises as Premises } from '../../@types/shared'
 import { unique } from '../../utils/utils'
 import referenceDataFactory from './referenceData'
 
@@ -12,6 +12,7 @@ class NewPremisesFactory extends Factory<NewPremises> {
       localAuthorityAreaId: premises.localAuthorityArea.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
+      pdu: premises.probationDeliveryUnit.id,
     })
   }
 }

@@ -20,7 +20,7 @@ Given('I search for a bedspace', () => {
     const page = Page.verifyOnPage(BedspaceSearchPage)
 
     const searchParameters = bedSearchParametersFactory.build({
-      probationDeliveryUnit: this.premises.pdu,
+      probationDeliveryUnit: this.premises.probationDeliveryUnit.id,
     })
 
     page.completeForm(searchParameters)

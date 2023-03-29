@@ -1,6 +1,6 @@
 import type { ReferenceData } from '@approved-premises/ui'
-import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
+import RestClient, { CallConfig } from './restClient'
 
 export default class ReferenceDataClient {
   restClient: RestClient

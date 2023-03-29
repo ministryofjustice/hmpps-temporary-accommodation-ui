@@ -2,12 +2,12 @@ import type { Response, SuperAgentRequest } from 'superagent'
 
 import type { Booking, DateCapacity, Premises, Room, StaffMember } from '@approved-premises/api'
 
+import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
+import { characteristics, localAuthorities, probationRegions } from '../../wiremock/referenceDataStubs'
+import { errorStub } from '../../wiremock/utils'
 import bookingStubs from './booking'
 import roomStubs from './room'
-import { errorStub } from '../../wiremock/utils'
-import paths from '../../server/paths/api'
-import { characteristics, localAuthorities, probationRegions } from '../../wiremock/referenceDataStubs'
 
 const stubPremises = (premises: Array<Premises>) =>
   stubFor({

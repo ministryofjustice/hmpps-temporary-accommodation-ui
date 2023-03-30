@@ -37,7 +37,7 @@ export default class BedspaceSearchPage extends Page {
   }
 
   shouldShowEmptySearchResults() {
-    cy.get('p').should('contain', 'No bedspaces found')
+    cy.get('p').should('contain', 'There are no available bedspaces')
   }
 
   shouldShowPrefilledSearchParameters(searchParameters: BedSearchParameters) {

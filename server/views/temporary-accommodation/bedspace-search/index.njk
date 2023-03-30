@@ -70,7 +70,12 @@
   {% if results %}
     <p>
       {% if results.results.length === 0 %}
-        No bedspaces found available for {{ parseNaturalNumber(durationDays) }} {{ 'day' if parseNaturalNumber(durationDays) === 1 else 'days' }} from {{ formatDate(startDate) }}
+        <p class="govuk-body-l">
+          There are no available bedspaces {{ parseNaturalNumber(durationDays) }} {{ 'day' if parseNaturalNumber(durationDays) === 1 else 'days' }} from {{ formatDate(startDate) }}.
+        </p>
+        <p class="govuk-body-l">
+          Try changing one or more of your search criteria to get more results.
+        </p>
       {% else  %}
         Showing {{ results.results.length }} {{ 'result' if results.results.length === 1 else 'results' }}
       {% endif %}

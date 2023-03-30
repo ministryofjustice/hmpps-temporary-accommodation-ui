@@ -36,4 +36,16 @@ export default abstract class PremisesEditablePage extends Page {
 
     this.clickSubmit()
   }
+
+  getPdus(alias: string): void {
+    this.getSelectOptionsAsReferenceData('What is the PDU?', alias)
+  }
+
+  getLocalAuthorities(alias: string): void {
+    this.getSelectOptionsAsReferenceData('What is the local authority (optional)?', alias)
+  }
+
+  getCharacteristics(alias: string): void {
+    this.getCheckboxItemsAsReferenceData('Does the property have any of the following attributes?', alias)
+  }
 }

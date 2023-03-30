@@ -53,7 +53,7 @@ export default class PremisesService {
       a.name.localeCompare(b.name),
     )
 
-    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name))
+    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name)) as Array<ReferenceData>
 
     return { localAuthorities, characteristics, probationRegions, pdus }
   }

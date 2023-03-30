@@ -19,12 +19,12 @@ import { filterCharacteristics } from '../../utils/characteristicUtils'
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
     const data = faker.helpers.arrayElement(departureReasonsJson)
-    return this.params(data)
+    return this.params(data as ReferenceData)
   }
 
   moveOnCategories() {
     const data = faker.helpers.arrayElement(moveOnCategoriesJson)
-    return this.params(data)
+    return this.params(data as ReferenceData)
   }
 
   destinationProviders() {
@@ -39,7 +39,7 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
 
   lostBedReasons() {
     const data = faker.helpers.arrayElement(lostBedReasonsJson)
-    return this.params(data)
+    return this.params(data as ReferenceData)
   }
 
   nonArrivalReason() {
@@ -58,11 +58,11 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
   }
 
   probationRegion(): Factory<ReferenceData> {
-    return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(probationRegionsJson))
+    return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(probationRegionsJson) as ReferenceData)
   }
 
   pdu(): Factory<ReferenceData> {
-    return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(pdusJson))
+    return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(pdusJson) as ReferenceData)
   }
 }
 

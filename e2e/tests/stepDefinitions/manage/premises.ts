@@ -18,6 +18,8 @@ const actingUserProbationRegionName =
   getUrlEncodedCypressEnv('acting_user_probation_region_name') ||
   throwMissingCypressEnvError('acting_user_probation_region_name')
 
+const actingUserProbationRegion = { id: actingUserProbationRegionId, name: actingUserProbationRegionName }
+
 Given('I view the list of premises', () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
   dashboardPage.clickPremisesLink()
@@ -54,26 +56,24 @@ Given('I view an existing active premises', () => {
 Given('I create a premises with all necessary details', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
 
-  const probationRegion = probationRegionFactory.build({
-    id: actingUserProbationRegionId,
-    name: actingUserProbationRegionName,
-  })
-  const premises = premisesFactory.build({
-    id: 'unknown',
-    probationRegion,
-  })
+  page.getPdus('pdus')
+  page.getLocalAuthorities('localAuthorities')
+  page.getCharacteristics('characteristics')
 
-  page.shouldPreselectProbationRegion(probationRegion)
+  cy.then(function _() {
+    const premises = premisesFactory
+      .forEnvironment(actingUserProbationRegion, this.pdus, this.localAuthorities, this.characteristics)
+      .build({
+        id: 'unknown',
+      })
 
-  const newPremises = newPremisesFactory.build({
-    ...premises,
-    localAuthorityAreaId: premises.localAuthorityArea.id,
-    characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
-    probationRegionId: premises.probationRegion.id,
+    page.shouldPreselectProbationRegion(premises.probationRegion)
+
+    const newPremises = newPremisesFactory.fromPremises(premises).build()
+
+    cy.wrap(premises).as('premises')
+    page.completeForm(newPremises)
   })
-
-  cy.wrap(premises).as('premises')
-  page.completeForm(newPremises)
 })
 
 Given('I attempt to create a premises with required details missing', () => {
@@ -86,26 +86,25 @@ Given('I attempt to create a premises with required details missing', () => {
 Given('I attempt to create a premises with the PDU missing', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
 
-  const probationRegion = probationRegionFactory.build({
-    id: actingUserProbationRegionId,
-    name: actingUserProbationRegionName,
-  })
-  const premises = premisesFactory.build({
-    id: 'unknown',
-    probationRegion,
-    pdu: '',
-  })
+  page.getPdus('pdus')
+  page.getLocalAuthorities('localAuthorities')
+  page.getCharacteristics('characteristics')
 
-  const newPremises = newPremisesFactory.build({
-    ...premises,
-    localAuthorityAreaId: premises.localAuthorityArea.id,
-    characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
-    probationRegionId: premises.probationRegion.id,
+  cy.then(function _() {
+    const premises = premisesFactory
+      .forEnvironment(actingUserProbationRegion, this.pdus, this.localAuthorities, this.characteristics)
+      .build({
+        id: 'unknown',
+      })
+
+    const newPremises = newPremisesFactory.fromPremises(premises).build({
+      pdu: '',
+    })
+
+    page.completeForm(newPremises)
+
+    cy.wrap(['pdu']).as('missing')
   })
-
-  page.completeForm(newPremises)
-
-  cy.wrap(['pdu']).as('missing')
 })
 
 Given("I'm editing the premises", () => {
@@ -122,25 +121,23 @@ Given('I edit the premises details', () => {
   cy.get('@premises').then((premises: Premises) => {
     const page = Page.verifyOnPage(PremisesEditPage, premises)
 
-    const probationRegion = probationRegionFactory.build({
-      id: actingUserProbationRegionId,
-      name: actingUserProbationRegionName,
-    })
-    const updatedPremises = premisesFactory.build({
-      id: premises.id,
-      name: premises.name,
-      probationRegion,
-    })
+    page.getPdus('pdus')
+    page.getLocalAuthorities('localAuthorities')
+    page.getCharacteristics('characteristics')
 
-    const updatePremises = updatePremisesFactory.build({
-      ...updatedPremises,
-      localAuthorityAreaId: updatedPremises.localAuthorityArea.id,
-      characteristicIds: updatedPremises.characteristics.map(characteristic => characteristic.id),
-      probationRegionId: updatedPremises.probationRegion.id,
-    })
+    cy.then(function _() {
+      const updatedPremises = premisesFactory
+        .forEnvironment(actingUserProbationRegion, this.pdus, this.localAuthorities, this.characteristics)
+        .build({
+          id: premises.id,
+          name: premises.name,
+        })
 
-    cy.wrap(updatedPremises).as('premises')
-    page.completeForm(updatePremises)
+      const updatePremises = updatePremisesFactory.fromPremises(updatedPremises).build()
+
+      cy.wrap(updatedPremises).as('premises')
+      page.completeForm(updatePremises)
+    })
   })
 })
 
@@ -159,22 +156,8 @@ Given('I attempt to edit the premises to remove the PDU', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(PremisesEditPage, this.premises)
 
-    const probationRegion = probationRegionFactory.build({
-      id: actingUserProbationRegionId,
-      name: actingUserProbationRegionName,
-    })
-    const updatedPremises = premisesFactory.build({
-      id: this.premises.id,
-      name: this.premises.name,
-      probationRegion,
+    const updatePremises = updatePremisesFactory.fromPremises(this.premises).build({
       pdu: '',
-    })
-
-    const updatePremises = updatePremisesFactory.build({
-      ...updatedPremises,
-      localAuthorityAreaId: updatedPremises.localAuthorityArea.id,
-      characteristicIds: updatedPremises.characteristics.map(characteristic => characteristic.id),
-      probationRegionId: updatedPremises.probationRegion.id,
     })
 
     page.completeForm(updatePremises)
@@ -184,10 +167,7 @@ Given('I attempt to edit the premises to remove the PDU', () => {
 })
 
 Then('I should see only premises for my region', () => {
-  const probationRegion = probationRegionFactory.build({
-    id: actingUserProbationRegionId,
-    name: actingUserProbationRegionName,
-  })
+  const probationRegion = probationRegionFactory.build(actingUserProbationRegion)
 
   cy.then(function _() {
     this.premisesList.forEach(premises => {

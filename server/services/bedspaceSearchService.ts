@@ -22,7 +22,7 @@ export default class BedspaceSearchService {
   }
 
   async getReferenceData(): Promise<BedspaceSearchReferenceData> {
-    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name))
+    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name)) as Array<ReferenceData>
 
     return { pdus }
   }

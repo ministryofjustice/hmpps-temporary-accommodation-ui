@@ -12,7 +12,7 @@ export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSeachResults: BedspaceSearchResult[] | undefined
 
   constructor(results?: BedSearchResults) {
-    super('List of available bedspaces')
+    super('Search for available bedspaces')
 
     this.bedspaceSeachResults = results?.results.map(result => new BedspaceSearchResult(result))
   }

@@ -85,7 +85,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
 
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', '')
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
-    this.getSelectInputByIdAndSelectAnEntry('pdu', '')
+    this.getSelectInputByIdAndSelectAnEntry('probationDeliveryUnitId', '')
 
     cy.get('legend')
       .contains('Does the property have any of the following attributes?')

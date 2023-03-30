@@ -93,7 +93,7 @@
     "probationRegionId": {
       "empty": "You must choose a probation region"
     },
-    "pdu": {
+    "probationDeliveryUnitId": {
       "empty": "You must choose a PDU"
     },
     "status": {

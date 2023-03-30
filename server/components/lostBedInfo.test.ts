@@ -1,7 +1,7 @@
-import lostBedFactory from '../testutils/factories/lostBed'
+import { lostBedFactory } from '../testutils/factories'
+import { statusTag } from '../utils/lostBedUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './lostBedInfo'
-import { statusTag } from '../utils/lostBedUtils'
 
 jest.mock('../utils/viewUtils', () => {
   return {

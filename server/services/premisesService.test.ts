@@ -3,14 +3,16 @@ import PremisesClient from '../data/premisesClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import characteristicFactory from '../testutils/factories/characteristic'
-import localAuthorityFactory from '../testutils/factories/localAuthority'
-import newPremisesFactory from '../testutils/factories/newPremises'
-import pduFactory from '../testutils/factories/pdu'
-import premisesFactory from '../testutils/factories/premises'
-import probationRegionFactory from '../testutils/factories/probationRegion'
-import staffMemberFactory from '../testutils/factories/staffMember'
-import updatePremisesFactory from '../testutils/factories/updatePremises'
+import {
+  characteristicFactory,
+  localAuthorityFactory,
+  newPremisesFactory,
+  pduFactory,
+  premisesFactory,
+  probationRegionFactory,
+  staffMemberFactory,
+  updatePremisesFactory,
+} from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'

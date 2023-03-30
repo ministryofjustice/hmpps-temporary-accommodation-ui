@@ -3,11 +3,13 @@ import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodat
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bedSearchParametersFactory from '../../../../server/testutils/factories/bedSearchParameters'
-import bedSearchResult from '../../../../server/testutils/factories/bedSearchResult'
-import bedSearchResultsFactory from '../../../../server/testutils/factories/bedSearchResults'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
+import {
+  bedSearchParametersFactory,
+  bedSearchResultFactory,
+  bedSearchResultsFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../../server/testutils/factories'
 
 context('Bedspace Search', () => {
   beforeEach(() => {
@@ -107,7 +109,7 @@ context('Bedspace Search', () => {
     const premises = premisesFactory.build()
     const room = roomFactory.build()
     const results = bedSearchResultsFactory.build({
-      results: [bedSearchResult.forBedspace(premises, room).build()],
+      results: [bedSearchResultFactory.forBedspace(premises, room).build()],
     })
 
     cy.task('stubBedSearch', results)

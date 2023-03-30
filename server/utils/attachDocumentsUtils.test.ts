@@ -2,8 +2,7 @@ import { ErrorMessages } from '@approved-premises/ui'
 import { descriptionTextArea, documentCheckbox, documentWithDescription, tableRows } from './attachDocumentsUtils'
 
 import paths from '../paths/apply'
-import applicationFactory from '../testutils/factories/application'
-import documentFactory from '../testutils/factories/document'
+import { applicationFactory, documentFactory } from '../testutils/factories'
 
 import { DateFormats } from './dateUtils'
 

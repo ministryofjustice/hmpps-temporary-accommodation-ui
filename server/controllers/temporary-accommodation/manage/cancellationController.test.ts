@@ -4,11 +4,13 @@ import { CancellationsController } from '.'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
-import bookingFactory from '../../../testutils/factories/booking'
-import cancellationFactory from '../../../testutils/factories/cancellation'
-import newCancellationFactory from '../../../testutils/factories/newCancellation'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
+import {
+  bookingFactory,
+  cancellationFactory,
+  newCancellationFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'

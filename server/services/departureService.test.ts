@@ -1,14 +1,12 @@
 import type { Departure } from '@approved-premises/api'
 
-import DepartureService from './departureService'
 import BookingClient from '../data/bookingClient'
 import ReferenceDataClient from '../data/referenceDataClient'
+import DepartureService from './departureService'
 
-import departureFactory from '../testutils/factories/departure'
-import referenceDataFactory from '../testutils/factories/referenceData'
-import newDepartureFactory from '../testutils/factories/newDeparture'
-import { DateFormats } from '../utils/dateUtils'
 import { CallConfig } from '../data/restClient'
+import { departureFactory, newDepartureFactory, referenceDataFactory } from '../testutils/factories'
+import { DateFormats } from '../utils/dateUtils'
 
 jest.mock('../data/bookingClient.ts')
 jest.mock('../data/referenceDataClient.ts')

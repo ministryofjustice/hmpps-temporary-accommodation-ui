@@ -2,8 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import bedSearchParametersFactory from '../testutils/factories/bedSearchParameters'
-import bedSearchResultsFactory from '../testutils/factories/bedSearchResults'
+import { bedSearchParametersFactory, bedSearchResultsFactory } from '../testutils/factories'
 import BedClient from './bedClient'
 import { CallConfig } from './restClient'
 

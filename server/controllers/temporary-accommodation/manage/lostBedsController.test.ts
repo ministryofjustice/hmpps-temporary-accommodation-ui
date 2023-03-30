@@ -4,14 +4,16 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import lostBedFactory from '../../../testutils/factories/lostBed'
-import lostBedCancellationFactory from '../../../testutils/factories/lostBedCancellation'
-import newLostBedFactory from '../../../testutils/factories/newLostBed'
-import newLostBedCancellationFactory from '../../../testutils/factories/newLostBedCancellation'
-import premisesFactory from '../../../testutils/factories/premises'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
-import roomFactory from '../../../testutils/factories/room'
-import updateLostBedFactory from '../../../testutils/factories/updateLostBed'
+import {
+  lostBedCancellationFactory,
+  lostBedFactory,
+  newLostBedCancellationFactory,
+  newLostBedFactory,
+  premisesFactory,
+  referenceDataFactory,
+  roomFactory,
+  updateLostBedFactory,
+} from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
 import extractCallConfig from '../../../utils/restUtils'

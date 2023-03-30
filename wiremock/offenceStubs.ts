@@ -1,6 +1,6 @@
 import { crnRegex } from '.'
 import paths from '../server/paths/api'
-import activeOffenceFactory from '../server/testutils/factories/activeOffence'
+import { activeOffenceFactory } from '../server/testutils/factories'
 
 export default [
   {

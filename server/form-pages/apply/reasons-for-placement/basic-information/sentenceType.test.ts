@@ -1,4 +1,4 @@
-import applicationFactory from '../../../../testutils/factories/application'
+import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 
 import SentenceType from './sentenceType'

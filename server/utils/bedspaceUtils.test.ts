@@ -1,6 +1,5 @@
 import paths from '../paths/temporary-accommodation/manage'
-import premisesFactory from '../testutils/factories/premises'
-import roomFactory from '../testutils/factories/room'
+import { premisesFactory, roomFactory } from '../testutils/factories'
 import { bedspaceActions } from './bedspaceUtils'
 
 describe('bedspaceUtils', () => {

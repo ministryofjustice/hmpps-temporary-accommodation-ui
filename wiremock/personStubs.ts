@@ -1,4 +1,4 @@
-import personFactory from '../server/testutils/factories/person'
+import { personFactory } from '../server/testutils/factories'
 
 const personStubs: Array<Record<string, unknown>> = []
 

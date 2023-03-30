@@ -1,14 +1,16 @@
 import nock from 'nock'
 
-import LostBedClient from './lostBedClient'
 import config from '../config'
-import lostBedFactory from '../testutils/factories/lostBed'
-import newLostBedFactory from '../testutils/factories/newLostBed'
-import updateLostBedFactory from '../testutils/factories/updateLostBed'
-import lostBedCancellationFactory from '../testutils/factories/lostBedCancellation'
-import newLostBedCancellationFactory from '../testutils/factories/newLostBedCancellation'
-import { CallConfig } from './restClient'
 import paths from '../paths/api'
+import {
+  lostBedCancellationFactory,
+  lostBedFactory,
+  newLostBedCancellationFactory,
+  newLostBedFactory,
+  updateLostBedFactory,
+} from '../testutils/factories'
+import LostBedClient from './lostBedClient'
+import { CallConfig } from './restClient'
 
 describe('LostBedClient', () => {
   let fakeApprovedPremisesApi: nock.Scope

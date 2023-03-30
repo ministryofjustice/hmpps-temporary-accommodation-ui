@@ -1,8 +1,8 @@
 import nock from 'nock'
 
-import ReferenceDataClient from './referenceDataClient'
-import referenceDataFactory from '../testutils/factories/referenceData'
 import config from '../config'
+import { referenceDataFactory } from '../testutils/factories'
+import ReferenceDataClient from './referenceDataClient'
 import { CallConfig } from './restClient'
 
 describe('PremisesClient', () => {

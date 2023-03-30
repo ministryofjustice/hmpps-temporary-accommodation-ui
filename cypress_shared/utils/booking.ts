@@ -1,6 +1,5 @@
 import { Booking, Premises, Room } from '../../server/@types/shared'
-import premisesFactory from '../../server/testutils/factories/premises'
-import roomFactory from '../../server/testutils/factories/room'
+import { premisesFactory, roomFactory } from '../../server/testutils/factories'
 
 export const setupBookingStateStubs = (booking: Booking): { premises: Premises; room: Room } => {
   const premises = premisesFactory.build()

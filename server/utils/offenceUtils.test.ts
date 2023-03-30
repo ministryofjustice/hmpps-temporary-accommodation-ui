@@ -2,7 +2,7 @@ import { DateFormats } from './dateUtils'
 
 import { offenceRadioButton, offenceTableRows } from './offenceUtils'
 
-import activeOffenceFactory from '../testutils/factories/activeOffence'
+import { activeOffenceFactory } from '../testutils/factories'
 
 describe('offenceUtils', () => {
   describe('offenceRadioButton', () => {

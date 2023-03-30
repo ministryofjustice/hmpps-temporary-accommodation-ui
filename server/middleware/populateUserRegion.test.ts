@@ -2,12 +2,11 @@ import { createMock } from '@golevelup/ts-jest'
 import type { Request, Response } from 'express'
 import populateUserRegion from './populateUserRegion'
 
-import type { UserService } from '../services'
-import userFactory from '../testutils/factories/user'
-import probationRegionFactory from '../testutils/factories/probationRegion'
-import extractCallConfig from '../utils/restUtils'
-import { CallConfig } from '../data/restClient'
 import { ProbationRegion } from '../@types/shared'
+import { CallConfig } from '../data/restClient'
+import type { UserService } from '../services'
+import { probationRegionFactory, userFactory } from '../testutils/factories'
+import extractCallConfig from '../utils/restUtils'
 
 jest.mock('../utils/restUtils')
 

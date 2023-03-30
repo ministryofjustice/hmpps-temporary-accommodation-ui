@@ -1,6 +1,4 @@
-import bookingFactory from '../testutils/factories/booking'
-import cancellationFactory from '../testutils/factories/cancellation'
-import extension from '../testutils/factories/extension'
+import { bookingFactory, cancellationFactory, extensionFactory } from '../testutils/factories'
 import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './bookingInfo'
@@ -225,7 +223,7 @@ describe('BookingInfo', () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
-        extensions: extension.buildList(2),
+        extensions: extensionFactory.buildList(2),
       })
 
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
@@ -291,7 +289,7 @@ describe('BookingInfo', () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
-        extensions: extension.buildList(2),
+        extensions: extensionFactory.buildList(2),
       })
 
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)

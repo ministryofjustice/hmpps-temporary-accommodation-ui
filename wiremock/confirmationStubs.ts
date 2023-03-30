@@ -1,5 +1,5 @@
+import { confirmationFactory } from '../server/testutils/factories'
 import { guidRegex } from './index'
-import confirmationFactory from '../server/testutils/factories/confirmation'
 
 const confirmationStubs: Array<Record<string, unknown>> = []
 

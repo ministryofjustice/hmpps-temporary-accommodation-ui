@@ -4,9 +4,7 @@ import BookingCancellationNewPage from '../../../../cypress_shared/pages/tempora
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import cancellationFactory from '../../../../server/testutils/factories/cancellation'
-import newCancellationFactory from '../../../../server/testutils/factories/newCancellation'
+import { bookingFactory, cancellationFactory, newCancellationFactory } from '../../../../server/testutils/factories'
 
 context('Booking cancellation', () => {
   beforeEach(() => {

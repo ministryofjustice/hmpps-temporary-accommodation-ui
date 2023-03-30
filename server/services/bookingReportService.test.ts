@@ -1,11 +1,11 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
-import ReferenceDataClient from '../data/referenceDataClient'
-import BookingReportService from './bookingReportService'
 import { ReportClient } from '../data'
-import { bookingReportFilename, bookingReportForProbationRegionFilename } from '../utils/reportUtils'
-import probationRegionFactory from '../testutils/factories/probationRegion'
+import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
+import { probationRegionFactory } from '../testutils/factories'
+import { bookingReportFilename, bookingReportForProbationRegionFilename } from '../utils/reportUtils'
+import BookingReportService from './bookingReportService'
 
 jest.mock('../data/reportClient.ts')
 jest.mock('../data/referenceDataClient.ts')

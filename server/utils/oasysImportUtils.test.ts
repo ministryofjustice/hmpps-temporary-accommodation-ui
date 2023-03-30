@@ -1,6 +1,4 @@
-import applicationFactory from '../testutils/factories/application'
-import { roshSummaryFactory } from '../testutils/factories/oasysSections'
-import oasysSelectionFactory from '../testutils/factories/oasysSelection'
+import { applicationFactory, oasysSelectionFactory, roshSummaryFactory } from '../testutils/factories'
 import {
   fetchOptionalOasysSections,
   oasysImportReponse,

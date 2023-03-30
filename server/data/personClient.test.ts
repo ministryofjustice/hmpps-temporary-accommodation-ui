@@ -1,20 +1,22 @@
-import nock from 'nock'
-import { Response } from 'express'
 import { createMock } from '@golevelup/ts-jest'
+import { Response } from 'express'
+import nock from 'nock'
 
-import PersonClient from './personClient'
 import config from '../config'
-import riskFactory from '../testutils/factories/risks'
-import personFactory from '../testutils/factories/person'
-import prisonCaseNotesFactory from '../testutils/factories/prisonCaseNotes'
 import paths from '../paths/api'
-import adjudicationsFactory from '../testutils/factories/adjudication'
-import activeOffenceFactory from '../testutils/factories/activeOffence'
-import oasysSelectionFactory from '../testutils/factories/oasysSelection'
-import oasysSectionsFactory from '../testutils/factories/oasysSections'
+import {
+  activeOffenceFactory,
+  adjudicationFactory,
+  oasysSectionsFactory,
+  oasysSelectionFactory,
+  personFactory,
+  prisonCaseNotesFactory,
+  risksFactory,
+} from '../testutils/factories'
+import PersonClient from './personClient'
 
-import oasysStubs from './stubs/oasysStubs.json'
 import { CallConfig } from './restClient'
+import oasysStubs from './stubs/oasysStubs.json'
 
 describe('PersonClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -57,16 +59,16 @@ describe('PersonClient', () => {
   describe('risks', () => {
     it('should return the risks for a person', async () => {
       const crn = 'crn'
-      const person = riskFactory.build()
+      const risks = risksFactory.build()
 
       fakeApprovedPremisesApi
         .get(`/people/${crn}/risks`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(201, person)
+        .reply(201, risks)
 
       const result = await personClient.risks(crn)
 
-      expect(result).toEqual(person)
+      expect(result).toEqual(risks)
       expect(nock.isDone()).toBeTruthy()
     })
   })
@@ -91,7 +93,7 @@ describe('PersonClient', () => {
   describe('adjudications', () => {
     it('should return the adjudications for a person', async () => {
       const crn = 'crn'
-      const adjudications = adjudicationsFactory.buildList(5)
+      const adjudications = adjudicationFactory.buildList(5)
 
       fakeApprovedPremisesApi
         .get(paths.people.adjudications({ crn }))

@@ -1,9 +1,7 @@
 import BedClient from '../data/bedClient'
 import pduJson from '../data/pdus.json'
 import { CallConfig } from '../data/restClient'
-import bedSearchParametersFactory from '../testutils/factories/bedSearchParameters'
-import bedSearchResultsFactory from '../testutils/factories/bedSearchResults'
-import pduFactory from '../testutils/factories/pdu'
+import { bedSearchParametersFactory, bedSearchResultsFactory, pduFactory } from '../testutils/factories'
 import BedspaceSearchService from './bedspaceSearchService'
 
 jest.mock('../data/bedClient')

@@ -1,5 +1,4 @@
-import documentFactory from '../../testutils/factories/document'
-import applicationFactory from '../../testutils/factories/application'
+import { applicationFactory, documentFactory } from '../../testutils/factories'
 import { documentsFromApplication, overwriteApplicationDocuments } from './documentUtils'
 
 describe('documentUtils', () => {

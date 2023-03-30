@@ -5,12 +5,14 @@ import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommod
 import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import lostBedFactory from '../../../../server/testutils/factories/lostBed'
-import newLostBedFactory from '../../../../server/testutils/factories/newLostBed'
-import newLostBedCancellationFactory from '../../../../server/testutils/factories/newLostBedCancellation'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import updateLostBedFactory from '../../../../server/testutils/factories/updateLostBed'
+import {
+  lostBedFactory,
+  newLostBedCancellationFactory,
+  newLostBedFactory,
+  premisesFactory,
+  roomFactory,
+  updateLostBedFactory,
+} from '../../../../server/testutils/factories'
 
 context('Lost bed', () => {
   beforeEach(() => {

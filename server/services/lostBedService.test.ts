@@ -1,16 +1,18 @@
 import type { LostBed, NewLostBed } from '@approved-premises/api'
 
-import LostBedService from './lostBedService'
 import LostBedClient from '../data/lostBedClient'
 import ReferenceDataClient from '../data/referenceDataClient'
+import LostBedService from './lostBedService'
 
-import lostBedFactory from '../testutils/factories/lostBed'
-import newLostBedFactory from '../testutils/factories/newLostBed'
-import referenceDataFactory from '../testutils/factories/referenceData'
-import updateLostBedFactory from '../testutils/factories/updateLostBed'
-import lostBedCancellationFactory from '../testutils/factories/lostBedCancellation'
-import newLostBedCancellationFactory from '../testutils/factories/newLostBedCancellation'
 import { CallConfig } from '../data/restClient'
+import {
+  lostBedCancellationFactory,
+  lostBedFactory,
+  newLostBedCancellationFactory,
+  newLostBedFactory,
+  referenceDataFactory,
+  updateLostBedFactory,
+} from '../testutils/factories'
 
 jest.mock('../data/lostBedClient.ts')
 jest.mock('../data/referenceDataClient.ts')

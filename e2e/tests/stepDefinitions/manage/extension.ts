@@ -4,9 +4,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingExtensionNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import extensionFactory from '../../../../server/testutils/factories/extension'
-import newExtensionFactory from '../../../../server/testutils/factories/newExtension'
+import { bookingFactory, extensionFactory, newExtensionFactory } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
 Given('I extend the booking', () => {

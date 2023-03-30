@@ -4,9 +4,7 @@ import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommo
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import newRoomFactory from '../../../../server/testutils/factories/newRoom'
-import roomFactory from '../../../../server/testutils/factories/room'
-import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
+import { newRoomFactory, roomFactory, updateRoomFactory } from '../../../../server/testutils/factories'
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {

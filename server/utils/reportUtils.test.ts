@@ -1,4 +1,4 @@
-import probationRegionFactory from '../testutils/factories/probationRegion'
+import { probationRegionFactory } from '../testutils/factories'
 import { bookingReportFilename, bookingReportForProbationRegionFilename } from './reportUtils'
 
 describe('reportUtils', () => {

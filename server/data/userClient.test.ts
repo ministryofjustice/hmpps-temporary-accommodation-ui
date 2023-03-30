@@ -1,10 +1,10 @@
 import nock from 'nock'
 
 import config from '../config'
-import UserClient from './userClient'
-import userFactory from '../testutils/factories/user'
 import paths from '../paths/api'
+import { userFactory } from '../testutils/factories'
 import { CallConfig } from './restClient'
+import UserClient from './userClient'
 
 describe('UserClient', () => {
   let fakeApprovedPremisesApi: nock.Scope

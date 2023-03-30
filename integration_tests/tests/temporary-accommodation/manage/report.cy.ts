@@ -1,10 +1,10 @@
 import path from 'path'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import { bookingReportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 import Page from '../../../../cypress_shared/pages/page'
-import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
+import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { premisesFactory } from '../../../../server/testutils/factories'
+import { bookingReportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 
 context('Report', () => {
   beforeEach(() => {

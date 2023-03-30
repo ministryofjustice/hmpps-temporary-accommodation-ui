@@ -11,9 +11,7 @@ import ApplicationService from './applicationService'
 import { CallConfig } from '../data/restClient'
 import Apply from '../form-pages/apply'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
-import activeOffenceFactory from '../testutils/factories/activeOffence'
-import applicationFactory from '../testutils/factories/application'
-import documentFactory from '../testutils/factories/document'
+import { activeOffenceFactory, applicationFactory, documentFactory } from '../testutils/factories'
 import { isUnapplicable } from '../utils/applicationUtils'
 
 const FirstPage = jest.fn()

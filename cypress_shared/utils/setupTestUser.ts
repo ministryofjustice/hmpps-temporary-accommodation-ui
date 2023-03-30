@@ -1,5 +1,4 @@
-import referenceDataFactory from '../../server/testutils/factories/referenceData'
-import userFactory from '../../server/testutils/factories/user'
+import { referenceDataFactory, userFactory } from '../../server/testutils/factories'
 
 export default function setupTestUser() {
   cy.task('stubSignIn')

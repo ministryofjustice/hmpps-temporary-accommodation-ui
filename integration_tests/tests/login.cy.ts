@@ -1,10 +1,9 @@
-import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
+import AuthManageDetailsPage from '../../cypress_shared/pages/authManageDetails'
 import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
-import AuthManageDetailsPage from '../../cypress_shared/pages/authManageDetails'
+import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import setupTestUser from '../../cypress_shared/utils/setupTestUser'
-import referenceDataFactory from '../../server/testutils/factories/referenceData'
-import userFactory from '../../server/testutils/factories/user'
+import { referenceDataFactory, userFactory } from '../../server/testutils/factories'
 
 context('SignIn', () => {
   beforeEach(() => {

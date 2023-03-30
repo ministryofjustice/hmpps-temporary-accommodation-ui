@@ -1,4 +1,4 @@
-import applicationFactory from '../testutils/factories/application'
+import { applicationFactory } from '../testutils/factories'
 import { getResponseForPage } from './applicationUtils'
 
 import {

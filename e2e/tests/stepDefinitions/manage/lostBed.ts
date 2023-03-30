@@ -1,14 +1,16 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
-import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
-import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedEdit'
 import LostBedCancelPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedCancel'
-import newLostBedFactory from '../../../../server/testutils/factories/newLostBed'
-import updateLostBedFactory from '../../../../server/testutils/factories/updateLostBed'
-import lostBedFactory from '../../../../server/testutils/factories/lostBed'
-import cancelLostBedFactory from '../../../../server/testutils/factories/newLostBedCancellation'
+import LostBedEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedEdit'
+import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedNew'
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
+import {
+  lostBedCancellationFactory,
+  lostBedFactory,
+  newLostBedFactory,
+  updateLostBedFactory,
+} from '../../../../server/testutils/factories'
 
 Given(`I'm marking a bedspace as void`, () => {
   cy.then(function _() {
@@ -106,7 +108,7 @@ Given('I cancel the void booking', () => {
     lostBedShowPage.clickCancelVoidLink()
 
     const lostBedCancelPage = Page.verifyOnPage(LostBedCancelPage, this.premises, this.room, this.lostBed)
-    const lostBedCancellation = cancelLostBedFactory.build()
+    const lostBedCancellation = lostBedCancellationFactory.build()
     cy.wrap(lostBedCancellation).as('lostBedCancellation')
 
     lostBedCancelPage.clearForm()

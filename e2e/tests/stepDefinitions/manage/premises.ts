@@ -6,10 +6,12 @@ import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import probationRegionFactory from '../../../../server/testutils/factories/probationRegion'
-import updatePremisesFactory from '../../../../server/testutils/factories/updatePremises'
+import {
+  newPremisesFactory,
+  premisesFactory,
+  probationRegionFactory,
+  updatePremisesFactory,
+} from '../../../../server/testutils/factories'
 import { getUrlEncodedCypressEnv, throwMissingCypressEnvError } from '../utils'
 
 const actingUserProbationRegionId =

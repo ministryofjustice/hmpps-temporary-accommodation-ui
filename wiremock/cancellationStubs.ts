@@ -1,5 +1,5 @@
+import { cancellationFactory } from '../server/testutils/factories'
 import { guidRegex } from './index'
-import cancellationFactory from '../server/testutils/factories/cancellation'
 import { errorStub, getCombinations } from './utils'
 
 const cancellationStubs: Array<Record<string, unknown>> = []

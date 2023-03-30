@@ -1,13 +1,13 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import type { NextFunction, Request, Response } from 'express'
 import { BookingReportsController } from '.'
-import BookingReportService from '../../../services/bookingReportService'
 import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
+import BookingReportService from '../../../services/bookingReportService'
+import { probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
-import probationRegionFactory from '../../../testutils/factories/probationRegion'
 import filterProbationRegions from '../../../utils/userUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')

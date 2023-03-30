@@ -1,13 +1,15 @@
 import nock from 'nock'
 
-import premisesFactory from '../testutils/factories/premises'
-import newPremisesFactory from '../testutils/factories/newPremises'
-import updatePremisesFactory from '../testutils/factories/updatePremises'
-import PremisesClient from './premisesClient'
 import config from '../config'
 import paths from '../paths/api'
-import dateCapacityFactory from '../testutils/factories/dateCapacity'
-import staffMemberFactory from '../testutils/factories/staffMember'
+import {
+  dateCapacityFactory,
+  newPremisesFactory,
+  premisesFactory,
+  staffMemberFactory,
+  updatePremisesFactory,
+} from '../testutils/factories'
+import PremisesClient from './premisesClient'
 import { CallConfig } from './restClient'
 
 describe('PremisesClient', () => {

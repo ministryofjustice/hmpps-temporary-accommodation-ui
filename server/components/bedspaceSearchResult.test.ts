@@ -1,10 +1,10 @@
-import bedSearchResult from '../testutils/factories/bedSearchResult'
+import { bedSearchResultFactory } from '../testutils/factories'
 import summaryListRows from './bedspaceSearchResult'
 
 describe('BedspaceSearchResult', () => {
   describe('summaryListRows', () => {
     it('returns summary list rows for a bedspace search result', async () => {
-      const searchResult = bedSearchResult.build({
+      const searchResult = bedSearchResultFactory.build({
         premises: {
           addressLine1: 'First address line',
           postcode: 'Postcode',

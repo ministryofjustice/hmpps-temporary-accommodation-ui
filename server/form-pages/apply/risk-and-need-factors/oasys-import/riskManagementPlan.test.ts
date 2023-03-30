@@ -1,13 +1,11 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import { PersonService } from '../../../../services'
-import applicationFactory from '../../../../testutils/factories/application'
-import oasysSectionsFactory from '../../../../testutils/factories/oasysSections'
-import risksFactory from '../../../../testutils/factories/risks'
-import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import { oasysImportReponse } from '../../../../utils/oasysImportUtils'
-import RiskManagementPlan from './riskManagementPlan'
-import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 import { CallConfig } from '../../../../data/restClient'
+import { PersonService } from '../../../../services'
+import { applicationFactory, oasysSectionsFactory, risksFactory } from '../../../../testutils/factories'
+import { oasysImportReponse } from '../../../../utils/oasysImportUtils'
+import { mapApiPersonRisksForUi } from '../../../../utils/utils'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
+import RiskManagementPlan from './riskManagementPlan'
 
 jest.mock('../../../../services/personService.ts')
 

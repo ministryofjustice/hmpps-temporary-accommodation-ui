@@ -3,9 +3,7 @@ import BookingConfirmationNewPage from '../../../../cypress_shared/pages/tempora
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import confirmationFactory from '../../../../server/testutils/factories/confirmation'
-import newConfirmationFactory from '../../../../server/testutils/factories/newConfirmation'
+import { bookingFactory, confirmationFactory, newConfirmationFactory } from '../../../../server/testutils/factories'
 
 context('Booking confirmation', () => {
   beforeEach(() => {

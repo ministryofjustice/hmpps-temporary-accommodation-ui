@@ -2,7 +2,7 @@ import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room 
 
 import pduJson from '../../../../server/data/pdus.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import premisesFactory from '../../../../server/testutils/factories/premises'
+import { premisesFactory } from '../../../../server/testutils/factories'
 import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 

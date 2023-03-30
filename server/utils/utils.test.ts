@@ -1,7 +1,6 @@
 import { PersonRisks } from '@approved-premises/api'
 import type { SummaryListItem } from '@approved-premises/ui'
-import applicationFactory from '../testutils/factories/application'
-import risksFactory from '../testutils/factories/risks'
+import { applicationFactory, risksFactory } from '../testutils/factories'
 import { DateFormats } from './dateUtils'
 import { SessionDataError } from './errors'
 import {

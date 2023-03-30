@@ -2,19 +2,21 @@ import nock from 'nock'
 
 import BookingClient from './bookingClient'
 
-import arrivalFactory from '../testutils/factories/arrival'
-import newBookingFactory from '../testutils/factories/newBooking'
-import bookingFactory from '../testutils/factories/booking'
-import cancellationFactory from '../testutils/factories/cancellation'
-import newCancellationFactory from '../testutils/factories/newCancellation'
-import departureFactory from '../testutils/factories/departure'
-import newDepartureFactory from '../testutils/factories/newDeparture'
-import nonArrivalFactory from '../testutils/factories/nonArrival'
-import newArrivalFactory from '../testutils/factories/newArrival'
+import {
+  arrivalFactory,
+  bookingFactory,
+  cancellationFactory,
+  confirmationFactory,
+  departureFactory,
+  newArrivalFactory,
+  newBookingFactory,
+  newCancellationFactory,
+  newConfirmationFactory,
+  newDepartureFactory,
+  nonArrivalFactory,
+} from '../testutils/factories'
 
 import config from '../config'
-import confirmationFactory from '../testutils/factories/confirmation'
-import newConfirmationFactory from '../testutils/factories/newConfirmation'
 import { CallConfig } from './restClient'
 
 describe('BookingClient', () => {

@@ -3,9 +3,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import arrivalFactory from '../../../../server/testutils/factories/arrival'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import newArrivalFactory from '../../../../server/testutils/factories/newArrival'
+import { arrivalFactory, bookingFactory, newArrivalFactory } from '../../../../server/testutils/factories'
 
 Given('I mark the booking as arrived', () => {
   cy.then(function _() {

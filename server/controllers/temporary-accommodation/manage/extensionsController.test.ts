@@ -3,13 +3,15 @@ import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, ExtensionService, PremisesService } from '../../../services'
-import bookingFactory from '../../../testutils/factories/booking'
-import departureFactory from '../../../testutils/factories/departure'
-import extensionFactory from '../../../testutils/factories/extension'
-import newDepartureFactory from '../../../testutils/factories/newDeparture'
-import newExtensionFactory from '../../../testutils/factories/newExtension'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
+import {
+  bookingFactory,
+  departureFactory,
+  extensionFactory,
+  newDepartureFactory,
+  newExtensionFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../testutils/factories'
 import { getLatestExtension } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'

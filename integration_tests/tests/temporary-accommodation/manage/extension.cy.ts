@@ -3,9 +3,7 @@ import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import extensionFactory from '../../../../server/testutils/factories/extension'
-import newExtensionFactory from '../../../../server/testutils/factories/newExtension'
+import { bookingFactory, extensionFactory, newExtensionFactory } from '../../../../server/testutils/factories'
 
 context('Booking extension', () => {
   beforeEach(() => {

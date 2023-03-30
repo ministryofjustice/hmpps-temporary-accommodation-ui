@@ -1,14 +1,13 @@
-import { Request } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import { Request } from 'express'
 import 'reflect-metadata'
 
 // Use a wildcard import to allow us to use jest.spyOn on functions within this module
-import * as utils from './index'
-import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import { ApprovedPremisesApplication } from '../../@types/shared'
+import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
+import * as utils from './index'
 
-import applicationFactory from '../../testutils/factories/application'
-import assessmentFactory from '../../testutils/factories/assessment'
+import { applicationFactory, assessmentFactory } from '../../testutils/factories'
 
 describe('utils', () => {
   describe('applyYesOrNo', () => {

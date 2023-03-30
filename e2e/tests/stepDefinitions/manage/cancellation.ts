@@ -4,9 +4,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingCancellationEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationEdit'
 import BookingCancellationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import cancellationFactory from '../../../../server/testutils/factories/cancellation'
-import newCancellationFactory from '../../../../server/testutils/factories/newCancellation'
+import { bookingFactory, cancellationFactory, newCancellationFactory } from '../../../../server/testutils/factories'
 
 Given('I cancel the booking', () => {
   cy.then(function _() {

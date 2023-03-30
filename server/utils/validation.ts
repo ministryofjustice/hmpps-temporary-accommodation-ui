@@ -11,12 +11,18 @@ interface InvalidParams {
   errorType: string
 }
 
+interface AnnotatedError extends Error {
+  data?: { 'invalid-params'?: Array<InvalidParams> } | Record<string, string>
+}
+
+type ErrorContext = keyof typeof errorLookup
+
 export const catchValidationErrorOrPropogate = (
   request: Request,
   response: Response,
   error: SanitisedError | Error,
   redirectPath: string,
-  context = 'generic',
+  context: ErrorContext = 'generic',
 ): void => {
   const errors = extractValidationErrors(error, context)
 
@@ -72,8 +78,8 @@ export const errorMessage = (field: string, text: string): ErrorMessage => {
 }
 
 export const insertGenericError = (error: SanitisedError | Error, propertyName: string, errorType: string): void => {
-  const data = 'data' in error ? error.data : {}
-  const invalidParams = (data['invalid-params'] ? data['invalid-params'] : []) as Array<Record<string, string>>
+  const data = ('data' in error ? error.data : {}) as AnnotatedError['data']
+  const invalidParams = (data['invalid-params'] ? data['invalid-params'] : []) as Array<InvalidParams>
 
   invalidParams.push({
     propertyName: `$.${propertyName}`,
@@ -81,14 +87,13 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
   })
 
   data['invalid-params'] = invalidParams
-  // eslint-disable-next-line dot-notation
-  error['data'] = data
+  ;(error as AnnotatedError).data = data
 }
 
-const extractValidationErrors = (error: SanitisedError | Error, context: string) => {
-  if ('data' in error) {
+const extractValidationErrors = (error: SanitisedError | Error, context: ErrorContext) => {
+  if (isAnnotedError(error)) {
     if (error.data['invalid-params'] && error.data['invalid-params'].length) {
-      return generateErrors(error.data['invalid-params'], context)
+      return generateErrors(error.data['invalid-params'] as Array<InvalidParams>, context)
     }
     if (error instanceof ValidationError) {
       return error.data as Record<string, string>
@@ -98,7 +103,7 @@ const extractValidationErrors = (error: SanitisedError | Error, context: string)
   throw error
 }
 
-const generateErrors = (params: Array<InvalidParams>, context: string): Record<string, string> => {
+const generateErrors = (params: Array<InvalidParams>, context: ErrorContext): Record<string, string> => {
   return params.reduce((obj, error) => {
     const key = error.propertyName.split('.').slice(1).join('_')
     return {
@@ -126,7 +131,7 @@ const generateErrorMessages = (errors: Record<string, string>): ErrorMessages =>
   }, {})
 }
 
-const errorText = (error: InvalidParams, context: string): ErrorSummary => {
+const errorText = (error: InvalidParams, context: ErrorContext): ErrorSummary => {
   const errors =
     jsonpath.value(errorLookup[context], error.propertyName) ||
     throwUndefinedError(`Cannot find a translation for an error at the path ${error.propertyName}`)
@@ -142,4 +147,8 @@ const errorText = (error: InvalidParams, context: string): ErrorSummary => {
 
 const throwUndefinedError = (message: string) => {
   throw new Error(message)
+}
+
+const isAnnotedError = (error: SanitisedError | Error): error is AnnotatedError => {
+  return 'data' in error
 }

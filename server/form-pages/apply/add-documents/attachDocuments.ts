@@ -1,5 +1,5 @@
 import type { ApprovedPremisesApplication, Document } from '@approved-premises/api'
-import { DataServices, TaskListErrors } from '@approved-premises/ui'
+import { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../utils/decorators'
 
 import { CallConfig } from '../../../data/restClient'
@@ -59,7 +59,7 @@ export default class AttachDocuments implements TasklistPage {
   }
 
   response() {
-    const response = {}
+    const response: PageResponse = {}
 
     this.body.selectedDocuments.forEach(d => {
       response[d.fileName] = d.description || 'No description'

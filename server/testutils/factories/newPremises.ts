@@ -12,7 +12,7 @@ class NewPremisesFactory extends Factory<NewPremises> {
       localAuthorityAreaId: premises.localAuthorityArea.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
-      pdu: premises.probationDeliveryUnit.id,
+      probationDeliveryUnitId: premises.probationDeliveryUnit.id,
     })
   }
 }
@@ -28,7 +28,7 @@ export default NewPremisesFactory.define(() => ({
     characteristic => characteristic.id,
   ),
   probationRegionId: referenceDataFactory.probationRegion().build().id,
-  pdu: referenceDataFactory.pdu().build().id,
+  probationDeliveryUnitId: referenceDataFactory.pdu().build().id,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),
   notes: faker.lorem.lines(),
 }))

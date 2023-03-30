@@ -130,7 +130,7 @@ export default class PremisesService {
       localAuthorityAreaId: premises.localAuthorityArea?.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
-      pdu: premises.probationDeliveryUnit.id,
+      probationDeliveryUnitId: premises.probationDeliveryUnit.id,
     }
   }
 

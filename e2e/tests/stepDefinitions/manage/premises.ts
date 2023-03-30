@@ -101,12 +101,12 @@ Given('I attempt to create a premises with the PDU missing', () => {
       })
 
     const newPremises = newPremisesFactory.fromPremises(premises).build({
-      pdu: '',
+      probationDeliveryUnitId: '',
     })
 
     page.completeForm(newPremises)
 
-    cy.wrap(['pdu']).as('missing')
+    cy.wrap(['probationDeliveryUnitId']).as('missing')
   })
 })
 
@@ -160,12 +160,12 @@ Given('I attempt to edit the premises to remove the PDU', () => {
     const page = Page.verifyOnPage(PremisesEditPage, this.premises)
 
     const updatePremises = updatePremisesFactory.fromPremises(this.premises).build({
-      pdu: '',
+      probationDeliveryUnitId: '',
     })
 
     page.completeForm(updatePremises)
 
-    cy.wrap(['pdu']).as('missing')
+    cy.wrap(['probationDeliveryUnitId']).as('missing')
   })
 })
 

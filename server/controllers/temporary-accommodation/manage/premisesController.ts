@@ -7,7 +7,7 @@ import PremisesService from '../../../services/premisesService'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, reallocateErrors } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}
@@ -64,7 +64,6 @@ export default class PremisesController {
         req.flash('success', 'Property created')
         res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
-        reallocateErrors(err, 'probationDeliveryUnitId', 'pdu')
         catchValidationErrorOrPropogate(req, res, err, paths.premises.new({}))
       }
     }
@@ -117,7 +116,6 @@ export default class PremisesController {
         req.flash('success', 'Property updated')
         res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
-        reallocateErrors(err, 'probationDeliveryUnitId', 'pdu')
         catchValidationErrorOrPropogate(req, res, err, paths.premises.edit({ premisesId }))
       }
     }

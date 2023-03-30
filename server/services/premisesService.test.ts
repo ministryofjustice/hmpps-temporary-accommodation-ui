@@ -269,7 +269,7 @@ describe('PremisesService', () => {
         localAuthorityAreaId: 'local-authority',
         characteristicIds: ['characteristic-a', 'characteristic-b'],
         probationRegionId: 'a-probation-region',
-        pdu: 'a-probation-delivery-unit',
+        probationDeliveryUnitId: 'a-probation-delivery-unit',
       })
 
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
@@ -398,17 +398,19 @@ describe('PremisesService', () => {
   describe('update', () => {
     it('on success updates the premises and returns the updated premises', async () => {
       const premises = premisesFactory.build()
-      const newPremises = updatePremisesFactory.build({
+      const updatePremises = updatePremisesFactory.build({
         postcode: premises.postcode,
         notes: premises.notes,
       })
       premisesClient.update.mockResolvedValue(premises)
 
-      const updatedPremises = await service.update(callConfig, premises.id, newPremises)
+      const updatedPremises = await service.update(callConfig, premises.id, updatePremises)
       expect(updatedPremises).toEqual(premises)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, newPremises)
+      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, {
+        ...updatePremises,
+      })
     })
   })
 })

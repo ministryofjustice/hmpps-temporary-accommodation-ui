@@ -110,7 +110,13 @@ describe('BedspaceSearchController', () => {
       expect(bedspaceSearchService.search).toHaveBeenCalledWith(callConfig, expect.objectContaining(searchParameters))
 
       expect(setUserInput).toHaveBeenCalledWith(request.query, 'get')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.bedspaces.search({}))
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.bedspaces.search({}),
+        'bedspaceSearch',
+      )
     })
   })
 })

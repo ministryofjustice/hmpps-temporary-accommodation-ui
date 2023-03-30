@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Request } from 'express'
-import probationRegionFactory from '../testutils/factories/probationRegion'
+import { probationRegionFactory } from '../testutils/factories'
 import extractCallConfig from './restUtils'
 
 describe('extractCallConfig', () => {

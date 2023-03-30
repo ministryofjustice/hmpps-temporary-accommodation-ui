@@ -1,9 +1,9 @@
 import type { Nonarrival } from '@approved-premises/api'
 
-import NonarrivalService from './nonArrivalService'
 import BookingClient from '../data/bookingClient'
-import NonArrivalFactory from '../testutils/factories/nonArrival'
 import { CallConfig } from '../data/restClient'
+import { nonArrivalFactory } from '../testutils/factories'
+import NonarrivalService from './nonArrivalService'
 
 jest.mock('../data/bookingClient.ts')
 
@@ -22,7 +22,7 @@ describe('NonarrivalService', () => {
 
   describe('createNonarrival', () => {
     it('on success returns the arrival that has been posted', async () => {
-      const nonArrival: Nonarrival = NonArrivalFactory.build()
+      const nonArrival: Nonarrival = nonArrivalFactory.build()
       const newNonArrival = {
         ...nonArrival,
         reason: nonArrival.reason.id,

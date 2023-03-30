@@ -4,12 +4,14 @@ import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommod
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bedFactory from '../../../../server/testutils/factories/bed'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import newRoomFactory from '../../../../server/testutils/factories/newRoom'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import updateRoomFactory from '../../../../server/testutils/factories/updateRoom'
+import {
+  bedFactory,
+  bookingFactory,
+  newRoomFactory,
+  premisesFactory,
+  roomFactory,
+  updateRoomFactory,
+} from '../../../../server/testutils/factories'
 
 context('Bedspace', () => {
   beforeEach(() => {

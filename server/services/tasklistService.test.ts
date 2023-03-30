@@ -1,6 +1,6 @@
-import applicationFactory from '../testutils/factories/application'
-import TasklistService from './tasklistService'
 import getTaskStatus from '../form-pages/utils/getTaskStatus'
+import { applicationFactory } from '../testutils/factories'
+import TasklistService from './tasklistService'
 
 jest.mock('../form-pages/apply', () => {
   return {

@@ -3,11 +3,13 @@ import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-ac
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import arrivalFactory from '../../../../server/testutils/factories/arrival'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import newArrivalFactory from '../../../../server/testutils/factories/newArrival'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
+import {
+  arrivalFactory,
+  bookingFactory,
+  newArrivalFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../../server/testutils/factories'
 
 context('Booking arrival', () => {
   beforeEach(() => {

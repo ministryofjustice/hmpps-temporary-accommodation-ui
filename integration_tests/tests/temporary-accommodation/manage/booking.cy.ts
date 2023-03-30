@@ -4,11 +4,13 @@ import BookingConfirmPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import newBookingFactory from '../../../../server/testutils/factories/newBooking'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import personFactory from '../../../../server/testutils/factories/person'
+import {
+  bookingFactory,
+  newBookingFactory,
+  personFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../../server/testutils/factories'
 
 context('Booking', () => {
   beforeEach(() => {

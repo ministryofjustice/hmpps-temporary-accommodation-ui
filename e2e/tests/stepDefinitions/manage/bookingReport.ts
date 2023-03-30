@@ -3,7 +3,7 @@ import path from 'path'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
-import probationRegionFactory from '../../../../server/testutils/factories/probationRegion'
+import { probationRegionFactory } from '../../../../server/testutils/factories'
 import { bookingReportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 import { getUrlEncodedCypressEnv, throwMissingCypressEnvError } from '../utils'
 

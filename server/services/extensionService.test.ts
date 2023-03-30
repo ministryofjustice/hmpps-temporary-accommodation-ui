@@ -1,7 +1,6 @@
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
-import extensionFactory from '../testutils/factories/extension'
-import newExtensionFactory from '../testutils/factories/newExtension'
+import { extensionFactory, newExtensionFactory } from '../testutils/factories'
 import ExtensionService from './extensionService'
 
 jest.mock('../data/bookingClient.ts')

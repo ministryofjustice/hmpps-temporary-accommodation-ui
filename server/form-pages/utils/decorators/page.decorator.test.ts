@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { ApprovedPremisesApplication } from '@approved-premises/api'
+import { applicationFactory } from '../../../testutils/factories'
 import Page from './page.decorator'
-import applicationFactory from '../../../testutils/factories/application'
 
 describe('tasklistPageDecorator', () => {
   describe('with a simple class', () => {

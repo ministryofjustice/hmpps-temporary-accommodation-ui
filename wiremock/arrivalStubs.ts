@@ -1,5 +1,5 @@
+import { arrivalFactory } from '../server/testutils/factories'
 import { guidRegex } from './index'
-import arrivalFactory from '../server/testutils/factories/arrival'
 import { errorStub, getCombinations } from './utils'
 
 const arrivalStubs: Array<Record<string, unknown>> = []

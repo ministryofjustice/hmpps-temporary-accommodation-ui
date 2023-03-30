@@ -1,8 +1,7 @@
 import { TaskWithStatus } from '../@types/ui'
 import applyPaths from '../paths/apply'
 import assessPaths from '../paths/assess'
-import applicationFactory from '../testutils/factories/application'
-import assessmentFactory from '../testutils/factories/assessment'
+import { applicationFactory, assessmentFactory } from '../testutils/factories'
 import { statusTag, taskLink } from './taskListUtils'
 
 describe('taskListUtils', () => {

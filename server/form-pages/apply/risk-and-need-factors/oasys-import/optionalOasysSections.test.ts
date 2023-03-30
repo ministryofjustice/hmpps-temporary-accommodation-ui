@@ -1,8 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import { CallConfig } from '../../../../data/restClient'
 import { ApplicationService, PersonService } from '../../../../services'
-import applicationFactory from '../../../../testutils/factories/application'
-import oasysSelectionFactory from '../../../../testutils/factories/oasysSelection'
+import { applicationFactory, oasysSelectionFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 
 import OptionalOasysSections from './optionalOasysSections'

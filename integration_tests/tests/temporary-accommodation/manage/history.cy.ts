@@ -3,7 +3,7 @@ import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingFactory from '../../../../server/testutils/factories/booking'
+import { bookingFactory } from '../../../../server/testutils/factories'
 import { deriveBookingHistory } from '../../../../server/utils/bookingUtils'
 
 context('Booking history', () => {

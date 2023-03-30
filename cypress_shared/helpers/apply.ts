@@ -12,9 +12,7 @@ import {
   Person,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
-import documentFactory from '../../server/testutils/factories/document'
-import oasysSectionsFactory from '../../server/testutils/factories/oasysSections'
-import oasysSelectionFactory from '../../server/testutils/factories/oasysSelection'
+import { documentFactory, oasysSectionsFactory, oasysSelectionFactory } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
 import {

@@ -1,4 +1,4 @@
-import assessmentFactory from '../../testutils/factories/assessment'
+import { assessmentFactory } from '../../testutils/factories'
 import getSections from './getSections'
 
 describe('getSections', () => {

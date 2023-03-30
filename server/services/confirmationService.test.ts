@@ -1,8 +1,7 @@
 import BookingClient from '../data/bookingClient'
-import ConfirmationService from './confirmationService'
-import newConfirmationFactory from '../testutils/factories/newConfirmation'
-import confirmationFactory from '../testutils/factories/confirmation'
 import { CallConfig } from '../data/restClient'
+import { confirmationFactory, newConfirmationFactory } from '../testutils/factories'
+import ConfirmationService from './confirmationService'
 
 jest.mock('../data/bookingClient.ts')
 

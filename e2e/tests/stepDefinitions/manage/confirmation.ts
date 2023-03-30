@@ -3,9 +3,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import confirmationFactory from '../../../../server/testutils/factories/confirmation'
-import newConfirmationFactory from '../../../../server/testutils/factories/newConfirmation'
+import { bookingFactory, confirmationFactory, newConfirmationFactory } from '../../../../server/testutils/factories'
 
 Given('I confirm the booking', () => {
   cy.then(function _() {

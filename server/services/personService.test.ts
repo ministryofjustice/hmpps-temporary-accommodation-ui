@@ -1,18 +1,20 @@
 import type { Person } from '@approved-premises/api'
-import { Response } from 'express'
 import { createMock } from '@golevelup/ts-jest'
+import { Response } from 'express'
 
-import PersonService from './personService'
 import PersonClient from '../data/personClient'
-import PersonFactory from '../testutils/factories/person'
-import risksFactory from '../testutils/factories/risks'
-import { mapApiPersonRisksForUi } from '../utils/utils'
-import prisonCaseNotesFactory from '../testutils/factories/prisonCaseNotes'
-import adjudicationsFactory from '../testutils/factories/adjudication'
-import activeOffenceFactory from '../testutils/factories/activeOffence'
-import oasysSelectionFactory from '../testutils/factories/oasysSelection'
-import oasysSectionsFactory from '../testutils/factories/oasysSections'
 import { CallConfig } from '../data/restClient'
+import {
+  activeOffenceFactory,
+  adjudicationFactory,
+  oasysSectionsFactory,
+  oasysSelectionFactory,
+  personFactory,
+  prisonCaseNotesFactory,
+  risksFactory,
+} from '../testutils/factories'
+import { mapApiPersonRisksForUi } from '../utils/utils'
+import PersonService from './personService'
 
 jest.mock('../data/personClient.ts')
 
@@ -31,7 +33,7 @@ describe('PersonService', () => {
 
   describe('findByCrn', () => {
     it('on success returns the person given their CRN', async () => {
-      const person: Person = PersonFactory.build()
+      const person: Person = personFactory.build()
       personClient.search.mockResolvedValue(person)
 
       const postedPerson = await service.findByCrn(callConfig, 'crn')
@@ -89,7 +91,7 @@ describe('PersonService', () => {
 
   describe('getAdjudications', () => {
     it("on success returns the person's adjudications notes given their CRN", async () => {
-      const adjudications = adjudicationsFactory.buildList(3)
+      const adjudications = adjudicationFactory.buildList(3)
 
       personClient.adjudications.mockResolvedValue(adjudications)
 

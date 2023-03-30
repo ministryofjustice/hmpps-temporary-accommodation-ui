@@ -5,10 +5,12 @@ import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import newPremisesFactory from '../../../../server/testutils/factories/newPremises'
-import premisesFactory from '../../../../server/testutils/factories/premises'
-import roomFactory from '../../../../server/testutils/factories/room'
-import updatePremisesFactory from '../../../../server/testutils/factories/updatePremises'
+import {
+  newPremisesFactory,
+  premisesFactory,
+  roomFactory,
+  updatePremisesFactory,
+} from '../../../../server/testutils/factories'
 
 context('Premises', () => {
   beforeEach(() => {

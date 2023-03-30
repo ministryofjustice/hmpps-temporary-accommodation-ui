@@ -1,5 +1,5 @@
 import paths from '../paths/temporary-accommodation/manage'
-import premisesFactory from '../testutils/factories/premises'
+import { premisesFactory } from '../testutils/factories'
 import { getActiveStatuses, premisesActions, statusInfo, statusTag } from './premisesUtils'
 
 describe('premisesUtils', () => {

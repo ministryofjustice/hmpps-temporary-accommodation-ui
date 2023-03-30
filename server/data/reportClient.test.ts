@@ -4,8 +4,8 @@ import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
 import config from '../config'
 import paths from '../paths/api'
+import { probationRegionFactory } from '../testutils/factories'
 import ReportClient from './reportClient'
-import probationRegionFactory from '../testutils/factories/probationRegion'
 import { CallConfig } from './restClient'
 
 describe('ReportClient', () => {

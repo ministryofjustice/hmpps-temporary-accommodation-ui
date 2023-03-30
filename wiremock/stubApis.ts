@@ -4,10 +4,15 @@ import { DeepPartial } from 'fishery'
 import type { ApprovedPremises } from '@approved-premises/api'
 import { bulkStub } from './index'
 
-import bedFactory from '../server/testutils/factories/bed'
-import bookingFactory from '../server/testutils/factories/booking'
-import lostBedFactory from '../server/testutils/factories/lostBed'
-import premisesFactory from '../server/testutils/factories/premises'
+import {
+  bedFactory,
+  bedSearchResultsFactory,
+  bookingFactory,
+  dateCapacityFactory,
+  lostBedFactory,
+  premisesFactory,
+  staffMemberFactory,
+} from '../server/testutils/factories'
 import premisesJson from './stubs/premises.json'
 
 import applicationStubs from './applicationStubs'
@@ -23,9 +28,6 @@ import roomStubs from './roomStub'
 import userStub from './userStub'
 
 import path from '../server/paths/api'
-import bedSearchResults from '../server/testutils/factories/bedSearchResults'
-import dateCapacityFactory from '../server/testutils/factories/dateCapacity'
-import staffMemberFactory from '../server/testutils/factories/staffMember'
 import confirmationStubs from './confirmationStubs'
 import oasysSectionsStubs from './oasysSectionsStubs'
 import oasysSelectionStubs from './oasysSelectionStubs'
@@ -243,7 +245,7 @@ stubs.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: bedSearchResults.forPremises(premises).build(),
+    jsonBody: bedSearchResultsFactory.forPremises(premises).build(),
   },
 })
 

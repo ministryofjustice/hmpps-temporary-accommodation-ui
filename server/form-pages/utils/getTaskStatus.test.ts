@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest'
-import applicationFactory from '../../testutils/factories/application'
-import getTaskStatus from './getTaskStatus'
+import { applicationFactory } from '../../testutils/factories'
 import TasklistPage from '../tasklistPage'
+import getTaskStatus from './getTaskStatus'
 
 describe('getTaskStatus', () => {
   const page1Instance = createMock<TasklistPage>()

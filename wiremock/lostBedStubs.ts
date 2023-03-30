@@ -1,8 +1,7 @@
-import { guidRegex } from './index'
-import lostBedFactory from '../server/testutils/factories/lostBed'
-import lostBedCancellationFactory from '../server/testutils/factories/lostBedCancellation'
-import { errorStub, getCombinations } from './utils'
 import paths from '../server/paths/api'
+import { lostBedCancellationFactory, lostBedFactory } from '../server/testutils/factories'
+import { guidRegex } from './index'
+import { errorStub, getCombinations } from './utils'
 
 const lostBeds: Array<Record<string, unknown>> = []
 

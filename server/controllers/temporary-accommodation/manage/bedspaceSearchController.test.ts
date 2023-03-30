@@ -3,9 +3,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
-import bedSearchParameters from '../../../testutils/factories/bedSearchParameters'
-import bedSearchResults from '../../../testutils/factories/bedSearchResults'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
+import { bedSearchParametersFactory, bedSearchResultsFactory, referenceDataFactory } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
@@ -57,7 +55,7 @@ describe('BedspaceSearchController', () => {
     })
 
     it('renders the search page with search results when given a search query', async () => {
-      const searchParameters = bedSearchParameters.build()
+      const searchParameters = bedSearchParametersFactory.build()
 
       request.query = {
         ...searchParameters,
@@ -65,7 +63,7 @@ describe('BedspaceSearchController', () => {
         ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
       } as Record<string, string>
 
-      const searchResults = bedSearchResults.build()
+      const searchResults = bedSearchResultsFactory.build()
 
       bedspaceSearchService.getReferenceData.mockResolvedValue(referenceData)
       bedspaceSearchService.search.mockResolvedValue(searchResults)
@@ -88,7 +86,7 @@ describe('BedspaceSearchController', () => {
     })
 
     it('renders with errors if the API returns an error', async () => {
-      const searchParameters = bedSearchParameters.build()
+      const searchParameters = bedSearchParametersFactory.build()
 
       request.query = {
         ...searchParameters,

@@ -4,11 +4,13 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, PremisesService } from '../../../services'
 import ConfirmationService from '../../../services/confirmationService'
-import bookingFactory from '../../../testutils/factories/booking'
-import confirmationFactory from '../../../testutils/factories/confirmation'
-import newConfirmationFactory from '../../../testutils/factories/newConfirmation'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
+import {
+  bookingFactory,
+  confirmationFactory,
+  newConfirmationFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import ConfirmationsController from './confirmationsController'

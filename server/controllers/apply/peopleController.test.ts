@@ -1,12 +1,12 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
 
-import PeopleController from './peopleController'
-import PersonService from '../../services/personService'
-import personFactory from '../../testutils/factories/person'
-import { errorMessage, errorSummary } from '../../utils/validation'
-import extractCallConfig from '../../utils/restUtils'
 import { CallConfig } from '../../data/restClient'
+import PersonService from '../../services/personService'
+import { personFactory } from '../../testutils/factories'
+import extractCallConfig from '../../utils/restUtils'
+import { errorMessage, errorSummary } from '../../utils/validation'
+import PeopleController from './peopleController'
 
 jest.mock('../../utils/restUtils')
 

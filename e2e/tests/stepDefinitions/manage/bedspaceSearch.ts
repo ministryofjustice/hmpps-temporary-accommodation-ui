@@ -2,9 +2,11 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
-import bedSearchParametersFactory from '../../../../server/testutils/factories/bedSearchParameters'
-import bedSearchResultFactory from '../../../../server/testutils/factories/bedSearchResult'
-import bedSearchResultsFactory from '../../../../server/testutils/factories/bedSearchResults'
+import {
+  bedSearchParametersFactory,
+  bedSearchResultFactory,
+  bedSearchResultsFactory,
+} from '../../../../server/testutils/factories'
 
 Given("I'm searching for a bedspace", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)

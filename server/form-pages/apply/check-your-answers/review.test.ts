@@ -1,7 +1,7 @@
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-examples'
 
+import { applicationFactory } from '../../../testutils/factories'
 import Review from './review'
-import applicationFactory from '../../../testutils/factories/application'
 
 describe('Review', () => {
   const application = applicationFactory.build({})

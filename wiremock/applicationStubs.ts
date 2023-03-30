@@ -1,7 +1,7 @@
 import { guidRegex } from './index'
 
-import applicationFactory from '../server/testutils/factories/application'
 import paths from '../server/paths/api'
+import { applicationFactory } from '../server/testutils/factories'
 
 export default [
   {

@@ -7,12 +7,14 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
-import newPremisesFactory from '../../../testutils/factories/newPremises'
-import premisesFactory from '../../../testutils/factories/premises'
-import probationRegionFactory from '../../../testutils/factories/probationRegion'
-import referenceDataFactory from '../../../testutils/factories/referenceData'
-import roomFactory from '../../../testutils/factories/room'
-import updatePremisesFactory from '../../../testutils/factories/updatePremises'
+import {
+  newPremisesFactory,
+  premisesFactory,
+  probationRegionFactory,
+  referenceDataFactory,
+  roomFactory,
+  updatePremisesFactory,
+} from '../../../testutils/factories'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'

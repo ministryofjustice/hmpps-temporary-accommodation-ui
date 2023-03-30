@@ -1,8 +1,5 @@
 import paths from '../paths/temporary-accommodation/manage'
-import arrivalFactory from '../testutils/factories/arrival'
-import bookingFactory from '../testutils/factories/booking'
-import departureFactory from '../testutils/factories/departure'
-import extensionFactory from '../testutils/factories/extension'
+import { arrivalFactory, bookingFactory, departureFactory, extensionFactory } from '../testutils/factories'
 import {
   bookingActions,
   deriveBookingHistory,

@@ -5,9 +5,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingDepartureEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureEdit'
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import departureFactory from '../../../../server/testutils/factories/departure'
-import newDepartureFactory from '../../../../server/testutils/factories/newDeparture'
+import { bookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
 Given('I mark the booking as departed', () => {

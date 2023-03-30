@@ -1,6 +1,6 @@
 import { crnRegex } from '.'
 import paths from '../server/paths/api'
-import oasysSectionsFactory from '../server/testutils/factories/oasysSections'
+import { oasysSectionsFactory } from '../server/testutils/factories'
 
 export default [
   {

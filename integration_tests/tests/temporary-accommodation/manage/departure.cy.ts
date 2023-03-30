@@ -4,9 +4,7 @@ import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingFactory from '../../../../server/testutils/factories/booking'
-import departureFactory from '../../../../server/testutils/factories/departure'
-import newDepartureFactory from '../../../../server/testutils/factories/newDeparture'
+import { bookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
 
 context('Booking departure', () => {
   beforeEach(() => {

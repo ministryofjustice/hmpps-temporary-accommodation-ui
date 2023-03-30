@@ -1,11 +1,9 @@
 import nock from 'nock'
 
-import ApplicationClient from './applicationClient'
 import config from '../config'
-import applicationFactory from '../testutils/factories/application'
-import activeOffenceFactory from '../testutils/factories/activeOffence'
-import documentFactory from '../testutils/factories/document'
 import paths from '../paths/api'
+import { activeOffenceFactory, applicationFactory, documentFactory } from '../testutils/factories'
+import ApplicationClient from './applicationClient'
 import { CallConfig } from './restClient'
 
 describe('ApplicationClient', () => {

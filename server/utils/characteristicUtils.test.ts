@@ -1,4 +1,4 @@
-import characteristicFactory from '../testutils/factories/characteristic'
+import { characteristicFactory } from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from './characteristicUtils'
 import { escape } from './viewUtils'
 

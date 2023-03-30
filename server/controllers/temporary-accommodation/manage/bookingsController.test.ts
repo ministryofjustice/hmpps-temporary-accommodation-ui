@@ -4,11 +4,13 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import bookingFactory from '../../../testutils/factories/booking'
-import newBookingFactory from '../../../testutils/factories/newBooking'
-import premisesFactory from '../../../testutils/factories/premises'
-import roomFactory from '../../../testutils/factories/room'
-import personFactory from '../../../testutils/factories/person'
+import {
+  bookingFactory,
+  newBookingFactory,
+  personFactory,
+  premisesFactory,
+  roomFactory,
+} from '../../../testutils/factories'
 import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'

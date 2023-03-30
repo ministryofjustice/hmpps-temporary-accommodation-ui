@@ -12,10 +12,13 @@ import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
 import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
-import activeOffenceFactory from '../../../server/testutils/factories/activeOffence'
-import applicationFactory from '../../../server/testutils/factories/application'
-import personFactory from '../../../server/testutils/factories/person'
-import risksFactory, { tierEnvelopeFactory } from '../../../server/testutils/factories/risks'
+import {
+  activeOffenceFactory,
+  applicationFactory,
+  personFactory,
+  risksFactory,
+  tierEnvelopeFactory,
+} from '../../../server/testutils/factories'
 
 context('Apply', () => {
   beforeEach(() => {

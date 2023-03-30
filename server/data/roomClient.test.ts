@@ -2,11 +2,9 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import roomFactory from '../testutils/factories/room'
-import newRoomFactory from '../testutils/factories/newRoom'
-import updateRoomFactory from '../testutils/factories/updateRoom'
-import RoomClient from './roomClient'
+import { newRoomFactory, roomFactory, updateRoomFactory } from '../testutils/factories'
 import { CallConfig } from './restClient'
+import RoomClient from './roomClient'
 
 describe('Room Client', () => {
   let fakeApprovedPremisesApi: nock.Scope

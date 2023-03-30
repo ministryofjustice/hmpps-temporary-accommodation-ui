@@ -1,5 +1,5 @@
+import { lostBedFactory } from '../testutils/factories'
 import { lostBedActions, statusTag } from './lostBedUtils'
-import lostBedFactory from '../testutils/factories/lostBed'
 
 describe('lostBedUtils', () => {
   describe('statusTag', () => {

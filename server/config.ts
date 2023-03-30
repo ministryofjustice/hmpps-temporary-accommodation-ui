@@ -52,6 +52,7 @@ export default {
   flags: {
     oasysDisabled: process.env.OASYS_DISABLED || false,
     applyDisabled: !['local', 'dev', 'test'].includes(environment),
+    bookingSearchDisabled: !['local', 'dev', 'test'].includes(environment),
   },
   environment,
   sentry: {

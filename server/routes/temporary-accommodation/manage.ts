@@ -5,6 +5,7 @@ import type { Router } from 'express'
 import type { Controllers } from '../../controllers'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
+import config from '../../config'
 
 import actions from '../utils'
 

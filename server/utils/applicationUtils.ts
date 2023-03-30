@@ -2,7 +2,7 @@ import type {
   ApprovedPremisesApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
-import type { PageResponse, TableRow } from '@approved-premises/ui'
+import type { FormPages, PageResponse, TableRow } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
@@ -52,7 +52,7 @@ const createNameAnchorElement = (name: string, applicationId: string) => {
 export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>>
 
 const getResponses = (applicationOrAssessment: Application | Assessment): ApplicationOrAssessmentResponse => {
-  const responses = {}
+  const responses: ApplicationOrAssessmentResponse = {}
 
   Object.keys(applicationOrAssessment.data).forEach(taskName => {
     responses[taskName] = getResponsesForTask(applicationOrAssessment, taskName)
@@ -84,7 +84,7 @@ const getResponseForPage = (
 }
 
 const getPage = (taskName: string, pageName: string, isAnAssessment?: boolean): TasklistPageInterface => {
-  const pageList = isAnAssessment ? Assess.pages[taskName] : Apply.pages[taskName]
+  const pageList = isAnAssessment ? Assess.pages[taskName as keyof FormPages] : Apply.pages[taskName as keyof FormPages]
 
   const Page = pageList[pageName]
 

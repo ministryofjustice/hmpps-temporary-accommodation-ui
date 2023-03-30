@@ -6,7 +6,6 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "sourceMap": true,
-    "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "noEmit": false,
     "allowJs": true,
@@ -17,7 +16,6 @@
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "typeRoots": ["./server/@types", "./node_modules/@types"],
-    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@approved-premises/api": ["server/@types/shared/index.d.ts"],

@@ -28,7 +28,7 @@ jest.mock('../form-pages/apply', () => {
 
 jest.mock('../form-pages/assess', () => {
   return {
-    pages: { 'assess-page': {} },
+    pages: { 'prison-information': {} },
   }
 })
 
@@ -39,7 +39,7 @@ Apply.pages['basic-information'] = {
   second: SecondApplyPage,
 }
 
-Assess.pages['assess-page'] = {
+Assess.pages['prison-information'] = {
   first: AssessPage,
 }
 
@@ -72,7 +72,7 @@ describe('applicationUtils', () => {
     })
 
     it('should return a page from assess if passed the option', () => {
-      expect(getPage('assess-page', 'first', true)).toEqual(AssessPage)
+      expect(getPage('prison-information', 'first', true)).toEqual(AssessPage)
     })
 
     it('should raise an error if the page is not found', async () => {

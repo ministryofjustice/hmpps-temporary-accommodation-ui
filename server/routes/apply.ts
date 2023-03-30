@@ -7,6 +7,7 @@ import type { Controllers } from '../controllers'
 import paths from '../paths/apply'
 import { Services } from '../services'
 
+import { FormPages } from '../@types/ui'
 import actions from './utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
@@ -26,7 +27,7 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.applications.people.selectOffence.pattern, offencesController.selectOffence())
   get(paths.applications.people.documents.pattern, documentsController.show())
 
-  Object.keys(pages).forEach((taskKey: string) => {
+  Object.keys(pages).forEach((taskKey: keyof FormPages) => {
     Object.keys(pages[taskKey]).forEach((pageKey: string) => {
       const { pattern } = paths.applications.show.path(`tasks/${taskKey}/pages/${pageKey}`)
       get(pattern, pagesController.show(taskKey, pageKey))

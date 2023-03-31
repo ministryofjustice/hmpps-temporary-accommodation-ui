@@ -1,5 +1,6 @@
 import nock from 'nock'
 
+import bookingSearchResultsFactory from '../testutils/factories/bookingSearchResults'
 import BookingClient from './bookingClient'
 
 import {
@@ -18,6 +19,7 @@ import {
 
 import config from '../config'
 import { CallConfig } from './restClient'
+import paths from '../paths/api'
 
 describe('BookingClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -243,6 +245,21 @@ describe('BookingClient', () => {
 
       expect(result).toEqual(nonArrival)
       expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('index', () => {
+    it('should return all bookings', async () => {
+      const bookings = bookingSearchResultsFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.bookings.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bookings)
+
+      const result = await bookingClient.index()
+
+      expect(result).toEqual(bookings)
     })
   })
 })

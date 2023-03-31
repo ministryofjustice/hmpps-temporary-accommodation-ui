@@ -8,6 +8,7 @@ const singleBedspacePath = bedspacesPath.path(':roomId')
 
 const bookingsPath = singleBedspacePath.path('bookings')
 const singleBookingPath = bookingsPath.path(':bookingId')
+const allBookingsPath = temporaryAccommodationPath.path('bookings')
 
 const confirmationsPath = singleBookingPath.path('confirm')
 const arrivalsPath = singleBookingPath.path('mark-as-active')
@@ -66,6 +67,7 @@ const paths = {
       edit: cancellationsPath.path('edit'),
       update: cancellationsPath,
     },
+    search: allBookingsPath,
   },
   lostBeds: {
     new: lostBedsPath.path('new'),

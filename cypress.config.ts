@@ -16,6 +16,7 @@ import report from './integration_tests/mockApis/report'
 import room from './integration_tests/mockApis/room'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import user from './integration_tests/mockApis/user'
+import bookingSearch from './integration_tests/mockApis/bookingSearch'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import { resetStubs } from './wiremock'
 
@@ -52,6 +53,7 @@ export default defineConfig({
         ...user,
         ...schemaValidator,
         ...bed,
+        ...bookingSearch,
       })
     },
     baseUrl: 'http://localhost:3007',

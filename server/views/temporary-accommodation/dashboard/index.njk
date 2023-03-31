@@ -20,14 +20,16 @@
       </div>
     </div>
 
+{% if not bookingSearchDisabled %}
     <div class="card">
       <div class="card-body">
-        <h3 class="govuk-heading-s">
-          <a class="govuk-link"  href="{{ paths.reports.bookings.new({}) }}">Download data</a>
-        </h3>
-        <p class="govuk-body">Download data on properties, bedspaces, and bookings</p>
-      </div>
+        <h2 class="govuk-heading-s">
+            <a class="govuk-link" href="{{ paths.bookings.search({}) }}">Find a booking</a>
+        </h2>
+        <p class="govuk-body">View and manage provisional, confirmed, active and closed bookings</p>
+        </div>
     </div>
+  {% endif %}
 
     <div class="card">
       <div class="card-body">
@@ -35,6 +37,15 @@
           <a class="govuk-link"  href="{{ paths.bedspaces.search({}) }}">Find a bedspace</a>
         </h3>
         <p class="govuk-body">View all bedspaces and filter by available date to make a booking or void a bedspace</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h3 class="govuk-heading-s">
+          <a class="govuk-link"  href="{{ paths.reports.bookings.new({}) }}">Download data</a>
+        </h3>
+        <p class="govuk-body">Download data on properties, bedspaces, and bookings</p>
       </div>
     </div>
   </div>

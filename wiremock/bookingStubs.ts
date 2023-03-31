@@ -1,8 +1,18 @@
-import { bookingFactory } from '../server/testutils/factories'
+import type { BookingSearchResult } from '@approved-premises/api'
+import { bookingFactory, bookingSearchResultFactory, bookingSearchResultsFactory } from '../server/testutils/factories'
 import { guidRegex } from './index'
+import bookingSearchResultPremisesSummary from '../server/testutils/factories/bookingSearchResultPremisesSummary'
 import { errorStub, getCombinations } from './utils'
+import paths from '../server/paths/api'
+import premises from './stubs/premises.json'
 
 const bookingStubs: Array<Record<string, unknown>> = []
+
+const bookingSummaries: Array<BookingSearchResult> = premises.map(item => {
+  return bookingSearchResultFactory.build({
+    premises: { ...bookingSearchResultPremisesSummary.build(), id: item.id },
+  })
+})
 
 bookingStubs.push({
   priority: 99,
@@ -42,6 +52,21 @@ bookingStubs.push({
       'Content-Type': 'application/json;charset=UTF-8',
     },
     jsonBody: bookingFactory.build(),
+  },
+})
+
+bookingStubs.push({
+  priority: 99,
+  request: {
+    method: 'GET',
+    urlPathPattern: paths.bookings.search({}),
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: bookingSearchResultsFactory.build({ resultsCount: bookingSummaries.length, results: bookingSummaries }),
   },
 })
 

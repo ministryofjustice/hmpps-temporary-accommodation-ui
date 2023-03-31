@@ -5,6 +5,7 @@ import type { Router } from 'express'
 import type { Controllers } from '../../controllers'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
+import config from '../../config'
 
 import actions from '../utils'
 
@@ -23,6 +24,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     bookingReportsController,
     lostBedsController,
     bedspaceSearchController,
+    bookingSearchController,
   } = controllers.temporaryAccommodation
 
   get(paths.premises.index.pattern, premisesController.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
@@ -260,6 +262,12 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+
+  if (!config.flags.bookingSearchDisabled) {
+    get(paths.bookings.search.pattern, bookingSearchController.index(), {
+      auditEvent: 'VIEW_SEARCH_BOOKINGS',
+    })
+  }
 
   get(paths.bedspaces.search.pattern, bedspaceSearchController.index(), { auditEvent: 'VIEW_SEARCH_BEDSPACES ' })
 

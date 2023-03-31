@@ -1,0 +1,41 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% set pageTitle = applicationName + " - Find a booking" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ breadCrumb('Find a booking', []) }}
+
+  <h1>Find a booking</h1>
+
+  <h2>List of bookings</h2>
+
+    {{ govukTable({
+    captionClasses: "govuk-table__caption--m",
+    head: [
+      {
+        text: "Name"
+      },
+      {
+        text: "CRN"
+      },
+      {
+        text: "Location"
+      },
+      {
+        text: "Start"
+      },
+      {
+        text: "End"
+      },
+      {
+        html: '<span class="govuk-visually-hidden">Actions</span>'
+      }
+    ],
+    rows: bookingTableRows
+  }) }}
+
+{% endblock %}

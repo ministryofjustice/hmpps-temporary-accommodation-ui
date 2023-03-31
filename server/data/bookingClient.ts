@@ -14,8 +14,10 @@ import type {
   NewNonarrival,
   Nonarrival,
 } from '@approved-premises/api'
+import type { BookingSearchResults } from 'server/@types/shared/models/BookingSearchResults'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
+import paths from '../paths/api'
 
 export default class BookingClient {
   restClient: RestClient
@@ -102,6 +104,12 @@ export default class BookingClient {
     })
 
     return response as Nonarrival
+  }
+
+  async index(): Promise<BookingSearchResults> {
+    const response = await this.restClient.get({ path: paths.bookings.search({}) })
+
+    return response as BookingSearchResults
   }
 
   private bookingsPath(premisesId: string): string {

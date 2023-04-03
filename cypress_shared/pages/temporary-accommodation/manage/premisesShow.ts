@@ -42,7 +42,7 @@ export default class PremisesShowPage extends Page {
                       .map(text => text.trim())
 
                     const pduName = pduElement.text().trim()
-                    const pdu = pduJson.find(p => p.name === pduName)?.id as string
+                    const pdu = pduJson.find(p => pduName.startsWith(p.name))?.id as string
 
                     const premises = premisesFactory.build({
                       id,

@@ -10,9 +10,13 @@ export type PlacementRequest = (NewPlacementRequest & {
     id?: string;
     person?: Person;
     risks?: PersonRisks;
+    applicationId?: string;
+    assessmentId?: string;
 } & {
     id: string;
     person: Person;
     risks: PersonRisks;
+    applicationId: string;
+    assessmentId: string;
 });
 

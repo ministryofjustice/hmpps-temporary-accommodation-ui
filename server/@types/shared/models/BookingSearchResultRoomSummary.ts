@@ -6,3 +6,4 @@ export type BookingSearchResultRoomSummary = {
     id: string;
     name: string;
 };
+

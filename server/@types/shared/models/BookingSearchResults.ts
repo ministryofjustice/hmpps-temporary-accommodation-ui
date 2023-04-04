@@ -8,3 +8,4 @@ export type BookingSearchResults = {
     resultsCount: number;
     results: Array<BookingSearchResult>;
 };
+

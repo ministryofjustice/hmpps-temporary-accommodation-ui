@@ -96,9 +96,6 @@
     "pdu": {
       "empty": "You must choose a PDU"
     },
-    "probationDeliveryUnit": {
-      "empty": "You must choose a PDU"
-    },
     "status": {
       "empty": "You must choose a status"
     }
@@ -111,6 +108,21 @@
     },
     "reason": {
       "empty": "You must choose a cancellation reason"
+    }
+  },
+  "bedspaceSearch": {
+    "probationDeliveryUnit": {
+      "empty": "You must choose a PDU"
+    },
+    "startDate": {
+      "empty": "You must enter a date",
+      "invalid": "You must enter a real date"
+    },
+    "durationDays": {
+      "empty": "You must enter a duration in days",
+      "invalid": "You must enter a duration of at least 1 day",
+      "expectedNumber": "You must enter a duration of at least 1 day",
+      "mustBeAtLeast1": "You must enter a duration of at least 1 day"
     }
   }
 }

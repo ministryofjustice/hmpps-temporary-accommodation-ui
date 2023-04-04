@@ -52,7 +52,7 @@ export default class BedspaceSearchController {
         })
       } catch (err) {
         setUserInput(req, 'get')
-        catchValidationErrorOrPropogate(req, res, err, paths.bedspaces.search({}))
+        catchValidationErrorOrPropogate(req, res, err, paths.bedspaces.search({}), 'bedspaceSearch')
       }
     }
   }

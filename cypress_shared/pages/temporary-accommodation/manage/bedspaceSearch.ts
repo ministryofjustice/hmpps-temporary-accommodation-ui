@@ -12,7 +12,7 @@ export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSeachResults: BedspaceSearchResult[] | undefined
 
   constructor(results?: BedSearchResults) {
-    super('List of available bedspaces')
+    super('Search for available bedspaces')
 
     this.bedspaceSeachResults = results?.results.map(result => new BedspaceSearchResult(result))
   }
@@ -37,19 +37,19 @@ export default class BedspaceSearchPage extends Page {
   }
 
   shouldShowEmptySearchResults() {
-    cy.get('p').should('contain', 'No bedspaces found')
+    cy.get('p').should('contain', 'There are no available bedspaces')
   }
 
   shouldShowPrefilledSearchParameters(searchParameters: BedSearchParameters) {
-    this.shouldShowDateInputsByLegend('Available on', searchParameters.startDate)
-    this.shouldShowTextInputByLabel('Days available for', `${searchParameters.durationDays}`)
-    this.shouldShowSelectInputByLabel('PDU', searchParameters.probationDeliveryUnit)
+    this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
+    this.shouldShowTextInputByLabel('Number of days available', `${searchParameters.durationDays}`)
+    this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
   }
 
   completeForm(searchParameters: BedSearchParameters) {
-    this.completeDateInputsByLegend('Available on', searchParameters.startDate)
-    this.completeTextInputByLabel('Days available for', `${searchParameters.durationDays}`)
-    this.completeSelectInputByLabel('PDU', searchParameters.probationDeliveryUnit)
+    this.completeDateInputsByLegend('Available from', searchParameters.startDate)
+    this.completeTextInputByLabel('Number of days available', `${searchParameters.durationDays}`)
+    this.completeSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
   }
 
   clickBedspaceLink(room: Room) {

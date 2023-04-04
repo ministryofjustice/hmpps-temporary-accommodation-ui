@@ -1,7 +1,7 @@
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import bookingSearchResultsFactory from '../../../../server/testutils/factories/bookingSearchResults'
+import { bookingSearchResultsFactory } from '../../../../server/testutils/factories/index'
 import Page from '../../../../cypress_shared/pages/page'
 
 context('Booking search', () => {

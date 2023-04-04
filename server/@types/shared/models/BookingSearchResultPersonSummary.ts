@@ -6,3 +6,4 @@ export type BookingSearchResultPersonSummary = {
     name: string;
     crn: string;
 };
+

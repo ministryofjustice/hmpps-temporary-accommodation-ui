@@ -11,3 +11,4 @@ export type BookingSearchResultBookingSummary = {
     endDate: string;
     createdAt: string;
 };
+

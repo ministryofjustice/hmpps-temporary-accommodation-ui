@@ -10,3 +10,4 @@ export type BookingSearchResultPremisesSummary = {
     town?: string;
     postcode: string;
 };
+

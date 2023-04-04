@@ -15,3 +15,4 @@ export type BookingSearchResult = {
     room: BookingSearchResultRoomSummary;
     bed: BookingSearchResultBedSummary;
 };
+

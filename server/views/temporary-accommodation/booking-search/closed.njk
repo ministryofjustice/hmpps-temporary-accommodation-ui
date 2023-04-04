@@ -29,6 +29,9 @@
 
     {{ govukTable({
     captionClasses: "govuk-table__caption--m",
+    attributes: {
+    'data-module': 'moj-sortable-table'
+    },
     head: [
       {
         text: "Name"
@@ -40,22 +43,35 @@
         text: "Location"
       },
       {
-        text: "Start"
+        text: "Start",
+        attributes: {
+          "aria-sort": "none"
+        }
       },
       {
-        text: "End"
+        text: "End",
+        attributes: {
+          "aria-sort": "none"
+        }
       },
       {
         html: '<span class="govuk-visually-hidden">Actions</span>'
       }
     ],
     rows: bookingTableRows
-  }) }}
+    }) }}
 
     </div>
 
 </div>
 
-
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+  $(document).ready(function () {
+  window
+      .MOJFrontend
+      .initAll() })
+</script>
+{% endblock %}
 
 {% endblock %}

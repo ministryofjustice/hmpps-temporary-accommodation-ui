@@ -254,3 +254,9 @@ export type OasysImportArrays =
   | ArrayOfOASysRiskManagementPlanQuestions
 
 export type JourneyType = 'applications' | 'assessments'
+
+export interface SideNavObj {
+  text: string
+  href: string
+  active: boolean
+}

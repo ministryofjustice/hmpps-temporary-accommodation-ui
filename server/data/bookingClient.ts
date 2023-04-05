@@ -1,6 +1,7 @@
 import type {
   Arrival,
   Booking,
+  BookingSearchStatus,
   Cancellation,
   Confirmation,
   Departure,
@@ -18,6 +19,7 @@ import type { BookingSearchResults } from 'server/@types/shared/models/BookingSe
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
+import { createQueryString } from '../utils/utils'
 
 export default class BookingClient {
   restClient: RestClient
@@ -106,8 +108,12 @@ export default class BookingClient {
     return response as Nonarrival
   }
 
-  async index(): Promise<BookingSearchResults> {
-    const response = await this.restClient.get({ path: paths.bookings.search({}) })
+  async search(status: BookingSearchStatus): Promise<BookingSearchResults> {
+    const queryString: string = createQueryString({ status })
+
+    const path = `${paths.bookings.search({ status })}${queryString ? `?${queryString}` : ''}`
+
+    const response = await this.restClient.get({ path })
 
     return response as BookingSearchResults
   }

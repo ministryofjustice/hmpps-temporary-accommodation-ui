@@ -67,7 +67,20 @@ const paths = {
       edit: cancellationsPath.path('edit'),
       update: cancellationsPath,
     },
-    search: allBookingsPath,
+    search: {
+      provisional: {
+        index: allBookingsPath.path('provisional'),
+      },
+      active: {
+        index: allBookingsPath.path('active'),
+      },
+      closed: {
+        index: allBookingsPath.path('closed'),
+      },
+      confirmed: {
+        index: allBookingsPath.path('confirmed'),
+      },
+    },
   },
   lostBeds: {
     new: lostBedsPath.path('new'),

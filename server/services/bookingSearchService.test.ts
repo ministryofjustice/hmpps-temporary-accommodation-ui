@@ -1,8 +1,7 @@
-import bookingSearchResultFactory from '../testutils/factories/bookingSearchResult'
 import BookingClient from '../data/bookingClient'
 import BookingSearchService from './bookingSearchService'
 import { CallConfig } from '../data/restClient'
-import bookingSearchResultsFactory from '../testutils/factories/bookingSearchResults'
+import { bookingSearchResultFactory, bookingSearchResultsFactory } from '../testutils/factories/index'
 import { DateFormats } from '../utils/dateUtils'
 import paths from '../paths/temporary-accommodation/manage'
 
@@ -22,15 +21,15 @@ describe('BookingService', () => {
   })
 
   describe('getTableRowsForFindBooking', () => {
-    it('returns a table view of all bookings', async () => {
+    it('returns a table view of all returned bookings', async () => {
       const booking1 = bookingSearchResultFactory.build()
       const booking2 = bookingSearchResultFactory.build()
       const booking3 = bookingSearchResultFactory.build()
       const bookings = bookingSearchResultsFactory.build({ resultsCount: 3, results: [booking1, booking2, booking3] })
 
-      bookingClient.index.mockResolvedValue(bookings)
+      bookingClient.search.mockResolvedValue(bookings)
 
-      const rows = await service.getTableRowsForFindBooking(callConfig)
+      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional')
 
       expect(rows).toEqual([
         [
@@ -86,9 +85,9 @@ describe('BookingService', () => {
 
     it('returns an empty array if no bookings exist', async () => {
       const bookings = bookingSearchResultsFactory.build({ resultsCount: 0, results: [] })
-      bookingClient.index.mockResolvedValue(bookings)
+      bookingClient.search.mockResolvedValue(bookings)
 
-      const rows = await service.getTableRowsForFindBooking(callConfig)
+      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional')
 
       expect(rows).toEqual([])
     })

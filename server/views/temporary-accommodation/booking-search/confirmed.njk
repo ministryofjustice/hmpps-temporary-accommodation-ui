@@ -1,0 +1,61 @@
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{%- from "moj/components/side-navigation/macro.njk" import mojSideNavigation -%}
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% set pageTitle = applicationName + " - Find a booking" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ breadCrumb('Find a booking', []) }}
+
+  <h1>Find a booking</h1>
+
+  <div class="govuk-grid-row">
+
+  <div class="govuk-grid-column-one-third">
+
+    {{ mojSideNavigation({
+      label: 'Side navigation',
+      items: sideNavArr
+    }) }}
+
+    </div>
+
+    <div class="govuk-grid-column-two-thirds">
+
+    <h2>Confirmed bookings</h2>
+
+    {{ govukTable({
+    captionClasses: "govuk-table__caption--m",
+    head: [
+      {
+        text: "Name"
+      },
+      {
+        text: "CRN"
+      },
+      {
+        text: "Location"
+      },
+      {
+        text: "Start"
+      },
+      {
+        text: "End"
+      },
+      {
+        html: '<span class="govuk-visually-hidden">Actions</span>'
+      }
+    ],
+    rows: bookingTableRows
+  }) }}
+
+    </div>
+
+</div>
+
+
+
+{% endblock %}

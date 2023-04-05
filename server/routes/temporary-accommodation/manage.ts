@@ -264,8 +264,17 @@ export default function routes(controllers: Controllers, services: Services, rou
   })
 
   if (!config.flags.bookingSearchDisabled) {
-    get(paths.bookings.search.pattern, bookingSearchController.index(), {
-      auditEvent: 'VIEW_SEARCH_BOOKINGS',
+    get(paths.bookings.search.provisional.index.pattern, bookingSearchController.index('provisional'), {
+      auditEvent: 'VIEW_SEARCH_PROVISIONAL_BOOKINGS',
+    })
+    get(paths.bookings.search.active.index.pattern, bookingSearchController.index('active'), {
+      auditEvent: 'VIEW_SEARCH_ACTIVE_BOOKINGS',
+    })
+    get(paths.bookings.search.closed.index.pattern, bookingSearchController.index('closed'), {
+      auditEvent: 'VIEW_SEARCH_CLOSED_BOOKINGS',
+    })
+    get(paths.bookings.search.confirmed.index.pattern, bookingSearchController.index('confirmed'), {
+      auditEvent: 'VIEW_SEARCH_CONFIRMED_BOOKINGS',
     })
   }
 

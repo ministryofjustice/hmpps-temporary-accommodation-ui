@@ -2,6 +2,7 @@ import nock from 'nock'
 
 import bookingSearchResultsFactory from '../testutils/factories/bookingSearchResults'
 import BookingClient from './bookingClient'
+import RestClient, { CallConfig } from './restClient'
 
 import {
   arrivalFactory,
@@ -18,7 +19,6 @@ import {
 } from '../testutils/factories'
 
 import config from '../config'
-import { CallConfig } from './restClient'
 import paths from '../paths/api'
 
 describe('BookingClient', () => {
@@ -248,18 +248,38 @@ describe('BookingClient', () => {
     })
   })
 
-  describe('index', () => {
-    it('should return all bookings', async () => {
+  describe('search', () => {
+    it('should return all provisional bookings', async () => {
       const bookings = bookingSearchResultsFactory.build()
 
       fakeApprovedPremisesApi
-        .get(paths.bookings.search({}))
+        .get(`${paths.bookings.search({})}?status=provisional`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, bookings)
 
-      const result = await bookingClient.index()
+      const result = await bookingClient.search('provisional')
 
       expect(result).toEqual(bookings)
     })
+  })
+
+  it('calls restClient with the correct path when handed in provisional status', async () => {
+    bookingClient.restClient = {
+      get: jest.fn(),
+    } as unknown as jest.Mocked<RestClient>
+
+    await bookingClient.search('provisional')
+
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=provisional' })
+  })
+
+  it('calls restClient with the correct path when handed in active status', async () => {
+    bookingClient.restClient = {
+      get: jest.fn(),
+    } as unknown as jest.Mocked<RestClient>
+
+    await bookingClient.search('active')
+
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=active' })
   })
 })

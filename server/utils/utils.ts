@@ -3,6 +3,7 @@ import Case from 'case'
 import type { ApprovedPremisesApplication, PersonRisks } from '@approved-premises/api'
 import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 
+import qs, { IStringifyOptions } from 'qs'
 import escapeRegExp from 'lodash.escaperegexp'
 import { DateFormats } from './dateUtils'
 import { SessionDataError } from './errors'
@@ -133,3 +134,10 @@ export function unique<T extends { id: string }>(elements: Array<T>): Array<T> {
 }
 
 export const exact = (text: string) => new RegExp(`^${escapeRegExp(text)}$`)
+
+export const createQueryString = (
+  params: Record<string, unknown> | string,
+  options: IStringifyOptions = { encode: false, indices: false },
+): string => {
+  return qs.stringify(params, options)
+}

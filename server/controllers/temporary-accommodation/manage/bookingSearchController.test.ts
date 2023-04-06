@@ -4,7 +4,7 @@ import BookingSearchController from './bookingSearchController'
 import { CallConfig } from '../../../data/restClient'
 import { BookingSearchService } from '../../../services'
 import extractCallConfig from '../../../utils/restUtils'
-import { createSideNavArr } from '../../../utils/bookingSearchUtils'
+import { createSideNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/bookingSearchUtils')
@@ -25,6 +25,7 @@ describe('BookingSearchController', () => {
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(createSideNavArr as jest.MockedFn<typeof createSideNavArr>).mockReturnValue([])
+    ;(createTableHeadings as jest.MockedFn<typeof createTableHeadings>).mockReturnValue([])
   })
 
   describe('index', () => {
@@ -37,7 +38,9 @@ describe('BookingSearchController', () => {
 
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'provisional')
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/provisional', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
+        status: 'provisional',
+        tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
       })
@@ -52,7 +55,9 @@ describe('BookingSearchController', () => {
 
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'active')
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/active', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
+        status: 'active',
+        tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
       })
@@ -67,7 +72,9 @@ describe('BookingSearchController', () => {
 
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'confirmed')
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/confirmed', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
+        status: 'confirmed',
+        tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
       })
@@ -82,7 +89,9 @@ describe('BookingSearchController', () => {
 
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'closed')
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/closed', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
+        status: 'closed',
+        tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
       })

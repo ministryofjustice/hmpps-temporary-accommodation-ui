@@ -1,5 +1,5 @@
 import { BookingSearchStatus } from '@approved-premises/api'
-import { SideNavObj } from '../@types/ui/index'
+import { SideNavObj, TableCell } from '../@types/ui/index'
 import paths from '../paths/temporary-accommodation/manage'
 
 export function createSideNavArr(status: BookingSearchStatus): Array<SideNavObj> {
@@ -23,6 +23,38 @@ export function createSideNavArr(status: BookingSearchStatus): Array<SideNavObj>
       text: 'Closed',
       href: paths.bookings.search.closed.index({}),
       active: status === 'closed',
+    },
+  ]
+}
+
+export function createTableHeadings(status: BookingSearchStatus): Array<TableCell> {
+  return [
+    {
+      text: 'Name',
+      attributes: {
+        'aria-sort': 'none',
+      },
+    },
+    {
+      text: 'CRN',
+    },
+    {
+      text: 'Location',
+    },
+    {
+      text: 'Start',
+      attributes: {
+        'aria-sort': ['provisional', 'confirmed'].includes(status) ? 'ascending' : 'none',
+      },
+    },
+    {
+      text: 'End',
+      attributes: {
+        'aria-sort': ['active', 'closed'].includes(status) ? 'ascending' : 'none',
+      },
+    },
+    {
+      html: '<span class="govuk-visually-hidden">Actions</span>',
     },
   ]
 }

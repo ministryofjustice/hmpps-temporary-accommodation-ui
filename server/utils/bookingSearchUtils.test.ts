@@ -1,5 +1,5 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { createSideNavArr } from './bookingSearchUtils'
+import { createSideNavArr, createTableHeadings } from './bookingSearchUtils'
 
 describe('bookingSearchUtils', () => {
   describe('createSideNavArr', () => {
@@ -29,5 +29,77 @@ describe('bookingSearchUtils', () => {
 
       expect(createSideNavArr('provisional')).toEqual(sideNavArr)
     })
+  })
+
+  describe('createTableHeadings', () => {
+    it('returns table headings with start date sorted ascending for provisional or confirmed booking status', () => {
+      const tableHeadings = [
+        {
+          text: 'Name',
+          attributes: {
+            'aria-sort': 'none',
+          },
+        },
+        {
+          text: 'CRN',
+        },
+        {
+          text: 'Location',
+        },
+        {
+          text: 'Start',
+          attributes: {
+            'aria-sort': 'ascending',
+          },
+        },
+        {
+          text: 'End',
+          attributes: {
+            'aria-sort': 'none',
+          },
+        },
+        {
+          html: '<span class="govuk-visually-hidden">Actions</span>',
+        },
+      ]
+
+      expect(createTableHeadings('provisional')).toEqual(tableHeadings)
+      expect(createTableHeadings('confirmed')).toEqual(tableHeadings)
+    })
+  })
+
+  it('returns table headings with end date sorted ascending for active and closed booking status', () => {
+    const tableHeadings = [
+      {
+        text: 'Name',
+        attributes: {
+          'aria-sort': 'none',
+        },
+      },
+      {
+        text: 'CRN',
+      },
+      {
+        text: 'Location',
+      },
+      {
+        text: 'Start',
+        attributes: {
+          'aria-sort': 'none',
+        },
+      },
+      {
+        text: 'End',
+        attributes: {
+          'aria-sort': 'ascending',
+        },
+      },
+      {
+        html: '<span class="govuk-visually-hidden">Actions</span>',
+      },
+    ]
+
+    expect(createTableHeadings('active')).toEqual(tableHeadings)
+    expect(createTableHeadings('closed')).toEqual(tableHeadings)
   })
 })

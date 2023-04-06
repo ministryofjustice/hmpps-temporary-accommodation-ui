@@ -25,41 +25,16 @@
 
     <div class="govuk-grid-column-two-thirds">
 
-    <h2>Confirmed bookings</h2>
+    <h2>{{ status | capitalize }} bookings</h2>
 
     {{ govukTable({
     captionClasses: "govuk-table__caption--m",
     attributes: {
     'data-module': 'moj-sortable-table'
     },
-    head: [
-      {
-        text: "Name"
-      },
-      {
-        text: "CRN"
-      },
-      {
-        text: "Location"
-      },
-      {
-        text: "Start",
-        attributes: {
-          "aria-sort": "none"
-        }
-      },
-      {
-        text: "End",
-        attributes: {
-          "aria-sort": "none"
-        }
-      },
-      {
-        html: '<span class="govuk-visually-hidden">Actions</span>'
-      }
-    ],
+    head: tableHeadings,
     rows: bookingTableRows
-    }) }}
+  }) }}
 
     </div>
 
@@ -71,6 +46,7 @@
   window
       .MOJFrontend
       .initAll() })
+
 </script>
 {% endblock %}
 

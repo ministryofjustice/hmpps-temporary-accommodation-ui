@@ -164,7 +164,7 @@
     "reflect-metadata": "^0.1.13",
     "static-path": "^0.0.4",
     "superagent": "^8.0.2",
-    "typescript-json-schema": "^0.55.0",
+    "typescript-json-schema": "^0.56.0",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.0"
   },

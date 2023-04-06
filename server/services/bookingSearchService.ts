@@ -18,8 +18,14 @@ export default class BookingSearchService {
         this.textValue(summary.person.name),
         this.textValue(summary.person.crn),
         this.textValue(summary.premises.addressLine1),
-        this.textValue(DateFormats.isoDateToUIDate(summary.booking.startDate, { format: 'short' })),
-        this.textValue(DateFormats.isoDateToUIDate(summary.booking.endDate, { format: 'short' })),
+        this.dateSortValue(
+          DateFormats.isoDateToUIDate(summary.booking.startDate, { format: 'short' }),
+          summary.booking.startDate,
+        ),
+        this.dateSortValue(
+          DateFormats.isoDateToUIDate(summary.booking.endDate, { format: 'short' }),
+          summary.booking.endDate,
+        ),
         this.htmlValue(
           `<a href="${paths.bookings.show({
             premisesId: summary.premises.id,
@@ -37,5 +43,14 @@ export default class BookingSearchService {
 
   private htmlValue(value: string) {
     return { html: value }
+  }
+
+  private dateSortValue(uiDate: string, isoDate: string) {
+    return {
+      text: uiDate,
+      attributes: {
+        'data-sort-value': `${isoDate}`,
+      },
+    }
   }
 }

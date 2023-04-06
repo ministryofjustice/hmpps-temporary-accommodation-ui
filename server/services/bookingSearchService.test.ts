@@ -36,8 +36,18 @@ describe('BookingService', () => {
           { text: booking1.person.name },
           { text: booking1.person.crn },
           { text: booking1.premises.addressLine1 },
-          { text: DateFormats.isoDateToUIDate(booking1.booking.startDate, { format: 'short' }) },
-          { text: DateFormats.isoDateToUIDate(booking1.booking.endDate, { format: 'short' }) },
+          {
+            text: DateFormats.isoDateToUIDate(booking1.booking.startDate, { format: 'short' }),
+            attributes: {
+              'data-sort-value': booking1.booking.startDate,
+            },
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking1.booking.endDate, { format: 'short' }),
+            attributes: {
+              'data-sort-value': booking1.booking.endDate,
+            },
+          },
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking1.premises.id,
@@ -52,8 +62,18 @@ describe('BookingService', () => {
           { text: booking2.person.name },
           { text: booking2.person.crn },
           { text: booking2.premises.addressLine1 },
-          { text: DateFormats.isoDateToUIDate(booking2.booking.startDate, { format: 'short' }) },
-          { text: DateFormats.isoDateToUIDate(booking2.booking.endDate, { format: 'short' }) },
+          {
+            text: DateFormats.isoDateToUIDate(booking2.booking.startDate, { format: 'short' }),
+            attributes: {
+              'data-sort-value': booking2.booking.startDate,
+            },
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking2.booking.endDate, { format: 'short' }),
+            attributes: {
+              'data-sort-value': booking2.booking.endDate,
+            },
+          },
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking2.premises.id,
@@ -68,8 +88,18 @@ describe('BookingService', () => {
           { text: booking3.person.name },
           { text: booking3.person.crn },
           { text: booking3.premises.addressLine1 },
-          { text: DateFormats.isoDateToUIDate(booking3.booking.startDate, { format: 'short' }) },
-          { text: DateFormats.isoDateToUIDate(booking3.booking.endDate, { format: 'short' }) },
+          {
+            text: DateFormats.isoDateToUIDate(booking3.booking.startDate, { format: 'short' }),
+            attributes: {
+              'data-sort-value': booking3.booking.startDate,
+            },
+          },
+          {
+            text: DateFormats.isoDateToUIDate(booking3.booking.endDate, { format: 'short' }),
+            attributes: {
+              'data-sort-value': booking3.booking.endDate,
+            },
+          },
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking3.premises.id,

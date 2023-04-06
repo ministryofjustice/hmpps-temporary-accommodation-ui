@@ -2,7 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 import { BookingSearchService } from 'server/services'
 import type { BookingSearchStatus } from '@approved-premises/api'
 import extractCallConfig from '../../../utils/restUtils'
-import { createSideNavArr } from '../../../utils/bookingSearchUtils'
+import { createSideNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
 export default class BookingSearchController {
   constructor(private readonly bookingSearchService: BookingSearchService) {}
@@ -13,9 +13,12 @@ export default class BookingSearchController {
 
       const bookingTableRows = await this.bookingSearchService.getTableRowsForFindBooking(callConfig, status)
 
-      const sideNavArr = createSideNavArr(status)
-
-      return res.render(`temporary-accommodation/booking-search/${status}`, { sideNavArr, bookingTableRows })
+      return res.render(`temporary-accommodation/booking-search/results`, {
+        status,
+        sideNavArr: createSideNavArr(status),
+        tableHeadings: createTableHeadings(status),
+        bookingTableRows,
+      })
     }
   }
 }

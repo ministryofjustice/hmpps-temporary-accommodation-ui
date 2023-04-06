@@ -39,6 +39,7 @@ export type { BedSearchResultRoomSummary } from './models/BedSearchResultRoomSum
 export type { BedSearchResults } from './models/BedSearchResults';
 export type { Booking } from './models/Booking';
 export type { BookingBody } from './models/BookingBody';
+export type { BookingNotMade } from './models/BookingNotMade';
 export type { BookingSearchResult } from './models/BookingSearchResult';
 export type { BookingSearchResultBedSummary } from './models/BookingSearchResultBedSummary';
 export type { BookingSearchResultBookingSummary } from './models/BookingSearchResultBookingSummary';
@@ -77,6 +78,7 @@ export type { MoveOnCategory } from './models/MoveOnCategory';
 export type { NewApplication } from './models/NewApplication';
 export type { NewArrival } from './models/NewArrival';
 export type { NewBooking } from './models/NewBooking';
+export type { NewBookingNotMade } from './models/NewBookingNotMade';
 export type { NewCancellation } from './models/NewCancellation';
 export type { NewClarificationNote } from './models/NewClarificationNote';
 export type { NewConfirmation } from './models/NewConfirmation';

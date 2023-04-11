@@ -13,6 +13,7 @@ export type { ApprovedPremisesApplication } from './models/ApprovedPremisesAppli
 export type { ApprovedPremisesAssessment } from './models/ApprovedPremisesAssessment';
 export type { ApprovedPremisesBedSearchParameters } from './models/ApprovedPremisesBedSearchParameters';
 export type { ApprovedPremisesBedSearchResult } from './models/ApprovedPremisesBedSearchResult';
+export type { ApprovedPremisesSummary } from './models/ApprovedPremisesSummary';
 export type { ApprovedPremisesUser } from './models/ApprovedPremisesUser';
 export type { ApType } from './models/ApType';
 export type { ArrayOfOASysOffenceDetailsQuestions } from './models/ArrayOfOASysOffenceDetailsQuestions';
@@ -107,6 +108,7 @@ export type { PersonRisks } from './models/PersonRisks';
 export type { PlacementCriteria } from './models/PlacementCriteria';
 export type { PlacementRequest } from './models/PlacementRequest';
 export type { Premises } from './models/Premises';
+export type { PremisesSummary } from './models/PremisesSummary';
 export type { PrisonCaseNote } from './models/PrisonCaseNote';
 export type { ProbationRegion } from './models/ProbationRegion';
 export type { Problem } from './models/Problem';
@@ -136,6 +138,7 @@ export type { TemporaryAccommodationAssessment } from './models/TemporaryAccommo
 export type { TemporaryAccommodationBedSearchParameters } from './models/TemporaryAccommodationBedSearchParameters';
 export type { TemporaryAccommodationBedSearchResult } from './models/TemporaryAccommodationBedSearchResult';
 export type { TemporaryAccommodationPremises } from './models/TemporaryAccommodationPremises';
+export type { TemporaryAccommodationPremisesSummary } from './models/TemporaryAccommodationPremisesSummary';
 export type { TemporaryAccommodationUser } from './models/TemporaryAccommodationUser';
 export type { UpdateApplication } from './models/UpdateApplication';
 export type { UpdateAssessment } from './models/UpdateAssessment';

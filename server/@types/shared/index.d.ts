@@ -110,6 +110,7 @@ export type { PlacementRequest } from './models/PlacementRequest';
 export type { Premises } from './models/Premises';
 export type { PremisesSummary } from './models/PremisesSummary';
 export type { PrisonCaseNote } from './models/PrisonCaseNote';
+export type { ProbationDeliveryUnit } from './models/ProbationDeliveryUnit';
 export type { ProbationRegion } from './models/ProbationRegion';
 export type { Problem } from './models/Problem';
 export type { PropertyStatus } from './models/PropertyStatus';

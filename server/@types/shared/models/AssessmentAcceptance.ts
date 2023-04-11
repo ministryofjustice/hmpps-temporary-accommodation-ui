@@ -3,10 +3,10 @@
 /* eslint-disable */
 
 import type { AnyValue } from './AnyValue';
-import type { NewPlacementRequest } from './NewPlacementRequest';
+import type { PlacementRequirements } from './PlacementRequirements';
 
 export type AssessmentAcceptance = {
     document: AnyValue;
-    requirements: NewPlacementRequest;
+    requirements?: PlacementRequirements;
 };
 

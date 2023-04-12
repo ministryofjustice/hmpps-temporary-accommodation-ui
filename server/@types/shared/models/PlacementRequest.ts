@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { NewPlacementRequest } from './NewPlacementRequest';
 import type { Person } from './Person';
 import type { PersonRisks } from './PersonRisks';
+import type { PlacementRequirements } from './PlacementRequirements';
 
-export type PlacementRequest = (NewPlacementRequest & {
+export type PlacementRequest = (PlacementRequirements & {
     id?: string;
     person?: Person;
     risks?: PersonRisks;

@@ -2,4 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type ApplicationStatus = 'inProgress' | 'submitted' | 'requestedFurtherInformation';
+export type ApplicationStatus = 'inProgress' | 'submitted' | 'requestedFurtherInformation' | 'pending' | 'rejected' | 'awaitingPlacement' | 'placed';

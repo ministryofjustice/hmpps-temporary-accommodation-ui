@@ -6,7 +6,7 @@ import type { ApType } from './ApType';
 import type { Gender } from './Gender';
 import type { PlacementCriteria } from './PlacementCriteria';
 
-export type NewPlacementRequest = {
+export type PlacementRequirements = {
     gender: Gender;
     type: ApType;
     expectedArrival: string;

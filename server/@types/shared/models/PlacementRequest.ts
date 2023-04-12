@@ -2,6 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
+import type { AssessmentDecision } from './AssessmentDecision';
 import type { Person } from './Person';
 import type { PersonRisks } from './PersonRisks';
 import type { PlacementRequestStatus } from './PlacementRequestStatus';
@@ -16,11 +18,19 @@ export type PlacementRequest = (PlacementRequirements & {
     assessmentId?: string;
     releaseType?: ReleaseTypeOption;
     status?: PlacementRequestStatus;
+    assessmentDecision?: AssessmentDecision;
+    assessmentDate?: string;
+    assessor?: ApprovedPremisesUser;
 } & {
     id: string;
     person: Person;
     risks: PersonRisks;
     applicationId: string;
     assessmentId: string;
+    releaseType: ReleaseTypeOption;
+    status: PlacementRequestStatus;
+    assessmentDecision: AssessmentDecision;
+    assessmentDate: string;
+    assessor: ApprovedPremisesUser;
 });
 

@@ -5,7 +5,7 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<BookingSearchResultBookingSummary>(() => ({
   id: faker.datatype.uuid(),
-  status: faker.helpers.arrayElement(['provisional', 'confirmed', 'active', 'closed', 'cancelled'] as const),
+  status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed'] as const),
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),

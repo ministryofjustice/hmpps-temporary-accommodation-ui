@@ -1,3 +1,4 @@
+import type { BookingStatus } from '@approved-premises/api'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
@@ -37,7 +38,7 @@ context('Booking search', () => {
     // And there are bookings of all relevant status types in the database
     const bookings = bookingSearchResultsFactory.build()
 
-    const statuses = ['provisional', 'active', 'closed', 'confirmed']
+    const statuses: Array<BookingStatus> = ['provisional', 'arrived', 'departed', 'confirmed']
 
     statuses.forEach(status => {
       cy.task('stubFindBookings', { bookings, status })

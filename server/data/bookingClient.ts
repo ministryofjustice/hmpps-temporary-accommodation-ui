@@ -1,7 +1,6 @@
 import type {
   Arrival,
   Booking,
-  BookingSearchStatus,
   Cancellation,
   Confirmation,
   Departure,
@@ -15,6 +14,7 @@ import type {
   NewNonarrival,
   Nonarrival,
 } from '@approved-premises/api'
+import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import type { BookingSearchResults } from 'server/@types/shared/models/BookingSearchResults'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
@@ -108,7 +108,7 @@ export default class BookingClient {
     return response as Nonarrival
   }
 
-  async search(status: BookingSearchStatus): Promise<BookingSearchResults> {
+  async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {
     const queryString: string = createQueryString({ status })
 
     const path = `${paths.bookings.search({ status })}${queryString ? `?${queryString}` : ''}`

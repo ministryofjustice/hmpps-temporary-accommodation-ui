@@ -4,7 +4,7 @@ import BookingSearchController from './bookingSearchController'
 import { CallConfig } from '../../../data/restClient'
 import { BookingSearchService } from '../../../services'
 import extractCallConfig from '../../../utils/restUtils'
-import { createSideNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
+import { convertApiStatusToUiStatus, createSideNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/bookingSearchUtils')
@@ -31,6 +31,7 @@ describe('BookingSearchController', () => {
   describe('index', () => {
     it('renders the table view for provisional bookings', async () => {
       bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+      ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('provisional')
 
       const requestHandler = bookingSearchController.index('provisional')
 
@@ -39,24 +40,25 @@ describe('BookingSearchController', () => {
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'provisional')
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
-        status: 'provisional',
+        uiStatus: 'provisional',
         tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
       })
     })
 
-    it('renders the table view for active bookings', async () => {
+    it('renders the table view for arrived bookings', async () => {
       bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+      ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('active')
 
-      const requestHandler = bookingSearchController.index('active')
+      const requestHandler = bookingSearchController.index('arrived')
 
       await requestHandler(request, response, next)
 
-      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'active')
+      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'arrived')
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
-        status: 'active',
+        uiStatus: 'active',
         tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
@@ -65,6 +67,7 @@ describe('BookingSearchController', () => {
 
     it('renders the table view for confirmed bookings', async () => {
       bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+      ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('confirmed')
 
       const requestHandler = bookingSearchController.index('confirmed')
 
@@ -73,24 +76,25 @@ describe('BookingSearchController', () => {
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'confirmed')
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
-        status: 'confirmed',
+        uiStatus: 'confirmed',
         tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],
       })
     })
 
-    it('renders the table view for closed bookings', async () => {
+    it('renders the table view for departed bookings', async () => {
       bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+      ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('closed')
 
-      const requestHandler = bookingSearchController.index('closed')
+      const requestHandler = bookingSearchController.index('departed')
 
       await requestHandler(request, response, next)
 
-      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'closed')
+      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'departed')
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
-        status: 'closed',
+        uiStatus: 'closed',
         tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],

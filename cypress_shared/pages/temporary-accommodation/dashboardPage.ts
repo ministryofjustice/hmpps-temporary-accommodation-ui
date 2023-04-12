@@ -22,7 +22,7 @@ export default class DashboardPage extends Page {
     cy.get('a').contains('Find a bedspace').click()
   }
 
-  clickFindABookingLink(): void {
-    cy.get('a').contains('Find a booking').click()
+  clickViewBookingsLink(): void {
+    cy.get('a').contains('View all bookings').click()
   }
 }

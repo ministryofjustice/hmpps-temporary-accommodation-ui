@@ -7,7 +7,7 @@ Given(`I'm searching bookings`, () => {
   cy.then(function _() {
     cy.visit('/')
     const dashboardPage = Page.verifyOnPage(DashboardPage)
-    dashboardPage.clickFindABookingLink()
+    dashboardPage.clickViewBookingsLink()
   })
 })
 

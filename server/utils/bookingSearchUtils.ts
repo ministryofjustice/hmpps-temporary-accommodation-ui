@@ -39,16 +39,16 @@ export function createTableHeadings(status: BookingSearchUiStatus): Array<TableC
       text: 'CRN',
     },
     {
-      text: 'Location',
+      text: 'Address',
     },
     {
-      text: 'Start',
+      text: 'Start date',
       attributes: {
         'aria-sort': ['provisional', 'confirmed'].includes(status) ? 'ascending' : 'none',
       },
     },
     {
-      text: 'End',
+      text: 'End date',
       attributes: {
         'aria-sort': ['active', 'closed'].includes(status) ? 'ascending' : 'none',
       },

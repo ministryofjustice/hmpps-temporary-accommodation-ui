@@ -6,7 +6,7 @@ import { DateFormats } from '../../../../server/utils/dateUtils'
 
 export default class BookingSearchPage extends Page {
   constructor() {
-    super('Find a booking')
+    super('View bookings')
   }
 
   static visit(status: BookingSearchApiStatus): BookingSearchPage {

@@ -44,16 +44,16 @@ describe('bookingSearchUtils', () => {
           text: 'CRN',
         },
         {
-          text: 'Location',
+          text: 'Address',
         },
         {
-          text: 'Start',
+          text: 'Start date',
           attributes: {
             'aria-sort': 'ascending',
           },
         },
         {
-          text: 'End',
+          text: 'End date',
           attributes: {
             'aria-sort': 'none',
           },
@@ -80,16 +80,16 @@ describe('bookingSearchUtils', () => {
         text: 'CRN',
       },
       {
-        text: 'Location',
+        text: 'Address',
       },
       {
-        text: 'Start',
+        text: 'Start date',
         attributes: {
           'aria-sort': 'none',
         },
       },
       {
-        text: 'End',
+        text: 'End date',
         attributes: {
           'aria-sort': 'ascending',
         },

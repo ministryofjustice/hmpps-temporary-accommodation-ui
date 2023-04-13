@@ -14,32 +14,30 @@
 
 # Release checklist
 
-As part of our continuous deployment strategy we must ensure that this work is
-ready to be released at any point. Before merging to `main` we must first
-confirm:
+[Release process
+documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/edit-v2/4247847062?draftShareId=a1c360ab-bd31-4db1-aae3-7cc002761de9).
 
-## Pre merge checklist
+## Pre-merge checklist
 
-- [ ] Have all changes to any dependencies been deployed to both `preprod` and
-    `production` in a backwards compatible way? (This includes our API,
-    infrastructure, third-party integrations and any secrets or environment variables)
-- [ ] Has a required data migration been included in this change or been done in
-    advance?
+- [ ] Are any changes required to dependent services for this change to work?
+  (eg. CAS API)
+- [ ] Have they been released to production already?
 
-## Post merge checklist
+## Post-merge checklist
 
-Once we've merged we now need to release this through to production before
-considering it done.
+- [ ] [Manually
+  approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
+  release to test
+- [ ] [Manually
+  approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
+  release to preprod
+- [ ] [Manually
+  approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
+  release to prod
 
-[Find the build-and-deploy job in CircleCI](https://app.circleci.com/pipelines/github/ministryofjustice/hmpps-temporary-accommodation-ui)
-and work through the following steps:
-
-- [ ] Has the product manager asked to provide approval for this feature?
-  - [ ] Has the product manager approved?
-- [ ] Manually approve release to preprod
-- [ ] Verify change released to preprod
-- [ ] Manually approve release to prod
-- [ ] Verify change released to production
-
-Should a release fail at any step, you as the author should now lead the work to
-fix it as soon as possible.
+<!-- Should a release fail at any step, you as the author should now lead the work to
+fix it as soon as possible. You can monitor deployment failures in CircleCI
+itself and application errors are found in
+[Sentry](https://ministryofjustice.sentry.io/issues/?project=4504129156218880&referrer=sidebar&statsPeriod=24h).
+Both events should be automatically sent to our [Slack
+channel](https://mojdt.slack.com/archives/C048BJS7S2F). -->

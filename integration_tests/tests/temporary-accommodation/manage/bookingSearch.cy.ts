@@ -1,4 +1,4 @@
-import type { BookingStatus } from '@approved-premises/api'
+import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
@@ -23,22 +23,22 @@ context('Booking search', () => {
     // When I visit the dashboard
     const dashboard = DashboardPage.visit()
 
-    // And I click the Find a booking tile
-    dashboard.clickFindABookingLink()
+    // And I click the View all bookings tile
+    dashboard.clickViewBookingsLink()
 
     // Then I navigate to the Find a provisional booking page
     const page = Page.verifyOnPage(BookingSearchPage)
     page.checkBookingStatus('provisional')
   })
 
-  it('navigates to the find a booking pages for each status', () => {
+  it('navigates to the view bookings pages for each status', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there are bookings of all relevant status types in the database
     const bookings = bookingSearchResultsFactory.build()
 
-    const statuses: Array<BookingStatus> = ['provisional', 'arrived', 'departed', 'confirmed']
+    const statuses: Array<BookingSearchApiStatus> = ['provisional', 'arrived', 'departed', 'confirmed']
 
     statuses.forEach(status => {
       cy.task('stubFindBookings', { bookings, status })
@@ -66,7 +66,7 @@ context('Booking search', () => {
     page.checkBookingStatus('closed')
   })
 
-  it('navigates back to the dashboard from the find a booking page', () => {
+  it('navigates back to the dashboard from the view bookings page', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -75,7 +75,7 @@ context('Booking search', () => {
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
 
-    // When I visit the Find a booking page
+    // When I visit the View bookings page
     const page = BookingSearchPage.visit('provisional')
 
     // And I click the previous bread crumb

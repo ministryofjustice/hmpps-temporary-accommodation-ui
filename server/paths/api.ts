@@ -1,6 +1,7 @@
 import { path } from 'static-path'
 
 const premisesPath = path('/premises')
+const premisesSummaryPath = path('/premises/summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
@@ -19,7 +20,7 @@ const managePaths = {
   premises: {
     create: premisesPath,
     update: singlePremisesPath,
-    index: premisesPath,
+    index: premisesSummaryPath,
     show: singlePremisesPath,
     rooms: {
       index: roomsPath,

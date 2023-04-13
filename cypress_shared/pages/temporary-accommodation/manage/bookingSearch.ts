@@ -1,5 +1,5 @@
-import type { Booking, BookingStatus, Premises, Room } from '@approved-premises/api'
-import type { BookingSearchUiStatus } from '@approved-premises/ui'
+import type { Booking, Premises } from '@approved-premises/api'
+import type { BookingSearchApiStatus, BookingSearchUiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
@@ -9,7 +9,7 @@ export default class BookingSearchPage extends Page {
     super('Find a booking')
   }
 
-  static visit(status: BookingStatus): BookingSearchPage {
+  static visit(status: BookingSearchApiStatus): BookingSearchPage {
     cy.visit(paths.bookings.search[status].index({}))
     return new BookingSearchPage()
   }

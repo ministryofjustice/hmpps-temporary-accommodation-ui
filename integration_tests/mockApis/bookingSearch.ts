@@ -1,10 +1,11 @@
 import { SuperAgentRequest } from 'superagent'
-import type { BookingSearchResults, BookingStatus } from '@approved-premises/api'
+import type { BookingSearchResults } from '@approved-premises/api'
+import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import paths from '../../server/paths/api'
 import { stubFor } from '../../wiremock'
 
 export default {
-  stubFindBookings: (args: { bookings: BookingSearchResults; status: BookingStatus }): SuperAgentRequest =>
+  stubFindBookings: (args: { bookings: BookingSearchResults; status: BookingSearchApiStatus }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',

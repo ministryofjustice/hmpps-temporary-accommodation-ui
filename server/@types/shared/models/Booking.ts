@@ -4,6 +4,7 @@
 
 import type { Arrival } from './Arrival';
 import type { BookingBody } from './BookingBody';
+import type { BookingStatus } from './BookingStatus';
 import type { Cancellation } from './Cancellation';
 import type { Confirmation } from './Confirmation';
 import type { Departure } from './Departure';
@@ -11,7 +12,7 @@ import type { Extension } from './Extension';
 import type { Nonarrival } from './Nonarrival';
 
 export type Booking = (BookingBody & {
-    status: 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled' | 'provisional' | 'confirmed';
+    status: BookingStatus;
     extensions: Array<Extension>;
     arrival?: Arrival | null;
     /**

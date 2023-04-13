@@ -267,10 +267,10 @@ export default function routes(controllers: Controllers, services: Services, rou
     get(paths.bookings.search.provisional.index.pattern, bookingSearchController.index('provisional'), {
       auditEvent: 'VIEW_SEARCH_PROVISIONAL_BOOKINGS',
     })
-    get(paths.bookings.search.active.index.pattern, bookingSearchController.index('active'), {
+    get(paths.bookings.search.active.index.pattern, bookingSearchController.index('arrived'), {
       auditEvent: 'VIEW_SEARCH_ACTIVE_BOOKINGS',
     })
-    get(paths.bookings.search.closed.index.pattern, bookingSearchController.index('closed'), {
+    get(paths.bookings.search.closed.index.pattern, bookingSearchController.index('departed'), {
       auditEvent: 'VIEW_SEARCH_CLOSED_BOOKINGS',
     })
     get(paths.bookings.search.confirmed.index.pattern, bookingSearchController.index('confirmed'), {

@@ -49,7 +49,7 @@ export type { BookingSearchResultPremisesSummary } from './models/BookingSearchR
 export type { BookingSearchResultRoomSummary } from './models/BookingSearchResultRoomSummary';
 export type { BookingSearchResults } from './models/BookingSearchResults';
 export type { BookingSearchSortField } from './models/BookingSearchSortField';
-export type { BookingSearchStatus } from './models/BookingSearchStatus';
+export type { BookingStatus } from './models/BookingStatus';
 export type { Cancellation } from './models/Cancellation';
 export type { CancellationReason } from './models/CancellationReason';
 export type { Characteristic } from './models/Characteristic';
@@ -106,6 +106,7 @@ export type { PersonAcctAlert } from './models/PersonAcctAlert';
 export type { PersonRisks } from './models/PersonRisks';
 export type { PlacementCriteria } from './models/PlacementCriteria';
 export type { PlacementRequest } from './models/PlacementRequest';
+export type { PlacementRequestStatus } from './models/PlacementRequestStatus';
 export type { PlacementRequirements } from './models/PlacementRequirements';
 export type { Premises } from './models/Premises';
 export type { PremisesSummary } from './models/PremisesSummary';

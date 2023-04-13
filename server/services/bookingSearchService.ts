@@ -1,5 +1,4 @@
-import type { TableRow } from '@approved-premises/ui'
-import type { BookingSearchStatus } from '@approved-premises/api'
+import type { BookingSearchApiStatus, TableRow } from '@approved-premises/ui'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
@@ -9,7 +8,7 @@ import paths from '../paths/temporary-accommodation/manage'
 export default class BookingSearchService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
-  async getTableRowsForFindBooking(callConfig: CallConfig, status: BookingSearchStatus): Promise<Array<TableRow>> {
+  async getTableRowsForFindBooking(callConfig: CallConfig, status: BookingSearchApiStatus): Promise<Array<TableRow>> {
     const bookingClient = this.bookingClientFactory(callConfig)
     const bookingSummaries = await bookingClient.search(status)
 

@@ -2,11 +2,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { BookingSearchStatus } from './BookingSearchStatus';
+import type { BookingStatus } from './BookingStatus';
 
 export type BookingSearchResultBookingSummary = {
     id: string;
-    status: BookingSearchStatus;
+    status: BookingStatus;
     startDate: string;
     endDate: string;
     createdAt: string;

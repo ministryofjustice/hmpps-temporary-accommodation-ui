@@ -273,13 +273,13 @@ describe('BookingClient', () => {
     expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=provisional' })
   })
 
-  it('calls restClient with the correct path when handed in active status', async () => {
+  it('calls restClient with the correct path when handed in arrived status', async () => {
     bookingClient.restClient = {
       get: jest.fn(),
     } as unknown as jest.Mocked<RestClient>
 
-    await bookingClient.search('active')
+    await bookingClient.search('arrived')
 
-    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=active' })
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=arrived' })
   })
 })

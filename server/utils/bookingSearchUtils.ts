@@ -1,8 +1,8 @@
-import { BookingSearchStatus } from '@approved-premises/api'
+import type { BookingSearchApiStatus, BookingSearchUiStatus } from '@approved-premises/ui'
 import { SideNavObj, TableCell } from '../@types/ui/index'
 import paths from '../paths/temporary-accommodation/manage'
 
-export function createSideNavArr(status: BookingSearchStatus): Array<SideNavObj> {
+export function createSideNavArr(status: BookingSearchUiStatus): Array<SideNavObj> {
   return [
     {
       text: 'Provisional',
@@ -27,7 +27,7 @@ export function createSideNavArr(status: BookingSearchStatus): Array<SideNavObj>
   ]
 }
 
-export function createTableHeadings(status: BookingSearchStatus): Array<TableCell> {
+export function createTableHeadings(status: BookingSearchUiStatus): Array<TableCell> {
   return [
     {
       text: 'Name',
@@ -57,4 +57,15 @@ export function createTableHeadings(status: BookingSearchStatus): Array<TableCel
       html: '<span class="govuk-visually-hidden">Actions</span>',
     },
   ]
+}
+
+export function convertApiStatusToUiStatus(status: BookingSearchApiStatus): BookingSearchUiStatus {
+  switch (status) {
+    case 'arrived':
+      return 'active'
+    case 'departed':
+      return 'closed'
+    default:
+      return status
+  }
 }

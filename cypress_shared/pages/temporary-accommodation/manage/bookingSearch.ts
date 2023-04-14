@@ -21,13 +21,14 @@ export default class BookingSearchPage extends Page {
 
   checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
     cy.get('tr')
+      .filter(
+        `:contains(${booking.person.name}):contains(${booking.person.crn}):contains(${
+          premises.addressLine1
+        }):contains(${DateFormats.isoDateToUIDate(booking.arrivalDate, {
+          format: 'short',
+        })}):contains(${DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })})`,
+      )
       .children()
-      .should('contain', booking.person.name)
-      .and('contain', booking.person.crn)
-      .and('contain', premises.addressLine1)
-      .and('contain', DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
-      .and('contain', DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
-      .get('td')
       .eq(5)
       .contains('View')
       .click()

@@ -1,16 +1,50 @@
 [
-  { "id": "5bb2a91b-a33a-425e-8503-2ba69d7cabe7", "name": "Admitted to Hospital", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "9a68687d-944b-4960-9de2-7645635910f3", "name": "Bed Withdrawn", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "c81c42fe-f7af-4d16-b67d-93f0b4cbd338", "name": "Breach / recall (abscond)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "f5b57d36-1b3c-4777-93a2-72ff59cf7674", "name": "Breach / recall (behaviour / increasing risk)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "b80cbd68-c223-40af-b82b-5f7cee6f6fd7", "name": "Breach / recall (curfew)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "ff751e28-f957-4941-8049-5b44c6da878e", "name": "Breach / recall (house rules)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "d6e3f1db-01a7-4ce4-b7cb-f1ff5454d62e", "name": "Breach / recall (licence or bail condition)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "d86b6e2e-0b95-459a-a85a-065729149f0a", "name": "Breach / recall (other)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "761cfbe1-c102-4fe9-b943-bf131d550c90", "name": "Breach / recall (positive drugs test)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "69eac20f-c3b9-4ea3-87fd-814c3f1fd117", "name": "Died", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "6589f8fb-d377-4bc4-ace9-d3a2ce02f97b", "name": "Left of own volition", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "60d030db-ce2d-4f1a-b24f-42ce15d268f7", "name": "Other", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "f4d00e1c-8bfd-40e9-8241-a7d0f744e737", "name": "Planned move-on", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "ae93ec2c-157a-49fd-a4c9-b67f1a9457d8", "name": "Further custodial sentence imposed", "isActive": true, "serviceScope": "temporary-accommodation" }
+  {
+    "id": "b5d8a978-eb20-436e-a00f-f1358a3664d5",
+    "name": "Admitted to Hospital/Healthcare Facility",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "1de629ea-c5fb-4e91-9b0b-ef7d4d69bd5b",
+    "name": "Bed Withdrawn - Serious Incident related to CAS3 placement",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "d6c85a7e-cf9d-4a47-8da2-a25356d34570",
+    "name": "Bed Withdrawn – Person on probation no longer in property",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "93153ad1-38a3-4f4f-809e-ba8297c0565a",
+    "name": "Bed Withdrawn – Further offence/behaviour/increasing risk",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "94976884-c32f-4162-b3af-214beed0e988",
+    "name": "Bed Withdrawn - Recall/Breach",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "b8975a4d-68ff-4f42-9ac8-5136c4b393ef",
+    "name": "Deceased",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "166b6b02-6f42-4447-b278-dd9a0b437b54",
+    "name": "Planned Move on",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "529fe9a0-a644-48db-9e62-83c83a623a93",
+    "name": "Person on probation moved to another CAS3 property",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  }
 ]

@@ -85,7 +85,7 @@ describe('BookingSearchController', () => {
 
     it('renders the table view for departed bookings', async () => {
       bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
-      ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('closed')
+      ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('departed')
 
       const requestHandler = bookingSearchController.index('departed')
 
@@ -94,7 +94,7 @@ describe('BookingSearchController', () => {
       expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'departed')
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
-        uiStatus: 'closed',
+        uiStatus: 'departed',
         tableHeadings: [],
         bookingTableRows: [],
         sideNavArr: [],

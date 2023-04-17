@@ -18,4 +18,4 @@ Feature: Manage Temporary Accommodation - Booking search
         Then I should see a summary of the booking on the active bookings page
         And I mark the booking as departed
         And I'm searching bookings
-        Then I should see a summary of the booking on the closed bookings page
+        Then I should see a summary of the booking on the departed bookings page

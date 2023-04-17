@@ -20,9 +20,9 @@ export function createSideNavArr(status: BookingSearchUiStatus): Array<SideNavOb
       active: status === 'active',
     },
     {
-      text: 'Closed',
-      href: paths.bookings.search.closed.index({}),
-      active: status === 'closed',
+      text: 'Departed',
+      href: paths.bookings.search.departed.index({}),
+      active: status === 'departed',
     },
   ]
 }
@@ -50,7 +50,7 @@ export function createTableHeadings(status: BookingSearchUiStatus): Array<TableC
     {
       text: 'End date',
       attributes: {
-        'aria-sort': ['active', 'closed'].includes(status) ? 'ascending' : 'none',
+        'aria-sort': ['active', 'departed'].includes(status) ? 'ascending' : 'none',
       },
     },
     {
@@ -63,8 +63,6 @@ export function convertApiStatusToUiStatus(status: BookingSearchApiStatus): Book
   switch (status) {
     case 'arrived':
       return 'active'
-    case 'departed':
-      return 'closed'
     default:
       return status
   }

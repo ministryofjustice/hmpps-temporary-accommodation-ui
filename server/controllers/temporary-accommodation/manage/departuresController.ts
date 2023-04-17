@@ -54,7 +54,7 @@ export default class DeparturesController {
       try {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
-        req.flash('success', 'Booking marked as closed')
+        req.flash('success', 'Booking marked as departed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.bookings.departures.new({ premisesId, roomId, bookingId }))
@@ -106,7 +106,7 @@ export default class DeparturesController {
       try {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
-        req.flash('success', 'Closed booking updated')
+        req.flash('success', 'Departed booking updated')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(

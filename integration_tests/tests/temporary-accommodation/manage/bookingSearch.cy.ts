@@ -59,11 +59,11 @@ context('Booking search', () => {
     // Then I navigate to the Find an active booking page
     page.checkBookingStatus('active')
 
-    // And I click the Closed bookings link
-    page.clickOtherBookingStatusLink('closed')
+    // And I click the Departed bookings link
+    page.clickOtherBookingStatusLink('departed')
 
-    // Then I navigate to the Find a closed booking page
-    page.checkBookingStatus('closed')
+    // Then I navigate to the Find a departed booking page
+    page.checkBookingStatus('departed')
   })
 
   it('navigates back to the dashboard from the view bookings page', () => {

@@ -47,12 +47,12 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns mark as closed and extend actions for an arrived booking', () => {
+    it('returns mark as departed and extend actions for an arrived booking', () => {
       const booking = bookingFactory.arrived().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
         {
-          text: 'Mark as closed',
+          text: 'Mark as departed',
           classes: 'govuk-button--secondary',
           href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
         },
@@ -64,12 +64,12 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns edit closed booking for a departed booking', () => {
+    it('returns edit departed booking for a departed booking', () => {
       const booking = bookingFactory.departed().build()
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
         {
-          text: 'Update closed booking',
+          text: 'Update departed booking',
           classes: 'govuk-button--secondary',
           href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
         },

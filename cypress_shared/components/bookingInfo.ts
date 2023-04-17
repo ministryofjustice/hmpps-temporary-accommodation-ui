@@ -44,7 +44,7 @@ export default class BookingInfoComponent extends Component {
         this.shouldShowKeyAndValues(keyText, latestExtension.notes.split('\n'))
       }
     } else if (status === 'departed') {
-      this.shouldShowKeyAndValue('Status', 'Closed')
+      this.shouldShowKeyAndValue('Status', 'Departed')
       this.shouldShowKeyAndValue('Departure reason', this.booking.departure.reason.name)
       this.shouldShowKeyAndValue('Move on category', this.booking.departure.moveOnCategory.name)
       this.shouldShowKeyAndValues('Notes', this.booking.departure.notes.split('\n'))

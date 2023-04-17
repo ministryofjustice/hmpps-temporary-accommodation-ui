@@ -6,7 +6,7 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Mark booking as closed" %}
+{% set pageTitle = applicationName + " - Mark booking as departed" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -18,7 +18,7 @@
 
   {% include "../../_messages.njk" %}
 
-  <h1>Mark booking as closed</h1>
+  <h1>Mark booking as departed</h1>
 
   {{ showErrorSummary(errorSummary) }}
 

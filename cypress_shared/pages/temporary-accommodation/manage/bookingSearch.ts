@@ -1,8 +1,9 @@
 import type { Booking, Premises } from '@approved-premises/api'
-import type { BookingSearchApiStatus, BookingSearchUiStatus } from '@approved-premises/ui'
+import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
+import { convertApiStatusToUiStatus } from '../../../../server/utils/bookingSearchUtils'
 
 export default class BookingSearchPage extends Page {
   constructor() {
@@ -14,8 +15,9 @@ export default class BookingSearchPage extends Page {
     return new BookingSearchPage()
   }
 
-  checkBookingStatus(status: BookingSearchUiStatus) {
-    const capitalisedStatus = status.charAt(0).toUpperCase() + status.slice(1)
+  checkBookingStatus(status: BookingSearchApiStatus) {
+    const uiStatus = convertApiStatusToUiStatus(status)
+    const capitalisedStatus = uiStatus.charAt(0).toUpperCase() + uiStatus.slice(1)
     cy.get('h2').contains(`${capitalisedStatus} bookings`)
   }
 
@@ -34,8 +36,9 @@ export default class BookingSearchPage extends Page {
       .click()
   }
 
-  clickOtherBookingStatusLink(status: BookingSearchUiStatus) {
-    const capitalisedStatus = status.charAt(0).toUpperCase() + status.slice(1)
+  clickOtherBookingStatusLink(status: BookingSearchApiStatus) {
+    const uiStatus = convertApiStatusToUiStatus(status)
+    const capitalisedStatus = uiStatus.charAt(0).toUpperCase() + uiStatus.slice(1)
     cy.contains(capitalisedStatus).click()
   }
 }

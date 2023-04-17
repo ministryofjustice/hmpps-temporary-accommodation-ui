@@ -1,33 +1,35 @@
-import type { BookingSearchApiStatus, BookingSearchUiStatus } from '@approved-premises/ui'
+import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import { SideNavObj, TableCell } from '../@types/ui/index'
 import paths from '../paths/temporary-accommodation/manage'
 
-export function createSideNavArr(status: BookingSearchUiStatus): Array<SideNavObj> {
+export function createSideNavArr(status: BookingSearchApiStatus): Array<SideNavObj> {
+  const uiStatus = convertApiStatusToUiStatus(status)
   return [
     {
       text: 'Provisional',
       href: paths.bookings.search.provisional.index({}),
-      active: status === 'provisional',
+      active: uiStatus === 'provisional',
     },
     {
       text: 'Confirmed',
       href: paths.bookings.search.confirmed.index({}),
-      active: status === 'confirmed',
+      active: uiStatus === 'confirmed',
     },
     {
       text: 'Active',
       href: paths.bookings.search.active.index({}),
-      active: status === 'active',
+      active: uiStatus === 'active',
     },
     {
       text: 'Departed',
       href: paths.bookings.search.departed.index({}),
-      active: status === 'departed',
+      active: uiStatus === 'departed',
     },
   ]
 }
 
-export function createTableHeadings(status: BookingSearchUiStatus): Array<TableCell> {
+export function createTableHeadings(status: BookingSearchApiStatus): Array<TableCell> {
+  const uiStatus = convertApiStatusToUiStatus(status)
   return [
     {
       text: 'Name',
@@ -44,13 +46,13 @@ export function createTableHeadings(status: BookingSearchUiStatus): Array<TableC
     {
       text: 'Start date',
       attributes: {
-        'aria-sort': ['provisional', 'confirmed'].includes(status) ? 'ascending' : 'none',
+        'aria-sort': ['provisional', 'confirmed'].includes(uiStatus) ? 'ascending' : 'none',
       },
     },
     {
       text: 'End date',
       attributes: {
-        'aria-sort': ['active', 'departed'].includes(status) ? 'ascending' : 'none',
+        'aria-sort': ['active', 'departed'].includes(uiStatus) ? 'ascending' : 'none',
       },
     },
     {
@@ -59,7 +61,7 @@ export function createTableHeadings(status: BookingSearchUiStatus): Array<TableC
   ]
 }
 
-export function convertApiStatusToUiStatus(status: BookingSearchApiStatus): BookingSearchUiStatus {
+export function convertApiStatusToUiStatus(status: BookingSearchApiStatus): string {
   switch (status) {
     case 'arrived':
       return 'active'

@@ -261,6 +261,4 @@ export interface SideNavObj {
   active: boolean
 }
 
-export type BookingSearchUiStatus = 'provisional' | 'confirmed' | 'active' | 'departed'
-
 export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | 'departed'

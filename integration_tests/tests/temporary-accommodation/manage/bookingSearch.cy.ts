@@ -54,10 +54,10 @@ context('Booking search', () => {
     page.checkBookingStatus('confirmed')
 
     // And I click the Active bookings link
-    page.clickOtherBookingStatusLink('active')
+    page.clickOtherBookingStatusLink('arrived')
 
     // Then I navigate to the Find an active booking page
-    page.checkBookingStatus('active')
+    page.checkBookingStatus('arrived')
 
     // And I click the Departed bookings link
     page.clickOtherBookingStatusLink('departed')

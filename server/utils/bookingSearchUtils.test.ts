@@ -68,7 +68,7 @@ describe('bookingSearchUtils', () => {
     })
   })
 
-  it('returns table headings with end date sorted ascending for active and departed booking status', () => {
+  it('returns table headings with end date sorted ascending for arrived and departed booking status', () => {
     const tableHeadings = [
       {
         text: 'Name',
@@ -99,7 +99,7 @@ describe('bookingSearchUtils', () => {
       },
     ]
 
-    expect(createTableHeadings('active')).toEqual(tableHeadings)
+    expect(createTableHeadings('arrived')).toEqual(tableHeadings)
     expect(createTableHeadings('departed')).toEqual(tableHeadings)
   })
 })

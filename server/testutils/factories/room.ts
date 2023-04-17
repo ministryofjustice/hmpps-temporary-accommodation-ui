@@ -1,10 +1,10 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import { Room } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
 import { unique } from '../../utils/utils'
 import bedFactory from './bed'
+import referenceDataFactory from './referenceData'
 
 export default Factory.define<Room>(() => ({
   id: faker.datatype.uuid(),

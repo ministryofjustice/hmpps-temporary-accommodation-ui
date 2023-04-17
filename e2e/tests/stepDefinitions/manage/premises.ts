@@ -58,9 +58,9 @@ Given('I view an existing active premises', () => {
 Given('I create a premises with all necessary details', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
 
-  page.getPdus('pdus')
-  page.getLocalAuthorities('localAuthorities')
-  page.getCharacteristics('characteristics')
+  page.assignPdus('pdus')
+  page.assignLocalAuthorities('localAuthorities')
+  page.assignCharacteristics('characteristics')
 
   cy.then(function _() {
     const premises = premisesFactory
@@ -88,9 +88,9 @@ Given('I attempt to create a premises with required details missing', () => {
 Given('I attempt to create a premises with the PDU missing', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
 
-  page.getPdus('pdus')
-  page.getLocalAuthorities('localAuthorities')
-  page.getCharacteristics('characteristics')
+  page.assignPdus('pdus')
+  page.assignLocalAuthorities('localAuthorities')
+  page.assignCharacteristics('characteristics')
 
   cy.then(function _() {
     const premises = premisesFactory
@@ -123,9 +123,9 @@ Given('I edit the premises details', () => {
   cy.get('@premises').then((premises: Premises) => {
     const page = Page.verifyOnPage(PremisesEditPage, premises)
 
-    page.getPdus('pdus')
-    page.getLocalAuthorities('localAuthorities')
-    page.getCharacteristics('characteristics')
+    page.assignPdus('pdus')
+    page.assignLocalAuthorities('localAuthorities')
+    page.assignCharacteristics('characteristics')
 
     cy.then(function _() {
       const updatedPremises = premisesFactory

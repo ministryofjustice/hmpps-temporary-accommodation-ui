@@ -13,7 +13,7 @@ const stubPremises = (premises: Array<Premises>) =>
   stubFor({
     request: {
       method: 'GET',
-      urlPath: '/premises',
+      urlPath: '/premises/summary',
     },
     response: {
       status: 200,

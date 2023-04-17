@@ -20,17 +20,17 @@ Given('I create a bedspace with all necessary details', () => {
   cy.get('@premises').then(premises => {
     const page = Page.verifyOnPage(BedspaceNewPage, premises)
 
-    const room = roomFactory.build({
-      id: 'unknown',
-    })
+    page.assignCharacteristics('characteristics')
 
-    const newRoom = newRoomFactory.build({
-      ...room,
-      characteristicIds: room.characteristics.map(characteristic => characteristic.id),
-    })
+    cy.then(function _() {
+      const room = roomFactory.forEnvironment(this.characteristics).build({
+        id: 'unknown',
+      })
+      const newRoom = newRoomFactory.fromRoom(room).build()
 
-    cy.wrap(room).as('room')
-    page.completeForm(newRoom)
+      cy.wrap(room).as('room')
+      page.completeForm(newRoom)
+    })
   })
 })
 
@@ -48,18 +48,18 @@ Given('I edit the bedspace details', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceEditPage, this.premises, this.room)
 
-    const updatedRoom = roomFactory.build({
-      id: this.room.id,
-      name: this.room.name,
-    })
+    page.assignCharacteristics('characteristics')
 
-    const updateRoom = updateRoomFactory.build({
-      ...updatedRoom,
-      characteristicIds: updatedRoom.characteristics.map(characteristic => characteristic.id),
-    })
+    cy.then(function __() {
+      const updatedRoom = roomFactory.forEnvironment(this.characteristics).build({
+        id: this.room.id,
+        name: this.room.name,
+      })
+      const updateRoom = updateRoomFactory.fromRoom(updatedRoom).build()
 
-    cy.wrap(updatedRoom).as('room')
-    page.completeForm(updateRoom)
+      cy.wrap(updatedRoom).as('room')
+      page.completeForm(updateRoom)
+    })
   })
 })
 

@@ -12,4 +12,8 @@ export default abstract class BedspaceEditablePage extends Page {
 
     this.clickSubmit()
   }
+
+  assignCharacteristics(alias: string): void {
+    this.getCheckboxItemsAsReferenceData('Does the bedspace have any of the following attributes?', alias)
+  }
 }

@@ -1,12 +1,30 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import { Room } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
+import { ReferenceData } from '../../@types/ui'
 import { unique } from '../../utils/utils'
 import bedFactory from './bed'
+import characteristicFactory from './characteristic'
+import referenceDataFactory from './referenceData'
 
-export default Factory.define<Room>(() => ({
+class RoomFactory extends Factory<Room> {
+  /* istanbul ignore next */
+  forEnvironment(characteristics: ReferenceData[]) {
+    return this.params({
+      characteristics: faker.helpers
+        .arrayElements(characteristics, faker.datatype.number({ min: 1, max: 5 }))
+        .map(characteristic =>
+          characteristicFactory.build({
+            ...characteristic,
+            modelScope: 'room',
+          }),
+        ),
+    })
+  }
+}
+
+export default RoomFactory.define(() => ({
   id: faker.datatype.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   characteristics: unique(

@@ -1,10 +1,20 @@
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
-import type { UpdateRoom } from '@approved-premises/api'
+import type { Room, UpdateRoom } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
 import { unique } from '../../utils/utils'
 
-export default Factory.define<UpdateRoom>(() => ({
+class UpdateRoomFactory extends Factory<UpdateRoom> {
+  /* istanbul ignore next */
+  fromRoom(room: Room) {
+    return this.params({
+      ...room,
+      characteristicIds: room.characteristics.map(characteristic => characteristic.id),
+    })
+  }
+}
+
+export default UpdateRoomFactory.define(() => ({
   characteristicIds: unique([referenceDataFactory.characteristic('room').build()]).map(
     characteristic => characteristic.id,
   ),

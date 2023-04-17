@@ -1,14 +1,38 @@
 [
-  { "id": "d8e04fa1-9757-4681-bfab-6c61913c8463", "name": "Approved Premises", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "247ae3f4-7958-4c59-97ed-272a39ad411c", "name": "Friends/Family (settled)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "2236cd7e-32c5-4784-a461-8f0aead1d386", "name": "Householder (Owner - freehold or leasehold)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "d3b9f02e-c3a5-475b-a5dd-124c058900d9", "name": "Long Term Residential Healthcare", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "587dc0dc-9073-4992-9d58-5576753050e9", "name": "Rental accommodation - private rental", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "12c739fa-7bb1-416d-bbf2-71362578a7f3", "name": "Rental accommodation - social rental", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "3de4665a-c848-4797-ba80-502cacc6f7d7", "name": "Friends/Family (transient)", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "a90a77a3-5662-4fa8-85ab-07d0c085052f", "name": "Homeless - Shelter/Emergency Hostel/Campsite", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "33244330-87e9-4cc6-9940-f78586585436", "name": "Homeless - Rough Sleeping", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "15fb0af2-3406-49c9-81ed-5e42bddf9fc2", "name": "Homeless - Squat", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "91158ed5-467e-4ee8-90d9-4f17a5dac82f", "name": "Transient/short term accommodation", "isActive": true, "serviceScope": "temporary-accommodation" },
-  { "id": "9e18dc4d-297b-4a9c-86cc-31238d339b3a", "name": "AfEO Funded", "isActive": true }
+  {
+    "id": "bd7425b0-ee9a-491c-a64b-c6a034847778",
+    "name": "CAS2",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "b6d65622-44ae-42ac-9da0-c6a02532c3d5",
+    "name": "Hospital",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "c532986f-462c-4adf-ab2e-583e49f06ec6",
+    "name": "Prison (further custodial event)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "8c392f36-515c-4210-bb72-6255f12abb91",
+    "name": "Recalled",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "5d1f4d82-6830-43bf-b197-c5975c0c721b",
+    "name": "N/A (only to be used where person on probation is deceased)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "24e80792-1eee-48fc-9a02-51275c3a6217",
+    "name": "N/A (only to be used where person on probation has moved to another CAS3 property)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  }
 ]

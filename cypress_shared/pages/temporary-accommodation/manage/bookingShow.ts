@@ -43,14 +43,14 @@ export default class BookingShowPage extends Page {
   clickMarkDepartedBookingButton(): void {
     cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Mark as closed').click()
+      cy.get('a').contains('Mark as departed').click()
     })
   }
 
   clickEditDepartedBookingButton(): void {
     cy.get('.moj-page-header-actions').within(() => {
       cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Update closed booking').click()
+      cy.get('a').contains('Update departed booking').click()
     })
   }
 

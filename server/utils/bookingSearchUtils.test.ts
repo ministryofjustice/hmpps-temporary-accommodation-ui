@@ -21,8 +21,8 @@ describe('bookingSearchUtils', () => {
           active: false,
         },
         {
-          text: 'Closed',
-          href: paths.bookings.search.closed.index({}),
+          text: 'Departed',
+          href: paths.bookings.search.departed.index({}),
           active: false,
         },
       ]
@@ -68,7 +68,7 @@ describe('bookingSearchUtils', () => {
     })
   })
 
-  it('returns table headings with end date sorted ascending for active and closed booking status', () => {
+  it('returns table headings with end date sorted ascending for arrived and departed booking status', () => {
     const tableHeadings = [
       {
         text: 'Name',
@@ -99,8 +99,8 @@ describe('bookingSearchUtils', () => {
       },
     ]
 
-    expect(createTableHeadings('active')).toEqual(tableHeadings)
-    expect(createTableHeadings('closed')).toEqual(tableHeadings)
+    expect(createTableHeadings('arrived')).toEqual(tableHeadings)
+    expect(createTableHeadings('departed')).toEqual(tableHeadings)
   })
 })
 
@@ -109,6 +109,6 @@ describe('convertApiStatusToUiStatus', () => {
     expect(convertApiStatusToUiStatus('provisional')).toEqual('provisional')
     expect(convertApiStatusToUiStatus('confirmed')).toEqual('confirmed')
     expect(convertApiStatusToUiStatus('arrived')).toEqual('active')
-    expect(convertApiStatusToUiStatus('departed')).toEqual('closed')
+    expect(convertApiStatusToUiStatus('departed')).toEqual('departed')
   })
 })

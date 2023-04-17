@@ -44,13 +44,13 @@ Then('I should see a summary of the booking on the active bookings page', () => 
   })
 })
 
-Then('I should see a summary of the booking on the closed bookings page', () => {
+Then('I should see a summary of the booking on the departed bookings page', () => {
   cy.then(function _() {
     const bookingSearchPage = Page.verifyOnPage(BookingSearchPage)
     bookingSearchPage.checkBookingStatus('provisional')
 
-    bookingSearchPage.clickOtherBookingStatusLink('closed')
-    bookingSearchPage.checkBookingStatus('closed')
+    bookingSearchPage.clickOtherBookingStatusLink('departed')
+    bookingSearchPage.checkBookingStatus('departed')
 
     bookingSearchPage.checkBookingDetailsAndClickView(this.premises, this.booking)
   })

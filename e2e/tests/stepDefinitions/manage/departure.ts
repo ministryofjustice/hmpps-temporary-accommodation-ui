@@ -91,7 +91,7 @@ Given('I attempt to edit the departed booking with required details missing', ()
 Then('I should see the booking with the departed status', () => {
   cy.then(function _() {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
-    bookingShowPage.shouldShowBanner('Booking marked as closed')
+    bookingShowPage.shouldShowBanner('Booking marked as departed')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()
@@ -105,7 +105,7 @@ Then('I should see the booking with the departed status', () => {
 Then('I should see the booking with the edited departure details', () => {
   cy.then(function _() {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
-    bookingShowPage.shouldShowBanner('Closed booking updated')
+    bookingShowPage.shouldShowBanner('Departed booking updated')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()

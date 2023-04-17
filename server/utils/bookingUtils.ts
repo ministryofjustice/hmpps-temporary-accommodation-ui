@@ -36,7 +36,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
     case 'arrived':
       items.push(
         {
-          text: 'Mark as closed',
+          text: 'Mark as departed',
           classes: 'govuk-button--secondary',
           href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
         },
@@ -49,7 +49,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
       break
     case 'departed':
       items.push({
-        text: 'Update closed booking',
+        text: 'Update departed booking',
         classes: 'govuk-button--secondary',
         href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
       })
@@ -89,7 +89,7 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
     tagClass: 'govuk-tag--green',
   },
   {
-    name: 'Closed',
+    name: 'Departed',
     id: 'departed',
     tagClass: 'govuk-tag--red',
   },

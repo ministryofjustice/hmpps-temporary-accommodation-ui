@@ -54,7 +54,7 @@ export default class BedspaceShowPage extends Page {
         } else if (status === 'arrived') {
           cy.get('td').eq(3).contains('Active')
         } else if (status === 'departed') {
-          cy.get('td').eq(3).contains('Closed')
+          cy.get('td').eq(3).contains('Departed')
         }
 
         cy.get('td').eq(4).contains('View')

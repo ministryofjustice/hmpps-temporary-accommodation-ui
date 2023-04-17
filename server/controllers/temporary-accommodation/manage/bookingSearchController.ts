@@ -13,12 +13,10 @@ export default class BookingSearchController {
 
       const bookingTableRows = await this.bookingSearchService.getTableRowsForFindBooking(callConfig, status)
 
-      const uiStatus = convertApiStatusToUiStatus(status)
-
       return res.render(`temporary-accommodation/booking-search/results`, {
-        uiStatus,
-        sideNavArr: createSideNavArr(uiStatus),
-        tableHeadings: createTableHeadings(uiStatus),
+        uiStatus: convertApiStatusToUiStatus(status),
+        sideNavArr: createSideNavArr(status),
+        tableHeadings: createTableHeadings(status),
         bookingTableRows,
       })
     }

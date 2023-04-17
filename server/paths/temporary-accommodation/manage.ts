@@ -12,7 +12,7 @@ const allBookingsPath = temporaryAccommodationPath.path('bookings')
 
 const confirmationsPath = singleBookingPath.path('confirm')
 const arrivalsPath = singleBookingPath.path('mark-as-active')
-const departuresPath = singleBookingPath.path('mark-as-closed')
+const departuresPath = singleBookingPath.path('mark-as-departed')
 const extensionsPath = singleBookingPath.path('extend')
 const cancellationsPath = singleBookingPath.path('cancellations')
 
@@ -74,8 +74,8 @@ const paths = {
       active: {
         index: allBookingsPath.path('active'),
       },
-      closed: {
-        index: allBookingsPath.path('closed'),
+      departed: {
+        index: allBookingsPath.path('departed'),
       },
       confirmed: {
         index: allBookingsPath.path('confirmed'),

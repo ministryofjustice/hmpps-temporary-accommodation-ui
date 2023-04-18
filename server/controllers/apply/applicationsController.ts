@@ -1,14 +1,14 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import TasklistService from '../../services/tasklistService'
-import ApplicationService from '../../services/applicationService'
-import { PersonService } from '../../services'
-import { fetchErrorsAndUserInput } from '../../utils/validation'
-import paths from '../../paths/apply'
-import { DateFormats } from '../../utils/dateUtils'
 import Apply from '../../form-pages/apply'
+import paths from '../../paths/apply'
+import { PersonService } from '../../services'
+import ApplicationService from '../../services/applicationService'
+import TasklistService from '../../services/tasklistService'
 import { firstPageOfApplicationJourney, getResponses, isUnapplicable } from '../../utils/applicationUtils'
+import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
+import { fetchErrorsAndUserInput } from '../../utils/validation'
 
 export const tasklistPageHeading = 'Apply for an Approved Premises (AP) placement'
 

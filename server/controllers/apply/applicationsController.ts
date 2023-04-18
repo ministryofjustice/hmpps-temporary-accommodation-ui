@@ -51,7 +51,7 @@ export default class ApplicationsController {
       const callConfig = extractCallConfig(req)
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const crnArr = req.flash('crn')
+      const crnArr = req.flash('crn') as string
 
       if (crnArr.length) {
         const crn = crnArr[0]

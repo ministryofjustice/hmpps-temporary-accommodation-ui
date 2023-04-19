@@ -11,6 +11,7 @@ import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   insertGenericError,
+  reallocateErrors,
   setUserInput,
 } from './validation'
 
@@ -307,6 +308,52 @@ describe('insertGenericError', () => {
         'invalid-params': [
           { propertyName: '$.someOtherProperty', errorType: 'someOtherErrorType' },
           { propertyName: '$.someProperty', errorType: 'someErrorType' },
+        ],
+      },
+    })
+  })
+})
+
+describe('reallocateError', () => {
+  it('renames a property matching the source parameter to the destination parameter', () => {
+    const error = {
+      data: {
+        'invalid-params': [
+          { propertyName: '$.apiProperty', errorType: 'someErrorType' },
+          { propertyName: '$.unrelatedProperty', errorType: 'somOtherErrorType' },
+        ],
+      },
+    }
+
+    reallocateErrors(error as SanitisedError, 'apiProperty', 'uiProperty')
+
+    expect(error).toEqual({
+      data: {
+        'invalid-params': [
+          { propertyName: '$.uiProperty', errorType: 'someErrorType' },
+          { propertyName: '$.unrelatedProperty', errorType: 'somOtherErrorType' },
+        ],
+      },
+    })
+  })
+
+  it('does nothing if the desination parameter already exists', () => {
+    const error = {
+      data: {
+        'invalid-params': [
+          { propertyName: '$.apiProperty', errorType: 'someErrorType' },
+          { propertyName: '$.uiProperty', errorType: 'somOtherErrorType' },
+        ],
+      },
+    }
+
+    reallocateErrors(error as SanitisedError, 'apiProperty', 'uiProperty')
+
+    expect(error).toEqual({
+      data: {
+        'invalid-params': [
+          { propertyName: '$.apiProperty', errorType: 'someErrorType' },
+          { propertyName: '$.uiProperty', errorType: 'somOtherErrorType' },
         ],
       },
     })

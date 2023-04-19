@@ -51,7 +51,7 @@ export const catchAPIErrorOrPropogate = (request: Request, response: Response, e
 
 export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput => {
   const errors = firstFlashItem(request, 'errors') || {}
-  const errorSummary = request.flash('errorSummary') || []
+  const errorSummary = (request.flash('errorSummary') || []) as Array<ErrorSummary>
   const userInput = firstFlashItem(request, 'userInput') || {}
 
   return { errors, errorSummary, userInput }
@@ -91,7 +91,7 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
 }
 
 const extractValidationErrors = (error: SanitisedError | Error, context: ErrorContext) => {
-  if (isAnnotedError(error)) {
+  if (isAnnotatedError(error)) {
     if (error.data['invalid-params'] && error.data['invalid-params'].length) {
       return generateErrors(error.data['invalid-params'] as Array<InvalidParams>, context)
     }
@@ -101,6 +101,26 @@ const extractValidationErrors = (error: SanitisedError | Error, context: ErrorCo
   }
 
   throw error
+}
+
+export const reallocateErrors = (error: SanitisedError | Error, source: string, destination: string) => {
+  if (isAnnotatedError(error)) {
+    const invalidParams = error.data['invalid-params'] as Array<InvalidParams>
+
+    if (
+      invalidParams?.some(element => {
+        return element.propertyName === `$.${destination}`
+      })
+    ) {
+      return
+    }
+
+    invalidParams?.forEach(element => {
+      if (element.propertyName === `$.${source}`) {
+        element.propertyName = `$.${destination}`
+      }
+    })
+  }
 }
 
 const generateErrors = (params: Array<InvalidParams>, context: ErrorContext): Record<string, string> => {
@@ -149,6 +169,6 @@ const throwUndefinedError = (message: string) => {
   throw new Error(message)
 }
 
-const isAnnotedError = (error: SanitisedError | Error): error is AnnotatedError => {
+const isAnnotatedError = (error: SanitisedError | Error): error is AnnotatedError => {
   return 'data' in error
 }

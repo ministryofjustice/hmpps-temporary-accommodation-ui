@@ -18,7 +18,7 @@ import {
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, reallocateErrors } from '../../../utils/validation'
 import PremisesController from './premisesController'
 
 jest.mock('../../../utils/validation')
@@ -195,6 +195,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(reallocateErrors).toHaveBeenCalledWith(err, 'probationDeliveryUnitId', 'pdu')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.new({}))
     })
   })
@@ -320,6 +321,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(reallocateErrors).toHaveBeenCalledWith(err, 'probationDeliveryUnitId', 'pdu')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,

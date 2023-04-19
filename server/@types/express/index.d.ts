@@ -1,5 +1,5 @@
-import type { ErrorMessages } from '@approved-premises/ui'
 import type { ApprovedPremisesApplication as Application, ProbationRegion } from '@approved-premises/api'
+import type { ErrorMessages } from '@approved-premises/ui'
 
 export default {}
 
@@ -33,6 +33,8 @@ declare module 'express' {
   type ShowRequestHandler = TypedRequestHandler<ShowParams>
 }
 
+type FlashMessage = string | ErrorMessages | Array<ErrorSummary> | Record<string, unknown>
+
 export declare global {
   namespace Express {
     interface User {
@@ -45,7 +47,8 @@ export declare global {
       verified?: boolean
       id: string
       logout(done: (err: unknown) => void): void
-      flash(type: string, message: string | ErrorMessages | Array<ErrorSummary> | Record<string, unknown>): number
+      flash(type: string, message: FlashMessage): number
+      flash(type: string): FlashMessage
     }
   }
 }

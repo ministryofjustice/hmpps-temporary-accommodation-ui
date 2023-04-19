@@ -181,7 +181,7 @@ export interface ErrorSummary {
 
 export interface ErrorsAndUserInput {
   errors: ErrorMessages
-  errorSummary: Array<string>
+  errorSummary: Array<ErrorSummary>
   userInput: Record<string, unknown>
 }
 

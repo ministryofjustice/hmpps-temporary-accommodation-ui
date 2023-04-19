@@ -29,6 +29,7 @@ export default class BookingClient {
   }
 
   async create(premisesId: string, data: NewBooking): Promise<Booking> {
+    data = { crn: data.crn.trim(), ...data }
     return (await this.restClient.post({ path: this.bookingsPath(premisesId), data })) as Booking
   }
 

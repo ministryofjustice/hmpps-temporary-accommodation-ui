@@ -55,7 +55,7 @@ Given('I view an existing active premises', () => {
   })
 })
 
-Given('I create a premises with all necessary details', () => {
+Given('I create an active premises with all necessary details', () => {
   const page = Page.verifyOnPage(PremisesNewPage)
 
   page.assignPdus('pdus')
@@ -65,6 +65,7 @@ Given('I create a premises with all necessary details', () => {
   cy.then(function _() {
     const premises = premisesFactory
       .forEnvironment(actingUserProbationRegion, this.pdus, this.localAuthorities, this.characteristics)
+      .active()
       .build({
         id: 'unknown',
       })

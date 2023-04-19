@@ -4,7 +4,7 @@ Feature: Manage Temporary Accommodation - Bedspace Search
 
     Scenario: Searching for a bedspace
         Given I'm creating a premises
-        And I create a premises with all necessary details
+        And I create an active premises with all necessary details
         And I'm creating a bedspace
         And I create a bedspace with all necessary details
         And I return to the dashboard

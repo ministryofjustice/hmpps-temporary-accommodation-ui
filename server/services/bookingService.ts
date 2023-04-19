@@ -17,14 +17,6 @@ export default class BookingService {
     private readonly lostBedClientFactory: RestClientBuilder<LostBedClient>,
   ) {}
 
-  async create(callConfig: CallConfig, premisesId: string, booking: NewBooking): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig)
-
-    const confirmedBooking = await bookingClient.create(premisesId, booking)
-
-    return confirmedBooking
-  }
-
   async createForBedspace(
     callConfig: CallConfig,
     premisesId: string,
@@ -40,14 +32,6 @@ export default class BookingService {
     })
 
     return confirmedBooking
-  }
-
-  async find(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig)
-
-    const booking = await bookingClient.find(premisesId, bookingId)
-
-    return booking
   }
 
   async getTableRowsForBedspace(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<TableRow>> {

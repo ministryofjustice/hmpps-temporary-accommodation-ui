@@ -40,20 +40,6 @@ describe('BookingService', () => {
     lostBedClientFactory.mockReturnValue(lostBedClient)
   })
 
-  describe('create', () => {
-    it('on success returns the booking that has been posted', async () => {
-      const booking = bookingFactory.build()
-      const newBooking = newBookingFactory.build()
-      bookingClient.create.mockResolvedValue(booking)
-
-      const postedBooking = await service.create(callConfig, premisesId, newBooking)
-      expect(postedBooking).toEqual(booking)
-
-      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingClient.create).toHaveBeenCalledWith(premisesId, newBooking)
-    })
-  })
-
   describe('createForBedspace', () => {
     it('posts a new booking with a bed ID, and on success returns the created booking', async () => {
       const booking = bookingFactory.build()
@@ -77,26 +63,6 @@ describe('BookingService', () => {
         bedId,
         ...newBooking,
       })
-    })
-  })
-
-  describe('find', () => {
-    it('on success returns the booking that has been requested', async () => {
-      const arrivalDate = new Date(2022, 2, 11)
-      const departureDate = new Date(2022, 2, 12)
-
-      const booking = bookingFactory.build({
-        arrivalDate: arrivalDate.toISOString(),
-        departureDate: departureDate.toISOString(),
-      })
-
-      bookingClient.find.mockResolvedValue(booking)
-
-      const retrievedBooking = await service.find(callConfig, premisesId, booking.id)
-      expect(retrievedBooking).toEqual(booking)
-
-      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
     })
   })
 

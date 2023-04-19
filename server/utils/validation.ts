@@ -107,7 +107,7 @@ const extractValidationErrors = (error: SanitisedError | Error, context: ErrorCo
   throw error
 }
 
-export const reallocateErrors = (error: SanitisedError | Error, source: string, destination: string) => {
+export const transformErrors = (error: SanitisedError | Error, source: string, destination: string) => {
   if (isAnnotatedError(error)) {
     const invalidParams = error.data['invalid-params'] as Array<InvalidParams>
 

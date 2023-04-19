@@ -12,8 +12,8 @@ import {
   clearUserInput,
   fetchErrorsAndUserInput,
   insertGenericError,
-  reallocateErrors,
   setUserInput,
+  transformErrors,
 } from './validation'
 
 jest.mock('../i18n/en/errors.json', () => {
@@ -336,7 +336,7 @@ describe('reallocateError', () => {
       },
     }
 
-    reallocateErrors(error as SanitisedError, 'apiProperty', 'uiProperty')
+    transformErrors(error as SanitisedError, 'apiProperty', 'uiProperty')
 
     expect(error).toEqual({
       data: {
@@ -358,7 +358,7 @@ describe('reallocateError', () => {
       },
     }
 
-    reallocateErrors(error as SanitisedError, 'apiProperty', 'uiProperty')
+    transformErrors(error as SanitisedError, 'apiProperty', 'uiProperty')
 
     expect(error).toEqual({
       data: {

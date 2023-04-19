@@ -175,8 +175,9 @@ export interface ErrorMessages {
 }
 
 export interface ErrorSummary {
-  text: string
-  href: string
+  text?: string
+  html?: string
+  href?: string
 }
 
 export interface ErrorsAndUserInput {

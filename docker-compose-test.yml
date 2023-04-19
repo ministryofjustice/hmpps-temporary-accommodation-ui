@@ -5,6 +5,8 @@ services:
     image: 'bitnami/redis:7.0.11'
     networks:
       - hmpps_int
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - '6380:6379'
 

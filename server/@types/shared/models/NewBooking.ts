@@ -10,5 +10,6 @@ export type NewBooking = {
     departureDate: string;
     bedId: string;
     serviceName: ServiceName;
+    enableTurnarounds?: boolean;
 };
 

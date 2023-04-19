@@ -11,17 +11,6 @@ import type { PlacementRequirements } from './PlacementRequirements';
 import type { ReleaseTypeOption } from './ReleaseTypeOption';
 
 export type PlacementRequest = (PlacementRequirements & {
-    id?: string;
-    person?: Person;
-    risks?: PersonRisks;
-    applicationId?: string;
-    assessmentId?: string;
-    releaseType?: ReleaseTypeOption;
-    status?: PlacementRequestStatus;
-    assessmentDecision?: AssessmentDecision;
-    assessmentDate?: string;
-    assessor?: ApprovedPremisesUser;
-} & {
     id: string;
     person: Person;
     risks: PersonRisks;

@@ -91,7 +91,7 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
 }
 
 const extractValidationErrors = (error: SanitisedError | Error, context: ErrorContext) => {
-  if (isAnnotedError(error)) {
+  if (isAnnotatedError(error)) {
     if (error.data['invalid-params'] && error.data['invalid-params'].length) {
       return generateErrors(error.data['invalid-params'] as Array<InvalidParams>, context)
     }
@@ -149,6 +149,6 @@ const throwUndefinedError = (message: string) => {
   throw new Error(message)
 }
 
-const isAnnotedError = (error: SanitisedError | Error): error is AnnotatedError => {
+const isAnnotatedError = (error: SanitisedError | Error): error is AnnotatedError => {
   return 'data' in error
 }

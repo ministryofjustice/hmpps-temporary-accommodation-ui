@@ -28,6 +28,7 @@ export default class BookingService {
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
       bedId: room.beds[0].id,
+      enableTurnarounds: false,
       ...booking,
     })
 

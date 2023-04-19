@@ -65,6 +65,7 @@ describe('BookingService', () => {
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
         bedId,
+        enableTurnarounds: false,
         ...newBooking,
       })
       expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)

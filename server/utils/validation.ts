@@ -24,13 +24,18 @@ export const catchValidationErrorOrPropogate = (
   redirectPath: string,
   context: ErrorContext = 'generic',
 ): void => {
-  const errors = extractValidationErrors(error, context)
+  const bespokeError = (isAnnotatedError(error) && (error.data.bespokeError as BespokeError)) || undefined
 
+  const errors = extractValidationErrors(error, context)
   const errorMessages = generateErrorMessages(errors)
-  const errorSummary = generateErrorSummary(errors)
+  const errorSummary = bespokeError?.errorSummary || generateErrorSummary(errors)
+  const errorTitle = bespokeError?.errorTitle
 
   request.flash('errors', errorMessages)
   request.flash('errorSummary', errorSummary)
+  if (errorTitle) {
+    request.flash('errorTitle', errorTitle)
+  }
   request.flash('userInput', request.body)
 
   response.redirect(redirectPath)
@@ -52,9 +57,10 @@ export const catchAPIErrorOrPropogate = (request: Request, response: Response, e
 export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput => {
   const errors = firstFlashItem(request, 'errors') || {}
   const errorSummary = (request.flash('errorSummary') || []) as Array<ErrorSummary>
+  const errorTitle = firstFlashItem(request, 'errorTitle')
   const userInput = firstFlashItem(request, 'userInput') || {}
 
-  return { errors, errorSummary, userInput }
+  return { errors, errorSummary, errorTitle, userInput }
 }
 
 export const setUserInput = (request: Request, source: 'get' | 'post' = 'post'): void => {

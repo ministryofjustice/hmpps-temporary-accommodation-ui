@@ -82,6 +82,44 @@ describe('catchValidationErrorOrPropogate', () => {
     expect(response.redirect).toHaveBeenCalledWith('some/url')
   })
 
+  it('sets errors from bespoke error data as flash messages and redirects back to the form', () => {
+    const bespokeErrorSummary = [
+      {
+        text: 'some-error',
+        href: '#someLink',
+      },
+    ]
+    const bespokeErrorTitle = 'Some Error Title'
+
+    const error = createMock<SanitisedError>({
+      data: {
+        bespokeError: {
+          errorSummary: bespokeErrorSummary,
+          errorTitle: bespokeErrorTitle,
+        },
+        'invalid-params': [
+          {
+            propertyName: '$.crn',
+            errorType: 'empty',
+          },
+          {
+            propertyName: '$.arrivalDate',
+            errorType: 'empty',
+          },
+        ],
+      },
+    })
+
+    catchValidationErrorOrPropogate(request, response, error, 'some/url')
+
+    expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+    expect(request.flash).toHaveBeenCalledWith('errorTitle', bespokeErrorTitle)
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
+
+    expect(response.redirect).toHaveBeenCalledWith('some/url')
+  })
+
   it('using the context parameter when supplied to find error messages in the error lookup', () => {
     const error = createMock<SanitisedError>({
       data: {
@@ -211,15 +249,17 @@ describe('fetchErrorsAndUserInput', () => {
   const request = createMock<Request>({})
 
   let errors: ErrorMessages
-  let userInput: Record<string, unknown>
   let errorSummary: ErrorSummary
+  let errorTitle: string
+  let userInput: Record<string, unknown>
 
   beforeEach(() => {
     ;(request.flash as jest.Mock).mockImplementation((message: string) => {
       return {
         errors: [errors],
-        userInput: [userInput],
         errorSummary,
+        errorTitle: [errorTitle],
+        userInput: [userInput],
       }[message]
     })
   })
@@ -227,17 +267,18 @@ describe('fetchErrorsAndUserInput', () => {
   it('returns default values if there is nothing present', () => {
     const result = fetchErrorsAndUserInput(request)
 
-    expect(result).toEqual({ errors: {}, errorSummary: [], userInput: {} })
+    expect(result).toEqual({ errors: {}, errorSummary: [], errorTitle: undefined, userInput: {} })
   })
 
   it('fetches the values from the flash', () => {
     errors = createMock<ErrorMessages>()
     errorSummary = createMock<ErrorSummary>()
+    errorTitle = 'Error title'
     userInput = { foo: 'bar' }
 
     const result = fetchErrorsAndUserInput(request)
 
-    expect(result).toEqual({ errors, errorSummary, userInput })
+    expect(result).toEqual({ errors, errorSummary, errorTitle, userInput })
   })
 })
 

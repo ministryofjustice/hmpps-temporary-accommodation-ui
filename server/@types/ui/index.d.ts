@@ -183,6 +183,7 @@ export interface ErrorSummary {
 export interface ErrorsAndUserInput {
   errors: ErrorMessages
   errorSummary: Array<ErrorSummary>
+  errorTitle?: string
   userInput: Record<string, unknown>
 }
 

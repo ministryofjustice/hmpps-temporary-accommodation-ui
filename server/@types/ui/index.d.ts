@@ -187,6 +187,11 @@ export interface ErrorsAndUserInput {
   userInput: Record<string, unknown>
 }
 
+export interface BespokeError {
+  errorTitle: string
+  errorSummary: Array<ErrorSummary>
+}
+
 export type TaskListErrors<K extends TasklistPage> = Partial<Record<keyof K['body'], unknown>>
 
 export type YesOrNo = 'yes' | 'no'

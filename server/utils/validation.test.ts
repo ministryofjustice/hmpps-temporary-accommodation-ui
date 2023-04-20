@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Request, Response } from 'express'
 
-import type { ErrorMessages, ErrorSummary } from '@approved-premises/ui'
+import type { BespokeError, ErrorMessages, ErrorSummary } from '@approved-premises/ui'
 import type TaskListPage from '../form-pages/tasklistPage'
 import errorLookups from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
@@ -11,6 +11,7 @@ import {
   catchValidationErrorOrPropogate,
   clearUserInput,
   fetchErrorsAndUserInput,
+  insertBespokeError,
   insertGenericError,
   setUserInput,
   transformErrors,
@@ -361,6 +362,43 @@ describe('insertGenericError', () => {
           { propertyName: '$.someOtherProperty', errorType: 'someOtherErrorType' },
           { propertyName: '$.someProperty', errorType: 'someErrorType' },
         ],
+      },
+    })
+  })
+})
+
+describe('insertBespokeError', () => {
+  it('inserts a bespoke error when the error data is empty', () => {
+    const error = {}
+    const bespokeError: BespokeError = {
+      errorTitle: 'some-bespoke-error',
+      errorSummary: [],
+    }
+
+    insertBespokeError(error as SanitisedError, bespokeError)
+
+    expect(error).toEqual({
+      data: { bespokeError },
+    })
+  })
+
+  it('inserts a property error when the error data is not empty', () => {
+    const error = {
+      data: {
+        'some-other-data': {},
+      },
+    }
+    const bespokeError: BespokeError = {
+      errorTitle: 'some-bespoke-error',
+      errorSummary: [],
+    }
+
+    insertBespokeError(error as SanitisedError, bespokeError)
+
+    expect(error).toEqual({
+      data: {
+        bespokeError,
+        'some-other-data': {},
       },
     })
   })

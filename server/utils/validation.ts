@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import jsonpath from 'jsonpath'
 
-import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
+import type { BespokeError, ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
 import errorLookup from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError, ValidationError } from './errors'
@@ -12,7 +12,7 @@ interface InvalidParams {
 }
 
 interface AnnotatedError extends Error {
-  data?: { 'invalid-params'?: Array<InvalidParams> } | Record<string, string>
+  data?: { 'invalid-params'?: Array<InvalidParams>; bespokeError?: BespokeError } | Record<string, string>
 }
 
 type ErrorContext = keyof typeof errorLookup
@@ -97,6 +97,12 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
   })
 
   data['invalid-params'] = invalidParams
+  ;(error as AnnotatedError).data = data
+}
+
+export const insertBespokeError = (error: SanitisedError | Error, bespokeError: BespokeError): void => {
+  const data = ('data' in error ? error.data : {}) as AnnotatedError['data']
+  data.bespokeError = bespokeError
   ;(error as AnnotatedError).data = data
 }
 

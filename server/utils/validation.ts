@@ -61,6 +61,10 @@ export const setUserInput = (request: Request, source: 'get' | 'post' = 'post'):
   request.flash('userInput', source === 'post' ? request.body : request.query)
 }
 
+export const clearUserInput = (request: Request): void => {
+  request.flash('userInput', null)
+}
+
 export const errorSummary = (field: string, text: string): ErrorSummary => {
   return {
     text,

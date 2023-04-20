@@ -9,6 +9,7 @@ import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
+  clearUserInput,
   fetchErrorsAndUserInput,
   insertGenericError,
   setUserInput,
@@ -99,6 +100,8 @@ export default class BookingsController {
         const booking = await this.bookingsService.createForBedspace(callConfig, premisesId, room, newBooking)
 
         req.flash('success', 'Booking created')
+        clearUserInput(req)
+
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
       } catch (err) {
         if (err.status === 409) {

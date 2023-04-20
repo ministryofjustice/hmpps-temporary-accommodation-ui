@@ -9,6 +9,7 @@ import { TasklistAPIError, ValidationError } from './errors'
 import {
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
+  clearUserInput,
   fetchErrorsAndUserInput,
   insertGenericError,
   reallocateErrors,
@@ -262,6 +263,16 @@ describe('setUserInput', () => {
 
     expect(request.flash).toHaveBeenCalledWith('userInput', request.query)
   })
+})
+
+describe('clearUserInput', () => {
+  const request = createMock<Request>({})
+
+  request.flash('userInput', 'text')
+
+  clearUserInput(request)
+
+  expect(request.flash).toHaveBeenCalledWith('userInput', null)
 })
 
 describe('insertGenericError', () => {

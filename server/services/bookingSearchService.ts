@@ -12,7 +12,14 @@ export default class BookingSearchService {
     const bookingClient = this.bookingClientFactory(callConfig)
     const bookingSummaries = await bookingClient.search(status)
 
-    return bookingSummaries.results.map(summary => {
+    const { results } = bookingSummaries
+
+    if (status === 'departed') {
+      const closedBookingSummaries = await bookingClient.search('closed')
+      results.push(...closedBookingSummaries.results)
+    }
+
+    return results.map(summary => {
       return [
         this.textValue(summary.person.name),
         this.textValue(summary.person.crn),

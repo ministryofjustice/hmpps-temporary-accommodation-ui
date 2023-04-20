@@ -36,4 +36,5 @@ export default defineConfig({
     setupNodeEvents,
     supportFile: false,
   },
+  numTestsKeptInMemory: 0,
 })

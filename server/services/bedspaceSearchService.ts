@@ -1,8 +1,7 @@
 import type { TemporaryAccommodationBedSearchParameters as BedSearchParameters } from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
-import { RestClientBuilder } from '../data'
+import { ReferenceDataClient, RestClientBuilder } from '../data'
 import BedClient from '../data/bedClient'
-import pduJson from '../data/pdus.json'
 import { CallConfig } from '../data/restClient'
 
 export type BedspaceSearchReferenceData = {
@@ -10,7 +9,10 @@ export type BedspaceSearchReferenceData = {
 }
 
 export default class BedspaceSearchService {
-  constructor(private readonly bedClientFactory: RestClientBuilder<BedClient>) {}
+  constructor(
+    private readonly bedClientFactory: RestClientBuilder<BedClient>,
+    private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
+  ) {}
 
   async search(callConfig: CallConfig, searchParameters: BedSearchParameters) {
     const bedClient = this.bedClientFactory(callConfig)
@@ -21,8 +23,16 @@ export default class BedspaceSearchService {
     })
   }
 
-  async getReferenceData(): Promise<BedspaceSearchReferenceData> {
-    const pdus = pduJson.sort((a, b) => a.name.localeCompare(b.name)) as Array<ReferenceData>
+  async getReferenceData(callConfig: CallConfig): Promise<BedspaceSearchReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
+
+    const pdus = (
+      await referenceDataClient.getReferenceData('probation-delivery-units', {
+        probationRegionId: callConfig.probationRegion.id,
+      })
+    )
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(pdu => ({ ...pdu, id: pdu.name }))
 
     return { pdus }
   }

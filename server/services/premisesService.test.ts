@@ -1,4 +1,3 @@
-import pduJson from '../data/pdus.json'
 import PremisesClient from '../data/premisesClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
@@ -23,9 +22,6 @@ jest.mock('../data/referenceDataClient')
 jest.mock('../utils/premisesUtils')
 jest.mock('../utils/viewUtils')
 jest.mock('../utils/characteristicUtils')
-jest.mock('../data/pdus.json', () => {
-  return []
-})
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -36,7 +32,7 @@ describe('PremisesService', () => {
 
   const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
 
-  const callConfig = { token: 'some-token' } as CallConfig
+  const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
   const premisesId = 'premisesId'
 
   beforeEach(() => {
@@ -85,11 +81,11 @@ describe('PremisesService', () => {
         if (objectType === 'characteristics') {
           return [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, roomCharacteristic]
         }
-        return [probationRegion2, probationRegion1, probationRegion3]
+        if (objectType === 'probation-regions') {
+          return [probationRegion2, probationRegion1, probationRegion3]
+        }
+        return [pdu2, pdu3, pdu1]
       })
-
-      pduJson.length = 0
-      pduJson.push(pdu2, pdu3, pdu1)
       ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
         genericCharacteristic,
         premisesCharacteristic2,
@@ -101,12 +97,18 @@ describe('PremisesService', () => {
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
         probationRegions: [probationRegion1, probationRegion2, probationRegion3],
-        pdus: [pdu1, pdu2, pdu3],
+        pdus: [
+          { ...pdu1, id: pdu1.name },
+          { ...pdu2, id: pdu2.name },
+          { ...pdu3, id: pdu3.name },
+        ],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
-      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
+        probationRegionId: callConfig.probationRegion.id,
+      })
 
       expect(filterCharacteristics).toHaveBeenCalledWith(
         [genericCharacteristic, premisesCharacteristic2, premisesCharacteristic1, roomCharacteristic],

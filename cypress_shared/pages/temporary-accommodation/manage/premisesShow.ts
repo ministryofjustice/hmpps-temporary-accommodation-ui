@@ -1,8 +1,7 @@
 import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room } from '@approved-premises/api'
 
-import pduJson from '../../../../server/data/pdus.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { premisesFactory } from '../../../../server/testutils/factories'
+import { pduFactory, premisesFactory } from '../../../../server/testutils/factories'
 import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 
@@ -42,7 +41,10 @@ export default class PremisesShowPage extends Page {
                       .map(text => text.trim())
 
                     const pduName = pduElement.text().trim()
-                    const pdu = pduJson.find(p => pduName.startsWith(p.name))?.id as string
+                    const pdu = pduFactory.build({
+                      id: pduName,
+                      name: pduName,
+                    })
 
                     const premises = premisesFactory.build({
                       id,
@@ -50,7 +52,7 @@ export default class PremisesShowPage extends Page {
                       addressLine1: addressLines[0],
                       postcode: addressLines[addressLines.length - 1],
                       status,
-                      pdu,
+                      pdu: pdu.name,
                     })
 
                     cy.wrap(premises).as(alias)

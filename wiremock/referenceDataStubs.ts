@@ -1,11 +1,12 @@
-import departureReasonsJson from './stubs/departure-reasons.json'
-import moveOnCategoriesJson from './stubs/move-on-categories.json'
-import destinationProvidersJson from './stubs/destination-providers.json'
 import cancellationReasonsJson from './stubs/cancellation-reasons.json'
-import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
-import keyWorkersJson from './stubs/keyworkers.json'
 import characteristicsJson from './stubs/characteristics.json'
+import departureReasonsJson from './stubs/departure-reasons.json'
+import destinationProvidersJson from './stubs/destination-providers.json'
+import keyWorkersJson from './stubs/keyworkers.json'
 import localAuthoritiesJson from './stubs/local-authorities.json'
+import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
+import moveOnCategoriesJson from './stubs/move-on-categories.json'
+import pdusJson from './stubs/pdus.json'
 import probationRegionsJson from './stubs/probation-regions.json'
 
 const departureReasons = {
@@ -134,6 +135,20 @@ const probationRegions = {
   },
 }
 
+const pdus = {
+  request: {
+    method: 'GET',
+    urlPath: '/reference-data/probation-delivery-units',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: pdusJson,
+  },
+}
+
 export {
   departureReasons,
   moveOnCategories,
@@ -144,4 +159,5 @@ export {
   characteristics,
   localAuthorities,
   probationRegions,
+  pdus,
 }

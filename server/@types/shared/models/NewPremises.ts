@@ -16,5 +16,6 @@ export type NewPremises = {
     characteristicIds: Array<string>;
     status: PropertyStatus;
     pdu?: string;
+    probationDeliveryUnitId?: string;
 };
 

@@ -20,4 +20,4 @@ set -a
 
 set +a
 
-npx cypress open --e2e --browser chrome -C cypress.config.e2e.ts --config '{"baseUrl":"http://localhost:3000"}'
+npx cypress open --e2e --browser chrome -C cypress.config.e2e.ts --config '{"baseUrl":"http://localhost:3000", "numTestsKeptInMemory": 50}'

@@ -1,6 +1,7 @@
 import type { Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
-import type { PageHeadingBarItem } from '@approved-premises/ui'
+import type { BespokeError, PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
+import { SanitisedError } from '../sanitisedError'
 import { DateFormats } from './dateUtils'
 
 export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<PageHeadingBarItem> {
@@ -148,6 +149,41 @@ export const transformApiBookingToUiBooking = (booking: Booking): Booking => {
     return { ...booking, status: 'departed' }
   }
   return booking
+}
+
+export const generateConflictBespokeError = (
+  err: SanitisedError,
+  premisesId: string,
+  roomId: string,
+  datesGrammaticalNumber: 'plural' | 'singular',
+): BespokeError => {
+  const { detail } = err.data as { detail: string }
+
+  const detailWords = detail.split(' ')
+  const conflictId = detailWords[detailWords.length - 1]
+  const conflictType = detail.includes('Lost Bed') ? 'lost-bed' : 'booking'
+
+  const title =
+    datesGrammaticalNumber === 'plural'
+      ? 'This bedspace is not available for the dates entered'
+      : 'This bedspace is not available for the date entered'
+
+  const link =
+    conflictType === 'lost-bed'
+      ? `<a href="${paths.lostBeds.show({
+          premisesId,
+          roomId,
+          lostBedId: conflictId,
+        })}">existing void</a>`
+      : `<a href="${paths.bookings.show({
+          premisesId,
+          roomId,
+          bookingId: conflictId,
+        })}">existing booking</a>`
+
+  const message = datesGrammaticalNumber === 'plural' ? `They conflict with an ${link}` : `It conflicts with an ${link}`
+
+  return { errorTitle: title, errorSummary: [{ html: message }] }
 }
 
 const getUpdatedAt = (booking: Booking): string => {

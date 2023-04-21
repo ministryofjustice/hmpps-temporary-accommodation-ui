@@ -1,13 +1,15 @@
-import type { Booking, NewExtension, Premises, Room } from '@approved-premises/api'
-import errorLookups from '../../../../server/i18n/en/errors.json'
+import type { Booking, LostBed, NewExtension, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { getLatestExtension } from '../../../../server/utils/bookingUtils'
+import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
 
 export default class BookingExtensionNewPage extends Page {
+  private readonly bedspaceConflictErrorComponent: BedspaceConflictErrorComponent
+
   private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
 
   private readonly locationHeaderComponent: LocationHeaderComponent
@@ -17,6 +19,7 @@ export default class BookingExtensionNewPage extends Page {
   constructor(premises: Premises, room: Room, private readonly booking: Booking) {
     super('Extend or shorten booking')
 
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room)
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
@@ -40,11 +43,15 @@ export default class BookingExtensionNewPage extends Page {
     }
   }
 
-  shouldShowDateConflictErrorMessages(): void {
-    ;['newDepartureDate'].forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups.generic[field].conflict)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
-    })
+  shouldShowDateConflictErrorMessages(
+    conflictingEntity: Booking | LostBed,
+    conflictingEntityType: 'booking' | 'lost-bed',
+  ): void {
+    this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(
+      ['newDepartureDate'],
+      conflictingEntity,
+      conflictingEntityType,
+    )
   }
 
   completeForm(newExtension: NewExtension): void {

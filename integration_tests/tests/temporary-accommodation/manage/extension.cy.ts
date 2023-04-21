@@ -3,7 +3,12 @@ import BookingExtensionNewPage from '../../../../cypress_shared/pages/temporary-
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingFactory, extensionFactory, newExtensionFactory } from '../../../../server/testutils/factories'
+import {
+  bookingFactory,
+  extensionFactory,
+  lostBedFactory,
+  newExtensionFactory,
+} from '../../../../server/testutils/factories'
 
 context('Booking extension', () => {
   beforeEach(() => {
@@ -92,9 +97,12 @@ context('Booking extension', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is an arrived booking in the database
+    // And there is an arrived booking and a conflicting lost bed in the database
     const booking = bookingFactory.arrived().build()
+    const conflictingLostBed = lostBedFactory.build()
+
     const { premises, room } = setupBookingStateStubs(booking)
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the booking extension page
     const page = BookingExtensionNewPage.visit(premises, room, booking)
@@ -104,12 +112,17 @@ context('Booking extension', () => {
     const newExtension = newExtensionFactory.build({
       ...extension,
     })
-    cy.task('stubExtensionCreateConflictError', { premisesId: premises.id, bookingId: booking.id })
+    cy.task('stubExtensionCreateConflictError', {
+      premisesId: premises.id,
+      bookingId: booking.id,
+      conflictingEntityId: conflictingLostBed.id,
+      conflictingEntityType: 'lost-bed',
+    })
 
     page.completeForm(newExtension)
 
-    // Then I should see error messages for the date fields
-    page.shouldShowDateConflictErrorMessages()
+    // Then I should see error messages for the conflict
+    page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
   })
 
   it('navigates back from the booking extension page to the show booking page', () => {

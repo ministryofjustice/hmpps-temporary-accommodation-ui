@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, ExtensionService, PremisesService } from '../../../services'
@@ -12,10 +13,15 @@ import {
   premisesFactory,
   roomFactory,
 } from '../../../testutils/factories'
-import { getLatestExtension } from '../../../utils/bookingUtils'
+import { generateConflictBespokeError, getLatestExtension } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertBespokeError,
+  insertGenericError,
+} from '../../../utils/validation'
 import ExtensionsController from './extensionsController'
 
 jest.mock('../../../utils/validation')
@@ -213,9 +219,18 @@ describe('ExtensionsController', () => {
       extensionService.createExtension.mockImplementation(() => {
         throw err
       })
+      const bespokeError: BespokeError = {
+        errorTitle: 'some-bespoke-error',
+        errorSummary: [],
+      }
+      ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+        bespokeError,
+      )
 
       await requestHandler(request, response, next)
 
+      expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'singular')
+      expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'newDepartureDate', 'conflict')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,

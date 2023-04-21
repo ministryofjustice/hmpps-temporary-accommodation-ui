@@ -1,13 +1,26 @@
-import type { NewBooking } from '@approved-premises/api'
+import type { Booking, LostBed, NewBooking, Premises, Room } from '@approved-premises/api'
 import errorLookups from '../../../../server/i18n/en/errors.json'
+import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import Page from '../../page'
 
 export default abstract class BookingEditablePage extends Page {
-  shouldShowDateConflictErrorMessages(): void {
-    ;['arrivalDate', 'departureDate'].forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups.generic[field].conflict)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
-    })
+  private readonly bedspaceConflictErrorComponent: BedspaceConflictErrorComponent
+
+  constructor(title: string, premises: Premises, room: Room) {
+    super(title)
+
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room)
+  }
+
+  shouldShowDateConflictErrorMessages(
+    conflictingEntity: Booking | LostBed,
+    conflictingEntityType: 'booking' | 'lost-bed',
+  ): void {
+    this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(
+      ['arrivalDate', 'departureDate'],
+      conflictingEntity,
+      conflictingEntityType,
+    )
   }
 
   shouldShowUserPermissionErrorMessage(): void {

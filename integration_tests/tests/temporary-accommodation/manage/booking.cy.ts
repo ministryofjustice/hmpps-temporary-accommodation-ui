@@ -6,6 +6,7 @@ import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommod
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bookingFactory,
+  lostBedFactory,
   newBookingFactory,
   personFactory,
   premisesFactory,
@@ -205,12 +206,14 @@ context('Booking', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises and a room the database
+    // And there is a premises, a room, and a conflicting lost bed in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
+    const conflictingLostBed = lostBedFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -230,14 +233,18 @@ context('Booking', () => {
     // And I confirm the booking
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
 
-    cy.task('stubBookingCreateApiError', { premisesId: premises.id, errorCode: 409, errorTitle: 'Conflict' })
+    cy.task('stubBookingCreateConflictError', {
+      premisesId: premises.id,
+      conflictingEntityId: conflictingLostBed.id,
+      conflictingEntityType: 'lost-bed',
+    })
     bookingConfirmPage.clickSubmit()
 
-    // Then I should see error messages for the date fields
+    // Then I should see error messages for the conflict
     const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
 
     returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
-    returnedBookingNewPage.shouldShowDateConflictErrorMessages()
+    returnedBookingNewPage.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
   })
 
   it('shows errors when the API returns a 403 Forbidden error', () => {

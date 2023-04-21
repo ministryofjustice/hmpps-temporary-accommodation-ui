@@ -9,7 +9,7 @@ export default class BookingNewPage extends BookingEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
   constructor(premises: Premises, room: Room) {
-    super('Book bedspace')
+    super('Book bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }

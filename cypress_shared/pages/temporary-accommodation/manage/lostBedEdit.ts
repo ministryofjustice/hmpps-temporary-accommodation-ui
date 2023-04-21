@@ -6,8 +6,8 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 export default class LostBedEditPage extends LostBedEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-    super('Void a bedspace')
-  constructor(private readonly premises: Premises, private readonly room: Room) {
+  constructor(premises: Premises, room: Room) {
+    super('Void a bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }

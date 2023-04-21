@@ -1,13 +1,25 @@
-import { NewLostBed, UpdateLostBed } from '@approved-premises/api'
+import { Booking, LostBed, NewLostBed, Premises, Room, UpdateLostBed } from '@approved-premises/api'
+import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import Page from '../../page'
-import errorLookups from '../../../../server/i18n/en/errors.json'
 
 export default abstract class LostBedEditablePage extends Page {
-  shouldShowDateConflictErrorMessages(): void {
-    ;['startDate', 'endDate'].forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups.generic[field].conflict)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
-    })
+  private readonly bedspaceConflictErrorComponent: BedspaceConflictErrorComponent
+
+  constructor(title: string, premises: Premises, room: Room) {
+    super(title)
+
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room)
+  }
+
+  shouldShowDateConflictErrorMessages(
+    conflictingEntity: Booking | LostBed,
+    conflictingEntityType: 'booking' | 'lost-bed',
+  ): void {
+    this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(
+      ['startDate', 'endDate'],
+      conflictingEntity,
+      conflictingEntityType,
+    )
   }
 
   protected completeEditableForm(newOrUpdateLostBed: NewLostBed | UpdateLostBed): void {

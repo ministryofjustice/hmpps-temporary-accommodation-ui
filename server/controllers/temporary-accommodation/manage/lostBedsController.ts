@@ -4,10 +4,16 @@ import type { NewLostBed, NewLostBedCancellation, UpdateLostBed } from '@approve
 import paths from '../../../paths/temporary-accommodation/manage'
 import { LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
+import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertBespokeError,
+  insertGenericError,
+} from '../../../utils/validation'
 
 export default class LostBedsController {
   constructor(
@@ -18,7 +24,7 @@ export default class LostBedsController {
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId } = req.params
 
       const callConfig = extractCallConfig(req)
@@ -33,7 +39,8 @@ export default class LostBedsController {
         room,
         lostBedReasons,
         errors,
-        errorSummary: requestErrorSummary,
+        errorTitle,
+        errorSummary,
         ...userInput,
       })
     }
@@ -57,6 +64,7 @@ export default class LostBedsController {
         res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: lostBed.id }))
       } catch (err) {
         if (err.status === 409) {
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
           insertGenericError(err, 'startDate', 'conflict')
           insertGenericError(err, 'endDate', 'conflict')
         }
@@ -104,6 +112,7 @@ export default class LostBedsController {
         res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: updatedLostBed.id }))
       } catch (err) {
         if (err.status === 409) {
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
           insertGenericError(err, 'startDate', 'conflict')
           insertGenericError(err, 'endDate', 'conflict')
         }
@@ -115,7 +124,7 @@ export default class LostBedsController {
 
   edit(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
 
       const { premisesId, roomId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
@@ -131,6 +140,7 @@ export default class LostBedsController {
         lostBedReasons,
         errors,
         errorSummary,
+        errorTitle,
         premises,
         room,
         lostBedId,

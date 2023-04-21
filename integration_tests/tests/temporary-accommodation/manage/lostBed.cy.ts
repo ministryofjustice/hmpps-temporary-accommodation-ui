@@ -6,6 +6,7 @@ import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommoda
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import {
+  bookingFactory,
   lostBedFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,
@@ -152,12 +153,14 @@ context('Lost bed', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises and a room the database
+    // And there is a premises, a room, and a conflicting booking in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
+    const conflictingBooking = bookingFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
     // When I visit the new lost bed page
     cy.task('stubLostBedReferenceData')
@@ -172,12 +175,16 @@ context('Lost bed', () => {
       reason: lostBed.reason.id,
     })
 
-    cy.task('stubLostBedCreateConflictError', premises.id)
+    cy.task('stubLostBedCreateConflictError', {
+      premisesId: premises.id,
+      conflictingEntityId: conflictingBooking.id,
+      conflictingEntityType: 'booking',
+    })
 
     page.completeForm(newLostBed)
 
-    // Then I should see error messages for the date fields
-    page.shouldShowDateConflictErrorMessages()
+    // Then I should see error messages for conflict
+    page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
   })
 
   it('navigates back from the new lost bed page to the show bedspace page', () => {

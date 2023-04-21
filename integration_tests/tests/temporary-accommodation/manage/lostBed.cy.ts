@@ -291,7 +291,7 @@ context('Lost bed', () => {
     page.clickEditVoidLink()
 
     // Then I navigate to the edit void booking page
-    Page.verifyOnPage(LostBedEditPage, premises, room, lostBed)
+    Page.verifyOnPage(LostBedEditPage, premises, room)
   })
 
   it('navigates back from the update void booking page to the view void booking page', () => {

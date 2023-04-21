@@ -66,7 +66,7 @@ Given('I edit the void booking', () => {
     const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.room, this.lostBed)
     lostBedShowPage.clickEditVoidLink()
 
-    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room, this.lostBed)
+    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room)
     const lostBedUpdate = updateLostBedFactory.build()
     cy.wrap(lostBedUpdate).as('lostBedUpdate')
 
@@ -94,7 +94,7 @@ Given('I attempt to edit the void booking with required details missing', () => 
   cy.then(function _() {
     const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.room, this.lostBed)
     lostBedShowPage.clickEditVoidLink()
-    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room, this.lostBed)
+    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room)
 
     lostBedEditPage.clearForm()
     lostBedEditPage.clickSubmit()

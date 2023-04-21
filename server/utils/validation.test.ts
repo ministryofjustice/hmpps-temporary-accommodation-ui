@@ -57,7 +57,7 @@ describe('catchValidationErrorOrPropogate', () => {
     }
   })
 
-  it('sets the errors and request body as flash messages and redirects back to the form', () => {
+  it('sets errors from invalid params data as flash messages and redirects back to the form', () => {
     const error = createMock<SanitisedError>({
       data: {
         'invalid-params': [
@@ -288,7 +288,7 @@ describe('insertGenericError', () => {
     })
   })
 
-  it('inserts a property error when the error data not empty', () => {
+  it('inserts a property error when the error data is not empty', () => {
     const error = {
       data: {
         'some-other-data': {},
@@ -325,7 +325,7 @@ describe('insertGenericError', () => {
   })
 })
 
-describe('reallocateError', () => {
+describe('transformErrors', () => {
   it('renames a property matching the source parameter to the destination parameter', () => {
     const error = {
       data: {

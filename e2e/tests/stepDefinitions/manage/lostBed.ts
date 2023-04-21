@@ -125,3 +125,18 @@ Then('I should see confirmation that the void is cancelled', () => {
     lostBedShowPage.shouldShowLostBedDetails()
   })
 })
+
+Given('I attempt to create a conflicting void booking', () => {
+  cy.then(function _() {
+    const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.room)
+    const newLostBed = newLostBedFactory.build({ ...this.lostBed })
+    lostBedNewPage.completeForm(newLostBed)
+  })
+})
+
+Then('I should see errors for the conflicting void booking', () => {
+  cy.then(function _() {
+    const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.room)
+    lostBedNewPage.shouldShowDateConflictErrorMessages(this.lostBed, 'lost-bed')
+  })
+})

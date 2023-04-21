@@ -14,6 +14,14 @@ Feature: Manage Temporary Accommodation - Lost beds
         Given I'm marking a bedspace as void
         And I attempt to mark a bedspace as void with required details missing
         Then I should see a list of the problems encountered voiding the bedspace
+
+    Scenario: Showing void booking creation conflict errors
+        Given I'm marking a bedspace as void
+        And I create a void booking with all necessary details
+        And I go up a breadcrumb level
+        And I'm marking a bedspace as void
+        And I attempt to create a conflicting void booking
+        Then I should see errors for the conflicting void booking
     
     Scenario: Editing a void booking
         Given I'm marking a bedspace as void

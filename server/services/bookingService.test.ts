@@ -6,7 +6,7 @@ import { bedFactory, bookingFactory, lostBedFactory, newBookingFactory, roomFact
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { statusTag } from '../utils/bookingUtils'
+import { statusTag, transformApiBookingToUiBooking } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
@@ -15,6 +15,7 @@ jest.mock('../data/referenceDataClient')
 jest.mock('../utils/bookingUtils', () => ({
   ...jest.requireActual('../utils/bookingUtils'),
   statusTag: jest.fn(),
+  transformApiBookingToUiBooking: jest.fn(),
 }))
 jest.mock('../data/lostBedClient')
 jest.mock('../utils/lostBedUtils')
@@ -38,20 +39,9 @@ describe('BookingService', () => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
     lostBedClientFactory.mockReturnValue(lostBedClient)
-  })
-
-  describe('create', () => {
-    it('on success returns the booking that has been posted', async () => {
-      const booking = bookingFactory.build()
-      const newBooking = newBookingFactory.build()
-      bookingClient.create.mockResolvedValue(booking)
-
-      const postedBooking = await service.create(callConfig, premisesId, newBooking)
-      expect(postedBooking).toEqual(booking)
-
-      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingClient.create).toHaveBeenCalledWith(premisesId, newBooking)
-    })
+    ;(transformApiBookingToUiBooking as jest.MockedFunction<typeof transformApiBookingToUiBooking>).mockImplementation(
+      booking => booking,
+    )
   })
 
   describe('createForBedspace', () => {
@@ -75,28 +65,10 @@ describe('BookingService', () => {
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
         bedId,
+        enableTurnarounds: false,
         ...newBooking,
       })
-    })
-  })
-
-  describe('find', () => {
-    it('on success returns the booking that has been requested', async () => {
-      const arrivalDate = new Date(2022, 2, 11)
-      const departureDate = new Date(2022, 2, 12)
-
-      const booking = bookingFactory.build({
-        arrivalDate: arrivalDate.toISOString(),
-        departureDate: departureDate.toISOString(),
-      })
-
-      bookingClient.find.mockResolvedValue(booking)
-
-      const retrievedBooking = await service.find(callConfig, premisesId, booking.id)
-      expect(retrievedBooking).toEqual(booking)
-
-      expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
+      expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)
     })
   })
 
@@ -306,6 +278,10 @@ describe('BookingService', () => {
 
       expect(statusTag).toHaveBeenCalledTimes(4)
       expect(lostBedStatusTag).toHaveBeenCalledTimes(4)
+
+      bookings.forEach(booking => {
+        expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)
+      })
     })
   })
 
@@ -320,6 +296,7 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
+      expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)
     })
   })
 })

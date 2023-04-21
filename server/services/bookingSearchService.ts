@@ -2,8 +2,8 @@ import type { BookingSearchApiStatus, TableRow } from '@approved-premises/ui'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
-import { DateFormats } from '../utils/dateUtils'
 import paths from '../paths/temporary-accommodation/manage'
+import { DateFormats } from '../utils/dateUtils'
 
 export default class BookingSearchService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
@@ -12,7 +12,14 @@ export default class BookingSearchService {
     const bookingClient = this.bookingClientFactory(callConfig)
     const bookingSummaries = await bookingClient.search(status)
 
-    return bookingSummaries.results.map(summary => {
+    const { results } = bookingSummaries
+
+    if (status === 'departed') {
+      const closedBookingSummaries = await bookingClient.search('closed')
+      results.push(...closedBookingSummaries.results)
+    }
+
+    return results.map(summary => {
       return [
         this.textValue(summary.person.name),
         this.textValue(summary.person.crn),

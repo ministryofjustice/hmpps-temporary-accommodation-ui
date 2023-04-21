@@ -48,6 +48,14 @@ Feature: Manage Temporary Accommodation - Booking
         And I attempt to create a booking with required details missing
         Then I should see a list of the problems encountered creating the booking
 
+    Scenario: Showing booking creation conflict errors
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I go up a breadcrumb level
+        And I'm creating a booking
+        And I attempt to create a conflicting booking
+        Then I should see errors for the conflicting booking
+
     Scenario: Showing booking cancellation errors
         Given I'm creating a booking
         And I create a booking with all necessary details

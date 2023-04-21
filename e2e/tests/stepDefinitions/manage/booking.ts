@@ -64,6 +64,23 @@ Given('I attempt to create a booking with required details missing', () => {
   })
 })
 
+Given('I attempt to create a conflicting booking', () => {
+  cy.then(function _() {
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+
+    const newBooking = newBookingFactory.build({
+      ...this.booking,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
+    bookingConfirmPage.shouldShowBookingDetails()
+
+    bookingConfirmPage.clickSubmit()
+  })
+})
+
 Then('I should see a confirmation for my new booking', () => {
   cy.then(function _() {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
@@ -100,5 +117,12 @@ Then('I should see a list of the problems encountered creating the booking', () 
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
     page.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate'])
+  })
+})
+
+Then('I should see errors for the conflicting booking', () => {
+  cy.then(function _() {
+    const page = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+    page.shouldShowDateConflictErrorMessages(this.booking, 'booking')
   })
 })

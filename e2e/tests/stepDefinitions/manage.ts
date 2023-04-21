@@ -16,3 +16,7 @@ Given('I am logged in', () => {
 Given('I return to the dashboard', () => {
   Page.clickDashboardLink()
 })
+
+Given('I go up a breadcrumb level', () => {
+  Page.clickBreadCrumbUp()
+})

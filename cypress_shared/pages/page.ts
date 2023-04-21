@@ -15,6 +15,10 @@ export default abstract class Page extends Component {
     cy.get('.govuk-breadcrumbs a').contains('Home').click()
   }
 
+  static clickBreadCrumbUp(): void {
+    cy.get('li.govuk-breadcrumbs__list-item:nth-last-child(2)').click()
+  }
+
   constructor(private readonly title: string) {
     super()
 
@@ -170,7 +174,7 @@ export default abstract class Page extends Component {
   }
 
   clickBreadCrumbUp(): void {
-    cy.get('li.govuk-breadcrumbs__list-item:nth-last-child(2)').click()
+    Page.clickBreadCrumbUp()
   }
 
   expectDownload(timeout?: number) {

@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
@@ -11,13 +12,20 @@ import {
   premisesFactory,
   roomFactory,
 } from '../../../testutils/factories'
+import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertBespokeError,
+  insertGenericError,
+} from '../../../utils/validation'
 import ArrivalsController from './arrivalsController'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/bookingUtils')
 
 describe('ArrivalsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -171,9 +179,18 @@ describe('ArrivalsController', () => {
       arrivalService.createArrival.mockImplementation(() => {
         throw err
       })
+      const bespokeError: BespokeError = {
+        errorTitle: 'some-bespoke-error',
+        errorSummary: [],
+      }
+      ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+        bespokeError,
+      )
 
       await requestHandler(request, response, next)
 
+      expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+      expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
       expect(insertGenericError).toHaveBeenCalledWith(err, 'expectedDepartureDate', 'conflict')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(

@@ -104,14 +104,16 @@ context('Booking arrival', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a confirmed booking in the database
+    // And there is a confirmed booking and a conflicting booking in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
     const booking = bookingFactory.confirmed().build()
+    const conflictingBooking = bookingFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBooking', { premisesId: premises.id, booking })
+    cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
     // When I visit the booking confirmation page
     const page = BookingArrivalNewPage.visit(premises, room, booking)
@@ -121,12 +123,17 @@ context('Booking arrival', () => {
     const newArrival = newArrivalFactory.build({
       ...arrival,
     })
-    cy.task('stubArrivalCreateConflictError', { premisesId: premises.id, bookingId: booking.id })
+    cy.task('stubArrivalCreateConflictError', {
+      premisesId: premises.id,
+      bookingId: booking.id,
+      conflictingEntityId: conflictingBooking.id,
+      conflictingEntityType: 'booking',
+    })
 
     page.completeForm(newArrival)
 
-    // Then I should see error messages for the date fields
-    page.shouldShowDateConflictErrorMessages()
+    // Then I should see error messages for the conflict
+    page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
   })
 
   it('navigates back from the booking arrival page to the show booking page', () => {

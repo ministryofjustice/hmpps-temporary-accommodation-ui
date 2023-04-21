@@ -3,9 +3,15 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewArrival } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
+import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertBespokeError,
+  insertGenericError,
+} from '../../../utils/validation'
 
 export default class ArrivalsController {
   constructor(
@@ -17,7 +23,7 @@ export default class ArrivalsController {
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
@@ -31,7 +37,8 @@ export default class ArrivalsController {
         room,
         booking,
         errors,
-        errorSummary: requestErrorSummary,
+        errorSummary,
+        errorTitle,
         ...DateFormats.isoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
         ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
         ...userInput,
@@ -57,6 +64,7 @@ export default class ArrivalsController {
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
           insertGenericError(err, 'arrivalDate', 'conflict')
           insertGenericError(err, 'expectedDepartureDate', 'conflict')
         }

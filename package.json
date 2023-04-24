@@ -154,7 +154,7 @@
     "lodash.escaperegexp": "^4.1.2",
     "method-override": "^3.0.0",
     "nocache": "^3.0.4",
-    "nunjucks": "^3.2.3",
+    "nunjucks": "^3.2.4",
     "passport": "^0.6.0",
     "passport-oauth2": "^1.6.1",
     "path-to-regexp": "^6.2.1",

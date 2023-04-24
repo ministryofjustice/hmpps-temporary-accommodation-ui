@@ -89,6 +89,7 @@ export type { NewLostBed } from './models/NewLostBed';
 export type { NewLostBedCancellation } from './models/NewLostBedCancellation';
 export type { NewNonarrival } from './models/NewNonarrival';
 export type { NewPlacementRequestBooking } from './models/NewPlacementRequestBooking';
+export type { NewPlacementRequestBookingConfirmation } from './models/NewPlacementRequestBookingConfirmation';
 export type { NewPremises } from './models/NewPremises';
 export type { NewReallocation } from './models/NewReallocation';
 export type { NewRoom } from './models/NewRoom';

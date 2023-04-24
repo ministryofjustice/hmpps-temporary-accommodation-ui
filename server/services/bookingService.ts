@@ -5,7 +5,7 @@ import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { statusTag } from '../utils/bookingUtils'
+import { statusTag, transformApiBookingToUiBooking } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
@@ -16,14 +16,6 @@ export default class BookingService {
     private readonly bookingClientFactory: RestClientBuilder<BookingClient>,
     private readonly lostBedClientFactory: RestClientBuilder<LostBedClient>,
   ) {}
-
-  async create(callConfig: CallConfig, premisesId: string, booking: NewBooking): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig)
-
-    const confirmedBooking = await bookingClient.create(premisesId, booking)
-
-    return confirmedBooking
-  }
 
   async createForBedspace(
     callConfig: CallConfig,
@@ -36,23 +28,18 @@ export default class BookingService {
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
       bedId: room.beds[0].id,
+      enableTurnarounds: false,
       ...booking,
     })
 
-    return confirmedBooking
-  }
-
-  async find(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
-    const bookingClient = this.bookingClientFactory(callConfig)
-
-    const booking = await bookingClient.find(premisesId, bookingId)
-
-    return booking
+    return transformApiBookingToUiBooking(confirmedBooking)
   }
 
   async getTableRowsForBedspace(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<TableRow>> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
+    const bookings = (await bookingClient.allBookingsForPremisesId(premisesId)).map(booking =>
+      transformApiBookingToUiBooking(booking),
+    )
 
     const lostBedClient = this.lostBedClientFactory(callConfig)
     const lostBeds = await (
@@ -110,7 +97,7 @@ export default class BookingService {
     const bookingClient = this.bookingClientFactory(callConfig)
     const booking = await bookingClient.find(premisesId, bookingId)
 
-    return booking
+    return transformApiBookingToUiBooking(booking)
   }
 
   private textValue(value: string) {

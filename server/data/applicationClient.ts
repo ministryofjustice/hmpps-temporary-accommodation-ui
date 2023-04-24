@@ -21,7 +21,7 @@ export default class ApplicationClient {
 
     return (await this.restClient.post({
       path: `${paths.applications.new.pattern}?createWithRisks=${!config.flags.oasysDisabled}`,
-      data: { crn, convictionId, deliusEventNumber, offenceId },
+      data: { crn: crn.trim(), convictionId, deliusEventNumber, offenceId },
     })) as ApprovedPremisesApplication
   }
 

@@ -38,7 +38,7 @@ context('Booking search', () => {
     // And there are bookings of all relevant status types in the database
     const bookings = bookingSearchResultsFactory.build()
 
-    const statuses: Array<BookingSearchApiStatus> = ['provisional', 'arrived', 'departed', 'confirmed']
+    const statuses: Array<BookingSearchApiStatus> = ['provisional', 'arrived', 'departed', 'confirmed', 'closed']
 
     statuses.forEach(status => {
       cy.task('stubFindBookings', { bookings, status })

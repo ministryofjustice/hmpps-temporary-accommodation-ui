@@ -59,6 +59,12 @@ class BookingFactory extends Factory<Booking> {
     })
   }
 
+  closed() {
+    return this.departed().params({
+      status: 'closed',
+    })
+  }
+
   cancelled(source: 'provisional' | 'confirmed' = 'provisional') {
     const cancellation = cancellationFactory.build()
 

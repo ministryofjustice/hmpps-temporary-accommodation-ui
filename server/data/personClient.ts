@@ -26,7 +26,7 @@ export default class PersonClient {
 
   async search(crn: string): Promise<Person> {
     const response = await this.restClient.get({
-      path: `${paths.people.search({})}?crn=${crn}`,
+      path: `${paths.people.search({})}?crn=${crn.trim()}`,
     })
 
     return response as Person
@@ -34,32 +34,32 @@ export default class PersonClient {
 
   async risks(crn: string): Promise<PersonRisks> {
     const response = await this.restClient.get({
-      path: paths.people.risks.show({ crn }),
+      path: paths.people.risks.show({ crn: crn.trim() }),
     })
 
     return response as PersonRisks
   }
 
   async prisonCaseNotes(crn: string): Promise<Array<PrisonCaseNote>> {
-    const response = await this.restClient.get({ path: paths.people.prisonCaseNotes({ crn }) })
+    const response = await this.restClient.get({ path: paths.people.prisonCaseNotes({ crn: crn.trim() }) })
 
     return response as Array<PrisonCaseNote>
   }
 
   async adjudications(crn: string): Promise<Array<Adjudication>> {
-    const response = await this.restClient.get({ path: paths.people.adjudications({ crn }) })
+    const response = await this.restClient.get({ path: paths.people.adjudications({ crn: crn.trim() }) })
 
     return response as Array<Adjudication>
   }
 
   async offences(crn: string): Promise<Array<ActiveOffence>> {
-    const response = await this.restClient.get({ path: paths.people.offences({ crn }) })
+    const response = await this.restClient.get({ path: paths.people.offences({ crn: crn.trim() }) })
 
     return response as Array<ActiveOffence>
   }
 
   async oasysSelections(crn: string): Promise<Array<OASysSection>> {
-    const response = await this.restClient.get({ path: paths.people.oasys.selection({ crn }) })
+    const response = await this.restClient.get({ path: paths.people.oasys.selection({ crn: crn.trim() }) })
 
     return response as Array<OASysSection>
   }
@@ -75,7 +75,7 @@ export default class PersonClient {
         { encode: false, indices: false },
       )
 
-      const path = `${paths.people.oasys.sections({ crn })}${queryString ? `?${queryString}` : ''}`
+      const path = `${paths.people.oasys.sections({ crn: crn.trim() })}${queryString ? `?${queryString}` : ''}`
 
       response = (await this.restClient.get({ path })) as OASysSections
     }
@@ -84,6 +84,6 @@ export default class PersonClient {
   }
 
   async document(crn: string, documentId: string, response: Response): Promise<void> {
-    await this.restClient.pipe(response, { path: paths.people.documents({ crn, documentId }) })
+    await this.restClient.pipe(response, { path: paths.people.documents({ crn: crn.trim(), documentId }) })
   }
 }

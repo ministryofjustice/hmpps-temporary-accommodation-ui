@@ -11,5 +11,6 @@ export type SubmitApplication = {
     isWomensApplication: boolean;
     targetLocation: string;
     releaseType: ReleaseTypeOption;
+    arrivalDate?: string;
 };
 

@@ -9,6 +9,7 @@ import paths from '../paths/temporary-accommodation/manage'
 import { statusTag, transformApiBookingToUiBooking } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
+import config from '../config'
 
 jest.mock('../data/bookingClient')
 jest.mock('../data/referenceDataClient')
@@ -65,7 +66,7 @@ describe('BookingService', () => {
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
         bedId,
-        enableTurnarounds: false,
+        enableTurnarounds: !config.flags.turnaroundsDisabled,
         ...newBooking,
       })
       expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)

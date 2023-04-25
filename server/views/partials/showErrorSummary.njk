@@ -1,10 +1,10 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-{% macro showErrorSummary(errorList) %}
+{% macro showErrorSummary(errorList, errorTitle) %}
 
   {% if errorList | length %}
     {{ govukErrorSummary({
-      titleText: "There is a problem",
+      titleText: errorTitle if errorTitle else "There is a problem",
       errorList: errorList
     }) }}
   {% endif %}

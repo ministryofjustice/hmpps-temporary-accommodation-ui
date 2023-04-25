@@ -6,15 +6,15 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 export default class LostBedEditPage extends LostBedEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(private readonly premises: Premises, private readonly room: Room, private readonly lostBed: LostBed) {
-    super('Void a bedspace')
+  constructor(premises: Premises, room: Room) {
+    super('Void a bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }
 
   static visit(premises: Premises, room: Room, lostBed: LostBed): LostBedEditPage {
     cy.visit(paths.lostBeds.edit({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }))
-    return new LostBedEditPage(premises, room, lostBed)
+    return new LostBedEditPage(premises, room)
   }
 
   shouldShowBedspaceDetails(): void {

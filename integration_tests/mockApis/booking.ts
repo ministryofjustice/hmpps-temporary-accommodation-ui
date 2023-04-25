@@ -1,7 +1,7 @@
 import type { Booking } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
-import { errorStub } from '../../wiremock/utils'
+import { bedspaceConflictResponseBody, errorStub } from '../../wiremock/utils'
 
 export default {
   stubBookingCreate: (args: { premisesId: string; booking: Booking }) =>
@@ -35,6 +35,24 @@ export default {
           title: args.errorTitle,
           status: args.errorCode,
         },
+      },
+    }),
+  stubBookingCreateConflictError: (args: {
+    premisesId: string
+    conflictingEntityId: string
+    conflictingEntityType: 'booking' | 'lost-bed'
+  }) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: `/premises/${args.premisesId}/bookings`,
+      },
+      response: {
+        status: 409,
+        headers: {
+          'Content-Type': 'application/problem+json;charset=UTF-8',
+        },
+        jsonBody: bedspaceConflictResponseBody(args.conflictingEntityId, args.conflictingEntityType),
       },
     }),
   stubBooking: (args: { premisesId: string; booking: Booking }) =>

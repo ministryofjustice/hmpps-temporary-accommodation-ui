@@ -3,7 +3,7 @@ import { SuperAgentRequest } from 'superagent'
 import type { Extension } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
-import { errorStub } from '../../wiremock/utils'
+import { bedspaceConflictResponseBody, errorStub } from '../../wiremock/utils'
 
 export default {
   stubExtensionCreate: (args: { premisesId: string; bookingId: string; extension: Extension }): SuperAgentRequest =>
@@ -24,7 +24,12 @@ export default {
     params: Array<string>
   }): SuperAgentRequest =>
     stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/extensions`, 'POST')),
-  stubExtensionCreateConflictError: (args: { premisesId: string; bookingId: string }) =>
+  stubExtensionCreateConflictError: (args: {
+    premisesId: string
+    bookingId: string
+    conflictingEntityId: string
+    conflictingEntityType: 'booking' | 'lost-bed'
+  }) =>
     stubFor({
       request: {
         method: 'POST',
@@ -35,10 +40,7 @@ export default {
         headers: {
           'Content-Type': 'application/problem+json;charset=UTF-8',
         },
-        jsonBody: {
-          title: 'Conflict',
-          status: 409,
-        },
+        jsonBody: bedspaceConflictResponseBody(args.conflictingEntityId, args.conflictingEntityType),
       },
     }),
   verifyExtensionCreate: async (args: { premisesId: string; bookingId: string }) =>

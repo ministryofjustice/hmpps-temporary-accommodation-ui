@@ -6,8 +6,8 @@ import LocationHeaderComponent from '../../../components/locationHeader'
 export default class LostBedNewPage extends LostBedEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(private readonly premises: Premises, private readonly room: Room) {
-    super('Void a bedspace')
+  constructor(premises: Premises, room: Room) {
+    super('Void a bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }

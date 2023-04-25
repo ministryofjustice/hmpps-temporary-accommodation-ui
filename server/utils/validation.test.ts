@@ -1,7 +1,7 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Request, Response } from 'express'
 
-import type { ErrorMessages, ErrorSummary } from '@approved-premises/ui'
+import type { BespokeError, ErrorMessages, ErrorSummary } from '@approved-premises/ui'
 import type TaskListPage from '../form-pages/tasklistPage'
 import errorLookups from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
@@ -11,6 +11,7 @@ import {
   catchValidationErrorOrPropogate,
   clearUserInput,
   fetchErrorsAndUserInput,
+  insertBespokeError,
   insertGenericError,
   setUserInput,
   transformErrors,
@@ -57,7 +58,7 @@ describe('catchValidationErrorOrPropogate', () => {
     }
   })
 
-  it('sets the errors and request body as flash messages and redirects back to the form', () => {
+  it('sets errors from invalid params data as flash messages and redirects back to the form', () => {
     const error = createMock<SanitisedError>({
       data: {
         'invalid-params': [
@@ -77,6 +78,44 @@ describe('catchValidationErrorOrPropogate', () => {
 
     expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
     expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
+
+    expect(response.redirect).toHaveBeenCalledWith('some/url')
+  })
+
+  it('sets errors from bespoke error data as flash messages and redirects back to the form', () => {
+    const bespokeErrorSummary = [
+      {
+        text: 'some-error',
+        href: '#someLink',
+      },
+    ]
+    const bespokeErrorTitle = 'Some Error Title'
+
+    const error = createMock<SanitisedError>({
+      data: {
+        bespokeError: {
+          errorSummary: bespokeErrorSummary,
+          errorTitle: bespokeErrorTitle,
+        },
+        'invalid-params': [
+          {
+            propertyName: '$.crn',
+            errorType: 'empty',
+          },
+          {
+            propertyName: '$.arrivalDate',
+            errorType: 'empty',
+          },
+        ],
+      },
+    })
+
+    catchValidationErrorOrPropogate(request, response, error, 'some/url')
+
+    expect(request.flash).toHaveBeenCalledWith('errors', expectedErrors)
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
+    expect(request.flash).toHaveBeenCalledWith('errorTitle', bespokeErrorTitle)
     expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
 
     expect(response.redirect).toHaveBeenCalledWith('some/url')
@@ -211,15 +250,17 @@ describe('fetchErrorsAndUserInput', () => {
   const request = createMock<Request>({})
 
   let errors: ErrorMessages
-  let userInput: Record<string, unknown>
   let errorSummary: ErrorSummary
+  let errorTitle: string
+  let userInput: Record<string, unknown>
 
   beforeEach(() => {
     ;(request.flash as jest.Mock).mockImplementation((message: string) => {
       return {
         errors: [errors],
-        userInput: [userInput],
         errorSummary,
+        errorTitle: [errorTitle],
+        userInput: [userInput],
       }[message]
     })
   })
@@ -227,17 +268,18 @@ describe('fetchErrorsAndUserInput', () => {
   it('returns default values if there is nothing present', () => {
     const result = fetchErrorsAndUserInput(request)
 
-    expect(result).toEqual({ errors: {}, errorSummary: [], userInput: {} })
+    expect(result).toEqual({ errors: {}, errorSummary: [], errorTitle: undefined, userInput: {} })
   })
 
   it('fetches the values from the flash', () => {
     errors = createMock<ErrorMessages>()
     errorSummary = createMock<ErrorSummary>()
+    errorTitle = 'Error title'
     userInput = { foo: 'bar' }
 
     const result = fetchErrorsAndUserInput(request)
 
-    expect(result).toEqual({ errors, errorSummary, userInput })
+    expect(result).toEqual({ errors, errorSummary, errorTitle, userInput })
   })
 })
 
@@ -288,7 +330,7 @@ describe('insertGenericError', () => {
     })
   })
 
-  it('inserts a property error when the error data not empty', () => {
+  it('inserts a property error when the error data is not empty', () => {
     const error = {
       data: {
         'some-other-data': {},
@@ -325,7 +367,44 @@ describe('insertGenericError', () => {
   })
 })
 
-describe('reallocateError', () => {
+describe('insertBespokeError', () => {
+  it('inserts a bespoke error when the error data is empty', () => {
+    const error = {}
+    const bespokeError: BespokeError = {
+      errorTitle: 'some-bespoke-error',
+      errorSummary: [],
+    }
+
+    insertBespokeError(error as SanitisedError, bespokeError)
+
+    expect(error).toEqual({
+      data: { bespokeError },
+    })
+  })
+
+  it('inserts a property error when the error data is not empty', () => {
+    const error = {
+      data: {
+        'some-other-data': {},
+      },
+    }
+    const bespokeError: BespokeError = {
+      errorTitle: 'some-bespoke-error',
+      errorSummary: [],
+    }
+
+    insertBespokeError(error as SanitisedError, bespokeError)
+
+    expect(error).toEqual({
+      data: {
+        bespokeError,
+        'some-other-data': {},
+      },
+    })
+  })
+})
+
+describe('transformErrors', () => {
   it('renames a property matching the source parameter to the destination parameter', () => {
     const error = {
       data: {

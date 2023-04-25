@@ -66,7 +66,7 @@ Given('I edit the void booking', () => {
     const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.room, this.lostBed)
     lostBedShowPage.clickEditVoidLink()
 
-    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room, this.lostBed)
+    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room)
     const lostBedUpdate = updateLostBedFactory.build()
     cy.wrap(lostBedUpdate).as('lostBedUpdate')
 
@@ -94,7 +94,7 @@ Given('I attempt to edit the void booking with required details missing', () => 
   cy.then(function _() {
     const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.room, this.lostBed)
     lostBedShowPage.clickEditVoidLink()
-    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room, this.lostBed)
+    const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room)
 
     lostBedEditPage.clearForm()
     lostBedEditPage.clickSubmit()
@@ -123,5 +123,20 @@ Then('I should see confirmation that the void is cancelled', () => {
 
     lostBedShowPage.shouldShowBanner('Void booking cancelled')
     lostBedShowPage.shouldShowLostBedDetails()
+  })
+})
+
+Given('I attempt to create a conflicting void booking', () => {
+  cy.then(function _() {
+    const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.room)
+    const newLostBed = newLostBedFactory.build({ ...this.lostBed })
+    lostBedNewPage.completeForm(newLostBed)
+  })
+})
+
+Then('I should see errors for the conflicting void booking', () => {
+  cy.then(function _() {
+    const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.room)
+    lostBedNewPage.shouldShowDateConflictErrorMessages(this.lostBed, 'lost-bed')
   })
 })

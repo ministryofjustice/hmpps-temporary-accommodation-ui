@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express'
 import jsonpath from 'jsonpath'
 
-import type { ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
+import type { BespokeError, ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAndUserInput } from '@approved-premises/ui'
 import errorLookup from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError, ValidationError } from './errors'
@@ -12,7 +12,7 @@ interface InvalidParams {
 }
 
 interface AnnotatedError extends Error {
-  data?: { 'invalid-params'?: Array<InvalidParams> } | Record<string, string>
+  data?: { 'invalid-params'?: Array<InvalidParams>; bespokeError?: BespokeError } | Record<string, string>
 }
 
 type ErrorContext = keyof typeof errorLookup
@@ -24,13 +24,18 @@ export const catchValidationErrorOrPropogate = (
   redirectPath: string,
   context: ErrorContext = 'generic',
 ): void => {
-  const errors = extractValidationErrors(error, context)
+  const bespokeError = (isAnnotatedError(error) && (error.data.bespokeError as BespokeError)) || undefined
 
+  const errors = extractValidationErrors(error, context)
   const errorMessages = generateErrorMessages(errors)
-  const errorSummary = generateErrorSummary(errors)
+  const errorSummary = bespokeError?.errorSummary || generateErrorSummary(errors)
+  const errorTitle = bespokeError?.errorTitle
 
   request.flash('errors', errorMessages)
   request.flash('errorSummary', errorSummary)
+  if (errorTitle) {
+    request.flash('errorTitle', errorTitle)
+  }
   request.flash('userInput', request.body)
 
   response.redirect(redirectPath)
@@ -52,9 +57,10 @@ export const catchAPIErrorOrPropogate = (request: Request, response: Response, e
 export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput => {
   const errors = firstFlashItem(request, 'errors') || {}
   const errorSummary = (request.flash('errorSummary') || []) as Array<ErrorSummary>
+  const errorTitle = firstFlashItem(request, 'errorTitle')
   const userInput = firstFlashItem(request, 'userInput') || {}
 
-  return { errors, errorSummary, userInput }
+  return { errors, errorSummary, errorTitle, userInput }
 }
 
 export const setUserInput = (request: Request, source: 'get' | 'post' = 'post'): void => {
@@ -91,6 +97,12 @@ export const insertGenericError = (error: SanitisedError | Error, propertyName: 
   })
 
   data['invalid-params'] = invalidParams
+  ;(error as AnnotatedError).data = data
+}
+
+export const insertBespokeError = (error: SanitisedError | Error, bespokeError: BespokeError): void => {
+  const data = ('data' in error ? error.data : {}) as AnnotatedError['data']
+  data.bespokeError = bespokeError
   ;(error as AnnotatedError).data = data
 }
 

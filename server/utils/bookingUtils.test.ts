@@ -1,8 +1,10 @@
 import paths from '../paths/temporary-accommodation/manage'
+import { SanitisedError } from '../sanitisedError'
 import { arrivalFactory, bookingFactory, departureFactory, extensionFactory } from '../testutils/factories'
 import {
   bookingActions,
   deriveBookingHistory,
+  generateConflictBespokeError,
   getLatestExtension,
   shortenedOrExtended,
   statusTag,
@@ -11,6 +13,8 @@ import {
 
 const premisesId = 'premisesId'
 const roomId = 'roomId'
+const bookingId = 'bookingId'
+const lostBedId = 'lostBedId'
 
 describe('bookingUtils', () => {
   describe('bookingActions', () => {
@@ -389,6 +393,71 @@ describe('bookingUtils', () => {
       const result = transformApiBookingToUiBooking(booking)
 
       expect(result).toEqual(bookingCopy)
+    })
+  })
+
+  describe('generateConflictBespokeError', () => {
+    it('generates a bespoke error when there is a conflicting booking', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Booking: ${bookingId}`,
+        },
+      }
+
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'plural')).toEqual({
+        errorTitle: 'This bedspace is not available for the dates entered',
+        errorSummary: [
+          {
+            html: `They conflict with an <a href="${paths.bookings.show({
+              premisesId,
+              roomId,
+              bookingId,
+            })}">existing booking</a>`,
+          },
+        ],
+      })
+    })
+
+    it('generates a bespoke error when there is a conflicting lost bed', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Lost Bed: ${lostBedId}`,
+        },
+      }
+
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'plural')).toEqual({
+        errorTitle: 'This bedspace is not available for the dates entered',
+        errorSummary: [
+          {
+            html: `They conflict with an <a href="${paths.lostBeds.show({
+              premisesId,
+              roomId,
+              lostBedId,
+            })}">existing void</a>`,
+          },
+        ],
+      })
+    })
+
+    it('generates a bespoke error for a single date', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Booking: ${bookingId}`,
+        },
+      }
+
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'singular')).toEqual({
+        errorTitle: 'This bedspace is not available for the date entered',
+        errorSummary: [
+          {
+            html: `It conflicts with an <a href="${paths.bookings.show({
+              premisesId,
+              roomId,
+              bookingId,
+            })}">existing booking</a>`,
+          },
+        ],
+      })
     })
   })
 })

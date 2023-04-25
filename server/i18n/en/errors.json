@@ -18,7 +18,7 @@
     "arrivalDate": {
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
-      "conflict": "An existing booking or void overlaps with these dates"
+      "conflict": "This bedspace is not available for these dates"
     },
     "date": {
       "empty": "You must enter a valid departure date",
@@ -32,13 +32,13 @@
       "empty": "You must enter an end date",
       "invalid": "The end date is an invalid date",
       "beforeBookingArrivalDate": "The end date cannot be before the start date",
-      "conflict": "An existing booking or void overlaps with these dates"
+      "conflict": "This bedspace is not available for these dates"
     },
     "expectedDepartureDate": {
       "empty": "You must enter an expected departure date",
       "invalid": "The expected departure date is an invalid date",
       "beforeBookingArrivalDate": "The departure date cannot be before the arrival date",
-      "conflict": "An existing booking or void overlaps with these dates"
+      "conflict": "This bedspace is not available for these dates"
     },
     "keyWorkerStaffId": {
       "empty": "You must choose a keyworker"
@@ -63,17 +63,17 @@
       "empty": "You must enter a new departure date",
       "invalid": "The departure date is an invalid date",
       "beforeBookingArrivalDate": "The new departure date must be after the arrival date",
-      "conflict": "An existing booking or void overlaps with these dates"
+      "conflict": "This bedspace is not available for this date"
     },
     "startDate": {
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
-      "conflict": "An existing booking or void overlaps with these dates"
+      "conflict": "This bedspace is not available for these dates"
     },
     "endDate": {
       "empty": "You must enter a end date",
       "invalid": "The end date is an invalid date",
-      "conflict": "An existing booking or void overlaps with these dates",
+      "conflict": "This bedspace is not available for these dates",
       "beforeStartDate": "The end date must be before the start date"
     },
     "reason": {

@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { LostBedService, PremisesService } from '../../../services'
@@ -14,15 +15,22 @@ import {
   roomFactory,
   updateLostBedFactory,
 } from '../../../testutils/factories'
+import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertBespokeError,
+  insertGenericError,
+} from '../../../utils/validation'
 import LostBedsController from './lostBedsController'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/lostBedUtils')
+jest.mock('../../../utils/bookingUtils')
 
 describe('LostBedsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -109,7 +117,7 @@ describe('LostBedsController', () => {
       it('renders with errors if the API returns an error', async () => {
         const requestHandler = lostBedsController.create()
 
-        const err = { status: 409 }
+        const err = {}
         lostBedService.create.mockImplementation(() => {
           throw err
         })
@@ -137,6 +145,14 @@ describe('LostBedsController', () => {
           throw err
         })
 
+        const bespokeError: BespokeError = {
+          errorTitle: 'some-bespoke-error',
+          errorSummary: [],
+        }
+        ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+          bespokeError,
+        )
+
         request.params = {
           premisesId,
           roomId,
@@ -144,6 +160,10 @@ describe('LostBedsController', () => {
 
         await requestHandler(request, response, next)
 
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+        expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'startDate', 'conflict')
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'endDate', 'conflict')
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,
@@ -256,9 +276,20 @@ describe('LostBedsController', () => {
         lostBedService.update.mockImplementation(() => {
           throw err
         })
+        const bespokeError: BespokeError = {
+          errorTitle: 'some-bespoke-error',
+          errorSummary: [],
+        }
+        ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+          bespokeError,
+        )
 
         await requestHandler(request, response, next)
 
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+        expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'startDate', 'conflict')
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'endDate', 'conflict')
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,

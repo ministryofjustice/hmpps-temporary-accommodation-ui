@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PersonService, PremisesService } from '../../../services'
@@ -11,12 +12,13 @@ import {
   premisesFactory,
   roomFactory,
 } from '../../../testutils/factories'
-import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
+import { bookingActions, deriveBookingHistory, generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
+  insertBespokeError,
   insertGenericError,
   setUserInput,
 } from '../../../utils/validation'
@@ -249,6 +251,14 @@ describe('BookingsController', () => {
         throw err
       })
 
+      const bespokeError: BespokeError = {
+        errorTitle: 'some-bespoke-error',
+        errorSummary: [],
+      }
+      ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+        bespokeError,
+      )
+
       const booking = bookingFactory.build()
       const newBooking = newBookingFactory.build({
         ...booking,
@@ -266,6 +276,8 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+      expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
       expect(insertGenericError).toHaveBeenCalledWith(err, 'departureDate', 'conflict')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(

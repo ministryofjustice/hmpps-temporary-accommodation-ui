@@ -4,13 +4,14 @@ import type { NewBooking } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { bookingActions, deriveBookingHistory } from '../../../utils/bookingUtils'
+import { bookingActions, deriveBookingHistory, generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
   clearUserInput,
   fetchErrorsAndUserInput,
+  insertBespokeError,
   insertGenericError,
   setUserInput,
 } from '../../../utils/validation'
@@ -25,7 +26,7 @@ export default class BookingsController {
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId } = req.params
 
       const callConfig = extractCallConfig(req)
@@ -37,7 +38,8 @@ export default class BookingsController {
         premises,
         room,
         errors,
-        errorSummary: requestErrorSummary,
+        errorSummary,
+        errorTitle,
         ...userInput,
       })
     }
@@ -105,6 +107,7 @@ export default class BookingsController {
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
       } catch (err) {
         if (err.status === 409) {
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
           insertGenericError(err, 'arrivalDate', 'conflict')
           insertGenericError(err, 'departureDate', 'conflict')
         } else if (err.status === 403) {

@@ -54,6 +54,10 @@ export default class BookingShowPage extends Page {
     this.clickAction('Update cancelled booking')
   }
 
+  clickChangeTurnaround(): void {
+    this.clickAction('Change turnaround time')
+  }
+
   clickHistoryLink(): void {
     cy.get('a').contains('View booking history').click()
   }

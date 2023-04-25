@@ -34,6 +34,7 @@ import oasysSelectionFactory from './oasysSelection'
 import pduFactory from './pdu'
 import personFactory from './person'
 import premisesFactory from './premises'
+import premisesSummaryFactory from './premisesSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -108,4 +109,5 @@ export {
   bookingSearchResultBedSummaryFactory,
   bookingSearchResultFactory,
   bookingSearchResultsFactory,
+  premisesSummaryFactory,
 }

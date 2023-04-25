@@ -11,6 +11,7 @@ import {
   dateCapacityFactory,
   lostBedFactory,
   premisesFactory,
+  premisesSummaryFactory,
   staffMemberFactory,
 } from '../server/testutils/factories'
 import premisesJson from './stubs/premises.json'
@@ -42,17 +43,21 @@ const premises = premisesJson.map(item => {
   return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>) })
 })
 
+const premisesSummaries = premisesJson.map(item => {
+  return premisesSummaryFactory.build({ ...item })
+})
+
 stubs.push({
   request: {
     method: 'GET',
-    urlPath: '/premises',
+    urlPath: '/premises/summary',
   },
   response: {
     status: 200,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: premises,
+    jsonBody: premisesSummaries,
   },
 })
 

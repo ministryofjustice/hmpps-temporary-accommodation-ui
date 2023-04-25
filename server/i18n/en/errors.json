@@ -98,6 +98,12 @@
     },
     "status": {
       "empty": "You must choose a status"
+    },
+    "workingDays": {
+      "empty": "You must enter a turnaround time",
+      "expectedNumber": "You must enter a turnaround time in days",
+      "invalid": "You must enter a turnaround time in days",
+      "conflict": "This bedspace is not available for this turnaround time"
     }
   },
   "bookingCancellation": {

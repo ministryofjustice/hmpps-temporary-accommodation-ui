@@ -97,11 +97,7 @@ describe('PremisesService', () => {
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
         probationRegions: [probationRegion1, probationRegion2, probationRegion3],
-        pdus: [
-          { ...pdu1, id: pdu1.name },
-          { ...pdu2, id: pdu2.name },
-          { ...pdu3, id: pdu3.name },
-        ],
+        pdus: [pdu1, pdu2, pdu3],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')

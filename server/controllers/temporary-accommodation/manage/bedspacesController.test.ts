@@ -6,7 +6,13 @@ import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { premisesFactory, referenceDataFactory, roomFactory, updateRoomFactory } from '../../../testutils/factories'
+import {
+  characteristicFactory,
+  premisesFactory,
+  referenceDataFactory,
+  roomFactory,
+  updateRoomFactory,
+} from '../../../testutils/factories'
 import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -246,7 +252,12 @@ describe('BedspacesController', () => {
 
   describe('show', () => {
     it('returns the bedspace details to the template', async () => {
-      const premises = premisesFactory.build()
+      const premises = premisesFactory.build({
+        characteristics: [
+          characteristicFactory.build({ name: 'b test characteristic' }),
+          characteristicFactory.build({ name: 'a test characteristic' }),
+        ],
+      })
       const room = roomFactory.build()
 
       premisesService.getPremises.mockResolvedValue(premises)
@@ -265,6 +276,7 @@ describe('BedspacesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspaces/show', {
         premises,
+        premisesCharacteristics: ['a test characteristic', 'b test characteristic'],
         bedspace: bedspaceDetails,
         bookingTableRows,
         actions: [],

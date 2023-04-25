@@ -1,0 +1,7 @@
+.attributes-header {
+    margin-bottom: 2em;
+  
+    h2 {
+      @include govuk-font($size: 19, $weight: 'bold');
+    }
+  }

@@ -109,6 +109,7 @@ export default class BedspacesController {
       const { premisesId, roomId } = req.params
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premisesCharacteristics = premises.characteristics.map(item => item.name).sort((a, b) => a.localeCompare(b))
       const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
 
       const bedspaceDetails = await this.bedspaceService.getSingleBedspaceDetails(callConfig, premisesId, roomId)
@@ -116,6 +117,7 @@ export default class BedspacesController {
 
       return res.render('temporary-accommodation/bedspaces/show', {
         premises,
+        premisesCharacteristics,
         bedspace: bedspaceDetails,
         bookingTableRows,
         actions: bedspaceActions(premises, room),

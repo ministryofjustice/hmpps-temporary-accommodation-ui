@@ -15,6 +15,7 @@ const arrivalsPath = singleBookingPath.path('mark-as-active')
 const departuresPath = singleBookingPath.path('mark-as-departed')
 const extensionsPath = singleBookingPath.path('extend')
 const cancellationsPath = singleBookingPath.path('cancellations')
+const turnaroundsPath = singleBookingPath.path('turnarounds')
 
 const lostBedsPath = singleBedspacePath.path('void')
 const singleLostBedPath = lostBedsPath.path(':lostBedId')
@@ -66,6 +67,10 @@ const paths = {
       create: cancellationsPath,
       edit: cancellationsPath.path('edit'),
       update: cancellationsPath,
+    },
+    turnarounds: {
+      new: turnaroundsPath.path('edit'),
+      create: turnaroundsPath,
     },
     search: {
       provisional: {

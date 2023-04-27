@@ -10,6 +10,7 @@ import confirmationFactory from './confirmation'
 import departureFactory from './departure'
 import extensionFactory from './extension'
 import personFactory from './person'
+import turnaroundFactory from './turnaround'
 
 const soon = () =>
   DateFormats.dateObjToIsoDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
@@ -89,6 +90,7 @@ export default BookingFactory.define(() => {
 
   const cancellations = faker.helpers.arrayElements(cancellationFactory.buildList(5))
   const departures = faker.helpers.arrayElements(departureFactory.buildList(5))
+  const turnarounds = faker.helpers.arrayElements(turnaroundFactory.buildList(5))
 
   return {
     person: personFactory.build(),
@@ -106,6 +108,8 @@ export default BookingFactory.define(() => {
     cancellation: cancellations[0],
     cancellations,
     extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
+    turnaround: turnarounds[0],
+    turnarounds,
     serviceName: 'temporary-accommodation' as const,
     createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   }

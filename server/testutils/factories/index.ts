@@ -47,9 +47,11 @@ import referenceDataFactory from './referenceData'
 import risksFactory, { tierEnvelopeFactory } from './risks'
 import roomFactory from './room'
 import staffMemberFactory from './staffMember'
+import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
 import updateRoomFactory from './updateRoom'
+import updateTurnaroundFactory from './updateTurnaround'
 import userFactory from './user'
 
 export {
@@ -108,4 +110,6 @@ export {
   bookingSearchResultBedSummaryFactory,
   bookingSearchResultFactory,
   bookingSearchResultsFactory,
+  turnaroundFactory,
+  updateTurnaroundFactory,
 }

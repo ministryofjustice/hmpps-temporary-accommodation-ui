@@ -12,7 +12,9 @@ import type {
   NewDeparture,
   NewExtension,
   NewNonarrival,
+  NewTurnaround,
   Nonarrival,
+  Turnaround,
 } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import type { BookingSearchResults } from 'server/@types/shared/models/BookingSearchResults'
@@ -109,6 +111,15 @@ export default class BookingClient {
     })
 
     return response as Nonarrival
+  }
+
+  async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround): Promise<Turnaround> {
+    const response = await this.restClient.post({
+      path: `${this.bookingPath(premisesId, bookingId)}/turnarounds`,
+      data: turnaround,
+    })
+
+    return response as Turnaround
   }
 
   async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {

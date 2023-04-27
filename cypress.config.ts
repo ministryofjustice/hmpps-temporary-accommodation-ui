@@ -16,6 +16,7 @@ import premises from './integration_tests/mockApis/premises'
 import report from './integration_tests/mockApis/report'
 import room from './integration_tests/mockApis/room'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
+import turnaround from './integration_tests/mockApis/turnaround'
 import user from './integration_tests/mockApis/user'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import { resetStubs } from './wiremock'
@@ -45,6 +46,7 @@ export default defineConfig({
         ...departure,
         ...cancellation,
         ...confirmation,
+        ...turnaround,
         ...lostBed,
         ...person,
         ...applications,

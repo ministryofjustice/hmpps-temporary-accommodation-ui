@@ -20,6 +20,7 @@ import PersonService from './personService'
 import PremisesService from './premisesService'
 import UserService from './userService'
 import BookingSearchService from './bookingSearchService'
+import TurnaroundService from './turnaroundService'
 
 export const services = () => {
   const {
@@ -53,6 +54,7 @@ export const services = () => {
   const bookingReportService = new BookingReportService(reportClientBuilder, referenceDataClientBuilder)
   const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder, referenceDataClientBuilder)
   const bookingSearchService = new BookingSearchService(bookingClientBuilder)
+  const turnaroundService = new TurnaroundService(bookingClientBuilder)
 
   return {
     userService,
@@ -72,6 +74,7 @@ export const services = () => {
     bookingReportService,
     bedspaceSearchService,
     bookingSearchService,
+    turnaroundService,
   }
 }
 
@@ -91,4 +94,5 @@ export {
   ApplicationService,
   BedspaceService,
   BookingSearchService,
+  TurnaroundService,
 }

@@ -147,6 +147,7 @@ export type { TemporaryAccommodationBedSearchResult } from './models/TemporaryAc
 export type { TemporaryAccommodationPremises } from './models/TemporaryAccommodationPremises';
 export type { TemporaryAccommodationPremisesSummary } from './models/TemporaryAccommodationPremisesSummary';
 export type { TemporaryAccommodationUser } from './models/TemporaryAccommodationUser';
+export type { Turnaround } from './models/Turnaround';
 export type { UpdateApplication } from './models/UpdateApplication';
 export type { UpdateApprovedPremisesApplication } from './models/UpdateApprovedPremisesApplication';
 export type { UpdateAssessment } from './models/UpdateAssessment';
@@ -155,6 +156,7 @@ export type { UpdateLostBed } from './models/UpdateLostBed';
 export type { UpdatePremises } from './models/UpdatePremises';
 export type { UpdateRoom } from './models/UpdateRoom';
 export type { UpdateTemporaryAccommodationApplication } from './models/UpdateTemporaryAccommodationApplication';
+export type { UpdateTurnaround } from './models/UpdateTurnaround';
 export type { User } from './models/User';
 export type { UserQualification } from './models/UserQualification';
 export type { UserRole } from './models/UserRole';

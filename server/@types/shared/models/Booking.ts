@@ -10,6 +10,7 @@ import type { Confirmation } from './Confirmation';
 import type { Departure } from './Departure';
 import type { Extension } from './Extension';
 import type { Nonarrival } from './Nonarrival';
+import type { Turnaround } from './Turnaround';
 
 export type Booking = (BookingBody & {
     status: BookingStatus;
@@ -33,5 +34,13 @@ export type Booking = (BookingBody & {
      */
     cancellations: Array<Cancellation>;
     confirmation?: Confirmation | null;
+    /**
+     * The latest version of the turnaround, if it exists
+     */
+    turnaround?: Turnaround | null;
+    /**
+     * The full history of turnarounds
+     */
+    turnarounds?: Array<Turnaround>;
 });
 

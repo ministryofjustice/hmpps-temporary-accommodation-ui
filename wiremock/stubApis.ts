@@ -26,6 +26,7 @@ import lostBedStubs from './lostBedStubs'
 import nonArrivalStubs from './nonArrivalStubs'
 import personStubs from './personStubs'
 import roomStubs from './roomStub'
+import turnaroundStubs from './turnaroundStubs'
 import userStub from './userStub'
 
 import path from '../server/paths/api'
@@ -265,6 +266,7 @@ stubs.push(
   ...cancellationStubs,
   ...confirmationStubs,
   ...extensionStubs,
+  ...turnaroundStubs,
   ...lostBedStubs,
   ...personStubs,
   ...applicationStubs,

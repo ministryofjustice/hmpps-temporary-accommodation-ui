@@ -18,7 +18,7 @@ export default class BookingArrivalNewPage extends Page {
   constructor(premises: Premises, room: Room, private readonly booking: Booking) {
     super('Mark booking as active')
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room)
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')
     this.bookingInfoComponent = new BookingInfoComponent(booking)
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })

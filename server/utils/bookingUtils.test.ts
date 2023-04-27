@@ -5,6 +5,7 @@ import {
   bookingActions,
   deriveBookingHistory,
   generateConflictBespokeError,
+  generateTurnaroundConflictBespokeError,
   getLatestExtension,
   shortenedOrExtended,
   statusTag,
@@ -455,6 +456,50 @@ describe('bookingUtils', () => {
               roomId,
               bookingId,
             })}">existing booking</a>`,
+          },
+        ],
+      })
+    })
+  })
+
+  describe('generateTurnaroundConflictBespokeError', () => {
+    it('generates a bespoke error when there is a conflicting booking', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Booking: ${bookingId}`,
+        },
+      }
+
+      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, roomId)).toEqual({
+        errorTitle: 'The turnaround time could not be changed',
+        errorSummary: [
+          {
+            html: `The new turnaround time would conflict with an <a href="${paths.bookings.show({
+              premisesId,
+              roomId,
+              bookingId,
+            })}">existing booking</a>`,
+          },
+        ],
+      })
+    })
+
+    it('generates a bespoke error when there is a conflicting lost bed', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Lost Bed: ${lostBedId}`,
+        },
+      }
+
+      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, roomId)).toEqual({
+        errorTitle: 'The turnaround time could not be changed',
+        errorSummary: [
+          {
+            html: `The new turnaround time would conflict with an <a href="${paths.lostBeds.show({
+              premisesId,
+              roomId,
+              lostBedId,
+            })}">existing void</a>`,
           },
         ],
       })

@@ -9,7 +9,7 @@ export default abstract class BookingEditablePage extends Page {
   constructor(title: string, premises: Premises, room: Room) {
     super(title)
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room)
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')
   }
 
   shouldShowDateConflictErrorMessages(

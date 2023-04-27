@@ -6,6 +6,7 @@ import { ReferenceData } from '../../@types/ui'
 import { unique } from '../../utils/utils'
 import characteristicFactory from './characteristic'
 import localAuthorityFactory from './localAuthority'
+import pduFactory from './pdu'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
 
@@ -29,6 +30,8 @@ class PremisesFactory extends Factory<Premises> {
     localAuthorities: ReferenceData[],
     characteristics: ReferenceData[],
   ) {
+    const pdu = pduFactory.build({ ...faker.helpers.arrayElement(pdus) })
+
     return this.params({
       probationRegion: probationRegionFactory.build({
         ...probationRegion,
@@ -36,7 +39,8 @@ class PremisesFactory extends Factory<Premises> {
       localAuthorityArea: localAuthorityFactory.build({
         ...faker.helpers.arrayElement(localAuthorities),
       }),
-      pdu: faker.helpers.arrayElement(pdus).id,
+      pdu: pdu.id,
+      probationDeliveryUnit: pdu,
       characteristics: faker.helpers
         .arrayElements(characteristics, faker.datatype.number({ min: 1, max: 5 }))
         .map(characteristic =>
@@ -49,26 +53,31 @@ class PremisesFactory extends Factory<Premises> {
   }
 }
 
-export default PremisesFactory.define(() => ({
-  id: faker.datatype.uuid(),
-  name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
-  addressLine1: faker.address.streetAddress(),
-  addressLine2: faker.address.secondaryAddress(),
-  town: faker.address.cityName(),
-  postcode: faker.address.zipCode(),
-  bedCount: 50,
-  availableBedsForToday: faker.datatype.number({ min: 0, max: 50 }),
-  apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
-  probationRegion: referenceDataFactory.probationRegion().build(),
-  apArea: apAreaFactory.build(),
-  localAuthorityArea: referenceDataFactory.localAuthority().build(),
-  pdu: referenceDataFactory.pdu().build().id,
-  characteristics: unique(
-    referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
-  ),
-  status: faker.helpers.arrayElement(['active', 'archived'] as const),
-  notes: faker.lorem.lines(5),
-}))
+export default PremisesFactory.define(() => {
+  const pdu = referenceDataFactory.pdu().build()
+
+  return {
+    id: faker.datatype.uuid(),
+    name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
+    addressLine1: faker.address.streetAddress(),
+    addressLine2: faker.address.secondaryAddress(),
+    town: faker.address.cityName(),
+    postcode: faker.address.zipCode(),
+    bedCount: 50,
+    availableBedsForToday: faker.datatype.number({ min: 0, max: 50 }),
+    apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
+    probationRegion: referenceDataFactory.probationRegion().build(),
+    apArea: apAreaFactory.build(),
+    localAuthorityArea: referenceDataFactory.localAuthority().build(),
+    pdu: pdu.id,
+    probationDeliveryUnit: pdu,
+    characteristics: unique(
+      referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
+    ),
+    status: faker.helpers.arrayElement(['active', 'archived'] as const),
+    notes: faker.lorem.lines(5),
+  }
+})
 
 const apAreaFactory = Factory.define<ApArea>(() => ({
   id: faker.datatype.uuid(),

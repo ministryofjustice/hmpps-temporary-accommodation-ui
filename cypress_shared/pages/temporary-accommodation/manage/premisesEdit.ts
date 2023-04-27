@@ -46,7 +46,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
       .contains('What is the PDU?')
       .siblings('select')
       .children('option')
-      .contains(exact(this.premises.pdu))
+      .contains(exact(this.premises.probationDeliveryUnit.name))
       .should('be.selected')
 
     cy.get('legend')
@@ -85,7 +85,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
 
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaId', '')
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
-    this.getSelectInputByIdAndSelectAnEntry('pdu', '')
+    this.getSelectInputByIdAndSelectAnEntry('probationDeliveryUnitId', '')
 
     cy.get('legend')
       .contains('Does the property have any of the following attributes?')

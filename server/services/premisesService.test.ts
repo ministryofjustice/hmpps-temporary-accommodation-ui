@@ -97,11 +97,7 @@ describe('PremisesService', () => {
         localAuthorities: [localAuthority1, localAuthority2, localAuthority3],
         characteristics: [premisesCharacteristic1, premisesCharacteristic2, genericCharacteristic],
         probationRegions: [probationRegion1, probationRegion2, probationRegion3],
-        pdus: [
-          { ...pdu1, id: pdu1.name },
-          { ...pdu2, id: pdu2.name },
-          { ...pdu3, id: pdu3.name },
-        ],
+        pdus: [pdu1, pdu2, pdu3],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')
@@ -139,7 +135,7 @@ describe('PremisesService', () => {
             text: premises1.bedCount.toString(),
           },
           {
-            text: premises1.pdu,
+            text: premises1.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises1.status}</strong>`,
@@ -158,7 +154,7 @@ describe('PremisesService', () => {
             text: premises2.bedCount.toString(),
           },
           {
-            text: premises2.pdu,
+            text: premises2.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises2.status}</strong>`,
@@ -177,7 +173,7 @@ describe('PremisesService', () => {
             text: premises3.bedCount.toString(),
           },
           {
-            text: premises3.pdu,
+            text: premises3.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises3.status}</strong>`,
@@ -196,7 +192,7 @@ describe('PremisesService', () => {
             text: premises4.bedCount.toString(),
           },
           {
-            text: premises4.pdu,
+            text: premises4.probationDeliveryUnit.name,
           },
           {
             html: `<strong>${premises4.status}</strong>`,
@@ -255,6 +251,10 @@ describe('PremisesService', () => {
           name: 'A probation region',
           id: 'a-probation-region',
         }),
+        probationDeliveryUnit: pduFactory.build({
+          name: 'A probation delivery unit',
+          id: 'a-probation-delivery-unit',
+        }),
       })
 
       premisesClient.find.mockResolvedValue(premises)
@@ -265,6 +265,7 @@ describe('PremisesService', () => {
         localAuthorityAreaId: 'local-authority',
         characteristicIds: ['characteristic-a', 'characteristic-b'],
         probationRegionId: 'a-probation-region',
+        probationDeliveryUnitId: 'a-probation-delivery-unit',
       })
 
       expect(premisesClient.find).toHaveBeenCalledWith(premises.id)
@@ -306,7 +307,7 @@ describe('PremisesService', () => {
         probationRegion: probationRegionFactory.build({
           name: 'A probation region',
         }),
-        pdu: 'A PDU',
+        probationDeliveryUnit: pduFactory.build({ name: 'A PDU' }),
         status: 'active',
         notes: 'Some notes',
       })
@@ -393,17 +394,19 @@ describe('PremisesService', () => {
   describe('update', () => {
     it('on success updates the premises and returns the updated premises', async () => {
       const premises = premisesFactory.build()
-      const newPremises = updatePremisesFactory.build({
+      const updatePremises = updatePremisesFactory.build({
         postcode: premises.postcode,
         notes: premises.notes,
       })
       premisesClient.update.mockResolvedValue(premises)
 
-      const updatedPremises = await service.update(callConfig, premises.id, newPremises)
+      const updatedPremises = await service.update(callConfig, premises.id, updatePremises)
       expect(updatedPremises).toEqual(premises)
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, newPremises)
+      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, {
+        ...updatePremises,
+      })
     })
   })
 })

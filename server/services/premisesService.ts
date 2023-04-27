@@ -56,9 +56,7 @@ export default class PremisesService {
       await referenceDataClient.getReferenceData('probation-delivery-units', {
         probationRegionId: callConfig.probationRegion.id,
       })
-    )
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(pdu => ({ ...pdu, id: pdu.name }))
+    ).sort((a, b) => a.name.localeCompare(b.name))
 
     return { localAuthorities, characteristics, probationRegions, pdus }
   }
@@ -132,7 +130,7 @@ export default class PremisesService {
       localAuthorityAreaId: premises.localAuthorityArea?.id,
       characteristicIds: premises.characteristics.map(characteristic => characteristic.id),
       probationRegionId: premises.probationRegion.id,
-      pdu: premises.pdu,
+      probationDeliveryUnitId: premises.probationDeliveryUnit.id,
     }
   }
 
@@ -171,7 +169,7 @@ export default class PremisesService {
         },
         {
           key: this.textValue('PDU'),
-          value: this.textValue(premises.pdu),
+          value: this.textValue(premises.probationDeliveryUnit.name),
         },
         {
           key: this.textValue('Attributes'),

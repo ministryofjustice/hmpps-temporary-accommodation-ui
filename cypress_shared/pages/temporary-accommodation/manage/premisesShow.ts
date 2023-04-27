@@ -53,6 +53,7 @@ export default class PremisesShowPage extends Page {
                       postcode: addressLines[addressLines.length - 1],
                       status,
                       pdu: pdu.name,
+                      probationDeliveryUnit: pdu,
                     })
 
                     cy.wrap(premises).as(alias)
@@ -77,7 +78,7 @@ export default class PremisesShowPage extends Page {
       ])
       this.shouldShowKeyAndValue('Local authority', this.premises.localAuthorityArea.name)
       this.shouldShowKeyAndValue('Probation region', this.premises.probationRegion.name)
-      this.shouldShowKeyAndValue('PDU', this.premises.pdu)
+      this.shouldShowKeyAndValue('PDU', this.premises.probationDeliveryUnit.name)
       this.shouldShowKeyAndValues(
         'Attributes',
         this.premises.characteristics.map(({ name }) => name),

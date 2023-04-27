@@ -4,6 +4,11 @@ import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import { DateFormats } from './dateUtils'
 
+type ParsedConflictError = {
+  conflictingEntityId: string
+  conflictingEntityType: 'booking' | 'lost-bed'
+}
+
 export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<PageHeadingBarItem> {
   const items = []
 
@@ -158,10 +163,7 @@ export const generateConflictBespokeError = (
   datesGrammaticalNumber: 'plural' | 'singular',
 ): BespokeError => {
   const { detail } = err.data as { detail: string }
-
-  const detailWords = detail.split(' ')
-  const conflictId = detailWords[detailWords.length - 1]
-  const conflictType = detail.includes('Lost Bed') ? 'lost-bed' : 'booking'
+  const { conflictingEntityId, conflictingEntityType } = parseConflictError(detail)
 
   const title =
     datesGrammaticalNumber === 'plural'
@@ -169,21 +171,57 @@ export const generateConflictBespokeError = (
       : 'This bedspace is not available for the date entered'
 
   const link =
-    conflictType === 'lost-bed'
+    conflictingEntityType === 'lost-bed'
       ? `<a href="${paths.lostBeds.show({
           premisesId,
           roomId,
-          lostBedId: conflictId,
+          lostBedId: conflictingEntityId,
         })}">existing void</a>`
       : `<a href="${paths.bookings.show({
           premisesId,
           roomId,
-          bookingId: conflictId,
+          bookingId: conflictingEntityId,
         })}">existing booking</a>`
 
   const message = datesGrammaticalNumber === 'plural' ? `They conflict with an ${link}` : `It conflicts with an ${link}`
 
   return { errorTitle: title, errorSummary: [{ html: message }] }
+}
+
+export const generateTurnaroundConflictBespokeError = (
+  err: SanitisedError,
+  premisesId: string,
+  roomId: string,
+): BespokeError => {
+  const { detail } = err.data as { detail: string }
+  const { conflictingEntityId, conflictingEntityType } = parseConflictError(detail)
+
+  const title = 'The turnaround time could not be changed'
+
+  const link =
+    conflictingEntityType === 'lost-bed'
+      ? `<a href="${paths.lostBeds.show({
+          premisesId,
+          roomId,
+          lostBedId: conflictingEntityId,
+        })}">existing void</a>`
+      : `<a href="${paths.bookings.show({
+          premisesId,
+          roomId,
+          bookingId: conflictingEntityId,
+        })}">existing booking</a>`
+
+  const message = `The new turnaround time would conflict with an ${link}`
+
+  return { errorTitle: title, errorSummary: [{ html: message }] }
+}
+
+const parseConflictError = (detail: string): ParsedConflictError => {
+  const detailWords = detail.split(' ')
+  const conflictingEntityId = detailWords[detailWords.length - 1]
+  const conflictingEntityType = detail.includes('Lost Bed') ? 'lost-bed' : 'booking'
+
+  return { conflictingEntityId, conflictingEntityType }
 }
 
 const getUpdatedAt = (booking: Booking): string => {

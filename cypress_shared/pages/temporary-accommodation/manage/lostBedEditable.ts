@@ -8,7 +8,7 @@ export default abstract class LostBedEditablePage extends Page {
   constructor(title: string, premises: Premises, room: Room) {
     super(title)
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room)
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'lost-bed')
   }
 
   shouldShowDateConflictErrorMessages(

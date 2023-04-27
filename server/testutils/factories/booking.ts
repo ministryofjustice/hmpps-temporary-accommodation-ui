@@ -10,6 +10,7 @@ import confirmationFactory from './confirmation'
 import departureFactory from './departure'
 import extensionFactory from './extension'
 import personFactory from './person'
+import turnaroundFactory from './turnaround'
 
 const soon = () =>
   DateFormats.dateObjToIsoDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
@@ -86,19 +87,29 @@ class BookingFactory extends Factory<Booking> {
 export default BookingFactory.define(() => {
   const originalArrivalDate = faker.date.soon()
   const arrivalDate = faker.date.soon()
+  const departureDate = faker.date.future(1, arrivalDate)
 
   const cancellations = faker.helpers.arrayElements(cancellationFactory.buildList(5))
   const departures = faker.helpers.arrayElements(departureFactory.buildList(5))
+  const turnarounds = faker.helpers.arrayElements(turnaroundFactory.buildList(5))
 
   return {
     person: personFactory.build(),
     originalArrivalDate: DateFormats.dateObjToIsoDate(originalArrivalDate),
     originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, originalArrivalDate)),
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
-    departureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, arrivalDate)),
+    departureDate: DateFormats.dateObjToIsoDate(departureDate),
+    closeDate: DateFormats.dateObjToIsoDate(faker.date.future(1, departureDate)),
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     id: faker.datatype.uuid(),
-    status: faker.helpers.arrayElement(['provisional', 'confirmed', 'arrived', 'departed', 'cancelled'] as const),
+    status: faker.helpers.arrayElement([
+      'provisional',
+      'confirmed',
+      'arrived',
+      'departed',
+      'closed',
+      'cancelled',
+    ] as const),
     arrival: arrivalFactory.build(),
     departure: departures[0],
     departures,
@@ -106,6 +117,8 @@ export default BookingFactory.define(() => {
     cancellation: cancellations[0],
     cancellations,
     extensions: faker.helpers.arrayElements(extensionFactory.buildList(5)),
+    turnaround: turnarounds[0],
+    turnarounds,
     serviceName: 'temporary-accommodation' as const,
     createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   }

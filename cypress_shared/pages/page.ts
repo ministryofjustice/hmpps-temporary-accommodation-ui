@@ -158,6 +158,10 @@ export default abstract class Page extends Component {
     cy.get(`#${prefix}-year`).clear()
   }
 
+  clearTextInputByLabel(label: string): void {
+    cy.get('label').contains(label).parent().find('input').clear()
+  }
+
   completeDateInputs(prefix: string, date: string): void {
     const parsedDate = DateFormats.isoToDateObj(date)
     cy.get(`#${prefix}-day`).type(parsedDate.getDate().toString())

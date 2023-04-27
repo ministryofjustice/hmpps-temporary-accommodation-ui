@@ -6,6 +6,7 @@ import {
   dateCapacityFactory,
   newPremisesFactory,
   premisesFactory,
+  premisesSummaryFactory,
   staffMemberFactory,
   updatePremisesFactory,
 } from '../testutils/factories'
@@ -34,16 +35,16 @@ describe('PremisesClient', () => {
   })
 
   describe('all', () => {
-    const premises = premisesFactory.buildList(5)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
 
     it('should get all premises for the given service', async () => {
       fakeApprovedPremisesApi
         .get(paths.premises.index({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, premises)
+        .reply(200, premisesSummaries)
 
       const output = await premisesClient.all()
-      expect(output).toEqual(premises)
+      expect(output).toEqual(premisesSummaries)
     })
   })
 

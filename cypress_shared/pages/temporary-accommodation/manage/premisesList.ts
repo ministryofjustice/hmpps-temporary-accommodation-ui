@@ -1,4 +1,7 @@
-import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
+import type {
+  TemporaryAccommodationPremises as Premises,
+  TemporaryAccommodationPremisesSummary as PremisesSummary,
+} from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { premisesFactory } from '../../../../server/testutils/factories'
@@ -52,7 +55,7 @@ export default class PremisesListPage extends Page {
       )
   }
 
-  shouldShowPremises(premises: Array<Premises>): void {
+  shouldShowPremises(premises: Array<PremisesSummary>): void {
     premises.forEach((item: Premises) => {
       const shortAddress = `${item.addressLine1}, ${item.postcode}`
 

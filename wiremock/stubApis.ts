@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { DeepPartial } from 'fishery'
 
-import type { ApprovedPremises } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises } from '@approved-premises/api'
 import { bulkStub } from './index'
 
 import {
@@ -11,6 +11,7 @@ import {
   dateCapacityFactory,
   lostBedFactory,
   premisesFactory,
+  premisesSummaryFactory,
   staffMemberFactory,
 } from '../server/testutils/factories'
 import premisesJson from './stubs/premises.json'
@@ -39,20 +40,24 @@ import { errorStub, getCombinations } from './utils'
 const stubs = []
 
 const premises = premisesJson.map(item => {
-  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>) })
+  return premisesFactory.build({ ...(item as DeepPartial<TemporaryAccommodationPremises>) })
+})
+
+const premisesSummaries = premises.map(singlePremises => {
+  return premisesSummaryFactory.build({ ...singlePremises })
 })
 
 stubs.push({
   request: {
     method: 'GET',
-    urlPath: '/premises',
+    urlPath: path.premises.index({}),
   },
   response: {
     status: 200,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: premises,
+    jsonBody: premisesSummaries,
   },
 })
 

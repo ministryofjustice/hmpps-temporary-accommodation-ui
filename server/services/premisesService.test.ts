@@ -8,6 +8,7 @@ import {
   newPremisesFactory,
   pduFactory,
   premisesFactory,
+  premisesSummaryFactory,
   probationRegionFactory,
   staffMemberFactory,
   updatePremisesFactory,
@@ -115,12 +116,12 @@ describe('PremisesService', () => {
 
   describe('tableRows', () => {
     it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
-      const premises1 = premisesFactory.build({ addressLine1: 'ABC', postcode: '123' })
-      const premises2 = premisesFactory.build({ addressLine1: 'GHI', postcode: '123' })
-      const premises3 = premisesFactory.build({ addressLine1: 'GHI', postcode: '456' })
-      const premises4 = premisesFactory.build({ addressLine1: 'XYZ', postcode: '123' })
+      const premisesSummary1 = premisesSummaryFactory.build({ addressLine1: 'ABC', postcode: '123' })
+      const premisesSummary2 = premisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '123' })
+      const premisesSummary3 = premisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '456' })
+      const premisesSummary4 = premisesSummaryFactory.build({ addressLine1: 'XYZ', postcode: '123' })
 
-      const premises = [premises4, premises1, premises3, premises2]
+      const premises = [premisesSummary4, premisesSummary1, premisesSummary3, premisesSummary2]
       premisesClient.all.mockResolvedValue(premises)
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
 
@@ -132,17 +133,17 @@ describe('PremisesService', () => {
             text: 'ABC, 123',
           },
           {
-            text: premises1.bedCount.toString(),
+            text: premisesSummary1.bedCount.toString(),
           },
           {
-            text: premises1.probationDeliveryUnit.name,
+            text: premisesSummary1.pdu,
           },
           {
-            html: `<strong>${premises1.status}</strong>`,
+            html: `<strong>${premisesSummary1.status}</strong>`,
           },
           {
             html: `<a href="${paths.premises.show({
-              premisesId: premises1.id,
+              premisesId: premisesSummary1.id,
             })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
           },
         ],
@@ -151,17 +152,17 @@ describe('PremisesService', () => {
             text: 'GHI, 123',
           },
           {
-            text: premises2.bedCount.toString(),
+            text: premisesSummary2.bedCount.toString(),
           },
           {
-            text: premises2.probationDeliveryUnit.name,
+            text: premisesSummary2.pdu,
           },
           {
-            html: `<strong>${premises2.status}</strong>`,
+            html: `<strong>${premisesSummary2.status}</strong>`,
           },
           {
             html: `<a href="${paths.premises.show({
-              premisesId: premises2.id,
+              premisesId: premisesSummary2.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
           },
         ],
@@ -170,17 +171,17 @@ describe('PremisesService', () => {
             text: 'GHI, 456',
           },
           {
-            text: premises3.bedCount.toString(),
+            text: premisesSummary3.bedCount.toString(),
           },
           {
-            text: premises3.probationDeliveryUnit.name,
+            text: premisesSummary3.pdu,
           },
           {
-            html: `<strong>${premises3.status}</strong>`,
+            html: `<strong>${premisesSummary3.status}</strong>`,
           },
           {
             html: `<a href="${paths.premises.show({
-              premisesId: premises3.id,
+              premisesId: premisesSummary3.id,
             })}">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
           },
         ],
@@ -189,17 +190,17 @@ describe('PremisesService', () => {
             text: 'XYZ, 123',
           },
           {
-            text: premises4.bedCount.toString(),
+            text: premisesSummary4.bedCount.toString(),
           },
           {
-            text: premises4.probationDeliveryUnit.name,
+            text: premisesSummary4.pdu,
           },
           {
-            html: `<strong>${premises4.status}</strong>`,
+            html: `<strong>${premisesSummary4.status}</strong>`,
           },
           {
             html: `<a href="${paths.premises.show({
-              premisesId: premises4.id,
+              premisesId: premisesSummary4.id,
             })}">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
           },
         ],

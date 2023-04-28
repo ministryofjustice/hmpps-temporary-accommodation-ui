@@ -97,6 +97,19 @@ describe('bookingUtils', () => {
         ])
       })
 
+      it('returns edit departed booking for a closed booking', () => {
+        const booking = bookingFactory.closed().build({ id: bookingId })
+
+        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+          {
+            text: 'Update departed booking',
+            classes: 'govuk-button--secondary',
+            href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+          },
+          changeTurnaroundAction,
+        ])
+      })
+
       it('returns edit cancelled booking for a cancelled booking', () => {
         const booking = bookingFactory.cancelled().build({ id: bookingId })
 

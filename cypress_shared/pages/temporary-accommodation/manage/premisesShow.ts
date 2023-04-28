@@ -1,7 +1,7 @@
 import type { TemporaryAccommodationPremises as Premises, ProbationRegion, Room } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { pduFactory, premisesFactory } from '../../../../server/testutils/factories'
+import { characteristicFactory, pduFactory, premisesFactory } from '../../../../server/testutils/factories'
 import { statusInfo } from '../../../../server/utils/premisesUtils'
 import Page from '../../page'
 
@@ -21,6 +21,14 @@ export default class PremisesShowPage extends Page {
 
       cy.get('[data-cy-premises] h3').then(nameElement => {
         const name = nameElement.text()
+
+        const characteristics = []
+        cy.get('.govuk-summary-list__key')
+          .contains('Attributes')
+          .siblings('.govuk-summary-list__value')
+          .children()
+          .children()
+          .each($li => characteristics.push(characteristicFactory.build({ name: $li.text() })))
 
         cy.get('.govuk-summary-list__key')
           .contains('Address')
@@ -54,6 +62,7 @@ export default class PremisesShowPage extends Page {
                       status,
                       pdu: pdu.name,
                       probationDeliveryUnit: pdu,
+                      characteristics,
                     })
 
                     cy.wrap(premises).as(alias)

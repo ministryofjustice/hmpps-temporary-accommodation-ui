@@ -37,4 +37,7 @@ export default defineConfig({
     supportFile: false,
   },
   numTestsKeptInMemory: 0,
+  env: {
+    testLevel: 'e2e',
+  },
 })

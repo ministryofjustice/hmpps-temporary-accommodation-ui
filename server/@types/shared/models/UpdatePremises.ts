@@ -16,5 +16,6 @@ export type UpdatePremises = {
     status: PropertyStatus;
     pdu?: string;
     probationDeliveryUnitId?: string;
+    turnaroundWorkingDayCount?: number;
 };
 

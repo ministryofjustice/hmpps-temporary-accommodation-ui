@@ -269,6 +269,7 @@ context('Bedspace', () => {
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
     page.shouldShowAsActive()
+    page.shouldShowPremisesAttributes()
 
     // And I should see the booking details
     bookings.forEach(booking => {
@@ -301,6 +302,7 @@ context('Bedspace', () => {
     // Then I should see the bedspace details
     page.shouldShowBedspaceDetails()
     page.shouldShowAsArchived()
+    page.shouldShowPremisesAttributes()
 
     // And I should see the booking details
     bookings.forEach(booking => {

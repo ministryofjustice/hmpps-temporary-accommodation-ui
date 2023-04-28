@@ -9,9 +9,12 @@ import Page from '../../page'
 export default class BedspaceShowPage extends Page {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
+  private readonly premises: Premises
+
   constructor(premises: Premises, private readonly room: Room) {
     super('View a bedspace')
 
+    this.premises = premises
     this.locationHeaderComponent = new LocationHeaderComponent({ premises })
   }
 
@@ -30,6 +33,15 @@ export default class BedspaceShowPage extends Page {
       this.room.characteristics.map(({ name }) => name),
     )
     this.shouldShowKeyAndValues('Notes', this.room.notes.split('\n'))
+  }
+
+  shouldShowPremisesAttributes(): void {
+    cy.get('.attributes-header').within(() => {
+      cy.get('h2').contains('Property attributes')
+      this.premises.characteristics?.forEach(characteristic => {
+        cy.get('h2').contains('Property attributes').siblings('ul').children().should('contain', characteristic.name)
+      })
+    })
   }
 
   shouldShowBookingDetails(booking: Booking): void {

@@ -183,6 +183,14 @@ export default class PremisesService {
           key: this.textValue('Notes'),
           value: this.htmlValue(formatLines(premises.notes)),
         },
+        {
+          key: this.textValue('Expected turnaround time'),
+          value: this.textValue(
+            `${premises.turnaroundWorkingDayCount} working ${
+              premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'
+            }`,
+          ),
+        },
       ],
     }
   }

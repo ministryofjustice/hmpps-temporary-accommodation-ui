@@ -144,8 +144,9 @@ export const deriveBookingHistory = (booking: Booking) => {
   const departures = [...booking.departures].sort(compareBookingState)
   const cancellations = [...booking.cancellations].sort(compareBookingState)
 
-  const bookingWithSortedExensions = {
+  const bookingWithSortedExensions: Booking = {
     ...booking,
+    status: booking.status === 'closed' ? 'departed' : booking.status,
     extensions,
     departures,
     cancellations,

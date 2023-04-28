@@ -1,7 +1,9 @@
 import type { Booking, LostBed, Room, UpdateLostBed } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
+import { BookingStatus } from '../../../../server/@types/ui/index'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
+import { statusName } from '../../../../server/utils/bookingUtils'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import Page from '../../page'
@@ -45,31 +47,34 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowBookingDetails(booking: Booking): void {
-    const { status } = booking
-
     cy.get('tr')
       .contains(booking.person.crn)
       .parent()
       .within(() => {
-        cy.get('td').eq(0).contains(booking.person.crn)
-        cy.get('td')
-          .eq(1)
-          .contains(DateFormats.isoDateToUIDate(booking.arrivalDate, { format: 'short' }))
-        cy.get('td')
-          .eq(2)
-          .contains(DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' }))
-
-        if (status === 'provisional') {
-          cy.get('td').eq(3).contains('Provisional')
-        } else if (status === 'confirmed') {
-          cy.get('td').eq(3).contains('Confirmed')
-        } else if (status === 'arrived') {
-          cy.get('td').eq(3).contains('Active')
-        } else if (status === 'departed') {
-          cy.get('td').eq(3).contains('Departed')
+        cy.wrap(booking).as('modifiedBooking')
+        if (booking.status === ('unknown-departed-or-closed' as BookingStatus)) {
+          cy.get('td')
+            .eq(3)
+            .then(statusElement => {
+              const status = statusElement.text().trim() === statusName('closed') ? 'closed' : 'departed'
+              cy.wrap({ ...booking, status }).as('modifiedBooking')
+            })
         }
 
-        cy.get('td').eq(4).contains('View')
+        cy.then(function _() {
+          const { status } = this.modifiedBooking
+
+          cy.get('td').eq(0).contains(this.modifiedBooking.person.crn)
+          cy.get('td')
+            .eq(1)
+            .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.arrivalDate, { format: 'short' }))
+          cy.get('td')
+            .eq(2)
+            .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.departureDate, { format: 'short' }))
+
+          cy.get('td').eq(3).contains(statusName(status))
+          cy.get('td').eq(4).contains('View')
+        })
       })
   }
 

@@ -408,5 +408,63 @@ describe('BookingInfo', () => {
       expect(statusTag).toHaveBeenCalledWith('departed')
       expect(formatLines).toHaveBeenCalledWith(booking.departure.notes)
     })
+
+    it('returns summary list rows for a closed booking', () => {
+      const booking = bookingFactory.closed().build({
+        arrivalDate: '2022-03-21',
+        departureDate: '2023-01-07T00:00:00.000Z',
+      })
+
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      const result = summaryListRows(booking)
+
+      expect(result).toEqual([
+        {
+          key: {
+            text: 'Status',
+          },
+          value: {
+            html: statusHtml,
+          },
+        },
+        {
+          key: {
+            text: 'Departure date',
+          },
+          value: {
+            text: '7 January 2023',
+          },
+        },
+        {
+          key: {
+            text: 'Departure reason',
+          },
+          value: {
+            text: booking.departure.reason.name,
+          },
+        },
+        {
+          key: {
+            text: 'Move on category',
+          },
+          value: {
+            text: booking.departure.moveOnCategory.name,
+          },
+        },
+        {
+          key: {
+            text: 'Notes',
+          },
+          value: {
+            html: booking.departure.notes,
+          },
+        },
+      ])
+
+      expect(statusTag).toHaveBeenCalledWith('closed')
+      expect(formatLines).toHaveBeenCalledWith(booking.departure.notes)
+    })
   })
 })

@@ -35,7 +35,7 @@ export default (booking: Booking): SummaryList['rows'] => {
         value: textValue(DateFormats.isoDateToUIDate(departureDate)),
       },
     )
-  } else if (status === 'departed') {
+  } else if (status === 'departed' || status === 'closed') {
     rows.push({
       key: textValue('Departure date'),
       value: textValue(DateFormats.isoDateToUIDate(departureDate)),
@@ -81,7 +81,7 @@ export default (booking: Booking): SummaryList['rows'] => {
         value: htmlValue(formatLines(latestExtension.notes)),
       })
     }
-  } else if (status === 'departed') {
+  } else if (status === 'departed' || status === 'closed') {
     rows.push(
       {
         key: textValue('Departure reason'),

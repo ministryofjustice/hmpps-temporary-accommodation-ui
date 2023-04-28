@@ -42,6 +42,13 @@ export default class BookingInfoComponent extends Component {
         shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.modifiedBooking.departureDate))
       }
 
+      const days = this.modifiedBooking.turnaround.workingDays
+      shouldShowKeyAndValue('Turnaround time', `${days} working ${days === 1 ? 'day' : 'days'}`)
+
+      if (this.modifiedBooking.effectiveEndDate !== 'unknown') {
+        shouldShowKeyAndValue('Turnaround end date', DateFormats.isoDateToUIDate(this.modifiedBooking.effectiveEndDate))
+      }
+
       if (status === 'confirmed') {
         shouldShowKeyAndValues('Notes', this.modifiedBooking.confirmation.notes.split('\n'))
       } else if (status === 'cancelled') {

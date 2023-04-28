@@ -1,5 +1,6 @@
 import type { Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
+import config from '../config'
 import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { formatLines } from '../utils/viewUtils'
@@ -40,6 +41,21 @@ export default (booking: Booking): SummaryList['rows'] => {
       key: textValue('Departure date'),
       value: textValue(DateFormats.isoDateToUIDate(departureDate)),
     })
+  }
+
+  if (!config.flags.turnaroundsDisabled) {
+    const days = booking.turnaround.workingDays
+
+    rows.push(
+      {
+        key: textValue('Turnaround time'),
+        value: textValue(`${days} working ${days === 1 ? 'day' : 'days'}`),
+      },
+      {
+        key: textValue('Turnaround end date'),
+        value: textValue(DateFormats.isoDateToUIDate(booking.effectiveEndDate || booking.departureDate)),
+      },
+    )
   }
 
   if (status === 'confirmed') {

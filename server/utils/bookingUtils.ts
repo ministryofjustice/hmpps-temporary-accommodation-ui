@@ -104,8 +104,13 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
     tagClass: 'govuk-tag--green',
   },
   {
-    name: 'Departed',
+    name: config.flags.turnaroundsDisabled ? 'Departed' : 'Turnaround',
     id: 'departed',
+    tagClass: 'govuk-tag--red',
+  },
+  {
+    name: 'Departed',
+    id: 'closed',
     tagClass: 'govuk-tag--red',
   },
   {

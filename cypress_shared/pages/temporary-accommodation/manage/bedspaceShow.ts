@@ -54,6 +54,10 @@ export default class BedspaceShowPage extends Page {
         } else if (status === 'arrived') {
           cy.get('td').eq(3).contains('Active')
         } else if (status === 'departed') {
+          cy.get('td')
+            .eq(3)
+            .contains(Cypress.env('testLevel') === 'e2e' ? 'Departed' : 'Departed - Turnaround In Progress')
+        } else if (status === 'closed') {
           cy.get('td').eq(3).contains('Departed')
         }
 

@@ -11,7 +11,6 @@ import {
   shortenedOrExtended,
   statusName,
   statusTag,
-  transformApiBookingToUiBooking,
 } from './bookingUtils'
 
 const premisesId = 'premisesId'
@@ -421,26 +420,6 @@ describe('bookingUtils', () => {
       })
 
       expect(shortenedOrExtended(extension)).toEqual('extended')
-    })
-  })
-
-  describe('transformApiBookingToUiBooking', () => {
-    it('transforms a closed booking to a departed booking', () => {
-      const booking = bookingFactory.closed().build()
-      const bookingCopy = { ...booking }
-
-      const result = transformApiBookingToUiBooking(booking)
-
-      expect(result).toEqual({ ...bookingCopy, status: 'departed' })
-    })
-
-    it('leaves non-closed bookings unchanged', () => {
-      const booking = bookingFactory.arrived().build()
-      const bookingCopy = { ...booking }
-
-      const result = transformApiBookingToUiBooking(booking)
-
-      expect(result).toEqual(bookingCopy)
     })
   })
 

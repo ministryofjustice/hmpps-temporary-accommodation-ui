@@ -6,7 +6,7 @@ import { bedFactory, bookingFactory, lostBedFactory, newBookingFactory, roomFact
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { statusTag, transformApiBookingToUiBooking } from '../utils/bookingUtils'
+import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 import config from '../config'
@@ -16,7 +16,6 @@ jest.mock('../data/referenceDataClient')
 jest.mock('../utils/bookingUtils', () => ({
   ...jest.requireActual('../utils/bookingUtils'),
   statusTag: jest.fn(),
-  transformApiBookingToUiBooking: jest.fn(),
 }))
 jest.mock('../data/lostBedClient')
 jest.mock('../utils/lostBedUtils')
@@ -40,9 +39,6 @@ describe('BookingService', () => {
     jest.resetAllMocks()
     bookingClientFactory.mockReturnValue(bookingClient)
     lostBedClientFactory.mockReturnValue(lostBedClient)
-    ;(transformApiBookingToUiBooking as jest.MockedFunction<typeof transformApiBookingToUiBooking>).mockImplementation(
-      booking => booking,
-    )
   })
 
   describe('createForBedspace', () => {
@@ -69,7 +65,6 @@ describe('BookingService', () => {
         enableTurnarounds: !config.flags.turnaroundsDisabled,
         ...newBooking,
       })
-      expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)
     })
   })
 
@@ -279,10 +274,6 @@ describe('BookingService', () => {
 
       expect(statusTag).toHaveBeenCalledTimes(4)
       expect(lostBedStatusTag).toHaveBeenCalledTimes(4)
-
-      bookings.forEach(booking => {
-        expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)
-      })
     })
   })
 
@@ -297,7 +288,6 @@ describe('BookingService', () => {
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.find).toHaveBeenCalledWith(premisesId, booking.id)
-      expect(transformApiBookingToUiBooking).toHaveBeenCalledWith(booking)
     })
   })
 })

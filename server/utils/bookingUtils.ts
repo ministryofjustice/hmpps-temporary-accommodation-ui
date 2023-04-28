@@ -171,13 +171,6 @@ export const shortenedOrExtended = (extension: Extension): 'shortened' | 'extend
   return previousDepartureDate.getTime() > newDepartureDate.getTime() ? 'shortened' : 'extended'
 }
 
-export const transformApiBookingToUiBooking = (booking: Booking): Booking => {
-  if (booking.status === 'closed') {
-    return { ...booking, status: 'departed' }
-  }
-  return booking
-}
-
 export const generateConflictBespokeError = (
   err: SanitisedError,
   premisesId: string,

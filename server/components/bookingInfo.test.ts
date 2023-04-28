@@ -10,7 +10,7 @@ describe('BookingInfo', () => {
   const statusHtml = '<strong>Some status</strong>'
 
   describe('summaryListRows', () => {
-    it('returns summary list rows for a provisional booking', async () => {
+    it('returns summary list rows for a provisional booking', () => {
       const booking = bookingFactory.provisional().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
@@ -18,7 +18,7 @@ describe('BookingInfo', () => {
 
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
 
-      const result = await summaryListRows(booking)
+      const result = summaryListRows(booking)
 
       expect(result).toEqual([
         {
@@ -50,7 +50,7 @@ describe('BookingInfo', () => {
       expect(statusTag).toHaveBeenCalledWith('provisional')
     })
 
-    it('returns summary list rows for a confirmed booking', async () => {
+    it('returns summary list rows for a confirmed booking', () => {
       const booking = bookingFactory.confirmed().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
@@ -100,7 +100,7 @@ describe('BookingInfo', () => {
       expect(formatLines).toHaveBeenCalledWith(booking.confirmation.notes)
     })
 
-    it('returns summary list rows for a cancelled booking', async () => {
+    it('returns summary list rows for a cancelled booking', () => {
       const booking = bookingFactory.cancelled().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
@@ -169,7 +169,7 @@ describe('BookingInfo', () => {
       expect(formatLines).toHaveBeenCalledWith(booking.cancellation.notes)
     })
 
-    it('returns summary list rows for an arrived booking', async () => {
+    it('returns summary list rows for an arrived booking', () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
@@ -219,7 +219,7 @@ describe('BookingInfo', () => {
       expect(formatLines).toHaveBeenCalledWith(booking.arrival.notes)
     })
 
-    it('returns summary list rows for an arrived and extended booking', async () => {
+    it('returns summary list rows for an arrived and extended booking', () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
@@ -285,7 +285,7 @@ describe('BookingInfo', () => {
       expect(shortenedOrExtended).toHaveBeenCalledWith(booking.extensions[0])
     })
 
-    it('returns summary list rows for an arrived and shortended booking', async () => {
+    it('returns summary list rows for an arrived and shortended booking', () => {
       const booking = bookingFactory.arrived().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07',
@@ -351,7 +351,7 @@ describe('BookingInfo', () => {
       expect(shortenedOrExtended).toHaveBeenCalledWith(booking.extensions[0])
     })
 
-    it('returns summary list rows for a departed booking', async () => {
+    it('returns summary list rows for a departed booking', () => {
       const booking = bookingFactory.departed().build({
         arrivalDate: '2022-03-21',
         departureDate: '2023-01-07T00:00:00.000Z',

@@ -164,6 +164,7 @@ premises.forEach(item => {
     bedspaceBookingFactory.confirmed().buildList(rand()),
     bedspaceBookingFactory.arrived().buildList(rand()),
     bedspaceBookingFactory.departed().buildList(rand()),
+    bedspaceBookingFactory.closed().buildList(rand()),
     bedspaceBookingFactory.cancelled().buildList(rand()),
   ].flat()
 

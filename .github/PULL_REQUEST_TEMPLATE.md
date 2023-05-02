@@ -14,8 +14,7 @@
 
 # Release checklist
 
-[Release process
-documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/edit-v2/4247847062?draftShareId=a1c360ab-bd31-4db1-aae3-7cc002761de9).
+[Release process documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/edit-v2/4247847062?draftShareId=a1c360ab-bd31-4db1-aae3-7cc002761de9).
 
 ## Pre-merge checklist
 
@@ -25,14 +24,11 @@ documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/edit-v2/4247847
 
 ## Post-merge checklist
 
-- [ ] [Manually
-  approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
+- [ ] [Manually approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
   release to test
-- [ ] [Manually
-  approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
+- [ ] [Manually approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
   release to preprod
-- [ ] [Manually
-  approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
+- [ ] [Manually approve](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/4247847062/Release+process#Manual-releases)
   release to prod
 
 <!-- Should a release fail at any step, you as the author should now lead the work to

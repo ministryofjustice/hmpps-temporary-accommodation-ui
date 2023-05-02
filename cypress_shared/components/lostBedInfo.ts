@@ -20,6 +20,8 @@ export default class LostBedInfoComponent extends Component {
       }
     })
 
+    this.shouldShowKeyAndValue('Reason', this.lostBed.reason.name)
+
     if (status === 'active') {
       this.shouldShowKeyAndValue('Notes', this.lostBed.notes)
     } else if (status === 'cancelled') {

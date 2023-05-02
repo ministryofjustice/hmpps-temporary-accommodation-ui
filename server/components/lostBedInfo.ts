@@ -5,7 +5,7 @@ import { formatLines } from '../utils/viewUtils'
 import { statusTag } from '../utils/lostBedUtils'
 
 export default (lostBed: LostBed): SummaryList['rows'] => {
-  const { status, startDate, endDate } = lostBed
+  const { status, startDate, endDate, reason } = lostBed
 
   const rows: SummaryList['rows'] = []
 
@@ -22,6 +22,11 @@ export default (lostBed: LostBed): SummaryList['rows'] => {
   rows.push({
     key: textValue('End date'),
     value: textValue(DateFormats.isoDateToUIDate(endDate)),
+  })
+
+  rows.push({
+    key: textValue('Reason'),
+    value: textValue(reason.name),
   })
 
   rows.push({

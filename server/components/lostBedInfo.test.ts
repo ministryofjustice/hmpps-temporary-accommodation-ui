@@ -1,4 +1,4 @@
-import { lostBedFactory } from '../testutils/factories'
+import { lostBedFactory, referenceDataFactory } from '../testutils/factories'
 import { statusTag } from '../utils/lostBedUtils'
 import { formatLines } from '../utils/viewUtils'
 import summaryListRows from './lostBedInfo'
@@ -15,6 +15,9 @@ describe('LostBedInfo', () => {
       const lostBed = lostBedFactory.active().build({
         startDate: '2023-03-21',
         endDate: '2023-03-24',
+        reason: referenceDataFactory.build({
+          name: 'Some reason',
+        }),
       })
 
       const result = await summaryListRows(lostBed)
@@ -46,6 +49,14 @@ describe('LostBedInfo', () => {
         },
         {
           key: {
+            text: 'Reason',
+          },
+          value: {
+            text: 'Some reason',
+          },
+        },
+        {
+          key: {
             text: 'Notes',
           },
           value: {
@@ -58,6 +69,9 @@ describe('LostBedInfo', () => {
       const lostBed = lostBedFactory.cancelled().build({
         startDate: '2023-04-21',
         endDate: '2023-04-24',
+        reason: referenceDataFactory.build({
+          name: 'Some reason',
+        }),
       })
 
       const result = await summaryListRows(lostBed)
@@ -85,6 +99,14 @@ describe('LostBedInfo', () => {
           },
           value: {
             text: '24 April 2023',
+          },
+        },
+        {
+          key: {
+            text: 'Reason',
+          },
+          value: {
+            text: 'Some reason',
           },
         },
         {

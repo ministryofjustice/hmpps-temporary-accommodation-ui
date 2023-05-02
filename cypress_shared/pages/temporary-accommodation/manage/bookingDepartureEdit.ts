@@ -13,7 +13,7 @@ export default class BookingDepartureEditPage extends BookingDepartureEditablePa
   private readonly bookingInfoComponent: BookingInfoComponent
 
   constructor(premises: Premises, room: Room, private readonly booking: Booking) {
-    super('Update departed booking')
+    super('Update departure details')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })

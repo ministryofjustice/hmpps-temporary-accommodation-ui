@@ -88,7 +88,7 @@ describe('bookingUtils', () => {
 
         expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
           {
-            text: 'Update departed booking',
+            text: 'Update departure details',
             classes: 'govuk-button--secondary',
             href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
           },
@@ -101,7 +101,7 @@ describe('bookingUtils', () => {
 
         expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
           {
-            text: 'Update departed booking',
+            text: 'Update departure details',
             classes: 'govuk-button--secondary',
             href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
           },

@@ -154,4 +154,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
+  njkEnv.addGlobal('turnaroundsDisabled', config.flags.turnaroundsDisabled)
 }

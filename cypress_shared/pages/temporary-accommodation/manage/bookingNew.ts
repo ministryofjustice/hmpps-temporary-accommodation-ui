@@ -1,5 +1,5 @@
 import type { NewBooking } from '@approved-premises/api'
-import { Premises, Room } from '../../../../server/@types/shared'
+import { TemporaryAccommodationPremises as Premises, Room } from '../../../../server/@types/shared'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -8,7 +8,7 @@ import BookingEditablePage from './bookingEditable'
 export default class BookingNewPage extends BookingEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(premises: Premises, room: Room) {
+  constructor(private readonly premises: Premises, room: Room) {
     super('Book bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
@@ -34,6 +34,13 @@ export default class BookingNewPage extends BookingEditablePage {
 
   shouldShowBookingDetails(): void {
     this.locationHeaderComponent.shouldShowLocationDetails()
+
+    cy.get('p').should(
+      'contain',
+      `There will be a turnaround time of ${this.premises.turnaroundWorkingDayCount} working ${
+        this.premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'
+      } after this booking`,
+    )
   }
 
   shouldShowPrefilledBookingDetails(newBooking: NewBooking): void {

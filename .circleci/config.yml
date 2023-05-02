@@ -18,7 +18,7 @@ parameters:
 
   node-version:
     type: string
-    default: 16.15-browsers
+    default: 18.16-browsers
 
 jobs:
   check_outdated:

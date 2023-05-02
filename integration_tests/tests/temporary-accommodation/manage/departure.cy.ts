@@ -170,7 +170,7 @@ context('Booking departure', () => {
 
     // And I should be redirected to the show booking page
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
-    bookingShowPage.shouldShowBanner('Departed booking updated')
+    bookingShowPage.shouldShowBanner('Departure date changed')
   })
 
   it('shows errors when the API returns an error when editing a departed booking', () => {

@@ -105,7 +105,7 @@ Then('I should see the booking with the departed status', () => {
 Then('I should see the booking with the edited departure details', () => {
   cy.then(function _() {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
-    bookingShowPage.shouldShowBanner('Departed booking updated')
+    bookingShowPage.shouldShowBanner('Departure date changed')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()

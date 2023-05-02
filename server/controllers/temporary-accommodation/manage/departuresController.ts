@@ -106,7 +106,7 @@ export default class DeparturesController {
       try {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
-        req.flash('success', 'Departed booking updated')
+        req.flash('success', 'Departure date changed')
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(

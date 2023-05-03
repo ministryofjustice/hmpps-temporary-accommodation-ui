@@ -8,6 +8,7 @@ import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import {
   newPremisesFactory,
   premisesFactory,
+  premisesSummaryFactory,
   roomFactory,
   updatePremisesFactory,
 } from '../../../../server/testutils/factories'
@@ -23,8 +24,8 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
 
     // When I visit the dashboard page
     const page = DashboardPage.visit()
@@ -41,14 +42,14 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
 
     // When I visit the premises page
     const page = PremisesListPage.visit()
 
     // Then I should see all of the premises listed
-    page.shouldShowPremises(premises)
+    page.shouldShowPremises(premisesSummaries)
   })
 
   it('should navigate back from the premises list page to the dashboard', () => {
@@ -56,8 +57,8 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
 
     // When I visit the premises list page
     const page = PremisesListPage.visit()
@@ -74,8 +75,8 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
 
     // And there is reference data in the database
     cy.task('stubPremisesReferenceData')
@@ -95,18 +96,20 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
-    cy.task('stubSinglePremises', premises[0])
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const singlePremises = premisesFactory.build({ ...premisesSummaries[0] })
+
+    cy.task('stubPremises', premisesSummaries)
+    cy.task('stubSinglePremises', singlePremises)
 
     // When I visit the premises page
     const page = PremisesListPage.visit()
 
     // Add I click the view a premises link
-    page.clickPremisesViewLink(premises[0])
+    page.clickPremisesViewLink(singlePremises)
 
     // Then I navigate to the show premises page
-    Page.verifyOnPage(PremisesShowPage, premises[0])
+    Page.verifyOnPage(PremisesShowPage, singlePremises)
   })
 
   it('should navigate to the edit premises page', () => {
@@ -217,8 +220,8 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
 
     // And there is reference data in the database
     cy.task('stubPremisesReferenceData')
@@ -382,12 +385,13 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
-    cy.task('stubSinglePremises', premises[0])
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const singlePremises = premisesFactory.build({ ...premisesSummaries[0] })
+    cy.task('stubPremises', premisesSummaries)
+    cy.task('stubSinglePremises', singlePremises)
 
     // When I visit the show premises page
-    const page = PremisesShowPage.visit(premises[0])
+    const page = PremisesShowPage.visit(singlePremises)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

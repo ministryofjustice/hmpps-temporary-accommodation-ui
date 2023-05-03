@@ -1,6 +1,13 @@
 import type { Response, SuperAgentRequest } from 'superagent'
 
-import type { Booking, DateCapacity, Premises, Room, StaffMember } from '@approved-premises/api'
+import type {
+  Booking,
+  DateCapacity,
+  Premises,
+  TemporaryAccommodationPremisesSummary as PremisesSummary,
+  Room,
+  StaffMember,
+} from '@approved-premises/api'
 
 import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
@@ -9,7 +16,7 @@ import { errorStub } from '../../wiremock/utils'
 import bookingStubs from './booking'
 import roomStubs from './room'
 
-const stubPremises = (premises: Array<Premises>) =>
+const stubPremises = (premisesSummaries: Array<PremisesSummary>) =>
   stubFor({
     request: {
       method: 'GET',
@@ -20,7 +27,7 @@ const stubPremises = (premises: Array<Premises>) =>
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: premises,
+      jsonBody: premisesSummaries,
     },
   })
 

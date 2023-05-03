@@ -55,10 +55,10 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const newPremises: NewPremises = {
         characteristicIds: [],
+        ...req.body,
         turnaroundWorkingDayCount: !config.flags.turnaroundsDisabled
           ? parseNaturalNumber(req.body.turnaroundWorkingDayCount)
           : null,
-        ...req.body,
       }
 
       try {
@@ -112,10 +112,10 @@ export default class PremisesController {
 
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
+        ...req.body,
         turnaroundWorkingDayCount: !config.flags.turnaroundsDisabled
           ? parseNaturalNumber(req.body.turnaroundWorkingDayCount)
           : null,
-        ...req.body,
       }
 
       try {

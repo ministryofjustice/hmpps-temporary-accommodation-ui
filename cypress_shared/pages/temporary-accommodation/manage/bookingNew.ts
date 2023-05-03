@@ -1,9 +1,9 @@
 import type { NewBooking } from '@approved-premises/api'
 import { Premises, Room } from '../../../../server/@types/shared'
+import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import BookingEditablePage from './bookingEditable'
-import errorLookups from '../../../../server/i18n/en/errors.json'
 
 export default class BookingNewPage extends BookingEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent

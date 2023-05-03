@@ -68,9 +68,12 @@ export default class BedspaceShowPage extends Page {
           cy.get('td')
             .eq(1)
             .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.arrivalDate, { format: 'short' }))
-          cy.get('td')
-            .eq(2)
-            .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.departureDate, { format: 'short' }))
+
+          if (this.modifiedBooking.effectiveEndDate !== 'unknown') {
+            cy.get('td')
+              .eq(2)
+              .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.effectiveEndDate, { format: 'short' }))
+          }
 
           cy.get('td').eq(3).contains(statusName(status))
           cy.get('td').eq(4).contains('View')

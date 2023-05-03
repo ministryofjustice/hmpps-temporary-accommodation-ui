@@ -54,7 +54,14 @@ export default class BookingService {
         rows: [
           this.textValue(b.person.crn),
           this.textValue(DateFormats.isoDateToUIDate(b.arrivalDate, { format: 'short' })),
-          this.textValue(DateFormats.isoDateToUIDate(b.departureDate, { format: 'short' })),
+          this.textValue(
+            DateFormats.isoDateToUIDate(
+              config.flags.turnaroundsDisabled ? b.departureDate : b.effectiveEndDate || b.departureDate,
+              {
+                format: 'short',
+              },
+            ),
+          ),
           this.htmlValue(statusTag(b.status)),
           this.htmlValue(
             `<a href="${paths.bookings.show({

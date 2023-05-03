@@ -100,7 +100,9 @@
       "empty": "You must choose a status"
     },
     "turnaroundWorkingDayCount": {
-      "isNotAPositiveInteger": "The expected turnaround time must be a positive number"
+      "isNotAPositiveInteger": "The expected turnaround time is not a valid number of days",
+      "expectedNumber": "The expected turnaround time is not a valid number of days",
+      "empty": "You must enter an expected turnaround time"
     }
   },
   "bookingCancellation": {

@@ -20,16 +20,6 @@ export default class PremisesShowPage extends Page {
       const id = url.match(/properties\/(.+)/)[1]
 
       cy.get('[data-cy-premises] h3').then(nameElement => {
-        const name = nameElement.text()
-
-        const characteristics = []
-        cy.get('.govuk-summary-list__key')
-          .contains('Attributes')
-          .siblings('.govuk-summary-list__value')
-          .children()
-          .children()
-          .each($li => characteristics.push(characteristicFactory.build({ name: $li.text() })))
-
         cy.get('.govuk-summary-list__key')
           .contains('Address')
           .siblings('.govuk-summary-list__value')
@@ -42,30 +32,26 @@ export default class PremisesShowPage extends Page {
                   .contains('PDU')
                   .siblings('.govuk-summary-list__value')
                   .then(pduElement => {
-                    const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
-                    const addressLines = addressElement
-                      .html()
-                      .split('<br>')
-                      .map(text => text.trim())
-
-                    const pduName = pduElement.text().trim()
-                    const pdu = pduFactory.build({
-                      id: pduName,
-                      name: pduName,
-                    })
-
-                    const premises = premisesFactory.build({
-                      id,
-                      name,
-                      addressLine1: addressLines[0],
-                      postcode: addressLines[addressLines.length - 1],
-                      status,
-                      pdu: pdu.name,
-                      probationDeliveryUnit: pdu,
-                      characteristics,
-                    })
-
-                    cy.wrap(premises).as(alias)
+                    cy.get('.govuk-summary-list__key')
+                      .contains('Attributes')
+                      .siblings('.govuk-summary-list__value')
+                      .then(attributeElement => {
+                        cy.get('.govuk-summary-list__key')
+                          .contains('Expected turnaround time')
+                          .siblings('.govuk-summary-list__value')
+                          .then(turnaroundTimeElement => {
+                            const premises = this.parsePremises(
+                              id,
+                              nameElement,
+                              addressElement,
+                              statusElement,
+                              pduElement,
+                              attributeElement,
+                              turnaroundTimeElement,
+                            )
+                            cy.wrap(premises).as(alias)
+                          })
+                      })
                   })
               })
           })
@@ -157,5 +143,51 @@ export default class PremisesShowPage extends Page {
       .within(() => {
         cy.get('a').contains('View').click()
       })
+  }
+
+  private parsePremises(
+    id: string,
+    nameElement: JQuery<HTMLElement>,
+    addressElement: JQuery<HTMLElement>,
+    pduElement: JQuery<HTMLElement>,
+    statusElement: JQuery<HTMLElement>,
+    attributeElement: JQuery<HTMLElement>,
+    turnaroundTimeElement: JQuery<HTMLElement>,
+  ): Premises {
+    const name = nameElement.text()
+
+    const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
+    const addressLines = addressElement
+      .html()
+      .split('<br>')
+      .map(text => text.trim())
+
+    const pduName = pduElement.text().trim()
+    const pdu = pduFactory.build({
+      id: pduName,
+      name: pduName,
+    })
+
+    const characteristics = attributeElement
+      .children('ul')
+      .children('li')
+      .toArray()
+      .map(element => characteristicFactory.build({ name: element.innerText }))
+
+    const turnaroundWorkingDayCount = Number.parseInt(turnaroundTimeElement.text().trim().split(' ')[0], 10)
+
+    const premises = premisesFactory.build({
+      id,
+      name,
+      addressLine1: addressLines[0],
+      postcode: addressLines[addressLines.length - 1],
+      status,
+      pdu: pdu.name,
+      probationDeliveryUnit: pdu,
+      characteristics,
+      turnaroundWorkingDayCount,
+    })
+
+    return premises
   }
 }

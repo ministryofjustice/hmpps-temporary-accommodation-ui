@@ -39,7 +39,22 @@
     items: actions
   }) }}
 
-  {{ locationHeader({ premises: premises }) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+      {{ locationHeader({ premises: premises }) }}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      <div class="attributes-header details">
+        <h2>Property attributes</h2>
+        <ul>
+          {% for characteristic in premisesCharacteristics %}
+          <li>{{ characteristic }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
 
   <div class="edit-bar">
     <div class="edit-bar__container">
@@ -51,6 +66,7 @@
       </div>
     </div>
   </div>
+
 
   {{ govukSummaryList({
     rows: bedspace.summaryList.rows,

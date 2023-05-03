@@ -69,6 +69,7 @@ Then('I should see a confirmation for my new bedspace', () => {
     page.shouldShowBanner('Bedspace created')
 
     page.shouldShowBedspaceDetails()
+    page.shouldShowPremisesAttributes()
 
     if (this.premises.status === 'archived') {
       page.shouldShowAsArchived()
@@ -84,6 +85,7 @@ Then('I should see a confirmation for my updated bedspace', () => {
     page.shouldShowBanner('Bedspace updated')
 
     page.shouldShowBedspaceDetails()
+    page.shouldShowPremisesAttributes()
 
     if (this.premises.status === 'archived') {
       page.shouldShowAsArchived()

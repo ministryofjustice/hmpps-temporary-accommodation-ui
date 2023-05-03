@@ -85,6 +85,12 @@ export default class PremisesShowPage extends Page {
       )
       this.shouldShowKeyAndValue('Status', statusInfo(this.premises.status).name)
       this.shouldShowKeyAndValues('Notes', this.premises.notes.split('\n'))
+      this.shouldShowKeyAndValue(
+        'Expected turnaround time',
+        `${this.premises.turnaroundWorkingDayCount} working ${
+          this.premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'
+        }`,
+      )
     })
   }
 

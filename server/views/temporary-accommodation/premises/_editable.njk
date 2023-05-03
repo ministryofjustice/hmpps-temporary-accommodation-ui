@@ -163,6 +163,28 @@
   }, fetchContext()
 ) }}
 
+{% if not config.turnaroundsDisabled %}
+
+{{ taInput(
+  {
+    label: {
+      text: "Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days",
+      classes: "govuk-label--m"
+    },
+    classes: "govuk-input--width-3",
+    fieldName: "turnaroundWorkingDayCount",
+    hint: {
+      text: "Weekends and bank holidays will be automatically added to the turnaround time"
+    },
+    suffix: {
+    text: "working days"
+    }
+  },
+  fetchContext()
+) }}
+
+{% endif %}
+
 {{ govukButton({
   text: "Submit",
   preventDoubleClick: true

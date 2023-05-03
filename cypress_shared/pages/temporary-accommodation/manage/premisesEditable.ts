@@ -34,6 +34,15 @@ export default abstract class PremisesEditablePage extends Page {
     this.getLabel('Please provide any further property details')
     this.getTextInputByIdAndEnterDetails('notes', newOrUpdatePremises.notes)
 
+    this.getLabel(
+      'Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days',
+    )
+    this.getTextInputByIdAndClear('turnaroundWorkingDayCount')
+    this.getTextInputByIdAndEnterDetails(
+      'turnaroundWorkingDayCount',
+      `${newOrUpdatePremises.turnaroundWorkingDayCount}`,
+    )
+
     this.clickSubmit()
   }
 

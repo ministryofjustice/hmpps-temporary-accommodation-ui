@@ -98,6 +98,9 @@
     },
     "status": {
       "empty": "You must choose a status"
+    },
+    "turnaroundWorkingDayCount": {
+      "isNotAPositiveInteger": "The expected turnaround time must be a positive number"
     }
   },
   "bookingCancellation": {

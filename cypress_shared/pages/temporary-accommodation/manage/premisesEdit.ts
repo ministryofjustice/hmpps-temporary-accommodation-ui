@@ -95,5 +95,6 @@ export default class PremisesEditPage extends PremisesEditablePage {
       })
 
     this.getTextInputByIdAndClear('notes')
+    this.getTextInputByIdAndClear('turnaroundWorkingDayCount')
   }
 }

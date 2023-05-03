@@ -310,6 +310,7 @@ describe('PremisesService', () => {
         probationDeliveryUnit: pduFactory.build({ name: 'A PDU' }),
         status: 'active',
         notes: 'Some notes',
+        turnaroundWorkingDayCount: 2,
       })
 
       premisesClient.find.mockResolvedValue(premises)
@@ -353,6 +354,10 @@ describe('PremisesService', () => {
             {
               key: { text: 'Notes' },
               value: { html: 'Some notes' },
+            },
+            {
+              key: { text: 'Expected turnaround time' },
+              value: { text: '2 working days' },
             },
           ],
         },

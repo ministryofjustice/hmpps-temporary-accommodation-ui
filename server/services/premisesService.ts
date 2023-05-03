@@ -14,6 +14,7 @@ import { CallConfig } from '../data/restClient'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
+import config from '../config'
 
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
@@ -153,38 +154,47 @@ export default class PremisesService {
       .filter(line => line && line !== '')
       .map(line => escape(line))
 
-    return {
-      rows: [
-        {
-          key: this.textValue('Address'),
-          value: this.htmlValue(addressLines.join('<br />')),
-        },
-        {
-          key: this.textValue('Local authority'),
-          value: this.textValue(premises.localAuthorityArea?.name),
-        },
-        {
-          key: this.textValue('Probation region'),
-          value: this.textValue(premises.probationRegion.name),
-        },
-        {
-          key: this.textValue('PDU'),
-          value: this.textValue(premises.probationDeliveryUnit.name),
-        },
-        {
-          key: this.textValue('Attributes'),
-          value: formatCharacteristics(premises.characteristics),
-        },
-        {
-          key: this.textValue('Status'),
-          value: this.htmlValue(statusTag(premises.status)),
-        },
-        {
-          key: this.textValue('Notes'),
-          value: this.htmlValue(formatLines(premises.notes)),
-        },
-      ],
+    const rows = [
+      {
+        key: this.textValue('Address'),
+        value: this.htmlValue(addressLines.join('<br />')),
+      },
+      {
+        key: this.textValue('Local authority'),
+        value: this.textValue(premises.localAuthorityArea?.name),
+      },
+      {
+        key: this.textValue('Probation region'),
+        value: this.textValue(premises.probationRegion.name),
+      },
+      {
+        key: this.textValue('PDU'),
+        value: this.textValue(premises.probationDeliveryUnit.name),
+      },
+      {
+        key: this.textValue('Attributes'),
+        value: formatCharacteristics(premises.characteristics),
+      },
+      {
+        key: this.textValue('Status'),
+        value: this.htmlValue(statusTag(premises.status)),
+      },
+      {
+        key: this.textValue('Notes'),
+        value: this.htmlValue(formatLines(premises.notes)),
+      },
+    ]
+
+    if (!config.flags.turnaroundsDisabled) {
+      rows.push({
+        key: this.textValue('Expected turnaround time'),
+        value: this.textValue(
+          `${premises.turnaroundWorkingDayCount} working ${premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'}`,
+        ),
+      })
     }
+
+    return { rows }
   }
 
   private textValue(value: string) {

@@ -168,6 +168,7 @@ context('Premises', () => {
         expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
         expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
         expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
+        expect(requestBody.turnaroundWorkingDayCount).equal(`${newPremises.turnaroundWorkingDayCount}`)
       })
 
       // And I should be redirected to the show premises page
@@ -274,6 +275,7 @@ context('Premises', () => {
         expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
         expect(requestBody.status).equal(updatePremises.status)
         expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
+        expect(requestBody.turnaroundWorkingDayCount).equal(`${updatePremises.turnaroundWorkingDayCount}`)
       })
 
       // And I should be redirected to the show premises page

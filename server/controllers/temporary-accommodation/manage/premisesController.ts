@@ -8,6 +8,8 @@ import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { parseNaturalNumber } from '../../../utils/formUtils'
+import config from '../../../config'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}
@@ -53,6 +55,9 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const newPremises: NewPremises = {
         characteristicIds: [],
+        turnaroundWorkingDayCount: config.flags.turnaroundsDisabled
+          ? parseNaturalNumber(req.body.turnaroundWorkingDayCount)
+          : null,
         ...req.body,
       }
 
@@ -107,6 +112,9 @@ export default class PremisesController {
 
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
+        turnaroundWorkingDayCount: config.flags.turnaroundsDisabled
+          ? parseNaturalNumber(req.body.turnaroundWorkingDayCount)
+          : null,
         ...req.body,
       }
 

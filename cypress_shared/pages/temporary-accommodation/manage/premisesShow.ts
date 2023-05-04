@@ -149,18 +149,19 @@ export default class PremisesShowPage extends Page {
     id: string,
     nameElement: JQuery<HTMLElement>,
     addressElement: JQuery<HTMLElement>,
-    pduElement: JQuery<HTMLElement>,
     statusElement: JQuery<HTMLElement>,
+    pduElement: JQuery<HTMLElement>,
     attributeElement: JQuery<HTMLElement>,
     turnaroundTimeElement: JQuery<HTMLElement>,
   ): Premises {
     const name = nameElement.text()
 
-    const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
     const addressLines = addressElement
       .html()
       .split('<br>')
       .map(text => text.trim())
+
+    const status = statusElement.text().trim() === 'Online' ? 'active' : 'archived'
 
     const pduName = pduElement.text().trim()
     const pdu = pduFactory.build({

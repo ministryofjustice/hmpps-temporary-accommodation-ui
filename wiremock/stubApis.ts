@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { DeepPartial } from 'fishery'
 
-import type { ApprovedPremises } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises } from '@approved-premises/api'
 import { bulkStub } from './index'
 
 import {
@@ -40,7 +40,7 @@ import { errorStub, getCombinations } from './utils'
 const stubs = []
 
 const premises = premisesJson.map(item => {
-  return premisesFactory.build({ ...(item as DeepPartial<ApprovedPremises>) })
+  return premisesFactory.build({ ...(item as DeepPartial<TemporaryAccommodationPremises>) })
 })
 
 const premisesSummaries = premisesJson.map(item => {

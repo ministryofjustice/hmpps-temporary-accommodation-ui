@@ -3,7 +3,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
-import { premisesFactory } from '../../../../server/testutils/factories'
+import { premisesSummaryFactory } from '../../../../server/testutils/factories'
 import { bookingReportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 
 context('Report', () => {
@@ -107,8 +107,8 @@ context('Report', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premises = premisesFactory.buildList(5)
-    cy.task('stubPremises', premises)
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
 
     // When I visit the show premises page
     cy.task('stubBookingReportReferenceData')

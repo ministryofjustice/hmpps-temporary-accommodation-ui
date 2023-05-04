@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type UpdateTurnaround = {
+export type NewTurnaround = {
     workingDays: number;
 };
 

@@ -95,6 +95,7 @@ export type { NewPlacementRequestBookingConfirmation } from './models/NewPlaceme
 export type { NewPremises } from './models/NewPremises';
 export type { NewReallocation } from './models/NewReallocation';
 export type { NewRoom } from './models/NewRoom';
+export type { NewTurnaround } from './models/NewTurnaround';
 export type { Nonarrival } from './models/Nonarrival';
 export type { NonArrivalReason } from './models/NonArrivalReason';
 export type { OASysAssessmentId } from './models/OASysAssessmentId';
@@ -156,7 +157,6 @@ export type { UpdateLostBed } from './models/UpdateLostBed';
 export type { UpdatePremises } from './models/UpdatePremises';
 export type { UpdateRoom } from './models/UpdateRoom';
 export type { UpdateTemporaryAccommodationApplication } from './models/UpdateTemporaryAccommodationApplication';
-export type { UpdateTurnaround } from './models/UpdateTurnaround';
 export type { User } from './models/User';
 export type { UserQualification } from './models/UserQualification';
 export type { UserRole } from './models/UserRole';

@@ -19,6 +19,15 @@ export default class BookingNewPage extends BookingEditablePage {
     return new BookingNewPage(premises, room)
   }
 
+  assignTurnaroundDays(alias: string): void {
+    cy.get('p')
+      .contains(this.turnaroundText())
+      .then(element => {
+        const days = Number.parseInt(element.text().match(/\d+/)[0], 10)
+        cy.wrap(days).as(alias)
+      })
+  }
+
   completeForm(newBooking: NewBooking): void {
     super.completeEditableForm(newBooking)
   }
@@ -35,12 +44,7 @@ export default class BookingNewPage extends BookingEditablePage {
   shouldShowBookingDetails(): void {
     this.locationHeaderComponent.shouldShowLocationDetails()
 
-    cy.get('p').should(
-      'contain',
-      `There will be a turnaround time of ${this.premises.turnaroundWorkingDayCount} working ${
-        this.premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'
-      } after this booking`,
-    )
+    cy.get('p').should('contain', this.turnaroundText())
   }
 
   shouldShowPrefilledBookingDetails(newBooking: NewBooking): void {
@@ -48,5 +52,11 @@ export default class BookingNewPage extends BookingEditablePage {
     this.shouldShowDateInputs('departureDate', newBooking.departureDate)
 
     cy.get('#crn').should('have.value', newBooking.crn)
+  }
+
+  private turnaroundText(): string {
+    return `There will be a turnaround time of ${this.premises.turnaroundWorkingDayCount} working ${
+      this.premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'
+    } after this booking`
   }
 }

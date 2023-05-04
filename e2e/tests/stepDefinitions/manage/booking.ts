@@ -7,7 +7,12 @@ import BookingConfirmPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingHistory'
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import { bookingFactory, newBookingFactory, personFactory } from '../../../../server/testutils/factories'
+import {
+  bookingFactory,
+  newBookingFactory,
+  personFactory,
+  turnaroundFactory,
+} from '../../../../server/testutils/factories'
 import { throwMissingCypressEnvError } from '../utils'
 
 const environment = Cypress.env('environment') || throwMissingCypressEnvError('environment')
@@ -29,27 +34,33 @@ Given("I'm creating a booking", () => {
 Given('I create a booking with all necessary details', () => {
   cy.then(function _() {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+    bookingNewPage.assignTurnaroundDays('turnaroundDays')
 
-    const newBooking = newBookingFactory.build({
-      crn: person.crn,
+    cy.then(function __() {
+      const newBooking = newBookingFactory.build({
+        crn: person.crn,
+      })
+
+      const booking = bookingFactory.provisional().build({
+        ...newBooking,
+        person,
+        turnaround: turnaroundFactory.build({
+          workingDays: this.turnaroundDays,
+        }),
+        effectiveEndDate: 'unknown',
+        turnaroundStartDate: 'unknown',
+      })
+
+      bookingNewPage.completeForm(newBooking)
+
+      const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
+      bookingConfirmPage.shouldShowBookingDetails()
+
+      bookingConfirmPage.clickSubmit()
+
+      cy.wrap(booking).as('booking')
+      this.historicBookings.push(booking)
     })
-
-    const booking = bookingFactory.provisional().build({
-      ...newBooking,
-      person,
-      effectiveEndDate: 'unknown',
-      turnaroundStartDate: 'unknown',
-    })
-
-    bookingNewPage.completeForm(newBooking)
-
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
-    bookingConfirmPage.shouldShowBookingDetails()
-
-    bookingConfirmPage.clickSubmit()
-
-    cy.wrap(booking).as('booking')
-    this.historicBookings.push(booking)
   })
 })
 

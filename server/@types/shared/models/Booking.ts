@@ -42,5 +42,7 @@ export type Booking = (BookingBody & {
      * The full history of turnarounds
      */
     turnarounds?: Array<Turnaround>;
+    turnaroundStartDate?: string;
+    effectiveEndDate?: string;
 });
 

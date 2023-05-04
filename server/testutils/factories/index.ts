@@ -28,6 +28,7 @@ import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
 import newPremisesFactory from './newPremises'
 import newRoomFactory from './newRoom'
+import newTurnaroundFactory from './newTurnaround'
 import nonArrivalFactory from './nonArrival'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import oasysSelectionFactory from './oasysSelection'
@@ -45,7 +46,6 @@ import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
 import updateRoomFactory from './updateRoom'
-import updateTurnaroundFactory from './updateTurnaround'
 import userFactory from './user'
 import bookingSearchResultPersonSummaryFactory from './bookingSearchResultPersonSummary'
 import bookingSearchResultBookingSummaryFactory from './bookingSearchResultBookingSummary'
@@ -113,5 +113,5 @@ export {
   bookingSearchResultsFactory,
   premisesSummaryFactory,
   turnaroundFactory,
-  updateTurnaroundFactory,
+  newTurnaroundFactory,
 }

@@ -88,6 +88,8 @@ export default BookingFactory.define(() => {
   const originalArrivalDate = faker.date.soon()
   const arrivalDate = faker.date.soon()
   const departureDate = faker.date.future(1, arrivalDate)
+  const turnaroundStartDate = faker.date.soon(1, departureDate)
+  const effectiveEndDate = faker.date.soon(5, departureDate)
 
   const cancellations = faker.helpers.arrayElements(cancellationFactory.buildList(5))
   const departures = faker.helpers.arrayElements(departureFactory.buildList(5))
@@ -99,7 +101,8 @@ export default BookingFactory.define(() => {
     originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, originalArrivalDate)),
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
     departureDate: DateFormats.dateObjToIsoDate(departureDate),
-    closeDate: DateFormats.dateObjToIsoDate(faker.date.future(1, departureDate)),
+    turnaroundStartDate: DateFormats.dateObjToIsoDate(turnaroundStartDate),
+    effectiveEndDate: DateFormats.dateObjToIsoDate(effectiveEndDate),
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     id: faker.datatype.uuid(),
     status: faker.helpers.arrayElement([

@@ -1,5 +1,6 @@
 import type { Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
 import type { BespokeError, PageHeadingBarItem } from '@approved-premises/ui'
+import config from '../config'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import { DateFormats } from './dateUtils'
@@ -69,6 +70,14 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
       break
     default:
       break
+  }
+
+  if (!config.flags.turnaroundsDisabled && booking.status !== 'cancelled') {
+    items.push({
+      text: 'Change turnaround time',
+      classes: 'govuk-button--secondary',
+      href: paths.bookings.turnarounds.new({ premisesId, roomId, bookingId: booking.id }),
+    })
   }
 
   if (items.length === 0) {

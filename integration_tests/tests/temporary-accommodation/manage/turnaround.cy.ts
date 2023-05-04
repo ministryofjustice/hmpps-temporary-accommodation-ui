@@ -16,6 +16,24 @@ context('Booking turnarounds', () => {
     setupTestUser()
   })
 
+  it('navigates to the change turnaround page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a booking in the database
+    const booking = bookingFactory.provisional().build()
+    const { premises, room } = setupBookingStateStubs(booking)
+
+    // When I visit the show booking page
+    const bookingShow = BookingShowPage.visit(premises, room, booking)
+
+    // Add I click the extend booking action
+    bookingShow.clickChangeTurnaround()
+
+    // Then I navigate to the change turnaround page
+    Page.verifyOnPage(BookingTurnaroundNewPage, premises, room, booking)
+  })
+
   it('allows me to change a turnaround', () => {
     // Given I am signed in
     cy.signIn()

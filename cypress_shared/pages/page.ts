@@ -85,7 +85,7 @@ export default abstract class Page extends Component {
   }
 
   shouldShowTextInputByLabel(label: string, value: string): void {
-    cy.get('label').contains(label).siblings('input').should('have.value', value)
+    cy.get('label').contains(label).parent().find('input').should('have.value', value)
   }
 
   shouldShowSelectInputByLabel(label: string, value: string): void {
@@ -109,7 +109,7 @@ export default abstract class Page extends Component {
   }
 
   completeTextInputByLabel(label: string, value: string): void {
-    cy.get('label').contains(label).siblings('input').type(value)
+    cy.get('label').contains(label).parent().find('input').type(value)
   }
 
   completeSelectInputByLabel(label: string, value: string): void {
@@ -156,6 +156,10 @@ export default abstract class Page extends Component {
     cy.get(`#${prefix}-day`).clear()
     cy.get(`#${prefix}-month`).clear()
     cy.get(`#${prefix}-year`).clear()
+  }
+
+  clearTextInputByLabel(label: string): void {
+    cy.get('label').contains(label).parent().find('input').clear()
   }
 
   completeDateInputs(prefix: string, date: string): void {

@@ -1,3 +1,4 @@
+import config from '../config'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import { arrivalFactory, bookingFactory, departureFactory, extensionFactory } from '../testutils/factories'
@@ -5,6 +6,7 @@ import {
   bookingActions,
   deriveBookingHistory,
   generateConflictBespokeError,
+  generateTurnaroundConflictBespokeError,
   getLatestExtension,
   shortenedOrExtended,
   statusTag,
@@ -16,81 +18,107 @@ const roomId = 'roomId'
 const bookingId = 'bookingId'
 const lostBedId = 'lostBedId'
 
+const cancelBookingAction = {
+  text: 'Cancel booking',
+  classes: 'govuk-button--secondary',
+  href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+}
+
+const changeTurnaroundAction = {
+  text: 'Change turnaround time',
+  classes: 'govuk-button--secondary',
+  href: paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+}
+
 describe('bookingUtils', () => {
   describe('bookingActions', () => {
-    it('returns a mark as confirmed action for a provisional booking', () => {
-      const booking = bookingFactory.provisional().build()
+    describe('when turnarounds are enabled', () => {
+      beforeAll(() => {
+        config.flags.turnaroundsDisabled = false
+      })
 
-      expect(bookingActions(premisesId, roomId, booking)).toEqual([
-        {
-          text: 'Mark as confirmed',
-          classes: '',
-          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
-        },
-        {
-          text: 'Cancel booking',
-          classes: 'govuk-button--secondary',
-          href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
-        },
-      ])
+      it('returns a mark as confirmed action for a provisional booking', () => {
+        const booking = bookingFactory.provisional().build({ id: bookingId })
+
+        expect(bookingActions(premisesId, roomId, booking)).toEqual([
+          {
+            text: 'Mark as confirmed',
+            classes: '',
+            href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+          },
+          cancelBookingAction,
+          changeTurnaroundAction,
+        ])
+      })
+
+      it('returns a mark as active action for a confirmed booking', () => {
+        const booking = bookingFactory.confirmed().build({ id: bookingId })
+
+        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+          {
+            text: 'Mark as active',
+            classes: '',
+            href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          },
+          cancelBookingAction,
+          changeTurnaroundAction,
+        ])
+      })
+
+      it('returns mark as departed and extend actions for an arrived booking', () => {
+        const booking = bookingFactory.arrived().build({ id: bookingId })
+
+        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+          {
+            text: 'Mark as departed',
+            classes: 'govuk-button--secondary',
+            href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+          },
+          {
+            text: 'Extend or shorten booking',
+            classes: 'govuk-button--secondary',
+            href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+          },
+          changeTurnaroundAction,
+        ])
+      })
+
+      it('returns edit departed booking for a departed booking', () => {
+        const booking = bookingFactory.departed().build({ id: bookingId })
+
+        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+          {
+            text: 'Update departed booking',
+            classes: 'govuk-button--secondary',
+            href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+          },
+          changeTurnaroundAction,
+        ])
+      })
+
+      it('returns edit cancelled booking for a cancelled booking', () => {
+        const booking = bookingFactory.cancelled().build({ id: bookingId })
+
+        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+          {
+            text: 'Update cancelled booking',
+            classes: 'govuk-button--secondary',
+            href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+          },
+        ])
+      })
     })
 
-    it('returns a mark as active action for a confirmed booking', () => {
-      const booking = bookingFactory.confirmed().build()
+    describe('when turnarounds are disabled', () => {
+      beforeAll(() => {
+        config.flags.turnaroundsDisabled = true
+      })
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-        {
-          text: 'Mark as active',
-          classes: '',
-          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
-        },
-        {
-          text: 'Cancel booking',
-          classes: 'govuk-button--secondary',
-          href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
-        },
-      ])
-    })
+      it('does not include a change turn around action', () => {
+        const booking = bookingFactory.departed().build({ id: bookingId })
 
-    it('returns mark as departed and extend actions for an arrived booking', () => {
-      const booking = bookingFactory.arrived().build()
-
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-        {
-          text: 'Mark as departed',
-          classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
-        },
-        {
-          text: 'Extend or shorten booking',
-          classes: 'govuk-button--secondary',
-          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
-        },
-      ])
-    })
-
-    it('returns edit departed booking for a departed booking', () => {
-      const booking = bookingFactory.departed().build()
-
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-        {
-          text: 'Update departed booking',
-          classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
-        },
-      ])
-    })
-
-    it('returns edit cancelled booking for a cancelled booking', () => {
-      const booking = bookingFactory.cancelled().build()
-
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-        {
-          text: 'Update cancelled booking',
-          classes: 'govuk-button--secondary',
-          href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
-        },
-      ])
+        expect(bookingActions('premisesId', 'roomId', booking)).not.toContainEqual(changeTurnaroundAction)
+      })
     })
   })
 
@@ -455,6 +483,50 @@ describe('bookingUtils', () => {
               roomId,
               bookingId,
             })}">existing booking</a>`,
+          },
+        ],
+      })
+    })
+  })
+
+  describe('generateTurnaroundConflictBespokeError', () => {
+    it('generates a bespoke error when there is a conflicting booking', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Booking: ${bookingId}`,
+        },
+      }
+
+      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, roomId)).toEqual({
+        errorTitle: 'The turnaround time could not be changed',
+        errorSummary: [
+          {
+            html: `The new turnaround time would conflict with an <a href="${paths.bookings.show({
+              premisesId,
+              roomId,
+              bookingId,
+            })}">existing booking</a>`,
+          },
+        ],
+      })
+    })
+
+    it('generates a bespoke error when there is a conflicting lost bed', () => {
+      const err = {
+        data: {
+          detail: `Conflicting Lost Bed: ${lostBedId}`,
+        },
+      }
+
+      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, roomId)).toEqual({
+        errorTitle: 'The turnaround time could not be changed',
+        errorSummary: [
+          {
+            html: `The new turnaround time would conflict with an <a href="${paths.lostBeds.show({
+              premisesId,
+              roomId,
+              lostBedId,
+            })}">existing void</a>`,
           },
         ],
       })

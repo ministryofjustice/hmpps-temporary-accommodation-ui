@@ -1,0 +1,59 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../components/ta-input/macro.njk" import taInput %}
+{% from "../components/booking-info/macro.njk" import bookingInfo %}
+{% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Change turnaround time" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+  }) }}
+
+  {% include "../../_messages.njk" %}
+
+  <h1>Change turnaround time</h1>
+
+  {{ showErrorSummary(errorSummary, errorTitle) }}
+
+  {{ popDetailsHeader(booking.person) }}
+  {{ locationHeader({ premises: premises, room: room }) }}
+
+  {{ bookingInfo(booking) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.bookings.turnarounds.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ taInput({
+            label: {
+              text: "What is the new turnaround time?",
+              classes: "govuk-label--m"
+            },
+            classes: "govuk-input--width-3",
+            fieldName: "workingDays",
+            suffix: {
+              text: "working days"
+            }
+          },
+          fetchContext()
+        ) }}
+
+        {{ govukButton({
+          text: "Submit",
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,5 +1,6 @@
 import type { Booking, NewBooking, Room } from '@approved-premises/api'
 import type { TableRow } from '@approved-premises/ui'
+import config from '../config'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
@@ -28,7 +29,7 @@ export default class BookingService {
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
       bedId: room.beds[0].id,
-      enableTurnarounds: false,
+      enableTurnarounds: !config.flags.turnaroundsDisabled,
       ...booking,
     })
 

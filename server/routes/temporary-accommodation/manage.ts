@@ -6,6 +6,7 @@ import type { Controllers } from '../../controllers'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
 
+import config from '../../config'
 import actions from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
@@ -20,6 +21,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     departuresController,
     extensionsController,
     cancellationsController,
+    turnaroundsController,
     bookingReportsController,
     lostBedsController,
     bedspaceSearchController,
@@ -211,6 +213,24 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+
+  if (!config.flags.turnaroundsDisabled) {
+    get(paths.bookings.turnarounds.new.pattern, turnaroundsController.new(), {
+      auditEvent: 'VIEW_BOOKING_NEW_TURNAROUND',
+    })
+    post(paths.bookings.turnarounds.create.pattern, turnaroundsController.create(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.bookings.turnarounds.new.pattern,
+          auditEvent: 'CREATE_BOOKING_TURNAROUND_FAILURE',
+        },
+        {
+          path: paths.bookings.show.pattern,
+          auditEvent: 'CREATE_BOOKING_TURNAROUND_SUCCESS',
+        },
+      ],
+    })
+  }
 
   get(paths.reports.bookings.new.pattern, bookingReportsController.new(), { auditEvent: 'VIEW_REPORT_CREATE' })
   post(paths.reports.bookings.create.pattern, bookingReportsController.create(), {

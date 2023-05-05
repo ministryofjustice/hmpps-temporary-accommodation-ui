@@ -27,52 +27,35 @@ export default class BookingShowPage extends Page {
   }
 
   clickConfirmBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Mark as confirmed').click()
-    })
+    this.clickAction('Mark as confirmed')
   }
 
   clickMarkArrivedBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Mark as active').click()
-    })
+    this.clickAction('Mark as active')
   }
 
   clickMarkDepartedBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Mark as departed').click()
-    })
+    this.clickAction('Mark as departed')
   }
 
   clickEditDepartedBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Update departed booking').click()
-    })
+    this.clickAction('Update departed booking')
   }
 
   clickExtendBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Extend or shorten booking').click()
-    })
+    this.clickAction('Extend or shorten booking')
   }
 
   clickCancelBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Cancel booking').click()
-    })
+    this.clickAction('Cancel booking')
   }
 
   clickEditCancelledBookingButton(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Update cancelled booking').click()
-    })
+    this.clickAction('Update cancelled booking')
+  }
+
+  clickChangeTurnaround(): void {
+    this.clickAction('Change turnaround time')
   }
 
   clickHistoryLink(): void {
@@ -83,5 +66,12 @@ export default class BookingShowPage extends Page {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
+  }
+
+  private clickAction(action: string) {
+    cy.get('.moj-page-header-actions').within(() => {
+      cy.get('button').contains('Actions').click()
+      cy.get('a').contains(action).click()
+    })
   }
 }

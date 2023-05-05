@@ -14,7 +14,6 @@ export type BookingBody = {
     originalArrivalDate: string;
     departureDate: string;
     originalDepartureDate: string;
-    closeDate?: string;
     createdAt: string;
     keyWorker?: StaffMember;
     serviceName: ServiceName;

@@ -13,6 +13,7 @@ import ExtensionsController from './extensionsController'
 import LostBedsController from './lostBedsController'
 import PremisesController from './premisesController'
 import BookingSearchController from './bookingSearchController'
+import TurnaroundsController from './turnaroundsController'
 
 export const controllers = (services: Services) => {
   const premisesController = new PremisesController(services.premisesService, services.bedspaceService)
@@ -58,6 +59,12 @@ export const controllers = (services: Services) => {
     services.bookingService,
     services.cancellationService,
   )
+  const turnaroundsController = new TurnaroundsController(
+    services.premisesService,
+    services.bedspaceService,
+    services.bookingService,
+    services.turnaroundService,
+  )
 
   const bookingReportsController = new BookingReportsController(services.bookingReportService)
 
@@ -79,6 +86,7 @@ export const controllers = (services: Services) => {
     departuresController,
     extensionsController,
     cancellationsController,
+    turnaroundsController,
     bookingReportsController,
     lostBedsController,
     bedspaceSearchController,
@@ -94,6 +102,7 @@ export {
   ArrivalsController,
   ExtensionsController,
   CancellationsController,
+  TurnaroundsController,
   BookingReportsController,
   LostBedsController,
   BedspaceSearchController,

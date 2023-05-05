@@ -15,7 +15,9 @@ import {
   newCancellationFactory,
   newConfirmationFactory,
   newDepartureFactory,
+  newTurnaroundFactory,
   nonArrivalFactory,
+  turnaroundFactory,
 } from '../testutils/factories'
 
 import config from '../config'
@@ -244,6 +246,23 @@ describe('BookingClient', () => {
       const result = await bookingClient.markNonArrival('premisesId', 'bookingId', payload)
 
       expect(result).toEqual(nonArrival)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('createTurnaround', () => {
+    it('should create a turnaround', async () => {
+      const turnaround = turnaroundFactory.build()
+      const payload = newTurnaroundFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(`/premises/premisesId/bookings/bookingId/turnarounds`, payload)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(201, turnaround)
+
+      const result = await bookingClient.createTurnaround('premisesId', 'bookingId', payload)
+
+      expect(result).toEqual(turnaround)
       expect(nock.isDone()).toBeTruthy()
     })
   })

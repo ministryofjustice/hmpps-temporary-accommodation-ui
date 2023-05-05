@@ -12,14 +12,16 @@ import type {
   NewDeparture,
   NewExtension,
   NewNonarrival,
+  NewTurnaround,
   Nonarrival,
+  Turnaround,
 } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import type { BookingSearchResults } from 'server/@types/shared/models/BookingSearchResults'
-import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { createQueryString } from '../utils/utils'
+import RestClient, { CallConfig } from './restClient'
 
 export default class BookingClient {
   restClient: RestClient
@@ -109,6 +111,15 @@ export default class BookingClient {
     })
 
     return response as Nonarrival
+  }
+
+  async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround): Promise<Turnaround> {
+    const response = await this.restClient.post({
+      path: `${this.bookingPath(premisesId, bookingId)}/turnarounds`,
+      data: turnaround,
+    })
+
+    return response as Turnaround
   }
 
   async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {

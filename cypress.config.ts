@@ -4,6 +4,7 @@ import arrival from './integration_tests/mockApis/arrival'
 import auth from './integration_tests/mockApis/auth'
 import bedspaceSearch from './integration_tests/mockApis/bedspaceSearch'
 import booking from './integration_tests/mockApis/booking'
+import bookingSearch from './integration_tests/mockApis/bookingSearch'
 import cancellation from './integration_tests/mockApis/cancellation'
 import confirmation from './integration_tests/mockApis/confirmation'
 import departure from './integration_tests/mockApis/departure'
@@ -15,8 +16,8 @@ import premises from './integration_tests/mockApis/premises'
 import report from './integration_tests/mockApis/report'
 import room from './integration_tests/mockApis/room'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
+import turnaround from './integration_tests/mockApis/turnaround'
 import user from './integration_tests/mockApis/user'
-import bookingSearch from './integration_tests/mockApis/bookingSearch'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import { resetStubs } from './wiremock'
 
@@ -45,6 +46,7 @@ export default defineConfig({
         ...departure,
         ...cancellation,
         ...confirmation,
+        ...turnaround,
         ...lostBed,
         ...person,
         ...applications,

@@ -8,6 +8,13 @@ import bedSearchParametersFactory from './bedSearchParameters'
 import bedSearchResultFactory from './bedSearchResult'
 import bedSearchResultsFactory from './bedSearchResults'
 import bookingFactory from './booking'
+import bookingSearchResultFactory from './bookingSearchResult'
+import bookingSearchResultBedSummaryFactory from './bookingSearchResultBedSummary'
+import bookingSearchResultBookingSummaryFactory from './bookingSearchResultBookingSummary'
+import bookingSearchResultPersonSummaryFactory from './bookingSearchResultPersonSummary'
+import bookingSearchResultPremisesSummaryFactory from './bookingSearchResultPremisesSummary'
+import bookingSearchResultRoomSummaryFactory from './bookingSearchResultRoomSummary'
+import bookingSearchResultsFactory from './bookingSearchResults'
 import cancellationFactory from './cancellation'
 import characteristicFactory from './characteristic'
 import confirmationFactory from './confirmation'
@@ -28,6 +35,7 @@ import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
 import newPremisesFactory from './newPremises'
 import newRoomFactory from './newRoom'
+import newTurnaroundFactory from './newTurnaround'
 import nonArrivalFactory from './nonArrival'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import oasysSelectionFactory from './oasysSelection'
@@ -45,15 +53,7 @@ import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
 import updateRoomFactory from './updateRoom'
-import updateTurnaroundFactory from './updateTurnaround'
 import userFactory from './user'
-import bookingSearchResultPersonSummaryFactory from './bookingSearchResultPersonSummary'
-import bookingSearchResultBookingSummaryFactory from './bookingSearchResultBookingSummary'
-import bookingSearchResultPremisesSummaryFactory from './bookingSearchResultPremisesSummary'
-import bookingSearchResultRoomSummaryFactory from './bookingSearchResultRoomSummary'
-import bookingSearchResultBedSummaryFactory from './bookingSearchResultBedSummary'
-import bookingSearchResultFactory from './bookingSearchResult'
-import bookingSearchResultsFactory from './bookingSearchResults'
 
 export {
   activeOffenceFactory,
@@ -113,5 +113,5 @@ export {
   bookingSearchResultsFactory,
   premisesSummaryFactory,
   turnaroundFactory,
-  updateTurnaroundFactory,
+  newTurnaroundFactory,
 }

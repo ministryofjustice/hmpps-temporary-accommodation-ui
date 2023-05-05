@@ -9,6 +9,7 @@ import {
   generateTurnaroundConflictBespokeError,
   getLatestExtension,
   shortenedOrExtended,
+  statusName,
   statusTag,
   transformApiBookingToUiBooking,
 } from './bookingUtils'
@@ -125,6 +126,12 @@ describe('bookingUtils', () => {
   describe('statusTag', () => {
     it('returns the HTML formatted display name of a given status', () => {
       expect(statusTag('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
+    })
+  })
+
+  describe('statusName', () => {
+    it('returns display name of a given status', () => {
+      expect(statusName('confirmed')).toEqual('Confirmed')
     })
   })
 

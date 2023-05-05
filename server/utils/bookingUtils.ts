@@ -120,6 +120,11 @@ export const statusTag = (statusId: Booking['status']) => {
   return `<strong class="govuk-tag ${status.tagClass}">${status.name}</strong>`
 }
 
+export const statusName = (statusId: Booking['status']) => {
+  const status = allStatuses.find(({ id }) => id === statusId)
+  return status.name
+}
+
 export const getLatestExtension = (booking: Booking) => {
   return booking.extensions.reduce((latestExtension, testExtension) => {
     const latestTime = DateFormats.isoToDateObj(latestExtension.createdAt).getTime()

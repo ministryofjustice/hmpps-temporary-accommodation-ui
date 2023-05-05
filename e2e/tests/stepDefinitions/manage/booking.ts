@@ -37,6 +37,8 @@ Given('I create a booking with all necessary details', () => {
     const booking = bookingFactory.provisional().build({
       ...newBooking,
       person,
+      effectiveEndDate: 'unknown',
+      turnaroundStartDate: 'unknown',
     })
 
     bookingNewPage.completeForm(newBooking)

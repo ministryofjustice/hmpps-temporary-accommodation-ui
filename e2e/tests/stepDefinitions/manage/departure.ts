@@ -7,6 +7,7 @@ import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { bookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
+import { BookingStatus } from '../../../../server/@types/ui/index'
 
 Given('I mark the booking as departed', () => {
   cy.then(function _() {
@@ -70,6 +71,7 @@ Given('I edit the departed booking', () => {
       ...this.booking,
       departureDate: newDeparture.dateTime,
       departure,
+      status: 'unknown-departed-or-closed' as BookingStatus,
     })
 
     cy.wrap(departedBooking).as('booking')
@@ -105,7 +107,7 @@ Then('I should see the booking with the departed status', () => {
 Then('I should see the booking with the edited departure details', () => {
   cy.then(function _() {
     const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
-    bookingShowPage.shouldShowBanner('Departed booking updated')
+    bookingShowPage.shouldShowBanner('Departure details changed')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()

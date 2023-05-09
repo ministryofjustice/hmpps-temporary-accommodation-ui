@@ -230,7 +230,7 @@ describe('DeparturesController', () => {
         expect.objectContaining(newDeparture),
       )
 
-      expect(request.flash).toHaveBeenCalledWith('success', 'Departed booking updated')
+      expect(request.flash).toHaveBeenCalledWith('success', 'Departure details changed')
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
     })
 

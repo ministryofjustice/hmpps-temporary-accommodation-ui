@@ -9,8 +9,8 @@ import {
   generateTurnaroundConflictBespokeError,
   getLatestExtension,
   shortenedOrExtended,
+  statusName,
   statusTag,
-  transformApiBookingToUiBooking,
 } from './bookingUtils'
 
 const premisesId = 'premisesId'
@@ -88,7 +88,20 @@ describe('bookingUtils', () => {
 
         expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
           {
-            text: 'Update departed booking',
+            text: 'Update departure details',
+            classes: 'govuk-button--secondary',
+            href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+          },
+          changeTurnaroundAction,
+        ])
+      })
+
+      it('returns edit departed booking for a closed booking', () => {
+        const booking = bookingFactory.closed().build({ id: bookingId })
+
+        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+          {
+            text: 'Update departure details',
             classes: 'govuk-button--secondary',
             href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
           },
@@ -125,6 +138,12 @@ describe('bookingUtils', () => {
   describe('statusTag', () => {
     it('returns the HTML formatted display name of a given status', () => {
       expect(statusTag('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
+    })
+  })
+
+  describe('statusName', () => {
+    it('returns display name of a given status', () => {
+      expect(statusName('confirmed')).toEqual('Confirmed')
     })
   })
 
@@ -401,26 +420,6 @@ describe('bookingUtils', () => {
       })
 
       expect(shortenedOrExtended(extension)).toEqual('extended')
-    })
-  })
-
-  describe('transformApiBookingToUiBooking', () => {
-    it('transforms a closed booking to a departed booking', () => {
-      const booking = bookingFactory.closed().build()
-      const bookingCopy = { ...booking }
-
-      const result = transformApiBookingToUiBooking(booking)
-
-      expect(result).toEqual({ ...bookingCopy, status: 'departed' })
-    })
-
-    it('leaves non-closed bookings unchanged', () => {
-      const booking = bookingFactory.arrived().build()
-      const bookingCopy = { ...booking }
-
-      const result = transformApiBookingToUiBooking(booking)
-
-      expect(result).toEqual(bookingCopy)
     })
   })
 

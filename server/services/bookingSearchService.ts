@@ -14,11 +14,6 @@ export default class BookingSearchService {
 
     const { results } = bookingSummaries
 
-    if (status === 'departed') {
-      const closedBookingSummaries = await bookingClient.search('closed')
-      results.push(...closedBookingSummaries.results)
-    }
-
     return results.map(summary => {
       return [
         this.textValue(summary.person.name),

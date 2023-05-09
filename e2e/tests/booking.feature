@@ -43,6 +43,12 @@ Feature: Manage Temporary Accommodation - Booking
         Then I should see the booking with the edited departure details
         And I should see previous booking states in the booking history
 
+    Scenario: Editing a booking's turnaround time
+        Given I'm creating a booking
+        And I create a booking with all necessary details
+        And I edit the booking's turnaround time
+        Then I should see the booking with the edited turnaround time
+
     Scenario: Showing booking creation errors
         Given I'm creating a booking
         And I attempt to create a booking with required details missing

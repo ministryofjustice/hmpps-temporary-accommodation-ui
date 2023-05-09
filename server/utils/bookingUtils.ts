@@ -12,11 +12,12 @@ type ParsedConflictError = {
 
 export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<PageHeadingBarItem> {
   const items = []
+  const bookingId = booking.id
 
   const cancelAction = {
     text: 'Cancel booking',
     classes: 'govuk-button--secondary',
-    href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId: booking.id }),
+    href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
   }
 
   switch (booking.status) {
@@ -25,7 +26,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         {
           text: 'Mark as confirmed',
           classes: '',
-          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
         },
         cancelAction,
       )
@@ -35,7 +36,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         {
           text: 'Mark as active',
           classes: '',
-          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
         },
         cancelAction,
       )
@@ -45,27 +46,28 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         {
           text: 'Mark as departed',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.new({ premisesId, roomId, bookingId }),
         },
         {
           text: 'Extend or shorten booking',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId }),
         },
       )
       break
     case 'departed':
+    case 'closed':
       items.push({
-        text: 'Update departed booking',
+        text: 'Update departure details',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+        href: paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
       })
       break
     case 'cancelled':
       items.push({
         text: 'Update cancelled booking',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+        href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
       })
       break
     default:
@@ -104,8 +106,13 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
     tagClass: 'govuk-tag--green',
   },
   {
-    name: 'Departed',
+    name: config.flags.turnaroundsDisabled ? 'Departed' : 'Turnaround',
     id: 'departed',
+    tagClass: 'govuk-tag--red',
+  },
+  {
+    name: 'Departed',
+    id: 'closed',
     tagClass: 'govuk-tag--red',
   },
   {
@@ -118,6 +125,11 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
 export const statusTag = (statusId: Booking['status']) => {
   const status = allStatuses.find(({ id }) => id === statusId)
   return `<strong class="govuk-tag ${status.tagClass}">${status.name}</strong>`
+}
+
+export const statusName = (statusId: Booking['status']) => {
+  const status = allStatuses.find(({ id }) => id === statusId)
+  return status.name
 }
 
 export const getLatestExtension = (booking: Booking) => {
@@ -134,8 +146,9 @@ export const deriveBookingHistory = (booking: Booking) => {
   const departures = [...booking.departures].sort(compareBookingState)
   const cancellations = [...booking.cancellations].sort(compareBookingState)
 
-  const bookingWithSortedExensions = {
+  const bookingWithSortedExensions: Booking = {
     ...booking,
+    status: booking.status === 'closed' ? 'departed' : booking.status,
     extensions,
     departures,
     cancellations,
@@ -156,13 +169,6 @@ export const shortenedOrExtended = (extension: Extension): 'shortened' | 'extend
   const newDepartureDate = DateFormats.isoToDateObj(extension.newDepartureDate)
 
   return previousDepartureDate.getTime() > newDepartureDate.getTime() ? 'shortened' : 'extended'
-}
-
-export const transformApiBookingToUiBooking = (booking: Booking): Booking => {
-  if (booking.status === 'closed') {
-    return { ...booking, status: 'departed' }
-  }
-  return booking
 }
 
 export const generateConflictBespokeError = (

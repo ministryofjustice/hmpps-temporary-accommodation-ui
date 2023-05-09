@@ -1,5 +1,6 @@
 import type { Booking } from '@approved-premises/api'
-import { getLatestExtension, shortenedOrExtended } from '../../server/utils/bookingUtils'
+import { BookingStatus } from '../../server/@types/ui/index'
+import { getLatestExtension, shortenedOrExtended, statusName } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
 import Component from './component'
 
@@ -9,45 +10,67 @@ export default class BookingInfoComponent extends Component {
   }
 
   shouldShowBookingDetails(): void {
-    const { status } = this.booking
+    cy.wrap(this.booking).as('modifiedBooking')
 
-    if (status === 'provisional' || status === 'confirmed' || status === 'cancelled') {
-      this.shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-      this.shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    } else if (status === 'arrived') {
-      this.shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.booking.arrivalDate))
-      this.shouldShowKeyAndValue('Expected departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
-    } else if (status === 'departed') {
-      this.shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.booking.departureDate))
+    if (this.booking.status === ('unknown-departed-or-closed' as BookingStatus)) {
+      cy.get('.govuk-summary-list__key')
+        .contains('Status')
+        .siblings('.govuk-summary-list__value')
+        .then(statusElement => {
+          const status = statusElement.text().trim() === statusName('closed') ? 'closed' : 'departed'
+          cy.wrap({ ...this.booking, status }).as('modifiedBooking')
+        })
     }
 
-    if (status === 'provisional') {
-      this.shouldShowKeyAndValue('Status', 'Provisional')
-    } else if (status === 'confirmed') {
-      this.shouldShowKeyAndValue('Status', 'Confirmed')
-      this.shouldShowKeyAndValues('Notes', this.booking.confirmation.notes.split('\n'))
-    } else if (status === 'cancelled') {
-      this.shouldShowKeyAndValue('Status', 'Cancelled')
-      this.shouldShowKeyAndValue('Cancellation date', DateFormats.isoDateToUIDate(this.booking.cancellation.date))
-      this.shouldShowKeyAndValue('Cancellation reason', this.booking.cancellation.reason.name)
-      this.shouldShowKeyAndValues('Notes', this.booking.cancellation.notes.split('\n'))
-    } else if (status === 'arrived') {
-      this.shouldShowKeyAndValue('Status', 'Active')
-      this.shouldShowKeyAndValues('Notes', this.booking.arrival.notes.split('\n'))
+    const { shouldShowKeyAndValue, shouldShowKeyAndValues } = this
 
-      const latestExtension = getLatestExtension(this.booking)
-      if (latestExtension) {
-        const keyText =
-          shortenedOrExtended(latestExtension) === 'shortened'
-            ? 'Notes on shortened booking'
-            : 'Notes on extended booking'
-        this.shouldShowKeyAndValues(keyText, latestExtension.notes.split('\n'))
+    cy.then(function _() {
+      const { status } = this.modifiedBooking
+
+      shouldShowKeyAndValue('Status', statusName(this.modifiedBooking.status))
+
+      if (status === 'provisional' || status === 'confirmed' || status === 'cancelled') {
+        shouldShowKeyAndValue('Start date', DateFormats.isoDateToUIDate(this.modifiedBooking.arrivalDate))
+        shouldShowKeyAndValue('End date', DateFormats.isoDateToUIDate(this.modifiedBooking.departureDate))
+      } else if (status === 'arrived') {
+        shouldShowKeyAndValue('Arrival date', DateFormats.isoDateToUIDate(this.modifiedBooking.arrivalDate))
+        shouldShowKeyAndValue(
+          'Expected departure date',
+          DateFormats.isoDateToUIDate(this.modifiedBooking.departureDate),
+        )
+      } else if (status === 'departed' || status === 'closed') {
+        shouldShowKeyAndValue('Departure date', DateFormats.isoDateToUIDate(this.modifiedBooking.departureDate))
       }
-    } else if (status === 'departed') {
-      this.shouldShowKeyAndValue('Status', 'Departed')
-      this.shouldShowKeyAndValue('Departure reason', this.booking.departure.reason.name)
-      this.shouldShowKeyAndValue('Move on category', this.booking.departure.moveOnCategory.name)
-      this.shouldShowKeyAndValues('Notes', this.booking.departure.notes.split('\n'))
-    }
+
+      const days = this.modifiedBooking.turnaround.workingDays
+      shouldShowKeyAndValue('Turnaround time', `${days} working ${days === 1 ? 'day' : 'days'}`)
+
+      if (this.modifiedBooking.effectiveEndDate !== 'unknown') {
+        shouldShowKeyAndValue('Turnaround end date', DateFormats.isoDateToUIDate(this.modifiedBooking.effectiveEndDate))
+      }
+
+      if (status === 'confirmed') {
+        shouldShowKeyAndValues('Notes', this.modifiedBooking.confirmation.notes.split('\n'))
+      } else if (status === 'cancelled') {
+        shouldShowKeyAndValue('Cancellation date', DateFormats.isoDateToUIDate(this.modifiedBooking.cancellation.date))
+        shouldShowKeyAndValue('Cancellation reason', this.modifiedBooking.cancellation.reason.name)
+        shouldShowKeyAndValues('Notes', this.modifiedBooking.cancellation.notes.split('\n'))
+      } else if (status === 'arrived') {
+        shouldShowKeyAndValues('Notes', this.modifiedBooking.arrival.notes.split('\n'))
+
+        const latestExtension = getLatestExtension(this.modifiedBooking)
+        if (latestExtension) {
+          const keyText =
+            shortenedOrExtended(latestExtension) === 'shortened'
+              ? 'Notes on shortened booking'
+              : 'Notes on extended booking'
+          shouldShowKeyAndValues(keyText, latestExtension.notes.split('\n'))
+        }
+      } else if (status === 'departed' || status === 'closed') {
+        shouldShowKeyAndValue('Departure reason', this.modifiedBooking.departure.reason.name)
+        shouldShowKeyAndValue('Move on category', this.modifiedBooking.departure.moveOnCategory.name)
+        shouldShowKeyAndValues('Notes', this.modifiedBooking.departure.notes.split('\n'))
+      }
+    })
   }
 }

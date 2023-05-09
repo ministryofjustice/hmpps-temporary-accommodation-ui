@@ -39,7 +39,7 @@ export default class BookingShowPage extends Page {
   }
 
   clickEditDepartedBookingButton(): void {
-    this.clickAction('Update departed booking')
+    this.clickAction('Update departure details')
   }
 
   clickExtendBookingButton(): void {

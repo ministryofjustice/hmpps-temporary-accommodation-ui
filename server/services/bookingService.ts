@@ -6,7 +6,7 @@ import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { statusTag, transformApiBookingToUiBooking } from '../utils/bookingUtils'
+import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
 
@@ -33,14 +33,12 @@ export default class BookingService {
       ...booking,
     })
 
-    return transformApiBookingToUiBooking(confirmedBooking)
+    return confirmedBooking
   }
 
   async getTableRowsForBedspace(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<TableRow>> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    const bookings = (await bookingClient.allBookingsForPremisesId(premisesId)).map(booking =>
-      transformApiBookingToUiBooking(booking),
-    )
+    const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
 
     const lostBedClient = this.lostBedClientFactory(callConfig)
     const lostBeds = await (
@@ -56,7 +54,14 @@ export default class BookingService {
         rows: [
           this.textValue(b.person.crn),
           this.textValue(DateFormats.isoDateToUIDate(b.arrivalDate, { format: 'short' })),
-          this.textValue(DateFormats.isoDateToUIDate(b.departureDate, { format: 'short' })),
+          this.textValue(
+            DateFormats.isoDateToUIDate(
+              config.flags.turnaroundsDisabled ? b.departureDate : b.effectiveEndDate || b.departureDate,
+              {
+                format: 'short',
+              },
+            ),
+          ),
           this.htmlValue(statusTag(b.status)),
           this.htmlValue(
             `<a href="${paths.bookings.show({
@@ -98,7 +103,7 @@ export default class BookingService {
     const bookingClient = this.bookingClientFactory(callConfig)
     const booking = await bookingClient.find(premisesId, bookingId)
 
-    return transformApiBookingToUiBooking(booking)
+    return booking
   }
 
   private textValue(value: string) {

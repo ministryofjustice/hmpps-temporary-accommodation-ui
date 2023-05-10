@@ -9,7 +9,7 @@ export default class ReportNewPage extends Page {
   }
 
   static visit(): ReportNewPage {
-    cy.visit(paths.reports.bookings.new({}))
+    cy.visit(paths.reports.new({}))
     return new ReportNewPage()
   }
 

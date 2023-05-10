@@ -63,7 +63,7 @@ export default class ReportsController {
           reportType,
         )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))
+        catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
       }
     }
   }

@@ -232,8 +232,8 @@ export default function routes(controllers: Controllers, services: Services, rou
     })
   }
 
-  get(paths.reports.bookings.new.pattern, reportsController.new(), { auditEvent: 'VIEW_REPORT_CREATE' })
-  post(paths.reports.bookings.create.pattern, reportsController.create(), {
+  get(paths.reports.new.pattern, reportsController.new(), { auditEvent: 'VIEW_REPORT_CREATE' })
+  post(paths.reports.create.pattern, reportsController.create(), {
     auditEvent: 'REPORT_CREATED_SUCCESS',
     auditBodyParams: ['probationRegionId'],
   })

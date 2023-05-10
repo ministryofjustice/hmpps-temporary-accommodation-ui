@@ -32,12 +32,14 @@ describe('BookingReportService', () => {
     it('pipes all bookings to an express response, for download as a file', async () => {
       const response = createMock<Response>()
       ;(bookingReportFilename as jest.MockedFunction<typeof bookingReportFilename>).mockReturnValue('some-filename')
+      const month = '1'
+      const year = '2023'
 
-      await service.pipeBookings(callConfig, response)
+      await service.pipeBookings(callConfig, response, month, year)
 
       expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingReportFilename).toHaveBeenCalled()
-      expect(reportClient.bookings).toHaveBeenCalledWith(response, 'some-filename')
+      expect(reportClient.bookings).toHaveBeenCalledWith(response, 'some-filename', month, year)
     })
   })
 
@@ -49,15 +51,19 @@ describe('BookingReportService', () => {
       ;(
         bookingReportForProbationRegionFilename as jest.MockedFunction<typeof bookingReportForProbationRegionFilename>
       ).mockReturnValue('some-filename')
+      const month = '1'
+      const year = '2023'
 
-      await service.pipeBookingsForProbationRegion(callConfig, response, probationRegions[0].id)
+      await service.pipeBookingsForProbationRegion(callConfig, response, probationRegions[0].id, month, year)
 
       expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bookingReportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0])
+      expect(bookingReportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0], month, year)
       expect(reportClient.bookingsForProbationRegion).toHaveBeenCalledWith(
         response,
         'some-filename',
         probationRegions[0].id,
+        month,
+        year,
       )
     })
   })

@@ -15,18 +15,20 @@ export default class BookingReportService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async pipeBookings(callConfig: CallConfig, response: Response): Promise<void> {
+  async pipeBookings(callConfig: CallConfig, response: Response, month: string, year: string): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
     const filename = bookingReportFilename()
 
-    await reportClient.bookings(response, filename)
+    await reportClient.bookings(response, filename, month, year)
   }
 
   async pipeBookingsForProbationRegion(
     callConfig: CallConfig,
     response: Response,
     probationRegionId: string,
+    month: string,
+    year: string,
   ): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
@@ -34,9 +36,9 @@ export default class BookingReportService {
       region => region.id === probationRegionId,
     )
 
-    const filename = bookingReportForProbationRegionFilename(probationRegion)
+    const filename = bookingReportForProbationRegionFilename(probationRegion, month, year)
 
-    await reportClient.bookingsForProbationRegion(response, filename, probationRegionId)
+    await reportClient.bookingsForProbationRegion(response, filename, probationRegionId, month, year)
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BookingReportReferenceData> {

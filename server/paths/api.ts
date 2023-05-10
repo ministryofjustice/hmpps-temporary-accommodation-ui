@@ -117,6 +117,8 @@ export default {
   },
   reports: {
     bookings: reportsPath.path('bookings'),
+    bedspaceUsage: reportsPath.path('bed-usage'),
+    bedspaceUtilisation: reportsPath.path('bed-utilisation'),
   },
   users: {
     actingUser: {

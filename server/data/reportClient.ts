@@ -18,7 +18,7 @@ export default class ReportClient {
     })
   }
 
-  async bookingsForProbationRegion(
+  async reportForProbationRegion(
     response: Response,
     filename: string,
     probationRegionId: string,

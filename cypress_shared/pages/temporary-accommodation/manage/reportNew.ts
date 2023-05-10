@@ -3,14 +3,14 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { exact } from '../../../../server/utils/utils'
 import Page from '../../page'
 
-export default class BookingReportNewPage extends Page {
+export default class ReportNewPage extends Page {
   constructor() {
     super('Booking reports')
   }
 
-  static visit(): BookingReportNewPage {
+  static visit(): ReportNewPage {
     cy.visit(paths.reports.bookings.new({}))
-    return new BookingReportNewPage()
+    return new ReportNewPage()
   }
 
   shouldPreselectProbationRegion(probationRegion: ProbationRegion): void {

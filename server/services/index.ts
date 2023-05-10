@@ -8,7 +8,7 @@ import ArrivalService from './arrivalService'
 import AuditService from './auditService'
 import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
-import BookingReportService from './bookingReportService'
+import ReportService from './reportService'
 import BookingService from './bookingService'
 import CancellationService from './cancellationService'
 import ConfirmationService from './confirmationService'
@@ -51,7 +51,7 @@ export const services = () => {
   const bedspaceService = new BedspaceService(roomClientBuilder, referenceDataClientBuilder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
-  const bookingReportService = new BookingReportService(reportClientBuilder, referenceDataClientBuilder)
+  const reportService = new ReportService(reportClientBuilder, referenceDataClientBuilder)
   const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder, referenceDataClientBuilder)
   const bookingSearchService = new BookingSearchService(bookingClientBuilder)
   const turnaroundService = new TurnaroundService(bookingClientBuilder)
@@ -71,7 +71,7 @@ export const services = () => {
     bedspaceService,
     confirmationService,
     extensionService,
-    bookingReportService,
+    reportService,
     bedspaceSearchService,
     bookingSearchService,
     turnaroundService,

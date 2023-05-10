@@ -1,10 +1,10 @@
 import path from 'path'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
+import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
 import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import { premisesSummaryFactory } from '../../../../server/testutils/factories'
-import { bookingReportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
+import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 
 context('Report', () => {
   beforeEach(() => {
@@ -17,17 +17,17 @@ context('Report', () => {
     cy.signIn()
 
     // And there is reference data in the database
-    cy.task('stubBookingReportReferenceData')
+    cy.task('stubReportReferenceData')
 
     // When I visit the dashboard page
     const page = DashboardPage.visit()
 
     // Add I click the reports link
-    cy.task('stubBookingReportReferenceData')
+    cy.task('stubReportReferenceData')
     page.clickReportsLink()
 
     // Then I navigate to the booking report page
-    Page.verifyOnPage(BookingReportNewPage)
+    Page.verifyOnPage(ReportNewPage)
   })
 
   it('does not download a file when the API returns an error', () => {
@@ -35,8 +35,8 @@ context('Report', () => {
     cy.signIn()
 
     // When I visit the booking report page
-    cy.task('stubBookingReportReferenceData')
-    const page = BookingReportNewPage.visit()
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
 
     // And I fill out the form
     cy.then(function _() {
@@ -46,7 +46,7 @@ context('Report', () => {
 
       page.completeForm(month, year)
 
-      cy.task('stubBookingReportError', {
+      cy.task('stubReportError', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
         month,
@@ -65,8 +65,8 @@ context('Report', () => {
     cy.signIn()
 
     // When I visit the booking report page
-    cy.task('stubBookingReportReferenceData')
-    const page = BookingReportNewPage.visit()
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
 
     cy.then(function _() {
       // Then I should see the user's probation region preselected
@@ -79,19 +79,19 @@ context('Report', () => {
 
       page.completeForm(month, year)
 
-      cy.task('stubBookingReportForRegion', { data: 'some-data', probationRegionId: probationRegion.id, month, year })
+      cy.task('stubReportForRegion', { data: 'some-data', probationRegionId: probationRegion.id, month, year })
       page.expectDownload()
       page.clickSubmit()
 
       // Then a report should have been requested from the API
-      cy.task('verifyBookingReportForRegion', { probationRegionId: probationRegion.id, month, year }).then(requests => {
+      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        bookingReportForProbationRegionFilename(probationRegion, month, year),
+        reportForProbationRegionFilename(probationRegion, month, year),
       )
 
       cy.readFile(filePath).then(file => {
@@ -105,8 +105,8 @@ context('Report', () => {
     cy.signIn()
 
     // When I visit the booking report page
-    cy.task('stubBookingReportReferenceData')
-    const page = BookingReportNewPage.visit()
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
 
     // And I clear the probation region
     page.clearForm()
@@ -125,8 +125,8 @@ context('Report', () => {
     cy.task('stubPremises', premisesSummaries)
 
     // When I visit the show premises page
-    cy.task('stubBookingReportReferenceData')
-    const page = BookingReportNewPage.visit()
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

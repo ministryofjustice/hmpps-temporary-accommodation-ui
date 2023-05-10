@@ -22,7 +22,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     extensionsController,
     cancellationsController,
     turnaroundsController,
-    bookingReportsController,
+    reportsController,
     lostBedsController,
     bedspaceSearchController,
     bookingSearchController,
@@ -232,8 +232,8 @@ export default function routes(controllers: Controllers, services: Services, rou
     })
   }
 
-  get(paths.reports.bookings.new.pattern, bookingReportsController.new(), { auditEvent: 'VIEW_REPORT_CREATE' })
-  post(paths.reports.bookings.create.pattern, bookingReportsController.create(), {
+  get(paths.reports.bookings.new.pattern, reportsController.new(), { auditEvent: 'VIEW_REPORT_CREATE' })
+  post(paths.reports.bookings.create.pattern, reportsController.create(), {
     auditEvent: 'REPORT_CREATED_SUCCESS',
     auditBodyParams: ['probationRegionId'],
   })

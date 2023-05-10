@@ -95,7 +95,7 @@ describe('ReportClient', () => {
 
       const response = createMock<Response>()
 
-      await reportClient.bookingsForProbationRegion(response, 'some-filename', probationRegion.id, month, year)
+      await reportClient.reportForProbationRegion(response, 'some-filename', probationRegion.id, month, year, type)
 
       expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({

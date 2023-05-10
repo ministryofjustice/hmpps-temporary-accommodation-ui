@@ -2,9 +2,9 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import path from 'path'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import BookingReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingReportNew'
+import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
 import { probationRegionFactory } from '../../../../server/testutils/factories'
-import { bookingReportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
+import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 import { getUrlEncodedCypressEnv, throwMissingCypressEnvError } from '../utils'
 
 const actingUserProbationRegionId =
@@ -20,7 +20,7 @@ Given("I'm downloading a booking report", () => {
 })
 
 Given('I download a report for the preselected probation region', () => {
-  const bookingReportPage = Page.verifyOnPage(BookingReportNewPage)
+  const reportPage = Page.verifyOnPage(ReportNewPage)
 
   const probationRegion = probationRegionFactory.build({
     id: actingUserProbationRegionId,
@@ -29,19 +29,19 @@ Given('I download a report for the preselected probation region', () => {
   const month = '1'
   const year = '2023'
 
-  bookingReportPage.shouldPreselectProbationRegion(probationRegion)
-  bookingReportPage.completeForm(month, year)
-  bookingReportPage.expectDownload(10000)
-  bookingReportPage.clickSubmit()
+  reportPage.shouldPreselectProbationRegion(probationRegion)
+  reportPage.completeForm(month, year)
+  reportPage.expectDownload(10000)
+  reportPage.clickSubmit()
 
-  cy.wrap(bookingReportForProbationRegionFilename(probationRegion, month, year)).as('filename')
+  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year)).as('filename')
 })
 
 Given('I clear the form and attempt to download a report', () => {
-  const bookingReportPage = Page.verifyOnPage(BookingReportNewPage)
+  const reportPage = Page.verifyOnPage(ReportNewPage)
 
-  bookingReportPage.clearForm()
-  bookingReportPage.clickSubmit()
+  reportPage.clearForm()
+  reportPage.clickSubmit()
 
   cy.wrap(['probationRegionId', 'month', 'year']).as('missing')
 })
@@ -56,7 +56,7 @@ Then('I should download a booking report', () => {
 
 Then('I should see a list of the problems encountered downloading the report', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingReportNewPage)
+    const page = Page.verifyOnPage(ReportNewPage)
     page.shouldShowErrorMessagesForFields(this.missing)
   })
 })

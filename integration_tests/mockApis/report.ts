@@ -3,7 +3,7 @@ import { getMatchingRequests, stubFor } from '../../wiremock'
 import { probationRegions } from '../../wiremock/referenceDataStubs'
 
 export default {
-  stubBookingReport: (data: string) =>
+  stubReport: (data: string) =>
     stubFor({
       request: {
         method: 'GET',
@@ -17,7 +17,7 @@ export default {
         body: data,
       },
     }),
-  stubBookingReportError: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
+  stubReportError: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
     stubFor({
       request: {
         method: 'GET',
@@ -39,7 +39,7 @@ export default {
         body: args.data,
       },
     }),
-  stubBookingReportForRegion: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
+  stubReportForRegion: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
     stubFor({
       request: {
         method: 'GET',
@@ -58,14 +58,14 @@ export default {
         body: args.data,
       },
     }),
-  verifyBookingReport: async () =>
+  verifyReport: async () =>
     (
       await getMatchingRequests({
         method: 'GET',
         url: api.reports.bookings({}),
       })
     ).body.requests,
-  verifyBookingReportForRegion: async (args: { probationRegionId: string; month: string; year: string }) =>
+  verifyReportForRegion: async (args: { probationRegionId: string; month: string; year: string }) =>
     (
       await getMatchingRequests({
         method: 'GET',
@@ -83,5 +83,5 @@ export default {
         },
       })
     ).body.requests,
-  stubBookingReportReferenceData: () => stubFor(probationRegions),
+  stubReportReferenceData: () => stubFor(probationRegions),
 }

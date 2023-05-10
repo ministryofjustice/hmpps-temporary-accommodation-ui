@@ -3,7 +3,7 @@ import { DateFormats, monthsArr } from './dateUtils'
 
 const permittedFilenameCharacters = 'abcdefghijklmnopqrstuvwxyz01234567890 '
 
-export const bookingReportFilename = () => {
+export const reportFilename = () => {
   const date = DateFormats.dateObjtoUIDate(new Date(), { format: 'short' })
 
   const concatenatedName = `bookings ${date}`
@@ -11,11 +11,7 @@ export const bookingReportFilename = () => {
   return `${filterFilename(concatenatedName)}.xlsx`
 }
 
-export const bookingReportForProbationRegionFilename = (
-  probationRegion: ProbationRegion,
-  month: string,
-  year: string,
-) => {
+export const reportForProbationRegionFilename = (probationRegion: ProbationRegion, month: string, year: string) => {
   const regionName = probationRegion.name
 
   const monthName = monthsArr.find(monthObj => monthObj.value === month).name

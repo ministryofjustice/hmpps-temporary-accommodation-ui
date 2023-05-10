@@ -113,7 +113,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
 
@@ -132,7 +132,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
 
@@ -151,7 +151,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
 
@@ -175,7 +175,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
   })

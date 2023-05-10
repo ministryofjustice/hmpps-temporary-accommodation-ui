@@ -96,10 +96,8 @@ const paths = {
     cancellations: { new: singleLostBedPath.path('cancel'), create: singleLostBedPath.path('cancellations') },
   },
   reports: {
-    bookings: {
-      new: reportsPath.path('bookings'),
-      create: reportsPath.path('bookings'),
-    },
+    new: reportsPath.path('bookings'),
+    create: reportsPath.path('bookings'),
   },
   bedspaces: {
     search: temporaryAccommodationPath.path('/find-a-bedspace'),

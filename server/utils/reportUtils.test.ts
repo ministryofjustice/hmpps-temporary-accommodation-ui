@@ -1,6 +1,8 @@
 import { probationRegionFactory } from '../testutils/factories'
 import { bookingReportFilename, bookingReportForProbationRegionFilename } from './reportUtils'
 
+jest.mock('./validation')
+
 describe('reportUtils', () => {
   describe('bookingReportFilename', () => {
     it('returns a filename with the current date', () => {
@@ -17,11 +19,12 @@ describe('reportUtils', () => {
       const probationRegion = probationRegionFactory.build({
         name: 'Kent, Surrey & Sussex',
       })
-      jest.useFakeTimers().setSystemTime(new Date(2023, 2, 14))
+      const month = '3'
+      const year = '2023'
 
-      const result = bookingReportForProbationRegionFilename(probationRegion)
+      const result = bookingReportForProbationRegionFilename(probationRegion, month, year)
 
-      expect(result).toEqual('bookings-kent-surrey-sussex-14-mar-23.xlsx')
+      expect(result).toEqual('bookings-kent-surrey-sussex-march-2023.xlsx')
     })
   })
 })

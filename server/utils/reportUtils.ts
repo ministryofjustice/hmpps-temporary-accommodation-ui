@@ -1,5 +1,5 @@
 import { ProbationRegion } from '@approved-premises/api'
-import { DateFormats } from './dateUtils'
+import { DateFormats, monthsArr } from './dateUtils'
 
 const permittedFilenameCharacters = 'abcdefghijklmnopqrstuvwxyz01234567890 '
 
@@ -11,11 +11,16 @@ export const bookingReportFilename = () => {
   return `${filterFilename(concatenatedName)}.xlsx`
 }
 
-export const bookingReportForProbationRegionFilename = (probationRegion: ProbationRegion) => {
-  const date = DateFormats.dateObjtoUIDate(new Date(), { format: 'short' })
+export const bookingReportForProbationRegionFilename = (
+  probationRegion: ProbationRegion,
+  month: string,
+  year: string,
+) => {
   const regionName = probationRegion.name
 
-  const concatenatedName = `bookings ${regionName} ${date}`
+  const monthName = monthsArr.find(monthObj => monthObj.value === month).name
+
+  const concatenatedName = `bookings ${regionName} ${monthName} ${year}`
 
   return `${filterFilename(concatenatedName)}.xlsx`
 }

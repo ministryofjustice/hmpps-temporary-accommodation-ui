@@ -53,17 +53,19 @@ describe('ReportService', () => {
       ).mockReturnValue('some-filename')
       const month = '1'
       const year = '2023'
+      const type = 'bedspace-usage'
 
-      await service.pipeReportForProbationRegion(callConfig, response, probationRegions[0].id, month, year)
+      await service.pipeReportForProbationRegion(callConfig, response, probationRegions[0].id, month, year, type)
 
       expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(reportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0], month, year)
+      expect(reportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0], month, year, type)
       expect(reportClient.reportForProbationRegion).toHaveBeenCalledWith(
         response,
         'some-filename',
         probationRegions[0].id,
         month,
         year,
+        type,
       )
     })
   })

@@ -1,5 +1,6 @@
 import type { ProbationRegion } from '@approved-premises/api'
 import { Response } from 'express'
+import type { ReportType } from '@approved-premises/ui'
 import type { ReferenceDataClient, RestClientBuilder } from '../data'
 import ReportClient from '../data/reportClient'
 import { CallConfig } from '../data/restClient'
@@ -29,6 +30,7 @@ export default class ReportService {
     probationRegionId: string,
     month: string,
     year: string,
+    type: ReportType,
   ): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
@@ -36,7 +38,7 @@ export default class ReportService {
       region => region.id === probationRegionId,
     )
 
-    const filename = reportForProbationRegionFilename(probationRegion, month, year)
+    const filename = reportForProbationRegionFilename(probationRegion, month, year, type)
 
     await reportClient.reportForProbationRegion(response, filename, probationRegionId, month, year, type)
   }

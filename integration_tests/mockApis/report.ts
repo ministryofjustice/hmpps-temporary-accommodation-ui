@@ -17,7 +17,7 @@ export default {
         body: data,
       },
     }),
-  stubBookingReportError: (args: { data: string; probationRegionId: string }) =>
+  stubBookingReportError: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
     stubFor({
       request: {
         method: 'GET',
@@ -26,6 +26,12 @@ export default {
           probationRegionId: {
             equalTo: args.probationRegionId,
           },
+          month: {
+            equalTo: args.month,
+          },
+          year: {
+            equalTo: args.year,
+          },
         },
       },
       response: {
@@ -33,7 +39,7 @@ export default {
         body: args.data,
       },
     }),
-  stubBookingReportForRegion: (args: { data: string; probationRegionId: string }) =>
+  stubBookingReportForRegion: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
     stubFor({
       request: {
         method: 'GET',
@@ -59,14 +65,20 @@ export default {
         url: api.reports.bookings({}),
       })
     ).body.requests,
-  verifyBookingReportForRegion: async (probationRegionId: string) =>
+  verifyBookingReportForRegion: async (args: { probationRegionId: string; month: string; year: string }) =>
     (
       await getMatchingRequests({
         method: 'GET',
         urlPath: api.reports.bookings({}),
         queryParameters: {
           probationRegionId: {
-            equalTo: probationRegionId,
+            equalTo: args.probationRegionId,
+          },
+          month: {
+            equalTo: args.month,
+          },
+          year: {
+            equalTo: args.year,
           },
         },
       })

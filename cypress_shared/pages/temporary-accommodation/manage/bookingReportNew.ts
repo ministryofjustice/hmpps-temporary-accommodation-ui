@@ -23,7 +23,17 @@ export default class BookingReportNewPage extends Page {
       .should('be.selected')
   }
 
+  completeForm(month: string, year: string): void {
+    this.getLabel('Month')
+    this.getSelectInputByIdAndSelectAnEntry('month', month)
+
+    this.getLabel('Year')
+    this.getSelectInputByIdAndSelectAnEntry('year', year)
+  }
+
   clearForm(): void {
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
+    this.getSelectInputByIdAndSelectAnEntry('month', '')
+    this.getSelectInputByIdAndSelectAnEntry('year', '')
   }
 }

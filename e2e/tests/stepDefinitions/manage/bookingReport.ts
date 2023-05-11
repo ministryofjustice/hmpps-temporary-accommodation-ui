@@ -13,13 +13,13 @@ const actingUserProbationRegionName =
   getUrlEncodedCypressEnv('acting_user_probation_region_name') ||
   throwMissingCypressEnvError('acting_user_probation_region_name')
 
-Given("I'm downloading a booking report", () => {
+Given("I'm downloading a report", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
 
   dashboardPage.clickReportsLink()
 })
 
-Given('I download a report for the preselected probation region', () => {
+Given('I download a booking report for the preselected probation region', () => {
   const reportPage = Page.verifyOnPage(ReportNewPage)
 
   const probationRegion = probationRegionFactory.build({
@@ -28,25 +28,64 @@ Given('I download a report for the preselected probation region', () => {
   })
   const month = '1'
   const year = '2023'
+  const type = 'bookings'
 
   reportPage.shouldPreselectProbationRegion(probationRegion)
   reportPage.completeForm(month, year)
   reportPage.expectDownload(10000)
-  reportPage.clickSubmit()
+  reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year)).as('filename')
+  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year, type)).as('filename')
 })
 
-Given('I clear the form and attempt to download a report', () => {
+Given('I download a bedspace usage report for the preselected probation region', () => {
+  const reportPage = Page.verifyOnPage(ReportNewPage)
+
+  const probationRegion = probationRegionFactory.build({
+    id: actingUserProbationRegionId,
+    name: actingUserProbationRegionName,
+  })
+  const month = '7'
+  const year = '2023'
+  const type = 'bedspace-usage'
+
+  reportPage.shouldPreselectProbationRegion(probationRegion)
+  reportPage.completeForm(month, year)
+  reportPage.expectDownload(10000)
+  reportPage.clickDownload(type)
+
+  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year, type)).as('filename')
+})
+
+Given('I download an occupancy report for the preselected probation region', () => {
+  const reportPage = Page.verifyOnPage(ReportNewPage)
+
+  const probationRegion = probationRegionFactory.build({
+    id: actingUserProbationRegionId,
+    name: actingUserProbationRegionName,
+  })
+  const month = '7'
+  const year = '2023'
+  const type = 'occupancy'
+
+  reportPage.shouldPreselectProbationRegion(probationRegion)
+  reportPage.completeForm(month, year)
+  reportPage.expectDownload(10000)
+  reportPage.clickDownload(type)
+
+  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year, type)).as('filename')
+})
+
+Given('I clear the form and attempt to download a booking report', () => {
   const reportPage = Page.verifyOnPage(ReportNewPage)
 
   reportPage.clearForm()
-  reportPage.clickSubmit()
+  reportPage.clickDownload('bookings')
 
   cy.wrap(['probationRegionId', 'month', 'year']).as('missing')
 })
 
-Then('I should download a booking report', () => {
+Then('I should download a report', () => {
   cy.then(function _() {
     const filePath = path.join(Cypress.config('downloadsFolder'), this.filename)
 

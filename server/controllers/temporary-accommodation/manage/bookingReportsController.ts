@@ -5,6 +5,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGeneric
 import BookingReportService from '../../../services/bookingReportService'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
+import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 
 export default class BookingReportsController {
   constructor(private readonly bookingReportService: BookingReportService) {}
@@ -22,6 +23,8 @@ export default class BookingReportsController {
         errors,
         errorSummary: requestErrorSummary,
         probationRegionId: req.session.probationRegion.id,
+        months: monthsArr,
+        years: getYearsSince(2023),
         ...userInput,
       })
     }
@@ -30,16 +33,28 @@ export default class BookingReportsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       try {
-        const { probationRegionId } = req.body
+        const { probationRegionId, month, year } = req.body
         const callConfig = extractCallConfig(req)
 
-        if (!probationRegionId) {
-          const error = new Error()
-          insertGenericError(error, 'probationRegionId', 'empty')
+        const error = new Error()
+
+        const fields = [
+          { name: 'probationRegionId', value: probationRegionId },
+          { name: 'month', value: month },
+          { name: 'year', value: year },
+        ]
+
+        fields.forEach(field => {
+          if (!field.value) {
+            insertGenericError(error, field.name, 'empty')
+          }
+        })
+
+        if (!fields.every(field => Boolean(field.value))) {
           throw error
         }
 
-        await this.bookingReportService.pipeBookingsForProbationRegion(callConfig, res, probationRegionId)
+        await this.bookingReportService.pipeBookingsForProbationRegion(callConfig, res, probationRegionId, month, year)
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))
       }

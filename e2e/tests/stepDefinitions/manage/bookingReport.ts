@@ -26,21 +26,24 @@ Given('I download a report for the preselected probation region', () => {
     id: actingUserProbationRegionId,
     name: actingUserProbationRegionName,
   })
+  const month = '1'
+  const year = '2023'
 
   bookingReportPage.shouldPreselectProbationRegion(probationRegion)
+  bookingReportPage.completeForm(month, year)
   bookingReportPage.expectDownload(10000)
   bookingReportPage.clickSubmit()
 
-  cy.wrap(bookingReportForProbationRegionFilename(probationRegion)).as('filename')
+  cy.wrap(bookingReportForProbationRegionFilename(probationRegion, month, year)).as('filename')
 })
 
-Given('I clear the preselected probation region and attempt to download a report', () => {
+Given('I clear the form and attempt to download a report', () => {
   const bookingReportPage = Page.verifyOnPage(BookingReportNewPage)
 
   bookingReportPage.clearForm()
   bookingReportPage.clickSubmit()
 
-  cy.wrap(['probationRegionId']).as('missing')
+  cy.wrap(['probationRegionId', 'month', 'year']).as('missing')
 })
 
 Then('I should download a booking report', () => {

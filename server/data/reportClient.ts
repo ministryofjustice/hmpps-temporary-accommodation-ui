@@ -10,11 +10,25 @@ export default class ReportClient {
     this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async bookings(response: Response, filename: string): Promise<void> {
-    await this.restClient.pipe(response, { path: paths.reports.bookings({}), filename })
+  async bookings(response: Response, filename: string, month: string, year: string): Promise<void> {
+    await this.restClient.pipe(response, {
+      path: paths.reports.bookings({}),
+      query: { year, month },
+      filename,
+    })
   }
 
-  async bookingsForProbationRegion(response: Response, filename: string, probationRegionId: string): Promise<void> {
-    await this.restClient.pipe(response, { path: paths.reports.bookings({}), query: { probationRegionId }, filename })
+  async bookingsForProbationRegion(
+    response: Response,
+    filename: string,
+    probationRegionId: string,
+    month: string,
+    year: string,
+  ): Promise<void> {
+    await this.restClient.pipe(response, {
+      path: paths.reports.bookings({}),
+      query: { probationRegionId, year, month },
+      filename,
+    })
   }
 }

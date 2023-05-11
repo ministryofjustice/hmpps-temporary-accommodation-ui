@@ -41,7 +41,17 @@ context('Report', () => {
     // And I fill out the form
     cy.then(function _() {
       const probationRegion = this.actingUserProbationRegion
-      cy.task('stubBookingReportError', { data: 'some-data', probationRegionId: probationRegion.id })
+      const month = '3'
+      const year = '2023'
+
+      page.completeForm(month, year)
+
+      cy.task('stubBookingReportError', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        month,
+        year,
+      })
     })
 
     page.expectDownload()
@@ -64,20 +74,24 @@ context('Report', () => {
 
       // And when I fill out the form
       const probationRegion = this.actingUserProbationRegion
+      const month = '3'
+      const year = '2023'
 
-      cy.task('stubBookingReportForRegion', { data: 'some-data', probationRegionId: probationRegion.id })
+      page.completeForm(month, year)
+
+      cy.task('stubBookingReportForRegion', { data: 'some-data', probationRegionId: probationRegion.id, month, year })
       page.expectDownload()
       page.clickSubmit()
 
       // Then a report should have been requested from the API
-      cy.task('verifyBookingReportForRegion', probationRegion.id).then(requests => {
+      cy.task('verifyBookingReportForRegion', { probationRegionId: probationRegion.id, month, year }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        bookingReportForProbationRegionFilename(probationRegion),
+        bookingReportForProbationRegionFilename(probationRegion, month, year),
       )
 
       cy.readFile(filePath).then(file => {
@@ -86,7 +100,7 @@ context('Report', () => {
     })
   })
 
-  it('should show an error when the user does not select a probation region', () => {
+  it('should show an error when the user does not select required fields', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -99,7 +113,7 @@ context('Report', () => {
     page.clickSubmit()
 
     // Then I should see an messages relating to the probation region
-    page.shouldShowErrorMessagesForFields(['probationRegionId'])
+    page.shouldShowErrorMessagesForFields(['probationRegionId', 'month', 'year'])
   })
 
   it('navigates back from the booking report page to the dashboard page', () => {

@@ -9,5 +9,5 @@ Feature: Manage Temporary Accommodation - Report
 
     Scenario: Showing report download errors
         Given I'm downloading a booking report
-        And I clear the preselected probation region and attempt to download a report
+        And I clear the form and attempt to download a report
         Then I should see a list of the problems encountered downloading the report

@@ -34,6 +34,39 @@
           fetchContext()
         ) }}
 
+        <div class="govuk-grid-row">
+           <div class="govuk-grid-column-one-third">
+
+              {{ taSelect(
+                {
+                  label: {
+                    text: "Month",
+                    classes: "govuk-label--s"
+                  },
+                  items: convertObjectsToSelectOptions(months, 'Choose month', 'name', 'value', 'month'),
+                  fieldName: "month"
+                },
+                fetchContext()
+              ) }}
+
+           </div>
+           <div class="govuk-grid-column-one-third govuk-!-margin-left-5">
+
+            {{ taSelect(
+              {
+                label: {
+                  text: "Year",
+                  classes: "govuk-label--s"
+                },
+                items: convertObjectsToSelectOptions(years, 'Choose year', 'year', 'year', 'year'),
+                fieldName: "year"
+              },
+              fetchContext()
+            ) }}
+
+           </div>
+        </div>
+
         {{ govukButton({
           text: "Download report"
         }) }}

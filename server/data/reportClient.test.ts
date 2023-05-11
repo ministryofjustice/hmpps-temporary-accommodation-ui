@@ -33,14 +33,18 @@ describe('ReportClient', () => {
     it('pipes all bookings to an express response', async () => {
       const data = 'some-data'
 
+      const year = '2023'
+      const month = '3'
+
       fakeApprovedPremisesApi
         .get(paths.reports.bookings({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ year, month })
         .reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
 
-      await reportClient.bookings(response, 'some-filename')
+      await reportClient.bookings(response, 'some-filename', month, year)
 
       expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
@@ -54,14 +58,18 @@ describe('ReportClient', () => {
     it('pipes all bookings to an express response', async () => {
       const data = 'some-data'
 
+      const year = '2024'
+      const month = '0'
+
       fakeApprovedPremisesApi
         .get(paths.reports.bookings({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ year, month })
         .reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
 
-      await reportClient.bookings(response, 'some-filename')
+      await reportClient.bookings(response, 'some-filename', month, year)
 
       expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
@@ -76,16 +84,18 @@ describe('ReportClient', () => {
       const probationRegion = probationRegionFactory.build()
 
       const data = 'some-data'
+      const year = '2020'
+      const month = '1'
 
       fakeApprovedPremisesApi
         .get(paths.reports.bookings({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .query({ probationRegionId: probationRegion.id })
+        .query({ probationRegionId: probationRegion.id, year, month })
         .reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
 
-      await reportClient.bookingsForProbationRegion(response, 'some-filename', probationRegion.id)
+      await reportClient.bookingsForProbationRegion(response, 'some-filename', probationRegion.id, month, year)
 
       expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({

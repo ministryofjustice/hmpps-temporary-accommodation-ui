@@ -1,5 +1,11 @@
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { DateFormats, InvalidDateStringError, dateAndTimeInputsAreValidDates, dateIsBlank } from './dateUtils'
+import {
+  DateFormats,
+  InvalidDateStringError,
+  dateAndTimeInputsAreValidDates,
+  dateIsBlank,
+  getYearsSince,
+} from './dateUtils'
 
 describe('DateFormats', () => {
   describe('dateObjToIsoDate', () => {
@@ -222,5 +228,15 @@ describe('dateIsBlank', () => {
     }
 
     expect(dateIsBlank(date)).toEqual(true)
+  })
+})
+
+describe('getYearsSince', () => {
+  jest.useFakeTimers().setSystemTime(new Date('2027-01-01'))
+
+  it('returns correct years array', () => {
+    const years = [{ year: '2023' }, { year: '2024' }, { year: '2025' }, { year: '2026' }, { year: '2027' }]
+
+    expect(getYearsSince(2023)).toEqual(years)
   })
 })

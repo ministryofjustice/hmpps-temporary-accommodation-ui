@@ -33,7 +33,7 @@ export default class ReportsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       try {
-        const { probationRegionId, month, year } = req.body
+        const { probationRegionId, month, year, reportType } = req.body
         const callConfig = extractCallConfig(req)
 
         const error = new Error()
@@ -63,7 +63,7 @@ export default class ReportsController {
           reportType,
         )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))
+        catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
       }
     }
   }

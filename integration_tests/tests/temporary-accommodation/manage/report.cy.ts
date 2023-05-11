@@ -12,7 +12,7 @@ context('Report', () => {
     setupTestUser()
   })
 
-  it('should navigate to the booking report page', () => {
+  it('should navigate to the report page', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -26,7 +26,7 @@ context('Report', () => {
     cy.task('stubReportReferenceData')
     page.clickReportsLink()
 
-    // Then I navigate to the booking report page
+    // Then I navigate to the report page
     Page.verifyOnPage(ReportNewPage)
   })
 
@@ -34,11 +34,12 @@ context('Report', () => {
     // Given I am signed in
     cy.signIn()
 
-    // When I visit the booking report page
+    // When I visit the report page
     cy.task('stubReportReferenceData')
     const page = ReportNewPage.visit()
 
     // And I fill out the form
+    const type = 'bookings'
     cy.then(function _() {
       const probationRegion = this.actingUserProbationRegion
       const month = '3'
@@ -51,11 +52,12 @@ context('Report', () => {
         probationRegionId: probationRegion.id,
         month,
         year,
+        type,
       })
     })
 
     page.expectDownload()
-    page.clickSubmit()
+    page.clickDownload(type)
 
     cy.get('h1').contains('Internal Server Error')
   })
@@ -64,7 +66,7 @@ context('Report', () => {
     // Given I am signed in
     cy.signIn()
 
-    // When I visit the booking report page
+    // When I visit the report page
     cy.task('stubReportReferenceData')
     const page = ReportNewPage.visit()
 
@@ -73,25 +75,126 @@ context('Report', () => {
       page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
 
       // And when I fill out the form
+      const type = 'bookings'
       const probationRegion = this.actingUserProbationRegion
       const month = '3'
       const year = '2023'
 
       page.completeForm(month, year)
 
-      cy.task('stubReportForRegion', { data: 'some-data', probationRegionId: probationRegion.id, month, year })
+      cy.task('stubReportForRegion', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        month,
+        year,
+        type,
+      })
       page.expectDownload()
-      page.clickSubmit()
+      page.clickDownload(type)
 
       // Then a report should have been requested from the API
-      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year }).then(requests => {
+      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion, month, year),
+        reportForProbationRegionFilename(probationRegion, month, year, type),
+      )
+
+      cy.readFile(filePath).then(file => {
+        expect(file).equals('some-data')
+      })
+    })
+  })
+
+  it("allows me to download an occupancy report for the acting user's region", () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the report page
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
+
+    cy.then(function _() {
+      // Then I should see the user's probation region preselected
+      page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
+
+      // And when I fill out the form
+      const type = 'occupancy'
+      const probationRegion = this.actingUserProbationRegion
+      const month = '3'
+      const year = '2023'
+
+      page.completeForm(month, year)
+
+      cy.task('stubReportForRegion', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        month,
+        year,
+        type,
+      })
+      page.expectDownload()
+      page.clickDownload(type)
+
+      // Then a report should have been requested from the API
+      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+        expect(requests).to.have.length(1)
+      })
+
+      // And the report should be downloded
+      const filePath = path.join(
+        Cypress.config('downloadsFolder'),
+        reportForProbationRegionFilename(probationRegion, month, year, type),
+      )
+
+      cy.readFile(filePath).then(file => {
+        expect(file).equals('some-data')
+      })
+    })
+  })
+
+  it("allows me to download a bedspace usage report for the acting user's region", () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the report page
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
+
+    cy.then(function _() {
+      // Then I should see the user's probation region preselected
+      page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
+
+      // And when I fill out the form
+      const type = 'bedspace-usage'
+      const probationRegion = this.actingUserProbationRegion
+      const month = '3'
+      const year = '2023'
+
+      page.completeForm(month, year)
+
+      cy.task('stubReportForRegion', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        month,
+        year,
+        type,
+      })
+      page.expectDownload()
+      page.clickDownload(type)
+
+      // Then a report should have been requested from the API
+      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+        expect(requests).to.have.length(1)
+      })
+
+      // And the report should be downloded
+      const filePath = path.join(
+        Cypress.config('downloadsFolder'),
+        reportForProbationRegionFilename(probationRegion, month, year, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -104,13 +207,13 @@ context('Report', () => {
     // Given I am signed in
     cy.signIn()
 
-    // When I visit the booking report page
+    // When I visit the report page
     cy.task('stubReportReferenceData')
     const page = ReportNewPage.visit()
 
     // And I clear the probation region
     page.clearForm()
-    page.clickSubmit()
+    page.clickDownload('occupancy')
 
     // Then I should see an messages relating to the probation region
     page.shouldShowErrorMessagesForFields(['probationRegionId', 'month', 'year'])

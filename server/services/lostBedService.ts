@@ -72,7 +72,9 @@ export default class LostBedService {
   async getReferenceData(callConfig: CallConfig): Promise<LostBedReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
-    const reasons = await referenceDataClient.getReferenceData('lost-bed-reasons')
+    const reasons = (await referenceDataClient.getReferenceData('lost-bed-reasons')).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )
 
     return reasons
   }

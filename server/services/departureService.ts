@@ -45,8 +45,8 @@ export default class DepartureService {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const [departureReasons, moveOnCategories] = await Promise.all([
-      referenceDataClient.getReferenceData('departure-reasons'),
-      referenceDataClient.getReferenceData('move-on-categories'),
+      (await referenceDataClient.getReferenceData('departure-reasons')).sort((a, b) => a.name.localeCompare(b.name)),
+      (await referenceDataClient.getReferenceData('move-on-categories')).sort((a, b) => a.name.localeCompare(b.name)),
     ])
 
     return {

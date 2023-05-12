@@ -42,7 +42,9 @@ export default class CancellationService {
   async getReferenceData(callConfig: CallConfig): Promise<CancellationReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
-    const cancellationReasons = await referenceDataClient.getReferenceData('cancellation-reasons')
+    const cancellationReasons = (await referenceDataClient.getReferenceData('cancellation-reasons')).sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )
 
     return { cancellationReasons }
   }

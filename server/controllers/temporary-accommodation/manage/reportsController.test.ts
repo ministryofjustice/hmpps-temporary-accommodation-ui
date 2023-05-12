@@ -85,6 +85,7 @@ describe('ReportsController', () => {
         probationRegionId: 'probation-region',
         month: '6',
         year: '2024',
+        reportType: 'bookings',
       }
 
       await requestHandler(request, response, next)
@@ -95,6 +96,7 @@ describe('ReportsController', () => {
         'probation-region',
         '6',
         '2024',
+        'bookings',
       )
     })
 
@@ -104,6 +106,7 @@ describe('ReportsController', () => {
       request.body = {
         month: '2',
         year: '2023',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -123,6 +126,7 @@ describe('ReportsController', () => {
       request.body = {
         probationRegionId: 'probation-region',
         year: '2023',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -142,6 +146,7 @@ describe('ReportsController', () => {
       request.body = {
         probationRegionId: 'probation-region',
         month: '3',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -162,6 +167,7 @@ describe('ReportsController', () => {
         probationRegionId: '',
         month: '',
         year: '',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)

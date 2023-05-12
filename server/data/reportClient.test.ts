@@ -79,16 +79,17 @@ describe('ReportClient', () => {
     })
   })
 
-  describe('bookingsForProbationRegion', () => {
-    it('pipes bookings for a probation region to an express response', async () => {
+  describe('reportForProbationRegion', () => {
+    it('pipes data for a probation region to an express response', async () => {
       const probationRegion = probationRegionFactory.build()
 
       const data = 'some-data'
       const year = '2020'
       const month = '1'
+      const type = 'occupancy'
 
       fakeApprovedPremisesApi
-        .get(paths.reports.bookings({}))
+        .get(paths.reports.bedspaceUtilisation({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({ probationRegionId: probationRegion.id, year, month })
         .reply(200, data, { 'content-type': 'some-content-type' })

@@ -4,7 +4,7 @@ import { Services } from '../../../services'
 import ArrivalsController from './arrivalsController'
 import BedspacesController from './bedspacesController'
 import BedspaceSearchController from './bedspaceSearchController'
-import BookingReportsController from './bookingReportsController'
+import ReportsController from './reportsController'
 import BookingsController from './bookingsController'
 import CancellationsController from './cancellationsController'
 import ConfirmationsController from './confirmationsController'
@@ -66,7 +66,7 @@ export const controllers = (services: Services) => {
     services.turnaroundService,
   )
 
-  const bookingReportsController = new BookingReportsController(services.bookingReportService)
+  const reportsController = new ReportsController(services.reportService)
 
   const lostBedsController = new LostBedsController(
     services.lostBedService,
@@ -87,7 +87,7 @@ export const controllers = (services: Services) => {
     extensionsController,
     cancellationsController,
     turnaroundsController,
-    bookingReportsController,
+    reportsController,
     lostBedsController,
     bedspaceSearchController,
     bookingSearchController,
@@ -103,7 +103,7 @@ export {
   ExtensionsController,
   CancellationsController,
   TurnaroundsController,
-  BookingReportsController,
+  ReportsController,
   LostBedsController,
   BedspaceSearchController,
   BookingSearchController,

@@ -1,16 +1,17 @@
 import type { ProbationRegion } from '@approved-premises/api'
+import { ReportType } from '@approved-premises/ui'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { exact } from '../../../../server/utils/utils'
 import Page from '../../page'
 
-export default class BookingReportNewPage extends Page {
+export default class ReportNewPage extends Page {
   constructor() {
-    super('Booking reports')
+    super('Reports')
   }
 
-  static visit(): BookingReportNewPage {
-    cy.visit(paths.reports.bookings.new({}))
-    return new BookingReportNewPage()
+  static visit(): ReportNewPage {
+    cy.visit(paths.reports.new({}))
+    return new ReportNewPage()
   }
 
   shouldPreselectProbationRegion(probationRegion: ProbationRegion): void {
@@ -35,5 +36,15 @@ export default class BookingReportNewPage extends Page {
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
     this.getSelectInputByIdAndSelectAnEntry('month', '')
     this.getSelectInputByIdAndSelectAnEntry('year', '')
+  }
+
+  clickDownload(type: ReportType): void {
+    if (type === 'bedspace-usage') {
+      cy.get('button').contains('Download bedspace usage').click()
+    } else if (type === 'bookings') {
+      cy.get('button').contains('Download booking data').click()
+    } else if (type === 'occupancy') {
+      cy.get('button').contains('Download occupancy report').click()
+    }
   }
 }

@@ -1,9 +1,9 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
-import { BookingReportsController } from '.'
+import { ReportsController } from '.'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import BookingReportService from '../../../services/bookingReportService'
+import ReportService from '../../../services/reportService'
 import { probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
@@ -16,7 +16,7 @@ jest.mock('../../../utils/userUtils')
 jest.mock('../../../utils/dateUtils')
 jest.mock('../../../utils/reportUtils')
 
-describe('BookingReportsController', () => {
+describe('ReportsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
   let request: Request
@@ -24,9 +24,9 @@ describe('BookingReportsController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  const bookingReportService = createMock<BookingReportService>({})
+  const reportService = createMock<ReportService>({})
 
-  const bookingReportsController = new BookingReportsController(bookingReportService)
+  const reportsController = new ReportsController(reportService)
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -52,21 +52,21 @@ describe('BookingReportsController', () => {
         }),
       ]
 
-      bookingReportService.getReferenceData.mockResolvedValue({
+      reportService.getReferenceData.mockResolvedValue({
         probationRegions: unfilteredRegions,
       })
       ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
-      const requestHandler = bookingReportsController.new()
+      const requestHandler = reportsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
       ;(getYearsSince as jest.Mock).mockReturnValue([])
 
       await requestHandler(request, response, next)
 
-      expect(bookingReportService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(reportService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(filterProbationRegions).toHaveBeenCalledWith(unfilteredRegions, request)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/bookings/new', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/new', {
         allProbationRegions: filteredRegions,
         errors: {},
         errorSummary: [],
@@ -79,31 +79,34 @@ describe('BookingReportsController', () => {
 
   describe('create', () => {
     it('creates a booking report for the probation region and pipes it into the express response', async () => {
-      const requestHandler = bookingReportsController.create()
+      const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
         month: '6',
         year: '2024',
+        reportType: 'bookings',
       }
 
       await requestHandler(request, response, next)
 
-      expect(bookingReportService.pipeBookingsForProbationRegion).toHaveBeenCalledWith(
+      expect(reportService.pipeReportForProbationRegion).toHaveBeenCalledWith(
         callConfig,
         response,
         'probation-region',
         '6',
         '2024',
+        'bookings',
       )
     })
 
     it('renders with errors if the probation region is not specified', async () => {
-      const requestHandler = bookingReportsController.create()
+      const requestHandler = reportsController.create()
 
       request.body = {
         month: '2',
         year: '2023',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -113,16 +116,17 @@ describe('BookingReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
 
     it('renders with errors if the month is not specified', async () => {
-      const requestHandler = bookingReportsController.create()
+      const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
         year: '2023',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -132,16 +136,17 @@ describe('BookingReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
 
     it('renders with errors if the year is not specified', async () => {
-      const requestHandler = bookingReportsController.create()
+      const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
         month: '3',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -151,17 +156,18 @@ describe('BookingReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
 
     it('renders with all errors if no fields are completed', async () => {
-      const requestHandler = bookingReportsController.create()
+      const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: '',
         month: '',
         year: '',
+        reportType: 'occupancy',
       }
 
       await requestHandler(request, response, next)
@@ -175,7 +181,7 @@ describe('BookingReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.bookings.new({}),
+        paths.reports.new({}),
       )
     })
   })

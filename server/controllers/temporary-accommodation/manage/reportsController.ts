@@ -2,13 +2,13 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import BookingReportService from '../../../services/bookingReportService'
+import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 
-export default class BookingReportsController {
-  constructor(private readonly bookingReportService: BookingReportService) {}
+export default class ReportsController {
+  constructor(private readonly reportService: ReportService) {}
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -16,9 +16,9 @@ export default class BookingReportsController {
 
       const callConfig = extractCallConfig(req)
 
-      const { probationRegions: allProbationRegions } = await this.bookingReportService.getReferenceData(callConfig)
+      const { probationRegions: allProbationRegions } = await this.reportService.getReferenceData(callConfig)
 
-      return res.render('temporary-accommodation/reports/bookings/new', {
+      return res.render('temporary-accommodation/reports/new', {
         allProbationRegions: filterProbationRegions(allProbationRegions, req),
         errors,
         errorSummary: requestErrorSummary,
@@ -33,7 +33,7 @@ export default class BookingReportsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       try {
-        const { probationRegionId, month, year } = req.body
+        const { probationRegionId, month, year, reportType } = req.body
         const callConfig = extractCallConfig(req)
 
         const error = new Error()
@@ -54,9 +54,16 @@ export default class BookingReportsController {
           throw error
         }
 
-        await this.bookingReportService.pipeBookingsForProbationRegion(callConfig, res, probationRegionId, month, year)
+        await this.reportService.pipeReportForProbationRegion(
+          callConfig,
+          res,
+          probationRegionId,
+          month,
+          year,
+          reportType,
+        )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.reports.bookings.new({}))
+        catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
       }
     }
   }

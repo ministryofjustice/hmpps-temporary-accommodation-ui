@@ -1,23 +1,23 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% extends "../../../partials/layout.njk" %}
-{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
+{% extends "../../partials/layout.njk" %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../components/ta-select/macro.njk" import taSelect %}
 
-{% set pageTitle = applicationName + " - Booking reports" %}
+{% set pageTitle = applicationName + " - Reports" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-  {{ breadCrumb('Booking reports', []) }}
+  {{ breadCrumb('Reports', []) }}
 
-  {% include "../../../_messages.njk" %}
+  {% include "../../_messages.njk" %}
   
-  <h1>Booking reports</h1>
+  <h1>Reports</h1>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.reports.bookings.create() }}" method="post">
+      <form action="{{ paths.reports.create() }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}
@@ -67,9 +67,33 @@
            </div>
         </div>
 
-        {{ govukButton({
-          text: "Download report"
-        }) }}
+
+                {{ govukButton({
+                text: "Download booking data",
+                name: "reportType",
+                value: 'bookings',
+                classes: 'govuk-input govuk-!-width-one-half'
+              }) }}
+
+              <br/>
+
+              {{ govukButton({
+                text: "Download bedspace usage",
+                name: "reportType",
+                value: 'bedspace-usage',
+                classes: 'govuk-input govuk-!-width-one-half'
+              }) }}
+
+              <br/>
+
+              {{ govukButton({
+                text: "Download occupancy report",
+                name: "reportType",
+                value: 'occupancy',
+                classes: 'govuk-input govuk-!-width-one-half'
+              }) }}
+
+       
       
       </form>
     </div>

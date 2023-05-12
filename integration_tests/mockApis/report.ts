@@ -1,9 +1,11 @@
+import { ReportType } from '@approved-premises/ui'
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { probationRegions } from '../../wiremock/referenceDataStubs'
+import { getApiReportPath } from '../../server/utils/reportUtils'
 
 export default {
-  stubBookingReport: (data: string) =>
+  stubReport: (data: string) =>
     stubFor({
       request: {
         method: 'GET',
@@ -17,11 +19,11 @@ export default {
         body: data,
       },
     }),
-  stubBookingReportError: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
+  stubReportError: (args: { data: string; probationRegionId: string; month: string; year: string; type: ReportType }) =>
     stubFor({
       request: {
         method: 'GET',
-        urlPath: api.reports.bookings({}),
+        urlPath: getApiReportPath(args.type),
         queryParameters: {
           probationRegionId: {
             equalTo: args.probationRegionId,
@@ -39,14 +41,26 @@ export default {
         body: args.data,
       },
     }),
-  stubBookingReportForRegion: (args: { data: string; probationRegionId: string; month: string; year: string }) =>
+  stubReportForRegion: (args: {
+    data: string
+    probationRegionId: string
+    month: string
+    year: string
+    type: ReportType
+  }) =>
     stubFor({
       request: {
         method: 'GET',
-        urlPath: api.reports.bookings({}),
+        urlPath: getApiReportPath(args.type),
         queryParameters: {
           probationRegionId: {
             equalTo: args.probationRegionId,
+          },
+          month: {
+            equalTo: args.month,
+          },
+          year: {
+            equalTo: args.year,
           },
         },
       },
@@ -58,18 +72,18 @@ export default {
         body: args.data,
       },
     }),
-  verifyBookingReport: async () =>
+  verifyReport: async () =>
     (
       await getMatchingRequests({
         method: 'GET',
         url: api.reports.bookings({}),
       })
     ).body.requests,
-  verifyBookingReportForRegion: async (args: { probationRegionId: string; month: string; year: string }) =>
+  verifyReportForRegion: async (args: { probationRegionId: string; month: string; year: string; type: ReportType }) =>
     (
       await getMatchingRequests({
         method: 'GET',
-        urlPath: api.reports.bookings({}),
+        urlPath: getApiReportPath(args.type),
         queryParameters: {
           probationRegionId: {
             equalTo: args.probationRegionId,
@@ -83,5 +97,5 @@ export default {
         },
       })
     ).body.requests,
-  stubBookingReportReferenceData: () => stubFor(probationRegions),
+  stubReportReferenceData: () => stubFor(probationRegions),
 }

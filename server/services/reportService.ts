@@ -1,15 +1,16 @@
 import type { ProbationRegion } from '@approved-premises/api'
 import { Response } from 'express'
+import type { ReportType } from '@approved-premises/ui'
 import type { ReferenceDataClient, RestClientBuilder } from '../data'
 import ReportClient from '../data/reportClient'
 import { CallConfig } from '../data/restClient'
-import { bookingReportFilename, bookingReportForProbationRegionFilename } from '../utils/reportUtils'
+import { reportFilename, reportForProbationRegionFilename } from '../utils/reportUtils'
 
-export type BookingReportReferenceData = {
+export type ReportReferenceData = {
   probationRegions: Array<ProbationRegion>
 }
 
-export default class BookingReportService {
+export default class ReportService {
   constructor(
     private readonly reportClientFactory: RestClientBuilder<ReportClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
@@ -18,17 +19,18 @@ export default class BookingReportService {
   async pipeBookings(callConfig: CallConfig, response: Response, month: string, year: string): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
-    const filename = bookingReportFilename()
+    const filename = reportFilename()
 
     await reportClient.bookings(response, filename, month, year)
   }
 
-  async pipeBookingsForProbationRegion(
+  async pipeReportForProbationRegion(
     callConfig: CallConfig,
     response: Response,
     probationRegionId: string,
     month: string,
     year: string,
+    type: ReportType,
   ): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
@@ -36,12 +38,12 @@ export default class BookingReportService {
       region => region.id === probationRegionId,
     )
 
-    const filename = bookingReportForProbationRegionFilename(probationRegion, month, year)
+    const filename = reportForProbationRegionFilename(probationRegion, month, year, type)
 
-    await reportClient.bookingsForProbationRegion(response, filename, probationRegionId, month, year)
+    await reportClient.reportForProbationRegion(response, filename, probationRegionId, month, year, type)
   }
 
-  async getReferenceData(callConfig: CallConfig): Promise<BookingReportReferenceData> {
+  async getReferenceData(callConfig: CallConfig): Promise<ReportReferenceData> {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     const probationRegions = await referenceDataClient.getReferenceData('probation-regions')

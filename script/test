@@ -18,7 +18,7 @@ npm run lint
 
 echo "==> Running unit tests..."
 
-npm run test
+npm run test:ci
 
 echo "==> Starting the backing services in Docker..."
 

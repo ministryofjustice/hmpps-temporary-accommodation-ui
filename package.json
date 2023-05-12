@@ -22,6 +22,7 @@
     "lint:fix": "eslint . --cache --max-warnings 0 --fix && node_modules/.bin/shellcheck ./script/**/*[^utils] ./script/utils/**",
     "typecheck": "tsc && tsc -p integration_tests",
     "test": "jest",
+    "test:ci": "jest --runInBand",
     "test:e2e:ci": "cypress run -C cypress.config.e2e.ts",
     "test:integration": "npm run start-test-wiremock && start-server-and-test start-feature http://localhost:3007/ping int-test",
     "test:integration:ui": "npm run start-test-wiremock && start-server-and-test start-feature:dev http://localhost:3007/ping int-test-ui",
@@ -51,11 +52,6 @@
     "coverageThreshold": {
       "global": {
         "functions": 100
-      }
-    },
-    "globals": {
-      "ts-jest": {
-        "isolatedModules": true
       }
     },
     "testMatch": [
@@ -90,7 +86,15 @@
       "json",
       "node",
       "ts"
-    ]
+    ],
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "isolatedModules": true
+        }
+      ]
+    }
   },
   "nodemonConfig": {
     "ignore": [

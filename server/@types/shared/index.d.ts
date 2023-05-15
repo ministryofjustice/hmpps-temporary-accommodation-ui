@@ -52,6 +52,7 @@ export type { BookingSearchResultRoomSummary } from './models/BookingSearchResul
 export type { BookingSearchResults } from './models/BookingSearchResults';
 export type { BookingSearchSortField } from './models/BookingSearchSortField';
 export type { BookingStatus } from './models/BookingStatus';
+export type { CacheType } from './models/CacheType';
 export type { Cancellation } from './models/Cancellation';
 export type { CancellationReason } from './models/CancellationReason';
 export type { Characteristic } from './models/Characteristic';

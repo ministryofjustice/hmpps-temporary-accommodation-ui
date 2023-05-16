@@ -22,6 +22,10 @@ export default abstract class LostBedEditablePage extends Page {
     )
   }
 
+  assignReasons(alias: string): void {
+    this.getSelectOptionsAsReferenceData('What is the reason for this void?', alias)
+  }
+
   protected completeEditableForm(newOrUpdateLostBed: NewLostBed | UpdateLostBed): void {
     this.getLegend('What is the start date?')
     this.completeDateInputs('startDate', newOrUpdateLostBed.startDate)

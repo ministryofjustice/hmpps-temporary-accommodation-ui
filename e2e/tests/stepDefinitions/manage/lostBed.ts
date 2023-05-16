@@ -25,12 +25,21 @@ Given(`I'm marking a bedspace as void`, () => {
 Given('I create a void booking with all necessary details', () => {
   cy.then(function _() {
     const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.room)
+    lostBedNewPage.assignReasons('reasons')
 
-    const newLostBed = newLostBedFactory.build({ status: 'active' })
-    const lostBed = lostBedFactory.build({ ...newLostBed })
+    cy.then(function __() {
+      const lostBed = lostBedFactory.forEnvironment(this.reasons).active().build({
+        id: 'unknown',
+      })
 
-    cy.wrap(lostBed).as('lostBed')
-    lostBedNewPage.completeForm(newLostBed)
+      const newLostBed = newLostBedFactory.build({
+        ...lostBed,
+        reason: lostBed.reason.id,
+      })
+
+      cy.wrap(lostBed).as('lostBed')
+      lostBedNewPage.completeForm(newLostBed)
+    })
   })
 })
 
@@ -67,18 +76,28 @@ Given('I edit the void booking', () => {
     lostBedShowPage.clickEditVoidLink()
 
     const lostBedEditPage = Page.verifyOnPage(LostBedEditPage, this.premises, this.room)
-    const lostBedUpdate = updateLostBedFactory.build()
-    cy.wrap(lostBedUpdate).as('lostBedUpdate')
+    lostBedEditPage.assignReasons('reasons')
 
-    lostBedEditPage.clearForm()
-    lostBedEditPage.completeForm(lostBedUpdate)
+    cy.then(function __() {
+      const updatedLostBed = lostBedFactory.forEnvironment(this.reasons).active().build({
+        id: this.lostBed.id,
+      })
+
+      const updateLostBed = updateLostBedFactory.build({
+        ...updatedLostBed,
+        reason: updatedLostBed.reason.id,
+      })
+
+      cy.wrap(updatedLostBed).as('lostBed')
+      lostBedEditPage.clearForm()
+      lostBedEditPage.completeForm(updateLostBed)
+    })
   })
 })
 
 Then('I should see confirmation for my updated void booking', () => {
   cy.then(function _() {
-    const updatedLostBed = { ...this.lostBed, ...this.lostBedUpdate }
-    const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.room, updatedLostBed)
+    const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, this.premises, this.room, this.lostBed)
 
     lostBedShowPage.shouldShowBanner('Void booking updated')
     lostBedShowPage.shouldShowLostBedDetails()
@@ -86,7 +105,7 @@ Then('I should see confirmation for my updated void booking', () => {
     lostBedShowPage.clickBreadCrumbUp()
 
     const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
-    bedspaceShowPage.shouldShowLostBedDetails(this.lostBedUpdate)
+    bedspaceShowPage.shouldShowLostBedDetails(this.lostBed)
   })
 })
 
@@ -129,7 +148,7 @@ Then('I should see confirmation that the void is cancelled', () => {
 Given('I attempt to create a conflicting void booking', () => {
   cy.then(function _() {
     const lostBedNewPage = Page.verifyOnPage(LostBedNewPage, this.premises, this.room)
-    const newLostBed = newLostBedFactory.build({ ...this.lostBed })
+    const newLostBed = newLostBedFactory.build({ ...this.lostBed, reason: this.lostBed.reason.id })
     lostBedNewPage.completeForm(newLostBed)
   })
 })

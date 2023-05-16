@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
 import type { LostBed } from '@approved-premises/api'
+import { ReferenceData } from '../../@types/ui'
 import { DateFormats } from '../../utils/dateUtils'
 import lostBedCancellationFactory from './lostBedCancellation'
 import referenceDataFactory from './referenceData'
@@ -22,6 +23,13 @@ class LostBedFactory extends Factory<LostBed> {
   past() {
     return this.params({
       startDate: DateFormats.dateObjToIsoDate(faker.date.past()),
+    })
+  }
+
+  /* istanbul ignore next */
+  forEnvironment(reasons: ReferenceData[]) {
+    return this.params({
+      reason: faker.helpers.arrayElement(reasons),
     })
   }
 }

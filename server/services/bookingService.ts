@@ -1,4 +1,4 @@
-import type { Booking, NewBooking, Room } from '@approved-premises/api'
+import type { Booking, LostBed, NewBooking, Room } from '@approved-premises/api'
 import type { TableRow } from '@approved-premises/ui'
 import config from '../config'
 
@@ -9,6 +9,20 @@ import paths from '../paths/temporary-accommodation/manage'
 import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
 import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
+
+export type BookingListingEntry = {
+  path: string
+  body: Booking
+  type: 'booking'
+}
+
+export type LostBedListingEntry = {
+  path: string
+  body: LostBed
+  type: 'lost-bed'
+}
+
+export type ListingEntry = LostBedListingEntry | BookingListingEntry
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -97,6 +111,48 @@ export default class BookingService {
         return b.sortingValue - a.sortingValue
       })
       .map(bookingOrLostBed => bookingOrLostBed.rows)
+  }
+
+  async getListingEntries(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<Entity>> {
+    const bookingClient = this.bookingClientFactory(callConfig)
+    const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
+
+    const lostBedClient = this.lostBedClientFactory(callConfig)
+    const lostBeds = await (
+      await lostBedClient.allLostBedsForPremisesId(premisesId)
+    ).filter(lostBed => lostBed.status === 'active')
+
+    const bedId = room.beds[0].id
+
+    const bookingListingEntries = bookings
+      .filter(b => b.bed.id === bedId)
+      .map(b => ({
+        sortingValue: DateFormats.isoToDateObj(b.arrivalDate).getTime(),
+        type: 'booking' as const,
+        body: b,
+        path: paths.bookings.show({
+          premisesId,
+          roomId: room.id,
+          bookingId: b.id,
+        }),
+      }))
+
+    const lostBedListingEntries = lostBeds
+      .filter(lostBed => lostBed.bedId === bedId)
+      .map(lostBed => ({
+        sortingValue: DateFormats.isoToDateObj(lostBed.startDate).getTime(),
+        type: 'lost-bed' as const,
+        body: lostBed,
+        path: paths.lostBeds.show({
+          premisesId,
+          roomId: room.id,
+          lostBedId: lostBed.id,
+        }),
+      }))
+
+    return [...bookingListingEntries, ...lostBedListingEntries].sort((a, b) => {
+      return b.sortingValue - a.sortingValue
+    })
   }
 
   async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {

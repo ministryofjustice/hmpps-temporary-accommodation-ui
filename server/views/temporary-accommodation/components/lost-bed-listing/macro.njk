@@ -1,0 +1,35 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro lostBedListing(lostBed, lostBedPath) %}
+
+<div class="listing-entry lost-bed-listing" data-cy-id="{{ lostBed.id }}">
+  <div class="listing-entry__header">
+    <h2 class="listing-entry__title govuk-heading-s">
+      Void
+    </h2>
+    <div class="listing-entry__link">
+      <a href="{{ lostBedPath }}" class="govuk-body-s">View void</a>
+    </div>
+  </div>
+  <div class="listing-entry__content">
+    <h3>
+      {{ lostBed.reason.name }}
+    </h3>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        {{ govukSummaryList({
+          rows: LostBedListing.summaryListRows(lostBed)
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-half">
+          <div class="listing-entry__content__lost-bed-notes">
+          <h4>Notes</h4>
+            {{ lostBed.notes }}
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endmacro %}

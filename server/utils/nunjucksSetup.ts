@@ -32,6 +32,7 @@ import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
 import * as BookingListing from '../components/bookingListing'
+import * as LostBedListing from '../components/lostBedListing'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -151,6 +152,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows: bookingSummaryListRows })
   njkEnv.addGlobal('BookingListing', BookingListing)
+  njkEnv.addGlobal('LostBedListing', LostBedListing)
 
   njkEnv.addGlobal('BedspaceSearchResult', { summaryListRows: bedspaceSearchResultSummaryListRows })
   njkEnv.addGlobal('LostBedInfo', { summaryListRows: lostBedSummaryListRows })

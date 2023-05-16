@@ -7,6 +7,7 @@ import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bedFactory,
   bookingFactory,
+  lostBedFactory,
   newRoomFactory,
   premisesFactory,
   roomFactory,
@@ -248,20 +249,26 @@ context('Bedspace', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is an active premises, a room, and bookings in the database
+    // And there is an active premises, a room, bookings and a lost bed in the database
     const premises = premisesFactory.active().build()
     const room = roomFactory.build()
+    const bed = bedFactory.build({
+      id: room.beds[0].id,
+    })
     const bookings = bookingFactory
       .params({
-        bed: bedFactory.build({
-          id: room.beds[0].id,
-        }),
+        bed,
       })
       .buildList(5)
+
+    const lostBed = lostBedFactory.active().build({
+      bedId: bed.id,
+    })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds: [lostBed] })
 
     // When I visit the show bedspace page
     const page = BedspaceShowPage.visit(premises, room)
@@ -271,30 +278,34 @@ context('Bedspace', () => {
     page.shouldShowAsActive()
     page.shouldShowPremisesAttributes()
 
-    // And I should see the booking details
+    // And I should see the booking and lost bed details
     bookings.forEach(booking => {
       page.shouldShowBookingDetails(booking)
     })
+    page.shouldShowLostBedDetails(lostBed)
   })
 
   it('shows a single bedspace in an archived premises', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is an archived premises, a room, and bookings in the database
+    // And there is an archived premises, a room, bookings, and a lost bed in the database
     const premises = premisesFactory.archived().build()
     const room = roomFactory.build()
+    const bed = bedFactory.build({
+      id: room.beds[0].id,
+    })
     const bookings = bookingFactory
       .params({
-        bed: bedFactory.build({
-          id: room.beds[0].id,
-        }),
+        bed,
       })
       .buildList(5)
+    const lostBed = lostBedFactory.active().build({ bedId: bed.id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds: [lostBed] })
 
     // When I visit the show bedspace page
     const page = BedspaceShowPage.visit(premises, room)
@@ -304,10 +315,11 @@ context('Bedspace', () => {
     page.shouldShowAsArchived()
     page.shouldShowPremisesAttributes()
 
-    // And I should see the booking details
+    // And I should see the booking and lost bed details
     bookings.forEach(booking => {
       page.shouldShowBookingDetails(booking)
     })
+    page.shouldShowLostBedDetails(lostBed)
   })
 
   it('navigates back from the show bedspace page to the show premises page', () => {

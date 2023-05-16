@@ -1,11 +1,12 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { ErrorsAndUserInput, SummaryListItem, TableRow } from '../../../@types/ui'
+import { ErrorsAndUserInput, SummaryListItem } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
+import { ListingEntry } from '../../../services/bookingService'
 import {
   characteristicFactory,
   premisesFactory,
@@ -265,8 +266,8 @@ describe('BedspacesController', () => {
       const bedspaceDetails = { room, summaryList: { rows: [] as Array<SummaryListItem> } }
       bedspaceService.getSingleBedspaceDetails.mockResolvedValue(bedspaceDetails)
 
-      const bookingTableRows: Array<TableRow> = []
-      bookingService.getTableRowsForBedspace.mockResolvedValue([])
+      const listingEntries: Array<ListingEntry> = []
+      bookingService.getListingEntries.mockResolvedValue([])
       ;(bedspaceActions as jest.MockedFunction<typeof bedspaceActions>).mockReturnValue([])
 
       request.params = { premisesId: premises.id, roomId: room.id }
@@ -278,13 +279,13 @@ describe('BedspacesController', () => {
         premises,
         premisesCharacteristics: ['a test characteristic', 'b test characteristic'],
         bedspace: bedspaceDetails,
-        bookingTableRows,
+        listingEntries,
         actions: [],
       })
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premises.id, room.id)
-      expect(bookingService.getTableRowsForBedspace).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getListingEntries).toHaveBeenCalledWith(callConfig, premises.id, room.id)
     })
   })
 })

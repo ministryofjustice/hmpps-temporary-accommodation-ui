@@ -1,0 +1,65 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro bookingListing(booking, bookingPath) %}
+
+{% set active = (booking.status === 'arrived' or booking.status === 'departed') %}
+
+<div class="listing-entry booking-listing {{ 'listing-entry__active' if active else '' }}">
+  <div class="listing-entry__header">
+    <h2 class="listing-entry__title govuk-heading-s">
+      {% if active %}
+        Active booking
+      {% else %}
+        Booking
+      {% endif %}
+    </h2>
+    <div class="listing-entry__link">
+      <a href="{{ bookingPath }}" class="govuk-body-s">View booking</a>
+    </div>
+  </div>
+  <div class="listing-entry__content">
+    <h3>
+      {{ booking.person.name }}
+    </h3>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="listing-entry__content__booking-person">
+          {{ govukSummaryList({
+            rows: BookingListing.personSummaryListRows(booking)
+          }) }}
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <div class="listing-entry__content__booking-status">
+          {{ govukSummaryList({
+            rows: BookingListing.statusSummaryListRows(booking)
+          }) }}
+        </div>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <div class="listing-entry__content__booking-placement">
+          <h4>Placement</h4>
+          {{ govukSummaryList({
+            rows: BookingListing.placementSummaryListRows(booking)
+          }) }}
+        </div>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        {% set turnaroundSummaryListRows = BookingListing.turnaroundSummaryListRows(booking) %}
+
+        {% if turnaroundSummaryListRows | length %}
+          <div class="listing-entry__content__booking-turnaround">
+            <h4>Scheduled turnaround</h4>
+            {{ govukSummaryList({
+              rows: turnaroundSummaryListRows
+            }) }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}

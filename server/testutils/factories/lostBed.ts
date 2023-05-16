@@ -20,6 +20,7 @@ class LostBedFactory extends Factory<LostBed> {
     })
   }
 
+  /* istanbul ignore next */
   past() {
     return this.params({
       startDate: DateFormats.dateObjToIsoDate(faker.date.past()),

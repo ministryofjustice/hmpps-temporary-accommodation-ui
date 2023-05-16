@@ -139,6 +139,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   })
 
   njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)
+  njkEnv.addGlobal('turnaroundsDisabled', config.flags.turnaroundsDisabled)
 
   njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
 
@@ -154,5 +155,4 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
-  njkEnv.addGlobal('turnaroundsDisabled', config.flags.turnaroundsDisabled)
 }

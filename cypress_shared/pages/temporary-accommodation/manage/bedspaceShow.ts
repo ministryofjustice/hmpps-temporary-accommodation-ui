@@ -1,11 +1,11 @@
 import type { Booking, LostBed, Room, UpdateLostBed } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
-import { BookingStatus } from '../../../../server/@types/ui/index'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { statusName } from '../../../../server/utils/bookingUtils'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import { assignModifiedBookingForTurnarounds } from '../../../utils/booking'
 import Page from '../../page'
 
 export default class BedspaceShowPage extends Page {
@@ -51,15 +51,9 @@ export default class BedspaceShowPage extends Page {
       .contains(booking.person.crn)
       .parent()
       .within(() => {
-        cy.wrap(booking).as('modifiedBooking')
-        if (booking.status === ('unknown-departed-or-closed' as BookingStatus)) {
-          cy.get('td')
-            .eq(3)
-            .then(statusElement => {
-              const status = statusElement.text().trim() === statusName('closed') ? 'closed' : 'departed'
-              cy.wrap({ ...booking, status }).as('modifiedBooking')
-            })
-        }
+        cy.get('td')
+          .eq(3)
+          .then(statusElement => assignModifiedBookingForTurnarounds(booking, statusElement, 'modifiedBooking'))
 
         cy.then(function _() {
           const { status } = this.modifiedBooking

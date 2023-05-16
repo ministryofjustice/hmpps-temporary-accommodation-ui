@@ -1,7 +1,7 @@
 import type { Booking } from '@approved-premises/api'
-import { BookingStatus } from '../../server/@types/ui/index'
 import { getLatestExtension, shortenedOrExtended, statusName } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
+import { assignModifiedBookingForTurnarounds } from '../utils/booking'
 import Component from './component'
 
 export default class BookingInfoComponent extends Component {
@@ -10,17 +10,10 @@ export default class BookingInfoComponent extends Component {
   }
 
   shouldShowBookingDetails(): void {
-    cy.wrap(this.booking).as('modifiedBooking')
-
-    if (this.booking.status === ('unknown-departed-or-closed' as BookingStatus)) {
-      cy.get('.govuk-summary-list__key')
-        .contains('Status')
-        .siblings('.govuk-summary-list__value')
-        .then(statusElement => {
-          const status = statusElement.text().trim() === statusName('closed') ? 'closed' : 'departed'
-          cy.wrap({ ...this.booking, status }).as('modifiedBooking')
-        })
-    }
+    cy.get('.govuk-summary-list__key')
+      .contains('Status')
+      .siblings('.govuk-summary-list__value')
+      .then(statusElement => assignModifiedBookingForTurnarounds(this.booking, statusElement, 'modifiedBooking'))
 
     const { shouldShowKeyAndValue, shouldShowKeyAndValues } = this
 

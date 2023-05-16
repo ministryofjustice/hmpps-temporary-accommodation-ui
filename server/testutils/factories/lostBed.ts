@@ -1,10 +1,10 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { LostBed } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
-import lostBedCancellationFactory from './lostBedCancellation'
 import { DateFormats } from '../../utils/dateUtils'
+import lostBedCancellationFactory from './lostBedCancellation'
+import referenceDataFactory from './referenceData'
 
 class LostBedFactory extends Factory<LostBed> {
   active() {

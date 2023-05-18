@@ -33,6 +33,7 @@ export type { AssessmentAcceptance } from './models/AssessmentAcceptance';
 export type { AssessmentDecision } from './models/AssessmentDecision';
 export type { AssessmentRejection } from './models/AssessmentRejection';
 export type { AssessmentStatus } from './models/AssessmentStatus';
+export type { AssessmentSummary } from './models/AssessmentSummary';
 export type { Bed } from './models/Bed';
 export type { BedSearchParameters } from './models/BedSearchParameters';
 export type { BedSearchResult } from './models/BedSearchResult';

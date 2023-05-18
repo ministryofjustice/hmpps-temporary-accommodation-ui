@@ -6,7 +6,7 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Person>(() => ({
   crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
-  name: faker.name.fullName(),
+  name: faker.person.fullName(),
   dateOfBirth: DateFormats.dateObjToIsoDate(faker.date.past()),
   sex: faker.helpers.arrayElement(['Male', 'Female', 'Other', 'Prefer not to say']),
   status: faker.helpers.arrayElement(['InCustody', 'InCommunity']),

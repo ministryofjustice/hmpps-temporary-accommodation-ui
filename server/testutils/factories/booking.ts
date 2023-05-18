@@ -103,7 +103,7 @@ export default BookingFactory.define(() => {
     departureDate: DateFormats.dateObjToIsoDate(departureDate),
     turnaroundStartDate: DateFormats.dateObjToIsoDate(turnaroundStartDate),
     effectiveEndDate: DateFormats.dateObjToIsoDate(effectiveEndDate),
-    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    name: `${faker.person.firstName()} ${faker.person.lastName()}`,
     id: faker.string.uuid(),
     status: faker.helpers.arrayElement([
       'provisional',

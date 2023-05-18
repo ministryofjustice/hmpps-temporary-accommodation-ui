@@ -4,5 +4,5 @@ import { Factory } from 'fishery'
 
 export default Factory.define<BookingSearchResultPersonSummary>(() => ({
   crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
-  name: faker.name.fullName(),
+  name: faker.person.fullName(),
 }))

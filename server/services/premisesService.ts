@@ -14,7 +14,6 @@ import { CallConfig } from '../data/restClient'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
-import config from '../config'
 
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
@@ -185,14 +184,12 @@ export default class PremisesService {
       },
     ]
 
-    if (!config.flags.turnaroundsDisabled) {
-      rows.push({
-        key: this.textValue('Expected turnaround time'),
-        value: this.textValue(
-          `${premises.turnaroundWorkingDayCount} working ${premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'}`,
-        ),
-      })
-    }
+    rows.push({
+      key: this.textValue('Expected turnaround time'),
+      value: this.textValue(
+        `${premises.turnaroundWorkingDayCount} working ${premises.turnaroundWorkingDayCount === 1 ? 'day' : 'days'}`,
+      ),
+    })
 
     return { rows }
   }

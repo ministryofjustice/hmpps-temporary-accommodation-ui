@@ -9,7 +9,6 @@ import extractCallConfig from '../../../utils/restUtils'
 import filterProbationRegions from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { parseNaturalNumber } from '../../../utils/formUtils'
-import config from '../../../config'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}
@@ -56,9 +55,7 @@ export default class PremisesController {
       const newPremises: NewPremises = {
         characteristicIds: [],
         ...req.body,
-        turnaroundWorkingDayCount: !config.flags.turnaroundsDisabled
-          ? parseNaturalNumber(req.body.turnaroundWorkingDayCount)
-          : null,
+        turnaroundWorkingDayCount: parseNaturalNumber(req.body.turnaroundWorkingDayCount),
       }
 
       try {
@@ -113,9 +110,7 @@ export default class PremisesController {
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
         ...req.body,
-        turnaroundWorkingDayCount: !config.flags.turnaroundsDisabled
-          ? parseNaturalNumber(req.body.turnaroundWorkingDayCount)
-          : null,
+        turnaroundWorkingDayCount: parseNaturalNumber(req.body.turnaroundWorkingDayCount),
       }
 
       try {

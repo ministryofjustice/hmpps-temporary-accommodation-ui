@@ -163,8 +163,6 @@
   }, fetchContext()
 ) }}
 
-{% if not config.turnaroundsDisabled %}
-
 {{ taInput(
   {
     label: {
@@ -182,8 +180,6 @@
   },
   fetchContext()
 ) }}
-
-{% endif %}
 
 {{ govukButton({
   text: "Submit",

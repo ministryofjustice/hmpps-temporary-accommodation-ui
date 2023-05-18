@@ -1,4 +1,3 @@
-import config from '../config'
 import { bookingFactory, cancellationFactory, extensionFactory } from '../testutils/factories'
 import { getLatestExtension, shortenedOrExtended, statusTag } from '../utils/bookingUtils'
 import { formatLines } from '../utils/viewUtils'
@@ -484,121 +483,74 @@ describe('BookingInfo', () => {
       expect(formatLines).toHaveBeenCalledWith(booking.departure.notes)
     })
 
-    describe('when turnarounds are enabled', () => {
-      beforeAll(() => {
-        config.flags.turnaroundsDisabled = false
+    it('returns summary list rows containing the turnaround time when it is more than one day', () => {
+      const booking = bookingFactory.build({
+        effectiveEndDate: '2023-02-11',
+        turnaround: {
+          workingDays: 4,
+        },
       })
 
-      it('returns summary list rows containing the turnaround time when it is more than one day', () => {
-        const booking = bookingFactory.build({
-          effectiveEndDate: '2023-02-11',
-          turnaround: {
-            workingDays: 4,
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      const result = summaryListRows(booking)
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            key: {
+              text: 'Turnaround time',
+            },
+            value: {
+              text: '4 working days',
+            },
           },
-        })
-
-        ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
-        ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
-
-        const result = summaryListRows(booking)
-
-        expect(result).toEqual(
-          expect.arrayContaining([
-            {
-              key: {
-                text: 'Turnaround time',
-              },
-              value: {
-                text: '4 working days',
-              },
+          {
+            key: {
+              text: 'Turnaround end date',
             },
-            {
-              key: {
-                text: 'Turnaround end date',
-              },
-              value: {
-                text: '11 February 2023',
-              },
+            value: {
+              text: '11 February 2023',
             },
-          ]),
-        )
-      })
-
-      it('returns summary list rows containing the turnaround time when it is exactly one day', () => {
-        const booking = bookingFactory.build({
-          effectiveEndDate: '2023-02-11',
-          turnaround: {
-            workingDays: 1,
           },
-        })
-
-        ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
-        ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
-
-        const result = summaryListRows(booking)
-
-        expect(result).toEqual(
-          expect.arrayContaining([
-            {
-              key: {
-                text: 'Turnaround time',
-              },
-              value: {
-                text: '1 working day',
-              },
-            },
-            {
-              key: {
-                text: 'Turnaround end date',
-              },
-              value: {
-                text: '11 February 2023',
-              },
-            },
-          ]),
-        )
-      })
+        ]),
+      )
     })
 
-    describe('when turnarounds are disabled', () => {
-      beforeAll(() => {
-        config.flags.turnaroundsDisabled = true
+    it('returns summary list rows containing the turnaround time when it is exactly one day', () => {
+      const booking = bookingFactory.build({
+        effectiveEndDate: '2023-02-11',
+        turnaround: {
+          workingDays: 1,
+        },
       })
 
-      it('returns summary list rows not containing the turnaround time', () => {
-        const booking = bookingFactory.build({
-          effectiveEndDate: '2023-02-11',
-          turnaround: {
-            workingDays: 4,
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
+
+      const result = summaryListRows(booking)
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            key: {
+              text: 'Turnaround time',
+            },
+            value: {
+              text: '1 working day',
+            },
           },
-        })
-
-        ;(statusTag as jest.MockedFunction<typeof statusTag>).mockReturnValue(statusHtml)
-        ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(text => text)
-
-        const result = summaryListRows(booking)
-
-        expect(result).not.toEqual(
-          expect.arrayContaining([
-            {
-              key: {
-                text: 'Turnaround time',
-              },
-              value: {
-                text: '4 working days',
-              },
+          {
+            key: {
+              text: 'Turnaround end date',
             },
-            {
-              key: {
-                text: 'Turnaround end date',
-              },
-              value: {
-                text: '11 February 2023',
-              },
+            value: {
+              text: '11 February 2023',
             },
-          ]),
-        )
-      })
+          },
+        ]),
+      )
     })
   })
 })

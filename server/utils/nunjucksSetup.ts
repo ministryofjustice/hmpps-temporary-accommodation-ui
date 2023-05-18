@@ -141,7 +141,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   })
 
   njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)
-  njkEnv.addGlobal('turnaroundsDisabled', config.flags.turnaroundsDisabled)
 
   njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
 

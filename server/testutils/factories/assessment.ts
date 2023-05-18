@@ -5,6 +5,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
 import { DateFormats } from '../../utils/dateUtils'
+import { fakeObject } from '../utils'
 import applicationFactory from './application'
 
 class AssessmentFactory extends Factory<ApprovedPremisesAssessment> {
@@ -32,7 +33,7 @@ export default AssessmentFactory.define(() => ({
   allocatedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   decision: faker.helpers.arrayElement(['accepted' as const, 'rejected' as const, undefined]),
-  data: JSON.parse(faker.datatype.json()),
+  data: fakeObject(),
   clarificationNotes: [],
   rejectionRationale: faker.lorem.sentence(),
 }))

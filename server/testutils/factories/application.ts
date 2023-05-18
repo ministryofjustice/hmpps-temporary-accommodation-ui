@@ -4,6 +4,7 @@ import { Factory } from 'fishery'
 import type { ApprovedPremisesApplication, OASysSection } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
+import { fakeObject } from '../utils'
 import personFactory from './person'
 import risksFactory from './risks'
 
@@ -11,7 +12,7 @@ class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
   withReleaseDate(releaseDate = DateFormats.dateObjToIsoDate(faker.date.soon())) {
     return this.params({
       data: {
-        ...JSON.parse(faker.datatype.json()),
+        ...fakeObject(),
         'basic-information': {
           'release-date': { releaseDate, knowReleaseDate: 'yes' },
           'placement-date': { startDateSameAsReleaseDate: 'yes' },
@@ -23,7 +24,7 @@ class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
   withOptionalOasysSectionsSelected(needsLinkedToReoffending: Array<OASysSection>, otherNeeds: Array<OASysSection>) {
     return this.params({
       data: {
-        ...JSON.parse(faker.datatype.json()),
+        ...fakeObject(),
         'oasys-import': {
           'optional-oasys-sections': {
             needsLinkedToReoffending,
@@ -36,8 +37,8 @@ class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
 
   withData() {
     return this.params({
-      data: JSON.parse(faker.datatype.json()),
-      document: JSON.parse(faker.datatype.json()),
+      data: fakeObject(),
+      document: fakeObject(),
     })
   }
 }

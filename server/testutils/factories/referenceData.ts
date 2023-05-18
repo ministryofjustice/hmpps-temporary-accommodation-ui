@@ -14,7 +14,6 @@ import nonArrivalReasonsJson from '../../../wiremock/stubs/non-arrival-reasons.j
 import pdusJson from '../../../wiremock/stubs/pdus.json'
 import probationRegionsJson from '../../../wiremock/stubs/probation-regions.json'
 import { Characteristic, LocalAuthorityArea } from '../../@types/shared'
-import { filterCharacteristics } from '../../utils/characteristicUtils'
 
 class ReferenceDataFactory extends Factory<ReferenceData> {
   departureReasons() {
@@ -48,9 +47,13 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
   }
 
   characteristic(modelScope: 'premises' | 'room'): Factory<Characteristic> {
-    return Factory.define<Characteristic>(() =>
-      faker.helpers.arrayElement(filterCharacteristics(characteristicsJson as Characteristic[], modelScope)),
-    )
+    return Factory.define<Characteristic>(() => {
+      return faker.helpers.arrayElement(
+        (characteristicsJson as Characteristic[]).filter(
+          characteristic => characteristic.modelScope === modelScope || characteristic.modelScope === '*',
+        ),
+      )
+    })
   }
 
   localAuthority(): Factory<LocalAuthorityArea> {

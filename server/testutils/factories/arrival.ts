@@ -9,7 +9,7 @@ export default Factory.define<Arrival>(() => {
 
   return {
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
-    bookingId: faker.datatype.uuid(),
+    bookingId: faker.string.uuid(),
     expectedDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, arrivalDate)),
     notes: faker.lorem.sentence(),
     createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),

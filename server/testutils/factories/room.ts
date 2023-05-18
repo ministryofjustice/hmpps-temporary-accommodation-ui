@@ -25,7 +25,7 @@ class RoomFactory extends Factory<Room> {
 }
 
 export default RoomFactory.define(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   characteristics: unique(
     referenceDataFactory.characteristic('room').buildList(faker.datatype.number({ min: 1, max: 5 })),

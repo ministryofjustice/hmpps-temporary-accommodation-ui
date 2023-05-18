@@ -57,7 +57,7 @@ export default PremisesFactory.define(() => {
   const pdu = referenceDataFactory.pdu().build()
 
   return {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
     addressLine1: faker.address.streetAddress(),
     addressLine2: faker.address.secondaryAddress(),
@@ -81,7 +81,7 @@ export default PremisesFactory.define(() => {
 })
 
 const apAreaFactory = Factory.define<ApArea>(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   name: faker.address.cityName(),
   identifier: faker.random.alphaNumeric(),
 }))

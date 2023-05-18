@@ -1,14 +1,14 @@
-import { Factory } from 'fishery'
-import { faker } from '@faker-js/faker/locale/en_GB'
 import type { Extension } from '@approved-premises/api'
+import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Extension>(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   previousDepartureDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   newDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future()),
-  bookingId: faker.datatype.uuid(),
+  bookingId: faker.string.uuid(),
   notes: faker.lorem.sentence(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

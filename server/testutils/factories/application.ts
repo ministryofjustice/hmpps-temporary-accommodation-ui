@@ -43,10 +43,10 @@ class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
 }
 
 export default ApplicationFactory.define(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   person: personFactory.build(),
-  createdByUserId: faker.datatype.uuid(),
-  schemaVersion: faker.datatype.uuid(),
+  createdByUserId: faker.string.uuid(),
+  schemaVersion: faker.string.uuid(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   data: {},

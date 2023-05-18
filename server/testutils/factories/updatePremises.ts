@@ -18,10 +18,10 @@ class UpdatePremisesFactory extends Factory<UpdatePremises> {
 }
 
 export default UpdatePremisesFactory.define(() => ({
-  addressLine1: faker.address.streetAddress(),
-  addressLine2: faker.address.secondaryAddress(),
-  town: faker.address.city(),
-  postcode: faker.address.zipCode(),
+  addressLine1: faker.location.streetAddress(),
+  addressLine2: faker.location.secondaryAddress(),
+  town: faker.location.city(),
+  postcode: faker.location.zipCode(),
   localAuthorityAreaId: referenceDataFactory.localAuthority().build().id,
   characteristicIds: unique([referenceDataFactory.characteristic('premises').build()]).map(
     characteristic => characteristic.id,

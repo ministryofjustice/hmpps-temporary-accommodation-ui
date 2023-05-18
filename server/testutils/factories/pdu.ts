@@ -5,7 +5,7 @@ import { ReferenceData } from '../../@types/ui'
 export default Factory.define<ReferenceData>(() => {
   return {
     id: faker.string.uuid(),
-    name: faker.address.county(),
+    name: faker.location.county(),
     isActive: true,
     serviceScope: 'temporary-accommodation',
   }

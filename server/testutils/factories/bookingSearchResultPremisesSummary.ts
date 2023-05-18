@@ -6,8 +6,8 @@ import type { BookingSearchResultPremisesSummary } from '@approved-premises/api'
 export default Factory.define<BookingSearchResultPremisesSummary>(() => ({
   id: faker.string.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
-  addressLine1: faker.address.streetAddress(),
-  addressLine2: faker.address.secondaryAddress(),
-  town: faker.address.cityName(),
-  postcode: faker.address.zipCode(),
+  addressLine1: faker.location.streetAddress(),
+  addressLine2: faker.location.secondaryAddress(),
+  town: faker.location.cityName(),
+  postcode: faker.location.zipCode(),
 }))

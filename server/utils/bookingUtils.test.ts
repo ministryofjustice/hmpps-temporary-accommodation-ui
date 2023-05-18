@@ -137,7 +137,7 @@ describe('bookingUtils', () => {
 
   describe('statusTag', () => {
     it('returns the HTML formatted display name of a given status', () => {
-      expect(statusTag('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--purple">Confirmed</strong>')
+      expect(statusTag('confirmed')).toEqual('<strong class="govuk-tag govuk-tag--green">Confirmed</strong>')
     })
   })
 

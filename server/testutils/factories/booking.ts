@@ -13,7 +13,9 @@ import personFactory from './person'
 import turnaroundFactory from './turnaround'
 
 const soon = () =>
-  DateFormats.dateObjToIsoDate(faker.date.soon(5, addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1)))
+  DateFormats.dateObjToIsoDate(
+    faker.date.soon({ days: 5, refDate: addDays(new Date(new Date().setHours(0, 0, 0, 0)), 1) }),
+  )
 const past = () => DateFormats.dateObjToIsoDate(faker.date.past())
 const future = () => DateFormats.dateObjToIsoDate(faker.date.future())
 class BookingFactory extends Factory<Booking> {
@@ -88,8 +90,8 @@ export default BookingFactory.define(() => {
   const originalArrivalDate = faker.date.soon()
   const arrivalDate = faker.date.soon()
   const departureDate = faker.date.future({ years: 1, refDate: arrivalDate })
-  const turnaroundStartDate = faker.date.soon(1, departureDate)
-  const effectiveEndDate = faker.date.soon(5, departureDate)
+  const turnaroundStartDate = faker.date.soon({ days: 1, refDate: departureDate })
+  const effectiveEndDate = faker.date.soon({ days: 5, refDate: departureDate })
 
   const cancellations = faker.helpers.arrayElements(cancellationFactory.buildList(5))
   const departures = faker.helpers.arrayElements(departureFactory.buildList(5))

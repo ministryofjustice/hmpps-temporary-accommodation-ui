@@ -61,7 +61,7 @@ export default PremisesFactory.define(() => {
     name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
     addressLine1: faker.location.streetAddress(),
     addressLine2: faker.location.secondaryAddress(),
-    town: faker.location.cityName(),
+    town: faker.location.city(),
     postcode: faker.location.zipCode(),
     bedCount: 50,
     availableBedsForToday: faker.number.int({ min: 0, max: 50 }),
@@ -82,6 +82,6 @@ export default PremisesFactory.define(() => {
 
 const apAreaFactory = Factory.define<ApArea>(() => ({
   id: faker.string.uuid(),
-  name: faker.location.cityName(),
+  name: faker.location.city(),
   identifier: faker.random.alphaNumeric(),
 }))

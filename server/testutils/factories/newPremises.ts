@@ -21,7 +21,7 @@ export default NewPremisesFactory.define(() => ({
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.location.streetAddress(),
   addressLine2: faker.location.secondaryAddress(),
-  town: faker.location.cityName(),
+  town: faker.location.city(),
   postcode: faker.location.zipCode(),
   localAuthorityAreaId: referenceDataFactory.localAuthority().build().id,
   characteristicIds: unique([referenceDataFactory.characteristic('premises').build()]).map(

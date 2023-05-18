@@ -10,7 +10,7 @@ export default Factory.define<PremisesSummary>(() => ({
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.location.streetAddress(),
   addressLine2: faker.location.secondaryAddress(),
-  town: faker.location.cityName(),
+  town: faker.location.city(),
   postcode: faker.location.zipCode(),
   bedCount: 50,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),

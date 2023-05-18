@@ -1,7 +1,7 @@
 import type { NewLostBed, Premises, Room } from '@approved-premises/api'
-import LostBedEditablePage from './lostBedEditable'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import LostBedEditablePage from './lostBedEditable'
 
 export default class LostBedNewPage extends LostBedEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent

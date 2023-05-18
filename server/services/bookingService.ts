@@ -1,14 +1,25 @@
-import type { Booking, NewBooking, Room } from '@approved-premises/api'
-import type { TableRow } from '@approved-premises/ui'
+import type { Booking, LostBed, NewBooking, Room } from '@approved-premises/api'
 import config from '../config'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
-import { statusTag as lostBedStatusTag } from '../utils/lostBedUtils'
+
+export type BookingListingEntry = {
+  path: string
+  body: Booking
+  type: 'booking'
+}
+
+export type LostBedListingEntry = {
+  path: string
+  body: LostBed
+  type: 'lost-bed'
+}
+
+export type ListingEntry = LostBedListingEntry | BookingListingEntry
 
 export default class BookingService {
   UPCOMING_WINDOW_IN_DAYS = 5
@@ -36,7 +47,7 @@ export default class BookingService {
     return confirmedBooking
   }
 
-  async getTableRowsForBedspace(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<TableRow>> {
+  async getListingEntries(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<ListingEntry>> {
     const bookingClient = this.bookingClientFactory(callConfig)
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
 
@@ -47,56 +58,35 @@ export default class BookingService {
 
     const bedId = room.beds[0].id
 
-    const bookingRowArr = bookings
+    const bookingListingEntries = bookings
       .filter(b => b.bed.id === bedId)
       .map(b => ({
         sortingValue: DateFormats.isoToDateObj(b.arrivalDate).getTime(),
-        rows: [
-          this.textValue(b.person.crn),
-          this.textValue(DateFormats.isoDateToUIDate(b.arrivalDate, { format: 'short' })),
-          this.textValue(
-            DateFormats.isoDateToUIDate(
-              config.flags.turnaroundsDisabled ? b.departureDate : b.effectiveEndDate || b.departureDate,
-              {
-                format: 'short',
-              },
-            ),
-          ),
-          this.htmlValue(statusTag(b.status)),
-          this.htmlValue(
-            `<a href="${paths.bookings.show({
-              premisesId,
-              roomId: room.id,
-              bookingId: b.id,
-            })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${b.person.crn}</span></a>`,
-          ),
-        ],
+        type: 'booking' as const,
+        body: b,
+        path: paths.bookings.show({
+          premisesId,
+          roomId: room.id,
+          bookingId: b.id,
+        }),
       }))
 
-    const lostBedRowArr = lostBeds
+    const lostBedListingEntries = lostBeds
       .filter(lostBed => lostBed.bedId === bedId)
       .map(lostBed => ({
         sortingValue: DateFormats.isoToDateObj(lostBed.startDate).getTime(),
-        rows: [
-          this.textValue('-'),
-          this.textValue(DateFormats.isoDateToUIDate(lostBed.startDate, { format: 'short' })),
-          this.textValue(DateFormats.isoDateToUIDate(lostBed.endDate, { format: 'short' })),
-          this.htmlValue(lostBedStatusTag(lostBed.status, 'bookingsAndVoids')),
-          this.htmlValue(
-            `<a href="${paths.lostBeds.show({
-              premisesId,
-              roomId: room.id,
-              lostBedId: lostBed.id,
-            })}">View<span class="govuk-visually-hidden"> void booking</span></a>`,
-          ),
-        ],
+        type: 'lost-bed' as const,
+        body: lostBed,
+        path: paths.lostBeds.show({
+          premisesId,
+          roomId: room.id,
+          lostBedId: lostBed.id,
+        }),
       }))
 
-    return [...bookingRowArr, ...lostBedRowArr]
-      .sort((a, b) => {
-        return b.sortingValue - a.sortingValue
-      })
-      .map(bookingOrLostBed => bookingOrLostBed.rows)
+    return [...bookingListingEntries, ...lostBedListingEntries].sort((a, b) => {
+      return b.sortingValue - a.sortingValue
+    })
   }
 
   async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
@@ -104,13 +94,5 @@ export default class BookingService {
     const booking = await bookingClient.find(premisesId, bookingId)
 
     return booking
-  }
-
-  private textValue(value: string) {
-    return { text: value }
-  }
-
-  private htmlValue(value: string) {
-    return { html: value }
   }
 }

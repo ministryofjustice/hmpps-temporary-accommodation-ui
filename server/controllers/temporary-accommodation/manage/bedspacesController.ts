@@ -113,13 +113,13 @@ export default class BedspacesController {
       const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
 
       const bedspaceDetails = await this.bedspaceService.getSingleBedspaceDetails(callConfig, premisesId, roomId)
-      const bookingTableRows = await this.bookingService.getTableRowsForBedspace(callConfig, premisesId, room)
+      const listingEntries = await this.bookingService.getListingEntries(callConfig, premisesId, room)
 
       return res.render('temporary-accommodation/bedspaces/show', {
         premises,
         premisesCharacteristics,
         bedspace: bedspaceDetails,
-        bookingTableRows,
+        listingEntries,
         actions: bedspaceActions(premises, room),
       })
     }

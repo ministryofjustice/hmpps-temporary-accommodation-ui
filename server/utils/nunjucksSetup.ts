@@ -31,6 +31,8 @@ import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
+import * as BookingListing from '../components/bookingListing'
+import * as LostBedListing from '../components/lostBedListing'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -139,6 +141,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   })
 
   njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)
+  njkEnv.addGlobal('turnaroundsDisabled', config.flags.turnaroundsDisabled)
 
   njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
 
@@ -148,11 +151,13 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows: bookingSummaryListRows })
+  njkEnv.addGlobal('BookingListing', BookingListing)
+  njkEnv.addGlobal('LostBedListing', LostBedListing)
+
   njkEnv.addGlobal('BedspaceSearchResult', { summaryListRows: bedspaceSearchResultSummaryListRows })
   njkEnv.addGlobal('LostBedInfo', { summaryListRows: lostBedSummaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
-  njkEnv.addGlobal('turnaroundsDisabled', config.flags.turnaroundsDisabled)
 }

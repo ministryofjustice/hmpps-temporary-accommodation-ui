@@ -66,7 +66,7 @@ context('Lost bed', () => {
     const bedspaceShowPage = BedspaceShowPage.visit(premises, room)
 
     // Add I click the lost bed link
-    bedspaceShowPage.clickLostBedLink(premises.id, room.id, lostBeds[0].id)
+    bedspaceShowPage.clickLostBedLink(lostBeds[0])
 
     // Then I navigate to the show lost bed page
     Page.verifyOnPage(LostBedShowPage, premises, room, lostBeds[0])

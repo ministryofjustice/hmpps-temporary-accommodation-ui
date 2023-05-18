@@ -1,0 +1,80 @@
+.listing-entry {
+  @include govuk-responsive-margin(8, "bottom");
+
+  border: $govuk-border-width solid govuk-colour('light-grey');
+  
+  background-color: govuk-colour('light-grey');
+
+  &:focus {
+    outline: $govuk-focus-width solid $govuk-focus-colour;
+  }
+}
+
+.listing-entry__active {
+  border-color: govuk-colour('blue');
+  background-color: govuk-colour('blue');
+  
+  h2, a {
+    color: govuk-colour('white');
+  }
+}
+
+.listing-entry__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+
+  padding: 2px govuk-spacing(3) govuk-spacing(1);
+
+  // Ensures the component header appears separate to the component body text in high contrast mode
+  border-bottom: 1px solid transparent;
+
+  @include govuk-media-query($from: tablet) {
+    padding: 2px govuk-spacing(4) govuk-spacing(1);
+  }
+}
+
+.listing-entry__title {
+  margin: 0;
+  padding: 0;
+}
+
+.listing-entry__link {
+  margin: 0;
+  padding: 0;
+}
+
+.listing-entry__content {
+  @include govuk-text-colour;
+  padding: govuk-spacing(1) govuk-spacing(3);
+
+  background-color: $govuk-body-background-colour;
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+
+  .govuk-summary-list {
+    width: 100%;
+    max-width: none;
+    margin-bottom: govuk-spacing(1);
+  }
+
+  .govuk-summary-list__row {
+    border-width: 2px;
+    border-color: govuk-colour('light-grey');
+    width: 100%;
+  }
+
+  .govuk-summary-list__row:last-child {
+    border-bottom: 0;
+  }
+
+  h4 {
+    margin-top: 0px;
+  }
+
+  .govuk-grid-row {
+    margin-bottom: govuk-spacing(2);
+  }
+}

@@ -98,7 +98,7 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
   {
     name: 'Confirmed',
     id: 'confirmed',
-    tagClass: 'govuk-tag--purple',
+    tagClass: 'govuk-tag--green',
   },
   {
     name: 'Active',
@@ -108,17 +108,17 @@ export const allStatuses: Array<{ name: string; id: Booking['status']; tagClass:
   {
     name: config.flags.turnaroundsDisabled ? 'Departed' : 'Turnaround',
     id: 'departed',
-    tagClass: 'govuk-tag--red',
+    tagClass: 'govuk-tag--green',
   },
   {
     name: 'Departed',
     id: 'closed',
-    tagClass: 'govuk-tag--red',
+    tagClass: 'govuk-tag--grey',
   },
   {
     name: 'Cancelled',
     id: 'cancelled',
-    tagClass: 'govuk-tag--orange',
+    tagClass: 'govuk-tag--grey',
   },
 ]
 

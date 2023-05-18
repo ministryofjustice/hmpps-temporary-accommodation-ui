@@ -4,6 +4,8 @@
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
+{% from "../components/booking-listing/macro.njk" import bookingListing %}
+{% from "../components/lost-bed-listing/macro.njk" import lostBedListing %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -75,27 +77,13 @@
 
   <h2>Bookings</h2>
 
-  {{ govukTable({
-    captionClasses: "govuk-table__caption--m",
-    head: [
-      {
-        text: "CRN"
-      },
-      {
-        text: "Start date"
-      },
-      {
-        text: "End date"
-      },
-      {
-        text: "Status"
-      },
-      {
-        html: '<span class="govuk-visually-hidden">Actions</span>'
-      }
-    ],
-    rows: bookingTableRows
-  }) }}
+  {% for listingEntry in listingEntries %}
+    {% if listingEntry.type === 'booking'%}
+      {{ bookingListing(listingEntry.body, listingEntry.path) }}
+    {% elif listingEntry.type === 'lost-bed' %}
+      {{ lostBedListing(listingEntry.body, listingEntry.path) }}
+    {% endif %}
+  {% endfor %}
 
 {% endblock %}
 

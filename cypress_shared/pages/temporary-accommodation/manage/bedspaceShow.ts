@@ -1,11 +1,10 @@
-import type { Booking, LostBed, Room, UpdateLostBed } from '@approved-premises/api'
+import type { Booking, LostBed, Room } from '@approved-premises/api'
 
 import { Premises } from '../../../../server/@types/shared'
-import { BookingStatus } from '../../../../server/@types/ui/index'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { statusName } from '../../../../server/utils/bookingUtils'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import BookingListingComponent from '../../../components/bookingListing'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import LostBedListingComponent from '../../../components/lostBedListing'
 import Page from '../../page'
 
 export default class BedspaceShowPage extends Page {
@@ -47,53 +46,13 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowBookingDetails(booking: Booking): void {
-    cy.get('tr')
-      .contains(booking.person.crn)
-      .parent()
-      .within(() => {
-        cy.wrap(booking).as('modifiedBooking')
-        if (booking.status === ('unknown-departed-or-closed' as BookingStatus)) {
-          cy.get('td')
-            .eq(3)
-            .then(statusElement => {
-              const status = statusElement.text().trim() === statusName('closed') ? 'closed' : 'departed'
-              cy.wrap({ ...booking, status }).as('modifiedBooking')
-            })
-        }
-
-        cy.then(function _() {
-          const { status } = this.modifiedBooking
-
-          cy.get('td').eq(0).contains(this.modifiedBooking.person.crn)
-          cy.get('td')
-            .eq(1)
-            .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.arrivalDate, { format: 'short' }))
-
-          if (this.modifiedBooking.effectiveEndDate !== 'unknown') {
-            cy.get('td')
-              .eq(2)
-              .contains(DateFormats.isoDateToUIDate(this.modifiedBooking.effectiveEndDate, { format: 'short' }))
-          }
-
-          cy.get('td').eq(3).contains(statusName(status))
-          cy.get('td').eq(4).contains('View')
-        })
-      })
+    const bookingListingComponent = new BookingListingComponent(booking)
+    bookingListingComponent.shouldShowBookingDetails()
   }
 
-  shouldShowLostBedDetails(lostBedOrLostBedUpdate: LostBed | UpdateLostBed): void {
-    cy.get('tr')
-      .contains('Void')
-      .parent()
-      .parent()
-      .within(() => {
-        cy.get('td')
-          .eq(1)
-          .contains(DateFormats.isoDateToUIDate(lostBedOrLostBedUpdate.startDate, { format: 'short' }))
-        cy.get('td')
-          .eq(2)
-          .contains(DateFormats.isoDateToUIDate(lostBedOrLostBedUpdate.endDate, { format: 'short' }))
-      })
+  shouldShowLostBedDetails(lostBed: LostBed): void {
+    const lostBedListingComponent = new LostBedListingComponent(lostBed)
+    lostBedListingComponent.shouldShowLostBedDetails()
   }
 
   shouldShowAsActive(): void {
@@ -133,15 +92,12 @@ export default class BedspaceShowPage extends Page {
   }
 
   clickBookingLink(booking: Booking): void {
-    cy.get('tr')
-      .contains(booking.person.crn)
-      .parent()
-      .within(() => {
-        cy.get('a').contains('View').click()
-      })
+    const bookingListingComponent = new BookingListingComponent(booking)
+    bookingListingComponent.clickLink()
   }
 
-  clickLostBedLink(premisesId: string, roomId: string, lostBedId: string): void {
-    cy.get(`[href="${paths.lostBeds.show({ premisesId, roomId, lostBedId })}"]`).click()
+  clickLostBedLink(lostBed: LostBed): void {
+    const lostBedListingComponent = new LostBedListingComponent(lostBed)
+    lostBedListingComponent.clickLink()
   }
 }

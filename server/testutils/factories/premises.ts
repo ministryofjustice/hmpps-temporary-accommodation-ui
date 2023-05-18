@@ -65,7 +65,7 @@ export default PremisesFactory.define(() => {
     postcode: faker.location.zipCode(),
     bedCount: 50,
     availableBedsForToday: faker.number.int({ min: 0, max: 50 }),
-    apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
+    apAreaId: faker.string.alphanumeric({ length: 2, casing: 'upper' }),
     probationRegion: referenceDataFactory.probationRegion().build(),
     apArea: apAreaFactory.build(),
     localAuthorityArea: referenceDataFactory.localAuthority().build(),
@@ -83,5 +83,5 @@ export default PremisesFactory.define(() => {
 const apAreaFactory = Factory.define<ApArea>(() => ({
   id: faker.string.uuid(),
   name: faker.location.city(),
-  identifier: faker.random.alphaNumeric(),
+  identifier: faker.string.alphanumeric(),
 }))

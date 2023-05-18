@@ -25,9 +25,9 @@ else
 fi
 
 if [ "$app" = "api" ]; then
-  stern -n "hmpps-approved-premises-$environment" "hmpps-approved-premises-api" -t
+  stern -n "hmpps-community-accommodation-$environment" "hmpps-approved-premises-api" -t
 elif [ "$app" = "ui" ]; then
-  stern -n "hmpps-approved-premises-$environment" "hmpps-approved-premises-ui" -t
+  stern -n "hmpps-community-accommodation-$environment" "hmpps-temporary-accommodation-ui" -t
 else
   echo "Unknown application $2"
   exit 1

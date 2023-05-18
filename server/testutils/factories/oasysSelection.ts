@@ -18,7 +18,7 @@ class OasysSelectionFactory extends Factory<OASysSection> {
 }
 
 export default OasysSelectionFactory.define(() => ({
-  section: faker.datatype.number({ min: 1, max: 20 }),
+  section: faker.number.int({ min: 1, max: 20 }),
   name: faker.helpers.arrayElement([
     'accommodation',
     'relationships',

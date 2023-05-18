@@ -1,5 +1,5 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { PersonRisks, RiskEnvelopeStatus } from '@approved-premises/api'
 import { RiskLevel, RiskTierLevel, TierLetter, TierNumber } from '@approved-premises/ui'
@@ -9,7 +9,7 @@ const riskLevels: Array<RiskLevel> = ['Low', 'Medium', 'High', 'Very High']
 const riskEnvelopeStatuses: Array<RiskEnvelopeStatus> = ['retrieved', 'not_found', 'error']
 
 export default Factory.define<PersonRisks>(() => ({
-  crn: `C${faker.datatype.number({ min: 100000, max: 999999 })}`,
+  crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
   roshRisks: roshRisksFactory.build(),
   mappa: mappaFactory.build(),
   flags: flagsFactory.build(),

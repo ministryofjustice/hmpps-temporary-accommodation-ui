@@ -9,6 +9,6 @@ export default Factory.define<ActiveOffence>(() => ({
   deliusEventNumber: faker.string.uuid(),
   offenceDescription: faker.lorem.sentence(),
   offenceId: faker.string.uuid(),
-  convictionId: faker.datatype.number(),
+  convictionId: faker.number.int(),
   offenceDate: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

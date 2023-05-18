@@ -31,5 +31,5 @@ export default NewPremisesFactory.define(() => ({
   probationDeliveryUnitId: referenceDataFactory.pdu().build().id,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),
   notes: faker.lorem.lines(),
-  turnaroundWorkingDayCount: faker.datatype.number({ min: 1, max: 5 }),
+  turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 5 }),
 }))

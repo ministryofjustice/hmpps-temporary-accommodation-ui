@@ -42,7 +42,7 @@ class PremisesFactory extends Factory<Premises> {
       pdu: pdu.id,
       probationDeliveryUnit: pdu,
       characteristics: faker.helpers
-        .arrayElements(characteristics, faker.datatype.number({ min: 1, max: 5 }))
+        .arrayElements(characteristics, faker.number.int({ min: 1, max: 5 }))
         .map(characteristic =>
           characteristicFactory.build({
             ...characteristic,
@@ -64,7 +64,7 @@ export default PremisesFactory.define(() => {
     town: faker.address.cityName(),
     postcode: faker.address.zipCode(),
     bedCount: 50,
-    availableBedsForToday: faker.datatype.number({ min: 0, max: 50 }),
+    availableBedsForToday: faker.number.int({ min: 0, max: 50 }),
     apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
     probationRegion: referenceDataFactory.probationRegion().build(),
     apArea: apAreaFactory.build(),
@@ -72,11 +72,11 @@ export default PremisesFactory.define(() => {
     pdu: pdu.id,
     probationDeliveryUnit: pdu,
     characteristics: unique(
-      referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
+      referenceDataFactory.characteristic('premises').buildList(faker.number.int({ min: 1, max: 5 })),
     ),
     status: faker.helpers.arrayElement(['active', 'archived'] as const),
     notes: faker.lorem.lines(5),
-    turnaroundWorkingDayCount: faker.datatype.number({ min: 1, max: 5 }),
+    turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 5 }),
   }
 })
 

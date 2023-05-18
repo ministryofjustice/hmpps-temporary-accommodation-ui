@@ -4,7 +4,6 @@ import BookingService from './bookingService'
 
 import { bedFactory, bookingFactory, lostBedFactory, newBookingFactory, roomFactory } from '../testutils/factories'
 
-import config from '../config'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 
@@ -57,7 +56,7 @@ describe('BookingService', () => {
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
         bedId,
-        enableTurnarounds: !config.flags.turnaroundsDisabled,
+        enableTurnarounds: true,
         ...newBooking,
       })
     })

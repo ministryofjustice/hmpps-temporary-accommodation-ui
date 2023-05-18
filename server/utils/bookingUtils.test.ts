@@ -1,4 +1,3 @@
-import config from '../config'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import { arrivalFactory, bookingFactory, departureFactory, extensionFactory } from '../testutils/factories'
@@ -32,106 +31,88 @@ const changeTurnaroundAction = {
 
 describe('bookingUtils', () => {
   describe('bookingActions', () => {
-    describe('when turnarounds are enabled', () => {
-      beforeAll(() => {
-        config.flags.turnaroundsDisabled = false
-      })
+    it('returns a mark as confirmed action for a provisional booking', () => {
+      const booking = bookingFactory.provisional().build({ id: bookingId })
 
-      it('returns a mark as confirmed action for a provisional booking', () => {
-        const booking = bookingFactory.provisional().build({ id: bookingId })
-
-        expect(bookingActions(premisesId, roomId, booking)).toEqual([
-          {
-            text: 'Mark as confirmed',
-            classes: '',
-            href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
-          },
-          cancelBookingAction,
-          changeTurnaroundAction,
-        ])
-      })
-
-      it('returns a mark as active action for a confirmed booking', () => {
-        const booking = bookingFactory.confirmed().build({ id: bookingId })
-
-        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-          {
-            text: 'Mark as active',
-            classes: '',
-            href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
-          },
-          cancelBookingAction,
-          changeTurnaroundAction,
-        ])
-      })
-
-      it('returns mark as departed and extend actions for an arrived booking', () => {
-        const booking = bookingFactory.arrived().build({ id: bookingId })
-
-        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-          {
-            text: 'Mark as departed',
-            classes: 'govuk-button--secondary',
-            href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
-          },
-          {
-            text: 'Extend or shorten booking',
-            classes: 'govuk-button--secondary',
-            href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
-          },
-          changeTurnaroundAction,
-        ])
-      })
-
-      it('returns edit departed booking for a departed booking', () => {
-        const booking = bookingFactory.departed().build({ id: bookingId })
-
-        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-          {
-            text: 'Update departure details',
-            classes: 'govuk-button--secondary',
-            href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
-          },
-          changeTurnaroundAction,
-        ])
-      })
-
-      it('returns edit departed booking for a closed booking', () => {
-        const booking = bookingFactory.closed().build({ id: bookingId })
-
-        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-          {
-            text: 'Update departure details',
-            classes: 'govuk-button--secondary',
-            href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
-          },
-          changeTurnaroundAction,
-        ])
-      })
-
-      it('returns edit cancelled booking for a cancelled booking', () => {
-        const booking = bookingFactory.cancelled().build({ id: bookingId })
-
-        expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
-          {
-            text: 'Update cancelled booking',
-            classes: 'govuk-button--secondary',
-            href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
-          },
-        ])
-      })
+      expect(bookingActions(premisesId, roomId, booking)).toEqual([
+        {
+          text: 'Mark as confirmed',
+          classes: '',
+          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+        },
+        cancelBookingAction,
+        changeTurnaroundAction,
+      ])
     })
 
-    describe('when turnarounds are disabled', () => {
-      beforeAll(() => {
-        config.flags.turnaroundsDisabled = true
-      })
+    it('returns a mark as active action for a confirmed booking', () => {
+      const booking = bookingFactory.confirmed().build({ id: bookingId })
 
-      it('does not include a change turn around action', () => {
-        const booking = bookingFactory.departed().build({ id: bookingId })
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Mark as active',
+          classes: '',
+          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+        },
+        cancelBookingAction,
+        changeTurnaroundAction,
+      ])
+    })
 
-        expect(bookingActions('premisesId', 'roomId', booking)).not.toContainEqual(changeTurnaroundAction)
-      })
+    it('returns mark as departed and extend actions for an arrived booking', () => {
+      const booking = bookingFactory.arrived().build({ id: bookingId })
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Mark as departed',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Extend or shorten booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        changeTurnaroundAction,
+      ])
+    })
+
+    it('returns edit departed booking for a departed booking', () => {
+      const booking = bookingFactory.departed().build({ id: bookingId })
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Update departure details',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+        },
+        changeTurnaroundAction,
+      ])
+    })
+
+    it('returns edit departed booking for a closed booking', () => {
+      const booking = bookingFactory.closed().build({ id: bookingId })
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Update departure details',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+        },
+        changeTurnaroundAction,
+      ])
+    })
+
+    it('returns edit cancelled booking for a cancelled booking', () => {
+      const booking = bookingFactory.cancelled().build({ id: bookingId })
+
+      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+        {
+          text: 'Update cancelled booking',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+        },
+      ])
     })
   })
 

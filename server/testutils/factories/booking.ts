@@ -87,7 +87,7 @@ class BookingFactory extends Factory<Booking> {
 export default BookingFactory.define(() => {
   const originalArrivalDate = faker.date.soon()
   const arrivalDate = faker.date.soon()
-  const departureDate = faker.date.future(1, arrivalDate)
+  const departureDate = faker.date.future({ years: 1, refDate: arrivalDate })
   const turnaroundStartDate = faker.date.soon(1, departureDate)
   const effectiveEndDate = faker.date.soon(5, departureDate)
 
@@ -98,7 +98,7 @@ export default BookingFactory.define(() => {
   return {
     person: personFactory.build(),
     originalArrivalDate: DateFormats.dateObjToIsoDate(originalArrivalDate),
-    originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future(1, originalArrivalDate)),
+    originalDepartureDate: DateFormats.dateObjToIsoDate(faker.date.future({ years: 1, refDate: originalArrivalDate })),
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),
     departureDate: DateFormats.dateObjToIsoDate(departureDate),
     turnaroundStartDate: DateFormats.dateObjToIsoDate(turnaroundStartDate),

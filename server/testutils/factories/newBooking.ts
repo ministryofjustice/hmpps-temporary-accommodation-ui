@@ -8,7 +8,7 @@ import personFactory from './person'
 
 export default Factory.define<NewBooking>(() => {
   const arrivalDate = faker.date.soon()
-  const departureDate = faker.date.future(1, arrivalDate)
+  const departureDate = faker.date.future({ years: 1, refDate: arrivalDate })
 
   return {
     crn: personFactory.build().crn,

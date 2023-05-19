@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
-import type { ApprovedPremisesApplication, OASysSection } from '@approved-premises/api'
+import type { OASysSection, TemporaryAccommodationApplication } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 import { fakeObject } from '../utils'
 import personFactory from './person'
 import risksFactory from './risks'
 
-class ApplicationFactory extends Factory<ApprovedPremisesApplication> {
+class ApplicationFactory extends Factory<TemporaryAccommodationApplication> {
   withReleaseDate(releaseDate = DateFormats.dateObjToIsoDate(faker.date.soon())) {
     return this.params({
       data: {

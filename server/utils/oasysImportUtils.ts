@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication as Application, OASysQuestion, OASysSection } from '../@types/shared'
+import { TemporaryAccommodationApplication as Application, OASysQuestion, OASysSection } from '../@types/shared'
 import { OasysImportArrays } from '../@types/ui'
 import { SessionDataError } from './errors'
 import { sentenceCase } from './utils'

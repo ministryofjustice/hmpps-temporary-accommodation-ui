@@ -1,7 +1,7 @@
 import {
   ActiveOffence,
   Adjudication,
-  ApprovedPremisesApplication as Application,
+  TemporaryAccommodationApplication as Application,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,

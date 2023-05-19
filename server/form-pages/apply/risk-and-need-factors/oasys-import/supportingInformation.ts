@@ -1,9 +1,9 @@
 import type { DataServices, PersonRisksUI } from '@approved-premises/ui'
 
 import type {
-  ApprovedPremisesApplication,
   ArrayOfOASysSupportingInformationQuestions,
   OASysSections,
+  TemporaryAccommodationApplication,
 } from '@approved-premises/api'
 
 import TasklistPage from '../../../tasklistPage'
@@ -41,7 +41,7 @@ export default class SupportingInformation implements TasklistPage {
 
   static async initialize(
     body: Record<string, unknown>,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {

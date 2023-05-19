@@ -1,4 +1,4 @@
-import type { ApprovedPremisesApplication, Document } from '@approved-premises/api'
+import type { Document, TemporaryAccommodationApplication } from '@approved-premises/api'
 import { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../utils/decorators'
 
@@ -21,11 +21,11 @@ export default class AttachDocuments implements TasklistPage {
 
   documents: Array<Document> | undefined
 
-  constructor(public body: AttachDocumentsBody, public readonly application: ApprovedPremisesApplication) {}
+  constructor(public body: AttachDocumentsBody, public readonly application: TemporaryAccommodationApplication) {}
 
   static async initialize(
     body: AttachDocumentsResponse,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     callConfig: CallConfig,
     dataServices: DataServices,
   ): Promise<AttachDocuments> {

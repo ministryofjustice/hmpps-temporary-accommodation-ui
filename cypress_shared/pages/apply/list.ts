@@ -1,7 +1,7 @@
-import Page from '../page'
+import { TemporaryAccommodationApplication as Application } from '../../../server/@types/shared'
 import paths from '../../../server/paths/apply'
 import { DateFormats } from '../../../server/utils/dateUtils'
-import { ApprovedPremisesApplication as Application } from '../../../server/@types/shared'
+import Page from '../page'
 
 export default class ListPage extends Page {
   constructor(

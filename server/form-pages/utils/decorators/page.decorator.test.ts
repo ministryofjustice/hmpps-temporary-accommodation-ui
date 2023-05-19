@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ApprovedPremisesApplication } from '@approved-premises/api'
+import { TemporaryAccommodationApplication } from '@approved-premises/api'
 import { applicationFactory } from '../../../testutils/factories'
 import Page from './page.decorator'
 
@@ -42,7 +42,7 @@ describe('tasklistPageDecorator', () => {
       name: 'Some Name',
     })
     class ClassWithApplication {
-      constructor(readonly body: Record<string, unknown>, readonly application: ApprovedPremisesApplication) {}
+      constructor(readonly body: Record<string, unknown>, readonly application: TemporaryAccommodationApplication) {}
     }
 
     @Page({
@@ -52,7 +52,7 @@ describe('tasklistPageDecorator', () => {
     class ClassWithApplicationAndPreviousPage {
       constructor(
         readonly body: Record<string, unknown>,
-        readonly application: ApprovedPremisesApplication,
+        readonly application: TemporaryAccommodationApplication,
         readonly previousPage: string,
       ) {}
     }

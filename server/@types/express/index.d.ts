@@ -1,4 +1,4 @@
-import type { ApprovedPremisesApplication as Application, ProbationRegion } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication as Application, ProbationRegion } from '@approved-premises/api'
 import type { ErrorMessages } from '@approved-premises/ui'
 
 export default {}

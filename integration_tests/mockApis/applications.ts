@@ -1,11 +1,11 @@
 import { SuperAgentRequest } from 'superagent'
 
-import type { ApprovedPremisesApplication } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 
 import { getMatchingRequests, stubFor } from '../../wiremock'
 
 export default {
-  stubApplications: (applications: ApprovedPremisesApplication): SuperAgentRequest =>
+  stubApplications: (applications: TemporaryAccommodationApplication): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -17,7 +17,7 @@ export default {
         jsonBody: applications,
       },
     }),
-  stubApplicationCreate: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
+  stubApplicationCreate: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -29,7 +29,7 @@ export default {
         jsonBody: { ...args.application, data: null },
       },
     }),
-  stubApplicationUpdate: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
+  stubApplicationUpdate: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',
@@ -52,7 +52,7 @@ export default {
         transformers: ['response-template'],
       },
     }),
-  stubApplicationGet: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
+  stubApplicationGet: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -65,7 +65,7 @@ export default {
       },
     }),
   stubApplicationDocuments: (args: {
-    application: ApprovedPremisesApplication
+    application: TemporaryAccommodationApplication
     documents: Array<Document>
   }): SuperAgentRequest =>
     stubFor({
@@ -79,7 +79,7 @@ export default {
         jsonBody: args.documents,
       },
     }),
-  stubApplicationSubmit: (args: { application: ApprovedPremisesApplication }): SuperAgentRequest =>
+  stubApplicationSubmit: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',

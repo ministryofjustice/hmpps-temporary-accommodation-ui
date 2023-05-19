@@ -1,42 +1,42 @@
 import {
-  ApprovedPremisesApplication,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
+  TemporaryAccommodationApplication,
 } from '@approved-premises/api'
 import { TableRow } from '@approved-premises/ui'
 
 const roshSummariesFromApplication = (
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ): ArrayOfOASysRiskOfSeriousHarmSummaryQuestions => {
   return application.data['oasys-import']['rosh-summary'].roshSummaries as ArrayOfOASysRiskOfSeriousHarmSummaryQuestions
 }
 
 const offenceDetailSummariesFromApplication = (
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ): ArrayOfOASysOffenceDetailsQuestions => {
   return application.data['oasys-import']['offence-details']
     .offenceDetailsSummaries as ArrayOfOASysOffenceDetailsQuestions
 }
 
 const supportInformationFromApplication = (
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ): ArrayOfOASysSupportingInformationQuestions => {
   return application.data['oasys-import']['supporting-information']
     .supportingInformationSummaries as ArrayOfOASysSupportingInformationQuestions
 }
 
 const riskManagementPlanFromApplication = (
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ): ArrayOfOASysRiskManagementPlanQuestions => {
   return application.data['oasys-import']['risk-management-plan']
     .riskManagementSummaries as ArrayOfOASysRiskManagementPlanQuestions
 }
 
 const riskToSelfSummariesFromApplication = (
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ): ArrayOfOASysRiskToSelfQuestions => {
   return application.data['oasys-import']['risk-to-self'].riskToSelfSummaries as ArrayOfOASysRiskToSelfQuestions
 }

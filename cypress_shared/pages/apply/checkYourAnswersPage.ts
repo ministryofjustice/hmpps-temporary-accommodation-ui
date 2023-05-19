@@ -1,10 +1,10 @@
-import type { ApprovedPremisesApplication } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import ApplyPage from './applyPage'
 
 import paths from '../../../server/paths/apply'
 
 export default class CheckYourAnswersPage extends ApplyPage {
-  constructor(application: ApprovedPremisesApplication) {
+  constructor(application: TemporaryAccommodationApplication) {
     super(
       'Check your answers',
       application,

@@ -1,11 +1,14 @@
-import { ApprovedPremisesApplication, ArrayOfOASysRiskOfSeriousHarmSummaryQuestions } from '@approved-premises/api'
+import {
+  ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
+  TemporaryAccommodationApplication,
+} from '@approved-premises/api'
 import paths from '../../../server/paths/apply'
 
 import ApplyPage from './applyPage'
 
 export default class RoshSummary extends ApplyPage {
   constructor(
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     private readonly roshSummary: ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
   ) {
     super(

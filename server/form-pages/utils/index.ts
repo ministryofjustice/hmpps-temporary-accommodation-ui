@@ -1,8 +1,8 @@
 import type { JourneyType, Task, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
 import type { Request } from 'express'
-import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
-import { ApprovedPremisesApplication, ApprovedPremisesAssessment } from '../../@types/shared'
+import { ApprovedPremisesAssessment, TemporaryAccommodationApplication } from '../../@types/shared'
 import { sentenceCase } from '../../utils/utils'
+import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 
 export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unknown>): YesOrNoWithDetail<K> => {
   return {
@@ -97,7 +97,7 @@ export const updateAssessmentData = (
 
 export function getBody(
   Page: TasklistPageInterface,
-  application: ApprovedPremisesApplication | ApprovedPremisesAssessment,
+  application: TemporaryAccommodationApplication | ApprovedPremisesAssessment,
   request: Request,
   userInput: Record<string, unknown>,
 ) {
@@ -112,7 +112,7 @@ export function getBody(
 
 export function getPageDataFromApplication(
   Page: TasklistPageInterface,
-  application: ApprovedPremisesApplication | ApprovedPremisesAssessment,
+  application: TemporaryAccommodationApplication | ApprovedPremisesAssessment,
 ) {
   const pageName = getPageName(Page)
   const taskName = getTaskName(Page)

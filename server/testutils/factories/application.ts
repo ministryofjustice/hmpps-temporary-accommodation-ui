@@ -53,8 +53,6 @@ export default ApplicationFactory.define(() => ({
   data: {},
   document: {},
   outdatedSchema: faker.datatype.boolean(),
-  isWomensApplication: faker.datatype.boolean(),
-  isPipeApplication: faker.datatype.boolean(),
   risks: risksFactory.build(),
   status: 'inProgress' as const,
 }))

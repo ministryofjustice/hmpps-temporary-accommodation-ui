@@ -36,13 +36,13 @@ class LostBedFactory extends Factory<LostBed> {
 }
 
 export default LostBedFactory.define(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   notes: faker.lorem.sentence(),
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   endDate: DateFormats.dateObjToIsoDate(faker.date.future()),
-  referenceNumber: faker.datatype.uuid(),
+  referenceNumber: faker.string.uuid(),
   reason: referenceDataFactory.lostBedReasons().build(),
   status: faker.helpers.arrayElement(['active', 'cancelled'] as const),
-  bedId: faker.datatype.uuid(),
+  bedId: faker.string.uuid(),
   cancellation: lostBedCancellationFactory.build(),
 }))

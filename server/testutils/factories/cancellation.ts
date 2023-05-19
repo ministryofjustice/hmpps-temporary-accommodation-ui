@@ -1,14 +1,14 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { Cancellation } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
+import referenceDataFactory from './referenceData'
 
 export default Factory.define<Cancellation>(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   date: DateFormats.dateObjToIsoDate(faker.date.soon()),
-  bookingId: faker.datatype.uuid(),
+  bookingId: faker.string.uuid(),
   reason: referenceDataFactory.cancellationReasons().build(),
   notes: faker.lorem.sentence(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),

@@ -17,11 +17,11 @@ class BedSearchResultsFactory extends Factory<BedSearchResults> {
 }
 
 export default BedSearchResultsFactory.define(() => {
-  const results = bedSearchResult.buildList(faker.datatype.number({ min: 5, max: 10 }))
+  const results = bedSearchResult.buildList(faker.number.int({ min: 5, max: 10 }))
 
   return {
-    resultsRoomCount: faker.datatype.number({ min: 5, max: 10 }),
-    resultsPremisesCount: faker.datatype.number({ min: 5, max: 10 }),
+    resultsRoomCount: faker.number.int({ min: 5, max: 10 }),
+    resultsPremisesCount: faker.number.int({ min: 5, max: 10 }),
     resultsBedCount: results.length,
     results,
   }

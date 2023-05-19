@@ -1,14 +1,14 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { Departure } from '@approved-premises/api'
-import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
+import referenceDataFactory from './referenceData'
 
 export default Factory.define<Departure>(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   dateTime: DateFormats.dateObjToIsoDateTime(faker.date.soon()),
-  bookingId: faker.datatype.uuid(),
+  bookingId: faker.string.uuid(),
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),
   moveOnCategory: referenceDataFactory.moveOnCategories().build(),

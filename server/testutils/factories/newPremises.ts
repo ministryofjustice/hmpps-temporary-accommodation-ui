@@ -19,10 +19,10 @@ class NewPremisesFactory extends Factory<NewPremises> {
 
 export default NewPremisesFactory.define(() => ({
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
-  addressLine1: faker.address.streetAddress(),
-  addressLine2: faker.address.secondaryAddress(),
-  town: faker.address.cityName(),
-  postcode: faker.address.zipCode(),
+  addressLine1: faker.location.streetAddress(),
+  addressLine2: faker.location.secondaryAddress(),
+  town: faker.location.city(),
+  postcode: faker.location.zipCode(),
   localAuthorityAreaId: referenceDataFactory.localAuthority().build().id,
   characteristicIds: unique([referenceDataFactory.characteristic('premises').build()]).map(
     characteristic => characteristic.id,
@@ -31,5 +31,5 @@ export default NewPremisesFactory.define(() => ({
   probationDeliveryUnitId: referenceDataFactory.pdu().build().id,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),
   notes: faker.lorem.lines(),
-  turnaroundWorkingDayCount: faker.datatype.number({ min: 1, max: 5 }),
+  turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 5 }),
 }))

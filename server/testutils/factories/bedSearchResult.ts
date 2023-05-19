@@ -56,7 +56,7 @@ const premisesToPremisesSummary = (premises: Premises): BedSearchResultPremisesS
     name: characteristic.name,
     propertyName: characteristic.propertyName,
   })),
-  bedCount: faker.datatype.number({ min: 1, max: 10 }),
+  bedCount: faker.number.int({ min: 1, max: 10 }),
 })
 
 const roomToRoomSummary = (room: Room): BedSearchResultRoomSummary => ({

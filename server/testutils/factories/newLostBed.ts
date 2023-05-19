@@ -12,8 +12,8 @@ export default Factory.define<NewLostBed>(() => {
     notes: faker.lorem.sentence(),
     startDate: DateFormats.dateObjToIsoDate(startDate),
     endDate: DateFormats.dateObjToIsoDate(endDate),
-    referenceNumber: faker.datatype.uuid(),
+    referenceNumber: faker.string.uuid(),
     reason: referenceDataFactory.lostBedReasons().build().id,
-    bedId: faker.datatype.uuid(),
+    bedId: faker.string.uuid(),
   }
 })

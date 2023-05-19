@@ -13,7 +13,7 @@ class RoomFactory extends Factory<Room> {
   forEnvironment(characteristics: ReferenceData[]) {
     return this.params({
       characteristics: faker.helpers
-        .arrayElements(characteristics, faker.datatype.number({ min: 1, max: 5 }))
+        .arrayElements(characteristics, faker.number.int({ min: 1, max: 5 }))
         .map(characteristic =>
           characteristicFactory.build({
             ...characteristic,
@@ -25,11 +25,9 @@ class RoomFactory extends Factory<Room> {
 }
 
 export default RoomFactory.define(() => ({
-  id: faker.datatype.uuid(),
+  id: faker.string.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
-  characteristics: unique(
-    referenceDataFactory.characteristic('room').buildList(faker.datatype.number({ min: 1, max: 5 })),
-  ),
+  characteristics: unique(referenceDataFactory.characteristic('room').buildList(faker.number.int({ min: 1, max: 5 }))),
   notes: faker.lorem.lines(),
   beds: [bedFactory.build()],
 }))

@@ -42,7 +42,7 @@ class PremisesFactory extends Factory<Premises> {
       pdu: pdu.id,
       probationDeliveryUnit: pdu,
       characteristics: faker.helpers
-        .arrayElements(characteristics, faker.datatype.number({ min: 1, max: 5 }))
+        .arrayElements(characteristics, faker.number.int({ min: 1, max: 5 }))
         .map(characteristic =>
           characteristicFactory.build({
             ...characteristic,
@@ -57,31 +57,31 @@ export default PremisesFactory.define(() => {
   const pdu = referenceDataFactory.pdu().build()
 
   return {
-    id: faker.datatype.uuid(),
+    id: faker.string.uuid(),
     name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
-    addressLine1: faker.address.streetAddress(),
-    addressLine2: faker.address.secondaryAddress(),
-    town: faker.address.cityName(),
-    postcode: faker.address.zipCode(),
+    addressLine1: faker.location.streetAddress(),
+    addressLine2: faker.location.secondaryAddress(),
+    town: faker.location.city(),
+    postcode: faker.location.zipCode(),
     bedCount: 50,
-    availableBedsForToday: faker.datatype.number({ min: 0, max: 50 }),
-    apAreaId: faker.random.alphaNumeric(2, { casing: 'upper' }),
+    availableBedsForToday: faker.number.int({ min: 0, max: 50 }),
+    apAreaId: faker.string.alphanumeric({ length: 2, casing: 'upper' }),
     probationRegion: referenceDataFactory.probationRegion().build(),
     apArea: apAreaFactory.build(),
     localAuthorityArea: referenceDataFactory.localAuthority().build(),
     pdu: pdu.id,
     probationDeliveryUnit: pdu,
     characteristics: unique(
-      referenceDataFactory.characteristic('premises').buildList(faker.datatype.number({ min: 1, max: 5 })),
+      referenceDataFactory.characteristic('premises').buildList(faker.number.int({ min: 1, max: 5 })),
     ),
     status: faker.helpers.arrayElement(['active', 'archived'] as const),
     notes: faker.lorem.lines(5),
-    turnaroundWorkingDayCount: faker.datatype.number({ min: 1, max: 5 }),
+    turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 5 }),
   }
 })
 
 const apAreaFactory = Factory.define<ApArea>(() => ({
-  id: faker.datatype.uuid(),
-  name: faker.address.cityName(),
-  identifier: faker.random.alphaNumeric(),
+  id: faker.string.uuid(),
+  name: faker.location.city(),
+  identifier: faker.string.alphanumeric(),
 }))

@@ -4,8 +4,8 @@ import { Factory } from 'fishery'
 import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Turnaround>(() => ({
-  id: faker.datatype.uuid(),
-  bookingId: faker.datatype.uuid(),
-  workingDays: faker.datatype.number({ min: 1, max: 10 }),
+  id: faker.string.uuid(),
+  bookingId: faker.string.uuid(),
+  workingDays: faker.number.int({ min: 1, max: 10 }),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

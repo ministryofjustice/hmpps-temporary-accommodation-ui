@@ -1,13 +1,13 @@
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import { Factory } from 'fishery'
 
 import type { PrisonCaseNote } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<PrisonCaseNote>(({ sequence }) => ({
-  authorName: faker.name.fullName(),
-  id: faker.datatype.uuid(),
+  authorName: faker.person.fullName(),
+  id: faker.string.uuid(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   occurredAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   sensitive: faker.datatype.boolean(),

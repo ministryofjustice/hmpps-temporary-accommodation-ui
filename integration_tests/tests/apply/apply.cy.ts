@@ -173,6 +173,6 @@ context('Apply', () => {
     confirmationPage.clickBackToDashboard()
 
     // Then I am taken back to the dashboard
-    Page.verifyOnPage(ListPage, applications, [], [])
+    Page.verifyOnPage(ListPage, applications, [])
   })
 })

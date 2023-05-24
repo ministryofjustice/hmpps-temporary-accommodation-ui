@@ -1,7 +1,7 @@
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import paths from '../paths/apply'
-import { applicationFactory, tierEnvelopeFactory } from '../testutils/factories'
+import { applicationFactory } from '../testutils/factories'
 import { DateFormats } from './dateUtils'
 import { isApplicableTier, tierBadge } from './personUtils'
 
@@ -131,16 +131,12 @@ describe('applicationUtils', () => {
         person: { name: 'A' },
         data: {},
         submittedAt: null,
-        risks: { tier: tierEnvelopeFactory.build({ value: { level: 'A1' } }) },
       })
       const applicationB = applicationFactory.withReleaseDate(arrivalDate).build({
         person: { name: 'A' },
-        risks: { tier: tierEnvelopeFactory.build({ value: { level: null } }) },
       })
 
       const result = dashboardTableRows([applicationA, applicationB])
-
-      expect(tierBadge).toHaveBeenCalledWith('A1')
 
       expect(result).toEqual([
         [
@@ -149,9 +145,6 @@ describe('applicationUtils', () => {
           },
           {
             text: applicationA.person.crn,
-          },
-          {
-            html: 'TIER_BADGE',
           },
           {
             text: 'N/A',
@@ -168,9 +161,6 @@ describe('applicationUtils', () => {
             text: applicationB.person.crn,
           },
           {
-            html: 'TIER_BADGE',
-          },
-          {
             text: DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }),
           },
           {
@@ -185,13 +175,9 @@ describe('applicationUtils', () => {
     it('returns the correct tag for each status', () => {
       const inProgressApplication = applicationFactory.build({ status: 'inProgress' })
       const submittedApplication = applicationFactory.build({ status: 'submitted' })
-      const informationRequestedApplication = applicationFactory.build({ status: 'requestedFurtherInformation' })
 
       expect(getStatus(inProgressApplication)).toEqual('<strong class="govuk-tag govuk-tag--blue">In Progress</strong>')
       expect(getStatus(submittedApplication)).toEqual('<strong class="govuk-tag">Submitted</strong>')
-      expect(getStatus(informationRequestedApplication)).toEqual(
-        '<strong class="govuk-tag govuk-tag--yellow">Info Request</strong>',
-      )
     })
   })
 

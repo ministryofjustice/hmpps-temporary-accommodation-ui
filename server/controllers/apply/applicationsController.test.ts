@@ -42,7 +42,7 @@ describe('applicationsController', () => {
 
   describe('index', () => {
     it('renders the index view', async () => {
-      const applications: GroupedApplications = { inProgress: [], requestedFurtherInformation: [], submitted: [] }
+      const applications: GroupedApplications = { inProgress: [], submitted: [] }
 
       applicationService.getAllForLoggedInUser.mockResolvedValue(applications)
 
@@ -51,7 +51,6 @@ describe('applicationsController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('applications/index', {
-        pageHeading: 'Approved Premises applications',
         applications,
       })
       expect(applicationService.getAllForLoggedInUser).toHaveBeenCalled()

@@ -7,27 +7,18 @@ export default class ListPage extends Page {
   constructor(
     private readonly inProgressApplications: Array<Application>,
     private readonly submittedApplications: Array<Application>,
-    private readonly requestedFurtherInformationApplications: Array<Application>,
   ) {
-    super('Approved Premises applications')
+    super('Temporary Accommodation (TA) applications')
   }
 
-  static visit(
-    inProgressApplications: Array<Application>,
-    submittedApplications: Array<Application>,
-    requestedFurtherInformationApplications: Array<Application>,
-  ): ListPage {
+  static visit(inProgressApplications: Array<Application>, submittedApplications: Array<Application>): ListPage {
     cy.visit(paths.applications.index.pattern)
 
-    return new ListPage(inProgressApplications, submittedApplications, requestedFurtherInformationApplications)
+    return new ListPage(inProgressApplications, submittedApplications)
   }
 
   shouldShowInProgressApplications(): void {
     this.shouldShowApplications(this.inProgressApplications, 'In Progress')
-  }
-
-  shouldShowFurtherInformationRequestedApplications(): void {
-    this.shouldShowApplications(this.requestedFurtherInformationApplications, 'Info Request')
   }
 
   shouldShowSubmittedApplications(): void {
@@ -36,10 +27,6 @@ export default class ListPage extends Page {
 
   clickSubmit() {
     cy.get('.govuk-button').click()
-  }
-
-  clickFurtherInformationRequestedTab() {
-    cy.get('a').contains('Further information requested').click()
   }
 
   clickSubmittedTab() {
@@ -55,15 +42,14 @@ export default class ListPage extends Page {
         .within(() => {
           cy.get('th').eq(0).contains(application.person.name)
           cy.get('td').eq(0).contains(application.person.crn)
-          cy.get('td').eq(1).contains(application.risks.tier.value.level)
           cy.get('td')
-            .eq(2)
+            .eq(1)
             .contains(
               DateFormats.isoDateToUIDate(application.data['basic-information']['release-date'].releaseDate, {
                 format: 'short',
               }),
             )
-          cy.get('td').eq(3).contains(status)
+          cy.get('td').eq(2).contains(status)
         })
     })
   }

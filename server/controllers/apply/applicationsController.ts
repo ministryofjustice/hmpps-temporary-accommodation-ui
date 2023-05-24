@@ -20,7 +20,7 @@ export default class ApplicationsController {
       const callConfig = extractCallConfig(req)
       const applications = await this.applicationService.getAllForLoggedInUser(callConfig)
 
-      res.render('applications/index', { pageHeading: 'Approved Premises applications', applications })
+      res.render('applications/index', { applications })
     }
   }
 

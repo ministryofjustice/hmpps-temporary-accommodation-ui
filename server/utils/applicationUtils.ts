@@ -10,7 +10,6 @@ import paths from '../paths/apply'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError } from './errors'
-import { tierBadge } from './personUtils'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
@@ -19,7 +18,6 @@ const dashboardTableRows = (applications: Array<Application>): Array<TableRow> =
     return [
       createNameAnchorElement(application.person.name, application.id),
       textValue(application.person.crn),
-      htmlValue(tierBadge(application.risks.tier.value?.level || '')),
       textValue(arrivalDate ? DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }) : 'N/A'),
       htmlValue(getStatus(application)),
     ]
@@ -30,8 +28,6 @@ const getStatus = (application: Application): string => {
   switch (application.status) {
     case 'submitted':
       return `<strong class="govuk-tag">Submitted</strong>`
-    case 'requestedFurtherInformation':
-      return `<strong class="govuk-tag govuk-tag--yellow">Info Request</strong>`
     default:
       return `<strong class="govuk-tag govuk-tag--blue">In Progress</strong>`
   }

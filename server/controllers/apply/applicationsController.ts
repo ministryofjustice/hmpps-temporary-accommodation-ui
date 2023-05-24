@@ -57,7 +57,6 @@ export default class ApplicationsController {
         const offenceId = offences.length === 1 ? offences[0].offenceId : null
 
         return res.render(`applications/people/confirm`, {
-          pageHeading: `Confirm ${person.name}'s details`,
           ...person,
           date: DateFormats.dateObjtoUIDate(new Date()),
           dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),

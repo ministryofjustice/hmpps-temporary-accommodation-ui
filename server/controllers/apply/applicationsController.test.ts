@@ -131,7 +131,6 @@ describe('applicationsController', () => {
           await requestHandler(request, response, next)
 
           expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-            pageHeading: `Confirm ${person.name}'s details`,
             ...person,
             date: DateFormats.dateObjtoUIDate(new Date()),
             dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
@@ -151,7 +150,6 @@ describe('applicationsController', () => {
           await requestHandler(request, response, next)
 
           expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-            pageHeading: `Confirm ${person.name}'s details`,
             ...person,
             date: DateFormats.dateObjtoUIDate(new Date()),
             dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
@@ -172,7 +170,6 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-          pageHeading: `Confirm ${person.name}'s details`,
           ...person,
           date: DateFormats.dateObjtoUIDate(new Date()),
           dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),

@@ -26,9 +26,7 @@ export default class ApplicationsController {
 
   start(): RequestHandler {
     return (_req: Request, res: Response) => {
-      res.render('applications/start', {
-        pageHeading: tasklistPageHeading,
-      })
+      res.render('applications/start')
     }
   }
 

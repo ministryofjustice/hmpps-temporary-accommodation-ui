@@ -63,9 +63,7 @@ describe('applicationsController', () => {
 
       requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/start', {
-        pageHeading: 'Apply for an Approved Premises (AP) placement',
-      })
+      expect(response.render).toHaveBeenCalledWith('applications/start')
     })
   })
 

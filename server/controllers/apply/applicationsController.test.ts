@@ -202,7 +202,6 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/new', {
-          pageHeading: "Enter the person's CRN",
           errors: {},
           errorSummary: [],
         })
@@ -216,7 +215,6 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/new', {
-          pageHeading: "Enter the person's CRN",
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,
           ...errorsAndUserInput.userInput,

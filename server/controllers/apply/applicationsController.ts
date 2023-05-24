@@ -10,8 +10,6 @@ import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
 
-export const tasklistPageHeading = 'Apply for an Approved Premises (AP) placement'
-
 export default class ApplicationsController {
   constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
 
@@ -116,7 +114,6 @@ export default class ApplicationsController {
             },
           ],
           errorObject,
-          pageHeading: tasklistPageHeading,
           sections: Apply.sections,
         })
       }

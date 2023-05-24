@@ -8,7 +8,7 @@ import { ApplicationService, PersonService } from '../../services'
 import TasklistService from '../../services/tasklistService'
 import { activeOffenceFactory, applicationFactory, personFactory } from '../../testutils/factories'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
-import ApplicationsController, { tasklistPageHeading } from './applicationsController'
+import ApplicationsController from './applicationsController'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/apply'
@@ -317,7 +317,6 @@ describe('applicationsController', () => {
             text: 'You must confirm the information provided is complete, accurate and up to date.',
           },
         ],
-        pageHeading: tasklistPageHeading,
         sections: Apply.sections,
       })
     })

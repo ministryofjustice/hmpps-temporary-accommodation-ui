@@ -2,7 +2,7 @@ import Page from '../page'
 
 export default class SubmissionConfirmation extends Page {
   constructor() {
-    super('Application confirmation')
+    super('Referral complete')
   }
 
   clickBackToDashboard() {

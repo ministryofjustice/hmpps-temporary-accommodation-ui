@@ -285,9 +285,7 @@ describe('applicationsController', () => {
       expect(applicationService.findApplication).toHaveBeenCalledWith(callConfig, 'some-id')
       expect(getResponses).toHaveBeenCalledWith(application)
       expect(applicationService.submit).toHaveBeenCalledWith(callConfig, application)
-      expect(response.render).toHaveBeenCalledWith('applications/confirm', {
-        pageHeading: 'Application confirmation',
-      })
+      expect(response.render).toHaveBeenCalledWith('applications/confirm')
     })
 
     it('renders the "show" view with errors if the checkbox isnt ticked ', async () => {

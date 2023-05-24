@@ -117,7 +117,7 @@ export default class ApplicationsController {
       }
 
       await this.applicationService.submit(callConfig, application)
-      return res.render('applications/confirm', { pageHeading: 'Application confirmation' })
+      return res.render('applications/confirm')
     }
   }
 }

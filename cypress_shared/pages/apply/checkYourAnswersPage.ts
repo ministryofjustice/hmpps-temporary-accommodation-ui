@@ -14,6 +14,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     )
   }
 
+  shouldShowSentenceInformationAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('sentence-information', 'Sentence information')
+    this.shouldShowAnswersForTask('sentence-information', pages)
+  }
+
   private shouldShowAnswersForTask(taskName: string, pages: Array<ApplyPage>) {
     cy.get(`[data-cy-check-your-answers-section="${taskName}"]`).within(() => {
       pages.forEach(page => {

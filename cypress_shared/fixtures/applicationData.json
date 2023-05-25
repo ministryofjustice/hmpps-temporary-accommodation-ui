@@ -1,4 +1,9 @@
 {
+  "sentence-information": {
+    "sentence-type": {
+      "sentenceType": "communityOrder"
+    }
+  },
   "check-your-answers": {
     "review": {
       "reviewed": "1"

@@ -15,7 +15,15 @@ import { PersonRisksUI } from '@approved-premises/ui'
 import { documentFactory, oasysSectionsFactory, oasysSelectionFactory } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
-import { CheckYourAnswersPage, ConfirmDetailsPage, EnterCRNPage, StartPage, TaskListPage } from '../pages/apply'
+import {
+  CheckYourAnswersPage,
+  ConfirmDetailsPage,
+  EnterCRNPage,
+  SentenceTypePage,
+  StartPage,
+  TaskListPage,
+} from '../pages/apply'
+import ApplyPage from '../pages/apply/applyPage'
 import {
   offenceDetailSummariesFromApplication,
   riskManagementPlanFromApplication,
@@ -25,7 +33,9 @@ import {
 } from './index'
 
 export default class ApplyHelper {
-  pages = {}
+  pages = {
+    sentenceInformation: [] as Array<ApplyPage>,
+  }
 
   uiRisks?: PersonRisksUI
 
@@ -88,12 +98,14 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
+    this.completeSentenceInformation()
+
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [].length
+    return [...this.pages.sentenceInformation].length
   }
 
   private stubPersonEndpoints() {
@@ -188,12 +200,41 @@ export default class ApplyHelper {
     cy.task('stubApplicationSubmit', { application: this.application })
   }
 
+  completeSentenceInformation() {
+    // Given I click the sentence information task
+    cy.get('[data-cy-task-name="sentence-information"]').click()
+    const sentenceTypePage = new SentenceTypePage(this.application)
+
+    // When I complete the form
+    sentenceTypePage.completeForm()
+    sentenceTypePage.clickSubmit()
+
+    this.pages.sentenceInformation = [sentenceTypePage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('sentence-information', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
+
+    // And the risk widgets should be visible
+    if (this.uiRisks) {
+      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+  }
+
   private completeCheckYourAnswersSection() {
     // Given I click the check your answers task
     cy.get('[data-cy-task-name="check-your-answers"]').click()
 
     // Then I should be on the check your answers page
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
+
+    // And the page should be populated with my answers
+    checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
 
     // When I have checked my answers
     checkYourAnswersPage.clickSubmit()

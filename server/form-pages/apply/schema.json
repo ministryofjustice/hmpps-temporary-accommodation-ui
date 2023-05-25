@@ -4,9 +4,32 @@
   "title": "Apply Schema",
   "additionalProperties": false,
   "required": [
+    "sentence-information",
     "check-your-answers"
   ],
   "properties": {
+    "sentence-information": {
+      "type": "object",
+      "properties": {
+        "sentence-type": {
+          "type": "object",
+          "properties": {
+            "sentenceType": {
+              "enum": [
+                "bailPlacement",
+                "communityOrder",
+                "extendedDeterminate",
+                "ipp",
+                "life",
+                "nonStatutory",
+                "standardDeterminate"
+              ],
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "check-your-answers": {
       "type": "object",
       "properties": {

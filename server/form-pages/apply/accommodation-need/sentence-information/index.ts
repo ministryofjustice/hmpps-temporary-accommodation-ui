@@ -4,8 +4,8 @@ import { Task } from '../../../utils/decorators'
 import SentenceType from './sentenceType'
 
 @Task({
-  name: 'Basic information',
-  slug: 'basic-information',
+  name: 'Sentence information',
+  slug: 'sentence-information',
   pages: [SentenceType],
 })
-export default class BasicInformation {}
+export default class SentenceInformation {}

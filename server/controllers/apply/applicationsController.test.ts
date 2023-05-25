@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import type { ApprovedPremisesApplication } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { ErrorsAndUserInput, GroupedApplications } from '@approved-premises/ui'
 import Apply from '../../form-pages/apply'
 import { ApplicationService, PersonService } from '../../services'
@@ -71,7 +71,7 @@ describe('applicationsController', () => {
   })
 
   describe('show', () => {
-    const application = createMock<ApprovedPremisesApplication>({ person: { crn: 'some-crn' } })
+    const application = createMock<TemporaryAccommodationApplication>({ person: { crn: 'some-crn' } })
 
     beforeEach(() => {
       request = createMock<Request>({

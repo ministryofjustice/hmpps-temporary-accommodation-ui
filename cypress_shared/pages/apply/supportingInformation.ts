@@ -1,11 +1,11 @@
-import { ApprovedPremisesApplication, ArrayOfOASysSupportingInformationQuestions } from '@approved-premises/api'
+import { ArrayOfOASysSupportingInformationQuestions, TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../server/paths/apply'
 
 import ApplyPage from './applyPage'
 
 export default class SupportingInformation extends ApplyPage {
   constructor(
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     private readonly supportingInformationSummaries: ArrayOfOASysSupportingInformationQuestions,
   ) {
     super(

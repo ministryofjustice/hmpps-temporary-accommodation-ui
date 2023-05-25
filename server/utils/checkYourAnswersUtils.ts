@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication } from '@approved-premises/api'
+import { TemporaryAccommodationApplication } from '@approved-premises/api'
 import { HtmlItem, SummaryListItem, Task, TextItem } from '@approved-premises/ui'
 
 import paths from '../paths/apply'
@@ -6,12 +6,12 @@ import paths from '../paths/apply'
 import { getResponseForPage } from './applicationUtils'
 import reviewSections from './reviewUtils'
 
-const checkYourAnswersSections = (application: ApprovedPremisesApplication) =>
+const checkYourAnswersSections = (application: TemporaryAccommodationApplication) =>
   reviewSections(application, getTaskResponsesAsSummaryListItems)
 
 export const getTaskResponsesAsSummaryListItems = (
   task: Task,
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ): Array<SummaryListItem> => {
   const items: Array<SummaryListItem> = []
 
@@ -65,7 +65,7 @@ const summaryListItemForResponse = (
   value: TextItem | HtmlItem,
   task: Task,
   pageName: string,
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
 ) => {
   return {
     key: {

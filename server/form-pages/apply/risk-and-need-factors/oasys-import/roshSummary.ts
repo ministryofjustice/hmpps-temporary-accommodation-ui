@@ -2,9 +2,9 @@
 import type { DataServices, PersonRisksUI } from '@approved-premises/ui'
 
 import type {
-  ApprovedPremisesApplication,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
   OASysSections,
+  TemporaryAccommodationApplication,
 } from '@approved-premises/api'
 
 import TasklistPage from '../../../tasklistPage'
@@ -38,7 +38,7 @@ export default class RoshSummary implements TasklistPage {
 
   static async initialize(
     body: Record<string, unknown>,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {

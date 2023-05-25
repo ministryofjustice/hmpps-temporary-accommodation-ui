@@ -1,4 +1,7 @@
-import { ApprovedPremisesApplication as Application, ApprovedPremisesAssessment as Assessment } from '../@types/shared'
+import {
+  TemporaryAccommodationApplication as Application,
+  ApprovedPremisesAssessment as Assessment,
+} from '../@types/shared'
 import { SummaryListItem, Task } from '../@types/ui'
 import Apply from '../form-pages/apply'
 import getSections from './assessments/getSections'

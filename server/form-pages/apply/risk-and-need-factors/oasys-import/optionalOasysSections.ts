@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication, OASysSection } from '../../../../@types/shared'
+import { OASysSection, TemporaryAccommodationApplication } from '../../../../@types/shared'
 import { DataServices } from '../../../../@types/ui'
 import { CallConfig } from '../../../../data/restClient'
 import { flattenCheckboxInput, isStringOrArrayOfStrings } from '../../../../utils/formUtils'
@@ -35,7 +35,7 @@ export default class OptionalOasysSections implements TasklistPage {
 
   static async initialize(
     body: Partial<Response>,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {

@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication as Application, Document } from '../../@types/shared'
+import { TemporaryAccommodationApplication as Application, Document } from '../../@types/shared'
 
 export const documentsFromApplication = (application: Application): Array<Document> => {
   return (

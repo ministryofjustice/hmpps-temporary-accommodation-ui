@@ -1,18 +1,18 @@
 /* istanbul ignore file */
 
-import { ApprovedPremisesApplication, ApprovedPremisesAssessment } from '@approved-premises/api'
+import { ApprovedPremisesAssessment, TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { CallConfig } from '../data/restClient'
 
 export interface TasklistPageInterface {
   new (
     body: Record<string, unknown>,
-    document?: ApprovedPremisesApplication | ApprovedPremisesAssessment,
+    document?: TemporaryAccommodationApplication | ApprovedPremisesAssessment,
     previousPage?: string,
   ): TasklistPage
   initialize?(
     body: Record<string, unknown>,
-    document: ApprovedPremisesApplication | ApprovedPremisesAssessment,
+    document: TemporaryAccommodationApplication | ApprovedPremisesAssessment,
     callConfig: CallConfig,
     dataServices: DataServices,
   ): Promise<TasklistPage>

@@ -1,5 +1,5 @@
 import type {
-  ApprovedPremisesApplication as Application,
+  TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
 import type { PageResponse, TableRow } from '@approved-premises/ui'

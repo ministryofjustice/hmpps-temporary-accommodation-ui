@@ -1,9 +1,9 @@
 import type { DataServices, PersonRisksUI } from '@approved-premises/ui'
 
 import type {
-  ApprovedPremisesApplication,
   ArrayOfOASysRiskToSelfQuestions,
   OASysSections,
+  TemporaryAccommodationApplication,
 } from '@approved-premises/api'
 
 import TasklistPage from '../../../tasklistPage'
@@ -37,7 +37,7 @@ export default class RiskToSelf implements TasklistPage {
 
   static async initialize(
     body: Record<string, unknown>,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {

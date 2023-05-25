@@ -1,10 +1,4 @@
-import {
-  EnterCRNPage,
-  ListPage,
-  SelectOffencePage,
-  SentenceTypePage,
-  StartPage,
-} from '../../../cypress_shared/pages/apply'
+import { EnterCRNPage, ListPage, SelectOffencePage, StartPage, TaskListPage } from '../../../cypress_shared/pages/apply'
 
 import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
@@ -78,8 +72,8 @@ context('Apply', () => {
       expect(body.deliusEventNumber).equal(selectedOffence.deliusEventNumber)
       expect(body.offenceId).equal(selectedOffence.offenceId)
 
-      // Then I should be on the Sentence Type page
-      Page.verifyOnPage(SentenceTypePage, this.application)
+      // Then I should be on the task list page
+      Page.verifyOnPage(TaskListPage)
     })
   })
 

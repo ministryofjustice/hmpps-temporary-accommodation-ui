@@ -212,7 +212,11 @@ export default class ApplyHelper {
   }
 
   completeBasicInformation() {
+    // Given I click the 'Basic Information' task
+    cy.get('[data-cy-task-name="basic-information"]').click()
     const sentenceTypePage = new SentenceTypePage(this.application)
+
+    // When I complete the form
     sentenceTypePage.completeForm()
     sentenceTypePage.clickSubmit()
 

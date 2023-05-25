@@ -186,9 +186,7 @@ describe('applicationUtils', () => {
       ;(isApplicableTier as jest.Mock).mockReturnValue(true)
       const application = applicationFactory.build()
 
-      expect(firstPageOfApplicationJourney(application)).toEqual(
-        paths.applications.pages.show({ id: application.id, task: 'basic-information', page: 'sentence-type' }),
-      )
+      expect(firstPageOfApplicationJourney(application)).toEqual(paths.applications.show({ id: application.id }))
     })
   })
 

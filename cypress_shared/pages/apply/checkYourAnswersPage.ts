@@ -19,6 +19,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('sentence-information', pages)
   }
 
+  shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
+    this.shouldShowAnswersForTask('oasys-import', pages)
+  }
+
   private shouldShowAnswersForTask(taskName: string, pages: Array<ApplyPage>) {
     cy.get(`[data-cy-check-your-answers-section="${taskName}"]`).within(() => {
       pages.forEach(page => {

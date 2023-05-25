@@ -19,8 +19,14 @@ import {
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
+  OffenceDetailsPage,
+  OptionalOasysSectionsPage,
+  RiskManagementPlanPage,
+  RiskToSelfPage,
+  RoshSummaryPage,
   SentenceTypePage,
   StartPage,
+  SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
@@ -35,6 +41,7 @@ import {
 export default class ApplyHelper {
   pages = {
     sentenceInformation: [] as Array<ApplyPage>,
+    oasysImport: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -63,7 +70,7 @@ export default class ApplyHelper {
     private readonly application: Application,
     private readonly person: Person,
     private readonly offences: Array<ActiveOffence>,
-    private readonly type: 'e2e' | 'integration',
+    private readonly environment: 'e2e' | 'integration',
   ) {}
 
   initializeE2e(oasysSectionsLinkedToReoffending: Array<OASysSection>, otherOasysSections: Array<OASysSection>) {
@@ -75,6 +82,7 @@ export default class ApplyHelper {
     this.uiRisks = uiRisks
     this.stubPersonEndpoints()
     this.stubApplicationEndpoints()
+    this.stubOasysEndpoints()
     this.stubDocumentEndpoints()
     this.stubOffences()
   }
@@ -99,13 +107,14 @@ export default class ApplyHelper {
 
   completeApplication() {
     this.completeSentenceInformation()
+    this.completeOasysImport()
 
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.sentenceInformation].length
+    return [...this.pages.sentenceInformation, ...this.pages.oasysImport].length
   }
 
   private stubPersonEndpoints() {
@@ -218,12 +227,74 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('sentence-information', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
 
     // And the risk widgets should be visible
     if (this.uiRisks) {
       tasklistPage.shouldShowRiskWidgets(this.uiRisks)
     }
+  }
+
+  private completeOasysImport() {
+    // Given I click the oasys import task
+    cy.get('[data-cy-task-name="oasys-import"]').click()
+    const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
+
+    // When I complete the form
+    optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
+    optionalOasysImportPage.clickSubmit()
+
+    const roshSummaryPage = new RoshSummaryPage(this.application, this.roshSummaries)
+
+    if (this.uiRisks) {
+      roshSummaryPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+
+    roshSummaryPage.completeForm()
+
+    roshSummaryPage.clickSubmit()
+
+    const offenceDetailsPage = new OffenceDetailsPage(this.application, this.offenceDetailSummaries)
+
+    if (this.uiRisks) {
+      offenceDetailsPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+
+    offenceDetailsPage.completeForm()
+    offenceDetailsPage.clickSubmit()
+
+    const supportingInformationPage = new SupportingInformationPage(
+      this.application,
+      this.supportingInformationSummaries,
+    )
+    supportingInformationPage.completeForm()
+    supportingInformationPage.clickSubmit()
+
+    const riskManagementPlanPage = new RiskManagementPlanPage(this.application, this.riskManagementPlanSummaries)
+    riskManagementPlanPage.completeForm()
+    riskManagementPlanPage.clickSubmit()
+
+    const riskToSelfPage = new RiskToSelfPage(this.application, this.riskToSelfSummaries)
+    riskToSelfPage.completeForm()
+    riskToSelfPage.clickSubmit()
+
+    this.pages.oasysImport = [
+      optionalOasysImportPage,
+      roshSummaryPage,
+      offenceDetailsPage,
+      supportingInformationPage,
+      riskManagementPlanPage,
+      riskToSelfPage,
+    ]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // Then I should be taken back to the tasklist
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
+
+    // And the Attach Documents task should show as not started
+    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
   }
 
   private completeCheckYourAnswersSection() {
@@ -235,6 +306,10 @@ export default class ApplyHelper {
 
     // And the page should be populated with my answers
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
+
+    if (this.environment === 'integration') {
+      checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
+    }
 
     // When I have checked my answers
     checkYourAnswersPage.clickSubmit()

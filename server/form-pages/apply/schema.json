@@ -6,6 +6,7 @@
   "required": [
     "sentence-information",
     "oasys-import",
+    "attach-documents",
     "check-your-answers"
   ],
   "properties": {
@@ -256,6 +257,51 @@
                     "type": "string"
                   },
                   "answer": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "attach-documents": {
+      "type": "object",
+      "properties": {
+        "attach-documents": {
+          "type": "object",
+          "properties": {
+            "selectedDocuments": {
+              "type": "array",
+              "items": {
+                "description": "Meta Info about a file relating to an Offender",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "level": {
+                    "description": "The level at which a Document is associated - i.e. to the Offender or to a specific Conviction",
+                    "enum": [
+                      "Conviction",
+                      "Offender"
+                    ],
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "typeCode": {
+                    "type": "string"
+                  },
+                  "typeDescription": {
+                    "type": "string"
+                  },
+                  "description": {
                     "type": "string"
                   }
                 }

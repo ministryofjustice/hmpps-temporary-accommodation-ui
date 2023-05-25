@@ -1,12 +1,12 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import { CallConfig } from '../../../data/restClient'
-import { ApplicationService, PersonService } from '../../../services'
-import { applicationFactory, documentFactory } from '../../../testutils/factories'
-import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-examples'
+import { CallConfig } from '../../../../data/restClient'
+import { ApplicationService, PersonService } from '../../../../services'
+import { applicationFactory, documentFactory } from '../../../../testutils/factories'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 
 import AttachDocuments from './attachDocuments'
 
-jest.mock('../../../services/applicationService.ts')
+jest.mock('../../../../services/applicationService.ts')
 
 describe('attachDocuments', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig

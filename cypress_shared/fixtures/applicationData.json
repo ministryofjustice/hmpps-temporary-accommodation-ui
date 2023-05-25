@@ -146,6 +146,30 @@
       ]
     }
   },
+  "attach-documents": {
+    "attach-documents": {
+      "selectedDocuments": [
+        {
+          "id": "aeb43e06-a4a1-460f-9acf-e2495de84604",
+          "level": "Offender",
+          "fileName": "Random offender document1.pdf",
+          "createdAt": "2019-09-10T00:00:00Z",
+          "typeCode": "OFFENDER_DOCUMENT",
+          "typeDescription": "Offender related",
+          "description": "Some Description 1"
+        },
+        {
+          "id": "5f8a2288-0a17-4e45-afd5-5e57794a7b53",
+          "level": "Conviction",
+          "fileName": "national.asm",
+          "createdAt": "2022-09-13",
+          "typeCode": "serenade",
+          "typeDescription": "porter",
+          "description": "Some Description 2"
+        }
+      ]
+    }
+  },
   "check-your-answers": {
     "review": {
       "reviewed": "1"

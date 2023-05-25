@@ -18,7 +18,7 @@ export default class AttachDocumentsPage extends ApplyPage {
     super(
       'Select any additional documents that are required to support your application',
       application,
-      'attach-required-documents',
+      'attach-documents',
       'attach-documents',
       paths.applications.show({ id: application.id }),
     )

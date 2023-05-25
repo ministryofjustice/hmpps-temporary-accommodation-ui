@@ -1,23 +1,19 @@
-import type { Request } from 'express'
+import type { ActiveOffence, TemporaryAccommodationApplication as Application, Document } from '@approved-premises/api'
 import type { DataServices, GroupedApplications } from '@approved-premises/ui'
-import type { ActiveOffence, ApprovedPremisesApplication, Document } from '@approved-premises/api'
+import type { Request } from 'express'
 
-import { isUnapplicable } from '../utils/applicationUtils'
-import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
 import type { ApplicationClient, RestClientBuilder } from '../data'
+import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
 import { ValidationError } from '../utils/errors'
 
-import { getBody, getPageName, getTaskName } from '../form-pages/utils'
 import { CallConfig } from '../data/restClient'
+import { getBody, getPageName, getTaskName } from '../form-pages/utils'
+import { getApplicationSubmissionData, getApplicationUpdateData } from '../utils/applications/getApplicationData'
 
 export default class ApplicationService {
   constructor(private readonly applicationClientFactory: RestClientBuilder<ApplicationClient>) {}
 
-  async createApplication(
-    callConfig: CallConfig,
-    crn: string,
-    activeOffence: ActiveOffence,
-  ): Promise<ApprovedPremisesApplication> {
+  async createApplication(callConfig: CallConfig, crn: string, activeOffence: ActiveOffence): Promise<Application> {
     const applicationClient = this.applicationClientFactory(callConfig)
 
     const application = await applicationClient.create(crn, activeOffence)
@@ -25,7 +21,7 @@ export default class ApplicationService {
     return application
   }
 
-  async findApplication(callConfig: CallConfig, id: string): Promise<ApprovedPremisesApplication> {
+  async findApplication(callConfig: CallConfig, id: string): Promise<Application> {
     const applicationClient = this.applicationClientFactory(callConfig)
 
     const application = await applicationClient.find(id)
@@ -42,10 +38,8 @@ export default class ApplicationService {
       submitted: [],
     } as GroupedApplications
 
-    const applications = allApplications.filter(application => !isUnapplicable(application))
-
     await Promise.all(
-      applications.map(async application => {
+      allApplications.map(async application => {
         switch (application.status) {
           case 'submitted':
             result.submitted.push(application)
@@ -63,7 +57,7 @@ export default class ApplicationService {
     return result
   }
 
-  async getDocuments(callConfig: CallConfig, application: ApprovedPremisesApplication): Promise<Array<Document>> {
+  async getDocuments(callConfig: CallConfig, application: Application): Promise<Array<Document>> {
     const applicationClient = this.applicationClientFactory(callConfig)
 
     const documents = await applicationClient.documents(application)
@@ -108,13 +102,13 @@ export default class ApplicationService {
     }
   }
 
-  async submit(callConfig: CallConfig, application: ApprovedPremisesApplication) {
+  async submit(callConfig: CallConfig, application: Application) {
     const client = this.applicationClientFactory(callConfig)
 
-    await client.submit(application)
+    await client.submit(application.id, getApplicationSubmissionData(application))
   }
 
-  async getApplicationFromSessionOrAPI(callConfig: CallConfig, request: Request): Promise<ApprovedPremisesApplication> {
+  async getApplicationFromSessionOrAPI(callConfig: CallConfig, request: Request): Promise<Application> {
     const { application } = request.session
 
     if (application && application.id === request.params.id) {
@@ -123,14 +117,14 @@ export default class ApplicationService {
     return this.findApplication(callConfig, request.params.id)
   }
 
-  private async saveToSession(application: ApprovedPremisesApplication, page: TasklistPage, request: Request) {
+  private async saveToSession(application: Application, page: TasklistPage, request: Request) {
     request.session.application = application
     request.session.previousPage = request.params.page
   }
 
-  private async saveToApi(callConfig: CallConfig, application: ApprovedPremisesApplication) {
+  private async saveToApi(callConfig: CallConfig, application: Application) {
     const client = this.applicationClientFactory(callConfig)
 
-    await client.update(application)
+    await client.update(application.id, getApplicationUpdateData(application))
   }
 }

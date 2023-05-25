@@ -1,6 +1,7 @@
 import activeOffenceFactory from './activeOffence'
 import adjudicationFactory from './adjudication'
 import applicationFactory from './application'
+import applicationSummaryFactory from './applicationSummary'
 import arrivalFactory from './arrival'
 import assessmentFactory from './assessment'
 import bedFactory from './bed'
@@ -59,6 +60,7 @@ export {
   activeOffenceFactory,
   adjudicationFactory,
   applicationFactory,
+  applicationSummaryFactory,
   arrivalFactory,
   assessmentFactory,
   bedFactory,

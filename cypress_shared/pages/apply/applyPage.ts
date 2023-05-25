@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication, Document, OASysQuestion } from '@approved-premises/api'
+import { Document, OASysQuestion, TemporaryAccommodationApplication } from '@approved-premises/api'
 import TasklistPage from '../../../server/form-pages/tasklistPage'
 import Page from '../page'
 
@@ -9,7 +9,7 @@ export default class ApplyPage extends Page {
 
   constructor(
     title: string,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     taskName: string,
     pageName: string,
     backLink?: string,

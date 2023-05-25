@@ -1,7 +1,6 @@
 import {
   Adjudication,
   Application,
-  ApprovedPremisesApplication,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
@@ -19,6 +18,7 @@ import {
   PrisonCaseNote,
   RiskTier,
   RoshRisks,
+  TemporaryAccommodationApplication,
   User,
 } from '@approved-premises/api'
 import { CallConfig } from '../../data/restClient'
@@ -226,7 +226,7 @@ export type DataServices = Partial<{
     getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>
   }
   applicationService: {
-    getDocuments: (callConfig: CallConfig, application: ApprovedPremisesApplication) => Promise<Array<Document>>
+    getDocuments: (callConfig: CallConfig, application: TemporaryAccommodationApplication) => Promise<Array<Document>>
   }
   userService: {
     getUserById: (callConfig: CallConfig, id: string) => Promise<User>

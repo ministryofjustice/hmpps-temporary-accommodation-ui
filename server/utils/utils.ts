@@ -1,10 +1,10 @@
 import Case from 'case'
 
-import type { ApprovedPremisesApplication, PersonRisks } from '@approved-premises/api'
+import type { PersonRisks, TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 
-import qs, { IStringifyOptions } from 'qs'
 import escapeRegExp from 'lodash.escaperegexp'
+import qs, { IStringifyOptions } from 'qs'
 import { DateFormats } from './dateUtils'
 import { SessionDataError } from './errors'
 
@@ -77,7 +77,7 @@ export const lowerCase = (string: string) => Case.lower(string)
  * @returns the response for the given task/page/question.
  */
 export const retrieveQuestionResponseFromApplication = <T>(
-  application: ApprovedPremisesApplication,
+  application: TemporaryAccommodationApplication,
   task: string,
   page: string,
   question?: string,

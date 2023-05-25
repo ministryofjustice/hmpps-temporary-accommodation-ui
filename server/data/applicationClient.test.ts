@@ -1,5 +1,6 @@
 import nock from 'nock'
 
+import { SubmitApplication, UpdateApplication } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import { activeOffenceFactory, applicationFactory, documentFactory } from '../testutils/factories'
@@ -94,14 +95,17 @@ describe('ApplicationClient', () => {
 
   describe('update', () => {
     it('should return an application when a PUT request is made', async () => {
-      const application = applicationFactory.withData().build()
+      const application = applicationFactory.build()
+      const data: UpdateApplication = {
+        data: application.data,
+      }
 
       fakeApprovedPremisesApi
-        .put(paths.applications.update({ id: application.id }), JSON.stringify({ data: application.data }))
+        .put(paths.applications.update({ id: application.id }), JSON.stringify({ ...data, type: 'CAS3' }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, application)
 
-      const result = await applicationClient.update(application)
+      const result = await applicationClient.update(application.id, data)
 
       expect(result).toEqual(application)
       expect(nock.isDone()).toBeTruthy()
@@ -126,17 +130,17 @@ describe('ApplicationClient', () => {
 
   describe('submit', () => {
     it('should submit the application', async () => {
-      const application = applicationFactory.withData().build()
+      const application = applicationFactory.build()
+      const data: SubmitApplication = {
+        translatedDocument: application.document,
+      }
 
       fakeApprovedPremisesApi
-        .post(
-          paths.applications.submission({ id: application.id }),
-          JSON.stringify({ translatedDocument: application.document }),
-        )
+        .post(paths.applications.submission({ id: application.id }), JSON.stringify({ ...data, type: 'CAS3' }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201)
 
-      await applicationClient.submit(application)
+      await applicationClient.submit(application.id, data)
 
       expect(nock.isDone()).toBeTruthy()
     })

@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication, Document } from '@approved-premises/api'
+import { Document, TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../server/paths/apply'
 
 import { DateFormats } from '../../../server/utils/dateUtils'
@@ -13,7 +13,7 @@ export default class AttachDocumentsPage extends ApplyPage {
   constructor(
     documents: Array<Document>,
     selectedDocuments: Array<Document>,
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
   ) {
     super(
       'Select any additional documents that are required to support your application',

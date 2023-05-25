@@ -1,6 +1,6 @@
 import type { Task, TaskStatus } from '@approved-premises/ui'
 import {
-  ApprovedPremisesApplication as Application,
+  TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
 import { TasklistPageInterface } from '../tasklistPage'

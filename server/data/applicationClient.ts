@@ -1,7 +1,14 @@
-import type { ActiveOffence, ApprovedPremisesApplication, Document } from '@approved-premises/api'
-import RestClient, { CallConfig } from './restClient'
+import type {
+  ActiveOffence,
+  TemporaryAccommodationApplication as Application,
+  TemporaryAccommodationApplicationSummary as ApplicationSummary,
+  Document,
+  SubmitApplication,
+  UpdateTemporaryAccommodationApplication as UpdateApplication,
+} from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
+import RestClient, { CallConfig } from './restClient'
 
 export default class ApplicationClient {
   restClient: RestClient
@@ -10,40 +17,40 @@ export default class ApplicationClient {
     this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async find(applicationId: string): Promise<ApprovedPremisesApplication> {
+  async find(applicationId: string): Promise<Application> {
     return (await this.restClient.get({
       path: paths.applications.show({ id: applicationId }),
-    })) as ApprovedPremisesApplication
+    })) as Application
   }
 
-  async create(crn: string, activeOffence: ActiveOffence): Promise<ApprovedPremisesApplication> {
+  async create(crn: string, activeOffence: ActiveOffence): Promise<Application> {
     const { convictionId, deliusEventNumber, offenceId } = activeOffence
 
     return (await this.restClient.post({
       path: `${paths.applications.new.pattern}?createWithRisks=${!config.flags.oasysDisabled}`,
       data: { crn: crn.trim(), convictionId, deliusEventNumber, offenceId },
-    })) as ApprovedPremisesApplication
+    })) as Application
   }
 
-  async update(application: ApprovedPremisesApplication): Promise<ApprovedPremisesApplication> {
+  async update(applicationId: string, updateData: UpdateApplication): Promise<UpdateApplication> {
     return (await this.restClient.put({
-      path: paths.applications.update({ id: application.id }),
-      data: { data: application.data },
-    })) as ApprovedPremisesApplication
+      path: paths.applications.update({ id: applicationId }),
+      data: { ...updateData, type: 'CAS3' },
+    })) as UpdateApplication
   }
 
-  async all(): Promise<Array<ApprovedPremisesApplication>> {
-    return (await this.restClient.get({ path: paths.applications.index.pattern })) as Array<ApprovedPremisesApplication>
+  async all(): Promise<Array<ApplicationSummary>> {
+    return (await this.restClient.get({ path: paths.applications.index.pattern })) as Array<ApplicationSummary>
   }
 
-  async submit(application: ApprovedPremisesApplication): Promise<void> {
+  async submit(applicationId: string, submissionData: SubmitApplication): Promise<void> {
     await this.restClient.post({
-      path: paths.applications.submission({ id: application.id }),
-      data: { translatedDocument: application.document },
+      path: paths.applications.submission({ id: applicationId }),
+      data: { ...submissionData, type: 'CAS3' },
     })
   }
 
-  async documents(application: ApprovedPremisesApplication): Promise<Array<Document>> {
+  async documents(application: Application): Promise<Array<Document>> {
     return (await this.restClient.get({
       path: paths.applications.documents({ id: application.id }),
     })) as Array<Document>

@@ -1,5 +1,5 @@
 import type { TaskListErrors } from '@approved-premises/ui'
-import type { ApprovedPremisesApplication } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import { Page } from '../../utils/decorators'
 
 import TasklistPage from '../../tasklistPage'
@@ -10,7 +10,7 @@ export default class Review implements TasklistPage {
 
   title = 'Check your answers'
 
-  constructor(public body: { reviewed?: string }, readonly application: ApprovedPremisesApplication) {}
+  constructor(public body: { reviewed?: string }, readonly application: TemporaryAccommodationApplication) {}
 
   previous() {
     return 'dashboard'

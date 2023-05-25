@@ -1,11 +1,11 @@
-import { ApprovedPremisesApplication, ArrayOfOASysRiskManagementPlanQuestions } from '@approved-premises/api'
+import { ArrayOfOASysRiskManagementPlanQuestions, TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../server/paths/apply'
 
 import ApplyPage from './applyPage'
 
 export default class RiskManagementPlan extends ApplyPage {
   constructor(
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     private readonly riskRiskManagementPlanSummaries: ArrayOfOASysRiskManagementPlanQuestions,
   ) {
     super(

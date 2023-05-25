@@ -1,5 +1,5 @@
 import {
-  ApprovedPremisesApplication as Application,
+  TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
 import { FormSections, Task, TaskStatus, TaskWithStatus } from '@approved-premises/ui'

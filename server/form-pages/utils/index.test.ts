@@ -3,7 +3,7 @@ import { Request } from 'express'
 import 'reflect-metadata'
 
 // Use a wildcard import to allow us to use jest.spyOn on functions within this module
-import { ApprovedPremisesApplication } from '../../@types/shared'
+import { TemporaryAccommodationApplication } from '../../@types/shared'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
@@ -157,14 +157,14 @@ describe('utils', () => {
       const input = { user: 'input' }
 
       expect(
-        utils.getBody({} as TasklistPageInterface, {} as ApprovedPremisesApplication, {} as Request, input),
+        utils.getBody({} as TasklistPageInterface, {} as TemporaryAccommodationApplication, {} as Request, input),
       ).toEqual(input)
     })
 
     it('if there isnt userInput and there is a request body the request body is returned', () => {
       const request: DeepMocked<Request> = createMock<Request>()
 
-      expect(utils.getBody({} as TasklistPageInterface, {} as ApprovedPremisesApplication, request, {}))
+      expect(utils.getBody({} as TasklistPageInterface, {} as TemporaryAccommodationApplication, request, {}))
     })
 
     it('if there is neither a request body or userInput then getPageFromApplicationData is called and returns the data for that page', () => {

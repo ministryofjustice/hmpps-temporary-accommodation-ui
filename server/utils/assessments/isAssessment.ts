@@ -1,5 +1,5 @@
 import {
-  ApprovedPremisesApplication as Application,
+  TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '../../@types/shared'
 

@@ -1,11 +1,11 @@
-import { ApprovedPremisesApplication, ArrayOfOASysOffenceDetailsQuestions } from '@approved-premises/api'
+import { ArrayOfOASysOffenceDetailsQuestions, TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../server/paths/apply'
 
 import ApplyPage from './applyPage'
 
 export default class OffenceDetails extends ApplyPage {
   constructor(
-    application: ApprovedPremisesApplication,
+    application: TemporaryAccommodationApplication,
     private readonly offenceDetailSummaries: ArrayOfOASysOffenceDetailsQuestions,
   ) {
     super(

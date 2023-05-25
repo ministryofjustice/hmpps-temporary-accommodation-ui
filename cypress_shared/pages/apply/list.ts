@@ -35,6 +35,8 @@ export default class ListPage extends Page {
 
   private shouldShowApplications(applications: Array<Application>, status: string): void {
     applications.forEach(application => {
+      const releaseDate = application.data['basic-information']?.['release-date']?.releaseDate
+
       cy.contains(application.person.name)
         .should('have.attr', 'href', paths.applications.show({ id: application.id }))
         .parent()
@@ -45,9 +47,11 @@ export default class ListPage extends Page {
           cy.get('td')
             .eq(1)
             .contains(
-              DateFormats.isoDateToUIDate(application.data['basic-information']['release-date'].releaseDate, {
-                format: 'short',
-              }),
+              releaseDate
+                ? DateFormats.isoDateToUIDate(releaseDate, {
+                    format: 'short',
+                  })
+                : 'N/A',
             )
           cy.get('td').eq(2).contains(status)
         })

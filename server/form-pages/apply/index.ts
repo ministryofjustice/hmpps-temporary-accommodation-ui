@@ -1,10 +1,19 @@
 /* istanbul ignore file */
 import BaseForm from '../baseForm'
 import { Form } from '../utils/decorators'
-import AddDocuments from './add-documents'
+import AccommodationNeed from './accommodation-need'
 import CheckYourAnswers from './check-your-answers'
-import ReasonsForPlacement from './reasons-for-placement'
-import RiskAndNeedFactors from './risk-and-need-factors'
+import PlacementConsiderations from './placement-considerations'
+import RequiredReferralsAndDocuments from './required-referrals-and-documents'
+import RiskStrengthAndNeedInformation from './risk-strength-and-need-information'
 
-@Form({ sections: [ReasonsForPlacement, RiskAndNeedFactors, AddDocuments, CheckYourAnswers] })
+@Form({
+  sections: [
+    AccommodationNeed,
+    RiskStrengthAndNeedInformation,
+    PlacementConsiderations,
+    RequiredReferralsAndDocuments,
+    CheckYourAnswers,
+  ],
+})
 export default class Apply extends BaseForm {}

@@ -94,16 +94,6 @@ context('Apply', () => {
       expect(body.deliusEventNumber).equal(offence.deliusEventNumber)
       expect(body.offenceId).equal(offence.offenceId)
     })
-
-    // And I complete the basic information step
-    apply.completeBasicInformation()
-
-    // Then the API should have recieved the updated application
-    cy.task('verifyApplicationUpdate', this.application.id).then(requests => {
-      const firstRequestData = JSON.parse(requests[0].body).data
-
-      expect(firstRequestData['basic-information']['sentence-type'].sentenceType).equal('communityOrder')
-    })
   })
 
   it('shows an error message if the person is not found', function test() {

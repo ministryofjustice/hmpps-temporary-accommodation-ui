@@ -15,22 +15,7 @@ import { PersonRisksUI } from '@approved-premises/ui'
 import { documentFactory, oasysSectionsFactory, oasysSelectionFactory } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
-import {
-  AttachDocumentsPage,
-  CheckYourAnswersPage,
-  ConfirmDetailsPage,
-  EnterCRNPage,
-  OffenceDetailsPage,
-  OptionalOasysSectionsPage,
-  RiskManagementPlanPage,
-  RiskToSelfPage,
-  RoshSummaryPage,
-  SentenceTypePage,
-  StartPage,
-  SupportingInformationPage,
-  TaskListPage,
-} from '../pages/apply'
-import ApplyPage from '../pages/apply/applyPage'
+import { CheckYourAnswersPage, ConfirmDetailsPage, EnterCRNPage, StartPage, TaskListPage } from '../pages/apply'
 import {
   offenceDetailSummariesFromApplication,
   riskManagementPlanFromApplication,
@@ -40,11 +25,7 @@ import {
 } from './index'
 
 export default class ApplyHelper {
-  pages = {
-    reasonsForPlacement: [] as Array<ApplyPage>,
-    riskAndNeedFactors: [] as Array<ApplyPage>,
-    addDocuments: [] as Array<ApplyPage>,
-  }
+  pages = {}
 
   uiRisks?: PersonRisksUI
 
@@ -84,7 +65,6 @@ export default class ApplyHelper {
     this.uiRisks = uiRisks
     this.stubPersonEndpoints()
     this.stubApplicationEndpoints()
-    this.stubOasysEndpoints()
     this.stubDocumentEndpoints()
     this.stubOffences()
   }
@@ -108,15 +88,12 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
-    this.completeBasicInformation()
-    this.completeOasysImport()
-    this.completeAttachDocuments()
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.reasonsForPlacement, ...this.pages.riskAndNeedFactors, this.pages.addDocuments].length
+    return [].length
   }
 
   private stubPersonEndpoints() {
@@ -211,128 +188,12 @@ export default class ApplyHelper {
     cy.task('stubApplicationSubmit', { application: this.application })
   }
 
-  completeBasicInformation() {
-    // Given I click the 'Basic Information' task
-    cy.get('[data-cy-task-name="basic-information"]').click()
-    const sentenceTypePage = new SentenceTypePage(this.application)
-
-    // When I complete the form
-    sentenceTypePage.completeForm()
-    sentenceTypePage.clickSubmit()
-
-    this.pages.reasonsForPlacement = [sentenceTypePage]
-
-    // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('basic-information', 'Completed')
-
-    // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
-
-    // And the risk widgets should be visible
-    if (this.uiRisks) {
-      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
-    }
-  }
-
-  private completeOasysImport() {
-    // Given I click the 'Import Oasys' task
-    cy.get('[data-cy-task-name="oasys-import"]').click()
-    const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
-
-    // When I complete the form
-    optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
-    optionalOasysImportPage.clickSubmit()
-
-    const roshSummaryPage = new RoshSummaryPage(this.application, this.roshSummaries)
-
-    if (this.uiRisks) {
-      roshSummaryPage.shouldShowRiskWidgets(this.uiRisks)
-    }
-
-    roshSummaryPage.completeForm()
-
-    roshSummaryPage.clickSubmit()
-
-    const offenceDetailsPage = new OffenceDetailsPage(this.application, this.offenceDetailSummaries)
-
-    if (this.uiRisks) {
-      offenceDetailsPage.shouldShowRiskWidgets(this.uiRisks)
-    }
-
-    offenceDetailsPage.completeForm()
-    offenceDetailsPage.clickSubmit()
-
-    const supportingInformationPage = new SupportingInformationPage(
-      this.application,
-      this.supportingInformationSummaries,
-    )
-    supportingInformationPage.completeForm()
-    supportingInformationPage.clickSubmit()
-
-    const riskManagementPlanPage = new RiskManagementPlanPage(this.application, this.riskManagementPlanSummaries)
-    riskManagementPlanPage.completeForm()
-    riskManagementPlanPage.clickSubmit()
-
-    const riskToSelfPage = new RiskToSelfPage(this.application, this.riskToSelfSummaries)
-    riskToSelfPage.completeForm()
-    riskToSelfPage.clickSubmit()
-
-    this.pages.riskAndNeedFactors = [
-      optionalOasysImportPage,
-      roshSummaryPage,
-      offenceDetailsPage,
-      supportingInformationPage,
-      riskManagementPlanPage,
-      riskToSelfPage,
-    ]
-
-    // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // Then I should be taken back to the tasklist
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
-
-    // And the Attach Documents task should show as not started
-    tasklistPage.shouldShowTaskStatus('attach-required-documents', 'Not started')
-  }
-
-  private completeAttachDocuments() {
-    // Given I click on the Attach Documents task
-    cy.get('[data-cy-task-name="attach-required-documents"]').click()
-    const attachDocumentsPage = new AttachDocumentsPage(this.documents, this.selectedDocuments, this.application)
-
-    // Then I should be able to download the documents
-    attachDocumentsPage.shouldBeAbleToDownloadDocuments(this.documents)
-
-    // And I attach the relevant documents
-    attachDocumentsPage.shouldDisplayDocuments()
-    attachDocumentsPage.completeForm()
-    attachDocumentsPage.clickSubmit()
-
-    this.pages.addDocuments = [attachDocumentsPage]
-
-    // Then I should be taken back to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // And the Attach Documents task should show a completed status
-    tasklistPage.shouldShowTaskStatus('attach-required-documents', 'Completed')
-
-    // And the Check Your Answers task should show as not started
-    tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
-  }
-
   private completeCheckYourAnswersSection() {
     // Given I click the check your answers task
     cy.get('[data-cy-task-name="check-your-answers"]').click()
 
     // Then I should be on the check your answers page
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
-
-    // And the page should be populated with my answers
-    checkYourAnswersPage.shouldShowBasicInformationAnswers(this.pages.reasonsForPlacement)
 
     // When I have checked my answers
     checkYourAnswersPage.clickSubmit()

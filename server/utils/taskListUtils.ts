@@ -36,7 +36,7 @@ export const taskLink = (task: TaskWithStatus, applicationOrAssessment: Applicat
           page: firstPage,
         })
 
-    return `<a href="${link}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.title}</a>`
+    return `<a href="${link}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.actionText}</a>`
   }
-  return task.title
+  return task.actionText
 }

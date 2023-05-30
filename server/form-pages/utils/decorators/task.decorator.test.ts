@@ -41,19 +41,30 @@ describe('Task', () => {
       title = 'Page 2'
     }
 
-    @Task({ name: 'My Task', slug: 'my-task', pages: [Page1, Page2, Page3] })
+    @Task({ name: 'My Task', actionText: 'Complete My Task', slug: 'my-task', pages: [Page1, Page2, Page3] })
     class MyTask {}
 
     const slug = Reflect.getMetadata('task:slug', MyTask)
     const name = Reflect.getMetadata('task:name', MyTask)
+    const actionText = Reflect.getMetadata('task:actionText', MyTask)
     const pages = Reflect.getMetadata('task:pages', MyTask)
 
     expect(slug).toEqual('my-task')
     expect(name).toEqual('My Task')
+    expect(actionText).toEqual('Complete My Task')
     expect(pages).toEqual([Page1, Page2, Page3])
 
     expect(Reflect.getMetadata('page:task', Page1)).toEqual('my-task')
     expect(Reflect.getMetadata('page:task', Page2)).toEqual('my-task')
     expect(Reflect.getMetadata('page:task', Page3)).toEqual('my-task')
+  })
+
+  it('uses the task name for action text when no action text is given', () => {
+    @Task({ name: 'My Task', slug: 'my-task', pages: [] })
+    class MyTask {}
+
+    const actionText = Reflect.getMetadata('task:actionText', MyTask)
+
+    expect(actionText).toEqual('My Task')
   })
 })

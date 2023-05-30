@@ -1,18 +1,18 @@
 import BaseForm from '../../baseForm'
 
-import Section from './section.decorator'
 import Form from './form.decorator'
+import Section from './section.decorator'
 import Task from './task.decorator'
 
 describe('Task', () => {
   it('records metadata about a class', () => {
-    @Task({ name: 'Task 1', slug: 'task-1', pages: [] })
+    @Task({ name: 'Task 1', actionText: 'Complete Task 1', slug: 'task-1', pages: [] })
     class Task1 {}
 
-    @Task({ name: 'Task 2', slug: 'task-2', pages: [] })
+    @Task({ name: 'Task 2', actionText: 'Complete Task 2', slug: 'task-2', pages: [] })
     class Task2 {}
 
-    @Task({ name: 'Task 3', slug: 'task-3', pages: [] })
+    @Task({ name: 'Task 3', actionText: 'Complete Task 3', slug: 'task-3', pages: [] })
     class Task3 {}
 
     @Section({ title: 'Section 1', tasks: [Task1] })
@@ -32,14 +32,14 @@ describe('Task', () => {
       {
         title: 'Section 1',
         name: 'Section1',
-        tasks: [{ id: 'task-1', title: 'Task 1', pages: {} }],
+        tasks: [{ id: 'task-1', title: 'Task 1', actionText: 'Complete Task 1', pages: {} }],
       },
       {
         title: 'Section 2',
         name: 'Section2',
         tasks: [
-          { id: 'task-2', title: 'Task 2', pages: {} },
-          { id: 'task-3', title: 'Task 3', pages: {} },
+          { id: 'task-2', title: 'Task 2', actionText: 'Complete Task 2', pages: {} },
+          { id: 'task-3', title: 'Task 3', actionText: 'Complete Task 3', pages: {} },
         ],
       },
       {

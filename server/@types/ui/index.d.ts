@@ -65,6 +65,7 @@ export type YesNoOrIDKWithDetail<T extends string> = {
 export type Task = {
   id: string
   title: string
+  actionText: string
   pages: Record<string, unknown>
 }
 

@@ -23,6 +23,7 @@ export const getTask = <T>(task: T) => {
   const taskPages = {}
   const slug = Reflect.getMetadata('task:slug', task)
   const name = Reflect.getMetadata('task:name', task)
+  const actionText = Reflect.getMetadata('task:actionText', task)
   const pageClasses = Reflect.getMetadata('task:pages', task)
 
   pageClasses.forEach(<PageType>(page: PageType) => {
@@ -33,6 +34,7 @@ export const getTask = <T>(task: T) => {
   return {
     id: slug,
     title: name,
+    actionText,
     pages: taskPages,
   }
 }

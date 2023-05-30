@@ -7,14 +7,14 @@ export default class BedspaceSearchResult extends Component {
   }
 
   shouldShowResult(checkCount = true): void {
-    cy.get('div[data-cy-result]')
+    cy.get('table')
       .contains(this.result.room.name)
-      .parents('div[data-cy-result]')
+      .parent()
       .within(() => {
-        this.shouldShowKeyAndValue('Address', `${this.result.premises.addressLine1}, ${this.result.premises.postcode}`)
-
+        cy.get('td').eq(0).should('contain', this.result.room.name)
+        cy.get('td').eq(1).should('contain', `${this.result.premises.addressLine1}, ${this.result.premises.postcode}`)
         if (checkCount) {
-          this.shouldShowKeyAndValue('Bedspaces in property', `${this.result.premises.bedCount}`)
+          cy.get('td').eq(2).should('contain', this.result.premises.bedCount)
         }
       })
   }

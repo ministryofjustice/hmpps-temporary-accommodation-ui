@@ -10,8 +10,6 @@ import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
 
-export const tasklistPageHeading = 'Apply for an Approved Premises (AP) placement'
-
 export default class ApplicationsController {
   constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
 
@@ -20,15 +18,13 @@ export default class ApplicationsController {
       const callConfig = extractCallConfig(req)
       const applications = await this.applicationService.getAllForLoggedInUser(callConfig)
 
-      res.render('applications/index', { pageHeading: 'Approved Premises applications', applications })
+      res.render('applications/index', { applications })
     }
   }
 
   start(): RequestHandler {
     return (_req: Request, res: Response) => {
-      res.render('applications/start', {
-        pageHeading: tasklistPageHeading,
-      })
+      res.render('applications/start')
     }
   }
 
@@ -61,7 +57,6 @@ export default class ApplicationsController {
         const offenceId = offences.length === 1 ? offences[0].offenceId : null
 
         return res.render(`applications/people/confirm`, {
-          pageHeading: `Confirm ${person.name}'s details`,
           ...person,
           date: DateFormats.dateObjtoUIDate(new Date()),
           dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
@@ -73,7 +68,6 @@ export default class ApplicationsController {
       }
 
       return res.render('applications/new', {
-        pageHeading: "Enter the person's CRN",
         errors,
         errorSummary,
         ...userInput,
@@ -118,13 +112,12 @@ export default class ApplicationsController {
             },
           ],
           errorObject,
-          pageHeading: tasklistPageHeading,
           sections: Apply.sections,
         })
       }
 
       await this.applicationService.submit(callConfig, application)
-      return res.render('applications/confirm', { pageHeading: 'Application confirmation' })
+      return res.render('applications/confirm')
     }
   }
 }

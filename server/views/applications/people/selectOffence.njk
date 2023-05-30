@@ -3,22 +3,19 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + pageHeading  %}
+{% set pageTitle = applicationName + " - Select the index offence for " + person.name %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1>{{ pageHeading}}</h1>
+      <h1>Select the index offence for {{ person.name }}</h1>
 
       <p class="govuk-body">
         {{ person.name }} has more than one offence identified against their CRN.
 
-      <p class="govuk-body">
-        Please select the main offence that will be used to assess their sutability
-        for an Approved Premises (the 'index offence') below:
-      </p>
+      <p class="govuk-body">Select their main offence.</p>
 
         <form action="{{ paths.applications.create() }}" method="post">
           <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>

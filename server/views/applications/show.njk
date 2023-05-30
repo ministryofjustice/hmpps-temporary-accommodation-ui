@@ -8,15 +8,13 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% block pageTitle %}
- Approved Premises - Task list
-{% endblock %}
+{% set pageTitle = applicationName + " - Apply for a Temporary Accommodation placement" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-width-container">
       <h1 class="govuk-heading-xl">
-        Apply for an Approved Premises (AP) placement
+        Apply for a Temporary Accommodation placement
       </h1>
 
       <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Application {{ taskList.status }}</h2>

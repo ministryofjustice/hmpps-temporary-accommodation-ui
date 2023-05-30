@@ -4,7 +4,7 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + pageHeading %}
+{% set pageTitle = applicationName + " - Confirm " + name + "'s details" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -26,7 +26,7 @@
         <input type="hidden" name="religion" value="{{ religion }}"/>
         <input type="hidden" name="offenceId" value="{{ offenceId }}"/>
 
-        <h1 class="govuk-heading-l">{{ pageHeading }}</h1>
+        <h1 class="govuk-heading-l">Confirm {{ name }}'s details</h1>
 
         <p>
           Taken from NDelius, <strong>{{ date }}</strong>

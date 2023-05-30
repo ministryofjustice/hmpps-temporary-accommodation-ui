@@ -42,7 +42,6 @@ describe('OffencesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('applications/people/selectOffence', {
-        pageHeading: `Select index offence for ${person.name}`,
         person,
         offences,
       })

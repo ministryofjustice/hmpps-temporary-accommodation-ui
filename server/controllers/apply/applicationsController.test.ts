@@ -8,7 +8,7 @@ import { ApplicationService, PersonService } from '../../services'
 import TasklistService from '../../services/tasklistService'
 import { activeOffenceFactory, applicationFactory, personFactory } from '../../testutils/factories'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
-import ApplicationsController, { tasklistPageHeading } from './applicationsController'
+import ApplicationsController from './applicationsController'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/apply'
@@ -42,7 +42,7 @@ describe('applicationsController', () => {
 
   describe('index', () => {
     it('renders the index view', async () => {
-      const applications: GroupedApplications = { inProgress: [], requestedFurtherInformation: [], submitted: [] }
+      const applications: GroupedApplications = { inProgress: [], submitted: [] }
 
       applicationService.getAllForLoggedInUser.mockResolvedValue(applications)
 
@@ -51,7 +51,6 @@ describe('applicationsController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('applications/index', {
-        pageHeading: 'Approved Premises applications',
         applications,
       })
       expect(applicationService.getAllForLoggedInUser).toHaveBeenCalled()
@@ -64,9 +63,7 @@ describe('applicationsController', () => {
 
       requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/start', {
-        pageHeading: 'Apply for an Approved Premises (AP) placement',
-      })
+      expect(response.render).toHaveBeenCalledWith('applications/start')
     })
   })
 
@@ -134,7 +131,6 @@ describe('applicationsController', () => {
           await requestHandler(request, response, next)
 
           expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-            pageHeading: `Confirm ${person.name}'s details`,
             ...person,
             date: DateFormats.dateObjtoUIDate(new Date()),
             dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
@@ -154,7 +150,6 @@ describe('applicationsController', () => {
           await requestHandler(request, response, next)
 
           expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-            pageHeading: `Confirm ${person.name}'s details`,
             ...person,
             date: DateFormats.dateObjtoUIDate(new Date()),
             dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
@@ -175,7 +170,6 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-          pageHeading: `Confirm ${person.name}'s details`,
           ...person,
           date: DateFormats.dateObjtoUIDate(new Date()),
           dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
@@ -205,7 +199,6 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/new', {
-          pageHeading: "Enter the person's CRN",
           errors: {},
           errorSummary: [],
         })
@@ -219,7 +212,6 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/new', {
-          pageHeading: "Enter the person's CRN",
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,
           ...errorsAndUserInput.userInput,
@@ -293,9 +285,7 @@ describe('applicationsController', () => {
       expect(applicationService.findApplication).toHaveBeenCalledWith(callConfig, 'some-id')
       expect(getResponses).toHaveBeenCalledWith(application)
       expect(applicationService.submit).toHaveBeenCalledWith(callConfig, application)
-      expect(response.render).toHaveBeenCalledWith('applications/confirm', {
-        pageHeading: 'Application confirmation',
-      })
+      expect(response.render).toHaveBeenCalledWith('applications/confirm')
     })
 
     it('renders the "show" view with errors if the checkbox isnt ticked ', async () => {
@@ -320,7 +310,6 @@ describe('applicationsController', () => {
             text: 'You must confirm the information provided is complete, accurate and up to date.',
           },
         ],
-        pageHeading: tasklistPageHeading,
         sections: Apply.sections,
       })
     })

@@ -235,13 +235,11 @@ export type DataServices = Partial<{
 
 export interface GroupedAssessments {
   completed: Array<Assessment>
-  requestedFurtherInformation: Array<Assessment>
   awaiting: Array<Assessment>
 }
 
 export interface GroupedApplications {
   inProgress: Array<Application>
-  requestedFurtherInformation: Array<Application>
   submitted: Array<Application>
 }
 

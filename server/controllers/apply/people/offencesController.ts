@@ -14,7 +14,6 @@ export default class OffencesController {
       const offences = await this.personService.getOffences(callConfig, crn)
 
       res.render('applications/people/selectOffence', {
-        pageHeading: `Select index offence for ${person.name}`,
         person,
         offences,
       })

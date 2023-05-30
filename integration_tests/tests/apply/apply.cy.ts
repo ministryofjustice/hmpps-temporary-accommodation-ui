@@ -160,7 +160,7 @@ context('Apply', () => {
     const confirmationPage = new SubmissionConfirmation()
 
     // Given there are applications in the database
-    const applications = applicationFactory.withReleaseDate().buildList(5)
+    const applications = applicationFactory.buildList(5)
     cy.task('stubApplications', applications)
 
     // And there are risks in the database

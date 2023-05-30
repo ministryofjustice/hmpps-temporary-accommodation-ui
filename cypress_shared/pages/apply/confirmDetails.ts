@@ -14,8 +14,12 @@ export default class ConfirmDetailsPage extends Page {
       this.assertDefinition('CRN', this.person.crn)
       this.assertDefinition('Date of Birth', DateFormats.isoDateToUIDate(this.person.dateOfBirth, { format: 'short' }))
       this.assertDefinition('NOMS Number', this.person.nomsNumber)
-      this.assertDefinition('Nationality', this.person.nationality)
-      this.assertDefinition('Religion or belief', this.person.religionOrBelief)
+      if (this.person.nationality) {
+        this.assertDefinition('Nationality', this.person.nationality)
+      }
+      if (this.person.religionOrBelief) {
+        this.assertDefinition('Religion or belief', this.person.religionOrBelief)
+      }
       this.assertDefinition('Sex', this.person.sex)
     })
 

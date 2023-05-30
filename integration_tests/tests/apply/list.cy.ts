@@ -15,8 +15,8 @@ context('Applications dashboard', () => {
     cy.signIn()
 
     // And there are applications in the database
-    const inProgressApplications = applicationFactory.withReleaseDate().buildList(5, { status: 'inProgress' })
-    const submittedApplications = applicationFactory.withReleaseDate().buildList(5, { status: 'submitted' })
+    const inProgressApplications = applicationFactory.buildList(5, { status: 'inProgress' })
+    const submittedApplications = applicationFactory.buildList(5, { status: 'submitted' })
 
     cy.task('stubApplications', [inProgressApplications, submittedApplications].flat())
 

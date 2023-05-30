@@ -18,11 +18,11 @@ export default class ListPage extends Page {
   }
 
   shouldShowInProgressApplications(): void {
-    this.shouldShowApplications(this.inProgressApplications, 'In Progress')
+    this.shouldShowApplications(this.inProgressApplications, 'in-progress', 'In Progress')
   }
 
   shouldShowSubmittedApplications(): void {
-    this.shouldShowApplications(this.submittedApplications, 'Submitted')
+    this.shouldShowApplications(this.submittedApplications, 'applications-submitted', 'Submitted')
   }
 
   clickSubmit() {
@@ -33,24 +33,29 @@ export default class ListPage extends Page {
     cy.get('a').contains('Submitted').click()
   }
 
-  private shouldShowApplications(applications: Array<Application>, status: string): void {
+  private shouldShowApplications(applications: Array<Application>, containerId: string, status: string): void {
     applications.forEach(application => {
-      cy.contains(application.person.name)
-        .should('have.attr', 'href', paths.applications.show({ id: application.id }))
-        .parent()
-        .parent()
-        .within(() => {
-          cy.get('th').eq(0).contains(application.person.name)
-          cy.get('td').eq(0).contains(application.person.crn)
-          cy.get('td')
-            .eq(1)
-            .contains(
-              DateFormats.isoDateToUIDate(application.data['basic-information']['release-date'].releaseDate, {
-                format: 'short',
-              }),
-            )
-          cy.get('td').eq(2).contains(status)
-        })
+      const releaseDate = application.data['basic-information']?.['release-date']?.releaseDate
+
+      cy.get(`#${containerId}`).within(() => {
+        cy.get(`a[href*="${paths.applications.show({ id: application.id })}"]`)
+          .parent()
+          .parent()
+          .within(() => {
+            cy.get('th').eq(0).contains(application.person.name)
+            cy.get('td').eq(0).contains(application.person.crn)
+            cy.get('td')
+              .eq(1)
+              .contains(
+                releaseDate
+                  ? DateFormats.isoDateToUIDate(releaseDate, {
+                      format: 'short',
+                    })
+                  : 'N/A',
+              )
+            cy.get('td').eq(2).contains(status)
+          })
+      })
     })
   }
 }

@@ -5,6 +5,7 @@ import SentenceType from './sentenceType'
 
 @Task({
   name: 'Sentence information',
+  actionText: 'Add sentence information',
   slug: 'sentence-information',
   pages: [SentenceType],
 })

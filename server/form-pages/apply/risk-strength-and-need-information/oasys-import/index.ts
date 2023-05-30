@@ -9,6 +9,7 @@ import SupportingInformation from './supportingInformation'
 @Task({
   slug: 'oasys-import',
   name: 'OASys information',
+  actionText: 'Import OASys information',
   pages: [OptionalOasysSections, RoshSummary, OffenceDetails, SupportingInformation, RiskManagementPlan, RiskToSelf],
 })
 export default class OasysImport {}

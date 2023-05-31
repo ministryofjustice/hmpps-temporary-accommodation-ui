@@ -29,13 +29,13 @@
   {% elif page.previous() %}
     {{ govukBackLink({
       text: "Back",
-      href: paths.applications.pages.show({ id: applicationId, task: task, page: page.previous() })
+      href: paths.applications.pages.show({ id: applicationId, task: task.id, page: page.previous() })
     }) }}
   {% endif %}
 
   <div class="govuk-grid-row">
     <div class="{{ columnClasses | default("govuk-grid-column-two-thirds") }}">
-      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task, page: page.name }) }}?_method=PUT" method="post">
+      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ showErrorSummary(errorSummary) }}

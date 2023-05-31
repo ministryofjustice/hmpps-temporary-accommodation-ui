@@ -3,7 +3,7 @@ import createError from 'http-errors'
 
 import type { DataServices } from '@approved-premises/ui'
 import { ApplicationService } from '../../../services'
-import { getPage } from '../../../utils/applicationUtils'
+import { getPage, getSectionAndTask } from '../../../utils/applicationUtils'
 
 import { viewPath } from '../../../form-pages/utils'
 import paths from '../../../paths/apply'
@@ -22,16 +22,20 @@ export default class PagesController {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         const callConfig = extractCallConfig(req)
+        const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
         const Page = getPage(taskName, pageName)
 
-        const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
         const page = await this.applicationService.initializePage(callConfig, Page, req, this.dataServices, userInput)
+
+        const { section, task } = getSectionAndTask(taskName)
 
         res.render(viewPath(page, 'applications'), {
           applicationId: req.params.id,
           errors,
           errorSummary,
-          task: taskName,
+          section,
+          task,
           page,
           ...page.body,
         })

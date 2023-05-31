@@ -1,6 +1,7 @@
 import type { JourneyType, Task, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
 import type { Request } from 'express'
-import { ApprovedPremisesAssessment, TemporaryAccommodationApplication } from '../../@types/shared'
+import { TemporaryAccommodationApplication as Application, ApprovedPremisesAssessment } from '../../@types/shared'
+import { SessionDataError } from '../../utils/errors'
 import { sentenceCase } from '../../utils/utils'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 
@@ -99,7 +100,7 @@ export const updateAssessmentData = (
 
 export function getBody(
   Page: TasklistPageInterface,
-  application: TemporaryAccommodationApplication | ApprovedPremisesAssessment,
+  application: Application | ApprovedPremisesAssessment,
   request: Request,
   userInput: Record<string, unknown>,
 ) {
@@ -114,7 +115,7 @@ export function getBody(
 
 export function getPageDataFromApplication(
   Page: TasklistPageInterface,
-  application: TemporaryAccommodationApplication | ApprovedPremisesAssessment,
+  application: Application | ApprovedPremisesAssessment,
 ) {
   const pageName = getPageName(Page)
   const taskName = getTaskName(Page)
@@ -138,4 +139,22 @@ export const responsesForYesNoAndCommentsSections = (
 
     return response
   }, {})
+}
+
+export const getProbationPractitionerName = (application: Application, raiseOnMissing = true) => {
+  const throwOrReturnNull = (message: string): null => {
+    if (raiseOnMissing) {
+      throw new SessionDataError(message)
+    }
+
+    return null
+  }
+
+  const name: string = application.data?.['contact-details']?.['probation-practitioner']?.name
+
+  if (!name) {
+    return throwOrReturnNull('No probation practitioner name')
+  }
+
+  return name
 }

@@ -6,6 +6,7 @@ import EnterCRNPage from './enterCrn'
 import ListPage from './list'
 import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
+import PractitionerPduPage from './practitionerPdu'
 import ProbationPractitionerPage from './probationPractitioner'
 import RiskManagementPlanPage from './riskManagementPlan'
 import RiskToSelfPage from './riskToSelf'
@@ -29,6 +30,7 @@ export {
   SentenceTypePage,
   ProbationPractitionerPage,
   BackupContactPage,
+  PractitionerPduPage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,

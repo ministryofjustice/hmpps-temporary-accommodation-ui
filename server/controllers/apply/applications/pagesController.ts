@@ -2,18 +2,18 @@ import type { NextFunction, Request, RequestHandler, Response } from 'express'
 import createError from 'http-errors'
 
 import type { DataServices } from '@approved-premises/ui'
-import { getPage } from '../../../utils/applicationUtils'
 import { ApplicationService } from '../../../services'
+import { getPage } from '../../../utils/applicationUtils'
 
+import { viewPath } from '../../../form-pages/utils'
+import paths from '../../../paths/apply'
+import { UnknownPageError } from '../../../utils/errors'
+import extractCallConfig from '../../../utils/restUtils'
 import {
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
 } from '../../../utils/validation'
-import paths from '../../../paths/apply'
-import { UnknownPageError } from '../../../utils/errors'
-import { viewPath } from '../../../form-pages/utils'
-import extractCallConfig from '../../../utils/restUtils'
 
 export default class PagesController {
   constructor(private readonly applicationService: ApplicationService, private readonly dataServices: DataServices) {}

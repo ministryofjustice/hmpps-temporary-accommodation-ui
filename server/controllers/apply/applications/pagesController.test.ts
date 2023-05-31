@@ -1,24 +1,24 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
 import createError from 'http-errors'
 
 import type { DataServices, ErrorsAndUserInput, FormPages } from '@approved-premises/ui'
-import PagesController from './pagesController'
-import { ApplicationService } from '../../../services'
-import TasklistPage from '../../../form-pages/tasklistPage'
 import Apply from '../../../form-pages/apply'
+import TasklistPage from '../../../form-pages/tasklistPage'
+import { ApplicationService } from '../../../services'
 import { getPage } from '../../../utils/applicationUtils'
+import PagesController from './pagesController'
 
+import { CallConfig } from '../../../data/restClient'
+import { viewPath } from '../../../form-pages/utils'
+import paths from '../../../paths/apply'
+import { UnknownPageError } from '../../../utils/errors'
+import extractCallConfig from '../../../utils/restUtils'
 import {
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
 } from '../../../utils/validation'
-import { UnknownPageError } from '../../../utils/errors'
-import paths from '../../../paths/apply'
-import { viewPath } from '../../../form-pages/utils'
-import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../form-pages/utils')

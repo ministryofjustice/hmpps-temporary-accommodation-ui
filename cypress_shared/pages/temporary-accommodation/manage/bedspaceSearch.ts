@@ -53,6 +53,6 @@ export default class BedspaceSearchPage extends Page {
   }
 
   clickBedspaceLink(room: Room) {
-    cy.get('h4').contains(room.name).parent().siblings().contains('View').click()
+    cy.get('td').contains(room.name).parent().find('td').contains('View').click()
   }
 }

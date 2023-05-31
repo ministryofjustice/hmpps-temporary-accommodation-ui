@@ -19,20 +19,20 @@ import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems } f
 
 import { dashboardTableRows } from './applicationUtils'
 import * as AttachDocumentsUtils from './attachDocumentsUtils'
+import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as TasklistUtils from './taskListUtils'
 
-import bedspaceSearchResultSummaryListRows from '../components/bedspaceSearchResult'
 import bookingSummaryListRows from '../components/bookingInfo'
+import * as BookingListing from '../components/bookingListing'
 import lostBedSummaryListRows from '../components/lostBedInfo'
+import * as LostBedListing from '../components/lostBedListing'
 import config from '../config'
 import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
-import * as BookingListing from '../components/bookingListing'
-import * as LostBedListing from '../components/lostBedListing'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -153,7 +153,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('BookingListing', BookingListing)
   njkEnv.addGlobal('LostBedListing', LostBedListing)
 
-  njkEnv.addGlobal('BedspaceSearchResult', { summaryListRows: bedspaceSearchResultSummaryListRows })
+  njkEnv.addGlobal('BedspaceSearchResultUtils', BedspaceSearchResultUtils)
   njkEnv.addGlobal('LostBedInfo', { summaryListRows: lostBedSummaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)

@@ -1,4 +1,5 @@
 import AttachDocumentsPage from './attachDocumentsPage'
+import BackupContactPage from './backupContact'
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
@@ -27,6 +28,7 @@ export {
   TaskListPage,
   SentenceTypePage,
   ProbationPractitionerPage,
+  BackupContactPage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,

@@ -17,11 +17,14 @@ import { documentsFromApplication } from '../../server/utils/assessments/documen
 import Page from '../pages'
 import {
   AttachDocumentsPage,
+  BackupContactPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
+  PractitionerPduPage,
+  ProbationPractitionerPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
   RoshSummaryPage,
@@ -42,6 +45,7 @@ import {
 export default class ApplyHelper {
   pages = {
     sentenceInformation: [] as Array<ApplyPage>,
+    contactDetails: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     attachDocuments: [] as Array<ApplyPage>,
   }
@@ -109,6 +113,7 @@ export default class ApplyHelper {
 
   completeApplication() {
     this.completeSentenceInformation()
+    this.completeContactDetails()
     this.completeOasysImport()
     this.completeAttachDocuments()
 
@@ -117,7 +122,12 @@ export default class ApplyHelper {
   }
 
   numberOfPages() {
-    return [...this.pages.sentenceInformation, ...this.pages.oasysImport, this.pages.attachDocuments].length
+    return [
+      ...this.pages.sentenceInformation,
+      ...this.pages.contactDetails,
+      ...this.pages.oasysImport,
+      ...this.pages.attachDocuments,
+    ].length
   }
 
   private stubPersonEndpoints() {
@@ -230,6 +240,40 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('sentence-information', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('contact-details', 'Not started')
+
+    // And the risk widgets should be visible
+    if (this.uiRisks) {
+      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+  }
+
+  private completeContactDetails() {
+    // Given I click the contact details task
+    cy.get('[data-cy-task-name="contact-details"]').click()
+
+    // When I complete the form
+    const probationPractitionerPage = new ProbationPractitionerPage(this.application)
+    probationPractitionerPage.completeForm()
+    probationPractitionerPage.clickSubmit()
+
+    const backupContactPage = new BackupContactPage(this.application)
+    backupContactPage.completeForm()
+    backupContactPage.clickSubmit()
+
+    const practitionerPduPage = new PractitionerPduPage(this.application)
+    practitionerPduPage.completeForm()
+    practitionerPduPage.clickSubmit()
+
+    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, practitionerPduPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('contact-details', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
 
     // And the risk widgets should be visible
@@ -334,6 +378,7 @@ export default class ApplyHelper {
 
     // And the page should be populated with my answers
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
+    checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)

@@ -19,6 +19,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('sentence-information', pages)
   }
 
+  shouldShowContactDetailsAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('contact-details', 'Contact details')
+    this.shouldShowAnswersForTask('contact-details', pages)
+  }
+
   shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
     this.shouldShowAnswersForTask('oasys-import', pages)

@@ -5,6 +5,7 @@
   "additionalProperties": false,
   "required": [
     "sentence-information",
+    "contact-details",
     "oasys-import",
     "attach-documents",
     "check-your-answers"
@@ -26,6 +27,47 @@
                 "nonStatutory",
                 "standardDeterminate"
               ],
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "contact-details": {
+      "type": "object",
+      "properties": {
+        "probation-practitioner": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            }
+          }
+        },
+        "backup-contact": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            }
+          }
+        },
+        "practitioner-pdu": {
+          "type": "object",
+          "properties": {
+            "pdu": {
               "type": "string"
             }
           }

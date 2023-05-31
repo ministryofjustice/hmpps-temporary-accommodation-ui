@@ -5,6 +5,7 @@ import EnterCRNPage from './enterCrn'
 import ListPage from './list'
 import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
+import ProbationPractitionerPage from './probationPractitioner'
 import RiskManagementPlanPage from './riskManagementPlan'
 import RiskToSelfPage from './riskToSelf'
 import RoshSummaryPage from './roshSummary'
@@ -25,6 +26,7 @@ export {
   SubmissionConfirmation,
   TaskListPage,
   SentenceTypePage,
+  ProbationPractitionerPage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,

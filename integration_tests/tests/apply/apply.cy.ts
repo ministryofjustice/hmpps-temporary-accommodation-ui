@@ -1,10 +1,4 @@
-import {
-  EnterCRNPage,
-  ListPage,
-  SelectOffencePage,
-  SentenceTypePage,
-  StartPage,
-} from '../../../cypress_shared/pages/apply'
+import { EnterCRNPage, ListPage, SelectOffencePage, StartPage, TaskListPage } from '../../../cypress_shared/pages/apply'
 
 import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
@@ -78,8 +72,8 @@ context('Apply', () => {
       expect(body.deliusEventNumber).equal(selectedOffence.deliusEventNumber)
       expect(body.offenceId).equal(selectedOffence.offenceId)
 
-      // Then I should be on the Sentence Type page
-      Page.verifyOnPage(SentenceTypePage, this.application)
+      // Then I should be on the task list page
+      Page.verifyOnPage(TaskListPage)
     })
   })
 
@@ -101,14 +95,14 @@ context('Apply', () => {
       expect(body.offenceId).equal(offence.offenceId)
     })
 
-    // And I complete the basic information step
-    apply.completeBasicInformation()
+    // And I complete the sentence information task
+    apply.completeSentenceInformation()
 
     // Then the API should have recieved the updated application
     cy.task('verifyApplicationUpdate', this.application.id).then(requests => {
       const firstRequestData = JSON.parse(requests[0].body).data
 
-      expect(firstRequestData['basic-information']['sentence-type'].sentenceType).equal('communityOrder')
+      expect(firstRequestData['sentence-information']['sentence-type'].sentenceType).equal('communityOrder')
     })
   })
 

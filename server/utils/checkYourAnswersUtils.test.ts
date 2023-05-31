@@ -76,7 +76,9 @@ describe('checkYourAnswersUtils', () => {
     it('returns an empty array if there isnt any responses for the task', () => {
       const application = applicationFactory.build()
 
-      expect(getTaskResponsesAsSummaryListItems({ id: '42', title: '42', pages: {} }, application)).toEqual([])
+      expect(
+        getTaskResponsesAsSummaryListItems({ id: '42', title: '42', actionText: '42', pages: {} }, application),
+      ).toEqual([])
     })
 
     it('returns the task responses as Summary List items and adds the actions object', () => {
@@ -86,7 +88,9 @@ describe('checkYourAnswersUtils', () => {
         title: 'response',
       }))
 
-      expect(getTaskResponsesAsSummaryListItems({ id: 'foo', title: 'bar', pages: {} }, application)).toEqual([
+      expect(
+        getTaskResponsesAsSummaryListItems({ id: 'foo', title: 'bar', actionText: '42', pages: {} }, application),
+      ).toEqual([
         {
           actions: {
             items: [

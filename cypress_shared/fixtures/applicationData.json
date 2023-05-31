@@ -1,5 +1,5 @@
 {
-  "basic-information": {
+  "sentence-information": {
     "sentence-type": {
       "sentenceType": "communityOrder"
     }
@@ -146,7 +146,7 @@
       ]
     }
   },
-  "attach-required-documents": {
+  "attach-documents": {
     "attach-documents": {
       "selectedDocuments": [
         {

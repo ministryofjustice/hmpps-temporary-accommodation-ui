@@ -8,6 +8,7 @@ describe('taskListUtils', () => {
   const task = {
     id: 'second-task',
     title: 'Second Task',
+    actionText: 'Complete Second Task',
     pages: { foo: 'bar', bar: 'baz' },
     status: 'in_progress',
   } as TaskWithStatus
@@ -24,14 +25,14 @@ describe('taskListUtils', () => {
             id: 'some-uuid',
             task: 'second-task',
             page: 'foo',
-          })}" aria-describedby="eligibility-second-task" data-cy-task-name="second-task">Second Task</a>`,
+          })}" aria-describedby="eligibility-second-task" data-cy-task-name="second-task">Complete Second Task</a>`,
         )
       })
 
       it('should return the task name when the task cannot be started', () => {
         task.status = 'cannot_start'
 
-        expect(taskLink(task, application)).toEqual(`Second Task`)
+        expect(taskLink(task, application)).toEqual(`Complete Second Task`)
       })
     })
 
@@ -46,14 +47,14 @@ describe('taskListUtils', () => {
             id: 'some-uuid',
             task: 'second-task',
             page: 'foo',
-          })}" aria-describedby="eligibility-second-task" data-cy-task-name="second-task">Second Task</a>`,
+          })}" aria-describedby="eligibility-second-task" data-cy-task-name="second-task">Complete Second Task</a>`,
         )
       })
 
       it('should return the task name when the task cannot be started', () => {
         task.status = 'cannot_start'
 
-        expect(taskLink(task, application)).toEqual(`Second Task`)
+        expect(taskLink(task, application)).toEqual('Complete Second Task')
       })
     })
   })

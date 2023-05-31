@@ -1,7 +1,7 @@
 import { guidRegex } from './index'
 
 import paths from '../server/paths/api'
-import { applicationFactory } from '../server/testutils/factories'
+import { applicationFactory, documentFactory } from '../server/testutils/factories'
 
 export default [
   {
@@ -57,6 +57,17 @@ export default [
       status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {},
+    },
+  },
+  {
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.applications.documents({ id: guidRegex }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: documentFactory.buildList(5),
     },
   },
 ]

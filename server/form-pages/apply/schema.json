@@ -4,13 +4,13 @@
   "title": "Apply Schema",
   "additionalProperties": false,
   "required": [
-    "basic-information",
+    "sentence-information",
     "oasys-import",
-    "attach-required-documents",
+    "attach-documents",
     "check-your-answers"
   ],
   "properties": {
-    "basic-information": {
+    "sentence-information": {
       "type": "object",
       "properties": {
         "sentence-type": {
@@ -266,7 +266,7 @@
         }
       }
     },
-    "attach-required-documents": {
+    "attach-documents": {
       "type": "object",
       "properties": {
         "attach-documents": {

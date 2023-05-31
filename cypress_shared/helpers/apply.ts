@@ -41,9 +41,9 @@ import {
 
 export default class ApplyHelper {
   pages = {
-    reasonsForPlacement: [] as Array<ApplyPage>,
-    riskAndNeedFactors: [] as Array<ApplyPage>,
-    addDocuments: [] as Array<ApplyPage>,
+    sentenceInformation: [] as Array<ApplyPage>,
+    oasysImport: [] as Array<ApplyPage>,
+    attachDocuments: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -72,7 +72,7 @@ export default class ApplyHelper {
     private readonly application: Application,
     private readonly person: Person,
     private readonly offences: Array<ActiveOffence>,
-    private readonly type: 'e2e' | 'integration',
+    private readonly environment: 'e2e' | 'integration',
   ) {}
 
   initializeE2e(oasysSectionsLinkedToReoffending: Array<OASysSection>, otherOasysSections: Array<OASysSection>) {
@@ -108,15 +108,16 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
-    this.completeBasicInformation()
+    this.completeSentenceInformation()
     this.completeOasysImport()
     this.completeAttachDocuments()
+
     this.completeCheckYourAnswersSection()
     this.submitApplication()
   }
 
   numberOfPages() {
-    return [...this.pages.reasonsForPlacement, ...this.pages.riskAndNeedFactors, this.pages.addDocuments].length
+    return [...this.pages.sentenceInformation, ...this.pages.oasysImport, this.pages.attachDocuments].length
   }
 
   private stubPersonEndpoints() {
@@ -211,18 +212,22 @@ export default class ApplyHelper {
     cy.task('stubApplicationSubmit', { application: this.application })
   }
 
-  completeBasicInformation() {
+  completeSentenceInformation() {
+    // Given I click the sentence information task
+    cy.get('[data-cy-task-name="sentence-information"]').click()
     const sentenceTypePage = new SentenceTypePage(this.application)
+
+    // When I complete the form
     sentenceTypePage.completeForm()
     sentenceTypePage.clickSubmit()
 
-    this.pages.reasonsForPlacement = [sentenceTypePage]
+    this.pages.sentenceInformation = [sentenceTypePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
     // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('basic-information', 'Completed')
+    tasklistPage.shouldShowTaskStatus('sentence-information', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
@@ -234,7 +239,7 @@ export default class ApplyHelper {
   }
 
   private completeOasysImport() {
-    // Given I click the 'Import Oasys' task
+    // Given I click the oasys import task
     cy.get('[data-cy-task-name="oasys-import"]').click()
     const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
 
@@ -276,7 +281,7 @@ export default class ApplyHelper {
     riskToSelfPage.completeForm()
     riskToSelfPage.clickSubmit()
 
-    this.pages.riskAndNeedFactors = [
+    this.pages.oasysImport = [
       optionalOasysImportPage,
       roshSummaryPage,
       offenceDetailsPage,
@@ -292,12 +297,12 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
 
     // And the Attach Documents task should show as not started
-    tasklistPage.shouldShowTaskStatus('attach-required-documents', 'Not started')
+    tasklistPage.shouldShowTaskStatus('attach-documents', 'Not started')
   }
 
   private completeAttachDocuments() {
-    // Given I click on the Attach Documents task
-    cy.get('[data-cy-task-name="attach-required-documents"]').click()
+    // Given I click on the attach documents task
+    cy.get('[data-cy-task-name="attach-documents"]').click()
     const attachDocumentsPage = new AttachDocumentsPage(this.documents, this.selectedDocuments, this.application)
 
     // Then I should be able to download the documents
@@ -308,13 +313,13 @@ export default class ApplyHelper {
     attachDocumentsPage.completeForm()
     attachDocumentsPage.clickSubmit()
 
-    this.pages.addDocuments = [attachDocumentsPage]
+    this.pages.attachDocuments = [attachDocumentsPage]
 
     // Then I should be taken back to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
     // And the Attach Documents task should show a completed status
-    tasklistPage.shouldShowTaskStatus('attach-required-documents', 'Completed')
+    tasklistPage.shouldShowTaskStatus('attach-documents', 'Completed')
 
     // And the Check Your Answers task should show as not started
     tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
@@ -328,7 +333,12 @@ export default class ApplyHelper {
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
 
     // And the page should be populated with my answers
-    checkYourAnswersPage.shouldShowBasicInformationAnswers(this.pages.reasonsForPlacement)
+    checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
+
+    if (this.environment === 'integration') {
+      checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
+      checkYourAnswersPage.shouldShowAttachDocumentsAnswers(this.pages.attachDocuments)
+    }
 
     // When I have checked my answers
     checkYourAnswersPage.clickSubmit()

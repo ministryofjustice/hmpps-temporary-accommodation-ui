@@ -8,7 +8,7 @@ describe('documentUtils', () => {
       const originalDocuments = documentFactory.buildList(1)
       const newDocuments = documentFactory.buildList(2)
 
-      application.data['attach-required-documents'] = {
+      application.data['attach-documents'] = {
         'attach-documents': {
           selectedDocuments: originalDocuments,
         },
@@ -24,7 +24,7 @@ describe('documentUtils', () => {
       const application = applicationFactory.build()
       const documents = documentFactory.buildList(2)
 
-      application.data['attach-required-documents'] = {
+      application.data['attach-documents'] = {
         'attach-documents': {
           selectedDocuments: documents,
         },

@@ -14,9 +14,19 @@ export default class CheckYourAnswersPage extends ApplyPage {
     )
   }
 
-  shouldShowBasicInformationAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('basic-information', 'Basic information')
-    this.shouldShowAnswersForTask('basic-information', pages)
+  shouldShowSentenceInformationAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('sentence-information', 'Sentence information')
+    this.shouldShowAnswersForTask('sentence-information', pages)
+  }
+
+  shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
+    this.shouldShowAnswersForTask('oasys-import', pages)
+  }
+
+  shouldShowAttachDocumentsAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('attach-documents', 'Attach documents')
+    this.shouldShowAnswersForTask('attach-documents', pages)
   }
 
   private shouldShowAnswersForTask(taskName: string, pages: Array<ApplyPage>) {

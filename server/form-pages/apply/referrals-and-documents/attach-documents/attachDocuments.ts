@@ -1,9 +1,9 @@
 import type { Document, TemporaryAccommodationApplication } from '@approved-premises/api'
 import { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
-import { Page } from '../../utils/decorators'
+import { Page } from '../../../utils/decorators'
 
-import { CallConfig } from '../../../data/restClient'
-import TasklistPage from '../../tasklistPage'
+import { CallConfig } from '../../../../data/restClient'
+import TasklistPage from '../../../tasklistPage'
 
 type AttachDocumentsBody = {
   selectedDocuments?: Array<Document>

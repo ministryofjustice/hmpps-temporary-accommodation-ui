@@ -40,7 +40,7 @@ Given('I start a new application', () => {
 
 Given('I fill in and complete an application', () => {
   cy.url().then(function _(url) {
-    const id = url.match(/applications\/(.+)\/tasks/)[1]
+    const id = url.match(/applications\/(.+)/)[1]
     const application = applicationFactory.build({ ...this.application, id })
 
     const apply = new ApplyHelper(application, person, [], 'e2e')

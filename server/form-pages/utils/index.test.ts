@@ -75,6 +75,7 @@ describe('utils', () => {
 
       Reflect.defineMetadata('task:slug', 'slug', Task)
       Reflect.defineMetadata('task:name', 'Name', Task)
+      Reflect.defineMetadata('task:actionText', 'Action text', Task)
       Reflect.defineMetadata('task:pages', [Page1, Page2], Task)
 
       Reflect.defineMetadata('section:title', 'Section', Section)
@@ -83,7 +84,12 @@ describe('utils', () => {
 
     describe('getTask', () => {
       it('fetches metadata for a specific task and pages', () => {
-        expect(utils.getTask(Task)).toEqual({ id: 'slug', title: 'Name', pages: { 'page-1': Page1, 'page-2': Page2 } })
+        expect(utils.getTask(Task)).toEqual({
+          id: 'slug',
+          title: 'Name',
+          actionText: 'Action text',
+          pages: { 'page-1': Page1, 'page-2': Page2 },
+        })
       })
     })
 
@@ -106,13 +112,13 @@ describe('utils', () => {
             return {
               title: 'Section 1',
               name: 'Section1',
-              tasks: [{ id: 'foo', title: 'Foo', pages: { 'page-1': Page1, 'page-2': Page2 } }],
+              tasks: [{ id: 'foo', title: 'Foo', actionText: 'Do Foo', pages: { 'page-1': Page1, 'page-2': Page2 } }],
             }
           }
           return {
             title: 'Section 2',
             name: 'Section2',
-            tasks: [{ id: 'bar', title: 'Bar', pages: { 'page-3': Page1, 'page-4': Page2 } }],
+            tasks: [{ id: 'bar', title: 'Bar', actionText: 'Do Bar', pages: { 'page-3': Page1, 'page-4': Page2 } }],
           }
         })
 

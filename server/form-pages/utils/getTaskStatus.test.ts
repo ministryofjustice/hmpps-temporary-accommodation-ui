@@ -15,6 +15,7 @@ describe('getTaskStatus', () => {
   const task = {
     id: 'my-task',
     title: 'My Task',
+    actionText: 'Complete My Task',
     pages: {
       'page-1': Page1,
       'page-2': Page2,

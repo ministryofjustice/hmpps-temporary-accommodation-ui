@@ -1,0 +1,28 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {{ formPageTextarea({
+    fieldName: "plan"
+  }, fetchContext()) }}
+
+  {% set summaryHtml %}
+    <p>The move on plan should be discussed with the person before the Temporary Accommodation placement starts.</p>
+    <p>Examples of move on planning could include:</p>
+    <ul>
+      <li>any information about move on that is included as part of the person's sentence plan</li>
+      <li>discussions with the Local Authority if they intend to accommodate someone</li>
+    </ul>
+  {% endset %}
+
+  {{ govukDetails({
+    summaryText: "Vew guidance",
+    html: summaryHtml
+  }) }}
+{% endblock %}

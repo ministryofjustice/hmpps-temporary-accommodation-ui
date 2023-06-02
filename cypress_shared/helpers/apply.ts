@@ -21,6 +21,7 @@ import {
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   EnterCRNPage,
+  MoveOnPlanPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
   PractitionerPduPage,
@@ -47,6 +48,7 @@ export default class ApplyHelper {
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
+    moveOnPlan: [] as Array<ApplyPage>,
     attachDocuments: [] as Array<ApplyPage>,
   }
 
@@ -115,6 +117,7 @@ export default class ApplyHelper {
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeOasysImport()
+    this.completeMoveOnPlan()
     this.completeAttachDocuments()
 
     this.completeCheckYourAnswersSection()
@@ -126,6 +129,7 @@ export default class ApplyHelper {
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.oasysImport,
+      ...this.pages.moveOnPlan,
       ...this.pages.attachDocuments,
     ].length
   }
@@ -340,7 +344,28 @@ export default class ApplyHelper {
     // Then I should be taken back to the tasklist
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
 
-    // And the Attach Documents task should show as not started
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('move-on-plan', 'Not started')
+  }
+
+  private completeMoveOnPlan() {
+    // Given I click on the move on plan task
+    cy.get('[data-cy-task-name="move-on-plan"]').click()
+
+    // When I complete the form
+    const moveOnPlanPage = new MoveOnPlanPage(this.application)
+    moveOnPlanPage.completeForm()
+    moveOnPlanPage.clickSubmit()
+
+    this.pages.moveOnPlan = [moveOnPlanPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('move-on-plan', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('attach-documents', 'Not started')
   }
 
@@ -382,6 +407,11 @@ export default class ApplyHelper {
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
+    }
+
+    checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
+
+    if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowAttachDocumentsAnswers(this.pages.attachDocuments)
     }
 

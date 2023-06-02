@@ -6,7 +6,7 @@
 {% from "./_table.njk" import applicationsTable %}
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Temporary Accommodation (TA) applications" %}
+{% set pageTitle = applicationName + " - Temporary Accommodation (TA) referrals" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -14,7 +14,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
 
-            <h1 class="govuk-heading-l">Temporary Accommodation (TA) applications</h1>
+            <h1 class="govuk-heading-l">Temporary Accommodation (TA) referrals</h1>
 
             {{ govukTabs({
                 items: [
@@ -22,14 +22,14 @@
                         label: "In Progress",
                         id: "in-progress",
                         panel: {
-                            html: applicationsTable("Applications", dashboardTableRows(applications.inProgress))
+                            html: applicationsTable("Referrals", dashboardTableRows(applications.inProgress))
                         }
                     },
                     {
                         label: "Submitted",
                         id: "applications-submitted",
                         panel: {
-                            html: applicationsTable("Applications", dashboardTableRows(applications.submitted))
+                            html: applicationsTable("Referrals", dashboardTableRows(applications.submitted))
                         }
                     }
                 ]
@@ -38,8 +38,8 @@
         </div>
 
         <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">Start a new application</h2>
-            <p>Start a new application for Temporary Accommodation below.</p>
+            <h2 class="govuk-heading-m">Start a new referral</h2>
+            <p>Start a new referral for Temporary Accommodation below.</p>
 
             {{ govukButton({
                 text: "Start now",

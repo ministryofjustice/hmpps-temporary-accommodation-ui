@@ -11,10 +11,11 @@ import {
   getArrivalDate,
   getPage,
   getResponses,
+  getSectionAndTask,
   getStatus,
   isUnapplicable,
 } from './applicationUtils'
-import { SessionDataError, UnknownPageError } from './errors'
+import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 
 const FirstApplyPage = jest.fn()
 const SecondApplyPage = jest.fn()
@@ -34,10 +35,92 @@ jest.mock('../form-pages/assess', () => {
 
 jest.mock('./personUtils')
 
+const applySection1Task1 = {
+  id: 'first-apply-section-task-1',
+  title: 'First Apply section, task 1',
+  actionText: '',
+  pages: {},
+}
+const applySection1Task2 = {
+  id: 'first-apply-section-task-2',
+  title: 'First Apply section, task 2',
+  actionText: '',
+  pages: {},
+}
+
+const applySection2Task1 = {
+  id: 'second-apply-section-task-1',
+  title: 'Second Apply section, task 1',
+  actionText: '',
+  pages: {},
+}
+
+const applySection2Task2 = {
+  id: 'second-apply-section-task-2',
+  title: 'Second Apply section, task 2',
+  actionText: '',
+  pages: {},
+}
+
+const applySection1 = {
+  name: 'first-apply-section',
+  title: 'First Apply section',
+  tasks: [applySection1Task1, applySection1Task2],
+}
+
+const applySection2 = {
+  name: 'second-apply-section',
+  title: 'Second Apply section',
+  tasks: [applySection2Task1, applySection2Task2],
+}
+
+Apply.sections = [applySection1, applySection2]
+
 Apply.pages['basic-information'] = {
   first: FirstApplyPage,
   second: SecondApplyPage,
 }
+
+const assessSection1Task1 = {
+  id: 'first-assess-section-task-1',
+  title: 'First Apply section, task 1',
+  actionText: '',
+  pages: {},
+}
+const assessSection1Task2 = {
+  id: 'first-assess-section-task-2',
+  title: 'First Assess section, task 2',
+  actionText: '',
+  pages: {},
+}
+
+const assessSection2Task1 = {
+  id: 'second-assess-section-task-1',
+  title: 'Second Assess section, task 1',
+  actionText: '',
+  pages: {},
+}
+
+const assessSection2Task2 = {
+  id: 'second-assess-section-task-2',
+  title: 'Second Assess section, task 2',
+  actionText: '',
+  pages: {},
+}
+
+const assessSection1 = {
+  name: 'first-assess-section',
+  title: 'First Assess section',
+  tasks: [assessSection1Task1, assessSection1Task2],
+}
+
+const assessSection2 = {
+  name: 'second-assess-section',
+  title: 'Second Assess section',
+  tasks: [assessSection2Task1, assessSection2Task2],
+}
+
+Assess.sections = [assessSection1, assessSection2]
 
 Assess.pages['assess-page'] = {
   first: AssessPage,
@@ -71,7 +154,7 @@ describe('applicationUtils', () => {
       expect(getPage('basic-information', 'second')).toEqual(SecondApplyPage)
     })
 
-    it('should return a page from assess if passed the option', () => {
+    it('should return a page from Assess if passed the option', () => {
       expect(getPage('assess-page', 'first', true)).toEqual(AssessPage)
     })
 
@@ -79,6 +162,28 @@ describe('applicationUtils', () => {
       expect(() => {
         getPage('basic-information', 'bar')
       }).toThrow(UnknownPageError)
+    })
+  })
+
+  describe('getSectionAndTask', () => {
+    it('should return a section and task from Apply if it exists', () => {
+      expect(getSectionAndTask('first-apply-section-task-2')).toEqual({
+        section: applySection1,
+        task: applySection1Task2,
+      })
+    })
+
+    it('should return a page from Assess if passed the option', () => {
+      expect(getSectionAndTask('second-assess-section-task-1', true)).toEqual({
+        section: assessSection2,
+        task: assessSection2Task1,
+      })
+    })
+
+    it('should raise an error if the task is not found', async () => {
+      expect(() => {
+        getSectionAndTask('unknown-task')
+      }).toThrow(UnknownTaskError)
     })
   })
 

@@ -2,14 +2,14 @@ import type {
   TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
-import type { PageResponse, TableRow } from '@approved-premises/ui'
+import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
 import paths from '../paths/apply'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
-import { SessionDataError, UnknownPageError } from './errors'
+import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
@@ -91,6 +91,27 @@ const getPage = (taskName: string, pageName: string, isAnAssessment?: boolean): 
   return Page as TasklistPageInterface
 }
 
+const getSectionAndTask = (taskName: string, isAnAssessment?: boolean): { section: FormSection; task: Task } => {
+  const sections = isAnAssessment ? Assess.sections : Apply.sections
+
+  let result: { section: FormSection; task: Task }
+
+  sections.every(section => {
+    const task = section.tasks.find(sectionTask => sectionTask.id === taskName)
+
+    if (task) {
+      result = { section, task }
+      return false
+    }
+    return true
+  })
+
+  if (result) {
+    return result
+  }
+  throw new UnknownTaskError(taskName)
+}
+
 const getArrivalDate = (application: Application, raiseOnMissing = true): string | null => {
   const throwOrReturnNull = (message: string): null => {
     if (raiseOnMissing) {
@@ -152,6 +173,7 @@ export {
   getResponses,
   getResponseForPage,
   getPage,
+  getSectionAndTask,
   getArrivalDate,
   dashboardTableRows,
   firstPageOfApplicationJourney,

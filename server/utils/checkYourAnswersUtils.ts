@@ -5,6 +5,7 @@ import paths from '../paths/apply'
 
 import { getResponseForPage } from './applicationUtils'
 import reviewSections from './reviewUtils'
+import { escape } from './viewUtils'
 
 const checkYourAnswersSections = (application: TemporaryAccommodationApplication) =>
   reviewSections(application, getTaskResponsesAsSummaryListItems)
@@ -46,10 +47,10 @@ const embeddedSummaryListItem = (answers: Array<Record<string, unknown>>): strin
       response += `
       <div class="govuk-summary-list__row govuk-summary-list__row--embedded">
         <dt class="govuk-summary-list__key govuk-summary-list__key--embedded">
-          ${key}
+         ${escape(key)}
         </dt>
         <dd class="govuk-summary-list__value govuk-summary-list__value--embedded">
-        ${answer[key]}
+        ${escape(answer[key] as string)}
         </dd>
       </div>
       `

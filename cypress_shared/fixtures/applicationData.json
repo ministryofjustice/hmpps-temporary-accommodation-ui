@@ -4,6 +4,21 @@
       "sentenceType": "communityOrder"
     }
   },
+  "contact-details": {
+    "probation-practitioner": {
+      "name": "Practitioner Name",
+      "phone": "01234 56780",
+      "email": "name@example.com"
+    },
+    "backup-contact": {
+      "name": "Backup Name",
+      "phone": "09876 54321",
+      "email": "backup-name@example.com"
+    },
+    "practitioner-pdu": {
+      "pdu": "Some PDU"
+    }
+  },
   "oasys-import": {
     "optional-oasys-sections": {
       "needsLinkedToReoffending": [

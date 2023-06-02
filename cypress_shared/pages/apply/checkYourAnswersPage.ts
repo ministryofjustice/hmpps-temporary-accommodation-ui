@@ -19,6 +19,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('sentence-information', pages)
   }
 
+  shouldShowContactDetailsAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('contact-details', 'Contact details')
+    this.shouldShowAnswersForTask('contact-details', pages)
+  }
+
   shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
     this.shouldShowAnswersForTask('oasys-import', pages)
@@ -34,7 +39,26 @@ export default class CheckYourAnswersPage extends ApplyPage {
       pages.forEach(page => {
         const responses = page.tasklistPage.response()
         Object.keys(responses).forEach(key => {
-          this.assertDefinition(key, responses[key] as string)
+          const value = responses[key] as string | Array<Record<string, unknown>>
+
+          if (typeof value === 'string') {
+            this.assertDefinition(key, responses[key] as string)
+          } else {
+            cy.get('dt')
+              .contains(key)
+              .parent()
+              .within(() => {
+                value.forEach((embeddedRecord, index) => {
+                  cy.get('dl.govuk-summary-list--embedded')
+                    .eq(index)
+                    .within(() => {
+                      Object.keys(embeddedRecord).forEach(embeddedKey => {
+                        this.assertDefinition(embeddedKey, embeddedRecord[embeddedKey] as string)
+                      })
+                    })
+                })
+              })
+          }
         })
       })
     })

@@ -8,6 +8,7 @@ import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
 import { applicationFactory, assessmentFactory } from '../../testutils/factories'
+import { SessionDataError } from '../../utils/errors'
 
 describe('utils', () => {
   describe('applyYesOrNo', () => {
@@ -225,6 +226,32 @@ describe('utils', () => {
       ).toEqual({
         'question copy': 'Response',
       })
+    })
+  })
+
+  describe('getProbationPractitionerName', () => {
+    it('returns the probation practioner name when present in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'contact-details': {
+            'probation-practitioner': { name: 'Some Name' },
+          },
+        },
+      })
+      expect(utils.getProbationPractitionerName(application)).toEqual('Some Name')
+    })
+
+    it('throws an error or returns null when the probation practitioner name is not known', () => {
+      const application = applicationFactory.build({
+        data: {
+          'contact-details': {},
+        },
+      })
+
+      expect(() => utils.getProbationPractitionerName(application)).toThrow(
+        new SessionDataError('No probation practitioner name'),
+      )
+      expect(utils.getProbationPractitionerName(application, false)).toEqual(null)
     })
   })
 })

@@ -1,24 +1,24 @@
-import type { NextFunction, Request, Response } from 'express'
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
+import type { NextFunction, Request, Response } from 'express'
 import createError from 'http-errors'
 
-import type { DataServices, ErrorsAndUserInput, FormPages } from '@approved-premises/ui'
-import PagesController from './pagesController'
-import { ApplicationService } from '../../../services'
-import TasklistPage from '../../../form-pages/tasklistPage'
+import type { DataServices, ErrorsAndUserInput, FormPages, FormSection, Task } from '@approved-premises/ui'
 import Apply from '../../../form-pages/apply'
-import { getPage } from '../../../utils/applicationUtils'
+import TasklistPage from '../../../form-pages/tasklistPage'
+import { ApplicationService } from '../../../services'
+import { getPage, getSectionAndTask } from '../../../utils/applicationUtils'
+import PagesController from './pagesController'
 
+import { CallConfig } from '../../../data/restClient'
+import { viewPath } from '../../../form-pages/utils'
+import paths from '../../../paths/apply'
+import { UnknownPageError } from '../../../utils/errors'
+import extractCallConfig from '../../../utils/restUtils'
 import {
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
 } from '../../../utils/validation'
-import { UnknownPageError } from '../../../utils/errors'
-import paths from '../../../paths/apply'
-import { viewPath } from '../../../form-pages/utils'
-import extractCallConfig from '../../../utils/restUtils'
-import { CallConfig } from '../../../data/restClient'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../form-pages/utils')
@@ -42,6 +42,9 @@ describe('pagesController', () => {
   const dataServices = createMock<DataServices>({}) as DataServices
 
   const PageConstructor = jest.fn()
+
+  const task = createMock<Task>()
+  const section = createMock<FormSection>()
   const page = createMock<TasklistPage>({})
 
   let pagesController: PagesController
@@ -58,17 +61,18 @@ describe('pagesController', () => {
       request.params = {
         id: 'some-uuid',
       }
+      ;(getSectionAndTask as jest.Mock).mockReturnValue({ section, task })
       ;(viewPath as jest.Mock).mockReturnValue('applications/pages/some/view')
     })
 
     it('renders a page', async () => {
-      ;(fetchErrorsAndUserInput as jest.Mock).mockImplementation(() => {
-        return { errors: {}, errorSummary: [], userInput: {} }
-      })
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       const requestHandler = pagesController.show('some-task', 'some-page')
 
       await requestHandler(request, response, next)
+
+      expect(getSectionAndTask).toHaveBeenCalledWith('some-task')
 
       expect(getPage).toHaveBeenCalledWith('some-task', 'some-page')
       expect(applicationService.initializePage).toHaveBeenCalledWith(
@@ -81,7 +85,8 @@ describe('pagesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('applications/pages/some/view', {
         applicationId: request.params.id,
-        task: 'some-task',
+        section,
+        task,
         page,
         errors: {},
         errorSummary: [],
@@ -107,7 +112,8 @@ describe('pagesController', () => {
 
       expect(response.render).toHaveBeenCalledWith('applications/pages/some/view', {
         applicationId: request.params.id,
-        task: 'some-task',
+        section,
+        task,
         page,
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,

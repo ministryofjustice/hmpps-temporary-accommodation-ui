@@ -5,7 +5,7 @@ import paths from '../paths/apply'
 
 import { getResponseForPage } from './applicationUtils'
 import reviewSections from './reviewUtils'
-import { escape } from './viewUtils'
+import { escape, formatLines } from './viewUtils'
 
 const checkYourAnswersSections = (application: TemporaryAccommodationApplication) =>
   reviewSections(application, getTaskResponsesAsSummaryListItems)
@@ -28,7 +28,7 @@ export const getTaskResponsesAsSummaryListItems = (
     Object.keys(response).forEach(key => {
       const value =
         typeof response[key] === 'string' || response[key] instanceof String
-          ? ({ text: response[key] } as TextItem)
+          ? ({ html: formatLines(response[key] as string) } as HtmlItem)
           : ({ html: embeddedSummaryListItem(response[key] as Array<Record<string, unknown>>) } as HtmlItem)
 
       items.push(summaryListItemForResponse(key, value, task, pageName, application))

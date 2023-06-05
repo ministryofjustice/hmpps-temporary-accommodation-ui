@@ -161,6 +161,11 @@
       ]
     }
   },
+  "move-on-plan": {
+    "move-on-plan": {
+      "plan": "A move on plan"
+    }
+  },
   "attach-documents": {
     "attach-documents": {
       "selectedDocuments": [

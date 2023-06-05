@@ -29,6 +29,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('oasys-import', pages)
   }
 
+  shouldShowMoveOnPlanAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('move-on-plan', 'Move on plan')
+    this.shouldShowAnswersForTask('move-on-plan', pages)
+  }
+
   shouldShowAttachDocumentsAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('attach-documents', 'Attach documents')
     this.shouldShowAnswersForTask('attach-documents', pages)

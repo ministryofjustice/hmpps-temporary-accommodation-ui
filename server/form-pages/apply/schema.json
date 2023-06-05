@@ -7,6 +7,7 @@
     "sentence-information",
     "contact-details",
     "oasys-import",
+    "move-on-plan",
     "attach-documents",
     "check-your-answers"
   ],
@@ -303,6 +304,19 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "move-on-plan": {
+      "type": "object",
+      "properties": {
+        "move-on-plan": {
+          "type": "object",
+          "properties": {
+            "plan": {
+              "type": "string"
             }
           }
         }

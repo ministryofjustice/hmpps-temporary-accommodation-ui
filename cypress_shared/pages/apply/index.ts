@@ -4,6 +4,7 @@ import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
+import MoveOnPlanPage from './moveOnPlan'
 import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
 import PractitionerPduPage from './practitionerPdu'
@@ -37,5 +38,6 @@ export {
   SupportingInformationPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
+  MoveOnPlanPage,
   AttachDocumentsPage,
 }

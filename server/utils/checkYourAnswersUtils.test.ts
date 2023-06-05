@@ -7,7 +7,7 @@ import {
   getTaskResponsesAsSummaryListItems,
 } from './checkYourAnswersUtils'
 import reviewSections from './reviewUtils'
-import { escape } from './viewUtils'
+import { escape, formatLines } from './viewUtils'
 
 jest.mock('./reviewUtils')
 jest.mock('./applicationUtils')
@@ -94,6 +94,7 @@ describe('checkYourAnswersUtils', () => {
       ;(getResponseForPage as jest.Mock).mockImplementation(() => ({
         title: 'response',
       }))
+      ;(formatLines as jest.Mock).mockImplementation((value: string) => `Formatted "${value}"`)
 
       expect(
         getTaskResponsesAsSummaryListItems({ id: 'foo', title: 'bar', actionText: '42', pages: {} }, application),
@@ -112,10 +113,12 @@ describe('checkYourAnswersUtils', () => {
             text: 'title',
           },
           value: {
-            text: 'response',
+            html: 'Formatted "response"',
           },
         },
       ])
+
+      expect(formatLines).toHaveBeenCalledWith('response')
     })
   })
 })

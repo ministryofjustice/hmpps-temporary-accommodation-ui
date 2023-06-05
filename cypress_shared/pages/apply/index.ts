@@ -10,6 +10,7 @@ import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
 import PractitionerPduPage from './practitionerPdu'
 import ProbationPractitionerPage from './probationPractitioner'
+import ReleaseDatePage from './releaseDate'
 import RiskManagementPlanPage from './riskManagementPlan'
 import RiskToSelfPage from './riskToSelf'
 import RoshSummaryPage from './roshSummary'
@@ -34,6 +35,7 @@ export {
   BackupContactPage,
   PractitionerPduPage,
   EligibilityReasonPage,
+  ReleaseDatePage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,

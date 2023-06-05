@@ -4,7 +4,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Apply for a Temporary Accommodation placement" %}
+{% set pageTitle = applicationName + " - Make a referral for Temporary Accommodation" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -18,24 +18,24 @@
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.applications.new() }}" method="get">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        <h1>Apply for a Temporary Accommodation placement</h1>
+        <h1>Make a referral for Temporary Accommodation</h1>
 
         <p class="govuk-body">Temporary Accommodation (TA) is for people on probation who are at risk of homelessness on their first night of release. </p>
 
         <p class="govuk-body">This includes release from prison, an Approved Premises, or Bail Accommodation and Support Services.</p>
 
-        <p class="govuk-body">Use this service to apply for a TA placement.</p>
+        <p class="govuk-body">Use this service to refer for TA.</p>
 
         <h2>Before you start</h2>
 
         <h3>You need</h3>
 
         <ul>
-          <li>to have consent from the person on probation to apply for TA</li>
+          <li>to have consent from the person on probation to refer for TA</li>
           <li>to have completed a Duty to Refer and Commissioned Rehabilitative Services referral</li>
           <li>a signed <a href="">Accommodation Compact</a> from the person</li>
           <li>the person's CRN</li>
-          <li>an up to date OASys – we'll use this to pre-fill some of your application</li>
+          <li>an up to date OASys – we'll use this to pre-fill some of your referral</li>
         </ul>
 
         <h3>You need to know</h3>

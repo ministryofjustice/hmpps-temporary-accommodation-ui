@@ -2,7 +2,7 @@ import Page from '../page'
 
 export default class TaskListPage extends Page {
   constructor() {
-    super('Apply for a Temporary Accommodation placement')
+    super('Make a referral for Temporary Accommodation')
   }
 
   shouldShowTaskStatus = (task: string, status: string): void => {

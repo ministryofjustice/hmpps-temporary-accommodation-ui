@@ -8,7 +8,7 @@ export default class ListPage extends Page {
     private readonly inProgressApplications: Array<Application>,
     private readonly submittedApplications: Array<Application>,
   ) {
-    super('Temporary Accommodation (TA) applications')
+    super('Temporary Accommodation (TA) referrals')
   }
 
   static visit(inProgressApplications: Array<Application>, submittedApplications: Array<Application>): ListPage {

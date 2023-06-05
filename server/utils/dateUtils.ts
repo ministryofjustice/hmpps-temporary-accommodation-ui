@@ -1,5 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
+import { isPast } from 'date-fns'
 
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
@@ -148,4 +149,9 @@ export const getYearsSince = (startYear: number): Array<{ year: string }> => {
     years.push({ year: (startYear++).toString() })
   }
   return years
+}
+
+export const dateIsInThePast = (dateString: string): boolean => {
+  const date = DateFormats.isoToDateObj(dateString)
+  return isPast(date)
 }

@@ -12,7 +12,7 @@
     fieldName: "plan"
   }, fetchContext()) }}
 
-  {% set summaryHtml %}
+  {% set detailsHtml %}
     <p>The move on plan should be discussed with the person before the Temporary Accommodation placement starts.</p>
     <p>Examples of move on planning could include:</p>
     <ul>
@@ -23,6 +23,6 @@
 
   {{ govukDetails({
     summaryText: "Vew guidance",
-    html: summaryHtml
+    html: detailsHtml
   }) }}
 {% endblock %}

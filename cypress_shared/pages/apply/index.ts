@@ -1,3 +1,4 @@
+import AccommodationRequiredFromDatePage from './accommodationRequiredFromDate'
 import AttachDocumentsPage from './attachDocumentsPage'
 import BackupContactPage from './backupContact'
 import CheckYourAnswersPage from './checkYourAnswersPage'
@@ -36,6 +37,7 @@ export {
   PractitionerPduPage,
   EligibilityReasonPage,
   ReleaseDatePage,
+  AccommodationRequiredFromDatePage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,

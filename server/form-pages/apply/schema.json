@@ -6,6 +6,7 @@
   "required": [
     "sentence-information",
     "contact-details",
+    "eligibility",
     "oasys-import",
     "move-on-plan",
     "attach-documents",
@@ -69,6 +70,64 @@
           "type": "object",
           "properties": {
             "pdu": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "eligibility": {
+      "type": "object",
+      "properties": {
+        "eligibility-reason": {
+          "type": "object",
+          "properties": {
+            "reason": {
+              "enum": [
+                "homelessFromApprovedPremises",
+                "homelessFromBailAccommodation",
+                "homelessFromCustody"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "release-date": {
+          "type": "object",
+          "properties": {
+            "releaseDate-year": {
+              "type": "string"
+            },
+            "releaseDate-month": {
+              "type": "string"
+            },
+            "releaseDate-day": {
+              "type": "string"
+            },
+            "releaseDate-time": {
+              "type": "string"
+            },
+            "releaseDate": {
+              "type": "string"
+            }
+          }
+        },
+        "accommodation-required-from-date": {
+          "type": "object",
+          "properties": {
+            "accommodationRequiredFromDate-year": {
+              "type": "string"
+            },
+            "accommodationRequiredFromDate-month": {
+              "type": "string"
+            },
+            "accommodationRequiredFromDate-day": {
+              "type": "string"
+            },
+            "accommodationRequiredFromDate-time": {
+              "type": "string"
+            },
+            "accommodationRequiredFromDate": {
               "type": "string"
             }
           }

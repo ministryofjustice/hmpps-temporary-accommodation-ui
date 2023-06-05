@@ -2,6 +2,7 @@ import AttachDocumentsPage from './attachDocumentsPage'
 import BackupContactPage from './backupContact'
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
+import EligibilityReasonPage from './eligibilityReason'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
 import MoveOnPlanPage from './moveOnPlan'
@@ -32,6 +33,7 @@ export {
   ProbationPractitionerPage,
   BackupContactPage,
   PractitionerPduPage,
+  EligibilityReasonPage,
   OptionalOasysSectionsPage,
   RoshSummaryPage,
   OffenceDetailsPage,

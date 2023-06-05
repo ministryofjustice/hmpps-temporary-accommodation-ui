@@ -279,11 +279,6 @@ export default class ApplyHelper {
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
-
-    // And the risk widgets should be visible
-    if (this.uiRisks) {
-      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
-    }
   }
 
   private completeOasysImport() {

@@ -21,11 +21,16 @@ import {
   BackupContactPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
+  CrsDetailsPage,
+  CrsSubmittedPage,
+  DtrDetailsPage,
+  DtrSubmittedPage,
   EligibilityReasonPage,
   EnterCRNPage,
   MoveOnPlanPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
+  OtherAccommodationOptionsPage,
   PractitionerPduPage,
   ProbationPractitionerPage,
   ReleaseDatePage,
@@ -45,6 +50,7 @@ import {
   roshSummariesFromApplication,
   supportInformationFromApplication,
 } from './index'
+import { hasSubmittedDtr } from '../../server/form-pages/utils'
 
 export default class ApplyHelper {
   pages = {
@@ -53,6 +59,7 @@ export default class ApplyHelper {
     eligibility: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
+    accommodationReferralDetails: [] as Array<ApplyPage>,
     attachDocuments: [] as Array<ApplyPage>,
   }
 
@@ -123,6 +130,7 @@ export default class ApplyHelper {
     this.completeEligibility()
     this.completeOasysImport()
     this.completeMoveOnPlan()
+    this.completeAccommodationReferralDetails()
     this.completeAttachDocuments()
 
     this.completeCheckYourAnswersSection()
@@ -136,6 +144,7 @@ export default class ApplyHelper {
       ...this.pages.eligibility,
       ...this.pages.oasysImport,
       ...this.pages.moveOnPlan,
+      ...this.pages.accommodationReferralDetails,
       ...this.pages.attachDocuments,
     ].length
   }
@@ -396,6 +405,52 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('move-on-plan', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('accommodation-referral-details', 'Not started')
+  }
+
+  private completeAccommodationReferralDetails() {
+    // Given I click on the accommodation referral details task
+    cy.get('[data-cy-task-name="accommodation-referral-details"]').click()
+
+    this.pages.accommodationReferralDetails = []
+
+    // When I complete the form
+    const dtrSubmittedPage = new DtrSubmittedPage(this.application)
+    dtrSubmittedPage.completeForm()
+    dtrSubmittedPage.clickSubmit()
+    this.pages.accommodationReferralDetails.push(dtrSubmittedPage)
+
+    if (hasSubmittedDtr(this.application)) {
+      const dtrDetailsPage = new DtrDetailsPage(this.application)
+      dtrDetailsPage.completeForm()
+      dtrDetailsPage.clickSubmit()
+      this.pages.accommodationReferralDetails.push(dtrDetailsPage)
+    }
+
+    const crsSubmittedPage = new CrsSubmittedPage(this.application)
+    crsSubmittedPage.completeForm()
+    crsSubmittedPage.clickSubmit()
+    this.pages.accommodationReferralDetails.push(crsSubmittedPage)
+
+    if (hasSubmittedDtr(this.application)) {
+      const crsDetailsPage = new CrsDetailsPage(this.application)
+      crsDetailsPage.completeForm()
+      crsDetailsPage.clickSubmit()
+      this.pages.accommodationReferralDetails.push(crsDetailsPage)
+    }
+
+    const otherAccommodationOptionsPage = new OtherAccommodationOptionsPage(this.application)
+    otherAccommodationOptionsPage.completeForm()
+    otherAccommodationOptionsPage.clickSubmit()
+    this.pages.accommodationReferralDetails.push(otherAccommodationOptionsPage)
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('accommodation-referral-details', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('attach-documents', 'Not started')
   }
 
@@ -441,6 +496,7 @@ export default class ApplyHelper {
     }
 
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
+    checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowAttachDocumentsAnswers(this.pages.attachDocuments)

@@ -3,6 +3,7 @@ import AttachDocumentsPage from './attachDocumentsPage'
 import BackupContactPage from './backupContact'
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
+import CrsDetailsPage from './crsDetails'
 import CrsSubmittedPage from './crsSubmitted'
 import DtrDetailsPage from './dtrDetails'
 import DtrSubmittedPage from './dtrSubmitted'
@@ -51,5 +52,6 @@ export {
   DtrSubmittedPage,
   DtrDetailsPage,
   CrsSubmittedPage,
+  CrsDetailsPage,
   AttachDocumentsPage,
 }

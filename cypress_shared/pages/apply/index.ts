@@ -3,6 +3,7 @@ import AttachDocumentsPage from './attachDocumentsPage'
 import BackupContactPage from './backupContact'
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
+import DtrSubmittedPage from './dtrSubmitted'
 import EligibilityReasonPage from './eligibilityReason'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
@@ -45,5 +46,6 @@ export {
   RiskManagementPlanPage,
   RiskToSelfPage,
   MoveOnPlanPage,
+  DtrSubmittedPage,
   AttachDocumentsPage,
 }

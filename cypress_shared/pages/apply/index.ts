@@ -13,6 +13,7 @@ import ListPage from './list'
 import MoveOnPlanPage from './moveOnPlan'
 import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
+import OtherAccommodationOptionsPage from './otherAccommodationOptions'
 import PractitionerPduPage from './practitionerPdu'
 import ProbationPractitionerPage from './probationPractitioner'
 import ReleaseDatePage from './releaseDate'
@@ -53,5 +54,6 @@ export {
   DtrDetailsPage,
   CrsSubmittedPage,
   CrsDetailsPage,
+  OtherAccommodationOptionsPage,
   AttachDocumentsPage,
 }

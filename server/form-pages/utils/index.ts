@@ -160,3 +160,13 @@ export const hasSubmittedDtr = (application: Application): boolean => {
 
   return dtrSubmitted === 'yes'
 }
+
+export const hasSubmittedCrs = (application: Application) => {
+  const crsSubmitted: YesOrNo = application.data?.['accommodation-referral-details']?.['crs-submitted']?.crsSubmitted
+
+  if (!crsSubmitted) {
+    throw new SessionDataError('No CRS submitted value')
+  }
+
+  return crsSubmitted === 'yes'
+}

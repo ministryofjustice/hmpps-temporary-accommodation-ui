@@ -253,4 +253,38 @@ describe('utils', () => {
       )
     })
   })
+
+  describe('hasSubmittedDtr', () => {
+    it('returns true when the DTR has been submitted in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-submitted': { dtrSubmitted: 'yes' },
+          },
+        },
+      })
+      expect(utils.hasSubmittedDtr(application)).toEqual(true)
+    })
+
+    it('returns false when the DTR has not been submitted in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-submitted': { dtrSubmitted: 'no' },
+          },
+        },
+      })
+      expect(utils.hasSubmittedDtr(application)).toEqual(false)
+    })
+
+    it('throws an error when the DTR submitted page has not been completed', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {},
+        },
+      })
+
+      expect(() => utils.hasSubmittedDtr(application)).toThrow(new SessionDataError('No DTR submitted value'))
+    })
+  })
 })

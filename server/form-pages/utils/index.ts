@@ -150,3 +150,13 @@ export const getProbationPractitionerName = (application: Application) => {
 
   return name
 }
+
+export const hasSubmittedDtr = (application: Application): boolean => {
+  const dtrSubmitted: YesOrNo = application.data?.['accommodation-referral-details']?.['dtr-submitted']?.dtrSubmitted
+
+  if (!dtrSubmitted) {
+    throw new SessionDataError('No DTR submitted value')
+  }
+
+  return dtrSubmitted === 'yes'
+}

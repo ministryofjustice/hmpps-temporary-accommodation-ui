@@ -16,16 +16,19 @@ import { documentFactory, oasysSectionsFactory, oasysSelectionFactory } from '..
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
 import {
+  AccommodationRequiredFromDatePage,
   AttachDocumentsPage,
   BackupContactPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
+  EligibilityReasonPage,
   EnterCRNPage,
   MoveOnPlanPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
   PractitionerPduPage,
   ProbationPractitionerPage,
+  ReleaseDatePage,
   RiskManagementPlanPage,
   RiskToSelfPage,
   RoshSummaryPage,
@@ -47,6 +50,7 @@ export default class ApplyHelper {
   pages = {
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
+    eligibility: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
     attachDocuments: [] as Array<ApplyPage>,
@@ -116,6 +120,7 @@ export default class ApplyHelper {
   completeApplication() {
     this.completeSentenceInformation()
     this.completeContactDetails()
+    this.completeEligibility()
     this.completeOasysImport()
     this.completeMoveOnPlan()
     this.completeAttachDocuments()
@@ -128,6 +133,7 @@ export default class ApplyHelper {
     return [
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
+      ...this.pages.eligibility,
       ...this.pages.oasysImport,
       ...this.pages.moveOnPlan,
       ...this.pages.attachDocuments,
@@ -278,12 +284,36 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('contact-details', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
+    tasklistPage.shouldShowTaskStatus('eligibility', 'Not started')
+  }
 
-    // And the risk widgets should be visible
-    if (this.uiRisks) {
-      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
-    }
+  private completeEligibility() {
+    // Given I click the eligibility task
+    cy.get('[data-cy-task-name="eligibility"]').click()
+
+    // When I complete the form
+    const eligibilityReasonPage = new EligibilityReasonPage(this.application)
+    eligibilityReasonPage.completeForm()
+    eligibilityReasonPage.clickSubmit()
+
+    const releaseDatePage = new ReleaseDatePage(this.application)
+    releaseDatePage.completeForm()
+    releaseDatePage.clickSubmit()
+
+    const accommodationRequiredFromDatePage = new AccommodationRequiredFromDatePage(this.application)
+    accommodationRequiredFromDatePage.completeForm()
+    accommodationRequiredFromDatePage.clickSubmit()
+
+    this.pages.eligibility = [eligibilityReasonPage, releaseDatePage, accommodationRequiredFromDatePage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('eligibility', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
   }
 
   private completeOasysImport() {
@@ -404,6 +434,7 @@ export default class ApplyHelper {
     // And the page should be populated with my answers
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
     checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
+    checkYourAnswersPage.shouldShowEligibilityAnswers(this.pages.eligibility)
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)

@@ -19,6 +19,24 @@
       "pdu": "Some PDU"
     }
   },
+  "eligibility": {
+    "eligibility-reason": {
+      "reason": "homelessFromApprovedPremises"
+    },
+    "release-date": {
+      "releaseDate": "2123-09-02",
+      "releaseDate-year": "2123",
+      "releaseDate-month": "9",
+      "releaseDate-day": "2"
+
+    },
+    "accommodation-required-from-date": {
+      "accommodationRequiredFromDate": "2123-09-16",
+      "accommodationRequiredFromDate-year": "2123",
+      "accommodationRequiredFromDate-month": "9",
+      "accommodationRequiredFromDate-day": "16"
+    }
+  },
   "oasys-import": {
     "optional-oasys-sections": {
       "needsLinkedToReoffending": [

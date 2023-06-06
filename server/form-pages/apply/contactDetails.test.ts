@@ -1,6 +1,6 @@
-import { applicationFactory } from '../../../../testutils/factories'
-import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import TasklistPage from '../../../tasklistPage'
+import { applicationFactory } from '../../testutils/factories'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../shared-examples'
+import TasklistPage from '../tasklistPage'
 
 import ContactDetails from './contactDetails'
 

@@ -11,6 +11,7 @@ declare module 'express-session' {
     application: Application
     previousPage: string
     probationRegion: ProbationRegion
+    userDetails: UserDetails
   }
 }
 

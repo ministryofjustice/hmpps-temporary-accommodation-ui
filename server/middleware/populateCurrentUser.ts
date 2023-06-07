@@ -8,9 +8,12 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     try {
       if (req.user) {
         const callConfig = extractCallConfig(req)
-        const user = res.locals.user && (await userService.getUser(callConfig))
-        if (user) {
-          res.locals.user = { ...user, ...res.locals.user }
+        const userDetails = req.session.userDetails
+          ? req.session.userDetails
+          : res.locals.user && (await userService.getUser(callConfig))
+        if (userDetails) {
+          req.session.userDetails = userDetails
+          res.locals.user = { ...userDetails, ...res.locals.user }
         } else {
           logger.info('No user available')
         }

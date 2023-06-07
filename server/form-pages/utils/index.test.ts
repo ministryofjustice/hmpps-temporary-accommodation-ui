@@ -241,7 +241,7 @@ describe('utils', () => {
       expect(utils.getProbationPractitionerName(application)).toEqual('Some Name')
     })
 
-    it('throws an error or returns null when the probation practitioner name is not known', () => {
+    it('throws an error when the probation practitioner name is not known', () => {
       const application = applicationFactory.build({
         data: {
           'contact-details': {},
@@ -251,7 +251,6 @@ describe('utils', () => {
       expect(() => utils.getProbationPractitionerName(application)).toThrow(
         new SessionDataError('No probation practitioner name'),
       )
-      expect(utils.getProbationPractitionerName(application, false)).toEqual(null)
     })
   })
 })

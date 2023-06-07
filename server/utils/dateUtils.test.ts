@@ -1,15 +1,17 @@
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { isPast } from 'date-fns'
+import { isFuture, isPast } from 'date-fns'
 import {
   DateFormats,
   InvalidDateStringError,
   dateAndTimeInputsAreValidDates,
   dateIsBlank,
+  dateIsInFuture,
   dateIsInThePast,
   getYearsSince,
 } from './dateUtils'
 
 jest.mock('date-fns/isPast')
+jest.mock('date-fns/isFuture')
 
 describe('DateFormats', () => {
   describe('dateObjToIsoDate', () => {
@@ -256,5 +258,19 @@ describe('dateIsInThePast', () => {
     ;(isPast as jest.Mock).mockReturnValue(false)
 
     expect(dateIsInThePast('2020-01-01')).toEqual(false)
+  })
+})
+
+describe('dateIsInTheFuture', () => {
+  it('returns true if the date is in the future', () => {
+    ;(isFuture as jest.Mock).mockReturnValue(true)
+
+    expect(dateIsInFuture('2020-01-01')).toEqual(true)
+  })
+
+  it('returns false if the date is not in the future', () => {
+    ;(isFuture as jest.Mock).mockReturnValue(false)
+
+    expect(dateIsInFuture('2020-01-01')).toEqual(false)
   })
 })

@@ -19,6 +19,7 @@ import ProbationPractitionerPage from './probationPractitioner'
 import ReleaseDatePage from './releaseDate'
 import RiskManagementPlanPage from './riskManagementPlan'
 import RiskToSelfPage from './riskToSelf'
+import RoomSharingPage from './roomSharing'
 import RoshSummaryPage from './roshSummary'
 import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
@@ -49,6 +50,7 @@ export {
   SupportingInformationPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
+  RoomSharingPage,
   MoveOnPlanPage,
   DtrSubmittedPage,
   DtrDetailsPage,

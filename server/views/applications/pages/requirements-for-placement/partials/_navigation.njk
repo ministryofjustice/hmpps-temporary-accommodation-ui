@@ -1,0 +1,20 @@
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+
+<h1 class="govuk-heading-l">
+  <span class="govuk-caption-l">{{ section.title }}</span>
+  {{ task.title }}
+</h1>
+
+{{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+    text: 'Room sharing',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'room-sharing' }),
+    active: page.title === 'Room sharing'
+  },
+  {
+    text: 'Food allergies',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'food-allergies' }),
+    active: page.title === 'Food allergies'
+  }]
+}) }}

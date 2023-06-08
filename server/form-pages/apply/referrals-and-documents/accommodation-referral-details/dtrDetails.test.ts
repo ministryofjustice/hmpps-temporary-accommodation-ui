@@ -49,7 +49,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails(body, application)
       expect(page.errors()).toEqual({
-        date: 'You must specify the date of DTR / NOP',
+        date: 'You must specify the date DTR / NOP was submitted',
       })
     })
 
@@ -60,7 +60,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails(body, application)
       expect(page.errors()).toEqual({
-        date: 'You must specify a valid date of DTR / NOP',
+        date: 'You must specify a valid date DTR / NOP was submitted',
       })
     })
 
@@ -71,7 +71,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails(body, application)
       expect(page.errors()).toEqual({
-        date: 'The date of DTR / NOP must not be in the future',
+        date: 'The date DTR / NOP was submitted must not be in the future',
       })
     })
   })
@@ -83,7 +83,7 @@ describe('DtrDetails', () => {
       const page = new DtrDetails(body, application)
       expect(page.response()).toEqual({
         'DTR / NOP reference number': 'ABC123',
-        'Date of DTR / NOP': '23 July 2023',
+        'Date DTR / NOP was submitted': '23 July 2023',
       })
     })
   })

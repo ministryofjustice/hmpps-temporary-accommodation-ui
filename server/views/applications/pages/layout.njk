@@ -43,7 +43,7 @@
         {% block questions %}{% endblock %}
 
         {{ govukButton({
-          text: "Save and continue",
+          text: buttonText if buttonText else "Save and continue",
           preventDoubleClick: true
         }) }}
       </form>

@@ -28,6 +28,7 @@ import {
   DtrSubmittedPage,
   EligibilityReasonPage,
   EnterCRNPage,
+  FoodAllergiesPage,
   MoveOnPlanPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
@@ -37,6 +38,7 @@ import {
   ReleaseDatePage,
   RiskManagementPlanPage,
   RiskToSelfPage,
+  RoomSharingPage,
   RoshSummaryPage,
   SentenceTypePage,
   StartPage,
@@ -58,6 +60,7 @@ export default class ApplyHelper {
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
+    requirementsFromPlacement: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
     accommodationReferralDetails: [] as Array<ApplyPage>,
     attachDocuments: [] as Array<ApplyPage>,
@@ -129,6 +132,7 @@ export default class ApplyHelper {
     this.completeContactDetails()
     this.completeEligibility()
     this.completeOasysImport()
+    this.completeRequirementsForPlacement()
     this.completeMoveOnPlan()
     this.completeAccommodationReferralDetails()
     this.completeAttachDocuments()
@@ -143,6 +147,7 @@ export default class ApplyHelper {
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
       ...this.pages.oasysImport,
+      ...this.pages.requirementsFromPlacement,
       ...this.pages.moveOnPlan,
       ...this.pages.accommodationReferralDetails,
       ...this.pages.attachDocuments,
@@ -384,6 +389,31 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Not started')
+  }
+
+  private completeRequirementsForPlacement() {
+    // Given I click on the requirements for placement task
+    cy.get('[data-cy-task-name="requirements-for-placement"]').click()
+
+    // When I complete the form
+    const roomSharingPage = new RoomSharingPage(this.application)
+    roomSharingPage.completeForm()
+    roomSharingPage.clickSubmit()
+
+    const foodAllergiesPage = new FoodAllergiesPage(this.application)
+    foodAllergiesPage.completeForm()
+    foodAllergiesPage.clickSubmit()
+
+    this.pages.requirementsFromPlacement = [roomSharingPage, foodAllergiesPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('move-on-plan', 'Not started')
   }
 
@@ -495,6 +525,7 @@ export default class ApplyHelper {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 
+    checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
     checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)
 

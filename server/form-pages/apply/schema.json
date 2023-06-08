@@ -8,6 +8,7 @@
     "contact-details",
     "eligibility",
     "oasys-import",
+    "requirements-for-placement",
     "move-on-plan",
     "accommodation-referral-details",
     "attach-documents",
@@ -364,6 +365,41 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "requirements-for-placement": {
+      "type": "object",
+      "properties": {
+        "room-sharing": {
+          "type": "object",
+          "properties": {
+            "roomSharing": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "roomSharingDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "food-allergies": {
+          "type": "object",
+          "properties": {
+            "foodAllergies": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "foodAllergiesDetail": {
+              "type": "string"
             }
           }
         }

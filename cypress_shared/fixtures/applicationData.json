@@ -179,6 +179,16 @@
       ]
     }
   },
+  "requirements-for-placement": {
+    "room-sharing": {
+      "roomSharing": "yes",
+      "roomSharingDetail": "Sharing risk managed by X, Y, Z"
+    },
+    "food-allergies": {
+      "foodAllergies": "yes",
+      "foodAllergiesDetail": "Allergic to X, Y, Z"
+    }
+  },
   "move-on-plan": {
     "move-on-plan": {
       "plan": "A move on plan"

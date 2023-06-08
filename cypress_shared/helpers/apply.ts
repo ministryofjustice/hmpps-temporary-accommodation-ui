@@ -12,6 +12,7 @@ import {
   Person,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
+import { hasSubmittedDtr } from '../../server/form-pages/utils'
 import { documentFactory, oasysSectionsFactory, oasysSelectionFactory } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import Page from '../pages'
@@ -50,7 +51,6 @@ import {
   roshSummariesFromApplication,
   supportInformationFromApplication,
 } from './index'
-import { hasSubmittedDtr } from '../../server/form-pages/utils'
 
 export default class ApplyHelper {
   pages = {

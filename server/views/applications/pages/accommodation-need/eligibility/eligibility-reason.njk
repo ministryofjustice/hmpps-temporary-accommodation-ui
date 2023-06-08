@@ -1,0 +1,39 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {{ formPageRadios({
+    fieldName: "reason",
+    items: page.items()
+  }, fetchContext()) }}
+
+  {% set detailsHtml %}
+    <p>TA is open to adult prison leavers who are aged 18 or over. They must be:</p>
+    <ul>
+      <li>at risk of being released as homeless from prison following a custodial sentence. They must be supervised by the probation service</li>
+      <li>moving on as homeless from an Approved Premises (AP)</li>
+      <li>moving on as homeless following a period at a Bail Accommodation and Support Service (BASS) residence</li>
+    </ul>
+    <p>TA is not available to:</p>
+    <ul>
+      <li>persons on probation subject to a community order or suspended sentence order only</li>
+      <li>persons who are released after a period on remand, not under the supervision of the probation service</li>
+      <li>prison leavers who after their release, later become homeless</li>
+      <li>prison leavers at the point of release on home detention curfew</li>
+      <li>persons released from custody at Sentence Expiry date (SED)</li>
+      <li>foreign national offenders (FNOs) who have no recourse to public funds (NRPFs)</li>
+    </ul>
+  {% endset %}
+
+  {{ govukDetails({
+    summaryText: "View guidance on eligibility",
+    html: detailsHtml
+  }) }}
+
+{% endblock %}

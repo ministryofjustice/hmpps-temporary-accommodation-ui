@@ -30,7 +30,7 @@ export default class PagesController {
 
         const { section, task } = getSectionAndTask(taskName)
 
-        res.render(viewPath(page, 'applications'), {
+        res.render(viewPath(section, task, page, 'applications'), {
           applicationId: req.params.id,
           errors,
           errorSummary,

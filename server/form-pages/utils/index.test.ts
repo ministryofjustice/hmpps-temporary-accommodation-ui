@@ -7,6 +7,7 @@ import { TemporaryAccommodationApplication } from '../../@types/shared'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
+import { FormSection, Task } from '../../@types/ui'
 import { applicationFactory, assessmentFactory } from '../../testutils/factories'
 import { SessionDataError } from '../../utils/errors'
 
@@ -60,9 +61,9 @@ describe('utils', () => {
   })
 
   describe('Decorator metadata utils', () => {
-    class Section {}
+    class SomeSection {}
 
-    class Task {}
+    class SomeTask {}
 
     class Page1 {}
     class Page2 {}
@@ -74,18 +75,18 @@ describe('utils', () => {
       Reflect.defineMetadata('page:task', 'task-1', Page1)
       Reflect.defineMetadata('page:task', 'task-2', Page2)
 
-      Reflect.defineMetadata('task:slug', 'slug', Task)
-      Reflect.defineMetadata('task:name', 'Name', Task)
-      Reflect.defineMetadata('task:actionText', 'Action text', Task)
-      Reflect.defineMetadata('task:pages', [Page1, Page2], Task)
+      Reflect.defineMetadata('task:slug', 'slug', SomeTask)
+      Reflect.defineMetadata('task:name', 'Name', SomeTask)
+      Reflect.defineMetadata('task:actionText', 'Action text', SomeTask)
+      Reflect.defineMetadata('task:pages', [Page1, Page2], SomeTask)
 
-      Reflect.defineMetadata('section:title', 'Section', Section)
-      Reflect.defineMetadata('section:tasks', [Task], Section)
+      Reflect.defineMetadata('section:title', 'Section', SomeSection)
+      Reflect.defineMetadata('section:tasks', [SomeTask], SomeSection)
     })
 
     describe('getTask', () => {
       it('fetches metadata for a specific task and pages', () => {
-        expect(utils.getTask(Task)).toEqual({
+        expect(utils.getTask(SomeTask)).toEqual({
           id: 'slug',
           title: 'Name',
           actionText: 'Action text',
@@ -96,9 +97,9 @@ describe('utils', () => {
 
     describe('getSection', () => {
       it('fetches metadata for a specific section and tasks', () => {
-        expect(utils.getSection(Section)).toEqual({
+        expect(utils.getSection(SomeSection)).toEqual({
           title: 'Section',
-          tasks: [utils.getTask(Task)],
+          tasks: [utils.getTask(SomeTask)],
         })
       })
     })
@@ -141,8 +142,20 @@ describe('utils', () => {
         const page1 = new Page1()
         const page2 = new Page2()
 
-        expect(utils.viewPath(page1, 'applications')).toEqual('applications/pages/task-1/page-1')
-        expect(utils.viewPath(page2, 'assessments')).toEqual('assessments/pages/task-2/page-2')
+        const task = {
+          id: 'some-task',
+        } as Task
+
+        const section = {
+          name: 'Some section',
+        } as FormSection
+
+        expect(utils.viewPath(section, task, page1 as TasklistPage, 'applications')).toEqual(
+          'applications/pages/some-section/some-task/page-1',
+        )
+        expect(utils.viewPath(section, task, page2 as TasklistPage, 'assessments')).toEqual(
+          'assessments/pages/some-section/some-task/page-2',
+        )
       })
     })
 

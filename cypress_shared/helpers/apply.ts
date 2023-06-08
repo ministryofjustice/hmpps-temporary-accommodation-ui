@@ -41,6 +41,7 @@ import {
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
   PropertySharingPage,
+  ReferralHistoryDetailsPage,
   ReleaseDatePage,
   ReligiousOrCulturalNeedsPage,
   RiskManagementPlanPage,
@@ -61,12 +62,14 @@ import {
   roshSummariesFromApplication,
   supportInformationFromApplication,
 } from './index'
+import ReferralsPreviouslySubmittedPage from '../pages/apply/accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
 
 export default class ApplyHelper {
   pages = {
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
+    accommodationReferralHistory: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
@@ -143,6 +146,7 @@ export default class ApplyHelper {
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeEligibility()
+    this.completeAccommodationReferralHistory()
     this.completeLicenceConditions()
     this.completeOasysImport()
     this.completePlacementLocation()
@@ -162,6 +166,7 @@ export default class ApplyHelper {
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
+      ...this.pages.accommodationReferralHistory,
       ...this.pages.licenceConditions,
       ...this.pages.oasysImport,
       ...this.pages.placementLocation,
@@ -345,6 +350,31 @@ export default class ApplyHelper {
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('eligibility', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('accommodation-referral-history', 'Not started')
+  }
+
+  private completeAccommodationReferralHistory() {
+    // Given I click the accommodation referral history task
+    cy.get('[data-cy-task-name="accommodation-referral-history"]').click()
+
+    // When I complete the form
+    const referralsPreviouslySumbittedPage = new ReferralsPreviouslySubmittedPage(this.application)
+    referralsPreviouslySumbittedPage.completeForm()
+    referralsPreviouslySumbittedPage.clickSubmit()
+
+    const referralHistoryDetailsPage = new ReferralHistoryDetailsPage(this.application)
+    referralHistoryDetailsPage.completeForm()
+    referralHistoryDetailsPage.clickSubmit()
+
+    this.pages.accommodationReferralHistory = [referralsPreviouslySumbittedPage, referralHistoryDetailsPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('accommodation-referral-history', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('licence-conditions', 'Not started')
@@ -646,6 +676,7 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
     checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
     checkYourAnswersPage.shouldShowEligibilityAnswers(this.pages.eligibility)
+    checkYourAnswersPage.shouldShowAccommodationReferralHistoryAnswers(this.pages.accommodationReferralHistory)
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
 
     if (this.environment === 'integration') {

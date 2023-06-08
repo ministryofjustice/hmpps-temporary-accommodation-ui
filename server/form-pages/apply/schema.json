@@ -7,6 +7,7 @@
     "sentence-information",
     "contact-details",
     "eligibility",
+    "accommodation-referral-history",
     "licence-conditions",
     "oasys-import",
     "placement-location",
@@ -140,6 +141,57 @@
         }
       }
     },
+    "accommodation-referral-history": {
+      "type": "object",
+      "properties": {
+        "referrals-previously-submitted": {
+          "type": "object",
+          "properties": {
+            "referralsPreviouslySubmitted": {
+              "enum": [
+                "iDontKnow",
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "referral-history-details": {
+          "type": "object",
+          "properties": {
+            "accommodationTypes": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "cas1",
+                  "cas3",
+                  "crs",
+                  "crsWomen",
+                  "dtr"
+                ],
+                "type": "string"
+              }
+            },
+            "cas1Detail": {
+              "type": "string"
+            },
+            "dtrDetail": {
+              "type": "string"
+            },
+            "crsDetail": {
+              "type": "string"
+            },
+            "crsWomenDetail": {
+              "type": "string"
+            },
+            "cas3Detail": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "licence-conditions": {
       "type": "object",
       "properties": {
@@ -197,10 +249,10 @@
             "nonContactDetail": {
               "type": "string"
             },
-            "residencyRestrictionDetail": {
+            "programmesDetail": {
               "type": "string"
             },
-            "programmesDetail": {
+            "residencyRestrictionDetail": {
               "type": "string"
             },
             "otherDetail": {

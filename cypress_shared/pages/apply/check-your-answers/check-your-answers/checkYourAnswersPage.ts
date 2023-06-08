@@ -29,6 +29,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('eligibility', pages)
   }
 
+  shouldShowAccommodationReferralHistoryAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('accommodation-referral-history', 'Accommodation referral history')
+    this.shouldShowAnswersForTask('accommodation-referral-history', pages)
+  }
+
   shouldShowLicenceConditionsAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('licence-conditions', 'Licence conditions')
     this.shouldShowAnswersForTask('licence-conditions', pages)

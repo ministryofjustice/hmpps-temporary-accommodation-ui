@@ -1,4 +1,4 @@
-import type { FormSection, JourneyType, Task, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
+import type { FormSection, JourneyType, Task, YesNoOrIDK, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
 import type { Request } from 'express'
 import { TemporaryAccommodationApplication as Application, ApprovedPremisesAssessment } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
@@ -18,6 +18,10 @@ export const yesOrNoResponseWithDetail = <K extends string>(key: K, body: Record
 
 export const yesNoOrDontKnowResponseWithDetail = <K extends string>(key: K, body: Record<string, string>) => {
   return body[key] === 'iDontKnow' ? "Don't know" : yesOrNoResponseWithDetail<K>(key, body)
+}
+
+export const yesNoOrDontKnowResponse = <K extends string>(key: K, body: { [T in K]?: YesNoOrIDK }) => {
+  return body[key] === 'iDontKnow' ? "Don't know" : sentenceCase(body[key])
 }
 
 export const getTask = <T>(task: T) => {

@@ -26,6 +26,14 @@ export default class ApplyPage extends Page {
     }
   }
 
+  completeYesNoInputWithDetailFromPageBody(fieldName: string) {
+    this.checkRadioButtonFromPageBody(fieldName)
+
+    if (this.tasklistPage.body[fieldName] === 'yes') {
+      this.completeTextInputFromPageBody(`${fieldName}Detail`)
+    }
+  }
+
   checkRadioButtonFromPageBody(fieldName: string) {
     this.checkRadioByNameAndValue(fieldName, this.tasklistPage.body[fieldName] as string)
   }

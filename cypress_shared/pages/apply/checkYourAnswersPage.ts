@@ -39,6 +39,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('move-on-plan', pages)
   }
 
+  shouldShowAccommodationReferralDetails(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('accommodation-referral-details', 'Accommodation referral details')
+    this.shouldShowAnswersForTask('accommodation-referral-details', pages)
+  }
+
   shouldShowAttachDocumentsAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('attach-documents', 'Attach documents')
     this.shouldShowAnswersForTask('attach-documents', pages)

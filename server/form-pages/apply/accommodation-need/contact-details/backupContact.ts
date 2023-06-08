@@ -1,6 +1,6 @@
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
-import ContactDetails from './contactDetails'
+import ContactDetails from '../../contactDetails'
 
 @Page({ name: 'backup-contact', bodyProperties: ['name', 'phone', 'email'] })
 export default class BackupContact extends ContactDetails implements TasklistPage {

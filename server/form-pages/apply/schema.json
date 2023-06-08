@@ -9,6 +9,7 @@
     "eligibility",
     "oasys-import",
     "move-on-plan",
+    "accommodation-referral-details",
     "attach-documents",
     "check-your-answers"
   ],
@@ -375,6 +376,87 @@
           "type": "object",
           "properties": {
             "plan": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "accommodation-referral-details": {
+      "type": "object",
+      "properties": {
+        "dtr-submitted": {
+          "type": "object",
+          "properties": {
+            "dtrSubmitted": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "dtr-details": {
+          "type": "object",
+          "properties": {
+            "reference": {
+              "type": "string"
+            },
+            "date-year": {
+              "type": "string"
+            },
+            "date-month": {
+              "type": "string"
+            },
+            "date-day": {
+              "type": "string"
+            },
+            "date-time": {
+              "type": "string"
+            },
+            "date": {
+              "type": "string"
+            }
+          }
+        },
+        "crs-submitted": {
+          "type": "object",
+          "properties": {
+            "crsSubmitted": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "crs-details": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "phone": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            }
+          }
+        },
+        "other-accommodation-options": {
+          "type": "object",
+          "properties": {
+            "otherOptions": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "otherOptionsDetail": {
               "type": "string"
             }
           }

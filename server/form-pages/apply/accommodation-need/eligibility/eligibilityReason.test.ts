@@ -24,7 +24,7 @@ describe('EligibilityReason', () => {
       expect(page.errors()).toEqual({})
     })
 
-    it('returns an errors if the reason is not populated', () => {
+    it('returns an error if the reason is not populated', () => {
       const page = new EligibilityReason({}, application)
       expect(page.errors()).toEqual({ reason: 'You must choose a reason' })
     })

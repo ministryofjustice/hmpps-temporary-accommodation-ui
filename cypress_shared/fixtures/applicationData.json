@@ -184,6 +184,31 @@
       "plan": "A move on plan"
     }
   },
+  "accommodation-referral-details": {
+    "dtr-submitted": {
+      "dtrSubmitted": "yes"
+    },
+    "dtr-details": {
+      "reference": "ABC123",
+      "date": "2022-04-12",
+      "date-year": "2022",
+      "date-month": "4",
+      "date-day": "12"
+
+    },
+    "crs-submitted": {
+      "crsSubmitted": "yes"
+    },
+    "crs-details": {
+      "name": "CRS referrer name",
+      "phone": "02346 802346",
+      "email": "crs-referrer@example.com"
+    },
+    "other-accommodation-options": {
+      "otherOptions": "yes",
+      "otherOptionsDetail": "Other accommodation details"
+    }
+  },
   "attach-documents": {
     "attach-documents": {
       "selectedDocuments": [

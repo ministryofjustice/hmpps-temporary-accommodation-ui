@@ -141,20 +141,32 @@ export const responsesForYesNoAndCommentsSections = (
   }, {})
 }
 
-export const getProbationPractitionerName = (application: Application, raiseOnMissing = true) => {
-  const throwOrReturnNull = (message: string): null => {
-    if (raiseOnMissing) {
-      throw new SessionDataError(message)
-    }
-
-    return null
-  }
-
+export const getProbationPractitionerName = (application: Application) => {
   const name: string = application.data?.['contact-details']?.['probation-practitioner']?.name
 
   if (!name) {
-    return throwOrReturnNull('No probation practitioner name')
+    throw new SessionDataError('No probation practitioner name')
   }
 
   return name
+}
+
+export const hasSubmittedDtr = (application: Application): boolean => {
+  const dtrSubmitted: YesOrNo = application.data?.['accommodation-referral-details']?.['dtr-submitted']?.dtrSubmitted
+
+  if (!dtrSubmitted) {
+    throw new SessionDataError('No DTR submitted value')
+  }
+
+  return dtrSubmitted === 'yes'
+}
+
+export const hasSubmittedCrs = (application: Application) => {
+  const crsSubmitted: YesOrNo = application.data?.['accommodation-referral-details']?.['crs-submitted']?.crsSubmitted
+
+  if (!crsSubmitted) {
+    throw new SessionDataError('No CRS submitted value')
+  }
+
+  return crsSubmitted === 'yes'
 }

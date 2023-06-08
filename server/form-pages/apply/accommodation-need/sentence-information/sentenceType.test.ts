@@ -23,7 +23,7 @@ describe('SentenceType', () => {
       expect(page.errors()).toEqual({})
     })
 
-    it('should return an errors if the sentence type is not populated', () => {
+    it('should return an error if the sentence type is not populated', () => {
       const page = new SentenceType({}, application)
       expect(page.errors()).toEqual({ sentenceType: 'You must choose a sentence type' })
     })

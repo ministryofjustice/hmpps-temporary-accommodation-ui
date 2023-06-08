@@ -3,12 +3,17 @@ import AttachDocumentsPage from './attachDocumentsPage'
 import BackupContactPage from './backupContact'
 import CheckYourAnswersPage from './checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
+import CrsDetailsPage from './crsDetails'
+import CrsSubmittedPage from './crsSubmitted'
+import DtrDetailsPage from './dtrDetails'
+import DtrSubmittedPage from './dtrSubmitted'
 import EligibilityReasonPage from './eligibilityReason'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
 import MoveOnPlanPage from './moveOnPlan'
 import OffenceDetailsPage from './offenceDetails'
 import OptionalOasysSectionsPage from './optionalOasysSections'
+import OtherAccommodationOptionsPage from './otherAccommodationOptions'
 import PractitionerPduPage from './practitionerPdu'
 import ProbationPractitionerPage from './probationPractitioner'
 import ReleaseDatePage from './releaseDate'
@@ -45,5 +50,10 @@ export {
   RiskManagementPlanPage,
   RiskToSelfPage,
   MoveOnPlanPage,
+  DtrSubmittedPage,
+  DtrDetailsPage,
+  CrsSubmittedPage,
+  CrsDetailsPage,
+  OtherAccommodationOptionsPage,
   AttachDocumentsPage,
 }

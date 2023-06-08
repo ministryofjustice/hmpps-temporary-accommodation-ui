@@ -241,7 +241,7 @@ describe('utils', () => {
       expect(utils.getProbationPractitionerName(application)).toEqual('Some Name')
     })
 
-    it('throws an error or returns null when the probation practitioner name is not known', () => {
+    it('throws an error when the probation practitioner name is not known', () => {
       const application = applicationFactory.build({
         data: {
           'contact-details': {},
@@ -251,7 +251,74 @@ describe('utils', () => {
       expect(() => utils.getProbationPractitionerName(application)).toThrow(
         new SessionDataError('No probation practitioner name'),
       )
-      expect(utils.getProbationPractitionerName(application, false)).toEqual(null)
+    })
+  })
+
+  describe('hasSubmittedDtr', () => {
+    it('returns true when the DTR has been submitted in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-submitted': { dtrSubmitted: 'yes' },
+          },
+        },
+      })
+      expect(utils.hasSubmittedDtr(application)).toEqual(true)
+    })
+
+    it('returns false when the DTR has not been submitted in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-submitted': { dtrSubmitted: 'no' },
+          },
+        },
+      })
+      expect(utils.hasSubmittedDtr(application)).toEqual(false)
+    })
+
+    it('throws an error when the DTR submitted page has not been completed', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {},
+        },
+      })
+
+      expect(() => utils.hasSubmittedDtr(application)).toThrow(new SessionDataError('No DTR submitted value'))
+    })
+  })
+
+  describe('hasSubmittedCrs', () => {
+    it('returns true when the CRS has been submitted in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'crs-submitted': { crsSubmitted: 'yes' },
+          },
+        },
+      })
+      expect(utils.hasSubmittedCrs(application)).toEqual(true)
+    })
+
+    it('returns false when the CRS has not been submitted in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'crs-submitted': { crsSubmitted: 'no' },
+          },
+        },
+      })
+      expect(utils.hasSubmittedCrs(application)).toEqual(false)
+    })
+
+    it('throws an error when the CRS submitted page has not been completed', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {},
+        },
+      })
+
+      expect(() => utils.hasSubmittedCrs(application)).toThrow(new SessionDataError('No CRS submitted value'))
     })
   })
 })

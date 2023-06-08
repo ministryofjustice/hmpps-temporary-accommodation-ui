@@ -9,6 +9,7 @@ import DtrDetailsPage from './dtrDetails'
 import DtrSubmittedPage from './dtrSubmitted'
 import EligibilityReasonPage from './eligibilityReason'
 import EnterCRNPage from './enterCrn'
+import FoodAllergiesPage from './foodAllergies'
 import ListPage from './list'
 import MoveOnPlanPage from './moveOnPlan'
 import OffenceDetailsPage from './offenceDetails'
@@ -51,6 +52,7 @@ export {
   RiskManagementPlanPage,
   RiskToSelfPage,
   RoomSharingPage,
+  FoodAllergiesPage,
   MoveOnPlanPage,
   DtrSubmittedPage,
   DtrDetailsPage,

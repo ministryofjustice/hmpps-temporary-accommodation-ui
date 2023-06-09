@@ -12,6 +12,7 @@ import ListPage from './list'
 import MoveOnPlanPage from './placement-considerations/move-on-plan/moveOnPlan'
 import FoodAllergiesPage from './placement-considerations/requirements-for-placement/foodAllergies'
 import RoomSharingPage from './placement-considerations/requirements-for-placement/roomSharing'
+import LocalConnectionsPage from './placement-considerations/safeguarding-and-support/localConnections'
 import SafeguardingAndVulnerabilityPage from './placement-considerations/safeguarding-and-support/safeguardingAndVulnerability'
 import SupportInTheCommunityPage from './placement-considerations/safeguarding-and-support/supportInTheCommunity'
 import CrsSubmittedPage from './referrals-and-documents/accommodation-referral-details/crsSubmitted'
@@ -54,6 +55,7 @@ export {
   RiskToSelfPage,
   SafeguardingAndVulnerabilityPage,
   SupportInTheCommunityPage,
+  LocalConnectionsPage,
   RoomSharingPage,
   FoodAllergiesPage,
   MoveOnPlanPage,

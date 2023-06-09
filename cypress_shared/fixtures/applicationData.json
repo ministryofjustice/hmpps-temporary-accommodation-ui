@@ -179,6 +179,22 @@
       ]
     }
   },
+  "safeguarding-and-support": {
+    "safeguarding-and-vulnerability": {
+      "concerns": "yes",
+      "concernsDetail": "Concerns A, B, and C"
+    },
+    "support-in-the-community": {
+      "support": "Community support details"
+    },
+    "local-connections": {
+      "localConnections": "Local connection details"
+    },
+    "caring-responsibilities": {
+      "caringResponsibilities": "yes",
+      "caringResponsibilitiesDetail": "Caring responsibilities X, Y, and Z"
+    }
+  },
   "requirements-for-placement": {
     "room-sharing": {
       "roomSharing": "yes",

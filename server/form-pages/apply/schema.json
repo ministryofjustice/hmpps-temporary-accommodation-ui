@@ -8,6 +8,7 @@
     "contact-details",
     "eligibility",
     "oasys-import",
+    "safeguarding-and-support",
     "requirements-for-placement",
     "move-on-plan",
     "accommodation-referral-details",
@@ -365,6 +366,57 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "safeguarding-and-support": {
+      "type": "object",
+      "properties": {
+        "safeguarding-and-vulnerability": {
+          "type": "object",
+          "properties": {
+            "concerns": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "concernsDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "support-in-the-community": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "type": "string"
+            }
+          }
+        },
+        "local-connections": {
+          "type": "object",
+          "properties": {
+            "localConnections": {
+              "type": "string"
+            }
+          }
+        },
+        "caring-responsibilities": {
+          "type": "object",
+          "properties": {
+            "caringResponsibilities": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "caringResponsibilitiesDetail": {
+              "type": "string"
             }
           }
         }

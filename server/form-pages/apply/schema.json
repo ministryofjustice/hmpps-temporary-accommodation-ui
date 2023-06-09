@@ -468,20 +468,6 @@
             }
           }
         },
-        "crs-details": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
-            },
-            "phone": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            }
-          }
-        },
         "other-accommodation-options": {
           "type": "object",
           "properties": {

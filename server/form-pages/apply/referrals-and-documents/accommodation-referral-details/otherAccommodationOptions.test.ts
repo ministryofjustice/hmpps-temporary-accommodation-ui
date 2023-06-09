@@ -1,6 +1,6 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { itShouldHaveNextValue } from '../../../shared-examples'
-import { hasSubmittedCrs, yesOrNoResponseWithDetail } from '../../../utils'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
+import { yesOrNoResponseWithDetail } from '../../../utils'
 import OtherAccommodationOptions from './otherAccommodationOptions'
 
 jest.mock('../../../utils')
@@ -18,20 +18,7 @@ describe('OtherAccommodationOptions', () => {
     })
   })
 
-  describe('previous', () => {
-    it('returns the CRS details page ID when the CRS has been submitted', () => {
-      ;(hasSubmittedCrs as jest.Mock).mockReturnValue(true)
-
-      expect(new OtherAccommodationOptions(body, application).previous()).toEqual('crs-details')
-    })
-
-    it('returns the CRS submitted page ID when the CRS has not been submitted', () => {
-      ;(hasSubmittedCrs as jest.Mock).mockReturnValue(false)
-
-      expect(new OtherAccommodationOptions(body, application).previous()).toEqual('crs-submitted')
-    })
-  })
-
+  itShouldHavePreviousValue(new OtherAccommodationOptions({}, application), 'crs-submitted')
   itShouldHaveNextValue(new OtherAccommodationOptions({}, application), '')
 
   describe('errors', () => {

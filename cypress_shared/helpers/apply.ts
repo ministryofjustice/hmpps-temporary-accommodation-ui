@@ -22,7 +22,6 @@ import {
   BackupContactPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
-  CrsDetailsPage,
   CrsSubmittedPage,
   DtrDetailsPage,
   DtrSubmittedPage,
@@ -461,13 +460,6 @@ export default class ApplyHelper {
     crsSubmittedPage.completeForm()
     crsSubmittedPage.clickSubmit()
     this.pages.accommodationReferralDetails.push(crsSubmittedPage)
-
-    if (hasSubmittedDtr(this.application)) {
-      const crsDetailsPage = new CrsDetailsPage(this.application)
-      crsDetailsPage.completeForm()
-      crsDetailsPage.clickSubmit()
-      this.pages.accommodationReferralDetails.push(crsDetailsPage)
-    }
 
     const otherAccommodationOptionsPage = new OtherAccommodationOptionsPage(this.application)
     otherAccommodationOptionsPage.completeForm()

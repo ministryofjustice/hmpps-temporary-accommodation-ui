@@ -3,7 +3,7 @@ import type { TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
-import { hasSubmittedCrs, yesOrNoResponseWithDetail } from '../../../utils'
+import { yesOrNoResponseWithDetail } from '../../../utils'
 
 type OtherAccommodationOptionsBody = YesOrNoWithDetail<'otherOptions'>
 
@@ -20,7 +20,7 @@ export default class OtherAccommodationOptions implements TasklistPage {
   }
 
   previous() {
-    return hasSubmittedCrs(this.application) ? 'crs-details' : 'crs-submitted'
+    return 'crs-submitted'
   }
 
   next() {

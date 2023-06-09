@@ -287,38 +287,4 @@ describe('utils', () => {
       expect(() => utils.hasSubmittedDtr(application)).toThrow(new SessionDataError('No DTR submitted value'))
     })
   })
-
-  describe('hasSubmittedCrs', () => {
-    it('returns true when the CRS has been submitted in the application', () => {
-      const application = applicationFactory.build({
-        data: {
-          'accommodation-referral-details': {
-            'crs-submitted': { crsSubmitted: 'yes' },
-          },
-        },
-      })
-      expect(utils.hasSubmittedCrs(application)).toEqual(true)
-    })
-
-    it('returns false when the CRS has not been submitted in the application', () => {
-      const application = applicationFactory.build({
-        data: {
-          'accommodation-referral-details': {
-            'crs-submitted': { crsSubmitted: 'no' },
-          },
-        },
-      })
-      expect(utils.hasSubmittedCrs(application)).toEqual(false)
-    })
-
-    it('throws an error when the CRS submitted page has not been completed', () => {
-      const application = applicationFactory.build({
-        data: {
-          'accommodation-referral-details': {},
-        },
-      })
-
-      expect(() => utils.hasSubmittedCrs(application)).toThrow(new SessionDataError('No CRS submitted value'))
-    })
-  })
 })

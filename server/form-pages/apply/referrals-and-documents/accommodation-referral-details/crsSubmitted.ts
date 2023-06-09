@@ -25,7 +25,7 @@ export default class CrsSubmitted implements TasklistPage {
   }
 
   next() {
-    return this.body.crsSubmitted === 'yes' ? 'crs-details' : 'other-accommodation-options'
+    return 'other-accommodation-options'
   }
 
   errors() {

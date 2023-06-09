@@ -1,7 +1,7 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import paths from '../../../server/paths/apply'
+import paths from '../../../../../server/paths/apply'
 
-import ContactDetails from './contactDetails'
+import ContactDetails from '../../contactDetails'
 
 export default class BackupContact extends ContactDetails {
   constructor(application: Application) {

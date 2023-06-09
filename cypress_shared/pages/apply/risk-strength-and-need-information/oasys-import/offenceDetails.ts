@@ -1,7 +1,7 @@
 import { ArrayOfOASysOffenceDetailsQuestions, TemporaryAccommodationApplication } from '@approved-premises/api'
-import paths from '../../../server/paths/apply'
+import paths from '../../../../../server/paths/apply'
 
-import ApplyPage from './applyPage'
+import ApplyPage from '../../applyPage'
 
 export default class OffenceDetails extends ApplyPage {
   constructor(

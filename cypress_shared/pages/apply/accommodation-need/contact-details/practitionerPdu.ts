@@ -1,8 +1,8 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import paths from '../../../server/paths/apply'
+import paths from '../../../../../server/paths/apply'
 
-import { getProbationPractitionerName } from '../../../server/form-pages/utils'
-import ApplyPage from './applyPage'
+import { getProbationPractitionerName } from '../../../../../server/form-pages/utils'
+import ApplyPage from '../../applyPage'
 
 export default class PractitionerPdu extends ApplyPage {
   constructor(application: Application) {

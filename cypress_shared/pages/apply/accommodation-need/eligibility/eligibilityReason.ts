@@ -1,6 +1,6 @@
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
-import paths from '../../../server/paths/apply'
-import ApplyPage from './applyPage'
+import paths from '../../../../../server/paths/apply'
+import ApplyPage from '../../applyPage'
 
 export default class EligibilityReasonPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {

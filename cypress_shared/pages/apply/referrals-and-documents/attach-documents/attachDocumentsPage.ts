@@ -1,9 +1,9 @@
 import { Document, TemporaryAccommodationApplication } from '@approved-premises/api'
-import paths from '../../../server/paths/apply'
+import paths from '../../../../../server/paths/apply'
 
-import { DateFormats } from '../../../server/utils/dateUtils'
+import { DateFormats } from '../../../../../server/utils/dateUtils'
 
-import ApplyPage from './applyPage'
+import ApplyPage from '../../applyPage'
 
 export default class AttachDocumentsPage extends ApplyPage {
   documents: Array<Document>

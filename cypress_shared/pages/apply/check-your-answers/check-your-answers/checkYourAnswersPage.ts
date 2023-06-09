@@ -1,7 +1,7 @@
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
-import ApplyPage from './applyPage'
+import ApplyPage from '../../applyPage'
 
-import paths from '../../../server/paths/apply'
+import paths from '../../../../../server/paths/apply'
 
 export default class CheckYourAnswersPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {

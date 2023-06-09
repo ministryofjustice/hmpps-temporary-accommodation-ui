@@ -1,7 +1,7 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import paths from '../../../server/paths/apply'
+import paths from '../../../../../server/paths/apply'
 
-import ApplyPage from './applyPage'
+import ApplyPage from '../../applyPage'
 
 export default class MoveOnPlan extends ApplyPage {
   constructor(application: Application) {

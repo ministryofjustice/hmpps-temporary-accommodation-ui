@@ -209,11 +209,6 @@
     "crs-submitted": {
       "crsSubmitted": "yes"
     },
-    "crs-details": {
-      "name": "CRS referrer name",
-      "phone": "02346 802346",
-      "email": "crs-referrer@example.com"
-    },
     "other-accommodation-options": {
       "otherOptions": "yes",
       "otherOptionsDetail": "Other accommodation details"

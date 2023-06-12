@@ -15,7 +15,7 @@ export default class DtrDetails implements TasklistPage {
 
   questions = {
     reference: 'DTR / NOP reference number',
-    date: 'Date of DTR / NOP',
+    date: 'Date DTR / NOP was submitted',
   }
 
   constructor(readonly body: Partial<DtrDetailsBody>, readonly application: Application) {}
@@ -43,11 +43,11 @@ export default class DtrDetails implements TasklistPage {
     }
 
     if (dateIsBlank(this.body)) {
-      errors.date = 'You must specify the date of DTR / NOP'
+      errors.date = 'You must specify the date DTR / NOP was submitted'
     } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'date'>, 'date')) {
-      errors.date = 'You must specify a valid date of DTR / NOP'
+      errors.date = 'You must specify a valid date DTR / NOP was submitted'
     } else if (dateIsInFuture(this.body.date)) {
-      errors.date = 'The date of DTR / NOP must not be in the future'
+      errors.date = 'The date DTR / NOP was submitted must not be in the future'
     }
 
     return errors

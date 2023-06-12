@@ -9,6 +9,7 @@ import DtrDetailsPage from './dtrDetails'
 import DtrSubmittedPage from './dtrSubmitted'
 import EligibilityReasonPage from './eligibilityReason'
 import EnterCRNPage from './enterCrn'
+import FoodAllergiesPage from './foodAllergies'
 import ListPage from './list'
 import MoveOnPlanPage from './moveOnPlan'
 import OffenceDetailsPage from './offenceDetails'
@@ -19,6 +20,7 @@ import ProbationPractitionerPage from './probationPractitioner'
 import ReleaseDatePage from './releaseDate'
 import RiskManagementPlanPage from './riskManagementPlan'
 import RiskToSelfPage from './riskToSelf'
+import RoomSharingPage from './roomSharing'
 import RoshSummaryPage from './roshSummary'
 import SelectOffencePage from './selectOffence'
 import SentenceTypePage from './sentenceType'
@@ -49,6 +51,8 @@ export {
   SupportingInformationPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
+  RoomSharingPage,
+  FoodAllergiesPage,
   MoveOnPlanPage,
   DtrSubmittedPage,
   DtrDetailsPage,

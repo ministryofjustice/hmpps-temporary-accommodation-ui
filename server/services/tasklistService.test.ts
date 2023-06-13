@@ -1,51 +1,63 @@
 import getTaskStatus from '../form-pages/utils/getTaskStatus'
 import { applicationFactory } from '../testutils/factories'
+import getSections from '../utils/assessments/getSections'
 import TasklistService from './tasklistService'
 
-jest.mock('../form-pages/apply', () => {
-  return {
-    sections: [
+jest.mock('../form-pages/utils/getTaskStatus')
+jest.mock('../utils/assessments/getSections')
+
+const sections = [
+  {
+    title: 'First section',
+    name: 'first-section',
+    actionText: 'Complete  section',
+    tasks: [
       {
-        title: 'First Section',
-        tasks: [
-          {
-            id: 'first-task',
-            title: 'First task',
-          },
-          {
-            id: 'second-task',
-            title: 'Second task',
-          },
-        ],
+        id: 'first-task',
+        title: 'First task',
+        actionText: 'Complete first task',
+        pages: {},
       },
       {
-        title: 'Second Section',
-        tasks: [
-          {
-            id: 'third-task',
-            title: 'Third task',
-          },
-          {
-            id: 'fourth-task',
-            title: 'Fourth task',
-          },
-          {
-            id: 'fifth-task',
-            title: 'Fifth task',
-          },
-        ],
+        id: 'second-task',
+        title: 'Second task',
+        actionText: 'Complete second task',
+        pages: {},
       },
     ],
-  }
-})
-
-jest.mock('../form-pages/utils/getTaskStatus')
+  },
+  {
+    title: 'Second section',
+    name: 'second-section',
+    tasks: [
+      {
+        id: 'third-task',
+        title: 'Third task',
+        actionText: 'Complete third task',
+        pages: {},
+      },
+      {
+        id: 'fourth-task',
+        title: 'Fourth task',
+        actionText: 'Complete fourth task',
+        pages: {},
+      },
+      {
+        id: 'fifth-task',
+        title: 'Fifth task',
+        actionText: 'Complete fifth task',
+        pages: {},
+      },
+    ],
+  },
+]
 
 describe('tasklistService', () => {
   const application = applicationFactory.build({ id: 'some-uuid' })
 
   beforeEach(() => {
     jest.resetAllMocks()
+    ;(getSections as jest.MockedFunction<typeof getSections>).mockReturnValue(sections)
   })
 
   describe('taskStatuses', () => {
@@ -143,19 +155,49 @@ describe('tasklistService', () => {
       expect(tasklistService.sections).toEqual([
         {
           sectionNumber: 1,
-          title: 'First Section',
+          title: 'First section',
           tasks: [
-            { id: 'first-task', title: 'First task', status: 'cannot_start' },
-            { id: 'second-task', title: 'Second task', status: 'cannot_start' },
+            {
+              id: 'first-task',
+              title: 'First task',
+              actionText: 'Complete first task',
+              pages: {},
+              status: 'cannot_start',
+            },
+            {
+              id: 'second-task',
+              title: 'Second task',
+              actionText: 'Complete second task',
+              pages: {},
+              status: 'cannot_start',
+            },
           ],
         },
         {
           sectionNumber: 2,
-          title: 'Second Section',
+          title: 'Second section',
           tasks: [
-            { id: 'third-task', title: 'Third task', status: 'cannot_start' },
-            { id: 'fourth-task', title: 'Fourth task', status: 'cannot_start' },
-            { id: 'fifth-task', title: 'Fifth task', status: 'cannot_start' },
+            {
+              id: 'third-task',
+              title: 'Third task',
+              actionText: 'Complete third task',
+              pages: {},
+              status: 'cannot_start',
+            },
+            {
+              id: 'fourth-task',
+              title: 'Fourth task',
+              actionText: 'Complete fourth task',
+              pages: {},
+              status: 'cannot_start',
+            },
+            {
+              id: 'fifth-task',
+              title: 'Fifth task',
+              actionText: 'Complete fifth task',
+              pages: {},
+              status: 'cannot_start',
+            },
           ],
         },
       ])

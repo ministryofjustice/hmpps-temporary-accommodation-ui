@@ -1,0 +1,31 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../../layout.njk" %}
+
+{% set buttonText = "Next" %}
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  {% include "./partials/_navigation.njk" %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <h3 class="govuk-!-margin-top-0 govuk-heading-m">Provide details of what support is or will be in place whilst {{ page.application.person.name }} is in the community</h3>
+      <p>Include details of any other agencies providing wrap around support upon release. For example:</p>
+      <ul>
+        <li>mental health services</li>
+        <li>the local women's centre</li>
+        <li>women's aid</li>
+      </ul>
+
+      {{ formPageTextarea({
+        fieldName: 'support',
+        label: {
+          text: "Provide details",
+          classes: "govuk-label--s"
+        }
+      }, fetchContext()) }}
+
+    </div>
+  </div>
+{% endblock %}

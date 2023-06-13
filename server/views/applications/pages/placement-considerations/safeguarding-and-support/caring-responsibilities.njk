@@ -1,0 +1,55 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../../layout.njk" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  {% include "./partials/_navigation.njk" %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    
+      <p>Consider if the person has caring responsibilities. These may include:</p>
+      <ul>
+        <li>if the person is pregnant</li>
+        <li>if the person has children who are likely to visit</li>
+      </ul>
+
+      {% set caringResponsibilitiesDetailHtml %}
+        {{ formPageTextarea({
+            fieldName: 'caringResponsibilitiesDetail',
+            label: {
+              text: "Provide details",
+              classes: "govuk-label--s"
+            },
+            hint: {
+              text: "Consider how the location of the accommodation will fit into the longer term plan to move the person into settled accommodation."
+            }
+        }, fetchContext()) }}
+      {% endset %}
+
+      {{ formPageRadios({
+          fieldName: "caringResponsibilities",
+          fieldset: {
+            legend: {
+              text: page.questions.caringResponsibilities,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          items: [
+            {
+              value: "yes",
+              text: "Yes",
+              conditional: {
+                html: caringResponsibilitiesDetailHtml
+              }
+            },
+            {
+              value: "no",
+              text: "No"
+            }
+          ]
+        }, fetchContext()) }}
+      
+      </div>
+    </div>
+{% endblock %}

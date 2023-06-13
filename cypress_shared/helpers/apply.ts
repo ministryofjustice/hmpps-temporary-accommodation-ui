@@ -20,6 +20,7 @@ import {
   AccommodationRequiredFromDatePage,
   AttachDocumentsPage,
   BackupContactPage,
+  CaringResponsibilitiesPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   CrsSubmittedPage,
@@ -28,6 +29,7 @@ import {
   EligibilityReasonPage,
   EnterCRNPage,
   FoodAllergiesPage,
+  LocalConnectionsPage,
   MoveOnPlanPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
@@ -39,8 +41,10 @@ import {
   RiskToSelfPage,
   RoomSharingPage,
   RoshSummaryPage,
+  SafeguardingAndVulnerabilityPage,
   SentenceTypePage,
   StartPage,
+  SupportInTheCommunityPage,
   SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
@@ -59,6 +63,7 @@ export default class ApplyHelper {
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
+    safeguardingAndSupport: [] as Array<ApplyPage>,
     requirementsFromPlacement: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
     accommodationReferralDetails: [] as Array<ApplyPage>,
@@ -131,6 +136,7 @@ export default class ApplyHelper {
     this.completeContactDetails()
     this.completeEligibility()
     this.completeOasysImport()
+    this.completeSafeguardingAndSupport()
     this.completeRequirementsForPlacement()
     this.completeMoveOnPlan()
     this.completeAccommodationReferralDetails()
@@ -146,6 +152,7 @@ export default class ApplyHelper {
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
       ...this.pages.oasysImport,
+      ...this.pages.safeguardingAndSupport,
       ...this.pages.requirementsFromPlacement,
       ...this.pages.moveOnPlan,
       ...this.pages.accommodationReferralDetails,
@@ -388,6 +395,44 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Not started')
+  }
+
+  private completeSafeguardingAndSupport() {
+    // Given I click on the safeguarding and support task
+    cy.get('[data-cy-task-name="safeguarding-and-support"]').click()
+
+    // When I complete the form
+    const safeguardingAndVulnerabilityPage = new SafeguardingAndVulnerabilityPage(this.application)
+    safeguardingAndVulnerabilityPage.completeForm()
+    safeguardingAndVulnerabilityPage.clickSubmit()
+
+    const supportInTheCommunityPage = new SupportInTheCommunityPage(this.application)
+    supportInTheCommunityPage.completeForm()
+    supportInTheCommunityPage.clickSubmit()
+
+    const localConnectionsPage = new LocalConnectionsPage(this.application)
+    localConnectionsPage.completeForm()
+    localConnectionsPage.clickSubmit()
+
+    const careResponsibilitiesPage = new CaringResponsibilitiesPage(this.application)
+    careResponsibilitiesPage.completeForm()
+    careResponsibilitiesPage.clickSubmit()
+
+    this.pages.safeguardingAndSupport = [
+      safeguardingAndVulnerabilityPage,
+      supportInTheCommunityPage,
+      localConnectionsPage,
+      careResponsibilitiesPage,
+    ]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Not started')
   }
 
@@ -517,6 +562,7 @@ export default class ApplyHelper {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 
+    checkYourAnswersPage.shouldShowSafeguardingAndSupportAnswers(this.pages.safeguardingAndSupport)
     checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
     checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)

@@ -1,0 +1,30 @@
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+
+<h1 class="govuk-heading-l">
+  <span class="govuk-caption-l">{{ section.title }}</span>
+  {{ task.title }}
+</h1>
+
+{{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+    text: 'Safeguarding and vulnerability',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'safeguarding-and-vulnerability' }),
+    active: page.title === 'Safeguarding and vulnerability'
+  },
+  {
+    text: 'Support in the community',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'support-in-the-community' }),
+    active: page.title === 'Support in the community'
+  },
+  {
+    text: 'Local connections',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'local-connections' }),
+    active: page.title === 'Local connections'
+  },
+  {
+    text: 'Caring responsibilities',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'caring-responsibilities' }),
+    active: page.title === 'Caring responsibilities'
+  }]
+}) }}

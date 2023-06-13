@@ -7,6 +7,7 @@ import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
 import paths from '../paths/apply'
+import getSections from './assessments/getSections'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
@@ -50,20 +51,18 @@ export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>
 const getResponses = (applicationOrAssessment: Application | Assessment): ApplicationOrAssessmentResponse => {
   const responses = {}
 
-  Object.keys(applicationOrAssessment.data).forEach(taskName => {
-    responses[taskName] = getResponsesForTask(applicationOrAssessment, taskName)
+  const formSections = getSections(applicationOrAssessment)
+
+  formSections.forEach(section => {
+    section.tasks.forEach(task => {
+      const responsesForTask: Array<PageResponse> = []
+      forPagesInTask(applicationOrAssessment, task, page => responsesForTask.push(page.response()))
+
+      responses[task.id] = responsesForTask
+    })
   })
 
   return responses
-}
-
-const getResponsesForTask = (
-  applicationOrAssessment: Application | Assessment,
-  taskName: string,
-): Array<PageResponse> => {
-  const pageNames = Object.keys(applicationOrAssessment.data[taskName])
-  const responsesForPages = pageNames.map(pageName => getResponseForPage(applicationOrAssessment, taskName, pageName))
-  return responsesForPages
 }
 
 const getResponseForPage = (

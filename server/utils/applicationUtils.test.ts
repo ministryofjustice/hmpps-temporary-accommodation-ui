@@ -16,6 +16,7 @@ import {
   getStatus,
   isUnapplicable,
 } from './applicationUtils'
+import getSections from './assessments/getSections'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 
 const FirstApplyPage = jest.fn()
@@ -35,6 +36,7 @@ jest.mock('../form-pages/assess', () => {
 })
 
 jest.mock('./personUtils')
+jest.mock('./assessments/getSections')
 
 const applySection1Task1 = {
   id: 'first-apply-section-task-1',
@@ -133,22 +135,26 @@ Assess.pages['assess-page'] = {
 describe('applicationUtils', () => {
   describe('getResponses', () => {
     it('returns the responses from all answered questions', () => {
+      ;(getSections as jest.MockedFunction<typeof getSections>).mockReturnValue([applySection1, applySection2])
+
       FirstApplyPage.mockReturnValue({
-        response: () => {
-          return { foo: 'bar' }
-        },
+        response: () => ({ foo: 'bar' }),
+        next: () => 'second',
       })
 
       SecondApplyPage.mockReturnValue({
-        response: () => {
-          return { bar: 'foo' }
-        },
+        response: () => ({ bar: 'foo' }),
+        next: () => '',
       })
 
       const application = applicationFactory.build()
-      application.data = { 'basic-information': { first: '', second: '' } }
 
-      expect(getResponses(application)).toEqual({ 'basic-information': [{ foo: 'bar' }, { bar: 'foo' }] })
+      expect(getResponses(application)).toEqual({
+        'first-apply-section-task-1': [{ foo: 'bar' }, { bar: 'foo' }],
+        'first-apply-section-task-2': [],
+        'second-apply-section-task-1': [],
+        'second-apply-section-task-2': [],
+      })
     })
   })
 

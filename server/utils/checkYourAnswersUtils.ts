@@ -3,7 +3,7 @@ import { HtmlItem, SummaryListItem, Task, TextItem } from '@approved-premises/ui
 
 import paths from '../paths/apply'
 
-import { getResponseForPage } from './applicationUtils'
+import { forPagesInTask } from './applicationUtils'
 import reviewSections from './reviewUtils'
 import { escape, formatLines } from './viewUtils'
 
@@ -16,14 +16,8 @@ export const getTaskResponsesAsSummaryListItems = (
 ): Array<SummaryListItem> => {
   const items: Array<SummaryListItem> = []
 
-  if (!application.data[task.id]) {
-    return items
-  }
-
-  const pageNames = Object.keys(application.data[task.id])
-
-  pageNames.forEach(pageName => {
-    const response = getResponseForPage(application, task.id, pageName)
+  forPagesInTask(application, task, (page, pageName) => {
+    const response = page.response()
 
     Object.keys(response).forEach(key => {
       const value =

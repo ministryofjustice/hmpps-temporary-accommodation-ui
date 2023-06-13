@@ -65,19 +65,6 @@ const getResponses = (applicationOrAssessment: Application | Assessment): Applic
   return responses
 }
 
-const getResponseForPage = (
-  applicationOrAssessment: Application | Assessment,
-  taskName: string,
-  pageName: string,
-): PageResponse => {
-  const Page = getPage(taskName, pageName, isAssessment(applicationOrAssessment))
-
-  const body = applicationOrAssessment?.data?.[taskName]?.[pageName]
-  const page = new Page(body, applicationOrAssessment)
-
-  return page.response()
-}
-
 const forPagesInTask = (
   applicationOrAssessment: Application | Assessment,
   task: Task,
@@ -187,7 +174,6 @@ const firstPageOfApplicationJourney = (application: Application) => {
 
 export {
   getResponses,
-  getResponseForPage,
   forPagesInTask,
   getPage,
   getSectionAndTask,

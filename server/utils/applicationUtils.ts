@@ -5,7 +5,7 @@ import type {
 import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
-import { TasklistPageInterface } from '../form-pages/tasklistPage'
+import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
 import paths from '../paths/apply'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
@@ -77,6 +77,23 @@ const getResponseForPage = (
   const page = new Page(body, applicationOrAssessment)
 
   return page.response()
+}
+
+const forPagesInTask = (
+  applicationOrAssessment: Application | Assessment,
+  task: Task,
+  callback: (page: TasklistPage, pageName: string) => void,
+): void => {
+  const pageNames = Object.keys(task.pages)
+  let pageName = pageNames?.[0]
+
+  while (pageName) {
+    const Page = getPage(task.id, pageName, isAssessment(applicationOrAssessment))
+    const body = applicationOrAssessment?.data?.[task.id]?.[pageName]
+    const page = new Page(body, applicationOrAssessment)
+    callback(page, pageName)
+    pageName = page.next()
+  }
 }
 
 const getPage = (taskName: string, pageName: string, isAnAssessment?: boolean): TasklistPageInterface => {
@@ -172,6 +189,7 @@ const firstPageOfApplicationJourney = (application: Application) => {
 export {
   getResponses,
   getResponseForPage,
+  forPagesInTask,
   getPage,
   getSectionAndTask,
   getArrivalDate,

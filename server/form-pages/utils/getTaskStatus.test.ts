@@ -119,7 +119,7 @@ describe('getTaskStatus', () => {
     expect(page3Instance.next).toHaveBeenCalled()
   })
 
-  it('returns complete when the first page does not have data, but subsequent ones do', () => {
+  it('returns in_progress when the first page does not have data, but subsequent ones do', () => {
     const application = applicationFactory.build({
       data: { 'my-task': { 'page-2': { foo: 'bar' }, 'page-3': { foo: 'bar' } } },
     })
@@ -130,18 +130,18 @@ describe('getTaskStatus', () => {
     page3Instance.errors.mockReturnValue({})
     page3Instance.next.mockReturnValue('')
 
-    expect(getTaskStatus(task, application)).toEqual('complete')
+    expect(getTaskStatus(task, application)).toEqual('in_progress')
 
     expect(Page1).not.toHaveBeenCalled()
     expect(page1Instance.errors).not.toHaveBeenCalled()
     expect(page1Instance.next).not.toHaveBeenCalled()
 
-    expect(Page2).toHaveBeenCalled()
-    expect(page2Instance.errors).toHaveBeenCalled()
-    expect(page2Instance.next).toHaveBeenCalled()
+    expect(Page2).not.toHaveBeenCalled()
+    expect(page2Instance.errors).not.toHaveBeenCalled()
+    expect(page2Instance.next).not.toHaveBeenCalled()
 
-    expect(Page3).toHaveBeenCalled()
-    expect(page3Instance.errors).toHaveBeenCalled()
-    expect(page3Instance.next).toHaveBeenCalled()
+    expect(Page3).not.toHaveBeenCalled()
+    expect(page3Instance.errors).not.toHaveBeenCalled()
+    expect(page3Instance.next).not.toHaveBeenCalled()
   })
 })

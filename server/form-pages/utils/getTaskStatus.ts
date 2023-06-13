@@ -1,8 +1,8 @@
-import type { Task, TaskStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
+import type { Task, TaskStatus } from '@approved-premises/ui'
 import { TasklistPageInterface } from '../tasklistPage'
 
 const getPageData = (applicationOrAssessment: Application | Assessment, taskName: string, pageName: string) => {
@@ -10,52 +10,31 @@ const getPageData = (applicationOrAssessment: Application | Assessment, taskName
 }
 
 const getTaskStatus = (task: Task, applicationOrAssessment: Application | Assessment): TaskStatus => {
-  // Find the first page that has an answer
-  let pageId = Object.keys(task.pages).find(
-    (pageName: string) => !!getPageData(applicationOrAssessment, task.id, pageName),
-  )
-
-  let status: TaskStatus
-
-  // If there's no page that's been completed, then we know the task is incomplete
-  if (!pageId) {
-    return 'not_started'
-  }
+  const pageIds = Object.keys(task.pages)
+  let pageId = pageIds?.[0]
 
   while (pageId) {
     const pageData = getPageData(applicationOrAssessment, task.id, pageId)
 
-    // If there's no page data for this page, then we know it's incomplete
+    // If there's no page data for this page, then we know the task is incomplete
     if (!pageData) {
-      status = 'in_progress'
-      break
+      return pageIds.some(progessTestPageId => !!getPageData(applicationOrAssessment, task.id, progessTestPageId))
+        ? 'in_progress'
+        : 'not_started'
     }
 
-    // Let's initialize this page
     const Page = task.pages[pageId] as TasklistPageInterface
     const page = new Page(pageData, applicationOrAssessment)
 
-    // Get the errors for this page
-    const errors = page.errors()
-    // And the next page ID
+    // If there's errors for this page, then we know the task incomplete
+    if (page.errors().length) {
+      return 'in_progress'
+    }
+
     pageId = page.next()
-
-    if (errors.length) {
-      // Are there any errors? Then the task is incomplete
-      status = 'in_progress'
-      break
-    }
-
-    if (!pageId) {
-      // Is the next page blank? Then the task is complete
-      status = 'complete'
-      break
-    }
-
-    // If none of the above is true, we loop round again!
   }
 
-  return status
+  return 'complete'
 }
 
 export default getTaskStatus

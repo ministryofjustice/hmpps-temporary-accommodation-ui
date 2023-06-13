@@ -1,0 +1,40 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {% set noHtml %}
+    {% set html %}
+      <h3 class="govuk-notification-banner__heading">Duty to Refer (DTR) / National Offender Pathway (NOP) must be submitted before application to Temporary Accommodation (TA) is made</h3>
+      <p class="govuk-body">The person must also agree to sign an Accommodation Compact</p>
+      <p class="govuk-body">You can still submit your application</p>
+    {% endset %}
+
+    {{ govukNotificationBanner({
+      html: html
+    }) }}
+  {% endset %}
+
+  {{ formPageRadios({
+    fieldName: "dtrSubmitted",
+    items: [
+      {
+        value: "yes",
+        text: "Yes"
+      },
+      {
+        value: "no",
+        text: "No",
+        conditional: {
+          html: noHtml
+        }
+      }
+    ]
+  }, fetchContext()) }}
+
+{% endblock %}

@@ -1,8 +1,8 @@
-import type { JourneyType, Task, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
+import type { FormSection, JourneyType, Task, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
 import type { Request } from 'express'
 import { TemporaryAccommodationApplication as Application, ApprovedPremisesAssessment } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
-import { sentenceCase } from '../../utils/utils'
+import { kebabCase, sentenceCase } from '../../utils/utils'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 
 export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unknown>): YesOrNoWithDetail<K> => {
@@ -69,11 +69,10 @@ export const getPagesForSections = <T>(sections: Array<T>) => {
   return pages
 }
 
-export const viewPath = <T>(page: T, journeyType: JourneyType) => {
+export const viewPath = (section: FormSection, task: Task, page: TasklistPage, journeyType: JourneyType) => {
   const pageName = getPageName(page.constructor)
-  const taskName = getTaskName(page.constructor)
 
-  return `${journeyType}/pages/${taskName}/${pageName}`
+  return `${journeyType}/pages/${kebabCase(section.name)}/${task.id}/${pageName}`
 }
 
 export const getPageName = <T>(page: T) => {

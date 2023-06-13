@@ -1,0 +1,56 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+    <h1 class="govuk-heading-l">{{page.title}}</h1>
+
+    <p class="govuk-body">We'll automatically import:</p>
+
+    <ul class="govuk-list govuk-list--bullet">
+        <li>offence details</li>
+        <li>RoSH summary</li>
+        <li>any MAPPA or hate-based information</li>
+        <li>sections linked to RoSH</li>
+        <li>Risk Management Plan</li>
+        <li>Section 8 - Drug misuse</li>
+        <li>Section 9 - Alcohol misuse</li>
+    </ul>
+
+    <p>Select any sections that include information that's relevant to the risk an Approved Premises (AP) will help manage or the needs an AP can support.</p>
+    <p>You will be able to edit the information that is pulled in from OASys. Any new information that you provide as part of this application should be added to OASys.</p>
+
+    <h2 class="govuk-heading-s">Needs linked to risk of serious harm are automatically imported</h2>
+
+    {{
+        govukCheckboxes({
+            idPrefix: "needsLinkedToReoffending",
+            name: "needsLinkedToReoffending",
+            errorMessage: errors.needsLinkedToReoffending,
+            fieldset: {
+                legend: {
+                    text: "Optional - Needs linked to reoffending",
+                    classes: "govuk-fieldset__legend--m"
+                }
+            },
+            items: OasysImportUtils.sectionCheckBoxes(page.allNeedsLinkedToReoffending, page.body.needsLinkedToReoffending)
+        })
+    }}
+
+    {{
+        govukCheckboxes({
+            idPrefix: "otherNeeds",
+            name: "otherNeeds",
+            errorMessage: errors.otherNeeds,
+            fieldset: {
+                legend: {
+                    text: "Optional - Needs not linked to risk of serious harm or reoffending",
+                    classes: "govuk-fieldset__legend--m"
+                }
+            },
+            items: OasysImportUtils.sectionCheckBoxes(page.allOtherNeeds, page.body.otherNeeds)
+        })
+    }}
+
+{% endblock %}

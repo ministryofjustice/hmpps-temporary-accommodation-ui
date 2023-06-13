@@ -2,7 +2,10 @@ import { TaskWithStatus } from '../@types/ui'
 import applyPaths from '../paths/apply'
 import assessPaths from '../paths/assess'
 import { applicationFactory, assessmentFactory } from '../testutils/factories'
+import isAssessment from './assessments/isAssessment'
 import { statusTag, taskLink } from './taskListUtils'
+
+jest.mock('./assessments/isAssessment')
 
 describe('taskListUtils', () => {
   const task = {
@@ -18,6 +21,8 @@ describe('taskListUtils', () => {
       const application = applicationFactory.build({ id: 'some-uuid' })
 
       it('should return a link to a task the task can be started', () => {
+        ;(isAssessment as jest.MockedFunction<typeof isAssessment>).mockReturnValue(false)
+
         task.status = 'in_progress'
 
         expect(taskLink(task, application)).toEqual(
@@ -37,12 +42,14 @@ describe('taskListUtils', () => {
     })
 
     describe('with an assessment', () => {
-      const application = assessmentFactory.build({ id: 'some-uuid' })
+      const assessment = assessmentFactory.build({ id: 'some-uuid' })
 
       it('should return a link to a task the task can be started', () => {
+        ;(isAssessment as jest.MockedFunction<typeof isAssessment>).mockReturnValue(true)
+
         task.status = 'in_progress'
 
-        expect(taskLink(task, application)).toEqual(
+        expect(taskLink(task, assessment)).toEqual(
           `<a href="${assessPaths.assessments.pages.show({
             id: 'some-uuid',
             task: 'second-task',
@@ -54,7 +61,7 @@ describe('taskListUtils', () => {
       it('should return the task name when the task cannot be started', () => {
         task.status = 'cannot_start'
 
-        expect(taskLink(task, application)).toEqual('Complete Second Task')
+        expect(taskLink(task, assessment)).toEqual('Complete Second Task')
       })
     })
   })

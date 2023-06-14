@@ -18,6 +18,7 @@ import { documentsFromApplication } from '../../server/utils/assessments/documen
 import Page from '../pages'
 import {
   AccommodationRequiredFromDatePage,
+  AdditionalLicenceConditionsPage,
   AlternativePduPage,
   AttachDocumentsPage,
   BackupContactPage,
@@ -63,6 +64,7 @@ export default class ApplyHelper {
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
+    licenceConditions: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     safeguardingAndSupport: [] as Array<ApplyPage>,
@@ -137,6 +139,7 @@ export default class ApplyHelper {
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeEligibility()
+    this.completeLicenceConditions()
     this.completeOasysImport()
     this.completePlacementLocation()
     this.completeSafeguardingAndSupport()
@@ -154,6 +157,7 @@ export default class ApplyHelper {
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
+      ...this.pages.licenceConditions,
       ...this.pages.oasysImport,
       ...this.pages.placementLocation,
       ...this.pages.safeguardingAndSupport,
@@ -335,6 +339,27 @@ export default class ApplyHelper {
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('eligibility', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('licence-conditions', 'Not started')
+  }
+
+  private completeLicenceConditions() {
+    // Given I click the eligibility task
+    cy.get('[data-cy-task-name="licence-conditions"]').click()
+
+    // When I complete the form
+    const additionalLicenceConditionsPage = new AdditionalLicenceConditionsPage(this.application)
+    additionalLicenceConditionsPage.completeForm()
+    additionalLicenceConditionsPage.clickSubmit()
+
+    this.pages.licenceConditions = [additionalLicenceConditionsPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('licence-conditions', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
@@ -582,6 +607,7 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
     checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
     checkYourAnswersPage.shouldShowEligibilityAnswers(this.pages.eligibility)
+    checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)

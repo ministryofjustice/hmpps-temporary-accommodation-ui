@@ -7,6 +7,7 @@
     "sentence-information",
     "contact-details",
     "eligibility",
+    "licence-conditions",
     "oasys-import",
     "placement-location",
     "safeguarding-and-support",
@@ -132,6 +133,76 @@
               "type": "string"
             },
             "accommodationRequiredFromDate": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "licence-conditions": {
+      "type": "object",
+      "properties": {
+        "additional-licence-conditions": {
+          "type": "object",
+          "properties": {
+            "conditions": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "alcoholMonitoring",
+                  "civilOrders",
+                  "curfew",
+                  "drugTesting",
+                  "engagementWithServices",
+                  "exclusionZone",
+                  "initmateRelationships",
+                  "noContactWithChildren",
+                  "nonAssociation",
+                  "nonContact",
+                  "other",
+                  "programmes",
+                  "residencyRestriction"
+                ],
+                "type": "string"
+              }
+            },
+            "alcoholMonitoringDetail": {
+              "type": "string"
+            },
+            "civilOrdersDetail": {
+              "type": "string"
+            },
+            "curfewDetail": {
+              "type": "string"
+            },
+            "drugTestingDetail": {
+              "type": "string"
+            },
+            "engagementWithServicesDetail": {
+              "type": "string"
+            },
+            "exclusionZoneDetail": {
+              "type": "string"
+            },
+            "initmateRelationshipsDetail": {
+              "type": "string"
+            },
+            "noContactWithChildrenDetail": {
+              "type": "string"
+            },
+            "nonAssociationDetail": {
+              "type": "string"
+            },
+            "nonContactDetail": {
+              "type": "string"
+            },
+            "residencyRestrictionDetail": {
+              "type": "string"
+            },
+            "programmesDetail": {
+              "type": "string"
+            },
+            "otherDetail": {
               "type": "string"
             }
           }

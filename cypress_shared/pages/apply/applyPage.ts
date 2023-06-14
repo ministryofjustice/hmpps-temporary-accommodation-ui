@@ -48,6 +48,13 @@ export default class ApplyPage extends Page {
     })
   }
 
+  checkCheckboxesWithDetailsFromPageBody(fieldName: string) {
+    ;(this.tasklistPage.body[fieldName] as Array<string>).forEach(value => {
+      this.checkCheckboxByNameAndValue(`${fieldName}[]`, value)
+      this.completeTextInputFromPageBody(`${value}Detail`)
+    })
+  }
+
   completeDateInputsFromPageBody(fieldName: string) {
     const date = this.tasklistPage.body[fieldName] as string
     this.completeDateInputs(fieldName, date)

@@ -8,6 +8,7 @@
     "contact-details",
     "eligibility",
     "oasys-import",
+    "placement-location",
     "safeguarding-and-support",
     "requirements-for-placement",
     "move-on-plan",
@@ -366,6 +367,26 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "placement-location": {
+      "type": "object",
+      "properties": {
+        "alternative-pdu": {
+          "type": "object",
+          "properties": {
+            "alternativePdu": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "alternativePduDetail": {
+              "type": "string"
             }
           }
         }

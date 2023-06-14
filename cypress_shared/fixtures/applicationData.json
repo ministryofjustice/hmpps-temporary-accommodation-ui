@@ -179,6 +179,12 @@
       ]
     }
   },
+  "placement-location": {
+    "alternative-pdu": {
+      "alternativePdu": "yes",
+      "alternativePduDetail": "Some PDU, for reasons X, Y, Z"
+    }
+  },
   "safeguarding-and-support": {
     "safeguarding-and-vulnerability": {
       "concerns": "yes",

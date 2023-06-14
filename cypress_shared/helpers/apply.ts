@@ -18,6 +18,7 @@ import { documentsFromApplication } from '../../server/utils/assessments/documen
 import Page from '../pages'
 import {
   AccommodationRequiredFromDatePage,
+  AlternativePduPage,
   AttachDocumentsPage,
   BackupContactPage,
   CaringResponsibilitiesPage,
@@ -63,6 +64,7 @@ export default class ApplyHelper {
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
+    placementLocation: [] as Array<ApplyPage>,
     safeguardingAndSupport: [] as Array<ApplyPage>,
     requirementsFromPlacement: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
@@ -136,6 +138,7 @@ export default class ApplyHelper {
     this.completeContactDetails()
     this.completeEligibility()
     this.completeOasysImport()
+    this.completePlacementLocation()
     this.completeSafeguardingAndSupport()
     this.completeRequirementsForPlacement()
     this.completeMoveOnPlan()
@@ -152,6 +155,7 @@ export default class ApplyHelper {
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
       ...this.pages.oasysImport,
+      ...this.pages.placementLocation,
       ...this.pages.safeguardingAndSupport,
       ...this.pages.requirementsFromPlacement,
       ...this.pages.moveOnPlan,
@@ -395,6 +399,27 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('placement-location', 'Not started')
+  }
+
+  private completePlacementLocation() {
+    // Given I click on the safeguarding and support task
+    cy.get('[data-cy-task-name="placement-location"]').click()
+
+    // When I complete the form
+    const alternativePduPage = new AlternativePduPage(this.application)
+    alternativePduPage.completeForm()
+    alternativePduPage.clickSubmit()
+
+    this.pages.placementLocation = [alternativePduPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Not started')
   }
 
@@ -562,6 +587,7 @@ export default class ApplyHelper {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 
+    checkYourAnswersPage.shouldShowPlacementLocationAnswers(this.pages.placementLocation)
     checkYourAnswersPage.shouldShowSafeguardingAndSupportAnswers(this.pages.safeguardingAndSupport)
     checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)

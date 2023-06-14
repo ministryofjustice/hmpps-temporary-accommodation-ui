@@ -5,8 +5,9 @@ import type {
 import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
-import { TasklistPageInterface } from '../form-pages/tasklistPage'
+import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
 import paths from '../paths/apply'
+import getSections from './assessments/getSections'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
@@ -50,33 +51,35 @@ export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>
 const getResponses = (applicationOrAssessment: Application | Assessment): ApplicationOrAssessmentResponse => {
   const responses = {}
 
-  Object.keys(applicationOrAssessment.data).forEach(taskName => {
-    responses[taskName] = getResponsesForTask(applicationOrAssessment, taskName)
+  const formSections = getSections(applicationOrAssessment)
+
+  formSections.forEach(section => {
+    section.tasks.forEach(task => {
+      const responsesForTask: Array<PageResponse> = []
+      forPagesInTask(applicationOrAssessment, task, page => responsesForTask.push(page.response()))
+
+      responses[task.id] = responsesForTask
+    })
   })
 
   return responses
 }
 
-const getResponsesForTask = (
+const forPagesInTask = (
   applicationOrAssessment: Application | Assessment,
-  taskName: string,
-): Array<PageResponse> => {
-  const pageNames = Object.keys(applicationOrAssessment.data[taskName])
-  const responsesForPages = pageNames.map(pageName => getResponseForPage(applicationOrAssessment, taskName, pageName))
-  return responsesForPages
-}
+  task: Task,
+  callback: (page: TasklistPage, pageName: string) => void,
+): void => {
+  const pageNames = Object.keys(task.pages)
+  let pageName = pageNames?.[0]
 
-const getResponseForPage = (
-  applicationOrAssessment: Application | Assessment,
-  taskName: string,
-  pageName: string,
-): PageResponse => {
-  const Page = getPage(taskName, pageName, isAssessment(applicationOrAssessment))
-
-  const body = applicationOrAssessment?.data?.[taskName]?.[pageName]
-  const page = new Page(body, applicationOrAssessment)
-
-  return page.response()
+  while (pageName) {
+    const Page = getPage(task.id, pageName, isAssessment(applicationOrAssessment))
+    const body = applicationOrAssessment?.data?.[task.id]?.[pageName]
+    const page = new Page(body, applicationOrAssessment)
+    callback(page, pageName)
+    pageName = page.next()
+  }
 }
 
 const getPage = (taskName: string, pageName: string, isAnAssessment?: boolean): TasklistPageInterface => {
@@ -171,7 +174,7 @@ const firstPageOfApplicationJourney = (application: Application) => {
 
 export {
   getResponses,
-  getResponseForPage,
+  forPagesInTask,
   getPage,
   getSectionAndTask,
   getArrivalDate,

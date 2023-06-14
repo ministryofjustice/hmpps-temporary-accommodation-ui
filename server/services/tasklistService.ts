@@ -3,10 +3,8 @@ import {
   ApprovedPremisesAssessment as Assessment,
 } from '@approved-premises/api'
 import { FormSections, Task, TaskStatus, TaskWithStatus } from '@approved-premises/ui'
-import Apply from '../form-pages/apply'
 import getTaskStatus from '../form-pages/utils/getTaskStatus'
 import getSections from '../utils/assessments/getSections'
-import isAssessment from '../utils/assessments/isAssessment'
 
 export default class TasklistService {
   taskStatuses: Record<string, TaskStatus>
@@ -14,7 +12,7 @@ export default class TasklistService {
   formSections: FormSections
 
   constructor(applicationOrAssessment: Application | Assessment) {
-    this.formSections = isAssessment(applicationOrAssessment) ? getSections(applicationOrAssessment) : Apply.sections
+    this.formSections = getSections(applicationOrAssessment)
     this.taskStatuses = {}
 
     this.formSections.forEach(section => {

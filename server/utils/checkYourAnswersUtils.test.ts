@@ -1,6 +1,8 @@
+import { createMock } from '@golevelup/ts-jest'
 import { applicationFactory } from '../testutils/factories'
-import { getResponseForPage } from './applicationUtils'
+import { forPagesInTask } from './applicationUtils'
 
+import TasklistPage from '../form-pages/tasklistPage'
 import {
   checkYourAnswersSections,
   embeddedSummaryListItem,
@@ -80,45 +82,45 @@ describe('checkYourAnswersUtils', () => {
   })
 
   describe('getTaskResponsesAsSummaryListItems', () => {
-    it('returns an empty array if there isnt any responses for the task', () => {
-      const application = applicationFactory.build()
-
-      expect(
-        getTaskResponsesAsSummaryListItems({ id: '42', title: '42', actionText: '42', pages: {} }, application),
-      ).toEqual([])
-    })
-
     it('returns the task responses as Summary List items and adds the actions object', () => {
       const application = applicationFactory.build()
-      application.data = { foo: ['bar'] }
-      ;(getResponseForPage as jest.Mock).mockImplementation(() => ({
-        title: 'response',
-      }))
+      ;(forPagesInTask as jest.MockedFunction<typeof forPagesInTask>).mockImplementation((_1, _2, callback) => {
+        const page = createMock<TasklistPage>()
+
+        page.response.mockReturnValue({
+          'A question': 'An answer',
+        })
+
+        callback(page, 'some-page')
+      })
       ;(formatLines as jest.Mock).mockImplementation((value: string) => `Formatted "${value}"`)
 
       expect(
-        getTaskResponsesAsSummaryListItems({ id: 'foo', title: 'bar', actionText: '42', pages: {} }, application),
+        getTaskResponsesAsSummaryListItems(
+          { id: 'some-task', title: 'Some task', actionText: 'Complete some task', pages: {} },
+          application,
+        ),
       ).toEqual([
         {
           actions: {
             items: [
               {
-                href: `/applications/${application.id}/tasks/foo/pages/0`,
+                href: `/applications/${application.id}/tasks/some-task/pages/some-page`,
                 text: 'Change',
-                visuallyHiddenText: 'title',
+                visuallyHiddenText: 'A question',
               },
             ],
           },
           key: {
-            text: 'title',
+            text: 'A question',
           },
           value: {
-            html: 'Formatted "response"',
+            html: 'Formatted "An answer"',
           },
         },
       ])
 
-      expect(formatLines).toHaveBeenCalledWith('response')
+      expect(formatLines).toHaveBeenCalledWith('An answer')
     })
   })
 })

@@ -8,6 +8,7 @@ import { isApplicableTier, tierBadge } from './personUtils'
 import {
   dashboardTableRows,
   firstPageOfApplicationJourney,
+  forPagesInTask,
   getArrivalDate,
   getPage,
   getResponses,
@@ -15,6 +16,7 @@ import {
   getStatus,
   isUnapplicable,
 } from './applicationUtils'
+import getSections from './assessments/getSections'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 
 const FirstApplyPage = jest.fn()
@@ -34,12 +36,16 @@ jest.mock('../form-pages/assess', () => {
 })
 
 jest.mock('./personUtils')
+jest.mock('./assessments/getSections')
 
 const applySection1Task1 = {
   id: 'first-apply-section-task-1',
   title: 'First Apply section, task 1',
   actionText: '',
-  pages: {},
+  pages: {
+    first: FirstApplyPage,
+    second: SecondApplyPage,
+  },
 }
 const applySection1Task2 = {
   id: 'first-apply-section-task-2',
@@ -76,7 +82,7 @@ const applySection2 = {
 
 Apply.sections = [applySection1, applySection2]
 
-Apply.pages['basic-information'] = {
+Apply.pages['first-apply-section-task-1'] = {
   first: FirstApplyPage,
   second: SecondApplyPage,
 }
@@ -129,29 +135,72 @@ Assess.pages['assess-page'] = {
 describe('applicationUtils', () => {
   describe('getResponses', () => {
     it('returns the responses from all answered questions', () => {
+      ;(getSections as jest.MockedFunction<typeof getSections>).mockReturnValue([applySection1, applySection2])
+
       FirstApplyPage.mockReturnValue({
-        response: () => {
-          return { foo: 'bar' }
-        },
+        response: () => ({ foo: 'bar' }),
+        next: () => 'second',
       })
 
       SecondApplyPage.mockReturnValue({
-        response: () => {
-          return { bar: 'foo' }
-        },
+        response: () => ({ bar: 'foo' }),
+        next: () => '',
       })
 
       const application = applicationFactory.build()
-      application.data = { 'basic-information': { first: '', second: '' } }
 
-      expect(getResponses(application)).toEqual({ 'basic-information': [{ foo: 'bar' }, { bar: 'foo' }] })
+      expect(getResponses(application)).toEqual({
+        'first-apply-section-task-1': [{ foo: 'bar' }, { bar: 'foo' }],
+        'first-apply-section-task-2': [],
+        'second-apply-section-task-1': [],
+        'second-apply-section-task-2': [],
+      })
+    })
+  })
+
+  describe('forPagesInTask', () => {
+    it('iterates through the pages of a task', () => {
+      const firstApplyPageInstance = {
+        next: () => 'second',
+      }
+      const secondApplyPageInstance = {
+        next: () => '',
+      }
+
+      FirstApplyPage.mockReturnValue(firstApplyPageInstance)
+      SecondApplyPage.mockReturnValue(secondApplyPageInstance)
+      const spy = jest.fn()
+
+      const application = applicationFactory.build()
+
+      forPagesInTask(application, applySection1Task1, spy)
+
+      expect(spy).toHaveBeenCalledWith(firstApplyPageInstance, 'first')
+      expect(spy).toHaveBeenCalledWith(secondApplyPageInstance, 'second')
+      expect(spy).toHaveBeenCalledTimes(2)
+    })
+
+    it('skips tasks that are not part of the user journey', () => {
+      const firstApplyPageInstance = {
+        next: () => '',
+      }
+
+      FirstApplyPage.mockReturnValue(firstApplyPageInstance)
+      const spy = jest.fn()
+
+      const application = applicationFactory.build()
+
+      forPagesInTask(application, applySection1Task1, spy)
+
+      expect(spy).toHaveBeenCalledWith(firstApplyPageInstance, 'first')
+      expect(spy).toHaveBeenCalledTimes(1)
     })
   })
 
   describe('getPage', () => {
     it('should return a page from Apply if it exists', () => {
-      expect(getPage('basic-information', 'first')).toEqual(FirstApplyPage)
-      expect(getPage('basic-information', 'second')).toEqual(SecondApplyPage)
+      expect(getPage('first-apply-section-task-1', 'first')).toEqual(FirstApplyPage)
+      expect(getPage('first-apply-section-task-1', 'second')).toEqual(SecondApplyPage)
     })
 
     it('should return a page from Assess if passed the option', () => {
@@ -160,7 +209,7 @@ describe('applicationUtils', () => {
 
     it('should raise an error if the page is not found', async () => {
       expect(() => {
-        getPage('basic-information', 'bar')
+        getPage('first-apply-section-task-1', 'bar')
       }).toThrow(UnknownPageError)
     })
   })

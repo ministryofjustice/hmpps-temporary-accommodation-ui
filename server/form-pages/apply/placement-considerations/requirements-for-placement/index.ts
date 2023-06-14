@@ -2,12 +2,12 @@
 
 import { Task } from '../../../utils/decorators'
 import FoodAllergies from './foodAllergies'
-import RoomSharing from './roomSharing'
+import PropertySharing from './propertySharing'
 
 @Task({
   name: 'Requirements for placement',
   actionText: 'Provide requirements for placement',
   slug: 'requirements-for-placement',
-  pages: [RoomSharing, FoodAllergies],
+  pages: [PropertySharing, FoodAllergies],
 })
 export default class RequirementsForPlacement {}

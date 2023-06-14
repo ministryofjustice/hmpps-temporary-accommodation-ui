@@ -22,7 +22,7 @@ describe('FoodAllergies', () => {
     })
   })
 
-  itShouldHavePreviousValue(new FoodAllergies({}, application), 'room-sharing')
+  itShouldHavePreviousValue(new FoodAllergies({}, application), 'property-sharing')
   itShouldHaveNextValue(new FoodAllergies({}, application), '')
 
   describe('errors', () => {

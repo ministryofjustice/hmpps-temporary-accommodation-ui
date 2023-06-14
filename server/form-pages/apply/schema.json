@@ -446,17 +446,17 @@
     "requirements-for-placement": {
       "type": "object",
       "properties": {
-        "room-sharing": {
+        "property-sharing": {
           "type": "object",
           "properties": {
-            "roomSharing": {
+            "propertySharing": {
               "enum": [
                 "no",
                 "yes"
               ],
               "type": "string"
             },
-            "roomSharingDetail": {
+            "propertySharingDetail": {
               "type": "string"
             }
           }

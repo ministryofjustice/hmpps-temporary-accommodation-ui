@@ -12,7 +12,7 @@ import ListPage from './list'
 import MoveOnPlanPage from './placement-considerations/move-on-plan/moveOnPlan'
 import AlternativePduPage from './placement-considerations/placement-location/alternativePdu'
 import FoodAllergiesPage from './placement-considerations/requirements-for-placement/foodAllergies'
-import RoomSharingPage from './placement-considerations/requirements-for-placement/roomSharing'
+import PropertySharingPage from './placement-considerations/requirements-for-placement/propertySharing'
 import CaringResponsibilitiesPage from './placement-considerations/safeguarding-and-support/caringResponsibilities'
 import LocalConnectionsPage from './placement-considerations/safeguarding-and-support/localConnections'
 import SafeguardingAndVulnerabilityPage from './placement-considerations/safeguarding-and-support/safeguardingAndVulnerability'
@@ -60,7 +60,7 @@ export {
   SupportInTheCommunityPage,
   LocalConnectionsPage,
   CaringResponsibilitiesPage,
-  RoomSharingPage,
+  PropertySharingPage,
   FoodAllergiesPage,
   MoveOnPlanPage,
   DtrSubmittedPage,

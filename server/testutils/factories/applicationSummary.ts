@@ -13,4 +13,5 @@ export default Factory.define<ApplicationSummary>(() => ({
   submittedAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   createdByUserId: faker.string.uuid(),
   status: 'inProgress',
+  type: 'CAS3',
 }))

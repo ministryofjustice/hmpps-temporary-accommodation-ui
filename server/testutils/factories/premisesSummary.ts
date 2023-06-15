@@ -15,4 +15,5 @@ export default Factory.define<PremisesSummary>(() => ({
   bedCount: 50,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),
   pdu: referenceDataFactory.pdu().build().id,
+  service: 'CAS3',
 }))

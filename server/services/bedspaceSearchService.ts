@@ -14,7 +14,7 @@ export default class BedspaceSearchService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async search(callConfig: CallConfig, searchParameters: BedSearchParameters) {
+  async search(callConfig: CallConfig, searchParameters: Omit<BedSearchParameters, 'serviceName'>) {
     const bedClient = this.bedClientFactory(callConfig)
 
     return bedClient.search({

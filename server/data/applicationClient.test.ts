@@ -98,6 +98,7 @@ describe('ApplicationClient', () => {
       const application = applicationFactory.build()
       const data: UpdateApplication = {
         data: application.data,
+        type: 'CAS3',
       }
 
       fakeApprovedPremisesApi
@@ -133,6 +134,7 @@ describe('ApplicationClient', () => {
       const application = applicationFactory.build()
       const data: SubmitApplication = {
         translatedDocument: application.document,
+        type: 'CAS3',
       }
 
       fakeApprovedPremisesApi

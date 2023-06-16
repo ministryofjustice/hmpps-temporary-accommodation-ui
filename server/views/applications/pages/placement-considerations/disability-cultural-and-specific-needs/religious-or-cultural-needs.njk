@@ -1,0 +1,37 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ take.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {% set religiousOrCulturalNeedsDetailHtml %}
+    {{ formPageTextarea({
+        fieldName: 'religiousOrCulturalNeedsDetail',
+        label: {
+          text: "Provide details",
+          classes: "govuk-label--s"
+        }
+    },fetchContext()) }}
+  {% endset %}
+
+  {{ formPageRadios({
+    fieldName: "religiousOrCulturalNeeds",
+    items: [
+      {
+        value: "yes",
+        text: "Yes",
+        conditional: {
+          html: religiousOrCulturalNeedsDetailHtml
+        }
+      },
+      {
+        value: "no",
+        text: "No"
+      }
+    ]
+  }, fetchContext()) }}
+
+{% endblock %}

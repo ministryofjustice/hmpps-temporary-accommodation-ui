@@ -37,6 +37,8 @@ class LostBedFactory extends Factory<LostBed> {
 
 export default LostBedFactory.define(() => ({
   id: faker.string.uuid(),
+  bedName: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
+  roomName: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   notes: faker.lorem.sentence(),
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   endDate: DateFormats.dateObjToIsoDate(faker.date.future()),

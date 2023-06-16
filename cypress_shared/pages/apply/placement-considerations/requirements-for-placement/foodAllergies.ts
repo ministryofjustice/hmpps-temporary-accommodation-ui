@@ -12,7 +12,7 @@ export default class FoodAllergiesPage extends ApplyPage {
       paths.applications.pages.show({
         id: application.id,
         task: 'requirements-for-placement',
-        page: 'room-sharing',
+        page: 'property-sharing',
       }),
     )
   }

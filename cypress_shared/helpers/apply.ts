@@ -37,10 +37,10 @@ import {
   OtherAccommodationOptionsPage,
   PractitionerPduPage,
   ProbationPractitionerPage,
+  PropertySharingPage,
   ReleaseDatePage,
   RiskManagementPlanPage,
   RiskToSelfPage,
-  RoomSharingPage,
   RoshSummaryPage,
   SafeguardingAndVulnerabilityPage,
   SentenceTypePage,
@@ -466,15 +466,15 @@ export default class ApplyHelper {
     cy.get('[data-cy-task-name="requirements-for-placement"]').click()
 
     // When I complete the form
-    const roomSharingPage = new RoomSharingPage(this.application)
-    roomSharingPage.completeForm()
-    roomSharingPage.clickSubmit()
+    const propertySharingPage = new PropertySharingPage(this.application)
+    propertySharingPage.completeForm()
+    propertySharingPage.clickSubmit()
 
     const foodAllergiesPage = new FoodAllergiesPage(this.application)
     foodAllergiesPage.completeForm()
     foodAllergiesPage.clickSubmit()
 
-    this.pages.requirementsFromPlacement = [roomSharingPage, foodAllergiesPage]
+    this.pages.requirementsFromPlacement = [propertySharingPage, foodAllergiesPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

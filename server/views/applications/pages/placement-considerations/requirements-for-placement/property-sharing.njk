@@ -6,9 +6,9 @@
 
   {% include "./partials/_navigation.njk" %}
 
-  {% set roomSharingDetailHtml %}
+  {% set propertySharingDetailHtml %}
     {{ formPageTextarea({
-        fieldName: 'roomSharingDetail',
+        fieldName: 'propertySharingDetail',
         label: {
           text: "Provide details on how you will manage risk if the person is placed in shared accommodation",
           classes: "govuk-label--s"
@@ -17,10 +17,10 @@
   {% endset %}
 
   {{ formPageRadios({
-      fieldName: "roomSharing",
+      fieldName: "propertySharing",
       fieldset: {
         legend: {
-          text: page.questions.roomSharing,
+          text: page.questions.propertySharing,
           classes: "govuk-fieldset__legend--m"
         }
       },
@@ -29,7 +29,7 @@
           value: "yes",
           text: "Yes",
           conditional: {
-            html: roomSharingDetailHtml
+            html: propertySharingDetailHtml
           }
         },
         {

@@ -28,7 +28,7 @@ export default class FoodAllergies implements TasklistPage {
   }
 
   previous() {
-    return 'room-sharing'
+    return 'property-sharing'
   }
 
   next() {

@@ -10,6 +10,7 @@ import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
 import NeedsPage from './placement-considerations/disability-cultural-and-specific-needs/needs'
+import PropertyAttributesOrAdaptationsPage from './placement-considerations/disability-cultural-and-specific-needs/propertyAttributesOrAdaptations'
 import MoveOnPlanPage from './placement-considerations/move-on-plan/moveOnPlan'
 import AlternativePduPage from './placement-considerations/placement-location/alternativePdu'
 import FoodAllergiesPage from './placement-considerations/requirements-for-placement/foodAllergies'
@@ -60,6 +61,7 @@ export {
   RiskToSelfPage,
   AlternativePduPage,
   NeedsPage,
+  PropertyAttributesOrAdaptationsPage,
   SafeguardingAndVulnerabilityPage,
   SupportInTheCommunityPage,
   LocalConnectionsPage,

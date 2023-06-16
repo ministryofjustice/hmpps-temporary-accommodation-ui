@@ -1,0 +1,40 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {% set alternativePduDetailHtml %}
+    {{ formPageTextarea({
+      fieldName: "alternativePduDetail",
+      label: {
+        text: "Provide the alternative PDU and the reason it is preferred",
+        classes: "govuk-label--s"
+      }
+    },fetchContext()) }}
+  {% endset %}
+
+  {{ formPageRadios({
+    fieldName: "alternativePdu",
+    hint: {
+      text: "If placement is required in a PDU that's different to the person's current PDU, select 'yes'"
+    },
+    items: [
+      {
+        value: "yes",
+        text: "Yes",
+        conditional: {
+          html: alternativePduDetailHtml
+        }
+      },
+      {
+        value: "no",
+        text: "No"
+      }
+    ]
+  },fetchContext()) }}
+{% endblock %}

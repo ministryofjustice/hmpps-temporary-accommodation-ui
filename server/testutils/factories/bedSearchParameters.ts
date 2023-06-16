@@ -9,4 +9,5 @@ export default Factory.define<BedSearchParameters>(() => ({
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   durationDays: faker.number.int({ min: 1, max: 10 }),
   probationDeliveryUnit: referenceData.pdu().build().id,
+  serviceName: 'temporary-accommodation',
 }))

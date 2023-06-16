@@ -55,4 +55,5 @@ export default ApplicationFactory.define(() => ({
   outdatedSchema: faker.datatype.boolean(),
   risks: risksFactory.build(),
   status: 'inProgress' as const,
+  type: 'CAS3',
 }))

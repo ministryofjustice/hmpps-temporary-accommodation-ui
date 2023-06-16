@@ -7,6 +7,7 @@ describe('getApplicationUpdateData', () => {
 
     expect(getApplicationUpdateData(application)).toEqual({
       data: application.data,
+      type: 'CAS3',
     })
   })
 })
@@ -17,6 +18,7 @@ describe('getApplicationSubmissionData', () => {
 
     expect(getApplicationSubmissionData(application)).toEqual({
       translatedDocument: application.document,
+      type: 'CAS3',
     })
   })
 })

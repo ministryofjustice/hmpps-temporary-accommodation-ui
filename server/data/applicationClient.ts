@@ -35,7 +35,7 @@ export default class ApplicationClient {
   async update(applicationId: string, updateData: UpdateApplication): Promise<UpdateApplication> {
     return (await this.restClient.put({
       path: paths.applications.update({ id: applicationId }),
-      data: { ...updateData, type: 'CAS3' },
+      data: updateData,
     })) as UpdateApplication
   }
 
@@ -46,7 +46,7 @@ export default class ApplicationClient {
   async submit(applicationId: string, submissionData: SubmitApplication): Promise<void> {
     await this.restClient.post({
       path: paths.applications.submission({ id: applicationId }),
-      data: { ...submissionData, type: 'CAS3' },
+      data: submissionData,
     })
   }
 

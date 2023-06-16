@@ -77,6 +77,7 @@ export default PremisesFactory.define(() => {
     status: faker.helpers.arrayElement(['active', 'archived'] as const),
     notes: faker.lorem.lines(5),
     turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 5 }),
+    service: 'temporary-accommodation',
   }
 })
 

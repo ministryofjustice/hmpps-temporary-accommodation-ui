@@ -1,8 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import {
-  TemporaryAccommodationBedSearchParameters as BedSearchParameters,
-  BedSearchResults,
-} from '../../../@types/shared'
+import { BedSearchResults } from '../../../@types/shared'
 import { ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -11,6 +8,8 @@ import { DateFormats } from '../../../utils/dateUtils'
 import { parseNaturalNumber } from '../../../utils/formUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
+
+type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & { probationDeliveryUnit: string; durationDays: string }
 
 export default class BedspaceSearchController {
   constructor(private readonly searchService: BedspaceSearchService) {}
@@ -23,7 +22,7 @@ export default class BedspaceSearchController {
 
       const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
 
-      const query = Object.keys(req.query).length ? (req.query as Record<string, string>) : undefined
+      const query = Object.keys(req.query).length ? (req.query as BedspaceSearchQuery) : undefined
       let results: BedSearchResults
 
       try {
@@ -39,7 +38,7 @@ export default class BedspaceSearchController {
             ...query,
             startDate,
             durationDays,
-          } as BedSearchParameters)
+          })
         }
 
         res.render('temporary-accommodation/bedspace-search/index', {

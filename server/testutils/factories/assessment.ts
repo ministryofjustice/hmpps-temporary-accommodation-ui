@@ -36,4 +36,5 @@ export default AssessmentFactory.define(() => ({
   data: fakeObject(),
   clarificationNotes: [],
   rejectionRationale: faker.lorem.sentence(),
+  service: 'CAS3',
 }))

@@ -1,7 +1,7 @@
 import { TemporaryAccommodationApplicationSummary as ApplicationSummary } from '@approved-premises/api'
 
-import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker'
+import { Factory } from 'fishery'
 
 import { DateFormats } from '../../utils/dateUtils'
 import personFactory from './person'
@@ -13,4 +13,5 @@ export default Factory.define<ApplicationSummary>(() => ({
   submittedAt: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   createdByUserId: faker.string.uuid(),
   status: 'inProgress',
+  type: 'CAS3',
 }))

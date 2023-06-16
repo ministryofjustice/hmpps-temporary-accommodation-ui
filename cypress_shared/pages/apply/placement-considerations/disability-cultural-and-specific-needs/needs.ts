@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class NeedsPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Disablility, cultural and specific needs',
+      'Disability, cultural and specific needs',
       application,
       'disability-cultural-and-specific-needs',
       'needs',

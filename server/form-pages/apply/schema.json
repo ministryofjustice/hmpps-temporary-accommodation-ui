@@ -10,6 +10,7 @@
     "licence-conditions",
     "oasys-import",
     "placement-location",
+    "disability-cultural-and-specific-needs",
     "safeguarding-and-support",
     "requirements-for-placement",
     "move-on-plan",
@@ -457,6 +458,98 @@
               "type": "string"
             },
             "alternativePduDetail": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "disability-cultural-and-specific-needs": {
+      "type": "object",
+      "properties": {
+        "needs": {
+          "type": "object",
+          "properties": {
+            "needs": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "alcoholMisuse",
+                  "drugMisuse",
+                  "hearingImpairment",
+                  "language",
+                  "learningDisability",
+                  "mentalHealth",
+                  "mobility",
+                  "neurodivergence",
+                  "none",
+                  "other",
+                  "visualImpairment"
+                ],
+                "type": "string"
+              }
+            },
+            "alcoholMisuseDetail": {
+              "type": "string"
+            },
+            "drugMisuseDetail": {
+              "type": "string"
+            },
+            "hearingImpairmentDetail": {
+              "type": "string"
+            },
+            "mentalHealthDetail": {
+              "type": "string"
+            },
+            "languageDetail": {
+              "type": "string"
+            },
+            "learningDisabilityDetail": {
+              "type": "string"
+            },
+            "mobilityDetail": {
+              "type": "string"
+            },
+            "neurodivergenceDetail": {
+              "type": "string"
+            },
+            "visualImpairmentDetail": {
+              "type": "string"
+            },
+            "otherDetail": {
+              "type": "string"
+            },
+            "noneDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "property-attributes-or-adaptations": {
+          "type": "object",
+          "properties": {
+            "propertyAttributesOrAdaptations": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "propertyAttributesOrAdaptationsDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "religious-or-cultural-needs": {
+          "type": "object",
+          "properties": {
+            "religiousOrCulturalNeeds": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "religiousOrCulturalNeedsDetail": {
               "type": "string"
             }
           }

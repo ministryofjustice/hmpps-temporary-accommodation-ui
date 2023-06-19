@@ -13,7 +13,7 @@
       govukCheckboxes(
         mergeObjects(
           mergeObjects(params, { items: checkboxItems }),
-          { idPrefix: params.fieldName, name: params.fieldName, errorMessage: context.errors[params.fieldName] }
+          { idPrefix: params.fieldName, name: params.fieldName + "[]", errorMessage: context.errors[params.fieldName] }
         )
       )
   }}

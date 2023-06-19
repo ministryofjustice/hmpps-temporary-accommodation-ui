@@ -37,6 +37,24 @@
       "accommodationRequiredFromDate-day": "16"
     }
   },
+  "licence-conditions": {
+    "additional-licence-conditions": {
+      "conditions": ["civilOrders", "nonAssociation", "nonContact", "other"],
+      "alcoholMonitoringDetail": "",
+      "civilOrdersDetail": "Civil orders detail",
+      "curfewDetail": "",
+      "drugTestingDetail": "",
+      "engagementWithServicesDetail": "",
+      "exclusionZoneDetail": "",
+      "initmateRelationshipsDetail": "",
+      "noContactWithChildrenDetail": "",
+      "nonAssociationDetail": "Non association detail",
+      "nonContactDetail": "Non contact detail",
+      "programmesDetail": "",
+      "residencyRestrictionDetail": "",
+      "otherDetail": "Other detail"
+    }
+  },
   "oasys-import": {
     "optional-oasys-sections": {
       "needsLinkedToReoffending": [

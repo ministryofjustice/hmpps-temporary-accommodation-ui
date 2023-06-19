@@ -43,8 +43,15 @@ export default class ApplyPage extends Page {
   }
 
   checkCheckboxesFromPageBody(fieldName: string) {
-    ;(this.tasklistPage.body[fieldName] as Array<string>).forEach(need => {
-      this.checkCheckboxByNameAndValue(fieldName, need)
+    ;(this.tasklistPage.body[fieldName] as Array<string>).forEach(value => {
+      this.checkCheckboxByNameAndValue(`${fieldName}[]`, value)
+    })
+  }
+
+  checkCheckboxesWithDetailsFromPageBody(fieldName: string) {
+    ;(this.tasklistPage.body[fieldName] as Array<string>).forEach(value => {
+      this.checkCheckboxByNameAndValue(`${fieldName}[]`, value)
+      this.completeTextInputFromPageBody(`${value}Detail`)
     })
   }
 

@@ -69,7 +69,7 @@ describe('AdditionalLicenceConditions', () => {
       expect(page.items()).toEqual(
         expect.arrayContaining([
           { value: 'alcoholMonitoring', text: 'Alcohol monitoring' },
-          { value: 'civilOrders', text: 'Civil orders / SHPT / restraining, criminal behaviour orders' },
+          { value: 'civilOrders', text: 'Civil orders (e.g. SHPT), restraining orders, criminal behaviour orders' },
           {
             value: 'exclusionZone',
             text: 'Exclusion zone',

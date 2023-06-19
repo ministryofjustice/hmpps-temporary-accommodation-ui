@@ -10,8 +10,9 @@ const conditions = {
     error: 'You must provide details about alcohol monitoring',
   },
   civilOrders: {
-    text: 'Civil orders / SHPT / restraining, criminal behaviour orders',
-    error: 'You must provide details about civil orders / SHPT / restraining, criminal behaviour orders',
+    text: 'Civil orders (e.g. SHPT), restraining orders, criminal behaviour orders',
+    error:
+      'You must provide details about any civil orders (e.g. SHPT), restraining orders, or criminal behaviour orders',
   },
   curfew: {
     text: 'Curfew',

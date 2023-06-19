@@ -39,7 +39,7 @@ export default class FoodAllergies implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.foodAllergies) {
-      errors.foodAllergies = `You must specifiy if ${this.application.person.name} has any food allergies or dietary requirements`
+      errors.foodAllergies = `You must specify if ${this.application.person.name} has any food allergies or dietary requirements`
     }
 
     if (this.body.foodAllergies === 'yes' && !this.body.foodAllergiesDetail) {

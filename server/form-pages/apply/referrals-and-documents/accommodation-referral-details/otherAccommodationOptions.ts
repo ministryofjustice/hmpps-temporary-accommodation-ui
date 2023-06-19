@@ -31,7 +31,7 @@ export default class OtherAccommodationOptions implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.otherOptions) {
-      errors.otherOptions = 'You must specifiy if other accommodation options have been considered'
+      errors.otherOptions = 'You must specify if other accommodation options have been considered'
     }
 
     if (this.body.otherOptions === 'yes' && !this.body.otherOptionsDetail) {

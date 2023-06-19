@@ -39,7 +39,7 @@ describe('CaringResponsibilities', () => {
     it('returns an error if the caring responsibilities answer not populated', () => {
       const page = new CaringResponsibilities({ ...body, caringResponsibilities: undefined }, application)
       expect(page.errors()).toEqual({
-        caringResponsibilities: `You must specifiy if John Smith has any caring responsibilities`,
+        caringResponsibilities: `You must specify if John Smith has any caring responsibilities`,
       })
     })
 

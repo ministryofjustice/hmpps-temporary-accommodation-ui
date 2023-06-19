@@ -31,7 +31,7 @@ export default class AlternativePdu implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.alternativePdu) {
-      errors.alternativePdu = 'You must specifiy if placement is required in an alternative PDU'
+      errors.alternativePdu = 'You must specify if placement is required in an alternative PDU'
     }
 
     if (this.body.alternativePdu === 'yes' && !this.body.alternativePduDetail) {

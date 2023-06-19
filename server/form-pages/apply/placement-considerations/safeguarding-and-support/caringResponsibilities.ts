@@ -39,7 +39,7 @@ export default class CaringResponsibilities implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.caringResponsibilities) {
-      errors.caringResponsibilities = `You must specifiy if ${this.application.person.name} has any caring responsibilities`
+      errors.caringResponsibilities = `You must specify if ${this.application.person.name} has any caring responsibilities`
     }
 
     if (this.body.caringResponsibilities === 'yes' && !this.body.caringResponsibilitiesDetail) {

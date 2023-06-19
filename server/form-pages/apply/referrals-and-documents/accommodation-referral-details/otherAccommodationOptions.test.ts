@@ -35,7 +35,7 @@ describe('OtherAccommodationOptions', () => {
     it('returns an error if the other options answer not populated', () => {
       const page = new OtherAccommodationOptions({ ...body, otherOptions: undefined }, application)
       expect(page.errors()).toEqual({
-        otherOptions: 'You must specifiy if other accommodation options have been considered',
+        otherOptions: 'You must specify if other accommodation options have been considered',
       })
     })
 

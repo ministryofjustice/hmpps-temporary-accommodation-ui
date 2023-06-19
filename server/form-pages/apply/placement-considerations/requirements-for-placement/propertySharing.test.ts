@@ -39,7 +39,7 @@ describe('PropertySharing', () => {
     it('returns an error if the property sharing answer not populated', () => {
       const page = new PropertySharing({ ...body, propertySharing: undefined }, application)
       expect(page.errors()).toEqual({
-        propertySharing: 'You must specifiy if John Smith would be able to share accommodation with others',
+        propertySharing: 'You must specify if John Smith would be able to share accommodation with others',
       })
     })
 

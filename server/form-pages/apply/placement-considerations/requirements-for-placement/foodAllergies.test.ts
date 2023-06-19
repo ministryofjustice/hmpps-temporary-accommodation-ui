@@ -39,7 +39,7 @@ describe('FoodAllergies', () => {
     it('returns an error if the food allergies answer not populated', () => {
       const page = new FoodAllergies({ ...body, foodAllergies: undefined }, application)
       expect(page.errors()).toEqual({
-        foodAllergies: 'You must specifiy if John Smith has any food allergies or dietary requirements',
+        foodAllergies: 'You must specify if John Smith has any food allergies or dietary requirements',
       })
     })
 

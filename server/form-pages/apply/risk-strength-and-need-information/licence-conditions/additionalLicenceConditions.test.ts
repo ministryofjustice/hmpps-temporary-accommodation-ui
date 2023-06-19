@@ -47,7 +47,7 @@ describe('AdditionalLicenceConditions', () => {
       expect(page.errors()).toEqual({
         curfewDetail: 'You must provide details about curfew conditions',
         exclusionZoneDetail: 'You must provide details about the exclusion zone',
-        programmesDetail: 'You must provide details about programme or activity conditions',
+        programmesDetail: 'You must provide details about conditions on programmes or activities',
       })
     })
   })

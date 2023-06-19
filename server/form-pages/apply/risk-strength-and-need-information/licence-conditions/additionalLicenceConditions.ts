@@ -24,7 +24,7 @@ const conditions = {
   },
   engagementWithServices: {
     text: 'Engagement with services',
-    error: 'You must provide details about engagement with services conditions',
+    error: 'You must provide details about conditions to engage with services',
   },
   exclusionZone: {
     text: 'Exclusion zone',
@@ -34,23 +34,23 @@ const conditions = {
   },
   initmateRelationships: {
     text: 'Inform community probation practitioner of developing intimate relationships',
-    error: 'You must provide details about intimate relationships conditions',
+    error: 'You must provide details about conditions on intimate relationships',
   },
   noContactWithChildren: {
     text: 'No contact with children',
-    error: 'You must provide details about child contact conditions',
+    error: 'You must provide details about conditions on child contact',
   },
   nonAssociation: {
     text: 'Non association',
-    error: 'You must provide details about non association conditions',
+    error: 'You must provide details about conditions on non association',
   },
   nonContact: {
     text: 'Non contact',
-    error: 'You must provide details about non contact conditions',
+    error: 'You must provide details about conditions on non contact',
   },
   programmes: {
     text: 'Participate or co-operate with programmes or activities',
-    error: 'You must provide details about programme or activity conditions',
+    error: 'You must provide details about conditions on programmes or activities',
   },
   residencyRestriction: {
     text: 'Restriction of residency',

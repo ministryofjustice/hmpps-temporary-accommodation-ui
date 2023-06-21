@@ -67,7 +67,7 @@ export class DateFormats {
    * @returns an ISO8601 date string.
    */
   static dateAndTimeInputsToIsoString<K extends string | number>(
-    dateInputObj: ObjectWithDateParts<K>,
+    dateInputObj: Partial<ObjectWithDateParts<K>>,
     key: K,
     options: { representation: 'auto' | 'complete' } = { representation: 'auto' },
   ) {

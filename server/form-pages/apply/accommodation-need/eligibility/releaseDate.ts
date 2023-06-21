@@ -37,7 +37,7 @@ export default class ReleaseDate implements TasklistPage {
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (dateIsBlank(this.body)) {
+    if (dateIsBlank(this.body, 'releaseDate')) {
       errors.releaseDate = 'You must specify the release date'
     } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'releaseDate'>, 'releaseDate')) {
       errors.releaseDate = 'You must specify a valid release date'

@@ -33,7 +33,7 @@ export default class AccommodationRequiredFromDate implements TasklistPage {
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (dateIsBlank(this.body)) {
+    if (dateIsBlank(this.body, 'accommodationRequiredFromDate')) {
       errors.accommodationRequiredFromDate = 'You must specify the date accommodation is required from'
     } else if (
       !dateAndTimeInputsAreValidDates(

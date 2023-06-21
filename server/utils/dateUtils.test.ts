@@ -224,7 +224,7 @@ describe('dateIsBlank', () => {
       'field-year': '2022',
     }
 
-    expect(dateIsBlank(date)).toEqual(false)
+    expect(dateIsBlank(date, 'field')).toEqual(false)
   })
 
   it('returns true if the date is blank', () => {
@@ -234,7 +234,20 @@ describe('dateIsBlank', () => {
       'field-year': '',
     }
 
-    expect(dateIsBlank(date)).toEqual(true)
+    expect(dateIsBlank(date, 'field')).toEqual(true)
+  })
+
+  it('ignores irrelevant fields', () => {
+    const date: ObjectWithDateParts<'field'> & ObjectWithDateParts<'otherField'> = {
+      'field-day': '12',
+      'field-month': '1',
+      'field-year': '2022',
+      'otherField-day': undefined,
+      'otherField-month': undefined,
+      'otherField-year': undefined,
+    }
+
+    expect(dateIsBlank(date, 'field')).toEqual(false)
   })
 })
 

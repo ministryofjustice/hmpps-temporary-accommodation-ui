@@ -43,7 +43,7 @@ export default class DtrDetails implements TasklistPage {
       errors.reference = 'You must specify the DTR / NOP reference number'
     }
 
-    if (dateIsBlank(this.body)) {
+    if (dateIsBlank(this.body, 'date')) {
       errors.date = 'You must specify the date DTR / NOP was submitted'
     } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'date'>, 'date')) {
       errors.date = 'You must specify a valid date DTR / NOP was submitted'

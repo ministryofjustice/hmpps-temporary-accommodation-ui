@@ -45,7 +45,7 @@ export default class DtrDetails implements TasklistPage {
 
     if (dateIsBlank(this.body, 'date')) {
       errors.date = 'You must specify the date DTR / NOP was submitted'
-    } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'date'>, 'date')) {
+    } else if (!dateAndTimeInputsAreValidDates(this.body, 'date')) {
       errors.date = 'You must specify a valid date DTR / NOP was submitted'
     } else if (dateIsInFuture(this.body.date)) {
       errors.date = 'The date DTR / NOP was submitted must not be in the future'

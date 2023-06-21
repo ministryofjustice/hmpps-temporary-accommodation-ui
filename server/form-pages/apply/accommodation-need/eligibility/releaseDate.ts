@@ -39,7 +39,7 @@ export default class ReleaseDate implements TasklistPage {
 
     if (dateIsBlank(this.body, 'releaseDate')) {
       errors.releaseDate = 'You must specify the release date'
-    } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'releaseDate'>, 'releaseDate')) {
+    } else if (!dateAndTimeInputsAreValidDates(this.body, 'releaseDate')) {
       errors.releaseDate = 'You must specify a valid release date'
     } else if (dateIsInThePast(this.body.releaseDate)) {
       errors.releaseDate = 'The release date must not be in the past'

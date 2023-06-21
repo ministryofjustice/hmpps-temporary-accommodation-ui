@@ -35,12 +35,7 @@ export default class AccommodationRequiredFromDate implements TasklistPage {
 
     if (dateIsBlank(this.body, 'accommodationRequiredFromDate')) {
       errors.accommodationRequiredFromDate = 'You must specify the date accommodation is required from'
-    } else if (
-      !dateAndTimeInputsAreValidDates(
-        this.body as ObjectWithDateParts<'accommodationRequiredFromDate'>,
-        'accommodationRequiredFromDate',
-      )
-    ) {
+    } else if (!dateAndTimeInputsAreValidDates(this.body, 'accommodationRequiredFromDate')) {
       errors.accommodationRequiredFromDate = 'You must specify a valid date accommodation is required from'
     } else if (dateIsInThePast(this.body.accommodationRequiredFromDate)) {
       errors.accommodationRequiredFromDate = 'The date accommodation is required from must not be in the past'

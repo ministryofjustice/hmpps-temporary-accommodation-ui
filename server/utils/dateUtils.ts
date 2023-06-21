@@ -104,7 +104,7 @@ export class DateFormats {
 }
 
 export const dateAndTimeInputsAreValidDates = <K extends string | number>(
-  dateInputObj: ObjectWithDateParts<K>,
+  dateInputObj: Partial<ObjectWithDateParts<K>>,
   key: K,
 ): boolean => {
   const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)

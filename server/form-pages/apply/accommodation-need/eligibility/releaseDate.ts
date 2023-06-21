@@ -2,13 +2,14 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
+import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
 
 type ReleaseDateBody = ObjectWithDateParts<'releaseDate'>
 
 @Page({
   name: 'release-date',
-  bodyProperties: ['releaseDate', 'releaseDate-year', 'releaseDate-month', 'releaseDate-day'],
+  bodyProperties: dateBodyProperties('releaseDate'),
 })
 export default class ReleaseDate implements TasklistPage {
   title: string

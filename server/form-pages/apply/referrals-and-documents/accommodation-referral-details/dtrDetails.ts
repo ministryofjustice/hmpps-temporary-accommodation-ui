@@ -4,12 +4,13 @@ import { Page } from '../../../utils/decorators'
 
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInFuture } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
+import { dateBodyProperties } from '../../../utils'
 
 type DtrDetailsBody = {
   reference: string
 } & ObjectWithDateParts<'date'>
 
-@Page({ name: 'dtr-details', bodyProperties: ['reference', 'date', 'date-year', 'date-month', 'date-day'] })
+@Page({ name: 'dtr-details', bodyProperties: ['reference', ...dateBodyProperties('date')] })
 export default class DtrDetails implements TasklistPage {
   title = 'Provide further details'
 

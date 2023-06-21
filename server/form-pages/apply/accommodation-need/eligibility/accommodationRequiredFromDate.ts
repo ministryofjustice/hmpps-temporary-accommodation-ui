@@ -2,18 +2,14 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
+import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
 
 type AccommodationRequiredFromDateBody = ObjectWithDateParts<'accommodationRequiredFromDate'>
 
 @Page({
   name: 'accommodation-required-from-date',
-  bodyProperties: [
-    'accommodationRequiredFromDate',
-    'accommodationRequiredFromDate-year',
-    'accommodationRequiredFromDate-month',
-    'accommodationRequiredFromDate-day',
-  ],
+  bodyProperties: dateBodyProperties('accommodationRequiredFromDate'),
 })
 export default class AccommodationRequiredFromDate implements TasklistPage {
   title = 'What date is accommodation required from?'

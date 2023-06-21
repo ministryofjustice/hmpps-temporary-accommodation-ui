@@ -71,25 +71,36 @@ export class DateFormats {
     key: K,
     options: { representation: 'auto' | 'complete' } = { representation: 'auto' },
   ) {
-    const day = `0${dateInputObj[`${key}-day`]}`.slice(-2)
-    const month = `0${dateInputObj[`${key}-month`]}`.slice(-2)
-    const year = dateInputObj[`${key}-year`]
-    const time = dateInputObj[`${key}-time`]
+    const yearKey = `${key}-year`
+    const monthKey = `${key}-month`
+    const dayKey = `${key}-day`
+    const timeKey = `${key}-time`
 
-    const o: { [P in K]?: string } = dateInputObj
+    const year = dateInputObj[yearKey] as string
+    const month = `0${dateInputObj[monthKey]}`.slice(-2)
+    const day = `0${dateInputObj[dayKey]}`.slice(-2)
+    const time = dateInputObj[timeKey] as string
+
+    let date: string
     if (day && month && year) {
       if (time) {
-        o[key] = `${year}-${month}-${day}T${time}:00.000Z`
+        date = `${year}-${month}-${day}T${time}:00.000Z`
       } else if (options.representation === 'complete') {
-        o[key] = `${year}-${month}-${day}T00:00:00.000Z`
+        date = `${year}-${month}-${day}T00:00:00.000Z`
       } else {
-        o[key] = `${year}-${month}-${day}`
+        date = `${year}-${month}-${day}`
       }
     } else {
-      o[key] = undefined
+      date = undefined
     }
 
-    return dateInputObj
+    return {
+      [yearKey]: dateInputObj[yearKey],
+      [monthKey]: dateInputObj[monthKey],
+      [dayKey]: dateInputObj[dayKey],
+      [timeKey]: time,
+      [key]: date,
+    } as ObjectWithDateParts<K>
   }
 
   static isoToDateAndTimeInputs<K extends string | number>(isoDate: string, key: K): ObjectWithDateParts<K> {

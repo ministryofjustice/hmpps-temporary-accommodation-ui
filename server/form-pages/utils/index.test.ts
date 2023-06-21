@@ -320,4 +320,15 @@ describe('utils', () => {
       expect(() => utils.hasSubmittedDtr(application)).toThrow(new SessionDataError('No DTR submitted value'))
     })
   })
+
+  describe('dateBodyProperties', () => {
+    it('returns date field names for use in page body properties', () => {
+      expect(utils.dateBodyProperties('someDate')).toEqual([
+        'someDate',
+        'someDate-year',
+        'someDate-month',
+        'someDate-day',
+      ])
+    })
+  })
 })

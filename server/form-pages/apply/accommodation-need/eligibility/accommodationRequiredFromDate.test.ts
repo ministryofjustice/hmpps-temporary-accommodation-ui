@@ -1,11 +1,24 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
+import { dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import AccommodationRequiredFromDate from './accommodationRequiredFromDate'
 
-jest.mock('../../../../utils/dateUtils')
+jest.mock('../../../../utils/dateUtils', () => {
+  const module = jest.requireActual('../../../../utils/dateUtils')
 
-const body = { accommodationRequiredFromDate: '2024-04-11' as const }
+  return {
+    ...module,
+    dateIsBlank: jest.fn(),
+    dateAndTimeInputsAreValidDates: jest.fn(),
+    dateIsInThePast: jest.fn(),
+  }
+})
+
+const body = {
+  'accommodationRequiredFromDate-year': '2024',
+  'accommodationRequiredFromDate-month': '4',
+  'accommodationRequiredFromDate-day': '11',
+}
 
 describe('AccommodationRequiredFromDate', () => {
   const application = applicationFactory.build()
@@ -14,7 +27,10 @@ describe('AccommodationRequiredFromDate', () => {
     it('sets the body', () => {
       const page = new AccommodationRequiredFromDate(body, application)
 
-      expect(page.body).toEqual(body)
+      expect(page.body).toEqual({
+        ...body,
+        accommodationRequiredFromDate: '2024-04-11',
+      })
     })
   })
 
@@ -67,12 +83,8 @@ describe('AccommodationRequiredFromDate', () => {
 
   describe('response', () => {
     it('returns a translated version of the response', () => {
-      ;(DateFormats.isoDateToUIDate as jest.Mock).mockReturnValue('11 April 2024')
-
       const page = new AccommodationRequiredFromDate(body, application)
       expect(page.response()).toEqual({ 'Accommodation required from date': '11 April 2024' })
-
-      expect(DateFormats.isoDateToUIDate).toHaveBeenCalledWith('2024-04-11')
     })
   })
 })

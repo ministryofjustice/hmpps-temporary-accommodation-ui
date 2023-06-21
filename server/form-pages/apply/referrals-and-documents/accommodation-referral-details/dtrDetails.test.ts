@@ -1,11 +1,20 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInFuture } from '../../../../utils/dateUtils'
+import { dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInFuture } from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import DtrDetails from './dtrDetails'
 
-jest.mock('../../../../utils/dateUtils')
+jest.mock('../../../../utils/dateUtils', () => {
+  const module = jest.requireActual('../../../../utils/dateUtils')
 
-const body = { reference: 'ABC123', date: '2022-07-23' }
+  return {
+    ...module,
+    dateIsBlank: jest.fn(),
+    dateAndTimeInputsAreValidDates: jest.fn(),
+    dateIsInFuture: jest.fn(),
+  }
+})
+
+const body = { reference: 'ABC123', 'date-year': '2022', 'date-month': '7', 'date-day': '23' }
 
 describe('DtrDetails', () => {
   const application = applicationFactory.build()
@@ -14,7 +23,10 @@ describe('DtrDetails', () => {
     it('sets the body', () => {
       const page = new DtrDetails(body, application)
 
-      expect(page.body).toEqual(body)
+      expect(page.body).toEqual({
+        ...body,
+        date: '2022-07-23',
+      })
     })
   })
 
@@ -78,12 +90,10 @@ describe('DtrDetails', () => {
 
   describe('response', () => {
     it('returns a translated version of the response', () => {
-      ;(DateFormats.isoDateToUIDate as jest.Mock).mockReturnValue('23 July 2023')
-
       const page = new DtrDetails(body, application)
       expect(page.response()).toEqual({
         'DTR / NOP reference number': 'ABC123',
-        'Date DTR / NOP was submitted': '23 July 2023',
+        'Date DTR / NOP was submitted': '23 July 2022',
       })
     })
   })

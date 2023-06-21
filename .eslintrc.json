@@ -58,7 +58,8 @@
             "printWidth": 120,
             "semi": false
           }
-        ]
+        ],
+        "no-underscore-dangle": ["error", { "allowAfterThis": true }]
       }
     }
   ],

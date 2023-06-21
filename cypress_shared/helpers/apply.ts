@@ -45,11 +45,13 @@ import {
   PropertySharingPage,
   ReferralHistoryDetailsPage,
   ReleaseDatePage,
+  ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
   RoshSummaryPage,
   SafeguardingAndVulnerabilityPage,
+  SentenceExpiryPage,
   SentenceTypePage,
   StartPage,
   SupportInTheCommunityPage,
@@ -279,13 +281,21 @@ export default class ApplyHelper {
   completeSentenceInformation() {
     // Given I click the sentence information task
     cy.get('[data-cy-task-name="sentence-information"]').click()
-    const sentenceTypePage = new SentenceTypePage(this.application)
 
     // When I complete the form
+    const sentenceTypePage = new SentenceTypePage(this.application)
     sentenceTypePage.completeForm()
     sentenceTypePage.clickSubmit()
 
-    this.pages.sentenceInformation = [sentenceTypePage]
+    const sentenceExpiryPage = new SentenceExpiryPage(this.application)
+    sentenceExpiryPage.completeForm()
+    sentenceExpiryPage.clickSubmit()
+
+    const releaseTypePage = new ReleaseTypePage(this.application)
+    releaseTypePage.completeForm()
+    releaseTypePage.clickSubmit()
+
+    this.pages.sentenceInformation = [sentenceTypePage, sentenceExpiryPage, releaseTypePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

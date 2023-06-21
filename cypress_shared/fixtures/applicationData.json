@@ -2,6 +2,31 @@
   "sentence-information": {
     "sentence-type": {
       "sentenceType": "communityOrder"
+    },
+    "sentence-expiry": {
+      "sentenceExpiryDate": "2124-01-19",
+      "sentenceExpiryDate-year": "2124",
+      "sentenceExpiryDate-month": "1",
+      "sentenceExpiryDate-day": "19"
+    },
+    "release-type": {
+      "releaseTypes": ["licence", "pss"],
+      "licenceStartDate": "2024-01-19",
+      "licenceStartDate-year": "2024",
+      "licenceStartDate-month": "1",
+      "licenceStartDate-day": "19",
+      "licenceEndDate": "2024-07-09",
+      "licenceEndDate-year": "2024",
+      "licenceEndDate-month": "7",
+      "licenceEndDate-day": "9",
+      "pssStartDate": "2122-04-01",
+      "pssStartDate-year": "2122",
+      "pssStartDate-month": "4",
+      "pssStartDate-day": "1",
+      "pssEndDate": "2122-07-18",
+      "pssEndDate-year": "2122",
+      "pssEndDate-month": "7",
+      "pssEndDate-day": "18"
     }
   },
   "contact-details": {

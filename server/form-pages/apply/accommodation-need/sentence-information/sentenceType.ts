@@ -31,7 +31,7 @@ export default class SentenceType implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'sentence-expiry'
   }
 
   errors() {

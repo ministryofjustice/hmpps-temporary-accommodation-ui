@@ -35,7 +35,7 @@ describe('AlternativePdu', () => {
     it('returns an error if the alternative PDU answer not populated', () => {
       const page = new AlternativePdu({ ...body, alternativePdu: undefined }, application)
       expect(page.errors()).toEqual({
-        alternativePdu: 'You must specifiy if placement is required in an alternative PDU',
+        alternativePdu: 'You must specify if placement is required in an alternative PDU',
       })
     })
 

@@ -39,7 +39,7 @@ export default class PropertySharing implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.propertySharing) {
-      errors.propertySharing = `You must specifiy if ${this.application.person.name} would be able to share accommodation with others`
+      errors.propertySharing = `You must specify if ${this.application.person.name} would be able to share accommodation with others`
     }
 
     if (this.body.propertySharing === 'yes' && !this.body.propertySharingDetail) {

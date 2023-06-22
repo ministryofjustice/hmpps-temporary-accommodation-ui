@@ -33,13 +33,16 @@ import {
   FoodAllergiesPage,
   LocalConnectionsPage,
   MoveOnPlanPage,
+  NeedsPage,
   OffenceDetailsPage,
   OptionalOasysSectionsPage,
   OtherAccommodationOptionsPage,
   PractitionerPduPage,
   ProbationPractitionerPage,
+  PropertyAttributesOrAdaptationsPage,
   PropertySharingPage,
   ReleaseDatePage,
+  ReligiousOrCulturalNeedsPage,
   RiskManagementPlanPage,
   RiskToSelfPage,
   RoshSummaryPage,
@@ -67,6 +70,7 @@ export default class ApplyHelper {
     licenceConditions: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
+    disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
     safeguardingAndSupport: [] as Array<ApplyPage>,
     requirementsFromPlacement: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
@@ -142,6 +146,7 @@ export default class ApplyHelper {
     this.completeLicenceConditions()
     this.completeOasysImport()
     this.completePlacementLocation()
+    this.completeDisabilityCulturalAndSpecificNeeds()
     this.completeSafeguardingAndSupport()
     this.completeRequirementsForPlacement()
     this.completeMoveOnPlan()
@@ -160,6 +165,7 @@ export default class ApplyHelper {
       ...this.pages.licenceConditions,
       ...this.pages.oasysImport,
       ...this.pages.placementLocation,
+      ...this.pages.disabilityCulturalAndSpecificNeeds,
       ...this.pages.safeguardingAndSupport,
       ...this.pages.requirementsFromPlacement,
       ...this.pages.moveOnPlan,
@@ -445,6 +451,39 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('disability-cultural-and-specific-needs', 'Not started')
+  }
+
+  private completeDisabilityCulturalAndSpecificNeeds() {
+    // Given I click on the safeguarding and support task
+    cy.get('[data-cy-task-name="disability-cultural-and-specific-needs"]').click()
+
+    // When I complete the form
+    const needsPage = new NeedsPage(this.application)
+    needsPage.completeForm()
+    needsPage.clickSubmit()
+
+    const propertyAttributesOrAdaptationsPage = new PropertyAttributesOrAdaptationsPage(this.application)
+    propertyAttributesOrAdaptationsPage.completeForm()
+    propertyAttributesOrAdaptationsPage.clickSubmit()
+
+    const religiousOrCulturalNeedsPage = new ReligiousOrCulturalNeedsPage(this.application)
+    religiousOrCulturalNeedsPage.completeForm()
+    religiousOrCulturalNeedsPage.clickSubmit()
+
+    this.pages.disabilityCulturalAndSpecificNeeds = [
+      needsPage,
+      propertyAttributesOrAdaptationsPage,
+      religiousOrCulturalNeedsPage,
+    ]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('disability-cultural-and-specific-needs', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Not started')
   }
 
@@ -614,6 +653,9 @@ export default class ApplyHelper {
     }
 
     checkYourAnswersPage.shouldShowPlacementLocationAnswers(this.pages.placementLocation)
+    checkYourAnswersPage.shouldShowDisabilityCulturalAndSpecificNeedsAnswers(
+      this.pages.disabilityCulturalAndSpecificNeeds,
+    )
     checkYourAnswersPage.shouldShowSafeguardingAndSupportAnswers(this.pages.safeguardingAndSupport)
     checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)

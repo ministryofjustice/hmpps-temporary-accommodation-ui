@@ -44,6 +44,14 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('placement-location', pages)
   }
 
+  shouldShowDisabilityCulturalAndSpecificNeedsAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle(
+      'disability-cultural-and-specific-needs',
+      'Disability, cultural and specific needs',
+    )
+    this.shouldShowAnswersForTask('disability-cultural-and-specific-needs', pages)
+  }
+
   shouldShowSafeguardingAndSupportAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('safeguarding-and-support', 'Safeguarding and support')
     this.shouldShowAnswersForTask('safeguarding-and-support', pages)

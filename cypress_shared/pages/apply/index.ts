@@ -9,6 +9,9 @@ import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkY
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
+import ReligiousOrCulturalNeedsPage from './placement-considerations/disability-cultural-and-specific-needs/religiousOrCulturalNeeds'
+import NeedsPage from './placement-considerations/disability-cultural-and-specific-needs/needs'
+import PropertyAttributesOrAdaptationsPage from './placement-considerations/disability-cultural-and-specific-needs/propertyAttributesOrAdaptations'
 import MoveOnPlanPage from './placement-considerations/move-on-plan/moveOnPlan'
 import AlternativePduPage from './placement-considerations/placement-location/alternativePdu'
 import FoodAllergiesPage from './placement-considerations/requirements-for-placement/foodAllergies'
@@ -58,6 +61,9 @@ export {
   RiskManagementPlanPage,
   RiskToSelfPage,
   AlternativePduPage,
+  NeedsPage,
+  PropertyAttributesOrAdaptationsPage,
+  ReligiousOrCulturalNeedsPage,
   SafeguardingAndVulnerabilityPage,
   SupportInTheCommunityPage,
   LocalConnectionsPage,

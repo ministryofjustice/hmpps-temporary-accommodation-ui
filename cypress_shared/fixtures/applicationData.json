@@ -203,6 +203,29 @@
       "alternativePduDetail": "Some PDU, for reasons X, Y, Z"
     }
   },
+  "disability-cultural-and-specific-needs": {
+    "needs": {
+      "needs": ["alcoholMisuse", "neurodivergence", "other"],
+      "alcoholMisuseDetail": "Alcohol misuse detail",
+      "drugMisuseDetail": "",
+      "hearingImpairmentDetail": "",
+      "mentalHealthDetail": "",
+      "languageDetail": "",
+      "learningDisabilityDetail": "",
+      "mobilityDetail": "",
+      "neurodivergenceDetail": "Neurodivergence detail",
+      "visualImpairmentDetail": "",
+      "otherDetail": "Other needs detail"
+    },
+    "property-attributes-or-adaptations": {
+      "propertyAttributesOrAdaptations": "yes",
+      "propertyAttributesOrAdaptationsDetail": "Adaptation requirements detail"
+    },
+    "religious-or-cultural-needs": {
+      "religiousOrCulturalNeeds": "yes",
+      "religiousOrCulturalNeedsDetail": "Religious needs detail"
+    }
+  },
   "safeguarding-and-support": {
     "safeguarding-and-vulnerability": {
       "concerns": "yes",

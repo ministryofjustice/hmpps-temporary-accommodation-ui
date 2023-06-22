@@ -47,7 +47,7 @@ describe('AdditionalLicenceConditions', () => {
       expect(page.errors()).toEqual({
         curfewDetail: 'You must provide details about curfew conditions',
         exclusionZoneDetail: 'You must provide details about the exclusion zone',
-        programmesDetail: 'You must provide details about programme or activity conditions',
+        programmesDetail: 'You must provide details about conditions on programmes or activities',
       })
     })
   })
@@ -69,7 +69,7 @@ describe('AdditionalLicenceConditions', () => {
       expect(page.items()).toEqual(
         expect.arrayContaining([
           { value: 'alcoholMonitoring', text: 'Alcohol monitoring' },
-          { value: 'civilOrders', text: 'Civil orders / SHPT / restraining, criminal behaviour orders' },
+          { value: 'civilOrders', text: 'Civil orders (e.g. SHPT), restraining orders, criminal behaviour orders' },
           {
             value: 'exclusionZone',
             text: 'Exclusion zone',

@@ -23,14 +23,16 @@ export default class BedspaceSearchController {
       const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
 
       const query = Object.keys(req.query).length ? (req.query as BedspaceSearchQuery) : undefined
+
       let results: BedSearchResults
+      let startDate: string
 
       try {
         if (query) {
-          const { startDate } = DateFormats.dateAndTimeInputsToIsoString(
+          startDate = DateFormats.dateAndTimeInputsToIsoString(
             query as ObjectWithDateParts<'startDate'>,
             'startDate',
-          )
+          ).startDate
 
           const durationDays = parseNaturalNumber(query.durationDays)
 
@@ -44,6 +46,7 @@ export default class BedspaceSearchController {
         res.render('temporary-accommodation/bedspace-search/index', {
           allPdus,
           results,
+          startDate,
           errors,
           errorSummary,
           ...query,

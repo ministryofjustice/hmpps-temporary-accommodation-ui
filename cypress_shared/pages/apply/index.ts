@@ -37,6 +37,7 @@ import RiskManagementPlanPage from './risk-strength-and-need-information/oasys-i
 import RiskToSelfPage from './risk-strength-and-need-information/oasys-import/riskToSelf'
 import RoshSummaryPage from './risk-strength-and-need-information/oasys-import/roshSummary'
 import SupportingInformationPage from './risk-strength-and-need-information/oasys-import/supportingInformation'
+import AdjudicationsPage from './risk-strength-and-need-information/prison-information/adjudications'
 import SelectOffencePage from './selectOffence'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
@@ -66,6 +67,7 @@ export {
   ConsentDetailsPage,
   OptionalOasysSectionsPage,
   AdditionalLicenceConditionsPage,
+  AdjudicationsPage,
   RoshSummaryPage,
   OffenceDetailsPage,
   SupportingInformationPage,

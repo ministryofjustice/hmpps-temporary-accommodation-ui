@@ -1,9 +1,22 @@
 import type { FormSection, JourneyType, Task, YesNoOrIDK, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
 import type { Request } from 'express'
-import { TemporaryAccommodationApplication as Application, ApprovedPremisesAssessment } from '../../@types/shared'
+import {
+  Adjudication,
+  TemporaryAccommodationApplication as Application,
+  ApprovedPremisesAssessment,
+} from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
 import { kebabCase, sentenceCase } from '../../utils/utils'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
+
+export type PageBodyAdjudication = {
+  id: number
+  reportedAt: string
+  establishment: string
+  offenceDescription: string
+  hearingHeld: boolean
+  finding: string
+}
 
 export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unknown>): YesOrNoWithDetail<K> => {
   return {
@@ -185,4 +198,15 @@ export const pageBodyShallowEquals = (body1: Record<string, unknown>, body2: Rec
     }
     return value1 === value2
   })
+}
+
+export const mapAdjudicationsForPageBody = (adjudications: Array<Adjudication>): Array<PageBodyAdjudication> => {
+  return adjudications.map(adjudication => ({
+    id: adjudication.id,
+    reportedAt: adjudication.reportedAt,
+    establishment: adjudication.establishment,
+    offenceDescription: adjudication.offenceDescription,
+    hearingHeld: adjudication.hearingHeld,
+    finding: adjudication.finding || '',
+  }))
 }

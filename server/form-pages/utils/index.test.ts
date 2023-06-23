@@ -8,7 +8,7 @@ import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
 import { FormSection, Task } from '../../@types/ui'
-import { applicationFactory, assessmentFactory } from '../../testutils/factories'
+import { adjudicationFactory, applicationFactory, assessmentFactory } from '../../testutils/factories'
 import { SessionDataError } from '../../utils/errors'
 
 describe('utils', () => {
@@ -390,6 +390,36 @@ describe('utils', () => {
 
       expect(utils.pageBodyShallowEquals(value1, value2)).toEqual(false)
       expect(utils.pageBodyShallowEquals(value2, value1)).toEqual(false)
+    })
+  })
+
+  describe('mapAdjudicationsForPageBody', () => {
+    it('returns adjucations with any extra data removed', () => {
+      const adjudication1 = adjudicationFactory.build()
+      const adjudication2 = adjudicationFactory.build()
+      const adjudication3 = adjudicationFactory.build()
+
+      const adjudicationWithExtraInfo = { ...adjudication2, 'some-extra-field': 'some extra data' }
+
+      expect(utils.mapAdjudicationsForPageBody([adjudication1, adjudicationWithExtraInfo, adjudication3])).toEqual([
+        adjudication1,
+        adjudication2,
+        adjudication3,
+      ])
+    })
+
+    it('returns adjucations with missing findings replaced with an empty string', () => {
+      const adjudication1 = adjudicationFactory.build()
+      const adjudication2 = adjudicationFactory.build({
+        finding: null,
+      })
+      const adjudication3 = adjudicationFactory.build()
+
+      expect(utils.mapAdjudicationsForPageBody([adjudication1, adjudication2, adjudication3])).toEqual([
+        adjudication1,
+        { ...adjudication2, finding: '' },
+        adjudication3,
+      ])
     })
   })
 })

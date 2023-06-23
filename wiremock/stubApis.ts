@@ -30,6 +30,8 @@ import turnaroundStubs from './turnaroundStubs'
 import userStub from './userStub'
 
 import path from '../server/paths/api'
+import acctAlertStubs from './acctAlertStubs'
+import adjudicationStubs from './adjudicationStubs'
 import confirmationStubs from './confirmationStubs'
 import oasysSectionsStubs from './oasysSectionsStubs'
 import oasysSelectionStubs from './oasysSelectionStubs'
@@ -277,6 +279,8 @@ stubs.push(
   ...offenceStubs,
   ...oasysSelectionStubs,
   ...oasysSectionsStubs,
+  ...acctAlertStubs,
+  ...adjudicationStubs,
   ...Object.values(referenceDataStubs),
 )
 

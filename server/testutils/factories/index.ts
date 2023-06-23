@@ -1,3 +1,4 @@
+import acctAlertFactory from './acctAlert'
 import activeOffenceFactory from './activeOffence'
 import adjudicationFactory from './adjudication'
 import applicationFactory from './application'
@@ -58,6 +59,7 @@ import updateRoomFactory from './updateRoom'
 import userFactory from './user'
 
 export {
+  acctAlertFactory,
   activeOffenceFactory,
   adjudicationFactory,
   applicationFactory,

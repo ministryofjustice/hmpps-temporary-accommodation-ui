@@ -37,6 +37,19 @@
       "accommodationRequiredFromDate-day": "16"
     }
   },
+  "accommodation-referral-history": {
+    "referrals-previously-submitted": {
+      "referralsPreviouslySubmitted": "yes"
+    },
+    "referral-history-details": {
+      "accommodationTypes": ["cas1", "crs"],
+      "cas1Detail": "Approved Premises detail",
+      "dtrDetail": "",
+      "crsDetail": "CRS detail",
+      "crsWomenDetail": "",
+      "cas3Detail": ""
+    }
+  },
   "licence-conditions": {
     "additional-licence-conditions": {
       "conditions": ["civilOrders", "nonAssociation", "nonContact", "other"],

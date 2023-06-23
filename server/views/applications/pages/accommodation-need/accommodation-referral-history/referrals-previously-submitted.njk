@@ -1,0 +1,45 @@
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {{ formPageRadios({
+    fieldName: "referralsPreviouslySubmitted",
+    fieldset: {
+      legend: {
+        text: page.questions.referralsPreviouslySubmitted,
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    items: [
+      {
+        value: "yes",
+        text: "Yes"
+      },
+      {
+        value: "no",
+        text: "No"
+      },
+      {
+        value: "iDontKnow",
+        text: "I don't know"
+      }
+    ]
+  }, fetchContext()) }}
+
+  <p>You can check OASys and/or nDelius to see if referrals have ever been made for the following services:</p>
+  <ul>
+    <li>Approved Premises</li>
+    <li>Local authority (duty to refer)</li>
+    <li>Commissioned rehabilitative services (CRS) accommodation</li>
+    <li>CRS women's accommodation referral</li>
+    <li>Temporary Accommodation - previously known as Community Accommodation Services Tier 3 (CAS3)</li>
+  </ul>
+  <p>If you cannot find information about previous applications, select 'I don't know'.</p>
+  <p>You do not need to include the current duty to refer or CRS referrals.</p>
+
+{% endblock %}

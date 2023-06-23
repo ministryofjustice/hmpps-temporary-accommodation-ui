@@ -60,6 +60,26 @@ describe('utils', () => {
     })
   })
 
+  describe('yesNoOrDontKnowResponse', () => {
+    it('returns Yes if the answer is yes', () => {
+      const body = { foo: 'yes' as const }
+
+      expect(utils.yesNoOrDontKnowResponse('foo', body)).toEqual('Yes')
+    })
+
+    it('returns No if the answer is yes', () => {
+      const body = { foo: 'no' as const }
+
+      expect(utils.yesNoOrDontKnowResponse('foo', body)).toEqual('No')
+    })
+
+    it('returns "Don\'t know" if the answer is iDontKnow', () => {
+      const body = { foo: 'iDontKnow' as const }
+
+      expect(utils.yesNoOrDontKnowResponse('foo', body)).toEqual("Don't know")
+    })
+  })
+
   describe('Decorator metadata utils', () => {
     class SomeSection {}
 

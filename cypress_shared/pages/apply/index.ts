@@ -1,3 +1,5 @@
+import ReferralHistoryDetailsPage from './accommodation-need/accommodation-referral-history/referralHistoryDetails'
+import ReferralsPreviouslySumbittedPage from './accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
 import PractitionerPduPage from './accommodation-need/contact-details/practitionerPdu'
 import ProbationPractitionerPage from './accommodation-need/contact-details/probationPractitioner'
@@ -51,6 +53,8 @@ export {
   BackupContactPage,
   PractitionerPduPage,
   EligibilityReasonPage,
+  ReferralsPreviouslySumbittedPage,
+  ReferralHistoryDetailsPage,
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   OptionalOasysSectionsPage,

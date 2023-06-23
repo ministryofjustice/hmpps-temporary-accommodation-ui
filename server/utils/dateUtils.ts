@@ -160,3 +160,9 @@ export const dateIsInFuture = (dateString: string): boolean => {
   const date = DateFormats.isoToDateObj(dateString)
   return isFuture(date)
 }
+
+export const dateInputHint = (direction: 'past' | 'future') => {
+  const year = new Date().getFullYear() + (direction === 'past' ? -1 : 1)
+
+  return `For example, 27 3 ${year}`
+}

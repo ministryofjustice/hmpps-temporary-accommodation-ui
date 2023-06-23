@@ -4,6 +4,7 @@ import {
   DateFormats,
   InvalidDateStringError,
   dateAndTimeInputsAreValidDates,
+  dateInputHint,
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
@@ -272,5 +273,19 @@ describe('dateIsInTheFuture', () => {
     ;(isFuture as jest.Mock).mockReturnValue(false)
 
     expect(dateIsInFuture('2020-01-01')).toEqual(false)
+  })
+})
+
+describe('dateInputHint', () => {
+  it('returns hint text with an example past date', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2027-03-11'))
+
+    expect(dateInputHint('past')).toEqual('For example, 27 3 2026')
+  })
+
+  it('returns hint text with an example future date', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2027-03-11'))
+
+    expect(dateInputHint('future')).toEqual('For example, 27 3 2028')
   })
 })

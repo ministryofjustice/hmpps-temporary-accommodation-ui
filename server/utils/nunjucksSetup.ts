@@ -6,7 +6,7 @@ import nunjucks from 'nunjucks'
 import * as pathModule from 'path'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
-import { DateFormats } from './dateUtils'
+import { DateFormats, dateInputHint } from './dateUtils'
 import {
   convertObjectsToCheckboxItems,
   convertObjectsToRadioItems,
@@ -88,6 +88,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
   njkEnv.addGlobal('formatDate', DateFormats.isoDateToUIDate)
   njkEnv.addGlobal('parseNaturalNumber', parseNaturalNumber)
+  njkEnv.addGlobal('dateInputHint', dateInputHint)
 
   njkEnv.addGlobal('dateFieldValues', function sendContextToDateFieldValues(fieldName: string, errors: ErrorMessages) {
     return dateFieldValues(fieldName, this.ctx, errors)

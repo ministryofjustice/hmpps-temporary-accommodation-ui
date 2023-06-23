@@ -4,6 +4,7 @@ import {
   Adjudication,
   TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment,
+  PersonAcctAlert,
 } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
 import { kebabCase, sentenceCase } from '../../utils/utils'
@@ -16,6 +17,15 @@ export type PageBodyAdjudication = {
   offenceDescription: string
   hearingHeld: boolean
   finding: string
+}
+
+export type PageBodyPersonAcctAlert = {
+  alertId: number
+  comment?: string
+  dateCreated: string
+  dateExpires: string
+  expired: boolean
+  active: boolean
 }
 
 export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unknown>): YesOrNoWithDetail<K> => {
@@ -208,5 +218,16 @@ export const mapAdjudicationsForPageBody = (adjudications: Array<Adjudication>):
     offenceDescription: adjudication.offenceDescription,
     hearingHeld: adjudication.hearingHeld,
     finding: adjudication.finding || '',
+  }))
+}
+
+export const mapAcctAlertsForPageBody = (acctAlerts: Array<PersonAcctAlert>): Array<PageBodyPersonAcctAlert> => {
+  return acctAlerts.map(acctAlert => ({
+    alertId: acctAlert.alertId,
+    comment: acctAlert.comment || '',
+    dateCreated: acctAlert.dateCreated,
+    dateExpires: acctAlert.dateExpires || '',
+    expired: acctAlert.expired,
+    active: acctAlert.active,
   }))
 }

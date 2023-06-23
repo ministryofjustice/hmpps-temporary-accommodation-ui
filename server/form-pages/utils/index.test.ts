@@ -8,7 +8,7 @@ import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
 import { FormSection, Task } from '../../@types/ui'
-import { adjudicationFactory, applicationFactory, assessmentFactory } from '../../testutils/factories'
+import { acctAlertFactory, adjudicationFactory, applicationFactory, assessmentFactory } from '../../testutils/factories'
 import { SessionDataError } from '../../utils/errors'
 
 describe('utils', () => {
@@ -419,6 +419,38 @@ describe('utils', () => {
         adjudication1,
         { ...adjudication2, finding: '' },
         adjudication3,
+      ])
+    })
+  })
+
+  describe('mapAcctAlertsForPageBody', () => {
+    it('returns ACCT alerts with any extra data removed', () => {
+      const acctAlert1 = acctAlertFactory.build()
+      const acctAlert2 = acctAlertFactory.build()
+      const acctAlert3 = acctAlertFactory.build()
+
+      const acctAlertWithExtraInfo = { ...acctAlert2, 'some-extra-field': 'some extra data' }
+
+      expect(utils.mapAcctAlertsForPageBody([acctAlert1, acctAlertWithExtraInfo, acctAlert3])).toEqual([
+        acctAlert1,
+        acctAlert2,
+        acctAlert3,
+      ])
+    })
+
+    it('returns ACCT alerts with missing comments and expiry dates replaced with an empty string', () => {
+      const acctAlert1 = acctAlertFactory.build()
+      const acctAlert2 = acctAlertFactory.build({
+        comment: null,
+      })
+      const acctAlert3 = acctAlertFactory.build({
+        dateExpires: null,
+      })
+
+      expect(utils.mapAcctAlertsForPageBody([acctAlert1, acctAlert2, acctAlert3])).toEqual([
+        acctAlert1,
+        { ...acctAlert2, comment: '' },
+        { ...acctAlert3, dateExpires: '' },
       ])
     })
   })

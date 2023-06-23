@@ -10,6 +10,7 @@ import {
   Document,
   OASysSection,
   Person,
+  PersonAcctAlert,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import { hasSubmittedDtr } from '../../server/form-pages/utils'
@@ -102,6 +103,8 @@ export default class ApplyHelper {
 
   adjudications: Array<Adjudication> = []
 
+  acctAlerts: Array<PersonAcctAlert> = []
+
   documents: Array<Document> = []
 
   selectedDocuments: Array<Document> = []
@@ -122,6 +125,8 @@ export default class ApplyHelper {
     this.uiRisks = uiRisks
     this.stubPersonEndpoints()
     this.stubApplicationEndpoints()
+    this.stubAdjudicationEndpoints()
+    this.stubAcctAlertsEndpoint()
     this.stubOasysEndpoints()
     this.stubDocumentEndpoints()
     this.stubOffences()
@@ -196,6 +201,22 @@ export default class ApplyHelper {
     cy.task('stubApplicationCreate', { application: this.application })
     cy.task('stubApplicationUpdate', { application: this.application })
     cy.task('stubApplicationGet', { application: this.application })
+  }
+
+  private stubAdjudicationEndpoints() {
+    this.adjudications = applicationDataJson['prison-information'].adjudications.adjudications.map(adjudicationJson =>
+      adjudicationFactory.build(adjudicationJson),
+    )
+
+    cy.task('stubAdjudications', { person: this.person, adjudications: this.adjudications })
+  }
+
+  private stubAcctAlertsEndpoint() {
+    this.acctAlerts = applicationDataJson['prison-information']['acct-alerts'].acctAlerts.map(acctAlertJson =>
+      acctAlertFactory.build(acctAlertJson),
+    )
+
+    cy.task('stubAcctAlerts', { person: this.person, acctAlerts: this.acctAlerts })
   }
 
   private stubOasysEndpoints() {

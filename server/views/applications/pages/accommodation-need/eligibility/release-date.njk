@@ -7,10 +7,15 @@
     {{ page.title }}
   </h1>
 
+  {% set hintHtml %}
+    <p class="govuk-hint">This could include the release date from custody, an Approved Premises, or Bail Accommodation and Support Services</p>
+    <p class="govuk-hint">{{ dateInputHint('future') }}</p>
+  {% endset %}
+
   {{ formPageDateInput( {
     fieldName: "releaseDate",
     hint: {
-      text: "This could include the release date from custody, an Approved Premises, or Bail Accommodation and Support Services"
+      html: hintHtml
     },
     items: dateFieldValues('releaseDate', errors)
   }, fetchContext()) }}

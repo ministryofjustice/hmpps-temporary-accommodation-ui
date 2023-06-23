@@ -60,6 +60,14 @@ export class DateFormats {
   }
 
   /**
+   * @param isoDate an ISO date string.
+   * @returns the date and time to be shown in the UI: "20 Dec 2012, 14:30".
+   */
+  static isoDateTimeToUIDateTime(isoDate: string) {
+    return format(DateFormats.isoToDateObj(isoDate), 'd MMM y, HH:mm')
+  }
+
+  /**
    * Converts input for a GDS date input https://design-system.service.gov.uk/components/date-input/
    * into an ISO8601 date string
    * @param dateInputObj an object with date parts (i.e. `-month` `-day` `-year`), which come from a `govukDateInput`.

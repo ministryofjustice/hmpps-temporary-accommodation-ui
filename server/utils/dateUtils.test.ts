@@ -73,6 +73,30 @@ describe('DateFormats', () => {
     })
   })
 
+  describe('isoDateTimeToUIDateTime', () => {
+    it('converts a ISO8601 date string to a GOV.UK formatted date', () => {
+      const date = '2022-11-11T10:00:00.000Z'
+
+      expect(DateFormats.isoDateTimeToUIDateTime(date)).toEqual('11 Nov 2022, 10:00')
+    })
+
+    it('raises an error if the date is not a valid ISO8601 date string', () => {
+      const date = '23/11/2022'
+
+      expect(() => DateFormats.isoDateTimeToUIDateTime(date)).toThrow(
+        new InvalidDateStringError(`Invalid Date: ${date}`),
+      )
+    })
+
+    it('raises an error if the date is not a date string', () => {
+      const date = 'NOT A DATE'
+
+      expect(() => DateFormats.isoDateTimeToUIDateTime(date)).toThrow(
+        new InvalidDateStringError(`Invalid Date: ${date}`),
+      )
+    })
+  })
+
   describe('dateAndTimeInputsToIsoString', () => {
     it('converts a date object', () => {
       const obj: ObjectWithDateParts<'date'> = {

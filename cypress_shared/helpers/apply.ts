@@ -14,12 +14,21 @@ import {
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import { hasSubmittedDtr } from '../../server/form-pages/utils'
-import { documentFactory, oasysSectionsFactory, oasysSelectionFactory } from '../../server/testutils/factories'
+import {
+  acctAlertFactory,
+  adjudicationFactory,
+  documentFactory,
+  oasysSectionsFactory,
+  oasysSelectionFactory,
+} from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
+import applicationDataJson from '../fixtures/applicationData.json'
 import Page from '../pages'
 import {
   AccommodationRequiredFromDatePage,
+  AcctAlertsPage,
   AdditionalLicenceConditionsPage,
+  AdjudicationsPage,
   AlternativePduPage,
   BackupContactPage,
   CaringResponsibilitiesPage,
@@ -76,6 +85,7 @@ export default class ApplyHelper {
     behaviourInPreviousAccommodation: [] as Array<ApplyPage>,
     consent: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
+    prisonInformation: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
@@ -157,6 +167,7 @@ export default class ApplyHelper {
     this.completeBehaviourInPreviousAccommodation()
     this.completeConsent()
     this.completeLicenceConditions()
+    this.completePrisonInformation()
     this.completeOasysImport()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
@@ -177,6 +188,7 @@ export default class ApplyHelper {
       ...this.pages.behaviourInPreviousAccommodation,
       ...this.pages.consent,
       ...this.pages.licenceConditions,
+      ...this.pages.prisonInformation,
       ...this.pages.oasysImport,
       ...this.pages.placementLocation,
       ...this.pages.disabilityCulturalAndSpecificNeeds,
@@ -455,6 +467,35 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('licence-conditions', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('prison-information', 'Not started')
+  }
+
+  private completePrisonInformation() {
+    // Given I click the eligibility task
+    Page.verifyOnPage(TaskListPage).clickTask('prison-information')
+
+    // When I complete the form
+    const adjudicationsPage = new AdjudicationsPage(this.application)
+    if (this.environment === 'integration') {
+      adjudicationsPage.shouldDisplayAdjudications(this.adjudications)
+    }
+    adjudicationsPage.clickSubmit()
+
+    const acctAlertsPage = new AcctAlertsPage(this.application)
+    if (this.environment === 'integration') {
+      acctAlertsPage.shouldDisplayAcctAlerts(this.acctAlerts)
+    }
+    acctAlertsPage.clickSubmit()
+
+    this.pages.prisonInformation = [adjudicationsPage, acctAlertsPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('prison-information', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
   }
 
@@ -714,6 +755,7 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
 
     if (this.environment === 'integration') {
+      checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 

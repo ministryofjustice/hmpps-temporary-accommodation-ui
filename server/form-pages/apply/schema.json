@@ -10,6 +10,7 @@
     "behaviour-in-previous-accommodation",
     "consent",
     "licence-conditions",
+    "prison-information",
     "oasys-import",
     "placement-location",
     "disability-cultural-and-specific-needs",
@@ -377,6 +378,73 @@
             },
             "otherDetail": {
               "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "prison-information": {
+      "type": "object",
+      "properties": {
+        "adjudications": {
+          "type": "object",
+          "properties": {
+            "adjudications": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "reportedAt": {
+                    "type": "string"
+                  },
+                  "establishment": {
+                    "type": "string"
+                  },
+                  "offenceDescription": {
+                    "type": "string"
+                  },
+                  "hearingHeld": {
+                    "type": "boolean"
+                  },
+                  "finding": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "acct-alerts": {
+          "type": "object",
+          "properties": {
+            "acctAlerts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "alertId": {
+                    "type": "number"
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "dateCreated": {
+                    "type": "string"
+                  },
+                  "dateExpires": {
+                    "type": "string"
+                  },
+                  "expired": {
+                    "type": "boolean"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  }
+                }
+              }
             }
           }
         }

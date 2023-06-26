@@ -34,6 +34,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('accommodation-referral-history', pages)
   }
 
+  shouldShowConsentAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('consent', 'Consent')
+    this.shouldShowAnswersForTask('consent', pages)
+  }
+
   shouldShowLicenceConditionsAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('licence-conditions', 'Licence conditions')
     this.shouldShowAnswersForTask('licence-conditions', pages)

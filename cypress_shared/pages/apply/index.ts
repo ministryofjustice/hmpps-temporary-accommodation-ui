@@ -1,5 +1,6 @@
 import ReferralHistoryDetailsPage from './accommodation-need/accommodation-referral-history/referralHistoryDetails'
 import ReferralsPreviouslySumbittedPage from './accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
+import ConsentGivenPage from './accommodation-need/consent/consentGiven'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
 import PractitionerPduPage from './accommodation-need/contact-details/practitionerPdu'
 import ProbationPractitionerPage from './accommodation-need/contact-details/probationPractitioner'
@@ -57,6 +58,7 @@ export {
   ReferralHistoryDetailsPage,
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
+  ConsentGivenPage,
   OptionalOasysSectionsPage,
   AdditionalLicenceConditionsPage,
   RoshSummaryPage,

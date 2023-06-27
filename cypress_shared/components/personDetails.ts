@@ -19,6 +19,9 @@ export default class PersonDetailsComponent extends Component {
       if (this.person.religionOrBelief) {
         this.assertDefinition('Religion or belief', this.person.religionOrBelief)
       }
+      if (this.person.ethnicity) {
+        this.assertDefinition('Ethnicity', this.person.ethnicity)
+      }
       this.assertDefinition('Sex', this.person.sex)
       cy.get(`[data-cy-status]`).should('have.attr', 'data-cy-status').and('equal', this.person.status)
       this.assertDefinition('Prison', this.person.prisonName)

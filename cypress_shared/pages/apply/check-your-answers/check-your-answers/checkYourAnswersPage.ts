@@ -2,8 +2,11 @@ import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import ApplyPage from '../../applyPage'
 
 import paths from '../../../../../server/paths/apply'
+import PersonDetailsComponent from '../../../../components/personDetails'
 
 export default class CheckYourAnswersPage extends ApplyPage {
+  private readonly personDetailsComponent: PersonDetailsComponent
+
   constructor(application: TemporaryAccommodationApplication) {
     super(
       'Check your answers',
@@ -12,6 +15,12 @@ export default class CheckYourAnswersPage extends ApplyPage {
       'review',
       paths.applications.show({ id: application.id }),
     )
+
+    this.personDetailsComponent = new PersonDetailsComponent(application.person)
+  }
+
+  shouldShowPersonDetails() {
+    this.personDetailsComponent.shouldShowPersonDetails()
   }
 
   shouldShowSentenceInformationAnswers(pages: Array<ApplyPage>) {

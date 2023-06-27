@@ -701,6 +701,7 @@ export default class ApplyHelper {
 
     // Then I should be on the check your answers page
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
+    checkYourAnswersPage.shouldShowPersonDetails()
 
     // And the page should be populated with my answers
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)

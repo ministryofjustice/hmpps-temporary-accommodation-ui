@@ -9,7 +9,6 @@ import type { RiskTierEnvelope } from './RiskTierEnvelope';
 import type { Task } from './Task';
 
 export type PlacementRequestTask = (Task & PlacementDates & {
-    id: string;
     tier: RiskTierEnvelope;
     releaseType: ReleaseTypeOption;
     placementRequestStatus: PlacementRequestStatus;

@@ -17,6 +17,9 @@
 
   {{ formPageDateInput( {
     fieldName: "date",
+    hint: {
+      text: dateInputHint('past')
+    },
     fieldset: {
       legend: {
         text: page.questions.date,

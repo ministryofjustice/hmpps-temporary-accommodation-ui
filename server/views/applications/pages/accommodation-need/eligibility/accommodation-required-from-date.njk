@@ -9,6 +9,9 @@
 
   {{ formPageDateInput( {
     fieldName: "accommodationRequiredFromDate",
+    hint: {
+      text: dateInputHint('future')
+    },
     items: dateFieldValues('accommodationRequiredFromDate', errors)
   }, fetchContext()) }}
 

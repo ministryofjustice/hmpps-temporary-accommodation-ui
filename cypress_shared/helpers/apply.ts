@@ -25,6 +25,8 @@ import {
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
+  ConsentDetailsPage,
+  ConsentGivenPage,
   CrsSubmittedPage,
   DtrDetailsPage,
   DtrSubmittedPage,
@@ -54,6 +56,7 @@ import {
   SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
+import ReferralsPreviouslySubmittedPage from '../pages/apply/accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
 import ApplyPage from '../pages/apply/applyPage'
 import {
   offenceDetailSummariesFromApplication,
@@ -62,7 +65,6 @@ import {
   roshSummariesFromApplication,
   supportInformationFromApplication,
 } from './index'
-import ReferralsPreviouslySubmittedPage from '../pages/apply/accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
 
 export default class ApplyHelper {
   pages = {
@@ -70,6 +72,7 @@ export default class ApplyHelper {
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
     accommodationReferralHistory: [] as Array<ApplyPage>,
+    consent: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
@@ -147,6 +150,7 @@ export default class ApplyHelper {
     this.completeContactDetails()
     this.completeEligibility()
     this.completeAccommodationReferralHistory()
+    this.completeConsent()
     this.completeLicenceConditions()
     this.completeOasysImport()
     this.completePlacementLocation()
@@ -167,6 +171,7 @@ export default class ApplyHelper {
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
       ...this.pages.accommodationReferralHistory,
+      ...this.pages.consent,
       ...this.pages.licenceConditions,
       ...this.pages.oasysImport,
       ...this.pages.placementLocation,
@@ -375,6 +380,31 @@ export default class ApplyHelper {
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('accommodation-referral-history', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('consent', 'Not started')
+  }
+
+  private completeConsent() {
+    // Given I click the eligibility task
+    cy.get('[data-cy-task-name="consent"]').click()
+
+    // When I complete the form
+    const consentGivenPage = new ConsentGivenPage(this.application)
+    consentGivenPage.completeForm()
+    consentGivenPage.clickSubmit()
+
+    const consentDetailsPage = new ConsentDetailsPage(this.application)
+    consentDetailsPage.completeForm()
+    consentDetailsPage.clickSubmit()
+
+    this.pages.consent = [consentGivenPage, consentDetailsPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('consent', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('licence-conditions', 'Not started')
@@ -677,6 +707,7 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
     checkYourAnswersPage.shouldShowEligibilityAnswers(this.pages.eligibility)
     checkYourAnswersPage.shouldShowAccommodationReferralHistoryAnswers(this.pages.accommodationReferralHistory)
+    checkYourAnswersPage.shouldShowConsentAnswers(this.pages.consent)
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
 
     if (this.environment === 'integration') {

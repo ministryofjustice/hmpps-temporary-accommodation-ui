@@ -8,6 +8,7 @@
     "contact-details",
     "eligibility",
     "accommodation-referral-history",
+    "consent",
     "licence-conditions",
     "oasys-import",
     "placement-location",
@@ -186,6 +187,39 @@
               "type": "string"
             },
             "cas3Detail": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "properties": {
+        "consent-given": {
+          "type": "object",
+          "properties": {
+            "consentGiven": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "consent-details": {
+          "type": "object",
+          "properties": {
+            "consentType": {
+              "enum": [
+                "other",
+                "verbal",
+                "written"
+              ],
+              "type": "string"
+            },
+            "consentTypeDetail": {
               "type": "string"
             }
           }

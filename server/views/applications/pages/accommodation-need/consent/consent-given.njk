@@ -1,0 +1,35 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {% set conditionalHtml %}
+    {{ govukNotificationBanner({
+      text: "Consent must be given before an application to Temporary Accommodation (TA) is made"
+    }) }}
+  {% endset %}
+
+  {{ formPageRadios({
+    fieldName: "consentGiven",
+    items: [
+      {
+        value: "yes",
+        text: "Yes"
+      },
+      {
+        value: "no",
+        text: "No",
+        conditional: {
+          html: conditionalHtml
+        }
+      }
+    ]
+  }, fetchContext()) }}
+
+  <p>The person must also sign an Accommodation Compact.</p>
+{% endblock %}

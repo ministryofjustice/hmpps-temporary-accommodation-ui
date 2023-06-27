@@ -18,12 +18,7 @@
       <form action="{{ paths.applications.create() }}" method="post">
 
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        <input type="hidden" name="name" value="{{ name }}"/>
         <input type="hidden" name="crn" value="{{ crn }}"/>
-        <input type="hidden" name="dateOfBirth" value="{{ dateOfBirth }}"/>
-        <input type="hidden" name="sex" value="{{ sex }}"/>
-        <input type="hidden" name="nationality" value="{{ nationality }}"/>
-        <input type="hidden" name="religion" value="{{ religion }}"/>
         <input type="hidden" name="offenceId" value="{{ offenceId }}"/>
 
         <h1 class="govuk-heading-l">Confirm {{ name }}'s details</h1>

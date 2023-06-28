@@ -110,11 +110,17 @@ export default class ApplicationsController {
         }
 
         await this.applicationService.submit(callConfig, application)
-        return res.render('applications/confirm')
+        res.redirect(paths.applications.confirm({ id }))
       } catch (err) {
         insertGenericError(err, 'confirmation', 'invalid')
         catchValidationErrorOrPropogate(req, res, err, paths.applications.show({ id }), 'application')
       }
+    }
+  }
+
+  confirm(): RequestHandler {
+    return async (_: Request, res: Response) => {
+      return res.render('applications/confirm')
     }
   }
 }

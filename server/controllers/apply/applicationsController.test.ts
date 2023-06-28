@@ -300,7 +300,7 @@ describe('applicationsController', () => {
       expect(applicationService.findApplication).toHaveBeenCalledWith(callConfig, 'some-id')
       expect(getResponses).toHaveBeenCalledWith(application)
       expect(applicationService.submit).toHaveBeenCalledWith(callConfig, application)
-      expect(response.render).toHaveBeenCalledWith('applications/confirm')
+      expect(response.redirect).toHaveBeenCalledWith(paths.applications.confirm({ id: 'some-id' }))
     })
 
     it("renders with errors if the checkbox isn't ticked", async () => {
@@ -322,6 +322,15 @@ describe('applicationsController', () => {
         paths.applications.show({ id: 'some-id' }),
         'application',
       )
+    })
+  })
+
+  describe('submit', () => {
+    it('renders the application submission confirmation page', async () => {
+      const requestHandler = applicationsController.confirm()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('applications/confirm')
     })
   })
 })

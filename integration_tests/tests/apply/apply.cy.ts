@@ -190,4 +190,23 @@ context('Apply', () => {
     // Then I should see an error message asking me to checck the checkbox
     taskListPage.shouldShowErrorMessagesForFields(['confirmation'], 'invalid', 'application')
   })
+
+  it('does not show the confirm checkbox and submit button while the application is incomplete', function test() {
+    // Given there is an incomplete application in the database
+    const application = { ...this.application, data: { ...this.application.data, 'move-on-plan': undefined } }
+    cy.task('stubApplications', [application])
+
+    const apply = new ApplyHelper(application, this.person, this.offences, 'integration')
+    apply.setupApplicationStubs()
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([application], [])
+
+    // And I click on the application
+    listPage.clickApplication(application)
+
+    // Then I should not see confirm checkbox and submit button
+    const taskListPage = Page.verifyOnPage(TaskListPage)
+    taskListPage.shouldNotShowSubmitComponents()
+  })
 })

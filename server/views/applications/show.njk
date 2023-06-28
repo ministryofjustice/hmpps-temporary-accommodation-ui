@@ -25,20 +25,13 @@
 
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.applications.submission({id: application.id}) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-        <ol class="app-task-list">
-          {% set applicationOrAssessment = application %}
-          {% include '../partials/taskListItems.njk' %}
+        {% set applicationOrAssessment = application %}
+        {% include '../partials/taskList.njk' %}
 
-          <li>
-            <h2 class="app-task-list__section">
-              <span class="app-task-list__section-number">
-                {{ (taskList.sections | length) + 1 }}.
-            </span>
-            Submit your application
-          </h2>
-
-            {{ govukCheckboxes({
+        {% if taskList.status === 'complete' %}
+          {{ govukCheckboxes({
             idPrefix: "confirmation",
             name: "confirmation",
             items: [
@@ -49,15 +42,12 @@
             ],
             errorMessage: errors.confirmation
           }) }}
-          </li>
-        </ol>
 
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-        {{ govukButton({
-          text: "Submit referral",
-          preventDoubleClick: true
-        }) }}
+          {{ govukButton({
+            text: "Submit referral",
+            preventDoubleClick: true
+          }) }}
+        {% endif %}
       </form>
 
       {{ govukButton({
@@ -65,7 +55,6 @@
         classes: "govuk-button--secondary",
         href: paths.applications.index({})
       }) }}
-
     </div>
 
     {% if not oasysDisabled %}

@@ -17,6 +17,10 @@ export default class ListPage extends Page {
     return new ListPage(inProgressApplications, submittedApplications)
   }
 
+  clickApplication(application: Application) {
+    cy.get('a').contains(application.person.name).click()
+  }
+
   shouldShowInProgressApplications(): void {
     this.shouldShowApplications(this.inProgressApplications, 'in-progress', 'In Progress')
   }

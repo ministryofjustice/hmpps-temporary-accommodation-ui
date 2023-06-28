@@ -109,7 +109,7 @@ context('Booking cancellation', () => {
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['date'], 'bookingCancellation')
+    page.shouldShowErrorMessagesForFields(['date'], 'empty', 'bookingCancellation')
   })
 
   it('navigates back from the booking cancellation page to the show booking page', () => {
@@ -191,7 +191,7 @@ context('Booking cancellation', () => {
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['date'], 'bookingCancellation')
+    page.shouldShowErrorMessagesForFields(['date'], 'empty', 'bookingCancellation')
   })
 
   it('navigates back from the edit booking cancellation page to the show booking page', () => {

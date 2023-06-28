@@ -37,10 +37,10 @@ export default abstract class Page extends Component {
 
   headerProbationRegion = (): PageElement => cy.get('.region-header')
 
-  shouldShowErrorMessagesForFields(fields: Array<string>, context = 'generic'): void {
+  shouldShowErrorMessagesForFields(fields: Array<string>, error = 'empty', context = 'generic'): void {
     fields.forEach(field => {
-      cy.get('.govuk-error-summary').should('contain', errorLookups[context][field]?.empty)
-      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[context][field]?.empty)
+      cy.get('.govuk-error-summary').should('contain', errorLookups[context][field][error])
+      cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups[context][field][error])
     })
   }
 

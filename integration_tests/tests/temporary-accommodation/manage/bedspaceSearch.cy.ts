@@ -154,7 +154,11 @@ context('Bedspace Search', () => {
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['startDate', 'durationDays', 'probationDeliveryUnit'], 'bedspaceSearch')
+    page.shouldShowErrorMessagesForFields(
+      ['startDate', 'durationDays', 'probationDeliveryUnit'],
+      'empty',
+      'bedspaceSearch',
+    )
   })
 
   it('navigates back from the bedspace search page to the dashboard', () => {

@@ -169,4 +169,25 @@ context('Apply', () => {
     // Then I am taken back to the dashboard
     Page.verifyOnPage(ListPage, applications, [])
   })
+
+  it('shows an error if the application is submitted without checking the confirm checkbox', function test() {
+    // Given there is a complete but not submitted application in the database
+    cy.task('stubApplications', [this.application])
+
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    apply.setupApplicationStubs()
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([this.application], [])
+
+    // And I click on the application
+    listPage.clickApplication(this.application)
+
+    // And I click submit without checking the confirm checkbox
+    const taskListPage = Page.verifyOnPage(TaskListPage)
+    taskListPage.clickSubmit()
+
+    // Then I should see an error message asking me to checck the checkbox
+    taskListPage.shouldShowErrorMessagesForFields(['confirmation'], 'invalid', 'application')
+  })
 })

@@ -141,5 +141,10 @@
       "expectedNumber": "You must enter a duration of at least 1 day",
       "mustBeAtLeast1": "You must enter a duration of at least 1 day"
     }
+  },
+  "application": {
+    "confirmation": {
+      "invalid": "You must confirm the information provided is complete, accurate and up to date"
+    }
   }
 }

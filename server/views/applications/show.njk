@@ -17,10 +17,11 @@
         Make a referral for Temporary Accommodation
       </h1>
 
+      {{ showErrorSummary(errorSummary) }}
+
       <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Referral {{ taskList.status }}</h2>
       <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{ taskList.completeSectionCount }} of {{ (taskList.sections | length) }} sections.</p>
     </div>
-    {{ showErrorSummary(errorSummary) }}
 
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.applications.submission({id: application.id}) }}" method="post">
@@ -40,13 +41,13 @@
             {{ govukCheckboxes({
             idPrefix: "confirmation",
             name: "confirmation",
-            errorMessage: errorObject,
             items: [
               {
                 value: "submit",
                 text: "I confirm the information provided is complete, accurate and up to date."
               }
-            ]
+            ],
+            errorMessage: errors.confirmation
           }) }}
           </li>
         </ol>

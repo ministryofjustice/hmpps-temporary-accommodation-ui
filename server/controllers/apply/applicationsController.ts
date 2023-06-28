@@ -1,6 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import Apply from '../../form-pages/apply'
 import paths from '../../paths/apply'
 import { PersonService } from '../../services'
 import ApplicationService from '../../services/applicationService'
@@ -8,7 +7,7 @@ import TasklistService from '../../services/tasklistService'
 import { firstPageOfApplicationJourney, getResponses } from '../../utils/applicationUtils'
 import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
-import { fetchErrorsAndUserInput } from '../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../utils/validation'
 
 export default class ApplicationsController {
   constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
@@ -34,7 +33,15 @@ export default class ApplicationsController {
       const application = await this.applicationService.getApplicationFromSessionOrAPI(callConfig, req)
       const taskList = new TasklistService(application)
 
-      res.render('applications/show', { application, taskList })
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      res.render('applications/show', {
+        application,
+        taskList,
+        errors,
+        errorSummary,
+        ...userInput,
+      })
     }
   }
 
@@ -92,28 +99,22 @@ export default class ApplicationsController {
   submit(): RequestHandler {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
-      const application = await this.applicationService.findApplication(callConfig, req.params.id)
+
+      const { id } = req.params
+      const application = await this.applicationService.findApplication(callConfig, id)
       application.document = getResponses(application)
 
-      if (req.body?.confirmation !== 'submit') {
-        const errorMessage = 'You must confirm the information provided is complete, accurate and up to date.'
-        const errorObject = { text: errorMessage }
+      try {
+        if (req.body?.confirmation !== 'submit') {
+          throw new Error()
+        }
 
-        return res.render('applications/show', {
-          application,
-          errorSummary: [
-            {
-              text: errorMessage,
-              href: '#confirmation',
-            },
-          ],
-          errorObject,
-          sections: Apply.sections,
-        })
+        await this.applicationService.submit(callConfig, application)
+        return res.render('applications/confirm')
+      } catch (err) {
+        insertGenericError(err, 'confirmation', 'invalid')
+        catchValidationErrorOrPropogate(req, res, err, paths.applications.show({ id }), 'application')
       }
-
-      await this.applicationService.submit(callConfig, application)
-      return res.render('applications/confirm')
     }
   }
 }

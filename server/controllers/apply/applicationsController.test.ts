@@ -12,7 +12,7 @@ import ApplicationsController from './applicationsController'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/apply'
-import { firstPageOfApplicationJourney, getResponses, isUnapplicable } from '../../utils/applicationUtils'
+import { firstPageOfApplicationJourney, getResponses } from '../../utils/applicationUtils'
 import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
 
@@ -93,15 +93,6 @@ describe('applicationsController', () => {
       })
 
       expect(applicationService.findApplication).not.toHaveBeenCalledWith(callConfig, application.id)
-    })
-
-    it('renders the not applicable page if the application is not applicable', async () => {
-      const requestHandler = applicationsController.show()
-      ;(isUnapplicable as jest.Mock).mockReturnValue(true)
-
-      await requestHandler(request, response, next)
-
-      expect(response.render).toHaveBeenCalledWith('applications/notEligible')
     })
   })
 

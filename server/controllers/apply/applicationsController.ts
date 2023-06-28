@@ -5,7 +5,7 @@ import paths from '../../paths/apply'
 import { PersonService } from '../../services'
 import ApplicationService from '../../services/applicationService'
 import TasklistService from '../../services/tasklistService'
-import { firstPageOfApplicationJourney, getResponses, isUnapplicable } from '../../utils/applicationUtils'
+import { firstPageOfApplicationJourney, getResponses } from '../../utils/applicationUtils'
 import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
 import { fetchErrorsAndUserInput } from '../../utils/validation'
@@ -34,11 +34,7 @@ export default class ApplicationsController {
       const application = await this.applicationService.getApplicationFromSessionOrAPI(callConfig, req)
       const taskList = new TasklistService(application)
 
-      if (isUnapplicable(application)) {
-        res.render('applications/notEligible')
-      } else {
-        res.render('applications/show', { application, taskList })
-      }
+      res.render('applications/show', { application, taskList })
     }
   }
 

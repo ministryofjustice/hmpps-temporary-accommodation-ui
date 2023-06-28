@@ -167,3 +167,22 @@ export const hasSubmittedDtr = (application: Application): boolean => {
 export const dateBodyProperties = (root: string) => {
   return [root, `${root}-year`, `${root}-month`, `${root}-day`]
 }
+
+export const pageBodyShallowEquals = (body1: Record<string, unknown>, body2: Record<string, unknown>) => {
+  const body1Keys = Object.keys(body1)
+  const body2Keys = Object.keys(body2)
+
+  if (body1Keys.length !== body2Keys.length) {
+    return false
+  }
+
+  return body1Keys.every(key => {
+    const value1 = body1[key]
+    const value2 = body2[key]
+
+    if (Array.isArray(value1) && Array.isArray(value2)) {
+      return value1.length === value2.length && value1.every((arrayValue, index) => arrayValue === value2[index])
+    }
+    return value1 === value2
+  })
+}

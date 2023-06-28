@@ -1,4 +1,11 @@
-import { EnterCRNPage, ListPage, SelectOffencePage, StartPage, TaskListPage } from '../../../cypress_shared/pages/apply'
+import {
+  EnterCRNPage,
+  ListPage,
+  MoveOnPlanPage,
+  SelectOffencePage,
+  StartPage,
+  TaskListPage,
+} from '../../../cypress_shared/pages/apply'
 
 import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 
@@ -208,5 +215,72 @@ context('Apply', () => {
     // Then I should not see confirm checkbox and submit button
     const taskListPage = Page.verifyOnPage(TaskListPage)
     taskListPage.shouldNotShowSubmitComponents()
+  })
+
+  it('marks check your answers as incomplete if the user changes answers for an existing page', function test() {
+    // Given there is a complete but not submitted application in the database
+    cy.task('stubApplications', [this.application])
+
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    apply.setupApplicationStubs()
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([this.application], [])
+
+    // And I click on the application
+    listPage.clickApplication(this.application)
+
+    // Then I check your answers should be marked as completed
+    const taskListPage = Page.verifyOnPage(TaskListPage)
+    taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
+
+    // And the I click on the move on plan section
+    taskListPage.clickTask('move-on-plan')
+
+    // And complete the move on section again
+    const moveOnPlanPage = new MoveOnPlanPage({
+      ...this.application,
+      data: {
+        ...this.application.data,
+        'move-on-plan': {
+          'move-on-plan': {
+            plan: 'Some other plan',
+          },
+        },
+      },
+    })
+    moveOnPlanPage.completeForm()
+    moveOnPlanPage.clickSubmit()
+
+    // Then I check your answers should be marked as not started
+    taskListPage.shouldShowTaskStatus('check-your-answers', 'Not started')
+  })
+
+  it('does not mark check your answers as incomplete if the user re-enters the same answers for an existing page', function test() {
+    // Given there is a complete but not submitted application in the database
+    cy.task('stubApplications', [this.application])
+
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    apply.setupApplicationStubs()
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([this.application], [])
+
+    // And I click on the application
+    listPage.clickApplication(this.application)
+
+    // Then I check your answers should be marked as completed
+    const taskListPage = Page.verifyOnPage(TaskListPage)
+    taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
+
+    // And the I click on the move on plan section
+    taskListPage.clickTask('move-on-plan')
+
+    // And complete the move on section again
+    const moveOnPlanPage = new MoveOnPlanPage(this.application)
+    moveOnPlanPage.clickSubmit()
+
+    // Then I check your answers should be marked as completed
+    taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
   })
 })

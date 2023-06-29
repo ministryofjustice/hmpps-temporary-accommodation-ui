@@ -11,6 +11,8 @@ import type { PersonRisks } from './PersonRisks';
 export type ApprovedPremisesApplication = (Application & {
     isWomensApplication?: boolean;
     isPipeApplication?: boolean;
+    isEmergencyApplication?: boolean;
+    isEsapApplication?: boolean;
     arrivalDate?: string;
     risks?: PersonRisks;
     createdByUserId: string;

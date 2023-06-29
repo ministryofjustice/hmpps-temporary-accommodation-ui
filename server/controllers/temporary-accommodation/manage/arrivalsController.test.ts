@@ -92,9 +92,7 @@ describe('ArrivalsController', () => {
       const requestHandler = arrivalsController.create()
 
       const arrival = arrivalFactory.build()
-      const newArrival = newArrivalFactory.build({
-        ...arrival,
-      })
+      const newArrival = newArrivalFactory.build()
 
       request.params = {
         premisesId,
@@ -102,7 +100,7 @@ describe('ArrivalsController', () => {
         bookingId,
       }
       request.body = {
-        ...newArrival,
+        notes: newArrival.notes,
         ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
         ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
       }

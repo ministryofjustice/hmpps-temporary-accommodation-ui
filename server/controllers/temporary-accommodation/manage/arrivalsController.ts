@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
-import type { NewArrival } from '@approved-premises/api'
+import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
@@ -55,6 +55,7 @@ export default class ArrivalsController {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
         ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
+        type: 'CAS3',
       }
 
       try {

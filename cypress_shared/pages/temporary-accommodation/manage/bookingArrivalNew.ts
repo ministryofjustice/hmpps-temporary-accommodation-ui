@@ -1,4 +1,4 @@
-import type { Booking, LostBed, NewArrival, Premises, Room } from '@approved-premises/api'
+import type { Booking, LostBed, NewCas3Arrival as NewArrival, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import BookingInfoComponent from '../../../components/bookingInfo'

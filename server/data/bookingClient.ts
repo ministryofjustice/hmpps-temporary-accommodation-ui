@@ -5,7 +5,7 @@ import type {
   Confirmation,
   Departure,
   Extension,
-  NewArrival,
+  NewCas3Arrival as NewArrival,
   NewBooking,
   NewCancellation,
   NewConfirmation,

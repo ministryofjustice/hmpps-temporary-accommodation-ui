@@ -276,7 +276,7 @@ export default class ApplyHelper {
 
   completeSentenceInformation() {
     // Given I click the sentence information task
-    cy.get('[data-cy-task-name="sentence-information"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('sentence-information')
 
     // When I complete the form
     const sentenceTypePage = new SentenceTypePage(this.application)
@@ -310,7 +310,7 @@ export default class ApplyHelper {
 
   private completeContactDetails() {
     // Given I click the contact details task
-    cy.get('[data-cy-task-name="contact-details"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('contact-details')
 
     // When I complete the form
     const probationPractitionerPage = new ProbationPractitionerPage(this.application)
@@ -339,7 +339,7 @@ export default class ApplyHelper {
 
   private completeEligibility() {
     // Given I click the eligibility task
-    cy.get('[data-cy-task-name="eligibility"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('eligibility')
 
     // When I complete the form
     const eligibilityReasonPage = new EligibilityReasonPage(this.application)
@@ -368,7 +368,7 @@ export default class ApplyHelper {
 
   private completeAccommodationReferralHistory() {
     // Given I click the accommodation referral history task
-    cy.get('[data-cy-task-name="accommodation-referral-history"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('accommodation-referral-history')
 
     // When I complete the form
     const referralsPreviouslySumbittedPage = new ReferralsPreviouslySubmittedPage(this.application)
@@ -393,7 +393,7 @@ export default class ApplyHelper {
 
   private completeConsent() {
     // Given I click the eligibility task
-    cy.get('[data-cy-task-name="consent"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('consent')
 
     // When I complete the form
     const consentGivenPage = new ConsentGivenPage(this.application)
@@ -418,7 +418,7 @@ export default class ApplyHelper {
 
   private completeLicenceConditions() {
     // Given I click the eligibility task
-    cy.get('[data-cy-task-name="licence-conditions"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('licence-conditions')
 
     // When I complete the form
     const additionalLicenceConditionsPage = new AdditionalLicenceConditionsPage(this.application)
@@ -439,7 +439,7 @@ export default class ApplyHelper {
 
   private completeOasysImport() {
     // Given I click the oasys import task
-    cy.get('[data-cy-task-name="oasys-import"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('oasys-import')
     const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
 
     // When I complete the form
@@ -501,7 +501,7 @@ export default class ApplyHelper {
 
   private completePlacementLocation() {
     // Given I click on the safeguarding and support task
-    cy.get('[data-cy-task-name="placement-location"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('placement-location')
 
     // When I complete the form
     const alternativePduPage = new AlternativePduPage(this.application)
@@ -522,7 +522,7 @@ export default class ApplyHelper {
 
   private completeDisabilityCulturalAndSpecificNeeds() {
     // Given I click on the safeguarding and support task
-    cy.get('[data-cy-task-name="disability-cultural-and-specific-needs"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('disability-cultural-and-specific-needs')
 
     // When I complete the form
     const needsPage = new NeedsPage(this.application)
@@ -555,7 +555,7 @@ export default class ApplyHelper {
 
   private completeSafeguardingAndSupport() {
     // Given I click on the safeguarding and support task
-    cy.get('[data-cy-task-name="safeguarding-and-support"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('safeguarding-and-support')
 
     // When I complete the form
     const safeguardingAndVulnerabilityPage = new SafeguardingAndVulnerabilityPage(this.application)
@@ -593,7 +593,7 @@ export default class ApplyHelper {
 
   private completeRequirementsForPlacement() {
     // Given I click on the requirements for placement task
-    cy.get('[data-cy-task-name="requirements-for-placement"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('requirements-for-placement')
 
     // When I complete the form
     const propertySharingPage = new PropertySharingPage(this.application)
@@ -618,7 +618,7 @@ export default class ApplyHelper {
 
   private completeMoveOnPlan() {
     // Given I click on the move on plan task
-    cy.get('[data-cy-task-name="move-on-plan"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('move-on-plan')
 
     // When I complete the form
     const moveOnPlanPage = new MoveOnPlanPage(this.application)
@@ -639,7 +639,7 @@ export default class ApplyHelper {
 
   private completeAccommodationReferralDetails() {
     // Given I click on the accommodation referral details task
-    cy.get('[data-cy-task-name="accommodation-referral-details"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('accommodation-referral-details')
 
     this.pages.accommodationReferralDetails = []
 
@@ -678,7 +678,7 @@ export default class ApplyHelper {
 
   private completeCheckYourAnswersSection() {
     // Given I click the check your answers task
-    cy.get('[data-cy-task-name="check-your-answers"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('check-your-answers')
 
     // Then I should be on the check your answers page
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)

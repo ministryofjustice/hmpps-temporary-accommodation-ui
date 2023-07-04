@@ -131,9 +131,9 @@ describe('applicationsController', () => {
           await requestHandler(request, response, next)
 
           expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-            ...person,
+            person,
+            crn: person.crn,
             date: DateFormats.dateObjtoUIDate(new Date()),
-            dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
             offenceId: offence.offenceId,
             errors: {},
             errorSummary: [],
@@ -150,9 +150,9 @@ describe('applicationsController', () => {
           await requestHandler(request, response, next)
 
           expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-            ...person,
+            person,
+            crn: person.crn,
             date: DateFormats.dateObjtoUIDate(new Date()),
-            dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
             offenceId: null,
             errors: {},
             errorSummary: [],
@@ -170,9 +170,9 @@ describe('applicationsController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('applications/people/confirm', {
-          ...person,
+          person,
+          crn: person.crn,
           date: DateFormats.dateObjtoUIDate(new Date()),
-          dateOfBirth: DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }),
           offenceId: offence.offenceId,
           errors: errorsAndUserInput.errors,
           errorSummary: errorsAndUserInput.errorSummary,

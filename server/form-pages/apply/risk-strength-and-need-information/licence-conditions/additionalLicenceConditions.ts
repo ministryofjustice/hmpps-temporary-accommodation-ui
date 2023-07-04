@@ -29,7 +29,7 @@ const conditions = {
   exclusionZone: {
     text: 'Exclusion zone',
     detailLabel: 'Provide details about the exclusion zone',
-    detailHint: 'You must ensure that the exclusion zone map is on NDelius.',
+    detailHint: 'You must ensure that the exclusion zone map is on nDelius.',
     error: 'You must provide details about the exclusion zone',
   },
   initmateRelationships: {

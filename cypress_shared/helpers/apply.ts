@@ -139,7 +139,7 @@ export default class ApplyHelper {
 
     // And I see the person on the confirmation page
     const confirmDetailsPage = new ConfirmDetailsPage(this.person)
-    confirmDetailsPage.verifyPersonIsVisible()
+    confirmDetailsPage.shouldPersonDetails()
 
     // And I confirm the person is who I expect to see
     confirmDetailsPage.clickSubmit()
@@ -701,6 +701,7 @@ export default class ApplyHelper {
 
     // Then I should be on the check your answers page
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
+    checkYourAnswersPage.shouldShowPersonDetails()
 
     // And the page should be populated with my answers
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)

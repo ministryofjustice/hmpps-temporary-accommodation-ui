@@ -1,0 +1,102 @@
+{%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+
+{% macro personDetails(person) %}
+  {% set rows = ([
+    {
+      key: {
+        text: "Name"
+      },
+      value: {
+        text: person.name
+      }
+    },
+    {
+      key: {
+        text: "CRN"
+      },
+      value: {
+        text: person.crn
+      }
+    },
+    {
+      key: {
+        text: "Date of birth"
+      },
+      value: {
+        text: formatDate(person.dateOfBirth, {format: 'short'})
+      }
+    },
+    {
+      key: {
+        text: "NOMS number"
+      },
+      value: {
+        text: person.nomsNumber
+      }
+    },
+    {
+      key: {
+        text: "Nationality"
+      },
+      value: {
+        text: person.nationality
+      }
+    },
+    {
+      key: {
+        text: "Religion or belief"
+      },
+      value: {
+        text: person.religionOrBelief
+      }
+    },
+    {
+      key: {
+        text: "Sex"
+      },
+      value: {
+        text: person.sex
+      }
+    },
+    {
+      key: {
+        text: "Ethnicity"
+      },
+      value: {
+        text: person.ethnicity
+      }
+    },
+    {
+      key: {
+        text: "Gender identity"
+      },
+      value: {
+        text: person.genderIdentity
+      }
+    },
+    {
+      key: {
+        text: "Status"
+      },
+      value: {
+        html: statusTag(person.status)
+      }
+    },
+    {
+      key: {
+        text: "Prison"
+      },
+      value: {
+        text: person.prisonName
+      }
+    }
+  ] | removeBlankSummaryListItems) %}
+
+  {{ govukSummaryList({
+    attributes: {
+      'data-cy-person-info': true
+    },
+    rows: rows
+  }) }}
+
+{% endmacro %}

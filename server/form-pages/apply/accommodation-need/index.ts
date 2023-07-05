@@ -1,5 +1,5 @@
 import { Section } from '../../utils/decorators'
-import BehaviourInPreviousAccommodation from './accommodation-referral-history'
+import BehaviourInPreviousAccommodation from './behaviour-in-previous-accommodation'
 import Consent from './consent'
 import ContactDetails from './contact-details'
 import Eligibility from './eligibility'

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 import { Task } from '../../../utils/decorators'
-import PreviousStaysDetails from './referralHistoryDetails'
-import PreviousStays from './referralsPreviouslySubmitted'
+import PreviousStays from './previousStays'
+import PreviousStaysDetails from './previousStaysDetails'
 
 @Task({
   name: 'Behaviour in previous accommodation',

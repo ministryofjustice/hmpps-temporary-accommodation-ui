@@ -1,6 +1,6 @@
 import { applicationFactory, personFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import PreviousStaysDetails from './referralHistoryDetails'
+import PreviousStaysDetails from './previousStaysDetails'
 
 const body = {
   accommodationTypes: ['cas1' as const, 'cas3' as const],

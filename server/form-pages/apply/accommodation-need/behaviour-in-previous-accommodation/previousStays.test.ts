@@ -1,7 +1,7 @@
 import { applicationFactory, personFactory } from '../../../../testutils/factories'
 import { itShouldHavePreviousValue } from '../../../shared-examples'
 import { yesNoOrDontKnowResponse } from '../../../utils'
-import PreviousStays from './referralsPreviouslySubmitted'
+import PreviousStays from './previousStays'
 
 jest.mock('../../../utils')
 

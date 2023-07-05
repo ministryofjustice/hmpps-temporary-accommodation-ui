@@ -19,25 +19,26 @@ describe('ReferralsPreviouslySubmitted', () => {
       const page = new ReferralsPreviouslySubmitted(body, application)
 
       expect(page.body).toEqual(body)
+      expect(page.questions.referralsPreviouslySubmitted).toEqual('Has John Smith previously stayed in Community Accommodation Services (CAS)?')
     })
   })
 
   itShouldHavePreviousValue(new ReferralsPreviouslySubmitted({}, application), 'dashboard')
 
   describe('next', () => {
-    it('returns the referral history details page ID when a referral has previously been submitted', () => {
+    it('returns the previous stays details page ID when the person has previous stayed in CAS', () => {
       expect(
         new ReferralsPreviouslySubmitted({ ...body, referralsPreviouslySubmitted: 'yes' }, application).next(),
       ).toEqual('referral-history-details')
     })
 
-    it('returns an empty page ID when no referral has previously been submitted', () => {
+    it('returns an empty page ID when the person has not previously stayed in CAS', () => {
       expect(
         new ReferralsPreviouslySubmitted({ ...body, referralsPreviouslySubmitted: 'no' }, application).next(),
       ).toEqual('')
     })
 
-    it('returns an empty page ID when it is unknown whether a referral has previously been submitted', () => {
+    it('returns an empty page ID when it is unknown whether the person has previously stayed in CAS', () => {
       expect(
         new ReferralsPreviouslySubmitted({ ...body, referralsPreviouslySubmitted: 'iDontKnow' }, application).next(),
       ).toEqual('')
@@ -54,7 +55,7 @@ describe('ReferralsPreviouslySubmitted', () => {
       const page = new ReferralsPreviouslySubmitted({}, application)
       expect(page.errors()).toEqual({
         referralsPreviouslySubmitted:
-          'You must specify whether referrals for accommodation services have been submitted previously',
+          'You must specify whether John Smith has previously stayed in Community Accommodation Services (CAS)',
       })
     })
   })
@@ -66,7 +67,7 @@ describe('ReferralsPreviouslySubmitted', () => {
       const page = new ReferralsPreviouslySubmitted(body, application)
 
       expect(page.response()).toEqual({
-        'Have referrals for accommodation services been submitted for John Smith previously?':
+        'Has John Smith previously stayed in Community Accommodation Services (CAS)?':
           "Yes, no, or don't know response",
       })
       expect(yesNoOrDontKnowResponse).toHaveBeenCalledWith('referralsPreviouslySubmitted', body)

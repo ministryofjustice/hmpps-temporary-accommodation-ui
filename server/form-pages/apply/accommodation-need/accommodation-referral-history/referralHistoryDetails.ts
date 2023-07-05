@@ -6,28 +6,13 @@ import TasklistPage from '../../../tasklistPage'
 
 const accommodationTypes = {
   cas1: {
-    text: 'Approved Premises',
-    detailLabel:
-      'Provide details on whether they were offered a place, if they stayed in the accommodation, and what their behaviour was like',
-    error: 'You must provide details on previous Approved Premises referrals',
+    text: 'Approved Premises (AP or CAS1)',
   },
-  dtr: {
-    text: 'Local authority (duty to refer)',
-    error: 'You must provide details on previous local authority (duty to refer) referrals',
-  },
-  crs: {
-    text: 'Commissioned rehabilitative services (CRS) accommodation',
-    detailLabel:
-      'Provide details on whether they were offered a place, if they stayed in the accommodation, and what their behaviour was like',
-    error: 'You must provide details on previous CRS referrals',
-  },
-  crsWomen: {
-    text: "CRS women's accommodation referral",
-    error: "You must provide details on previous CRS women's accommodation referrals",
+  cas2: {
+    text: 'Bail Accommodation and Support Service (BASS or CAS2)',
   },
   cas3: {
     text: 'Temporary Accommodation, previously known as CAS3',
-    error: 'You must provide details on previous Temporary Accommodation referrals',
   },
 } as const
 
@@ -43,9 +28,13 @@ type ReferralHistoryDetailsBody = {
   bodyProperties: ['accommodationTypes', ...Object.keys(accommodationTypes).map(key => `${key}Detail`)],
 })
 export default class ReferralHistoryDetails implements TasklistPage {
-  title = 'What type of accommodation was the referral for?'
+  title: string
 
-  constructor(readonly body: Partial<ReferralHistoryDetailsBody>, readonly application: Application) {}
+  constructor(readonly body: Partial<ReferralHistoryDetailsBody>, readonly application: Application) {
+    const { name } = application.person
+
+    this.title = `What type of accommodation did ${name} stay at?`
+  }
 
   response() {
     const response = {}
@@ -69,13 +58,15 @@ export default class ReferralHistoryDetails implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.accommodationTypes?.length) {
-      errors.accommodationTypes = 'You must specify what type of accommodation the referral was for'
+      const { name } = this.application.person
+
+      errors.accommodationTypes = `You must specify what type of accommodation ${name} stayed at`
     }
 
     this.body.accommodationTypes?.forEach(accommodationType => {
       const detailKey = `${accommodationType}Detail`
       if (!this.body[detailKey]) {
-        errors[detailKey] = accommodationTypes[accommodationType].error
+        errors[detailKey] = 'You must provide details about their behaviour during their stay'
       }
     })
 
@@ -87,7 +78,6 @@ export default class ReferralHistoryDetails implements TasklistPage {
       return {
         value: key,
         text: accommodationTypes[key].text,
-        detailLabel: accommodationTypes[key].detailLabel,
       }
     })
   }

@@ -260,10 +260,8 @@
               "items": {
                 "enum": [
                   "cas1",
-                  "cas3",
-                  "crs",
-                  "crsWomen",
-                  "dtr"
+                  "cas2",
+                  "cas3"
                 ],
                 "type": "string"
               }
@@ -271,13 +269,7 @@
             "cas1Detail": {
               "type": "string"
             },
-            "dtrDetail": {
-              "type": "string"
-            },
-            "crsDetail": {
-              "type": "string"
-            },
-            "crsWomenDetail": {
+            "cas2Detail": {
               "type": "string"
             },
             "cas3Detail": {

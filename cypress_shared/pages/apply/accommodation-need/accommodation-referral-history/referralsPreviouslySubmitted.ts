@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class ReferralsPreviouslySubmittedPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `Accommodation referral history`,
+      'Behaviour in previous accommodation',
       application,
       'accommodation-referral-history',
       'referrals-previously-submitted',

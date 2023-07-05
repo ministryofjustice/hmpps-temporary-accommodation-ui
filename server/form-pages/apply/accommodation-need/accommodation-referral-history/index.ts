@@ -5,8 +5,8 @@ import ReferralHistoryDetails from './referralHistoryDetails'
 import ReferralsPreviouslySubmitted from './referralsPreviouslySubmitted'
 
 @Task({
-  name: 'Accommodation referral history',
-  actionText: 'Provide accommodation referral history',
+  name: 'Behaviour in previous accommodation',
+  actionText: 'Provide details of behaviour in previous accommodation',
   slug: 'accommodation-referral-history',
   pages: [ReferralsPreviouslySubmitted, ReferralHistoryDetails],
 })

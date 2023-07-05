@@ -18,10 +18,10 @@ export default class ReferralsPreviouslySubmitted implements TasklistPage {
   constructor(readonly body: Partial<HistoryPreviouslySubmittedBody>, readonly application: Application) {
     const { name } = application.person
 
-    this.title = 'Accommodation referral history'
+    this.title = 'Behaviour in previous accommodation'
 
     this.questions = {
-      referralsPreviouslySubmitted: `Have referrals for accommodation services been submitted for ${name} previously?`,
+      referralsPreviouslySubmitted: `Has ${name} previously stayed in Community Accommodation Services (CAS)?`,
     }
   }
 
@@ -43,8 +43,10 @@ export default class ReferralsPreviouslySubmitted implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.referralsPreviouslySubmitted) {
+      const { name } = this.application.person
+
       errors.referralsPreviouslySubmitted =
-        'You must specify whether referrals for accommodation services have been submitted previously'
+        `You must specify whether ${name} has previously stayed in Community Accommodation Services (CAS)`
     }
 
     return errors

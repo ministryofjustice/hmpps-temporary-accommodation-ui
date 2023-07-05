@@ -15,7 +15,7 @@
         {{ formPageTextarea({
         fieldName: item.value + "Detail",
         label: {
-          text: item.detailLabel or "Provide details",
+          text: "Provide details about their behaviour during their stay",
           classes: "govuk-label--s"
         }
       },fetchContext()) }}
@@ -32,6 +32,9 @@
 
   {{ formPageCheckboxes({
     fieldName: "accommodationTypes",
+    hint: {
+      text: "Select all that apply"
+    },
     items: itemsWithDetail
   }, fetchContext()) }}
 

@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class ReferralHistoryDetailsPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `What type of accommodation was the referral for`,
+      `What type of accommodation did ${application.name} stay at?`,
       application,
       'accommodation-referral-history',
       'referral-history-details',

@@ -39,7 +39,7 @@ export default class CheckYourAnswersPage extends ApplyPage {
   }
 
   shouldShowAccommodationReferralHistoryAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('accommodation-referral-history', 'Accommodation referral history')
+    this.shouldShowCheckYourAnswersTitle('accommodation-referral-history', 'Behaviour in previous accommodation')
     this.shouldShowAnswersForTask('accommodation-referral-history', pages)
   }
 

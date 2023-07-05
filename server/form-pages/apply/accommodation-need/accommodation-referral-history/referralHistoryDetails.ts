@@ -19,18 +19,18 @@ const accommodationTypes = {
 type AccommodationTypes = keyof typeof accommodationTypes
 type AccommodationTypesDetail = { [T in AccommodationTypes as `${T}Detail`]: string }
 
-type ReferralHistoryDetailsBody = {
+type PreviousStaysDetailsBody = {
   accommodationTypes: Array<AccommodationTypes>
 } & AccommodationTypesDetail
 
 @Page({
-  name: 'referral-history-details',
+  name: 'previous-stays-details',
   bodyProperties: ['accommodationTypes', ...Object.keys(accommodationTypes).map(key => `${key}Detail`)],
 })
-export default class ReferralHistoryDetails implements TasklistPage {
+export default class PreviousStaysDetails implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<ReferralHistoryDetailsBody>, readonly application: Application) {
+  constructor(readonly body: Partial<PreviousStaysDetailsBody>, readonly application: Application) {
     const { name } = application.person
 
     this.title = `What type of accommodation did ${name} stay at?`
@@ -47,7 +47,7 @@ export default class ReferralHistoryDetails implements TasklistPage {
   }
 
   previous() {
-    return 'referrals-previously-submitted'
+    return 'previous-stays'
   }
 
   next() {

@@ -5,29 +5,29 @@ import { TemporaryAccommodationApplication as Application } from '../../../../@t
 import TasklistPage from '../../../tasklistPage'
 import { yesNoOrDontKnowResponse } from '../../../utils'
 
-type HistoryPreviouslySubmittedBody = { referralsPreviouslySubmitted: YesNoOrIDK }
+type PreviousStaysBody = { previousStays: YesNoOrIDK }
 
-@Page({ name: 'referrals-previously-submitted', bodyProperties: ['referralsPreviouslySubmitted'] })
-export default class ReferralsPreviouslySubmitted implements TasklistPage {
+@Page({ name: 'previous-stays', bodyProperties: ['previousStays'] })
+export default class PreviousStays implements TasklistPage {
   title: string
 
   questions: {
-    referralsPreviouslySubmitted: string
+    previousStays: string
   }
 
-  constructor(readonly body: Partial<HistoryPreviouslySubmittedBody>, readonly application: Application) {
+  constructor(readonly body: Partial<PreviousStaysBody>, readonly application: Application) {
     const { name } = application.person
 
     this.title = 'Behaviour in previous accommodation'
 
     this.questions = {
-      referralsPreviouslySubmitted: `Has ${name} previously stayed in Community Accommodation Services (CAS)?`,
+      previousStays: `Has ${name} previously stayed in Community Accommodation Services (CAS)?`,
     }
   }
 
   response() {
     return {
-      [this.questions.referralsPreviouslySubmitted]: yesNoOrDontKnowResponse('referralsPreviouslySubmitted', this.body),
+      [this.questions.previousStays]: yesNoOrDontKnowResponse('previousStays', this.body),
     }
   }
 
@@ -36,17 +36,16 @@ export default class ReferralsPreviouslySubmitted implements TasklistPage {
   }
 
   next() {
-    return this.body.referralsPreviouslySubmitted === 'yes' ? 'referral-history-details' : ''
+    return this.body.previousStays === 'yes' ? 'previous-stays-details' : ''
   }
 
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (!this.body.referralsPreviouslySubmitted) {
+    if (!this.body.previousStays) {
       const { name } = this.application.person
 
-      errors.referralsPreviouslySubmitted =
-        `You must specify whether ${name} has previously stayed in Community Accommodation Services (CAS)`
+      errors.previousStays = `You must specify whether ${name} has previously stayed in Community Accommodation Services (CAS)`
     }
 
     return errors

@@ -39,11 +39,11 @@ import {
   OptionalOasysSectionsPage,
   OtherAccommodationOptionsPage,
   PractitionerPduPage,
+  PreviousStaysDetailsPage,
+  PreviousStaysPage,
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
   PropertySharingPage,
-  ReferralHistoryDetailsPage,
-  ReferralsPreviouslySubmittedPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
@@ -72,7 +72,7 @@ export default class ApplyHelper {
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
-    accommodationReferralHistory: [] as Array<ApplyPage>,
+    behaviourInPreviousAccommodation: [] as Array<ApplyPage>,
     consent: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
@@ -149,7 +149,7 @@ export default class ApplyHelper {
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeEligibility()
-    this.completeAccommodationReferralHistory()
+    this.completeBehaviourInPreviousAccommodation()
     this.completeConsent()
     this.completeLicenceConditions()
     this.completeOasysImport()
@@ -169,7 +169,7 @@ export default class ApplyHelper {
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
-      ...this.pages.accommodationReferralHistory,
+      ...this.pages.behaviourInPreviousAccommodation,
       ...this.pages.consent,
       ...this.pages.licenceConditions,
       ...this.pages.oasysImport,
@@ -363,29 +363,29 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('eligibility', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('accommodation-referral-history', 'Not started')
+    tasklistPage.shouldShowTaskStatus('behaviour-in-previous-accommodation', 'Not started')
   }
 
-  private completeAccommodationReferralHistory() {
-    // Given I click the accommodation referral history task
-    Page.verifyOnPage(TaskListPage).clickTask('accommodation-referral-history')
+  private completeBehaviourInPreviousAccommodation() {
+    // Given I click the behaviour in previous accommodation task
+    Page.verifyOnPage(TaskListPage).clickTask('behaviour-in-previous-accommodation')
 
     // When I complete the form
-    const referralsPreviouslySumbittedPage = new ReferralsPreviouslySubmittedPage(this.application)
-    referralsPreviouslySumbittedPage.completeForm()
-    referralsPreviouslySumbittedPage.clickSubmit()
+    const previousStaysPage = new PreviousStaysPage(this.application)
+    previousStaysPage.completeForm()
+    previousStaysPage.clickSubmit()
 
-    const referralHistoryDetailsPage = new ReferralHistoryDetailsPage(this.application)
-    referralHistoryDetailsPage.completeForm()
-    referralHistoryDetailsPage.clickSubmit()
+    const previousStaysDetailsPage = new PreviousStaysDetailsPage(this.application)
+    previousStaysDetailsPage.completeForm()
+    previousStaysDetailsPage.clickSubmit()
 
-    this.pages.accommodationReferralHistory = [referralsPreviouslySumbittedPage, referralHistoryDetailsPage]
+    this.pages.behaviourInPreviousAccommodation = [previousStaysPage, previousStaysDetailsPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
     // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('accommodation-referral-history', 'Completed')
+    tasklistPage.shouldShowTaskStatus('behaviour-in-previous-accommodation', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('consent', 'Not started')
@@ -688,7 +688,7 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
     checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
     checkYourAnswersPage.shouldShowEligibilityAnswers(this.pages.eligibility)
-    checkYourAnswersPage.shouldShowAccommodationReferralHistoryAnswers(this.pages.accommodationReferralHistory)
+    checkYourAnswersPage.shouldShowBehaviourInPreviousAccommodationAnswers(this.pages.behaviourInPreviousAccommodation)
     checkYourAnswersPage.shouldShowConsentAnswers(this.pages.consent)
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
 

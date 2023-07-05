@@ -43,6 +43,7 @@ import {
   PropertyAttributesOrAdaptationsPage,
   PropertySharingPage,
   ReferralHistoryDetailsPage,
+  ReferralsPreviouslySubmittedPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
@@ -57,7 +58,6 @@ import {
   SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
-import ReferralsPreviouslySubmittedPage from '../pages/apply/accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
 import ApplyPage from '../pages/apply/applyPage'
 import {
   offenceDetailSummariesFromApplication,

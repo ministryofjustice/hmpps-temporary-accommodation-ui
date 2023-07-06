@@ -24,9 +24,11 @@ import dateCapacityFactory from './dateCapacity'
 import departureFactory from './departure'
 import documentFactory from './document'
 import extensionFactory from './extension'
+import flagsFactory from './flags'
 import localAuthorityFactory from './localAuthority'
 import lostBedFactory from './lostBed'
 import lostBedCancellationFactory from './lostBedCancellation'
+import mappaFactory from './mappa'
 import newArrivalFactory from './newArrival'
 import newBookingFactory from './newBooking'
 import newCancellationFactory from './newCancellation'
@@ -50,6 +52,7 @@ import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
 import risksFactory from './risks'
 import roomFactory from './room'
+import roshRisksFactory from './roshRisks'
 import staffMemberFactory from './staffMember'
 import tierEnvelopeFactory from './tierEnvelopeFactory'
 import turnaroundFactory from './turnaround'
@@ -85,9 +88,11 @@ export {
   departureFactory,
   documentFactory,
   extensionFactory,
+  flagsFactory,
   localAuthorityFactory,
   lostBedCancellationFactory,
   lostBedFactory,
+  mappaFactory,
   newArrivalFactory,
   newBookingFactory,
   newCancellationFactory,
@@ -111,6 +116,7 @@ export {
   referenceDataFactory,
   risksFactory,
   roomFactory,
+  roshRisksFactory,
   roshSummaryFactory,
   staffMemberFactory,
   tierEnvelopeFactory,

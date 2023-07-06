@@ -35,9 +35,9 @@ context('Apply', () => {
     cy.fixture('applicationData.json').then(applicationData => {
       const person = personFactory.build()
       const application = applicationFactory.build({ person })
-      const risks = risksFactory.build({
+      const risks = risksFactory.retrived().build({
         crn: person.crn,
-        tier: tierEnvelopeFactory.build({ value: { level: 'A3' } }),
+        tier: tierEnvelopeFactory.build({ status: 'retrieved', value: { level: 'A3' } }),
       })
       const offences = activeOffenceFactory.buildList(1)
       application.data = applicationData

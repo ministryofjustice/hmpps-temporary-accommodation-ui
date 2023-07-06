@@ -155,6 +155,12 @@
       ]
     }
   },
+  "approvals-for-specific-risks": {
+    "approvals-for-specific-risks": {
+      "approvals": "yes",
+      "approvalsDetail": "Approvals detail"
+    }
+  },
   "oasys-import": {
     "optional-oasys-sections": {
       "needsLinkedToReoffending": [

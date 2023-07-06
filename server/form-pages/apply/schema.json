@@ -11,6 +11,7 @@
     "consent",
     "licence-conditions",
     "prison-information",
+    "approvals-for-specific-risks",
     "oasys-import",
     "placement-location",
     "disability-cultural-and-specific-needs",
@@ -453,6 +454,27 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "approvals-for-specific-risks": {
+      "type": "object",
+      "properties": {
+        "approvals-for-specific-risks": {
+          "type": "object",
+          "properties": {
+            "approvals": {
+              "enum": [
+                "needsAddress",
+                "notRequired",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "approvalsDetail": {
+              "type": "string"
             }
           }
         }

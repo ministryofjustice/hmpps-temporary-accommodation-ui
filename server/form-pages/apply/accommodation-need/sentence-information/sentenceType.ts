@@ -27,11 +27,11 @@ export default class SentenceType implements TasklistPage {
   }
 
   previous() {
-    return ''
+    return 'dashboard'
   }
 
   next() {
-    return ''
+    return 'sentence-expiry'
   }
 
   errors() {

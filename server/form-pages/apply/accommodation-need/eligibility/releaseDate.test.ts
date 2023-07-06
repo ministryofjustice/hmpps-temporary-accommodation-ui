@@ -1,11 +1,20 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
+import { dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ReleaseDate from './releaseDate'
 
-jest.mock('../../../../utils/dateUtils')
+jest.mock('../../../../utils/dateUtils', () => {
+  const module = jest.requireActual('../../../../utils/dateUtils')
 
-const body = { releaseDate: '2024-04-11' as const }
+  return {
+    ...module,
+    dateIsBlank: jest.fn(),
+    dateAndTimeInputsAreValidDates: jest.fn(),
+    dateIsInThePast: jest.fn(),
+  }
+})
+
+const body = { 'releaseDate-year': '2024', 'releaseDate-month': '4', 'releaseDate-day': '11' }
 
 describe('ReleaseDate', () => {
   const application = applicationFactory.build()
@@ -14,7 +23,10 @@ describe('ReleaseDate', () => {
     it('sets the body', () => {
       const page = new ReleaseDate(body, application)
 
-      expect(page.body).toEqual(body)
+      expect(page.body).toEqual({
+        ...body,
+        releaseDate: '2024-04-11',
+      })
     })
   })
 
@@ -61,12 +73,8 @@ describe('ReleaseDate', () => {
 
   describe('response', () => {
     it('returns a translated version of the response', () => {
-      ;(DateFormats.isoDateToUIDate as jest.Mock).mockReturnValue('11 April 2024')
-
       const page = new ReleaseDate(body, application)
       expect(page.response()).toEqual({ 'Release date': '11 April 2024' })
-
-      expect(DateFormats.isoDateToUIDate).toHaveBeenCalledWith('2024-04-11')
     })
   })
 })

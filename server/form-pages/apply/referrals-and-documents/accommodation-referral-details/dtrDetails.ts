@@ -4,12 +4,13 @@ import { Page } from '../../../utils/decorators'
 
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInFuture } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
+import { dateBodyProperties } from '../../../utils'
 
 type DtrDetailsBody = {
   reference: string
 } & ObjectWithDateParts<'date'>
 
-@Page({ name: 'dtr-details', bodyProperties: ['reference', 'date', 'date-year', 'date-month', 'date-day'] })
+@Page({ name: 'dtr-details', bodyProperties: ['reference', ...dateBodyProperties('date')] })
 export default class DtrDetails implements TasklistPage {
   title = 'Provide further details'
 
@@ -18,7 +19,18 @@ export default class DtrDetails implements TasklistPage {
     date: 'Date DTR / NOP was submitted',
   }
 
-  constructor(readonly body: Partial<DtrDetailsBody>, readonly application: Application) {}
+  constructor(private _body: Partial<DtrDetailsBody>, readonly application: Application) {}
+
+  public set body(value: Partial<DtrDetailsBody>) {
+    this._body = {
+      ...value,
+      ...DateFormats.dateAndTimeInputsToIsoString(value, 'date'),
+    }
+  }
+
+  public get body(): Partial<DtrDetailsBody> {
+    return this._body
+  }
 
   response() {
     return {
@@ -42,9 +54,9 @@ export default class DtrDetails implements TasklistPage {
       errors.reference = 'You must specify the DTR / NOP reference number'
     }
 
-    if (dateIsBlank(this.body)) {
+    if (dateIsBlank(this.body, 'date')) {
       errors.date = 'You must specify the date DTR / NOP was submitted'
-    } else if (!dateAndTimeInputsAreValidDates(this.body as ObjectWithDateParts<'date'>, 'date')) {
+    } else if (!dateAndTimeInputsAreValidDates(this.body, 'date')) {
       errors.date = 'You must specify a valid date DTR / NOP was submitted'
     } else if (dateIsInFuture(this.body.date)) {
       errors.date = 'The date DTR / NOP was submitted must not be in the future'

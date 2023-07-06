@@ -40,6 +40,101 @@
               "type": "string"
             }
           }
+        },
+        "sentence-expiry": {
+          "type": "object",
+          "properties": {
+            "sentenceExpiryDate-year": {
+              "type": "string"
+            },
+            "sentenceExpiryDate-month": {
+              "type": "string"
+            },
+            "sentenceExpiryDate-day": {
+              "type": "string"
+            },
+            "sentenceExpiryDate-time": {
+              "type": "string"
+            },
+            "sentenceExpiryDate": {
+              "type": "string"
+            }
+          }
+        },
+        "release-type": {
+          "type": "object",
+          "properties": {
+            "releaseTypes": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "licence",
+                  "pss"
+                ],
+                "type": "string"
+              }
+            },
+            "licenceStartDate-year": {
+              "type": "string"
+            },
+            "licenceStartDate-month": {
+              "type": "string"
+            },
+            "licenceStartDate-day": {
+              "type": "string"
+            },
+            "licenceStartDate-time": {
+              "type": "string"
+            },
+            "licenceStartDate": {
+              "type": "string"
+            },
+            "licenceEndDate-year": {
+              "type": "string"
+            },
+            "licenceEndDate-month": {
+              "type": "string"
+            },
+            "licenceEndDate-day": {
+              "type": "string"
+            },
+            "licenceEndDate-time": {
+              "type": "string"
+            },
+            "licenceEndDate": {
+              "type": "string"
+            },
+            "pssStartDate-year": {
+              "type": "string"
+            },
+            "pssStartDate-month": {
+              "type": "string"
+            },
+            "pssStartDate-day": {
+              "type": "string"
+            },
+            "pssStartDate-time": {
+              "type": "string"
+            },
+            "pssStartDate": {
+              "type": "string"
+            },
+            "pssEndDate-year": {
+              "type": "string"
+            },
+            "pssEndDate-month": {
+              "type": "string"
+            },
+            "pssEndDate-day": {
+              "type": "string"
+            },
+            "pssEndDate-time": {
+              "type": "string"
+            },
+            "pssEndDate": {
+              "type": "string"
+            }
+          }
         }
       }
     },

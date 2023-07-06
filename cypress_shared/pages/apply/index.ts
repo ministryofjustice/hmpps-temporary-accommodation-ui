@@ -8,6 +8,8 @@ import ProbationPractitionerPage from './accommodation-need/contact-details/prob
 import AccommodationRequiredFromDatePage from './accommodation-need/eligibility/accommodationRequiredFromDate'
 import EligibilityReasonPage from './accommodation-need/eligibility/eligibilityReason'
 import ReleaseDatePage from './accommodation-need/eligibility/releaseDate'
+import ReleaseTypePage from './accommodation-need/sentence-information/releaseType'
+import SentenceExpiryPage from './accommodation-need/sentence-information/sentenceExpiry'
 import SentenceTypePage from './accommodation-need/sentence-information/sentenceType'
 import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
@@ -51,6 +53,8 @@ export {
   SubmissionConfirmation,
   TaskListPage,
   SentenceTypePage,
+  SentenceExpiryPage,
+  ReleaseTypePage,
   ProbationPractitionerPage,
   BackupContactPage,
   PractitionerPduPage,

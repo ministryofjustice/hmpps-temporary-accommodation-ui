@@ -28,6 +28,13 @@ export type PageBodyPersonAcctAlert = {
   active: boolean
 }
 
+export type BodyWithYesOrNo<K extends string> = { [T in K]?: YesOrNo }
+export type BodyWithYesNoOrIDK<K extends string> = { [T in K]?: YesNoOrIDK }
+export type BodyWithYesOrNoWithDetail<K extends string> = BodyWithYesOrNo<K> & { [T in K as `${T}Detail`]?: string }
+export type BodyWithYesNoOrIDKWithDetail<K extends string> = BodyWithYesNoOrIDK<K> & {
+  [T in K as `${T}Detail`]?: string
+}
+
 export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unknown>): YesOrNoWithDetail<K> => {
   return {
     [`${key}`]: body[`${key}`] as YesOrNo,
@@ -35,15 +42,17 @@ export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unkn
   } as YesOrNoWithDetail<K>
 }
 
-export const yesOrNoResponseWithDetail = <K extends string>(key: K, body: Record<string, string>) => {
+export const yesOrNoResponseWithDetail = <K extends string>(key: K, body: BodyWithYesOrNoWithDetail<K>) => {
   return body[key] === 'yes' ? `Yes - ${body[`${key}Detail`]}` : 'No'
 }
 
-export const yesNoOrDontKnowResponseWithDetail = <K extends string>(key: K, body: Record<string, string>) => {
-  return body[key] === 'iDontKnow' ? "Don't know" : yesOrNoResponseWithDetail<K>(key, body)
+export const yesNoOrDontKnowResponseWithDetail = <K extends string>(key: K, body: BodyWithYesNoOrIDKWithDetail<K>) => {
+  return body[key] === 'iDontKnow'
+    ? "Don't know"
+    : yesOrNoResponseWithDetail<K>(key, body as BodyWithYesOrNoWithDetail<K>)
 }
 
-export const yesNoOrDontKnowResponse = <K extends string>(key: K, body: { [T in K]?: YesNoOrIDK }) => {
+export const yesNoOrDontKnowResponse = <K extends string>(key: K, body: BodyWithYesNoOrIDK<K>) => {
   return body[key] === 'iDontKnow' ? "Don't know" : sentenceCase(body[key])
 }
 

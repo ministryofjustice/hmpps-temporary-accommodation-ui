@@ -28,13 +28,13 @@ describe('utils', () => {
 
   describe('yesOrNoResponseWithDetail', () => {
     it('returns a response with detail if the answer is yes', () => {
-      const body = { foo: 'yes', fooDetail: 'Some Detail' }
+      const body = { foo: 'yes' as const, fooDetail: 'Some Detail' }
 
       expect(utils.yesOrNoResponseWithDetail('foo', body)).toEqual('Yes - Some Detail')
     })
 
     it('returns no detail if the answer is no', () => {
-      const body = { foo: 'no' }
+      const body = { foo: 'no' as const }
 
       expect(utils.yesOrNoResponseWithDetail('foo', body)).toEqual('No')
     })
@@ -42,19 +42,19 @@ describe('utils', () => {
 
   describe('yesNoOrDontKnowResponseWithDetail', () => {
     it('returns a response with detail if the answer is yes', () => {
-      const body = { foo: 'yes', fooDetail: 'Some Detail' }
+      const body = { foo: 'yes' as const, fooDetail: 'Some Detail' }
 
       expect(utils.yesNoOrDontKnowResponseWithDetail('foo', body)).toEqual('Yes - Some Detail')
     })
 
     it('returns No if the answer is no', () => {
-      const body = { foo: 'no' }
+      const body = { foo: 'no' as const }
 
       expect(utils.yesNoOrDontKnowResponseWithDetail('foo', body)).toEqual('No')
     })
 
     it("returns Don't know if the answer is iDontKnow", () => {
-      const body = { foo: 'iDontKnow' }
+      const body = { foo: 'iDontKnow' as const }
 
       expect(utils.yesNoOrDontKnowResponseWithDetail('foo', body)).toEqual("Don't know")
     })
@@ -62,7 +62,7 @@ describe('utils', () => {
 
   describe('yesNoOrDontKnowResponse', () => {
     it('returns Yes if the answer is yes', () => {
-      const body = { foo: 'yes' as const }
+      const body = { foo: 'yes' as const, fooDetail: '' }
 
       expect(utils.yesNoOrDontKnowResponse('foo', body)).toEqual('Yes')
     })

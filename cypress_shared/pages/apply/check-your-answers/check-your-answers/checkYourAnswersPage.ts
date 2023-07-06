@@ -104,7 +104,7 @@ export default class CheckYourAnswersPage extends ApplyPage {
           const value = responses[key] as string | Array<Record<string, unknown>>
 
           if (typeof value === 'string') {
-            ;(responses[key] as string).split('\n').forEach(line => {
+            value.split('\n').forEach(line => {
               this.assertDefinition(key, line)
             })
           } else {

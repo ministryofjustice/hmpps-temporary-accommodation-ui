@@ -8,7 +8,16 @@ import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
 import { FormSection, Task } from '../../@types/ui'
-import { acctAlertFactory, adjudicationFactory, applicationFactory, assessmentFactory } from '../../testutils/factories'
+import {
+  acctAlertFactory,
+  adjudicationFactory,
+  applicationFactory,
+  assessmentFactory,
+  flagsFactory,
+  mappaFactory,
+  risksFactory,
+  roshRisksFactory,
+} from '../../testutils/factories'
 import { SessionDataError } from '../../utils/errors'
 
 describe('utils', () => {
@@ -452,6 +461,167 @@ describe('utils', () => {
         { ...acctAlert2, comment: '' },
         { ...acctAlert3, dateExpires: '' },
       ])
+    })
+  })
+})
+
+describe('personRisksRoshResponse', () => {
+  it('returns a page response for risks with a populated RoSH object', () => {
+    const risks = risksFactory.retrived().build({
+      roshRisks: roshRisksFactory.build({
+        status: 'retrieved',
+        value: {
+          overallRisk: 'High',
+          riskToChildren: '',
+          riskToPublic: '',
+          riskToKnownAdult: 'Low',
+          riskToStaff: 'Very High',
+        },
+      }),
+    })
+
+    expect(utils.personRisksRoshResponse(risks)).toEqual({
+      'Risk of serious harm': [
+        {
+          'Overall risk of serious harm': 'High',
+          'Risk to children': 'Not known',
+          'Risk to public': 'Not known',
+          'Risk to known adult': 'Low',
+          'Risk to staff': 'Very high',
+        },
+      ],
+    })
+  })
+
+  it('returns a page response for risks with an unpopulated RoSH value', () => {
+    const risks = risksFactory.retrived().build({
+      roshRisks: roshRisksFactory.build({
+        status: 'retrieved',
+        value: null,
+      }),
+    })
+
+    expect(utils.personRisksRoshResponse(risks)).toEqual({
+      'Risk of serious harm': [
+        {
+          'Overall risk of serious harm': 'Not known',
+          'Risk to children': 'Not known',
+          'Risk to public': 'Not known',
+          'Risk to known adult': 'Not known',
+          'Risk to staff': 'Not known',
+        },
+      ],
+    })
+  })
+
+  it('returns a page response for risks where there was an error retrieving RoSH information', () => {
+    const risks = risksFactory.retrived().build({
+      roshRisks: roshRisksFactory.build({
+        status: 'error',
+        value: null,
+      }),
+    })
+
+    expect(utils.personRisksRoshResponse(risks)).toEqual({
+      'Risk of serious harm':
+        'Something went wrong. We are unable to include RoSH information. This risk data must be checked manually outside of this service.',
+    })
+  })
+})
+
+describe('personRisksMappaResponse', () => {
+  it('returns a page response for risks with a populated MAPPA object', () => {
+    const risks = risksFactory.retrived().build({
+      mappa: mappaFactory.build({
+        status: 'retrieved',
+        value: { level: 'LEVEL 1' },
+      }),
+    })
+
+    expect(utils.personRisksMappaResponse(risks)).toEqual({
+      'Multi-agency public protection arrangements': 'LEVEL 1',
+    })
+  })
+
+  it('returns a page response for risks with an unpopulated MAPPA value', () => {
+    const risks = risksFactory.retrived().build({
+      mappa: mappaFactory.build({
+        status: 'retrieved',
+        value: null,
+      }),
+    })
+
+    expect(utils.personRisksMappaResponse(risks)).toEqual({
+      'Multi-agency public protection arrangements': 'Not known',
+    })
+  })
+
+  it('returns a page response for risks where there was an error retrieving MAPPA information', () => {
+    const risks = risksFactory.retrived().build({
+      mappa: mappaFactory.build({
+        status: 'error',
+        value: null,
+      }),
+    })
+
+    expect(utils.personRisksMappaResponse(risks)).toEqual({
+      'Multi-agency public protection arrangements':
+        'Something went wrong. We are unable to include MAPPA information. This risk data must be checked manually outside of this service.',
+    })
+  })
+})
+
+describe('personRisksFlagsResponse', () => {
+  it('returns a page response for risks with a populated flags object', () => {
+    const risks = risksFactory.retrived().build({
+      flags: flagsFactory.build({
+        status: 'retrieved',
+        value: ['Flag 1', 'Flag 2', 'Flag 3'],
+      }),
+    })
+
+    expect(utils.personRisksFlagsResponse(risks)).toEqual({
+      'Delius risk flags (registers)': 'Flag 1\nFlag 2\nFlag 3',
+    })
+  })
+
+  it('returns a page response for risks with a populated flags object with no flags', () => {
+    const risks = risksFactory.retrived().build({
+      flags: flagsFactory.build({
+        status: 'retrieved',
+        value: [],
+      }),
+    })
+
+    expect(utils.personRisksFlagsResponse(risks)).toEqual({
+      'Delius risk flags (registers)': 'No flags',
+    })
+  })
+
+  it('returns a page response for risks with an unpopulated flags value', () => {
+    const risks = risksFactory.retrived().build({
+      flags: flagsFactory.build({
+        status: 'retrieved',
+        value: null,
+      }),
+    })
+
+    expect(utils.personRisksFlagsResponse(risks)).toEqual({
+      'Delius risk flags (registers)': 'Not known',
+    })
+  })
+
+  it('returns a page response for risks where there was an error retrieving flags information', () => {
+    const risks = risksFactory.retrived().build({
+      flags: flagsFactory.build({
+        status: 'error',
+        value: null,
+      }),
+    })
+
+    expect(utils.personRisksFlagsResponse(risks)).toEqual({
+      'Delius risk flags (registers)':
+        'Something went wrong. We are unable to include risk flags. This risk data must be checked manually outside of this service.',
     })
   })
 })

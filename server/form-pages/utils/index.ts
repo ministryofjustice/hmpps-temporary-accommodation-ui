@@ -1,10 +1,19 @@
-import type { FormSection, JourneyType, Task, YesNoOrIDK, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
+import type {
+  FormSection,
+  JourneyType,
+  PageResponse,
+  Task,
+  YesNoOrIDK,
+  YesOrNo,
+  YesOrNoWithDetail,
+} from '@approved-premises/ui'
 import type { Request } from 'express'
 import {
   Adjudication,
   TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment,
   PersonAcctAlert,
+  PersonRisks,
 } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
 import { kebabCase, sentenceCase } from '../../utils/utils'
@@ -239,4 +248,54 @@ export const mapAcctAlertsForPageBody = (acctAlerts: Array<PersonAcctAlert>): Ar
     expired: acctAlert.expired,
     active: acctAlert.active,
   }))
+}
+
+export const personRisksRoshResponse = (risks: PersonRisks): PageResponse => {
+  if (risks?.roshRisks?.status === 'retrieved') {
+    const { value } = risks.roshRisks
+
+    return {
+      'Risk of serious harm': [
+        {
+          'Overall risk of serious harm': sentenceCase(value?.overallRisk) || 'Not known',
+          'Risk to children': sentenceCase(value?.riskToChildren) || 'Not known',
+          'Risk to public': sentenceCase(value?.riskToPublic) || 'Not known',
+          'Risk to known adult': sentenceCase(value?.riskToKnownAdult) || 'Not known',
+          'Risk to staff': sentenceCase(value?.riskToStaff) || 'Not known',
+        },
+      ],
+    }
+  }
+  return {
+    'Risk of serious harm':
+      'Something went wrong. We are unable to include RoSH information. This risk data must be checked manually outside of this service.',
+  }
+}
+
+export const personRisksMappaResponse = (risks: PersonRisks): PageResponse => {
+  if (risks?.mappa?.status === 'retrieved') {
+    const { value } = risks.mappa
+
+    return {
+      'Multi-agency public protection arrangements': value?.level || 'Not known',
+    }
+  }
+  return {
+    'Multi-agency public protection arrangements':
+      'Something went wrong. We are unable to include MAPPA information. This risk data must be checked manually outside of this service.',
+  }
+}
+
+export const personRisksFlagsResponse = (risks: PersonRisks): PageResponse => {
+  if (risks?.flags?.status === 'retrieved') {
+    const { value } = risks.flags
+
+    return {
+      'Delius risk flags (registers)': value?.length === 0 ? 'No flags' : value?.join('\n') || 'Not known',
+    }
+  }
+  return {
+    'Delius risk flags (registers)':
+      'Something went wrong. We are unable to include risk flags. This risk data must be checked manually outside of this service.',
+  }
 }

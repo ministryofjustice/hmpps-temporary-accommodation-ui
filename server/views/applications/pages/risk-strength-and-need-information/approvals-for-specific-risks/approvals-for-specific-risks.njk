@@ -1,0 +1,64 @@
+{% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
+{% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
+{% from "../../../../components/riskWidgets/tier-widget/macro.njk" import tierWidget %}
+{% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
+
+{% extends "../../layout.njk" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-colum-full">
+      <div class="risk-widgets-columns">
+        {{ roshWidget(page.risks.roshRisks) }}
+        {{ mappaWidget(page.risks.mappa) }}
+        {{ riskFlagWidget(page.risks.flags)}}
+      </div>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p>There are regional differences in what approvals are required and when.</p>
+      <p>Some regions require approvals before a referral is submitted. Others do not require approvals until an address is proposed by the homelessness prevention team (HPT).</p>
+      <p>Please make sure you have the right approvals before you continue.</p>
+
+      {% set itemsWithDetail = [] %}
+      {% set conditionalHtml %}
+        {{ formPageTextarea({
+          fieldName: "approvalsDetail",
+          label: {
+            text: "Provide details of who gave approval and the date it was given",
+            classes: "govuk-label--s"
+          }
+        },fetchContext()) }}
+      {% endset %}
+
+      {% for item in page.items() %}
+        {% set itemsWithDetail = (
+          itemsWithDetail.push(mergeObjects(item, {
+            conditional: { html: conditionalHtml } if item.value === 'yes' else undefined
+          })), itemsWithDetail)
+        %}
+      {% endfor %}
+
+      {{ formPageRadios({
+        fieldset: {
+          legend: {
+            text: page.questions.approvals,
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        fieldName: "approvals",
+        items: itemsWithDetail
+      }, fetchContext()) }}
+    </div>
+  </div>
+
+{% endblock %}

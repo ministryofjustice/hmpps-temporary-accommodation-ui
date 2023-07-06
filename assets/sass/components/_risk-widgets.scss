@@ -8,6 +8,17 @@ $very-high-score-colour: #711a0d;
 $very-high-score-border-colour: #942514;
 $mappa-colour: #4c2c92;
 
+.risk-widgets-columns {
+  display: flex;
+  gap: govuk-spacing(6);
+  padding-left: govuk-spacing(3);
+  padding-right: govuk-spacing(3);
+
+  & div {
+    flex: 1;
+  }
+}
+
 .rosh-widget {
   border: 2px solid govuk-colour('black');
   padding: govuk-spacing(4);

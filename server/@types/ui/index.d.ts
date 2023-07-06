@@ -84,7 +84,7 @@ export type FormSections = Array<FormSection>
 
 export type FormPages = { [key in TaskNames]: Record<string, unknown> }
 
-export type PageResponse = Record<string, string | Array<string> | Array<Record<string, unknown>>>
+export type PageResponse = Record<string, string | Array<Record<string, unknown>>>
 
 export interface HtmlAttributes {
   [key: string]: string

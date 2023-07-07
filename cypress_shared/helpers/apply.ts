@@ -20,7 +20,6 @@ import {
   AccommodationRequiredFromDatePage,
   AdditionalLicenceConditionsPage,
   AlternativePduPage,
-  AttachDocumentsPage,
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
@@ -83,7 +82,6 @@ export default class ApplyHelper {
     requirementsFromPlacement: [] as Array<ApplyPage>,
     moveOnPlan: [] as Array<ApplyPage>,
     accommodationReferralDetails: [] as Array<ApplyPage>,
-    attachDocuments: [] as Array<ApplyPage>,
   }
 
   uiRisks?: PersonRisksUI
@@ -161,7 +159,6 @@ export default class ApplyHelper {
     this.completeRequirementsForPlacement()
     this.completeMoveOnPlan()
     this.completeAccommodationReferralDetails()
-    this.completeAttachDocuments()
 
     this.completeCheckYourAnswersSection()
     this.submitApplication()
@@ -182,7 +179,6 @@ export default class ApplyHelper {
       ...this.pages.requirementsFromPlacement,
       ...this.pages.moveOnPlan,
       ...this.pages.accommodationReferralDetails,
-      ...this.pages.attachDocuments,
     ].length
   }
 
@@ -677,31 +673,6 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('accommodation-referral-details', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('attach-documents', 'Not started')
-  }
-
-  private completeAttachDocuments() {
-    // Given I click on the attach documents task
-    cy.get('[data-cy-task-name="attach-documents"]').click()
-    const attachDocumentsPage = new AttachDocumentsPage(this.documents, this.selectedDocuments, this.application)
-
-    // Then I should be able to download the documents
-    attachDocumentsPage.shouldBeAbleToDownloadDocuments(this.documents)
-
-    // And I attach the relevant documents
-    attachDocumentsPage.shouldDisplayDocuments()
-    attachDocumentsPage.completeForm()
-    attachDocumentsPage.clickSubmit()
-
-    this.pages.attachDocuments = [attachDocumentsPage]
-
-    // Then I should be taken back to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // And the Attach Documents task should show a completed status
-    tasklistPage.shouldShowTaskStatus('attach-documents', 'Completed')
-
-    // And the Check Your Answers task should show as not started
     tasklistPage.shouldShowTaskStatus('check-your-answers', 'Not started')
   }
 
@@ -733,10 +704,6 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
     checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)
-
-    if (this.environment === 'integration') {
-      checkYourAnswersPage.shouldShowAttachDocumentsAnswers(this.pages.attachDocuments)
-    }
 
     // When I have checked my answers
     checkYourAnswersPage.clickSubmit()

@@ -30,7 +30,6 @@ import CrsSubmittedPage from './referrals-and-documents/accommodation-referral-d
 import DtrDetailsPage from './referrals-and-documents/accommodation-referral-details/dtrDetails'
 import DtrSubmittedPage from './referrals-and-documents/accommodation-referral-details/dtrSubmitted'
 import OtherAccommodationOptionsPage from './referrals-and-documents/accommodation-referral-details/otherAccommodationOptions'
-import AttachDocumentsPage from './referrals-and-documents/attach-documents/attachDocumentsPage'
 import AdditionalLicenceConditionsPage from './risk-strength-and-need-information/licence-conditions/additionalLicenceConditions'
 import OffenceDetailsPage from './risk-strength-and-need-information/oasys-import/offenceDetails'
 import OptionalOasysSectionsPage from './risk-strength-and-need-information/oasys-import/optionalOasysSections'
@@ -87,5 +86,4 @@ export {
   DtrDetailsPage,
   CrsSubmittedPage,
   OtherAccommodationOptionsPage,
-  AttachDocumentsPage,
 }

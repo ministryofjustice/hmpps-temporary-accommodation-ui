@@ -197,26 +197,40 @@ export default abstract class Page extends Component {
   }
 
   shouldShowRosh = (risks: PersonRisksUI['roshRisks']): void => {
-    cy.get('h3').contains(`${risks.overallRisk.toLocaleUpperCase()} RoSH`)
-    cy.get('p').contains(`Last updated: ${risks.lastUpdated}`)
+    const roshRisksValue = risks.value
+
+    cy.get('h3').contains(`${roshRisksValue.overallRisk.toLocaleUpperCase()} RoSH`)
+    cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(roshRisksValue.lastUpdated)}`)
 
     cy.get('.rosh-widget__table').within($row => {
-      cy.wrap($row).get('th').contains('Children').get('td').contains(risks.riskToChildren, { matchCase: false })
-      cy.wrap($row).get('th').contains('Public').get('td').contains(risks.riskToPublic, { matchCase: false })
-      cy.wrap($row).get('th').contains('Known adult').get('td').contains(risks.riskToKnownAdult, { matchCase: false })
-      cy.wrap($row).get('th').contains('Staff').get('td').contains(risks.riskToStaff, { matchCase: false })
+      cy.wrap($row)
+        .get('th')
+        .contains('Children')
+        .get('td')
+        .contains(roshRisksValue.riskToChildren, { matchCase: false })
+      cy.wrap($row).get('th').contains('Public').get('td').contains(roshRisksValue.riskToPublic, { matchCase: false })
+      cy.wrap($row)
+        .get('th')
+        .contains('Known adult')
+        .get('td')
+        .contains(roshRisksValue.riskToKnownAdult, { matchCase: false })
+      cy.wrap($row).get('th').contains('Staff').get('td').contains(roshRisksValue.riskToStaff, { matchCase: false })
     })
   }
 
   shouldShowTier = (tier: PersonRisksUI['tier']): void => {
-    cy.get('h3').contains(`TIER ${tier.level}`)
-    cy.get('p').contains(`Last updated: ${tier.lastUpdated}`)
+    const tierValue = tier.value
+
+    cy.get('h3').contains(`TIER ${tierValue.level}`)
+    cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(tierValue.lastUpdated)}`)
   }
 
-  shouldShowDeliusRiskFlags = (flags: Array<string>): void => {
+  shouldShowDeliusRiskFlags = (flags: PersonRisksUI['flags']): void => {
+    const flagsValue = flags.value
+
     cy.get('h3').contains(`Delius risk flags (registers)`)
     cy.get('.risk-flag-widget > ul').within($item => {
-      flags.forEach(flag => {
+      flagsValue.forEach(flag => {
         cy.wrap($item).get('li').should('contain', flag)
       })
     })

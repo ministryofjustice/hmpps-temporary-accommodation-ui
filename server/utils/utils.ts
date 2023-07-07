@@ -5,7 +5,6 @@ import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 
 import escapeRegExp from 'lodash.escaperegexp'
 import qs, { IStringifyOptions } from 'qs'
-import { DateFormats } from './dateUtils'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
@@ -107,24 +106,7 @@ export const removeBlankSummaryListItems = (items: Array<SummaryListItem>): Arra
 }
 
 export const mapApiPersonRisksForUi = (risks: PersonRisks): PersonRisksUI => {
-  return {
-    ...risks,
-    roshRisks: {
-      ...risks.roshRisks?.value,
-      lastUpdated: risks.roshRisks?.value?.lastUpdated
-        ? DateFormats.isoDateToUIDate(risks.roshRisks.value.lastUpdated)
-        : '',
-    },
-    mappa: {
-      ...risks.mappa?.value,
-      lastUpdated: risks.mappa?.value?.lastUpdated ? DateFormats.isoDateToUIDate(risks.mappa.value.lastUpdated) : '',
-    },
-    tier: {
-      ...risks.tier?.value,
-      lastUpdated: risks.tier?.value?.lastUpdated ? DateFormats.isoDateToUIDate(risks.tier.value.lastUpdated) : '',
-    },
-    flags: risks.flags.value,
-  }
+  return risks
 }
 
 export function unique<T extends { id: string }>(elements: Array<T>): Array<T> {

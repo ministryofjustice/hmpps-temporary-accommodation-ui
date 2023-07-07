@@ -1,5 +1,14 @@
 <div class="mappa-widget">
-    <h3 class="govuk-heading-m"><strong>{{ params.level | default("NO", true) }}</strong> MAPPA</h3>
+  {% if params.status === 'retrieved' %}
+    <h3 class="govuk-heading-m"><strong>{{ params.value.level | default("NO", true) }}</strong> MAPPA</h3>
     <p class="govuk-body-m">Multi-agency public protection arrangements</p>
-    {% if params.level %}<p class="govuk-hint govuk-body-m">Last updated: {{ params.lastUpdated | default("Not known") }}</p>{% endif %}
+    {% if params.value.level %}
+      <p class="govuk-hint govuk-body-m">Last updated: {{ formatDate(params.value.lastUpdated) if params.value.lastUpdated else "Not known" }}</p>
+    {% endif %}
+  {% else %}
+    <h3 class="govuk-heading-m"><strong>UNKNOWN</strong> MAPPA</h3>
+    <p class="govuk-body-m">Multi-agency public protection arrangements</p>
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <p class="govuk-body-m">Something went wrong. We are unable to show or copy MAPPA information at this time. This risk data must be checked manually outside of this service.</p>
+  {% endif %}
 </div>

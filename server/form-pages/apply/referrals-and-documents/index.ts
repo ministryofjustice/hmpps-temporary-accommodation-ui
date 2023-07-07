@@ -1,6 +1,5 @@
 import { Section } from '../../utils/decorators'
 import AccommodationReferralDetails from './accommodation-referral-details'
-import AttachDocumentsTask from './attach-documents'
 
-@Section({ title: 'Required referrals and documents', tasks: [AccommodationReferralDetails, AttachDocumentsTask] })
+@Section({ title: 'Required referrals and documents', tasks: [AccommodationReferralDetails] })
 export default class ReferralsAndDocuments {}

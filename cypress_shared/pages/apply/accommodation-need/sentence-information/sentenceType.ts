@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class SentenceTypePage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Which of the following best describes the sentence type the person is on?',
+      'Which of the following best describes the sentence type?',
       application,
       'sentence-information',
       'sentence-type',

@@ -29,12 +29,10 @@
           "properties": {
             "sentenceType": {
               "enum": [
-                "bailPlacement",
-                "communityOrder",
                 "extendedDeterminate",
                 "ipp",
                 "life",
-                "nonStatutory",
+                "offenderRehabilitationAct",
                 "standardDeterminate"
               ],
               "type": "string"

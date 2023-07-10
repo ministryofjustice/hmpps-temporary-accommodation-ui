@@ -130,7 +130,7 @@ Then('I should see the booking with the edited cancellation details', () => {
 Then('I should see a list of the problems encountered cancelling the booking', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingCancellationNewPage, this.premises, this.room, this.booking)
-    page.shouldShowErrorMessagesForFields(['date'], 'bookingCancellation')
+    page.shouldShowErrorMessagesForFields(['date'], 'empty', 'bookingCancellation')
 
     page.clickBack()
   })
@@ -139,7 +139,7 @@ Then('I should see a list of the problems encountered cancelling the booking', (
 Then('I should see a list of the problems encountered editing the cancelling booking', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BookingCancellationEditPage, this.premises, this.room, this.booking)
-    page.shouldShowErrorMessagesForFields(['date'], 'bookingCancellation')
+    page.shouldShowErrorMessagesForFields(['date'], 'empty', 'bookingCancellation')
 
     page.clickBack()
   })

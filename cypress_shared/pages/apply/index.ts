@@ -1,5 +1,5 @@
-import ReferralHistoryDetailsPage from './accommodation-need/accommodation-referral-history/referralHistoryDetails'
-import ReferralsPreviouslySumbittedPage from './accommodation-need/accommodation-referral-history/referralsPreviouslySubmitted'
+import PreviousStaysPage from './accommodation-need/behaviour-in-previous-accommodation/previousStays'
+import PreviousStaysDetailsPage from './accommodation-need/behaviour-in-previous-accommodation/previousStaysDetails'
 import ConsentDetailsPage from './accommodation-need/consent/consentDetails'
 import ConsentGivenPage from './accommodation-need/consent/consentGiven'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
@@ -58,8 +58,8 @@ export {
   BackupContactPage,
   PractitionerPduPage,
   EligibilityReasonPage,
-  ReferralsPreviouslySumbittedPage,
-  ReferralHistoryDetailsPage,
+  PreviousStaysPage,
+  PreviousStaysDetailsPage,
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,

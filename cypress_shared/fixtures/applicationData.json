@@ -62,17 +62,15 @@
       "accommodationRequiredFromDate-day": "16"
     }
   },
-  "accommodation-referral-history": {
-    "referrals-previously-submitted": {
-      "referralsPreviouslySubmitted": "yes"
+  "behaviour-in-previous-accommodation": {
+    "previous-stays": {
+      "previousStays": "yes"
     },
-    "referral-history-details": {
-      "accommodationTypes": ["cas1", "crs"],
+    "previous-stays-details": {
+      "accommodationTypes": ["cas1", "cas3"],
       "cas1Detail": "Approved Premises detail",
-      "dtrDetail": "",
-      "crsDetail": "CRS detail",
-      "crsWomenDetail": "",
-      "cas3Detail": ""
+      "cas2Detail": "",
+      "cas3Detail": "Temporary Accommodation detail"
     }
   },
   "consent": {

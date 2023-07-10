@@ -7,7 +7,7 @@
     "sentence-information",
     "contact-details",
     "eligibility",
-    "accommodation-referral-history",
+    "behaviour-in-previous-accommodation",
     "consent",
     "licence-conditions",
     "oasys-import",
@@ -236,13 +236,13 @@
         }
       }
     },
-    "accommodation-referral-history": {
+    "behaviour-in-previous-accommodation": {
       "type": "object",
       "properties": {
-        "referrals-previously-submitted": {
+        "previous-stays": {
           "type": "object",
           "properties": {
-            "referralsPreviouslySubmitted": {
+            "previousStays": {
               "enum": [
                 "iDontKnow",
                 "no",
@@ -252,7 +252,7 @@
             }
           }
         },
-        "referral-history-details": {
+        "previous-stays-details": {
           "type": "object",
           "properties": {
             "accommodationTypes": {
@@ -260,10 +260,8 @@
               "items": {
                 "enum": [
                   "cas1",
-                  "cas3",
-                  "crs",
-                  "crsWomen",
-                  "dtr"
+                  "cas2",
+                  "cas3"
                 ],
                 "type": "string"
               }
@@ -271,13 +269,7 @@
             "cas1Detail": {
               "type": "string"
             },
-            "dtrDetail": {
-              "type": "string"
-            },
-            "crsDetail": {
-              "type": "string"
-            },
-            "crsWomenDetail": {
+            "cas2Detail": {
               "type": "string"
             },
             "cas3Detail": {

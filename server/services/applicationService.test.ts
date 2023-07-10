@@ -4,7 +4,7 @@ import type { Request } from 'express'
 
 import ApplicationClient from '../data/applicationClient'
 import type TasklistPage from '../form-pages/tasklistPage'
-import { getBody, getPageName, getTaskName } from '../form-pages/utils'
+import { getBody, getPageName, getTaskName, pageBodyShallowEquals } from '../form-pages/utils'
 import { ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
 
@@ -14,6 +14,7 @@ import {
 } from '../@types/shared'
 import { CallConfig } from '../data/restClient'
 import Apply from '../form-pages/apply'
+import Review from '../form-pages/apply/check-your-answers/review'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
 import {
   activeOffenceFactory,
@@ -274,9 +275,12 @@ describe('ApplicationService', () => {
           },
           body: { foo: 'bar' },
         })
-        ;(getPageName as jest.Mock).mockReturnValue('some-page')
-        ;(getTaskName as jest.Mock).mockReturnValue('some-task')
+        ;(getPageName as jest.Mock).mockImplementation(pageClass => (pageClass === Review ? 'review' : 'some-page'))
+        ;(getTaskName as jest.Mock).mockImplementation(pageClass =>
+          pageClass === Review ? 'check-your-answers' : 'some-task',
+        )
         ;(getApplicationUpdateData as jest.Mock).mockReturnValue(applicationData)
+        ;(pageBodyShallowEquals as jest.Mock).mockReturnValue(false)
       })
 
       it('does not throw an error', () => {
@@ -307,6 +311,99 @@ describe('ApplicationService', () => {
         expect(request.session.application).toEqual(application)
         expect(request.session.application.data).toEqual({
           'some-task': { 'other-page': { question: 'answer' }, 'some-page': { foo: 'bar' } },
+        })
+      })
+
+      it('invalidates the check your answers task when saving a new page', async () => {
+        application.data = {
+          'some-task': { 'other-page': { question: 'answer' } },
+          'check-your-answers': { review: { reviewed: '1' } },
+        }
+
+        await service.save(callConfig, page, request)
+
+        expect(request.session.application.data).toEqual({
+          'some-task': { 'other-page': { question: 'answer' }, 'some-page': { foo: 'bar' } },
+        })
+        expect(getApplicationUpdateData).toHaveBeenCalledWith({
+          ...application,
+          data: {
+            'some-task': { 'other-page': { question: 'answer' }, 'some-page': { foo: 'bar' } },
+          },
+        })
+      })
+
+      it('invalidates the check your answers task when changing an existing page', async () => {
+        application.data = {
+          'some-task': { 'some-page': { foo: 'baz' }, 'other-page': { question: 'answer' } },
+          'check-your-answers': { review: { reviewed: '1' } },
+        }
+
+        await service.save(callConfig, page, request)
+
+        expect(request.session.application.data).toEqual({
+          'some-task': { 'other-page': { question: 'answer' }, 'some-page': { foo: 'bar' } },
+        })
+        expect(getApplicationUpdateData).toHaveBeenCalledWith({
+          ...application,
+          data: {
+            'some-task': { 'other-page': { question: 'answer' }, 'some-page': { foo: 'bar' } },
+          },
+        })
+      })
+
+      it('does not invalidate the check your answers task when saving an existing page with unchanged data', async () => {
+        application.data = {
+          'some-task': { 'some-page': { foo: 'bar' } },
+          'check-your-answers': { review: { reviewed: '1' } },
+        }
+        ;(pageBodyShallowEquals as jest.Mock).mockReturnValue(true)
+
+        await service.save(callConfig, page, request)
+
+        expect(request.session.application.data).toEqual({
+          'some-task': { 'some-page': { foo: 'bar' } },
+          'check-your-answers': { review: { reviewed: '1' } },
+        })
+        expect(getApplicationUpdateData).toHaveBeenCalledWith({
+          ...application,
+          data: {
+            'some-task': { 'some-page': { foo: 'bar' } },
+            'check-your-answers': { review: { reviewed: '1' } },
+          },
+        })
+      })
+
+      it('does not invalidate the check your answers task when saving a check your answers page', async () => {
+        page = createMock<TasklistPage>({
+          errors: () => {
+            return {} as TaskListErrors<TasklistPage>
+          },
+          body: { reviewed: '1' },
+        })
+
+        application.data = {
+          'some-task': { 'other-page': { question: 'answer' } },
+        }
+        ;(getTaskName as jest.Mock).mockReturnValue('check-your-answers')
+        ;(getPageName as jest.Mock).mockReturnValue('review')
+
+        await service.save(callConfig, page, request)
+
+        expect(request.session.application.data).toEqual({
+          'some-task': {
+            'other-page': { question: 'answer' },
+          },
+          'check-your-answers': { review: { reviewed: '1' } },
+        })
+        expect(getApplicationUpdateData).toHaveBeenCalledWith({
+          ...application,
+          data: {
+            'some-task': {
+              'other-page': { question: 'answer' },
+            },
+            'check-your-answers': { review: { reviewed: '1' } },
+          },
         })
       })
     })

@@ -17,46 +17,37 @@
         Make a referral for Temporary Accommodation
       </h1>
 
+      {{ showErrorSummary(errorSummary) }}
+
       <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Referral {{ taskList.status }}</h2>
       <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{ taskList.completeSectionCount }} of {{ (taskList.sections | length) }} sections.</p>
     </div>
-    {{ showErrorSummary(errorSummary) }}
 
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.applications.submission({id: application.id}) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-        <ol class="app-task-list">
-          {% set applicationOrAssessment = application %}
-          {% include '../partials/taskListItems.njk' %}
+        {% set applicationOrAssessment = application %}
+        {% include '../partials/taskList.njk' %}
 
-          <li>
-            <h2 class="app-task-list__section">
-              <span class="app-task-list__section-number">
-                {{ (taskList.sections | length) + 1 }}.
-            </span>
-            Submit your application
-          </h2>
-
-            {{ govukCheckboxes({
+        {% if taskList.status === 'complete' %}
+          {{ govukCheckboxes({
             idPrefix: "confirmation",
             name: "confirmation",
-            errorMessage: errorObject,
             items: [
               {
                 value: "submit",
                 text: "I confirm the information provided is complete, accurate and up to date."
               }
-            ]
+            ],
+            errorMessage: errors.confirmation
           }) }}
-          </li>
-        </ol>
 
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-        {{ govukButton({
-          text: "Submit referral",
-          preventDoubleClick: true
-        }) }}
+          {{ govukButton({
+            text: "Submit referral",
+            preventDoubleClick: true
+          }) }}
+        {% endif %}
       </form>
 
       {{ govukButton({
@@ -64,7 +55,6 @@
         classes: "govuk-button--secondary",
         href: paths.applications.index({})
       }) }}
-
     </div>
 
     {% if not oasysDisabled %}

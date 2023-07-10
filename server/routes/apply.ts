@@ -19,6 +19,7 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.applications.index.pattern, applicationsController.index())
   get(paths.applications.new.pattern, applicationsController.new())
   get(paths.applications.show.pattern, applicationsController.show())
+  get(paths.applications.confirm.pattern, applicationsController.confirm())
   post(paths.applications.create.pattern, applicationsController.create())
   post(paths.applications.submission.pattern, applicationsController.submit())
 

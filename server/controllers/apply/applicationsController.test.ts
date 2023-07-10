@@ -3,16 +3,15 @@ import type { NextFunction, Request, Response } from 'express'
 
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { ErrorsAndUserInput, GroupedApplications } from '@approved-premises/ui'
-import Apply from '../../form-pages/apply'
 import { ApplicationService, PersonService } from '../../services'
 import TasklistService from '../../services/tasklistService'
 import { activeOffenceFactory, applicationFactory, personFactory } from '../../testutils/factories'
-import { fetchErrorsAndUserInput } from '../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../utils/validation'
 import ApplicationsController from './applicationsController'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/apply'
-import { firstPageOfApplicationJourney, getResponses, isUnapplicable } from '../../utils/applicationUtils'
+import { firstPageOfApplicationJourney, getResponses } from '../../utils/applicationUtils'
 import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
 
@@ -84,24 +83,40 @@ describe('applicationsController', () => {
       ;(TasklistService as jest.Mock).mockImplementation(() => {
         return stubTaskList
       })
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('applications/show', {
         application,
         taskList: stubTaskList,
+        errors: {},
+        errorSummary: [],
       })
 
       expect(applicationService.findApplication).not.toHaveBeenCalledWith(callConfig, application.id)
     })
 
-    it('renders the not applicable page if the application is not applicable', async () => {
+    it('renders the task list with errors and user input if an error has been sent to the flash', async () => {
       const requestHandler = applicationsController.show()
-      ;(isUnapplicable as jest.Mock).mockReturnValue(true)
+      const stubTaskList = jest.fn()
+
+      applicationService.getApplicationFromSessionOrAPI.mockResolvedValue(application)
+      ;(TasklistService as jest.Mock).mockImplementation(() => {
+        return stubTaskList
+      })
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
 
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/notEligible')
+      expect(response.render).toHaveBeenCalledWith('applications/show', {
+        application,
+        taskList: stubTaskList,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+      })
     })
   })
 
@@ -270,7 +285,7 @@ describe('applicationsController', () => {
   })
 
   describe('submit', () => {
-    it('calls the application service with the application id if the checkbox is ticked', async () => {
+    it('calls the application service with the application ID if the checkbox is ticked', async () => {
       const application = applicationFactory.build()
       application.data = { 'basic-information': { 'sentence-type': '' } }
       applicationService.findApplication.mockResolvedValue(application)
@@ -285,13 +300,13 @@ describe('applicationsController', () => {
       expect(applicationService.findApplication).toHaveBeenCalledWith(callConfig, 'some-id')
       expect(getResponses).toHaveBeenCalledWith(application)
       expect(applicationService.submit).toHaveBeenCalledWith(callConfig, application)
-      expect(response.render).toHaveBeenCalledWith('applications/confirm')
+      expect(response.redirect).toHaveBeenCalledWith(paths.applications.confirm({ id: 'some-id' }))
     })
 
-    it('renders the "show" view with errors if the checkbox isnt ticked ', async () => {
+    it("renders with errors if the checkbox isn't ticked", async () => {
       const application = applicationFactory.build()
       request.params.id = 'some-id'
-      request.body.confirmation = 'some-id'
+      request.body.confirmation = ''
       applicationService.findApplication.mockResolvedValue(application)
 
       const requestHandler = applicationsController.submit()
@@ -299,19 +314,23 @@ describe('applicationsController', () => {
       await requestHandler(request, response, next)
 
       expect(applicationService.findApplication).toHaveBeenCalledWith(callConfig, request)
-      expect(response.render).toHaveBeenCalledWith('applications/show', {
-        application,
-        errorObject: {
-          text: 'You must confirm the information provided is complete, accurate and up to date.',
-        },
-        errorSummary: [
-          {
-            href: '#confirmation',
-            text: 'You must confirm the information provided is complete, accurate and up to date.',
-          },
-        ],
-        sections: Apply.sections,
-      })
+      expect(insertGenericError).toHaveBeenCalledWith(expect.any(Error), 'confirmation', 'invalid')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
+        paths.applications.show({ id: 'some-id' }),
+        'application',
+      )
+    })
+  })
+
+  describe('submit', () => {
+    it('renders the application submission confirmation page', async () => {
+      const requestHandler = applicationsController.confirm()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('applications/confirm')
     })
   })
 })

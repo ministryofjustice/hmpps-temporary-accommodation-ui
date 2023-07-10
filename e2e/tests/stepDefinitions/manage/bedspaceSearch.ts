@@ -55,6 +55,10 @@ Then('I should see the bedspace search results', () => {
 Then('I should see a list of the problems encountered searching for a bedspace', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceSearchPage)
-    page.shouldShowErrorMessagesForFields(['startDate', 'durationDays', 'probationDeliveryUnit'], 'bedspaceSearch')
+    page.shouldShowErrorMessagesForFields(
+      ['startDate', 'durationDays', 'probationDeliveryUnit'],
+      'empty',
+      'bedspaceSearch',
+    )
   })
 })

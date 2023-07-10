@@ -331,4 +331,65 @@ describe('utils', () => {
       ])
     })
   })
+
+  describe('pageBodyShallowEquals', () => {
+    it('returns true when the two parameters are equal', () => {
+      const value1 = {
+        'some-key': 'some-value',
+        'some-key-2': ['value1', 'value2'],
+      }
+
+      const value2 = {
+        'some-key': 'some-value',
+        'some-key-2': ['value1', 'value2'],
+      }
+
+      expect(utils.pageBodyShallowEquals(value1, value2)).toEqual(true)
+      expect(utils.pageBodyShallowEquals(value2, value1)).toEqual(true)
+    })
+
+    it('returns false when the one parameter is a subset of the other', () => {
+      const value1 = {
+        'some-key': 'some-value',
+        'some-key-2': ['value1', 'value2'],
+      }
+
+      const value2 = {
+        'some-key': 'some-value',
+      }
+
+      expect(utils.pageBodyShallowEquals(value1, value2)).toEqual(false)
+      expect(utils.pageBodyShallowEquals(value2, value1)).toEqual(false)
+    })
+
+    it('returns false when one parameter contains a different array to the other', () => {
+      const value1 = {
+        'some-key': 'some-value',
+        'some-key-2': ['value1', 'value2', 'value3'],
+      }
+
+      const value2 = {
+        'some-key': 'some-value',
+        'some-key-2': ['value1', 'value2'],
+      }
+
+      expect(utils.pageBodyShallowEquals(value1, value2)).toEqual(false)
+      expect(utils.pageBodyShallowEquals(value2, value1)).toEqual(false)
+    })
+
+    it('returns false when parameters contains an inner object', () => {
+      const value1 = {
+        'some-key': 'some-value',
+        'some-key-2': { 'inner-key': 'inner-value' },
+      }
+
+      const value2 = {
+        'some-key': 'some-value',
+        'some-key-2': { 'inner-key': 'inner-value' },
+      }
+
+      expect(utils.pageBodyShallowEquals(value1, value2)).toEqual(false)
+      expect(utils.pageBodyShallowEquals(value2, value1)).toEqual(false)
+    })
+  })
 })

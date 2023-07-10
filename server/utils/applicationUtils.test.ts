@@ -14,7 +14,6 @@ import {
   getResponses,
   getSectionAndTask,
   getStatus,
-  isUnapplicable,
 } from './applicationUtils'
 import getSections from './assessments/getSections'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
@@ -341,38 +340,6 @@ describe('applicationUtils', () => {
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(paths.applications.show({ id: application.id }))
-    })
-  })
-
-  describe('isUnapplicable', () => {
-    const application = applicationFactory.build()
-
-    it('should return true if the applicant has answered no to the isExceptionalCase question', () => {
-      application.data = {
-        'basic-information': {
-          'is-exceptional-case': {
-            isExceptionalCase: 'no',
-          },
-        },
-      }
-
-      expect(isUnapplicable(application)).toEqual(true)
-    })
-
-    it('should return false if the applicant has answered yes to the isExceptionalCase question', () => {
-      application.data = {
-        'basic-information': {
-          'is-exceptional-case': {
-            isExceptionalCase: 'yes',
-          },
-        },
-      }
-
-      expect(isUnapplicable(application)).toEqual(false)
-    })
-
-    it('should return false if the applicant has not answered the isExceptionalCase question', () => {
-      expect(isUnapplicable(application)).toEqual(false)
     })
   })
 })

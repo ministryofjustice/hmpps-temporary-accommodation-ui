@@ -161,13 +161,6 @@ const getArrivalDate = (application: Application, raiseOnMissing = true): string
   return null
 }
 
-const isUnapplicable = (application: Application): boolean => {
-  const basicInformation = application.data?.['basic-information']
-  const isExceptionalCase = basicInformation?.['is-exceptional-case']?.isExceptionalCase
-
-  return isExceptionalCase === 'no'
-}
-
 const firstPageOfApplicationJourney = (application: Application) => {
   return paths.applications.show({ id: application.id })
 }
@@ -180,6 +173,5 @@ export {
   getArrivalDate,
   dashboardTableRows,
   firstPageOfApplicationJourney,
-  isUnapplicable,
   getStatus,
 }

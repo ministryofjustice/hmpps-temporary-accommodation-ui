@@ -7,7 +7,8 @@ import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
 import { ValidationError } from '../utils/errors'
 
 import { CallConfig } from '../data/restClient'
-import { getBody, getPageName, getTaskName } from '../form-pages/utils'
+import Review from '../form-pages/apply/check-your-answers/review'
+import { getBody, getPageName, getTaskName, pageBodyShallowEquals } from '../form-pages/utils'
 import { getApplicationSubmissionData, getApplicationUpdateData } from '../utils/applications/getApplicationData'
 
 export default class ApplicationService {
@@ -89,9 +90,20 @@ export default class ApplicationService {
       const pageName = getPageName(page.constructor)
       const taskName = getTaskName(page.constructor)
 
+      const oldBody = application.data?.[taskName]?.[pageName]
+
       application.data = application.data || {}
       application.data[taskName] = application.data[taskName] || {}
       application.data[taskName][pageName] = page.body
+
+      const reviewTaskName = getTaskName(Review)
+      const reviewPageName = getPageName(Review)
+
+      if (application.data[reviewTaskName] && !(taskName === reviewTaskName && pageName === reviewPageName)) {
+        if (!oldBody || !pageBodyShallowEquals(oldBody, page.body)) {
+          delete application.data[reviewTaskName]
+        }
+      }
 
       this.saveToSession(application, page, request)
       await this.saveToApi(callConfig, application)

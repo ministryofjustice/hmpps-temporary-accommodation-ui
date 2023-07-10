@@ -22,6 +22,7 @@ const paths = {
     update: applicationPath,
     checkYourAnswers: applicationPath.path('check-your-answers'),
     submission: applicationPath.path('submission'),
+    confirm: applicationPath.path('confirm'),
     pages: {
       show: pagesPath,
       update: pagesPath,

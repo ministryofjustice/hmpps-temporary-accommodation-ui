@@ -1,5 +1,8 @@
 {
   "sentence-information": {
+    "offending-summary": {
+      "summary": "A brief summary of offending history"
+    },
     "sentence-type": {
       "sentenceType": "extendedDeterminate"
     },

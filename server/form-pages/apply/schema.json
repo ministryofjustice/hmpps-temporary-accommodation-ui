@@ -24,6 +24,14 @@
     "sentence-information": {
       "type": "object",
       "properties": {
+        "offending-summary": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            }
+          }
+        },
         "sentence-type": {
           "type": "object",
           "properties": {

@@ -14,7 +14,7 @@ describe('SentenceType', () => {
     })
   })
 
-  itShouldHavePreviousValue(new SentenceType({}, application), 'dashboard')
+  itShouldHavePreviousValue(new SentenceType({}, application), 'offending-summary')
   itShouldHaveNextValue(new SentenceType({}, application), 'sentence-expiry')
 
   describe('errors', () => {

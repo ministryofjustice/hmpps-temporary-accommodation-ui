@@ -46,6 +46,7 @@ import {
   MoveOnPlanPage,
   NeedsPage,
   OffenceDetailsPage,
+  OffendingSummaryPage,
   OptionalOasysSectionsPage,
   OtherAccommodationOptionsPage,
   PractitionerPduPage,
@@ -312,6 +313,10 @@ export default class ApplyHelper {
     Page.verifyOnPage(TaskListPage).clickTask('sentence-information')
 
     // When I complete the form
+    const offendingSummaryPage = new OffendingSummaryPage(this.application)
+    offendingSummaryPage.completeForm()
+    offendingSummaryPage.clickSubmit()
+
     const sentenceTypePage = new SentenceTypePage(this.application)
     sentenceTypePage.completeForm()
     sentenceTypePage.clickSubmit()
@@ -324,7 +329,7 @@ export default class ApplyHelper {
     releaseTypePage.completeForm()
     releaseTypePage.clickSubmit()
 
-    this.pages.sentenceInformation = [sentenceTypePage, sentenceExpiryPage, releaseTypePage]
+    this.pages.sentenceInformation = [offendingSummaryPage, sentenceTypePage, sentenceExpiryPage, releaseTypePage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

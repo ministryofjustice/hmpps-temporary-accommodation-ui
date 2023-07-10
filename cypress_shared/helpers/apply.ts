@@ -63,6 +63,7 @@ import {
   RoshSummaryPage,
   SafeguardingAndVulnerabilityPage,
   SentenceExpiryPage,
+  SentenceLengthPage,
   SentenceTypePage,
   StartPage,
   SupportInTheCommunityPage,
@@ -321,6 +322,10 @@ export default class ApplyHelper {
     sentenceTypePage.completeForm()
     sentenceTypePage.clickSubmit()
 
+    const sentenceLengthPage = new SentenceLengthPage(this.application)
+    sentenceLengthPage.completeForm()
+    sentenceLengthPage.clickSubmit()
+
     const sentenceExpiryPage = new SentenceExpiryPage(this.application)
     sentenceExpiryPage.completeForm()
     sentenceExpiryPage.clickSubmit()
@@ -329,7 +334,13 @@ export default class ApplyHelper {
     releaseTypePage.completeForm()
     releaseTypePage.clickSubmit()
 
-    this.pages.sentenceInformation = [offendingSummaryPage, sentenceTypePage, sentenceExpiryPage, releaseTypePage]
+    this.pages.sentenceInformation = [
+      offendingSummaryPage,
+      sentenceTypePage,
+      sentenceLengthPage,
+      sentenceExpiryPage,
+      releaseTypePage,
+    ]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

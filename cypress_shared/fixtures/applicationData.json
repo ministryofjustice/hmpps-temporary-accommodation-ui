@@ -6,6 +6,12 @@
     "sentence-type": {
       "sentenceType": "extendedDeterminate"
     },
+    "sentence-length": {
+      "years": "2",
+      "months": "",
+      "weeks": "",
+      "days": "4"
+    },
     "sentence-expiry": {
       "sentenceExpiryDate": "2124-01-19",
       "sentenceExpiryDate-year": "2124",

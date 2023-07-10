@@ -15,7 +15,7 @@ describe('SentenceType', () => {
   })
 
   itShouldHavePreviousValue(new SentenceType({}, application), 'offending-summary')
-  itShouldHaveNextValue(new SentenceType({}, application), 'sentence-expiry')
+  itShouldHaveNextValue(new SentenceType({}, application), 'sentence-length')
 
   describe('errors', () => {
     it('should return an empty object if the sentence type is populated', () => {

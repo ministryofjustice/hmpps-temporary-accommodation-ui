@@ -29,7 +29,7 @@ describe('SentenceExpiry', () => {
     })
   })
 
-  itShouldHavePreviousValue(new SentenceExpiry({}, application), 'sentence-type')
+  itShouldHavePreviousValue(new SentenceExpiry({}, application), 'sentence-length')
   itShouldHaveNextValue(new SentenceExpiry({}, application), 'release-type')
 
   describe('errors', () => {

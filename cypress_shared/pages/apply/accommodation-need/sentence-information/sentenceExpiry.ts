@@ -9,7 +9,7 @@ export default class SentenceExpiryPage extends ApplyPage {
       application,
       'sentence-information',
       'sentence-expiry',
-      paths.applications.pages.show({ id: application.id, task: 'sentence-information', page: 'sentence-type' }),
+      paths.applications.pages.show({ id: application.id, task: 'sentence-information', page: 'sentence-length' }),
     )
   }
 

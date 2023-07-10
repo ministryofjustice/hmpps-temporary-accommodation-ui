@@ -47,6 +47,23 @@
             }
           }
         },
+        "sentence-length": {
+          "type": "object",
+          "properties": {
+            "years": {
+              "type": "string"
+            },
+            "months": {
+              "type": "string"
+            },
+            "weeks": {
+              "type": "string"
+            },
+            "days": {
+              "type": "string"
+            }
+          }
+        },
         "sentence-expiry": {
           "type": "object",
           "properties": {

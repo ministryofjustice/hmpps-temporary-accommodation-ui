@@ -11,6 +11,7 @@ import ReleaseDatePage from './accommodation-need/eligibility/releaseDate'
 import OffendingSummaryPage from './accommodation-need/sentence-information/offendingSummary'
 import ReleaseTypePage from './accommodation-need/sentence-information/releaseType'
 import SentenceExpiryPage from './accommodation-need/sentence-information/sentenceExpiry'
+import SentenceLengthPage from './accommodation-need/sentence-information/sentenceLength'
 import SentenceTypePage from './accommodation-need/sentence-information/sentenceType'
 import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
@@ -56,6 +57,7 @@ export {
   TaskListPage,
   OffendingSummaryPage,
   SentenceTypePage,
+  SentenceLengthPage,
   SentenceExpiryPage,
   ReleaseTypePage,
   ProbationPractitionerPage,

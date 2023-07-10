@@ -1,0 +1,25 @@
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+
+<h1 class="govuk-heading-l">
+  <span class="govuk-caption-l">{{ section.title }}</span>
+  {{ task.title }}
+</h1>
+
+<p>Review the adjudication and Assessment, Care in Custody and Teamwork (ACCT) information provided below to help inform your referral.</p>
+<p>This information will be included as part of your referral.</p>
+
+<p>Imported from NOMIS {{ formatDate(page.importDate) }}.</p>
+
+{{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+    text: 'Adjudications',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'adjudications' }),
+    active: page.title === 'Adjudications'
+  },
+  {
+    text: 'ACCT',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'acct-alerts' }),
+    active: page.title === 'ACCT'
+  }]
+}) }}

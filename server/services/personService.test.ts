@@ -5,6 +5,7 @@ import { Response } from 'express'
 import PersonClient from '../data/personClient'
 import { CallConfig } from '../data/restClient'
 import {
+  acctAlertFactory,
   activeOffenceFactory,
   adjudicationFactory,
   oasysSectionsFactory,
@@ -101,6 +102,21 @@ describe('PersonService', () => {
 
       expect(personClientFactory).toHaveBeenCalledWith(callConfig)
       expect(personClient.adjudications).toHaveBeenCalledWith('crn')
+    })
+  })
+
+  describe('getAcctAlerts', () => {
+    it("on success returns the person's ACCT alerts given their CRN", async () => {
+      const acctAlerts = acctAlertFactory.buildList(3)
+
+      personClient.acctAlerts.mockResolvedValue(acctAlerts)
+
+      const result = await service.getAcctAlerts(callConfig, 'crn')
+
+      expect(result).toEqual(acctAlerts)
+
+      expect(personClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(personClient.acctAlerts).toHaveBeenCalledWith('crn')
     })
   })
 

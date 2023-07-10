@@ -10,10 +10,12 @@ import type {
   OASysSection,
   OASysSections,
   Person,
+  PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
 } from '@approved-premises/api'
 
+import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 
 export default {
@@ -104,6 +106,19 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: args.adjudications,
+      },
+    }),
+
+  stubAcctAlerts: (args: { person: Person; acctAlerts: Array<PersonAcctAlert> }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: paths.people.acctAlerts({ crn: args.person.crn }),
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.acctAlerts,
       },
     }),
 

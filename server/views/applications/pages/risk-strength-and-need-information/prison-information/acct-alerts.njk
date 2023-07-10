@@ -1,0 +1,36 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% extends "../../layout.njk" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  {% include "./partials/_navigation.njk" %}
+
+  {% if acctAlerts | length %}
+    <table class="govuk-table">
+      <caption class="govuk-table__caption govuk-table__caption--m">ACCT</caption>
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header" style="width:100px;">Alert type</th>
+          <th scope="col" class="govuk-table__header">ACCT description</th>
+          <th scope="col" class="govuk-table__header">Date created</th>
+          <th scope="col" class="govuk-table__header">Expiry date</th>
+        </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+        {% for alert in acctAlerts %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ alert.alertId }}</td>
+            <td class="govuk-table__cell">{{ alert.comment }}</td>
+            <td class="govuk-table__cell">{{ formatDate(alert.dateCreated) }}</td>
+            <td class="govuk-table__cell">{{ formatDate(alert.dateExpires) if alert.dateExpires else '' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No ACCT information available for {{ page.application.person.name }}.</p>
+  {% endif %}
+
+{% endblock %}

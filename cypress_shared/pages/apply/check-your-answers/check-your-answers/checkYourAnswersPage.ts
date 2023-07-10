@@ -53,6 +53,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('licence-conditions', pages)
   }
 
+  shouldShowPrisonInformationAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('prison-information', 'Prison information')
+    this.shouldShowAnswersForTask('prison-information', pages)
+  }
+
   shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
     this.shouldShowAnswersForTask('oasys-import', pages)

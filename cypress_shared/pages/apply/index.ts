@@ -15,9 +15,9 @@ import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkY
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
 import ListPage from './list'
-import ReligiousOrCulturalNeedsPage from './placement-considerations/disability-cultural-and-specific-needs/religiousOrCulturalNeeds'
 import NeedsPage from './placement-considerations/disability-cultural-and-specific-needs/needs'
 import PropertyAttributesOrAdaptationsPage from './placement-considerations/disability-cultural-and-specific-needs/propertyAttributesOrAdaptations'
+import ReligiousOrCulturalNeedsPage from './placement-considerations/disability-cultural-and-specific-needs/religiousOrCulturalNeeds'
 import MoveOnPlanPage from './placement-considerations/move-on-plan/moveOnPlan'
 import AlternativePduPage from './placement-considerations/placement-location/alternativePdu'
 import FoodAllergiesPage from './placement-considerations/requirements-for-placement/foodAllergies'
@@ -37,6 +37,8 @@ import RiskManagementPlanPage from './risk-strength-and-need-information/oasys-i
 import RiskToSelfPage from './risk-strength-and-need-information/oasys-import/riskToSelf'
 import RoshSummaryPage from './risk-strength-and-need-information/oasys-import/roshSummary'
 import SupportingInformationPage from './risk-strength-and-need-information/oasys-import/supportingInformation'
+import AcctAlertsPage from './risk-strength-and-need-information/prison-information/acctAlerts'
+import AdjudicationsPage from './risk-strength-and-need-information/prison-information/adjudications'
 import SelectOffencePage from './selectOffence'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
@@ -66,6 +68,8 @@ export {
   ConsentDetailsPage,
   OptionalOasysSectionsPage,
   AdditionalLicenceConditionsPage,
+  AdjudicationsPage,
+  AcctAlertsPage,
   RoshSummaryPage,
   OffenceDetailsPage,
   SupportingInformationPage,

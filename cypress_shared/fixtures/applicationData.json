@@ -100,6 +100,56 @@
       "otherDetail": "Other detail"
     }
   },
+  "prison-information": {
+    "adjudications": {
+      "adjudications": [
+        {
+          "id": 69927,
+          "reportedAt": "2022-10-09",
+          "establishment": "Hawthorne",
+          "offenceDescription": "Nam vel nisi fugiat veniam possimus omnis.",
+          "hearingHeld": false,
+          "finding": "NOT_PROVED"
+        },
+        {
+          "id": 39963,
+          "reportedAt": "2022-07-10",
+          "establishment": "Oklahoma City",
+          "offenceDescription": "Illum maxime enim explicabo soluta sequi voluptas.",
+          "hearingHeld": true,
+          "finding": "PROVED"
+        },
+        {
+          "id": 77431,
+          "reportedAt": "2022-05-30",
+          "establishment": "Jurupa Valley",
+          "offenceDescription": "Quis porro nemo voluptates doloribus atque quis provident iure.",
+          "hearingHeld": false,
+          "finding": "PROVED"
+        }
+      ]
+    },
+    "acct-alerts": {
+      "acctAlerts": [
+        {
+          "alertId": 47419,
+          "dateCreated": "2022-12-05",
+          "dateExpires": "2023-05-29",
+          "comment": "Soluta harum harum hic maxime reprehenderit quis harum necessitatibus.",
+          "expired": false,
+          "active": true
+        },
+        {
+          "alertId": 429,
+          "dateCreated": "2022-05-21",
+          "dateExpires": "2023-12-16",
+          "comment": "Quia ex nisi deserunt voluptatibus sit ipsa.",
+          "expired": false,
+          "active": true
+        }
+      ]
+    }
+  },
   "oasys-import": {
     "optional-oasys-sections": {
       "needsLinkedToReoffending": [

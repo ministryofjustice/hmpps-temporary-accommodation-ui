@@ -5,6 +5,7 @@ import nock from 'nock'
 import config from '../config'
 import paths from '../paths/api'
 import {
+  acctAlertFactory,
   activeOffenceFactory,
   adjudicationFactory,
   oasysSectionsFactory,
@@ -103,6 +104,23 @@ describe('PersonClient', () => {
       const result = await personClient.adjudications(crn)
 
       expect(result).toEqual(adjudications)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('acctAlerts', () => {
+    it('should return the ACCT alerts for a person', async () => {
+      const crn = 'crn'
+      const acctAlerts = acctAlertFactory.buildList(5)
+
+      fakeApprovedPremisesApi
+        .get(paths.people.acctAlerts({ crn }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(201, acctAlerts)
+
+      const result = await personClient.acctAlerts(crn)
+
+      expect(result).toEqual(acctAlerts)
       expect(nock.isDone()).toBeTruthy()
     })
   })

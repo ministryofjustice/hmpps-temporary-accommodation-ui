@@ -8,7 +8,7 @@ import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
 import { FormSection, Task } from '../../@types/ui'
-import { applicationFactory, assessmentFactory } from '../../testutils/factories'
+import { acctAlertFactory, adjudicationFactory, applicationFactory, assessmentFactory } from '../../testutils/factories'
 import { SessionDataError } from '../../utils/errors'
 
 describe('utils', () => {
@@ -390,6 +390,68 @@ describe('utils', () => {
 
       expect(utils.pageBodyShallowEquals(value1, value2)).toEqual(false)
       expect(utils.pageBodyShallowEquals(value2, value1)).toEqual(false)
+    })
+  })
+
+  describe('mapAdjudicationsForPageBody', () => {
+    it('returns adjucations with any extra data removed', () => {
+      const adjudication1 = adjudicationFactory.build()
+      const adjudication2 = adjudicationFactory.build()
+      const adjudication3 = adjudicationFactory.build()
+
+      const adjudicationWithExtraInfo = { ...adjudication2, 'some-extra-field': 'some extra data' }
+
+      expect(utils.mapAdjudicationsForPageBody([adjudication1, adjudicationWithExtraInfo, adjudication3])).toEqual([
+        adjudication1,
+        adjudication2,
+        adjudication3,
+      ])
+    })
+
+    it('returns adjucations with missing findings replaced with an empty string', () => {
+      const adjudication1 = adjudicationFactory.build()
+      const adjudication2 = adjudicationFactory.build({
+        finding: null,
+      })
+      const adjudication3 = adjudicationFactory.build()
+
+      expect(utils.mapAdjudicationsForPageBody([adjudication1, adjudication2, adjudication3])).toEqual([
+        adjudication1,
+        { ...adjudication2, finding: '' },
+        adjudication3,
+      ])
+    })
+  })
+
+  describe('mapAcctAlertsForPageBody', () => {
+    it('returns ACCT alerts with any extra data removed', () => {
+      const acctAlert1 = acctAlertFactory.build()
+      const acctAlert2 = acctAlertFactory.build()
+      const acctAlert3 = acctAlertFactory.build()
+
+      const acctAlertWithExtraInfo = { ...acctAlert2, 'some-extra-field': 'some extra data' }
+
+      expect(utils.mapAcctAlertsForPageBody([acctAlert1, acctAlertWithExtraInfo, acctAlert3])).toEqual([
+        acctAlert1,
+        acctAlert2,
+        acctAlert3,
+      ])
+    })
+
+    it('returns ACCT alerts with missing comments and expiry dates replaced with an empty string', () => {
+      const acctAlert1 = acctAlertFactory.build()
+      const acctAlert2 = acctAlertFactory.build({
+        comment: null,
+      })
+      const acctAlert3 = acctAlertFactory.build({
+        dateExpires: null,
+      })
+
+      expect(utils.mapAcctAlertsForPageBody([acctAlert1, acctAlert2, acctAlert3])).toEqual([
+        acctAlert1,
+        { ...acctAlert2, comment: '' },
+        { ...acctAlert3, dateExpires: '' },
+      ])
     })
   })
 })

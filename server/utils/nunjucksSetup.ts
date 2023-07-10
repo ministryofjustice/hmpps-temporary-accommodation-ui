@@ -15,7 +15,7 @@ import {
   parseNaturalNumber,
 } from './formUtils'
 import { statusTag } from './personUtils'
-import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems } from './utils'
+import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
 import { dashboardTableRows } from './applicationUtils'
 import * as AttachDocumentsUtils from './attachDocumentsUtils'
@@ -87,6 +87,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
   njkEnv.addGlobal('formatDate', DateFormats.isoDateToUIDate)
+  njkEnv.addGlobal('formatDateTime', DateFormats.isoDateTimeToUIDateTime)
   njkEnv.addGlobal('parseNaturalNumber', parseNaturalNumber)
   njkEnv.addGlobal('dateInputHint', dateInputHint)
 
@@ -146,6 +147,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addFilter('mapApiPersonRisksForUi', mapApiPersonRisksForUi)
 
   njkEnv.addFilter('removeBlankSummaryListItems', removeBlankSummaryListItems)
+  njkEnv.addFilter('sentenceCase', sentenceCase)
 
   njkEnv.addGlobal('checkYourAnswersSections', checkYourAnswersSections)
   njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)

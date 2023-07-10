@@ -14,6 +14,7 @@ import {
   OASysSection,
   OASysSections,
   Person,
+  PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
   RiskTier,
@@ -222,6 +223,7 @@ export type DataServices = Partial<{
   personService: {
     getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>
     getAdjudications: (callConfig: CallConfig, crn: string) => Promise<Array<Adjudication>>
+    getAcctAlerts: (callConfig: CallConfig, crn: string) => Promise<Array<PersonAcctAlert>>
     getOasysSelections: (callConfig: CallConfig, crn: string) => Promise<Array<OASysSection>>
     getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
     getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>

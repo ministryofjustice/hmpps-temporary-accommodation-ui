@@ -24,7 +24,7 @@ export default class ConsentGiven implements TasklistPage {
   }
 
   next() {
-    return this.body.consentGiven === 'yes' ? 'consent-details' : ''
+    return ''
   }
 
   errors() {

@@ -1,5 +1,5 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { itShouldHavePreviousValue } from '../../../shared-examples'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ConsentGiven from './consentGiven'
 
 const body = { consentGiven: 'yes' as const }
@@ -16,15 +16,7 @@ describe('ConsentGiven', () => {
   })
 
   itShouldHavePreviousValue(new ConsentGiven({}, application), 'dashboard')
-  describe('next', () => {
-    it('returns the consent details page ID when consent has been given', () => {
-      expect(new ConsentGiven({ ...body }, application).next()).toEqual('consent-details')
-    })
-
-    it('returns an empty page ID when consent has not been given', () => {
-      expect(new ConsentGiven({ ...body, consentGiven: 'no' }, application).next()).toEqual('')
-    })
-  })
+  itShouldHaveNextValue(new ConsentGiven({}, application), '')
 
   describe('errors', () => {
     it('returns an empty object if all fields are populated', () => {

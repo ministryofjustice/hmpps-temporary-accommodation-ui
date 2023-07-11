@@ -318,22 +318,6 @@
               "type": "string"
             }
           }
-        },
-        "consent-details": {
-          "type": "object",
-          "properties": {
-            "consentType": {
-              "enum": [
-                "other",
-                "verbal",
-                "written"
-              ],
-              "type": "string"
-            },
-            "consentTypeDetail": {
-              "type": "string"
-            }
-          }
         }
       }
     },

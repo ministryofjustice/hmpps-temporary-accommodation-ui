@@ -4,7 +4,7 @@ import { Form } from '../utils/decorators'
 import AccommodationNeed from './accommodation-need'
 import CheckYourAnswers from './check-your-answers'
 import PlacementConsiderations from './placement-considerations'
-import ReferralsAndDocuments from './referrals-and-documents'
+import RequiredReferrals from './required-referrals'
 import RiskStrengthAndNeedInformation from './risk-strength-and-need-information'
 
 @Form({
@@ -12,7 +12,7 @@ import RiskStrengthAndNeedInformation from './risk-strength-and-need-information
     AccommodationNeed,
     RiskStrengthAndNeedInformation,
     PlacementConsiderations,
-    ReferralsAndDocuments,
+    RequiredReferrals,
     CheckYourAnswers,
   ],
 })

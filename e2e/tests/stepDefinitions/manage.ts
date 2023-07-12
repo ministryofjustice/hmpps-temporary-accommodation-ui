@@ -13,6 +13,10 @@ Given('I am logged in as an assessor', () => {
   cy.get('.govuk-button').contains('Sign in').click()
 })
 
+Given('I am logged in as a referrer', () => {
+  const username = Cypress.env('referrer_username') || throwMissingCypressEnvError('referrer_username')
+  const password = Cypress.env('referrer_password') || throwMissingCypressEnvError('referrer_password')
+
   cy.visit('/')
   cy.get('input[name="username"]').type(username)
   cy.get('input[name="password"]').type(password, { log: false })

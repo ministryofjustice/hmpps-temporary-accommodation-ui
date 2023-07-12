@@ -1,6 +1,6 @@
 Feature: Apply for an Approved Premises place
   Background:
-    Given I am logged in
+    Given I am logged in as a referrer
 
   Scenario: Creating an application
     When I start a new application

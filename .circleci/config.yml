@@ -67,6 +67,8 @@ jobs:
               --env "\
                 assessor_username=${CYPRESS_ASSESSOR_USERNAME_<< parameters.environment >>},\
                 assessor_password=${CYPRESS_ASSESSOR_PASSWORD_<< parameters.environment >>},\
+                referrer_username=${CYPRESS_REFERRER_USERNAME_<< parameters.environment >>},\
+                referrer_password=${CYPRESS_REFERRER_PASSWORD_<< parameters.environment >>},\
                 acting_user_probation_region_id=${CYPRESS_ACTING_USER_PROBATION_REGION_ID_<< parameters.environment >>},\
                 acting_user_probation_region_name=${CYPRESS_ACTING_USER_PROBATION_REGION_NAME_<< parameters.environment >>},\
                 environment=${CYPRESS_ENVIRONMENT_<< parameters.environment >>}"\

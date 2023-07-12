@@ -4,7 +4,7 @@ import { Router } from 'express'
 import type { Controllers } from '../../controllers'
 import paths from '../../paths/temporary-accommodation/static'
 import { Services } from '../../services'
-import actions from '../utils'
+import { actions } from '../utils'
 
 import config from '../../config'
 import applyRoutes from '../apply'

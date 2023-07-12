@@ -1,4 +1,4 @@
-import { User } from '../@types/shared'
+import { TemporaryAccommodationUser as User } from '../@types/shared'
 import { RestClientBuilder } from '../data'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { CallConfig } from '../data/restClient'

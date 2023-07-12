@@ -11,14 +11,14 @@ context('Applications dashboard', () => {
   })
 
   it('shows the dashboard ', () => {
-    // Given I am logged in
-    cy.signIn()
-
-    // And there are applications in the database
+    // Given there are applications in the database
     const inProgressApplications = applicationFactory.buildList(5, { status: 'inProgress' })
     const submittedApplications = applicationFactory.buildList(5, { status: 'submitted' })
 
     cy.task('stubApplications', [inProgressApplications, submittedApplications].flat())
+
+    // And given I am logged in
+    cy.signIn()
 
     // When I visit the Previous Applications page
     const page = ListPage.visit(inProgressApplications, submittedApplications)

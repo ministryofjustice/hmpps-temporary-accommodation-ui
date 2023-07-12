@@ -11,6 +11,7 @@ export default function routes(controllers: Controllers, services: Services, rou
   const { get, post, put } = actions(router, services.auditService)
 
   const {
+    dashboardController,
     premisesController,
     bedspacesController,
     bookingsController,
@@ -24,7 +25,9 @@ export default function routes(controllers: Controllers, services: Services, rou
     lostBedsController,
     bedspaceSearchController,
     bookingSearchController,
-  } = controllers.temporaryAccommodation
+  } = controllers.manage
+
+  get(paths.dashboard.index.pattern, dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
 
   get(paths.premises.index.pattern, premisesController.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
   get(paths.premises.new.pattern, premisesController.new(), { auditEvent: 'VIEW_PREMISES_CREATE' })

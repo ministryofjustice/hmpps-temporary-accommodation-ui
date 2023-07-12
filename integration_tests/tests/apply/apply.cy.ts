@@ -29,7 +29,10 @@ context('Apply', () => {
   })
 
   beforeEach(() => {
-    // Given I am logged in
+    // Given there are applications in the database
+    cy.task('stubApplications', [])
+
+    // And given I am logged in
     cy.signIn()
 
     cy.fixture('applicationData.json').then(applicationData => {

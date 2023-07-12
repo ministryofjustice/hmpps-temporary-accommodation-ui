@@ -75,7 +75,7 @@ context('SignIn', () => {
     const probationRegion = referenceDataFactory.probationRegion().build({
       name: 'Another region',
     })
-    const actingUser = userFactory.build({ region: probationRegion })
+    const actingUser = userFactory.build({ region: probationRegion, roles: ['assessor', 'referrer'] })
 
     cy.task('stubActingUser', actingUser)
     cy.signIn()

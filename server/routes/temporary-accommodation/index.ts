@@ -13,11 +13,11 @@ import manageRoutes from './manage'
 export default function routes(controllers: Controllers, services: Services): Router {
   const router = Router()
 
-  const { dashboardController, staticController } = controllers
+  const { landingController, staticController } = controllers
 
   const { get } = actions(router, services.auditService)
 
-  get('/', dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
+  get('/', landingController.index(), { auditEvent: 'VIEW_LANDING' })
   get(paths.static.cookies.pattern, staticController.cookies(), { auditEvent: 'VIEW_COOKIES' })
 
   manageRoutes(controllers, services, router)

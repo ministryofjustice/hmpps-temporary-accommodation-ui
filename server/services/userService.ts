@@ -5,7 +5,7 @@ import { CallConfig } from '../data/restClient'
 import UserClient from '../data/userClient'
 import { convertToTitleCase } from '../utils/utils'
 
-interface UserDetails {
+export type UserDetails = User & {
   name: string
   displayName: string
 }
@@ -16,15 +16,19 @@ export default class UserService {
     private readonly userClientFactory: RestClientBuilder<UserClient>,
   ) {}
 
-  async getUser(callConfig: CallConfig): Promise<UserDetails> {
-    const user = await this.hmppsAuthClient.getUser(callConfig)
-    return { ...user, displayName: convertToTitleCase(user.name) }
-  }
+  async getActingUser(callConfig: CallConfig): Promise<UserDetails> {
+    const hmppsAuthUser = await this.hmppsAuthClient.getActingUser(callConfig)
 
-  async getActingUser(callConfig: CallConfig): Promise<User> {
-    const userClient = this.userClientFactory(callConfig)
-    const user = await userClient.getActingUser()
+    const client = this.userClientFactory(callConfig)
+    const communityAccommodationUser = await client.getActingUser()
 
-    return user
+    return {
+      ...hmppsAuthUser,
+      displayName: convertToTitleCase(hmppsAuthUser.name),
+      id: communityAccommodationUser.id,
+      roles: communityAccommodationUser.roles,
+      service: communityAccommodationUser.service,
+      region: communityAccommodationUser.region,
+    }
   }
 }

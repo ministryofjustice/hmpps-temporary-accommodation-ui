@@ -8,7 +8,7 @@ export default function populateCurrentUser(userService: UserService): RequestHa
     try {
       if (req.user) {
         const callConfig = extractCallConfig(req)
-        const userDetails = req.session.userDetails || (await userService.getUser(callConfig))
+        const userDetails = req.session.userDetails || (await userService.getActingUser(callConfig))
         req.session.userDetails = userDetails
         res.locals.user = { ...userDetails, ...res.locals.user }
 

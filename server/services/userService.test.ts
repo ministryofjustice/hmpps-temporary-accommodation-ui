@@ -22,32 +22,36 @@ describe('User service', () => {
     userClientFactory.mockReturnValue(userClient)
   })
 
-  describe('getUser', () => {
-    it('Retrieves and formats user name', async () => {
-      hmppsAuthClient.getUser.mockResolvedValue({ name: 'john smith' } as User)
-
-      const result = await userService.getUser(callConfig)
-
-      expect(result.displayName).toEqual('John Smith')
-    })
-    it('Propagates error', async () => {
-      hmppsAuthClient.getUser.mockRejectedValue(new Error('some error'))
-
-      await expect(userService.getUser(callConfig)).rejects.toEqual(new Error('some error'))
-    })
-  })
-
   describe('getActingUser', () => {
-    it('gets the acting user', async () => {
-      const user = userFactory.build()
-      userClient.getActingUser.mockResolvedValue(user)
+    it('gets the acting user, collating results from the Community Accommoation API and the HMPPS Auth API', async () => {
+      const communityAccommodationUser = userFactory.build()
+      const hmppsAuthUser = { name: 'john smith' } as User
+
+      userClient.getActingUser.mockResolvedValue(communityAccommodationUser)
+      hmppsAuthClient.getActingUser.mockResolvedValue(hmppsAuthUser)
 
       const result = await userService.getActingUser(callConfig)
 
-      expect(result).toEqual(user)
+      expect(result).toEqual({
+        ...hmppsAuthUser,
+        ...communityAccommodationUser,
+        displayName: 'John Smith',
+      })
 
       expect(userClientFactory).toHaveBeenCalledWith(callConfig)
       expect(userClient.getActingUser).toHaveBeenCalledWith()
+    })
+
+    it('propagates errors from the HMPPS Auth API', async () => {
+      hmppsAuthClient.getActingUser.mockRejectedValue(new Error('some error'))
+
+      await expect(userService.getActingUser(callConfig)).rejects.toEqual(new Error('some error'))
+    })
+
+    it('propagates errors from the Community Accommodation API', async () => {
+      userClient.getActingUser.mockRejectedValue(new Error('some error'))
+
+      await expect(userService.getActingUser(callConfig)).rejects.toEqual(new Error('some error'))
     })
   })
 })

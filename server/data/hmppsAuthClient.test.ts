@@ -27,7 +27,7 @@ describe('hmppsAuthClient', () => {
     nock.cleanAll()
   })
 
-  describe('getUser', () => {
+  describe('getActingUser', () => {
     it('should return data from api', async () => {
       const response = { data: 'data' }
 
@@ -36,7 +36,7 @@ describe('hmppsAuthClient', () => {
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, response)
 
-      const output = await hmppsAuthClient.getUser(callConfig)
+      const output = await hmppsAuthClient.getActingUser(callConfig)
       expect(output).toEqual(response)
     })
   })

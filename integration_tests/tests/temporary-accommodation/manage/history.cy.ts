@@ -2,14 +2,14 @@ import Page from '../../../../cypress_shared/pages/page'
 import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingHistory'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { bookingFactory } from '../../../../server/testutils/factories'
 import { deriveBookingHistory } from '../../../../server/utils/bookingUtils'
 
 context('Booking history', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('navigates to the booking history page', () => {

@@ -1,13 +1,13 @@
 import { ListPage, StartPage } from '../../../cypress_shared/pages/apply'
 
 import Page from '../../../cypress_shared/pages/page'
-import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../cypress_shared/utils/setupTestUser'
 import { applicationFactory } from '../../../server/testutils/factories'
 
 context('Applications dashboard', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('referrer')
   })
 
   it('shows the dashboard ', () => {

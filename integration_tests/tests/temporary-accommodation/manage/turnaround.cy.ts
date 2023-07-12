@@ -2,7 +2,7 @@ import Page from '../../../../cypress_shared/pages/page'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import BookingTurnaroundNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingTurnaroundNew'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bookingFactory,
   lostBedFactory,
@@ -13,7 +13,7 @@ import {
 context('Booking turnarounds', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('navigates to the change turnaround page', () => {

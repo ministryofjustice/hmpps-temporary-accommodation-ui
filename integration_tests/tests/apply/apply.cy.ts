@@ -12,7 +12,7 @@ import { mapApiPersonRisksForUi } from '../../../server/utils/utils'
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
-import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../cypress_shared/utils/setupTestUser'
 import paths from '../../../server/paths/api'
 import {
   activeOffenceFactory,
@@ -25,7 +25,7 @@ import {
 context('Apply', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('referrer')
   })
 
   beforeEach(() => {

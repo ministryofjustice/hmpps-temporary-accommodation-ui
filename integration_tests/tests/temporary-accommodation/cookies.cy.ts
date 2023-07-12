@@ -1,9 +1,9 @@
-import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../cypress_shared/utils/setupTestUser'
 
 context('Cookies', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('should navigate to the cookie policy page', () => {

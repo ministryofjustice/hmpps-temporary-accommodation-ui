@@ -3,13 +3,13 @@ import BookingCancellationEditPage from '../../../../cypress_shared/pages/tempor
 import BookingCancellationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingCancellationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { bookingFactory, cancellationFactory, newCancellationFactory } from '../../../../server/testutils/factories'
 
 context('Booking cancellation', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('navigates to the booking cancellation page', () => {

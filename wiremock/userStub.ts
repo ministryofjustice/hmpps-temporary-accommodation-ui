@@ -13,7 +13,9 @@ userStubs.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: userFactory.build(),
+    jsonBody: userFactory.build({
+      roles: ['assessor', 'referrer'],
+    }),
   },
 })
 

@@ -2,9 +2,9 @@
 
 import { Services } from '../../../services'
 import ArrivalsController from './arrivalsController'
-import BedspacesController from './bedspacesController'
 import BedspaceSearchController from './bedspaceSearchController'
-import ReportsController from './reportsController'
+import BedspacesController from './bedspacesController'
+import BookingSearchController from './bookingSearchController'
 import BookingsController from './bookingsController'
 import CancellationsController from './cancellationsController'
 import ConfirmationsController from './confirmationsController'
@@ -12,7 +12,7 @@ import DeparturesController from './departuresController'
 import ExtensionsController from './extensionsController'
 import LostBedsController from './lostBedsController'
 import PremisesController from './premisesController'
-import BookingSearchController from './bookingSearchController'
+import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
 
 export const controllers = (services: Services) => {
@@ -95,16 +95,16 @@ export const controllers = (services: Services) => {
 }
 
 export {
-  PremisesController,
-  BedspacesController,
-  BookingsController,
-  ConfirmationsController,
   ArrivalsController,
-  ExtensionsController,
-  CancellationsController,
-  TurnaroundsController,
-  ReportsController,
-  LostBedsController,
   BedspaceSearchController,
+  BedspacesController,
   BookingSearchController,
+  BookingsController,
+  CancellationsController,
+  ConfirmationsController,
+  ExtensionsController,
+  LostBedsController,
+  PremisesController,
+  ReportsController,
+  TurnaroundsController,
 }

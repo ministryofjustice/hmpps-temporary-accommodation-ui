@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
-import { controllers as manageControllers } from './temporary-accommodation/manage'
 import { controllers as applyControllers } from './apply'
+import { controllers as manageControllers } from './temporary-accommodation/manage'
 
 import type { Services } from '../services'
 import DashboardController from './dashboardController'

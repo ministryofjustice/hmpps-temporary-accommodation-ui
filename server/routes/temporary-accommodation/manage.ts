@@ -1,11 +1,10 @@
 /* istanbul ignore file */
 
 import type { Router } from 'express'
-
 import type { Controllers } from '../../controllers'
+import { createRoleMiddleware } from '../../middleware/roleMiddleware'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
-
 import actions from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {

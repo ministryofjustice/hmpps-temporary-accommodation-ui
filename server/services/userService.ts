@@ -1,9 +1,9 @@
-import { convertToTitleCase } from '../utils/utils'
+import { User } from '../@types/shared'
+import { RestClientBuilder } from '../data'
 import type HmppsAuthClient from '../data/hmppsAuthClient'
 import { CallConfig } from '../data/restClient'
 import UserClient from '../data/userClient'
-import { User } from '../@types/shared'
-import { RestClientBuilder } from '../data'
+import { convertToTitleCase } from '../utils/utils'
 
 interface UserDetails {
   name: string

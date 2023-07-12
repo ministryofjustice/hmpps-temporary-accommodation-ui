@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 import { type RequestHandler, Router } from 'express'
-import AuditService from '../services/auditService'
-import { AuditEventSpec, auditMiddleware } from '../middleware/auditMiddleware'
 import asyncMiddleware from '../middleware/asyncMiddleware'
+import { AuditEventSpec, auditMiddleware } from '../middleware/auditMiddleware'
+import AuditService from '../services/auditService'
 
 export default function actions(router: Router, auditService: AuditService) {
   return {

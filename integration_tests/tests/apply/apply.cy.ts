@@ -13,7 +13,7 @@ import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
 import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
-import paths from '../../../server/paths/apply'
+import paths from '../../../server/paths/api'
 import {
   activeOffenceFactory,
   applicationFactory,

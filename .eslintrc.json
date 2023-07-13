@@ -59,7 +59,8 @@
             "semi": false
           }
         ],
-        "no-underscore-dangle": ["error", { "allowAfterThis": true }]
+        "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+        "no-empty-function": ["error", { "allow": ["constructors"] }]
       }
     }
   ],

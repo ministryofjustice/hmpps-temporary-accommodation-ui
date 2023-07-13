@@ -13,6 +13,7 @@ import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
 import setupTestUser from '../../../cypress_shared/utils/setupTestUser'
+import paths from '../../../server/paths/apply'
 import {
   activeOffenceFactory,
   applicationFactory,
@@ -154,7 +155,7 @@ context('Apply', () => {
     cy.task('verifyApplicationSubmit', this.application.id).then(requests => {
       expect(requests).to.have.length(1)
 
-      expect(requests[0].url).to.equal(`/applications/${this.application.id}/submission`)
+      expect(requests[0].url).to.equal(paths.applications.submission({ id: this.application.id }))
     })
 
     // And I should be taken to the confirmation page

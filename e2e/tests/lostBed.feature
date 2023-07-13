@@ -1,6 +1,6 @@
 Feature: Manage Temporary Accommodation - Lost beds
     Background:
-        Given I am logged in
+        Given I am logged in as an assessor
         And I view an existing active premises
         And I'm creating a bedspace
         And I create a bedspace with all necessary details
@@ -22,7 +22,7 @@ Feature: Manage Temporary Accommodation - Lost beds
         And I'm marking a bedspace as void
         And I attempt to create a conflicting void booking
         Then I should see errors for the conflicting void booking
-    
+
     Scenario: Editing a void booking
         Given I'm marking a bedspace as void
         And I create a void booking with all necessary details

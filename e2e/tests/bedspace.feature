@@ -1,6 +1,6 @@
 Feature: Manage Temporary Accommodation - Bedspace
     Background:
-        Given I am logged in
+        Given I am logged in as an assessor
 
     Scenario: Creating a bedspace
         Given I view an existing active premises

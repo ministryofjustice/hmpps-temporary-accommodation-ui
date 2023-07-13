@@ -1,6 +1,6 @@
 Feature: Manage Temporary Accommodation - Booking
     Background:
-        Given I am logged in
+        Given I am logged in as an assessor
         And I view an existing active premises
         And I'm creating a bedspace
         And I create a bedspace with all necessary details

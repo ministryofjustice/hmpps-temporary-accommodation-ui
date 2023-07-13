@@ -1,6 +1,6 @@
 Feature: Manage Temporary Accommodation - Report
     Background:
-        Given I am logged in
+        Given I am logged in as an assessor
 
     Scenario: Downloading a booking report for a probation region
         Given I'm downloading a report

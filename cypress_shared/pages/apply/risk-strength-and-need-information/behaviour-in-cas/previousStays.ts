@@ -7,7 +7,7 @@ export default class PreviousStaysPage extends ApplyPage {
     super(
       'Behaviour in previous accommodation',
       application,
-      'behaviour-in-previous-accommodation',
+      'behaviour-in-cas',
       'previous-stays',
       paths.applications.show({ id: application.id }),
     )

@@ -1,5 +1,3 @@
-import PreviousStaysPage from './accommodation-need/behaviour-in-previous-accommodation/previousStays'
-import PreviousStaysDetailsPage from './accommodation-need/behaviour-in-previous-accommodation/previousStaysDetails'
 import ConsentGivenPage from './accommodation-need/consent/consentGiven'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
 import PractitionerPduPage from './accommodation-need/contact-details/practitionerPdu'
@@ -32,6 +30,8 @@ import DtrDetailsPage from './required-referrals/accommodation-referral-details/
 import DtrSubmittedPage from './required-referrals/accommodation-referral-details/dtrSubmitted'
 import OtherAccommodationOptionsPage from './required-referrals/accommodation-referral-details/otherAccommodationOptions'
 import ApprovalsForSpecificRisksPage from './risk-strength-and-need-information/approvals-for-specific-risks/approvalsForSpecificRisks'
+import PreviousStaysPage from './risk-strength-and-need-information/behaviour-in-cas/previousStays'
+import PreviousStaysDetailsPage from './risk-strength-and-need-information/behaviour-in-cas/previousStaysDetails'
 import AdditionalLicenceConditionsPage from './risk-strength-and-need-information/licence-conditions/additionalLicenceConditions'
 import OffenceDetailsPage from './risk-strength-and-need-information/oasys-import/offenceDetails'
 import OptionalOasysSectionsPage from './risk-strength-and-need-information/oasys-import/optionalOasysSections'
@@ -64,12 +64,12 @@ export {
   BackupContactPage,
   PractitionerPduPage,
   EligibilityReasonPage,
-  PreviousStaysPage,
-  PreviousStaysDetailsPage,
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,
   OptionalOasysSectionsPage,
+  PreviousStaysPage,
+  PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AcctAlertsPage,

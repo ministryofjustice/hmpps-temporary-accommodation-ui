@@ -5,9 +5,9 @@ import PreviousStays from './previousStays'
 import PreviousStaysDetails from './previousStaysDetails'
 
 @Task({
-  name: 'Behaviour in previous accommodation',
-  actionText: 'Provide details of behaviour in previous accommodation',
-  slug: 'behaviour-in-previous-accommodation',
+  name: 'Behaviour in CAS',
+  actionText: 'Outline behaviour in CAS',
+  slug: 'behaviour-in-cas',
   pages: [PreviousStays, PreviousStaysDetails],
 })
-export default class BehaviourInPreviousAccommodation {}
+export default class BehaviourInCas {}

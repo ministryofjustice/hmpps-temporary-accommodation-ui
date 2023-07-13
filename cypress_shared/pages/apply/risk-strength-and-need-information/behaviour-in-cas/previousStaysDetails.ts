@@ -7,11 +7,11 @@ export default class PreviousStaysDetailsPage extends ApplyPage {
     super(
       `What type of accommodation did ${application.person.name} stay at?`,
       application,
-      'behaviour-in-previous-accommodation',
+      'behaviour-in-cas',
       'previous-stays-details',
       paths.applications.pages.show({
         id: application.id,
-        task: 'behaviour-in-previous-accommodation',
+        task: 'behaviour-in-cas',
         page: 'previous-stays',
       }),
     )

@@ -12,8 +12,7 @@ import actions from './utils'
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { pages } = Apply
   const { get, post, put } = actions(router, services.auditService)
-  const { applicationsController, pagesController, peopleController, offencesController, documentsController } =
-    controllers
+  const { applicationsController, pagesController, peopleController, offencesController } = controllers
 
   get(paths.applications.start.pattern, applicationsController.start())
   get(paths.applications.index.pattern, applicationsController.index())
@@ -25,7 +24,6 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   post(paths.applications.people.find.pattern, peopleController.find())
   get(paths.applications.people.selectOffence.pattern, offencesController.selectOffence())
-  get(paths.applications.people.documents.pattern, documentsController.show())
 
   Object.keys(pages).forEach((taskKey: string) => {
     Object.keys(pages[taskKey]).forEach((pageKey: string) => {

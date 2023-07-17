@@ -1,6 +1,5 @@
 import PreviousStaysPage from './accommodation-need/behaviour-in-previous-accommodation/previousStays'
 import PreviousStaysDetailsPage from './accommodation-need/behaviour-in-previous-accommodation/previousStaysDetails'
-import ConsentDetailsPage from './accommodation-need/consent/consentDetails'
 import ConsentGivenPage from './accommodation-need/consent/consentGiven'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
 import PractitionerPduPage from './accommodation-need/contact-details/practitionerPdu'
@@ -69,7 +68,6 @@ export {
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,
-  ConsentDetailsPage,
   OptionalOasysSectionsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,

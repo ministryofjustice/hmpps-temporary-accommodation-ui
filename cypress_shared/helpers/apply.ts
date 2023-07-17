@@ -34,7 +34,6 @@ import {
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
-  ConsentDetailsPage,
   ConsentGivenPage,
   CrsSubmittedPage,
   DtrDetailsPage,
@@ -449,11 +448,7 @@ export default class ApplyHelper {
     consentGivenPage.completeForm()
     consentGivenPage.clickSubmit()
 
-    const consentDetailsPage = new ConsentDetailsPage(this.application)
-    consentDetailsPage.completeForm()
-    consentDetailsPage.clickSubmit()
-
-    this.pages.consent = [consentGivenPage, consentDetailsPage]
+    this.pages.consent = [consentGivenPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)

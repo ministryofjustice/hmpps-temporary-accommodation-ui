@@ -210,6 +210,7 @@
           "properties": {
             "reason": {
               "enum": [
+                "homelessAfterRerelease",
                 "homelessFromApprovedPremises",
                 "homelessFromBailAccommodation",
                 "homelessFromCustody"
@@ -314,22 +315,6 @@
                 "no",
                 "yes"
               ],
-              "type": "string"
-            }
-          }
-        },
-        "consent-details": {
-          "type": "object",
-          "properties": {
-            "consentType": {
-              "enum": [
-                "other",
-                "verbal",
-                "written"
-              ],
-              "type": "string"
-            },
-            "consentTypeDetail": {
               "type": "string"
             }
           }

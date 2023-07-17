@@ -85,10 +85,6 @@
   "consent": {
     "consent-given": {
       "consentGiven": "yes"
-    },
-    "consent-details": {
-      "consentType": "other",
-      "consentTypeDetail": "Consent detail"
     }
   },
   "licence-conditions": {

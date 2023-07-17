@@ -6,6 +6,7 @@ import TasklistPage from '../../../tasklistPage'
 
 export const eligibilityReasons = {
   homelessFromCustody: 'Moving on as homeless from custody',
+  homelessAfterRerelease: 'Moving on as homeless after re-release following recall',
   homelessFromApprovedPremises: 'Moving on as homeless from an Approved Premises',
   homelessFromBailAccommodation: 'Moving on as homeless from Bail Accommodation and Support Service',
 } as const

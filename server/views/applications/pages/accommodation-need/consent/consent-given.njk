@@ -16,6 +16,9 @@
 
   {{ formPageRadios({
     fieldName: "consentGiven",
+    hint: {
+      text: "Temporary Accommodation was formerly known as CAS3"
+    },
     items: [
       {
         value: "yes",
@@ -31,5 +34,5 @@
     ]
   }, fetchContext()) }}
 
-  <p>The person must also sign an Accommodation Compact.</p>
+  <p>The person must also sign an Accommodation Compact. See the <a href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/?__id=webDiagram.show&map=0%3AFF2D8D3F16B44268B814F7F8177A16F7&dgm=6B8C1C46E26D4ACFBEC3D16F7ABA3029">operational guidance for TA</a> for more information.</p>
 {% endblock %}

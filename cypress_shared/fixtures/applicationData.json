@@ -1,7 +1,16 @@
 {
   "sentence-information": {
+    "offending-summary": {
+      "summary": "A brief summary of offending history"
+    },
     "sentence-type": {
-      "sentenceType": "communityOrder"
+      "sentenceType": "extendedDeterminate"
+    },
+    "sentence-length": {
+      "years": "2",
+      "months": "",
+      "weeks": "",
+      "days": "4"
     },
     "sentence-expiry": {
       "sentenceExpiryDate": "2124-01-19",

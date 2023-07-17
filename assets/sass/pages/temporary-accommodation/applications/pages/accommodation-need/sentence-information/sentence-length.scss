@@ -1,0 +1,19 @@
+.length-components {
+  @include govuk-clearfix;
+  // font-size: 0 removes whitespace caused by inline-block
+  font-size: 0;
+}
+
+.length-components__item {
+  display: inline-block;
+  margin-right: govuk-spacing(4);
+  margin-bottom: 0;
+}
+
+.length-components__label {
+  display: block;
+}
+
+.length-components__input {
+  margin-bottom: 0;
+}

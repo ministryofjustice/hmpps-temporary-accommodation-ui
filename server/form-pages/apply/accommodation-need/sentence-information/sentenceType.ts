@@ -7,18 +7,16 @@ import TasklistPage from '../../../tasklistPage'
 export const sentenceTypes = {
   standardDeterminate: 'Standard determinate custody',
   life: 'Life sentence',
-  ipp: 'Indeterminate Public Protection (IPP)',
+  ipp: 'Indeterminate public protection (IPP)',
   extendedDeterminate: 'Extended determinate custody',
-  communityOrder: 'Community Order (CO) / Suspended Sentence Order (SSO)',
-  bailPlacement: 'Bail placement',
-  nonStatutory: 'Non-statutory, MAPPA case',
+  offenderRehabilitationAct: 'Offender Rehabilitation Act (ORA) adult custody',
 } as const
 
 export type SentenceTypesT = keyof typeof sentenceTypes
 
 @Page({ name: 'sentence-type', bodyProperties: ['sentenceType'] })
 export default class SentenceType implements TasklistPage {
-  title = 'Which of the following best describes the sentence type the person is on?'
+  title = 'Which of the following best describes the sentence type?'
 
   constructor(readonly body: { sentenceType?: SentenceTypesT }, readonly application: Application) {}
 
@@ -27,11 +25,11 @@ export default class SentenceType implements TasklistPage {
   }
 
   previous() {
-    return 'dashboard'
+    return 'offending-summary'
   }
 
   next() {
-    return 'sentence-expiry'
+    return 'sentence-length'
   }
 
   errors() {

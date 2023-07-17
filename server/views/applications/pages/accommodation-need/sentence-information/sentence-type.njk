@@ -2,24 +2,17 @@
 
 {% block questions %}
 
-  {{
-    formPageRadios(
-      {
-        fieldName: "sentenceType",
-        fieldset: {
-          legend: {
-            text: page.title,
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        hint: {
-        text: "Select the option which best describes the situation"
-      },
-        items: page.items()
-      },
-      fetchContext()
-    )
-  }}
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ task.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {{ formPageRadios({
+    fieldName: "sentenceType",
+    hint: {
+      text: "Select the option which best describes the situation"
+    },
+    items: page.items()
+  }, fetchContext()) }}
 
 {% endblock %}

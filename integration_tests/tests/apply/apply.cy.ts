@@ -110,7 +110,9 @@ context('Apply', () => {
     cy.task('verifyApplicationUpdate', this.application.id).then(requests => {
       const firstRequestData = JSON.parse(requests[0].body).data
 
-      expect(firstRequestData['sentence-information']['sentence-type'].sentenceType).equal('communityOrder')
+      expect(firstRequestData['sentence-information']['offending-summary'].summary).equal(
+        'A brief summary of offending history',
+      )
     })
   })
 

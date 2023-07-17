@@ -24,19 +24,42 @@
     "sentence-information": {
       "type": "object",
       "properties": {
+        "offending-summary": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            }
+          }
+        },
         "sentence-type": {
           "type": "object",
           "properties": {
             "sentenceType": {
               "enum": [
-                "bailPlacement",
-                "communityOrder",
                 "extendedDeterminate",
                 "ipp",
                 "life",
-                "nonStatutory",
+                "offenderRehabilitationAct",
                 "standardDeterminate"
               ],
+              "type": "string"
+            }
+          }
+        },
+        "sentence-length": {
+          "type": "object",
+          "properties": {
+            "years": {
+              "type": "string"
+            },
+            "months": {
+              "type": "string"
+            },
+            "weeks": {
+              "type": "string"
+            },
+            "days": {
               "type": "string"
             }
           }

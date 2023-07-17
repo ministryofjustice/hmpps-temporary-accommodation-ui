@@ -1,19 +1,20 @@
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
+
 import paths from '../../../../../server/paths/apply'
 import ApplyPage from '../../applyPage'
 
-export default class SentenceExpiryPage extends ApplyPage {
+export default class OffendingSummaryPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Sentence expiry date',
+      `Provide a brief summary of ${application.person.name}'s offending history`,
       application,
       'sentence-information',
-      'sentence-expiry',
-      paths.applications.pages.show({ id: application.id, task: 'sentence-information', page: 'sentence-length' }),
+      'offending-summary',
+      paths.applications.show({ id: application.id }),
     )
   }
 
   completeForm() {
-    this.completeDateInputsFromPageBody('sentenceExpiryDate')
+    this.completeTextInputFromPageBody('summary')
   }
 }

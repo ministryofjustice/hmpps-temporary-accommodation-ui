@@ -33,7 +33,7 @@ export default class SentenceExpiry implements TasklistPage {
   }
 
   previous() {
-    return 'sentence-type'
+    return 'sentence-length'
   }
 
   next() {

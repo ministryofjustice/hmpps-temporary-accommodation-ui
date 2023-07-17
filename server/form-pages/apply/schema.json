@@ -759,9 +759,6 @@
                 "type": "string"
               }
             },
-            "otherDetail": {
-              "type": "string"
-            },
             "alcoholMisuseDetail": {
               "type": "string"
             },
@@ -787,6 +784,9 @@
               "type": "string"
             },
             "visualImpairmentDetail": {
+              "type": "string"
+            },
+            "otherDetail": {
               "type": "string"
             },
             "noneDetail": {

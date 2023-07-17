@@ -30,6 +30,7 @@ import {
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AlternativePduPage,
+  ApprovalsForSpecificRisksPage,
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
@@ -87,6 +88,7 @@ export default class ApplyHelper {
     consent: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
     prisonInformation: [] as Array<ApplyPage>,
+    approvalsForSpecificRisks: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
@@ -169,6 +171,7 @@ export default class ApplyHelper {
     this.completeConsent()
     this.completeLicenceConditions()
     this.completePrisonInformation()
+    this.completeApprovalsForSpecificRisks()
     this.completeOasysImport()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
@@ -190,6 +193,7 @@ export default class ApplyHelper {
       ...this.pages.consent,
       ...this.pages.licenceConditions,
       ...this.pages.prisonInformation,
+      ...this.pages.approvalsForSpecificRisks,
       ...this.pages.oasysImport,
       ...this.pages.placementLocation,
       ...this.pages.disabilityCulturalAndSpecificNeeds,
@@ -507,6 +511,35 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('prison-information', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Not started')
+  }
+
+  private completeApprovalsForSpecificRisks() {
+    // Given I click the approvals for specific risks task
+    cy.get('[data-cy-task-name="approvals-for-specific-risks"]').click()
+
+    // Then the risk widgets are visible
+    const approvalsForSpecificRisksPage = new ApprovalsForSpecificRisksPage(this.application)
+
+    if (this.uiRisks) {
+      approvalsForSpecificRisksPage.shouldShowMappa()
+      approvalsForSpecificRisksPage.shouldShowRosh(this.uiRisks.roshRisks)
+      approvalsForSpecificRisksPage.shouldShowDeliusRiskFlags(this.uiRisks.flags)
+    }
+
+    // And when I complete the form
+    approvalsForSpecificRisksPage.completeForm()
+    approvalsForSpecificRisksPage.clickSubmit()
+
+    this.pages.approvalsForSpecificRisks = [approvalsForSpecificRisksPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
   }
 
@@ -764,6 +797,7 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowBehaviourInPreviousAccommodationAnswers(this.pages.behaviourInPreviousAccommodation)
     checkYourAnswersPage.shouldShowConsentAnswers(this.pages.consent)
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
+    checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)

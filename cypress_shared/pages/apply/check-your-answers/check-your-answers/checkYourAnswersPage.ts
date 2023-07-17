@@ -58,6 +58,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('prison-information', pages)
   }
 
+  shouldShowApprovalsForSpecificRisksAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('approvals-for-specific-risks', 'Approvals for specific risks')
+    this.shouldShowAnswersForTask('approvals-for-specific-risks', pages)
+  }
+
   shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
     this.shouldShowAnswersForTask('oasys-import', pages)
@@ -104,7 +109,7 @@ export default class CheckYourAnswersPage extends ApplyPage {
           const value = responses[key] as string | Array<Record<string, unknown>>
 
           if (typeof value === 'string') {
-            ;(responses[key] as string).split('\n').forEach(line => {
+            value.split('\n').forEach(line => {
               this.assertDefinition(key, line)
             })
           } else {

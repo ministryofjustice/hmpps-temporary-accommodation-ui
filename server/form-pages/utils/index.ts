@@ -1,10 +1,19 @@
-import type { FormSection, JourneyType, Task, YesNoOrIDK, YesOrNo, YesOrNoWithDetail } from '@approved-premises/ui'
+import type {
+  FormSection,
+  JourneyType,
+  PageResponse,
+  Task,
+  YesNoOrIDK,
+  YesOrNo,
+  YesOrNoWithDetail,
+} from '@approved-premises/ui'
 import type { Request } from 'express'
 import {
   Adjudication,
   TemporaryAccommodationApplication as Application,
   ApprovedPremisesAssessment,
   PersonAcctAlert,
+  PersonRisks,
 } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
 import { kebabCase, sentenceCase } from '../../utils/utils'
@@ -28,6 +37,13 @@ export type PageBodyPersonAcctAlert = {
   active: boolean
 }
 
+export type BodyWithYesOrNo<K extends string> = { [T in K]?: YesOrNo }
+export type BodyWithYesNoOrIDK<K extends string> = { [T in K]?: YesNoOrIDK }
+export type BodyWithYesOrNoWithDetail<K extends string> = BodyWithYesOrNo<K> & { [T in K as `${T}Detail`]?: string }
+export type BodyWithYesNoOrIDKWithDetail<K extends string> = BodyWithYesNoOrIDK<K> & {
+  [T in K as `${T}Detail`]?: string
+}
+
 export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unknown>): YesOrNoWithDetail<K> => {
   return {
     [`${key}`]: body[`${key}`] as YesOrNo,
@@ -35,15 +51,17 @@ export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unkn
   } as YesOrNoWithDetail<K>
 }
 
-export const yesOrNoResponseWithDetail = <K extends string>(key: K, body: Record<string, string>) => {
+export const yesOrNoResponseWithDetail = <K extends string>(key: K, body: BodyWithYesOrNoWithDetail<K>) => {
   return body[key] === 'yes' ? `Yes - ${body[`${key}Detail`]}` : 'No'
 }
 
-export const yesNoOrDontKnowResponseWithDetail = <K extends string>(key: K, body: Record<string, string>) => {
-  return body[key] === 'iDontKnow' ? "Don't know" : yesOrNoResponseWithDetail<K>(key, body)
+export const yesNoOrDontKnowResponseWithDetail = <K extends string>(key: K, body: BodyWithYesNoOrIDKWithDetail<K>) => {
+  return body[key] === 'iDontKnow'
+    ? "Don't know"
+    : yesOrNoResponseWithDetail<K>(key, body as BodyWithYesOrNoWithDetail<K>)
 }
 
-export const yesNoOrDontKnowResponse = <K extends string>(key: K, body: { [T in K]?: YesNoOrIDK }) => {
+export const yesNoOrDontKnowResponse = <K extends string>(key: K, body: BodyWithYesNoOrIDK<K>) => {
   return body[key] === 'iDontKnow' ? "Don't know" : sentenceCase(body[key])
 }
 
@@ -230,4 +248,54 @@ export const mapAcctAlertsForPageBody = (acctAlerts: Array<PersonAcctAlert>): Ar
     expired: acctAlert.expired,
     active: acctAlert.active,
   }))
+}
+
+export const personRisksRoshResponse = (risks: PersonRisks): PageResponse => {
+  if (risks?.roshRisks?.status === 'retrieved') {
+    const { value } = risks.roshRisks
+
+    return {
+      'Risk of serious harm': [
+        {
+          'Overall risk of serious harm': sentenceCase(value?.overallRisk) || 'Not known',
+          'Risk to children': sentenceCase(value?.riskToChildren) || 'Not known',
+          'Risk to public': sentenceCase(value?.riskToPublic) || 'Not known',
+          'Risk to known adult': sentenceCase(value?.riskToKnownAdult) || 'Not known',
+          'Risk to staff': sentenceCase(value?.riskToStaff) || 'Not known',
+        },
+      ],
+    }
+  }
+  return {
+    'Risk of serious harm':
+      'Something went wrong. We are unable to include RoSH information. This risk data must be checked manually outside of this service.',
+  }
+}
+
+export const personRisksMappaResponse = (risks: PersonRisks): PageResponse => {
+  if (risks?.mappa?.status === 'retrieved') {
+    const { value } = risks.mappa
+
+    return {
+      'Multi-agency public protection arrangements': value?.level || 'Not known',
+    }
+  }
+  return {
+    'Multi-agency public protection arrangements':
+      'Something went wrong. We are unable to include MAPPA information. This risk data must be checked manually outside of this service.',
+  }
+}
+
+export const personRisksFlagsResponse = (risks: PersonRisks): PageResponse => {
+  if (risks?.flags?.status === 'retrieved') {
+    const { value } = risks.flags
+
+    return {
+      'Delius risk flags (registers)': value?.length === 0 ? 'No flags' : value?.join('\n') || 'Not known',
+    }
+  }
+  return {
+    'Delius risk flags (registers)':
+      'Something went wrong. We are unable to include risk flags. This risk data must be checked manually outside of this service.',
+  }
 }

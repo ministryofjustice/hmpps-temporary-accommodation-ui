@@ -9,16 +9,12 @@ import {
   ApprovedPremisesAssessment as Assessment,
   Booking,
   Document,
-  FlagsEnvelope,
-  Mappa,
   OASysSection,
   OASysSections,
   Person,
   PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
-  RiskTier,
-  RoshRisks,
   TemporaryAccommodationApplication,
   User,
 } from '@approved-premises/api'
@@ -84,7 +80,7 @@ export type FormSections = Array<FormSection>
 
 export type FormPages = { [key in TaskNames]: Record<string, unknown> }
 
-export type PageResponse = Record<string, string | Array<string> | Array<Record<string, unknown>>>
+export type PageResponse = Record<string, string | Array<Record<string, unknown>>>
 
 export interface HtmlAttributes {
   [key: string]: string
@@ -208,12 +204,7 @@ export interface ReferenceData {
   serviceScope: 'approved-premises' | 'temporary-accommodation' | '*'
 }
 
-export interface PersonRisksUI {
-  roshRisks: RoshRisks
-  tier: RiskTier
-  flags: FlagsEnvelope['value']
-  mappa: Mappa
-}
+export type PersonRisksUI = PersonRisks
 
 export type GroupedListofBookings = {
   [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<Booking>

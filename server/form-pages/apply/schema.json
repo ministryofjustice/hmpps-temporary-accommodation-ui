@@ -11,6 +11,7 @@
     "consent",
     "licence-conditions",
     "prison-information",
+    "approvals-for-specific-risks",
     "oasys-import",
     "placement-location",
     "disability-cultural-and-specific-needs",
@@ -348,6 +349,9 @@
                 "type": "string"
               }
             },
+            "otherDetail": {
+              "type": "string"
+            },
             "alcoholMonitoringDetail": {
               "type": "string"
             },
@@ -382,9 +386,6 @@
               "type": "string"
             },
             "residencyRestrictionDetail": {
-              "type": "string"
-            },
-            "otherDetail": {
               "type": "string"
             }
           }
@@ -453,6 +454,27 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    "approvals-for-specific-risks": {
+      "type": "object",
+      "properties": {
+        "approvals-for-specific-risks": {
+          "type": "object",
+          "properties": {
+            "approvals": {
+              "enum": [
+                "needsAddress",
+                "notRequired",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "approvalsDetail": {
+              "type": "string"
             }
           }
         }
@@ -737,6 +759,9 @@
                 "type": "string"
               }
             },
+            "otherDetail": {
+              "type": "string"
+            },
             "alcoholMisuseDetail": {
               "type": "string"
             },
@@ -762,9 +787,6 @@
               "type": "string"
             },
             "visualImpairmentDetail": {
-              "type": "string"
-            },
-            "otherDetail": {
               "type": "string"
             },
             "noneDetail": {

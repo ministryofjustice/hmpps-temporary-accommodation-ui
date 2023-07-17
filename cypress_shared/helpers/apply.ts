@@ -797,10 +797,10 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowBehaviourInPreviousAccommodationAnswers(this.pages.behaviourInPreviousAccommodation)
     checkYourAnswersPage.shouldShowConsentAnswers(this.pages.consent)
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
-    checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)
+      checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 

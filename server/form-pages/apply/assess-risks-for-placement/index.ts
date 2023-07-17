@@ -6,7 +6,7 @@ import OasysImport from './oasys-import'
 import PrisonInformation from './prison-information'
 
 @Section({
-  title: 'Risk, strength and need information',
+  title: 'Assess risks for placement',
   tasks: [LicenceConditions, PrisonInformation, ApprovalsForSpecificRisksTask, OasysImport, BehaviourInCas],
 })
-export default class RiskStrengthAndNeedInformation {}
+export default class AssessRisksForPlacement {}

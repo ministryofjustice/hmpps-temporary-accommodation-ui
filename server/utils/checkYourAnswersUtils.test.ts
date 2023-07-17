@@ -3,6 +3,7 @@ import { applicationFactory } from '../testutils/factories'
 import { forPagesInTask } from './applicationUtils'
 
 import TasklistPage from '../form-pages/tasklistPage'
+import paths from '../paths/apply'
 import {
   checkYourAnswersSections,
   embeddedSummaryListItem,
@@ -105,7 +106,7 @@ describe('checkYourAnswersUtils', () => {
           actions: {
             items: [
               {
-                href: `/applications/${application.id}/tasks/some-task/pages/some-page`,
+                href: paths.applications.pages.show({ id: application.id, task: 'some-task', page: 'some-page' }),
                 text: 'Change',
                 visuallyHiddenText: 'A question',
               },

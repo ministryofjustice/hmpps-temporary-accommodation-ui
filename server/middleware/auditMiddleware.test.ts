@@ -121,6 +121,30 @@ describe('auditMiddleware', () => {
     })
   })
 
+  it('includes additional metadata if provided', async () => {
+    const handler = jest.fn()
+    const response = createMock<Response>({ locals: { user: { username } } })
+    const request = createMock<Request>({
+      params: requestParams,
+    })
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, {
+      auditEvent,
+      additionalMetadata: { foo: 'bar' },
+    })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
+      ...requestParams,
+      foo: 'bar',
+    })
+  })
+
   it('returns an audited request handler, that sends an audit message based on the redirect destination of the given request handler', async () => {
     const somePath = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
 
@@ -179,6 +203,36 @@ describe('auditMiddleware', () => {
     expect(handler).toHaveBeenCalled()
     expect(auditService.sendAuditMessage).toHaveBeenCalledWith('MATCHING_PATH_1_AUDIT_EVENT', username, {
       premisesId: 'some-premises',
+    })
+  })
+
+  it('includes additional metadata if provided, as part of the audit message based on the redirect destination', async () => {
+    const somePath = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
+
+    const handler = jest.fn()
+    const response = createMock<Response>({
+      locals: { user: { username } },
+      get: field => {
+        return field === 'Location' ? somePath({ premisesId: 'some-premises', roomId: 'some-room' }) : undefined
+      },
+    })
+    const request = createMock<Request>()
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, {
+      additionalMetadata: { foo: 'bar' },
+      redirectAuditEventSpecs: [{ auditEvent, path: somePath.pattern }],
+    })
+
+    await auditedhandler(request, response, next)
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
+      premisesId: 'some-premises',
+      roomId: 'some-room',
+      foo: 'bar',
     })
   })
 })

@@ -71,17 +71,6 @@
       "accommodationRequiredFromDate-day": "16"
     }
   },
-  "behaviour-in-previous-accommodation": {
-    "previous-stays": {
-      "previousStays": "yes"
-    },
-    "previous-stays-details": {
-      "accommodationTypes": ["cas1", "cas3"],
-      "cas1Detail": "Approved Premises detail",
-      "cas2Detail": "",
-      "cas3Detail": "Temporary Accommodation detail"
-    }
-  },
   "consent": {
     "consent-given": {
       "consentGiven": "yes"
@@ -301,6 +290,17 @@
           "answer": "Some answer for the third risk to self question"
         }
       ]
+    }
+  },
+  "behaviour-in-cas": {
+    "previous-stays": {
+      "previousStays": "yes"
+    },
+    "previous-stays-details": {
+      "accommodationTypes": ["cas1", "cas3"],
+      "cas1Detail": "Approved Premises detail",
+      "cas2Detail": "",
+      "cas3Detail": "Temporary Accommodation detail"
     }
   },
   "placement-location": {

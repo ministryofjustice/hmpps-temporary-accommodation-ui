@@ -2,18 +2,12 @@
 import BaseForm from '../baseForm'
 import { Form } from '../utils/decorators'
 import AccommodationNeed from './accommodation-need'
+import AssessRisksForPlacement from './assess-risks-for-placement'
 import CheckYourAnswers from './check-your-answers'
 import PlacementConsiderations from './placement-considerations'
-import ReferralsAndDocuments from './referrals-and-documents'
-import RiskStrengthAndNeedInformation from './risk-strength-and-need-information'
+import RequiredReferrals from './required-referrals'
 
 @Form({
-  sections: [
-    AccommodationNeed,
-    RiskStrengthAndNeedInformation,
-    PlacementConsiderations,
-    ReferralsAndDocuments,
-    CheckYourAnswers,
-  ],
+  sections: [AccommodationNeed, AssessRisksForPlacement, PlacementConsiderations, RequiredReferrals, CheckYourAnswers],
 })
 export default class Apply extends BaseForm {}

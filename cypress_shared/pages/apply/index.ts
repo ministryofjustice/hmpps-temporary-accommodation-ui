@@ -1,5 +1,3 @@
-import PreviousStaysPage from './accommodation-need/behaviour-in-previous-accommodation/previousStays'
-import PreviousStaysDetailsPage from './accommodation-need/behaviour-in-previous-accommodation/previousStaysDetails'
 import ConsentGivenPage from './accommodation-need/consent/consentGiven'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
 import PractitionerPduPage from './accommodation-need/contact-details/practitionerPdu'
@@ -12,6 +10,18 @@ import ReleaseTypePage from './accommodation-need/sentence-information/releaseTy
 import SentenceExpiryPage from './accommodation-need/sentence-information/sentenceExpiry'
 import SentenceLengthPage from './accommodation-need/sentence-information/sentenceLength'
 import SentenceTypePage from './accommodation-need/sentence-information/sentenceType'
+import ApprovalsForSpecificRisksPage from './assess-risks-for-placement/approvals-for-specific-risks/approvalsForSpecificRisks'
+import PreviousStaysPage from './assess-risks-for-placement/behaviour-in-cas/previousStays'
+import PreviousStaysDetailsPage from './assess-risks-for-placement/behaviour-in-cas/previousStaysDetails'
+import AdditionalLicenceConditionsPage from './assess-risks-for-placement/licence-conditions/additionalLicenceConditions'
+import OffenceDetailsPage from './assess-risks-for-placement/oasys-import/offenceDetails'
+import OptionalOasysSectionsPage from './assess-risks-for-placement/oasys-import/optionalOasysSections'
+import RiskManagementPlanPage from './assess-risks-for-placement/oasys-import/riskManagementPlan'
+import RiskToSelfPage from './assess-risks-for-placement/oasys-import/riskToSelf'
+import RoshSummaryPage from './assess-risks-for-placement/oasys-import/roshSummary'
+import SupportingInformationPage from './assess-risks-for-placement/oasys-import/supportingInformation'
+import AcctAlertsPage from './assess-risks-for-placement/prison-information/acctAlerts'
+import AdjudicationsPage from './assess-risks-for-placement/prison-information/adjudications'
 import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkYourAnswersPage'
 import ConfirmDetailsPage from './confirmDetails'
 import EnterCRNPage from './enterCrn'
@@ -27,20 +37,10 @@ import CaringResponsibilitiesPage from './placement-considerations/safeguarding-
 import LocalConnectionsPage from './placement-considerations/safeguarding-and-support/localConnections'
 import SafeguardingAndVulnerabilityPage from './placement-considerations/safeguarding-and-support/safeguardingAndVulnerability'
 import SupportInTheCommunityPage from './placement-considerations/safeguarding-and-support/supportInTheCommunity'
-import CrsSubmittedPage from './referrals-and-documents/accommodation-referral-details/crsSubmitted'
-import DtrDetailsPage from './referrals-and-documents/accommodation-referral-details/dtrDetails'
-import DtrSubmittedPage from './referrals-and-documents/accommodation-referral-details/dtrSubmitted'
-import OtherAccommodationOptionsPage from './referrals-and-documents/accommodation-referral-details/otherAccommodationOptions'
-import ApprovalsForSpecificRisksPage from './risk-strength-and-need-information/approvals-for-specific-risks/approvalsForSpecificRisks'
-import AdditionalLicenceConditionsPage from './risk-strength-and-need-information/licence-conditions/additionalLicenceConditions'
-import OffenceDetailsPage from './risk-strength-and-need-information/oasys-import/offenceDetails'
-import OptionalOasysSectionsPage from './risk-strength-and-need-information/oasys-import/optionalOasysSections'
-import RiskManagementPlanPage from './risk-strength-and-need-information/oasys-import/riskManagementPlan'
-import RiskToSelfPage from './risk-strength-and-need-information/oasys-import/riskToSelf'
-import RoshSummaryPage from './risk-strength-and-need-information/oasys-import/roshSummary'
-import SupportingInformationPage from './risk-strength-and-need-information/oasys-import/supportingInformation'
-import AcctAlertsPage from './risk-strength-and-need-information/prison-information/acctAlerts'
-import AdjudicationsPage from './risk-strength-and-need-information/prison-information/adjudications'
+import CrsSubmittedPage from './required-referrals/accommodation-referral-details/crsSubmitted'
+import DtrDetailsPage from './required-referrals/accommodation-referral-details/dtrDetails'
+import DtrSubmittedPage from './required-referrals/accommodation-referral-details/dtrSubmitted'
+import OtherAccommodationOptionsPage from './required-referrals/accommodation-referral-details/otherAccommodationOptions'
 import SelectOffencePage from './selectOffence'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
@@ -64,12 +64,12 @@ export {
   BackupContactPage,
   PractitionerPduPage,
   EligibilityReasonPage,
-  PreviousStaysPage,
-  PreviousStaysDetailsPage,
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,
   OptionalOasysSectionsPage,
+  PreviousStaysPage,
+  PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AcctAlertsPage,

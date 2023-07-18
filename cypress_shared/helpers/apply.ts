@@ -84,12 +84,12 @@ export default class ApplyHelper {
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
-    behaviourInPreviousAccommodation: [] as Array<ApplyPage>,
     consent: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
     prisonInformation: [] as Array<ApplyPage>,
     approvalsForSpecificRisks: [] as Array<ApplyPage>,
     oasysImport: [] as Array<ApplyPage>,
+    behaviourInCas: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
     safeguardingAndSupport: [] as Array<ApplyPage>,
@@ -167,12 +167,12 @@ export default class ApplyHelper {
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeEligibility()
-    this.completeBehaviourInPreviousAccommodation()
     this.completeConsent()
     this.completeLicenceConditions()
     this.completePrisonInformation()
     this.completeApprovalsForSpecificRisks()
     this.completeOasysImport()
+    this.completeBehaviourInCas()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
     this.completeSafeguardingAndSupport()
@@ -189,12 +189,12 @@ export default class ApplyHelper {
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
-      ...this.pages.behaviourInPreviousAccommodation,
       ...this.pages.consent,
       ...this.pages.licenceConditions,
       ...this.pages.prisonInformation,
       ...this.pages.approvalsForSpecificRisks,
       ...this.pages.oasysImport,
+      ...this.pages.behaviourInCas,
       ...this.pages.placementLocation,
       ...this.pages.disabilityCulturalAndSpecificNeeds,
       ...this.pages.safeguardingAndSupport,
@@ -415,31 +415,6 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('eligibility', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('behaviour-in-previous-accommodation', 'Not started')
-  }
-
-  private completeBehaviourInPreviousAccommodation() {
-    // Given I click the behaviour in previous accommodation task
-    Page.verifyOnPage(TaskListPage).clickTask('behaviour-in-previous-accommodation')
-
-    // When I complete the form
-    const previousStaysPage = new PreviousStaysPage(this.application)
-    previousStaysPage.completeForm()
-    previousStaysPage.clickSubmit()
-
-    const previousStaysDetailsPage = new PreviousStaysDetailsPage(this.application)
-    previousStaysDetailsPage.completeForm()
-    previousStaysDetailsPage.clickSubmit()
-
-    this.pages.behaviourInPreviousAccommodation = [previousStaysPage, previousStaysDetailsPage]
-
-    // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('behaviour-in-previous-accommodation', 'Completed')
-
-    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('consent', 'Not started')
   }
 
@@ -600,6 +575,31 @@ export default class ApplyHelper {
 
     // Then I should be taken back to the tasklist
     tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Not started')
+  }
+
+  private completeBehaviourInCas() {
+    // Given I click the behaviour in CAS task
+    Page.verifyOnPage(TaskListPage).clickTask('behaviour-in-cas')
+
+    // When I complete the form
+    const previousStaysPage = new PreviousStaysPage(this.application)
+    previousStaysPage.completeForm()
+    previousStaysPage.clickSubmit()
+
+    const previousStaysDetailsPage = new PreviousStaysDetailsPage(this.application)
+    previousStaysDetailsPage.completeForm()
+    previousStaysDetailsPage.clickSubmit()
+
+    this.pages.behaviourInCas = [previousStaysPage, previousStaysDetailsPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('placement-location', 'Not started')
@@ -794,7 +794,6 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowSentenceInformationAnswers(this.pages.sentenceInformation)
     checkYourAnswersPage.shouldShowContactDetailsAnswers(this.pages.contactDetails)
     checkYourAnswersPage.shouldShowEligibilityAnswers(this.pages.eligibility)
-    checkYourAnswersPage.shouldShowBehaviourInPreviousAccommodationAnswers(this.pages.behaviourInPreviousAccommodation)
     checkYourAnswersPage.shouldShowConsentAnswers(this.pages.consent)
     checkYourAnswersPage.shouldShowLicenceConditionsAnswers(this.pages.licenceConditions)
 
@@ -804,6 +803,7 @@ export default class ApplyHelper {
       checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 
+    checkYourAnswersPage.shouldShowBehaviourInCasAnswers(this.pages.behaviourInCas)
     checkYourAnswersPage.shouldShowPlacementLocationAnswers(this.pages.placementLocation)
     checkYourAnswersPage.shouldShowDisabilityCulturalAndSpecificNeedsAnswers(
       this.pages.disabilityCulturalAndSpecificNeeds,

@@ -7,12 +7,12 @@
     "sentence-information",
     "contact-details",
     "eligibility",
-    "behaviour-in-previous-accommodation",
     "consent",
     "licence-conditions",
     "prison-information",
     "approvals-for-specific-risks",
     "oasys-import",
+    "behaviour-in-cas",
     "placement-location",
     "disability-cultural-and-specific-needs",
     "safeguarding-and-support",
@@ -256,49 +256,6 @@
               "type": "string"
             },
             "accommodationRequiredFromDate": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "behaviour-in-previous-accommodation": {
-      "type": "object",
-      "properties": {
-        "previous-stays": {
-          "type": "object",
-          "properties": {
-            "previousStays": {
-              "enum": [
-                "iDontKnow",
-                "no",
-                "yes"
-              ],
-              "type": "string"
-            }
-          }
-        },
-        "previous-stays-details": {
-          "type": "object",
-          "properties": {
-            "accommodationTypes": {
-              "type": "array",
-              "items": {
-                "enum": [
-                  "cas1",
-                  "cas2",
-                  "cas3"
-                ],
-                "type": "string"
-              }
-            },
-            "cas1Detail": {
-              "type": "string"
-            },
-            "cas2Detail": {
-              "type": "string"
-            },
-            "cas3Detail": {
               "type": "string"
             }
           }
@@ -714,6 +671,49 @@
         }
       }
     },
+    "behaviour-in-cas": {
+      "type": "object",
+      "properties": {
+        "previous-stays": {
+          "type": "object",
+          "properties": {
+            "previousStays": {
+              "enum": [
+                "iDontKnow",
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "previous-stays-details": {
+          "type": "object",
+          "properties": {
+            "accommodationTypes": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "cas1",
+                  "cas2",
+                  "cas3"
+                ],
+                "type": "string"
+              }
+            },
+            "cas2Detail": {
+              "type": "string"
+            },
+            "cas1Detail": {
+              "type": "string"
+            },
+            "cas3Detail": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "placement-location": {
       "type": "object",
       "properties": {
@@ -759,9 +759,6 @@
                 "type": "string"
               }
             },
-            "otherDetail": {
-              "type": "string"
-            },
             "alcoholMisuseDetail": {
               "type": "string"
             },
@@ -787,6 +784,9 @@
               "type": "string"
             },
             "visualImpairmentDetail": {
+              "type": "string"
+            },
+            "otherDetail": {
               "type": "string"
             },
             "noneDetail": {

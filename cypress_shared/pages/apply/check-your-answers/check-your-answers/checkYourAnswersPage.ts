@@ -38,9 +38,9 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('eligibility', pages)
   }
 
-  shouldShowBehaviourInPreviousAccommodationAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('behaviour-in-previous-accommodation', 'Behaviour in previous accommodation')
-    this.shouldShowAnswersForTask('behaviour-in-previous-accommodation', pages)
+  shouldShowBehaviourInCasAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('behaviour-in-cas', 'Behaviour in CAS')
+    this.shouldShowAnswersForTask('behaviour-in-cas', pages)
   }
 
   shouldShowConsentAnswers(pages: Array<ApplyPage>) {

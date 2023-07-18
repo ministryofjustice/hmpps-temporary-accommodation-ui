@@ -132,12 +132,15 @@ export const statusName = (statusId: Booking['status']) => {
 }
 
 export const getLatestExtension = (booking: Booking) => {
-  return booking.extensions.reduce((latestExtension, testExtension) => {
-    const latestTime = DateFormats.isoToDateObj(latestExtension.createdAt).getTime()
-    const testTime = DateFormats.isoToDateObj(testExtension.createdAt).getTime()
+  return booking.extensions.reduce(
+    (latestExtension, testExtension) => {
+      const latestTime = DateFormats.isoToDateObj(latestExtension.createdAt).getTime()
+      const testTime = DateFormats.isoToDateObj(testExtension.createdAt).getTime()
 
-    return latestTime > testTime ? latestExtension : testExtension
-  }, booking.extensions?.[0])
+      return latestTime > testTime ? latestExtension : testExtension
+    },
+    booking.extensions?.[0],
+  )
 }
 
 export const deriveBookingHistory = (booking: Booking) => {

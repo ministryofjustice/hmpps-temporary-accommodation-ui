@@ -15,7 +15,10 @@ export default class PropertySharing implements TasklistPage {
     propertySharing: string
   }
 
-  constructor(readonly body: Partial<PropertySharingBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<PropertySharingBody>,
+    readonly application: Application,
+  ) {
     this.questions = {
       propertySharing: `Would ${application.person.name} be able to share accommodation with others?`,
     }

@@ -11,7 +11,10 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 import { parseNaturalNumber } from '../../../utils/formUtils'
 
 export default class PremisesController {
-  constructor(private readonly premisesService: PremisesService, private readonly bedspaceService: BedspaceService) {}
+  constructor(
+    private readonly premisesService: PremisesService,
+    private readonly bedspaceService: BedspaceService,
+  ) {}
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {

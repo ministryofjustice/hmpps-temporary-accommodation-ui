@@ -12,7 +12,10 @@ export type OffendingSummaryBody = {
 export default class OffendingSummary implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<OffendingSummaryBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<OffendingSummaryBody>,
+    readonly application: Application,
+  ) {
     this.title = `Provide a brief summary of ${application.person.name}'s offending history`
   }
 

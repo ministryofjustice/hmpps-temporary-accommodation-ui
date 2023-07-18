@@ -42,7 +42,10 @@ describe('tasklistPageDecorator', () => {
       name: 'Some Name',
     })
     class ClassWithApplication {
-      constructor(readonly body: Record<string, unknown>, readonly application: TemporaryAccommodationApplication) {}
+      constructor(
+        readonly body: Record<string, unknown>,
+        readonly application: TemporaryAccommodationApplication,
+      ) {}
     }
 
     @Page({

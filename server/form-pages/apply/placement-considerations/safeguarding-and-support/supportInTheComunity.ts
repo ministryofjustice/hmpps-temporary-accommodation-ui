@@ -12,7 +12,10 @@ type SupportInTheCommunityBody = {
 export default class SupportInTheCommunity implements TasklistPage {
   title = 'Support in the community'
 
-  constructor(readonly body: Partial<SupportInTheCommunityBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<SupportInTheCommunityBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return {

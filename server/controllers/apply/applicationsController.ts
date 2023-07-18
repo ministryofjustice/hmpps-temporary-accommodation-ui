@@ -10,7 +10,10 @@ import extractCallConfig from '../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../utils/validation'
 
 export default class ApplicationsController {
-  constructor(private readonly applicationService: ApplicationService, private readonly personService: PersonService) {}
+  constructor(
+    private readonly applicationService: ApplicationService,
+    private readonly personService: PersonService,
+  ) {}
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {

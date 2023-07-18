@@ -26,7 +26,10 @@ const sentenceLengthComponentResponse = (value: string, singularLabel: string, p
 export default class SentenceLength implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<SentenceLengthBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<SentenceLengthBody>,
+    readonly application: Application,
+  ) {
     this.title = 'What is the sentence length?'
   }
 

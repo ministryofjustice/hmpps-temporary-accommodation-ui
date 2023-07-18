@@ -184,9 +184,12 @@ export default abstract class Page extends Component {
       .document()
       .then(doc => {
         doc.addEventListener('click', () => {
-          setTimeout(() => {
-            doc.location?.reload()
-          }, timeout || Cypress.config('defaultCommandTimeout'))
+          setTimeout(
+            () => {
+              doc.location?.reload()
+            },
+            timeout || Cypress.config('defaultCommandTimeout'),
+          )
         })
       })
   }

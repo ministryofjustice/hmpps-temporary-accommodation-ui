@@ -33,7 +33,10 @@ export default class ApprovalsForSpecificRisks implements TasklistPage {
 
   risks: PersonRisksUI
 
-  constructor(readonly body: Partial<ApprovalsForSpecificRisksBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<ApprovalsForSpecificRisksBody>,
+    readonly application: Application,
+  ) {
     this.risks = mapApiPersonRisksForUi(application.risks)
   }
 

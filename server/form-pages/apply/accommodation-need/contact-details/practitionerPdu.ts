@@ -9,7 +9,10 @@ type PractitionerPduBody = { pdu: string }
 export default class PractitionerPdu implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<PractitionerPduBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<PractitionerPduBody>,
+    readonly application: Application,
+  ) {
     const name = getProbationPractitionerName(application)
 
     this.title = `What is ${name}'s PDU?`

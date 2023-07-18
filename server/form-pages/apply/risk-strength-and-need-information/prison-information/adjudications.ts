@@ -30,7 +30,10 @@ export default class Adjudications implements TasklistPage {
 
   importDate: string
 
-  constructor(readonly body: Partial<AdjudicationsBody>, readonly application: ApprovedPremisesApplication) {}
+  constructor(
+    readonly body: Partial<AdjudicationsBody>,
+    readonly application: ApprovedPremisesApplication,
+  ) {}
 
   static async initialize(
     _: Record<string, unknown>,

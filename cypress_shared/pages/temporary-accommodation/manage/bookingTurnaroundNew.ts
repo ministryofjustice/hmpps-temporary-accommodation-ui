@@ -18,7 +18,11 @@ export default class BookingTurnaroundNewPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
+  constructor(
+    premises: Premises,
+    room: Room,
+    private readonly booking: Booking,
+  ) {
     super('Change turnaround time')
 
     this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'turnaround')

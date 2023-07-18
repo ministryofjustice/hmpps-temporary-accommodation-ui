@@ -6,7 +6,10 @@ import BedspaceEditablePage from './bedspaceEditable'
 export default class BedspaceEditPage extends BedspaceEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(premises: Premises, private readonly room: Room) {
+  constructor(
+    premises: Premises,
+    private readonly room: Room,
+  ) {
     super('Edit a bedspace')
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })

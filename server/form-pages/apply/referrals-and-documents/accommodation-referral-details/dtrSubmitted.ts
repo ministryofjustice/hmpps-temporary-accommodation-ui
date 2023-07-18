@@ -13,7 +13,10 @@ type DtrSubmittedBody = {
 export default class DtrSubmitted implements TasklistPage {
   title = 'Has the Duty to Refer (DTR) / National Offender Pathway (NOP) been submitted?'
 
-  constructor(readonly body: Partial<DtrSubmittedBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<DtrSubmittedBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return { [this.title]: sentenceCase(this.body.dtrSubmitted) }

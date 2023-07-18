@@ -7,7 +7,11 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 export default class LostBedCancelPage extends Page {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(private readonly premises: Premises, private readonly room: Room, private readonly lostBed: LostBed) {
+  constructor(
+    private readonly premises: Premises,
+    private readonly room: Room,
+    private readonly lostBed: LostBed,
+  ) {
     super('Cancel void booking')
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })

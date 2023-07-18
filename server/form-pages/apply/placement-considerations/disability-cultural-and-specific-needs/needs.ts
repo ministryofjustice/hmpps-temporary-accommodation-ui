@@ -71,7 +71,10 @@ type NeedsBody = {
 export default class Needs implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<NeedsBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<NeedsBody>,
+    readonly application: Application,
+  ) {
     this.title = `Does ${application.person.name} have any of the following needs?`
   }
 

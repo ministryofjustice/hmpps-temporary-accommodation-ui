@@ -9,7 +9,11 @@ export default class LostBedShowPage extends Page {
 
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(private readonly premises: Premises, private readonly room: Room, private readonly lostBed: LostBed) {
+  constructor(
+    private readonly premises: Premises,
+    private readonly room: Room,
+    private readonly lostBed: LostBed,
+  ) {
     super('Void booking')
 
     this.lostBedInfoComponent = new LostBedInfoComponent(lostBed)

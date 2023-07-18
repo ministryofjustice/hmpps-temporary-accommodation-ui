@@ -26,7 +26,10 @@ type ReleaseTypeBody = {
 export default class ReleaseType implements TasklistPage {
   title = 'What is the release type?'
 
-  constructor(private _body: Partial<ReleaseTypeBody>, readonly application: Application) {}
+  constructor(
+    private _body: Partial<ReleaseTypeBody>,
+    readonly application: Application,
+  ) {}
 
   public set body(value: Partial<ReleaseTypeBody>) {
     this._body = {

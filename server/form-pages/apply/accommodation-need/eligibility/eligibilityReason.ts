@@ -18,7 +18,10 @@ type EligibilityReasonBody = { reason: EligibilityReasonsT }
 export default class EligibilityReason implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<EligibilityReasonBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<EligibilityReasonBody>,
+    readonly application: Application,
+  ) {
     const { name } = application.person
     this.title = `How is ${name} eligible for Temporary Accommodation (TA)?`
   }

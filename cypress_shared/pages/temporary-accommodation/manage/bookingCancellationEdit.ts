@@ -12,7 +12,11 @@ export default class BookingCancellationEditPage extends BookingCancellationEdit
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
+  constructor(
+    premises: Premises,
+    room: Room,
+    private readonly booking: Booking,
+  ) {
     super('Update cancelled booking')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)

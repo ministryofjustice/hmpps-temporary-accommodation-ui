@@ -11,7 +11,10 @@ type SentenceExpiryBody = ObjectWithDateParts<'sentenceExpiryDate'>
 export default class SentenceExpiry implements TasklistPage {
   title: string
 
-  constructor(private _body: Partial<SentenceExpiryBody>, readonly application: Application) {
+  constructor(
+    private _body: Partial<SentenceExpiryBody>,
+    readonly application: Application,
+  ) {
     this.title = 'Sentence expiry date'
   }
 

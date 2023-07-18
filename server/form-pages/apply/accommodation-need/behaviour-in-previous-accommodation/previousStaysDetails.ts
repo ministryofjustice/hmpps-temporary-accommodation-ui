@@ -30,7 +30,10 @@ type PreviousStaysDetailsBody = {
 export default class PreviousStaysDetails implements TasklistPage {
   title: string
 
-  constructor(readonly body: Partial<PreviousStaysDetailsBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<PreviousStaysDetailsBody>,
+    readonly application: Application,
+  ) {
     const { name } = application.person
 
     this.title = `What type of accommodation did ${name} stay at?`

@@ -19,7 +19,10 @@ export default class DtrDetails implements TasklistPage {
     date: 'Date DTR / NOP was submitted',
   }
 
-  constructor(private _body: Partial<DtrDetailsBody>, readonly application: Application) {}
+  constructor(
+    private _body: Partial<DtrDetailsBody>,
+    readonly application: Application,
+  ) {}
 
   public set body(value: Partial<DtrDetailsBody>) {
     this._body = {

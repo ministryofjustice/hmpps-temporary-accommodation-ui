@@ -28,7 +28,10 @@ export default class AcctAlerts implements TasklistPage {
 
   importDate: string
 
-  constructor(readonly body: Partial<AcctAlertsBody>, readonly application: ApprovedPremisesApplication) {}
+  constructor(
+    readonly body: Partial<AcctAlertsBody>,
+    readonly application: ApprovedPremisesApplication,
+  ) {}
 
   static async initialize(
     _: Record<string, unknown>,

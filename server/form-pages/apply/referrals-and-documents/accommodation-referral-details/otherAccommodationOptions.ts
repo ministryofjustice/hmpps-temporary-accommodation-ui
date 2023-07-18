@@ -11,7 +11,10 @@ type OtherAccommodationOptionsBody = YesOrNoWithDetail<'otherOptions'>
 export default class OtherAccommodationOptions implements TasklistPage {
   title = 'Have other accommodation options been considered?'
 
-  constructor(readonly body: Partial<OtherAccommodationOptionsBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<OtherAccommodationOptionsBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return {

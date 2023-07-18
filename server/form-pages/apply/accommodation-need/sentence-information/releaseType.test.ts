@@ -129,6 +129,20 @@ describe('SentenceExpiry', () => {
         pssEndDate: 'You must specify a valid PSS end date',
       })
     })
+
+    it('returns an error if release types are not specified', () => {
+      const page = new ReleaseType({}, application)
+      expect(page.errors()).toEqual({
+        releaseTypes: 'You must specify the release types',
+      })
+    })
+
+    it('returns an error if release types are empty', () => {
+      const page = new ReleaseType({ releaseTypes: [] }, application)
+      expect(page.errors()).toEqual({
+        releaseTypes: 'You must specify the release types',
+      })
+    })
   })
 
   describe('response', () => {

@@ -74,10 +74,10 @@ export default class ReleaseType implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.releaseTypes?.length) {
-      errors.releaseTypes = 'You must specify the licence start date'
+      errors.releaseTypes = 'You must specify the release types'
     }
 
-    if (this.body.releaseTypes.includes('licence')) {
+    if (this.body.releaseTypes?.includes('licence')) {
       if (dateIsBlank(this.body, 'licenceStartDate')) {
         errors.licenceStartDate = 'You must specify the licence start date'
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'licenceStartDate')) {
@@ -91,7 +91,7 @@ export default class ReleaseType implements TasklistPage {
       }
     }
 
-    if (this.body.releaseTypes.includes('pss')) {
+    if (this.body.releaseTypes?.includes('pss')) {
       if (dateIsBlank(this.body, 'pssStartDate')) {
         errors.pssStartDate = 'You must specify the PSS start date'
       } else if (!dateAndTimeInputsAreValidDates(this.body, 'pssStartDate')) {

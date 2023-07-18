@@ -18,7 +18,10 @@ export type SentenceTypesT = keyof typeof sentenceTypes
 export default class SentenceType implements TasklistPage {
   title = 'Which of the following best describes the sentence type?'
 
-  constructor(readonly body: { sentenceType?: SentenceTypesT }, readonly application: Application) {}
+  constructor(
+    readonly body: { sentenceType?: SentenceTypesT },
+    readonly application: Application,
+  ) {}
 
   response() {
     return { [this.title]: sentenceTypes[this.body.sentenceType] }

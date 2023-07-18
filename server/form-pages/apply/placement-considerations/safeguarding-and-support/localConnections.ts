@@ -12,7 +12,10 @@ type LocalConnectionsBody = {
 export default class LocalConnections implements TasklistPage {
   title = 'Local connections'
 
-  constructor(readonly body: Partial<LocalConnectionsBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<LocalConnectionsBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return {

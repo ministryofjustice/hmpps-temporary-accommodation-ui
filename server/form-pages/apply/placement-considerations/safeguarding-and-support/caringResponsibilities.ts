@@ -15,7 +15,10 @@ export default class CaringResponsibilities implements TasklistPage {
     caringResponsibilities: string
   }
 
-  constructor(readonly body: Partial<CaringResponsibilitiesBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<CaringResponsibilitiesBody>,
+    readonly application: Application,
+  ) {
     this.questions = {
       caringResponsibilities: `Does ${application.person.name} have any caring responsibilities?`,
     }

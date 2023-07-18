@@ -15,7 +15,10 @@ export default class FoodAllergies implements TasklistPage {
     foodAllergies: string
   }
 
-  constructor(readonly body: Partial<FoodAllergiesBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<FoodAllergiesBody>,
+    readonly application: Application,
+  ) {
     this.questions = {
       foodAllergies: `Does ${application.person.name} have any food allergies or dietary requirements?`,
     }

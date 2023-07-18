@@ -15,7 +15,11 @@ export default class BookingArrivalNewPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, private readonly booking: Booking) {
+  constructor(
+    premises: Premises,
+    room: Room,
+    private readonly booking: Booking,
+  ) {
     super('Mark booking as active')
 
     this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')

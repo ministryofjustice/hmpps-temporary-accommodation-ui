@@ -9,7 +9,10 @@ export default abstract class ContactDetails {
 
   abstract nextPageId: string
 
-  constructor(readonly body: Partial<ContactDetailsBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<ContactDetailsBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return {

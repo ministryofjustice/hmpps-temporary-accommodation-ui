@@ -13,7 +13,10 @@ type ConsentGivenBody = {
 export default class ConsentGiven implements TasklistPage {
   title = 'Has consent for Temporary Accommodation been given?'
 
-  constructor(readonly body: Partial<ConsentGivenBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<ConsentGivenBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return { [this.title]: sentenceCase(this.body.consentGiven) }

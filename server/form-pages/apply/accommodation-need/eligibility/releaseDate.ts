@@ -14,7 +14,10 @@ type ReleaseDateBody = ObjectWithDateParts<'releaseDate'>
 export default class ReleaseDate implements TasklistPage {
   title: string
 
-  constructor(private _body: Partial<ReleaseDateBody>, readonly application: Application) {
+  constructor(
+    private _body: Partial<ReleaseDateBody>,
+    readonly application: Application,
+  ) {
     const { name } = application.person
 
     this.title = `What is ${name}'s release date?`

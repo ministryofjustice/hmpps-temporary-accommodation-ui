@@ -47,8 +47,8 @@ const documentCheckbox = (document: Document, selectedDocumentIds: Array<string>
   return `
   <div class="govuk-checkboxes__item">
     <input class="govuk-checkboxes__input" id="documentIds[${document.id}]" name="documentIds" type="checkbox" value="${
-    document.id
-  }" ${selectedDocumentIds.includes(document.id) ? 'checked' : ''}>
+      document.id
+    }" ${selectedDocumentIds.includes(document.id) ? 'checked' : ''}>
     <label class="govuk-label govuk-checkboxes__label" for="documentIds[${document.id}]">
       ${document.fileName}
     </label>

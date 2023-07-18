@@ -14,7 +14,10 @@ type CrsSubmittedBody = {
 export default class CrsSubmitted implements TasklistPage {
   title = 'Has a referral to Commissioned Rehabilitative Services (CRS) been submitted?'
 
-  constructor(readonly body: Partial<CrsSubmittedBody>, readonly application: Application) {}
+  constructor(
+    readonly body: Partial<CrsSubmittedBody>,
+    readonly application: Application,
+  ) {}
 
   response() {
     return { [this.title]: sentenceCase(this.body.crsSubmitted) }

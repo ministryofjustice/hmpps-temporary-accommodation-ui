@@ -12,7 +12,10 @@ export default class BedspaceShowPage extends Page {
 
   private readonly premises: Premises
 
-  constructor(premises: Premises, private readonly room: Room) {
+  constructor(
+    premises: Premises,
+    private readonly room: Room,
+  ) {
     super('View a bedspace')
 
     this.premises = premises

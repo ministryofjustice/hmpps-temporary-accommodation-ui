@@ -15,7 +15,10 @@ export default class PreviousStays implements TasklistPage {
     previousStays: string
   }
 
-  constructor(readonly body: Partial<PreviousStaysBody>, readonly application: Application) {
+  constructor(
+    readonly body: Partial<PreviousStaysBody>,
+    readonly application: Application,
+  ) {
     const { name } = application.person
 
     this.title = 'Behaviour in previous accommodation'

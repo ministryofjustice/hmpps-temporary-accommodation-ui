@@ -8,7 +8,10 @@ import BookingEditablePage from './bookingEditable'
 export default class BookingNewPage extends BookingEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(private readonly premises: Premises, room: Room) {
+  constructor(
+    private readonly premises: Premises,
+    room: Room,
+  ) {
     super('Book bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })

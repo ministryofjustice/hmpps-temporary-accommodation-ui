@@ -3,7 +3,10 @@ import { DateFormats } from '../../../server/utils/dateUtils'
 import Page from '../page'
 
 export default class SelectOffencePage extends Page {
-  constructor(private readonly person: Person, private readonly offences: Array<ActiveOffence>) {
+  constructor(
+    private readonly person: Person,
+    private readonly offences: Array<ActiveOffence>,
+  ) {
     super(`Select the index offence for ${person.name}`)
   }
 

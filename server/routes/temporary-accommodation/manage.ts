@@ -25,6 +25,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     lostBedsController,
     bedspaceSearchController,
     bookingSearchController,
+    assessmentsController,
   } = controllers.manage
 
   get(paths.dashboard.index.pattern, dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })

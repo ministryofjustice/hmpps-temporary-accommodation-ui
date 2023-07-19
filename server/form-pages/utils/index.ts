@@ -205,6 +205,18 @@ export const hasSubmittedDtr = (application: Application): boolean => {
   return dtrSubmitted === 'yes'
 }
 
+export const arrivalDateFromApplication = (application: Application): string => {
+  const dateOfArrival: string = (application.data as Record<string, unknown>)?.eligibility?.[
+    'accommodation-required-from-date'
+  ]?.accommodationRequiredFromDate
+
+  if (!dateOfArrival) {
+    throw new SessionDataError('No arrival date')
+  }
+
+  return dateOfArrival
+}
+
 export const dateBodyProperties = (root: string) => {
   return [root, `${root}-year`, `${root}-month`, `${root}-day`]
 }

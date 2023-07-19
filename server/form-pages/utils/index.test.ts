@@ -330,6 +330,27 @@ describe('utils', () => {
     })
   })
 
+  describe('arrivalDateFromApplication', () => {
+    it('returns the arrival date when present in the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          eligibility: { 'accommodation-required-from-date': { accommodationRequiredFromDate: 'Some Date' } },
+        },
+      })
+      expect(utils.arrivalDateFromApplication(application)).toEqual('Some Date')
+    })
+
+    it('throws an error when the arrival date is not known', () => {
+      const application = applicationFactory.build({
+        data: {
+          eligibility: {},
+        },
+      })
+
+      expect(() => utils.arrivalDateFromApplication(application)).toThrow(new SessionDataError('No arrival date'))
+    })
+  })
+
   describe('dateBodyProperties', () => {
     it('returns date field names for use in page body properties', () => {
       expect(utils.dateBodyProperties('someDate')).toEqual([

@@ -1,3 +1,4 @@
+import applicationDataJson from '../../../cypress_shared/fixtures/applicationData.json'
 import { applicationFactory } from '../../testutils/factories'
 import { getApplicationSubmissionData, getApplicationUpdateData } from './getApplicationData'
 
@@ -14,11 +15,12 @@ describe('getApplicationUpdateData', () => {
 
 describe('getApplicationSubmissionData', () => {
   it('extracts data for submitting an application', () => {
-    const application = applicationFactory.build()
+    const application = applicationFactory.build({ data: applicationDataJson })
 
     expect(getApplicationSubmissionData(application)).toEqual({
       translatedDocument: application.document,
       type: 'CAS3',
+      arrivalDate: applicationDataJson.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
     })
   })
 })

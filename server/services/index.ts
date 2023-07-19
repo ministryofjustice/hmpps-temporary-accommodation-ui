@@ -8,7 +8,7 @@ import ArrivalService from './arrivalService'
 import AuditService from './auditService'
 import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
-import ReportService from './reportService'
+import BookingSearchService from './bookingSearchService'
 import BookingService from './bookingService'
 import CancellationService from './cancellationService'
 import ConfirmationService from './confirmationService'
@@ -18,9 +18,9 @@ import LostBedService from './lostBedService'
 import NonArrivalService from './nonArrivalService'
 import PersonService from './personService'
 import PremisesService from './premisesService'
-import UserService from './userService'
-import BookingSearchService from './bookingSearchService'
+import ReportService from './reportService'
 import TurnaroundService from './turnaroundService'
+import UserService from './userService'
 
 export const services = () => {
   const {
@@ -81,18 +81,18 @@ export const services = () => {
 export type Services = ReturnType<typeof services>
 
 export {
-  UserService,
-  PremisesService,
-  PersonService,
-  ArrivalService,
-  NonArrivalService,
-  DepartureService,
-  ExtensionService,
-  CancellationService,
-  BookingService,
-  LostBedService,
   ApplicationService,
+  ArrivalService,
   BedspaceService,
   BookingSearchService,
+  BookingService,
+  CancellationService,
+  DepartureService,
+  ExtensionService,
+  LostBedService,
+  NonArrivalService,
+  PersonService,
+  PremisesService,
   TurnaroundService,
+  UserService,
 }

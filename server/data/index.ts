@@ -48,15 +48,15 @@ export const dataAccess = () => ({
 export type DataAccess = ReturnType<typeof dataAccess>
 
 export {
+  ApplicationClient,
+  BedClient,
   BookingClient,
-  PremisesClient,
   HmppsAuthClient,
-  RestClientBuilder,
-  ReferenceDataClient,
   LostBedClient,
   PersonClient,
-  ApplicationClient,
+  PremisesClient,
+  ReferenceDataClient,
   ReportClient,
+  RestClientBuilder,
   UserClient,
-  BedClient,
 }

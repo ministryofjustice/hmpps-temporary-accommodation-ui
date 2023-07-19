@@ -5,6 +5,7 @@ import { dataAccess } from '../data'
 import config from '../config'
 import ApplicationService from './applicationService'
 import ArrivalService from './arrivalService'
+import AssessmentsService from './assessmentsService'
 import AuditService from './auditService'
 import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
@@ -35,6 +36,7 @@ export const services = () => {
     reportClientBuilder,
     userClientBuilder,
     bedClientBuilder,
+    assessmentClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient, userClientBuilder)
@@ -55,6 +57,7 @@ export const services = () => {
   const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder, referenceDataClientBuilder)
   const bookingSearchService = new BookingSearchService(bookingClientBuilder)
   const turnaroundService = new TurnaroundService(bookingClientBuilder)
+  const assessmentsService = new AssessmentsService(assessmentClientBuilder)
 
   return {
     userService,
@@ -75,6 +78,7 @@ export const services = () => {
     bedspaceSearchService,
     bookingSearchService,
     turnaroundService,
+    assessmentsService,
   }
 }
 
@@ -83,6 +87,7 @@ export type Services = ReturnType<typeof services>
 export {
   ApplicationService,
   ArrivalService,
+  AssessmentsService,
   BedspaceService,
   BookingSearchService,
   BookingService,

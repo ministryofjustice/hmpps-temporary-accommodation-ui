@@ -3,10 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { BookingSummary } from './BookingSummary';
 import type { Cancellation } from './Cancellation';
 import type { PlacementRequest } from './PlacementRequest';
 
 export type PlacementRequestDetail = (PlacementRequest & {
     cancellations: Array<Cancellation>;
+    booking?: BookingSummary;
 });
 

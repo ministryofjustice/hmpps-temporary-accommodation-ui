@@ -22,6 +22,7 @@ export type PlacementRequest = (PlacementRequirements & PlacementDates & {
     status: PlacementRequestStatus;
     assessmentDecision: AssessmentDecision;
     assessmentDate: string;
+    applicationDate: string;
     assessor: ApprovedPremisesUser;
     notes?: string;
 });

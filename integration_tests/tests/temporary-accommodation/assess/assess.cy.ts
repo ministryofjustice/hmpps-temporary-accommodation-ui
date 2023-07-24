@@ -1,8 +1,9 @@
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import { assessmentSummaryFactory } from '../../../../server/testutils/factories'
+import { assessmentFactory, assessmentSummaryFactory } from '../../../../server/testutils/factories'
 import Page from '../../../../cypress_shared/pages/page'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
+import AssessmentShowPage from '../../../../cypress_shared/pages/assess/show'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -58,6 +59,31 @@ context('Apply', () => {
 
         // Then I should see the list of archived assessments
         listPage.shouldShowArchivedAssessments()
+      })
+    })
+
+    describe('Show an assessment', () => {
+      it('I can change the state of an assessment', () => {
+        const assessment = assessmentFactory.build({ status: 'unallocated' })
+        const assessmentSummary = assessmentSummaryFactory.buildList(1, {
+          status: 'unallocated',
+          person: assessment.application.person,
+          id: assessment.id,
+        })
+
+        cy.task('stubAssessments', assessmentSummary)
+        cy.task('stubFindAssessment', assessment)
+
+        // Given I visit the referral list page
+        const dashboardPage = DashboardPage.visit()
+        dashboardPage.clickReviewAndAssessReferrals()
+        const listPage = Page.verifyOnPage(ListPage, assessmentSummary, [], [], [])
+
+        // When I click on the referral
+        listPage.clickAssessment(assessment)
+
+        // Then I should be taken to the referral show page
+        Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, assessment.status)
       })
     })
   })

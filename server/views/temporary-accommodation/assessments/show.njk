@@ -1,0 +1,31 @@
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + assessment.application.person.name + " referral" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {{ breadCrumb(assessment.application.person.name, [
+    {title: 'Referrals', href: paths.assessments.index()}
+  ]) }}
+
+  {% include "../../_messages.njk" %}
+
+  {{
+    mojIdentityBar({
+      title: {
+        html: "<span><h1>" + assessment.application.person.name + "</h1>" + assessmentStatusTag(assessment.status) + "</span>"
+      },
+      menus: [{items: actions}]
+    })
+  }}
+
+{% endblock %}
+
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Update referral status", menuClasses: "moj-button-menu__wrapper--right"});
+  </script>
+{% endblock %}

@@ -14,7 +14,8 @@ import {
   dateFieldValues,
   parseNaturalNumber,
 } from './formUtils'
-import { statusTag } from './personUtils'
+import { statusTag as personStatusTag } from './personUtils'
+import { statusTag as assessmentStatusTag } from './assessmentUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
 import { dashboardTableRows } from './applicationUtils'
@@ -33,6 +34,7 @@ import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
+import { TemporaryAccommodationAssessment } from '../@types/shared'
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -132,7 +134,10 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     },
   )
 
-  njkEnv.addGlobal('statusTag', (status: PersonStatus) => markAsSafe(statusTag(status)))
+  njkEnv.addGlobal('personStatusTag', (status: PersonStatus) => markAsSafe(personStatusTag(status)))
+  njkEnv.addGlobal('assessmentStatusTag', (status: TemporaryAccommodationAssessment['status']) =>
+    markAsSafe(assessmentStatusTag(status)),
+  )
 
   njkEnv.addGlobal('mergeObjects', (obj1: Record<string, unknown>, obj2: Record<string, unknown>) => {
     return { ...obj1, ...obj2 }

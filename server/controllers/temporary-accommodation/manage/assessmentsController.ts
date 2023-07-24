@@ -1,6 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
 import AssessmentsService from '../../../services/assessmentsService'
 import extractCallConfig from '../../../utils/restUtils'
+import { assessmentActions } from '../../../utils/assessmentUtils'
 
 export const assessmentsTableHeaders = [
   {
@@ -56,6 +57,19 @@ export default class AssessmentsController {
 
       return res.render('temporary-accommodation/assessments/archive', {
         archivedTableRows,
+      })
+    }
+  }
+
+  show(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
+
+      return res.render('temporary-accommodation/assessments/show', {
+        assessment,
+        actions: assessmentActions(assessment),
       })
     }
   }

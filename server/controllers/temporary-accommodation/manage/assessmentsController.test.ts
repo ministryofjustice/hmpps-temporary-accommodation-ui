@@ -3,9 +3,10 @@ import type { NextFunction, Request, Response } from 'express'
 
 import { CallConfig } from '../../../data/restClient'
 import { AssessmentsService } from '../../../services'
-import { probationRegionFactory } from '../../../testutils/factories'
+import { assessmentFactory, probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import AssessmentsController, { assessmentsTableHeaders } from './assessmentsController'
+import { assessmentActions } from '../../../utils/assessmentUtils'
 
 jest.mock('../../../utils/restUtils')
 
@@ -69,6 +70,24 @@ describe('AssessmentsController', () => {
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig)
+    })
+  })
+
+  describe('show', () => {
+    it('shows a readonly view of an application', async () => {
+      const assessmentId = 'some-assessment-id'
+      const assessment = assessmentFactory.build({ id: assessmentId })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
+      request.params = { id: assessmentId }
+
+      const requestHandler = assessmentsController.show()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/show', {
+        assessment,
+        actions: assessmentActions(assessment),
+      })
+      expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
     })
   })
 })

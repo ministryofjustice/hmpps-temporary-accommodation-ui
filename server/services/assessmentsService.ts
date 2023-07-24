@@ -1,4 +1,5 @@
 import type { TableRow } from '@approved-premises/ui'
+import type { TemporaryAccommodationAssessment as Assessment } from '../@types/shared'
 import type { AssessmentClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
@@ -46,5 +47,11 @@ export default class AssessmentsService {
     )
 
     return result
+  }
+
+  findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+
+    return assessmentClient.find(assessmentId)
   }
 }

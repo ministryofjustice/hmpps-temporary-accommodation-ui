@@ -1,6 +1,6 @@
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
-import { assessmentSummaryFactory } from '../testutils/factories'
+import { assessmentFactory, assessmentSummaryFactory } from '../testutils/factories'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
 
@@ -95,6 +95,20 @@ describe('AssessmentsService', () => {
       archivedAssessments.forEach(archivedAssessment =>
         expect(assessmentTableRows).toHaveBeenCalledWith(archivedAssessment, true),
       )
+    })
+  })
+
+  describe('findAssessment', () => {
+    it('calls the find method on the assessment client and returns the result', async () => {
+      const assessment = assessmentFactory.build()
+      const assessmentId = 'some-id'
+
+      assessmentClient.find.mockResolvedValue(assessment)
+
+      expect(await service.findAssessment(callConfig, assessmentId)).toEqual(assessment)
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.find).toHaveBeenCalledWith(assessmentId)
     })
   })
 })

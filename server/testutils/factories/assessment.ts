@@ -2,13 +2,13 @@
 
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
-import type { ApprovedPremisesAssessment } from '@approved-premises/api'
+import type { TemporaryAccommodationAssessment as Assessment } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 import { fakeObject } from '../utils'
 import applicationFactory from './application'
 
-class AssessmentFactory extends Factory<ApprovedPremisesAssessment> {
+class AssessmentFactory extends Factory<Assessment> {
   createdXDaysAgo(days: number) {
     const today = new Date()
     return this.params({
@@ -37,4 +37,11 @@ export default AssessmentFactory.define(() => ({
   clarificationNotes: [],
   rejectionRationale: faker.lorem.sentence(),
   service: 'CAS3',
+  status: faker.helpers.arrayElement([
+    'unallocated' as const,
+    'in_review' as const,
+    'ready_to_place' as const,
+    'closed' as const,
+    'rejected' as const,
+  ]),
 }))

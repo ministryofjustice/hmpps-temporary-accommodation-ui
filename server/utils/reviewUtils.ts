@@ -1,6 +1,6 @@
 import {
   TemporaryAccommodationApplication as Application,
-  ApprovedPremisesAssessment as Assessment,
+  TemporaryAccommodationAssessment as Assessment,
 } from '../@types/shared'
 import { SummaryListItem, Task } from '../@types/ui'
 import getSections from './assessments/getSections'

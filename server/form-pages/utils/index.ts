@@ -11,7 +11,7 @@ import type {
 import {
   Adjudication,
   TemporaryAccommodationApplication as Application,
-  ApprovedPremisesAssessment,
+  TemporaryAccommodationAssessment as Assessment,
   PersonAcctAlert,
   PersonRisks,
 } from '../../@types/shared'
@@ -128,10 +128,7 @@ export const getTaskName = <T>(page: T) => {
   return Reflect.getMetadata('page:task', page)
 }
 
-export const updateAssessmentData = (
-  page: TasklistPage,
-  assessment: ApprovedPremisesAssessment,
-): ApprovedPremisesAssessment => {
+export const updateAssessmentData = (page: TasklistPage, assessment: Assessment): Assessment => {
   const pageName = getPageName(page.constructor)
   const taskName = getTaskName(page.constructor)
 
@@ -144,7 +141,7 @@ export const updateAssessmentData = (
 
 export function getBody(
   Page: TasklistPageInterface,
-  application: Application | ApprovedPremisesAssessment,
+  application: Application | Assessment,
   request: Request,
   userInput: Record<string, unknown>,
 ) {
@@ -157,10 +154,7 @@ export function getBody(
   return getPageDataFromApplication(Page, application)
 }
 
-export function getPageDataFromApplication(
-  Page: TasklistPageInterface,
-  application: Application | ApprovedPremisesAssessment,
-) {
+export function getPageDataFromApplication(Page: TasklistPageInterface, application: Application | Assessment) {
   const pageName = getPageName(Page)
   const taskName = getTaskName(Page)
 

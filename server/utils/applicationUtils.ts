@@ -1,6 +1,6 @@
 import type {
   TemporaryAccommodationApplication as Application,
-  ApprovedPremisesAssessment as Assessment,
+  TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
 import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'

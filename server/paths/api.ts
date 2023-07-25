@@ -19,8 +19,10 @@ const searchBookingsPath = bookingsPath.path('search')
 const assessPaths = {
   assessments: path('/assessments'),
   singleAssessment: path('/assessments/:id'),
-  acceptance: path('/assessments/:id/acceptance'),
+  allocation: path('/tasks/assessment/:id/allocations'),
   rejection: path('/assessments/:id/rejection'),
+  acceptance: path('/assessments/:id/acceptance'),
+  closure: path('/assessments/:id/closure'),
 }
 
 const clarificationNotePaths = {
@@ -116,8 +118,10 @@ export default {
     index: assessPaths.assessments,
     show: assessPaths.singleAssessment,
     update: assessPaths.singleAssessment,
-    acceptance: assessPaths.acceptance,
+    allocation: assessPaths.allocation,
     rejection: assessPaths.rejection,
+    acceptance: assessPaths.acceptance,
+    closure: assessPaths.closure,
     clarificationNotes: {
       create: clarificationNotePaths.notes,
       update: clarificationNotePaths.notes.path(':clarificationNoteId'),

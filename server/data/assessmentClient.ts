@@ -1,5 +1,7 @@
 import type {
   TemporaryAccommodationAssessment as Assessment,
+  AssessmentAcceptance,
+  AssessmentRejection,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
@@ -19,5 +21,37 @@ export default class AssessmentClient {
 
   async find(assessmentId: string): Promise<Assessment> {
     return (await this.restClient.get({ path: paths.assessments.show({ id: assessmentId }) })) as Assessment
+  }
+
+  async unallocateAssessment(id: string): Promise<void> {
+    await this.restClient.delete({
+      path: paths.assessments.allocation({ id }),
+    })
+  }
+
+  async allocateAssessment(id: string): Promise<void> {
+    await this.restClient.post({
+      path: paths.assessments.allocation({ id }),
+    })
+  }
+
+  async rejectAssessment(id: string): Promise<void> {
+    await this.restClient.post({
+      path: paths.assessments.rejection({ id }),
+      data: { document: {}, rejectionRationale: 'default' } as AssessmentRejection,
+    })
+  }
+
+  async acceptAssessment(id: string): Promise<void> {
+    await this.restClient.post({
+      path: paths.assessments.acceptance({ id }),
+      data: { document: {} } as AssessmentAcceptance,
+    })
+  }
+
+  async closeAssessment(id: string): Promise<void> {
+    await this.restClient.post({
+      path: paths.assessments.closure({ id }),
+    })
   }
 }

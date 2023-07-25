@@ -28,6 +28,61 @@ const assessmentStubs = [
       jsonBody: assessment,
     },
   },
+  {
+    request: {
+      method: 'DELETE',
+      url: paths.assessments.allocation({ id: assessment.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  },
+  {
+    request: {
+      method: 'POST',
+      url: paths.assessments.allocation({ id: assessment.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  },
+  {
+    request: {
+      method: 'POST',
+      url: paths.assessments.rejection({ id: assessment.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  },
+  {
+    request: {
+      method: 'POST',
+      url: paths.assessments.acceptance({ id: assessment.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  },
+  {
+    request: {
+      method: 'POST',
+      url: paths.assessments.closure({ id: assessment.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {},
+    },
+  },
 ]
 
 export default assessmentStubs

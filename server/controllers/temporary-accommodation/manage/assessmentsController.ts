@@ -1,8 +1,13 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { TemporaryAccommodationAssessment as Assessment } from '../../../@types/shared'
+import {
+  TemporaryAccommodationAssessment as Assessment,
+  TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+} from '../../../@types/shared'
 import AssessmentsService from '../../../services/assessmentsService'
 import extractCallConfig from '../../../utils/restUtils'
-import { assessmentActions } from '../../../utils/assessmentUtils'
+import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
+import paths from '../../../paths/temporary-accommodation/manage'
+import { lowerCase } from '../../../utils/utils'
 
 export const assessmentsTableHeaders = [
   {
@@ -31,7 +36,7 @@ export const assessmentsTableHeaders = [
   },
 ]
 
-export const confirmationPageContent: Record<Assessment['status'], {title: string, text: string} = {
+export const confirmationPageContent: Record<Assessment['status'], { title: string; text: string }> = {
   in_review: {
     title: 'Mark this referral as in review',
     text: '<p class="govuk-body">Mark this referral as in review if you or a HPT colleague are working on this referral.</p>',
@@ -109,6 +114,19 @@ export default class AssessmentsController {
         status: req.params.status,
         id: req.params.id,
       })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { id, status } = req.params
+
+      await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentStatus)
+
+      req.flash('info', `Assessment updated status updated to "${lowerCase(statusName(status as AssessmentStatus))}"`)
+      res.redirect(paths.assessments.show({ id }))
     }
   }
 }

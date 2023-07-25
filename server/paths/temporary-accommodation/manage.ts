@@ -115,6 +115,7 @@ const paths = {
     archive: assessmentsPath.path('archive'),
     show: assessmentsPath.path(':id'),
     confirm: assessmentPath.path(':status'),
+    update: assessmentPath.path(':status'),
   },
 }
 

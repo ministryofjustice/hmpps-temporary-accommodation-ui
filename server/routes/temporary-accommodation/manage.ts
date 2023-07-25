@@ -308,5 +308,15 @@ export default function routes(controllers: Controllers, services: Services, rou
     auditEvent: 'VIEW_ASSESSMENT_STATUS_CHANGE_CONFIRM',
   })
 
+  put(paths.assessments.update.pattern, assessmentsController.update(), {
+    auditEvent: 'UPDATE_ASSESSMENT',
+    redirectAuditEventSpecs: [
+      {
+        path: paths.assessments.show.pattern,
+        auditEvent: 'UPDATE_ASSESSMENT_SUCCESS',
+      },
+    ],
+  })
+
   return router
 }

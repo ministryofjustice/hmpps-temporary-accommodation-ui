@@ -7,6 +7,7 @@ import { assessmentFactory, probationRegionFactory } from '../../../testutils/fa
 import extractCallConfig from '../../../utils/restUtils'
 import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
 import { assessmentActions } from '../../../utils/assessmentUtils'
+import paths from '../../../paths/temporary-accommodation/manage'
 
 jest.mock('../../../utils/restUtils')
 
@@ -110,6 +111,21 @@ describe('AssessmentsController', () => {
         status,
         id: assessmentId,
       })
+    })
+  })
+
+  describe('update', () => {
+    it('calls the updateAssessmentStatus method on the service with the new status', async () => {
+      const newStatus = 'in_review'
+      const assessmentId = 'some-id'
+
+      const requestHandler = assessmentsController.update()
+      request.params = { id: assessmentId, status: newStatus }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
+      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.show({ id: assessmentId }))
     })
   })
 })

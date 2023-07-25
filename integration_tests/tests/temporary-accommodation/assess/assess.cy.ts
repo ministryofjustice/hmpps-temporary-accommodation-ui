@@ -4,6 +4,7 @@ import { assessmentFactory, assessmentSummaryFactory } from '../../../../server/
 import Page from '../../../../cypress_shared/pages/page'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
 import AssessmentShowPage from '../../../../cypress_shared/pages/assess/show'
+import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -84,6 +85,12 @@ context('Apply', () => {
 
         // Then I should be taken to the referral show page
         Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, assessment.status)
+        // Given I am on the referral page
+        // When I click on the 'Update referral status to: In review' button
+        assessmentPage.clickAction('In review')
+
+        // Then I am taken to the confirmation page
+        Page.verifyOnPage(AssessmentConfirmPage, 'Mark this referral as in review')
       })
     })
   })

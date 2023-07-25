@@ -1,0 +1,29 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - confirmation" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.assessments.show({ id: id })
+  }) }}
+
+  <h1 class="govuk-heading-l">{{content.title}}</h1>
+  {{content.text | safe}}
+
+  <form action="{{ paths.assessments.update({id: id, status: status}) }}?_method=PUT" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+    {{ 
+      govukButton({
+          text: "Confirm",
+          preventDoubleClick: true
+        }) 
+    }}
+
+  </form>
+{% endblock %}

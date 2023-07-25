@@ -5,7 +5,7 @@ import { CallConfig } from '../../../data/restClient'
 import { AssessmentsService } from '../../../services'
 import { assessmentFactory, probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
-import AssessmentsController, { assessmentsTableHeaders } from './assessmentsController'
+import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
 import { assessmentActions } from '../../../utils/assessmentUtils'
 
 jest.mock('../../../utils/restUtils')
@@ -88,6 +88,28 @@ describe('AssessmentsController', () => {
         actions: assessmentActions(assessment),
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
+    })
+  })
+
+  describe('confirm', () => {
+    it.each([
+      'null' as const,
+      'unallocated' as const,
+      'in_review' as const,
+      'ready_to_place' as const,
+      'closed' as const,
+      'rejected' as const,
+    ])('calls render with a confirmation message for the %s status', async status => {
+      const assessmentId = 'some-assessment-id'
+      const requestHandler = assessmentsController.confirm()
+      request.params = { id: assessmentId, status }
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm', {
+        content: confirmationPageContent[status],
+        status,
+        id: assessmentId,
+      })
     })
   })
 })

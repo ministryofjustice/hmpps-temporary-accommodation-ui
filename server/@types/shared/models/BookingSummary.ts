@@ -3,10 +3,12 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type NewPlacementRequestBooking = {
+export type BookingSummary = {
+    id: string;
+    premisesId: string;
+    premisesName: string;
     arrivalDate: string;
     departureDate: string;
-    bedId?: string;
-    premisesId?: string;
+    createdAt: string;
 };
 

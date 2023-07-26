@@ -150,6 +150,7 @@
       "approvalsDetail": "Approvals detail"
     }
   },
+  "placement-considerations": {},
   "behaviour-in-cas": {
     "previous-stays": {
       "previousStays": "yes"

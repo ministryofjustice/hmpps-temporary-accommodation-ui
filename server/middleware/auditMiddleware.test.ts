@@ -70,6 +70,24 @@ describe('auditMiddleware', () => {
     expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, requestParams)
   })
 
+  it('returns an audited request handler, that sends no audit message and throws and error if the handler returns an error', async () => {
+    const handler = jest.fn()
+    const response = createMock<Response>({ locals: { user: { username } } })
+    const request = createMock<Request>({ params: requestParams })
+    const next = jest.fn()
+
+    const auditService = createMock<AuditService>()
+
+    const auditedhandler = auditMiddleware(handler, auditService, { auditEvent })
+
+    handler.mockImplementation((_req, _res, handlerNext) => handlerNext('some-error'))
+
+    await expect(() => auditedhandler(request, response, next)).rejects.toEqual('some-error')
+
+    expect(handler).toHaveBeenCalled()
+    expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+  })
+
   it('returns an audited request handler, that sends an audit message that includes selected request body parameters', async () => {
     const handler = jest.fn()
     const response = createMock<Response>({ locals: { user: { username } } })

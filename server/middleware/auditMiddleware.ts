@@ -59,31 +59,40 @@ const wrapHandler =
       return
     }
 
-    await handler(req, res, next)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let handlerError: any
 
-    const encodedRedirectLocation = res.get('Location')
-    if (encodedRedirectLocation && redirectMatchers) {
-      const redirectPath = decodeURI(encodedRedirectLocation)
-      redirectParams = {}
+    await handler(req, res, error => {
+      handlerError = error
+    })
 
-      redirectMatchers.some(redirectMatcher => {
-        if (matchAuditEvent(redirectPath, redirectMatcher, redirectParams)) {
-          redirectAuditEvent = redirectMatcher.auditEvent
-          return true
-        }
-        return false
-      })
-    }
+    if (!handlerError) {
+      const encodedRedirectLocation = res.get('Location')
+      if (encodedRedirectLocation && redirectMatchers) {
+        const redirectPath = decodeURI(encodedRedirectLocation)
+        redirectParams = {}
 
-    if (auditEvent) {
-      await auditService.sendAuditMessage(auditEvent, userUuid, {
-        ...auditDetails(req, auditBodyParams),
-        ...additionalMetadata,
-      })
-    }
+        redirectMatchers.some(redirectMatcher => {
+          if (matchAuditEvent(redirectPath, redirectMatcher, redirectParams)) {
+            redirectAuditEvent = redirectMatcher.auditEvent
+            return true
+          }
+          return false
+        })
+      }
 
-    if (redirectAuditEvent) {
-      await auditService.sendAuditMessage(redirectAuditEvent, userUuid, { ...redirectParams, ...additionalMetadata })
+      if (auditEvent) {
+        await auditService.sendAuditMessage(auditEvent, userUuid, {
+          ...auditDetails(req, auditBodyParams),
+          ...additionalMetadata,
+        })
+      }
+
+      if (redirectAuditEvent) {
+        await auditService.sendAuditMessage(redirectAuditEvent, userUuid, { ...redirectParams, ...additionalMetadata })
+      }
+    } else {
+      throw handlerError
     }
   }
 

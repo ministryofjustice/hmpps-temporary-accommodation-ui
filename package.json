@@ -177,7 +177,7 @@
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.0",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@faker-js/faker": "^8.0.0",
-    "@golevelup/ts-jest": "^0.3.3",
+    "@golevelup/ts-jest": "^0.4.0",
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-format": "^0.2.5",
     "@types/compression": "^1.7.2",

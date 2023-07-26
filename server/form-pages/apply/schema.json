@@ -15,7 +15,7 @@
     "placement-location",
     "disability-cultural-and-specific-needs",
     "safeguarding-and-support",
-    "requirements-for-placement",
+    "food-allergies",
     "move-on-plan",
     "accommodation-referral-details",
     "check-your-answers"
@@ -642,24 +642,9 @@
         }
       }
     },
-    "requirements-for-placement": {
+    "food-allergies": {
       "type": "object",
       "properties": {
-        "property-sharing": {
-          "type": "object",
-          "properties": {
-            "propertySharing": {
-              "enum": [
-                "no",
-                "yes"
-              ],
-              "type": "string"
-            },
-            "propertySharingDetail": {
-              "type": "string"
-            }
-          }
-        },
         "food-allergies": {
           "type": "object",
           "properties": {

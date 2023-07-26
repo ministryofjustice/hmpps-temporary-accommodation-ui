@@ -81,9 +81,9 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('safeguarding-and-support', pages)
   }
 
-  shouldShowRequirementsForPlacementAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('requirements-for-placement', 'Requirements for placement')
-    this.shouldShowAnswersForTask('requirements-for-placement', pages)
+  shouldShowFoodAllergiesAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('food-allergies', 'Food allergies')
+    this.shouldShowAnswersForTask('food-allergies', pages)
   }
 
   shouldShowMoveOnPlanAnswers(pages: Array<ApplyPage>) {

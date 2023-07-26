@@ -2,7 +2,7 @@ import { Section } from '../../utils/decorators'
 import DisabilityCulturalAndSpecificNeeds from './disability-cultural-and-specific-needs'
 import MoveOnPlanTask from './move-on-plan'
 import PlacementLocation from './placement-location'
-import RequirementsForPlacement from './requirements-for-placement'
+import FoodAllergiesTask from './food-allergies'
 import SafeguardingAndSupport from './safeguarding-and-support'
 
 @Section({
@@ -11,7 +11,7 @@ import SafeguardingAndSupport from './safeguarding-and-support'
     PlacementLocation,
     DisabilityCulturalAndSpecificNeeds,
     SafeguardingAndSupport,
-    RequirementsForPlacement,
+    FoodAllergiesTask,
     MoveOnPlanTask,
   ],
 })

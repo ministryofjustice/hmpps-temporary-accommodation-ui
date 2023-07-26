@@ -59,7 +59,6 @@ import {
   PreviousStaysPage,
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
-  PropertySharingPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
@@ -168,7 +167,7 @@ export default class ApplyHelper {
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
     this.completeSafeguardingAndSupport()
-    this.completeRequirementsForPlacement()
+    this.completeFoodAllergies()
     this.completeMoveOnPlan()
     this.completeAccommodationReferralDetails()
 
@@ -623,29 +622,25 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Not started')
+    tasklistPage.shouldShowTaskStatus('food-allergies', 'Not started')
   }
 
-  private completeRequirementsForPlacement() {
-    // Given I click on the requirements for placement task
-    Page.verifyOnPage(TaskListPage).clickTask('requirements-for-placement')
+  private completeFoodAllergies() {
+    // Given I click on the food allergies task
+    Page.verifyOnPage(TaskListPage).clickTask('food-allergies')
 
     // When I complete the form
-    const propertySharingPage = new PropertySharingPage(this.application)
-    propertySharingPage.completeForm()
-    propertySharingPage.clickSubmit()
-
     const foodAllergiesPage = new FoodAllergiesPage(this.application)
     foodAllergiesPage.completeForm()
     foodAllergiesPage.clickSubmit()
 
-    this.pages.requirementsFromPlacement = [propertySharingPage, foodAllergiesPage]
+    this.pages.requirementsFromPlacement = [foodAllergiesPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
     // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Completed')
+    tasklistPage.shouldShowTaskStatus('food-allergies', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('move-on-plan', 'Not started')
@@ -737,7 +732,7 @@ export default class ApplyHelper {
       this.pages.disabilityCulturalAndSpecificNeeds,
     )
     checkYourAnswersPage.shouldShowSafeguardingAndSupportAnswers(this.pages.safeguardingAndSupport)
-    checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
+    checkYourAnswersPage.shouldShowFoodAllergiesAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
     checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)
 

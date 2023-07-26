@@ -31,7 +31,7 @@ export default class FoodAllergies implements TasklistPage {
   }
 
   previous() {
-    return 'property-sharing'
+    return 'dashboard'
   }
 
   next() {

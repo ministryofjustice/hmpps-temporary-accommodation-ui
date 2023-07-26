@@ -206,11 +206,7 @@
       "caringResponsibilitiesDetail": "Caring responsibilities X, Y, and Z"
     }
   },
-  "requirements-for-placement": {
-    "property-sharing": {
-      "propertySharing": "yes",
-      "propertySharingDetail": "Sharing risk managed by X, Y, Z"
-    },
+  "food-allergies": {
     "food-allergies": {
       "foodAllergies": "yes",
       "foodAllergiesDetail": "Allergic to X, Y, Z"

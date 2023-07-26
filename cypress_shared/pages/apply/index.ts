@@ -14,6 +14,7 @@ import ApprovalsForSpecificRisksPage from './assess-risks-for-placement/approval
 import PreviousStaysPage from './assess-risks-for-placement/behaviour-in-cas/previousStays'
 import PreviousStaysDetailsPage from './assess-risks-for-placement/behaviour-in-cas/previousStaysDetails'
 import AdditionalLicenceConditionsPage from './assess-risks-for-placement/licence-conditions/additionalLicenceConditions'
+import AccommodationSharingPage from './assess-risks-for-placement/placement-considerations/accommodationSharing'
 import AcctAlertsPage from './assess-risks-for-placement/prison-information/acctAlerts'
 import AdjudicationsPage from './assess-risks-for-placement/prison-information/adjudications'
 import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkYourAnswersPage'
@@ -60,6 +61,7 @@ export {
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,
+  AccommodationSharingPage,
   PreviousStaysPage,
   PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,

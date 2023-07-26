@@ -150,7 +150,13 @@
       "approvalsDetail": "Approvals detail"
     }
   },
-  "placement-considerations": {},
+  "placement-considerations": {
+    "accommodation-sharing": {
+      "accommodationSharing": "yes",
+      "accommodationSharingYesDetail": "Some detail",
+      "accommodationSharingNoDetail": ""
+    }
+  },
   "behaviour-in-cas": {
     "previous-stays": {
       "previousStays": "yes"

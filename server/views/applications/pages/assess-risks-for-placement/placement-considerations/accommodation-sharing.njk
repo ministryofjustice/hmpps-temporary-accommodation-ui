@@ -1,0 +1,102 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
+{% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
+{% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
+{% extends "../../layout.njk" %}
+
+{% set buttonText = "Next" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  {% include "./partials/_navigation.njk" %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% set accommodationSharingYesDetailWarningHtml %}
+        <p class="govuk-body">You will need to discuss the suitability of John Smith sharing with the community probation practitioners for the other occupants during placement.</p>
+        <p class="govuk-body">The HPT will tell you who the other occupants' community probation practitioners are.</p>
+      {% endset %}
+
+      {% set accommodationSharingYesDetailHtml %}
+        {{ formPageTextarea({
+          fieldName: 'accommodationSharingYesDetail',
+          label: {
+            text: "How will you manage the person's risk if they are placed in shared accommodation?",
+            classes: "govuk-label--s"
+          }
+        }, fetchContext()) }}
+
+        {{ govukWarningText({
+          html: accommodationSharingYesDetailWarningHtml,
+          iconFallbackText: "Warning"
+        }) }}
+      {% endset %}
+
+      {% set accommodationSharingNoDetailHtml %}
+        {{ formPageTextarea({
+          fieldName: 'accommodationSharingNoDetail',
+          label: {
+            text: "Why is this person unsuitable to share accommodation with others?",
+            classes: "govuk-label--s"
+          }
+        }, fetchContext()) }}
+      {% endset %}
+
+      {{ formPageRadios({
+        fieldName: "accommodationSharing",
+        fieldset: {
+          legend: {
+            text: page.questions.accommodationSharing,
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        items: [
+          {
+            value: "yes",
+            text: "Yes",
+            conditional: {
+              html: accommodationSharingYesDetailHtml
+            }
+          },
+          {
+            value: "no",
+            text: "No",
+            conditional: {
+              html: accommodationSharingNoDetailHtml
+            }
+          }
+        ]
+      }, fetchContext()) }}
+
+      {% set detailsHtml %}
+        <p class="govuk-body">Temporary Accommodation (formerly CAS3) placements may require a person to share accommodation with up to 4 other people on probation.</p>
+        <p class="govuk-body">Consider whether:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>the person had any cell sharing issues in custody</li>
+          <li>the person poses a risk to other people, including people on probation</li>
+          <li>the person has previously shared accommodation, for example in an Approved Premises (AP) or CAS2</li>
+          <li>the person has issues with drug and/or alcohol misuse</li>
+          <li>the person has convictions or behaviour related to any hate crime, or if they hold discriminatory views</li>
+          <li>there is a risk of exploitation or manipulative behaviour towards vulnerable people</li>
+          <li>there is a risk of confrontational behaviour</li>
+          <li>the person is known to be in a gang or have gang affiliations</li>
+          <li>the person is vulnerable</li>
+        </ul>
+      {% endset %}
+
+      {{ govukDetails({
+        summaryText: "Guidance on sharing accommodation",
+        html: detailsHtml
+      }) }}
+
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {{ roshWidget(page.risks.roshRisks) }}
+      {{ mappaWidget(page.risks.mappa) }}
+      {{ riskFlagWidget(page.risks.flags) }}
+    </div>
+  </div>
+{% endblock %}

@@ -1,4 +1,4 @@
-import type { User } from '@approved-premises/api'
+import type { TemporaryAccommodationUser as User } from '@approved-premises/api'
 import RestClient, { CallConfig } from './restClient'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'

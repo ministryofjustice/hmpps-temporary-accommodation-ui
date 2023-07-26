@@ -2,13 +2,13 @@ import Page from '../../../../cypress_shared/pages/page'
 import BookingConfirmationNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirmationNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { bookingFactory, confirmationFactory, newConfirmationFactory } from '../../../../server/testutils/factories'
 
 context('Booking confirmation', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('navigates to the confirm booking page', () => {

@@ -2,14 +2,14 @@ import path from 'path'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { premisesSummaryFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 
 context('Report', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('should navigate to the report page', () => {

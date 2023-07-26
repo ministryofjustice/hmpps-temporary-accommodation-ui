@@ -1,23 +1,25 @@
 /* istanbul ignore file */
 
-import { controllers as manageControllers } from './temporary-accommodation/manage'
 import { controllers as applyControllers } from './apply'
+import { controllers as manageControllers } from './temporary-accommodation/manage'
 
 import type { Services } from '../services'
-import DashboardController from './dashboardController'
 import StaticController from './staticController'
+import LandingController from './landingController'
 
 export const controllers = (services: Services) => {
-  const dashboardController = new DashboardController()
+  const landingController = new LandingController()
   const staticController = new StaticController()
 
   return {
-    dashboardController,
+    landingController,
     staticController,
-    temporaryAccommodation: {
+    manage: {
       ...manageControllers(services),
     },
-    ...applyControllers(services),
+    apply: {
+      ...applyControllers(services),
+    },
   }
 }
 

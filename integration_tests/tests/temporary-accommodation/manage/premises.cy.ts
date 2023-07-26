@@ -4,7 +4,7 @@ import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommo
 import PremisesListPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesList'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   newPremisesFactory,
   premisesFactory,
@@ -16,7 +16,7 @@ import {
 context('Premises', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('should navigate to the list premises page', () => {

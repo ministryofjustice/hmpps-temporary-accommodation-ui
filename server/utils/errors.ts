@@ -23,3 +23,7 @@ export class TasklistAPIError extends Error {
     this.field = field
   }
 }
+
+export class UnauthorizedError extends Error {
+  status = 401
+}

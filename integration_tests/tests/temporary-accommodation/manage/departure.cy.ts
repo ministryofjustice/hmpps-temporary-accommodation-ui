@@ -3,13 +3,13 @@ import BookingDepartureEditPage from '../../../../cypress_shared/pages/temporary
 import BookingDepartureNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureNew'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { bookingFactory, departureFactory, newDepartureFactory } from '../../../../server/testutils/factories'
 
 context('Booking departure', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('navigates to the booking departure page', () => {

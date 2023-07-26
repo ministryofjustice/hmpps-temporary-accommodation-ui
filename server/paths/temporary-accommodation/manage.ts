@@ -1,5 +1,7 @@
 import { temporaryAccommodationPath } from '../service'
 
+const dashboardPath = temporaryAccommodationPath.path('dashboard')
+
 const premisesPath = temporaryAccommodationPath.path('properties')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
@@ -23,6 +25,9 @@ const singleLostBedPath = lostBedsPath.path(':lostBedId')
 const reportsPath = temporaryAccommodationPath.path('reports')
 
 const paths = {
+  dashboard: {
+    index: dashboardPath,
+  },
   premises: {
     index: premisesPath,
     new: premisesPath.path('new'),

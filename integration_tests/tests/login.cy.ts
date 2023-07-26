@@ -2,13 +2,13 @@ import AuthManageDetailsPage from '../../cypress_shared/pages/authManageDetails'
 import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
 import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import setupTestUser from '../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../cypress_shared/utils/setupTestUser'
 import { referenceDataFactory, userFactory } from '../../server/testutils/factories'
 
 context('SignIn', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('Unauthenticated user directed to auth', () => {
@@ -75,7 +75,7 @@ context('SignIn', () => {
     const probationRegion = referenceDataFactory.probationRegion().build({
       name: 'Another region',
     })
-    const actingUser = userFactory.build({ region: probationRegion })
+    const actingUser = userFactory.build({ region: probationRegion, roles: ['assessor', 'referrer'] })
 
     cy.task('stubActingUser', actingUser)
     cy.signIn()

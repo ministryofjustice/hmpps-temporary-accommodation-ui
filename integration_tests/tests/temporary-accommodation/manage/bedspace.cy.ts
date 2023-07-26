@@ -3,7 +3,7 @@ import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommo
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import setupTestUser from '../../../../cypress_shared/utils/setupTestUser'
+import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bedFactory,
   bookingFactory,
@@ -17,7 +17,7 @@ import {
 context('Bedspace', () => {
   beforeEach(() => {
     cy.task('reset')
-    setupTestUser()
+    setupTestUser('assessor')
   })
 
   it('should navigate to the create bedspace page', () => {

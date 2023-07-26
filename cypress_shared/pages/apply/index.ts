@@ -15,6 +15,7 @@ import PreviousStaysPage from './assess-risks-for-placement/behaviour-in-cas/pre
 import PreviousStaysDetailsPage from './assess-risks-for-placement/behaviour-in-cas/previousStaysDetails'
 import AdditionalLicenceConditionsPage from './assess-risks-for-placement/licence-conditions/additionalLicenceConditions'
 import AccommodationSharingPage from './assess-risks-for-placement/placement-considerations/accommodationSharing'
+import AntiSocialBehaviourPage from './assess-risks-for-placement/placement-considerations/antiSocialBehaviour'
 import CooperationPage from './assess-risks-for-placement/placement-considerations/cooperation'
 import AcctAlertsPage from './assess-risks-for-placement/prison-information/acctAlerts'
 import AdjudicationsPage from './assess-risks-for-placement/prison-information/adjudications'
@@ -64,6 +65,7 @@ export {
   ConsentGivenPage,
   AccommodationSharingPage,
   CooperationPage,
+  AntiSocialBehaviourPage,
   PreviousStaysPage,
   PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,

@@ -158,6 +158,10 @@
     },
     "cooperation": {
       "support": "Support detail"
+    },
+    "anti-social-behaviour": {
+      "concerns": "yes",
+      "concernsDetail": "Anti-social behaviour concerns detail"
     }
   },
   "behaviour-in-cas": {

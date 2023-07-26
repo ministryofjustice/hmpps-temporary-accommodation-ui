@@ -4,41 +4,29 @@ import {
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
-  TemporaryAccommodationApplication,
 } from '@approved-premises/api'
 import { TableRow } from '@approved-premises/ui'
+import oasysDataJson from '../fixtures/oasysData.json'
 
-const roshSummariesFromApplication = (
-  application: TemporaryAccommodationApplication,
-): ArrayOfOASysRiskOfSeriousHarmSummaryQuestions => {
-  return application.data['oasys-import']['rosh-summary'].roshSummaries as ArrayOfOASysRiskOfSeriousHarmSummaryQuestions
+const roshSummariesFromJson = (): ArrayOfOASysRiskOfSeriousHarmSummaryQuestions => {
+  return oasysDataJson['rosh-summary'].roshSummaries as ArrayOfOASysRiskOfSeriousHarmSummaryQuestions
 }
 
-const offenceDetailSummariesFromApplication = (
-  application: TemporaryAccommodationApplication,
-): ArrayOfOASysOffenceDetailsQuestions => {
-  return application.data['oasys-import']['offence-details']
-    .offenceDetailsSummaries as ArrayOfOASysOffenceDetailsQuestions
+const offenceDetailSummariesFromJson = (): ArrayOfOASysOffenceDetailsQuestions => {
+  return oasysDataJson['offence-details'].offenceDetailsSummaries as ArrayOfOASysOffenceDetailsQuestions
 }
 
-const supportInformationFromApplication = (
-  application: TemporaryAccommodationApplication,
-): ArrayOfOASysSupportingInformationQuestions => {
-  return application.data['oasys-import']['supporting-information']
+const supportInformationFromJson = (): ArrayOfOASysSupportingInformationQuestions => {
+  return oasysDataJson['supporting-information']
     .supportingInformationSummaries as ArrayOfOASysSupportingInformationQuestions
 }
 
-const riskManagementPlanFromApplication = (
-  application: TemporaryAccommodationApplication,
-): ArrayOfOASysRiskManagementPlanQuestions => {
-  return application.data['oasys-import']['risk-management-plan']
-    .riskManagementSummaries as ArrayOfOASysRiskManagementPlanQuestions
+const riskManagementPlanFromJson = (): ArrayOfOASysRiskManagementPlanQuestions => {
+  return oasysDataJson['risk-management-plan'].riskManagementSummaries as ArrayOfOASysRiskManagementPlanQuestions
 }
 
-const riskToSelfSummariesFromApplication = (
-  application: TemporaryAccommodationApplication,
-): ArrayOfOASysRiskToSelfQuestions => {
-  return application.data['oasys-import']['risk-to-self'].riskToSelfSummaries as ArrayOfOASysRiskToSelfQuestions
+const riskToSelfSummariesFromJson = (): ArrayOfOASysRiskToSelfQuestions => {
+  return oasysDataJson['risk-to-self'].riskToSelfSummaries as ArrayOfOASysRiskToSelfQuestions
 }
 
 const tableRowsToArrays = (tableRows: Array<TableRow>): Array<Array<string>> => {
@@ -62,11 +50,11 @@ const shouldShowTableRows = <T>(items: Array<T>, tableRowFunction: (items: Array
 }
 
 export {
-  roshSummariesFromApplication,
-  offenceDetailSummariesFromApplication,
-  supportInformationFromApplication,
-  riskManagementPlanFromApplication,
-  riskToSelfSummariesFromApplication,
-  tableRowsToArrays,
+  offenceDetailSummariesFromJson,
+  riskManagementPlanFromJson,
+  riskToSelfSummariesFromJson,
+  roshSummariesFromJson,
   shouldShowTableRows,
+  supportInformationFromJson,
+  tableRowsToArrays,
 }

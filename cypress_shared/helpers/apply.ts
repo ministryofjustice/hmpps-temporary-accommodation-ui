@@ -13,6 +13,13 @@ import {
   PersonAcctAlert,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
+import {
+  offenceDetailSummariesFromJson,
+  riskManagementPlanFromJson,
+  riskToSelfSummariesFromJson,
+  roshSummariesFromJson,
+  supportInformationFromJson,
+} from '.'
 import { hasSubmittedDtr } from '../../server/form-pages/utils'
 import {
   acctAlertFactory,
@@ -45,9 +52,7 @@ import {
   LocalConnectionsPage,
   MoveOnPlanPage,
   NeedsPage,
-  OffenceDetailsPage,
   OffendingSummaryPage,
-  OptionalOasysSectionsPage,
   OtherAccommodationOptionsPage,
   PractitionerPduPage,
   PreviousStaysDetailsPage,
@@ -58,26 +63,15 @@ import {
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
-  RiskManagementPlanPage,
-  RiskToSelfPage,
-  RoshSummaryPage,
   SafeguardingAndVulnerabilityPage,
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
   StartPage,
   SupportInTheCommunityPage,
-  SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
-import {
-  offenceDetailSummariesFromApplication,
-  riskManagementPlanFromApplication,
-  riskToSelfSummariesFromApplication,
-  roshSummariesFromApplication,
-  supportInformationFromApplication,
-} from './index'
 
 export default class ApplyHelper {
   pages = {
@@ -88,7 +82,6 @@ export default class ApplyHelper {
     licenceConditions: [] as Array<ApplyPage>,
     prisonInformation: [] as Array<ApplyPage>,
     approvalsForSpecificRisks: [] as Array<ApplyPage>,
-    oasysImport: [] as Array<ApplyPage>,
     behaviourInCas: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
@@ -171,7 +164,6 @@ export default class ApplyHelper {
     this.completeLicenceConditions()
     this.completePrisonInformation()
     this.completeApprovalsForSpecificRisks()
-    this.completeOasysImport()
     this.completeBehaviourInCas()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
@@ -193,7 +185,6 @@ export default class ApplyHelper {
       ...this.pages.licenceConditions,
       ...this.pages.prisonInformation,
       ...this.pages.approvalsForSpecificRisks,
-      ...this.pages.oasysImport,
       ...this.pages.behaviourInCas,
       ...this.pages.placementLocation,
       ...this.pages.disabilityCulturalAndSpecificNeeds,
@@ -270,11 +261,11 @@ export default class ApplyHelper {
 
     const oasysSections = oasysSectionsFactory.build()
 
-    this.roshSummaries = roshSummariesFromApplication(this.application)
-    this.offenceDetailSummaries = offenceDetailSummariesFromApplication(this.application)
-    this.supportingInformationSummaries = supportInformationFromApplication(this.application)
-    this.riskManagementPlanSummaries = riskManagementPlanFromApplication(this.application)
-    this.riskToSelfSummaries = riskToSelfSummariesFromApplication(this.application)
+    this.roshSummaries = roshSummariesFromJson()
+    this.offenceDetailSummaries = offenceDetailSummariesFromJson()
+    this.supportingInformationSummaries = supportInformationFromJson()
+    this.riskManagementPlanSummaries = riskManagementPlanFromJson()
+    this.riskToSelfSummaries = riskToSelfSummariesFromJson()
 
     cy.task('stubOasysSections', {
       person: this.person,
@@ -515,68 +506,6 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
-  }
-
-  private completeOasysImport() {
-    // Given I click the oasys import task
-    Page.verifyOnPage(TaskListPage).clickTask('oasys-import')
-    const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
-
-    // When I complete the form
-    optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
-    optionalOasysImportPage.clickSubmit()
-
-    const roshSummaryPage = new RoshSummaryPage(this.application, this.roshSummaries)
-
-    if (this.uiRisks) {
-      roshSummaryPage.shouldShowRiskWidgets(this.uiRisks)
-    }
-
-    roshSummaryPage.completeForm()
-
-    roshSummaryPage.clickSubmit()
-
-    const offenceDetailsPage = new OffenceDetailsPage(this.application, this.offenceDetailSummaries)
-
-    if (this.uiRisks) {
-      offenceDetailsPage.shouldShowRiskWidgets(this.uiRisks)
-    }
-
-    offenceDetailsPage.completeForm()
-    offenceDetailsPage.clickSubmit()
-
-    const supportingInformationPage = new SupportingInformationPage(
-      this.application,
-      this.supportingInformationSummaries,
-    )
-    supportingInformationPage.completeForm()
-    supportingInformationPage.clickSubmit()
-
-    const riskManagementPlanPage = new RiskManagementPlanPage(this.application, this.riskManagementPlanSummaries)
-    riskManagementPlanPage.completeForm()
-    riskManagementPlanPage.clickSubmit()
-
-    const riskToSelfPage = new RiskToSelfPage(this.application, this.riskToSelfSummaries)
-    riskToSelfPage.completeForm()
-    riskToSelfPage.clickSubmit()
-
-    this.pages.oasysImport = [
-      optionalOasysImportPage,
-      roshSummaryPage,
-      offenceDetailsPage,
-      supportingInformationPage,
-      riskManagementPlanPage,
-      riskToSelfPage,
-    ]
-
-    // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // Then I should be taken back to the tasklist
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
-
-    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Not started')
   }
 
@@ -800,7 +729,6 @@ export default class ApplyHelper {
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)
       checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
-      checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 
     checkYourAnswersPage.shouldShowBehaviourInCasAnswers(this.pages.behaviourInCas)

@@ -14,12 +14,6 @@ import ApprovalsForSpecificRisksPage from './assess-risks-for-placement/approval
 import PreviousStaysPage from './assess-risks-for-placement/behaviour-in-cas/previousStays'
 import PreviousStaysDetailsPage from './assess-risks-for-placement/behaviour-in-cas/previousStaysDetails'
 import AdditionalLicenceConditionsPage from './assess-risks-for-placement/licence-conditions/additionalLicenceConditions'
-import OffenceDetailsPage from './assess-risks-for-placement/oasys-import/offenceDetails'
-import OptionalOasysSectionsPage from './assess-risks-for-placement/oasys-import/optionalOasysSections'
-import RiskManagementPlanPage from './assess-risks-for-placement/oasys-import/riskManagementPlan'
-import RiskToSelfPage from './assess-risks-for-placement/oasys-import/riskToSelf'
-import RoshSummaryPage from './assess-risks-for-placement/oasys-import/roshSummary'
-import SupportingInformationPage from './assess-risks-for-placement/oasys-import/supportingInformation'
 import AcctAlertsPage from './assess-risks-for-placement/prison-information/acctAlerts'
 import AdjudicationsPage from './assess-risks-for-placement/prison-information/adjudications'
 import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkYourAnswersPage'
@@ -67,18 +61,12 @@ export {
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,
-  OptionalOasysSectionsPage,
   PreviousStaysPage,
   PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AcctAlertsPage,
   ApprovalsForSpecificRisksPage,
-  RoshSummaryPage,
-  OffenceDetailsPage,
-  SupportingInformationPage,
-  RiskManagementPlanPage,
-  RiskToSelfPage,
   AlternativePduPage,
   NeedsPage,
   PropertyAttributesOrAdaptationsPage,

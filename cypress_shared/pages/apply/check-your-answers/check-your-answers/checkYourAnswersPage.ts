@@ -63,11 +63,6 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('approvals-for-specific-risks', pages)
   }
 
-  shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
-    this.shouldShowAnswersForTask('oasys-import', pages)
-  }
-
   shouldShowPlacementLocationAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('placement-location', 'Placement location')
     this.shouldShowAnswersForTask('placement-location', pages)

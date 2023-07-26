@@ -4,14 +4,17 @@ import { Factory } from 'fishery'
 import type { OASysSection } from '@approved-premises/api'
 
 class OasysSelectionFactory extends Factory<OASysSection> {
+  /* istanbul ignore next */
   needsLinkedToHarm() {
     return this.params({ linkedToHarm: true, linkedToReOffending: true })
   }
 
+  /* istanbul ignore next */
   needsLinkedToReoffending() {
     return this.params({ linkedToHarm: false, linkedToReOffending: true })
   }
 
+  /* istanbul ignore next */
   needsNotLinkedToReoffending() {
     return this.params({ linkedToHarm: false, linkedToReOffending: false })
   }

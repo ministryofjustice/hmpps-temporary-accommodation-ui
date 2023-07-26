@@ -1,0 +1,95 @@
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "moj/components/badge/macro.njk" import mojBadge %}
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Referrals" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% set unallocatedTableHtml %}
+  {{ 
+    govukTable({
+      firstCellIsHeader: true,
+      attributes: {
+        'data-module': 'moj-sortable-table'
+      },
+      head: tableHeaders,
+      rows: unallocatedTableRows
+    }) 
+  }}
+{% endset %}
+
+{% set inProgressTableHtml %}
+  {{ 
+    govukTable({
+      firstCellIsHeader: true,
+      attributes: {
+        'data-module': 'moj-sortable-table'
+      },
+      head: tableHeaders,
+      rows: inProgressTableRows
+    }) 
+  }}
+{% endset %}
+
+{% set readyToPlaceTableHtml %}
+  {{ 
+    govukTable({
+      firstCellIsHeader: true,
+      attributes: {
+        'data-module': 'moj-sortable-table'
+      },
+      head: tableHeaders,
+      rows: readyToPlaceTableRows
+    }) 
+  }}
+{% endset %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">Referrals</h1>
+
+      {{ 
+        govukTabs({
+          items: [
+            {
+              label: "Unallocated",
+              id: "unallocated",
+              panel: {
+                html: unallocatedTableHtml
+              }
+            },
+            {
+              label: "In Review",
+              id: "in-review",
+              panel: {
+                html: inProgressTableHtml
+              }
+            },
+            {
+              label: "Ready to place",
+              id: "ready-to-place",
+              panel: {
+                html: readyToPlaceTableHtml
+              }
+            }
+          ]
+      }) 
+    }}
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    $(document).ready(function () {
+      window
+        .MOJFrontend
+        .initAll()
+    })
+  </script>
+{% endblock %}

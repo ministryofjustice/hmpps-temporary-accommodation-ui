@@ -1,5 +1,6 @@
 import { defineConfig } from 'cypress'
 import applications from './integration_tests/mockApis/applications'
+import assessments from './integration_tests/mockApis/assessments'
 import arrival from './integration_tests/mockApis/arrival'
 import auth from './integration_tests/mockApis/auth'
 import bedspaceSearch from './integration_tests/mockApis/bedspaceSearch'
@@ -50,6 +51,7 @@ export default defineConfig({
         ...lostBed,
         ...person,
         ...applications,
+        ...assessments,
         ...room,
         ...report,
         ...user,

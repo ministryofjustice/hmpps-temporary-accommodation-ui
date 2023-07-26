@@ -162,6 +162,10 @@
     "anti-social-behaviour": {
       "concerns": "yes",
       "concernsDetail": "Anti-social behaviour concerns detail"
+    },
+    "substance-misuse": {
+      "substanceMisuse": "yes",
+      "substanceMisuseDetail": "Details of drug and alcohol misuse"
     }
   },
   "behaviour-in-cas": {

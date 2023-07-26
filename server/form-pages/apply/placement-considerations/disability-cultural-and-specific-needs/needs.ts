@@ -5,14 +5,6 @@ import { Page } from '../../../utils/decorators'
 import TasklistPage from '../../../tasklistPage'
 
 const personNeeds = {
-  alcoholMisuse: {
-    text: 'Alcohol misuse',
-    error: 'You must provide details about alcohol misuse needs',
-  },
-  drugMisuse: {
-    text: 'Drug misuse',
-    error: 'You must provide details about drug misuse needs',
-  },
   hearingImpairment: {
     text: 'Hearing impairment',
     error: "You must provide details about the person's hearing impairment",

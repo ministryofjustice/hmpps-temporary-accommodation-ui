@@ -509,8 +509,6 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "alcoholMisuse",
-                  "drugMisuse",
                   "hearingImpairment",
                   "language",
                   "learningDisability",
@@ -523,12 +521,6 @@
                 ],
                 "type": "string"
               }
-            },
-            "alcoholMisuseDetail": {
-              "type": "string"
-            },
-            "drugMisuseDetail": {
-              "type": "string"
             },
             "hearingImpairmentDetail": {
               "type": "string"

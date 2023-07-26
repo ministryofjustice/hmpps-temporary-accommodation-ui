@@ -169,10 +169,8 @@
   },
   "disability-cultural-and-specific-needs": {
     "needs": {
-      "needs": ["alcoholMisuse", "neurodivergence", "other"],
-      "alcoholMisuseDetail": "Alcohol misuse detail",
-      "drugMisuseDetail": "",
-      "hearingImpairmentDetail": "",
+      "needs": ["hearingImpairment", "neurodivergence", "other"],
+      "hearingImpairmentDetail": "Hearing impairment detail",
       "mentalHealthDetail": "",
       "languageDetail": "",
       "learningDisabilityDetail": "",

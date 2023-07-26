@@ -37,7 +37,7 @@ describe('auditMiddleware', () => {
     expect(handler).toHaveBeenCalled()
   })
 
-  it('returns an audited request handler, the redirects to /authError if there is no user UUID', async () => {
+  it('returns an audited request handler, that redirects to /authError if there is no user UUID', async () => {
     const handler = jest.fn()
     const response = createMock<Response>({ locals: { user: {} } })
     const request = createMock<Request>()

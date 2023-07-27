@@ -491,7 +491,7 @@ export default class ApplyHelper {
 
   private completeApprovalsForSpecificRisks() {
     // Given I click the approvals for specific risks task
-    cy.get('[data-cy-task-name="approvals-for-specific-risks"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('approvals-for-specific-risks')
 
     // Then the risk widgets are visible
     const approvalsForSpecificRisksPage = new ApprovalsForSpecificRisksPage(this.application)

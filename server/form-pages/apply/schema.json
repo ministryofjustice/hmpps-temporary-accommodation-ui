@@ -11,6 +11,7 @@
     "licence-conditions",
     "prison-information",
     "approvals-for-specific-risks",
+    "placement-considerations",
     "behaviour-in-cas",
     "placement-location",
     "disability-cultural-and-specific-needs",
@@ -436,6 +437,97 @@
         }
       }
     },
+    "placement-considerations": {
+      "type": "object",
+      "properties": {
+        "accommodation-sharing": {
+          "type": "object",
+          "properties": {
+            "accommodationSharing": {
+              "type": "string"
+            },
+            "accommodationSharingYesDetail": {
+              "type": "string"
+            },
+            "accommodationSharingNoDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "cooperation": {
+          "type": "object",
+          "properties": {
+            "support": {
+              "type": "string"
+            }
+          }
+        },
+        "anti-social-behaviour": {
+          "type": "object",
+          "properties": {
+            "concerns": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "concernsDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "substance-misuse": {
+          "type": "object",
+          "properties": {
+            "substanceMisuse": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "substanceMisuseDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "rosh-level": {
+          "type": "object",
+          "properties": {
+            "riskToChildren": {
+              "type": "string"
+            },
+            "riskToPublic": {
+              "type": "string"
+            },
+            "riskToKnownAdult": {
+              "type": "string"
+            },
+            "riskToStaff": {
+              "type": "string"
+            }
+          }
+        },
+        "risk-management-plan": {
+          "type": "object",
+          "properties": {
+            "victimSafetyPlanning": {
+              "type": "string"
+            },
+            "supervision": {
+              "type": "string"
+            },
+            "monitoringAndControl": {
+              "type": "string"
+            },
+            "interventionAndTreatment": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "behaviour-in-cas": {
       "type": "object",
       "properties": {
@@ -522,6 +614,9 @@
                 "type": "string"
               }
             },
+            "otherDetail": {
+              "type": "string"
+            },
             "hearingImpairmentDetail": {
               "type": "string"
             },
@@ -541,9 +636,6 @@
               "type": "string"
             },
             "visualImpairmentDetail": {
-              "type": "string"
-            },
-            "otherDetail": {
               "type": "string"
             },
             "noneDetail": {

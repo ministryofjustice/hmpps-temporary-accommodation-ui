@@ -38,6 +38,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('eligibility', pages)
   }
 
+  shouldShowPlacementConsiderationsAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('placement-considerations', 'Placement considerations')
+    this.shouldShowAnswersForTask('placement-considerations', pages)
+  }
+
   shouldShowBehaviourInCasAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('behaviour-in-cas', 'Behaviour in CAS')
     this.shouldShowAnswersForTask('behaviour-in-cas', pages)

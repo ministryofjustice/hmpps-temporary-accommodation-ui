@@ -33,16 +33,19 @@ import applicationDataJson from '../fixtures/applicationData.json'
 import Page from '../pages'
 import {
   AccommodationRequiredFromDatePage,
+  AccommodationSharingPage,
   AcctAlertsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AlternativePduPage,
+  AntiSocialBehaviourPage,
   ApprovalsForSpecificRisksPage,
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
+  CooperationPage,
   CrsSubmittedPage,
   DtrDetailsPage,
   DtrSubmittedPage,
@@ -62,11 +65,14 @@ import {
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
+  RiskManagementPlanPage,
+  RoshLevelPage,
   SafeguardingAndVulnerabilityPage,
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
   StartPage,
+  SubstanceMisusePage,
   SupportInTheCommunityPage,
   TaskListPage,
 } from '../pages/apply'
@@ -81,6 +87,7 @@ export default class ApplyHelper {
     licenceConditions: [] as Array<ApplyPage>,
     prisonInformation: [] as Array<ApplyPage>,
     approvalsForSpecificRisks: [] as Array<ApplyPage>,
+    placementConsiderations: [] as Array<ApplyPage>,
     behaviourInCas: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
@@ -163,6 +170,7 @@ export default class ApplyHelper {
     this.completeLicenceConditions()
     this.completePrisonInformation()
     this.completeApprovalsForSpecificRisks()
+    this.completePlacementConsiderations()
     this.completeBehaviourInCas()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
@@ -184,6 +192,7 @@ export default class ApplyHelper {
       ...this.pages.licenceConditions,
       ...this.pages.prisonInformation,
       ...this.pages.approvalsForSpecificRisks,
+      ...this.pages.placementConsiderations,
       ...this.pages.behaviourInCas,
       ...this.pages.placementLocation,
       ...this.pages.disabilityCulturalAndSpecificNeeds,
@@ -505,6 +514,54 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
 
     // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('placement-considerations', 'Not started')
+  }
+
+  private completePlacementConsiderations() {
+    // Given I click the placement considerations task
+    Page.verifyOnPage(TaskListPage).clickTask('placement-considerations')
+
+    // When I complete the form
+    const accommodationSharingPage = new AccommodationSharingPage(this.application)
+    accommodationSharingPage.completeForm()
+    accommodationSharingPage.clickSubmit()
+
+    const cooperationPage = new CooperationPage(this.application)
+    cooperationPage.completeForm()
+    cooperationPage.clickSubmit()
+
+    const antiSocialBehaviourPage = new AntiSocialBehaviourPage(this.application)
+    antiSocialBehaviourPage.completeForm()
+    antiSocialBehaviourPage.clickSubmit()
+
+    const substanceMisusePage = new SubstanceMisusePage(this.application)
+    substanceMisusePage.completeForm()
+    substanceMisusePage.clickSubmit()
+
+    const roshLevelPage = new RoshLevelPage(this.application)
+    roshLevelPage.completeForm()
+    roshLevelPage.clickSubmit()
+
+    const riskManagementPlan = new RiskManagementPlanPage(this.application)
+    riskManagementPlan.completeForm()
+    riskManagementPlan.clickSubmit()
+
+    this.pages.placementConsiderations = [
+      accommodationSharingPage,
+      cooperationPage,
+      antiSocialBehaviourPage,
+      substanceMisusePage,
+      roshLevelPage,
+      riskManagementPlan,
+    ]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-considerations', 'Completed')
+
+    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Not started')
   }
 
@@ -726,6 +783,7 @@ export default class ApplyHelper {
       checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
     }
 
+    checkYourAnswersPage.shouldShowPlacementConsiderationsAnswers(this.pages.placementConsiderations)
     checkYourAnswersPage.shouldShowBehaviourInCasAnswers(this.pages.behaviourInCas)
     checkYourAnswersPage.shouldShowPlacementLocationAnswers(this.pages.placementLocation)
     checkYourAnswersPage.shouldShowDisabilityCulturalAndSpecificNeedsAnswers(

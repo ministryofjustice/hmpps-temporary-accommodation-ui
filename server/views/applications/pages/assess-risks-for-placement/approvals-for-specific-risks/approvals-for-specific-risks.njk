@@ -1,6 +1,5 @@
 {% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
 {% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
-{% from "../../../../components/riskWidgets/tier-widget/macro.njk" import tierWidget %}
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
 
 {% extends "../../layout.njk" %}
@@ -14,7 +13,7 @@
   </h1>
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-colum-full">
+    <div class="govuk-grid-column-full">
       <div class="risk-widgets-columns">
         {{ roshWidget(page.risks.roshRisks) }}
         {{ mappaWidget(page.risks.mappa) }}

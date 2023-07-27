@@ -172,6 +172,12 @@
       "riskToPublic": "Risk to public detail",
       "riskToKnownAdult": "Risk to known adult detail",
       "riskToStaff": "Risk to staff detail"
+    },
+    "risk-management-plan": {
+      "victimSafetyPlanning": "Victim safety planning detail",
+      "supervision": "Supervision detail",
+      "monitoringAndControl": "Monitoring and control detail",
+      "interventionAndTreatment": "Intervention and treatment detail"
     }
   },
   "behaviour-in-cas": {

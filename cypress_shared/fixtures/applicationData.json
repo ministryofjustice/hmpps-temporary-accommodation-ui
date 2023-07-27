@@ -166,6 +166,12 @@
     "substance-misuse": {
       "substanceMisuse": "yes",
       "substanceMisuseDetail": "Details of drug and alcohol misuse"
+    },
+    "rosh-level": {
+      "riskToChildren": "Risk to children detail",
+      "riskToPublic": "Risk to public detail",
+      "riskToKnownAdult": "Risk to known adult detail",
+      "riskToStaff": "Risk to staff detail"
     }
   },
   "behaviour-in-cas": {

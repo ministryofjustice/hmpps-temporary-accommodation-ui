@@ -17,6 +17,7 @@ import AdditionalLicenceConditionsPage from './assess-risks-for-placement/licenc
 import AccommodationSharingPage from './assess-risks-for-placement/placement-considerations/accommodationSharing'
 import AntiSocialBehaviourPage from './assess-risks-for-placement/placement-considerations/antiSocialBehaviour'
 import CooperationPage from './assess-risks-for-placement/placement-considerations/cooperation'
+import RoshLevelPage from './assess-risks-for-placement/placement-considerations/roshLevel'
 import SubstanceMisusePage from './assess-risks-for-placement/placement-considerations/substanceMisuse'
 import AcctAlertsPage from './assess-risks-for-placement/prison-information/acctAlerts'
 import AdjudicationsPage from './assess-risks-for-placement/prison-information/adjudications'
@@ -68,6 +69,7 @@ export {
   CooperationPage,
   AntiSocialBehaviourPage,
   SubstanceMisusePage,
+  RoshLevelPage,
   PreviousStaysPage,
   PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,

@@ -34,6 +34,7 @@ export type { Assessment } from './models/Assessment';
 export type { AssessmentAcceptance } from './models/AssessmentAcceptance';
 export type { AssessmentDecision } from './models/AssessmentDecision';
 export type { AssessmentRejection } from './models/AssessmentRejection';
+export type { AssessmentSortField } from './models/AssessmentSortField';
 export type { AssessmentStatus } from './models/AssessmentStatus';
 export type { AssessmentSummary } from './models/AssessmentSummary';
 export type { AssessmentTask } from './models/AssessmentTask';

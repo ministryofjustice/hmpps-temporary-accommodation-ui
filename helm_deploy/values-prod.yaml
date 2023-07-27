@@ -14,6 +14,8 @@ generic-service:
     INGRESS_URL: 'https://temporary-accommodation.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in.hmpps.service.justice.gov.uk/auth'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api.prison.service.justice.gov.uk'
+    COMMUNITY_ACCOMMODATION_API_TIMEOUT_RESPONSE: 30000
+    COMMUNITY_ACCOMMODATION_API_TIMEOUT_DEADLINE: 30000
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

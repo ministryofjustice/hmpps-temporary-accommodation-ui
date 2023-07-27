@@ -1,0 +1,40 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
+{% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
+{% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
+{% extends "../../layout.njk" %}
+
+{% set buttonText = "Next" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  {% include "./partials/_navigation.njk" %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <p class="govuk-body">People placed into Temporary Accommodation are required to engage in weekly support sessions with the accommodation supplier support worker.</p>
+
+      <p class="govuk-body">Provide information relating to:</p>
+      <ul class="govuk-list govuk-list--bullet"> 
+        <li>any known compliance issues</li>
+        <li>risk to staff</li>
+        <li>concerns regarding lone working staff</li>
+      </ul>
+
+      {{ formPageTextarea({
+          fieldName: 'support',
+          label: {
+            text: page.questions.support,
+            classes: "govuk-label--m"
+          }
+      }, fetchContext()) }}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {{ roshWidget(page.risks.roshRisks) }}
+      {{ mappaWidget(page.risks.mappa) }}
+      {{ riskFlagWidget(page.risks.flags) }}
+    </div>
+  </div>
+{% endblock %}

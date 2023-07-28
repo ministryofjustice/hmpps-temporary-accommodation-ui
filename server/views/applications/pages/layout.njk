@@ -42,10 +42,12 @@
 
         {% block questions %}{% endblock %}
 
-        {{ govukButton({
-          text: buttonText if buttonText else "Save and continue",
-          preventDoubleClick: true
-        }) }}
+        {% if not disableButton %}
+          {{ govukButton({
+            text: buttonText if buttonText else "Save and continue",
+            preventDoubleClick: true
+          }) }}
+        {% endif %}
       </form>
     </div>
   </div>

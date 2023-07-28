@@ -4,7 +4,7 @@
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
 {% extends "../../layout.njk" %}
 
-{% set buttonText = "Next" %}
+{% set disableButton = true %}
 
 {% set columnClasses = "govuk-grid-column-full" %}
 {% block questions %}
@@ -60,6 +60,11 @@
       {{ govukDetails({
         summaryText: "Guidance on anti-social behaviour",
         html: detailsHtml
+      }) }}
+
+      {{ govukButton({
+        text: "Next",
+        preventDoubleClick: true
       }) }}
     </div>
     <div class="govuk-grid-column-one-third">

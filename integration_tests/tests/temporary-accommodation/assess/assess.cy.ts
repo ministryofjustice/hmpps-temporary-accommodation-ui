@@ -21,11 +21,15 @@ context('Apply', () => {
       const inProgressAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'in_review' })
       const unallocatedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'unallocated' })
       const readyToPlaceAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'ready_to_place' })
+      const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'rejected' })
+      const closedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'closed' })
 
       cy.task('stubAssessments', [
         ...inProgressAssessmentSummaries,
         ...unallocatedAssessmentSummaries,
         ...readyToPlaceAssessmentSummaries,
+        ...rejectedAssessmentSummaries,
+        ...closedAssessmentSummaries,
       ])
 
       // When I visit the dashboard
@@ -40,12 +44,19 @@ context('Apply', () => {
         unallocatedAssessmentSummaries,
         inProgressAssessmentSummaries,
         readyToPlaceAssessmentSummaries,
+        [...rejectedAssessmentSummaries, ...closedAssessmentSummaries],
       )
 
       // And I should see the list of referrals
       listPage.shouldShowUnallocatedAssessments()
       listPage.shouldShowInProgressAssessments()
       listPage.shouldShowReadyToPlaceAssessments()
+
+      // Given I click on the 'View archived assessments' link
+      listPage.clickViewArchivedReferrals()
+
+      // Then I should see the list of archived assessments
+      listPage.shouldShowArchivedAssessments()
     })
   })
 })

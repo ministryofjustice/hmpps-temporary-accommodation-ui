@@ -111,6 +111,7 @@ const paths = {
   },
   assessments: {
     index: assessmentsPath,
+    archive: assessmentsPath.path('archive'),
     show: assessmentsPath.path(':id'),
   },
 }

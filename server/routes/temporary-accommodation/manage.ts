@@ -298,6 +298,9 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.bedspaces.search.pattern, bedspaceSearchController.index(), { auditEvent: 'VIEW_SEARCH_BEDSPACES' })
 
   get(paths.assessments.index.pattern, assessmentsController.index(), { auditEvent: 'VIEW_ASSESSMENTS_LIST' })
+  get(paths.assessments.archive.pattern, assessmentsController.archive(), {
+    auditEvent: 'VIEW_ARCHIVE_ASSESSMENTS_LIST',
+  })
 
   return router
 }

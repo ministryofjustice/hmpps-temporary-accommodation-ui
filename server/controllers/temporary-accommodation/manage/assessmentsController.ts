@@ -29,15 +29,6 @@ export const assessmentsTableHeaders = [
   },
 ]
 
-export const archivedAssessmentsTableHeaders = [
-  ...assessmentsTableHeaders,
-  {
-    text: 'Bedspace required',
-    attributes: {
-      'aria-sort': 'ascending',
-    },
-  },
-]
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}
 
@@ -53,6 +44,18 @@ export default class AssessmentsController {
         inProgressTableRows,
         readyToPlaceTableRows,
         tableHeaders: assessmentsTableHeaders,
+      })
+    }
+  }
+
+  archive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { archivedTableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig)
+
+      return res.render('temporary-accommodation/assessments/archive', {
+        archivedTableRows,
       })
     }
   }

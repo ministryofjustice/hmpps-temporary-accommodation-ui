@@ -80,6 +80,15 @@
       }) 
     }}
 
+      {{ 
+        govukButton({
+          text: "View archived referrals",
+          type: "button",
+          href: paths.assessments.archive({}),
+          classes: "govuk-button--secondary"
+        }) 
+      }}
+
     </div>
   </div>
 {% endblock %}

@@ -5,10 +5,7 @@ import { CallConfig } from '../../../data/restClient'
 import { AssessmentsService } from '../../../services'
 import { probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
-import AssessmentsController, {
-  archivedAssessmentsTableHeaders,
-  assessmentsTableHeaders,
-} from './assessmentsController'
+import AssessmentsController, { assessmentsTableHeaders } from './assessmentsController'
 
 jest.mock('../../../utils/restUtils')
 
@@ -49,6 +46,26 @@ describe('AssessmentsController', () => {
         inProgressTableRows: [],
         readyToPlaceTableRows: [],
         tableHeaders: assessmentsTableHeaders,
+      })
+
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig)
+    })
+  })
+
+  describe('archive', () => {
+    it('returns the table rows to the archived template', async () => {
+      assessmentsService.getAllForLoggedInUser.mockResolvedValue({
+        unallocatedTableRows: [],
+        inProgressTableRows: [],
+        readyToPlaceTableRows: [],
+        archivedTableRows: [],
+      })
+
+      const requestHandler = assessmentsController.archive()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
+        archivedTableRows: [],
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig)

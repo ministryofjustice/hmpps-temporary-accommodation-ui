@@ -1,0 +1,54 @@
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ section.title }}</span>
+    {{ task.title }}
+  </h1>
+
+  <p class="govuk-body">Homelessness prevention teams (HPT) must be informed about identified risks and behaviours that may impact upon placement. This helps them to safely place prison leavers in Temporary Accommodation (formerly CAS3).</p>
+  <p class="govuk-body">Use information from the sources listed below to answer the following questions:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>OASys</li>
+    <li>Adjudications</li>
+    <li>ACCT information </li>
+  </ul>
+
+  </div>
+</div>
+
+{{ mojSubNavigation({
+  label: 'Sub navigation',
+  items: [{
+    text: 'Accommodation sharing',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'accommodation-sharing' }),
+    active: page.title === 'Accommodation sharing'
+  },
+  {
+    text: 'Cooperation',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'cooperation' }),
+    active: page.title === 'Cooperation'
+  },
+  {
+    text: 'Anti-social behaviour',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'anti-social-behaviour' }),
+    active: page.title === 'Anti-social behaviour'
+  },
+  {
+    text: 'Substance misuse',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'substance-misuse' }),
+    active: page.title === 'Substance misuse'
+  },
+  {
+    text: 'RoSH level',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'rosh-level' }),
+    active: page.title === 'RoSH level'
+  },
+  {
+    text: 'Risk management plan',
+    href: paths.applications.pages.show({ id: applicationId, task: task.id, page: 'risk-management-plan' }),
+    active: page.title === 'Risk management plan'
+  }]
+}) }}

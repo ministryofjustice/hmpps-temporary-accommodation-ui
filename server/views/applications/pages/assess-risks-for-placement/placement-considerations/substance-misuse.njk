@@ -1,0 +1,72 @@
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
+{% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
+{% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
+{% extends "../../layout.njk" %}
+
+{% set buttonText = "Next" %}
+
+{% set columnClasses = "govuk-grid-column-full" %}
+{% block questions %}
+
+  {% include "./partials/_navigation.njk" %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% set substanceMisuseDetailHtml %}
+        {{ formPageTextarea({
+          fieldName: 'substanceMisuseDetail',
+          label: {
+            text: "Provide information on the persons substance misuse and how you will support their placement given these issues",
+            classes: "govuk-label--s"
+          }
+        }, fetchContext()) }}
+      {% endset %}
+
+      {{ formPageRadios({
+        fieldName: "substanceMisuse",
+        fieldset: {
+          legend: {
+            text: page.questions.substanceMisuse,
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        items: [
+          {
+            value: "yes",
+            text: "Yes",
+            conditional: {
+              html: substanceMisuseDetailHtml
+            }
+          },
+          {
+            value: "no",
+            text: "No"
+          }
+        ]
+      }, fetchContext()) }}
+
+      {% set detailsHtml %}
+        <p class="govuk-body">Consider:</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>the substance/s used and the level of usage</li>
+          <li>whether there are concerns relating to the previous use of a property for the purposes of substance misuse</li>
+          <li>whether the person uses needles</li>
+          <li>if there is any support in place, or if agencies are involved</li>
+          <li>what the person's triggers might be</li>
+          <li>whether the person is currently abstinent from subtances</li>
+        </ul>
+      {% endset %}
+
+      {{ govukDetails({
+        summaryText: "Guidance on drug or alcohol misuse",
+        html: detailsHtml
+      }) }}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {{ roshWidget(page.risks.roshRisks) }}
+      {{ mappaWidget(page.risks.mappa) }}
+      {{ riskFlagWidget(page.risks.flags) }}
+    </div>
+  </div>
+{% endblock %}

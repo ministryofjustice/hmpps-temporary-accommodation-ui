@@ -14,12 +14,12 @@ import ApprovalsForSpecificRisksPage from './assess-risks-for-placement/approval
 import PreviousStaysPage from './assess-risks-for-placement/behaviour-in-cas/previousStays'
 import PreviousStaysDetailsPage from './assess-risks-for-placement/behaviour-in-cas/previousStaysDetails'
 import AdditionalLicenceConditionsPage from './assess-risks-for-placement/licence-conditions/additionalLicenceConditions'
-import OffenceDetailsPage from './assess-risks-for-placement/oasys-import/offenceDetails'
-import OptionalOasysSectionsPage from './assess-risks-for-placement/oasys-import/optionalOasysSections'
-import RiskManagementPlanPage from './assess-risks-for-placement/oasys-import/riskManagementPlan'
-import RiskToSelfPage from './assess-risks-for-placement/oasys-import/riskToSelf'
-import RoshSummaryPage from './assess-risks-for-placement/oasys-import/roshSummary'
-import SupportingInformationPage from './assess-risks-for-placement/oasys-import/supportingInformation'
+import AccommodationSharingPage from './assess-risks-for-placement/placement-considerations/accommodationSharing'
+import AntiSocialBehaviourPage from './assess-risks-for-placement/placement-considerations/antiSocialBehaviour'
+import CooperationPage from './assess-risks-for-placement/placement-considerations/cooperation'
+import RiskManagementPlanPage from './assess-risks-for-placement/placement-considerations/riskManagementPlan'
+import RoshLevelPage from './assess-risks-for-placement/placement-considerations/roshLevel'
+import SubstanceMisusePage from './assess-risks-for-placement/placement-considerations/substanceMisuse'
 import AcctAlertsPage from './assess-risks-for-placement/prison-information/acctAlerts'
 import AdjudicationsPage from './assess-risks-for-placement/prison-information/adjudications'
 import CheckYourAnswersPage from './check-your-answers/check-your-answers/checkYourAnswersPage'
@@ -29,10 +29,9 @@ import ListPage from './list'
 import NeedsPage from './placement-considerations/disability-cultural-and-specific-needs/needs'
 import PropertyAttributesOrAdaptationsPage from './placement-considerations/disability-cultural-and-specific-needs/propertyAttributesOrAdaptations'
 import ReligiousOrCulturalNeedsPage from './placement-considerations/disability-cultural-and-specific-needs/religiousOrCulturalNeeds'
+import FoodAllergiesPage from './placement-considerations/food-allergies/foodAllergies'
 import MoveOnPlanPage from './placement-considerations/move-on-plan/moveOnPlan'
 import AlternativePduPage from './placement-considerations/placement-location/alternativePdu'
-import FoodAllergiesPage from './placement-considerations/requirements-for-placement/foodAllergies'
-import PropertySharingPage from './placement-considerations/requirements-for-placement/propertySharing'
 import CaringResponsibilitiesPage from './placement-considerations/safeguarding-and-support/caringResponsibilities'
 import LocalConnectionsPage from './placement-considerations/safeguarding-and-support/localConnections'
 import SafeguardingAndVulnerabilityPage from './placement-considerations/safeguarding-and-support/safeguardingAndVulnerability'
@@ -67,18 +66,18 @@ export {
   ReleaseDatePage,
   AccommodationRequiredFromDatePage,
   ConsentGivenPage,
-  OptionalOasysSectionsPage,
+  AccommodationSharingPage,
+  CooperationPage,
+  AntiSocialBehaviourPage,
+  SubstanceMisusePage,
+  RoshLevelPage,
+  RiskManagementPlanPage,
   PreviousStaysPage,
   PreviousStaysDetailsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AcctAlertsPage,
   ApprovalsForSpecificRisksPage,
-  RoshSummaryPage,
-  OffenceDetailsPage,
-  SupportingInformationPage,
-  RiskManagementPlanPage,
-  RiskToSelfPage,
   AlternativePduPage,
   NeedsPage,
   PropertyAttributesOrAdaptationsPage,
@@ -87,7 +86,6 @@ export {
   SupportInTheCommunityPage,
   LocalConnectionsPage,
   CaringResponsibilitiesPage,
-  PropertySharingPage,
   FoodAllergiesPage,
   MoveOnPlanPage,
   DtrSubmittedPage,

@@ -11,12 +11,12 @@
     "licence-conditions",
     "prison-information",
     "approvals-for-specific-risks",
-    "oasys-import",
+    "placement-considerations",
     "behaviour-in-cas",
     "placement-location",
     "disability-cultural-and-specific-needs",
     "safeguarding-and-support",
-    "requirements-for-placement",
+    "food-allergies",
     "move-on-plan",
     "accommodation-referral-details",
     "check-your-answers"
@@ -437,235 +437,92 @@
         }
       }
     },
-    "oasys-import": {
+    "placement-considerations": {
       "type": "object",
       "properties": {
-        "optional-oasys-sections": {
+        "accommodation-sharing": {
           "type": "object",
           "properties": {
-            "needsLinkedToReoffending": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "section": {
-                    "type": "number"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "linkedToHarm": {
-                    "type": "boolean"
-                  },
-                  "linkedToReOffending": {
-                    "type": "boolean"
-                  }
-                }
-              }
+            "accommodationSharing": {
+              "type": "string"
             },
-            "otherNeeds": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "section": {
-                    "type": "number"
-                  },
-                  "name": {
-                    "type": "string"
-                  },
-                  "linkedToHarm": {
-                    "type": "boolean"
-                  },
-                  "linkedToReOffending": {
-                    "type": "boolean"
-                  }
-                }
-              }
+            "accommodationSharingYesDetail": {
+              "type": "string"
+            },
+            "accommodationSharingNoDetail": {
+              "type": "string"
             }
           }
         },
-        "rosh-summary": {
+        "cooperation": {
           "type": "object",
           "properties": {
-            "roshAnswers": {
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "roshSummaries": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "questionNumber": {
-                    "type": "string"
-                  },
-                  "answer": {
-                    "type": "string"
-                  }
-                }
-              }
+            "support": {
+              "type": "string"
             }
           }
         },
-        "offence-details": {
+        "anti-social-behaviour": {
           "type": "object",
           "properties": {
-            "offenceDetailsAnswers": {
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                {
-                  "type": "object"
-                }
-              ]
+            "concerns": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
             },
-            "offenceDetailsSummaries": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "questionNumber": {
-                    "type": "string"
-                  },
-                  "answer": {
-                    "type": "string"
-                  }
-                }
-              }
+            "concernsDetail": {
+              "type": "string"
             }
           }
         },
-        "supporting-information": {
+        "substance-misuse": {
           "type": "object",
           "properties": {
-            "supportingInformationAnswers": {
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                {
-                  "type": "object"
-                }
-              ]
+            "substanceMisuse": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
             },
-            "supportingInformationSummaries": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "sectionNumber": {
-                    "type": "number"
-                  },
-                  "questionNumber": {
-                    "type": "string"
-                  },
-                  "linkedToHarm": {
-                    "type": "boolean"
-                  },
-                  "linkedToReOffending": {
-                    "type": "boolean"
-                  },
-                  "answer": {
-                    "type": "string"
-                  }
-                }
-              }
+            "substanceMisuseDetail": {
+              "type": "string"
+            }
+          }
+        },
+        "rosh-level": {
+          "type": "object",
+          "properties": {
+            "riskToChildren": {
+              "type": "string"
+            },
+            "riskToPublic": {
+              "type": "string"
+            },
+            "riskToKnownAdult": {
+              "type": "string"
+            },
+            "riskToStaff": {
+              "type": "string"
             }
           }
         },
         "risk-management-plan": {
           "type": "object",
           "properties": {
-            "riskManagementAnswers": {
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                {
-                  "type": "object"
-                }
-              ]
+            "victimSafetyPlanning": {
+              "type": "string"
             },
-            "riskManagementSummaries": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "questionNumber": {
-                    "type": "string"
-                  },
-                  "answer": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "risk-to-self": {
-          "type": "object",
-          "properties": {
-            "riskToSelfAnswers": {
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                },
-                {
-                  "type": "object"
-                }
-              ]
+            "supervision": {
+              "type": "string"
             },
-            "riskToSelfSummaries": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "type": "string"
-                  },
-                  "questionNumber": {
-                    "type": "string"
-                  },
-                  "answer": {
-                    "type": "string"
-                  }
-                }
-              }
+            "monitoringAndControl": {
+              "type": "string"
+            },
+            "interventionAndTreatment": {
+              "type": "string"
             }
           }
         }
@@ -744,8 +601,6 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "alcoholMisuse",
-                  "drugMisuse",
                   "hearingImpairment",
                   "language",
                   "learningDisability",
@@ -759,10 +614,7 @@
                 "type": "string"
               }
             },
-            "alcoholMisuseDetail": {
-              "type": "string"
-            },
-            "drugMisuseDetail": {
+            "otherDetail": {
               "type": "string"
             },
             "hearingImpairmentDetail": {
@@ -784,9 +636,6 @@
               "type": "string"
             },
             "visualImpairmentDetail": {
-              "type": "string"
-            },
-            "otherDetail": {
               "type": "string"
             },
             "noneDetail": {
@@ -877,24 +726,9 @@
         }
       }
     },
-    "requirements-for-placement": {
+    "food-allergies": {
       "type": "object",
       "properties": {
-        "property-sharing": {
-          "type": "object",
-          "properties": {
-            "propertySharing": {
-              "enum": [
-                "no",
-                "yes"
-              ],
-              "type": "string"
-            },
-            "propertySharingDetail": {
-              "type": "string"
-            }
-          }
-        },
         "food-allergies": {
           "type": "object",
           "properties": {

@@ -13,6 +13,13 @@ import {
   PersonAcctAlert,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
+import {
+  offenceDetailSummariesFromJson,
+  riskManagementPlanFromJson,
+  riskToSelfSummariesFromJson,
+  roshSummariesFromJson,
+  supportInformationFromJson,
+} from '.'
 import { hasSubmittedDtr } from '../../server/form-pages/utils'
 import {
   acctAlertFactory,
@@ -26,16 +33,19 @@ import applicationDataJson from '../fixtures/applicationData.json'
 import Page from '../pages'
 import {
   AccommodationRequiredFromDatePage,
+  AccommodationSharingPage,
   AcctAlertsPage,
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AlternativePduPage,
+  AntiSocialBehaviourPage,
   ApprovalsForSpecificRisksPage,
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
+  CooperationPage,
   CrsSubmittedPage,
   DtrDetailsPage,
   DtrSubmittedPage,
@@ -45,39 +55,28 @@ import {
   LocalConnectionsPage,
   MoveOnPlanPage,
   NeedsPage,
-  OffenceDetailsPage,
   OffendingSummaryPage,
-  OptionalOasysSectionsPage,
   OtherAccommodationOptionsPage,
   PractitionerPduPage,
   PreviousStaysDetailsPage,
   PreviousStaysPage,
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
-  PropertySharingPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
   RiskManagementPlanPage,
-  RiskToSelfPage,
-  RoshSummaryPage,
+  RoshLevelPage,
   SafeguardingAndVulnerabilityPage,
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
   StartPage,
+  SubstanceMisusePage,
   SupportInTheCommunityPage,
-  SupportingInformationPage,
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
-import {
-  offenceDetailSummariesFromApplication,
-  riskManagementPlanFromApplication,
-  riskToSelfSummariesFromApplication,
-  roshSummariesFromApplication,
-  supportInformationFromApplication,
-} from './index'
 
 export default class ApplyHelper {
   pages = {
@@ -88,7 +87,7 @@ export default class ApplyHelper {
     licenceConditions: [] as Array<ApplyPage>,
     prisonInformation: [] as Array<ApplyPage>,
     approvalsForSpecificRisks: [] as Array<ApplyPage>,
-    oasysImport: [] as Array<ApplyPage>,
+    placementConsiderations: [] as Array<ApplyPage>,
     behaviourInCas: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
@@ -171,12 +170,12 @@ export default class ApplyHelper {
     this.completeLicenceConditions()
     this.completePrisonInformation()
     this.completeApprovalsForSpecificRisks()
-    this.completeOasysImport()
+    this.completePlacementConsiderations()
     this.completeBehaviourInCas()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
     this.completeSafeguardingAndSupport()
-    this.completeRequirementsForPlacement()
+    this.completeFoodAllergies()
     this.completeMoveOnPlan()
     this.completeAccommodationReferralDetails()
 
@@ -193,7 +192,7 @@ export default class ApplyHelper {
       ...this.pages.licenceConditions,
       ...this.pages.prisonInformation,
       ...this.pages.approvalsForSpecificRisks,
-      ...this.pages.oasysImport,
+      ...this.pages.placementConsiderations,
       ...this.pages.behaviourInCas,
       ...this.pages.placementLocation,
       ...this.pages.disabilityCulturalAndSpecificNeeds,
@@ -270,11 +269,11 @@ export default class ApplyHelper {
 
     const oasysSections = oasysSectionsFactory.build()
 
-    this.roshSummaries = roshSummariesFromApplication(this.application)
-    this.offenceDetailSummaries = offenceDetailSummariesFromApplication(this.application)
-    this.supportingInformationSummaries = supportInformationFromApplication(this.application)
-    this.riskManagementPlanSummaries = riskManagementPlanFromApplication(this.application)
-    this.riskToSelfSummaries = riskToSelfSummariesFromApplication(this.application)
+    this.roshSummaries = roshSummariesFromJson()
+    this.offenceDetailSummaries = offenceDetailSummariesFromJson()
+    this.supportingInformationSummaries = supportInformationFromJson()
+    this.riskManagementPlanSummaries = riskManagementPlanFromJson()
+    this.riskToSelfSummaries = riskToSelfSummariesFromJson()
 
     cy.task('stubOasysSections', {
       person: this.person,
@@ -491,7 +490,7 @@ export default class ApplyHelper {
 
   private completeApprovalsForSpecificRisks() {
     // Given I click the approvals for specific risks task
-    cy.get('[data-cy-task-name="approvals-for-specific-risks"]').click()
+    Page.verifyOnPage(TaskListPage).clickTask('approvals-for-specific-risks')
 
     // Then the risk widgets are visible
     const approvalsForSpecificRisksPage = new ApprovalsForSpecificRisksPage(this.application)
@@ -515,66 +514,52 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Not started')
+    tasklistPage.shouldShowTaskStatus('placement-considerations', 'Not started')
   }
 
-  private completeOasysImport() {
-    // Given I click the oasys import task
-    Page.verifyOnPage(TaskListPage).clickTask('oasys-import')
-    const optionalOasysImportPage = new OptionalOasysSectionsPage(this.application)
+  private completePlacementConsiderations() {
+    // Given I click the placement considerations task
+    Page.verifyOnPage(TaskListPage).clickTask('placement-considerations')
 
     // When I complete the form
-    optionalOasysImportPage.completeForm(this.oasysSectionsLinkedToReoffending, this.otherOasysSections)
-    optionalOasysImportPage.clickSubmit()
+    const accommodationSharingPage = new AccommodationSharingPage(this.application)
+    accommodationSharingPage.completeForm()
+    accommodationSharingPage.clickSubmit()
 
-    const roshSummaryPage = new RoshSummaryPage(this.application, this.roshSummaries)
+    const cooperationPage = new CooperationPage(this.application)
+    cooperationPage.completeForm()
+    cooperationPage.clickSubmit()
 
-    if (this.uiRisks) {
-      roshSummaryPage.shouldShowRiskWidgets(this.uiRisks)
-    }
+    const antiSocialBehaviourPage = new AntiSocialBehaviourPage(this.application)
+    antiSocialBehaviourPage.completeForm()
+    antiSocialBehaviourPage.clickSubmit()
 
-    roshSummaryPage.completeForm()
+    const substanceMisusePage = new SubstanceMisusePage(this.application)
+    substanceMisusePage.completeForm()
+    substanceMisusePage.clickSubmit()
 
-    roshSummaryPage.clickSubmit()
+    const roshLevelPage = new RoshLevelPage(this.application)
+    roshLevelPage.completeForm()
+    roshLevelPage.clickSubmit()
 
-    const offenceDetailsPage = new OffenceDetailsPage(this.application, this.offenceDetailSummaries)
+    const riskManagementPlan = new RiskManagementPlanPage(this.application)
+    riskManagementPlan.completeForm()
+    riskManagementPlan.clickSubmit()
 
-    if (this.uiRisks) {
-      offenceDetailsPage.shouldShowRiskWidgets(this.uiRisks)
-    }
-
-    offenceDetailsPage.completeForm()
-    offenceDetailsPage.clickSubmit()
-
-    const supportingInformationPage = new SupportingInformationPage(
-      this.application,
-      this.supportingInformationSummaries,
-    )
-    supportingInformationPage.completeForm()
-    supportingInformationPage.clickSubmit()
-
-    const riskManagementPlanPage = new RiskManagementPlanPage(this.application, this.riskManagementPlanSummaries)
-    riskManagementPlanPage.completeForm()
-    riskManagementPlanPage.clickSubmit()
-
-    const riskToSelfPage = new RiskToSelfPage(this.application, this.riskToSelfSummaries)
-    riskToSelfPage.completeForm()
-    riskToSelfPage.clickSubmit()
-
-    this.pages.oasysImport = [
-      optionalOasysImportPage,
-      roshSummaryPage,
-      offenceDetailsPage,
-      supportingInformationPage,
-      riskManagementPlanPage,
-      riskToSelfPage,
+    this.pages.placementConsiderations = [
+      accommodationSharingPage,
+      cooperationPage,
+      antiSocialBehaviourPage,
+      substanceMisusePage,
+      roshLevelPage,
+      riskManagementPlan,
     ]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
-    // Then I should be taken back to the tasklist
-    tasklistPage.shouldShowTaskStatus('oasys-import', 'Completed')
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('placement-considerations', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Not started')
@@ -694,29 +679,25 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Not started')
+    tasklistPage.shouldShowTaskStatus('food-allergies', 'Not started')
   }
 
-  private completeRequirementsForPlacement() {
-    // Given I click on the requirements for placement task
-    Page.verifyOnPage(TaskListPage).clickTask('requirements-for-placement')
+  private completeFoodAllergies() {
+    // Given I click on the food allergies task
+    Page.verifyOnPage(TaskListPage).clickTask('food-allergies')
 
     // When I complete the form
-    const propertySharingPage = new PropertySharingPage(this.application)
-    propertySharingPage.completeForm()
-    propertySharingPage.clickSubmit()
-
     const foodAllergiesPage = new FoodAllergiesPage(this.application)
     foodAllergiesPage.completeForm()
     foodAllergiesPage.clickSubmit()
 
-    this.pages.requirementsFromPlacement = [propertySharingPage, foodAllergiesPage]
+    this.pages.requirementsFromPlacement = [foodAllergiesPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage)
 
     // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('requirements-for-placement', 'Completed')
+    tasklistPage.shouldShowTaskStatus('food-allergies', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('move-on-plan', 'Not started')
@@ -800,16 +781,16 @@ export default class ApplyHelper {
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)
       checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
-      checkYourAnswersPage.shouldShowOasysImportAnswers(this.pages.oasysImport)
     }
 
+    checkYourAnswersPage.shouldShowPlacementConsiderationsAnswers(this.pages.placementConsiderations)
     checkYourAnswersPage.shouldShowBehaviourInCasAnswers(this.pages.behaviourInCas)
     checkYourAnswersPage.shouldShowPlacementLocationAnswers(this.pages.placementLocation)
     checkYourAnswersPage.shouldShowDisabilityCulturalAndSpecificNeedsAnswers(
       this.pages.disabilityCulturalAndSpecificNeeds,
     )
     checkYourAnswersPage.shouldShowSafeguardingAndSupportAnswers(this.pages.safeguardingAndSupport)
-    checkYourAnswersPage.shouldShowRequirementsForPlacementAnswers(this.pages.requirementsFromPlacement)
+    checkYourAnswersPage.shouldShowFoodAllergiesAnswers(this.pages.requirementsFromPlacement)
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
     checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)
 

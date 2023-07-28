@@ -150,146 +150,34 @@
       "approvalsDetail": "Approvals detail"
     }
   },
-  "oasys-import": {
-    "optional-oasys-sections": {
-      "needsLinkedToReoffending": [
-        { "section": 1, "name": "accommodation", "linkedToHarm": false, "linkedToReOffending": true },
-        { "section": 2, "name": "relationships", "linkedToHarm": false, "linkedToReOffending": true }
-      ],
-      "otherNeeds": [
-        {
-          "section": 3,
-          "name": "emotional",
-          "linkedToHarm": false,
-          "linkedToReOffending": false
-        },
-        {
-          "section": 4,
-          "name": "thinking",
-          "linkedToHarm": false,
-          "linkedToReOffending": false
-        }
-      ]
+  "placement-considerations": {
+    "accommodation-sharing": {
+      "accommodationSharing": "yes",
+      "accommodationSharingYesDetail": "Some detail",
+      "accommodationSharingNoDetail": ""
     },
-    "rosh-summary": {
-      "roshAnswers": [
-        "Some answer for the first RoSH question. With an extra comment 1",
-        "Some answer for the second RoSH question. With an extra comment 2",
-        "Some answer for the third RoSH question. With an extra comment 3"
-      ],
-      "roshSummaries": [
-        {
-          "questionNumber": "1",
-          "label": "The first RoSH question",
-          "answer": "Some answer for the first RoSH question"
-        },
-        {
-          "questionNumber": "2",
-          "label": "The second RoSH question",
-          "answer": "Some answer for the second RoSH question"
-        },
-        {
-          "questionNumber": "3",
-          "label": "The third RoSH question",
-          "answer": "Some answer for the third RoSH question"
-        }
-      ]
+    "cooperation": {
+      "support": "Support detail"
     },
-    "offence-details": {
-      "offenceDetailsAnswers": [
-        "Some answer for the first offence details question. With an extra comment 1",
-        "Some answer for the second offence details question. With an extra comment 2",
-        "Some answer for the third offence details question. With an extra comment 3"
-      ],
-      "offenceDetailsSummaries": [
-        {
-          "questionNumber": "1",
-          "label": "The first offence details question",
-          "answer": "Some answer for the first offence details question"
-        },
-        {
-          "questionNumber": "2",
-          "label": "The second offence details question",
-          "answer": "Some answer for the second offence details question"
-        },
-        {
-          "questionNumber": "3",
-          "label": "The third offence details question",
-          "answer": "Some answer for the third offence details question"
-        }
-      ]
+    "anti-social-behaviour": {
+      "concerns": "yes",
+      "concernsDetail": "Anti-social behaviour concerns detail"
     },
-    "supporting-information": {
-      "supportingInformationAnswers": [
-        "Some answer for the first supporting information question. With an extra comment 1",
-        "Some answer for the second supporting information question. With an extra comment 2",
-        "Some answer for the third supporting information question. With an extra comment 3"
-      ],
-      "supportingInformationSummaries": [
-        {
-          "questionNumber": "1",
-          "label": "The first supporting information question",
-          "answer": "Some answer for the first supporting information question"
-        },
-        {
-          "questionNumber": "2",
-          "label": "The second supporting information question",
-          "answer": "Some answer for the second supporting information question"
-        },
-        {
-          "questionNumber": "3",
-          "label": "The third supporting information question",
-          "answer": "Some answer for the third supporting information question"
-        }
-      ]
+    "substance-misuse": {
+      "substanceMisuse": "yes",
+      "substanceMisuseDetail": "Details of drug and alcohol misuse"
+    },
+    "rosh-level": {
+      "riskToChildren": "Risk to children detail",
+      "riskToPublic": "Risk to public detail",
+      "riskToKnownAdult": "Risk to known adult detail",
+      "riskToStaff": "Risk to staff detail"
     },
     "risk-management-plan": {
-      "riskManagementAnswers": [
-        "Some answer for the first risk management question. With an extra comment 1",
-        "Some answer for the second risk management question. With an extra comment 2",
-        "Some answer for the third risk management question. With an extra comment 3"
-      ],
-      "riskManagementSummaries": [
-        {
-          "questionNumber": "1",
-          "label": "The first risk management question",
-          "answer": "Some answer for the first risk management question"
-        },
-        {
-          "questionNumber": "2",
-          "label": "The second risk management question",
-          "answer": "Some answer for the second risk management question"
-        },
-        {
-          "questionNumber": "3",
-          "label": "The third risk management question",
-          "answer": "Some answer for the third risk management question"
-        }
-      ]
-    },
-    "risk-to-self": {
-      "riskToSelfAnswers": [
-        "Some answer for the first risk to self question. With an extra comment 1",
-        "Some answer for the second risk to self question. With an extra comment 2",
-        "Some answer for the third risk to self question. With an extra comment 3"
-      ],
-      "riskToSelfSummaries": [
-        {
-          "questionNumber": "1",
-          "label": "The first risk to self question",
-          "answer": "Some answer for the first risk to self question"
-        },
-        {
-          "questionNumber": "2",
-          "label": "The second risk to self question",
-          "answer": "Some answer for the second risk to self question"
-        },
-        {
-          "questionNumber": "3",
-          "label": "The third risk to self question",
-          "answer": "Some answer for the third risk to self question"
-        }
-      ]
+      "victimSafetyPlanning": "Victim safety planning detail",
+      "supervision": "Supervision detail",
+      "monitoringAndControl": "Monitoring and control detail",
+      "interventionAndTreatment": "Intervention and treatment detail"
     }
   },
   "behaviour-in-cas": {
@@ -311,10 +199,8 @@
   },
   "disability-cultural-and-specific-needs": {
     "needs": {
-      "needs": ["alcoholMisuse", "neurodivergence", "other"],
-      "alcoholMisuseDetail": "Alcohol misuse detail",
-      "drugMisuseDetail": "",
-      "hearingImpairmentDetail": "",
+      "needs": ["hearingImpairment", "neurodivergence", "other"],
+      "hearingImpairmentDetail": "Hearing impairment detail",
       "mentalHealthDetail": "",
       "languageDetail": "",
       "learningDisabilityDetail": "",
@@ -348,11 +234,7 @@
       "caringResponsibilitiesDetail": "Caring responsibilities X, Y, and Z"
     }
   },
-  "requirements-for-placement": {
-    "property-sharing": {
-      "propertySharing": "yes",
-      "propertySharingDetail": "Sharing risk managed by X, Y, Z"
-    },
+  "food-allergies": {
     "food-allergies": {
       "foodAllergies": "yes",
       "foodAllergiesDetail": "Allergic to X, Y, Z"

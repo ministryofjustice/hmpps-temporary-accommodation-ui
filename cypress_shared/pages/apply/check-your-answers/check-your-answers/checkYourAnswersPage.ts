@@ -38,6 +38,11 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('eligibility', pages)
   }
 
+  shouldShowPlacementConsiderationsAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('placement-considerations', 'Placement considerations')
+    this.shouldShowAnswersForTask('placement-considerations', pages)
+  }
+
   shouldShowBehaviourInCasAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('behaviour-in-cas', 'Behaviour in CAS')
     this.shouldShowAnswersForTask('behaviour-in-cas', pages)
@@ -63,11 +68,6 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('approvals-for-specific-risks', pages)
   }
 
-  shouldShowOasysImportAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('oasys-import', 'OASys information')
-    this.shouldShowAnswersForTask('oasys-import', pages)
-  }
-
   shouldShowPlacementLocationAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle('placement-location', 'Placement location')
     this.shouldShowAnswersForTask('placement-location', pages)
@@ -86,9 +86,9 @@ export default class CheckYourAnswersPage extends ApplyPage {
     this.shouldShowAnswersForTask('safeguarding-and-support', pages)
   }
 
-  shouldShowRequirementsForPlacementAnswers(pages: Array<ApplyPage>) {
-    this.shouldShowCheckYourAnswersTitle('requirements-for-placement', 'Requirements for placement')
-    this.shouldShowAnswersForTask('requirements-for-placement', pages)
+  shouldShowFoodAllergiesAnswers(pages: Array<ApplyPage>) {
+    this.shouldShowCheckYourAnswersTitle('food-allergies', 'Food allergies')
+    this.shouldShowAnswersForTask('food-allergies', pages)
   }
 
   shouldShowMoveOnPlanAnswers(pages: Array<ApplyPage>) {

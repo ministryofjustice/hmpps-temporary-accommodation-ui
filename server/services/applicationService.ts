@@ -1,6 +1,6 @@
+import type { Request } from 'express'
 import type { ActiveOffence, TemporaryAccommodationApplication as Application, Document } from '@approved-premises/api'
 import type { DataServices, GroupedApplications } from '@approved-premises/ui'
-import type { Request } from 'express'
 
 import type { ApplicationClient, RestClientBuilder } from '../data'
 import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'

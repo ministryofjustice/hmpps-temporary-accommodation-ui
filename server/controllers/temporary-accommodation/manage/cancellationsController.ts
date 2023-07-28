@@ -1,5 +1,5 @@
-import type { NewCancellation } from '@approved-premises/api'
 import type { Request, RequestHandler, Response } from 'express'
+import type { NewCancellation } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'

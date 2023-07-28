@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
-import type { NewTurnaround } from '@approved-premises/api'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
+import type { NewTurnaround } from '@approved-premises/api'
 
 export default Factory.define<NewTurnaround>(() => ({
   workingDays: faker.number.int({ min: 1, max: 10 }),

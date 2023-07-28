@@ -1,7 +1,6 @@
-import { TemporaryAccommodationApplicationSummary as ApplicationSummary } from '@approved-premises/api'
-
 import { faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
+import { TemporaryAccommodationApplicationSummary as ApplicationSummary } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 import personFactory from './person'

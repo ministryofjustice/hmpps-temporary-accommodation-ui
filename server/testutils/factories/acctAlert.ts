@@ -1,7 +1,6 @@
-import type { PersonAcctAlert } from '@approved-premises/api'
-
 import { Factory } from 'fishery'
 import { faker } from '@faker-js/faker/locale/en_GB'
+import type { PersonAcctAlert } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 

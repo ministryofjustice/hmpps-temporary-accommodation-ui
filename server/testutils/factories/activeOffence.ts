@@ -1,7 +1,6 @@
-import type { ActiveOffence } from '@approved-premises/api'
-
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
+import type { ActiveOffence } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
 

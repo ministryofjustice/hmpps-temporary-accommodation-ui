@@ -1,10 +1,10 @@
 import Case from 'case'
 
+import escapeRegExp from 'lodash.escaperegexp'
+import qs, { IStringifyOptions } from 'qs'
 import type { PersonRisks, TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
 
-import escapeRegExp from 'lodash.escaperegexp'
-import qs, { IStringifyOptions } from 'qs'
 import { SessionDataError } from './errors'
 
 /* istanbul ignore next */

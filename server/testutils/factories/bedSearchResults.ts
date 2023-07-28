@@ -1,7 +1,7 @@
 import { Factory } from 'fishery'
 
-import type { BedSearchResults, Premises } from '@approved-premises/api'
 import { faker } from '@faker-js/faker'
+import type { BedSearchResults, Premises } from '@approved-premises/api'
 import bedSearchResult from './bedSearchResult'
 
 class BedSearchResultsFactory extends Factory<BedSearchResults> {

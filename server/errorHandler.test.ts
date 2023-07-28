@@ -1,8 +1,8 @@
+import path from 'path'
 import express, { type Express } from 'express'
 import createError from 'http-errors'
 import request from 'supertest'
 
-import path from 'path'
 import nunjucksSetup from './utils/nunjucksSetup'
 import errorHandler from './errorHandler'
 

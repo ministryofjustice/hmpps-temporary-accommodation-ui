@@ -159,10 +159,23 @@ describe('applicationUtils', () => {
       const application = applicationFactory.build({ data: applyData })
 
       expect(getResponses(application)).toEqual({
-        'first-apply-section-task-1': [{ foo: 'bar' }, { bar: 'foo' }],
-        'first-apply-section-task-2': [],
-        'second-apply-section-task-1': [],
-        'second-apply-section-task-2': [],
+        sections: [
+          {
+            title: 'First Apply section',
+            tasks: [
+              {
+                title: 'First Apply section, task 1',
+                id: 'first-apply-section-task-1',
+                content: [
+                  {
+                    foo: 'bar',
+                  },
+                  { bar: 'foo' },
+                ],
+              },
+            ],
+          },
+        ],
       })
     })
   })

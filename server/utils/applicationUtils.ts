@@ -49,18 +49,38 @@ const createNameAnchorElement = (name: string, applicationId: string) => {
 
 export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>>
 
+export type Section = { title: string; tasks: Array<TaskResponse> }
+
+type TaskResponse = {
+  title: string
+  id: string
+  content: Array<PageResponse>
+}
+
 const getResponses = (applicationOrAssessment: Application | Assessment): ApplicationOrAssessmentResponse => {
-  const responses = {}
+  const responses: { sections: Array<Section> } = { sections: [] }
 
   const formSections = getSections(applicationOrAssessment)
 
   formSections.forEach(section => {
+    const sectionResponses: Section = { title: section.title, tasks: [] }
+
     section.tasks.forEach(task => {
       const responsesForTask: Array<PageResponse> = []
+
       forPagesInTask(applicationOrAssessment, task, page => responsesForTask.push(page.response()))
 
-      responses[task.id] = responsesForTask
+      if (responsesForTask.length) {
+        sectionResponses.tasks.push({
+          title: task.title,
+          id: task.id,
+          content: responsesForTask,
+        })
+      }
     })
+    if (sectionResponses.tasks.length) {
+      responses.sections.push(sectionResponses)
+    }
   })
 
   return responses

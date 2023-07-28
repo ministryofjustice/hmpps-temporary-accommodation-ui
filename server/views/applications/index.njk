@@ -11,41 +11,41 @@
 
 {% block content %}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
 
-            <h1 class="govuk-heading-l">Temporary Accommodation (TA) referrals</h1>
+      <h1 class="govuk-heading-l">Temporary Accommodation (TA) referrals</h1>
 
-            {{ govukTabs({
-                items: [
-                    {
-                        label: "In Progress",
-                        id: "in-progress",
-                        panel: {
-                            html: applicationsTable("Referrals", dashboardTableRows(applications.inProgress))
-                        }
-                    },
-                    {
-                        label: "Submitted",
-                        id: "applications-submitted",
-                        panel: {
-                            html: applicationsTable("Referrals", dashboardTableRows(applications.submitted))
-                        }
-                    }
-                ]
-            }) }}
+      {{ govukTabs({
+        items: [
+          {
+            label: "In Progress",
+            id: "in-progress",
+            panel: {
+              html: applicationsTable("Referrals", dashboardTableRows(applications.inProgress))
+            }
+          },
+          {
+            label: "Submitted",
+            id: "applications-submitted",
+            panel: {
+              html: applicationsTable("Referrals", dashboardTableRows(applications.submitted))
+            }
+          }
+        ]
+      }) }}
 
-        </div>
-
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">Start a new referral</h2>
-            <p>Start a new referral for Temporary Accommodation below.</p>
-
-            {{ govukButton({
-                text: "Start now",
-                href: paths.applications.start()
-            }) }}
-        </div>
     </div>
+
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">Start a new referral</h2>
+      <p class="govuk-body">Start a new referral for Temporary Accommodation below.</p>
+
+      {{ govukButton({
+        text: "Start now",
+        href: paths.applications.start()
+      }) }}
+    </div>
+  </div>
 </div>
 {% endblock %}

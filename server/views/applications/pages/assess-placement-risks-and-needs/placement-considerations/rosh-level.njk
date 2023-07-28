@@ -4,7 +4,7 @@
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
 {% extends "../../layout.njk" %}
 
-{% set buttonText = "Next" %}
+{% set disableButton = true %}
 
 {% set columnClasses = "govuk-grid-column-full" %}
 {% block questions %}
@@ -88,6 +88,11 @@
           html: riskToStaffHintHtml
         }
       }, fetchContext()) }}
+
+      {{ govukButton({
+        text: "Next",
+        preventDoubleClick: true
+      }) }}
     </div>
     <div class="govuk-grid-column-one-third">
       {{ roshWidget(page.risks.roshRisks) }}

@@ -5,6 +5,8 @@
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
 {% extends "../../layout.njk" %}
 
+{% set disableButton = true %}
+
 {% set columnClasses = "govuk-grid-column-full" %}
 {% block questions %}
 
@@ -53,6 +55,11 @@
           classes: "govuk-label--m"
         }
       }, fetchContext()) }}
+
+      {{ govukButton({
+        text: "Save and continue",
+        preventDoubleClick: true
+      }) }}
     </div>
     <div class="govuk-grid-column-one-third">
       {{ roshWidget(page.risks.roshRisks) }}

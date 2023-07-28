@@ -6,7 +6,7 @@ import PlacementConsiderations from './placement-considerations'
 import PrisonInformation from './prison-information'
 
 @Section({
-  title: 'Assess risks for placement',
+  title: 'Assess placement risks and needs',
   tasks: [LicenceConditions, PrisonInformation, ApprovalsForSpecificRisksTask, PlacementConsiderations, BehaviourInCas],
 })
-export default class AssessRisksForPlacement {}
+export default class AssessPlacementRisksAndNeeds {}

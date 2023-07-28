@@ -6,7 +6,7 @@ import FoodAllergiesTask from './food-allergies'
 import SafeguardingAndSupport from './safeguarding-and-support'
 
 @Section({
-  title: 'Placement considerations',
+  title: 'Requirements for placement',
   tasks: [
     PlacementLocation,
     DisabilityCulturalAndSpecificNeeds,
@@ -15,4 +15,4 @@ import SafeguardingAndSupport from './safeguarding-and-support'
     MoveOnPlanTask,
   ],
 })
-export default class PlacementConsiderations {}
+export default class RequirementsForPlacement {}

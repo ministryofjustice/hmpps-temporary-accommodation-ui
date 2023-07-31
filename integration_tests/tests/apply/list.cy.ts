@@ -21,16 +21,10 @@ context('Applications dashboard', () => {
     cy.signIn()
 
     // When I visit the Previous Applications page
-    const page = ListPage.visit(inProgressApplications, submittedApplications)
+    const page = ListPage.visit(inProgressApplications)
 
     // Then I should see all of the in progress applications
     page.shouldShowInProgressApplications()
-
-    // And I click on the submitted tab
-    page.clickSubmittedTab()
-
-    // Then I should see the applications that have been submitted
-    page.shouldShowSubmittedApplications()
 
     // And I the button should take me to the application start page
     page.clickSubmit()

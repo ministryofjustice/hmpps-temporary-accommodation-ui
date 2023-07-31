@@ -56,7 +56,7 @@ Then('I should see a confirmation of the application', () => {
   confirmationPage.clickBackToDashboard()
 
   cy.then(function _() {
-    const listPage = Page.verifyOnPage(ListPage, [this.application], [], [])
-    listPage.shouldShowSubmittedApplications()
+    const listPage = Page.verifyOnPage(ListPage, [])
+    listPage.shouldShowInProgressApplications()
   })
 })

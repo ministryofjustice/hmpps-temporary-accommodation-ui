@@ -71,7 +71,6 @@ describe('ApplicationService', () => {
 
       expect(result).toEqual({
         inProgress: inProgressApplications,
-        submitted: submittedApplications,
       })
 
       expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)

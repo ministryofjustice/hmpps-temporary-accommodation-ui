@@ -27,7 +27,7 @@ context('Landing', () => {
     cy.signIn()
 
     // I am redirected to the application listing page
-    Page.verifyOnPage(ListPage, [], [])
+    Page.verifyOnPage(ListPage, [])
   })
 
   it('signs-out a user who is not an assessor or a referrer', () => {

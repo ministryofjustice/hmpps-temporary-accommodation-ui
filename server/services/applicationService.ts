@@ -35,17 +35,15 @@ export default class ApplicationService {
     const allApplications = await applicationClient.all()
     const result = {
       inProgress: [],
-      submitted: [],
     } as GroupedApplications
 
     await Promise.all(
       allApplications.map(async application => {
         switch (application.status) {
-          case 'submitted':
-            result.submitted.push(application)
+          case 'inProgress':
+            result.inProgress.push(application)
             break
           default:
-            result.inProgress.push(application)
             break
         }
       }),

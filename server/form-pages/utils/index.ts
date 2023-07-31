@@ -1,3 +1,4 @@
+import type { Request } from 'express'
 import type {
   FormSection,
   JourneyType,
@@ -7,7 +8,6 @@ import type {
   YesOrNo,
   YesOrNoWithDetail,
 } from '@approved-premises/ui'
-import type { Request } from 'express'
 import {
   Adjudication,
   TemporaryAccommodationApplication as Application,

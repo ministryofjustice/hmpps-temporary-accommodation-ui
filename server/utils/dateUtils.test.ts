@@ -1,5 +1,5 @@
-import type { ObjectWithDateParts } from '@approved-premises/ui'
 import { isFuture, isPast } from 'date-fns'
+import type { ObjectWithDateParts } from '@approved-premises/ui'
 import {
   DateFormats,
   InvalidDateStringError,

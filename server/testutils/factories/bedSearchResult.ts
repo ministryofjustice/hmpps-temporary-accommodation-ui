@@ -1,5 +1,6 @@
 import { Factory } from 'fishery'
 
+import { faker } from '@faker-js/faker'
 import type {
   BedSearchResult,
   BedSearchResultPremisesSummary,
@@ -7,7 +8,6 @@ import type {
   Premises,
   Room,
 } from '@approved-premises/api'
-import { faker } from '@faker-js/faker'
 import bedFactory from './bed'
 import premisesFactory from './premises'
 import roomFactory from './room'

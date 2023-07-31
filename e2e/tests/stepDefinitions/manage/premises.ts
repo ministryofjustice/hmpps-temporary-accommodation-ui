@@ -1,5 +1,5 @@
-import type { Premises } from '@approved-premises/api'
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import type { Premises } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import PremisesEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesEdit'

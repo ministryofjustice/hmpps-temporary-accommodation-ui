@@ -1,5 +1,5 @@
-import type { ProbationRegion } from '@approved-premises/api'
 import { Response } from 'express'
+import type { ProbationRegion } from '@approved-premises/api'
 import type { ReportType } from '@approved-premises/ui'
 import type { ReferenceDataClient, RestClientBuilder } from '../data'
 import ReportClient from '../data/reportClient'

@@ -1,6 +1,6 @@
-import { SuperAgentRequest } from 'superagent'
 import { readFileSync } from 'fs'
 import path from 'path'
+import { SuperAgentRequest } from 'superagent'
 import qs from 'qs'
 
 import type {

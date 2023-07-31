@@ -1,5 +1,5 @@
-import { Room } from '@approved-premises/api'
 import { SuperAgentRequest } from 'superagent'
+import { Room } from '@approved-premises/api'
 import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { characteristics } from '../../wiremock/referenceDataStubs'

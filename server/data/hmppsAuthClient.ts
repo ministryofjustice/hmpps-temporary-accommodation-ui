@@ -1,5 +1,5 @@
-import superagent from 'superagent'
 import { URLSearchParams } from 'url'
+import superagent from 'superagent'
 
 import logger from '../../logger'
 import generateOauthClientToken from '../authentication/clientCredentials'

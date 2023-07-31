@@ -1,6 +1,6 @@
-import type { TemporaryAccommodationPremises as Premises, UpdatePremises } from '@approved-premises/api'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
+import type { TemporaryAccommodationPremises as Premises, UpdatePremises } from '@approved-premises/api'
 import { unique } from '../../utils/utils'
 import referenceDataFactory from './referenceData'
 

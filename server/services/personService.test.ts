@@ -1,6 +1,6 @@
-import type { Person } from '@approved-premises/api'
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
+import type { Person } from '@approved-premises/api'
 
 import PersonClient from '../data/personClient'
 import { CallConfig } from '../data/restClient'

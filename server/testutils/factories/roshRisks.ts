@@ -1,7 +1,7 @@
-import type { PersonRisks } from '@approved-premises/api'
-import { RiskLevel } from '@approved-premises/ui'
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
+import type { PersonRisks } from '@approved-premises/api'
+import { RiskLevel } from '@approved-premises/ui'
 import { DateFormats } from '../../utils/dateUtils'
 import { riskEnvelopeStatuses } from './tierEnvelopeFactory'
 

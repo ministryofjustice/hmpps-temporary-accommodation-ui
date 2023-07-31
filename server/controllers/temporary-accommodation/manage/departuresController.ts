@@ -1,5 +1,5 @@
-import type { NewDeparture } from '@approved-premises/api'
 import type { Request, RequestHandler, Response } from 'express'
+import type { NewDeparture } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'

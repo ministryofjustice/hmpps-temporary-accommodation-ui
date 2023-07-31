@@ -7,6 +7,6 @@ import PrisonInformation from './prison-information'
 
 @Section({
   title: 'Assess placement risks and needs',
-  tasks: [LicenceConditions, PrisonInformation, ApprovalsForSpecificRisksTask, PlacementConsiderations, BehaviourInCas],
+  tasks: [LicenceConditions, PrisonInformation, PlacementConsiderations, ApprovalsForSpecificRisksTask, BehaviourInCas],
 })
 export default class AssessPlacementRisksAndNeeds {}

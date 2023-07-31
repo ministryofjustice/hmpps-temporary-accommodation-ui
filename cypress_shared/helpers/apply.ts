@@ -86,8 +86,8 @@ export default class ApplyHelper {
     consent: [] as Array<ApplyPage>,
     licenceConditions: [] as Array<ApplyPage>,
     prisonInformation: [] as Array<ApplyPage>,
-    approvalsForSpecificRisks: [] as Array<ApplyPage>,
     placementConsiderations: [] as Array<ApplyPage>,
+    approvalsForSpecificRisks: [] as Array<ApplyPage>,
     behaviourInCas: [] as Array<ApplyPage>,
     placementLocation: [] as Array<ApplyPage>,
     disabilityCulturalAndSpecificNeeds: [] as Array<ApplyPage>,
@@ -169,8 +169,8 @@ export default class ApplyHelper {
     this.completeConsent()
     this.completeLicenceConditions()
     this.completePrisonInformation()
-    this.completeApprovalsForSpecificRisks()
     this.completePlacementConsiderations()
+    this.completeApprovalsForSpecificRisks()
     this.completeBehaviourInCas()
     this.completePlacementLocation()
     this.completeDisabilityCulturalAndSpecificNeeds()
@@ -485,35 +485,6 @@ export default class ApplyHelper {
     tasklistPage.shouldShowTaskStatus('prison-information', 'Completed')
 
     // And the next task should be marked as not started
-    tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Not started')
-  }
-
-  private completeApprovalsForSpecificRisks() {
-    // Given I click the approvals for specific risks task
-    Page.verifyOnPage(TaskListPage).clickTask('approvals-for-specific-risks')
-
-    // Then the risk widgets are visible
-    const approvalsForSpecificRisksPage = new ApprovalsForSpecificRisksPage(this.application)
-
-    if (this.uiRisks) {
-      approvalsForSpecificRisksPage.shouldShowMappa()
-      approvalsForSpecificRisksPage.shouldShowRosh(this.uiRisks.roshRisks)
-      approvalsForSpecificRisksPage.shouldShowDeliusRiskFlags(this.uiRisks.flags)
-    }
-
-    // And when I complete the form
-    approvalsForSpecificRisksPage.completeForm()
-    approvalsForSpecificRisksPage.clickSubmit()
-
-    this.pages.approvalsForSpecificRisks = [approvalsForSpecificRisksPage]
-
-    // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
-
-    // And the task should be marked as completed
-    tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
-
-    // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('placement-considerations', 'Not started')
   }
 
@@ -560,6 +531,35 @@ export default class ApplyHelper {
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('placement-considerations', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Not started')
+  }
+
+  private completeApprovalsForSpecificRisks() {
+    // Given I click the approvals for specific risks task
+    Page.verifyOnPage(TaskListPage).clickTask('approvals-for-specific-risks')
+
+    // Then the risk widgets are visible
+    const approvalsForSpecificRisksPage = new ApprovalsForSpecificRisksPage(this.application)
+
+    if (this.uiRisks) {
+      approvalsForSpecificRisksPage.shouldShowMappa()
+      approvalsForSpecificRisksPage.shouldShowRosh(this.uiRisks.roshRisks)
+      approvalsForSpecificRisksPage.shouldShowDeliusRiskFlags(this.uiRisks.flags)
+    }
+
+    // And when I complete the form
+    approvalsForSpecificRisksPage.completeForm()
+    approvalsForSpecificRisksPage.clickSubmit()
+
+    this.pages.approvalsForSpecificRisks = [approvalsForSpecificRisksPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Not started')
@@ -780,10 +780,14 @@ export default class ApplyHelper {
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)
-      checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
     }
 
     checkYourAnswersPage.shouldShowPlacementConsiderationsAnswers(this.pages.placementConsiderations)
+
+    if (this.environment === 'integration') {
+      checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
+    }
+
     checkYourAnswersPage.shouldShowBehaviourInCasAnswers(this.pages.behaviourInCas)
     checkYourAnswersPage.shouldShowPlacementLocationAnswers(this.pages.placementLocation)
     checkYourAnswersPage.shouldShowDisabilityCulturalAndSpecificNeedsAnswers(

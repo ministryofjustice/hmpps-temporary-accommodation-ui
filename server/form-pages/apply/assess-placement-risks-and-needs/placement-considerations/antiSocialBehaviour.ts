@@ -2,9 +2,9 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { PersonRisksUI, TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
-import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 
 type AntiSocialBehaviourBody = YesOrNoWithDetail<'concerns'>
 
@@ -47,7 +47,8 @@ export default class AntiSocialBehaviour implements TasklistPage {
     }
 
     if (this.body.concerns === 'yes' && !this.body.concernsDetail) {
-      errors.concernsDetail = 'You must provide details of any concerns or risks relating to anti-social behaviour'
+      errors.concernsDetail =
+        "You must specify how you will support the person's placement given the concerns or risks relating to anti-social behaviour"
     }
 
     return errors

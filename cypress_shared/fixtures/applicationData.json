@@ -174,10 +174,36 @@
       "riskToStaff": "Risk to staff detail"
     },
     "risk-management-plan": {
-      "victimSafetyPlanning": "Victim safety planning detail",
-      "supervision": "Supervision detail",
-      "monitoringAndControl": "Monitoring and control detail",
-      "interventionAndTreatment": "Intervention and treatment detail"
+      "oasysImported": "2023-08-02",
+      "oasysCompleted": "2023-08-02",
+      "riskManagementAnswers": {
+        "QRM30": "Some answer for the first risk management question. With an extra comment RM30",
+        "QRM31": "Some answer for the second risk management question. With an extra comment RM31",
+        "QRM32": "Some answer for the third risk management question. With an extra comment RM32",
+        "QRM33": "Some answer for the fourth risk management question. With an extra comment RM33"
+      },
+      "riskManagementSummaries": [
+        {
+          "questionNumber": "RM30",
+          "label": "Supervision",
+          "answer": "Some answer for the first risk management question. With an extra comment RM30"
+        },
+        {
+          "questionNumber": "RM31",
+          "label": "Monitoring and control",
+          "answer": "Some answer for the second risk management question. With an extra comment RM31"
+        },
+        {
+          "questionNumber": "RM32",
+          "label": "Interventions and treatment",
+          "answer": "Some answer for the third risk management question. With an extra comment RM32"
+        },
+        {
+          "questionNumber": "RM33",
+          "label": "Victim safety planning",
+          "answer": "Some answer for the fourth risk management question. With an extra comment RM33"
+        }
+      ]
     }
   },
   "behaviour-in-cas": {

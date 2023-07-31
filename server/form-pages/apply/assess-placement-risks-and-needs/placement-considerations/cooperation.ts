@@ -35,7 +35,8 @@ export default class Cooperation implements TasklistPage {
 
   response() {
     return {
-      [`How you will support ${this.application.person.name}'s placement?`]: this.body.support,
+      [`How will you support ${this.application.person.name}'s placement considering any risks to the support worker?`]:
+        this.body.support,
     }
   }
 

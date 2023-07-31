@@ -52,7 +52,7 @@ export default class SubstanceMisuse implements TasklistPage {
 
     if (this.body.substanceMisuse === 'yes' && !this.body.substanceMisuseDetail) {
       errors.substanceMisuseDetail =
-        'You must provide information on the persons substance misuse and how you will support their placement given these issue'
+        "You must provide information on the person's substance misuse and how you will support their placement given these issues"
     }
 
     return errors

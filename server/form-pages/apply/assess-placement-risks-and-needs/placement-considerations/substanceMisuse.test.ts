@@ -57,7 +57,7 @@ describe('SubstanceMisuse', () => {
       const page = new SubstanceMisuse({ ...body, substanceMisuseDetail: undefined }, application)
       expect(page.errors()).toEqual({
         substanceMisuseDetail:
-          'You must provide information on the persons substance misuse and how you will support their placement given these issue',
+          "You must provide information on the person's substance misuse and how you will support their placement given these issues",
       })
     })
   })

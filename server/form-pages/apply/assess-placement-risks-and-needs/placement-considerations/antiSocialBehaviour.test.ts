@@ -55,7 +55,8 @@ describe('AntiSocialBehaviour', () => {
     it('returns an error if the concerns answer is yes but details are not populated', () => {
       const page = new AntiSocialBehaviour({ ...body, concernsDetail: undefined }, application)
       expect(page.errors()).toEqual({
-        concernsDetail: 'You must provide details of any concerns or risks relating to anti-social behaviour',
+        concernsDetail:
+          "You must specify how you will support the person's placement given the concerns or risks relating to anti-social behaviour",
       })
     })
   })

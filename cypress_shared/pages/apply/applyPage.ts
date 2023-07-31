@@ -1,4 +1,4 @@
-import { Document, OASysQuestion, TemporaryAccommodationApplication } from '@approved-premises/api'
+import { Document, TemporaryAccommodationApplication } from '@approved-premises/api'
 import TasklistPage from '../../../server/form-pages/tasklistPage'
 import Page from '../page'
 
@@ -68,12 +68,18 @@ export default class ApplyPage extends Page {
     cy.get('.govuk-back-link').should('have.attr', 'href').and('include', path)
   }
 
-  completeOasysImportQuestions(questions: Array<OASysQuestion>, sectionName: string): void {
-    questions.forEach(question => {
-      cy.get('.govuk-label').contains(question.label)
-      cy.get(`textarea[name="${sectionName}[${question.questionNumber}]"]`)
-        .should('contain', question.answer)
-        .type(`. With an extra comment ${question.questionNumber}`)
+  completeOasysImportQuestions(section, sectionName: string, oasysMissing: boolean): void {
+    section.forEach(summary => {
+      cy.get('.govuk-label').contains(summary.label)
+      if (oasysMissing) {
+        cy.get(`textarea[name="${sectionName}[${summary.questionNumber}]"]`).type(
+          `${summary.questionNumber} content goes here`,
+        )
+      } else {
+        cy.get(`textarea[name="${sectionName}[${summary.questionNumber}]"]`)
+          .should('contain', summary.answer)
+          .type(`. With an extra comment ${summary.questionNumber}`)
+      }
     })
   }
 

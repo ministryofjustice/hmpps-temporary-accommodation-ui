@@ -263,3 +263,9 @@ export interface SideNavObj {
 export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | 'departed' | 'closed'
 
 export type ReportType = 'bookings' | 'bedspace-usage' | 'occupancy'
+
+export interface OasysPage extends TasklistPage {
+  oasysCompleted: string
+  risks: PersonRisksUI
+  oasysSuccess: boolean
+}

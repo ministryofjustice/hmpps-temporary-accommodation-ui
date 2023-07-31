@@ -1,8 +1,91 @@
-import { TemporaryAccommodationApplication as Application, OASysQuestion, OASysSection } from '../@types/shared'
-import { OasysImportArrays } from '../@types/ui'
+import {
+  TemporaryAccommodationApplication as Application,
+  OASysQuestion,
+  OASysSection,
+  OASysSections,
+} from '../@types/shared'
+import { DataServices, OasysImportArrays, OasysPage } from '../@types/ui'
+import { CallConfig } from '../data/restClient'
+import oasysStubs from '../data/stubs/oasysStubs.json'
+import { OasysNotFoundError } from '../services/personService'
 import { SessionDataError } from './errors'
-import { sentenceCase } from './utils'
+import { mapApiPersonRisksForUi, sentenceCase } from './utils'
 import { escape } from './viewUtils'
+
+export type Constructor<T> = new (body: unknown) => T
+
+export const getOasysSections = async <T extends OasysPage>(
+  body: Record<string, unknown>,
+  application: Application,
+  callConfig: CallConfig,
+  dataServices: DataServices,
+  constructor: Constructor<T>,
+  {
+    sectionName,
+    summaryKey,
+    answerKey,
+    selectedSections = [],
+  }: {
+    sectionName: string
+    summaryKey: string
+    answerKey: string
+    selectedSections?: Array<number>
+  },
+): Promise<T> => {
+  let oasysSections: OASysSections
+  let oasysSuccess: boolean
+
+  try {
+    oasysSections = await dataServices.personService.getOasysSections(
+      callConfig,
+      application.person.crn,
+      selectedSections,
+    )
+    oasysSuccess = true
+  } catch (e) {
+    if (e instanceof OasysNotFoundError) {
+      oasysSections = oasysStubs
+      oasysSuccess = false
+    } else {
+      throw e
+    }
+  }
+
+  const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {
+    const answer = body[answerKey]?.[question.questionNumber] || question.answer
+    return {
+      ...question,
+      answer,
+    }
+  })
+
+  const page = new constructor(body)
+
+  page.body[summaryKey] = summaries
+  page[summaryKey] = summaries
+  page.oasysCompleted = oasysSections?.dateCompleted || oasysSections?.dateStarted
+  page.oasysSuccess = oasysSuccess
+  page.risks = mapApiPersonRisksForUi(application.risks)
+
+  return page
+}
+
+export const validateOasysEntries = <T>(body: Partial<T>, questionKey: string, answerKey: string) => {
+  const errors = {}
+  const questions = body[questionKey]
+  const answers = body[answerKey]
+
+  Object.keys(questions).forEach(key => {
+    const question = questions[key]
+    if (!answers[question.questionNumber]) {
+      errors[
+        `${answerKey}[${question.questionNumber}]`
+      ] = `You must enter a response for the '${question.label}' question`
+    }
+  })
+
+  return errors
+}
 
 export const textareas = (questions: OasysImportArrays, key: 'roshAnswers' | 'offenceDetails') => {
   return questions
@@ -22,22 +105,17 @@ export const textareas = (questions: OasysImportArrays, key: 'roshAnswers' | 'of
     .join('')
 }
 
-export const oasysImportReponse = (
-  answers: Array<string> | Record<string, string>,
-  summaries: Array<OASysQuestion>,
-) => {
-  if (Array.isArray(answers)) {
-    return (answers as Array<string>).reduce((prev, question, i) => {
-      return {
-        ...prev,
-        [`${summaries[i].questionNumber}. ${summaries[i].label}`]: question,
-      }
-    }, {}) as Record<string, string>
-  }
-  if (!answers) {
-    return {}
-  }
-  return answers
+export const oasysImportReponse = (answers: Record<string, string>, summaries: Array<OASysQuestion>) => {
+  return Object.keys(answers).reduce((prev, k) => {
+    return {
+      ...prev,
+      [`${k}: ${findSummary(k, summaries).label}`]: answers[k],
+    }
+  }, {}) as Record<string, string>
+}
+
+const findSummary = (questionNumber: string, summaries: Array<OASysQuestion>) => {
+  return summaries.find(i => i.questionNumber === questionNumber)
 }
 
 export const fetchOptionalOasysSections = (application: Application): Array<number> => {

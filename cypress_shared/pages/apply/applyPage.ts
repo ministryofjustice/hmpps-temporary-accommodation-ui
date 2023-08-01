@@ -3,6 +3,7 @@ import TasklistPage from '../../../server/form-pages/tasklistPage'
 import Page from '../page'
 
 import Apply from '../../../server/form-pages/apply'
+import { questionKeyFromNumber } from '../../../server/utils/oasysImportUtils'
 
 export default class ApplyPage extends Page {
   tasklistPage: TasklistPage
@@ -72,11 +73,11 @@ export default class ApplyPage extends Page {
     section.forEach(summary => {
       cy.get('.govuk-label').contains(summary.label)
       if (oasysMissing) {
-        cy.get(`textarea[name="${sectionName}[${summary.questionNumber}]"]`).type(
+        cy.get(`textarea[name="${sectionName}[${questionKeyFromNumber(summary.questionNumber)}]"]`).type(
           `${summary.questionNumber} content goes here`,
         )
       } else {
-        cy.get(`textarea[name="${sectionName}[${summary.questionNumber}]"]`)
+        cy.get(`textarea[name="${sectionName}[${questionKeyFromNumber(summary.questionNumber)}]"]`)
           .should('contain', summary.answer)
           .type(`. With an extra comment ${summary.questionNumber}`)
       }

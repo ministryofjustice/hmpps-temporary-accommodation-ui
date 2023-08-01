@@ -17,6 +17,8 @@ import {
   fetchOptionalOasysSections,
   getOasysSections,
   oasysImportReponse,
+  questionKeyFromNumber,
+  questionNumberFromKey,
   sectionCheckBoxes,
   sortOasysImportSummaries,
   textareas,
@@ -105,7 +107,7 @@ describe('OASysImportUtils', () => {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result: any = await getOasysSections(
-        { offenceDetailsAnswers: { '1': 'My Response' } },
+        { offenceDetailsAnswers: { [questionKeyFromNumber('1')]: 'My Response' } },
         application,
         callConfig,
         { personService },
@@ -143,7 +145,7 @@ describe('OASysImportUtils', () => {
     ]
 
     it('should return errors for missing fields', () => {
-      const answers = { '1': '', '2': 'Some response' }
+      const answers = { [questionKeyFromNumber('1')]: '', [questionKeyFromNumber('2')]: 'Some response' }
       const body = {
         summaries,
         answers,
@@ -152,12 +154,12 @@ describe('OASysImportUtils', () => {
       const errors = validateOasysEntries(body, 'summaries', 'answers')
 
       expect(errors).toEqual({
-        'answers[1]': "You must enter a response for the 'The first question' question",
+        [`answers[${questionKeyFromNumber('1')}]`]: "You must enter a response for the 'The first question' question",
       })
     })
 
     it('should return no errors when all fields are complete', () => {
-      const answers = { '1': 'Some response', '2': 'Some response' }
+      const answers = { [questionKeyFromNumber('1')]: 'Some response', [questionKeyFromNumber('2')]: 'Some response' }
       const body = {
         summaries,
         answers,
@@ -166,6 +168,20 @@ describe('OASysImportUtils', () => {
       const errors = validateOasysEntries(body, 'summaries', 'answers')
 
       expect(errors).toEqual({})
+    })
+  })
+
+  describe('questionKeyFromNumber', () => {
+    it('ensures a string cannot be parsed as a number', () => {
+      expect(questionKeyFromNumber('1')).toEqual('Q1')
+      expect(questionKeyFromNumber('ABC')).toEqual('QABC')
+    })
+  })
+
+  describe('questionNumberFromKey', () => {
+    it('reverses questionKeyFromNumber', () => {
+      expect(questionNumberFromKey(questionKeyFromNumber('1'))).toEqual('1')
+      expect(questionNumberFromKey(questionKeyFromNumber('ABC'))).toEqual('ABC')
     })
   })
 
@@ -178,41 +194,57 @@ describe('OASysImportUtils', () => {
       expect(result).toMatchStringIgnoringWhitespace(`
               <div class="govuk-form-group">
               <h3 class="govuk-label-wrapper">
-                  <label class="govuk-label govuk-label--m" for=${sectionName}[${roshSummaries[0].questionNumber}]>
+                  <label class="govuk-label govuk-label--m" for=${sectionName}[${questionKeyFromNumber(
+                    roshSummaries[0].questionNumber,
+                  )}]>
                       ${roshSummaries[0].label}
                   </label>
               </h3>
-              <textarea class="govuk-textarea" id=${sectionName}[${roshSummaries[0].questionNumber}] name=${sectionName}[${roshSummaries[0].questionNumber}] rows="8">${roshSummaries[0].answer}</textarea>
+              <textarea class="govuk-textarea" id=${sectionName}[${questionKeyFromNumber(
+                roshSummaries[0].questionNumber,
+              )}] name=${sectionName}[${questionKeyFromNumber(roshSummaries[0].questionNumber)}] rows="8">${
+                roshSummaries[0].answer
+              }</textarea>
           </div>
           <hr>
           <div class="govuk-form-group">
           <h3 class="govuk-label-wrapper">
-              <label class="govuk-label govuk-label--m" for=${sectionName}[${roshSummaries[1].questionNumber}]>
+              <label class="govuk-label govuk-label--m" for=${sectionName}[${questionKeyFromNumber(
+                roshSummaries[1].questionNumber,
+              )}]>
                   ${roshSummaries[1].label}
               </label>
           </h3>
-          <textarea class="govuk-textarea" id=${sectionName}[${roshSummaries[1].questionNumber}] name=${sectionName}[${roshSummaries[1].questionNumber}] rows="8">${roshSummaries[1].answer}</textarea>
+          <textarea class="govuk-textarea" id=${sectionName}[${questionKeyFromNumber(
+            roshSummaries[1].questionNumber,
+          )}] name=${sectionName}[${questionKeyFromNumber(roshSummaries[1].questionNumber)}] rows="8">${
+            roshSummaries[1].answer
+          }</textarea>
       </div>
       <hr>`)
     })
   })
 
   describe('oasysImportReponse', () => {
-    it('returns a human readable response for reach question', () => {
-      const answers = { Q1: 'answer 1', Q2: 'answer 2', Q3: 'answer 3' }
+    it('returns a human readable response for each question', () => {
+      const answers = {
+        [questionKeyFromNumber('1')]: 'answer 1',
+        [questionKeyFromNumber('2')]: 'answer 2',
+        [questionKeyFromNumber('3')]: 'answer 3',
+      }
       const summaries = [
         {
-          questionNumber: 'Q1',
+          questionNumber: '1',
           label: 'The first question',
           answer: 'Some answer for the first question',
         },
         {
-          questionNumber: 'Q2',
+          questionNumber: '2',
           label: 'The second question',
           answer: 'Some answer for the second question',
         },
         {
-          questionNumber: 'Q3',
+          questionNumber: '3',
           label: 'The third question',
           answer: 'Some answer for the third question',
         },
@@ -220,9 +252,9 @@ describe('OASysImportUtils', () => {
       const result = oasysImportReponse(answers, summaries)
 
       expect(result).toEqual({
-        [`Q1: The first question`]: `answer 1`,
-        [`Q2: The second question`]: `answer 2`,
-        [`Q3: The third question`]: `answer 3`,
+        [`1: The first question`]: `answer 1`,
+        [`2: The second question`]: `answer 2`,
+        [`3: The third question`]: `answer 3`,
       })
     })
 

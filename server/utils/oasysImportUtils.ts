@@ -52,7 +52,7 @@ export const getOasysSections = async <T extends OasysPage>(
   }
 
   const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {
-    const answer = body[answerKey]?.[question.questionNumber] || question.answer
+    const answer = body[answerKey]?.[`${questionKeyFromNumber(question.questionNumber)}`] || question.answer
     return {
       label: question.label,
       questionNumber: question.questionNumber,
@@ -78,9 +78,9 @@ export const validateOasysEntries = <T>(body: Partial<T>, questionKey: string, a
 
   Object.keys(questions).forEach(key => {
     const question = questions[key]
-    if (!answers[question.questionNumber]) {
+    if (!answers[`${questionKeyFromNumber(question.questionNumber)}`]) {
       errors[
-        `${answerKey}[${question.questionNumber}]`
+        `${answerKey}[${questionKeyFromNumber(question.questionNumber)}]`
       ] = `You must enter a response for the '${question.label}' question`
     }
   })
@@ -88,18 +88,26 @@ export const validateOasysEntries = <T>(body: Partial<T>, questionKey: string, a
   return errors
 }
 
+export const questionKeyFromNumber = (questionNumber: string) => `Q${questionNumber}`
+
+export const questionNumberFromKey = (key: string) => key.substring(1)
+
 export const textareas = (questions: OasysImportArrays, key: 'roshAnswers' | 'offenceDetails') => {
   return questions
     .map(question => {
       return `<div class="govuk-form-group">
                 <h3 class="govuk-label-wrapper">
-                    <label class="govuk-label govuk-label--m" for=${key}[${question.questionNumber}]>
+                    <label class="govuk-label govuk-label--m" for=${key}[${questionKeyFromNumber(
+                      question.questionNumber,
+                    )}]>
                         ${question.label}
                     </label>
                 </h3>
-                <textarea class="govuk-textarea" id=${key}[${question.questionNumber}] name=${key}[${
-                  question.questionNumber
-                }] rows="8">${escape(question?.answer)}</textarea>
+                <textarea class="govuk-textarea" id=${key}[${questionKeyFromNumber(
+                  question.questionNumber,
+                )}] name=${key}[${questionKeyFromNumber(question.questionNumber)}] rows="8">${escape(
+                  question?.answer,
+                )}</textarea>
             </div>
             <hr>`
     })
@@ -107,10 +115,12 @@ export const textareas = (questions: OasysImportArrays, key: 'roshAnswers' | 'of
 }
 
 export const oasysImportReponse = (answers: Record<string, string>, summaries: Array<OASysQuestion>) => {
-  return Object.keys(answers).reduce((prev, k) => {
+  return Object.keys(answers).reduce((prev, key) => {
+    const questionNumber = questionNumberFromKey(key)
+
     return {
       ...prev,
-      [`${k}: ${findSummary(k, summaries).label}`]: answers[k],
+      [`${questionNumber}: ${findSummary(questionNumber, summaries).label}`]: answers[`${key}`],
     }
   }, {}) as Record<string, string>
 }

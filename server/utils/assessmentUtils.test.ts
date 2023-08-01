@@ -121,7 +121,7 @@ describe('assessmentUtils', () => {
       ])
     })
 
-    it('returns the "closed", "in_review" and "reject" actions for an assessment with a status of "ready_to_place"', () => {
+    it('returns the "closed", "in_review", "reject", and "Place referral" actions for an assessment with a status of "ready_to_place"', () => {
       const assessment = assessmentFactory.build({
         status: 'ready_to_place',
       })
@@ -143,6 +143,11 @@ describe('assessmentUtils', () => {
           text: 'Reject',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+        },
+        {
+          classes: 'govuk-button--secondary',
+          href: paths.bedspaces.search({}),
+          text: 'Place referral',
         },
       ])
     })

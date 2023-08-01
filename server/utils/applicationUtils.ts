@@ -218,13 +218,13 @@ const retrieveQuestionResponseFromApplication = <T>(
 }
 
 export {
-  getResponses,
-  forPagesInTask,
-  getPage,
-  getSectionAndTask,
-  getArrivalDate,
   dashboardTableRows,
   firstPageOfApplicationJourney,
+  forPagesInTask,
+  getArrivalDate,
+  getPage,
+  getResponses,
+  getSectionAndTask,
   getStatus,
   retrieveQuestionResponseFromApplication,
 }

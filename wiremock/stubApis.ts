@@ -18,6 +18,7 @@ import premisesJson from './stubs/premises.json'
 
 import applicationStubs from './applicationStubs'
 import arrivalStubs from './arrivalStubs'
+import assessmentStubs from './assessmentStubs'
 import bookingStubs from './bookingStubs'
 import cancellationStubs from './cancellationStubs'
 import departureStubs from './departuresStubs'
@@ -273,6 +274,7 @@ stubs.push(
   ...lostBedStubs,
   ...personStubs,
   ...applicationStubs,
+  ...assessmentStubs,
   ...roomStubs,
   ...userStub,
   ...reportStubs,

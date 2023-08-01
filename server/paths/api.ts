@@ -16,6 +16,17 @@ const searchBedsPath = bedsPath.path('search')
 const bookingsPath = path('/bookings')
 const searchBookingsPath = bookingsPath.path('search')
 
+const assessPaths = {
+  assessments: path('/assessments'),
+  singleAssessment: path('/assessments/:id'),
+  acceptance: path('/assessments/:id/acceptance'),
+  rejection: path('/assessments/:id/rejection'),
+}
+
+const clarificationNotePaths = {
+  notes: assessPaths.singleAssessment.path('notes'),
+}
+
 const managePaths = {
   premises: {
     create: premisesPath,
@@ -100,6 +111,17 @@ export default {
     new: applyPaths.applications.create,
     submission: applyPaths.applications.submission,
     documents: applyPaths.applications.show.path('documents'),
+  },
+  assessments: {
+    index: assessPaths.assessments,
+    show: assessPaths.singleAssessment,
+    update: assessPaths.singleAssessment,
+    acceptance: assessPaths.acceptance,
+    rejection: assessPaths.rejection,
+    clarificationNotes: {
+      create: clarificationNotePaths.notes,
+      update: clarificationNotePaths.notes.path(':clarificationNoteId'),
+    },
   },
   people: {
     risks: {

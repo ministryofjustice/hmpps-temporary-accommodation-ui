@@ -25,4 +25,8 @@ export default class DashboardPage extends Page {
   clickViewBookingsLink(): void {
     cy.get('a').contains('View all bookings').click()
   }
+
+  clickReviewAndAssessReferrals(): void {
+    cy.get('a').contains('Review and assess referrals').click()
+  }
 }

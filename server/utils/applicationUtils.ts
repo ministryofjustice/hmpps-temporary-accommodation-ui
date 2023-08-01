@@ -2,7 +2,7 @@ import type {
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
-import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
+import type { FormSection, HtmlItem, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
@@ -12,6 +12,8 @@ import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 import { kebabCase } from './utils'
+import { formatLines } from './viewUtils'
+import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummaryListItem'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
@@ -217,6 +219,28 @@ const retrieveQuestionResponseFromApplication = <T>(
   }
 }
 
+const taskResponsesToSummaryListRowItems = (
+  taskResponses: TaskResponse['content'],
+): Array<{ key: string; value: HtmlItem }> => {
+  const transformedResult = taskResponses
+    .map(taskResponse => {
+      return Object.entries(taskResponse).map(([key, value]) => {
+        return {
+          key: { text: key },
+          value: {
+            html:
+              typeof value === 'string' || value instanceof String
+                ? formatLines(value as string)
+                : embeddedSummaryListItem(value as Array<Record<string, unknown>>),
+          },
+        }
+      })
+    })
+    .flat()
+
+  return transformedResult as unknown as Array<{ key: string; value: HtmlItem }>
+}
+
 export {
   dashboardTableRows,
   firstPageOfApplicationJourney,
@@ -227,4 +251,5 @@ export {
   getSectionAndTask,
   getStatus,
   retrieveQuestionResponseFromApplication,
+  taskResponsesToSummaryListRowItems,
 }

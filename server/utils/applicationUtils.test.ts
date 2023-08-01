@@ -15,6 +15,7 @@ import {
   getSectionAndTask,
   getStatus,
   retrieveQuestionResponseFromApplication,
+  taskResponsesToSummaryListRowItems,
 } from './applicationUtils'
 import getSections from './assessments/getSections'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
@@ -444,6 +445,30 @@ describe('applicationUtils', () => {
         'questionResponse',
       )
       expect(questionResponse).toBe('no')
+    })
+  })
+
+  describe('taskResponsesToSummaryListRowItems', () => {
+    it('returns an array of summary list row items', () => {
+      const taskResponses = [
+        { 'question one': 'answer one' },
+        { 'question two': 'answer two', 'question three': 'answer three' },
+      ]
+
+      expect(taskResponsesToSummaryListRowItems(taskResponses)).toEqual([
+        {
+          key: { text: 'question one' },
+          value: { html: 'answer one' },
+        },
+        {
+          key: { text: 'question two' },
+          value: { html: 'answer two' },
+        },
+        {
+          key: { text: 'question three' },
+          value: { html: 'answer three' },
+        },
+      ])
     })
   })
 })

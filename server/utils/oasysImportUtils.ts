@@ -7,7 +7,6 @@ import {
 import { DataServices, OasysImportArrays, OasysPage } from '../@types/ui'
 import { CallConfig } from '../data/restClient'
 import oasysStubs from '../data/stubs/oasysStubs.json'
-import { OasysNotFoundError } from '../services/personService'
 import { SessionDataError } from './errors'
 import { mapApiPersonRisksForUi, sentenceCase } from './utils'
 import { escape } from './viewUtils'
@@ -43,12 +42,8 @@ export const getOasysSections = async <T extends OasysPage>(
     )
     oasysSuccess = true
   } catch (e) {
-    if (e instanceof OasysNotFoundError) {
-      oasysSections = oasysStubs
-      oasysSuccess = false
-    } else {
-      throw e
-    }
+    oasysSections = oasysStubs
+    oasysSuccess = false
   }
 
   const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {

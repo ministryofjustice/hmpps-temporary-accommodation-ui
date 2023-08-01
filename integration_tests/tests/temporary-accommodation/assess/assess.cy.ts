@@ -16,47 +16,49 @@ context('Apply', () => {
   })
 
   describe('Assess', () => {
-    it('I can view a list of assessments', () => {
-      // Given there are assessments in the database
-      const inProgressAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'in_review' })
-      const unallocatedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'unallocated' })
-      const readyToPlaceAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'ready_to_place' })
-      const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'rejected' })
-      const closedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'closed' })
+    describe('List assessments', () => {
+      it('I can view a list of assessments', () => {
+        // Given there are assessments in the database
+        const inProgressAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'in_review' })
+        const unallocatedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'unallocated' })
+        const readyToPlaceAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'ready_to_place' })
+        const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'rejected' })
+        const closedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'closed' })
 
-      cy.task('stubAssessments', [
-        ...inProgressAssessmentSummaries,
-        ...unallocatedAssessmentSummaries,
-        ...readyToPlaceAssessmentSummaries,
-        ...rejectedAssessmentSummaries,
-        ...closedAssessmentSummaries,
-      ])
+        cy.task('stubAssessments', [
+          ...inProgressAssessmentSummaries,
+          ...unallocatedAssessmentSummaries,
+          ...readyToPlaceAssessmentSummaries,
+          ...rejectedAssessmentSummaries,
+          ...closedAssessmentSummaries,
+        ])
 
-      // When I visit the dashboard
-      const dashboardPage = DashboardPage.visit()
+        // When I visit the dashboard
+        const dashboardPage = DashboardPage.visit()
 
-      // And I click on the "Review and assess referrals" link
-      dashboardPage.clickReviewAndAssessReferrals()
+        // And I click on the "Review and assess referrals" link
+        dashboardPage.clickReviewAndAssessReferrals()
 
-      // Then I should see the list of referrals
-      const listPage = Page.verifyOnPage(
-        ListPage,
-        unallocatedAssessmentSummaries,
-        inProgressAssessmentSummaries,
-        readyToPlaceAssessmentSummaries,
-        [...rejectedAssessmentSummaries, ...closedAssessmentSummaries],
-      )
+        // Then I should see the list of referrals
+        const listPage = Page.verifyOnPage(
+          ListPage,
+          unallocatedAssessmentSummaries,
+          inProgressAssessmentSummaries,
+          readyToPlaceAssessmentSummaries,
+          [...rejectedAssessmentSummaries, ...closedAssessmentSummaries],
+        )
 
-      // And I should see the list of referrals
-      listPage.shouldShowUnallocatedAssessments()
-      listPage.shouldShowInProgressAssessments()
-      listPage.shouldShowReadyToPlaceAssessments()
+        // And I should see the list of referrals
+        listPage.shouldShowUnallocatedAssessments()
+        listPage.shouldShowInProgressAssessments()
+        listPage.shouldShowReadyToPlaceAssessments()
 
-      // Given I click on the 'View archived assessments' link
-      listPage.clickViewArchivedReferrals()
+        // Given I click on the 'View archived assessments' link
+        listPage.clickViewArchivedReferrals()
 
-      // Then I should see the list of archived assessments
-      listPage.shouldShowArchivedAssessments()
+        // Then I should see the list of archived assessments
+        listPage.shouldShowArchivedAssessments()
+      })
     })
   })
 })

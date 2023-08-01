@@ -70,6 +70,8 @@ describe('OASysImportUtils', () => {
     })
 
     it('sets oasysSuccess to true along with the marshalled oasys data if there is not an OasysNotFoundError', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2024-05-01'))
+
       const personRisks = risksFactory.build()
       const application = applicationFactory.build({ risks: personRisks })
 
@@ -86,8 +88,12 @@ describe('OASysImportUtils', () => {
 
       expect(result.oasysSuccess).toEqual(true)
       expect(result.body.offenceDetailsSummary).toEqual(sortOasysImportSummaries(oasysSections.offenceDetails))
+      expect(result.body.oasysCompleted).toEqual(oasysSections.dateCompleted)
+      expect(result.body.oasysImported).toEqual('2024-05-01')
       expect(result.offenceDetailsSummary).toEqual(oasysSections.offenceDetails)
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
+
+      jest.useRealTimers()
     })
 
     it('prioritises the body over the Oasys data if the body is provided', async () => {
@@ -101,13 +107,18 @@ describe('OASysImportUtils', () => {
 
       const oasysSections = oasysSectionsFactory.build({
         offenceDetails,
+        dateCompleted: '2023-01-01',
       })
 
       getOasysSectionsMock.mockResolvedValue(oasysSections)
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result: any = await getOasysSections(
-        { offenceDetailsAnswers: { [questionKeyFromNumber('1')]: 'My Response' } },
+        {
+          offenceDetailsAnswers: { [questionKeyFromNumber('1')]: 'My Response' },
+          oasysImported: '2022-01-01',
+          oasysCompleted: '2022-02-01',
+        },
         application,
         callConfig,
         { personService },
@@ -127,6 +138,8 @@ describe('OASysImportUtils', () => {
           questionNumber: offenceDetails[1].questionNumber,
         },
       ])
+      expect(result.body.oasysImported).toEqual('2022-01-01')
+      expect(result.body.oasysCompleted).toEqual('2022-02-01')
     })
   })
 

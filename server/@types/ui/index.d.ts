@@ -265,7 +265,6 @@ export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | '
 export type ReportType = 'bookings' | 'bedspace-usage' | 'occupancy'
 
 export interface OasysPage extends TasklistPage {
-  oasysCompleted: string
   risks: PersonRisksUI
   oasysSuccess: boolean
 }

@@ -7,6 +7,7 @@ import {
 import { DataServices, OasysImportArrays, OasysPage } from '../@types/ui'
 import { CallConfig } from '../data/restClient'
 import oasysStubs from '../data/stubs/oasysStubs.json'
+import { DateFormats } from './dateUtils'
 import { SessionDataError } from './errors'
 import { mapApiPersonRisksForUi, sentenceCase } from './utils'
 import { escape } from './viewUtils'
@@ -59,7 +60,8 @@ export const getOasysSections = async <T extends OasysPage>(
 
   page.body[summaryKey] = summaries
   page[summaryKey] = summaries
-  page.oasysCompleted = oasysSections?.dateCompleted || oasysSections?.dateStarted
+  page.body.oasysImported = body.oasysImported || DateFormats.dateObjToIsoDate(new Date())
+  page.body.oasysCompleted = body.oasysCompleted || oasysSections?.dateCompleted || oasysSections?.dateStarted
   page.oasysSuccess = oasysSuccess
   page.risks = mapApiPersonRisksForUi(application.risks)
 

@@ -131,6 +131,13 @@ Assess.pages['assess-page'] = {
   first: AssessPage,
 }
 
+const applyData = {
+  'first-apply-section-task-1': {
+    first: 'some-data',
+    second: 'some-data',
+  },
+}
+
 describe('applicationUtils', () => {
   describe('getResponses', () => {
     it('returns the responses from all answered questions', () => {
@@ -139,14 +146,16 @@ describe('applicationUtils', () => {
       FirstApplyPage.mockReturnValue({
         response: () => ({ foo: 'bar' }),
         next: () => 'second',
+        errors: () => ({}),
       })
 
       SecondApplyPage.mockReturnValue({
         response: () => ({ bar: 'foo' }),
         next: () => '',
+        errors: () => ({}),
       })
 
-      const application = applicationFactory.build()
+      const application = applicationFactory.build({ data: applyData })
 
       expect(getResponses(application)).toEqual({
         'first-apply-section-task-1': [{ foo: 'bar' }, { bar: 'foo' }],
@@ -161,16 +170,18 @@ describe('applicationUtils', () => {
     it('iterates through the pages of a task', () => {
       const firstApplyPageInstance = {
         next: () => 'second',
+        errors: () => ({}),
       }
       const secondApplyPageInstance = {
         next: () => '',
+        errors: () => ({}),
       }
 
       FirstApplyPage.mockReturnValue(firstApplyPageInstance)
       SecondApplyPage.mockReturnValue(secondApplyPageInstance)
       const spy = jest.fn()
 
-      const application = applicationFactory.build()
+      const application = applicationFactory.build({ data: applyData })
 
       forPagesInTask(application, applySection1Task1, spy)
 
@@ -182,6 +193,22 @@ describe('applicationUtils', () => {
     it('skips tasks that are not part of the user journey', () => {
       const firstApplyPageInstance = {
         next: () => '',
+        errors: () => ({}),
+      }
+
+      FirstApplyPage.mockReturnValue(firstApplyPageInstance)
+      const spy = jest.fn()
+
+      const application = applicationFactory.build({ data: applyData })
+      forPagesInTask(application, applySection1Task1, spy)
+
+      expect(spy).toHaveBeenCalledWith(firstApplyPageInstance, 'first')
+      expect(spy).toHaveBeenCalledTimes(1)
+    })
+
+    it('throws an error if a page has no data', () => {
+      const firstApplyPageInstance = {
+        next: () => '',
       }
 
       FirstApplyPage.mockReturnValue(firstApplyPageInstance)
@@ -189,10 +216,37 @@ describe('applicationUtils', () => {
 
       const application = applicationFactory.build()
 
-      forPagesInTask(application, applySection1Task1, spy)
+      expect(() => forPagesInTask(application, applySection1Task1, spy)).toThrow(
+        new SessionDataError('No data for page first-apply-section-task-1:first'),
+      )
 
-      expect(spy).toHaveBeenCalledWith(firstApplyPageInstance, 'first')
-      expect(spy).toHaveBeenCalledTimes(1)
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('throws an error if a page has errors', () => {
+      const firstApplyPageInstance = {
+        next: () => '',
+        errors: () => ({
+          'some-error': 'Error message',
+        }),
+      }
+
+      FirstApplyPage.mockReturnValue(firstApplyPageInstance)
+      const spy = jest.fn()
+
+      const application = applicationFactory.build({
+        data: {
+          'first-apply-section-task-1': {
+            first: 'some-data',
+          },
+        },
+      })
+
+      expect(() => forPagesInTask(application, applySection1Task1, spy)).toThrow(
+        new SessionDataError('Errors for page first-apply-section-task-1:first'),
+      )
+
+      expect(spy).not.toHaveBeenCalled()
     })
   })
 

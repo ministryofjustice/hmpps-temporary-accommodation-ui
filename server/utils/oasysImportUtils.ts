@@ -54,7 +54,8 @@ export const getOasysSections = async <T extends OasysPage>(
   const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {
     const answer = body[answerKey]?.[question.questionNumber] || question.answer
     return {
-      ...question,
+      label: question.label,
+      questionNumber: question.questionNumber,
       answer,
     }
   })

@@ -512,6 +512,9 @@
         "risk-management-plan": {
           "type": "object",
           "properties": {
+            "version": {
+              "type": "string"
+            },
             "riskManagementAnswers": {
               "type": "object"
             },

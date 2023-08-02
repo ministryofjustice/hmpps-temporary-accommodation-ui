@@ -16,6 +16,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
 
+      <input type="hidden" name="version" value="{{ page.latestVersion }}"/>
+
       {% if page.oasysSuccess %}
         <p>Imported from OASys: <strong>{{ formatDate(page.body.oasysImported) }}</strong></p>
         <p>OASys last updated: <strong>{{ formatDate(page.body.oasysCompleted) }}</strong></p>

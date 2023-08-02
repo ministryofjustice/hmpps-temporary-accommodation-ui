@@ -9,6 +9,7 @@ import { CallConfig } from '../../../../data/restClient'
 import { getOasysSections, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
 
 type RiskManagementPlanBody = {
+  version: string
   riskManagementAnswers: Record<string, string>
   riskManagementSummaries: ArrayOfOASysRiskManagementPlanQuestions
   oasysImported: string
@@ -17,7 +18,7 @@ type RiskManagementPlanBody = {
 
 @Page({
   name: 'risk-management-plan',
-  bodyProperties: ['riskManagementAnswers', 'riskManagementSummaries', 'oasysImported', 'oasysCompleted'],
+  bodyProperties: ['version', 'riskManagementAnswers', 'riskManagementSummaries', 'oasysImported', 'oasysCompleted'],
 })
 export default class RiskManagementPlan implements OasysPage {
   riskManagementSummaries: RiskManagementPlanBody['riskManagementSummaries']
@@ -27,6 +28,8 @@ export default class RiskManagementPlan implements OasysPage {
   risks: PersonRisksUI
 
   oasysSuccess: boolean
+
+  latestVersion = '2'
 
   constructor(readonly body: Partial<RiskManagementPlanBody>) {}
 
@@ -56,6 +59,12 @@ export default class RiskManagementPlan implements OasysPage {
   }
 
   errors() {
+    if (this.body.version !== this.latestVersion) {
+      return {
+        version: 'You must complete the latest version of this page',
+      }
+    }
+
     return validateOasysEntries(this.body, 'riskManagementSummaries', 'riskManagementAnswers')
   }
 }

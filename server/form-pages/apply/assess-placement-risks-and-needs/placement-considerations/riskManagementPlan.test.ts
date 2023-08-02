@@ -6,6 +6,7 @@ import RiskManagementPlan from './riskManagementPlan'
 jest.mock('../../../../utils/oasysImportUtils')
 
 const body = {
+  version: '2',
   oasysImported: '2023-08-02',
   oasysCompleted: '2023-08-02',
   riskManagementAnswers: {
@@ -61,6 +62,10 @@ describe('RiskManagementPlan', () => {
   itShouldHaveNextValue(new RiskManagementPlan({}), '')
 
   describe('errors', () => {
+    beforeEach(() => {
+      ;(validateOasysEntries as jest.MockedFunction<typeof validateOasysEntries>).mockReset()
+    })
+
     it('returns the result of validateOasysEntries', () => {
       const page = new RiskManagementPlan(body)
 
@@ -71,6 +76,16 @@ describe('RiskManagementPlan', () => {
       expect(page.errors()).toEqual({
         someField: 'An error message',
       })
+      expect(validateOasysEntries).toHaveBeenCalledWith(body, 'riskManagementSummaries', 'riskManagementAnswers')
+    })
+
+    it('returns a version error if the body was not created with the latest version of the page', () => {
+      const page = new RiskManagementPlan({ version: '1' })
+
+      expect(page.errors()).toEqual({
+        version: 'You must complete the latest version of this page',
+      })
+      expect(validateOasysEntries).not.toHaveBeenCalled()
     })
   })
 

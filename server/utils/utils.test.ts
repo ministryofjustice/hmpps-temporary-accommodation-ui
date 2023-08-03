@@ -1,6 +1,7 @@
 import type { SummaryListItem } from '@approved-premises/ui'
 import { risksFactory } from '../testutils/factories'
 import {
+  appendQueryString,
   camelCase,
   convertToTitleCase,
   exact,
@@ -209,6 +210,18 @@ describe('unique', () => {
 
       expect(regExp.exec(evilString)).toBeTruthy()
       expect(regExp.exec(evilString.replace('$', '£'))).toBeFalsy()
+    })
+  })
+
+  describe('appendQueryString', () => {
+    it('appends a query string to a given path', () => {
+      expect(
+        appendQueryString('/some/path', { userId: 'some-user', bookingId: 'some-booking', num: 4, string: '&foo=bar' }),
+      ).toEqual('/some/path?userId=some-user&bookingId=some-booking&num=4&string=%26foo%3Dbar')
+    })
+
+    it('leaves the string unmodified when the provided data is empty', () => {
+      expect(appendQueryString('/some/path', {})).toEqual('/some/path')
     })
   })
 })

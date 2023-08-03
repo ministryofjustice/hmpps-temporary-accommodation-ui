@@ -3,6 +3,7 @@ import type {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
 } from '../@types/shared'
+import { AssessmentSummary } from '../@types/shared'
 import type { AssessmentClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
@@ -82,5 +83,10 @@ export default class AssessmentsService {
       default:
         assertUnreachable(status)
     }
+  }
+
+  async getReadyToPlaceForCrn(callConfig: CallConfig, crn: string): Promise<Array<AssessmentSummary>> {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+    return assessmentClient.readyToPlaceForCrn(crn)
   }
 }

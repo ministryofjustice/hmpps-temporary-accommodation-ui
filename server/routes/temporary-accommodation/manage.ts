@@ -91,6 +91,9 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.bookings.confirm.pattern, bookingsController.confirm(), {
     auditEvent: 'VIEW_BOOKING_CONFIRM',
   })
+  get(paths.bookings.selectAssessment.pattern, bookingsController.selectAssessment(), {
+    auditEvent: 'VIEW_BOOKING_SELECT_ASSESSMENT',
+  })
   post(paths.bookings.create.pattern, bookingsController.create(), {
     redirectAuditEventSpecs: [
       {

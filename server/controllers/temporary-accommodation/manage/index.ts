@@ -30,6 +30,7 @@ export const controllers = (services: Services) => {
     services.bedspaceService,
     services.bookingService,
     services.personService,
+    services.assessmentsService,
   )
 
   const confirmationsController = new ConfirmationsController(

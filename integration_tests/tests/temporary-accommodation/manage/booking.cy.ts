@@ -2,9 +2,11 @@ import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingConfirmPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirm'
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
+import BookingSelectAssessmentPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
+  assessmentSummaryFactory,
   bookingFactory,
   lostBedFactory,
   newBookingFactory,
@@ -79,6 +81,11 @@ context('Booking', () => {
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubFindPerson', { person })
+
+    // And there are assessments in the database
+    const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+    cy.task('stubAssessments', assessmentSummaries)
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -87,14 +94,20 @@ context('Booking', () => {
     bookingNewPage.shouldShowBookingDetails()
 
     // And when I fill out the form
-    const booking = bookingFactory.build({ person: personFactory.build({ crn: person.crn }) })
+    const booking = bookingFactory.build({ person, assessmentId: assessmentSummaries[0].id })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
     })
-    cy.task('stubFindPerson', { person })
 
     bookingNewPage.completeForm(newBooking)
+
+    // And I select an assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, assessmentSummaries)
+    bookingSelectAssessmentPage.shouldDisplayAssessments()
+    bookingSelectAssessmentPage.selectAssessment(assessmentSummaries[0])
+
+    bookingSelectAssessmentPage.clickSubmit()
 
     // And I confirm the booking
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
@@ -115,6 +128,69 @@ context('Booking', () => {
       expect(requestBody.crn).equal(newBooking.crn)
       expect(requestBody.arrivalDate).equal(newBooking.arrivalDate)
       expect(requestBody.departureDate).equal(newBooking.departureDate)
+      expect(requestBody.assessmentId).equal(newBooking.assessmentId)
+    })
+
+    // And I should be redirected to the show booking page
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    bookingShowPage.shouldShowBanner('Booking created')
+  })
+
+  it('allows me to create a booking without linking an assessment', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and a person in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const person = personFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubFindPerson', { person })
+
+    // And there are assessments in the database
+    cy.task('stubAssessments', [])
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises, room)
+
+    // Then I should see the booking details
+    bookingNewPage.shouldShowBookingDetails()
+
+    // And when I fill out the form
+    const booking = bookingFactory.build({ person })
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    // And I do not select an assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    bookingSelectAssessmentPage.clickSubmit()
+
+    // And I confirm the booking
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
+    bookingConfirmPage.shouldShowBookingDetails()
+
+    cy.task('stubBookingCreate', { premisesId: premises.id, booking })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    bookingConfirmPage.clickSubmit()
+
+    // Then a booking should have been created in the API
+    cy.task('verifyBookingCreate', premises.id).then(requests => {
+      expect(requests).to.have.length(1)
+      const requestBody = JSON.parse(requests[0].body)
+
+      expect(requestBody.service).equal('temporary-accommodation')
+      expect(requestBody.bedId).equal(room.beds[0].id)
+      expect(requestBody.crn).equal(newBooking.crn)
+      expect(requestBody.arrivalDate).equal(newBooking.arrivalDate)
+      expect(requestBody.departureDate).equal(newBooking.departureDate)
+      expect(requestBody.assessmentId).equal(undefined)
     })
 
     // And I should be redirected to the show booking page
@@ -151,6 +227,10 @@ context('Booking', () => {
     const premises = premisesFactory.build()
     const room = roomFactory.build()
 
+    // And there is no person in the database
+    const person = personFactory.build()
+    cy.task('stubPersonNotFound', { person })
+
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
@@ -158,8 +238,6 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I enter a CRN that is not found in the API
-    const person = personFactory.build()
-    cy.task('stubPersonNotFound', { person })
     bookingNewPage.enterCrn(person.crn)
     bookingNewPage.clickSubmit()
 
@@ -179,14 +257,21 @@ context('Booking', () => {
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubFindPerson', { person })
+
+    // And there are no assessments in the database
+    cy.task('stubAssessments', [])
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I miss required fields
     bookingNewPage.enterCrn(person.crn)
-    cy.task('stubFindPerson', { person })
     bookingNewPage.clickSubmit()
+
+    // And I select no assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    bookingSelectAssessmentPage.clickSubmit()
 
     // And I confirm the booking
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
@@ -209,26 +294,34 @@ context('Booking', () => {
     // And there is a premises, a room, and a conflicting lost bed in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
+    const person = personFactory.build()
     const conflictingLostBed = lostBedFactory.build()
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
+    cy.task('stubFindPerson', { person })
+
+    // And there are no assessments in the database
+    cy.task('stubAssessments', [])
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I fill out the form with dates that conflict with an existing booking
-    const booking = bookingFactory.build()
+    const booking = bookingFactory.build({
+      person,
+    })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
     })
-    const person = personFactory.build({ crn: booking.person.crn })
-
-    cy.task('stubFindPerson', { person })
 
     bookingNewPage.completeForm(newBooking)
+
+    // And I select no assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    bookingSelectAssessmentPage.clickSubmit()
 
     // And I confirm the booking
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
@@ -258,24 +351,65 @@ context('Booking', () => {
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
+    // And there is an inaccessible person in the database
+    const person = personFactory.build()
+    cy.task('stubFindPersonForbidden', { person })
+
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I fill out the form with a CRN the user does not have permission to access
-    const booking = bookingFactory.build()
+    const booking = bookingFactory.build({
+      person,
+    })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
     })
-
-    const person = personFactory.build({ crn: booking.person.crn })
-    cy.task('stubFindPersonForbidden', { person })
 
     bookingNewPage.completeForm(newBooking)
 
     // Then I should see error messages for the date fields
     bookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
     bookingNewPage.shouldShowUserPermissionErrorMessage()
+  })
+
+  it('shows errors when no assessment is seleced', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and a person in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const person = personFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubFindPerson', { person })
+
+    // And there are assessments in the database
+    const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+    cy.task('stubAssessments', assessmentSummaries)
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises, room)
+
+    // And when I fill out the form
+    const booking = bookingFactory.build({ person })
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    // And I do not select an assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, assessmentSummaries)
+    bookingSelectAssessmentPage.clickSubmit()
+
+    // Then I should see error messages relating to those fields
+    const revisitedBookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, assessmentSummaries)
+    revisitedBookingSelectAssessmentPage.shouldShowErrorMessagesForFields(['assessmentId'])
   })
 
   it('navigates back from the new booking page to the show bedspace page', () => {
@@ -310,24 +444,34 @@ context('Booking', () => {
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubFindPerson', { person })
+
+    // And there are no assessments in the database
+    cy.task('stubAssessments', [])
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I fill out the form
-    const booking = bookingFactory.build({ person: personFactory.build({ crn: person.crn }) })
+    const booking = bookingFactory.build({ person })
     const newBooking = newBookingFactory.build({
       ...booking,
       crn: booking.person.crn,
     })
 
-    cy.task('stubFindPerson', { person })
-
     bookingNewPage.completeForm(newBooking)
 
-    // And I click the back link
+    // And I select no assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    bookingSelectAssessmentPage.clickSubmit()
+
+    // And I click the back link on the confirm booking page
     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
     bookingConfirmPage.clickBack()
+
+    // Add I click the back link on the select assessment page
+    const revisitedBookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    revisitedBookingSelectAssessmentPage.clickBack()
 
     // Then I navigate to the new booking page
     const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)

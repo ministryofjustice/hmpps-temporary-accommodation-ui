@@ -1,10 +1,17 @@
 import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewBooking } from '@approved-premises/api'
+import config from '../../../config'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, PersonService, PremisesService } from '../../../services'
+import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { bookingActions, deriveBookingHistory, generateConflictBespokeError } from '../../../utils/bookingUtils'
+import {
+  assessmentRadioItems,
+  bookingActions,
+  deriveBookingHistory,
+  generateConflictBespokeError,
+  noAssessmentId,
+} from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -22,6 +29,7 @@ export default class BookingsController {
     private readonly bedspacesService: BedspaceService,
     private readonly bookingsService: BookingService,
     private readonly personsService: PersonService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   new(): RequestHandler {
@@ -45,22 +53,70 @@ export default class BookingsController {
     }
   }
 
-  confirm(): RequestHandler {
+  selectAssessment(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors, errorSummary, errorTitle } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId } = req.params
 
       const crn: string = req.query.crn as string
 
       const callConfig = extractCallConfig(req)
 
+      const backLink = appendQueryString(paths.bookings.new({ premisesId, roomId }), req.query)
+
+      try {
+        await this.personsService.findByCrn(callConfig, crn)
+        const assessments = await this.assessmentService.getReadyToPlaceForCrn(callConfig, crn)
+
+        return res.render('temporary-accommodation/bookings/selectAssessment', {
+          premisesId,
+          roomId,
+          assessmentRadioItems: assessmentRadioItems(assessments),
+          forceAssessmentId: assessments.length && !config.flags.applyDisabled ? undefined : noAssessmentId,
+          backLink,
+          errors,
+          errorSummary,
+          errorTitle,
+          ...req.query,
+        })
+      } catch (err) {
+        if (err.status === 404) {
+          insertGenericError(err, 'crn', 'doesNotExist')
+        } else if (err.status === 403) {
+          insertGenericError(err, 'crn', 'userPermission')
+        }
+
+        return catchValidationErrorOrPropogate(req, res, err, backLink)
+      }
+    }
+  }
+
+  confirm(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId } = req.params
+
+      const crn: string = req.query.crn as string
+      const { assessmentId } = req.query
+
+      const callConfig = extractCallConfig(req)
+
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
-      const backLink = appendQueryString(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), req.query)
+      const backLink = appendQueryString(
+        paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
+        req.query,
+      )
 
       try {
-        const person = await this.personsService.findByCrn(callConfig, crn)
+        if (!assessmentId) {
+          const error = new Error()
+          insertGenericError(error, 'assessmentId', 'empty')
 
+          return catchValidationErrorOrPropogate(req, res, error, backLink)
+        }
+
+        const person = await this.personsService.findByCrn(callConfig, crn)
 
         return res.render('temporary-accommodation/bookings/confirm', {
           premises,
@@ -76,7 +132,12 @@ export default class BookingsController {
           insertGenericError(err, 'crn', 'userPermission')
         }
 
-        return catchValidationErrorOrPropogate(req, res, err, backLink)
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          appendQueryString(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), req.query),
+        )
       }
     }
   }
@@ -86,6 +147,8 @@ export default class BookingsController {
       const { premisesId, roomId } = req.params
       const callConfig = extractCallConfig(req)
 
+      const { assessmentId } = req.body
+
       const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
       const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
 
@@ -94,6 +157,7 @@ export default class BookingsController {
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
         ...req.body,
+        assessmentId: assessmentId === noAssessmentId ? undefined : assessmentId,
         arrivalDate,
         departureDate,
       }

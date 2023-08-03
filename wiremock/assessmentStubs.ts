@@ -7,7 +7,7 @@ const assessmentStubs = [
   {
     request: {
       method: 'GET',
-      url: paths.assessments.index({}),
+      urlPathPattern: paths.assessments.index({}),
     },
     response: {
       status: 200,

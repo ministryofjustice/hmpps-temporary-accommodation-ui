@@ -1,5 +1,6 @@
 import nock from 'nock'
 
+import { TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import { assessmentFactory, assessmentSummaryFactory } from '../testutils/factories'
@@ -39,6 +40,22 @@ describe('AssessmentClient', () => {
         .reply(200, assessmentSummaries)
 
       const output = await assessmentClient.all()
+      expect(output).toEqual(assessmentSummaries)
+    })
+  })
+
+  describe('readyToPlaceForCrn', () => {
+    it('should get all ready to place assessments for the given CRN', async () => {
+      const crn = 'some-crn'
+      const status = 'ready_to_place' as AssessmentStatus
+      const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+
+      fakeApprovedPremisesApi
+        .get(`${paths.assessments.index({})}?crn=${crn}&statuses=${status}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, assessmentSummaries)
+
+      const output = await assessmentClient.readyToPlaceForCrn(crn)
       expect(output).toEqual(assessmentSummaries)
     })
   })

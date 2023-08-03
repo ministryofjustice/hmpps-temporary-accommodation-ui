@@ -1,7 +1,15 @@
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
-import { arrivalFactory, bookingFactory, departureFactory, extensionFactory } from '../testutils/factories'
 import {
+  arrivalFactory,
+  assessmentSummaryFactory,
+  bookingFactory,
+  departureFactory,
+  extensionFactory,
+  personFactory,
+} from '../testutils/factories'
+import {
+  assessmentRadioItems,
   bookingActions,
   deriveBookingHistory,
   generateConflictBespokeError,
@@ -510,6 +518,101 @@ describe('bookingUtils', () => {
           },
         ],
       })
+    })
+  })
+
+  describe('assessmentRadioItems', () => {
+    it('returns a single "no assessment" option when given an empty list of assessment summaries', () => {
+      expect(assessmentRadioItems([])).toEqual([
+        {
+          text: 'Book this bedspace without linking a referral',
+          value: 'no-assessment',
+        },
+      ])
+    })
+
+    it('returns a radio item for each asssessment summary, plus a "no assessment" option when given a non-empty list of assessment summaries', () => {
+      const person = personFactory.build({
+        name: 'John Smith',
+        crn: 'ABC123',
+      })
+
+      const assessmentSummary1 = assessmentSummaryFactory.build({
+        person,
+        createdAt: '2023-05-01',
+      })
+
+      const assessmentSummary2 = assessmentSummaryFactory.build({
+        person,
+        createdAt: '2023-04-01',
+      })
+
+      const assessmentSummary3 = assessmentSummaryFactory.build({
+        person,
+        createdAt: '2023-03-01',
+      })
+
+      expect(assessmentRadioItems([assessmentSummary2, assessmentSummary1, assessmentSummary3])).toEqual([
+        {
+          text: 'John Smith, CRN ABC123, referral submitted 1 May 23',
+          value: assessmentSummary1.id,
+        },
+        {
+          text: 'John Smith, CRN ABC123, referral submitted 1 Apr 23',
+          value: assessmentSummary2.id,
+        },
+        {
+          text: 'John Smith, CRN ABC123, referral submitted 1 Mar 23',
+          value: assessmentSummary3.id,
+        },
+        { divider: 'or' },
+        {
+          text: 'Book this bedspace without linking a referral',
+          value: 'no-assessment',
+        },
+      ])
+    })
+
+    it('returns a radio item for each asssessment summary when the person is a LAO', () => {
+      const person = personFactory.build({
+        crn: 'ABC123',
+      })
+      person.name = undefined
+
+      const assessmentSummary1 = assessmentSummaryFactory.build({
+        person,
+        createdAt: '2023-05-01',
+      })
+
+      const assessmentSummary2 = assessmentSummaryFactory.build({
+        person,
+        createdAt: '2023-04-01',
+      })
+
+      const assessmentSummary3 = assessmentSummaryFactory.build({
+        person,
+        createdAt: '2023-03-01',
+      })
+
+      expect(assessmentRadioItems([assessmentSummary2, assessmentSummary1, assessmentSummary3])).toEqual([
+        {
+          text: 'CRN ABC123, referral submitted 1 May 23',
+          value: assessmentSummary1.id,
+        },
+        {
+          text: 'CRN ABC123, referral submitted 1 Apr 23',
+          value: assessmentSummary2.id,
+        },
+        {
+          text: 'CRN ABC123, referral submitted 1 Mar 23',
+          value: assessmentSummary3.id,
+        },
+        { divider: 'or' },
+        {
+          text: 'Book this bedspace without linking a referral',
+          value: 'no-assessment',
+        },
+      ])
     })
   })
 })

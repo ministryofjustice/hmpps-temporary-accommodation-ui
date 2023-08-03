@@ -15,23 +15,25 @@ import {
 import { bookingActions, deriveBookingHistory, generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { appendQueryString } from '../../../utils/utils'
 import {
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
   insertBespokeError,
   insertGenericError,
-  setUserInput,
 } from '../../../utils/validation'
 import BookingsController from './bookingsController'
 
 jest.mock('../../../utils/bookingUtils')
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/utils')
 
 describe('BookingsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
   const roomId = 'roomId'
+  const backLink = 'some-back-link'
 
   let request: Request
 
@@ -56,6 +58,9 @@ describe('BookingsController', () => {
         premisesId,
         roomId,
       }
+      request.query = {
+        crn: 'some-crn',
+      }
 
       const premises = premisesFactory.build()
       const room = roomFactory.build()
@@ -64,7 +69,7 @@ describe('BookingsController', () => {
       bedspaceService.getRoom.mockResolvedValue(room)
 
       const requestHandler = bookingsController.new()
-      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
 
       await requestHandler(request, response, next)
 
@@ -76,6 +81,7 @@ describe('BookingsController', () => {
         room,
         errors: {},
         errorSummary: [],
+        crn: 'some-crn',
       })
     })
   })
@@ -91,8 +97,8 @@ describe('BookingsController', () => {
         premisesId,
         roomId,
       }
-      request.body = {
-        ...newBooking,
+      request.query = {
+        crn: newBooking.crn,
         ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
         ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
       }
@@ -100,6 +106,7 @@ describe('BookingsController', () => {
       premisesService.getPremises.mockResolvedValue(premises)
       bedspaceService.getRoom.mockResolvedValue(room)
       personService.findByCrn.mockResolvedValue(person)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const requestHandler = bookingsController.confirm()
 
@@ -107,18 +114,27 @@ describe('BookingsController', () => {
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
-      expect(setUserInput).toHaveBeenCalledWith(request)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        request.query,
+      )
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/confirm', {
         premises,
         room,
         person,
-        arrivalDate: newBooking.arrivalDate,
-        departureDate: newBooking.departureDate,
+        crn: newBooking.crn,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+        backLink,
       })
     })
 
     it('renders with an error if the API returns a 404 person not found status', async () => {
+      request.query = {
+        crn: 'some-crn',
+      }
+
       const requestHandler = bookingsController.confirm()
 
       const premises = premisesFactory.build()
@@ -126,6 +142,7 @@ describe('BookingsController', () => {
 
       premisesService.getPremises.mockResolvedValue(premises)
       bedspaceService.getRoom.mockResolvedValue(room)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const err = { status: 404 }
       personService.findByCrn.mockImplementation(() => {
@@ -134,16 +151,19 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'doesNotExist')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
+      expect(appendQueryString).toHaveBeenCalledWith(
         paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        request.query,
       )
+      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'doesNotExist')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
 
     it('renders with an error if the API returns a 403 forbidden status', async () => {
+      request.query = {
+        crn: 'some-crn',
+      }
+
       const requestHandler = bookingsController.confirm()
 
       const premises = premisesFactory.build()
@@ -151,6 +171,7 @@ describe('BookingsController', () => {
 
       premisesService.getPremises.mockResolvedValue(premises)
       bedspaceService.getRoom.mockResolvedValue(room)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const err = { status: 403 }
       personService.findByCrn.mockImplementation(() => {
@@ -159,13 +180,12 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
+      expect(appendQueryString).toHaveBeenCalledWith(
         paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        request.query,
       )
+      expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
   })
 
@@ -186,6 +206,8 @@ describe('BookingsController', () => {
       }
       request.body = {
         ...newBooking,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
       }
 
       bedspaceService.getRoom.mockResolvedValue(room)
@@ -214,6 +236,7 @@ describe('BookingsController', () => {
       bookingService.createForBedspace.mockImplementation(() => {
         throw err
       })
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const booking = bookingFactory.build()
       const newBooking = newBookingFactory.build({
@@ -232,12 +255,8 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.bookings.new({ premisesId, roomId }),
-      )
+      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.body)
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
 
     it('renders with errors if the API returns a 409 Conflict status', async () => {
@@ -258,6 +277,7 @@ describe('BookingsController', () => {
       ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
         bespokeError,
       )
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const booking = bookingFactory.build()
       const newBooking = newBookingFactory.build({
@@ -276,16 +296,12 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.body)
       expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
       expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
       expect(insertGenericError).toHaveBeenCalledWith(err, 'departureDate', 'conflict')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.bookings.new({ premisesId, roomId }),
-      )
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
 
     it('renders with errors if the API returns a 403 Forbidden status', async () => {
@@ -298,6 +314,7 @@ describe('BookingsController', () => {
       bookingService.createForBedspace.mockImplementation(() => {
         throw err
       })
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
 
       const booking = bookingFactory.build()
       const newBooking = newBookingFactory.build({
@@ -316,13 +333,9 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.body)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.bookings.new({ premisesId, roomId }),
-      )
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
   })
 

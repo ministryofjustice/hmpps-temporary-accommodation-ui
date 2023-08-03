@@ -7,13 +7,13 @@ import BedspaceService from '../../../services/bedspaceService'
 import { bookingActions, deriveBookingHistory, generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { appendQueryString } from '../../../utils/utils'
 import {
   catchValidationErrorOrPropogate,
   clearUserInput,
   fetchErrorsAndUserInput,
   insertBespokeError,
   insertGenericError,
-  setUserInput,
 } from '../../../utils/validation'
 
 export default class BookingsController {
@@ -26,7 +26,7 @@ export default class BookingsController {
 
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary, errorTitle } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId } = req.params
 
       const callConfig = extractCallConfig(req)
@@ -40,7 +40,7 @@ export default class BookingsController {
         errors,
         errorSummary,
         errorTitle,
-        ...userInput,
+        ...req.query,
       })
     }
   }
@@ -48,26 +48,26 @@ export default class BookingsController {
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId } = req.params
-      const { crn } = req.body
 
-      const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
-      const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
+      const crn: string = req.query.crn as string
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+
+      const backLink = appendQueryString(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), req.query)
+
       try {
         const person = await this.personsService.findByCrn(callConfig, crn)
 
-        setUserInput(req)
 
         return res.render('temporary-accommodation/bookings/confirm', {
           premises,
           room,
           person,
-          arrivalDate,
-          departureDate,
+          ...req.query,
+          backLink,
         })
       } catch (err) {
         if (err.status === 404) {
@@ -76,12 +76,7 @@ export default class BookingsController {
           insertGenericError(err, 'crn', 'userPermission')
         }
 
-        return catchValidationErrorOrPropogate(
-          req,
-          res,
-          err,
-          paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
-        )
+        return catchValidationErrorOrPropogate(req, res, err, backLink)
       }
     }
   }
@@ -91,11 +86,16 @@ export default class BookingsController {
       const { premisesId, roomId } = req.params
       const callConfig = extractCallConfig(req)
 
+      const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
+      const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
+
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
         ...req.body,
+        arrivalDate,
+        departureDate,
       }
 
       try {
@@ -114,7 +114,12 @@ export default class BookingsController {
           insertGenericError(err, 'crn', 'userPermission')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.new({ premisesId, roomId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          appendQueryString(paths.bookings.new({ premisesId, roomId }), req.body),
+        )
       }
     }
   }

@@ -10,6 +10,7 @@ import { ProbationRegion } from '../@types/shared'
 import { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
 import sanitiseError from '../sanitisedError'
+import { assertUnreachable } from '../utils/utils'
 import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 interface GetRequest {
@@ -29,6 +30,8 @@ interface PostRequest {
 }
 
 interface PutRequest extends PostRequest {}
+
+interface DeleteRequest extends Omit<PostRequest, 'data'> {}
 
 interface PipeRequest {
   path?: string
@@ -104,11 +107,15 @@ export default class RestClient {
   }
 
   async post(request: PostRequest = {}): Promise<unknown> {
-    return this.postOrPut('post', request)
+    return this.postPutOrDelete('post', request)
   }
 
   async put(request: PutRequest = {}): Promise<unknown> {
-    return this.postOrPut('put', request)
+    return this.postPutOrDelete('put', request)
+  }
+
+  async delete(request: DeleteRequest = {}): Promise<unknown> {
+    return this.postPutOrDelete('delete', request)
   }
 
   async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<unknown> {
@@ -190,14 +197,13 @@ export default class RestClient {
     })
   }
 
-  private async postOrPut(
-    method: 'post' | 'put',
+  private async postPutOrDelete(
+    method: 'post' | 'put' | 'delete',
     { path = null, headers = {}, responseType = '', data = {}, raw = false }: PutRequest | PostRequest = {},
   ): Promise<unknown> {
     logger.info(`${method} using user credentials: calling ${this.name}: ${path}`)
     try {
-      const request =
-        method === 'post' ? superagent.post(`${this.apiUrl()}${path}`) : superagent.put(`${this.apiUrl()}${path}`)
+      const request = this.createRequest(method, path)
 
       const result = await request
         .send(this.prepareDataForTransport(data))
@@ -213,6 +219,19 @@ export default class RestClient {
       const sanitisedError = sanitiseError(error)
       logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}', verb: ${method}`)
       throw sanitisedError
+    }
+  }
+
+  private createRequest(method: 'post' | 'put' | 'delete', path: string) {
+    switch (method) {
+      case 'post':
+        return superagent.post(`${this.apiUrl()}${path}`)
+      case 'put':
+        return superagent.put(`${this.apiUrl()}${path}`)
+      case 'delete':
+        return superagent.delete(`${this.apiUrl()}${path}`)
+      default:
+        return assertUnreachable(method)
     }
   }
 

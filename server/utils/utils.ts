@@ -123,3 +123,8 @@ export const createQueryString = (
 ): string => {
   return qs.stringify(params, options)
 }
+
+/* istanbul ignore next */
+export const assertUnreachable = (_: never) => {
+  throw new Error('Unreachable code reached')
+}

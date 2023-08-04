@@ -47,6 +47,8 @@ export const getOasysSections = async <T extends OasysPage>(
     oasysSuccess = false
   }
 
+  oasysSections = filterOasysSections(oasysSections)
+
   const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {
     const answer = body[answerKey]?.[`${questionKeyFromNumber(question.questionNumber)}`] || question.answer
     return {
@@ -157,4 +159,15 @@ export const sectionCheckBoxes = (fullList: Array<OASysSection>, selectedList: A
       checked: selectedList.map(n => n.section).includes(need.section),
     }
   })
+}
+
+const filterOasysSections = (oasysSections: OASysSections) => {
+  const permittedRiskManagementQuestions = ['RM30', 'RM31', 'RM32', 'RM33']
+
+  return {
+    ...oasysSections,
+    riskManagementPlan: oasysSections.riskManagementPlan.filter(question =>
+      permittedRiskManagementQuestions.includes(question.questionNumber),
+    ),
+  } as OASysSections
 }

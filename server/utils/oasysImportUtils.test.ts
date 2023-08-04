@@ -141,6 +141,50 @@ describe('OASysImportUtils', () => {
       expect(result.body.oasysImported).toEqual('2022-01-01')
       expect(result.body.oasysCompleted).toEqual('2022-02-01')
     })
+
+    it('filters risk manangement plan questions to an accepted whitelist', async () => {
+      const personRisks = risksFactory.build()
+      const application = applicationFactory.build({ risks: personRisks })
+
+      getOasysSectionsMock.mockImplementation(() => {
+        throw new OasysNotFoundError()
+      })
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const result: any = await getOasysSections({}, application, callConfig, { personService }, constructor, {
+        sectionName: 'riskManagementPlan',
+        summaryKey: 'riskManagementPlanSummary',
+        answerKey: 'riskManagementPlanAnswers',
+      })
+
+      const questions = [
+        {
+          label: 'Victim safety planning',
+          questionNumber: 'RM33',
+          answer: '',
+        },
+        {
+          label: 'Interventions and treatment',
+          questionNumber: 'RM32',
+          answer: '',
+        },
+        {
+          label: 'Monitoring and control',
+          questionNumber: 'RM31',
+          answer: '',
+        },
+        {
+          label: 'Supervision',
+          questionNumber: 'RM30',
+          answer: '',
+        },
+      ]
+
+      expect(result.oasysSuccess).toEqual(false)
+      expect(result.body.riskManagementPlanSummary).toEqual(sortOasysImportSummaries(questions))
+      expect(result.riskManagementPlanSummary).toEqual(questions)
+      expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
+    })
   })
 
   describe('validateOasysEntries', () => {

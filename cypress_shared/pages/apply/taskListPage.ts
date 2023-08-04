@@ -1,8 +1,16 @@
+import { TemporaryAccommodationApplication as Application } from '../../../server/@types/shared'
 import Page from '../page'
+import paths from '../../../server/paths/apply'
 
 export default class TaskListPage extends Page {
-  constructor() {
+  constructor(private readonly inProgressApplication: Application) {
     super('Make a referral for Temporary Accommodation')
+  }
+
+  static visit(inProgressApplication: Application): TaskListPage {
+    cy.visit(paths.applications.show({ id: inProgressApplication.id }))
+
+    return new TaskListPage(inProgressApplication)
   }
 
   shouldShowTaskStatus(task: string, status: string): void {

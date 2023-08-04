@@ -2,10 +2,8 @@ import Case from 'case'
 
 import escapeRegExp from 'lodash.escaperegexp'
 import qs, { IStringifyOptions } from 'qs'
-import type { PersonRisks, TemporaryAccommodationApplication } from '@approved-premises/api'
+import type { PersonRisks } from '@approved-premises/api'
 import type { PersonRisksUI, SummaryListItem } from '@approved-premises/ui'
-
-import { SessionDataError } from './errors'
 
 /* istanbul ignore next */
 const properCase = (word: string): string =>
@@ -66,27 +64,6 @@ export const pascalCase = (string: string) => camelCase(string).replace(/\w/, s 
 export const sentenceCase = (string: string) => Case.sentence(string)
 
 export const lowerCase = (string: string) => Case.lower(string)
-
-/**
- * Retrieves response for a given question from the application object.
- * @param application the application to fetch the response from.
- * @param task the task to retrieve the response for.
- * @param page the page that we need the response for in camelCase.
- * @param {string} question [question=page] the page that we need the response for. Defaults to the value of `page`.
- * @returns the response for the given task/page/question.
- */
-export const retrieveQuestionResponseFromApplication = <T>(
-  application: TemporaryAccommodationApplication,
-  task: string,
-  page: string,
-  question?: string,
-) => {
-  try {
-    return application.data[task][kebabCase(page)][question || page] as T
-  } catch (e) {
-    throw new SessionDataError(`Question ${question} was not found in the session`)
-  }
-}
 
 /**
  * Removes any items in an array of summary list items that are blank or undefined

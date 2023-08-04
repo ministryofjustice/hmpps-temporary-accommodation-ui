@@ -14,6 +14,7 @@ import {
   getResponses,
   getSectionAndTask,
   getStatus,
+  retrieveQuestionResponseFromApplication,
 } from './applicationUtils'
 import getSections from './assessments/getSections'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
@@ -394,6 +395,42 @@ describe('applicationUtils', () => {
       const application = applicationFactory.build()
 
       expect(firstPageOfApplicationJourney(application)).toEqual(paths.applications.show({ id: application.id }))
+    })
+  })
+
+  describe('retrieveQuestionResponseFromApplication', () => {
+    it("throws a SessionDataError if the property doesn't exist", () => {
+      const application = applicationFactory.build()
+      expect(() => retrieveQuestionResponseFromApplication(application, 'basic-information', '')).toThrow(
+        SessionDataError,
+      )
+    })
+
+    it('returns the property if it does exist and a question is not provided', () => {
+      const application = applicationFactory.build({
+        data: {
+          'basic-information': { 'my-page': { myPage: 'no' } },
+        },
+      })
+
+      const questionResponse = retrieveQuestionResponseFromApplication(application, 'basic-information', 'myPage')
+      expect(questionResponse).toBe('no')
+    })
+
+    it('returns the property if it does exist and a question is provided', () => {
+      const application = applicationFactory.build({
+        data: {
+          'basic-information': { 'my-page': { questionResponse: 'no' } },
+        },
+      })
+
+      const questionResponse = retrieveQuestionResponseFromApplication(
+        application,
+        'basic-information',
+        'myPage',
+        'questionResponse',
+      )
+      expect(questionResponse).toBe('no')
     })
   })
 })

@@ -1,0 +1,10 @@
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{{ govukPhaseBanner({
+  attributes: { "data-cy-phase-banner": "phase-banner" },
+  classes: "hmpps-header__container",
+  tag: {
+    text: "Beta"
+  },
+  html: PhaseBannerUtils.getContent(currentUrl)
+}) }}

@@ -513,7 +513,11 @@ export default class ApplyHelper {
     roshLevelPage.completeForm()
     roshLevelPage.clickSubmit()
 
-    const riskManagementPlan = new RiskManagementPlanPage(this.application)
+    const riskManagementPlan = new RiskManagementPlanPage(
+      this.application,
+      this.riskManagementPlanSummaries,
+      this.environment !== 'integration',
+    )
     riskManagementPlan.completeForm()
     riskManagementPlan.clickSubmit()
 
@@ -780,11 +784,7 @@ export default class ApplyHelper {
 
     if (this.environment === 'integration') {
       checkYourAnswersPage.shouldShowPrisonInformationAnswers(this.pages.prisonInformation)
-    }
-
-    checkYourAnswersPage.shouldShowPlacementConsiderationsAnswers(this.pages.placementConsiderations)
-
-    if (this.environment === 'integration') {
+      checkYourAnswersPage.shouldShowPlacementConsiderationsAnswers(this.pages.placementConsiderations)
       checkYourAnswersPage.shouldShowApprovalsForSpecificRisksAnswers(this.pages.approvalsForSpecificRisks)
     }
 

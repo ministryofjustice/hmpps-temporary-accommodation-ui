@@ -150,6 +150,13 @@ context('Apply', () => {
       expect(requests).to.have.length(apply.numberOfPages() + 1)
       const requestBody = JSON.parse(requests[requests.length - 1].body)
 
+      // We expect these fields to vary with date, so we effectively omit from testing
+      this.applicationData['placement-considerations']['risk-management-plan'].oasysImported =
+        requestBody.data['placement-considerations']['risk-management-plan'].oasysImported
+
+      this.applicationData['placement-considerations']['risk-management-plan'].oasysCompleted =
+        requestBody.data['placement-considerations']['risk-management-plan'].oasysCompleted
+
       expect(requestBody.data).to.deep.equal(this.applicationData)
 
       cy.task('validateBodyAgainstApplySchema', requestBody.data).then(result => {

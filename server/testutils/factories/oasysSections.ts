@@ -53,8 +53,8 @@ export const supportingInformationFactory = Factory.define<OASysSupportingInform
   }
 })
 
-const riskManagementPlanFactory = Factory.define<OASysQuestion>(options => ({
-  questionNumber: options.sequence.toString(),
+const riskManagementPlanFactory = Factory.define<OASysQuestion>(() => ({
+  questionNumber: faker.helpers.arrayElement(['RM28', 'RM29', 'RM30', 'RM31', 'RM32', 'RM33', 'RM32']),
   label: faker.helpers.arrayElement([
     'Key information about current situation',
     'Further considerations about current situation',

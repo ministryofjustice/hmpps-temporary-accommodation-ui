@@ -1,47 +1,53 @@
-import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { PersonRisksUI, TaskListErrors } from '@approved-premises/ui'
+import {
+  TemporaryAccommodationApplication as Application,
+  ArrayOfOASysRiskManagementPlanQuestions,
+} from '@approved-premises/api'
+import type { DataServices, OasysPage, PersonRisksUI } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
-import TasklistPage from '../../../tasklistPage'
-import { mapApiPersonRisksForUi } from '../../../../utils/utils'
+import { CallConfig } from '../../../../data/restClient'
+import { getOasysSections, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
 
 type RiskManagementPlanBody = {
-  victimSafetyPlanning: string
-  supervision: string
-  monitoringAndControl: string
-  interventionAndTreatment: string
+  version: string
+  riskManagementAnswers: Record<string, string>
+  riskManagementSummaries: ArrayOfOASysRiskManagementPlanQuestions
+  oasysImported: string
+  oasysCompleted: string
 }
 
 @Page({
   name: 'risk-management-plan',
-  bodyProperties: ['victimSafetyPlanning', 'supervision', 'monitoringAndControl', 'interventionAndTreatment'],
+  bodyProperties: ['version', 'riskManagementAnswers', 'riskManagementSummaries', 'oasysImported', 'oasysCompleted'],
 })
-export default class RiskManagementPlan implements TasklistPage {
-  title = 'Risk management plan'
+export default class RiskManagementPlan implements OasysPage {
+  riskManagementSummaries: RiskManagementPlanBody['riskManagementSummaries']
 
-  questions = {
-    victimSafetyPlanning: 'Victim safety planning',
-    supervision: 'Supervision',
-    monitoringAndControl: 'Monitoring and control',
-    interventionAndTreatment: 'Intervention and treatment',
-  }
+  title = 'Risk management plan'
 
   risks: PersonRisksUI
 
-  constructor(
-    readonly body: Partial<RiskManagementPlanBody>,
-    readonly application: Application,
+  oasysSuccess: boolean
+
+  latestVersion = '2'
+
+  constructor(readonly body: Partial<RiskManagementPlanBody>) {}
+
+  static async initialize(
+    body: Record<string, unknown>,
+    application: Application,
+    callConfig: CallConfig,
+    dataServices: DataServices,
   ) {
-    this.risks = mapApiPersonRisksForUi(application.risks)
+    return getOasysSections(body, application, callConfig, dataServices, RiskManagementPlan, {
+      sectionName: 'riskManagementPlan',
+      summaryKey: 'riskManagementSummaries',
+      answerKey: 'riskManagementAnswers',
+    })
   }
 
   response() {
-    return {
-      [this.questions.victimSafetyPlanning]: this.body.victimSafetyPlanning,
-      [this.questions.supervision]: this.body.supervision,
-      [this.questions.monitoringAndControl]: this.body.monitoringAndControl,
-      [this.questions.interventionAndTreatment]: this.body.interventionAndTreatment,
-    }
+    return oasysImportReponse(this.body.riskManagementAnswers, this.body.riskManagementSummaries)
   }
 
   previous() {
@@ -53,24 +59,12 @@ export default class RiskManagementPlan implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
-
-    if (!this.body.victimSafetyPlanning) {
-      errors.victimSafetyPlanning = 'You must provide details of victim safety planning'
+    if (this.body.version !== this.latestVersion) {
+      return {
+        version: 'You must complete the latest version of this page',
+      }
     }
 
-    if (!this.body.supervision) {
-      errors.supervision = 'You must provide details of supervision'
-    }
-
-    if (!this.body.monitoringAndControl) {
-      errors.monitoringAndControl = 'You must provide details of monitoring and control'
-    }
-
-    if (!this.body.interventionAndTreatment) {
-      errors.interventionAndTreatment = 'You must provide details of intervention and treatment'
-    }
-
-    return errors
+    return validateOasysEntries(this.body, 'riskManagementSummaries', 'riskManagementAnswers')
   }
 }

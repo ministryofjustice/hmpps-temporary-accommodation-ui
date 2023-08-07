@@ -63,7 +63,7 @@ describe('getTaskStatus', () => {
 
     expect(Page1).toHaveBeenCalled()
     expect(page1Instance.errors).toHaveBeenCalled()
-    expect(page1Instance.next).toHaveBeenCalled()
+    expect(page1Instance.next).not.toHaveBeenCalled()
   })
 
   it('returns complete when the second page does not have a next page', () => {

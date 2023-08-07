@@ -11,6 +11,13 @@
 {% set pageTitle = applicationName + " - Make a referral for Temporary Accommodation" %}
 
 {% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.applications.index()
+  }) }}
+
+
   <div class="govuk-grid-row">
     <div class="govuk-width-container">
       <h1 class="govuk-heading-xl">

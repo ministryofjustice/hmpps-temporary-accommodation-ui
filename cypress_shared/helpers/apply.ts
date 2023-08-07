@@ -313,7 +313,7 @@ export default class ApplyHelper {
 
   completeSentenceInformation() {
     // Given I click the sentence information task
-    Page.verifyOnPage(TaskListPage).clickTask('sentence-information')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('sentence-information')
 
     // When I complete the form
     const offendingSummaryPage = new OffendingSummaryPage(this.application)
@@ -345,7 +345,7 @@ export default class ApplyHelper {
     ]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('sentence-information', 'Completed')
@@ -361,7 +361,7 @@ export default class ApplyHelper {
 
   private completeContactDetails() {
     // Given I click the contact details task
-    Page.verifyOnPage(TaskListPage).clickTask('contact-details')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('contact-details')
 
     // When I complete the form
     const probationPractitionerPage = new ProbationPractitionerPage(this.application)
@@ -379,7 +379,7 @@ export default class ApplyHelper {
     this.pages.contactDetails = [probationPractitionerPage, backupContactPage, practitionerPduPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('contact-details', 'Completed')
@@ -390,7 +390,7 @@ export default class ApplyHelper {
 
   private completeEligibility() {
     // Given I click the eligibility task
-    Page.verifyOnPage(TaskListPage).clickTask('eligibility')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('eligibility')
 
     // When I complete the form
     const eligibilityReasonPage = new EligibilityReasonPage(this.application)
@@ -408,7 +408,7 @@ export default class ApplyHelper {
     this.pages.eligibility = [eligibilityReasonPage, releaseDatePage, accommodationRequiredFromDatePage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('eligibility', 'Completed')
@@ -419,7 +419,7 @@ export default class ApplyHelper {
 
   private completeConsent() {
     // Given I click the eligibility task
-    Page.verifyOnPage(TaskListPage).clickTask('consent')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('consent')
 
     // When I complete the form
     const consentGivenPage = new ConsentGivenPage(this.application)
@@ -429,7 +429,7 @@ export default class ApplyHelper {
     this.pages.consent = [consentGivenPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('consent', 'Completed')
@@ -440,7 +440,7 @@ export default class ApplyHelper {
 
   private completeLicenceConditions() {
     // Given I click the eligibility task
-    Page.verifyOnPage(TaskListPage).clickTask('licence-conditions')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('licence-conditions')
 
     // When I complete the form
     const additionalLicenceConditionsPage = new AdditionalLicenceConditionsPage(this.application)
@@ -450,7 +450,7 @@ export default class ApplyHelper {
     this.pages.licenceConditions = [additionalLicenceConditionsPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('licence-conditions', 'Completed')
@@ -461,7 +461,7 @@ export default class ApplyHelper {
 
   private completePrisonInformation() {
     // Given I click the eligibility task
-    Page.verifyOnPage(TaskListPage).clickTask('prison-information')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('prison-information')
 
     // When I complete the form
     const adjudicationsPage = new AdjudicationsPage(this.application)
@@ -479,7 +479,7 @@ export default class ApplyHelper {
     this.pages.prisonInformation = [adjudicationsPage, acctAlertsPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('prison-information', 'Completed')
@@ -490,7 +490,7 @@ export default class ApplyHelper {
 
   private completePlacementConsiderations() {
     // Given I click the placement considerations task
-    Page.verifyOnPage(TaskListPage).clickTask('placement-considerations')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-considerations')
 
     // When I complete the form
     const accommodationSharingPage = new AccommodationSharingPage(this.application)
@@ -531,7 +531,7 @@ export default class ApplyHelper {
     ]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('placement-considerations', 'Completed')
@@ -542,7 +542,7 @@ export default class ApplyHelper {
 
   private completeApprovalsForSpecificRisks() {
     // Given I click the approvals for specific risks task
-    Page.verifyOnPage(TaskListPage).clickTask('approvals-for-specific-risks')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('approvals-for-specific-risks')
 
     // Then the risk widgets are visible
     const approvalsForSpecificRisksPage = new ApprovalsForSpecificRisksPage(this.application)
@@ -560,7 +560,7 @@ export default class ApplyHelper {
     this.pages.approvalsForSpecificRisks = [approvalsForSpecificRisksPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('approvals-for-specific-risks', 'Completed')
@@ -571,7 +571,7 @@ export default class ApplyHelper {
 
   private completeBehaviourInCas() {
     // Given I click the behaviour in CAS task
-    Page.verifyOnPage(TaskListPage).clickTask('behaviour-in-cas')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('behaviour-in-cas')
 
     // When I complete the form
     const previousStaysPage = new PreviousStaysPage(this.application)
@@ -585,7 +585,7 @@ export default class ApplyHelper {
     this.pages.behaviourInCas = [previousStaysPage, previousStaysDetailsPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('behaviour-in-cas', 'Completed')
@@ -596,7 +596,7 @@ export default class ApplyHelper {
 
   private completePlacementLocation() {
     // Given I click on the safeguarding and support task
-    Page.verifyOnPage(TaskListPage).clickTask('placement-location')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
 
     // When I complete the form
     const alternativePduPage = new AlternativePduPage(this.application)
@@ -606,7 +606,7 @@ export default class ApplyHelper {
     this.pages.placementLocation = [alternativePduPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('placement-location', 'Completed')
@@ -617,7 +617,7 @@ export default class ApplyHelper {
 
   private completeDisabilityCulturalAndSpecificNeeds() {
     // Given I click on the safeguarding and support task
-    Page.verifyOnPage(TaskListPage).clickTask('disability-cultural-and-specific-needs')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('disability-cultural-and-specific-needs')
 
     // When I complete the form
     const needsPage = new NeedsPage(this.application)
@@ -639,7 +639,7 @@ export default class ApplyHelper {
     ]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('disability-cultural-and-specific-needs', 'Completed')
@@ -650,7 +650,7 @@ export default class ApplyHelper {
 
   private completeSafeguardingAndSupport() {
     // Given I click on the safeguarding and support task
-    Page.verifyOnPage(TaskListPage).clickTask('safeguarding-and-support')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('safeguarding-and-support')
 
     // When I complete the form
     const safeguardingAndVulnerabilityPage = new SafeguardingAndVulnerabilityPage(this.application)
@@ -677,7 +677,7 @@ export default class ApplyHelper {
     ]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('safeguarding-and-support', 'Completed')
@@ -688,7 +688,7 @@ export default class ApplyHelper {
 
   private completeFoodAllergies() {
     // Given I click on the food allergies task
-    Page.verifyOnPage(TaskListPage).clickTask('food-allergies')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('food-allergies')
 
     // When I complete the form
     const foodAllergiesPage = new FoodAllergiesPage(this.application)
@@ -698,7 +698,7 @@ export default class ApplyHelper {
     this.pages.requirementsFromPlacement = [foodAllergiesPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('food-allergies', 'Completed')
@@ -709,7 +709,7 @@ export default class ApplyHelper {
 
   private completeMoveOnPlan() {
     // Given I click on the move on plan task
-    Page.verifyOnPage(TaskListPage).clickTask('move-on-plan')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('move-on-plan')
 
     // When I complete the form
     const moveOnPlanPage = new MoveOnPlanPage(this.application)
@@ -719,7 +719,7 @@ export default class ApplyHelper {
     this.pages.moveOnPlan = [moveOnPlanPage]
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('move-on-plan', 'Completed')
@@ -730,7 +730,7 @@ export default class ApplyHelper {
 
   private completeAccommodationReferralDetails() {
     // Given I click on the accommodation referral details task
-    Page.verifyOnPage(TaskListPage).clickTask('accommodation-referral-details')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('accommodation-referral-details')
 
     this.pages.accommodationReferralDetails = []
 
@@ -758,7 +758,7 @@ export default class ApplyHelper {
     this.pages.accommodationReferralDetails.push(otherAccommodationOptionsPage)
 
     // Then I should be redirected to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the task should be marked as completed
     tasklistPage.shouldShowTaskStatus('accommodation-referral-details', 'Completed')
@@ -769,7 +769,7 @@ export default class ApplyHelper {
 
   private completeCheckYourAnswersSection() {
     // Given I click the check your answers task
-    Page.verifyOnPage(TaskListPage).clickTask('check-your-answers')
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('check-your-answers')
 
     // Then I should be on the check your answers page
     const checkYourAnswersPage = new CheckYourAnswersPage(this.application)
@@ -802,14 +802,14 @@ export default class ApplyHelper {
     checkYourAnswersPage.clickSubmit()
 
     // Then I should be taken back to the task list
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
 
     // And the check your answers task should show a completed status
     tasklistPage.shouldShowTaskStatus('check-your-answers', 'Completed')
   }
 
   private submitApplication() {
-    const tasklistPage = Page.verifyOnPage(TaskListPage)
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
     tasklistPage.checkCheckboxByLabel('submit')
 
     tasklistPage.clickSubmit()

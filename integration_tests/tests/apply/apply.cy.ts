@@ -84,7 +84,7 @@ context('Apply', () => {
       expect(body.offenceId).equal(selectedOffence.offenceId)
 
       // Then I should be on the task list page
-      Page.verifyOnPage(TaskListPage)
+      Page.verifyOnPage(TaskListPage, this.application)
     })
   })
 
@@ -204,7 +204,7 @@ context('Apply', () => {
     listPage.clickApplication(this.application)
 
     // And I click submit without checking the confirm checkbox
-    const taskListPage = Page.verifyOnPage(TaskListPage)
+    const taskListPage = Page.verifyOnPage(TaskListPage, this.application)
     taskListPage.clickSubmit()
 
     // Then I should see an error message asking me to checck the checkbox
@@ -226,7 +226,7 @@ context('Apply', () => {
     listPage.clickApplication(application)
 
     // Then I should not see confirm checkbox and submit button
-    const taskListPage = Page.verifyOnPage(TaskListPage)
+    const taskListPage = Page.verifyOnPage(TaskListPage, this.application)
     taskListPage.shouldNotShowSubmitComponents()
   })
 
@@ -244,7 +244,7 @@ context('Apply', () => {
     listPage.clickApplication(this.application)
 
     // Then I check your answers should be marked as completed
-    const taskListPage = Page.verifyOnPage(TaskListPage)
+    const taskListPage = Page.verifyOnPage(TaskListPage, this.application)
     taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
 
     // And the I click on the move on plan section
@@ -283,7 +283,7 @@ context('Apply', () => {
     listPage.clickApplication(this.application)
 
     // Then I check your answers should be marked as completed
-    const taskListPage = Page.verifyOnPage(TaskListPage)
+    const taskListPage = Page.verifyOnPage(TaskListPage, this.application)
     taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
 
     // And the I click on the move on plan section

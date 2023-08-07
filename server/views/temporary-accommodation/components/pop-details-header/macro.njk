@@ -4,14 +4,24 @@
 
 <div class="pop-details-header">
   {% if person %}
-
-    {% if config.nameLink %}
-      <p><span class="govuk-!-font-weight-bold">Name:</span> <a class="govuk-link" href="{{ config.nameLink }}">{{ person.name }}</a><br />
+    {% if person.name %}
+      {% if config.nameLink %}
+        <p><span class="govuk-!-font-weight-bold">Name:</span> <a class="govuk-link" href="{{ config.nameLink }}">{{ person.name }}</a><br />
+      {% else %}
+        <p><span class="govuk-!-font-weight-bold">Name:</span> {{ person.name }}<br />
+      {% endif %}
     {% else %}
-      <p><span class="govuk-!-font-weight-bold">Name:</span> {{ person.name }}<br />
+      {% if config.nameLink %}
+        <p><span class="govuk-!-font-weight-bold"><a class="govuk-link" href="{{ config.nameLink }}">Limited access offender</a></span><br />
+      {% else %}
+        <p><span class="govuk-!-font-weight-bold">Limited access offender</span><br />
+      {% endif %}
     {% endif %}
 
-    <span class="govuk-!-font-weight-bold">Date of birth:</span> {{formatDate(person.dateOfBirth)}}<br />
+    {% if person.dateOfBirth %}
+      <span class="govuk-!-font-weight-bold">Date of birth:</span> {{formatDate(person.dateOfBirth)}}<br />
+    {% endif %}
+
     <span class="govuk-!-font-weight-bold">CRN:</span> {{ person.crn }}</p>
   {% endif %}
 </div>

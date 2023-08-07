@@ -126,5 +126,6 @@ export default BookingFactory.define(() => {
     turnarounds,
     serviceName: 'temporary-accommodation' as const,
     createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    assessmentId: faker.string.uuid(),
   }
 })

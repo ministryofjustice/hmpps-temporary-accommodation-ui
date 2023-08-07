@@ -512,16 +512,33 @@
         "risk-management-plan": {
           "type": "object",
           "properties": {
-            "victimSafetyPlanning": {
+            "version": {
               "type": "string"
             },
-            "supervision": {
+            "riskManagementAnswers": {
+              "type": "object"
+            },
+            "riskManagementSummaries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "label": {
+                    "type": "string"
+                  },
+                  "questionNumber": {
+                    "type": "string"
+                  },
+                  "answer": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "oasysImported": {
               "type": "string"
             },
-            "monitoringAndControl": {
-              "type": "string"
-            },
-            "interventionAndTreatment": {
+            "oasysCompleted": {
               "type": "string"
             }
           }

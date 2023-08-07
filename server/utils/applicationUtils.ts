@@ -76,7 +76,17 @@ const forPagesInTask = (
   while (pageName) {
     const Page = getPage(task.id, pageName, isAssessment(applicationOrAssessment))
     const body = applicationOrAssessment?.data?.[task.id]?.[pageName]
+
+    if (!body) {
+      throw new SessionDataError(`No data for page ${task.id}:${pageName}`)
+    }
+
     const page = new Page(body, applicationOrAssessment)
+
+    if (Object.keys(page.errors()).length) {
+      throw new SessionDataError(`Errors for page ${task.id}:${pageName}`)
+    }
+
     callback(page, pageName)
     pageName = page.next()
   }

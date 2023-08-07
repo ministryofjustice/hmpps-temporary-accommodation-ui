@@ -94,25 +94,31 @@
   },
   "risk-management-plan": {
     "riskManagementAnswers": [
-      "Some answer for the first risk management question. With an extra comment 1",
-      "Some answer for the second risk management question. With an extra comment 2",
-      "Some answer for the third risk management question. With an extra comment 3"
+      "Some answer for the first risk management question. With an extra comment RM30",
+      "Some answer for the second risk management question. With an extra comment RM31",
+      "Some answer for the third risk management question. With an extra comment RM32",
+      "Some answer for the fourth risk management question. With an extra comment RM33"
     ],
     "riskManagementSummaries": [
       {
-        "questionNumber": "1",
-        "label": "The first risk management question",
+        "questionNumber": "RM30",
+        "label": "Supervision",
         "answer": "Some answer for the first risk management question"
       },
       {
-        "questionNumber": "2",
-        "label": "The second risk management question",
+        "questionNumber": "RM31",
+        "label": "Monitoring and control",
         "answer": "Some answer for the second risk management question"
       },
       {
-        "questionNumber": "3",
-        "label": "The third risk management question",
+        "questionNumber": "RM32",
+        "label": "Interventions and treatment",
         "answer": "Some answer for the third risk management question"
+      },
+      {
+        "questionNumber": "RM33",
+        "label": "Victim safety planning",
+        "answer": "Some answer for the fourth risk management question"
       }
     ]
   },

@@ -27,7 +27,7 @@ const getTaskStatus = (task: Task, applicationOrAssessment: Application | Assess
     const page = new Page(pageData, applicationOrAssessment)
 
     // If there's errors for this page, then we know the task incomplete
-    if (page.errors().length) {
+    if (Object.keys(page.errors()).length) {
       return 'in_progress'
     }
 

@@ -1,5 +1,6 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
 {% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
@@ -14,52 +15,48 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      {{ govukWarningText({
-        text: "The risk management plan could not be imported from OASys",
-        iconFallbackText: "Warning"
-      }) }}
 
-      <p class="govuk-body">
-        Provide an outline of the risk management plan.
-        Summarise how risks relating to accommodation will be managed whilst the person is in Temporary Accommodation.
-      </p>
+      <input type="hidden" name="version" value="{{ page.latestVersion }}"/>
 
-      {{ formPageTextarea({
-        fieldName: 'victimSafetyPlanning',
-        label: {
-          text: page.questions.victimSafetyPlanning,
-          classes: "govuk-label--m"
-        }
-      }, fetchContext()) }}
+      {% if page.oasysSuccess %}
+        <p>Imported from OASys: <strong>{{ formatDate(page.body.oasysImported) }}</strong></p>
+        <p>OASys last updated: <strong>{{ formatDate(page.body.oasysCompleted) }}</strong></p>
 
-      {{ formPageTextarea({
-        fieldName: 'supervision',
-        label: {
-          text: page.questions.supervision,
-          classes: "govuk-label--m"
-        }
-      }, fetchContext()) }}
+        <input type="hidden" name="oasysImported" value="{{ page.body.oasysImported }}"/>
+        <input type="hidden" name="oasysCompleted" value="{{ page.body.oasysCompleted }}"/>
+      {% else %}
+        {{ govukWarningText({
+          text: "The risk management plan could not be imported from OASys",
+          iconFallbackText: "Warning"
+        }) }}
 
-      {{ formPageTextarea({
-        fieldName: 'monitoringAndControl',
-        label: {
-          text: page.questions.monitoringAndControl,
-          classes: "govuk-label--m"
-        }
-      }, fetchContext()) }}
+        <p class="govuk-body">
+          Provide an outline of the risk management plan.
+          Summarise how risks relating to accommodation will be managed whilst the person is in Temporary Accommodation.
+        </p>
 
-      {{ formPageTextarea({
-        fieldName: 'interventionAndTreatment',
-        label: {
-          text: page.questions.interventionAndTreatment,
-          classes: "govuk-label--m"
-        }
-      }, fetchContext()) }}
+      {% endif %}
 
+      {% for question in page.body.riskManagementSummaries %}
+        {% set fieldName = 'riskManagementAnswers[' + OasysImportUtils.questionKeyFromNumber(question.questionNumber) +']' %}
+
+        {{ govukTextarea({ 
+          label: {
+            text: question.label,
+            classes: "govuk-label--m"
+          },
+          value: question.answer,
+          id: fieldName,
+          name: fieldName,
+          errorMessage: fetchContext().errors[fieldName]
+        }) }}
+      {% endfor %}
+  
       {{ govukButton({
         text: "Save and continue",
         preventDoubleClick: true
       }) }}
+
     </div>
     <div class="govuk-grid-column-one-third">
       {{ roshWidget(page.risks.roshRisks) }}

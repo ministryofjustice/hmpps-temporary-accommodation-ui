@@ -1,4 +1,5 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "../../../../components/riskWidgets/mappa-widget/macro.njk" import mappaWidget %}
 {% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
@@ -12,6 +13,14 @@
   {% include "./partials/_navigation.njk" %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+
+      {% if page.risks.roshRisks.status !== 'retrieved' %}
+        {{ govukWarningText({
+          text: "The RoSH levels could not be imported from OASys. Check OASys and enter the RoSH level in each corresponding textbox.",
+          iconFallbackText: "Warning"
+        }) }}
+      {% endif %}
+
       <h2>Risk to children</h2>
       {% set riskToChildrenHintHtml %}
         <p class="govuk-hint">Consider if the person:</p>

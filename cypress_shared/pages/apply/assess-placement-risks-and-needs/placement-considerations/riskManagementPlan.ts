@@ -1,9 +1,14 @@
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
+import { ArrayOfOASysRiskManagementPlanQuestions } from '../../../../../server/@types/shared'
 import paths from '../../../../../server/paths/apply'
 import ApplyPage from '../../applyPage'
 
 export default class RiskManagementPlanPage extends ApplyPage {
-  constructor(application: TemporaryAccommodationApplication) {
+  constructor(
+    application: TemporaryAccommodationApplication,
+    private readonly riskRiskManagementPlanSummaries: ArrayOfOASysRiskManagementPlanQuestions,
+    private readonly oasysMissing: boolean,
+  ) {
     super(
       'Placement considerations',
       application,
@@ -18,9 +23,6 @@ export default class RiskManagementPlanPage extends ApplyPage {
   }
 
   completeForm() {
-    this.completeTextInputFromPageBody('victimSafetyPlanning')
-    this.completeTextInputFromPageBody('supervision')
-    this.completeTextInputFromPageBody('monitoringAndControl')
-    this.completeTextInputFromPageBody('interventionAndTreatment')
+    this.completeOasysImportQuestions(this.riskRiskManagementPlanSummaries, 'riskManagementAnswers', this.oasysMissing)
   }
 }

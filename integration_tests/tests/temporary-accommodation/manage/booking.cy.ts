@@ -237,9 +237,13 @@ context('Booking', () => {
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
-    // And I enter a CRN that is not found in the API
-    bookingNewPage.enterCrn(person.crn)
-    bookingNewPage.clickSubmit()
+    // And when I fill out the form with a CRN that is not found in the API
+    const booking = bookingFactory.build({ person })
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+    bookingNewPage.completeForm(newBooking)
 
     // Then I should see the relevant error message
     const page = Page.verifyOnPage(BookingNewPage, premises, room)
@@ -266,25 +270,11 @@ context('Booking', () => {
     const bookingNewPage = BookingNewPage.visit(premises, room)
 
     // And I miss required fields
-    bookingNewPage.enterCrn(person.crn)
     bookingNewPage.clickSubmit()
-
-    // And I select no assessment
-    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
-    bookingSelectAssessmentPage.clickSubmit()
-
-    // And I confirm the booking
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
-
-    cy.task('stubBookingCreateErrors', {
-      premisesId: premises.id,
-      params: ['arrivalDate', 'departureDate'],
-    })
-    bookingConfirmPage.clickSubmit()
 
     // Then I should see error messages relating to those fields
     const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
-    returnedBookingNewPage.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate'])
+    returnedBookingNewPage.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
   })
 
   it('shows errors when the API returns a 409 Conflict error', () => {

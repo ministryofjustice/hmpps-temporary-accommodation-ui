@@ -227,6 +227,82 @@ describe('BookingsController', () => {
       })
     })
 
+    it.each([
+      [
+        'crn is empty',
+        {
+          crn: '',
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+        },
+        'crn',
+        'empty',
+      ],
+      [
+        'arrival date is empty',
+        {
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+        },
+        'arrivalDate',
+        'empty',
+      ],
+      [
+        'arrival date is invalid',
+        {
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+          'arrivalDate-day': 'not-a-number',
+        },
+        'arrivalDate',
+        'invalid',
+      ],
+      [
+        'departure date is empty',
+        {
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'arrivalDate'),
+        },
+        'departureDate',
+        'empty',
+      ],
+      [
+        'departure date is empty',
+        {
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newBookingFactory.build().departureDate, 'departureDate'),
+          'departureDate-day': 'not-a-number',
+        },
+        'departureDate',
+        'invalid',
+      ],
+    ])(
+      'renders with an error if the %s',
+      async (_: string, query: Record<string, string>, errorProperty: string, errorType: string) => {
+        const person = personFactory.build()
+
+        request.params = {
+          premisesId,
+          roomId,
+        }
+        request.query = query
+
+        personService.findByCrn.mockResolvedValue(person)
+        ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+        const requestHandler = bookingsController.selectAssessment()
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+        await requestHandler(request, response, next)
+
+        expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
+        expect(insertGenericError).toHaveBeenCalledWith(new Error(), errorProperty, errorType)
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, new Error(), backLink)
+      },
+    )
+
     it('renders with an error if the API returns a 404 person not found status', async () => {
       const newBooking = newBookingFactory.build()
 

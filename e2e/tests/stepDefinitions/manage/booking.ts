@@ -81,14 +81,6 @@ Given('I attempt to create a booking with required details missing', () => {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
     bookingNewPage.enterCrn(person.crn)
     bookingNewPage.clickSubmit()
-
-    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessment, [])
-    bookingSelectAssessmentPage.clickSubmit()
-
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
-    bookingConfirmPage.shouldShowBookingDetails()
-
-    bookingConfirmPage.clickSubmit()
   })
 })
 

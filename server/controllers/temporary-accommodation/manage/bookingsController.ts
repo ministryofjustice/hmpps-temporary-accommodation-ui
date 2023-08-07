@@ -60,11 +60,48 @@ export default class BookingsController {
 
       const crn: string = req.query.crn as string
 
+      const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.query, 'arrivalDate')
+      const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.query, 'departureDate')
+
       const callConfig = extractCallConfig(req)
 
       const backLink = appendQueryString(paths.bookings.new({ premisesId, roomId }), req.query)
 
       try {
+        let error: Error
+
+        if (!crn) {
+          error = error || new Error()
+          insertGenericError(error, 'crn', 'empty')
+        }
+
+        if (!arrivalDate) {
+          error = error || new Error()
+          insertGenericError(error, 'arrivalDate', 'empty')
+        } else {
+          try {
+            DateFormats.isoToDateObj(arrivalDate)
+          } catch (er) {
+            error = error || new Error()
+            insertGenericError(error, 'arrivalDate', 'invalid')
+          }
+        }
+        if (!departureDate) {
+          error = error || new Error()
+          insertGenericError(error, 'departureDate', 'empty')
+        } else {
+          try {
+            DateFormats.isoToDateObj(departureDate)
+          } catch (er) {
+            error = error || new Error()
+            insertGenericError(error, 'departureDate', 'invalid')
+          }
+        }
+
+        if (error) {
+          throw error
+        }
+
         await this.personsService.findByCrn(callConfig, crn)
         const assessments = await this.assessmentService.getReadyToPlaceForCrn(callConfig, crn)
 

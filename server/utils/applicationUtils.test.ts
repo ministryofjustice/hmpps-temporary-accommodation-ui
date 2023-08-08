@@ -15,6 +15,7 @@ import {
   getSectionAndTask,
   getStatus,
   retrieveQuestionResponseFromApplication,
+  taskResponsesToSummaryListRowItems,
 } from './applicationUtils'
 import getSections from './assessments/getSections'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
@@ -159,10 +160,23 @@ describe('applicationUtils', () => {
       const application = applicationFactory.build({ data: applyData })
 
       expect(getResponses(application)).toEqual({
-        'first-apply-section-task-1': [{ foo: 'bar' }, { bar: 'foo' }],
-        'first-apply-section-task-2': [],
-        'second-apply-section-task-1': [],
-        'second-apply-section-task-2': [],
+        sections: [
+          {
+            title: 'First Apply section',
+            tasks: [
+              {
+                title: 'First Apply section, task 1',
+                id: 'first-apply-section-task-1',
+                content: [
+                  {
+                    foo: 'bar',
+                  },
+                  { bar: 'foo' },
+                ],
+              },
+            ],
+          },
+        ],
       })
     })
   })
@@ -431,6 +445,30 @@ describe('applicationUtils', () => {
         'questionResponse',
       )
       expect(questionResponse).toBe('no')
+    })
+  })
+
+  describe('taskResponsesToSummaryListRowItems', () => {
+    it('returns an array of summary list row items', () => {
+      const taskResponses = [
+        { 'question one': 'answer one' },
+        { 'question two': 'answer two', 'question three': 'answer three' },
+      ]
+
+      expect(taskResponsesToSummaryListRowItems(taskResponses)).toEqual([
+        {
+          key: { text: 'question one' },
+          value: { html: 'answer one' },
+        },
+        {
+          key: { text: 'question two' },
+          value: { html: 'answer two' },
+        },
+        {
+          key: { text: 'question three' },
+          value: { html: 'answer three' },
+        },
+      ])
     })
   })
 })

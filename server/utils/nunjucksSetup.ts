@@ -18,7 +18,7 @@ import { statusTag as personStatusTag } from './personUtils'
 import { statusTag as assessmentStatusTag } from './assessmentUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
-import { dashboardTableRows } from './applicationUtils'
+import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
 import * as AttachDocumentsUtils from './attachDocumentsUtils'
 import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
@@ -157,6 +157,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('checkYourAnswersSections', checkYourAnswersSections)
   njkEnv.addGlobal('dashboardTableRows', dashboardTableRows)
+  njkEnv.addGlobal('taskResponsesToSummaryListRowItems', taskResponsesToSummaryListRowItems)
 
   njkEnv.addGlobal('BookingInfo', { summaryListRows: bookingSummaryListRows })
   njkEnv.addGlobal('BookingListing', BookingListing)

@@ -2,7 +2,7 @@ import type {
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
-import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
+import type { FormSection, HtmlItem, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
@@ -12,6 +12,8 @@ import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 import { kebabCase } from './utils'
+import { formatLines } from './viewUtils'
+import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummaryListItem'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
@@ -49,18 +51,38 @@ const createNameAnchorElement = (name: string, applicationId: string) => {
 
 export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>>
 
+export type Section = { title: string; tasks: Array<TaskResponse> }
+
+type TaskResponse = {
+  title: string
+  id: string
+  content: Array<PageResponse>
+}
+
 const getResponses = (applicationOrAssessment: Application | Assessment): ApplicationOrAssessmentResponse => {
-  const responses = {}
+  const responses: { sections: Array<Section> } = { sections: [] }
 
   const formSections = getSections(applicationOrAssessment)
 
   formSections.forEach(section => {
+    const sectionResponses: Section = { title: section.title, tasks: [] }
+
     section.tasks.forEach(task => {
       const responsesForTask: Array<PageResponse> = []
+
       forPagesInTask(applicationOrAssessment, task, page => responsesForTask.push(page.response()))
 
-      responses[task.id] = responsesForTask
+      if (responsesForTask.length) {
+        sectionResponses.tasks.push({
+          title: task.title,
+          id: task.id,
+          content: responsesForTask,
+        })
+      }
     })
+    if (sectionResponses.tasks.length) {
+      responses.sections.push(sectionResponses)
+    }
   })
 
   return responses
@@ -197,14 +219,37 @@ const retrieveQuestionResponseFromApplication = <T>(
   }
 }
 
+const taskResponsesToSummaryListRowItems = (
+  taskResponses: TaskResponse['content'],
+): Array<{ key: string; value: HtmlItem }> => {
+  const transformedResult = taskResponses
+    .map(taskResponse => {
+      return Object.entries(taskResponse).map(([key, value]) => {
+        return {
+          key: { text: key },
+          value: {
+            html:
+              typeof value === 'string' || value instanceof String
+                ? formatLines(value as string)
+                : embeddedSummaryListItem(value as Array<Record<string, unknown>>),
+          },
+        }
+      })
+    })
+    .flat()
+
+  return transformedResult as unknown as Array<{ key: string; value: HtmlItem }>
+}
+
 export {
-  getResponses,
-  forPagesInTask,
-  getPage,
-  getSectionAndTask,
-  getArrivalDate,
   dashboardTableRows,
   firstPageOfApplicationJourney,
+  forPagesInTask,
+  getArrivalDate,
+  getPage,
+  getResponses,
+  getSectionAndTask,
   getStatus,
   retrieveQuestionResponseFromApplication,
+  taskResponsesToSummaryListRowItems,
 }

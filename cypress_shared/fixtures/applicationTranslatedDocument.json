@@ -1,0 +1,242 @@
+{
+  "sections": [
+    {
+      "title": "Accommodation need",
+      "tasks": [
+        {
+          "title": "Sentence information",
+          "id": "sentence-information",
+          "content": [
+            { "Summary of offending history": "A brief summary of offending history" },
+            { "Which of the following best describes the sentence type?": "Extended determinate custody" },
+            { "What is the sentence length?": "2 years, 4 days" },
+            { "Sentence expiry date": "19 January 2124" },
+            {
+              "What is the release type?": "Licence, Post sentence supervision (PSS)",
+              "Licence start date": "19 January 2024",
+              "Licence end date": "9 July 2024",
+              "PSS start date": "1 April 2122",
+              "PSS end date": "18 July 2122"
+            }
+          ]
+        },
+        {
+          "title": "Contact details",
+          "id": "contact-details",
+          "content": [
+            {
+              "Probation practitioner details": [
+                { "Name": "Practitioner Name", "Phone": "01234 56780", "Email": "name@example.com" }
+              ]
+            },
+            {
+              "Backup contact / senior probation officer details": [
+                { "Name": "Backup Name", "Phone": "09876 54321", "Email": "backup-name@example.com" }
+              ]
+            },
+            { "PDU": "Some PDU" }
+          ]
+        },
+        {
+          "title": "Eligibility",
+          "id": "eligibility",
+          "content": [
+            {
+              "How is Edmund Kessler eligible for Temporary Accommodation (TA)?": "Moving on as homeless from an Approved Premises"
+            },
+            { "Release date": "2 September 2123" },
+            { "Accommodation required from date": "16 September 2123" }
+          ]
+        },
+        {
+          "title": "Consent",
+          "id": "consent",
+          "content": [{ "Has consent for Temporary Accommodation been given?": "Yes" }]
+        }
+      ]
+    },
+    {
+      "title": "Assess placement risks and needs",
+      "tasks": [
+        {
+          "title": "Licence conditions",
+          "id": "licence-conditions",
+          "content": [
+            {
+              "Civil orders (e.g. SHPT), restraining orders, criminal behaviour orders": "Civil orders detail",
+              "Non association": "Non association detail",
+              "Non contact": "Non contact detail",
+              "Other conditions (relevant to accommodation)": "Other detail"
+            }
+          ]
+        },
+        {
+          "title": "Prison information",
+          "id": "prison-information",
+          "content": [
+            {
+              "Adjudications": [
+                {
+                  "Adjudication number": 69927,
+                  "Report date and time": "9 Oct 2022, 00:00",
+                  "Establishment": "Hawthorne",
+                  "Offence description": "Nam vel nisi fugiat veniam possimus omnis.",
+                  "Finding": "Not proved"
+                },
+                {
+                  "Adjudication number": 39963,
+                  "Report date and time": "10 Jul 2022, 00:00",
+                  "Establishment": "Oklahoma City",
+                  "Offence description": "Illum maxime enim explicabo soluta sequi voluptas.",
+                  "Finding": "Proved"
+                },
+                {
+                  "Adjudication number": 77431,
+                  "Report date and time": "30 May 2022, 00:00",
+                  "Establishment": "Jurupa Valley",
+                  "Offence description": "Quis porro nemo voluptates doloribus atque quis provident iure.",
+                  "Finding": "Proved"
+                }
+              ]
+            },
+            {
+              "ACCT Alerts": [
+                {
+                  "Alert type": 47419,
+                  "ACCT description": "Soluta harum harum hic maxime reprehenderit quis harum necessitatibus.",
+                  "Date created": "5 December 2022",
+                  "Expiry date": "29 May 2023"
+                },
+                {
+                  "Alert type": 429,
+                  "ACCT description": "Quia ex nisi deserunt voluptatibus sit ipsa.",
+                  "Date created": "21 May 2022",
+                  "Expiry date": "16 December 2023"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Approvals for specific risks",
+          "id": "approvals-for-specific-risks",
+          "content": [
+            {
+              "Have your received approval for this referral?": "Yes - Approvals detail",
+              "Risk of serious harm": [
+                {
+                  "Overall risk of serious harm": "Low",
+                  "Risk to children": "Medium",
+                  "Risk to public": "Low",
+                  "Risk to known adult": "Low",
+                  "Risk to staff": "Medium"
+                }
+              ],
+              "Multi-agency public protection arrangements": "CAT 2 / LEVEL 1",
+              "Delius risk flags (registers)": "Not MAPPA Eligible, Registered Sex Offender, Hate Crime, Suicide/Self Harm, Street Gangs, Sexual Harm Prevention Order/Sexual Risk Order"
+            }
+          ]
+        },
+        {
+          "title": "Placement considerations",
+          "id": "placement-considerations",
+          "content": [
+            { "Is Edmund Kessler suitable to share accommodation with others?": "Yes - Some detail" },
+            { "How you will support Edmund Kessler's placement?": "Support detail" },
+            {
+              "Are there any concerns or risks relating to anti-social behaviour?": "Yes - Anti-social behaviour concerns detail"
+            },
+            {
+              "Does Edmund Kessler have any current or previous issues with drug or alcohol misuse?": "Yes - Details of drug and alcohol misuse"
+            },
+            {
+              "How will risk to children impact placement?": "Risk to children detail",
+              "How will risk to public impact placement?": "Risk to public detail",
+              "How will risk to known adult impact placement?": "Risk to known adult detail",
+              "How will risk to staff impact placement?": "Risk to staff detail"
+            },
+            {
+              "Victim safety planning": "Victim safety planning detail",
+              "Supervision": "Supervision detail",
+              "Monitoring and control": "Monitoring and control detail",
+              "Intervention and treatment": "Intervention and treatment detail"
+            }
+          ]
+        },
+        {
+          "title": "Behaviour in CAS",
+          "id": "behaviour-in-cas",
+          "content": [
+            { "Has Edmund Kessler previously stayed in Community Accommodation Services (CAS)?": "Yes" },
+            {
+              "Approved Premises (AP or CAS1)": "Approved Premises detail",
+              "Temporary Accommodation, previously known as CAS3": "Temporary Accommodation detail"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Requirements for placement",
+      "tasks": [
+        {
+          "title": "Placement location",
+          "id": "placement-location",
+          "content": [{ "Is placement required in an alternative PDU?": "Yes - Some PDU, for reasons X, Y, Z" }]
+        },
+        {
+          "title": "Disability, cultural and specific needs",
+          "id": "disability-cultural-and-specific-needs",
+          "content": [
+            {
+              "Hearing impairment": "Hearing impairment detail",
+              "Neurodivergence": "Neurodivergence detail",
+              "Other": "Other needs detail"
+            },
+            {
+              "Will Edmund Kessler require a property with specific attributes or adaptations?": "Yes - Adaptation requirements detail"
+            },
+            { "Does Edmund Kessler have any religious or cultural needs?": "Yes - Religious needs detail" }
+          ]
+        },
+        {
+          "title": "Safeguarding and support",
+          "id": "safeguarding-and-support",
+          "content": [
+            { "Do you have any concerns about safeguarding and/or vulnerability?": "Yes - Concerns A, B, and C" },
+            { "Details of support in the community": "Community support details" },
+            { "Details of local connections": "Local connection details" },
+            { "Does Edmund Kessler have any caring responsibilities?": "Yes - Caring responsibilities X, Y, and Z" }
+          ]
+        },
+        {
+          "title": "Food allergies",
+          "id": "food-allergies",
+          "content": [
+            { "Does Edmund Kessler have any food allergies or dietary requirements?": "Yes - Allergic to X, Y, Z" }
+          ]
+        },
+        {
+          "title": "Move on plan",
+          "id": "move-on-plan",
+          "content": [{ "How will you prepare Edmund Kessler for move on after placement?": "A move on plan" }]
+        }
+      ]
+    },
+    {
+      "title": "Required referrals",
+      "tasks": [
+        {
+          "title": "Accommodation referral details",
+          "id": "accommodation-referral-details",
+          "content": [
+            { "Has the Duty to Refer (DTR) / National Offender Pathway (NOP) been submitted?": "Yes" },
+            { "DTR / NOP reference number": "ABC123", "Date DTR / NOP was submitted": "12 April 2022" },
+            { "Has a referral to Commissioned Rehabilitative Services (CRS) been submitted?": "Yes" },
+            { "Have other accommodation options been considered?": "Yes - Other accommodation details" }
+          ]
+        }
+      ]
+    }
+  ]
+}

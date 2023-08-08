@@ -113,6 +113,11 @@ export const assessmentActions = (assessment: Assessment) => {
       classes: 'govuk-button--secondary',
       href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
     },
+    findABedspace: {
+      classes: 'govuk-button--secondary',
+      href: paths.bedspaces.search({}),
+      text: 'Place referral',
+    },
   }
 
   switch (assessment.status) {
@@ -123,7 +128,7 @@ export const assessmentActions = (assessment: Assessment) => {
       items.push(actions.readyToPlace, actions.unallocated, actions.reject)
       break
     case 'ready_to_place':
-      items.push(actions.close, actions.inReview, actions.reject)
+      items.push(actions.close, actions.inReview, actions.reject, actions.findABedspace)
       break
     case 'rejected':
       items.push(actions.unallocated)

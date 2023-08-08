@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export type NewReallocation = {
-    userId: string;
+    userId?: string;
 };
 

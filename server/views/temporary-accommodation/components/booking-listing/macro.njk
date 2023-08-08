@@ -19,7 +19,11 @@
   </div>
   <div class="listing-entry__content">
     <h3>
-      {{ booking.person.name }}
+      {% if booking.person.name %}
+        {{ booking.person.name }}
+      {% else %}
+        Limited access offender
+      {% endif %}
     </h3>
 
     <div class="govuk-grid-row">

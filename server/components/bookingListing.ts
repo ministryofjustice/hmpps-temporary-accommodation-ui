@@ -6,14 +6,18 @@ import { DateFormats } from '../utils/dateUtils'
 export const personSummaryListRows = (booking: Booking): SummaryList['rows'] => {
   const rows = [
     {
-      key: textValue('Date of birth'),
-      value: textValue(DateFormats.isoDateToUIDate(booking.person.dateOfBirth)),
-    },
-    {
       key: textValue('CRN'),
       value: textValue(booking.person.crn),
     },
   ] as SummaryList['rows']
+
+  if (booking.person.dateOfBirth) {
+    rows.unshift({
+      key: textValue('Date of birth'),
+      value: textValue(DateFormats.isoDateToUIDate(booking.person.dateOfBirth)),
+    })
+  }
+
   return rows
 }
 

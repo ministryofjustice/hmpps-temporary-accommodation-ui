@@ -18,6 +18,11 @@ jest.mock('../../form-pages/apply', () => {
           },
         ],
       },
+      {
+        title: 'Check your answers',
+        name: 'CheckYourAnswers',
+        tasks: [],
+      },
     ],
   }
 })
@@ -57,5 +62,14 @@ describe('getSections', () => {
     const sections = getSections(assessment)
 
     expect(sections).toEqual(Assess.sections)
+  })
+
+  it('excludes the check your answers section when excludeCheckYourAnswers is set', () => {
+    ;(isAssessment as jest.MockedFunction<typeof isAssessment>).mockReturnValue(false)
+
+    const application = applicationFactory.build()
+    const sections = getSections(application, true)
+
+    expect(sections).toEqual([Apply.sections[0]])
   })
 })

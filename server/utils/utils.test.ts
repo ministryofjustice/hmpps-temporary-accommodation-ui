@@ -1,6 +1,5 @@
 import type { SummaryListItem } from '@approved-premises/ui'
-import { applicationFactory, risksFactory } from '../testutils/factories'
-import { SessionDataError } from './errors'
+import { risksFactory } from '../testutils/factories'
 import {
   camelCase,
   convertToTitleCase,
@@ -11,7 +10,6 @@ import {
   mapApiPersonRisksForUi,
   pascalCase,
   removeBlankSummaryListItems,
-  retrieveQuestionResponseFromApplication,
   sentenceCase,
   unique,
 } from './utils'
@@ -72,42 +70,6 @@ describe('initialise name', () => {
     ['Double barrelled', 'Robert-John Smith-Jones-Wilson', 'R. Smith-Jones-Wilson'],
   ])('%s initialiseName(%s, %s)', (_: string, a: string, expected: string) => {
     expect(initialiseName(a)).toEqual(expected)
-  })
-})
-
-describe('retrieveQuestionResponseFromApplication', () => {
-  it("throws a SessionDataError if the property doesn't exist", () => {
-    const application = applicationFactory.build()
-    expect(() => retrieveQuestionResponseFromApplication(application, 'basic-information', '')).toThrow(
-      SessionDataError,
-    )
-  })
-
-  it('returns the property if it does exist and a question is not provided', () => {
-    const application = applicationFactory.build({
-      data: {
-        'basic-information': { 'my-page': { myPage: 'no' } },
-      },
-    })
-
-    const questionResponse = retrieveQuestionResponseFromApplication(application, 'basic-information', 'myPage')
-    expect(questionResponse).toBe('no')
-  })
-
-  it('returns the property if it does exist and a question is provided', () => {
-    const application = applicationFactory.build({
-      data: {
-        'basic-information': { 'my-page': { questionResponse: 'no' } },
-      },
-    })
-
-    const questionResponse = retrieveQuestionResponseFromApplication(
-      application,
-      'basic-information',
-      'myPage',
-      'questionResponse',
-    )
-    expect(questionResponse).toBe('no')
   })
 })
 

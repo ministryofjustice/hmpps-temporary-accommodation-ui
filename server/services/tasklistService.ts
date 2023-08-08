@@ -1,6 +1,6 @@
 import {
   TemporaryAccommodationApplication as Application,
-  ApprovedPremisesAssessment as Assessment,
+  TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
 import { FormSections, Task, TaskStatus, TaskWithStatus } from '@approved-premises/ui'
 import getTaskStatus from '../form-pages/utils/getTaskStatus'

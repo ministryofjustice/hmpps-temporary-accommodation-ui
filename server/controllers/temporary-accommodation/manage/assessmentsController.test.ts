@@ -3,9 +3,11 @@ import type { NextFunction, Request, Response } from 'express'
 
 import { CallConfig } from '../../../data/restClient'
 import { AssessmentsService } from '../../../services'
-import { probationRegionFactory } from '../../../testutils/factories'
+import { assessmentFactory, probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
-import AssessmentsController, { assessmentsTableHeaders } from './assessmentsController'
+import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
+import { assessmentActions } from '../../../utils/assessmentUtils'
+import paths from '../../../paths/temporary-accommodation/manage'
 
 jest.mock('../../../utils/restUtils')
 
@@ -69,6 +71,61 @@ describe('AssessmentsController', () => {
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig)
+    })
+  })
+
+  describe('show', () => {
+    it('shows a readonly view of an application', async () => {
+      const assessmentId = 'some-assessment-id'
+      const assessment = assessmentFactory.build({ id: assessmentId })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
+      request.params = { id: assessmentId }
+
+      const requestHandler = assessmentsController.show()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/show', {
+        assessment,
+        actions: assessmentActions(assessment),
+      })
+      expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
+    })
+  })
+
+  describe('confirm', () => {
+    it.each([
+      'null' as const,
+      'unallocated' as const,
+      'in_review' as const,
+      'ready_to_place' as const,
+      'closed' as const,
+      'rejected' as const,
+    ])('calls render with a confirmation message for the %s status', async status => {
+      const assessmentId = 'some-assessment-id'
+      const requestHandler = assessmentsController.confirm()
+      request.params = { id: assessmentId, status }
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm', {
+        content: confirmationPageContent[status],
+        status,
+        id: assessmentId,
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('calls the updateAssessmentStatus method on the service with the new status', async () => {
+      const newStatus = 'in_review'
+      const assessmentId = 'some-id'
+
+      const requestHandler = assessmentsController.update()
+      request.params = { id: assessmentId, status: newStatus }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
+      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.show({ id: assessmentId }))
     })
   })
 })

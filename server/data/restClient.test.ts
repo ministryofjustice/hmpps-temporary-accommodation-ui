@@ -137,6 +137,16 @@ describe('restClient', () => {
     })
   })
 
+  describe('delete', () => {
+    it('should make a DELETE request', async () => {
+      fakeApprovedPremisesApi.delete(`/some/path`).reply(200)
+
+      await restClient.delete({ path: '/some/path' })
+
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
   describe('pipe', () => {
     it('should make a GET request and pipe the response, using the specified filename', async () => {
       const data = 'some-data'

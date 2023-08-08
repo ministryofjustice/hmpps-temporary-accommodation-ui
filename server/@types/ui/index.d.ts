@@ -6,7 +6,7 @@ import {
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
-  ApprovedPremisesAssessment as Assessment,
+  TemporaryAccommodationAssessment as Assessment,
   Booking,
   Document,
   OASysSection,

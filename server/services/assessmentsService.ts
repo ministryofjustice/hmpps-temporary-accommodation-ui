@@ -1,7 +1,12 @@
 import type { TableRow } from '@approved-premises/ui'
+import type {
+  TemporaryAccommodationAssessment as Assessment,
+  TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+} from '../@types/shared'
 import type { AssessmentClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
+import { assertUnreachable } from '../utils/utils'
 
 export default class AssessmentsService {
   constructor(private readonly assessmentClientFactory: RestClientBuilder<AssessmentClient>) {}
@@ -46,5 +51,36 @@ export default class AssessmentsService {
     )
 
     return result
+  }
+
+  findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+
+    return assessmentClient.find(assessmentId)
+  }
+
+  async updateAssessmentStatus(callConfig: CallConfig, assessmentId: string, status: AssessmentStatus): Promise<void> {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+
+    switch (status) {
+      case 'unallocated':
+        await assessmentClient.unallocateAssessment(assessmentId)
+        break
+      case 'in_review':
+        await assessmentClient.allocateAssessment(assessmentId)
+        break
+      case 'rejected':
+        await assessmentClient.rejectAssessment(assessmentId)
+        break
+      case 'ready_to_place':
+        await assessmentClient.acceptAssessment(assessmentId)
+        break
+      case 'closed':
+        await assessmentClient.closeAssessment(assessmentId)
+        break
+
+      default:
+        assertUnreachable(status)
+    }
   }
 }

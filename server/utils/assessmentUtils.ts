@@ -1,4 +1,7 @@
-import { TemporaryAccommodationAssessmentSummary as AssessmentSummary } from '@approved-premises/api'
+import {
+  TemporaryAccommodationAssessment as Assessment,
+  TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+} from '@approved-premises/api'
 import { TableRow } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
@@ -79,4 +82,62 @@ const dateValue = (date: string) => {
       'data-sort-value': date,
     },
   }
+}
+
+export const assessmentActions = (assessment: Assessment) => {
+  const items = []
+
+  const actions = {
+    unallocated: {
+      text: 'Unallocated',
+      classes: 'govuk-button--secondary',
+      href: paths.assessments.update({ id: assessment.id, status: 'unallocated' }),
+    },
+    inReview: {
+      text: 'In review',
+      classes: 'govuk-button--secondary',
+      href: paths.assessments.update({ id: assessment.id, status: 'in_review' }),
+    },
+    reject: {
+      text: 'Reject',
+      classes: 'govuk-button--secondary',
+      href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+    },
+    readyToPlace: {
+      text: 'Ready to place',
+      classes: 'govuk-button--secondary',
+      href: paths.assessments.confirm({ id: assessment.id, status: 'ready_to_place' }),
+    },
+    close: {
+      text: 'Close',
+      classes: 'govuk-button--secondary',
+      href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
+    },
+  }
+
+  switch (assessment.status) {
+    case 'unallocated':
+      items.push(actions.inReview, actions.reject)
+      break
+    case 'in_review':
+      items.push(actions.readyToPlace, actions.unallocated, actions.reject)
+      break
+    case 'ready_to_place':
+      items.push(actions.close, actions.inReview, actions.reject)
+      break
+    case 'rejected':
+      items.push(actions.unallocated)
+      break
+    case 'closed':
+      items.push(actions.readyToPlace)
+      break
+    default:
+      break
+  }
+
+  if (items.length === 0) {
+    return null
+  }
+
+  return items
 }

@@ -301,6 +301,22 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.assessments.archive.pattern, assessmentsController.archive(), {
     auditEvent: 'VIEW_ARCHIVE_ASSESSMENTS_LIST',
   })
+  get(paths.assessments.show.pattern, assessmentsController.show(), {
+    auditEvent: 'VIEW_ASSESSMENT',
+  })
+  get(paths.assessments.confirm.pattern, assessmentsController.confirm(), {
+    auditEvent: 'VIEW_ASSESSMENT_STATUS_CHANGE_CONFIRM',
+  })
+
+  put(paths.assessments.update.pattern, assessmentsController.update(), {
+    auditEvent: 'UPDATE_ASSESSMENT',
+    redirectAuditEventSpecs: [
+      {
+        path: paths.assessments.show.pattern,
+        auditEvent: 'UPDATE_ASSESSMENT_SUCCESS',
+      },
+    ],
+  })
 
   return router
 }

@@ -1,11 +1,13 @@
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
-import { assessmentSummaryFactory } from '../testutils/factories'
+import { assessmentFactory, assessmentSummaryFactory } from '../testutils/factories'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
 
 jest.mock('../data/assessmentClient')
 jest.mock('../utils/assessmentUtils')
+
+const assessmentId = 'some-id'
 
 describe('AssessmentsService', () => {
   const assessmentClient = new AssessmentClient(null) as jest.Mocked<AssessmentClient>
@@ -95,6 +97,56 @@ describe('AssessmentsService', () => {
       archivedAssessments.forEach(archivedAssessment =>
         expect(assessmentTableRows).toHaveBeenCalledWith(archivedAssessment, true),
       )
+    })
+  })
+
+  describe('findAssessment', () => {
+    it('calls the find method on the assessment client and returns the result', async () => {
+      const assessment = assessmentFactory.build()
+
+      assessmentClient.find.mockResolvedValue(assessment)
+
+      expect(await service.findAssessment(callConfig, assessmentId)).toEqual(assessment)
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.find).toHaveBeenCalledWith(assessmentId)
+    })
+  })
+
+  describe('updateAssessment', () => {
+    it("calls the unallocateAssessment method on the client when the new status is 'unallocated'", async () => {
+      await service.updateAssessmentStatus(callConfig, assessmentId, 'unallocated')
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.unallocateAssessment).toHaveBeenCalledWith(assessmentId)
+    })
+
+    it("calls the allocateAssessment method on the client when the new status is 'in_review'", async () => {
+      await service.updateAssessmentStatus(callConfig, assessmentId, 'in_review')
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.allocateAssessment).toHaveBeenCalledWith(assessmentId)
+    })
+
+    it("calls the rejectAssessment method on the client when the new status is 'rejected'", async () => {
+      await service.updateAssessmentStatus(callConfig, assessmentId, 'rejected')
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId)
+    })
+
+    it("calls the acceptAssessment method on the client when the new status is 'ready_to_place'", async () => {
+      await service.updateAssessmentStatus(callConfig, assessmentId, 'ready_to_place')
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.acceptAssessment).toHaveBeenCalledWith(assessmentId)
+    })
+
+    it("calls the closeAssessment method on the client when the new status is 'closed'", async () => {
+      await service.updateAssessmentStatus(callConfig, assessmentId, 'closed')
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.closeAssessment).toHaveBeenCalledWith(assessmentId)
     })
   })
 })

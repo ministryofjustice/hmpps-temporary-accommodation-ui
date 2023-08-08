@@ -25,6 +25,7 @@ const singleLostBedPath = lostBedsPath.path(':lostBedId')
 const reportsPath = temporaryAccommodationPath.path('reports')
 
 const assessmentsPath = temporaryAccommodationPath.path('review-and-assess')
+const assessmentPath = assessmentsPath.path(':id')
 
 const paths = {
   dashboard: {
@@ -113,6 +114,8 @@ const paths = {
     index: assessmentsPath,
     archive: assessmentsPath.path('archive'),
     show: assessmentsPath.path(':id'),
+    confirm: assessmentPath.path(':status'),
+    update: assessmentPath.path(':status'),
   },
 }
 

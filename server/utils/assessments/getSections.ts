@@ -1,6 +1,6 @@
 import {
   TemporaryAccommodationApplication as Application,
-  ApprovedPremisesAssessment as Assessment,
+  TemporaryAccommodationAssessment as Assessment,
 } from '../../@types/shared'
 import { FormSections } from '../../@types/ui'
 import Apply from '../../form-pages/apply'

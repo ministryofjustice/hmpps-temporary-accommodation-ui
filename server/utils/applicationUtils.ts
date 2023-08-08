@@ -1,6 +1,6 @@
 import type {
   TemporaryAccommodationApplication as Application,
-  ApprovedPremisesAssessment as Assessment,
+  TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
 import type { FormSection, PageResponse, TableRow, Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
@@ -11,6 +11,7 @@ import getSections from './assessments/getSections'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
+import { kebabCase } from './utils'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
@@ -175,6 +176,27 @@ const firstPageOfApplicationJourney = (application: Application) => {
   return paths.applications.show({ id: application.id })
 }
 
+/**
+ * Retrieves response for a given question from the application object.
+ * @param application the application to fetch the response from.
+ * @param task the task to retrieve the response for.
+ * @param page the page that we need the response for in camelCase.
+ * @param {string} question [question=page] the page that we need the response for. Defaults to the value of `page`.
+ * @returns the response for the given task/page/question.
+ */
+const retrieveQuestionResponseFromApplication = <T>(
+  application: Application,
+  task: string,
+  page: string,
+  question?: string,
+) => {
+  try {
+    return application.data[task][kebabCase(page)][question || page] as T
+  } catch (e) {
+    throw new SessionDataError(`Question ${question} was not found in the session`)
+  }
+}
+
 export {
   getResponses,
   forPagesInTask,
@@ -184,4 +206,5 @@ export {
   dashboardTableRows,
   firstPageOfApplicationJourney,
   getStatus,
+  retrieveQuestionResponseFromApplication,
 }

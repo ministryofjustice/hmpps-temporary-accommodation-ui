@@ -1,6 +1,6 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { assessmentSummaryFactory, personFactory } from '../testutils/factories'
-import { assessmentTableRows, statusName, statusTag } from './assessmentUtils'
+import { assessmentFactory, assessmentSummaryFactory, personFactory } from '../testutils/factories'
+import { assessmentActions, assessmentTableRows, statusName, statusTag } from './assessmentUtils'
 
 describe('assessmentUtils', () => {
   describe('statusTag', () => {
@@ -68,6 +68,113 @@ describe('assessmentUtils', () => {
             'data-sort-value': 'Unallocated',
           },
           html: '<strong class="govuk-tag govuk-tag--grey">Unallocated</strong>',
+        },
+      ])
+    })
+  })
+
+  describe('assessmentActions', () => {
+    it('returns the "reject" and "in_review" actions for an assessment with a status of "unallocated"', () => {
+      const assessment = assessmentFactory.build({
+        status: 'unallocated',
+      })
+
+      const result = assessmentActions(assessment)
+
+      expect(result).toEqual([
+        {
+          text: 'In review',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'in_review' }),
+        },
+        {
+          text: 'Reject',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+        },
+      ])
+    })
+
+    it('returns the "unallocated", "ready_to_place" and "rejected" actions for an assessment with a status of "in_review"', () => {
+      const assessment = assessmentFactory.build({
+        status: 'in_review',
+      })
+
+      const result = assessmentActions(assessment)
+
+      expect(result).toEqual([
+        {
+          text: 'Ready to place',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'ready_to_place' }),
+        },
+        {
+          text: 'Unallocated',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
+        },
+        {
+          text: 'Reject',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+        },
+      ])
+    })
+
+    it('returns the "closed", "in_review" and "reject" actions for an assessment with a status of "ready_to_place"', () => {
+      const assessment = assessmentFactory.build({
+        status: 'ready_to_place',
+      })
+
+      const result = assessmentActions(assessment)
+
+      expect(result).toEqual([
+        {
+          text: 'Close',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
+        },
+        {
+          text: 'In review',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'in_review' }),
+        },
+        {
+          text: 'Reject',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+        },
+      ])
+    })
+
+    it('returns the "ready_to_place" action for an assessment with a status of "closed"', () => {
+      const assessment = assessmentFactory.build({
+        status: 'closed',
+      })
+
+      const result = assessmentActions(assessment)
+
+      expect(result).toEqual([
+        {
+          text: 'Ready to place',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'ready_to_place' }),
+        },
+      ])
+    })
+
+    it('returns the "unallocated" action for an assessment with a status of "rejected"', () => {
+      const assessment = assessmentFactory.build({
+        status: 'rejected',
+      })
+
+      const result = assessmentActions(assessment)
+
+      expect(result).toEqual([
+        {
+          text: 'Unallocated',
+          classes: 'govuk-button--secondary',
+          href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
         },
       ])
     })

@@ -22,7 +22,7 @@
         <input type="hidden" name="crn" value="{{ crn }}"/>
         <input type="hidden" name="offenceId" value="{{ offenceId }}"/>
 
-        <h1 class="govuk-heading-l">Confirm {{ person.name }}'s details</h1>
+        <h1 class="govuk-heading-l">Confirm {{ person.name | default("limited access offender") }}'s details</h1>
 
         <p>
           Taken from nDelius, <strong>{{ date }}</strong>

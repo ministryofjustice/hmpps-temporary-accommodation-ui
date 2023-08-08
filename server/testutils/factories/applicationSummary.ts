@@ -3,7 +3,7 @@ import { Factory } from 'fishery'
 import { TemporaryAccommodationApplicationSummary as ApplicationSummary } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
-import personFactory from './person'
+import { fullPersonFactory as personFactory } from './person'
 
 export default Factory.define<ApplicationSummary>(() => ({
   id: faker.string.uuid(),

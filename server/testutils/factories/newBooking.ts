@@ -4,7 +4,7 @@ import { Factory } from 'fishery'
 import type { NewBooking } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'
-import personFactory from './person'
+import { fullPersonFactory as personFactory } from './person'
 
 export default Factory.define<NewBooking>(() => {
   const arrivalDate = faker.date.soon()

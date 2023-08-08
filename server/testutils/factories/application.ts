@@ -5,7 +5,7 @@ import type { OASysSection, TemporaryAccommodationApplication } from '@approved-
 
 import { DateFormats } from '../../utils/dateUtils'
 import { fakeObject } from '../utils'
-import personFactory from './person'
+import { fullPersonFactory } from './person'
 import risksFactory from './risks'
 
 class ApplicationFactory extends Factory<TemporaryAccommodationApplication> {
@@ -45,7 +45,7 @@ class ApplicationFactory extends Factory<TemporaryAccommodationApplication> {
 
 export default ApplicationFactory.define(() => ({
   id: faker.string.uuid(),
-  person: personFactory.build(),
+  person: faker.helpers.arrayElement([fullPersonFactory.build()]),
   createdByUserId: faker.string.uuid(),
   schemaVersion: faker.string.uuid(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),

@@ -31,11 +31,10 @@ describe('reviewSections', () => {
 
     ;(getSections as jest.MockedFunction<typeof getSections>).mockReturnValue(sections)
 
-    const nonCheckYourAnswersSections = sections.slice(0, -1)
     const result = reviewSections(application, spy)
 
-    expect(getSections).toHaveBeenCalledWith(application)
-    expect(result).toHaveLength(nonCheckYourAnswersSections.length)
+    expect(getSections).toHaveBeenCalledWith(application, true)
+    expect(result).toHaveLength(sections.length)
   })
 
   it('returns an object with the titles of each section and an object for each task', () => {
@@ -44,7 +43,7 @@ describe('reviewSections', () => {
 
     const result = reviewSections(application, spy)
 
-    expect(getSections).toHaveBeenCalledWith(application)
+    expect(getSections).toHaveBeenCalledWith(application, true)
     expect(result).toEqual([
       {
         tasks: [
@@ -56,6 +55,10 @@ describe('reviewSections', () => {
         ],
         title: 'First section',
       },
+      {
+        tasks: [],
+        title: 'Second section',
+      },
     ])
   })
 
@@ -65,7 +68,7 @@ describe('reviewSections', () => {
 
     reviewSections(application, spy)
 
-    expect(getSections).toHaveBeenCalledWith(application)
+    expect(getSections).toHaveBeenCalledWith(application, true)
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenCalledWith(
       {

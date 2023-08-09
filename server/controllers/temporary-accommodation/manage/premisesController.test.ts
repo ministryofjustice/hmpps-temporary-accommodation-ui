@@ -17,7 +17,7 @@ import {
 } from '../../../testutils/factories'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import filterProbationRegions from '../../../utils/userUtils'
+import { filterProbationRegions } from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import PremisesController from './premisesController'
 

@@ -6,7 +6,7 @@ import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import filterProbationRegions from '../../../utils/userUtils'
+import { filterProbationRegions } from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { parseNaturalNumber } from '../../../utils/formUtils'
 

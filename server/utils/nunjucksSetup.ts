@@ -25,6 +25,7 @@ import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as PhaseBannerUtils from './phaseBannerUtils'
 import * as TasklistUtils from './taskListUtils'
+import * as PremisesUtils from './premisesUtils'
 
 import bookingSummaryListRows from '../components/bookingInfo'
 import * as BookingListing from '../components/bookingListing'
@@ -167,6 +168,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('LostBedInfo', { summaryListRows: lostBedSummaryListRows })
   njkEnv.addGlobal('OffenceUtils', OffenceUtils)
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
+  njkEnv.addGlobal('PremisesUtils', PremisesUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
   njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)

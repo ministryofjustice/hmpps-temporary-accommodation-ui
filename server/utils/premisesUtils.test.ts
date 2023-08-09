@@ -1,6 +1,6 @@
 import paths from '../paths/temporary-accommodation/manage'
 import { premisesFactory } from '../testutils/factories'
-import { getActiveStatuses, premisesActions, statusInfo, statusTag } from './premisesUtils'
+import { getActiveStatuses, premisesActions, shortAddress, statusInfo, statusTag } from './premisesUtils'
 
 describe('premisesUtils', () => {
   describe('premisesActions', () => {
@@ -62,6 +62,28 @@ describe('premisesUtils', () => {
   describe('statusTag', () => {
     it('returns the HTML tag for a given status', () => {
       expect(statusTag('pending')).toEqual('<strong class="govuk-tag govuk-tag--yellow">Pending</strong>')
+    })
+  })
+
+  describe('shortAddress', () => {
+    it('returns a shortened address for the premises when it does not have a town', () => {
+      const premises = premisesFactory.build({
+        addressLine1: '123 Road Lane',
+        postcode: 'ABC 123',
+      })
+      premises.town = undefined
+
+      expect(shortAddress(premises)).toEqual('123 Road Lane, ABC 123')
+    })
+
+    it('returns a shortened address for the premises when it does have a town', () => {
+      const premises = premisesFactory.build({
+        addressLine1: '123 Road Lane',
+        town: 'Townville',
+        postcode: 'ABC 123',
+      })
+
+      expect(shortAddress(premises)).toEqual('123 Road Lane, Townville, ABC 123')
     })
   })
 })

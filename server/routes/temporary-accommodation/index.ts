@@ -6,7 +6,6 @@ import paths from '../../paths/temporary-accommodation/static'
 import { Services } from '../../services'
 import { actions } from '../utils'
 
-import config from '../../config'
 import applyRoutes from '../apply'
 import manageRoutes from './manage'
 
@@ -22,10 +21,7 @@ export default function routes(controllers: Controllers, services: Services): Ro
   get(paths.static.useNDelius.pattern, staticController.useNDelius(), { auditEvent: 'VIEW_USE_NDELIUS' })
 
   manageRoutes(controllers, services, router)
-
-  if (!config.flags.applyDisabled) {
-    applyRoutes(controllers, services, router)
-  }
+  applyRoutes(controllers, services, router)
 
   return router
 }

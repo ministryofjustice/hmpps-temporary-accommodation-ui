@@ -23,6 +23,7 @@ import * as AttachDocumentsUtils from './attachDocumentsUtils'
 import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
+import * as PhaseBannerUtils from './phaseBannerUtils'
 import * as TasklistUtils from './taskListUtils'
 
 import bookingSummaryListRows from '../components/bookingInfo'
@@ -169,4 +170,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
+  njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)
 }

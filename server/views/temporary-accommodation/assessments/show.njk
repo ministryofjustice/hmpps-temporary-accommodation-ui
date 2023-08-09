@@ -29,8 +29,15 @@
           <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
               {% for action in actions %}
-                <a href="{{ action.href }}" role="menuitem" draggable="false" class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button" data-secondary="true">
-                  {{ action.text }}
+                {% if action.newTab %}
+                  <a href="{{ action.href }}" role="menuitem" draggable="false" class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button" data-secondary="true" rel="noreferrer noopener" target="_blank">
+                    {{ action.text }} (opens in new tab)
+                  </a>
+                {% else %}
+                  <a href="{{ action.href }}" role="menuitem" draggable="false" class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button" data-secondary="true">
+                    {{ action.text }}
+                  </a>
+                {% endif %}
                 </a>
               {% endfor %}
             </div>

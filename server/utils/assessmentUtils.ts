@@ -92,31 +92,37 @@ export const assessmentActions = (assessment: Assessment) => {
       text: 'Unallocated',
       classes: 'govuk-button--secondary',
       href: paths.assessments.update({ id: assessment.id, status: 'unallocated' }),
+      newTab: false,
     },
     inReview: {
       text: 'In review',
       classes: 'govuk-button--secondary',
       href: paths.assessments.update({ id: assessment.id, status: 'in_review' }),
+      newTab: false,
     },
     reject: {
       text: 'Reject',
       classes: 'govuk-button--secondary',
       href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+      newTab: false,
     },
     readyToPlace: {
       text: 'Ready to place',
       classes: 'govuk-button--secondary',
       href: paths.assessments.confirm({ id: assessment.id, status: 'ready_to_place' }),
+      newTab: false,
     },
     close: {
       text: 'Close',
       classes: 'govuk-button--secondary',
       href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
+      newTab: false,
     },
     findABedspace: {
       classes: 'govuk-button--secondary',
       href: paths.bedspaces.search({}),
       text: 'Place referral',
+      newTab: true,
     },
   }
 

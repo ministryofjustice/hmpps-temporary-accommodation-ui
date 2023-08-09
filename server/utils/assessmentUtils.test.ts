@@ -86,11 +86,13 @@ describe('assessmentUtils', () => {
           text: 'In review',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'in_review' }),
+          newTab: false,
         },
         {
           text: 'Reject',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+          newTab: false,
         },
       ])
     })
@@ -107,16 +109,19 @@ describe('assessmentUtils', () => {
           text: 'Ready to place',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'ready_to_place' }),
+          newTab: false,
         },
         {
           text: 'Unallocated',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
+          newTab: false,
         },
         {
           text: 'Reject',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+          newTab: false,
         },
       ])
     })
@@ -133,21 +138,25 @@ describe('assessmentUtils', () => {
           text: 'Close',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
+          newTab: false,
         },
         {
           text: 'In review',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'in_review' }),
+          newTab: false,
         },
         {
           text: 'Reject',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'rejected' }),
+          newTab: false,
         },
         {
           classes: 'govuk-button--secondary',
           href: paths.bedspaces.search({}),
           text: 'Place referral',
+          newTab: true,
         },
       ])
     })
@@ -164,6 +173,7 @@ describe('assessmentUtils', () => {
           text: 'Ready to place',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'ready_to_place' }),
+          newTab: false,
         },
       ])
     })
@@ -180,6 +190,7 @@ describe('assessmentUtils', () => {
           text: 'Unallocated',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
+          newTab: false,
         },
       ])
     })

@@ -9,11 +9,11 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Find a bedspace" %}
+{% set pageTitle = applicationName + " - Search for available bedspaces" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('Find a bedspace', []) }}
+  {{ breadCrumb('Search for available bedspaces', []) }}
 {% endblock %}
 
 {% block content %}
@@ -40,7 +40,7 @@
     {{ taInput(
       {
         label: {
-        text: 'Number of days available',
+        text: 'Number of days required',
         classes: "govuk-label--s"
       },
         classes: "govuk-input--width-2",
@@ -81,7 +81,7 @@
         </p>
       {% else  %}
         <p>
-          Showing {{ results.results.length }} {{ 'result' if results.results.length === 1 else 'results' }}
+          {{ results.results.length }} {{ 'result' if results.results.length === 1 else 'results' }}
         </p>
 
 

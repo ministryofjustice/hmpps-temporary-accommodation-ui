@@ -42,13 +42,13 @@ export default class BedspaceSearchPage extends Page {
 
   shouldShowPrefilledSearchParameters(searchParameters: BedSearchParameters) {
     this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
-    this.shouldShowTextInputByLabel('Number of days available', `${searchParameters.durationDays}`)
+    this.shouldShowTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
   }
 
   completeForm(searchParameters: BedSearchParameters) {
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
-    this.completeTextInputByLabel('Number of days available', `${searchParameters.durationDays}`)
+    this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     this.completeSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
   }
 

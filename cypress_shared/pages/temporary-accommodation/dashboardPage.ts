@@ -19,7 +19,7 @@ export default class DashboardPage extends Page {
   }
 
   clickSearchBedspacesLink(): void {
-    cy.get('a').contains('Find a bedspace').click()
+    cy.get('a').contains('Search for available bedspaces').click()
   }
 
   clickViewBookingsLink(): void {

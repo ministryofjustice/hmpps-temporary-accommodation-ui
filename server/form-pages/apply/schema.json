@@ -751,6 +751,7 @@
           "properties": {
             "foodAllergies": {
               "enum": [
+                "iDontKnow",
                 "no",
                 "yes"
               ],

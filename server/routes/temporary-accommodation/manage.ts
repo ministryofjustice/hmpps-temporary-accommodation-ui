@@ -2,13 +2,17 @@
 
 import type { Router } from 'express'
 import type { Controllers } from '../../controllers'
-import { createRoleMiddleware } from '../../middleware/roleMiddleware'
+import { createUserCheckMiddleware } from '../../middleware/userCheckMiddleware'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
 import { actions, compose } from '../utils'
+import { userHasAssessorRole } from '../../utils/userUtils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
-  const { get, post, put } = compose(actions(router, services.auditService), createRoleMiddleware('assessor'))
+  const { get, post, put } = compose(
+    actions(router, services.auditService),
+    createUserCheckMiddleware(userHasAssessorRole),
+  )
 
   const {
     dashboardController,

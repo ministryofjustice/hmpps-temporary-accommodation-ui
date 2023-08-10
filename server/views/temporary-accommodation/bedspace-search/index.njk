@@ -93,28 +93,30 @@
             <h2 class="govuk-heading-m"><a class="govuk-link--no-underline" href="{{ paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id}) }}">{{ result.room.name }}</a></h2>
             <h3 class="govuk-heading-s">{{ PremisesUtils.shortAddress(result.premises) }}</h3>
 
-            {% set keyCharacteristicsHtml %}
-              {% set premisesKeyCharacteristics = BedspaceSearchResultUtils.premisesKeyCharacteristics(result)  %}
-              {% set bedspaceKeyCharacteristics = BedspaceSearchResultUtils.bedspaceKeyCharacteristics(result)  %}
+            {% set premisesKeyCharacteristics = BedspaceSearchResultUtils.premisesKeyCharacteristics(result)  %}
+            {% set bedspaceKeyCharacteristics = BedspaceSearchResultUtils.bedspaceKeyCharacteristics(result)  %}
 
-              {% if premisesKeyCharacteristics.length %}
-                <p class="govuk-body govuk-!-static-margin-bottom-1">Property</p>
-                <ul class="govuk-list govuk-list--bullet" data-cy-premises-key-characteristics>
-                  {% for characteristic in premisesKeyCharacteristics %}
-                    <li>{{ characteristic }}</li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
+            {% if premisesKeyCharacteristics.length or bedspaceKeyCharacteristics.length %}
+              {% set keyCharacteristicsHtml %}
+                {% if premisesKeyCharacteristics.length %}
+                  <p class="govuk-body govuk-!-static-margin-bottom-1">Property</p>
+                  <ul class="govuk-list govuk-list--bullet" data-cy-premises-key-characteristics>
+                    {% for characteristic in premisesKeyCharacteristics %}
+                      <li>{{ characteristic }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
 
-              {% if bedspaceKeyCharacteristics.length %}
-                <p class="govuk-body govuk-!-static-margin-bottom-1">Bedspace</p>
-                <ul class="govuk-list govuk-list--bullet" data-cy-bedspace-key-characteristics>
-                  {% for characteristic in bedspaceKeyCharacteristics %}
-                    <li>{{ characteristic }}</li>
-                  {% endfor %}
-                </ul>
-              {% endif %}
-            {% endset %}
+                {% if bedspaceKeyCharacteristics.length %}
+                  <p class="govuk-body govuk-!-static-margin-bottom-1">Bedspace</p>
+                  <ul class="govuk-list govuk-list--bullet" data-cy-bedspace-key-characteristics>
+                    {% for characteristic in bedspaceKeyCharacteristics %}
+                      <li>{{ characteristic }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endset %}
+            {% endif %}
 
             {{ govukSummaryList({
               classes: 'govuk-summary-list--no-border',
@@ -126,7 +128,7 @@
                   value: {
                     html: keyCharacteristicsHtml
                   }
-                },
+                } if keyCharacteristicsHtml else undefined,
                 { 
                   key: {
                     text: "Number of bedspaces"

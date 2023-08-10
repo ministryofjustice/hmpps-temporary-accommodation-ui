@@ -63,7 +63,7 @@ describe('PreviousStays', () => {
       const page = new PreviousStays(body, application)
 
       expect(page.response()).toEqual({
-        'Has John Smith previously stayed in Community Accommodation Services (CAS)?':
+        'Has this person previously stayed in Community Accommodation Services (CAS)?':
           "Yes, no, or don't know response",
       })
       expect(yesNoOrDontKnowResponse).toHaveBeenCalledWith('previousStays', body)

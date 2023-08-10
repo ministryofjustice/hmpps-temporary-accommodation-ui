@@ -23,7 +23,10 @@ export default class ReligiousOrCulturalNeeds implements TasklistPage {
 
   response() {
     return {
-      [this.title]: yesOrNoResponseWithDetail('religiousOrCulturalNeeds', this.body),
+      'Does this person have any religious or cultural needs?': yesOrNoResponseWithDetail(
+        'religiousOrCulturalNeeds',
+        this.body,
+      ),
     }
   }
 

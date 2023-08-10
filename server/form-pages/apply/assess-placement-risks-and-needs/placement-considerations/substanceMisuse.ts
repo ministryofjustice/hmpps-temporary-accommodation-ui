@@ -31,7 +31,10 @@ export default class SubstanceMisuse implements TasklistPage {
 
   response() {
     return {
-      [this.questions.substanceMisuse]: yesOrNoResponseWithDetail('substanceMisuse', this.body),
+      'Does this person have any current or previous issues with drug or alcohol misuse?': yesOrNoResponseWithDetail(
+        'substanceMisuse',
+        this.body,
+      ),
     }
   }
 

@@ -19,7 +19,7 @@ export default class MoveOnPlan implements TasklistPage {
 
   response() {
     return {
-      [this.title]: this.body.plan,
+      'How will you prepare this person for move on after placement?': this.body.plan,
     }
   }
 

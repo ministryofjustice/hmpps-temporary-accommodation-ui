@@ -23,7 +23,10 @@ export default class PropertyAttributesOrAdaptations implements TasklistPage {
 
   response() {
     return {
-      [this.title]: yesOrNoResponseWithDetail('propertyAttributesOrAdaptations', this.body),
+      'Will this person require a property with specific attributes or adaptations?': yesOrNoResponseWithDetail(
+        'propertyAttributesOrAdaptations',
+        this.body,
+      ),
     }
   }
 

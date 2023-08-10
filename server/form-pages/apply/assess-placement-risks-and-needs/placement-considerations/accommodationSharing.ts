@@ -36,13 +36,15 @@ export default class AccommodationSharing implements TasklistPage {
   }
 
   response() {
+    const accommodationSharingQuestion = 'Is this person suitable to share accommodation with others?'
+
     if (this.body.accommodationSharing === 'yes') {
       return {
-        [this.questions.accommodationSharing]: `Yes - ${this.body.accommodationSharingYesDetail}`,
+        [accommodationSharingQuestion]: `Yes - ${this.body.accommodationSharingYesDetail}`,
       }
     }
     return {
-      [this.questions.accommodationSharing]: `No - ${this.body.accommodationSharingNoDetail}`,
+      [accommodationSharingQuestion]: `No - ${this.body.accommodationSharingNoDetail}`,
     }
   }
 

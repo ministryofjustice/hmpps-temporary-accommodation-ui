@@ -32,7 +32,10 @@
           }
         },
         fieldName: "startDate",
-        items: dateFieldValues('startDate', errors)
+        items: dateFieldValues('startDate', errors),
+        hint: {
+          text: dateInputHint('future')
+        }
       },
       fetchContext()
     ) }}

@@ -9,7 +9,7 @@ const reviewSections = (
   applicationOrAssessment: Application | Assessment,
   rowFunction: (task: Task, document: Application | Assessment) => Array<SummaryListItem>,
 ) => {
-  const nonCheckYourAnswersSections = getSections(applicationOrAssessment).slice(0, -1)
+  const nonCheckYourAnswersSections = getSections(applicationOrAssessment, true)
 
   return nonCheckYourAnswersSections.map(section => {
     return {

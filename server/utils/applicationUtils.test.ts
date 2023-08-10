@@ -178,6 +178,7 @@ describe('applicationUtils', () => {
           },
         ],
       })
+      expect(getSections).toHaveBeenCalledWith(application, true)
     })
   })
 

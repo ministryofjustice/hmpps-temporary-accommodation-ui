@@ -62,7 +62,7 @@ type TaskResponse = {
 const getResponses = (applicationOrAssessment: Application | Assessment): ApplicationOrAssessmentResponse => {
   const responses: { sections: Array<Section> } = { sections: [] }
 
-  const formSections = getSections(applicationOrAssessment)
+  const formSections = getSections(applicationOrAssessment, true)
 
   formSections.forEach(section => {
     const sectionResponses: Section = { title: section.title, tasks: [] }

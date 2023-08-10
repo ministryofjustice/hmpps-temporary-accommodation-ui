@@ -1,4 +1,5 @@
-import { BedSearchResult } from '../../server/@types/shared'
+import { TemporaryAccommodationBedSearchResult as BedSearchResult } from '../../server/@types/shared'
+import paths from '../../server/paths/temporary-accommodation/manage'
 import Component from './component'
 
 export default class BedspaceSearchResult extends Component {
@@ -31,6 +32,30 @@ export default class BedspaceSearchResult extends Component {
         if (checkCount) {
           this.shouldShowKeyAndValue('Number of bedspaces', `${this.result.premises.bedCount}`)
         }
+
+        this.result.overlaps.forEach((overlap, i) => {
+          cy.get('ul[data-cy-overlaps] > li')
+            .eq(i)
+            .within(() => {
+              cy.get('a')
+                .contains(overlap.crn)
+                .should(
+                  'have.attr',
+                  'href',
+                  paths.bookings.show({
+                    premisesId: this.result.premises.id,
+                    roomId: overlap.roomId,
+                    bookingId: overlap.bookingId,
+                  }),
+                )
+
+              cy.root().contains(`(${overlap.days} day overlap)`)
+            })
+        })
       })
+  }
+
+  clickOverlapLink(crn: string) {
+    cy.get('ul[data-cy-overlaps] > li > a').contains(crn).click()
   }
 }

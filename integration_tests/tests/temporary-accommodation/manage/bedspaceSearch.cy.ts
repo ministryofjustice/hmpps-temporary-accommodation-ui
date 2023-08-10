@@ -2,11 +2,15 @@ import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
+import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bedSearchParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
+  bookingFactory,
+  overlapFactory,
+  personFactory,
   premisesFactory,
   roomFactory,
 } from '../../../../server/testutils/factories'
@@ -137,6 +141,57 @@ context('Bedspace Search', () => {
     postSearchPage.clickBedspaceLink(room)
 
     Page.verifyOnPage(BedspaceShowPage, premises, room)
+  })
+
+  it('allows me to view an overlapping booking', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
+
+    // When I visit the search bedspaces page
+    const preSearchPage = BedspaceSearchPage.visit()
+
+    // And there is a bedspace with an overlap in the database
+    const person = personFactory.build({ crn: 'known-crn' })
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+
+    const booking = bookingFactory.build({
+      person,
+    })
+
+    const results = bedSearchResultsFactory.build({
+      results: [
+        bedSearchResultFactory.forBedspace(premises, room).build({
+          overlaps: [
+            overlapFactory.build({
+              crn: person.crn,
+              roomId: room.id,
+              bookingId: booking.id,
+              days: 5,
+            }),
+          ],
+        }),
+      ],
+    })
+
+    cy.task('stubBedSearch', results)
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubBooking', { premisesId: premises.id, booking })
+
+    // And when I fill out the form
+    const searchParameters = bedSearchParametersFactory.build()
+    preSearchPage.completeForm(searchParameters)
+    preSearchPage.clickSubmit()
+
+    // I should be able to navigate to the overlapping booking
+    const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
+    postSearchPage.clickOverlapLink(room, person.crn)
+
+    Page.verifyOnPage(BookingShowPage, premises, room, booking)
   })
 
   it('shows errors when the API returns an error', () => {

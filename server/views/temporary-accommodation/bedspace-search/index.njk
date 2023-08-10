@@ -118,6 +118,19 @@
               {% endset %}
             {% endif %}
 
+            {% if result.overlaps.length %}
+              {% set overlapsHtml %}
+                <ul class="govuk-list" data-cy-overlaps>
+                  {% for overlap in result.overlaps %}
+                    <li>
+                      <a class="govuk-link" href="{{ paths.bookings.show({premisesId: result.premises.id, roomId: overlap.roomId, bookingId: overlap.bookingId}) }}">{{ overlap.crn }}</a>
+                      ({{ overlap.days }} day overlap)
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endset %}
+            {% endif %}
+
             {{ govukSummaryList({
               classes: 'govuk-summary-list--no-border',
               rows: [
@@ -136,7 +149,15 @@
                   value: {
                     text: result.premises.bedCount
                   }
-                }
+                },
+                {
+                  key: {
+                    text: "People who will be in the shared property"
+                  },
+                  value: {
+                    html: overlapsHtml
+                  }
+                } if overlapsHtml else undefined
               ]
             }) }}
 

@@ -1,6 +1,6 @@
 import { applicationFactory, personFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import { yesOrNoResponseWithDetail } from '../../../utils'
+import { yesNoOrDontKnowResponseWithDetail } from '../../../utils'
 import FoodAllergies from './foodAllergies'
 
 jest.mock('../../../utils')
@@ -36,6 +36,11 @@ describe('FoodAllergies', () => {
       expect(page.errors()).toEqual({})
     })
 
+    it('returns an empty object if the food allergies answer is iDontKnow', () => {
+      const page = new FoodAllergies({ foodAllergies: 'iDontKnow' }, application)
+      expect(page.errors()).toEqual({})
+    })
+
     it('returns an error if the food allergies answer not populated', () => {
       const page = new FoodAllergies({ ...body, foodAllergies: undefined }, application)
       expect(page.errors()).toEqual({
@@ -53,13 +58,13 @@ describe('FoodAllergies', () => {
 
   describe('response', () => {
     it('returns a translated version of the response', () => {
-      ;(yesOrNoResponseWithDetail as jest.Mock).mockReturnValue('Response with optional detail')
+      ;(yesNoOrDontKnowResponseWithDetail as jest.Mock).mockReturnValue('Response with optional detail')
 
       const page = new FoodAllergies(body, application)
       expect(page.response()).toEqual({
         'Does this person have any food allergies or dietary requirements?': 'Response with optional detail',
       })
-      expect(yesOrNoResponseWithDetail).toHaveBeenCalledWith('foodAllergies', body)
+      expect(yesNoOrDontKnowResponseWithDetail).toHaveBeenCalledWith('foodAllergies', body)
     })
   })
 })

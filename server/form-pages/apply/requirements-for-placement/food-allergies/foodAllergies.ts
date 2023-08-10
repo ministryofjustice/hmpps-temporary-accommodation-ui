@@ -1,11 +1,11 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
+import type { TaskListErrors, YesNoOrIDKWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
-import { yesOrNoResponseWithDetail } from '../../../utils'
+import { yesNoOrDontKnowResponseWithDetail } from '../../../utils'
 
-type FoodAllergiesBody = YesOrNoWithDetail<'foodAllergies'>
+type FoodAllergiesBody = YesNoOrIDKWithDetail<'foodAllergies'>
 
 @Page({ name: 'food-allergies', bodyProperties: ['foodAllergies', 'foodAllergiesDetail'] })
 export default class FoodAllergies implements TasklistPage {
@@ -26,7 +26,7 @@ export default class FoodAllergies implements TasklistPage {
 
   response() {
     return {
-      'Does this person have any food allergies or dietary requirements?': yesOrNoResponseWithDetail(
+      'Does this person have any food allergies or dietary requirements?': yesNoOrDontKnowResponseWithDetail(
         'foodAllergies',
         this.body,
       ),

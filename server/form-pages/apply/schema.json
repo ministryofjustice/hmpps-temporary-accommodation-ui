@@ -10,8 +10,8 @@
     "consent",
     "licence-conditions",
     "prison-information",
-    "approvals-for-specific-risks",
     "placement-considerations",
+    "approvals-for-specific-risks",
     "behaviour-in-cas",
     "placement-location",
     "disability-cultural-and-specific-needs",
@@ -416,27 +416,6 @@
         }
       }
     },
-    "approvals-for-specific-risks": {
-      "type": "object",
-      "properties": {
-        "approvals-for-specific-risks": {
-          "type": "object",
-          "properties": {
-            "approvals": {
-              "enum": [
-                "needsAddress",
-                "notRequired",
-                "yes"
-              ],
-              "type": "string"
-            },
-            "approvalsDetail": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
     "placement-considerations": {
       "type": "object",
       "properties": {
@@ -539,6 +518,27 @@
               "type": "string"
             },
             "oasysCompleted": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "approvals-for-specific-risks": {
+      "type": "object",
+      "properties": {
+        "approvals-for-specific-risks": {
+          "type": "object",
+          "properties": {
+            "approvals": {
+              "enum": [
+                "needsAddress",
+                "notRequired",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "approvalsDetail": {
               "type": "string"
             }
           }
@@ -751,6 +751,7 @@
           "properties": {
             "foodAllergies": {
               "enum": [
+                "iDontKnow",
                 "no",
                 "yes"
               ],

@@ -2,13 +2,14 @@ import { Factory } from 'fishery'
 
 import { faker } from '@faker-js/faker'
 import type {
-  BedSearchResult,
+  TemporaryAccommodationBedSearchResult as BedSearchResult,
   BedSearchResultPremisesSummary,
   BedSearchResultRoomSummary,
   Premises,
   Room,
 } from '@approved-premises/api'
 import bedFactory from './bed'
+import overlapFactory from './overlap'
 import premisesFactory from './premises'
 import roomFactory from './room'
 
@@ -42,6 +43,7 @@ export default BedSearchResultFactory.define(() => {
       id: bed.id,
       name: bed.name,
     },
+    overlaps: overlapFactory.buildList(faker.number.int({ min: 0, max: 5 })),
   }
 })
 

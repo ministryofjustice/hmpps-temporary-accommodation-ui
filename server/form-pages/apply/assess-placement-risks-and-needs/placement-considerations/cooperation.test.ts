@@ -50,7 +50,7 @@ describe('Cooperation', () => {
     it('returns a translated version of the response', () => {
       const page = new Cooperation(body, application)
       expect(page.response()).toEqual({
-        "How will you support John Smith's placement considering any risks to the support worker?": 'Support detail',
+        "How will you support this person's placement considering any risks to the support worker?": 'Support detail',
       })
     })
   })

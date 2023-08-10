@@ -30,7 +30,10 @@ export default class PreviousStays implements TasklistPage {
 
   response() {
     return {
-      [this.questions.previousStays]: yesNoOrDontKnowResponse('previousStays', this.body),
+      'Has this person previously stayed in Community Accommodation Services (CAS)?': yesNoOrDontKnowResponse(
+        'previousStays',
+        this.body,
+      ),
     }
   }
 

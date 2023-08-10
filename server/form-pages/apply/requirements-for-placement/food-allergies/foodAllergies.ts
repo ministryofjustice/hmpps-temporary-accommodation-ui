@@ -26,7 +26,10 @@ export default class FoodAllergies implements TasklistPage {
 
   response() {
     return {
-      [this.questions.foodAllergies]: yesOrNoResponseWithDetail('foodAllergies', this.body),
+      'Does this person have any food allergies or dietary requirements?': yesOrNoResponseWithDetail(
+        'foodAllergies',
+        this.body,
+      ),
     }
   }
 

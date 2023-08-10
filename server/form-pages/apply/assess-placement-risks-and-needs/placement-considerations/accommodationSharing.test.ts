@@ -80,7 +80,7 @@ describe('AccommodationSharing', () => {
     it('returns a translated version of the response when the answer is yes', () => {
       const page = new AccommodationSharing(body, application)
       expect(page.response()).toEqual({
-        'Is John Smith suitable to share accommodation with others?': 'Yes - Yes detail',
+        'Is this person suitable to share accommodation with others?': 'Yes - Yes detail',
       })
     })
 
@@ -90,7 +90,7 @@ describe('AccommodationSharing', () => {
         application,
       )
       expect(page.response()).toEqual({
-        'Is John Smith suitable to share accommodation with others?': 'No - No detail',
+        'Is this person suitable to share accommodation with others?': 'No - No detail',
       })
     })
   })

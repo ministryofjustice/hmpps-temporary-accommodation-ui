@@ -64,7 +64,7 @@ describe('PropertyAttributesOrAdaptations', () => {
 
       const page = new PropertyAttributesOrAdaptations(body, application)
       expect(page.response()).toEqual({
-        'Will John Smith require a property with specific attributes or adaptations?': 'Response with optional detail',
+        'Will this person require a property with specific attributes or adaptations?': 'Response with optional detail',
       })
       expect(yesOrNoResponseWithDetail).toHaveBeenCalledWith('propertyAttributesOrAdaptations', body)
     })

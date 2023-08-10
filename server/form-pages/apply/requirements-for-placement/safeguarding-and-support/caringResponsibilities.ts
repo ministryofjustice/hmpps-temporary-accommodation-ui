@@ -26,7 +26,10 @@ export default class CaringResponsibilities implements TasklistPage {
 
   response() {
     return {
-      [this.questions.caringResponsibilities]: yesOrNoResponseWithDetail('caringResponsibilities', this.body),
+      'Does this person have any caring responsibilities?': yesOrNoResponseWithDetail(
+        'caringResponsibilities',
+        this.body,
+      ),
     }
   }
 

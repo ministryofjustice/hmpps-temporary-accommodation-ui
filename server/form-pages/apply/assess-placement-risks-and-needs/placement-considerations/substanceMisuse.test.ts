@@ -68,7 +68,7 @@ describe('SubstanceMisuse', () => {
 
       const page = new SubstanceMisuse(body, application)
       expect(page.response()).toEqual({
-        'Does John Smith have any current or previous issues with drug or alcohol misuse?':
+        'Does this person have any current or previous issues with drug or alcohol misuse?':
           'Response with optional detail',
       })
       expect(yesOrNoResponseWithDetail).toHaveBeenCalledWith('substanceMisuse', body)

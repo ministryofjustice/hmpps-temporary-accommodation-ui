@@ -27,7 +27,7 @@ export default class EligibilityReason implements TasklistPage {
   }
 
   response() {
-    return { [this.title]: eligibilityReasons[this.body.reason] }
+    return { 'How is this person eligible for Temporary Accommodation (TA)?': eligibilityReasons[this.body.reason] }
   }
 
   previous() {

@@ -3,8 +3,6 @@ import { assessmentFactory, assessmentSummaryFactory } from '../server/testutils
 
 const assessmentSummaries = assessmentSummaryFactory.buildList(20)
 
-const assessment = assessmentFactory.build()
-
 const assessmentStubs = [
   {
     request: {
@@ -17,72 +15,80 @@ const assessmentStubs = [
       jsonBody: assessmentSummaries,
     },
   },
-  {
-    request: {
-      method: 'GET',
-      url: paths.assessments.show({ id: assessment.id }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: assessment,
-    },
-  },
-  {
-    request: {
-      method: 'DELETE',
-      url: paths.assessments.allocation({ id: assessment.id }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {},
-    },
-  },
-  {
-    request: {
-      method: 'POST',
-      url: paths.assessments.allocation({ id: assessment.id }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {},
-    },
-  },
-  {
-    request: {
-      method: 'POST',
-      url: paths.assessments.rejection({ id: assessment.id }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {},
-    },
-  },
-  {
-    request: {
-      method: 'POST',
-      url: paths.assessments.acceptance({ id: assessment.id }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {},
-    },
-  },
-  {
-    request: {
-      method: 'POST',
-      url: paths.assessments.closure({ id: assessment.id }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {},
-    },
-  },
+  ...assessmentSummaries
+    .map(asessmentSummary => {
+      const assessment = assessmentFactory.build(asessmentSummary)
+
+      return [
+        {
+          request: {
+            method: 'GET',
+            url: paths.assessments.show({ id: assessment.id }),
+          },
+          response: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+            jsonBody: assessment,
+          },
+        },
+        {
+          request: {
+            method: 'DELETE',
+            url: paths.assessments.allocation({ id: assessment.id }),
+          },
+          response: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+            jsonBody: {},
+          },
+        },
+        {
+          request: {
+            method: 'POST',
+            url: paths.assessments.allocation({ id: assessment.id }),
+          },
+          response: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+            jsonBody: {},
+          },
+        },
+        {
+          request: {
+            method: 'POST',
+            url: paths.assessments.rejection({ id: assessment.id }),
+          },
+          response: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+            jsonBody: {},
+          },
+        },
+        {
+          request: {
+            method: 'POST',
+            url: paths.assessments.acceptance({ id: assessment.id }),
+          },
+          response: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+            jsonBody: {},
+          },
+        },
+        {
+          request: {
+            method: 'POST',
+            url: paths.assessments.closure({ id: assessment.id }),
+          },
+          response: {
+            status: 200,
+            headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+            jsonBody: {},
+          },
+        },
+      ]
+    })
+    .flat(),
 ]
 
 export default assessmentStubs

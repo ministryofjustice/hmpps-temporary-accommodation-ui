@@ -149,4 +149,19 @@ describe('AssessmentsService', () => {
       expect(assessmentClient.closeAssessment).toHaveBeenCalledWith(assessmentId)
     })
   })
+
+  describe('getReadyToPlaceForCrn', () => {
+    it('returns ready to place assessment summaries for the given CRN', async () => {
+      const crn = 'some-crn'
+
+      const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+      assessmentClient.readyToPlaceForCrn.mockResolvedValue(assessmentSummaries)
+
+      const result = await service.getReadyToPlaceForCrn(callConfig, crn)
+
+      expect(result).toEqual(assessmentSummaries)
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.readyToPlaceForCrn).toHaveBeenCalledWith(crn)
+    })
+  })
 })

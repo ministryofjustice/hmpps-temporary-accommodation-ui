@@ -25,9 +25,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.confirm({ premisesId: premises.id, roomId: room.id }) }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-      
+      <form action="{{ paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }) }}" method="get">      
         {% include "./_editable.njk" %}  
       </form>
     </div>
@@ -37,6 +35,6 @@
 
 {% block extraScripts %}
 
-<script type="text/javascript"  nonce="{{ cspNonce }}" src="/assets/js/booking-date-hint.js"></script>
+<script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/booking-date-hint.js"></script>
 
 {% endblock %}

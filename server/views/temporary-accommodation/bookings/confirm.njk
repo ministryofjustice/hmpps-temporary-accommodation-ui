@@ -13,7 +13,7 @@
 
   {{ govukBackLink({
     text: "Back",
-    href: paths.bookings.new({ premisesId: premises.id, roomId: room.id })
+    href: backLink
   }) }}
   
   <h1>Confirm CRN</h1>
@@ -28,15 +28,24 @@
       <form action="{{ paths.bookings.create({ premisesId: premises.id, roomId: room.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-        <input type="hidden" name="crn" value="{{ person.crn }}"/>
-        <input type="hidden" name="arrivalDate" value="{{ arrivalDate }}"/>
-        <input type="hidden" name="departureDate" value="{{ departureDate }}"/>
+        {% set context = fetchContext() %}
+
+        <input type="hidden" name="crn" value="{{ crn }}"/>
+
+        <input type="hidden" name="arrivalDate-day" value="{{ context['arrivalDate-day'] }}"/>
+        <input type="hidden" name="arrivalDate-month" value="{{ context['arrivalDate-month'] }}"/>
+        <input type="hidden" name="arrivalDate-year" value="{{ context['arrivalDate-year'] }}"/>
+        <input type="hidden" name="departureDate-day" value="{{ context['departureDate-day'] }}"/>
+        <input type="hidden" name="departureDate-month" value="{{ context['departureDate-month'] }}"/>
+        <input type="hidden" name="departureDate-year" value="{{ context['departureDate-year'] }}"/>
+
+        <input type="hidden" name="assessmentId" value="{{ assessmentId }}"/>
 
         <div class="govuk-button-group">
           {{ govukButton({
             text: "Back",
             classes: "govuk-button--secondary",
-            href: paths.bookings.new({ premisesId: premises.id, roomId: room.id })
+            href: backLink
           }) }}
           {{ govukButton({
             text: "Submit",

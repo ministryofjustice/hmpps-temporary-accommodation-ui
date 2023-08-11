@@ -13,7 +13,11 @@ export default class BookingShowPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, booking: Booking) {
+  constructor(
+    premises: Premises,
+    room: Room,
+    private readonly booking: Booking,
+  ) {
     super('View a booking')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
@@ -66,6 +70,10 @@ export default class BookingShowPage extends Page {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
     this.locationHeaderComponent.shouldShowLocationDetails()
     this.bookingInfoComponent.shouldShowBookingDetails()
+
+    if (this.booking.assessmentId) {
+      this.popDetailsHeaderComponent.shouldHaveNameLink(paths.assessments.show({ id: this.booking.assessmentId }))
+    }
   }
 
   private clickAction(action: string) {

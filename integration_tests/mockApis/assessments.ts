@@ -1,15 +1,15 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment } from '../../server/@types/shared'
+import { Assessment, AssessmentSummary } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 
 export default {
-  stubAssessments: (assessments: Array<Assessment>): SuperAgentRequest =>
+  stubAssessments: (assessments: Array<AssessmentSummary>): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        url: api.assessments.index({}),
+        urlPath: api.assessments.index({}),
       },
       response: {
         status: 200,

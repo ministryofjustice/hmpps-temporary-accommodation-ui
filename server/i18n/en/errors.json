@@ -115,6 +115,9 @@
     },
     "year": {
       "empty": "You must choose a year"
+    },
+    "assessmentId": {
+      "empty": "You must select an assessment, or select 'Book this bedspace without linking a referral'"
     }
   },
   "bookingCancellation": {

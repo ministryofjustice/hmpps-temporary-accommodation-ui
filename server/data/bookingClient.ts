@@ -20,7 +20,7 @@ import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import type { BookingSearchResults } from 'server/@types/shared/models/BookingSearchResults'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
-import { createQueryString } from '../utils/utils'
+import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
 
 export default class BookingClient {
@@ -123,9 +123,7 @@ export default class BookingClient {
   }
 
   async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {
-    const queryString: string = createQueryString({ status })
-
-    const path = `${paths.bookings.search({ status })}${queryString ? `?${queryString}` : ''}`
+    const path = appendQueryString(paths.bookings.search({ status }), { status })
 
     const response = await this.restClient.get({ path })
 

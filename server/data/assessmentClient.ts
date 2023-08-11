@@ -6,6 +6,7 @@ import type {
 } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
+import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
 
 export default class AssessmentClient {
@@ -17,6 +18,14 @@ export default class AssessmentClient {
 
   async all(): Promise<Array<AssessmentSummary>> {
     return (await this.restClient.get({ path: paths.assessments.index.pattern })) as Array<AssessmentSummary>
+  }
+
+  async readyToPlaceForCrn(crn: string): Promise<Array<AssessmentSummary>> {
+    const status: AssessmentSummary['status'] = 'ready_to_place'
+
+    return (await this.restClient.get({
+      path: appendQueryString(paths.assessments.index.pattern, { crn: crn.trim(), statuses: status }),
+    })) as Array<AssessmentSummary>
   }
 
   async find(assessmentId: string): Promise<Assessment> {

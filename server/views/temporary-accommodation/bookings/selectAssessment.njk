@@ -1,0 +1,97 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../components/ta-radios/macro.njk" import taRadios %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Book bedspace" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: backLink
+  }) }}
+
+  {% if applyDisabled %}
+    <h1 class="govuk-heading-l">Book bedspace for a person referred through nDelius</h1>
+  {% elif forceAssessmentId %}
+    <h1 class="govuk-heading-l">No referrals found</h1>
+  {% else %}
+    <h1 class="govuk-heading-l">Confirm which referral this booking is for</h1>
+  {% endif %}
+
+  {{ showErrorSummary(errorSummary, errorTitle) }}
+  
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.bookings.confirm({ premisesId: premisesId, roomId: roomId }) }}" method="get">
+
+        {% set context = fetchContext() %}
+
+        <input type="hidden" name="crn" value="{{ crn }}"/>
+
+        <input type="hidden" name="arrivalDate-day" value="{{ context['arrivalDate-day'] }}"/>
+        <input type="hidden" name="arrivalDate-month" value="{{ context['arrivalDate-month'] }}"/>
+        <input type="hidden" name="arrivalDate-year" value="{{ context['arrivalDate-year'] }}"/>
+        <input type="hidden" name="departureDate-day" value="{{ context['departureDate-day'] }}"/>
+        <input type="hidden" name="departureDate-month" value="{{ context['departureDate-month'] }}"/>
+        <input type="hidden" name="departureDate-year" value="{{ context['departureDate-year'] }}"/>
+
+        {% set bookingWithoutReferralGuidance %}
+          {% set detailsHtml %}
+            <p class="govuk-body">Choosing this option will impact the management information (MI) data for your region. Bookings will not be associated with a specific referral.</p>
+            <p class="govuk-body">This option should only be used where a referral could not be submitted through the Temporary Accommodation service. For example, in Wales where the referral process is different.</p>
+          {% endset %}
+
+          {{ govukDetails({
+            summaryText: "Booking a bedspace without linking a referral",
+            html: detailsHtml
+          }) }}
+        {% endset %}
+        
+        {% if applyDisabled %}
+          <p class="govuk-body">Book this bedspace for a person who has been referred to Temporary Accommodation (formerly CAS3) through nDelius.</p>
+
+          <h2 class="govuk-heading-m">Digital referrals</h1>
+          <p class="govuk-body">We are working on creating a digital referral for the Temporary Accommodation service. Is it not currently available in your region.</p>
+          <p class="govuk-body">In the future you will be able to link this booking to a digital referral.</p>
+
+          <input type="hidden" name="assessmentId" value="{{ forceAssessmentId }}"/>
+        {% elif forceAssessmentId %}
+          <p class="govuk-body">There are no referrals for this person that are ready to place.</p>
+          <p class="govuk-body">Check the list of <a class="govuk-link" href="{{ paths.assessments.index({}) }}">submitted referrals</a> to see if there is a referral for this person that should be marked as ready to place.</p>
+
+          <h2 class="govuk-heading-m">Book without linking a referral</h1>
+          <p class="govuk-body">You can continue to book this bedspace without linking a referral.</p>
+          
+          <input type="hidden" name="assessmentId" value="{{ forceAssessmentId }}"/>
+
+          {{ bookingWithoutReferralGuidance | safe }}
+        {% else %}
+          <p class="govuk-body">If the correct referral is not appearing in this list check that it has been marked as 'ready to place'.</p>
+          {{ taRadios(
+            {
+              items: assessmentRadioItems,
+              value: assessmentId,
+              fieldName: "assessmentId"
+            }, context
+          ) }}
+
+          {{ bookingWithoutReferralGuidance | safe }}
+        {% endif %}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Continue",
+            preventDoubleClick: true
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

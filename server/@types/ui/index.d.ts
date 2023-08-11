@@ -99,11 +99,15 @@ export interface TableRow {
   [index: number]: TableCell
 }
 
-export interface RadioItem {
-  text: string
-  value: string
-  checked?: boolean
-}
+export type RadioItem =
+  | {
+      text: string
+      value: string
+      checked?: boolean
+    }
+  | {
+      divider: string
+    }
 
 export type CheckBoxItem =
   | {

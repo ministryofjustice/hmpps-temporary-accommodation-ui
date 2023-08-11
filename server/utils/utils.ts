@@ -96,7 +96,7 @@ export const exact = (text: string) => new RegExp(`^${escapeRegExp(text)}$`)
 
 export const createQueryString = (
   params: Record<string, unknown> | string,
-  options: IStringifyOptions = { encode: false, indices: false },
+  options: IStringifyOptions = { encode: true, indices: false },
 ): string => {
   return qs.stringify(params, options)
 }
@@ -104,4 +104,14 @@ export const createQueryString = (
 /* istanbul ignore next */
 export const assertUnreachable = (_: never) => {
   throw new Error('Unreachable code reached')
+}
+
+export const appendQueryString = (
+  path: string,
+  params: Record<string, unknown>,
+  options: IStringifyOptions = { encode: true, indices: false },
+): string => {
+  const queryString = createQueryString(params, options)
+
+  return `${path}${queryString ? `?${queryString}` : ''}`
 }

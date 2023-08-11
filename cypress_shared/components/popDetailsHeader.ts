@@ -14,4 +14,8 @@ export default class PopDetailsHeaderComponent extends Component {
       cy.get('p').should('contain', `Date of birth: ${DateFormats.isoDateToUIDate(this.person.dateOfBirth)}`)
     })
   }
+
+  shouldHaveNameLink(path: string): void {
+    cy.get('a').contains(this.person.name).should('have.attr', 'href', path)
+  }
 }

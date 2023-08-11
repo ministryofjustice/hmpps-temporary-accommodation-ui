@@ -1,5 +1,5 @@
-import type { Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
-import type { BespokeError, PageHeadingBarItem } from '@approved-premises/ui'
+import type { AssessmentSummary, Booking, Cancellation, Departure, Extension } from '@approved-premises/api'
+import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import { DateFormats } from './dateUtils'
@@ -8,6 +8,8 @@ type ParsedConflictError = {
   conflictingEntityId: string
   conflictingEntityType: 'booking' | 'lost-bed'
 }
+
+export const noAssessmentId = 'no-assessment'
 
 export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<PageHeadingBarItem> {
   const items = []
@@ -233,6 +235,27 @@ export const generateTurnaroundConflictBespokeError = (
   return { errorTitle: title, errorSummary: [{ html: message }] }
 }
 
+export const assessmentRadioItems = (assessmentSummaries: Array<AssessmentSummary>) => {
+  const sortedAssessments = [...assessmentSummaries].sort((a, b) => {
+    if (a.createdAt > b.createdAt) {
+      return -1
+    }
+    if (a.createdAt < b.createdAt) {
+      return 1
+    }
+    return 0
+  })
+
+  return [
+    ...sortedAssessments.map(assessmentSummary => ({
+      value: assessmentSummary.id,
+      text: assessmentRadioItemText(assessmentSummary),
+    })),
+    ...(sortedAssessments.length ? [{ divider: 'or' }] : []),
+    { value: noAssessmentId, text: 'Book this bedspace without linking a referral' },
+  ] as Array<RadioItem>
+}
+
 const parseConflictError = (detail: string): ParsedConflictError => {
   const detailWords = detail.split(' ')
   const conflictingEntityId = detailWords[detailWords.length - 1]
@@ -354,4 +377,16 @@ const compareBookingState = (a: Extension | Departure | Cancellation, b: Extensi
   const dateB = DateFormats.isoToDateObj(b.createdAt)
 
   return dateA.getTime() - dateB.getTime()
+}
+
+const assessmentRadioItemText = (assessmentSummary: AssessmentSummary) => {
+  if (assessmentSummary.person.name) {
+    return `${assessmentSummary.person.name}, CRN ${
+      assessmentSummary.person.crn
+    }, referral submitted ${DateFormats.isoDateToUIDate(assessmentSummary.createdAt, { format: 'short' })}`
+  }
+  return `CRN ${assessmentSummary.person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
+    assessmentSummary.createdAt,
+    { format: 'short' },
+  )}`
 }

@@ -48,6 +48,7 @@ const paths = {
   },
   bookings: {
     new: bookingsPath.path('new'),
+    selectAssessment: bookingsPath.path('select-assessment'),
     confirm: bookingsPath.path('confirm'),
     create: bookingsPath,
     show: singleBookingPath,

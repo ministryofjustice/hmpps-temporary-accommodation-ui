@@ -6,6 +6,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import BookingConfirmPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirm'
 import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingHistory'
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
+import BookingSelectAssessment from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import {
   bookingFactory,
@@ -50,16 +51,27 @@ Given('I create a booking with all necessary details', () => {
         effectiveEndDate: 'unknown',
         turnaroundStartDate: 'unknown',
       })
+      booking.assessmentId = undefined
 
       bookingNewPage.completeForm(newBooking)
 
-      const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
-      bookingConfirmPage.shouldShowBookingDetails()
+      BookingSelectAssessment.assignAssessmentSummaries('assessments')
 
-      bookingConfirmPage.clickSubmit()
+      cy.get('@assessments').then(assessments => {
+        const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessment, assessments)
+        if (assessments.length) {
+          bookingSelectAssessmentPage.selectNoAssessment()
+        }
+        bookingSelectAssessmentPage.clickSubmit()
 
-      cy.wrap(booking).as('booking')
-      this.historicBookings.push(booking)
+        const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
+        bookingConfirmPage.shouldShowBookingDetails()
+
+        bookingConfirmPage.clickSubmit()
+
+        cy.wrap(booking).as('booking')
+        this.historicBookings.push(booking)
+      })
     })
   })
 })
@@ -69,11 +81,6 @@ Given('I attempt to create a booking with required details missing', () => {
     const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
     bookingNewPage.enterCrn(person.crn)
     bookingNewPage.clickSubmit()
-
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
-    bookingConfirmPage.shouldShowBookingDetails()
-
-    bookingConfirmPage.clickSubmit()
   })
 })
 
@@ -87,10 +94,21 @@ Given('I attempt to create a conflicting booking', () => {
 
     bookingNewPage.completeForm(newBooking)
 
-    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
-    bookingConfirmPage.shouldShowBookingDetails()
+    BookingSelectAssessment.assignAssessmentSummaries('assessments')
 
-    bookingConfirmPage.clickSubmit()
+    cy.get('@assessments').then(assessments => {
+      const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessment, assessments)
+      if (assessments.length) {
+        bookingSelectAssessmentPage.selectNoAssessment()
+      }
+      bookingSelectAssessmentPage.clickSubmit()
+      bookingSelectAssessmentPage.clickSubmit()
+
+      const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
+      bookingConfirmPage.shouldShowBookingDetails()
+
+      bookingConfirmPage.clickSubmit()
+    })
   })
 })
 

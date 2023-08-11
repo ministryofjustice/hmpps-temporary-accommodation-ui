@@ -102,7 +102,6 @@ Given('I attempt to create a conflicting booking', () => {
         bookingSelectAssessmentPage.selectNoAssessment()
       }
       bookingSelectAssessmentPage.clickSubmit()
-      bookingSelectAssessmentPage.clickSubmit()
 
       const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, person)
       bookingConfirmPage.shouldShowBookingDetails()

@@ -22,4 +22,13 @@ describe('StaticController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/cookies')
     })
   })
+
+  describe('useNDelius', () => {
+    it('should render the disabled-region page', () => {
+      const requestHandler = staticController.useNDelius()
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/useNDelius')
+    })
+  })
 })

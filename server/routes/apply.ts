@@ -3,14 +3,18 @@
 import type { Router } from 'express'
 import type { Controllers } from '../controllers'
 import Apply from '../form-pages/apply'
-import { createRoleMiddleware } from '../middleware/roleMiddleware'
+import { createUserCheckMiddleware } from '../middleware/userCheckMiddleware'
 import paths from '../paths/apply'
 import { Services } from '../services'
 import { actions, compose } from './utils'
+import { userHasReferrerRoleAndIsApplyEnabled } from '../utils/userUtils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { pages } = Apply
-  const { get, post, put } = compose(actions(router, services.auditService), createRoleMiddleware('referrer'))
+  const { get, post, put } = compose(
+    actions(router, services.auditService),
+    createUserCheckMiddleware(userHasReferrerRoleAndIsApplyEnabled),
+  )
   const { applicationsController, pagesController, peopleController, offencesController } = controllers.apply
 
   get(paths.applications.start.pattern, applicationsController.start(), { auditEvent: 'VIEW_APPLICATION_START' })

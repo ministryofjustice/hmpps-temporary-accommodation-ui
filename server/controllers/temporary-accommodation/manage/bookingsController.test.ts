@@ -1,7 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { BespokeError } from '../../../@types/ui'
-import config from '../../../config'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
@@ -30,12 +29,14 @@ import {
   insertBespokeError,
   insertGenericError,
 } from '../../../utils/validation'
+import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import BookingsController from './bookingsController'
 
 jest.mock('../../../utils/bookingUtils')
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/utils')
+jest.mock('../../../utils/userUtils')
 
 describe('BookingsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -67,7 +68,7 @@ describe('BookingsController', () => {
   beforeEach(() => {
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
-    config.flags.applyDisabled = false
+    ;(isApplyEnabledForUser as jest.MockedFn<typeof isApplyEnabledForUser>).mockReturnValue(true)
   })
 
   describe('new', () => {
@@ -138,6 +139,7 @@ describe('BookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/selectAssessment', {
         premisesId,
         roomId,
+        applyDisabled: false,
         assessmentRadioItems: radioItems,
         crn: newBooking.crn,
         ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
@@ -153,7 +155,7 @@ describe('BookingsController', () => {
       const person = personFactory.build()
       const assessmentSummaries = assessmentSummaryFactory.buildList(5)
 
-      config.flags.applyDisabled = true
+      ;(isApplyEnabledForUser as jest.MockedFn<typeof isApplyEnabledForUser>).mockReturnValue(false)
 
       request.params = {
         premisesId,
@@ -178,6 +180,7 @@ describe('BookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/selectAssessment', {
         premisesId,
         roomId,
+        applyDisabled: true,
         assessmentRadioItems: radioItems,
         crn: newBooking.crn,
         ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
@@ -216,6 +219,7 @@ describe('BookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/selectAssessment', {
         premisesId,
         roomId,
+        applyDisabled: false,
         assessmentRadioItems: radioItems,
         crn: newBooking.crn,
         ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),

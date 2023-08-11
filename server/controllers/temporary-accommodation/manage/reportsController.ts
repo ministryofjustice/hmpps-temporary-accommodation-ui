@@ -4,7 +4,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
-import filterProbationRegions from '../../../utils/userUtils'
+import { filterProbationRegions } from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 
 export default class ReportsController {

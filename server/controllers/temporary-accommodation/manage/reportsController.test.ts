@@ -6,7 +6,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import ReportService from '../../../services/reportService'
 import { probationRegionFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
-import filterProbationRegions from '../../../utils/userUtils'
+import { filterProbationRegions } from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 

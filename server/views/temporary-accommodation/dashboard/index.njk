@@ -5,13 +5,13 @@
 {% set bodyClasses = "temporary-accommodation-dashboard-index" %}
 
 {% block content %}
-  
+
   {% include "../../_messages.njk" %}
-  
+
   <h1>Manage estate</h1>
 
   <div class="card-container">
-    {% if not applyDisabled %}
+    {% if userReferralsEnabled %}
       <div class="card">
         <div class="card-body">
           <h2 class="govuk-heading-s">

@@ -1,7 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewBooking } from '@approved-premises/api'
-import config from '../../../config'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
@@ -22,6 +21,7 @@ import {
   insertBespokeError,
   insertGenericError,
 } from '../../../utils/validation'
+import { isApplyEnabledForUser } from '../../../utils/userUtils'
 
 export default class BookingsController {
   constructor(
@@ -66,6 +66,7 @@ export default class BookingsController {
       const callConfig = extractCallConfig(req)
 
       const backLink = appendQueryString(paths.bookings.new({ premisesId, roomId }), req.query)
+      const applyDisabled = !isApplyEnabledForUser(res.locals.user)
 
       try {
         let error: Error
@@ -109,7 +110,8 @@ export default class BookingsController {
           premisesId,
           roomId,
           assessmentRadioItems: assessmentRadioItems(assessments),
-          forceAssessmentId: assessments.length && !config.flags.applyDisabled ? undefined : noAssessmentId,
+          applyDisabled,
+          forceAssessmentId: assessments.length && !applyDisabled ? undefined : noAssessmentId,
           backLink,
           errors,
           errorSummary,

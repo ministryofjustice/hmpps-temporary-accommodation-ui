@@ -170,7 +170,7 @@
             { "Has this person previously stayed in Community Accommodation Services (CAS)?": "Yes" },
             {
               "Approved Premises (AP or CAS1)": "Approved Premises detail",
-              "Temporary Accommodation, previously known as CAS3": "Temporary Accommodation detail"
+              "Temporary Accommodation (CAS3)": "Temporary Accommodation detail"
             }
           ]
         }

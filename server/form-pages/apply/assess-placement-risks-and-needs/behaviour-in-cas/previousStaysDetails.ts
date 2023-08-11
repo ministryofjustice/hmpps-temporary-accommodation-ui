@@ -12,7 +12,7 @@ const accommodationTypes = {
     text: 'Bail Accommodation and Support Service (BASS or CAS2)',
   },
   cas3: {
-    text: 'Temporary Accommodation, previously known as CAS3',
+    text: 'Temporary Accommodation (CAS3)',
   },
 } as const
 

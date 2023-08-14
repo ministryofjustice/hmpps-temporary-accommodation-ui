@@ -51,8 +51,8 @@ export default function createApp(controllers: Controllers, services: Services):
   app.use(setUpCurrentUser(services))
   nunjucksSetup(app, path)
   app.use((req, res, next) => {
-    res.app.locals.infoMessages = req.flash('info')
-    res.app.locals.successMessages = req.flash('success')
+    res.locals.infoMessages = req.flash('info')
+    res.locals.successMessages = req.flash('success')
     return next()
   })
 

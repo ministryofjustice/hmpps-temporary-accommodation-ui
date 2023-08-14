@@ -1,3 +1,1 @@
-export default [
-  // 'Kent, Surrey & Sussex',
-]
+export default ['Kent, Surrey & Sussex']

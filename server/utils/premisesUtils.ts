@@ -56,3 +56,9 @@ export const statusTag = (status: PropertyStatus) => {
 export const statusInfo = (status: PropertyStatus): StatusInfo => {
   return allStatuses.find(({ id }) => id === status)
 }
+
+export const shortAddress = (premises: Premises): string => {
+  const elements = [premises.addressLine1, premises.town, premises.postcode].filter(element => !!element)
+
+  return elements.join(', ')
+}

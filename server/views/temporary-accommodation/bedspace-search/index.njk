@@ -85,7 +85,7 @@
 
 
         {% for result in results.results %}
-          <div data-cy-room-id="{{ result.room.id }}">
+          <div data-cy-bedspace>
             <h2 class="govuk-heading-m"><a class="govuk-link--no-underline" href="{{ paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id}) }}">{{ result.room.name }}</a></h2>
             <h3 class="govuk-heading-s">{{ PremisesUtils.shortAddress(result.premises) }}</h3>
 

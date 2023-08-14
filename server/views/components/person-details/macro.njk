@@ -2,95 +2,110 @@
 
 {% macro personDetails(person) %}
   {% set rows = ([
-    {
-      key: {
-        text: "Name"
-      },
-      value: {
-        text: person.name
+      {
+        key: {
+          text: "CRN"
+        },
+        value: {
+          text: person.crn
+        }
       }
-    },
-    {
-      key: {
-        text: "CRN"
+    ] | removeBlankSummaryListItems)
+  %}
+
+  {% if person.type !== "RestrictedPerson" %}
+    {% set rows = ([
+      {
+        key: {
+          text: "Name"
+        },
+        value: {
+          text: person.name
+        }
       },
-      value: {
-        text: person.crn
-      }
-    },
-    {
-      key: {
-        text: "Date of birth"
+      {
+        key: {
+          text: "CRN"
+        },
+        value: {
+          text: person.crn
+        }
       },
-      value: {
-        text: formatDate(person.dateOfBirth, {format: 'short'})
-      }
-    },
-    {
-      key: {
-        text: "NOMS number"
+      {
+        key: {
+          text: "Date of birth"
+        },
+        value: {
+          text: formatDate(person.dateOfBirth, {format: 'short'})
+        }
       },
-      value: {
-        text: person.nomsNumber
-      }
-    },
-    {
-      key: {
-        text: "Nationality"
+      {
+        key: {
+          text: "NOMS number"
+        },
+        value: {
+          text: person.nomsNumber
+        }
       },
-      value: {
-        text: person.nationality
-      }
-    },
-    {
-      key: {
-        text: "Religion or belief"
+      {
+        key: {
+          text: "Nationality"
+        },
+        value: {
+          text: person.nationality
+        }
       },
-      value: {
-        text: person.religionOrBelief
-      }
-    },
-    {
-      key: {
-        text: "Sex"
+      {
+        key: {
+          text: "Religion or belief"
+        },
+        value: {
+          text: person.religionOrBelief
+        }
       },
-      value: {
-        text: person.sex
-      }
-    },
-    {
-      key: {
-        text: "Ethnicity"
+      {
+        key: {
+          text: "Sex"
+        },
+        value: {
+          text: person.sex
+        }
       },
-      value: {
-        text: person.ethnicity
-      }
-    },
-    {
-      key: {
-        text: "Gender identity"
+      {
+        key: {
+          text: "Ethnicity"
+        },
+        value: {
+          text: person.ethnicity
+        }
       },
-      value: {
-        text: person.genderIdentity
-      }
-    },
-    {
-      key: {
-        text: "Status"
+      {
+        key: {
+          text: "Gender identity"
+        },
+        value: {
+          text: person.genderIdentity
+        }
       },
-      value: {
-        html: personStatusTag(person.status)
-      }
-    },
-    {
-      key: {
-        text: "Prison"
+      {
+        key: {
+          text: "Status"
+        },
+        value: {
+          html: personStatusTag(person.status)
+        }
       },
-      value: {
-        text: person.prisonName
+      {
+        key: {
+          text: "Prison"
+        },
+        value: {
+          text: person.prisonName
+        }
       }
-    }
-  ] | removeBlankSummaryListItems) %}
+    ] | removeBlankSummaryListItems) %}
+  {% endif %}
+
 
   {{ govukSummaryList({
     attributes: {

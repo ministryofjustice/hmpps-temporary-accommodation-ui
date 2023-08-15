@@ -776,6 +776,7 @@ describe('BookingsController', () => {
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
       expect(deriveBookingHistory).toHaveBeenCalledWith(booking)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 })

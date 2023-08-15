@@ -3,6 +3,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../components/ta-radios/macro.njk" import taRadios %}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
+{% from "../components/place-context-value/macro.njk" import placeContextValue %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -14,6 +16,7 @@
     text: "Back",
     href: backLink
   }) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -30,6 +33,8 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.bookings.confirm({ premisesId: premisesId, roomId: roomId }) }}" method="get">
+
+        {{ placeContextValue(placeContext) }}
 
         {% set context = fetchContext() %}
 

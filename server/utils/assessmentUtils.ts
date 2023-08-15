@@ -5,6 +5,7 @@ import {
 import { TableRow } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
+import { addPlaceContext, createPlaceContext } from './placeUtils'
 
 export const allStatuses: Array<{ name: string; id: AssessmentSummary['status']; tagClass: string }> = [
   {
@@ -120,7 +121,7 @@ export const assessmentActions = (assessment: Assessment) => {
     },
     findABedspace: {
       classes: 'govuk-button--secondary',
-      href: paths.bedspaces.search({}),
+      href: addPlaceContext(paths.bedspaces.search({}), createPlaceContext(assessment)),
       text: 'Place referral',
       newTab: true,
     },

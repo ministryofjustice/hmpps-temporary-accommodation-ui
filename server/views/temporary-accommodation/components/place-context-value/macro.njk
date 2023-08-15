@@ -1,0 +1,9 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro placeContextValue(placeContext) %}
+
+  {% if placeContext %}
+    <input type="hidden" name="placeContextAssessmentId" value="{{ placeContext.assessment.id }}" />
+  {% endif %}
+
+{% endmacro %}

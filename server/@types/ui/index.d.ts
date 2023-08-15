@@ -1,6 +1,7 @@
 import {
   Adjudication,
   Application,
+  TemporaryAccommodationApplicationSummary as ApplicationSummary,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
@@ -237,8 +238,8 @@ export interface GroupedAssessments {
 }
 
 export interface GroupedApplications {
-  inProgress: Array<Application>
-  submitted: Array<Application>
+  inProgress: Array<ApplicationSummary>
+  submitted: Array<ApplicationSummary>
 }
 
 export interface ApplicationWithRisks extends Application {

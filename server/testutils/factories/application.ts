@@ -3,6 +3,7 @@ import { Factory } from 'fishery'
 
 import type { OASysSection, TemporaryAccommodationApplication } from '@approved-premises/api'
 
+import applicationTranslatedDocument from '../../../cypress_shared/fixtures/applicationTranslatedDocument.json'
 import { DateFormats } from '../../utils/dateUtils'
 import { fakeObject } from '../utils'
 import { fullPersonFactory } from './person'
@@ -51,9 +52,10 @@ export default ApplicationFactory.define(() => ({
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   data: {},
-  document: {},
+  document: applicationTranslatedDocument,
   outdatedSchema: faker.datatype.boolean(),
   risks: risksFactory.build(),
   status: 'inProgress' as const,
   type: 'CAS3',
+  arrivalDate: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

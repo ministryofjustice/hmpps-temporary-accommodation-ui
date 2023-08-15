@@ -38,6 +38,7 @@ import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
+import { addPlaceContext } from './placeUtils'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
@@ -159,6 +160,10 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
 
   njkEnv.addGlobal('fetchContext', function fetchContext() {
     return this.ctx
+  })
+
+  njkEnv.addGlobal('addPlaceContext', function _(link: string) {
+    return addPlaceContext(link, this.ctx.placeContext)
   })
 
   njkEnv.addGlobal('oasysDisabled', config.flags.oasysDisabled)

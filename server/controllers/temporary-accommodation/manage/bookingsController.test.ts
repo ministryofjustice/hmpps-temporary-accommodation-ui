@@ -68,6 +68,8 @@ describe('BookingsController', () => {
   )
 
   beforeEach(() => {
+    ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockReset()
+
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(isApplyEnabledForUser as jest.MockedFn<typeof isApplyEnabledForUser>).mockReturnValue(true)
@@ -105,6 +107,42 @@ describe('BookingsController', () => {
         errorSummary: [],
         crn: 'some-crn',
       })
+    })
+
+    it('prefills the arrival date and CRN if present in a place context', async () => {
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {}
+
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const placeContext = placeContextFactory.build({
+        arrivalDate: '2024-02-01',
+        assessment: assessmentFactory.build({
+          application: applicationFactory.build({
+            person: personFactory.build({ crn: 'some-crn' }),
+          }),
+        }),
+      })
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bookingsController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/bookings/new',
+        expect.objectContaining({
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs('2024-02-01', 'arrivalDate'),
+        }),
+      )
     })
   })
 

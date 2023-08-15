@@ -40,7 +40,11 @@ export default class BookingsController {
 
       const callConfig = extractCallConfig(req)
 
-      await preservePlaceContext(req, res, this.assessmentService)
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+      const arrivalDatePrefill = placeContext?.arrivalDate
+        ? DateFormats.isoToDateAndTimeInputs(placeContext.arrivalDate, 'arrivalDate')
+        : {}
+      const crnPrefill = placeContext ? { crn: placeContext.assessment.application.person.crn } : {}
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
@@ -51,6 +55,8 @@ export default class BookingsController {
         errors,
         errorSummary,
         errorTitle,
+        ...arrivalDatePrefill,
+        ...crnPrefill,
         ...req.query,
       })
     }

@@ -10,6 +10,7 @@ import {
   probationRegionFactory,
 } from '../../../testutils/factories'
 import { assessmentActions } from '../../../utils/assessmentUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -18,6 +19,7 @@ import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/utils')
+jest.mock('../../../utils/placeUtils')
 
 describe('AssessmentsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -100,6 +102,7 @@ describe('AssessmentsController', () => {
         errorSummary: [],
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentsService)
     })
   })
 
@@ -118,6 +121,7 @@ describe('AssessmentsController', () => {
         actions: assessmentActions(assessment),
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentsService)
     })
   })
 

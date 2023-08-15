@@ -10,5 +10,6 @@ export type Application = {
     id: string;
     person: Person;
     createdAt: string;
+    arrivalDate: string;
 };
 

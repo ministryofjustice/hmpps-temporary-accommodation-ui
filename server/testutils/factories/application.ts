@@ -56,4 +56,5 @@ export default ApplicationFactory.define(() => ({
   risks: risksFactory.build(),
   status: 'inProgress' as const,
   type: 'CAS3',
+  arrivalDate: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

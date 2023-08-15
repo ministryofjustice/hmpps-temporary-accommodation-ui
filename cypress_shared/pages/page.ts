@@ -1,8 +1,9 @@
-import { PersonRisksUI, ReferenceData } from '../../server/@types/ui'
+import { PersonRisksUI, PlaceContext, ReferenceData } from '../../server/@types/ui'
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
 import { exact } from '../../server/utils/utils'
 import Component from '../components/component'
+import PlaceContextHeaderComponent from '../components/placeContextHeader'
 
 export type PageElement = Cypress.Chainable<JQuery>
 
@@ -255,6 +256,15 @@ export default abstract class Page extends Component {
     cy.get(`[data-cy-check-your-answers-section="${taskName}"]`).within(() => {
       cy.get('.box-title').should('contain', taskTitle)
     })
+  }
+
+  shouldShowPlaceContextHeader(placeContext: PlaceContext) {
+    const component = new PlaceContextHeaderComponent(placeContext)
+    component.shouldShowPlaceContextDetails()
+  }
+
+  shouldNotShowPlaceContextHeader() {
+    PlaceContextHeaderComponent.shouldNotShowPlaceContextDetails()
   }
 
   getSelectOptionsAsReferenceData(label: string, alias: string): void {

@@ -2,10 +2,11 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, PremisesService } from '../../../services'
+import { AssessmentsService, BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class BedspacesController {
@@ -13,6 +14,7 @@ export default class BedspacesController {
     private readonly premisesService: PremisesService,
     private readonly bedspaceService: BedspaceService,
     private readonly bookingService: BookingService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   new(): RequestHandler {
@@ -108,6 +110,8 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
       const { premisesId, roomId } = req.params
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const premisesCharacteristics = premises.characteristics.map(item => item.name).sort((a, b) => a.localeCompare(b))
       const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
@@ -120,7 +124,7 @@ export default class BedspacesController {
         premisesCharacteristics,
         bedspace: bedspaceDetails,
         listingEntries,
-        actions: bedspaceActions(premises, room),
+        actions: bedspaceActions(premises, room, placeContext),
       })
     }
   }

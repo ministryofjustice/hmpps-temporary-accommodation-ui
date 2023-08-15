@@ -4,7 +4,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { ErrorsAndUserInput, SummaryListItem } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, PremisesService } from '../../../services'
+import { AssessmentsService, BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { ListingEntry } from '../../../services/bookingService'
 import {
@@ -39,7 +39,13 @@ describe('BedspacesController', () => {
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
-  const bedspacesController = new BedspacesController(premisesService, bedspaceService, bookingService)
+  const assessmentService = createMock<AssessmentsService>({})
+  const bedspacesController = new BedspacesController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    assessmentService,
+  )
 
   beforeEach(() => {
     request = createMock<Request>()

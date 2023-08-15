@@ -10,7 +10,7 @@ describe('bedspaceUtils', () => {
       })
       const room = roomFactory.build()
 
-      expect(bedspaceActions(premises, room)).toEqual([
+      expect(bedspaceActions(premises, room, undefined)).toEqual([
         {
           text: 'Book bedspace',
           classes: 'govuk-button--secondary',
@@ -30,7 +30,7 @@ describe('bedspaceUtils', () => {
       })
       const room = roomFactory.build()
 
-      expect(bedspaceActions(premises, room)).toEqual(null)
+      expect(bedspaceActions(premises, room, undefined)).toEqual(null)
     })
   })
 })

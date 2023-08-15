@@ -55,3 +55,9 @@ export const preservePlaceContext = async (
 
   return undefined
 }
+
+export const clearPlaceContext = (req: Request, res: Response) => {
+  res.locals.placeContext = undefined
+  req.query.placeContextAssessmentId = undefined
+  req.query.placeContextArrivalDate = undefined
+}

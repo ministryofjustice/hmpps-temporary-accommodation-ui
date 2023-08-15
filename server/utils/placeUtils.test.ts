@@ -5,6 +5,7 @@ import type { AssessmentsService } from '../services'
 import { assessmentFactory, placeContextFactory } from '../testutils/factories'
 import {
   addPlaceContext,
+  clearPlaceContext,
   createPlaceContext,
   preservePlaceContext,
   updatePlaceContextWithArrivalDate,
@@ -132,6 +133,28 @@ describe('placeUtils', () => {
       expect(result).toEqual(undefined)
       expect(res.locals.placeContext).toEqual(undefined)
       expect(assessmentService.findAssessment).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('clearPlaceContext', () => {
+    it('removes any place context date from our query and our response locals', () => {
+      const placeContext = placeContextFactory.build()
+
+      const req = createMock<Request>({
+        query: {
+          placeContextAssessmentId: 'some-assessment-id',
+          placeContextArrivalDate: '2024-07-01',
+          'other-field': 'other-value',
+        },
+      })
+      const res = createMock<Response>({
+        locals: { placeContext, 'other-field': 'other-value' },
+      })
+
+      clearPlaceContext(req, res)
+
+      expect(req.query).toEqual({ 'other-field': 'other-value' })
+      expect(res.locals).toEqual({ 'other-field': 'other-value' })
     })
   })
 })

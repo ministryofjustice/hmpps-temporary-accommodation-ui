@@ -6,6 +6,8 @@
 {% from "../components/ta-select/macro.njk" import taSelect %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
+{% from "../components/place-context-value/macro.njk" import placeContextValue %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -14,6 +16,7 @@
 
 {% block beforeContent %}
   {{ breadCrumb('Find a bedspace', []) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -22,6 +25,9 @@
   <h1 class="govuk-heading-l">Search for available bedspaces</h1>
   <form action="{{ paths.bedspaces.search({}) }}" method="get">
     {{ showErrorSummary(errorSummary) }}
+
+    {{ placeContextValue(placeContext) }}
+
 
     {{ taDateInput(
       {
@@ -87,7 +93,9 @@
 
         {% for result in results.results %}
           <div data-cy-bedspace>
-            <h2 class="govuk-heading-m"><a class="govuk-link--no-underline" href="{{ paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id}) }}">{{ result.room.name }}</a></h2>
+            <h2 class="govuk-heading-m">
+              <a class="govuk-link--no-underline" href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id})) }}">{{ result.room.name }}</a>
+            </h2>
             <h3 class="govuk-heading-s">{{ PremisesUtils.shortAddress(result.premises) }}</h3>
 
             {% set keyCharacteristicsHtml %}

@@ -1,18 +1,35 @@
-import { BedSearchResults, TemporaryAccommodationPremises as Premises, Room } from '../../server/@types/shared'
+import {
+  AssessmentSummary,
+  BedSearchResults,
+  Booking,
+  Person,
+  TemporaryAccommodationPremises as Premises,
+  Room,
+} from '../../server/@types/shared'
 import { PlaceContext } from '../../server/@types/ui'
 import {
+  assessmentSummaryFactory,
   bedSearchParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
+  bookingFactory,
+  newBookingFactory,
 } from '../../server/testutils/factories'
 import AssessmentSummaryPage from '../pages/assess/summary'
 import Page from '../pages/page'
 import BedspaceSearchPage from '../pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../pages/temporary-accommodation/manage/bedspaceShow'
 import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
+import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
+
+  private readonly person: Person
+
+  private readonly booking: Booking
+
+  private readonly assessmentSummaries: Array<AssessmentSummary>
 
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
@@ -22,6 +39,17 @@ export default class PlaceHelper {
     this.bedSearchResults = bedSearchResultsFactory.build({
       results: [bedSearchResultFactory.forBedspace(this.premises, this.room).build()],
     })
+    this.person = this.placeContext.assessment.application.person
+    this.booking = bookingFactory.build({
+      person: this.person,
+    })
+    this.assessmentSummaries = [
+      assessmentSummaryFactory.build({
+        ...this.placeContext.assessment,
+        person: this.person,
+      }),
+      ...assessmentSummaryFactory.buildList(5),
+    ]
   }
 
   setupStubs() {
@@ -30,6 +58,8 @@ export default class PlaceHelper {
     cy.task('stubBedSearch', this.bedSearchResults)
     cy.task('stubSinglePremises', this.premises)
     cy.task('stubSingleRoom', { premisesId: this.premises.id, room: this.room })
+    cy.task('stubFindPerson', { person: this.person })
+    cy.task('stubAssessments', this.assessmentSummaries)
   }
 
   startPlace() {
@@ -41,6 +71,7 @@ export default class PlaceHelper {
     this.bedspaceSearchToSearchResults()
     this.searchResultsToBedspace()
     this.bedspaceToNewBooking()
+    this.newBookingToSelectAssessment()
   }
 
   private assessmentToBedspaceSearch() {
@@ -107,5 +138,22 @@ export default class PlaceHelper {
 
     // And the CRN and arrival date are prefilled
     bookingNewPage.shouldShowPrefilledBookingDetailsFromPlaceContext(this.placeContext)
+  }
+
+  private newBookingToSelectAssessment() {
+    // Given I am viewing the new booking page
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+
+    // When I fill out the form
+    const newBooking = newBookingFactory.build({
+      crn: this.person.crn,
+    })
+    bookingNewPage.completeForm(newBooking)
+
+    // I am taken to the select assessment page
+    const selectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, this.assessmentSummaries)
+
+    // And the place context header is visible
+    selectAssessmentPage.shouldShowPlaceContextHeader(this.placeContext)
   }
 }

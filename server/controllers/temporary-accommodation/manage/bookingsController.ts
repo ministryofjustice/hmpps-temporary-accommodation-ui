@@ -12,7 +12,7 @@ import {
   noAssessmentId,
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
-import { preservePlaceContext } from '../../../utils/placeUtils'
+import { clearPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -73,6 +73,12 @@ export default class BookingsController {
       const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.query, 'departureDate')
 
       const callConfig = extractCallConfig(req)
+
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      if (placeContext && crn !== placeContext.assessment.application.person.crn) {
+        clearPlaceContext(req, res)
+      }
 
       const backLink = appendQueryString(paths.bookings.new({ premisesId, roomId }), req.query)
       const applyDisabled = !isApplyEnabledForUser(res.locals.user)

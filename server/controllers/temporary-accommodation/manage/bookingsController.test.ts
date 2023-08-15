@@ -6,10 +6,13 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import {
+  applicationFactory,
+  assessmentFactory,
   assessmentSummaryFactory,
   bookingFactory,
   newBookingFactory,
   personFactory,
+  placeContextFactory,
   premisesFactory,
   roomFactory,
 } from '../../../testutils/factories'
@@ -21,7 +24,7 @@ import {
   noAssessmentId,
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
-import { preservePlaceContext } from '../../../utils/placeUtils'
+import { clearPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -175,6 +178,7 @@ describe('BookingsController', () => {
       expect(assessmentService.getReadyToPlaceForCrn).toHaveBeenCalledWith(callConfig, newBooking.crn)
       expect(personService.findByCrn).toHaveBeenCalledWith(callConfig, newBooking.crn)
       expect(assessmentRadioItems).toHaveBeenCalledWith(assessmentSummaries)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/selectAssessment', {
@@ -404,6 +408,39 @@ describe('BookingsController', () => {
       expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
+    })
+
+    it('clears any place context if the received CRN differs from that in the place context', async () => {
+      const newBooking = newBookingFactory.build()
+      const person = personFactory.build({})
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          application: applicationFactory.build({ person: personFactory.build({ crn: 'some-crn' }) }),
+        }),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {
+        crn: 'some-other-crn',
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+      }
+
+      personService.findByCrn.mockResolvedValue(person)
+      assessmentService.getReadyToPlaceForCrn.mockResolvedValue([])
+      ;(assessmentRadioItems as jest.MockedFunction<typeof assessmentRadioItems>).mockReturnValue(radioItems)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const requestHandler = bookingsController.selectAssessment()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await requestHandler(request, response, next)
+
+      expect(clearPlaceContext).toHaveBeenCalledWith(request, response)
     })
   })
 

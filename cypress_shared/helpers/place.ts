@@ -9,6 +9,7 @@ import AssessmentSummaryPage from '../pages/assess/summary'
 import Page from '../pages/page'
 import BedspaceSearchPage from '../pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../pages/temporary-accommodation/manage/bedspaceShow'
+import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
@@ -39,6 +40,7 @@ export default class PlaceHelper {
     this.assessmentToBedspaceSearch()
     this.bedspaceSearchToSearchResults()
     this.searchResultsToBedspace()
+    this.bedspaceToNewBooking()
   }
 
   private assessmentToBedspaceSearch() {
@@ -88,5 +90,19 @@ export default class PlaceHelper {
 
     // And the place context header is visible
     bedspaceShowPage.shouldShowPlaceContextHeader(this.placeContext)
+  }
+
+  private bedspaceToNewBooking() {
+    // Given I am viewing the bedspace show page
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
+
+    // And I click "Book bedspace"
+    bedspaceShowPage.clickBookBedspaceLink()
+
+    // I am taken to the new booking page
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room)
+
+    // And the place context banner is visible
+    bookingNewPage.shouldShowPlaceContextHeader(this.placeContext)
   }
 }

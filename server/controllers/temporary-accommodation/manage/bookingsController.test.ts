@@ -96,6 +96,7 @@ describe('BookingsController', () => {
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/new', {
         premises,

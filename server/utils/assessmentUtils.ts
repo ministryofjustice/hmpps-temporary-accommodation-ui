@@ -8,6 +8,7 @@ import { TableRow, TimelineItem } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 import { personName } from './personUtils'
+import { addPlaceContext, createPlaceContext } from './placeUtils'
 import { convertToTitleCase } from './utils'
 import { formatLines } from './viewUtils'
 
@@ -128,7 +129,7 @@ export const assessmentActions = (assessment: Assessment) => {
     },
     findABedspace: {
       classes: 'govuk-button--secondary',
-      href: paths.bedspaces.search({}),
+      href: addPlaceContext(paths.bedspaces.search({}), createPlaceContext(assessment)),
       text: 'Place referral',
       newTab: true,
     },

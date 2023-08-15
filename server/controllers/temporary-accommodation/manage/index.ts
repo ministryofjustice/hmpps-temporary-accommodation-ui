@@ -28,6 +28,7 @@ export const controllers = (services: Services) => {
     services.premisesService,
     services.bedspaceService,
     services.bookingService,
+    services.assessmentsService,
   )
   const bookingsController = new BookingsController(
     services.premisesService,

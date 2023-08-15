@@ -6,6 +6,7 @@
 {% from "../components/location-header/macro.njk" import locationHeader %}
 {% from "../components/booking-listing/macro.njk" import bookingListing %}
 {% from "../components/lost-bed-listing/macro.njk" import lostBedListing %}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -15,9 +16,10 @@
 
 {% block beforeContent %}
   {{ breadCrumb('View a bedspace', [
-    {title: 'List of properties', href: paths.premises.index()},
-    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })}
+    {title: 'List of properties', href: addPlaceContext(paths.premises.index())},
+    {title: 'View a property', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))}
   ]) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -80,9 +82,9 @@
 
   {% for listingEntry in listingEntries %}
     {% if listingEntry.type === 'booking'%}
-      {{ bookingListing(listingEntry.body, listingEntry.path) }}
+      {{ bookingListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
     {% elif listingEntry.type === 'lost-bed' %}
-      {{ lostBedListing(listingEntry.body, listingEntry.path) }}
+      {{ lostBedListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
     {% endif %}
   {% endfor %}
 

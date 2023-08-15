@@ -1,8 +1,9 @@
 import { Premises, Room } from '../@types/shared'
-import { PageHeadingBarItem } from '../@types/ui'
+import { PageHeadingBarItem, PlaceContext } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
+import { addPlaceContext } from './placeUtils'
 
-export function bedspaceActions(premises: Premises, room: Room): Array<PageHeadingBarItem> {
+export function bedspaceActions(premises: Premises, room: Room, placeContext: PlaceContext): Array<PageHeadingBarItem> {
   if (premises.status === 'archived') {
     return null
   }
@@ -10,7 +11,7 @@ export function bedspaceActions(premises: Premises, room: Room): Array<PageHeadi
     {
       text: 'Book bedspace',
       classes: 'govuk-button--secondary',
-      href: paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+      href: addPlaceContext(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), placeContext),
     },
   ]
 

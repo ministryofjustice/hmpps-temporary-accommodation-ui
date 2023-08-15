@@ -8,6 +8,7 @@ import {
 import AssessmentSummaryPage from '../pages/assess/summary'
 import Page from '../pages/page'
 import BedspaceSearchPage from '../pages/temporary-accommodation/manage/bedspaceSearch'
+import BedspaceShowPage from '../pages/temporary-accommodation/manage/bedspaceShow'
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
@@ -26,6 +27,8 @@ export default class PlaceHelper {
     cy.task('stubFindAssessment', this.placeContext.assessment)
     cy.task('stubBedspaceSearchReferenceData')
     cy.task('stubBedSearch', this.bedSearchResults)
+    cy.task('stubSinglePremises', this.premises)
+    cy.task('stubSingleRoom', { premisesId: this.premises.id, room: this.room })
   }
 
   startPlace() {
@@ -35,6 +38,7 @@ export default class PlaceHelper {
   progressPlace() {
     this.assessmentToBedspaceSearch()
     this.bedspaceSearchToSearchResults()
+    this.searchResultsToBedspace()
   }
 
   private assessmentToBedspaceSearch() {
@@ -70,5 +74,19 @@ export default class PlaceHelper {
 
     // And the place context header is visible
     resultsBedspaceSearchPage.shouldShowPlaceContextHeader(this.placeContext)
+  }
+
+  private searchResultsToBedspace() {
+    // Given I am viewing bedspace search results
+    const resultsBedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage, this.bedSearchResults)
+
+    // When I click a bedspace
+    resultsBedspaceSearchPage.clickBedspaceLink(this.room)
+
+    // I am taken to the bedspace show page
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
+
+    // And the place context header is visible
+    bedspaceShowPage.shouldShowPlaceContextHeader(this.placeContext)
   }
 }

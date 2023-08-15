@@ -9,13 +9,14 @@
 {% set pageTitle = applicationName + " - Book bedspace" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
     href: backLink
   }) }}
+{% endblock %}
 
+{% block content %}
   {% if applyDisabled %}
     <h1 class="govuk-heading-l">Book bedspace for a person referred through nDelius</h1>
   {% elif forceAssessmentId %}

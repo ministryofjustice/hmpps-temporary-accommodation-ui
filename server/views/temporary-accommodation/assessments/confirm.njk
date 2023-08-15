@@ -6,12 +6,14 @@
 {% set pageTitle = applicationName + " - confirmation" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
+{% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
     href: paths.assessments.show({ id: id })
   }) }}
+{% endblock %}
 
+{% block content %}
   <h1 class="govuk-heading-l">{{content.title}}</h1>
   {{content.text | safe}}
 

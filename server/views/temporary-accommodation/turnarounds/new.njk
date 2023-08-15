@@ -11,13 +11,14 @@
 {% set pageTitle = applicationName + " - Change turnaround time" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
     href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
   }) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
 
   <h1>Change turnaround time</h1>

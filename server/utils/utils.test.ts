@@ -224,4 +224,10 @@ describe('unique', () => {
       expect(appendQueryString('/some/path', {})).toEqual('/some/path')
     })
   })
+
+  it('appends a query string to a path that already contais a query string', () => {
+    expect(appendQueryString('/some/path?userId=some-user', { bookingId: 'some-booking' })).toEqual(
+      '/some/path?userId=some-user&bookingId=some-booking',
+    )
+  })
 })

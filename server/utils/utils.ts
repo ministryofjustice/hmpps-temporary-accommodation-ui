@@ -113,5 +113,8 @@ export const appendQueryString = (
 ): string => {
   const queryString = createQueryString(params, options)
 
+  if (path.includes('?')) {
+    return `${path}${queryString ? `&${queryString}` : ''}`
+  }
   return `${path}${queryString ? `?${queryString}` : ''}`
 }

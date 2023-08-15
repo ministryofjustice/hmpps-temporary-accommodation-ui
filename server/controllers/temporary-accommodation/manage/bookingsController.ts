@@ -221,7 +221,7 @@ export default class BookingsController {
           req,
           res,
           err,
-          appendQueryString(paths.bookings.new({ premisesId, roomId }), req.body),
+          appendQueryString(paths.bookings.new({ premisesId, roomId }), { ...req.body, _csrf: undefined }),
         )
       }
     }

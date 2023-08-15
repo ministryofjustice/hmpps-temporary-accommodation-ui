@@ -1,0 +1,24 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% macro placeContextHeader(placeContext) %}
+
+  {% if placeContext %}
+    <div class="place-context-header">
+      <strong class="govuk-heading-s govuk-!-margin-bottom-2">Person to place</strong>
+      <div class="place-context-header__attribute-container">
+        <div>{{ placeContext.assessment.application.person.name | default('Limited access offender') }}</div>
+        {% if placeContext.assessment.application.person.dateOfBirth %}
+          <div>Date of birth: {{ formatDate(placeContext.assessment.application.person.dateOfBirth, {format: 'short'}) }}</div>
+        {% endif %}
+        {% if placeContext.assessment.application.person.sex %}
+          <div>Sex: {{ placeContext.assessment.application.person.sex }}</div>
+        {% endif %}
+        {% if placeContext.assessment.application.person.genderIdentity %}
+          <div>Gender identity: {{ placeContext.assessment.application.person.genderIdentity }}</div>
+        {% endif %}
+        <div>CRN: {{ placeContext.assessment.application.person.crn }}</div>
+      </div>
+    </div>
+  {% endif %}
+
+{% endmacro %}

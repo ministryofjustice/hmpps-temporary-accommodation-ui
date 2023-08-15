@@ -3,15 +3,18 @@ import {
   assessmentFactory,
   assessmentSummaryFactory,
   personFactory,
+  placeContextFactory,
   referralHistoryNoteFactory,
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
 import { assessmentActions, assessmentTableRows, statusName, statusTag, timelineItems } from './assessmentUtils'
+import { addPlaceContext, createPlaceContext } from './placeUtils'
 import { formatLines } from './viewUtils'
 
 jest.mock('./viewUtils')
 jest.mock('./userUtils')
+jest.mock('./placeUtils')
 
 describe('assessmentUtils', () => {
   describe('statusTag', () => {
@@ -160,6 +163,11 @@ describe('assessmentUtils', () => {
         status: 'ready_to_place',
       })
 
+      const placeContext = placeContextFactory.build()
+
+      ;(createPlaceContext as jest.MockedFunction<typeof createPlaceContext>).mockReturnValue(placeContext)
+      ;(addPlaceContext as jest.MockedFunction<typeof addPlaceContext>).mockReturnValue('/path/with/place/context')
+
       const result = assessmentActions(assessment)
 
       expect(result).toEqual([
@@ -183,11 +191,14 @@ describe('assessmentUtils', () => {
         },
         {
           classes: 'govuk-button--secondary',
-          href: paths.bedspaces.search({}),
+          href: '/path/with/place/context',
           text: 'Place referral',
           newTab: true,
         },
       ])
+
+      expect(createPlaceContext).toHaveBeenCalledWith(assessment)
+      expect(addPlaceContext).toHaveBeenCalledWith(paths.bedspaces.search({}), placeContext)
     })
 
     it('returns the "ready_to_place" action for an assessment with a status of "closed"', () => {

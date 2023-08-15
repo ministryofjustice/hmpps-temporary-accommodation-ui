@@ -13,6 +13,7 @@ import {
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
 import {
   catchValidationErrorOrPropogate,
@@ -21,7 +22,6 @@ import {
   insertBespokeError,
   insertGenericError,
 } from '../../../utils/validation'
-import { isApplyEnabledForUser } from '../../../utils/userUtils'
 
 export default class BookingsController {
   constructor(

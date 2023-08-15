@@ -3,6 +3,8 @@
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
 {% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
+{% from "../components/place-context-value/macro.njk" import placeContextValue %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -14,6 +16,7 @@
     text: "Back",
     href: backLink
   }) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -26,8 +29,10 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.create({ premisesId: premises.id, roomId: room.id }) }}" method="post">
+      <form action="{{ addPlaceContext(paths.bookings.create({ premisesId: premises.id, roomId: room.id })) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ placeContextValue(placeContext) }}
 
         {% set context = fetchContext() %}
 

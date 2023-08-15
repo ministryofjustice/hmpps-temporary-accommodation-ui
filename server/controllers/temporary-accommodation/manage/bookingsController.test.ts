@@ -515,6 +515,7 @@ describe('BookingsController', () => {
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       expect(appendQueryString).toHaveBeenCalledWith(
         paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
         request.query,
@@ -628,6 +629,40 @@ describe('BookingsController', () => {
 
       expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'assessmentId', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, new Error(), backLink)
+    })
+
+    it('clears any place context if the received assessment ID differs from that in the place context', async () => {
+      const newBooking = newBookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const person = personFactory.build()
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          id: 'some-id',
+        }),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {
+        crn: newBooking.crn,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+        assessmentId: 'some-other-id',
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      personService.findByCrn.mockResolvedValue(person)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const requestHandler = bookingsController.confirm()
+      await requestHandler(request, response, next)
+
+      expect(clearPlaceContext).toHaveBeenCalledWith(request, response)
     })
   })
 

@@ -104,5 +104,8 @@ export default class PlaceHelper {
 
     // And the place context banner is visible
     bookingNewPage.shouldShowPlaceContextHeader(this.placeContext)
+
+    // And the CRN and arrival date are prefilled
+    bookingNewPage.shouldShowPrefilledBookingDetailsFromPlaceContext(this.placeContext)
   }
 }

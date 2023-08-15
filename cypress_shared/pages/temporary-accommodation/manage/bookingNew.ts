@@ -1,5 +1,6 @@
 import type { NewBooking } from '@approved-premises/api'
 import { TemporaryAccommodationPremises as Premises, Room } from '../../../../server/@types/shared'
+import { PlaceContext } from '../../../../server/@types/ui'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -56,6 +57,9 @@ export default class BookingNewPage extends BookingEditablePage {
     this.shouldShowDateInputsByLegend('What is the end date?', newBooking.departureDate)
   }
 
+  shouldShowPrefilledBookingDetailsFromPlaceContext(placeContext: NonNullable<PlaceContext>): void {
+    this.shouldShowTextInputByLabel("What is the person's CRN", placeContext.assessment.application.person.crn)
+    this.shouldShowDateInputsByLegend('What is the start date?', placeContext.arrivalDate!)
   }
 
   private turnaroundText(): string {

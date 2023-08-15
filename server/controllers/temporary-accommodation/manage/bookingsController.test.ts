@@ -21,6 +21,7 @@ import {
   noAssessmentId,
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -37,6 +38,7 @@ jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/utils')
 jest.mock('../../../utils/userUtils')
+jest.mock('../../../utils/placeUtils')
 
 describe('BookingsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -729,6 +731,7 @@ describe('BookingsController', () => {
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 

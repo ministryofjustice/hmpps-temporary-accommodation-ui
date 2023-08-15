@@ -3,6 +3,7 @@
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
 {% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -14,10 +15,11 @@
 
 {% block beforeContent %}
   {{ breadCrumb('View a booking', [
-    {title: 'List of properties', href: paths.premises.index()},
-    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
-    {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
+    {title: 'List of properties', href: addPlaceContext(paths.premises.index())},
+    {title: 'View a property', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
+    {title: 'View a bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
   ]) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -31,10 +33,10 @@
     items: actions
   }) }}
 
-  {{ popDetailsHeader(booking.person, { nameLink: paths.assessments.summary({ id: booking.assessmentId }) if booking.assessmentId else "" }) }}
+  {{ popDetailsHeader(booking.person, { nameLink: addPlaceContext(paths.assessments.summary({ id: booking.assessmentId })) if booking.assessmentId else "" }) }}
   {{ locationHeader({ room: room, premises: premises }) }}
 
-  {{ bookingInfo(booking, paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })) }}
+  {{ bookingInfo(booking, addPlaceContext(paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))) }}
 
 {% endblock %}
 

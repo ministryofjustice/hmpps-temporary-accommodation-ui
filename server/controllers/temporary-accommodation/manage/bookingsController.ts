@@ -12,6 +12,7 @@ import {
   noAssessmentId,
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -231,6 +232,8 @@ export default class BookingsController {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
+
+      await preservePlaceContext(req, res, this.assessmentService)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)

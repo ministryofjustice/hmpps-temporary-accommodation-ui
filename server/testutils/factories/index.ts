@@ -46,6 +46,7 @@ import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import oasysSelectionFactory from './oasysSelection'
 import pduFactory from './pdu'
 import personFactory from './person'
+import placeContextFactory from './placeContext'
 import premisesFactory from './premises'
 import premisesSummaryFactory from './premisesSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
@@ -111,6 +112,7 @@ export {
   oasysSelectionFactory,
   pduFactory,
   personFactory,
+  placeContextFactory,
   premisesFactory,
   premisesSummaryFactory,
   prisonCaseNotesFactory,

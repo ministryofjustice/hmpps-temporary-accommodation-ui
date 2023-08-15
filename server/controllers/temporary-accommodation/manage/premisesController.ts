@@ -2,18 +2,21 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
+import { AssessmentsService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
 import { parseNaturalNumber } from '../../../utils/formUtils'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export default class PremisesController {
   constructor(
     private readonly premisesService: PremisesService,
     private readonly bedspaceService: BedspaceService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   index(): RequestHandler {
@@ -131,6 +134,8 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
+
+      await preservePlaceContext(req, res, this.assessmentService)
 
       const details = await this.premisesService.getPremisesDetails(callConfig, premisesId)
 

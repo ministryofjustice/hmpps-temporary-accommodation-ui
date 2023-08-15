@@ -287,3 +287,9 @@ export interface OasysPage extends TasklistPage {
   risks: PersonRisksUI
   oasysSuccess: boolean
 }
+
+export type PlaceContext =
+  | {
+      assessment: Assessment
+    }
+  | undefined

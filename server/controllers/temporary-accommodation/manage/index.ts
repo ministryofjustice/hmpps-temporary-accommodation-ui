@@ -19,7 +19,11 @@ import TurnaroundsController from './turnaroundsController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()
-  const premisesController = new PremisesController(services.premisesService, services.bedspaceService)
+  const premisesController = new PremisesController(
+    services.premisesService,
+    services.bedspaceService,
+    services.assessmentsService,
+  )
   const bedspacesController = new BedspacesController(
     services.premisesService,
     services.bedspaceService,

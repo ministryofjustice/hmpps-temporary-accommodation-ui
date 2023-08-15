@@ -1,6 +1,6 @@
 import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
-import { sentenceCase } from '../../../server/utils/utils'
 import type { Section } from '../../../server/utils/applicationUtils'
+import { sentenceCase } from '../../../server/utils/utils'
 import Page from '../page'
 
 export default class AssessmentShowPage extends Page {

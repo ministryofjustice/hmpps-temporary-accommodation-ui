@@ -3,10 +3,10 @@ import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
 } from '../../../@types/shared'
-import AssessmentsService from '../../../services/assessmentsService'
-import extractCallConfig from '../../../utils/restUtils'
-import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
 import paths from '../../../paths/temporary-accommodation/manage'
+import AssessmentsService from '../../../services/assessmentsService'
+import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
+import extractCallConfig from '../../../utils/restUtils'
 import { lowerCase } from '../../../utils/utils'
 
 export const assessmentsTableHeaders = [

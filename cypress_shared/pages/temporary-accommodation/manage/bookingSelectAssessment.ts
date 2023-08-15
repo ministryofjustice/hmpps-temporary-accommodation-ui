@@ -1,4 +1,6 @@
 import type { AssessmentSummary } from '@approved-premises/api'
+import { FullPerson } from '../../../../server/@types/shared'
+import { PlaceContext } from '../../../../server/@types/ui'
 import { assessmentSummaryFactory } from '../../../../server/testutils/factories'
 import { noAssessmentId } from '../../../../server/utils/bookingUtils'
 import { DateFormats } from '../../../../server/utils/dateUtils'
@@ -36,6 +38,18 @@ export default class BookingSelectAssessmentPage extends Page {
         .eq(0)
         .contains(DateFormats.isoDateToUIDate(assessmentSummary.createdAt, { format: 'short' }))
     })
+  }
+
+  shouldShowPreselectedAsssessmentFromPlaceContext(placeContext: NonNullable<PlaceContext>): void {
+    const person = placeContext.assessment.application.person as FullPerson
+
+    this.shouldShowRadioInput(
+      'assessmentId',
+      ` ${person.name}, CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
+        placeContext.assessment.createdAt,
+        { format: 'short' },
+      )} `,
+    )
   }
 
   selectAssessment(assessmentSummary: AssessmentSummary): void {

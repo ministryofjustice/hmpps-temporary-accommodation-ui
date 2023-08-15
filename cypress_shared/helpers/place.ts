@@ -155,5 +155,8 @@ export default class PlaceHelper {
 
     // And the place context header is visible
     selectAssessmentPage.shouldShowPlaceContextHeader(this.placeContext)
+
+    // And the assessment is preselected
+    selectAssessmentPage.shouldShowPreselectedAsssessmentFromPlaceContext(this.placeContext)
   }
 }

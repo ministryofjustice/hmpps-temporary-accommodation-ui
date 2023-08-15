@@ -276,6 +276,45 @@ describe('BookingsController', () => {
       })
     })
 
+    it('prefills the asssessment ID if present in a place context', async () => {
+      const newBooking = newBookingFactory.build()
+      const person = personFactory.build()
+      const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          id: 'some-assessment-id',
+        }),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {
+        crn: newBooking.crn,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+      }
+
+      personService.findByCrn.mockResolvedValue(person)
+      assessmentService.getReadyToPlaceForCrn.mockResolvedValue(assessmentSummaries)
+      ;(assessmentRadioItems as jest.MockedFunction<typeof assessmentRadioItems>).mockReturnValue(radioItems)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const requestHandler = bookingsController.selectAssessment()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/bookings/selectAssessment',
+        expect.objectContaining({
+          assessmentId: 'some-assessment-id',
+        }),
+      )
+    })
+
     it.each([
       [
         'crn is empty',

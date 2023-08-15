@@ -118,6 +118,8 @@ export default class BookingsController {
           throw error
         }
 
+        const assessmentIdPrefill = placeContext ? { assessmentId: placeContext.assessment.id } : {}
+
         await this.personsService.findByCrn(callConfig, crn)
         const assessments = await this.assessmentService.getReadyToPlaceForCrn(callConfig, crn)
 
@@ -131,6 +133,7 @@ export default class BookingsController {
           errors,
           errorSummary,
           errorTitle,
+          ...assessmentIdPrefill,
           ...req.query,
         })
       } catch (err) {

@@ -1,6 +1,9 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { premisesFactory, roomFactory } from '../testutils/factories'
+import { placeContextFactory, premisesFactory, roomFactory } from '../testutils/factories'
 import { bedspaceActions } from './bedspaceUtils'
+import { addPlaceContext } from './placeUtils'
+
+jest.mock('./placeUtils')
 
 describe('bedspaceUtils', () => {
   describe('bedspaceUtils', () => {
@@ -9,12 +12,15 @@ describe('bedspaceUtils', () => {
         status: 'active',
       })
       const room = roomFactory.build()
+      const placeContext = placeContextFactory.build()
 
-      expect(bedspaceActions(premises, room)).toEqual([
+      ;(addPlaceContext as jest.MockedFunction<typeof addPlaceContext>).mockReturnValue('/path/with/place/context')
+
+      expect(bedspaceActions(premises, room, placeContext)).toEqual([
         {
           text: 'Book bedspace',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+          href: '/path/with/place/context',
         },
         {
           text: 'Void bedspace',
@@ -22,15 +28,22 @@ describe('bedspaceUtils', () => {
           href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
         },
       ])
+
+      expect(addPlaceContext).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        placeContext,
+      )
     })
 
     it('returns null for an archived premises', () => {
+      const placeContext = placeContextFactory.build()
+
       const premises = premisesFactory.build({
         status: 'archived',
       })
       const room = roomFactory.build()
 
-      expect(bedspaceActions(premises, room)).toEqual(null)
+      expect(bedspaceActions(premises, room, placeContext)).toEqual(null)
     })
   })
 })

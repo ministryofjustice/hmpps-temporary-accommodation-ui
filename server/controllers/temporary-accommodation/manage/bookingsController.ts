@@ -157,6 +157,12 @@ export default class BookingsController {
 
       const callConfig = extractCallConfig(req)
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      if (placeContext && placeContext.assessment.id !== assessmentId) {
+        clearPlaceContext(req, res)
+      }
+
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 

@@ -19,8 +19,10 @@ import AssessmentSummaryPage from '../pages/assess/summary'
 import Page from '../pages/page'
 import BedspaceSearchPage from '../pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../pages/temporary-accommodation/manage/bedspaceShow'
+import BookingConfirmPage from '../pages/temporary-accommodation/manage/bookingConfirm'
 import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
+import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
@@ -60,18 +62,22 @@ export default class PlaceHelper {
     cy.task('stubSingleRoom', { premisesId: this.premises.id, room: this.room })
     cy.task('stubFindPerson', { person: this.person })
     cy.task('stubAssessments', this.assessmentSummaries)
+    cy.task('stubBookingCreate', { premisesId: this.premises.id, booking: this.booking })
+    cy.task('stubBooking', { premisesId: this.premises.id, booking: this.booking })
   }
 
   startPlace() {
     AssessmentSummaryPage.visit(this.placeContext.assessment)
   }
 
-  progressPlace() {
+  completePlace() {
     this.assessmentToBedspaceSearch()
     this.bedspaceSearchToSearchResults()
     this.searchResultsToBedspace()
     this.bedspaceToNewBooking()
     this.newBookingToSelectAssessment()
+    this.selectAssessmentToConfirm()
+    this.confirmToShowBooking()
   }
 
   private assessmentToBedspaceSearch() {
@@ -158,5 +164,34 @@ export default class PlaceHelper {
 
     // And the assessment is preselected
     selectAssessmentPage.shouldShowPreselectedAsssessmentFromPlaceContext(this.placeContext)
+  }
+
+  private selectAssessmentToConfirm() {
+    // Given I am viewing the select assessment page
+    const selectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, this.assessmentSummaries)
+
+    // When I complete the form
+    selectAssessmentPage.selectAssessment(assessmentSummaryFactory.build(this.placeContext.assessment))
+    selectAssessmentPage.clickSubmit()
+
+    // I am taken to the booking confirm page
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, this.person)
+
+    // And the place context header is visible
+    bookingConfirmPage.shouldShowPlaceContextHeader(this.placeContext)
+  }
+
+  private confirmToShowBooking() {
+    // Given I am viewing the booking confirm page
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, this.person)
+
+    // When I click submit
+    bookingConfirmPage.clickSubmit()
+
+    // I am taken to the show booking page
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+
+    // And the place context header is not visible
+    bookingShowPage.shouldNotShowPlaceContextHeader()
   }
 }

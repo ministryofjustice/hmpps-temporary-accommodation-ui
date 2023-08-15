@@ -2,11 +2,12 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewLostBed, NewLostBedCancellation, UpdateLostBed } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { LostBedService, PremisesService } from '../../../services'
+import { AssessmentsService, LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -20,6 +21,7 @@ export default class LostBedsController {
     private readonly lostBedsService: LostBedService,
     private readonly premisesService: PremisesService,
     private readonly bedspacesService: BedspaceService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   new(): RequestHandler {
@@ -78,6 +80,8 @@ export default class LostBedsController {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
+
+      await preservePlaceContext(req, res, this.assessmentService)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)

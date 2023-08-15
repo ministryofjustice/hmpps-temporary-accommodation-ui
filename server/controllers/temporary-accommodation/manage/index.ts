@@ -81,6 +81,7 @@ export const controllers = (services: Services) => {
     services.lostBedService,
     services.premisesService,
     services.bedspaceService,
+    services.assessmentsService,
   )
 
   const bedspaceSearchController = new BedspaceSearchController(

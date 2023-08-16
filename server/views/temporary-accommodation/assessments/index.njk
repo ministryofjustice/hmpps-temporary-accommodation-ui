@@ -49,9 +49,11 @@
   }}
 {% endset %}
 
-{% block content %}
+{% block beforeContent %}
   {{ breadCrumb('Referrals', []) }}
+{% endblock %}
 
+{% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-l">Referrals</h1>

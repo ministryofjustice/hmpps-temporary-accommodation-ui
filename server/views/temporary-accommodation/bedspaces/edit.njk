@@ -7,14 +7,15 @@
 {% set pageTitle = applicationName + " - Edit a bedspace" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('Edit a bedspace', [
     {title: 'List of properties', href: paths.premises.index()},
     {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
     {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: id })}
   ]) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
   
   <h1>Edit a bedspace</h1>

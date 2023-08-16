@@ -10,12 +10,13 @@
 {% set mainClasses = "app-container govuk-body" %}
 {% set bodyClasses = "temporary-accommodation-premises-show" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('View a property', [
     {title: 'List of properties', href: paths.premises.index()}
   ]) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
 
   {% if premises.status === 'archived' %}

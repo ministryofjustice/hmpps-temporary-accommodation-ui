@@ -11,13 +11,14 @@
 {% set pageTitle = applicationName + " - Cancel void booking" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('Cancel a void booking', [
     {title: 'List of bedspaces', href: paths.premises.show({ premisesId: premises.id })},
     {title: 'View bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
   ]) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
 
   {{ mojPageHeaderActions({

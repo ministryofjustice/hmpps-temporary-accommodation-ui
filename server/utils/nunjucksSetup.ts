@@ -19,6 +19,7 @@ import { statusTag as personStatusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
 import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
+import * as AssessmentUtils from './assessmentUtils'
 import * as AttachDocumentsUtils from './attachDocumentsUtils'
 import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
@@ -179,6 +180,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('PremisesUtils', PremisesUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
+  njkEnv.addGlobal('AssessmentUtils', AssessmentUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
   njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)
 }

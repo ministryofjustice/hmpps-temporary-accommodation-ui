@@ -1,6 +1,16 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { assessmentFactory, assessmentSummaryFactory, personFactory } from '../testutils/factories'
-import { assessmentActions, assessmentTableRows, statusName, statusTag } from './assessmentUtils'
+import {
+  assessmentFactory,
+  assessmentSummaryFactory,
+  personFactory,
+  referralHistoryNoteFactory,
+  referralHistoryUserNoteFactory,
+} from '../testutils/factories'
+import { assessmentActions, assessmentTableRows, statusName, statusTag, timelineItems } from './assessmentUtils'
+import { formatLines } from './viewUtils'
+
+jest.mock('./viewUtils')
+jest.mock('./userUtils')
 
 describe('assessmentUtils', () => {
   describe('statusTag', () => {
@@ -191,6 +201,79 @@ describe('assessmentUtils', () => {
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
           newTab: false,
+        },
+      ])
+    })
+  })
+
+  describe('timelineItems', () => {
+    it('returns a notes in a format compatible with the MoJ timeline component', () => {
+      const userNote1 = referralHistoryUserNoteFactory.build({
+        createdByUserName: 'SOME USER',
+        createdAt: '2024-04-01',
+      })
+      const userNote2 = referralHistoryUserNoteFactory.build({
+        createdByUserName: 'ANOTHER USER',
+        createdAt: '2024-05-01',
+      })
+
+      const systemNote1 = referralHistoryNoteFactory.build({ createdAt: '2024-04-02' })
+      const systemNote2 = referralHistoryNoteFactory.build({ createdAt: '2024-05-02' })
+
+      const notes = [systemNote1, userNote2, userNote1, systemNote2]
+
+      const assessment = assessmentFactory.build({ referralHistoryNotes: notes })
+      const html = 'some formatted html'
+
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(_text => html)
+      const result = timelineItems(assessment)
+
+      expect(result).toEqual([
+        {
+          label: {
+            text: 'Note',
+          },
+          html,
+          datetime: {
+            timestamp: systemNote2.createdAt,
+            type: 'datetime',
+          },
+        },
+        {
+          label: {
+            text: 'Note',
+          },
+          html,
+          datetime: {
+            timestamp: userNote2.createdAt,
+            type: 'datetime',
+          },
+          byline: {
+            text: 'Another User',
+          },
+        },
+        {
+          label: {
+            text: 'Note',
+          },
+          html,
+          datetime: {
+            timestamp: systemNote1.createdAt,
+            type: 'datetime',
+          },
+        },
+        {
+          label: {
+            text: 'Note',
+          },
+          html,
+          datetime: {
+            timestamp: userNote1.createdAt,
+            type: 'datetime',
+          },
+          byline: {
+            text: 'Some User',
+          },
         },
       ])
     })

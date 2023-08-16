@@ -5,6 +5,8 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import {
+  applicationFactory,
+  assessmentFactory,
   bedSearchParametersFactory,
   bedSearchResultsFactory,
   placeContextFactory,
@@ -64,6 +66,34 @@ describe('BedspaceSearchController', () => {
         errors: {},
         errorSummary: [],
       })
+    })
+
+    it('prefills the start date if an arrival date is present in a place context', async () => {
+      request.query = {}
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          application: applicationFactory.build({
+            arrivalDate: '2024-02-01',
+          }),
+        }),
+      })
+
+      bedspaceSearchService.getReferenceData.mockResolvedValue(referenceData)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bedspaceSearchController.index()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceSearchService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceSearchService.search).not.toHaveBeenCalled()
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/bedspace-search/index',
+        expect.objectContaining(DateFormats.isoToDateAndTimeInputs('2024-02-01', 'startDate')),
+      )
     })
 
     it('renders the search page with search results when given a search query', async () => {

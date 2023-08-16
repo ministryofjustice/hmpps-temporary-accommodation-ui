@@ -32,6 +32,11 @@ export default class BedspaceSearchController {
       const query =
         (req.query as BedspaceSearchQuery).durationDays !== undefined ? (req.query as BedspaceSearchQuery) : undefined
 
+      const placeContextArrivalDate = placeContext?.assessment.application.arrivalDate
+      const startDatePrefill = placeContextArrivalDate
+        ? DateFormats.isoToDateAndTimeInputs(placeContextArrivalDate, 'startDate')
+        : {}
+
       let results: BedSearchResults
       let startDate: string
 
@@ -57,6 +62,7 @@ export default class BedspaceSearchController {
           startDate,
           errors,
           errorSummary,
+          ...startDatePrefill,
           ...query,
           ...userInput,
         })

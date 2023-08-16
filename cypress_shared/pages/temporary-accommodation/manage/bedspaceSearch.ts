@@ -46,6 +46,10 @@ export default class BedspaceSearchPage extends Page {
     this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
   }
 
+  shouldShowPrefilledStartDate(startDate: string) {
+    this.shouldShowDateInputsByLegend('Available from', startDate)
+  }
+
   completeForm(searchParameters: BedSearchParameters) {
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days available', `${searchParameters.durationDays}`)

@@ -31,4 +31,13 @@ describe('StaticController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/useNDelius')
     })
   })
+
+  describe('notAuthorised', () => {
+    it('should render the not authorise page', () => {
+      const requestHandler = staticController.notAuthorised()
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/notAuthorised')
+    })
+  })
 })

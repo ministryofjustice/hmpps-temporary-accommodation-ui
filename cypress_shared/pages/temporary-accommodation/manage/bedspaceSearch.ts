@@ -4,6 +4,7 @@ import {
   Room,
   TemporaryAccommodationBedSearchResult,
 } from '../../../../server/@types/shared'
+import { PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
@@ -50,6 +51,10 @@ export default class BedspaceSearchPage extends Page {
     this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
     this.shouldShowTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
+  }
+
+  shouldShowPrefilledSearchParametersFromPlaceContext(placeContext: NonNullable<PlaceContext>) {
+    this.shouldShowDateInputsByLegend('Available from', placeContext.assessment.application.arrivalDate)
   }
 
   completeForm(searchParameters: BedSearchParameters) {

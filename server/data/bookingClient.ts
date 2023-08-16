@@ -1,6 +1,7 @@
 import type {
   Arrival,
   Booking,
+  BookingSearchResults,
   Cancellation,
   Confirmation,
   Departure,
@@ -17,7 +18,6 @@ import type {
   Turnaround,
 } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
-import type { BookingSearchResults } from 'server/@types/shared/models/BookingSearchResults'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'

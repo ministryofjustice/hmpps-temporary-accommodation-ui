@@ -86,11 +86,7 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral show page
-          const assessmentPage = Page.verifyOnPage(
-            AssessmentShowPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentPage = Page.verifyOnPage(AssessmentShowPage, assessment)
           // And I can view an assessment
           assessmentPage.shouldShowAssessment(applicationTranslatedDocument)
 
@@ -111,7 +107,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the show page and a banner is shown
-          Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, 'in_review')
+          Page.verifyOnPage(AssessmentShowPage, { ...assessment, status: 'in_review' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "in review"')
 
           // And the assessment is updated in the database
@@ -132,7 +128,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the show page and a banner is shown
-          Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, 'ready_to_place')
+          Page.verifyOnPage(AssessmentShowPage, { ...assessment, status: 'ready_to_place' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "ready to place"')
 
           // And the assessment is updated in the database
@@ -153,7 +149,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the show page and a banner is shown
-          Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, 'closed')
+          Page.verifyOnPage(AssessmentShowPage, { ...assessment, status: 'closed' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "closed"')
 
           // And the assessment is updated in the database

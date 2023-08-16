@@ -1,12 +1,18 @@
 import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
+import paths from '../../../server/paths/temporary-accommodation/manage'
 import type { Section } from '../../../server/utils/applicationUtils'
 import { sentenceCase } from '../../../server/utils/utils'
 import Page from '../page'
 
 export default class AssessmentShowPage extends Page {
-  constructor(name: string, status: Assessment['status']) {
-    super(name)
-    cy.get('.govuk-tag').contains(sentenceCase(status as string))
+  constructor(assessment: Assessment) {
+    super(assessment.application.person.name)
+    cy.get('.govuk-tag').contains(sentenceCase(assessment.status as string))
+  }
+
+  static visit(assessment: Assessment): AssessmentShowPage {
+    cy.visit(paths.assessments.show({ id: assessment.id }))
+    return new AssessmentShowPage(assessment)
   }
 
   clickAction(option: string) {

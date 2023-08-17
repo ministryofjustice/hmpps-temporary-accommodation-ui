@@ -1,5 +1,5 @@
 import { ListPage } from '../../cypress_shared/pages/apply'
-import NotAuthorisedPage from '../../cypress_shared/pages/notAuthorised'
+import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
 import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser, setupTestUserWithoutRole } from '../../cypress_shared/utils/setupTestUser'
@@ -30,12 +30,12 @@ context('Landing', () => {
     Page.verifyOnPage(ListPage, [])
   })
 
-  it('redirects a user who is not an assessor or a referrer', () => {
+  it('signs-out a user who is not an assessor or a referrer', () => {
     // Given I am signed in as a user without a role
     setupTestUserWithoutRole()
     cy.signIn()
 
-    // I am redirected to the not authorised page
-    Page.verifyOnPage(NotAuthorisedPage)
+    // I am redirected to the sign-in page
+    Page.verifyOnPage(AuthSignInPage)
   })
 })

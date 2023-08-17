@@ -12,10 +12,4 @@ export default class StaticController {
       res.render('temporary-accommodation/static/useNDelius')
     }
   }
-
-  notAuthorised(): RequestHandler {
-    return (_req: Request, res: Response) => {
-      res.render('temporary-accommodation/static/notAuthorised')
-    }
-  }
 }

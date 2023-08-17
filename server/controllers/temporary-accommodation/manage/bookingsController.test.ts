@@ -150,7 +150,7 @@ describe('BookingsController', () => {
       })
     })
 
-    it('renders the select with a "no assessment" assessment ID if there are no assessments for the given CRN', async () => {
+    it('renders the select with a "no assessment" assessment ID if the Apply feature is disabled', async () => {
       const newBooking = newBookingFactory.build()
       const person = personFactory.build()
       const assessmentSummaries = assessmentSummaryFactory.buildList(5)
@@ -192,7 +192,7 @@ describe('BookingsController', () => {
       })
     })
 
-    it('renders the select with a "no assessment" assessment ID if the Apply feature is disabled', async () => {
+    it('renders the select with a "no assessment" assessment ID if there are no assessments for the given CRN', async () => {
       const newBooking = newBookingFactory.build()
       const person = personFactory.build()
 

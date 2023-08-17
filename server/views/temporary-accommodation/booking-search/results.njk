@@ -6,10 +6,11 @@
 {% set pageTitle = applicationName + " - View bookings" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('View bookings', []) }}
+{% endblock %}
 
+{% block content %}
   <h1>View bookings</h1>
 
   <div class="govuk-grid-row">

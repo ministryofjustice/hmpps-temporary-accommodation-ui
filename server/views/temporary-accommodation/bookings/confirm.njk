@@ -9,13 +9,14 @@
 {% set pageTitle = applicationName + " - Book bedspace" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
     href: backLink
   }) }}
-  
+{% endblock %}
+
+{% block content %}
   <h1>Confirm CRN</h1>
 
   <p>Confirm that the CRN is correct. This information cannot be changed once a bedspace has been booked.</p>

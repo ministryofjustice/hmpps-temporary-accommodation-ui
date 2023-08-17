@@ -13,13 +13,14 @@
 {% set mainClasses = "app-container govuk-body" %}
 {% set bodyClasses = "temporary-accommodation-bedspaces-show" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('View a bedspace', [
     {title: 'List of properties', href: paths.premises.index()},
     {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })}
   ]) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
 
   {% if premises.status === 'archived' %}

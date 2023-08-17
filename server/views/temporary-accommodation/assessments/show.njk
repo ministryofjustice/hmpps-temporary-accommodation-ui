@@ -7,11 +7,13 @@
 {% set pageTitle = applicationName + " - " + assessment.application.person.name + " referral" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
+{% block beforeContent %}
   {{ breadCrumb(assessment.application.person.name, [
     {title: 'Referrals', href: paths.assessments.index()}
   ]) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
 
   <div class="moj-identity-bar">

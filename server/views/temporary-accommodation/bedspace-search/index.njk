@@ -12,10 +12,11 @@
 {% set pageTitle = applicationName + " - Find a bedspace" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('Find a bedspace', []) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
 
   <h1 class="govuk-heading-l">Search for available bedspaces</h1>

@@ -8,13 +8,14 @@
 {% set pageTitle = applicationName + " - Add a property" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('Edit a property', [
     {title: 'List of properties', href: paths.premises.index()},
     {title: 'View a property', href: paths.premises.show({ premisesId: id })}
   ]) }}
+{% endblock %}
 
+{% block content %}
   {% include "../../_messages.njk" %}
   
   <h1>Edit a property</h1>

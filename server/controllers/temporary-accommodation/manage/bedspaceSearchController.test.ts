@@ -13,7 +13,7 @@ import {
   referenceDataFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
-import { addPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
+import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDate } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
 import BedspaceSearchController from './bedspaceSearchController'
@@ -126,6 +126,30 @@ describe('BedspaceSearchController', () => {
         errorSummary: [],
         ...request.query,
       })
+    })
+
+    it('updates the place context when given a search query', async () => {
+      const searchParameters = bedSearchParametersFactory.build()
+      const placeContext = placeContextFactory.build()
+
+      request.query = {
+        ...searchParameters,
+        durationDays: searchParameters.durationDays.toString(),
+        ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
+      } as Record<string, string>
+
+      const searchResults = bedSearchResultsFactory.build()
+
+      bedspaceSearchService.getReferenceData.mockResolvedValue(referenceData)
+      bedspaceSearchService.search.mockResolvedValue(searchResults)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bedspaceSearchController.index()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(updatePlaceContextWithArrivalDate).toHaveBeenCalledWith(response, placeContext, searchParameters.startDate)
     })
 
     it('renders with errors if the API returns an error', async () => {

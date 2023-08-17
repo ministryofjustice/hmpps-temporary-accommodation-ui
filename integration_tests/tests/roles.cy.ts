@@ -1,4 +1,4 @@
-import NotAuthorisedPage from '../../cypress_shared/pages/notAuthorised'
+import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
 import { setupTestUser } from '../../cypress_shared/utils/setupTestUser'
 import applyPaths from '../../server/paths/apply'
@@ -17,8 +17,8 @@ context('Roles', () => {
     // When I attempt to visit the application listing page
     cy.visit(applyPaths.applications.index({}))
 
-    // I am redirected to the not authorised page
-    Page.verifyOnPage(NotAuthorisedPage)
+    // I am redirected to the sign-in page
+    Page.verifyOnPage(AuthSignInPage)
   })
 
   it('does not allow a referrer to access manage', () => {
@@ -32,7 +32,7 @@ context('Roles', () => {
     // When I attempt to visit the dashboard page
     cy.visit(managePaths.dashboard.index({}))
 
-    // I am redirected to the not authorised page
-    Page.verifyOnPage(NotAuthorisedPage)
+    // I am redirected to the sign-in page
+    Page.verifyOnPage(AuthSignInPage)
   })
 })

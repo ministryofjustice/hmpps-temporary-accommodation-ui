@@ -3,7 +3,12 @@ import { Request, Response } from 'express'
 import { CallConfig } from '../data/restClient'
 import type { AssessmentsService } from '../services'
 import { assessmentFactory, placeContextFactory } from '../testutils/factories'
-import { addPlaceContext, createPlaceContext, preservePlaceContext } from './placeUtils'
+import {
+  addPlaceContext,
+  createPlaceContext,
+  preservePlaceContext,
+  updatePlaceContextWithArrivalDate,
+} from './placeUtils'
 import extractCallConfig from './restUtils'
 import { appendQueryString } from './utils'
 
@@ -23,12 +28,28 @@ describe('placeUtils', () => {
     })
   })
 
+  describe('updatePlaceContextWithArrivalDate', () => {
+    it('updates our PlaceContext', () => {
+      const res = createMock<Response>({
+        locals: {},
+      })
+
+      const placeContext = placeContextFactory.build()
+
+      const result = updatePlaceContextWithArrivalDate(res, placeContext, '2024-03-01')
+
+      expect(result).toEqual({ ...placeContext, arrivalDate: '2024-03-01' })
+      expect(res.locals.placeContext).toEqual({ ...placeContext, arrivalDate: '2024-03-01' })
+    })
+  })
+
   describe('addPlaceContext', () => {
     it('returns a path with a reference to the given place context', () => {
       const placeContext = placeContextFactory.build({
         assessment: assessmentFactory.build({
           id: 'some-id',
         }),
+        arrivalDate: '2024-01-07',
       })
 
       ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockImplementation(
@@ -36,7 +57,10 @@ describe('placeUtils', () => {
       )
 
       expect(addPlaceContext('/some/path', placeContext)).toEqual('/some/path?some-query-string')
-      expect(appendQueryString).toHaveBeenCalledWith('/some/path', { placeContextAssessmentId: 'some-id' })
+      expect(appendQueryString).toHaveBeenCalledWith('/some/path', {
+        placeContextAssessmentId: 'some-id',
+        placeContextArrivalDate: '2024-01-07',
+      })
     })
 
     it('returns the original path if the place context is undefinded', () => {
@@ -57,7 +81,7 @@ describe('placeUtils', () => {
       assessmentService.findAssessment.mockResolvedValue(assessment)
 
       const req = createMock<Request>({
-        query: { placeContextAssessmentId: 'some-assessment-id' },
+        query: { placeContextAssessmentId: 'some-assessment-id', placeContextArrivalDate: '2024-05-01' },
       })
       const res = createMock<Response>({
         locals: {},
@@ -65,8 +89,8 @@ describe('placeUtils', () => {
 
       const result = await preservePlaceContext(req, res, assessmentService)
 
-      expect(result).toEqual({ assessment })
-      expect(res.locals.placeContext).toEqual({ assessment })
+      expect(result).toEqual({ assessment, arrivalDate: '2024-05-01' })
+      expect(res.locals.placeContext).toEqual({ assessment, arrivalDate: '2024-05-01' })
       expect(assessmentService.findAssessment).toHaveBeenCalledWith(callConfig, 'some-assessment-id')
     })
 

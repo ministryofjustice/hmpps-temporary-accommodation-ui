@@ -59,7 +59,9 @@ export default class PlaceHelper {
     const bedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage)
 
     // When I fill out the form
-    const searchParameters = bedSearchParametersFactory.build()
+    const searchParameters = bedSearchParametersFactory.build({
+      startDate: this.placeContext.arrivalDate,
+    })
     bedspaceSearchPage.completeForm(searchParameters)
     bedspaceSearchPage.clickSubmit()
 

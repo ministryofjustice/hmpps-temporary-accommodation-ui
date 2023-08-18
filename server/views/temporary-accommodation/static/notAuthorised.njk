@@ -1,0 +1,21 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Not Authorised" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">You do not have permission to complete this action</h1>
+      <p class="govuk-body">
+        This may be because:
+        <ul class="govuk-list govuk-list--bullet">
+          <li>the CRN is not in your caseload</li>
+          <li>referrals through the Temporary Accommodation service are not currently available in your region</li>
+        </ul>
+      </p>
+      <p class="govuk-body">
+        If this is incorrect contact <a href="mailto:cas3support@digital.justice.gov.uk">cas3support@digital.justice.gov.uk</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

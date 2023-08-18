@@ -1,6 +1,7 @@
 ---
 generic-service:
   nameOverride: hmpps-temporary-accommodation-ui
+  serviceAccountName: hmpps-temporary-accommodation-service-account
 
   replicaCount: 4
 

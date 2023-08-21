@@ -1,11 +1,12 @@
 /* eslint-disable no-param-reassign */
 /* istanbul ignore file */
 
-import * as pathModule from 'path'
 import express from 'express'
 import nunjucks from 'nunjucks'
+import * as pathModule from 'path'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
+import { statusTag as assessmentStatusTag } from './assessmentUtils'
 import { DateFormats, dateInputHint } from './dateUtils'
 import {
   convertObjectsToCheckboxItems,
@@ -15,7 +16,6 @@ import {
   parseNaturalNumber,
 } from './formUtils'
 import { statusTag as personStatusTag } from './personUtils'
-import { statusTag as assessmentStatusTag } from './assessmentUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
 import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
@@ -24,9 +24,10 @@ import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as PhaseBannerUtils from './phaseBannerUtils'
-import * as TasklistUtils from './taskListUtils'
 import * as PremisesUtils from './premisesUtils'
+import * as TasklistUtils from './taskListUtils'
 
+import { TemporaryAccommodationAssessment } from '../@types/shared'
 import bookingSummaryListRows from '../components/bookingInfo'
 import * as BookingListing from '../components/bookingListing'
 import lostBedSummaryListRows from '../components/lostBedInfo'
@@ -36,7 +37,6 @@ import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
-import { TemporaryAccommodationAssessment } from '../@types/shared'
 
 const production = process.env.NODE_ENV === 'production'
 

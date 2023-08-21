@@ -5,8 +5,8 @@ import type { Controllers } from '../../controllers'
 import { createUserCheckMiddleware } from '../../middleware/userCheckMiddleware'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
-import { actions, compose } from '../utils'
 import { userHasAssessorRole } from '../../utils/userUtils'
+import { actions, compose } from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { get, post, put } = compose(

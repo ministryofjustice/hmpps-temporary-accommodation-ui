@@ -2,12 +2,12 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import { CallConfig } from '../../../data/restClient'
+import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import { assessmentFactory, probationRegionFactory } from '../../../testutils/factories'
+import { assessmentActions } from '../../../utils/assessmentUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
-import { assessmentActions } from '../../../utils/assessmentUtils'
-import paths from '../../../paths/temporary-accommodation/manage'
 
 jest.mock('../../../utils/restUtils')
 

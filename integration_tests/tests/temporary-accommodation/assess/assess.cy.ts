@@ -1,6 +1,6 @@
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
-import ListPage from '../../../../cypress_shared/pages/assess/list'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
+import ListPage from '../../../../cypress_shared/pages/assess/list'
 import AssessmentSummaryPage from '../../../../cypress_shared/pages/assess/summary'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'

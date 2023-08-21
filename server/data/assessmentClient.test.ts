@@ -3,7 +3,7 @@ import nock from 'nock'
 import { TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
-import { assessmentFactory, assessmentSummaryFactory } from '../testutils/factories'
+import { assessmentFactory, assessmentSummaryFactory, newReferralHistoryUserNoteFactory } from '../testutils/factories'
 import AssessmentClient from './assessmentClient'
 import { CallConfig } from './restClient'
 
@@ -126,6 +126,19 @@ describe('AssessmentClient', () => {
         .reply(200)
 
       await assessmentClient.closeAssessment(assessmentId)
+    })
+  })
+
+  describe('createNote', () => {
+    it('post a new referral note', async () => {
+      const newNote = newReferralHistoryUserNoteFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(paths.assessments.notes({ id: assessmentId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200)
+
+      await assessmentClient.createNote(assessmentId, newNote)
     })
   })
 })

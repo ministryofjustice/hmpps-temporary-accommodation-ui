@@ -23,6 +23,7 @@ const assessPaths = {
   rejection: path('/assessments/:id/rejection'),
   acceptance: path('/assessments/:id/acceptance'),
   closure: path('/assessments/:id/closure'),
+  notes: path('/assessments/:id/referral-history-notes'),
 }
 
 const clarificationNotePaths = {
@@ -122,6 +123,7 @@ export default {
     rejection: assessPaths.rejection,
     acceptance: assessPaths.acceptance,
     closure: assessPaths.closure,
+    notes: assessPaths.notes,
     clarificationNotes: {
       create: clarificationNotePaths.notes,
       update: clarificationNotePaths.notes.path(':clarificationNoteId'),

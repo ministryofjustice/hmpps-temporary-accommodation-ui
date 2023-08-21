@@ -3,7 +3,10 @@ import type {
   AssessmentAcceptance,
   AssessmentRejection,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+  NewReferralHistoryUserNote as NewNote,
+  ReferralHistoryNote as Note,
 } from '@approved-premises/api'
+
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
@@ -62,5 +65,9 @@ export default class AssessmentClient {
     await this.restClient.post({
       path: paths.assessments.closure({ id }),
     })
+  }
+
+  async createNote(id: string, data: NewNote): Promise<Note> {
+    return (await this.restClient.post({ path: paths.assessments.notes({ id }), data })) as Note
   }
 }

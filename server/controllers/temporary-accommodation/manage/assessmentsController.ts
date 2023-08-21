@@ -94,13 +94,13 @@ export default class AssessmentsController {
     }
   }
 
-  show(): RequestHandler {
+  full(): RequestHandler {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 
-      return res.render('temporary-accommodation/assessments/show', {
+      return res.render('temporary-accommodation/assessments/full', {
         assessment,
         actions: assessmentActions(assessment),
       })
@@ -126,7 +126,7 @@ export default class AssessmentsController {
       await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentStatus)
 
       req.flash('info', `Assessment updated status updated to "${lowerCase(statusName(status as AssessmentStatus))}"`)
-      res.redirect(paths.assessments.show({ id }))
+      res.redirect(paths.assessments.full({ id }))
     }
   }
 }

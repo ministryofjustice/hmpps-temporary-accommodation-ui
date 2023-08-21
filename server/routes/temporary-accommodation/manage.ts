@@ -308,8 +308,8 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.assessments.archive.pattern, assessmentsController.archive(), {
     auditEvent: 'VIEW_ARCHIVE_ASSESSMENTS_LIST',
   })
-  get(paths.assessments.show.pattern, assessmentsController.show(), {
-    auditEvent: 'VIEW_ASSESSMENT',
+  get(paths.assessments.full.pattern, assessmentsController.full(), {
+    auditEvent: 'VIEW_FULL_ASSESSMENT',
   })
   get(paths.assessments.confirm.pattern, assessmentsController.confirm(), {
     auditEvent: 'VIEW_ASSESSMENT_STATUS_CHANGE_CONFIRM',
@@ -319,7 +319,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     auditEvent: 'UPDATE_ASSESSMENT',
     redirectAuditEventSpecs: [
       {
-        path: paths.assessments.show.pattern,
+        path: paths.assessments.full.pattern,
         auditEvent: 'UPDATE_ASSESSMENT_SUCCESS',
       },
     ],

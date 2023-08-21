@@ -3,7 +3,7 @@ import { sentenceCase } from '../../../server/utils/utils'
 import type { Section } from '../../../server/utils/applicationUtils'
 import Page from '../page'
 
-export default class AssessmentShowPage extends Page {
+export default class AssessmentFullPage extends Page {
   constructor(name: string, status: Assessment['status']) {
     super(name)
     cy.get('.govuk-tag').contains(sentenceCase(status as string))

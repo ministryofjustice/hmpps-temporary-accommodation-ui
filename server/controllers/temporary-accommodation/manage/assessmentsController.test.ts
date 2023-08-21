@@ -74,17 +74,17 @@ describe('AssessmentsController', () => {
     })
   })
 
-  describe('show', () => {
+  describe('full', () => {
     it('shows a readonly view of an application', async () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
       request.params = { id: assessmentId }
 
-      const requestHandler = assessmentsController.show()
+      const requestHandler = assessmentsController.full()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/show', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/full', {
         assessment,
         actions: assessmentActions(assessment),
       })
@@ -125,7 +125,7 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
-      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.show({ id: assessmentId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.full({ id: assessmentId }))
     })
   })
 })

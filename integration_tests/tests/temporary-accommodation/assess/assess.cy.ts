@@ -1,6 +1,6 @@
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
-import AssessmentShowPage from '../../../../cypress_shared/pages/assess/show'
+import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
@@ -85,9 +85,9 @@ context('Apply', () => {
           // When I click on the referral
           listPage.clickAssessment(assessment)
 
-          // Then I should be taken to the referral show page
+          // Then I should be taken to the referral show full page
           const assessmentPage = Page.verifyOnPage(
-            AssessmentShowPage,
+            AssessmentFullPage,
             assessment.application.person.name,
             assessment.status,
           )
@@ -111,7 +111,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the show page and a banner is shown
-          Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, 'in_review')
+          Page.verifyOnPage(AssessmentFullPage, assessment.application.person.name, 'in_review')
           assessmentPage.shouldShowBanner('Assessment updated status updated to "in review"')
 
           // And the assessment is updated in the database
@@ -132,7 +132,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the show page and a banner is shown
-          Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, 'ready_to_place')
+          Page.verifyOnPage(AssessmentFullPage, assessment.application.person.name, 'ready_to_place')
           assessmentPage.shouldShowBanner('Assessment updated status updated to "ready to place"')
 
           // And the assessment is updated in the database
@@ -153,7 +153,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the show page and a banner is shown
-          Page.verifyOnPage(AssessmentShowPage, assessment.application.person.name, 'closed')
+          Page.verifyOnPage(AssessmentFullPage, assessment.application.person.name, 'closed')
           assessmentPage.shouldShowBanner('Assessment updated status updated to "closed"')
 
           // And the assessment is updated in the database

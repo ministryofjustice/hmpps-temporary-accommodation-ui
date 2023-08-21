@@ -2,6 +2,8 @@ import type { TableRow } from '@approved-premises/ui'
 import type {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+  NewReferralHistoryUserNote as NewNote,
+  ReferralHistoryNote as Note,
 } from '../@types/shared'
 import { AssessmentSummary } from '../@types/shared'
 import type { AssessmentClient, RestClientBuilder } from '../data'
@@ -88,5 +90,10 @@ export default class AssessmentsService {
   async getReadyToPlaceForCrn(callConfig: CallConfig, crn: string): Promise<Array<AssessmentSummary>> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
     return assessmentClient.readyToPlaceForCrn(crn)
+  }
+
+  async createNote(callConfig: CallConfig, assessmentId: string, newNote: NewNote): Promise<Note> {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+    return assessmentClient.createNote(assessmentId, newNote)
   }
 }

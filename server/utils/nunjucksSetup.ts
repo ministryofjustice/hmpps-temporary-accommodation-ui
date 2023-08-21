@@ -38,6 +38,9 @@ import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
+
 const production = process.env.NODE_ENV === 'production'
 
 export default function nunjucksSetup(app: express.Express, path: pathModule.PlatformPath): void {
@@ -87,6 +90,12 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     const safeFilter = njkEnv.getFilter('safe')
     return safeFilter(html)
   }
+
+  const mojFilters = getMojFilters()
+
+  Object.keys({ ...mojFilters, mojDate: DateFormats.isoDateTimeToUIDateTime }).forEach(filter => {
+    njkEnv.addFilter(filter, mojFilters[filter])
+  })
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)

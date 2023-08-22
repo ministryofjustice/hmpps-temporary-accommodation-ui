@@ -8,4 +8,6 @@ export default Factory.define<User>(() => ({
   roles: [],
   region: referenceData.probationRegion().build(),
   service: 'temporary-accommodation',
+  name: faker.person.fullName(),
+  deliusUsername: faker.person.fullName(),
 }))

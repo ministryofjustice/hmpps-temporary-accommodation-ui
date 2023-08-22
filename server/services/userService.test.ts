@@ -33,8 +33,8 @@ describe('User service', () => {
       const result = await userService.getActingUser(callConfig)
 
       expect(result).toEqual({
-        ...hmppsAuthUser,
         ...communityAccommodationUser,
+        ...hmppsAuthUser,
         displayName: 'John Smith',
       })
 

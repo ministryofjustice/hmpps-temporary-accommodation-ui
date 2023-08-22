@@ -29,6 +29,7 @@ export default class UserService {
       roles: communityAccommodationUser.roles,
       service: communityAccommodationUser.service,
       region: communityAccommodationUser.region,
+      deliusUsername: communityAccommodationUser.deliusUsername,
     }
   }
 }

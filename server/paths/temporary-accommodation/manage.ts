@@ -118,6 +118,7 @@ const paths = {
     summary: assessmentPath.path(':id/summary'),
     confirm: assessmentPath.path(':status'),
     update: assessmentPath.path(':status'),
+    notes: { create: assessmentPath.path('/notes') },
   },
 }
 

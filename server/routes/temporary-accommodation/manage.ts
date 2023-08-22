@@ -328,5 +328,7 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
+  post(paths.assessments.notes.create.pattern, assessmentsController.createNote())
+
   return router
 }

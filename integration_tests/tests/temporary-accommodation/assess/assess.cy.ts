@@ -5,7 +5,12 @@ import AssessmentSummaryPage from '../../../../cypress_shared/pages/assess/summa
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { assessmentFactory, assessmentSummaryFactory } from '../../../../server/testutils/factories'
+import {
+  assessmentFactory,
+  assessmentSummaryFactory,
+  newReferralHistoryUserNoteFactory,
+  referralHistoryUserNoteFactory,
+} from '../../../../server/testutils/factories'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -204,6 +209,54 @@ context('Apply', () => {
 
         // I can see notes for the assessment
         assessmentSummaryPage.shouldShowNotesTimeline()
+      })
+
+      it('allows me to create a new note', () => {
+        // Given I am on the assessment summary page
+        const assessment = assessmentFactory.build()
+        cy.task('stubFindAssessment', assessment)
+
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+
+        // When I create a new notes
+        const newNote = newReferralHistoryUserNoteFactory.build()
+
+        cy.task('stubCreateAssessmentNote', assessment)
+        assessmentSummaryPage.createNote(newNote.message)
+
+        // Then the note should have been created in the API
+        cy.task('verifyCreateAssessmentNote', assessment.id).then(requests => {
+          expect(requests).to.have.length(1)
+          const requestBody = JSON.parse(requests[0].body)
+          expect(requestBody.message.replaceAll('\r\n', '\n')).contains(newNote.message)
+        })
+
+        // And I am redirected back to assessment summary page
+        const postSumbmitAssessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+
+        postSumbmitAssessmentSummaryPage.shouldShowBanner('Note saved')
+      })
+
+      it('shows an error when I attempt to create an empty note', () => {
+        // Given I am on the assessment page
+        const assessment = assessmentFactory.build({
+          referralHistoryNotes: referralHistoryUserNoteFactory.buildList(5),
+          status: 'unallocated',
+        })
+
+        cy.task('stubFindAssessment', assessment)
+
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+
+        // When I attempt to create a new notes without a message
+        cy.task('stubCreateAssessmentNoteErrors', { assessmentId: assessment.id, params: ['message'] })
+        assessmentSummaryPage.clickSaveNote()
+
+        // Then I am redirected back to assessment page
+        const postSumbmitSummaryAssessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+
+        // And I should see an error messags
+        postSumbmitSummaryAssessmentPage.shouldShowErrorMessagesForFields(['message'])
       })
     })
   })

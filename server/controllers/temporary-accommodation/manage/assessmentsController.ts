@@ -2,12 +2,14 @@ import type { Request, RequestHandler, Response } from 'express'
 import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+  NewReferralHistoryUserNote as NewNote,
 } from '../../../@types/shared'
 import AssessmentsService from '../../../services/assessmentsService'
 import extractCallConfig from '../../../utils/restUtils'
 import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { lowerCase } from '../../../utils/utils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export const assessmentsTableHeaders = [
   {
@@ -49,7 +51,7 @@ export const confirmationPageContent: Record<Assessment['status'], { title: stri
   },
   rejected: {
     title: 'Confirm rejection',
-    text: `<p class="govuk-body">You will need to email the community probation practitioner to let them know their referral has been rejected.</p> 
+    text: `<p class="govuk-body">You will need to email the community probation practitioner to let them know their referral has been rejected.</p>
       <p class="govuk-body">Once a referral has been rejected it cannot be undone.</p>`,
   },
   closed: {
@@ -96,6 +98,8 @@ export default class AssessmentsController {
 
   summary(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
+
       const callConfig = extractCallConfig(req)
 
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
@@ -103,6 +107,10 @@ export default class AssessmentsController {
       return res.render('temporary-accommodation/assessments/summary', {
         assessment,
         actions: assessmentActions(assessment),
+        errors,
+        errorSummary,
+        errorTitle,
+        ...userInput,
       })
     }
   }
@@ -140,6 +148,32 @@ export default class AssessmentsController {
 
       req.flash('info', `Assessment updated status updated to "${lowerCase(statusName(status as AssessmentStatus))}"`)
       res.redirect(paths.assessments.summary({ id }))
+    }
+  }
+
+  createNote(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { id } = req.params
+      const { message } = req.body
+
+      const newNote: NewNote = {
+        message,
+      }
+
+      try {
+        await this.assessmentsService.createNote(callConfig, id, newNote)
+
+        req.flash('success', 'Note saved')
+        res.redirect(paths.assessments.summary({ id }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.assessments.summary({ id }),
+        )
+      }
     }
   }
 }

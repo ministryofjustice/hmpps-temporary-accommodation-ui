@@ -25,6 +25,21 @@ export default class AssessmentSummaryPage extends Page {
     cy.get('a').contains('View full referral').click()
   }
 
+  clickSaveNote() {
+    cy.get('button').contains('Save note').click()
+  }
+
+  createNote(message: string) {
+    cy.get('.referral-note')
+      .contains('Add a note')
+      .parent()
+      .parent()
+      .within(() => {
+        this.completeTextArea('message', message)
+      })
+    this.clickSaveNote()
+  }
+
   shouldShowAssessmentSummary(assessment: Assessment) {
     const {
       application: { person },

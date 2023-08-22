@@ -1,9 +1,13 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 {%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../components/person-details/macro.njk" import personDetails %}
+{%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -54,6 +58,8 @@
     </div>
   </div>
 
+  {{ showErrorSummary(errorSummary, errorTitle) }}
+
   {{ personDetails(assessment.application.person) }}
 
   {{ 
@@ -65,6 +71,29 @@
     }) 
   }}
 
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.assessments.notes.create({ id: assessment.id }) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {{ taTextarea(
+          {
+            fieldName: "message",
+            label: {
+              text: "Add a note",
+              classes: "govuk-label--m referral-note"
+            }
+          },
+          fetchContext()
+        ) }}
+
+        {{ govukButton({
+          text: "Save note",
+          classes: "govuk-button--secondary",
+          preventDoubleClick: true
+        }) }}
+      </form>
+    </div>
+  </div>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">

@@ -34,4 +34,26 @@ export default class AssessmentSummaryPage extends Page {
     cy.get('h1').contains(person.name)
     personDetailsComponent.shouldShowPersonDetails()
   }
+
+  shouldShowNotesTimeline() {
+    cy.get('.moj-timeline')
+      .parent()
+      .within(() => {
+        cy.get('.govuk-heading-l').should('contain', 'Referral History')
+
+        this.assessment
+          .referralHistoryNotes!.sort((noteA, noteB) => {
+            if (noteA.createdAt === noteB.createdAt) {
+              return 0
+            }
+
+            return noteA.createdAt < noteB.createdAt ? 1 : -1
+          })
+          .forEach((note, index) => {
+            note.message.split('\n').forEach(line => {
+              cy.get('.moj-timeline__description').eq(index).contains(line)
+            })
+          })
+      })
+  }
 }

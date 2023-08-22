@@ -194,6 +194,17 @@ context('Apply', () => {
           assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
         })
       })
+
+      it('shows existing notes', () => {
+        // Given I am on the assessment summary page
+        const assessment = assessmentFactory.build()
+        cy.task('stubFindAssessment', assessment)
+
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+
+        // I can see notes for the assessment
+        assessmentSummaryPage.shouldShowNotesTimeline()
+      })
     })
   })
 })

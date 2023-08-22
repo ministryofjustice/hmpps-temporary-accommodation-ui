@@ -328,7 +328,18 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
-  post(paths.assessments.notes.create.pattern, assessmentsController.createNote())
+  post(paths.assessments.notes.create.pattern, assessmentsController.createNote(), {
+    redirectAuditEventSpecs: [
+      {
+        path: `${paths.assessments.summary.pattern}\\?success=false`,
+        auditEvent: 'CREATE_ASSESSMENT_NOTE_FAILURE',
+      },
+      {
+        path: `${paths.assessments.summary.pattern}\\?success=true`,
+        auditEvent: 'CREATE_ASSESSMENT_NOTE_SUCCESS',
+      },
+    ],
+  })
 
   return router
 }

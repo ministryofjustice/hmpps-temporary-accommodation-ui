@@ -8,7 +8,7 @@ import AssessmentsService from '../../../services/assessmentsService'
 import extractCallConfig from '../../../utils/restUtils'
 import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { lowerCase } from '../../../utils/utils'
+import { appendQueryString, lowerCase } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export const assessmentsTableHeaders = [
@@ -165,13 +165,13 @@ export default class AssessmentsController {
         await this.assessmentsService.createNote(callConfig, id, newNote)
 
         req.flash('success', 'Note saved')
-        res.redirect(paths.assessments.summary({ id }))
+        res.redirect(appendQueryString(paths.assessments.summary({ id }), { success: 'true' }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.assessments.summary({ id }),
+          appendQueryString(paths.assessments.summary({ id }), { success: 'false' }),
         )
       }
     }

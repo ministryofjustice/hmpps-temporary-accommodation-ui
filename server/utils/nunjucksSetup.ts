@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 /* istanbul ignore file */
 
+import * as pathModule from 'path'
 import express from 'express'
 import nunjucks from 'nunjucks'
-import * as pathModule from 'path'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
 import { statusTag as assessmentStatusTag } from './assessmentUtils'

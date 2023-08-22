@@ -11,11 +11,13 @@ import {
 } from '../../../testutils/factories'
 import { assessmentActions } from '../../../utils/assessmentUtils'
 import extractCallConfig from '../../../utils/restUtils'
+import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/utils')
 
 describe('AssessmentsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -164,12 +166,16 @@ describe('AssessmentsController', () => {
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/success/token')
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.createNote).toHaveBeenCalledWith(callConfig, assessmentId, newNote)
       expect(request.flash).toHaveBeenCalledWith('success', 'Note saved')
-      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
+      expect(response.redirect).toHaveBeenCalledWith('/path/with/success/token')
+      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+        success: 'true',
+      })
     })
 
     it('redirects to the assessment summary page with errors if the API returns an error', async () => {
@@ -180,18 +186,17 @@ describe('AssessmentsController', () => {
       const err = new Error()
 
       assessmentsService.createNote.mockRejectedValue(err)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/failure/token')
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.assessments.summary({ id: assessmentId }),
-      )
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '/path/with/failure/token')
+      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+        success: 'false',
+      })
     })
   })
 })

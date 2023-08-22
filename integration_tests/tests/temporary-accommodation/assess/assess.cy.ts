@@ -87,11 +87,7 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral summary page
-          const assessmentPage = Page.verifyOnPage(
-            AssessmentSummaryPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
           // And I can view an assessment summary
           assessmentPage.shouldShowAssessmentSummary(assessment)
 
@@ -112,7 +108,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, assessment.application.person.name, 'in_review')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'in_review' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "in review"')
 
           // And the assessment is updated in the database
@@ -133,7 +129,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, assessment.application.person.name, 'ready_to_place')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'ready_to_place' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "ready to place"')
 
           // And the assessment is updated in the database
@@ -154,7 +150,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, assessment.application.person.name, 'closed')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'closed' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "closed"')
 
           // And the assessment is updated in the database
@@ -186,22 +182,14 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral summary page
-          const assessmentSummaryPage = Page.verifyOnPage(
-            AssessmentSummaryPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
           // And I can view an assessment summary
           assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
 
           // And I can view the full assessment
           assessmentSummaryPage.clickFullReferral()
 
-          const assessmentFullPage = Page.verifyOnPage(
-            AssessmentFullPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentFullPage = Page.verifyOnPage(AssessmentFullPage, assessment)
 
           assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
         })

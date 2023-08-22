@@ -39,6 +39,7 @@ import newExtensionFactory from './newExtension'
 import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
 import newPremisesFactory from './newPremises'
+import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
 import newRoomFactory from './newRoom'
 import newTurnaroundFactory from './newTurnaround'
 import nonArrivalFactory from './nonArrival'
@@ -52,6 +53,8 @@ import premisesSummaryFactory from './premisesSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
+import referralHistoryNoteFactory from './referralHistoryNote'
+import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import risksFactory from './risks'
 import roomFactory from './room'
 import roshRisksFactory from './roshRisks'
@@ -105,6 +108,7 @@ export {
   newLostBedCancellationFactory,
   newLostBedFactory,
   newPremisesFactory,
+  newReferralHistoryUserNoteFactory,
   newRoomFactory,
   newTurnaroundFactory,
   nonArrivalFactory,
@@ -118,6 +122,8 @@ export {
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,
+  referralHistoryNoteFactory,
+  referralHistoryUserNoteFactory,
   risksFactory,
   roomFactory,
   roshRisksFactory,

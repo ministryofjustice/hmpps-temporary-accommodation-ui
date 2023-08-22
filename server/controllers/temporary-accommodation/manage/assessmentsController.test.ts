@@ -74,6 +74,24 @@ describe('AssessmentsController', () => {
     })
   })
 
+  describe('summary', () => {
+    it('shows a summary view of the assessment', async () => {
+      const assessmentId = 'some-assessment-id'
+      const assessment = assessmentFactory.build({ id: assessmentId })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
+      request.params = { id: assessmentId }
+
+      const requestHandler = assessmentsController.summary()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/summary', {
+        assessment,
+        actions: assessmentActions(assessment),
+      })
+      expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
+    })
+  })
+
   describe('full', () => {
     it('shows a readonly view of an application', async () => {
       const assessmentId = 'some-assessment-id'
@@ -125,7 +143,7 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
-      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.full({ id: assessmentId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
     })
   })
 })

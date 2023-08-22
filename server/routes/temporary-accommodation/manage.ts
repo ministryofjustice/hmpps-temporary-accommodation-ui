@@ -311,6 +311,9 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.assessments.full.pattern, assessmentsController.full(), {
     auditEvent: 'VIEW_FULL_ASSESSMENT',
   })
+  get(paths.assessments.summary.pattern, assessmentsController.summary(), {
+    auditEvent: 'VIEW_ASSESSMENT_SUMMARY',
+  })
   get(paths.assessments.confirm.pattern, assessmentsController.confirm(), {
     auditEvent: 'VIEW_ASSESSMENT_STATUS_CHANGE_CONFIRM',
   })

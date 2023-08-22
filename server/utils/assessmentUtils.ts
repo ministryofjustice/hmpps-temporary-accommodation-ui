@@ -47,7 +47,7 @@ export const statusName = (statusId: AssessmentSummary['status']) => {
 export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showStatus: boolean = false): TableRow => {
   const row = [
     htmlValue(
-      `<a href="${paths.assessments.full({ id: assessmentSummary.id })}">${assessmentSummary.person.name}</a>`,
+      `<a href="${paths.assessments.summary({ id: assessmentSummary.id })}">${assessmentSummary.person.name}</a>`,
       assessmentSummary.person.name,
     ),
     textValue(assessmentSummary.person.crn),

@@ -20,7 +20,7 @@ context('Apply', () => {
 
   describe('Assess', () => {
     describe('List assessments', () => {
-      it('I can view a list of assessments', () => {
+      it('shows a list of assessments', () => {
         // Given there are assessments in the database
         const inProgressAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'in_review' })
         const unallocatedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'unallocated' })
@@ -65,7 +65,7 @@ context('Apply', () => {
     })
 
     describe('Show an assessment', () => {
-      it('I can change the state of an assessment', () => {
+      it('allows me to change the state of an assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })
           assessment.application.document = applicationTranslatedDocument

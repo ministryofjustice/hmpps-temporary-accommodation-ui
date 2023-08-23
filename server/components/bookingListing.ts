@@ -2,6 +2,7 @@ import type { Booking } from '@approved-premises/api'
 import type { SummaryList } from '@approved-premises/ui'
 import { statusTag } from '../utils/bookingUtils'
 import { DateFormats } from '../utils/dateUtils'
+import { isFullPerson } from '../utils/personUtils'
 
 export const personSummaryListRows = (booking: Booking): SummaryList['rows'] => {
   const rows = [
@@ -11,7 +12,7 @@ export const personSummaryListRows = (booking: Booking): SummaryList['rows'] => 
     },
   ] as SummaryList['rows']
 
-  if (booking.person.dateOfBirth) {
+  if (isFullPerson(booking.person)) {
     rows.unshift({
       key: textValue('Date of birth'),
       value: textValue(DateFormats.isoDateToUIDate(booking.person.dateOfBirth)),

@@ -68,7 +68,7 @@ export default abstract class Page extends Component {
 
     cy.get('legend')
       .contains(legend)
-      .siblings()
+      .siblings('.govuk-date-input')
       .within(() => {
         cy.get('label').contains('Day').siblings('input').should('have.value', parsedDate.getDate().toString())
         cy.get('label')
@@ -92,7 +92,7 @@ export default abstract class Page extends Component {
 
     cy.get('legend')
       .contains(legend)
-      .siblings()
+      .siblings('.govuk-date-input')
       .within(() => {
         cy.get('label').contains('Day').siblings('input').type(parsedDate.getDate().toString())
         cy.get('label')

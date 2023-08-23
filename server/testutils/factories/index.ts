@@ -44,6 +44,7 @@ import newTurnaroundFactory from './newTurnaround'
 import nonArrivalFactory from './nonArrival'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import oasysSelectionFactory from './oasysSelection'
+import overlapFactory from './overlap'
 import pduFactory from './pdu'
 import personFactory from './person'
 import premisesFactory from './premises'
@@ -109,6 +110,7 @@ export {
   nonArrivalFactory,
   oasysSectionsFactory,
   oasysSelectionFactory,
+  overlapFactory,
   pduFactory,
   personFactory,
   premisesFactory,

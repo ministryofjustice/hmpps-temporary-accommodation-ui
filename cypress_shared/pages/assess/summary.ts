@@ -1,12 +1,13 @@
 import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
+import { personName } from '../../../server/utils/personUtils'
 import { sentenceCase } from '../../../server/utils/utils'
 import PersonDetailsComponent from '../../components/personDetails'
 import Page from '../page'
 
 export default class AssessmentSummaryPage extends Page {
   constructor(private readonly assessment: Assessment) {
-    super(assessment.application.person.name)
+    super(personName(assessment.application.person, 'Limited access offender'))
     cy.get('.govuk-tag').contains(sentenceCase(assessment.status as string))
   }
 
@@ -46,7 +47,7 @@ export default class AssessmentSummaryPage extends Page {
     } = assessment
     const personDetailsComponent = new PersonDetailsComponent(person)
 
-    cy.get('h1').contains(person.name)
+    cy.get('h1').contains(personName(person, 'Limited access offender'))
     personDetailsComponent.shouldShowPersonDetails()
   }
 

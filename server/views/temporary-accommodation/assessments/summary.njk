@@ -11,10 +11,11 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + assessment.application.person.name + " referral summary" %}
+{% set name = personName(assessment.application.person, 'Limited access offender') %}
+{% set pageTitle = applicationName + " - " + name + " referral summary" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% set breadCrumbTitle = assessment.application.person.name + " - Summary" %}
+{% set breadCrumbTitle = name + " - Summary" %}
 
 {% block beforeContent %}
   {{ breadCrumb(breadCrumbTitle, [
@@ -30,7 +31,7 @@
       <div class="moj-identity-bar__details">
         <span class="moj-identity-bar__title">
           <span class="govuk-caption-xl">Referral summary</span>
-          <h1 class="govuk-heading-xl">{{ assessment.application.person.name }}
+          <h1 class="govuk-heading-xl">{{ name }}
             {{ assessmentStatusTag(assessment.status) | safe }}</h1>
         </span>
       </div>

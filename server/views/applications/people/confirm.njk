@@ -5,7 +5,7 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Confirm " + name + "'s details" %}
+{% set pageTitle = applicationName + " - Confirm " + personName(person) + "'s details" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -24,7 +24,7 @@
         <input type="hidden" name="crn" value="{{ crn }}"/>
         <input type="hidden" name="offenceId" value="{{ offenceId }}"/>
 
-        <h1 class="govuk-heading-l">Confirm {{ person.name | default("limited access offender") }}'s details</h1>
+        <h1 class="govuk-heading-l">Confirm {{ personName(person) }}'s details</h1>
 
         <p>
           Taken from nDelius, <strong>{{ date }}</strong>

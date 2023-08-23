@@ -1,5 +1,6 @@
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
+import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import AssessmentSummaryPage from '../../../../cypress_shared/pages/assess/summary'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
@@ -160,6 +161,49 @@ context('Apply', () => {
           cy.task('verifyCloseAssessment', assessment.id).then(requests => {
             expect(requests).to.have.length(1)
           })
+        })
+      })
+
+      it('shows the full assessment', () => {
+        cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+          const assessment = assessmentFactory.build({ status: 'unallocated' })
+          assessment.application.document = applicationTranslatedDocument
+          const assessmentSummary = assessmentSummaryFactory.buildList(1, {
+            status: 'unallocated',
+            person: assessment.application.person,
+            id: assessment.id,
+          })
+
+          cy.task('stubAssessments', assessmentSummary)
+          cy.task('stubFindAssessment', assessment)
+
+          // Given I visit the referral list page
+          const dashboardPage = DashboardPage.visit()
+          dashboardPage.clickReviewAndAssessReferrals()
+          const listPage = Page.verifyOnPage(ListPage, assessmentSummary, [], [], [])
+
+          // When I click on the referral
+          listPage.clickAssessment(assessment)
+
+          // Then I should be taken to the referral summary page
+          const assessmentSummaryPage = Page.verifyOnPage(
+            AssessmentSummaryPage,
+            assessment.application.person.name,
+            assessment.status,
+          )
+          // And I can view an assessment summary
+          assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
+
+          // And I can view the full assessment
+          assessmentSummaryPage.clickFullReferral()
+
+          const assessmentFullPage = Page.verifyOnPage(
+            AssessmentFullPage,
+            assessment.application.person.name,
+            assessment.status,
+          )
+
+          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
         })
       })
     })

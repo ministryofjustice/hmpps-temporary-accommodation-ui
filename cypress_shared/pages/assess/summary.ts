@@ -14,6 +14,10 @@ export default class AssessmentSummaryPage extends Page {
     cy.get('.moj-button-menu__wrapper').contains(option).click()
   }
 
+  clickFullReferral() {
+    cy.get('a').contains('View full referral').click()
+  }
+
   shouldShowAssessmentSummary(assessment: Assessment) {
     const {
       application: { person },

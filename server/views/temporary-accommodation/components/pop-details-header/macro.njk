@@ -4,7 +4,7 @@
 
 <div class="pop-details-header">
   {% if person %}
-    {% if person.name %}
+    {% if isFullPerson(person) %}
       {% if config.nameLink %}
         <p><span class="govuk-!-font-weight-bold">Name:</span> <a class="govuk-link" href="{{ config.nameLink }}">{{ person.name }}</a><br />
       {% else %}

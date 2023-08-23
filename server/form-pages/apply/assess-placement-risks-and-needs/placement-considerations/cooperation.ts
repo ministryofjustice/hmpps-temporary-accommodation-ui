@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { PersonRisksUI, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 import TasklistPage from '../../../tasklistPage'
 
@@ -27,7 +28,9 @@ export default class Cooperation implements TasklistPage {
     readonly application: Application,
   ) {
     this.questions = {
-      support: `Provide details of how you will support ${application.person.name}'s placement considering any risks to the support worker`,
+      support: `Provide details of how you will support ${personName(
+        application.person,
+      )}'s placement considering any risks to the support worker`,
     }
 
     this.risks = mapApiPersonRisksForUi(application.risks)
@@ -51,7 +54,7 @@ export default class Cooperation implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.support) {
-      errors.support = `You must specify how you will support ${this.application.person.name}'s placement`
+      errors.support = `You must specify how you will support ${personName(this.application.person)}'s placement`
     }
 
     return errors

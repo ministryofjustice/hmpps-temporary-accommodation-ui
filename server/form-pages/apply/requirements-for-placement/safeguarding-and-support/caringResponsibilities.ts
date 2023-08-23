@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
 
@@ -20,7 +21,7 @@ export default class CaringResponsibilities implements TasklistPage {
     readonly application: Application,
   ) {
     this.questions = {
-      caringResponsibilities: `Does ${application.person.name} have any caring responsibilities?`,
+      caringResponsibilities: `Does ${personName(application.person)} have any caring responsibilities?`,
     }
   }
 
@@ -45,7 +46,9 @@ export default class CaringResponsibilities implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.caringResponsibilities) {
-      errors.caringResponsibilities = `You must specify if ${this.application.person.name} has any caring responsibilities`
+      errors.caringResponsibilities = `You must specify if ${personName(
+        this.application.person,
+      )} has any caring responsibilities`
     }
 
     if (this.body.caringResponsibilities === 'yes' && !this.body.caringResponsibilitiesDetail) {

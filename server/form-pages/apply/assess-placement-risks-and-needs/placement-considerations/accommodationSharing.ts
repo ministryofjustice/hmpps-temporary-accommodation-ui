@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { PersonRisksUI, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 import TasklistPage from '../../../tasklistPage'
 
@@ -29,7 +30,7 @@ export default class AccommodationSharing implements TasklistPage {
     readonly application: Application,
   ) {
     this.questions = {
-      accommodationSharing: `Is ${application.person.name} suitable to share accommodation with others?`,
+      accommodationSharing: `Is ${personName(application.person)} suitable to share accommodation with others?`,
     }
 
     this.risks = mapApiPersonRisksForUi(application.risks)
@@ -60,7 +61,9 @@ export default class AccommodationSharing implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.accommodationSharing) {
-      errors.accommodationSharing = `You must specify if ${this.application.person.name} would be able to share accommodation with others`
+      errors.accommodationSharing = `You must specify if ${personName(
+        this.application.person,
+      )} would be able to share accommodation with others`
     }
 
     if (this.body.accommodationSharing === 'yes' && !this.body.accommodationSharingYesDetail) {

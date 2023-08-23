@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 
 export type OffendingSummaryBody = {
@@ -16,7 +17,7 @@ export default class OffendingSummary implements TasklistPage {
     readonly body: Partial<OffendingSummaryBody>,
     readonly application: Application,
   ) {
-    this.title = `Provide a brief summary of ${application.person.name}'s offending history`
+    this.title = `Provide a brief summary of ${personName(application.person)}'s offending history`
   }
 
   response() {
@@ -35,7 +36,7 @@ export default class OffendingSummary implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.summary) {
-      errors.summary = `You must enter a summary of ${this.application.person.name}'s offending history`
+      errors.summary = `You must enter a summary of ${personName(this.application.person)}'s offending history`
     }
 
     return errors

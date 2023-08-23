@@ -2,6 +2,7 @@ import { ApprovedPremisesApplication as Application } from '@approved-premises/a
 import type { TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 
 const personNeeds = {
@@ -67,7 +68,7 @@ export default class Needs implements TasklistPage {
     readonly body: Partial<NeedsBody>,
     readonly application: Application,
   ) {
-    this.title = `Does ${application.person.name} have any of the following needs?`
+    this.title = `Does ${personName(application.person)} have any of the following needs?`
   }
 
   response() {
@@ -94,9 +95,9 @@ export default class Needs implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.needs?.length) {
-      errors.needs = `You must specify whether ${this.application.person.name} has any of the following needs`
+      errors.needs = `You must specify whether ${personName(this.application.person)} has any of the following needs`
     } else if (this.body.needs.length > 1 && this.body.needs.includes('none')) {
-      errors.needs = `You must select ${this.application.person.name}'s needs, or select 'None of the above'`
+      errors.needs = `You must select ${personName(this.application.person)}'s needs, or select 'None of the above'`
     }
 
     this.body.needs?.forEach(need => {

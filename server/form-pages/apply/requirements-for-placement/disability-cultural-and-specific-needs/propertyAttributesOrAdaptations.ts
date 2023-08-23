@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
 
@@ -18,7 +19,7 @@ export default class PropertyAttributesOrAdaptations implements TasklistPage {
     readonly body: Partial<PropertyAttributesOrAdaptationsBody>,
     readonly application: Application,
   ) {
-    this.title = `Will ${application.person.name} require a property with specific attributes or adaptations?`
+    this.title = `Will ${personName(application.person)} require a property with specific attributes or adaptations?`
   }
 
   response() {
@@ -42,7 +43,9 @@ export default class PropertyAttributesOrAdaptations implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.propertyAttributesOrAdaptations) {
-      errors.propertyAttributesOrAdaptations = `You must specify if ${this.application.person.name} requires a property with specific attributes or adaptations`
+      errors.propertyAttributesOrAdaptations = `You must specify if ${personName(
+        this.application.person,
+      )} requires a property with specific attributes or adaptations`
     }
 
     if (this.body.propertyAttributesOrAdaptations === 'yes' && !this.body.propertyAttributesOrAdaptationsDetail) {

@@ -1,11 +1,12 @@
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../../../server/paths/apply'
 import ApplyPage from '../../applyPage'
+import { personName } from '../../../../../server/utils/personUtils'
 
 export default class EligibilityReasonPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `How is ${application.person.name} eligible for Temporary Accommodation (TA)?`,
+      `How is ${personName(application.person)} eligible for Temporary Accommodation (TA)?`,
       application,
       'eligibility',
       'eligibility-reason',

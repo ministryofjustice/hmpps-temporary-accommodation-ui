@@ -9,11 +9,6 @@ export default class AssessmentFullPage extends Page {
     cy.get('.govuk-tag').contains(sentenceCase(status as string))
   }
 
-  clickAction(option: string) {
-    cy.get('.moj-button-menu__toggle-button').contains('Update referral status').click()
-    cy.get('.moj-button-menu__wrapper').contains(option).click()
-  }
-
   shouldShowAssessment(applicationTranslatedDocument: Record<'sections', Array<Section>>) {
     applicationTranslatedDocument.sections.forEach(section => {
       cy.get('h2').contains(section.title)

@@ -2,110 +2,95 @@
 
 {% macro personDetails(person) %}
   {% set rows = ([
-      {
-        key: {
-          text: "CRN"
-        },
-        value: {
-          text: person.crn
-        }
+    {
+      key: {
+        text: "Name"
+      },
+      value: {
+        text: person.name
       }
-    ] | removeBlankSummaryListItems)
-  %}
-
-  {% if person.type !== "RestrictedPerson" %}
-    {% set rows = ([
-      {
-        key: {
-          text: "Name"
-        },
-        value: {
-          text: person.name
-        }
+    },
+    {
+      key: {
+        text: "CRN"
       },
-      {
-        key: {
-          text: "CRN"
-        },
-        value: {
-          text: person.crn
-        }
-      },
-      {
-        key: {
-          text: "Date of birth"
-        },
-        value: {
-          text: formatDate(person.dateOfBirth, {format: 'short'})
-        }
-      },
-      {
-        key: {
-          text: "NOMS number"
-        },
-        value: {
-          text: person.nomsNumber
-        }
-      },
-      {
-        key: {
-          text: "Nationality"
-        },
-        value: {
-          text: person.nationality
-        }
-      },
-      {
-        key: {
-          text: "Religion or belief"
-        },
-        value: {
-          text: person.religionOrBelief
-        }
-      },
-      {
-        key: {
-          text: "Sex"
-        },
-        value: {
-          text: person.sex
-        }
-      },
-      {
-        key: {
-          text: "Ethnicity"
-        },
-        value: {
-          text: person.ethnicity
-        }
-      },
-      {
-        key: {
-          text: "Gender identity"
-        },
-        value: {
-          text: person.genderIdentity
-        }
-      },
-      {
-        key: {
-          text: "Status"
-        },
-        value: {
-          html: personStatusTag(person.status)
-        }
-      },
-      {
-        key: {
-          text: "Prison"
-        },
-        value: {
-          text: person.prisonName
-        }
+      value: {
+        text: person.crn
       }
-    ] | removeBlankSummaryListItems) %}
-  {% endif %}
-
+    },
+    {
+      key: {
+        text: "Date of birth"
+      },
+      value: {
+        text: formatDate(person.dateOfBirth, {format: 'short'}) if isFullPerson(person) else undefined
+      }
+    },
+    {
+      key: {
+        text: "NOMS number"
+      },
+      value: {
+        text: person.nomsNumber
+      }
+    },
+    {
+      key: {
+        text: "Nationality"
+      },
+      value: {
+        text: person.nationality
+      }
+    },
+    {
+      key: {
+        text: "Religion or belief"
+      },
+      value: {
+        text: person.religionOrBelief
+      }
+    },
+    {
+      key: {
+        text: "Sex"
+      },
+      value: {
+        text: person.sex
+      }
+    },
+    {
+      key: {
+        text: "Ethnicity"
+      },
+      value: {
+        text: person.ethnicity
+      }
+    },
+    {
+      key: {
+        text: "Gender identity"
+      },
+      value: {
+        text: person.genderIdentity
+      }
+    },
+    {
+      key: {
+        text: "Status"
+      },
+      value: {
+        html: personStatusTag(person.status) if isFullPerson(person) else undefined
+      }
+    },
+    {
+      key: {
+        text: "Prison"
+      },
+      value: {
+        text: person.prisonName
+      }
+    }
+  ] | removeBlankSummaryListItems) %}
 
   {{ govukSummaryList({
     attributes: {

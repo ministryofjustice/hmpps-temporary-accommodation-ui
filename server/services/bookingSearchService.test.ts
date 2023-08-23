@@ -1,7 +1,11 @@
 import BookingClient from '../data/bookingClient'
 import BookingSearchService from './bookingSearchService'
 import { CallConfig } from '../data/restClient'
-import { bookingSearchResultFactory, bookingSearchResultsFactory } from '../testutils/factories/index'
+import {
+  bookingSearchResultFactory,
+  bookingSearchResultPersonSummaryFactory,
+  bookingSearchResultsFactory,
+} from '../testutils/factories/index'
 import { DateFormats } from '../utils/dateUtils'
 import paths from '../paths/temporary-accommodation/manage'
 
@@ -24,7 +28,9 @@ describe('BookingService', () => {
     it('returns a table view of all returned bookings', async () => {
       const booking1 = bookingSearchResultFactory.build()
       const booking2 = bookingSearchResultFactory.build()
-      const booking3 = bookingSearchResultFactory.build()
+      const booking3 = bookingSearchResultFactory.build({
+        person: bookingSearchResultPersonSummaryFactory.build({ name: '' }),
+      })
       const bookings = bookingSearchResultsFactory.build({ resultsCount: 3, results: [booking1, booking2, booking3] })
 
       bookingClient.search.mockResolvedValue(bookings)
@@ -85,7 +91,7 @@ describe('BookingService', () => {
           },
         ],
         [
-          { text: booking3.person.name },
+          { text: 'Limited access offender' },
           { text: booking3.person.crn },
           { text: booking3.premises.addressLine1 },
           {

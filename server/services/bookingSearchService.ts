@@ -16,7 +16,7 @@ export default class BookingSearchService {
 
     return results.map(summary => {
       return [
-        this.textValue(summary.person.name),
+        this.textValue(summary.person.name || 'Limited access offender'),
         this.textValue(summary.person.crn),
         this.textValue(summary.premises.addressLine1),
         this.dateSortValue(

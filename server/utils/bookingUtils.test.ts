@@ -7,6 +7,7 @@ import {
   departureFactory,
   extensionFactory,
   personFactory,
+  restrictedPersonFactory,
 } from '../testutils/factories'
 import {
   assessmentRadioItems,
@@ -574,10 +575,9 @@ describe('bookingUtils', () => {
     })
 
     it('returns a radio item for each asssessment summary when the person is a LAO', () => {
-      const person = personFactory.build({
+      const person = restrictedPersonFactory.build({
         crn: 'ABC123',
       })
-      person.name = undefined
 
       const assessmentSummary1 = assessmentSummaryFactory.build({
         person,

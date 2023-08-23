@@ -3,15 +3,10 @@ import { sentenceCase } from '../../../server/utils/utils'
 import type { Section } from '../../../server/utils/applicationUtils'
 import Page from '../page'
 
-export default class AssessmentShowPage extends Page {
+export default class AssessmentFullPage extends Page {
   constructor(name: string, status: Assessment['status']) {
     super(name)
     cy.get('.govuk-tag').contains(sentenceCase(status as string))
-  }
-
-  clickAction(option: string) {
-    cy.get('.moj-button-menu__toggle-button').contains('Update referral status').click()
-    cy.get('.moj-button-menu__wrapper').contains(option).click()
   }
 
   shouldShowAssessment(applicationTranslatedDocument: Record<'sections', Array<Section>>) {

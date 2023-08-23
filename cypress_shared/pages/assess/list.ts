@@ -42,7 +42,7 @@ export default class ListPage extends Page {
 
   shouldShowArchivedAssessments(): void {
     this.archivedAssessments.forEach(assessmentSummary => {
-      cy.get(`a[href*="${paths.assessments.show({ id: assessmentSummary.id })}"]`)
+      cy.get(`a[href*="${paths.assessments.full({ id: assessmentSummary.id })}"]`)
         .parent()
         .parent()
         .within(() => {
@@ -81,7 +81,7 @@ export default class ListPage extends Page {
   private shouldShowAssessments(assessments: Array<AssessmentSummary>, containerId: string): void {
     assessments.forEach(assessmentSummary => {
       cy.get(`#${containerId}`).within(() => {
-        cy.get(`a[href*="${paths.assessments.show({ id: assessmentSummary.id })}"]`)
+        cy.get(`a[href*="${paths.assessments.full({ id: assessmentSummary.id })}"]`)
           .parent()
           .parent()
           .within(() => {

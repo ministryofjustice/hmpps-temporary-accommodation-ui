@@ -1,0 +1,73 @@
+{%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../components/person-details/macro.njk" import personDetails %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + assessment.application.person.name + " referral summary" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% set breadCrumbTitle = assessment.application.person.name + " - Summary" %}
+
+{% block beforeContent %}
+  {{ breadCrumb(breadCrumbTitle, [
+    {title: 'Referrals', href: paths.assessments.index()}
+  ]) }}
+{% endblock %}
+
+{% block content %}
+  {% include "../../_messages.njk" %}
+
+  <div class="moj-identity-bar">
+    <div class="moj-identity-bar__container">
+      <div class="moj-identity-bar__details">
+        <span class="moj-identity-bar__title">
+          <span class="govuk-caption-xl">Referral summary</span>
+          <h1 class="govuk-heading-xl">{{ assessment.application.person.name }}
+            {{ assessmentStatusTag(assessment.status) | safe }}</h1>
+        </span>
+      </div>
+
+      <div class="moj-identity-bar__actions">
+        <div class="moj-identity-bar__menu">
+          <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+              {% for action in actions %}
+                {% if action.newTab %}
+                  <a href="{{ action.href }}" role="menuitem" draggable="false" class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button" data-secondary="true" rel="noreferrer noopener" target="_blank">
+                    {{ action.text }} (opens in new tab)
+                  </a>
+                {% else %}
+                  <a href="{{ action.href }}" role="menuitem" draggable="false" class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button" data-secondary="true">
+                    {{ action.text }}
+                  </a>
+                {% endif %}
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{ personDetails(assessment.application.person) }}
+
+  {{ 
+    govukButton({
+      text: "View full referral",
+      type: "button",
+      href: paths.assessments.full({ id: assessment.id }),
+      classes: "govuk-button--secondary"
+    }) 
+  }}
+
+{% endblock %}
+
+{% block extraScripts %}
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Update referral status", menuClasses: "moj-button-menu__wrapper--right"});
+  </script>
+{% endblock %}

@@ -3,17 +3,17 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Select the index offence for " + person.name %}
+{% set pageTitle = applicationName + " - Select the index offence for " + personName(person) %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1>Select the index offence for {{ person.name }}</h1>
+      <h1>Select the index offence for {{ personName(person) }}</h1>
 
       <p class="govuk-body">
-        {{ person.name }} has more than one offence identified against their CRN.
+        {{ personName(person, 'This person') }} has more than one offence identified against their CRN.
 
       <p class="govuk-body">Select their main offence.</p>
 

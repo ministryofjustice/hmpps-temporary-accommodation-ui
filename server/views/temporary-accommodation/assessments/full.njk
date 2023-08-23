@@ -1,5 +1,5 @@
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
-{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 
 {% extends "../../partials/layout.njk" %}
@@ -8,9 +8,10 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb(assessment.application.person.name, [
-    {title: 'Referrals', href: paths.assessments.index()}
-  ]) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.assessments.summary({ id: assessment.id })
+  }) }}
 {% endblock %}
 
 {% block content %}

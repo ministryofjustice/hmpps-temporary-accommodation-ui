@@ -1,9 +1,9 @@
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import paths from '../paths/apply'
-import { applicationFactory } from '../testutils/factories'
+import { applicationFactory, personFactory } from '../testutils/factories'
 import { DateFormats } from './dateUtils'
-import { isApplicableTier, tierBadge } from './personUtils'
+import { isApplicableTier, personName, tierBadge } from './personUtils'
 
 import {
   dashboardTableRows,
@@ -347,16 +347,18 @@ describe('applicationUtils', () => {
 
   describe('dashboardTableRows', () => {
     it('returns an array of applications as table rows', async () => {
-      ;(tierBadge as jest.Mock).mockReturnValue('TIER_BADGE')
+      ;(tierBadge as jest.MockedFunction<typeof tierBadge>).mockReturnValue('TIER_BADGE')
+      ;(personName as jest.MockedFunction<typeof personName>).mockImplementation(person => person.name)
+
       const arrivalDate = DateFormats.dateObjToIsoDate(new Date(2021, 0, 3))
 
       const applicationA = applicationFactory.build({
-        person: { name: 'A' },
+        person: personFactory.build({ name: 'A' }),
         data: {},
         submittedAt: null,
       })
       const applicationB = applicationFactory.withReleaseDate(arrivalDate).build({
-        person: { name: 'A' },
+        person: personFactory.build({ name: 'B' }),
       })
 
       const result = dashboardTableRows([applicationA, applicationB])
@@ -364,7 +366,7 @@ describe('applicationUtils', () => {
       expect(result).toEqual([
         [
           {
-            html: `<a href=${paths.applications.show({ id: applicationA.id })}>${applicationA.person.name}</a>`,
+            html: `<a href=${paths.applications.show({ id: applicationA.id })}>A</a>`,
           },
           {
             text: applicationA.person.crn,
@@ -378,7 +380,7 @@ describe('applicationUtils', () => {
         ],
         [
           {
-            html: `<a href=${paths.applications.show({ id: applicationB.id })}>${applicationB.person.name}</a>`,
+            html: `<a href=${paths.applications.show({ id: applicationB.id })}>B</a>`,
           },
           {
             text: applicationB.person.crn,
@@ -391,6 +393,8 @@ describe('applicationUtils', () => {
           },
         ],
       ])
+      expect(personName).toHaveBeenCalledWith(applicationA.person, 'Limited access offender')
+      expect(personName).toHaveBeenCalledWith(applicationB.person, 'Limited access offender')
     })
   })
 

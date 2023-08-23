@@ -1,6 +1,7 @@
 import { TemporaryAccommodationApplication as Application } from '../../../server/@types/shared'
 import paths from '../../../server/paths/apply'
 import { DateFormats } from '../../../server/utils/dateUtils'
+import { isFullPerson, personName } from '../../../server/utils/personUtils'
 import Page from '../page'
 
 export default class ListPage extends Page {
@@ -15,7 +16,11 @@ export default class ListPage extends Page {
   }
 
   clickApplication(application: Application) {
-    cy.get('a').contains(application.person.name).click()
+    if (isFullPerson(application.person)) {
+      cy.get('a').contains(application.person.name).click()
+    } else {
+      cy.get(`a[href*="${paths.applications.show({ id: application.id })}"]`).click()
+    }
   }
 
   shouldShowInProgressApplications(): void {
@@ -37,7 +42,7 @@ export default class ListPage extends Page {
           .parent()
           .parent()
           .within(() => {
-            cy.get('th').eq(0).contains(application.person.name)
+            cy.get('th').eq(0).contains(personName(application.person, 'Limited access offender'))
             cy.get('td').eq(0).contains(application.person.crn)
             cy.get('td')
               .eq(1)

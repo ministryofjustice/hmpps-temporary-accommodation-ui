@@ -72,7 +72,7 @@ export default class BookingShowPage extends Page {
     this.bookingInfoComponent.shouldShowBookingDetails()
 
     if (this.booking.assessmentId) {
-      this.popDetailsHeaderComponent.shouldHaveNameLink(paths.assessments.full({ id: this.booking.assessmentId }))
+      this.popDetailsHeaderComponent.shouldHaveNameLink(paths.assessments.summary({ id: this.booking.assessmentId }))
     }
   }
 

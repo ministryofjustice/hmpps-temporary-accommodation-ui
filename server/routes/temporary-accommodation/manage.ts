@@ -5,8 +5,8 @@ import type { Controllers } from '../../controllers'
 import { createUserCheckMiddleware } from '../../middleware/userCheckMiddleware'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
-import { actions, compose } from '../utils'
 import { userHasAssessorRole } from '../../utils/userUtils'
+import { actions, compose } from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { get, post, put } = compose(
@@ -324,6 +324,19 @@ export default function routes(controllers: Controllers, services: Services, rou
       {
         path: paths.assessments.full.pattern,
         auditEvent: 'UPDATE_ASSESSMENT_SUCCESS',
+      },
+    ],
+  })
+
+  post(paths.assessments.notes.create.pattern, assessmentsController.createNote(), {
+    redirectAuditEventSpecs: [
+      {
+        path: `${paths.assessments.summary.pattern}\\?success=false`,
+        auditEvent: 'CREATE_ASSESSMENT_NOTE_FAILURE',
+      },
+      {
+        path: `${paths.assessments.summary.pattern}\\?success=true`,
+        auditEvent: 'CREATE_ASSESSMENT_NOTE_SUCCESS',
       },
     ],
   })

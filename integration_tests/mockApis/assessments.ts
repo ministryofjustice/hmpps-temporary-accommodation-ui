@@ -3,6 +3,7 @@ import { Assessment, AssessmentSummary } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
+import { errorStub } from '../../wiremock/utils'
 
 export default {
   stubAssessments: (assessments: Array<AssessmentSummary>): SuperAgentRequest =>
@@ -124,4 +125,25 @@ export default {
         url: api.assessments.closure({ id: assessmentId }),
       })
     ).body.requests,
+  stubCreateAssessmentNote: (assessment: Assessment): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: api.assessments.notes({ id: assessment.id }),
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {},
+      },
+    }),
+  verifyCreateAssessmentNote: async (assessmentId: string) =>
+    (
+      await getMatchingRequests({
+        method: 'POST',
+        url: api.assessments.notes({ id: assessmentId }),
+      })
+    ).body.requests,
+  stubCreateAssessmentNoteErrors: (args: { assessmentId: string; params: Array<string> }): SuperAgentRequest =>
+    stubFor(errorStub(args.params, api.assessments.notes({ id: args.assessmentId }), 'POST')),
 }

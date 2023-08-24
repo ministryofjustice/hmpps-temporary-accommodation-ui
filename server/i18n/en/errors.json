@@ -118,6 +118,9 @@
     },
     "assessmentId": {
       "empty": "You must select an assessment, or select 'Book this bedspace without linking a referral'"
+    },
+    "message": {
+      "empty": "Enter text to save as a note"
     }
   },
   "bookingCancellation": {

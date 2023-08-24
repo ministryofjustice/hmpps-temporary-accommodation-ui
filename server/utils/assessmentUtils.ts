@@ -1,10 +1,14 @@
 import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+  ReferralHistoryNote as Note,
+  ReferralHistoryUserNote as UserNote,
 } from '@approved-premises/api'
-import { TableRow } from '../@types/ui'
+import { TableRow, TimelineItem } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
+import { convertToTitleCase } from './utils'
+import { formatLines } from './viewUtils'
 
 export const allStatuses: Array<{ name: string; id: AssessmentSummary['status']; tagClass: string }> = [
   {
@@ -151,4 +155,36 @@ export const assessmentActions = (assessment: Assessment) => {
   }
 
   return items
+}
+
+export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
+  const notes = [...assessment.referralHistoryNotes].sort((noteA, noteB) => {
+    if (noteA.createdAt === noteB.createdAt) {
+      return 0
+    }
+
+    return noteA.createdAt < noteB.createdAt ? 1 : -1
+  })
+
+  return notes.map(note => {
+    return {
+      label: {
+        text: 'Note',
+      },
+      html: formatLines(note.message),
+      datetime: {
+        timestamp: note.createdAt,
+        type: 'datetime',
+      },
+      byline: isUserNote(note)
+        ? {
+            text: convertToTitleCase(note.createdByUserName),
+          }
+        : undefined,
+    }
+  })
+}
+
+const isUserNote = (note: Note): note is UserNote => {
+  return (note as UserNote).createdByUserName !== undefined
 }

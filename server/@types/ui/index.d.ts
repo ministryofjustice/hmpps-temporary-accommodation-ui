@@ -159,6 +159,20 @@ export interface PageHeadingBarItem {
   text: string
 }
 
+export interface TimelineItem {
+  label: {
+    text: string
+  }
+  html: string
+  datetime: {
+    timestamp: string
+    type: 'datetime'
+  }
+  byline?: {
+    text: string
+  }
+}
+
 export type RiskLevel = 'Low' | 'Medium' | 'High' | 'Very High'
 
 export type TierNumber = '1' | '2' | '3' | '4'

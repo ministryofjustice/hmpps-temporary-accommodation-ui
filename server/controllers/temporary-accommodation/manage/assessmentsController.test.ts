@@ -2,14 +2,22 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import { CallConfig } from '../../../data/restClient'
-import { AssessmentsService } from '../../../services'
-import { assessmentFactory, probationRegionFactory } from '../../../testutils/factories'
-import extractCallConfig from '../../../utils/restUtils'
-import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
-import { assessmentActions } from '../../../utils/assessmentUtils'
 import paths from '../../../paths/temporary-accommodation/manage'
+import { AssessmentsService } from '../../../services'
+import {
+  assessmentFactory,
+  newReferralHistoryUserNoteFactory,
+  probationRegionFactory,
+} from '../../../testutils/factories'
+import { assessmentActions } from '../../../utils/assessmentUtils'
+import extractCallConfig from '../../../utils/restUtils'
+import { appendQueryString } from '../../../utils/utils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
 
 jest.mock('../../../utils/restUtils')
+jest.mock('../../../utils/validation')
+jest.mock('../../../utils/utils')
 
 describe('AssessmentsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -79,6 +87,7 @@ describe('AssessmentsController', () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
       request.params = { id: assessmentId }
 
       const requestHandler = assessmentsController.summary()
@@ -87,6 +96,8 @@ describe('AssessmentsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/summary', {
         assessment,
         actions: assessmentActions(assessment),
+        errors: {},
+        errorSummary: [],
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
     })
@@ -144,6 +155,48 @@ describe('AssessmentsController', () => {
 
       expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
+    })
+  })
+
+  describe('createNote', () => {
+    it('creates a new note and redirects to assessment summary page', async () => {
+      const requestHandler = assessmentsController.createNote()
+      const assessmentId = 'some-id'
+      const newNote = newReferralHistoryUserNoteFactory.build()
+
+      request.params = { id: assessmentId }
+      request.body = { message: newNote.message }
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/success/token')
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.createNote).toHaveBeenCalledWith(callConfig, assessmentId, newNote)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Note saved')
+      expect(response.redirect).toHaveBeenCalledWith('/path/with/success/token')
+      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+        success: 'true',
+      })
+    })
+
+    it('redirects to the assessment summary page with errors if the API returns an error', async () => {
+      const requestHandler = assessmentsController.createNote()
+      const assessmentId = 'some-id'
+      const newNote = newReferralHistoryUserNoteFactory.build()
+
+      const err = new Error()
+
+      assessmentsService.createNote.mockRejectedValue(err)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/failure/token')
+
+      request.params = { id: assessmentId }
+      request.body = { message: newNote.message }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '/path/with/failure/token')
+      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+        success: 'false',
+      })
     })
   })
 })

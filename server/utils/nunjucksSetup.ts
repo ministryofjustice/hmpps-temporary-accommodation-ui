@@ -6,6 +6,7 @@ import express from 'express'
 import nunjucks from 'nunjucks'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
+import { statusTag as assessmentStatusTag } from './assessmentUtils'
 import { DateFormats, dateInputHint } from './dateUtils'
 import {
   convertObjectsToCheckboxItems,
@@ -15,18 +16,19 @@ import {
   parseNaturalNumber,
 } from './formUtils'
 import { statusTag as personStatusTag } from './personUtils'
-import { statusTag as assessmentStatusTag } from './assessmentUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
 import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
+import * as AssessmentUtils from './assessmentUtils'
 import * as AttachDocumentsUtils from './attachDocumentsUtils'
 import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
 import * as PhaseBannerUtils from './phaseBannerUtils'
-import * as TasklistUtils from './taskListUtils'
 import * as PremisesUtils from './premisesUtils'
+import * as TasklistUtils from './taskListUtils'
 
+import { TemporaryAccommodationAssessment } from '../@types/shared'
 import bookingSummaryListRows from '../components/bookingInfo'
 import * as BookingListing from '../components/bookingListing'
 import lostBedSummaryListRows from '../components/lostBedInfo'
@@ -36,7 +38,9 @@ import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
-import { TemporaryAccommodationAssessment } from '../@types/shared'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
 
 const production = process.env.NODE_ENV === 'production'
 
@@ -87,6 +91,12 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
     const safeFilter = njkEnv.getFilter('safe')
     return safeFilter(html)
   }
+
+  const mojFilters = getMojFilters()
+
+  Object.keys({ ...mojFilters, mojDate: DateFormats.isoDateTimeToUIDateTime }).forEach(filter => {
+    njkEnv.addFilter(filter, mojFilters[filter])
+  })
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
@@ -170,6 +180,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('TasklistUtils', TasklistUtils)
   njkEnv.addGlobal('PremisesUtils', PremisesUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
+  njkEnv.addGlobal('AssessmentUtils', AssessmentUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
   njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)
 }

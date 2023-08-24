@@ -7,6 +7,7 @@ import type { TemporaryAccommodationAssessment as Assessment } from '@approved-p
 import { DateFormats } from '../../utils/dateUtils'
 import { fakeObject } from '../utils'
 import applicationFactory from './application'
+import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 
 class AssessmentFactory extends Factory<Assessment> {
   createdXDaysAgo(days: number) {
@@ -36,6 +37,7 @@ export default AssessmentFactory.define(() => ({
   data: fakeObject(),
   clarificationNotes: [],
   rejectionRationale: faker.lorem.sentence(),
+  referralHistoryNotes: referralHistoryUserNoteFactory.buildList(5),
   service: 'CAS3',
   status: faker.helpers.arrayElement([
     'unallocated' as const,

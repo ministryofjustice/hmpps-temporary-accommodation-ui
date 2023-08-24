@@ -1,11 +1,16 @@
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
-import ListPage from '../../../../cypress_shared/pages/assess/list'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
+import ListPage from '../../../../cypress_shared/pages/assess/list'
 import AssessmentSummaryPage from '../../../../cypress_shared/pages/assess/summary'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { assessmentFactory, assessmentSummaryFactory } from '../../../../server/testutils/factories'
+import {
+  assessmentFactory,
+  assessmentSummaryFactory,
+  newReferralHistoryUserNoteFactory,
+  referralHistoryUserNoteFactory,
+} from '../../../../server/testutils/factories'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -20,7 +25,7 @@ context('Apply', () => {
 
   describe('Assess', () => {
     describe('List assessments', () => {
-      it('I can view a list of assessments', () => {
+      it('shows a list of assessments', () => {
         // Given there are assessments in the database
         const inProgressAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'in_review' })
         const unallocatedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'unallocated' })
@@ -65,7 +70,7 @@ context('Apply', () => {
     })
 
     describe('Show an assessment', () => {
-      it('I can change the state of an assessment', () => {
+      it('allows me to change the state of an assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })
           assessment.application.document = applicationTranslatedDocument
@@ -87,11 +92,7 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral summary page
-          const assessmentPage = Page.verifyOnPage(
-            AssessmentSummaryPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
           // And I can view an assessment summary
           assessmentPage.shouldShowAssessmentSummary(assessment)
 
@@ -112,7 +113,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, assessment.application.person.name, 'in_review')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'in_review' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "in review"')
 
           // And the assessment is updated in the database
@@ -133,7 +134,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, assessment.application.person.name, 'ready_to_place')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'ready_to_place' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "ready to place"')
 
           // And the assessment is updated in the database
@@ -154,7 +155,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, assessment.application.person.name, 'closed')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'closed' })
           assessmentPage.shouldShowBanner('Assessment updated status updated to "closed"')
 
           // And the assessment is updated in the database
@@ -186,25 +187,76 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral summary page
-          const assessmentSummaryPage = Page.verifyOnPage(
-            AssessmentSummaryPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
           // And I can view an assessment summary
           assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
 
           // And I can view the full assessment
           assessmentSummaryPage.clickFullReferral()
 
-          const assessmentFullPage = Page.verifyOnPage(
-            AssessmentFullPage,
-            assessment.application.person.name,
-            assessment.status,
-          )
+          const assessmentFullPage = Page.verifyOnPage(AssessmentFullPage, assessment)
 
           assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
         })
+      })
+
+      it('shows existing notes', () => {
+        // Given I am on the assessment summary page
+        const assessment = assessmentFactory.build()
+        cy.task('stubFindAssessment', assessment)
+
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+
+        // I can see notes for the assessment
+        assessmentSummaryPage.shouldShowNotesTimeline()
+      })
+
+      it('allows me to create a new note', () => {
+        // Given I am on the assessment summary page
+        const assessment = assessmentFactory.build()
+        cy.task('stubFindAssessment', assessment)
+
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+
+        // When I create a new notes
+        const newNote = newReferralHistoryUserNoteFactory.build()
+
+        cy.task('stubCreateAssessmentNote', assessment)
+        assessmentSummaryPage.createNote(newNote.message)
+
+        // Then the note should have been created in the API
+        cy.task('verifyCreateAssessmentNote', assessment.id).then(requests => {
+          expect(requests).to.have.length(1)
+          const requestBody = JSON.parse(requests[0].body)
+          expect(requestBody.message.replaceAll('\r\n', '\n')).contains(newNote.message)
+        })
+
+        // And I am redirected back to assessment summary page
+        const postSumbmitAssessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+
+        postSumbmitAssessmentSummaryPage.shouldShowBanner('Note saved')
+      })
+
+      it('shows an error when I attempt to create an empty note', () => {
+        // Given I am on the assessment page
+        const assessment = assessmentFactory.build({
+          referralHistoryNotes: referralHistoryUserNoteFactory.buildList(5),
+          status: 'unallocated',
+        })
+
+        cy.task('stubFindAssessment', assessment)
+
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+
+        // When I attempt to create a new notes without a message
+        cy.task('stubCreateAssessmentNoteErrors', { assessmentId: assessment.id, params: ['message'] })
+        assessmentSummaryPage.clickSaveNote()
+
+        // Then I am redirected back to assessment page
+        const postSumbmitSummaryAssessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+
+        // And I should see an error messags
+        postSumbmitSummaryAssessmentPage.shouldShowErrorMessagesForFields(['message'])
       })
     })
   })

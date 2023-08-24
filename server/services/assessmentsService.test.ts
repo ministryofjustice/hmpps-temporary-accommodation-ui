@@ -1,6 +1,11 @@
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
-import { assessmentFactory, assessmentSummaryFactory } from '../testutils/factories'
+import {
+  assessmentFactory,
+  assessmentSummaryFactory,
+  newReferralHistoryUserNoteFactory,
+  referralHistoryNoteFactory,
+} from '../testutils/factories'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
 
@@ -162,6 +167,20 @@ describe('AssessmentsService', () => {
       expect(result).toEqual(assessmentSummaries)
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.readyToPlaceForCrn).toHaveBeenCalledWith(crn)
+    })
+  })
+
+  describe('createNote', () => {
+    it('returns a newly created user note', async () => {
+      const newNote = newReferralHistoryUserNoteFactory.build()
+      const note = referralHistoryNoteFactory.build()
+      assessmentClient.createNote.mockResolvedValue(note)
+
+      const result = await service.createNote(callConfig, assessmentId, newNote)
+
+      expect(result).toEqual(note)
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.createNote).toHaveBeenCalledWith(assessmentId, newNote)
     })
   })
 })

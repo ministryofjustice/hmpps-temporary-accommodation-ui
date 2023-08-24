@@ -20,7 +20,7 @@
   {% if applyDisabled %}
     <h1 class="govuk-heading-l">Book bedspace for a person referred through nDelius</h1>
   {% elif forceAssessmentId %}
-    <h1 class="govuk-heading-l">No referrals found</h1>
+    <h1 class="govuk-heading-l">Book without linking a referral</h1>
   {% else %}
     <h1 class="govuk-heading-l">Confirm which referral this booking is for</h1>
   {% endif %}
@@ -63,11 +63,12 @@
 
           <input type="hidden" name="assessmentId" value="{{ forceAssessmentId }}"/>
         {% elif forceAssessmentId %}
-          <p class="govuk-body">There are no referrals for this person that are ready to place.</p>
-          <p class="govuk-body">Check the list of <a class="govuk-link" href="{{ paths.assessments.index({}) }}">submitted referrals</a> to see if there is a referral for this person that should be marked as ready to place.</p>
+          <p class="govuk-body">There are no digital referrals for this person that are ready to place.</p>
+          <p class="govuk-body">If this is expected you can continue to book this bedspace without linking a referral.</p>
 
-          <h2 class="govuk-heading-m">Book without linking a referral</h1>
-          <p class="govuk-body">You can continue to book this bedspace without linking a referral.</p>
+          <h2 class="govuk-heading-m">No digital referrals found</h1>
+          <p class="govuk-body">If a referral has been submitted through the Temporary Accommodation service check the list of <a class="govuk-link" href="{{ paths.assessments.index({}) }}">submitted referrals</a>.</p>
+          <p class="govuk-body">Referrals must be marked as ready to place before a placement is booked.</p>
           
           <input type="hidden" name="assessmentId" value="{{ forceAssessmentId }}"/>
 

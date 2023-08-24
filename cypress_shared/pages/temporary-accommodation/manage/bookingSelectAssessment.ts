@@ -6,12 +6,12 @@ import Page from '../../page'
 
 export default class BookingSelectAssessmentPage extends Page {
   constructor(private readonly assessmentSummaries: Array<AssessmentSummary>) {
-    super(assessmentSummaries.length ? 'Confirm which referral this booking is for' : 'No referrals found')
+    super(assessmentSummaries.length ? 'Confirm which referral this booking is for' : 'Book without linking a referral')
   }
 
   static assignAssessmentSummaries(alias: string): void {
     cy.get('h1').then(titleElement => {
-      if (Cypress.$(titleElement).text() === 'No referrals found') {
+      if (Cypress.$(titleElement).text() === 'Book without linking a referral') {
         cy.wrap([]).as(alias)
       } else {
         cy.get('.govuk-radios')

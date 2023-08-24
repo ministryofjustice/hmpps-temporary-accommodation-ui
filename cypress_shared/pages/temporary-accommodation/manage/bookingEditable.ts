@@ -33,14 +33,9 @@ export default abstract class BookingEditablePage extends Page {
   }
 
   protected completeEditableForm(newOrUpdateBooking: NewBooking): void {
-    this.getLabel("What is the person's CRN")
-    this.getTextInputByIdAndEnterDetails('crn', newOrUpdateBooking.crn)
-
-    this.getLegend('What is the start date?')
-    this.completeDateInputs('arrivalDate', newOrUpdateBooking.arrivalDate)
-
-    this.getLegend('What is the end date?')
-    this.completeDateInputs('departureDate', newOrUpdateBooking.departureDate)
+    this.completeTextInputByLabel("What is the person's CRN", newOrUpdateBooking.crn)
+    this.completeDateInputsByLegend('What is the start date?', newOrUpdateBooking.arrivalDate)
+    this.completeDateInputsByLegend('What is the end date?', newOrUpdateBooking.departureDate)
 
     this.clickSubmit()
   }

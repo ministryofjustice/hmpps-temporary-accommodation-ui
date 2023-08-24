@@ -204,6 +204,7 @@ export type { TemporaryAccommodationPremisesSummary } from './models/TemporaryAc
 export type { TemporaryAccommodationUser } from './models/TemporaryAccommodationUser';
 export type { TemporaryAccommodationUserRole } from './models/TemporaryAccommodationUserRole';
 export type { Turnaround } from './models/Turnaround';
+export type { UnknownPerson } from './models/UnknownPerson';
 export type { UpdateApplication } from './models/UpdateApplication';
 export type { UpdateApplicationType } from './models/UpdateApplicationType';
 export type { UpdateApprovedPremisesApplication } from './models/UpdateApprovedPremisesApplication';

@@ -3,4 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type PersonType = 'FullPerson' | 'RestrictedPerson' | 'UnknownPerson' | 'FullPersonInfo' | 'RestrictedPersonInfo';
+import type { Person } from './Person';
+
+export type UnknownPerson = Person;
+

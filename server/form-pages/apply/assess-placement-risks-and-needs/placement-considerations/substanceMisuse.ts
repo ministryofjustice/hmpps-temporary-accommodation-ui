@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { PersonRisksUI, TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
 import { mapApiPersonRisksForUi } from '../../../../utils/utils'
@@ -23,7 +24,9 @@ export default class SubstanceMisuse implements TasklistPage {
     readonly application: Application,
   ) {
     this.questions = {
-      substanceMisuse: `Does ${application.person.name} have any current or previous issues with drug or alcohol misuse?`,
+      substanceMisuse: `Does ${personName(
+        application.person,
+      )} have any current or previous issues with drug or alcohol misuse?`,
     }
 
     this.risks = mapApiPersonRisksForUi(application.risks)
@@ -50,7 +53,9 @@ export default class SubstanceMisuse implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.substanceMisuse) {
-      errors.substanceMisuse = `You must specify if ${this.application.person.name} has any current or previous issues with drug or alcohol misuse`
+      errors.substanceMisuse = `You must specify if ${personName(
+        this.application.person,
+      )} has any current or previous issues with drug or alcohol misuse`
     }
 
     if (this.body.substanceMisuse === 'yes' && !this.body.substanceMisuseDetail) {

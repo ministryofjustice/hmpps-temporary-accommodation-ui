@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
 
@@ -18,7 +19,7 @@ export default class ReligiousOrCulturalNeeds implements TasklistPage {
     readonly body: Partial<ReligiousOrCulturalNeedsBody>,
     readonly application: Application,
   ) {
-    this.title = `Does ${application.person.name} have any religious or cultural needs?`
+    this.title = `Does ${personName(application.person)} have any religious or cultural needs?`
   }
 
   response() {
@@ -42,11 +43,15 @@ export default class ReligiousOrCulturalNeeds implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.religiousOrCulturalNeeds) {
-      errors.religiousOrCulturalNeeds = `You must specify if ${this.application.person.name} has any religious or cultural needs`
+      errors.religiousOrCulturalNeeds = `You must specify if ${personName(
+        this.application.person,
+      )} has any religious or cultural needs`
     }
 
     if (this.body.religiousOrCulturalNeeds === 'yes' && !this.body.religiousOrCulturalNeedsDetail) {
-      errors.religiousOrCulturalNeedsDetail = `You must provide details of ${this.application.person.name}'s religious or cultural needs`
+      errors.religiousOrCulturalNeedsDetail = `You must provide details of ${personName(
+        this.application.person,
+      )}'s religious or cultural needs`
     }
 
     return errors

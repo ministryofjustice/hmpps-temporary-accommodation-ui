@@ -4,6 +4,7 @@ import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePa
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
+import { personName } from '../../../../utils/personUtils'
 
 type ReleaseDateBody = ObjectWithDateParts<'releaseDate'>
 
@@ -18,7 +19,7 @@ export default class ReleaseDate implements TasklistPage {
     private _body: Partial<ReleaseDateBody>,
     readonly application: Application,
   ) {
-    const { name } = application.person
+    const name = personName(application.person)
 
     this.title = `What is ${name}'s release date?`
   }

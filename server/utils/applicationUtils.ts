@@ -11,6 +11,7 @@ import getSections from './assessments/getSections'
 import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
+import { personName } from './personUtils'
 import { kebabCase } from './utils'
 import { formatLines } from './viewUtils'
 import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummaryListItem'
@@ -20,7 +21,7 @@ const dashboardTableRows = (applications: Array<Application>): Array<TableRow> =
     const arrivalDate = getArrivalDate(application, false)
 
     return [
-      createNameAnchorElement(application.person.name, application.id),
+      createNameAnchorElement(personName(application.person, 'Limited access offender'), application.id),
       textValue(application.person.crn),
       textValue(arrivalDate ? DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }) : 'N/A'),
       htmlValue(getStatus(application)),

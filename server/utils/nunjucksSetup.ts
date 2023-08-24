@@ -15,7 +15,7 @@ import {
   dateFieldValues,
   parseNaturalNumber,
 } from './formUtils'
-import { statusTag as personStatusTag } from './personUtils'
+import { isFullPerson, personName, statusTag as personStatusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
 
 import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
@@ -104,6 +104,8 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('formatDateTime', DateFormats.isoDateTimeToUIDateTime)
   njkEnv.addGlobal('parseNaturalNumber', parseNaturalNumber)
   njkEnv.addGlobal('dateInputHint', dateInputHint)
+  njkEnv.addGlobal('personName', personName)
+  njkEnv.addGlobal('isFullPerson', isFullPerson)
 
   njkEnv.addGlobal('dateFieldValues', function sendContextToDateFieldValues(fieldName: string, errors: ErrorMessages) {
     return dateFieldValues(fieldName, this.ctx, errors)

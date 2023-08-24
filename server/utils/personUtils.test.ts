@@ -1,4 +1,5 @@
-import { isApplicableTier, statusTag, tierBadge } from './personUtils'
+import { personFactory } from '../testutils/factories'
+import { isApplicableTier, isFullPerson, personName, statusTag, tierBadge } from './personUtils'
 
 describe('personUtils', () => {
   describe('statusTag', () => {
@@ -46,6 +47,46 @@ describe('personUtils', () => {
 
     it(`returns false if the person's sex is female and has an inapplicable tier`, () => {
       expect(isApplicableTier('Female', 'D1')).toBeFalsy()
+    })
+  })
+
+  describe('personName', () => {
+    it('returns the name of the given person if non-empty', () => {
+      const person = personFactory.build({ name: 'John Smith' })
+
+      expect(personName(person)).toEqual('John Smith')
+    })
+
+    it('returns the name of the given person if non-empty, even if the fallback string is specified', () => {
+      const person = personFactory.build({ name: 'John Smith' })
+
+      expect(personName(person, 'Limited access offender')).toEqual('John Smith')
+    })
+
+    it('returns "this person" if the person\'s name is empty', () => {
+      const person = personFactory.build({ name: '' })
+
+      expect(personName(person)).toEqual('the person')
+    })
+
+    it("returns the fallback string if specified and the person's name is empty", () => {
+      const person = personFactory.build({ name: '' })
+
+      expect(personName(person, 'Limited access offender')).toEqual('Limited access offender')
+    })
+  })
+
+  describe('isFullPerson', () => {
+    it("returns true if the person's name is non-empty", () => {
+      const person = personFactory.build({ name: 'John Smith' })
+
+      expect(isFullPerson(person)).toEqual(true)
+    })
+
+    it("returns false if the person's name is empty", () => {
+      const person = personFactory.build({ name: '' })
+
+      expect(isFullPerson(person)).toEqual(false)
     })
   })
 })

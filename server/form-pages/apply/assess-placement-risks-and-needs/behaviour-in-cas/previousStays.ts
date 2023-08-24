@@ -2,6 +2,7 @@ import type { TaskListErrors, YesNoOrIDK } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import { TemporaryAccommodationApplication as Application } from '../../../../@types/shared'
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesNoOrDontKnowResponse } from '../../../utils'
 
@@ -19,7 +20,7 @@ export default class PreviousStays implements TasklistPage {
     readonly body: Partial<PreviousStaysBody>,
     readonly application: Application,
   ) {
-    const { name } = application.person
+    const name = personName(application.person)
 
     this.title = 'Behaviour in previous accommodation'
 
@@ -49,7 +50,7 @@ export default class PreviousStays implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.previousStays) {
-      const { name } = this.application.person
+      const name = personName(this.application.person)
 
       errors.previousStays = `You must specify whether ${name} has previously stayed in Community Accommodation Services (CAS)`
     }

@@ -4,6 +4,7 @@ import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import { convertApiStatusToUiStatus } from '../../../../server/utils/bookingSearchUtils'
+import { personName } from '../../../../server/utils/personUtils'
 
 export default class BookingSearchPage extends Page {
   constructor() {
@@ -24,7 +25,7 @@ export default class BookingSearchPage extends Page {
   checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
     cy.get('tr')
       .filter(
-        `:contains(${booking.person.name}):contains(${booking.person.crn}):contains(${
+        `:contains(${personName(booking.person, 'Limited access offender')}):contains(${booking.person.crn}):contains(${
           premises.addressLine1
         }):contains(${DateFormats.isoDateToUIDate(booking.arrivalDate, {
           format: 'short',

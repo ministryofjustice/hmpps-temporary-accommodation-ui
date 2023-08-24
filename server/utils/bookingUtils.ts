@@ -3,6 +3,7 @@ import type { BespokeError, PageHeadingBarItem, RadioItem } from '@approved-prem
 import paths from '../paths/temporary-accommodation/manage'
 import { SanitisedError } from '../sanitisedError'
 import { DateFormats } from './dateUtils'
+import { isFullPerson } from './personUtils'
 
 type ParsedConflictError = {
   conflictingEntityId: string
@@ -380,7 +381,7 @@ const compareBookingState = (a: Extension | Departure | Cancellation, b: Extensi
 }
 
 const assessmentRadioItemText = (assessmentSummary: AssessmentSummary) => {
-  if (assessmentSummary.person.name) {
+  if (isFullPerson(assessmentSummary.person)) {
     return `${assessmentSummary.person.name}, CRN ${
       assessmentSummary.person.crn
     }, referral submitted ${DateFormats.isoDateToUIDate(assessmentSummary.createdAt, { format: 'short' })}`

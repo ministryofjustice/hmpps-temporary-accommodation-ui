@@ -1,5 +1,6 @@
 import { ActiveOffence, Person } from '@approved-premises/api'
 import { DateFormats } from '../../../server/utils/dateUtils'
+import { personName } from '../../../server/utils/personUtils'
 import Page from '../page'
 
 export default class SelectOffencePage extends Page {
@@ -7,7 +8,7 @@ export default class SelectOffencePage extends Page {
     private readonly person: Person,
     private readonly offences: Array<ActiveOffence>,
   ) {
-    super(`Select the index offence for ${person.name}`)
+    super(`Select the index offence for ${personName(person)}`)
   }
 
   shouldDisplayOffences(): void {

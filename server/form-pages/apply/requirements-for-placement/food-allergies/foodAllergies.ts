@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { TaskListErrors, YesNoOrIDKWithDetail } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesNoOrDontKnowResponseWithDetail } from '../../../utils'
 
@@ -20,7 +21,7 @@ export default class FoodAllergies implements TasklistPage {
     readonly application: Application,
   ) {
     this.questions = {
-      foodAllergies: `Does ${application.person.name} have any food allergies or dietary requirements?`,
+      foodAllergies: `Does ${personName(application.person)} have any food allergies or dietary requirements?`,
     }
   }
 
@@ -45,7 +46,9 @@ export default class FoodAllergies implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.foodAllergies) {
-      errors.foodAllergies = `You must specify if ${this.application.person.name} has any food allergies or dietary requirements`
+      errors.foodAllergies = `You must specify if ${personName(
+        this.application.person,
+      )} has any food allergies or dietary requirements`
     }
 
     if (this.body.foodAllergies === 'yes' && !this.body.foodAllergiesDetail) {

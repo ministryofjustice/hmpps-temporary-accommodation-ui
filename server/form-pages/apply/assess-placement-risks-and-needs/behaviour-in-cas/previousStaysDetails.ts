@@ -2,6 +2,7 @@ import { ApprovedPremisesApplication as Application } from '@approved-premises/a
 import type { TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 
 const accommodationTypes = {
@@ -34,7 +35,7 @@ export default class PreviousStaysDetails implements TasklistPage {
     readonly body: Partial<PreviousStaysDetailsBody>,
     readonly application: Application,
   ) {
-    const { name } = application.person
+    const name = personName(application.person)
 
     this.title = `What type of accommodation did ${name} stay at?`
   }
@@ -61,7 +62,7 @@ export default class PreviousStaysDetails implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.accommodationTypes?.length) {
-      const { name } = this.application.person
+      const name = personName(this.application.person)
 
       errors.accommodationTypes = `You must specify what type of accommodation ${name} stayed at`
     }

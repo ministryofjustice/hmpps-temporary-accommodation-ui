@@ -1,5 +1,6 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { TaskListErrors } from '@approved-premises/ui'
+import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
 
@@ -12,7 +13,7 @@ export default class MoveOnPlan implements TasklistPage {
     readonly body: Partial<MoveOnPlanBody>,
     readonly application: Application,
   ) {
-    const { name } = application.person
+    const name = personName(application.person)
 
     this.title = `How will you prepare ${name} for move on after placement?`
   }

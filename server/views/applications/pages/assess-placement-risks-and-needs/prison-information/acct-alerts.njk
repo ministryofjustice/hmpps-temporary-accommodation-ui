@@ -30,7 +30,7 @@
       </tbody>
     </table>
   {% else %}
-    <p>No ACCT information available for {{ page.application.person.name }}.</p>
+    <p>No ACCT information available for {{ personName(page.application.person) }}.</p>
   {% endif %}
 
 {% endblock %}

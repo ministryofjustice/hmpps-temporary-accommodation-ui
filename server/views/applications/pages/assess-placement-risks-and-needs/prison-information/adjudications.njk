@@ -34,7 +34,7 @@
       </tbody>
     </table>
   {% else %}
-    <p>No adjudication information available for {{ page.application.person.name }}.</p>
+    <p>No adjudication information available for {{ personName(page.application.person) }}.</p>
   {% endif %}
 
 {% endblock %}

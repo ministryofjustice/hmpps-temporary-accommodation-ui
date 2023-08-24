@@ -2,11 +2,12 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import paths from '../../../../../server/paths/apply'
 
 import ApplyPage from '../../applyPage'
+import { personName } from '../../../../../server/utils/personUtils'
 
 export default class MoveOnPlan extends ApplyPage {
   constructor(application: Application) {
     super(
-      `How will you prepare ${application.person.name} for move on after placement?`,
+      `How will you prepare ${personName(application.person)} for move on after placement?`,
       application,
       'move-on-plan',
       'move-on-plan',

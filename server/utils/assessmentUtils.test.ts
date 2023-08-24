@@ -5,6 +5,7 @@ import {
   personFactory,
   referralHistoryNoteFactory,
   referralHistoryUserNoteFactory,
+  restrictedPersonFactory,
 } from '../testutils/factories'
 import { assessmentActions, assessmentTableRows, statusName, statusTag, timelineItems } from './assessmentUtils'
 import { formatLines } from './viewUtils'
@@ -49,6 +50,24 @@ describe('assessmentUtils', () => {
         { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
         { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
       ])
+    })
+
+    it('returns a table row for the given assessment summary for the assessments table when the person is a LAO', () => {
+      const assessmentSummary = assessmentSummaryFactory.build({
+        id: 'some-id',
+        person: restrictedPersonFactory.build(),
+      })
+
+      const result = assessmentTableRows(assessmentSummary)
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          {
+            html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">Limited access offender</a>`,
+            attributes: { 'data-sort-value': '' },
+          },
+        ]),
+      )
     })
 
     it('returns a table row for the given assessment summary for the assessments table with a status cell', () => {

@@ -1,11 +1,12 @@
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../../../server/paths/apply'
+import { personName } from '../../../../../server/utils/personUtils'
 import ApplyPage from '../../applyPage'
 
 export default class PropertyAttributesOrAdaptationsPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `Will ${application.person.name} require a property with specific attributes or adaptations?`,
+      `Will ${personName(application.person)} require a property with specific attributes or adaptations?`,
       application,
       'disability-cultural-and-specific-needs',
       'property-attributes-or-adaptations',

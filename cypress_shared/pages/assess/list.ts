@@ -4,6 +4,7 @@ import {
 } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../server/utils/dateUtils'
+import { isFullPerson, personName } from '../../../server/utils/personUtils'
 import { sentenceCase } from '../../../server/utils/utils'
 import Page from '../page'
 
@@ -18,7 +19,11 @@ export default class ListPage extends Page {
   }
 
   clickAssessment(assessment: Assessment) {
-    cy.get('a').contains(assessment.application.person.name).click()
+    if (isFullPerson(assessment.application.person)) {
+      cy.get('a').contains(assessment.application.person.name).click()
+    } else {
+      cy.get(`a[href*="${paths.assessments.summary({ id: assessment.id })}"]`).click()
+    }
   }
 
   shouldShowInProgressAssessments(): void {
@@ -46,7 +51,7 @@ export default class ListPage extends Page {
         .parent()
         .parent()
         .within(() => {
-          cy.get('th').eq(0).contains(assessmentSummary.person.name)
+          cy.get('th').eq(0).contains(personName(assessmentSummary.person, 'Limited access offender'))
           cy.get('td').eq(0).contains(assessmentSummary.person.crn)
           cy.get('td')
             .eq(1)
@@ -85,7 +90,7 @@ export default class ListPage extends Page {
           .parent()
           .parent()
           .within(() => {
-            cy.get('th').eq(0).contains(assessmentSummary.person.name)
+            cy.get('th').eq(0).contains(personName(assessmentSummary.person, 'Limited access offender'))
             cy.get('td').eq(0).contains(assessmentSummary.person.crn)
             cy.get('td')
               .eq(1)

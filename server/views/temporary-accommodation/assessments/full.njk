@@ -4,7 +4,8 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + assessment.application.person.name + " referral" %}
+{% set name = personName(assessment.application.person, 'Limited access offender') %}
+{% set pageTitle = applicationName + " - " + name + " referral" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -22,7 +23,7 @@
       <div class="moj-identity-bar__details">
         <span class="moj-identity-bar__title">
           <span class="govuk-caption-xl">Review referral</span>
-          <h1 class="govuk-heading-xl">{{ assessment.application.person.name }}
+          <h1 class="govuk-heading-xl">{{ name }}
             {{ assessmentStatusTag(assessment.status) | safe }}</h1>
         </span>
       </div>

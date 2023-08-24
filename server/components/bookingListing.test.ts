@@ -1,4 +1,4 @@
-import { bookingFactory, personFactory, turnaroundFactory } from '../testutils/factories'
+import { bookingFactory, personFactory, restrictedPersonFactory, turnaroundFactory } from '../testutils/factories'
 import { statusTag } from '../utils/bookingUtils'
 import {
   personSummaryListRows,
@@ -25,6 +25,21 @@ describe('BookingListing', () => {
           key: { text: 'Date of birth' },
           value: { text: '8 April 1980' },
         },
+        {
+          key: { text: 'CRN' },
+          value: { text: booking.person.crn },
+        },
+      ])
+    })
+
+    it('returns summary list rows for the person of a booking when the person is a LAO', () => {
+      const booking = bookingFactory.build({
+        person: restrictedPersonFactory.build(),
+      })
+
+      const result = personSummaryListRows(booking)
+
+      expect(result).toEqual([
         {
           key: { text: 'CRN' },
           value: { text: booking.person.crn },

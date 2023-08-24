@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 import { TemporaryAccommodationAssessmentSummary as AssessmentSummary } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
-import personFactory from './person'
+import { fullPersonFactory as personFactory } from './person'
 import risksFactory from './risks'
 
 class AssessmentSummaryFactory extends Factory<AssessmentSummary> {

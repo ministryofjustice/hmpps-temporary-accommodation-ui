@@ -9,7 +9,7 @@ import cancellationFactory from './cancellation'
 import confirmationFactory from './confirmation'
 import departureFactory from './departure'
 import extensionFactory from './extension'
-import personFactory from './person'
+import { fullPersonFactory as personFactory } from './person'
 import turnaroundFactory from './turnaround'
 
 const soon = () =>

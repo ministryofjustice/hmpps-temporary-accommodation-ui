@@ -1,6 +1,7 @@
 import type { Booking } from '@approved-premises/api'
 import { statusName } from '../../server/utils/bookingUtils'
 import { DateFormats } from '../../server/utils/dateUtils'
+import { isFullPerson, personName } from '../../server/utils/personUtils'
 import { assignModifiedBookingForTurnarounds } from '../utils/booking'
 import Component from './component'
 
@@ -33,10 +34,12 @@ export default class BookingListingComponent extends Component {
           cy.get('h2').should('contain', 'Booking')
         }
 
-        cy.get('h3').should('contain', booking.person.name)
+        cy.get('h3').should('contain', personName(booking.person, 'Limited access offender'))
 
         cy.get('.listing-entry__content__booking-person').within(() => {
-          shouldShowKeyAndValue('Date of birth', DateFormats.isoDateToUIDate(booking.person.dateOfBirth))
+          if (isFullPerson(booking.person)) {
+            shouldShowKeyAndValue('Date of birth', DateFormats.isoDateToUIDate(booking.person.dateOfBirth))
+          }
           shouldShowKeyAndValue('CRN', booking.person.crn)
         })
 

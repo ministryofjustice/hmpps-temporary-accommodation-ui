@@ -7,6 +7,7 @@ import {
 import { TableRow, TimelineItem } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
+import { personName } from './personUtils'
 import { convertToTitleCase } from './utils'
 import { formatLines } from './viewUtils'
 
@@ -51,8 +52,11 @@ export const statusName = (statusId: AssessmentSummary['status']) => {
 export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showStatus: boolean = false): TableRow => {
   const row = [
     htmlValue(
-      `<a href="${paths.assessments.summary({ id: assessmentSummary.id })}">${assessmentSummary.person.name}</a>`,
-      assessmentSummary.person.name,
+      `<a href="${paths.assessments.summary({ id: assessmentSummary.id })}">${personName(
+        assessmentSummary.person,
+        'Limited access offender',
+      )}</a>`,
+      personName(assessmentSummary.person, ''),
     ),
     textValue(assessmentSummary.person.crn),
     dateValue(assessmentSummary.createdAt),

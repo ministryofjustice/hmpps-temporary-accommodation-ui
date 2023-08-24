@@ -4,7 +4,7 @@ import { Factory } from 'fishery'
 import type { Person } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 
-export default Factory.define<Person>(() => ({
+export const fullPersonFactory = Factory.define<Person>(() => ({
   crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
   name: faker.person.fullName(),
   dateOfBirth: DateFormats.dateObjToIsoDate(faker.date.past()),
@@ -36,3 +36,11 @@ export default Factory.define<Person>(() => ({
   ]),
   prisonName: `HMP ${faker.location.street()}`,
 }))
+
+export const restrictedPersonFactory = Factory.define<Person>(
+  () =>
+    ({
+      name: '',
+      crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
+    }) as Person,
+)

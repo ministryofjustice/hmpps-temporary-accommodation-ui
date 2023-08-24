@@ -3,6 +3,7 @@ import type { TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
+import { personName } from '../../../../utils/personUtils'
 
 export const eligibilityReasons = {
   homelessFromCustody: 'Moving on as homeless from custody',
@@ -22,7 +23,7 @@ export default class EligibilityReason implements TasklistPage {
     readonly body: Partial<EligibilityReasonBody>,
     readonly application: Application,
   ) {
-    const { name } = application.person
+    const name = personName(application.person)
     this.title = `How is ${name} eligible for Temporary Accommodation (TA)?`
   }
 

@@ -42,7 +42,7 @@ export default (booking: Booking): SummaryList['rows'] => {
     })
   }
 
-  const days = booking.turnaround.workingDays
+  const days = booking.turnaround?.workingDays || 0
 
   rows.push(
     {

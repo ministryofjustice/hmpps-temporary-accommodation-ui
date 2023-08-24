@@ -5,6 +5,7 @@ import { applicationFactory, personFactory } from '../testutils/factories'
 import { DateFormats } from './dateUtils'
 import { isApplicableTier, personName, tierBadge } from './personUtils'
 
+import { FullPerson } from '../@types/shared'
 import {
   dashboardTableRows,
   firstPageOfApplicationJourney,
@@ -348,7 +349,7 @@ describe('applicationUtils', () => {
   describe('dashboardTableRows', () => {
     it('returns an array of applications as table rows', async () => {
       ;(tierBadge as jest.MockedFunction<typeof tierBadge>).mockReturnValue('TIER_BADGE')
-      ;(personName as jest.MockedFunction<typeof personName>).mockImplementation(person => person.name)
+      ;(personName as jest.MockedFunction<typeof personName>).mockImplementation(person => (person as FullPerson).name)
 
       const arrivalDate = DateFormats.dateObjToIsoDate(new Date(2021, 0, 3))
 

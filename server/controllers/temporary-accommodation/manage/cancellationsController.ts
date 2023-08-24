@@ -25,9 +25,8 @@ export default class CanellationsController {
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
-      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(
-        callConfig,
-      )
+      const { cancellationReasons: allCancellationReasons } =
+        await this.cancellationService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/cancellations/new', {
         premises,
@@ -79,9 +78,8 @@ export default class CanellationsController {
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
-      const { cancellationReasons: allCancellationReasons } = await this.cancellationService.getReferenceData(
-        callConfig,
-      )
+      const { cancellationReasons: allCancellationReasons } =
+        await this.cancellationService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/cancellations/edit', {
         premises,

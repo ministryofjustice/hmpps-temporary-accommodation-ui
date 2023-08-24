@@ -40,7 +40,11 @@ Given('I attempt to search for a bedspace with required details missing', () => 
 Then('I should see the bedspace search results', () => {
   cy.then(function _() {
     const results = bedSearchResultsFactory.build({
-      results: [bedSearchResultFactory.forBedspace(this.premises, this.room).build()],
+      results: [
+        bedSearchResultFactory.forBedspace(this.premises, this.room).build({
+          overlaps: [],
+        }),
+      ],
     })
 
     cy.wrap({ room: this.room, sr: results })

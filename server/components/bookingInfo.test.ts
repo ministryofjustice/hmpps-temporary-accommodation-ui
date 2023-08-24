@@ -552,5 +552,27 @@ describe('BookingInfo', () => {
         ]),
       )
     })
+
+    it('returns summary list rows containing the turnaround time when the turnaround is not present', () => {
+      const booking = bookingFactory.build({
+        effectiveEndDate: '2023-02-11',
+        turnaround: undefined,
+      })
+
+      const result = summaryListRows(booking)
+
+      expect(result).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            key: {
+              text: 'Turnaround time',
+            },
+            value: {
+              text: '0 working days',
+            },
+          }),
+        ]),
+      )
+    })
   })
 })

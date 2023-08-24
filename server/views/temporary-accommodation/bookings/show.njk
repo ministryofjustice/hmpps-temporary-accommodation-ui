@@ -31,7 +31,7 @@
     items: actions
   }) }}
 
-  {{ popDetailsHeader(booking.person, { nameLink: paths.assessments.full({ id: booking.assessmentId }) if booking.assessmentId else "" }) }}
+  {{ popDetailsHeader(booking.person, { nameLink: paths.assessments.summary({ id: booking.assessmentId }) if booking.assessmentId else "" }) }}
   {{ locationHeader({ room: room, premises: premises }) }}
 
   {{ bookingInfo(booking, paths.bookings.history({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })) }}

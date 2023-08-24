@@ -1,4 +1,4 @@
-import { personFactory } from '../testutils/factories'
+import { personFactory, restrictedPersonFactory } from '../testutils/factories'
 import { isApplicableTier, isFullPerson, personName, statusTag, tierBadge } from './personUtils'
 
 describe('personUtils', () => {
@@ -51,40 +51,40 @@ describe('personUtils', () => {
   })
 
   describe('personName', () => {
-    it('returns the name of the given person if non-empty', () => {
+    it('returns the name of the given person if the person is not a LAO', () => {
       const person = personFactory.build({ name: 'John Smith' })
 
       expect(personName(person)).toEqual('John Smith')
     })
 
-    it('returns the name of the given person if non-empty, even if the fallback string is specified', () => {
+    it('returns the name of the given person if the given person is not a LAO, even if the fallback string is specified', () => {
       const person = personFactory.build({ name: 'John Smith' })
 
       expect(personName(person, 'Limited access offender')).toEqual('John Smith')
     })
 
-    it('returns "this person" if the person\'s name is empty', () => {
-      const person = personFactory.build({ name: '' })
+    it('returns "this person" if the person is a LAO', () => {
+      const person = restrictedPersonFactory.build()
 
       expect(personName(person)).toEqual('the person')
     })
 
-    it("returns the fallback string if specified and the person's name is empty", () => {
-      const person = personFactory.build({ name: '' })
+    it('returns the fallback string if specified and the person is a LAO', () => {
+      const person = restrictedPersonFactory.build()
 
       expect(personName(person, 'Limited access offender')).toEqual('Limited access offender')
     })
   })
 
   describe('isFullPerson', () => {
-    it("returns true if the person's name is non-empty", () => {
-      const person = personFactory.build({ name: 'John Smith' })
+    it('returns true if the person is not a LAO', () => {
+      const person = personFactory.build()
 
       expect(isFullPerson(person)).toEqual(true)
     })
 
-    it("returns false if the person's name is empty", () => {
-      const person = personFactory.build({ name: '' })
+    it('returns false if the person is a LAO', () => {
+      const person = restrictedPersonFactory.build()
 
       expect(isFullPerson(person)).toEqual(false)
     })

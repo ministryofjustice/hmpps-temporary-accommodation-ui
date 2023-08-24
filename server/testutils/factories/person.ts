@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
-import type { Person } from '@approved-premises/api'
+import type { FullPerson, RestrictedPerson } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 
-export const fullPersonFactory = Factory.define<Person>(() => ({
+export const fullPersonFactory = Factory.define<FullPerson>(() => ({
   crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
   name: faker.person.fullName(),
   dateOfBirth: DateFormats.dateObjToIsoDate(faker.date.past()),
@@ -35,12 +35,10 @@ export const fullPersonFactory = Factory.define<Person>(() => ({
     'Any other ethnic group',
   ]),
   prisonName: `HMP ${faker.location.street()}`,
+  type: 'FullPerson',
 }))
 
-export const restrictedPersonFactory = Factory.define<Person>(
-  () =>
-    ({
-      name: '',
-      crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
-    }) as Person,
-)
+export const restrictedPersonFactory = Factory.define<RestrictedPerson>(() => ({
+  crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
+  type: 'RestrictedPerson',
+}))

@@ -63,6 +63,10 @@ export default abstract class Page extends Component {
     cy.get(`select[id="${id}"]`).children('option').contains(exact(contents)).should('be.selected')
   }
 
+  shouldShowRadioInput(id: string, contents: string) {
+    cy.get(`input[name="${id}"]`).siblings('label').contains(exact(contents)).siblings('input').should('be.checked')
+  }
+
   shouldShowDateInputsByLegend(legend: string, date: string): void {
     const parsedDate = DateFormats.isoToDateObj(date)
 

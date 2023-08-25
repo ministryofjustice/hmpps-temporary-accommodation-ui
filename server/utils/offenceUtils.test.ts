@@ -63,5 +63,33 @@ describe('offenceUtils', () => {
         ],
       ])
     })
+
+    it('returns table rows when no date is given', () => {
+      const offences = [
+        activeOffenceFactory.build({
+          offenceDate: undefined,
+        }),
+      ]
+
+      expect(offenceTableRows(offences)).toEqual([
+        [
+          {
+            html: offenceRadioButton(offences[0]),
+          },
+          {
+            text: offences[0].offenceId,
+          },
+          {
+            text: offences[0].offenceDescription,
+          },
+          {
+            text: 'Not known',
+          },
+          {
+            text: String(offences[0].convictionId),
+          },
+        ],
+      ])
+    })
   })
 })

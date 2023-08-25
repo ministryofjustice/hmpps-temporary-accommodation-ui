@@ -17,7 +17,7 @@ const offenceTableRows = (offences: Array<ActiveOffence>): Array<TableRow> => {
         text: offence.offenceDescription,
       },
       {
-        text: DateFormats.isoDateToUIDate(offence.offenceDate),
+        text: offence.offenceDate ? DateFormats.isoDateToUIDate(offence.offenceDate) : 'Not known',
       },
       {
         text: String(offence.convictionId),

@@ -6,11 +6,13 @@
 {% set pageTitle = applicationName + " - Add a property" %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block content %}
-
+{% block beforeContent %}
   {{ breadCrumb('Add a property', [
     {title: 'List of properties', href: paths.premises.index()}
   ]) }}
+{% endblock %}
+
+{% block content %}
 
   {% include "../../_messages.njk" %}
   

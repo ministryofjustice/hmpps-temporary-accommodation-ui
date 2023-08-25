@@ -94,17 +94,18 @@ export default abstract class Page extends Component {
       .contains(legend)
       .siblings('.govuk-date-input')
       .within(() => {
-        cy.get('label').contains('Day').siblings('input').type(parsedDate.getDate().toString())
+        cy.get('label').contains('Day').siblings('input').clear().type(parsedDate.getDate().toString())
         cy.get('label')
           .contains('Month')
           .siblings('input')
+          .clear()
           .type(`${parsedDate.getMonth() + 1}`)
-        cy.get('label').contains('Year').siblings('input').type(parsedDate.getFullYear().toString())
+        cy.get('label').contains('Year').siblings('input').clear().type(parsedDate.getFullYear().toString())
       })
   }
 
   completeTextInputByLabel(label: string, value: string): void {
-    cy.get('label').contains(label).parent().find('input').type(value)
+    cy.get('label').contains(label).parent().find('input').clear().type(value)
   }
 
   completeSelectInputByLabel(label: string, value: string): void {

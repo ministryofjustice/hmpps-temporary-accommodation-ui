@@ -116,6 +116,8 @@
                   </ul>
                 {% endif %}
               {% endset %}
+            {% else %}
+              {% set keyCharacteristicsHtml = undefined %}
             {% endif %}
 
             {% if result.overlaps.length %}
@@ -129,6 +131,8 @@
                   {% endfor %}
                 </ul>
               {% endset %}
+            {% else %}
+              {% set overlapsHtml = undefined %}
             {% endif %}
 
             {{ govukSummaryList({

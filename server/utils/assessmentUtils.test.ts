@@ -236,10 +236,9 @@ describe('assessmentUtils', () => {
         createdAt: '2024-05-01',
       })
 
-      const systemNote1 = referralHistoryNoteFactory.build({ createdAt: '2024-04-02' })
-      const systemNote2 = referralHistoryNoteFactory.build({ createdAt: '2024-05-02' })
+      const systemNote = referralHistoryNoteFactory.build({ createdAt: '2024-04-02', message: '' })
 
-      const notes = [systemNote1, userNote2, userNote1, systemNote2]
+      const notes = [systemNote, userNote2, userNote1]
 
       const assessment = assessmentFactory.build({ referralHistoryNotes: notes })
       const html = 'some formatted html'
@@ -254,31 +253,11 @@ describe('assessmentUtils', () => {
           },
           html,
           datetime: {
-            timestamp: systemNote2.createdAt,
-            type: 'datetime',
-          },
-        },
-        {
-          label: {
-            text: 'Note',
-          },
-          html,
-          datetime: {
             timestamp: userNote2.createdAt,
             type: 'datetime',
           },
           byline: {
             text: 'Another User',
-          },
-        },
-        {
-          label: {
-            text: 'Note',
-          },
-          html,
-          datetime: {
-            timestamp: systemNote1.createdAt,
-            type: 'datetime',
           },
         },
         {

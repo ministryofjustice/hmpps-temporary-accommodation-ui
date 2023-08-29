@@ -170,23 +170,25 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
     return noteA.createdAt < noteB.createdAt ? 1 : -1
   })
 
-  return notes.map(note => {
-    return {
-      label: {
-        text: 'Note',
-      },
-      html: formatLines(note.message),
-      datetime: {
-        timestamp: note.createdAt,
-        type: 'datetime',
-      },
-      byline: isUserNote(note)
-        ? {
-            text: convertToTitleCase(note.createdByUserName),
-          }
-        : undefined,
-    }
-  })
+  return notes
+    .filter(note => !!note.message)
+    .map(note => {
+      return {
+        label: {
+          text: 'Note',
+        },
+        html: formatLines(note.message),
+        datetime: {
+          timestamp: note.createdAt,
+          type: 'datetime',
+        },
+        byline: isUserNote(note)
+          ? {
+              text: convertToTitleCase(note.createdByUserName),
+            }
+          : undefined,
+      }
+    })
 }
 
 const isUserNote = (note: Note): note is UserNote => {

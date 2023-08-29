@@ -1,4 +1,5 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "../components/ta-textarea/macro.njk" import taTextarea %}
 {% from "../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../components/ta-select/macro.njk" import taSelect %}
@@ -50,6 +51,11 @@
   },
   fetchContext()
 ) }}
+
+{{ govukWarningText({
+  text: "You will need to record address and accommodation changes in nDelius. The CAS3 digital service does not automatically update nDelius.",
+  iconFallbackText: "Warning"
+}) }}
 
 {{ govukButton({
   text: "Submit",

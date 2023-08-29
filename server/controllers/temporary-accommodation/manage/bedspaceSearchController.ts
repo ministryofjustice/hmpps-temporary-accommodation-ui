@@ -3,26 +3,39 @@ import { BedSearchResults } from '../../../@types/shared'
 import { ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
+import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import { DateFormats } from '../../../utils/dateUtils'
 import { parseNaturalNumber } from '../../../utils/formUtils'
+import { addPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
 
 type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & { probationDeliveryUnit: string; durationDays: string }
 
 export default class BedspaceSearchController {
-  constructor(private readonly searchService: BedspaceSearchService) {}
+  constructor(
+    private readonly searchService: BedspaceSearchService,
+    private readonly assessmentService: AssessmentsService,
+  ) {}
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
       const callConfig = extractCallConfig(req)
 
       const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
 
-      const query = Object.keys(req.query).length ? (req.query as BedspaceSearchQuery) : undefined
+      const query =
+        (req.query as BedspaceSearchQuery).durationDays !== undefined ? (req.query as BedspaceSearchQuery) : undefined
+
+      const placeContextArrivalDate = placeContext?.assessment.application.arrivalDate
+      const startDatePrefill = placeContextArrivalDate
+        ? DateFormats.isoToDateAndTimeInputs(placeContextArrivalDate, 'startDate')
+        : {}
 
       let results: BedSearchResults
       let startDate: string
@@ -49,12 +62,19 @@ export default class BedspaceSearchController {
           startDate,
           errors,
           errorSummary,
+          ...startDatePrefill,
           ...query,
           ...userInput,
         })
       } catch (err) {
         setUserInput(req, 'get')
-        catchValidationErrorOrPropogate(req, res, err, paths.bedspaces.search({}), 'bedspaceSearch')
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          addPlaceContext(paths.bedspaces.search({}), placeContext),
+          'bedspaceSearch',
+        )
       }
     }
   }

@@ -1,5 +1,5 @@
 import type { TemporaryAccommodationApplication as Application, ProbationRegion } from '@approved-premises/api'
-import type { ErrorMessages } from '@approved-premises/ui'
+import type { ErrorMessages, PlaceContext } from '@approved-premises/ui'
 
 export default {}
 
@@ -12,6 +12,12 @@ declare module 'express-session' {
     previousPage: string
     probationRegion: ProbationRegion
     userDetails: UserDetails
+  }
+}
+
+declare module 'express-serve-static-core' {
+  interface Locals {
+    placeContext: PlaceContext
   }
 }
 

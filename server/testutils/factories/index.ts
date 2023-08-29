@@ -48,6 +48,7 @@ import oasysSelectionFactory from './oasysSelection'
 import overlapFactory from './overlap'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
+import placeContextFactory from './placeContext'
 import premisesFactory from './premises'
 import premisesSummaryFactory from './premisesSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
@@ -117,6 +118,7 @@ export {
   overlapFactory,
   pduFactory,
   personFactory,
+  placeContextFactory,
   premisesFactory,
   premisesSummaryFactory,
   prisonCaseNotesFactory,

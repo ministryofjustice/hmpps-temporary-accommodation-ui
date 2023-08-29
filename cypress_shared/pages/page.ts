@@ -1,8 +1,9 @@
-import { PersonRisksUI, ReferenceData } from '../../server/@types/ui'
+import { PersonRisksUI, PlaceContext, ReferenceData } from '../../server/@types/ui'
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
 import { exact } from '../../server/utils/utils'
 import Component from '../components/component'
+import PlaceContextHeaderComponent from '../components/placeContextHeader'
 
 export type PageElement = Cypress.Chainable<JQuery>
 
@@ -63,6 +64,10 @@ export default abstract class Page extends Component {
     cy.get(`select[id="${id}"]`).children('option').contains(exact(contents)).should('be.selected')
   }
 
+  shouldShowRadioInput(id: string, contents: string) {
+    cy.get(`input[name="${id}"]`).siblings('label').contains(exact(contents)).siblings('input').should('be.checked')
+  }
+
   shouldShowDateInputsByLegend(legend: string, date: string): void {
     const parsedDate = DateFormats.isoToDateObj(date)
 
@@ -94,17 +99,18 @@ export default abstract class Page extends Component {
       .contains(legend)
       .siblings('.govuk-date-input')
       .within(() => {
-        cy.get('label').contains('Day').siblings('input').type(parsedDate.getDate().toString())
+        cy.get('label').contains('Day').siblings('input').clear().type(parsedDate.getDate().toString())
         cy.get('label')
           .contains('Month')
           .siblings('input')
+          .clear()
           .type(`${parsedDate.getMonth() + 1}`)
-        cy.get('label').contains('Year').siblings('input').type(parsedDate.getFullYear().toString())
+        cy.get('label').contains('Year').siblings('input').clear().type(parsedDate.getFullYear().toString())
       })
   }
 
   completeTextInputByLabel(label: string, value: string): void {
-    cy.get('label').contains(label).parent().find('input').type(value)
+    cy.get('label').contains(label).parent().find('input').clear().type(value)
   }
 
   completeSelectInputByLabel(label: string, value: string): void {
@@ -250,6 +256,15 @@ export default abstract class Page extends Component {
     cy.get(`[data-cy-check-your-answers-section="${taskName}"]`).within(() => {
       cy.get('.box-title').should('contain', taskTitle)
     })
+  }
+
+  shouldShowPlaceContextHeader(placeContext: PlaceContext) {
+    const component = new PlaceContextHeaderComponent(placeContext)
+    component.shouldShowPlaceContextDetails()
+  }
+
+  shouldNotShowPlaceContextHeader() {
+    PlaceContextHeaderComponent.shouldNotShowPlaceContextDetails()
   }
 
   getSelectOptionsAsReferenceData(label: string, alias: string): void {

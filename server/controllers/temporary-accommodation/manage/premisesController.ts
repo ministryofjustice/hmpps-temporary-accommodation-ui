@@ -4,11 +4,11 @@ import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
+import { parseNaturalNumber } from '../../../utils/formUtils'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import { parseNaturalNumber } from '../../../utils/formUtils'
 
 export default class PremisesController {
   constructor(

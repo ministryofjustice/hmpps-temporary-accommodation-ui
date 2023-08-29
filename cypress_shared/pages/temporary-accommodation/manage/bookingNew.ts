@@ -51,10 +51,9 @@ export default class BookingNewPage extends BookingEditablePage {
   }
 
   shouldShowPrefilledBookingDetails(newBooking: NewBooking): void {
-    this.shouldShowDateInputs('arrivalDate', newBooking.arrivalDate)
-    this.shouldShowDateInputs('departureDate', newBooking.departureDate)
-
-    cy.get('#crn').should('have.value', newBooking.crn)
+    this.shouldShowTextInputByLabel("What is the person's CRN", newBooking.crn)
+    this.shouldShowDateInputsByLegend('What is the start date?', newBooking.arrivalDate)
+    this.shouldShowDateInputsByLegend('What is the end date?', newBooking.departureDate)
   }
 
   private turnaroundText(): string {

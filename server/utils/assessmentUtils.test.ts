@@ -4,7 +4,7 @@ import {
   assessmentSummaryFactory,
   personFactory,
   placeContextFactory,
-  referralHistoryNoteFactory,
+  referralHistorySystemNoteFactory,
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
@@ -247,22 +247,43 @@ describe('assessmentUtils', () => {
         createdAt: '2024-05-01',
       })
 
-      const systemNote = referralHistoryNoteFactory.build({ createdAt: '2024-04-02', message: '' })
+      const systemNote1 = referralHistorySystemNoteFactory.build({
+        createdByUserName: 'SOME USER',
+        createdAt: '2024-04-02',
+        category: 'in_review',
+      })
+      const systemNote2 = referralHistorySystemNoteFactory.build({
+        createdByUserName: 'SOME USER',
+        createdAt: '2024-05-02',
+        category: 'ready_to_place',
+      })
 
-      const notes = [systemNote, userNote2, userNote1]
+      const notes = [systemNote1, systemNote2, userNote2, userNote1]
 
       const assessment = assessmentFactory.build({ referralHistoryNotes: notes })
-      const html = 'some formatted html'
+      const userNoteHtml = 'some formatted html'
 
-      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(_text => html)
+      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(_text => userNoteHtml)
       const result = timelineItems(assessment)
 
       expect(result).toEqual([
         {
           label: {
+            text: 'Referral marked as ready to place',
+          },
+          datetime: {
+            timestamp: systemNote2.createdAt,
+            type: 'datetime',
+          },
+          byline: {
+            text: 'Some User',
+          },
+        },
+        {
+          label: {
             text: 'Note',
           },
-          html,
+          html: userNoteHtml,
           datetime: {
             timestamp: userNote2.createdAt,
             type: 'datetime',
@@ -273,9 +294,21 @@ describe('assessmentUtils', () => {
         },
         {
           label: {
+            text: 'Referral marked as in review',
+          },
+          datetime: {
+            timestamp: systemNote1.createdAt,
+            type: 'datetime',
+          },
+          byline: {
+            text: 'Some User',
+          },
+        },
+        {
+          label: {
             text: 'Note',
           },
-          html,
+          html: userNoteHtml,
           datetime: {
             timestamp: userNote1.createdAt,
             type: 'datetime',

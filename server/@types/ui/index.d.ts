@@ -164,7 +164,7 @@ export interface TimelineItem {
   label: {
     text: string
   }
-  html: string
+  html?: string
   datetime: {
     timestamp: string
     type: 'datetime'

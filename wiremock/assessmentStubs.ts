@@ -1,5 +1,9 @@
 import paths from '../server/paths/api'
-import { assessmentFactory, assessmentSummaryFactory, referralHistoryNoteFactory } from '../server/testutils/factories'
+import {
+  assessmentFactory,
+  assessmentSummaryFactory,
+  referralHistoryUserNoteFactory,
+} from '../server/testutils/factories'
 import { errorStub } from './utils'
 
 const assessmentSummaries = assessmentSummaryFactory.buildList(20)
@@ -96,7 +100,7 @@ const assessmentStubs = [
           response: {
             status: 200,
             headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-            jsonBody: referralHistoryNoteFactory.build(),
+            jsonBody: referralHistoryUserNoteFactory.build(),
           },
         },
         errorStub(['message'], paths.assessments.notes({ id: assessment.id }), 'POST'),

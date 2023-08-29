@@ -4,7 +4,7 @@ import {
   assessmentFactory,
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
-  referralHistoryNoteFactory,
+  referralHistoryUserNoteFactory,
 } from '../testutils/factories'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
@@ -173,7 +173,7 @@ describe('AssessmentsService', () => {
   describe('createNote', () => {
     it('returns a newly created user note', async () => {
       const newNote = newReferralHistoryUserNoteFactory.build()
-      const note = referralHistoryNoteFactory.build()
+      const note = referralHistoryUserNoteFactory.build()
       assessmentClient.createNote.mockResolvedValue(note)
 
       const result = await service.createNote(callConfig, assessmentId, newNote)

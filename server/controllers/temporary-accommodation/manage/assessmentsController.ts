@@ -6,10 +6,10 @@ import {
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
-import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
+import { assessmentActions, statusChangeMessage } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { appendQueryString, lowerCase } from '../../../utils/utils'
+import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
 export const assessmentsTableHeaders = [
@@ -151,7 +151,7 @@ export default class AssessmentsController {
 
       await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentStatus)
 
-      req.flash('info', `Assessment updated status updated to "${lowerCase(statusName(status as AssessmentStatus))}"`)
+      req.flash('info', statusChangeMessage(id, status as AssessmentStatus))
       res.redirect(paths.assessments.summary({ id }))
     }
   }

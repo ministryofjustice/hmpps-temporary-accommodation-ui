@@ -9,13 +9,14 @@ import {
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
 } from '../../../testutils/factories'
-import { assessmentActions } from '../../../utils/assessmentUtils'
+import { assessmentActions, statusChangeMessage } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
 
+jest.mock('../../../utils/assessmentUtils')
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/utils')
@@ -31,6 +32,15 @@ describe('AssessmentsController', () => {
 
   const assessmentsService = createMock<AssessmentsService>({})
   const assessmentsController = new AssessmentsController(assessmentsService)
+
+  const actions = [
+    {
+      text: 'Some action',
+      href: '/some/action/path',
+      classes: 'govuk-button--secondary',
+      newTab: false,
+    },
+  ]
 
   beforeEach(() => {
     request = createMock<Request>({
@@ -90,6 +100,7 @@ describe('AssessmentsController', () => {
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+      ;(assessmentActions as jest.MockedFunction<typeof assessmentActions>).mockReturnValue(actions)
       request.params = { id: assessmentId }
 
       const requestHandler = assessmentsController.summary()
@@ -97,7 +108,7 @@ describe('AssessmentsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/summary', {
         assessment,
-        actions: assessmentActions(assessment),
+        actions,
         errors: {},
         errorSummary: [],
       })
@@ -111,6 +122,7 @@ describe('AssessmentsController', () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
+      ;(assessmentActions as jest.MockedFunction<typeof assessmentActions>).mockReturnValue(actions)
       request.params = { id: assessmentId }
 
       const requestHandler = assessmentsController.full()
@@ -118,7 +130,7 @@ describe('AssessmentsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/full', {
         assessment,
-        actions: assessmentActions(assessment),
+        actions,
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentsService)
@@ -152,13 +164,17 @@ describe('AssessmentsController', () => {
       const newStatus = 'in_review'
       const assessmentId = 'some-id'
 
+      ;(statusChangeMessage as jest.MockedFunction<typeof statusChangeMessage>).mockReturnValue('some info message')
+
       const requestHandler = assessmentsController.update()
       request.params = { id: assessmentId, status: newStatus }
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
+      expect(statusChangeMessage).toHaveBeenCalledWith(assessmentId, newStatus)
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
+      expect(request.flash).toHaveBeenCalledWith('info', 'some info message')
     })
   })
 

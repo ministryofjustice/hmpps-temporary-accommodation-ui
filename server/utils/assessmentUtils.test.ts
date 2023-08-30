@@ -8,8 +8,8 @@ import {
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
-import { assessmentActions, assessmentTableRows, timelineItems } from './assessmentUtils'
-import { addPlaceContext, createPlaceContext } from './placeUtils'
+import { assessmentActions, assessmentTableRows, statusChangeMessage, timelineItems } from './assessmentUtils'
+import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
 import { formatLines } from './viewUtils'
 
 jest.mock('./viewUtils')
@@ -306,6 +306,38 @@ describe('assessmentUtils', () => {
           },
         },
       ])
+    })
+  })
+
+  describe('statusChangeMessage', () => {
+    it('returns a simple string info message', () => {
+      const assessment = assessmentFactory.build({ status: 'in_review' })
+
+      expect(statusChangeMessage(assessment.id, assessment.status)).toEqual('This referral is in review')
+    })
+
+    it('returns a title and HTML info message', () => {
+      const assessment = assessmentFactory.build({ status: 'rejected' })
+
+      expect(statusChangeMessage(assessment.id, assessment.status)).toEqual({
+        title: 'This referral has been rejected',
+        html: `<a class="govuk-link" href="${paths.assessments.index({})}">Return to the referrals dashboard</a>`,
+      })
+    })
+
+    it("returns an info message with a place context for the 'ready to place' status", () => {
+      const assessment = assessmentFactory.build({ status: 'ready_to_place' })
+
+      ;(addPlaceContextFromAssessmentId as jest.MockedFunction<typeof addPlaceContextFromAssessmentId>).mockReturnValue(
+        '/path/with/place/context',
+      )
+
+      expect(statusChangeMessage(assessment.id, assessment.status)).toEqual({
+        title: 'This referral is ready to place',
+        html: `<a class="govuk-link" href="/path/with/place/context" rel="noreferrer noopener" target="_blank">Place referral (opens in new tab)</a>`,
+      })
+
+      expect(addPlaceContextFromAssessmentId).toHaveBeenCalledWith(paths.bedspaces.search({}), assessment.id)
     })
   })
 })

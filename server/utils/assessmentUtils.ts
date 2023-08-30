@@ -1,15 +1,16 @@
 import {
   TemporaryAccommodationAssessment as Assessment,
+  TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
   ReferralHistoryNote as Note,
   ReferralHistorySystemNote as SystemNote,
   ReferralHistoryUserNote as UserNote,
 } from '@approved-premises/api'
-import { TableRow, TimelineItem } from '../@types/ui'
+import { MessageContents, TableRow, TimelineItem } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 import { personName } from './personUtils'
-import { addPlaceContext, createPlaceContext } from './placeUtils'
+import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
 import { assertUnreachable, convertToTitleCase } from './utils'
 import { formatLines } from './viewUtils'
 import { statusName, statusTag } from './assessmentStatusUtils'
@@ -148,6 +149,38 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
       byline: { text: convertToTitleCase(note.createdByUserName) },
     }
   })
+}
+
+export const statusChangeMessage = (assessmentId: string, status: AssessmentStatus): MessageContents => {
+  switch (status) {
+    case 'closed':
+      return 'This referral has been closed'
+    case 'in_review':
+      return 'This referral is in review'
+    case 'ready_to_place':
+      return {
+        title: 'This referral is ready to place',
+        html: `<a class="govuk-link" href="${addPlaceContextFromAssessmentId(
+          paths.bedspaces.search({}),
+          assessmentId,
+        )}" rel="noreferrer noopener" target="_blank">Place referral (opens in new tab)</a>`,
+      }
+    case 'rejected':
+      return {
+        title: 'This referral has been rejected',
+        html: `<a class="govuk-link" href="${paths.assessments.index({})}">Return to the referrals dashboard</a>`,
+      }
+    case 'unallocated':
+      return {
+        title: 'This referral has been unallocated',
+        html: `<a class="govuk-link" href="${paths.assessments.confirm({
+          id: assessmentId,
+          status: 'in_review',
+        })}">Mark as in review</a> if you are working on this referral`,
+      }
+    default:
+      return assertUnreachable(status)
+  }
 }
 
 const isUserNote = (note: Note): note is UserNote => {

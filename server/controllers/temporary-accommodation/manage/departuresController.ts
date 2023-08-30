@@ -54,7 +54,10 @@ export default class DeparturesController {
       try {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
-        req.flash('success', 'Booking marked as departed')
+        req.flash('success', {
+          title: 'Booking marked as departed',
+          text: 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+        })
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.bookings.departures.new({ premisesId, roomId, bookingId }))

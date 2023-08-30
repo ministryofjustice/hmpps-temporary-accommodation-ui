@@ -11,9 +11,18 @@
 
 {% if successMessages %}
   {% for message in successMessages %}
-    {{ govukNotificationBanner({
-      html: '<h3 class="govuk-!-margin-top-2">' + message + '</h3>',
-      type: 'success'
-    }) }}
+
+    {% if message is string %}
+      {{ govukNotificationBanner({
+        html: '<h3 class="govuk-!-margin-top-2">' + message + '</h3>',
+        type: 'success'
+      }) }}
+    {% else %}
+      {{ govukNotificationBanner({
+        html: '<h3 class="govuk-!-margin-top-2">' + message.title + '</h3><p class="govuk-body">' + message.text + '</p>',
+        type: 'success'
+      }) }}
+    {% endif %}
+
   {% endfor %}
 {% endif %}

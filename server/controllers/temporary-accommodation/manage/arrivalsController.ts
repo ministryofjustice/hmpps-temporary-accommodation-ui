@@ -61,7 +61,10 @@ export default class ArrivalsController {
       try {
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, newArrival)
 
-        req.flash('success', 'Booking marked as active')
+        req.flash('success', {
+          title: 'Booking marked as active',
+          text: 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+        })
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {
         if (err.status === 409) {

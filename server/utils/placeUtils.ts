@@ -33,6 +33,10 @@ export const preservePlaceContext = async (
       return undefined
     }
 
+    if (assessment.status !== 'ready_to_place') {
+      return undefined
+    }
+
     res.locals.placeContext = { assessment }
     return { assessment }
   }

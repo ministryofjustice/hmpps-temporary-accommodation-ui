@@ -53,7 +53,7 @@ describe('placeUtils', () => {
 
       const assessmentService = createMock<AssessmentsService>()
 
-      const assessment = assessmentFactory.build()
+      const assessment = assessmentFactory.build({ status: 'ready_to_place' })
       assessmentService.findAssessment.mockResolvedValue(assessment)
 
       const req = createMock<Request>({
@@ -81,6 +81,30 @@ describe('placeUtils', () => {
 
       const req = createMock<Request>({
         query: { placeContextAssessmentId: 'some-assessment-id' },
+      })
+      const res = createMock<Response>({
+        locals: {},
+      })
+
+      const result = await preservePlaceContext(req, res, assessmentService)
+
+      expect(result).toEqual(undefined)
+      expect(res.locals.placeContext).toEqual(undefined)
+      expect(assessmentService.findAssessment).toHaveBeenCalledWith(callConfig, 'some-assessment-id')
+    })
+
+    it('returns undefined when the assessment is not ready to place', async () => {
+      const callConfig = { token: 'some-call-config-token' } as CallConfig
+
+      ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
+
+      const assessmentService = createMock<AssessmentsService>()
+
+      const assessment = assessmentFactory.build({ status: 'rejected' })
+      assessmentService.findAssessment.mockResolvedValue(assessment)
+
+      const req = createMock<Request>({
+        query: { placeContextAssessmentId: 'some-assessment-id', placeContextArrivalDate: '2024-05-01' },
       })
       const res = createMock<Response>({
         locals: {},

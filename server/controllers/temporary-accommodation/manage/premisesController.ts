@@ -23,7 +23,9 @@ export default class PremisesController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const tableRows = await this.premisesService.tableRows(callConfig)
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      const tableRows = await this.premisesService.tableRows(callConfig, placeContext)
       return res.render('temporary-accommodation/premises/index', { tableRows })
     }
   }

@@ -7,6 +7,7 @@ import {
   localAuthorityFactory,
   newPremisesFactory,
   pduFactory,
+  placeContextFactory,
   premisesFactory,
   premisesSummaryFactory,
   probationRegionFactory,
@@ -14,6 +15,7 @@ import {
   updatePremisesFactory,
 } from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
+import { addPlaceContext } from '../utils/placeUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 import PremisesService from './premisesService'
@@ -23,6 +25,7 @@ jest.mock('../data/referenceDataClient')
 jest.mock('../utils/premisesUtils')
 jest.mock('../utils/viewUtils')
 jest.mock('../utils/characteristicUtils')
+jest.mock('../utils/placeUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -121,11 +124,14 @@ describe('PremisesService', () => {
       const premisesSummary3 = premisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '456' })
       const premisesSummary4 = premisesSummaryFactory.build({ addressLine1: 'XYZ', postcode: '123' })
 
+      const placeContext = placeContextFactory.build()
+
       const premises = [premisesSummary4, premisesSummary1, premisesSummary3, premisesSummary2]
       premisesClient.all.mockResolvedValue(premises)
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
+      ;(addPlaceContext as jest.MockedFunction<typeof addPlaceContext>).mockReturnValue('/path/with/place/context')
 
-      const rows = await service.tableRows(callConfig)
+      const rows = await service.tableRows(callConfig, placeContext)
 
       expect(rows).toEqual([
         [
@@ -142,9 +148,7 @@ describe('PremisesService', () => {
             html: `<strong>${premisesSummary1.status}</strong>`,
           },
           {
-            html: `<a href="${paths.premises.show({
-              premisesId: premisesSummary1.id,
-            })}">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
+            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
           },
         ],
         [
@@ -161,9 +165,7 @@ describe('PremisesService', () => {
             html: `<strong>${premisesSummary2.status}</strong>`,
           },
           {
-            html: `<a href="${paths.premises.show({
-              premisesId: premisesSummary2.id,
-            })}">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
+            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
           },
         ],
         [
@@ -180,9 +182,7 @@ describe('PremisesService', () => {
             html: `<strong>${premisesSummary3.status}</strong>`,
           },
           {
-            html: `<a href="${paths.premises.show({
-              premisesId: premisesSummary3.id,
-            })}">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
+            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
           },
         ],
         [
@@ -199,15 +199,37 @@ describe('PremisesService', () => {
             html: `<strong>${premisesSummary4.status}</strong>`,
           },
           {
-            html: `<a href="${paths.premises.show({
-              premisesId: premisesSummary4.id,
-            })}">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
+            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
           },
         ],
       ])
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.all).toHaveBeenCalled()
+      expect(addPlaceContext).toHaveBeenCalledWith(
+        paths.premises.show({
+          premisesId: premisesSummary1.id,
+        }),
+        placeContext,
+      )
+      expect(addPlaceContext).toHaveBeenCalledWith(
+        paths.premises.show({
+          premisesId: premisesSummary2.id,
+        }),
+        placeContext,
+      )
+      expect(addPlaceContext).toHaveBeenCalledWith(
+        paths.premises.show({
+          premisesId: premisesSummary3.id,
+        }),
+        placeContext,
+      )
+      expect(addPlaceContext).toHaveBeenCalledWith(
+        paths.premises.show({
+          premisesId: premisesSummary4.id,
+        }),
+        placeContext,
+      )
     })
   })
 

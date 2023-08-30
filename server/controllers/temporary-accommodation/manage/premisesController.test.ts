@@ -9,6 +9,7 @@ import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
 import {
   newPremisesFactory,
+  placeContextFactory,
   premisesFactory,
   probationRegionFactory,
   referenceDataFactory,
@@ -88,14 +89,18 @@ describe('PremisesController', () => {
 
   describe('index', () => {
     it('returns the table rows to the template', async () => {
+      const placeContext = placeContextFactory.build()
+
       premisesService.tableRows.mockResolvedValue([])
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { tableRows: [] })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 

@@ -117,7 +117,10 @@ describe('DeparturesController', () => {
         expect.objectContaining(newDeparture),
       )
 
-      expect(request.flash).toHaveBeenCalledWith('success', 'Booking marked as departed')
+      expect(request.flash).toHaveBeenCalledWith('success', {
+        title: 'Booking marked as departed',
+        text: 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+      })
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
     })
 

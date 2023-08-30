@@ -2,10 +2,19 @@
 
 {% if infoMessages %}
   {% for message in infoMessages %}
-    {{ govukNotificationBanner({
-      titleText: 'Important',
-      html: '<div class="govuk-heading-s">' + message + '</div>'
-    }) }}
+  
+    {% if message is string %}
+      {{ govukNotificationBanner({
+        titleText: 'Important',
+        html: '<div class="govuk-heading-s">' + (message | escape) + '</div>'
+      }) }}
+    {% else %}
+      {{ govukNotificationBanner({
+        titleText: 'Important',
+        html: '<div class="govuk-heading-s">' + (message.title | escape) + '</div><p class="govuk-body">' + ((message.text | escape) if message.text else message.html) + '</p>'
+      }) }}
+    {% endif %}
+
   {% endfor %}
 {% endif %}
 
@@ -14,12 +23,12 @@
 
     {% if message is string %}
       {{ govukNotificationBanner({
-        html: '<h3 class="govuk-!-margin-top-2">' + message + '</h3>',
+        html: '<h3 class="govuk-!-margin-top-2">' + (message | escape) + '</h3>',
         type: 'success'
       }) }}
     {% else %}
       {{ govukNotificationBanner({
-        html: '<h3 class="govuk-!-margin-top-2">' + message.title + '</h3><p class="govuk-body">' + message.text + '</p>',
+        html: '<h3 class="govuk-!-margin-top-2">' + (message.title | escape) + '</h3><p class="govuk-body">' + ((message.text | escape) if message.text else message.html) + '</p>',
         type: 'success'
       }) }}
     {% endif %}

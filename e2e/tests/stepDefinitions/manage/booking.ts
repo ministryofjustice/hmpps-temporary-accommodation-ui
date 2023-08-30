@@ -1,6 +1,4 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
-import devPersonData from '../../../../cypress_shared/fixtures/person-dev.json'
-import localPersonData from '../../../../cypress_shared/fixtures/person-local.json'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingConfirmPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingConfirm'
@@ -8,17 +6,8 @@ import BookingHistoryPage from '../../../../cypress_shared/pages/temporary-accom
 import BookingNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessment from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
-import {
-  bookingFactory,
-  newBookingFactory,
-  personFactory,
-  turnaroundFactory,
-} from '../../../../server/testutils/factories'
-import { throwMissingCypressEnvError } from '../utils'
-
-const environment = Cypress.env('environment') || throwMissingCypressEnvError('environment')
-
-const person = personFactory.build(environment === 'local' ? localPersonData : devPersonData)
+import { bookingFactory, newBookingFactory, turnaroundFactory } from '../../../../server/testutils/factories'
+import { person } from '../utils'
 
 Given("I'm creating a booking", () => {
   cy.then(function _() {

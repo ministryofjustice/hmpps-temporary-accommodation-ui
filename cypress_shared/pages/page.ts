@@ -65,7 +65,11 @@ export default abstract class Page extends Component {
   }
 
   shouldShowRadioInput(id: string, contents: string) {
-    cy.get(`input[name="${id}"]`).siblings('label').contains(exact(contents)).siblings('input').should('be.checked')
+    cy.get(`input[name="${id}"]`)
+      .siblings('label')
+      .contains(exact(` ${contents} `))
+      .siblings('input')
+      .should('be.checked')
   }
 
   shouldShowDateInputsByLegend(legend: string, date: string): void {
@@ -139,6 +143,14 @@ export default abstract class Page extends Component {
 
   checkRadioByNameAndValue(name: string, option: string): void {
     cy.get(`input[name="${name}"][value="${option}"]`).check()
+  }
+
+  checkRadioByNameAndLabel(name: string, label: string): void {
+    cy.get(`input[name="${name}"]`)
+      .siblings('label')
+      .contains(exact(` ${label} `))
+      .siblings('input')
+      .check()
   }
 
   checkCheckboxByNameAndValue(name: string, option: string): void {

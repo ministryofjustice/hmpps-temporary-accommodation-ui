@@ -2,6 +2,7 @@ import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
   ReferralHistoryNote as Note,
+  ReferralHistorySystemNote as SystemNote,
   ReferralHistoryUserNote as UserNote,
 } from '@approved-premises/api'
 import { TableRow, TimelineItem } from '../@types/ui'
@@ -9,7 +10,7 @@ import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 import { personName } from './personUtils'
 import { addPlaceContext, createPlaceContext } from './placeUtils'
-import { convertToTitleCase } from './utils'
+import { assertUnreachable, convertToTitleCase } from './utils'
 import { formatLines } from './viewUtils'
 
 export const allStatuses: Array<{ name: string; id: AssessmentSummary['status']; tagClass: string }> = [
@@ -171,27 +172,42 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
     return noteA.createdAt < noteB.createdAt ? 1 : -1
   })
 
-  return notes
-    .filter(note => !!note.message)
-    .map(note => {
-      return {
-        label: {
-          text: 'Note',
-        },
-        html: formatLines(note.message),
-        datetime: {
-          timestamp: note.createdAt,
-          type: 'datetime',
-        },
-        byline: isUserNote(note)
-          ? {
-              text: convertToTitleCase(note.createdByUserName),
-            }
-          : undefined,
-      }
-    })
+  return notes.map(note => {
+    return {
+      label: {
+        text: isUserNote(note) ? 'Note' : systemNoteLabelText(note),
+      },
+      ...(isUserNote(note) ? { html: userNoteHtml(note) } : {}),
+      datetime: {
+        timestamp: note.createdAt,
+        type: 'datetime',
+      },
+      byline: { text: convertToTitleCase(note.createdByUserName) },
+    }
+  })
 }
 
 const isUserNote = (note: Note): note is UserNote => {
-  return (note as UserNote).createdByUserName !== undefined
+  return note.type === 'user'
+}
+
+const userNoteHtml = (note: UserNote) => formatLines(note.message)
+
+const systemNoteLabelText = (note: SystemNote) => {
+  switch (note.category) {
+    case 'submitted':
+      return 'Referral submitted'
+    case 'unallocated':
+      return 'Referral marked as unallocated'
+    case 'in_review':
+      return 'Referral marked as in review'
+    case 'ready_to_place':
+      return 'Referral marked as ready to place'
+    case 'rejected':
+      return 'Referral marked as rejected'
+    case 'completed':
+      return 'Referral marked as closed'
+    default:
+      return assertUnreachable(note.category)
+  }
 }

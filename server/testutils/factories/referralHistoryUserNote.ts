@@ -8,4 +8,5 @@ export default Factory.define<ReferralHistoryUserNote>(() => ({
   createdByUserName: faker.person.fullName(),
   createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   message: faker.lorem.lines(),
+  type: 'user',
 }))

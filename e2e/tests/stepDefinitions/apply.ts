@@ -17,7 +17,11 @@ const offences = (environment === 'local' ? localOffencesData : devOffencesData)
 )
 
 Given('I start a new application', () => {
-  const application = applicationFactory.build({ person, data: applicationData })
+  const application = applicationFactory.build({
+    person,
+    data: applicationData,
+    arrivalDate: applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
+  })
 
   const apply = new ApplyHelper(application, person, [], 'e2e')
   apply.startApplication()

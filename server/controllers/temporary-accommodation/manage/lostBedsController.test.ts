@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { LostBedService, PremisesService } from '../../../services'
+import { AssessmentsService, LostBedService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import {
   lostBedCancellationFactory,
@@ -18,6 +18,7 @@ import {
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -31,6 +32,7 @@ jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/lostBedUtils')
 jest.mock('../../../utils/bookingUtils')
+jest.mock('../../../utils/placeUtils')
 
 describe('LostBedsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -46,8 +48,9 @@ describe('LostBedsController', () => {
   const lostBedService = createMock<LostBedService>({})
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
+  const assessmentService = createMock<AssessmentsService>({})
 
-  const lostBedsController = new LostBedsController(lostBedService, premisesService, bedspaceService)
+  const lostBedsController = new LostBedsController(lostBedService, premisesService, bedspaceService, assessmentService)
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -201,6 +204,7 @@ describe('LostBedsController', () => {
           actions: mockActions,
           allStatuses,
         })
+        expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       })
     })
 

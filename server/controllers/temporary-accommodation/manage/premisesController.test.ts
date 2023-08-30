@@ -9,17 +9,20 @@ import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
 import {
   newPremisesFactory,
+  placeContextFactory,
   premisesFactory,
   probationRegionFactory,
   referenceDataFactory,
   roomFactory,
   updatePremisesFactory,
 } from '../../../testutils/factories'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import PremisesController from './premisesController'
+import { AssessmentsService } from '../../../services'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -33,6 +36,7 @@ jest.mock('../../../utils/premisesUtils', () => {
   }
 })
 jest.mock('../../../utils/userUtils')
+jest.mock('../../../utils/placeUtils')
 
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -70,7 +74,9 @@ describe('PremisesController', () => {
 
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
-  const premisesController = new PremisesController(premisesService, bedspaceService)
+  const assessmentService = createMock<AssessmentsService>({})
+
+  const premisesController = new PremisesController(premisesService, bedspaceService, assessmentService)
 
   beforeEach(() => {
     request = createMock<Request>({
@@ -83,14 +89,18 @@ describe('PremisesController', () => {
 
   describe('index', () => {
     it('returns the table rows to the template', async () => {
+      const placeContext = placeContextFactory.build()
+
       premisesService.tableRows.mockResolvedValue([])
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { tableRows: [] })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 
@@ -354,6 +364,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.getPremisesDetails).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getBedspaceDetails).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 })

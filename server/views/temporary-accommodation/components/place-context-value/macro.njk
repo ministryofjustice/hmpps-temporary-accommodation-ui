@@ -4,6 +4,9 @@
 
   {% if placeContext %}
     <input type="hidden" name="placeContextAssessmentId" value="{{ placeContext.assessment.id }}" />
+    {% if placeContext.arrivalDate %}
+      <input type="hidden" name="placeContextArrivalDate" value="{{ placeContext.arrivalDate }}" />
+    {% endif %}
   {% endif %}
 
 {% endmacro %}

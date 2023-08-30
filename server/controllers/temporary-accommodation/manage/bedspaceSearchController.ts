@@ -7,7 +7,7 @@ import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import { DateFormats } from '../../../utils/dateUtils'
 import { parseNaturalNumber } from '../../../utils/formUtils'
-import { addPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
+import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDate } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
 
@@ -54,6 +54,8 @@ export default class BedspaceSearchController {
             startDate,
             durationDays,
           })
+
+          updatePlaceContextWithArrivalDate(res, placeContext, startDate)
         }
 
         res.render('temporary-accommodation/bedspace-search/index', {

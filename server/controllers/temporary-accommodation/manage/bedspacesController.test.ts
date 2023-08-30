@@ -4,7 +4,7 @@ import type { NextFunction, Request, Response } from 'express'
 import { ErrorsAndUserInput, SummaryListItem } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BookingService, PremisesService } from '../../../services'
+import { AssessmentsService, BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import { ListingEntry } from '../../../services/bookingService'
 import {
@@ -18,10 +18,12 @@ import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspacesController from './bedspacesController'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/bedspaceUtils')
+jest.mock('../../../utils/placeUtils')
 
 describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -39,7 +41,13 @@ describe('BedspacesController', () => {
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
   const bookingService = createMock<BookingService>({})
-  const bedspacesController = new BedspacesController(premisesService, bedspaceService, bookingService)
+  const assessmentService = createMock<AssessmentsService>({})
+  const bedspacesController = new BedspacesController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    assessmentService,
+  )
 
   beforeEach(() => {
     request = createMock<Request>()
@@ -286,6 +294,7 @@ describe('BedspacesController', () => {
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premises.id, room.id)
       expect(bookingService.getListingEntries).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 })

@@ -6,10 +6,13 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import {
+  applicationFactory,
+  assessmentFactory,
   assessmentSummaryFactory,
   bookingFactory,
   newBookingFactory,
   personFactory,
+  placeContextFactory,
   premisesFactory,
   roomFactory,
 } from '../../../testutils/factories'
@@ -21,6 +24,7 @@ import {
   noAssessmentId,
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
+import { clearPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -37,6 +41,7 @@ jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/utils')
 jest.mock('../../../utils/userUtils')
+jest.mock('../../../utils/placeUtils')
 
 describe('BookingsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -66,6 +71,8 @@ describe('BookingsController', () => {
   )
 
   beforeEach(() => {
+    ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockReset()
+
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(isApplyEnabledForUser as jest.MockedFn<typeof isApplyEnabledForUser>).mockReturnValue(true)
@@ -94,6 +101,7 @@ describe('BookingsController', () => {
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/new', {
         premises,
@@ -102,6 +110,42 @@ describe('BookingsController', () => {
         errorSummary: [],
         crn: 'some-crn',
       })
+    })
+
+    it('prefills the arrival date and CRN if present in a place context', async () => {
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {}
+
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const placeContext = placeContextFactory.build({
+        arrivalDate: '2024-02-01',
+        assessment: assessmentFactory.build({
+          application: applicationFactory.build({
+            person: personFactory.build({ crn: 'some-crn' }),
+          }),
+        }),
+      })
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bookingsController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/bookings/new',
+        expect.objectContaining({
+          crn: 'some-crn',
+          ...DateFormats.isoToDateAndTimeInputs('2024-02-01', 'arrivalDate'),
+        }),
+      )
     })
   })
 
@@ -134,6 +178,7 @@ describe('BookingsController', () => {
       expect(assessmentService.getReadyToPlaceForCrn).toHaveBeenCalledWith(callConfig, newBooking.crn)
       expect(personService.findByCrn).toHaveBeenCalledWith(callConfig, newBooking.crn)
       expect(assessmentRadioItems).toHaveBeenCalledWith(assessmentSummaries)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/selectAssessment', {
@@ -229,6 +274,48 @@ describe('BookingsController', () => {
         errorSummary: [],
         backLink,
       })
+    })
+
+    it('prefills the asssessment ID if present in a place context', async () => {
+      const newBooking = newBookingFactory.build()
+      const person = personFactory.build({
+        crn: newBooking.crn,
+      })
+      const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          id: 'some-assessment-id',
+          application: applicationFactory.build({ person }),
+        }),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {
+        crn: newBooking.crn,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+      }
+
+      personService.findByCrn.mockResolvedValue(person)
+      assessmentService.getReadyToPlaceForCrn.mockResolvedValue(assessmentSummaries)
+      ;(assessmentRadioItems as jest.MockedFunction<typeof assessmentRadioItems>).mockReturnValue(radioItems)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const requestHandler = bookingsController.selectAssessment()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/bookings/selectAssessment',
+        expect.objectContaining({
+          assessmentId: 'some-assessment-id',
+        }),
+      )
     })
 
     it.each([
@@ -364,6 +451,39 @@ describe('BookingsController', () => {
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
+
+    it('clears any place context if the received CRN differs from that in the place context', async () => {
+      const newBooking = newBookingFactory.build()
+      const person = personFactory.build({})
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          application: applicationFactory.build({ person: personFactory.build({ crn: 'some-crn' }) }),
+        }),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {
+        crn: 'some-other-crn',
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+      }
+
+      personService.findByCrn.mockResolvedValue(person)
+      assessmentService.getReadyToPlaceForCrn.mockResolvedValue([])
+      ;(assessmentRadioItems as jest.MockedFunction<typeof assessmentRadioItems>).mockReturnValue(radioItems)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const requestHandler = bookingsController.selectAssessment()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+
+      await requestHandler(request, response, next)
+
+      expect(clearPlaceContext).toHaveBeenCalledWith(request, response)
+    })
   })
 
   describe('confirm', () => {
@@ -395,6 +515,7 @@ describe('BookingsController', () => {
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       expect(appendQueryString).toHaveBeenCalledWith(
         paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
         request.query,
@@ -508,6 +629,40 @@ describe('BookingsController', () => {
 
       expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'assessmentId', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, new Error(), backLink)
+    })
+
+    it('clears any place context if the received assessment ID differs from that in the place context', async () => {
+      const newBooking = newBookingFactory.build()
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const person = personFactory.build()
+      const placeContext = placeContextFactory.build({
+        assessment: assessmentFactory.build({
+          id: 'some-id',
+        }),
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.query = {
+        crn: newBooking.crn,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+        assessmentId: 'some-other-id',
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      personService.findByCrn.mockResolvedValue(person)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue(backLink)
+
+      const requestHandler = bookingsController.confirm()
+      await requestHandler(request, response, next)
+
+      expect(clearPlaceContext).toHaveBeenCalledWith(request, response)
     })
   })
 
@@ -729,6 +884,7 @@ describe('BookingsController', () => {
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 
@@ -773,6 +929,7 @@ describe('BookingsController', () => {
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
       expect(deriveBookingHistory).toHaveBeenCalledWith(booking)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })
 })

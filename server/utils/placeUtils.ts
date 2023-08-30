@@ -9,9 +9,24 @@ export const createPlaceContext = (assessment: Assessment) => {
   return { assessment }
 }
 
+export const updatePlaceContextWithArrivalDate = (res: Response, placeContext: PlaceContext, arrivalDate: string) => {
+  if (placeContext) {
+    const updatedPlaceContext = { ...placeContext, arrivalDate }
+
+    res.locals.placeContext = updatedPlaceContext
+
+    return updatedPlaceContext
+  }
+
+  return undefined
+}
+
 export const addPlaceContext = (path: string, placeContext: PlaceContext) => {
   if (placeContext) {
-    return appendQueryString(path, { placeContextAssessmentId: placeContext.assessment.id })
+    return appendQueryString(path, {
+      placeContextAssessmentId: placeContext.assessment.id,
+      placeContextArrivalDate: placeContext.arrivalDate,
+    })
   }
   return path
 }
@@ -33,9 +48,20 @@ export const preservePlaceContext = async (
       return undefined
     }
 
-    res.locals.placeContext = { assessment }
-    return { assessment }
+    if (assessment.status !== 'ready_to_place') {
+      return undefined
+    }
+
+    const placeContext = { assessment, arrivalDate: req.query.placeContextArrivalDate as string }
+    res.locals.placeContext = placeContext
+    return placeContext
   }
 
   return undefined
+}
+
+export const clearPlaceContext = (req: Request, res: Response) => {
+  res.locals.placeContext = undefined
+  req.query.placeContextAssessmentId = undefined
+  req.query.placeContextArrivalDate = undefined
 }

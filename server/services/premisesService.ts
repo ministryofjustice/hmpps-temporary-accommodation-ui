@@ -6,12 +6,13 @@ import type {
   StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
-import type { ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
+import type { PlaceContext, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import paths from '../paths/temporary-accommodation/manage'
 
 import { CallConfig } from '../data/restClient'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
+import { addPlaceContext } from '../utils/placeUtils'
 import { statusTag } from '../utils/premisesUtils'
 import { escape, formatLines } from '../utils/viewUtils'
 
@@ -61,7 +62,7 @@ export default class PremisesService {
     return { localAuthorities, characteristics, probationRegions, pdus }
   }
 
-  async tableRows(callConfig: CallConfig): Promise<Array<TableRow>> {
+  async tableRows(callConfig: CallConfig, placeContext: PlaceContext): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.all()
 
@@ -75,9 +76,12 @@ export default class PremisesService {
           this.textValue(entry.pdu),
           this.htmlValue(statusTag(entry.status)),
           this.htmlValue(
-            `<a href="${paths.premises.show({
-              premisesId: entry.id,
-            })}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
+            `<a href="${addPlaceContext(
+              paths.premises.show({
+                premisesId: entry.id,
+              }),
+              placeContext,
+            )}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
           ),
         ]
       })

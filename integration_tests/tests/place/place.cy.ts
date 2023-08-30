@@ -22,7 +22,7 @@ context('Place', () => {
     // And I am at the start of the "place" journey
     placeHelper.startPlace()
 
-    // I can progress along the "place" journey
-    placeHelper.progressPlace()
+    // I can complete the "place" journey
+    placeHelper.completePlace()
   })
 })

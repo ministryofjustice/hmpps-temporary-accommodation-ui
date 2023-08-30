@@ -3,6 +3,7 @@
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
 {% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -12,8 +13,9 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+    href: addPlaceContext(paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
   }) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -30,6 +32,5 @@
       {{ bookingInfo(historicBookingDetail.booking) }}
     </div>
   {%endfor%}
-
 
 {% endblock %}

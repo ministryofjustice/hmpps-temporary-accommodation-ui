@@ -7,6 +7,7 @@ import {
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
 import { assessmentActions, statusName } from '../../../utils/assessmentUtils'
+import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString, lowerCase } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -102,6 +103,8 @@ export default class AssessmentsController {
 
       const callConfig = extractCallConfig(req)
 
+      await preservePlaceContext(req, res, this.assessmentsService)
+
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 
       return res.render('temporary-accommodation/assessments/summary', {
@@ -118,6 +121,8 @@ export default class AssessmentsController {
   full(): RequestHandler {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
+
+      await preservePlaceContext(req, res, this.assessmentsService)
 
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 

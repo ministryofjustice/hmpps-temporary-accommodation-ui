@@ -12,6 +12,7 @@ import {
   noAssessmentId,
 } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
+import { clearPlaceContext, preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { isApplyEnabledForUser } from '../../../utils/userUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -39,6 +40,12 @@ export default class BookingsController {
 
       const callConfig = extractCallConfig(req)
 
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
+      const arrivalDatePrefill = placeContext?.arrivalDate
+        ? DateFormats.isoToDateAndTimeInputs(placeContext.arrivalDate, 'arrivalDate')
+        : {}
+      const crnPrefill = placeContext ? { crn: placeContext.assessment.application.person.crn } : {}
+
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
@@ -48,6 +55,8 @@ export default class BookingsController {
         errors,
         errorSummary,
         errorTitle,
+        ...arrivalDatePrefill,
+        ...crnPrefill,
         ...req.query,
       })
     }
@@ -64,6 +73,13 @@ export default class BookingsController {
       const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.query, 'departureDate')
 
       const callConfig = extractCallConfig(req)
+
+      let placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      if (placeContext && crn !== placeContext.assessment.application.person.crn) {
+        clearPlaceContext(req, res)
+        placeContext = undefined
+      }
 
       const backLink = appendQueryString(paths.bookings.new({ premisesId, roomId }), req.query)
       const applyDisabled = !isApplyEnabledForUser(res.locals.user)
@@ -103,6 +119,8 @@ export default class BookingsController {
           throw error
         }
 
+        const assessmentIdPrefill = placeContext ? { assessmentId: placeContext.assessment.id } : {}
+
         await this.personsService.findByCrn(callConfig, crn)
         const assessments = await this.assessmentService.getReadyToPlaceForCrn(callConfig, crn)
 
@@ -116,6 +134,7 @@ export default class BookingsController {
           errors,
           errorSummary,
           errorTitle,
+          ...assessmentIdPrefill,
           ...req.query,
         })
       } catch (err) {
@@ -138,6 +157,13 @@ export default class BookingsController {
       const { assessmentId } = req.query
 
       const callConfig = extractCallConfig(req)
+
+      let placeContext = await preservePlaceContext(req, res, this.assessmentService)
+
+      if (placeContext && placeContext.assessment.id !== assessmentId) {
+        clearPlaceContext(req, res)
+        placeContext = undefined
+      }
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
@@ -232,6 +258,8 @@ export default class BookingsController {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
+      await preservePlaceContext(req, res, this.assessmentService)
+
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
@@ -250,6 +278,8 @@ export default class BookingsController {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
+
+      await preservePlaceContext(req, res, this.assessmentService)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)

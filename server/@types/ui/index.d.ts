@@ -291,5 +291,6 @@ export interface OasysPage extends TasklistPage {
 export type PlaceContext =
   | {
       assessment: Assessment
+      arrivalDate?: string
     }
   | undefined

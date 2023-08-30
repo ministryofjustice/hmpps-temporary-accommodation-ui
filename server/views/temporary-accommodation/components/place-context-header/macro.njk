@@ -11,11 +11,10 @@
         <div>{{ personName(person, 'Limited access offender') }}</div>
         {% if isFullPerson(person) %}
           <div>Date of birth: {{ formatDate(person.dateOfBirth, {format: 'short'}) }}</div>
-          {% if person.sex %}
-            <div>Sex: {{ person.sex }}</div>
-          {% endif %}
           {% if person.genderIdentity %}
             <div>Gender identity: {{ person.genderIdentity }}</div>
+          {% else %}
+            <div>Sex: {{ person.sex }}</div>
           {% endif %}
         {% endif %}
         <div>CRN: {{ person.crn }}</div>

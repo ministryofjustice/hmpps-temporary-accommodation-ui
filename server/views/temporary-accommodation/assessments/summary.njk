@@ -8,6 +8,7 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -21,6 +22,7 @@
   {{ breadCrumb(breadCrumbTitle, [
     {title: 'Referrals', href: paths.assessments.index()}
   ]) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
@@ -67,7 +69,7 @@
     govukButton({
       text: "View full referral",
       type: "button",
-      href: paths.assessments.full({ id: assessment.id }),
+      href: addPlaceContext(paths.assessments.full({ id: assessment.id })),
       classes: "govuk-button--secondary"
     }) 
   }}

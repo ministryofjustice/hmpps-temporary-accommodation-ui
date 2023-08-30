@@ -1,6 +1,7 @@
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
+{% from "../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -11,8 +12,9 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: paths.assessments.summary({ id: assessment.id })
+    href: addPlaceContext(paths.assessments.summary({ id: assessment.id }))
   }) }}
+  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

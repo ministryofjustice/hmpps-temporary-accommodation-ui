@@ -160,7 +160,7 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          text: 'Close',
+          text: 'Archive',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
           newTab: false,

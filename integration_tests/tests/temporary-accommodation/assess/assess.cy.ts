@@ -143,8 +143,8 @@ context('Apply', () => {
           })
 
           // Given the assessment is in the 'ready to place' state
-          // When I click on the Update status to 'Closed' button
-          assessmentPage.clickAction('Close')
+          // When I click on the Update status to 'closed' button
+          assessmentPage.clickAction('Archive')
 
           // Then I am taken to the confirmation page
           Page.verifyOnPage(AssessmentConfirmPage, 'Archive this referral')
@@ -156,7 +156,7 @@ context('Apply', () => {
 
           // I am taken to the summary page and a banner is shown
           Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'closed' })
-          assessmentPage.shouldShowBanner('This referral has been closed')
+          assessmentPage.shouldShowBanner('This referral has been archived')
 
           // And the assessment is updated in the database
           cy.task('verifyCloseAssessment', assessment.id).then(requests => {

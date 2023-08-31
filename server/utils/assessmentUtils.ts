@@ -87,7 +87,7 @@ export const assessmentActions = (assessment: Assessment) => {
       newTab: false,
     },
     close: {
-      text: 'Close',
+      text: 'Archive',
       classes: 'govuk-button--secondary',
       href: paths.assessments.confirm({ id: assessment.id, status: 'closed' }),
       newTab: false,
@@ -154,7 +154,7 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
 export const statusChangeMessage = (assessmentId: string, status: AssessmentStatus): MessageContents => {
   switch (status) {
     case 'closed':
-      return 'This referral has been closed'
+      return 'This referral has been archived'
     case 'in_review':
       return 'This referral is in review'
     case 'ready_to_place':

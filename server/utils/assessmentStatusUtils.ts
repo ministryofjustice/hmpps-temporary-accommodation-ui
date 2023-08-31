@@ -2,7 +2,7 @@ import { TemporaryAccommodationAssessmentSummary as AssessmentSummary } from '..
 
 export const allStatuses: Array<{ name: string; id: AssessmentSummary['status']; tagClass: string }> = [
   {
-    name: 'Closed',
+    name: 'Archived',
     id: 'closed',
     tagClass: 'govuk-tag--blue',
   },

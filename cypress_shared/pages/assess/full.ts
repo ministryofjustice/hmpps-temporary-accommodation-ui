@@ -1,14 +1,14 @@
 import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
 import type { Section } from '../../../server/utils/applicationUtils'
+import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { personName } from '../../../server/utils/personUtils'
-import { sentenceCase } from '../../../server/utils/utils'
 import Page from '../page'
 
 export default class AssessmentFullPage extends Page {
   constructor(private readonly assessment: Assessment) {
     super(personName(assessment.application.person, 'Limited access offender'))
-    cy.get('.govuk-tag').contains(sentenceCase(assessment.status as string))
+    cy.get('.govuk-tag').contains(statusName(assessment.status))
   }
 
   static visit(assessment: Assessment): AssessmentFullPage {

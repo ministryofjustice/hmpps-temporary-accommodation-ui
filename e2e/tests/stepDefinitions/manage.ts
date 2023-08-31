@@ -1,27 +1,20 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
+import ApplicationsListPage from '../../../cypress_shared/pages/apply/list'
 import Page from '../../../cypress_shared/pages/page'
 import { throwMissingCypressEnvError } from './utils'
 
 Given('I am logged in as an assessor', () => {
-  const username = Cypress.env('assessor_username') || throwMissingCypressEnvError('assessor_username')
-  const password = Cypress.env('assessor_password') || throwMissingCypressEnvError('assessor_password')
-
-  cy.visit('/')
-  cy.get('input[name="username"]').type(username)
-  cy.get('input[name="password"]').type(password, { log: false })
-
-  cy.get('.govuk-button').contains('Sign in').click()
+  signIn('assessor_username', 'assessor_password')
 })
 
 Given('I am logged in as a referrer', () => {
-  const username = Cypress.env('referrer_username') || throwMissingCypressEnvError('referrer_username')
-  const password = Cypress.env('referrer_password') || throwMissingCypressEnvError('referrer_password')
+  signIn('referrer_username', 'referrer_password')
+})
 
-  cy.visit('/')
-  cy.get('input[name="username"]').type(username)
-  cy.get('input[name="password"]').type(password, { log: false })
+Given('I am logged in as an assessor who visits the referrer landing page', () => {
+  signIn('assessor_username', 'assessor_password')
 
-  cy.get('.govuk-button').contains('Sign in').click()
+  ApplicationsListPage.visit([])
 })
 
 Given('I return to the dashboard', () => {
@@ -31,3 +24,14 @@ Given('I return to the dashboard', () => {
 Given('I go up a breadcrumb level', () => {
   Page.clickBreadCrumbUp()
 })
+
+const signIn = (usernameVariable: string, passwordVariable: string) => {
+  const username = Cypress.env(usernameVariable) || throwMissingCypressEnvError(usernameVariable)
+  const password = Cypress.env(passwordVariable) || throwMissingCypressEnvError(passwordVariable)
+
+  cy.visit('/')
+  cy.get('input[name="username"]').type(username)
+  cy.get('input[name="password"]').type(password, { log: false })
+
+  cy.get('.govuk-button').contains('Sign in').click()
+}

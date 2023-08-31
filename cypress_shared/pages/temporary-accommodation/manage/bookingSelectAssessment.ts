@@ -1,9 +1,9 @@
 import type { AssessmentSummary } from '@approved-premises/api'
-import { FullPerson } from '../../../../server/@types/shared'
+import { Assessment, Person } from '../../../../server/@types/shared'
 import { PlaceContext } from '../../../../server/@types/ui'
 import { assessmentSummaryFactory } from '../../../../server/testutils/factories'
-import { noAssessmentId } from '../../../../server/utils/bookingUtils'
 import { DateFormats } from '../../../../server/utils/dateUtils'
+import { isFullPerson } from '../../../../server/utils/personUtils'
 import Page from '../../page'
 
 export default class BookingSelectAssessmentPage extends Page {
@@ -41,22 +41,31 @@ export default class BookingSelectAssessmentPage extends Page {
   }
 
   shouldShowPreselectedAsssessmentFromPlaceContext(placeContext: NonNullable<PlaceContext>): void {
-    const person = placeContext.assessment.application.person as FullPerson
-
     this.shouldShowRadioInput(
       'assessmentId',
-      ` ${person.name}, CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
-        placeContext.assessment.createdAt,
-        { format: 'short' },
-      )} `,
+      this.assessmentRadioText(placeContext.assessment, placeContext.assessment.application.person),
     )
   }
 
   selectAssessment(assessmentSummary: AssessmentSummary): void {
-    this.checkRadioByNameAndValue('assessmentId', assessmentSummary.id)
+    this.checkRadioByNameAndLabel('assessmentId', this.assessmentRadioText(assessmentSummary, assessmentSummary.person))
   }
 
   selectNoAssessment(): void {
-    this.checkRadioByNameAndValue('assessmentId', noAssessmentId)
+    this.checkRadioByNameAndLabel('assessmentId', 'Book this bedspace without linking a referral')
+  }
+
+  private assessmentRadioText(assessment: Assessment | AssessmentSummary, person: Person): string {
+    if (isFullPerson(person)) {
+      return `${person.name}, CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
+        assessment.createdAt,
+        {
+          format: 'short',
+        },
+      )}`
+    }
+    return `CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(assessment.createdAt, {
+      format: 'short',
+    })}`
   }
 }

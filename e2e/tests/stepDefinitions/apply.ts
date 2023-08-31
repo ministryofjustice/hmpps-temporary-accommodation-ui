@@ -5,24 +5,23 @@ import ListPage from '../../../cypress_shared/pages/apply/list'
 import SelectOffencePage from '../../../cypress_shared/pages/apply/selectOffence'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
-import { activeOffenceFactory, applicationFactory, personFactory } from '../../../server/testutils/factories'
-import { throwMissingCypressEnvError } from './utils'
+import { activeOffenceFactory, applicationFactory } from '../../../server/testutils/factories'
+import { environment, person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
 import devOffencesData from '../../../cypress_shared/fixtures/offences-dev.json'
 import localOffencesData from '../../../cypress_shared/fixtures/offences-local.json'
-import devPersonData from '../../../cypress_shared/fixtures/person-dev.json'
-import localPersonData from '../../../cypress_shared/fixtures/person-local.json'
 
-const environment = Cypress.env('environment') || throwMissingCypressEnvError('environment')
-
-const person = personFactory.build(environment === 'local' ? localPersonData : devPersonData)
 const offences = (environment === 'local' ? localOffencesData : devOffencesData).map(offenceData =>
   activeOffenceFactory.build(offenceData),
 )
 
 Given('I start a new application', () => {
-  const application = applicationFactory.build({ person, data: applicationData })
+  const application = applicationFactory.build({
+    person,
+    data: applicationData,
+    arrivalDate: applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
+  })
 
   const apply = new ApplyHelper(application, person, [], 'e2e')
   apply.startApplication()

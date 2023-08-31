@@ -104,6 +104,7 @@ export default class PlaceHelper {
     // When I fill out the form
     const searchParameters = bedSearchParametersFactory.build({
       startDate: this.placeContext.arrivalDate,
+      probationDeliveryUnit: this.premises.probationDeliveryUnit.name,
     })
     bedspaceSearchPage.completeForm(searchParameters)
     bedspaceSearchPage.clickSubmit()
@@ -171,7 +172,9 @@ export default class PlaceHelper {
     const selectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, this.assessmentSummaries)
 
     // When I complete the form
-    selectAssessmentPage.selectAssessment(assessmentSummaryFactory.build(this.placeContext.assessment))
+    selectAssessmentPage.selectAssessment(
+      assessmentSummaryFactory.build({ ...this.placeContext.assessment, person: this.person }),
+    )
     selectAssessmentPage.clickSubmit()
 
     // I am taken to the booking confirm page

@@ -1,5 +1,4 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor'
-import ApplicationsListPage from '../../../cypress_shared/pages/apply/list'
 import Page from '../../../cypress_shared/pages/page'
 import { throwMissingCypressEnvError } from './utils'
 
@@ -9,12 +8,6 @@ Given('I am logged in as an assessor', () => {
 
 Given('I am logged in as a referrer', () => {
   signIn('referrer_username', 'referrer_password')
-})
-
-Given('I am logged in as an assessor who visits the referrer landing page', () => {
-  signIn('assessor_username', 'assessor_password')
-
-  ApplicationsListPage.visit([])
 })
 
 Given('I return to the dashboard', () => {

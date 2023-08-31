@@ -151,7 +151,7 @@ export default class AssessmentsController {
 
       await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentStatus)
 
-      req.flash('info', statusChangeMessage(id, status as AssessmentStatus))
+      req.flash('success', statusChangeMessage(id, status as AssessmentStatus))
       res.redirect(paths.assessments.summary({ id }))
     }
   }

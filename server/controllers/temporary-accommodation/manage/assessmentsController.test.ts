@@ -174,7 +174,7 @@ describe('AssessmentsController', () => {
       expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
       expect(statusChangeMessage).toHaveBeenCalledWith(assessmentId, newStatus)
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
-      expect(request.flash).toHaveBeenCalledWith('info', 'some info message')
+      expect(request.flash).toHaveBeenCalledWith('success', 'some info message')
     })
   })
 

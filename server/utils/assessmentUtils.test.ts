@@ -8,7 +8,7 @@ import {
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
-import { assessmentActions, assessmentTableRows, statusName, statusTag, timelineItems } from './assessmentUtils'
+import { assessmentActions, assessmentTableRows, timelineItems } from './assessmentUtils'
 import { addPlaceContext, createPlaceContext } from './placeUtils'
 import { formatLines } from './viewUtils'
 
@@ -17,18 +17,6 @@ jest.mock('./userUtils')
 jest.mock('./placeUtils')
 
 describe('assessmentUtils', () => {
-  describe('statusTag', () => {
-    it('returns the HTML tag for a given status', () => {
-      expect(statusTag('unallocated')).toEqual('<strong class="govuk-tag govuk-tag--grey">Unallocated</strong>')
-    })
-  })
-
-  describe('statusName', () => {
-    it('returns the display name for a given status', () => {
-      expect(statusName('in_review')).toEqual('In review')
-    })
-  })
-
   describe('assessmentTableRows', () => {
     it('returns a table row for the given assessment summary for the assessments table', () => {
       const assessmentSummary = assessmentSummaryFactory.build({

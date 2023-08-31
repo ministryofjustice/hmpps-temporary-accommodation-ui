@@ -6,7 +6,7 @@ import express from 'express'
 import nunjucks from 'nunjucks'
 
 import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
-import { statusTag as assessmentStatusTag } from './assessmentUtils'
+import { statusTag as assessmentStatusTag } from './assessmentStatusUtils'
 import { DateFormats, dateInputHint } from './dateUtils'
 import {
   convertObjectsToCheckboxItems,

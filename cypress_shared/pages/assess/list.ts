@@ -3,9 +3,9 @@ import {
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
 } from '../../../server/@types/shared'
 import paths from '../../../server/paths/temporary-accommodation/manage'
+import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { DateFormats } from '../../../server/utils/dateUtils'
 import { isFullPerson, personName } from '../../../server/utils/personUtils'
-import { sentenceCase } from '../../../server/utils/utils'
 import Page from '../page'
 
 export default class ListPage extends Page {
@@ -78,7 +78,7 @@ export default class ListPage extends Page {
                   })
                 : 'N/A',
             )
-          cy.get('td').eq(3).contains(sentenceCase(assessmentSummary.status))
+          cy.get('td').eq(3).contains(statusName(assessmentSummary.status))
         })
     })
   }

@@ -294,3 +294,14 @@ export type PlaceContext =
       arrivalDate?: string
     }
   | undefined
+
+export type MessageContents =
+  | {
+      title: string
+      text: string
+    }
+  | {
+      title: string
+      html: string
+    }
+  | string

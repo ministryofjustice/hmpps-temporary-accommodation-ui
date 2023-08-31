@@ -31,6 +31,12 @@ export const addPlaceContext = (path: string, placeContext: PlaceContext) => {
   return path
 }
 
+export const addPlaceContextFromAssessmentId = (path: string, assessmentId: string) => {
+  return appendQueryString(path, {
+    placeContextAssessmentId: assessmentId,
+  })
+}
+
 export const preservePlaceContext = async (
   req: Request,
   res: Response,

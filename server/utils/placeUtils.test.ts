@@ -5,6 +5,7 @@ import type { AssessmentsService } from '../services'
 import { assessmentFactory, placeContextFactory } from '../testutils/factories'
 import {
   addPlaceContext,
+  addPlaceContextFromAssessmentId,
   clearPlaceContext,
   createPlaceContext,
   preservePlaceContext,
@@ -67,6 +68,19 @@ describe('placeUtils', () => {
     it('returns the original path if the place context is undefinded', () => {
       expect(addPlaceContext('/some/path', undefined)).toEqual('/some/path')
       expect(appendQueryString).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('addPlaceContextFromAssessmentId', () => {
+    it('returns a path with a place context derived from the given assessment ID', () => {
+      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockImplementation(
+        path => `${path}?some-query-string`,
+      )
+
+      expect(addPlaceContextFromAssessmentId('/some/path', 'some-id')).toEqual('/some/path?some-query-string')
+      expect(appendQueryString).toHaveBeenCalledWith('/some/path', {
+        placeContextAssessmentId: 'some-id',
+      })
     })
   })
 

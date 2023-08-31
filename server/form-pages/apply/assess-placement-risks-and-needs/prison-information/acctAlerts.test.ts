@@ -25,6 +25,22 @@ describe('acctAlertResponse', () => {
       'Expiry date': '9 January 2022',
     })
   })
+
+  it('returns a response for an ACCT Alert when the alert expiry date is not provided', () => {
+    const acctAlert = acctAlertFactory.build({
+      alertId: 123,
+      comment: 'Some description',
+      dateCreated: '2022-01-01T10:00:00Z',
+      dateExpires: undefined,
+    })
+
+    expect(acctAlertResponse(acctAlert)).toEqual({
+      'Alert type': 123,
+      'ACCT description': 'Some description',
+      'Date created': '1 January 2022',
+      'Expiry date': '',
+    })
+  })
 })
 
 describe('AcctAlerts', () => {

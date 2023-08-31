@@ -15,7 +15,7 @@ export const acctAlertResponse = (acctAlert: PersonAcctAlert) => {
     'Alert type': acctAlert.alertId,
     'ACCT description': acctAlert.comment,
     'Date created': DateFormats.isoDateToUIDate(acctAlert.dateCreated),
-    'Expiry date': DateFormats.isoDateToUIDate(acctAlert.dateExpires),
+    'Expiry date': acctAlert.dateExpires ? DateFormats.isoDateToUIDate(acctAlert.dateExpires) : '',
   }
 }
 

@@ -24,6 +24,7 @@ async function setupNodeEvents(
 
 export default defineConfig({
   chromeWebSecurity: false,
+  video: true,
   fixturesFolder: 'e2e/fixtures',
   screenshotsFolder: 'e2e/screenshots',
   videosFolder: 'e2e/videos',
@@ -31,7 +32,6 @@ export default defineConfig({
   reporterOptions: {
     configFile: 'reporter-config.json',
   },
-  videoUploadOnPasses: false,
   taskTimeout: 70000,
   e2e: {
     specPattern: 'e2e/tests/**/*.feature',

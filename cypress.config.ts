@@ -24,6 +24,7 @@ import { resetStubs } from './wiremock'
 
 export default defineConfig({
   chromeWebSecurity: false,
+  video: true,
   fixturesFolder: 'cypress_shared/fixtures',
   screenshotsFolder: 'integration_tests/screenshots',
   videosFolder: 'integration_tests/videos',
@@ -31,7 +32,6 @@ export default defineConfig({
   reporterOptions: {
     configFile: 'reporter-config.json',
   },
-  videoUploadOnPasses: false,
   taskTimeout: 70000,
   e2e: {
     setupNodeEvents(on) {

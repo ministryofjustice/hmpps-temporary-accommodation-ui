@@ -38,7 +38,6 @@ describe('AssessmentsController', () => {
       text: 'Some action',
       href: '/some/action/path',
       classes: 'govuk-button--secondary',
-      newTab: false,
     },
   ]
 

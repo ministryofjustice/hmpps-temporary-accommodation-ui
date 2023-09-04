@@ -18,6 +18,7 @@ export default class PlaceContextHeaderComponent extends Component {
       const { person } = application
 
       cy.root().should('contain', personName(person, 'Limited access offender'))
+      cy.root().should('contain', 'View referral summary (opens in new tab)')
 
       if (isFullPerson(person)) {
         cy.root().should(

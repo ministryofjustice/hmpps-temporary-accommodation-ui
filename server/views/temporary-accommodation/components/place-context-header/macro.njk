@@ -7,7 +7,7 @@
 
     <div class="place-context-header govuk-body">
       <strong class="govuk-heading-s govuk-!-margin-bottom-2">Person to place</strong>
-      <div class="place-context-header__attribute-container">
+      <div class="place-context-header__attribute-container govuk-!-margin-bottom-2">
         <div>{{ personName(person, 'Limited access offender') }}</div>
         {% if isFullPerson(person) %}
           <div>Date of birth: {{ formatDate(person.dateOfBirth, {format: 'short'}) }}</div>
@@ -22,6 +22,7 @@
           <div>Accommodation required from: {{ formatDate(placeContext.assessment.application.arrivalDate, {format: 'short'}) }}</div>
         {% endif %}
       </div>
+      <a class="govuk-link" href="{{ addPlaceContext(paths.assessments.summary({ id: placeContext.assessment.id })) }}" rel="noreferrer noopener" target="_blank">View referral summary (opens in new tab)</a>
     </div>
   {% endif %}
 

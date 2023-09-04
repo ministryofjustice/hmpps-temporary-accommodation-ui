@@ -104,6 +104,7 @@
           "**/*.test.js",
           "**/*.test.ts",
           "**/testutils/**",
+          "cypress_shared/**",
           "cypress.config.ts",
           "cypress.config.e2e.ts"
         ]

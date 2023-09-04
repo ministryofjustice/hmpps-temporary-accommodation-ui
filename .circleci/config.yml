@@ -58,7 +58,7 @@ jobs:
           command: apt-get install xz-utils
       - run:
           name: Update npm
-          command: 'npm install -g npm@latest'
+          command: 'npm install -g npm@9.8.1'
       - node/install-packages
       - run:
           name: E2E Check - << parameters.environment >>

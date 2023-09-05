@@ -9,7 +9,11 @@
   </h1>
 
   {{ formPageTextarea({
-    fieldName: "plan"
+    fieldName: "plan",
+    label: {
+      text: "Provide details",
+      classes: "govuk-label--s"
+    }
   }, fetchContext()) }}
 
   {% set detailsHtml %}

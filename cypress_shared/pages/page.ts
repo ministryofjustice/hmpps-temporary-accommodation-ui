@@ -225,14 +225,14 @@ export default abstract class Page extends Component {
   }
 
   shouldShowMappa = (): void => {
-    cy.get('h3').contains('MAPPA')
-    cy.get('h3').contains('CAT 2 / LEVEL 1')
+    cy.get('h2').contains('MAPPA')
+    cy.get('h2').contains('CAT 2 / LEVEL 1')
   }
 
   shouldShowRosh = (risks: PersonRisksUI['roshRisks']): void => {
     const roshRisksValue = risks.value
 
-    cy.get('h3').contains(`${roshRisksValue.overallRisk.toLocaleUpperCase()} RoSH`)
+    cy.get('h2').contains(`${roshRisksValue.overallRisk.toLocaleUpperCase()} RoSH`)
     cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(roshRisksValue.lastUpdated)}`)
 
     cy.get('.rosh-widget__table').within($row => {
@@ -254,14 +254,14 @@ export default abstract class Page extends Component {
   shouldShowTier = (tier: PersonRisksUI['tier']): void => {
     const tierValue = tier.value
 
-    cy.get('h3').contains(`TIER ${tierValue.level}`)
+    cy.get('h2').contains(`TIER ${tierValue.level}`)
     cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(tierValue.lastUpdated)}`)
   }
 
   shouldShowDeliusRiskFlags = (flags: PersonRisksUI['flags']): void => {
     const flagsValue = flags.value
 
-    cy.get('h3').contains(`Delius risk flags (registers)`)
+    cy.get('h2').contains(`Delius risk flags (registers)`)
     cy.get('.risk-flag-widget > ul').within($item => {
       flagsValue.forEach(flag => {
         cy.wrap($item).get('li').should('contain', flag)

@@ -124,6 +124,7 @@ workflows:
                 - main
           requires:
             - request-test-approval
+          helm_timeout: 10m
 
       - request-preprod-approval:
           type: approval

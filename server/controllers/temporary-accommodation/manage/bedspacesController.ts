@@ -96,8 +96,14 @@ export default class BedspacesController {
 
       try {
         await this.bedspaceService.updateRoom(callConfig, premisesId, roomId, updateRoom)
+        const premises = await this.premisesService.getPremises(callConfig, premisesId)
 
-        req.flash('success', 'Bedspace updated')
+        if (premises.status === 'archived') {
+          req.flash('success', { title: 'Bedspace updated', text: 'This bedspace is in an archived property' })
+        } else {
+          req.flash('success', 'Bedspace updated')
+        }
+
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, roomId }))

@@ -143,6 +143,7 @@ context('Premises', () => {
     // When I visit the new premises page
     cy.then(function _() {
       const premises = premisesFactory.build({
+        status: 'active',
         probationRegion: this.actingUserProbationRegion,
       })
       const newPremises = newPremisesFactory.fromPremises(premises).build()
@@ -246,6 +247,7 @@ context('Premises', () => {
     cy.then(function _() {
       // And there is a premises in the database
       const premises = premisesFactory.build({
+        status: 'active',
         probationRegion: this.actingUserProbationRegion,
       })
       cy.task('stubSinglePremises', premises)
@@ -260,6 +262,7 @@ context('Premises', () => {
       cy.task('stubPremisesUpdate', premises)
 
       const updatedPremises = premisesFactory.build({
+        status: 'active',
         probationRegion: this.actingUserProbationRegion,
       })
       const updatePremises = updatePremisesFactory.fromPremises(updatedPremises).build()

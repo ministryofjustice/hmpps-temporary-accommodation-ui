@@ -22,14 +22,16 @@
   {% include "../../_messages.njk" %}
 
   {% if premises.status === 'archived' %}
-    {% set archivedBannerHtml %}
-      <p class="govuk-notification-banner__heading">This is an archived property.</p>
-      <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
-    {% endset %}
+    {% if not successMessages.length %}
+      {% set archivedBannerHtml %}
+        <p class="govuk-notification-banner__heading">This is an archived property.</p>
+        <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
+      {% endset %}
 
-    {{ govukNotificationBanner({
-      html: archivedBannerHtml
-    }) }}
+      {{ govukNotificationBanner({
+        html: archivedBannerHtml
+      }) }}
+    {% endif %}
   {% endif %}
 
   <h1 class="govuk-heading-l">View a property</h1>

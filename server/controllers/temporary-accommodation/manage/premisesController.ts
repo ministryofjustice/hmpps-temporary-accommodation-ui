@@ -71,7 +71,11 @@ export default class PremisesController {
 
         const { id: premisesId } = await this.premisesService.create(callConfig, newPremises)
 
-        req.flash('success', 'Property created')
+        if (req.body.status === 'archived') {
+          req.flash('success', 'Archived property created')
+        } else {
+          req.flash('success', 'Property created')
+        }
         res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.new({}))
@@ -124,7 +128,12 @@ export default class PremisesController {
       try {
         await this.premisesService.update(callConfig, premisesId, updatePremises)
 
-        req.flash('success', 'Property updated')
+        if (req.body.status === 'archived') {
+          req.flash('success', 'Property has been archived')
+        } else {
+          req.flash('success', 'Property updated')
+        }
+
         res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.edit({ premisesId }))

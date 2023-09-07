@@ -305,3 +305,5 @@ export type MessageContents =
       html: string
     }
   | string
+
+export type ApplicationSummaryData = {}

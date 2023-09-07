@@ -17,37 +17,41 @@
       <div class="length-components" id="lengthComponents">
         <div class="length-components__item">
           {{ formPageInput({
+            label: {
+              text: "Years",
+              classes: "govuk-date-input__label"
+            },
             fieldName: "years",
-            prefix: {
-              text: "years"
-            },
             classes: "govuk-input--width-3" + (" govuk-input--error" if errors.lengthComponents)
           }, fetchContext()) }}
         </div>
         <div class="length-components__item">
           {{ formPageInput({
+            label: {
+              text: "Months",
+              classes: "govuk-date-input__label"
+            },
             fieldName: "months",
-            prefix: {
-              text: "months"
-            },
             classes: "govuk-input--width-3" + (" govuk-input--error" if errors.lengthComponents)
           }, fetchContext()) }}
         </div>
         <div class="length-components__item">
           {{ formPageInput({
+            label: {
+              text: "Weeks",
+              classes: "govuk-date-input__label"
+            },
             fieldName: "weeks",
-            prefix: {
-              text: "weeks"
-            },
             classes: "govuk-input--width-3" + (" govuk-input--error" if errors.lengthComponents)
           }, fetchContext()) }}
         </div>
         <div class="length-components__item">
           {{ formPageInput({
-            fieldName: "days",
-            prefix: {
-              text: "days"
+            label: {
+              text: "Days",
+              classes: "govuk-date-input__label"
             },
+            fieldName: "days",
             classes: "govuk-input--width-3" + (" govuk-input--error" if errors.lengthComponents)
           }, fetchContext()) }}
         </div>

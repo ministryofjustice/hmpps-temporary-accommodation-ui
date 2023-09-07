@@ -209,26 +209,64 @@ describe('BedspacesController', () => {
     it('updates a bedspace and redirects to the show bedspace page', async () => {
       const requestHandler = bedspacesController.update()
 
+      const premises = premisesFactory.build({ status: 'active' })
       const room = roomFactory.build()
 
-      request.params = { premisesId, roomId: room.id }
+      request.params = { premisesId: premises.id, roomId: room.id }
       request.body = {
         name: room.name,
         notes: room.notes,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
       bedspaceService.updateRoom.mockResolvedValue(room)
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premisesId, room.id, {
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id, {
         name: room.name,
         notes: room.notes,
         characteristicIds: [],
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }),
+      )
+    })
+
+    it('renders the correct success message when the premises is archived', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const premises = premisesFactory.build({ status: 'archived' })
+      const room = roomFactory.build()
+
+      request.params = { premisesId: premises.id, roomId: room.id }
+      request.body = {
+        name: room.name,
+        notes: room.notes,
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.updateRoom.mockResolvedValue(room)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id, {
+        name: room.name,
+        notes: room.notes,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', {
+        title: 'Bedspace updated',
+        text: 'This bedspace is in an archived property',
+      })
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }),
+      )
     })
 
     it('renders with errors if the API returns an error', async () => {

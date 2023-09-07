@@ -11,8 +11,8 @@ describe('offenceUtils', () => {
 
       expect(offenceRadioButton(offence)).toMatchStringIgnoringWhitespace(`
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="offenceId" name="offenceId" type="radio" value="123" />
-        <label class="govuk-label govuk-radios__label" for="where-do-you-live">
+        <input class="govuk-radios__input" id="offenceId-123" name="offenceId" type="radio" value="123" />
+        <label class="govuk-label govuk-radios__label" for="offenceId-123">
           <span class="govuk-visually-hidden">
             Select Description goes here as index offence
           </span>

@@ -166,7 +166,7 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.create()
 
       const premises = premisesFactory.build()
-      const newPremises = newPremisesFactory.build()
+      const newPremises = newPremisesFactory.build({ status: 'active' })
 
       delete newPremises.characteristicIds
 
@@ -184,6 +184,31 @@ describe('PremisesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property created')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('creates an archived premises and shows correct success message', async () => {
+      const requestHandler = premisesController.create()
+
+      const premises = premisesFactory.build()
+      const newPremises = newPremisesFactory.build({ status: 'archived' })
+
+      delete newPremises.characteristicIds
+
+      request.body = {
+        ...newPremises,
+      }
+
+      premisesService.create.mockResolvedValue(premises)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.create).toHaveBeenCalledWith(callConfig, {
+        ...newPremises,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Archived property created')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
     })
 
@@ -288,7 +313,7 @@ describe('PremisesController', () => {
     it('updates a premises and redirects to the show premises page', async () => {
       const requestHandler = premisesController.update()
 
-      const premises = premisesFactory.build()
+      const premises = premisesFactory.build({ status: 'active' })
       const newPremises = newPremisesFactory.build({ ...premises })
 
       delete newPremises.characteristicIds
@@ -308,6 +333,32 @@ describe('PremisesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+    })
+
+    it('renders correct flash message when property has been archived', async () => {
+      const requestHandler = premisesController.update()
+
+      const premises = premisesFactory.build()
+      const newPremises = newPremisesFactory.build({ ...premises, status: 'archived' })
+
+      delete newPremises.characteristicIds
+
+      request.params.premisesId = premises.id
+      request.body = {
+        ...newPremises,
+      }
+
+      premisesService.update.mockResolvedValue(premises)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.update).toHaveBeenCalledWith(callConfig, premises.id, {
+        ...newPremises,
+        characteristicIds: [],
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property has been archived')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
     })
 

@@ -1,15 +1,15 @@
 {% if params.status === 'retrieved' %}
   <div class="tier-widget">
-    <h3 class="govuk-heading-m">
+    <h2 class="govuk-heading-m">
       <strong>TIER {{ params.value.level }}</strong>
-    </h3>
+    </h2>
     <p class="govuk-hint govuk-body-m">Last updated: {{ formatDate(params.value.lastUpdated) if params.value.lastUpdated else "Not known" }}</p>
   </div>
 {% else %}
   <div class="tier-widget">
-    <h3 class="govuk-heading-m">
+    <h2 class="govuk-heading-m">
       <strong>TIER UNKNOWN</strong>
-    </h3>
+    </h2>
     <p class="govuk-hint govuk-body-m">Something went wrong. We are unable to show or copy tier information at this time. This risk data must be checked manually outside of this service.</p>
   </div>
 {% endif %}

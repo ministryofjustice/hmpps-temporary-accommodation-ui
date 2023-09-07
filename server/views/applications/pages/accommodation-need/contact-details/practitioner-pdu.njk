@@ -8,6 +8,10 @@
   </h1>
 
   {{ formPageInput({
-    fieldName: "pdu"
+    fieldName: "pdu",
+    label: {
+      text: "Provide the PDU",
+      classes: "govuk-label--s"
+    }
   }, fetchContext()) }}
 {% endblock %}

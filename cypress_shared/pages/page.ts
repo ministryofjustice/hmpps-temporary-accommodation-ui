@@ -1,3 +1,5 @@
+import 'cypress-axe'
+import { Result } from 'axe-core'
 import { PersonRisksUI, PlaceContext, ReferenceData } from '../../server/@types/ui'
 import errorLookups from '../../server/i18n/en/errors.json'
 import { DateFormats } from '../../server/utils/dateUtils'
@@ -28,6 +30,16 @@ export default abstract class Page extends Component {
 
   checkOnPage(): void {
     cy.get('h1').contains(this.title)
+    cy.injectAxe()
+    cy.configureAxe({
+      rules: [
+        // Temporary rule whilst this issue is resolved https://github.com/w3c/aria/issues/1404
+        { id: 'aria-allowed-attr', reviewOnFail: true },
+        // Ignore the "All page content should be contained by landmarks", which conflicts with GOV.UK guidance (https://design-system.service.gov.uk/components/back-link/#how-it-works)
+        { id: 'region', reviewOnFail: true, selector: '.govuk-back-link' },
+      ],
+    })
+    cy.checkA11y(undefined, undefined, this.logAccessibilityViolations)
   }
 
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
@@ -213,14 +225,14 @@ export default abstract class Page extends Component {
   }
 
   shouldShowMappa = (): void => {
-    cy.get('h3').contains('MAPPA')
-    cy.get('h3').contains('CAT 2 / LEVEL 1')
+    cy.get('h2').contains('MAPPA')
+    cy.get('h2').contains('CAT 2 / LEVEL 1')
   }
 
   shouldShowRosh = (risks: PersonRisksUI['roshRisks']): void => {
     const roshRisksValue = risks.value
 
-    cy.get('h3').contains(`${roshRisksValue.overallRisk.toLocaleUpperCase()} RoSH`)
+    cy.get('h2').contains(`${roshRisksValue.overallRisk.toLocaleUpperCase()} RoSH`)
     cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(roshRisksValue.lastUpdated)}`)
 
     cy.get('.rosh-widget__table').within($row => {
@@ -242,14 +254,14 @@ export default abstract class Page extends Component {
   shouldShowTier = (tier: PersonRisksUI['tier']): void => {
     const tierValue = tier.value
 
-    cy.get('h3').contains(`TIER ${tierValue.level}`)
+    cy.get('h2').contains(`TIER ${tierValue.level}`)
     cy.get('p').contains(`Last updated: ${DateFormats.isoDateToUIDate(tierValue.lastUpdated)}`)
   }
 
   shouldShowDeliusRiskFlags = (flags: PersonRisksUI['flags']): void => {
     const flagsValue = flags.value
 
-    cy.get('h3').contains(`Delius risk flags (registers)`)
+    cy.get('h2').contains(`Delius risk flags (registers)`)
     cy.get('.risk-flag-widget > ul').within($item => {
       flagsValue.forEach(flag => {
         cy.wrap($item).get('li').should('contain', flag)
@@ -312,5 +324,19 @@ export default abstract class Page extends Component {
         })
         cy.wrap(items).as(alias)
       })
+  }
+
+  logAccessibilityViolations(violations: Result[]): void {
+    cy.task('logAccessibilityViolationsSummary', `Accessibility violations detected: ${violations.length}`)
+
+    const violationData = violations.map(({ id, impact, description, nodes }) => ({
+      id,
+      impact,
+      description,
+      nodes: nodes.length,
+      nodeTargets: nodes.map(node => node.target).join(' - '),
+    }))
+
+    cy.task('logAccessibilityViolationsTable', violationData)
   }
 }

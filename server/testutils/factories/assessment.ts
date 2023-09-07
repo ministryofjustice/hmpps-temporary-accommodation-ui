@@ -27,6 +27,7 @@ class AssessmentFactory extends Factory<Assessment> {
 export default AssessmentFactory.define(() => ({
   id: faker.string.uuid(),
   application: applicationFactory.withReleaseDate().build(),
+  summaryData: fakeObject(),
   allocatedToStaffMemberId: faker.string.uuid(),
   schemaVersion: faker.string.uuid(),
   outdatedSchema: false,

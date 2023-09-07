@@ -4,6 +4,7 @@ import {
   UpdateTemporaryAccommodationApplication as UpdateApplication,
 } from '../../@types/shared'
 import { arrivalDateFromApplication } from '../../form-pages/utils'
+import getSummaryDataFromApplication from './getSummaryDataFromApplication'
 
 export const getApplicationUpdateData = (application: Application): UpdateApplication => {
   return {
@@ -17,5 +18,6 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     translatedDocument: application.document,
     type: 'CAS3',
     arrivalDate: arrivalDateFromApplication(application),
+    summaryData: getSummaryDataFromApplication(application),
   }
 }

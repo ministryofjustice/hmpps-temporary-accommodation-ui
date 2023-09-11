@@ -21,7 +21,9 @@ describe('getApplicationSubmissionData', () => {
       translatedDocument: application.document,
       type: 'CAS3',
       arrivalDate: applicationDataJson.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
-      summaryData: {},
+      summaryData: {
+        isAbleToShare: true,
+      },
     })
   })
 })

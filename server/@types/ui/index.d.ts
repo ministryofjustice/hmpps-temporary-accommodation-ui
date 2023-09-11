@@ -306,4 +306,6 @@ export type MessageContents =
     }
   | string
 
-export type ApplicationSummaryData = {}
+export type ApplicationSummaryData = {
+  isAbleToShare: boolean | null
+}

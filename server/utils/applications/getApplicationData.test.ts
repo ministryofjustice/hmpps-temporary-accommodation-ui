@@ -23,6 +23,7 @@ describe('getApplicationSubmissionData', () => {
       arrivalDate: applicationDataJson.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
       summaryData: {
         isAbleToShare: true,
+        releaseType: 'Approved Premises',
       },
     })
   })

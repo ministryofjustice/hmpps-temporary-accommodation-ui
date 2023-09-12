@@ -5,6 +5,7 @@ import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type PropertyAttributesOrAdaptationsBody = YesOrNoWithDetail<'propertyAttributesOrAdaptations'>
 
@@ -26,7 +27,7 @@ export default class PropertyAttributesOrAdaptations implements TasklistPage {
 
   response() {
     return {
-      'Will this person require a property with specific attributes or adaptations?': yesOrNoResponseWithDetail(
+      [anonymiseFormContent(this.title, this.application.person)]: yesOrNoResponseWithDetail(
         'propertyAttributesOrAdaptations',
         this.body,
       ),

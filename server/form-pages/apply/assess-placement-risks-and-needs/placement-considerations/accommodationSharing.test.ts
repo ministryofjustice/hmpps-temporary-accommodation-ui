@@ -71,7 +71,7 @@ describe('AccommodationSharing', () => {
       )
       expect(page.errors()).toEqual({
         accommodationSharingNoDetail:
-          'You must provide details of why this person is unsuitable to share accommodation with others',
+          'You must provide details of why the person is unsuitable to share accommodation with others',
       })
     })
   })
@@ -80,7 +80,7 @@ describe('AccommodationSharing', () => {
     it('returns a translated version of the response when the answer is yes', () => {
       const page = new AccommodationSharing(body, application)
       expect(page.response()).toEqual({
-        'Is this person suitable to share accommodation with others?': 'Yes - Yes detail',
+        'Is the person suitable to share accommodation with others?': 'Yes - Yes detail',
       })
     })
 
@@ -90,7 +90,7 @@ describe('AccommodationSharing', () => {
         application,
       )
       expect(page.response()).toEqual({
-        'Is this person suitable to share accommodation with others?': 'No - No detail',
+        'Is the person suitable to share accommodation with others?': 'No - No detail',
       })
     })
   })

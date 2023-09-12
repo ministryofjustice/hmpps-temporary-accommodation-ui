@@ -62,7 +62,7 @@ export default class AcctAlerts implements TasklistPage {
 
     response['ACCT Alerts'] = this.body.acctAlerts.length
       ? this.body.acctAlerts.map(acctAlertResponse)
-      : `No ACCT information available for this person at the time of referral`
+      : `No ACCT information available for the person at the time of referral`
 
     return response
   }

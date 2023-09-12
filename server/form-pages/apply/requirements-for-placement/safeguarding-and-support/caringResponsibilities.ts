@@ -5,6 +5,7 @@ import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type CaringResponsibilitiesBody = YesOrNoWithDetail<'caringResponsibilities'>
 
@@ -29,7 +30,7 @@ export default class CaringResponsibilities implements TasklistPage {
 
   response() {
     return {
-      'Does this person have any caring responsibilities?': yesOrNoResponseWithDetail(
+      [anonymiseFormContent(this.questions.caringResponsibilities, this.application.person)]: yesOrNoResponseWithDetail(
         'caringResponsibilities',
         this.body,
       ),

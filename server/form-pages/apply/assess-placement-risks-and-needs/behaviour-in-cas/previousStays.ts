@@ -5,6 +5,7 @@ import { TemporaryAccommodationApplication as Application } from '../../../../@t
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesNoOrDontKnowResponse } from '../../../utils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type PreviousStaysBody = { previousStays: YesNoOrIDK }
 
@@ -31,7 +32,7 @@ export default class PreviousStays implements TasklistPage {
 
   response() {
     return {
-      'Has this person previously stayed in Community Accommodation Services (CAS)?': yesNoOrDontKnowResponse(
+      [anonymiseFormContent(this.questions.previousStays, this.application.person)]: yesNoOrDontKnowResponse(
         'previousStays',
         this.body,
       ),

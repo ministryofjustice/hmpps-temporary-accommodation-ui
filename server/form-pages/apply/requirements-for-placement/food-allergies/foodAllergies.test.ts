@@ -62,7 +62,7 @@ describe('FoodAllergies', () => {
 
       const page = new FoodAllergies(body, application)
       expect(page.response()).toEqual({
-        'Does this person have any food allergies or dietary requirements?': 'Response with optional detail',
+        'Does the person have any food allergies or dietary requirements?': 'Response with optional detail',
       })
       expect(yesNoOrDontKnowResponseWithDetail).toHaveBeenCalledWith('foodAllergies', body)
     })

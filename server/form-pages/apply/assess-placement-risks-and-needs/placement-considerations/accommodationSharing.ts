@@ -5,6 +5,7 @@ import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import { mapApiPersonRisksForUi } from '../../../../utils/utils'
 import TasklistPage from '../../../tasklistPage'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type AccommodationSharingBody = {
   accommodationSharing: string
@@ -39,15 +40,19 @@ export default class AccommodationSharing implements TasklistPage {
   }
 
   response() {
-    const accommodationSharingQuestion = 'Is this person suitable to share accommodation with others?'
-
     if (this.body.accommodationSharing === 'yes') {
       return {
-        [accommodationSharingQuestion]: `Yes - ${this.body.accommodationSharingYesDetail}`,
+        [anonymiseFormContent(
+          this.questions.accommodationSharing,
+          this.application.person,
+        )]: `Yes - ${this.body.accommodationSharingYesDetail}`,
       }
     }
     return {
-      [accommodationSharingQuestion]: `No - ${this.body.accommodationSharingNoDetail}`,
+      [anonymiseFormContent(
+        this.questions.accommodationSharing,
+        this.application.person,
+      )]: `No - ${this.body.accommodationSharingNoDetail}`,
     }
   }
 
@@ -75,7 +80,7 @@ export default class AccommodationSharing implements TasklistPage {
 
     if (this.body.accommodationSharing === 'no' && !this.body.accommodationSharingNoDetail) {
       errors.accommodationSharingNoDetail =
-        'You must provide details of why this person is unsuitable to share accommodation with others'
+        'You must provide details of why the person is unsuitable to share accommodation with others'
     }
 
     return errors

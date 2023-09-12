@@ -4,6 +4,7 @@ import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
 import { personName } from '../../../../utils/personUtils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 export const eligibilityReasons = {
   homelessFromCustody: 'Moving on as homeless from custody',
@@ -30,7 +31,7 @@ export default class EligibilityReason implements TasklistPage {
   }
 
   response() {
-    return { 'How is this person eligible for Temporary Accommodation (TA)?': eligibilityReasons[this.body.reason] }
+    return { [anonymiseFormContent(this.title, this.application.person)]: eligibilityReasons[this.body.reason] }
   }
 
   previous() {

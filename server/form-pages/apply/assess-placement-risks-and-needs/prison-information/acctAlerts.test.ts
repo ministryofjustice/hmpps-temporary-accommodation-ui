@@ -102,7 +102,7 @@ describe('AcctAlerts', () => {
       const page = new AcctAlerts({ acctAlerts: [] }, application)
 
       expect(page.response()).toEqual({
-        'ACCT Alerts': 'No ACCT information available for this person at the time of referral',
+        'ACCT Alerts': 'No ACCT information available for the person at the time of referral',
       })
     })
   })

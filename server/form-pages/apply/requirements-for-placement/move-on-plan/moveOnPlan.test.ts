@@ -47,7 +47,7 @@ describe('MoveOnPlan', () => {
       const page = new MoveOnPlan(body, application)
 
       expect(page.response()).toEqual({
-        'How will you prepare this person for move on after placement?': 'A plan',
+        'How will you prepare the person for move on after placement?': 'A plan',
       })
     })
   })

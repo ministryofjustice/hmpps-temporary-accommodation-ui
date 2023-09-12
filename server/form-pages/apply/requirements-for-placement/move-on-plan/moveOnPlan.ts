@@ -3,6 +3,7 @@ import type { TaskListErrors } from '@approved-premises/ui'
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type MoveOnPlanBody = { plan: string }
 @Page({ name: 'move-on-plan', bodyProperties: ['plan'] })
@@ -22,7 +23,7 @@ export default class MoveOnPlan implements TasklistPage {
 
   response() {
     return {
-      'How will you prepare this person for move on after placement?': this.body.plan,
+      [anonymiseFormContent(this.title, this.application.person)]: this.body.plan,
     }
   }
 

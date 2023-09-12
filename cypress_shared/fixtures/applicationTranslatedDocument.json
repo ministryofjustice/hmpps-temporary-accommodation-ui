@@ -42,7 +42,7 @@
           "id": "eligibility",
           "content": [
             {
-              "How is this person eligible for Temporary Accommodation (TA)?": "Moving on as homeless from an Approved Premises"
+              "How is the person eligible for Temporary Accommodation (TA)?": "Moving on as homeless from an Approved Premises"
             },
             { "Release date": "2 September 2123" },
             { "Accommodation required from date": "16 September 2123" }
@@ -141,13 +141,13 @@
           "title": "Placement considerations",
           "id": "placement-considerations",
           "content": [
-            { "Is this person suitable to share accommodation with others?": "Yes - Some detail" },
-            { "How you will support this person's placement?": "Support detail" },
+            { "Is the person suitable to share accommodation with others?": "Yes - Some detail" },
+            { "How you will support the person's placement?": "Support detail" },
             {
               "Are there any concerns or risks relating to anti-social behaviour?": "Yes - Anti-social behaviour concerns detail"
             },
             {
-              "Does this person have any current or previous issues with drug or alcohol misuse?": "Yes - Details of drug and alcohol misuse"
+              "Does the person have any current or previous issues with drug or alcohol misuse?": "Yes - Details of drug and alcohol misuse"
             },
             {
               "How will risk to children impact placement?": "Risk to children detail",
@@ -167,7 +167,7 @@
           "title": "Behaviour in CAS",
           "id": "behaviour-in-cas",
           "content": [
-            { "Has this person previously stayed in Community Accommodation Services (CAS)?": "Yes" },
+            { "Has the person previously stayed in Community Accommodation Services (CAS)?": "Yes" },
             {
               "Approved Premises (AP or CAS1)": "Approved Premises detail",
               "Temporary Accommodation (CAS3)": "Temporary Accommodation detail"
@@ -194,9 +194,9 @@
               "Other": "Other needs detail"
             },
             {
-              "Will this person require a property with specific attributes or adaptations?": "Yes - Adaptation requirements detail"
+              "Will the person require a property with specific attributes or adaptations?": "Yes - Adaptation requirements detail"
             },
-            { "Does this person have any religious or cultural needs?": "Yes - Religious needs detail" }
+            { "Does the person have any religious or cultural needs?": "Yes - Religious needs detail" }
           ]
         },
         {
@@ -206,20 +206,20 @@
             { "Do you have any concerns about safeguarding and/or vulnerability?": "Yes - Concerns A, B, and C" },
             { "Details of support in the community": "Community support details" },
             { "Details of local connections": "Local connection details" },
-            { "Does this person have any caring responsibilities?": "Yes - Caring responsibilities X, Y, and Z" }
+            { "Does the person have any caring responsibilities?": "Yes - Caring responsibilities X, Y, and Z" }
           ]
         },
         {
           "title": "Food allergies",
           "id": "food-allergies",
           "content": [
-            { "Does this person have any food allergies or dietary requirements?": "Yes - Allergic to X, Y, Z" }
+            { "Does the person have any food allergies or dietary requirements?": "Yes - Allergic to X, Y, Z" }
           ]
         },
         {
           "title": "Move on plan",
           "id": "move-on-plan",
-          "content": [{ "How will you prepare this person for move on after placement?": "A move on plan" }]
+          "content": [{ "How will you prepare the person for move on after placement?": "A move on plan" }]
         }
       ]
     },

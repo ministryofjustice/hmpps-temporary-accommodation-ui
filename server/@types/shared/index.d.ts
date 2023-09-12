@@ -132,6 +132,7 @@ export type { NonArrivalReason } from './models/NonArrivalReason';
 export type { OASysAssessmentId } from './models/OASysAssessmentId';
 export type { OASysAssessmentState } from './models/OASysAssessmentState';
 export type { OASysQuestion } from './models/OASysQuestion';
+export type { OASysRiskOfSeriousHarm } from './models/OASysRiskOfSeriousHarm';
 export type { OASysRiskToSelf } from './models/OASysRiskToSelf';
 export type { OASysSection } from './models/OASysSection';
 export type { OASysSections } from './models/OASysSections';
@@ -221,5 +222,6 @@ export type { UpdateTemporaryAccommodationApplication } from './models/UpdateTem
 export type { User } from './models/User';
 export type { UserQualification } from './models/UserQualification';
 export type { UserRolesAndQualifications } from './models/UserRolesAndQualifications';
+export type { UserSortField } from './models/UserSortField';
 export type { ValidationError } from './models/ValidationError';
 export type { WithdrawalReason } from './models/WithdrawalReason';

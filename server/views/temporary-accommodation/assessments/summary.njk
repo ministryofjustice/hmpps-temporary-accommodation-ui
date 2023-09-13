@@ -12,10 +12,10 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set name = personName(assessment.application.person, 'Limited access offender') %}
-{% set pageTitle = name + " referral summary - " + applicationName %}
+{% set pageTitle = "The person's referral summary - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
+{% set name = personName(assessment.application.person, 'Limited access offender') %}
 {% set breadCrumbTitle = name + " - Summary" %}
 
 {% block beforeContent %}

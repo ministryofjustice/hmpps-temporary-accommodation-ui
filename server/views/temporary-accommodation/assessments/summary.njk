@@ -13,7 +13,7 @@
 {% extends "../../partials/layout.njk" %}
 
 {% set name = personName(assessment.application.person, 'Limited access offender') %}
-{% set pageTitle = applicationName + " - " + name + " referral summary" %}
+{% set pageTitle = name + " referral summary - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% set breadCrumbTitle = name + " - Summary" %}

@@ -305,3 +305,8 @@ export type MessageContents =
       html: string
     }
   | string
+
+export type ApplicationSummaryData = {
+  isAbleToShare: boolean | null
+  releaseType: 'Rerelease' | 'Custody' | 'Approved Premises' | 'Bail accommodation and support' | null
+}

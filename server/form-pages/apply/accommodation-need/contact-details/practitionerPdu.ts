@@ -9,6 +9,8 @@ type PractitionerPduBody = { pdu: string }
 export default class PractitionerPdu implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = "What is the person's PDU?"
+
   constructor(
     readonly body: Partial<PractitionerPduBody>,
     readonly application: Application,

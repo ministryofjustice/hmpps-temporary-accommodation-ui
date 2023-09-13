@@ -14,6 +14,8 @@ type AccommodationRequiredFromDateBody = ObjectWithDateParts<'accommodationRequi
 export default class AccommodationRequiredFromDate implements TasklistPage {
   title = 'What date is accommodation required from?'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     private _body: Partial<AccommodationRequiredFromDateBody>,
     readonly application: Application,

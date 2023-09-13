@@ -6,6 +6,8 @@ import ContactDetails from '../../contactDetails'
 export default class BackupContact extends ContactDetails implements TasklistPage {
   title = 'Backup contact / senior probation officer details'
 
+  htmlDocumentTitle = this.title
+
   nextPageId = 'practitioner-pdu'
 
   previousPageId = 'probation-practitioner'

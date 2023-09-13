@@ -11,6 +11,8 @@ type OtherAccommodationOptionsBody = YesOrNoWithDetail<'otherOptions'>
 export default class OtherAccommodationOptions implements TasklistPage {
   title = 'Have other accommodation options been considered?'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<OtherAccommodationOptionsBody>,
     readonly application: Application,

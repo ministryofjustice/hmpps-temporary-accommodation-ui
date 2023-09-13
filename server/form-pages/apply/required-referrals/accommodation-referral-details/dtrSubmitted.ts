@@ -13,6 +13,8 @@ type DtrSubmittedBody = {
 export default class DtrSubmitted implements TasklistPage {
   title = 'Has the Duty to Refer (DTR) / National Offender Pathway (NOP) been submitted?'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<DtrSubmittedBody>,
     readonly application: Application,

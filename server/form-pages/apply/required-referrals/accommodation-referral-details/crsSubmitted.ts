@@ -14,6 +14,8 @@ type CrsSubmittedBody = {
 export default class CrsSubmitted implements TasklistPage {
   title = 'Has a referral to Commissioned Rehabilitative Services (CRS) been submitted?'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<CrsSubmittedBody>,
     readonly application: Application,

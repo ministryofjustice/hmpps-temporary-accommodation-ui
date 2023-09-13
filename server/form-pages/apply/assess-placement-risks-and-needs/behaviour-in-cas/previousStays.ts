@@ -10,7 +10,9 @@ type PreviousStaysBody = { previousStays: YesNoOrIDK }
 
 @Page({ name: 'previous-stays', bodyProperties: ['previousStays'] })
 export default class PreviousStays implements TasklistPage {
-  title: string
+  title = 'Behaviour in previous accommodation'
+
+  htmlDocumentTitle = this.title
 
   questions: {
     previousStays: string
@@ -21,8 +23,6 @@ export default class PreviousStays implements TasklistPage {
     readonly application: Application,
   ) {
     const name = personName(application.person)
-
-    this.title = 'Behaviour in previous accommodation'
 
     this.questions = {
       previousStays: `Has ${name} previously stayed in Community Accommodation Services (CAS)?`,

@@ -10,6 +10,8 @@ export default class Review implements TasklistPage {
 
   title = 'Check your answers'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     public body: { reviewed?: string },
     readonly application: TemporaryAccommodationApplication,

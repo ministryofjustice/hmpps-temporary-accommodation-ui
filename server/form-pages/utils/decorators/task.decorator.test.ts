@@ -5,6 +5,8 @@ import Task from './task.decorator'
 class PageBase implements TasklistPage {
   title: string
 
+  htmlDocumentTitle: string
+
   body: Record<string, unknown>
 
   previous() {

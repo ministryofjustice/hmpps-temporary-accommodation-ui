@@ -31,6 +31,8 @@ type PreviousStaysDetailsBody = {
 export default class PreviousStaysDetails implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = 'What type of accommodation did the person stay at?'
+
   constructor(
     readonly body: Partial<PreviousStaysDetailsBody>,
     readonly application: Application,

@@ -28,6 +28,8 @@ export const adjudicationResponse = (adjudication: Adjudication) => {
 export default class Adjudications implements TasklistPage {
   title = 'Adjudications'
 
+  htmlDocumentTitle = this.title
+
   importDate: string
 
   constructor(

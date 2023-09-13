@@ -5,8 +5,7 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set name = personName(assessment.application.person, 'Limited access offender') %}
-{% set pageTitle = applicationName + " - " + name + " referral" %}
+{% set pageTitle = "The person's referral - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -17,6 +16,7 @@
   {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
+{% set name = personName(assessment.application.person, 'Limited access offender') %}
 {% block content %}
   {% include "../../_messages.njk" %}
 

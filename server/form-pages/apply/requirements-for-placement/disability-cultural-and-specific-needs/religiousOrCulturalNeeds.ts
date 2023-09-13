@@ -15,6 +15,8 @@ type ReligiousOrCulturalNeedsBody = YesOrNoWithDetail<'religiousOrCulturalNeeds'
 export default class ReligiousOrCulturalNeeds implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = 'Does the person have any religious or cultural needs?'
+
   constructor(
     readonly body: Partial<ReligiousOrCulturalNeedsBody>,
     readonly application: Application,

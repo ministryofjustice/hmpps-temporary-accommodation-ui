@@ -14,6 +14,8 @@ type DtrDetailsBody = {
 export default class DtrDetails implements TasklistPage {
   title = 'Provide further details'
 
+  htmlDocumentTitle = this.title
+
   questions = {
     reference: 'DTR / NOP reference number',
     date: 'Date DTR / NOP was submitted',

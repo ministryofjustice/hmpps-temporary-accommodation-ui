@@ -27,6 +27,8 @@ type ApprovalsForSpecificRisksBody = {
 export default class ApprovalsForSpecificRisks implements TasklistPage {
   title = 'Approvals for specific risks'
 
+  htmlDocumentTitle = this.title
+
   questions = {
     approvals: 'Have your received approval for this referral?',
   }

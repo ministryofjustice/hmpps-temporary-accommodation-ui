@@ -19,6 +19,8 @@ type AccommodationSharingBody = {
 export default class AccommodationSharing implements TasklistPage {
   title = 'Accommodation sharing'
 
+  htmlDocumentTitle = this.title
+
   questions: {
     accommodationSharing: string
   }

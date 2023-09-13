@@ -13,6 +13,8 @@ type ConsentGivenBody = {
 export default class ConsentGiven implements TasklistPage {
   title = 'Has consent for Temporary Accommodation been given?'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<ConsentGivenBody>,
     readonly application: Application,

@@ -17,6 +17,8 @@ type CooperationBody = {
 export default class Cooperation implements TasklistPage {
   title = 'Cooperation'
 
+  htmlDocumentTitle = this.title
+
   questions: {
     support: string
   }

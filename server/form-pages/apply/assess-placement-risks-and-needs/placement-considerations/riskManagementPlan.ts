@@ -25,6 +25,8 @@ export default class RiskManagementPlan implements OasysPage {
 
   title = 'Risk management plan'
 
+  htmlDocumentTitle = this.title
+
   risks: PersonRisksUI
 
   oasysSuccess: boolean

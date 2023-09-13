@@ -9,6 +9,8 @@ type MoveOnPlanBody = { plan: string }
 export default class MoveOnPlan implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = 'How will you prepare the person for move on after placement?'
+
   constructor(
     readonly body: Partial<MoveOnPlanBody>,
     readonly application: Application,

@@ -19,6 +19,8 @@ type RoshLevelBody = {
 export default class RoshLevel implements TasklistPage {
   title = 'RoSH level'
 
+  htmlDocumentTitle = this.title
+
   risks: PersonRisksUI
 
   constructor(

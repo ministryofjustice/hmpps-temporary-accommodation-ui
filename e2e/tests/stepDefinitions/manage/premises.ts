@@ -131,6 +131,7 @@ Given('I edit the premises details', () => {
     cy.then(function _() {
       const updatedPremises = premisesFactory
         .forEnvironment(actingUserProbationRegion, this.pdus, this.localAuthorities, this.characteristics)
+        .active()
         .build({
           id: premises.id,
           name: premises.name,

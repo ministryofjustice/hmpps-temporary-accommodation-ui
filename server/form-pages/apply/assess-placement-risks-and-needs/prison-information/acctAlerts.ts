@@ -26,6 +26,8 @@ export const acctAlertResponse = (acctAlert: PersonAcctAlert) => {
 export default class AcctAlerts implements TasklistPage {
   title = 'ACCT'
 
+  htmlDocumentTitle = this.title
+
   importDate: string
 
   constructor(

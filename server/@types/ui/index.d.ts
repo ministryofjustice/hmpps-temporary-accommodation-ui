@@ -23,6 +23,7 @@ import { CallConfig } from '../../data/restClient'
 
 interface TasklistPage {
   body: Record<string, unknown>
+  htmlDocumentTitle: string
 }
 interface PersonService {}
 

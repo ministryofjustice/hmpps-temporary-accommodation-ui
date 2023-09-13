@@ -12,6 +12,8 @@ type AntiSocialBehaviourBody = YesOrNoWithDetail<'concerns'>
 export default class AntiSocialBehaviour implements TasklistPage {
   title = 'Anti-social behaviour'
 
+  htmlDocumentTitle = this.title
+
   questions = {
     concerns: 'Are there any concerns or risks relating to anti-social behaviour?',
   }

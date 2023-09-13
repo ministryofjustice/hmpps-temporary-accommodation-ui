@@ -7,6 +7,8 @@ import ContactDetails from './contactDetails'
 class ConcreteContactDetails extends ContactDetails implements TasklistPage {
   title = 'A title'
 
+  htmlDocumentTitle = this.title
+
   previousPageId = 'previous-page-id'
 
   nextPageId = 'next-page-id'

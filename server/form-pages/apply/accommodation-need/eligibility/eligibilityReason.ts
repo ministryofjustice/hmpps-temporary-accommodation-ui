@@ -19,6 +19,8 @@ type EligibilityReasonBody = { reason: EligibilityReasonsT }
 export default class EligibilityReason implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = 'How is the person eligible for Temporary Accommodation (TA)?'
+
   constructor(
     readonly body: Partial<EligibilityReasonBody>,
     readonly application: Application,

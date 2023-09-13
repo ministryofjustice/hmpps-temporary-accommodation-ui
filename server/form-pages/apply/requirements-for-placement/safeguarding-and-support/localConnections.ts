@@ -12,6 +12,8 @@ type LocalConnectionsBody = {
 export default class LocalConnections implements TasklistPage {
   title = 'Local connections'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<LocalConnectionsBody>,
     readonly application: Application,

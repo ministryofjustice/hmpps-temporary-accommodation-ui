@@ -64,6 +64,8 @@ type NeedsBody = {
 export default class Needs implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = 'Does the person have any of the following needs?'
+
   constructor(
     readonly body: Partial<NeedsBody>,
     readonly application: Application,

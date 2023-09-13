@@ -11,6 +11,8 @@ type AlternativePduBody = YesOrNoWithDetail<'alternativePdu'>
 export default class AlternativePdu implements TasklistPage {
   title = 'Is placement required in an alternative PDU?'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<AlternativePduBody>,
     readonly application: Application,

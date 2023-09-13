@@ -76,6 +76,8 @@ type AdditionalLicenceConditionsBody = {
 export default class AdditionalLicenceConditions implements TasklistPage {
   title = 'Additional licence conditions'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<AdditionalLicenceConditionsBody>,
     readonly application: Application,

@@ -15,6 +15,8 @@ type ReleaseDateBody = ObjectWithDateParts<'releaseDate'>
 export default class ReleaseDate implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = "What is the person's release date?"
+
   constructor(
     private _body: Partial<ReleaseDateBody>,
     readonly application: Application,

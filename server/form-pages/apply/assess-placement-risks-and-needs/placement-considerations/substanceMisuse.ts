@@ -13,6 +13,8 @@ type SubstanceMisuseBody = YesOrNoWithDetail<'substanceMisuse'>
 export default class SubstanceMisuse implements TasklistPage {
   title = 'Substance misuse'
 
+  htmlDocumentTitle = this.title
+
   questions: {
     substanceMisuse: string
   }

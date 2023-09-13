@@ -5,6 +5,8 @@ type ContactDetailsBody = { name: string; phone: string; email: string }
 export default abstract class ContactDetails {
   abstract title: string
 
+  abstract htmlDocumentTitle: string
+
   abstract previousPageId: string
 
   abstract nextPageId: string

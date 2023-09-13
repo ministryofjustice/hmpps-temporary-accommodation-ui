@@ -12,6 +12,8 @@ type FoodAllergiesBody = YesNoOrIDKWithDetail<'foodAllergies'>
 export default class FoodAllergies implements TasklistPage {
   title = 'Food allergies'
 
+  htmlDocumentTitle = this.title
+
   questions: {
     foodAllergies: string
   }

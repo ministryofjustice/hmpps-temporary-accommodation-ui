@@ -15,6 +15,8 @@ type PropertyAttributesOrAdaptationsBody = YesOrNoWithDetail<'propertyAttributes
 export default class PropertyAttributesOrAdaptations implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = 'Will the person require a property with specific attributes or adaptations?'
+
   constructor(
     readonly body: Partial<PropertyAttributesOrAdaptationsBody>,
     readonly application: Application,

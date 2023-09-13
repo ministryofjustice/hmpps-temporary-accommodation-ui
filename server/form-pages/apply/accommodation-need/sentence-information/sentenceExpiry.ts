@@ -9,14 +9,14 @@ type SentenceExpiryBody = ObjectWithDateParts<'sentenceExpiryDate'>
 
 @Page({ name: 'sentence-expiry', bodyProperties: dateBodyProperties('sentenceExpiryDate') })
 export default class SentenceExpiry implements TasklistPage {
-  title: string
+  title = 'Sentence expiry date'
+
+  htmlDocumentTitle = this.title
 
   constructor(
     private _body: Partial<SentenceExpiryBody>,
     readonly application: Application,
-  ) {
-    this.title = 'Sentence expiry date'
-  }
+  ) {}
 
   public set body(value: Partial<SentenceExpiryBody>) {
     this._body = {

@@ -13,6 +13,8 @@ export type OffendingSummaryBody = {
 export default class OffendingSummary implements TasklistPage {
   title: string
 
+  htmlDocumentTitle = "Provide a brief summary of the person's offending history"
+
   constructor(
     readonly body: Partial<OffendingSummaryBody>,
     readonly application: Application,

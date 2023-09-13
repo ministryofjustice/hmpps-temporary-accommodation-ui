@@ -12,6 +12,8 @@ type CaringResponsibilitiesBody = YesOrNoWithDetail<'caringResponsibilities'>
 export default class CaringResponsibilities implements TasklistPage {
   title = 'Caring responsibilities'
 
+  htmlDocumentTitle = this.title
+
   questions: {
     caringResponsibilities: string
   }

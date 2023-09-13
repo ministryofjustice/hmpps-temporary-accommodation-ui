@@ -12,6 +12,8 @@ type SupportInTheCommunityBody = {
 export default class SupportInTheCommunity implements TasklistPage {
   title = 'Support in the community'
 
+  htmlDocumentTitle = this.title
+
   constructor(
     readonly body: Partial<SupportInTheCommunityBody>,
     readonly application: Application,

@@ -24,14 +24,14 @@ const sentenceLengthComponentResponse = (value: string, singularLabel: string, p
 
 @Page({ name: 'sentence-length', bodyProperties: ['years', 'months', 'weeks', 'days'] })
 export default class SentenceLength implements TasklistPage {
-  title: string
+  title = 'What is the sentence length?'
+
+  htmlDocumentTitle = this.title
 
   constructor(
     readonly body: Partial<SentenceLengthBody>,
     readonly application: Application,
-  ) {
-    this.title = 'What is the sentence length?'
-  }
+  ) {}
 
   response() {
     const years = sentenceLengthComponentResponse(this.body.years, 'year', 'years')

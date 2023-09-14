@@ -5,6 +5,7 @@ import { acctAlertFactory, applicationFactory, personFactory } from '../../../..
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import { PageBodyPersonAcctAlert, mapAcctAlertsForPageBody } from '../../../utils'
 import AcctAlerts, { acctAlertResponse } from './acctAlerts'
+import { SanitisedError } from '../../../../sanitisedError'
 
 jest.mock('../../../../services/personService')
 jest.mock('../../../utils')
@@ -77,6 +78,24 @@ describe('AcctAlerts', () => {
 
       expect(getAcctAlertsMock).toHaveBeenCalledWith(callConfig, application.person.crn)
       expect(mapAcctAlertsForPageBody).toHaveBeenCalledWith(apiAcctAlerts)
+    })
+
+    it('sets the number of acctAlerts to 0 if none are found', async () => {
+      const err = <SanitisedError>{ data: { status: 404 } }
+      const getAcctAlertsMock = jest.fn().mockImplementation(() => {
+        throw err
+      })
+
+      const personService = createMock<PersonService>({
+        getAcctAlerts: getAcctAlertsMock,
+      })
+
+      const page = await AcctAlerts.initialize({}, application, callConfig, { personService })
+
+      expect(page.body).toEqual({ acctAlerts })
+
+      expect(getAcctAlertsMock).toHaveBeenCalledWith(callConfig, application.person.crn)
+      expect(mapAcctAlertsForPageBody).toHaveBeenCalledWith([])
     })
   })
 

@@ -5,6 +5,7 @@ import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type ReligiousOrCulturalNeedsBody = YesOrNoWithDetail<'religiousOrCulturalNeeds'>
 
@@ -26,7 +27,7 @@ export default class ReligiousOrCulturalNeeds implements TasklistPage {
 
   response() {
     return {
-      'Does this person have any religious or cultural needs?': yesOrNoResponseWithDetail(
+      [anonymiseFormContent(this.title, this.application.person)]: yesOrNoResponseWithDetail(
         'religiousOrCulturalNeeds',
         this.body,
       ),

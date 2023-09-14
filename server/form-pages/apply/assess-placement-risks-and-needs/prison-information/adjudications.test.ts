@@ -90,7 +90,7 @@ describe('Adjudications', () => {
       const page = new Adjudications({ adjudications: [] }, application)
 
       expect(page.response()).toEqual({
-        Adjudications: 'No adjudication information available for this person at the time of referral',
+        Adjudications: 'No adjudication information available for the person at the time of referral',
       })
     })
   })

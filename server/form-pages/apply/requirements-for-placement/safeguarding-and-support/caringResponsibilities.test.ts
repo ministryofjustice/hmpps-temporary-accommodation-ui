@@ -57,7 +57,7 @@ describe('CaringResponsibilities', () => {
 
       const page = new CaringResponsibilities(body, application)
       expect(page.response()).toEqual({
-        'Does this person have any caring responsibilities?': 'Response with optional detail',
+        'Does the person have any caring responsibilities?': 'Response with optional detail',
       })
       expect(yesOrNoResponseWithDetail).toHaveBeenCalledWith('caringResponsibilities', body)
     })

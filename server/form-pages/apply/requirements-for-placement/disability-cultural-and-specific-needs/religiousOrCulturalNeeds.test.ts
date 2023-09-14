@@ -57,7 +57,7 @@ describe('ReligiousOrCulturalNeeds', () => {
 
       const page = new ReligiousOrCulturalNeeds(body, application)
       expect(page.response()).toEqual({
-        'Does this person have any religious or cultural needs?': 'Response with optional detail',
+        'Does the person have any religious or cultural needs?': 'Response with optional detail',
       })
       expect(yesOrNoResponseWithDetail).toHaveBeenCalledWith('religiousOrCulturalNeeds', body)
     })

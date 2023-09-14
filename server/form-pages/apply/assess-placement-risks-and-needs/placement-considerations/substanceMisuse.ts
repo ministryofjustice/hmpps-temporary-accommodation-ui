@@ -6,6 +6,7 @@ import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesOrNoResponseWithDetail } from '../../../utils'
 import { mapApiPersonRisksForUi } from '../../../../utils/utils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type SubstanceMisuseBody = YesOrNoWithDetail<'substanceMisuse'>
 
@@ -36,7 +37,7 @@ export default class SubstanceMisuse implements TasklistPage {
 
   response() {
     return {
-      'Does this person have any current or previous issues with drug or alcohol misuse?': yesOrNoResponseWithDetail(
+      [anonymiseFormContent(this.questions.substanceMisuse, this.application.person)]: yesOrNoResponseWithDetail(
         'substanceMisuse',
         this.body,
       ),

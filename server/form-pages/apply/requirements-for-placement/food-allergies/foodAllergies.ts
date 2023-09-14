@@ -5,6 +5,7 @@ import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { yesNoOrDontKnowResponseWithDetail } from '../../../utils'
+import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 type FoodAllergiesBody = YesNoOrIDKWithDetail<'foodAllergies'>
 
@@ -29,7 +30,7 @@ export default class FoodAllergies implements TasklistPage {
 
   response() {
     return {
-      'Does this person have any food allergies or dietary requirements?': yesNoOrDontKnowResponseWithDetail(
+      [anonymiseFormContent(this.questions.foodAllergies, this.application.person)]: yesNoOrDontKnowResponseWithDetail(
         'foodAllergies',
         this.body,
       ),

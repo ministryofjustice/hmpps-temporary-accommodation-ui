@@ -26,7 +26,9 @@ const isApplicableTier = (sex: string, tier: string): boolean => {
   return applicableTiers.includes(tier)
 }
 
-const personName = (person: Person, fallback: string = 'the person') => {
+const personNameFallback = 'the person'
+
+const personName = (person: Person, fallback: string = personNameFallback) => {
   if (isFullPerson(person)) {
     return person.name
   }
@@ -37,4 +39,4 @@ const isFullPerson = (person: Person): person is FullPerson => {
   return person.type === 'FullPerson'
 }
 
-export { isApplicableTier, isFullPerson, personName, statusTag, tierBadge }
+export { isApplicableTier, isFullPerson, personName, personNameFallback, statusTag, tierBadge }

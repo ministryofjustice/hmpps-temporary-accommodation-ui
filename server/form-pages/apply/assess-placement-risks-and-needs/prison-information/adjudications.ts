@@ -65,7 +65,7 @@ export default class Adjudications implements TasklistPage {
 
     response.Adjudications = this.body.adjudications.length
       ? this.body.adjudications.map(adjudicationResponse)
-      : `No adjudication information available for this person at the time of referral`
+      : `No adjudication information available for the person at the time of referral`
 
     return response
   }

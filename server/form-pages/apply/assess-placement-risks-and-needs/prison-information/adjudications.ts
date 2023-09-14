@@ -43,7 +43,15 @@ export default class Adjudications implements TasklistPage {
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {
-    const adjudications = await dataServices.personService.getAdjudications(callConfig, application.person.crn)
+    let adjudications: Adjudication[] = []
+
+    try {
+      adjudications = await dataServices.personService.getAdjudications(callConfig, application.person.crn)
+    } catch (e) {
+      if (e?.data?.status !== 404) {
+        throw e
+      }
+    }
 
     const page = new Adjudications({ adjudications: mapAdjudicationsForPageBody(adjudications) }, application)
 

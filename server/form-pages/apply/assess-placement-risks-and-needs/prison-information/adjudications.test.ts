@@ -5,6 +5,7 @@ import { adjudicationFactory, applicationFactory, personFactory } from '../../..
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import { PageBodyAdjudication, mapAdjudicationsForPageBody } from '../../../utils'
 import Adjudications, { adjudicationResponse } from './adjudications'
+import { SanitisedError } from '../../../../sanitisedError'
 
 jest.mock('../../../../services/personService')
 jest.mock('../../../utils')
@@ -65,6 +66,24 @@ describe('Adjudications', () => {
 
       expect(getAdjudicationsMock).toHaveBeenCalledWith(callConfig, application.person.crn)
       expect(mapAdjudicationsForPageBody).toHaveBeenCalledWith(apiAdjudications)
+    })
+
+    it('sets the number of adjudications to 0 if none are found', async () => {
+      const err = <SanitisedError>{ data: { status: 404 } }
+      const getAdjudicationsMock = jest.fn().mockImplementation(() => {
+        throw err
+      })
+
+      const personService = createMock<PersonService>({
+        getAdjudications: getAdjudicationsMock,
+      })
+
+      const page = await Adjudications.initialize({}, application, callConfig, { personService })
+
+      expect(page.body).toEqual({ adjudications })
+
+      expect(getAdjudicationsMock).toHaveBeenCalledWith(callConfig, application.person.crn)
+      expect(mapAdjudicationsForPageBody).toHaveBeenCalledWith([])
     })
   })
 

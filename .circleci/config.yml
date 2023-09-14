@@ -46,7 +46,7 @@ jobs:
   e2e_environment_test:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
-      - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      - image: cypress/browsers:node-18.16.1-chrome-114.0.5735.133-1-ff-114.0.2-edge-114.0.1823.51-1
     parameters:
       environment:
         type: string
@@ -58,7 +58,7 @@ jobs:
           command: apt-get install xz-utils
       - run:
           name: Update npm
-          command: 'npm install -g npm@9.8.1'
+          command: 'npm install -g npm@latest'
       - node/install-packages
       - run:
           name: E2E Check - << parameters.environment >>

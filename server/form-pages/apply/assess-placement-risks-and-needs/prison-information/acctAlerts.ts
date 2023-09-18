@@ -41,7 +41,16 @@ export default class AcctAlerts implements TasklistPage {
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {
-    const acctAlerts = await dataServices.personService.getAcctAlerts(callConfig, application.person.crn)
+    let acctAlerts: PersonAcctAlert[] = []
+
+    try {
+      acctAlerts = await dataServices.personService.getAcctAlerts(callConfig, application.person.crn)
+    } catch (e) {
+      if (e?.data?.status !== 404) {
+        throw e
+      }
+    }
+
     const page = new AcctAlerts({ acctAlerts: mapAcctAlertsForPageBody(acctAlerts) }, application)
 
     page.importDate = DateFormats.dateObjToIsoDate(new Date())

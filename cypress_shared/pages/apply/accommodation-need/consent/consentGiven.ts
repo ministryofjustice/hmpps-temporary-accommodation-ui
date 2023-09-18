@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class ConsentGivenPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Has consent for Temporary Accommodation been given?',
+      'Has consent for Transitional Accommodation been given?',
       application,
       'consent',
       'consent-given',

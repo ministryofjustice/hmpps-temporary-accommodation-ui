@@ -6,7 +6,7 @@ import { personName } from '../../../../../server/utils/personUtils'
 export default class EligibilityReasonPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `How is ${personName(application.person)} eligible for Temporary Accommodation (TA)?`,
+      `How is ${personName(application.person)} eligible for Transitional Accommodation (TA)?`,
       application,
       'eligibility',
       'eligibility-reason',

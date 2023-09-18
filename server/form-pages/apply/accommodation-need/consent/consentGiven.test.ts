@@ -27,7 +27,7 @@ describe('ConsentGiven', () => {
     it('returns an error if the consent given field is not populated', () => {
       const page = new ConsentGiven({ ...body, consentGiven: undefined }, application)
       expect(page.errors()).toEqual({
-        consentGiven: 'You must specify if consent for Temporary Accommodation has been given',
+        consentGiven: 'You must specify if consent for Transitional Accommodation has been given',
       })
     })
   })
@@ -36,7 +36,7 @@ describe('ConsentGiven', () => {
     it('returns a translated version of the response', () => {
       const page = new ConsentGiven(body, application)
       expect(page.response()).toEqual({
-        'Has consent for Temporary Accommodation been given?': 'Yes',
+        'Has consent for Transitional Accommodation been given?': 'Yes',
       })
     })
   })

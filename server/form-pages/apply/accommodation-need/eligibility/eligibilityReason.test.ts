@@ -54,7 +54,7 @@ describe('EligibilityReason', () => {
       const page = new EligibilityReason(body, application)
 
       expect(page.response()).toEqual({
-        'How is the person eligible for Temporary Accommodation (TA)?':
+        'How is the person eligible for Transitional Accommodation (TA)?':
           'Moving on as homeless from an Approved Premises',
       })
     })

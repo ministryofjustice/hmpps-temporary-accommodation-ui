@@ -4,7 +4,7 @@ import paths from '../../../server/paths/apply'
 
 export default class TaskListPage extends Page {
   constructor(private readonly inProgressApplication: Application) {
-    super('Make a referral for Temporary Accommodation')
+    super('Make a referral for Transitional Accommodation')
   }
 
   static visit(inProgressApplication: Application): TaskListPage {

@@ -50,7 +50,7 @@
         {% set bookingWithoutReferralGuidance %}
           {% set detailsHtml %}
             <p class="govuk-body">Choosing this option will impact the management information (MI) data for your region. Bookings will not be associated with a specific referral.</p>
-            <p class="govuk-body">This option should only be used where a referral could not be submitted through the Temporary Accommodation service. For example, in Wales where the referral process is different.</p>
+            <p class="govuk-body">This option should only be used where a referral could not be submitted through the Transitional Accommodation service. For example, in Wales where the referral process is different.</p>
           {% endset %}
 
           {{ govukDetails({
@@ -60,10 +60,10 @@
         {% endset %}
         
         {% if applyDisabled %}
-          <p class="govuk-body">Book this bedspace for a person who has been referred to Temporary Accommodation (formerly CAS3) through nDelius.</p>
+          <p class="govuk-body">Book this bedspace for a person who has been referred to Transitional Accommodation (formerly CAS3) through nDelius.</p>
 
           <h2 class="govuk-heading-m">Digital referrals</h1>
-          <p class="govuk-body">We are working on creating a digital referral for the Temporary Accommodation service. Is it not currently available in your region.</p>
+          <p class="govuk-body">We are working on creating a digital referral for the Transitional Accommodation service. Is it not currently available in your region.</p>
           <p class="govuk-body">In the future you will be able to link this booking to a digital referral.</p>
 
           <input type="hidden" name="assessmentId" value="{{ forceAssessmentId }}"/>
@@ -72,7 +72,7 @@
           <p class="govuk-body">If this is expected you can continue to book this bedspace without linking a referral.</p>
 
           <h2 class="govuk-heading-m">No digital referrals found</h1>
-          <p class="govuk-body">If a referral has been submitted through the Temporary Accommodation service check the list of <a class="govuk-link" href="{{ paths.assessments.index({}) }}">submitted referrals</a>.</p>
+          <p class="govuk-body">If a referral has been submitted through the Transitional Accommodation service check the list of <a class="govuk-link" href="{{ paths.assessments.index({}) }}">submitted referrals</a>.</p>
           <p class="govuk-body">Referrals must be marked as ready to place before a placement is booked.</p>
           
           <input type="hidden" name="assessmentId" value="{{ forceAssessmentId }}"/>

@@ -1,0 +1,30 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "NOMS number missing from NDelius - " + applicationName %}
+
+{% block beforeContent %}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.applications.start()
+  }) }}
+
+{% endblock%}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">NOMS number missing from NDelius</h1>
+      <p class="govuk-body">The person’s NOMS number is not on NDelius. We are unable to import the person’s index offence or adjudications and ACCT information from NOMIS.</p>
+      <p class="govuk-body">Check the person’s NOMS number on NOMIS and add it to their NDelius record.</p>
+      <p class="govuk-body">Once their NOMS number has been added you will need to start a new referral.</p>
+        <p>
+          <a class="govuk-link" href="{{ paths.applications.index() }}">Return to home page</a>
+        </p>
+    </div>
+  </div>
+
+{% endblock %}

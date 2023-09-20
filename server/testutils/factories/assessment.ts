@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 import type { TemporaryAccommodationAssessment as Assessment } from '@approved-premises/api'
 
+import summaryData from '../../../cypress_shared/fixtures/summaryData.json'
 import { DateFormats } from '../../utils/dateUtils'
 import { fakeObject } from '../utils'
 import applicationFactory from './application'
@@ -27,7 +28,7 @@ class AssessmentFactory extends Factory<Assessment> {
 export default AssessmentFactory.define(() => ({
   id: faker.string.uuid(),
   application: applicationFactory.withReleaseDate().build(),
-  summaryData: fakeObject(),
+  summaryData,
   allocatedToStaffMemberId: faker.string.uuid(),
   schemaVersion: faker.string.uuid(),
   outdatedSchema: false,

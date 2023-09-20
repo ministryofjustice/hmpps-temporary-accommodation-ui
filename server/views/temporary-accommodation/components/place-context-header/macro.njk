@@ -21,6 +21,12 @@
         {% if placeContext.assessment.application.arrivalDate %}
           <div>Accommodation required from: {{ formatDate(placeContext.assessment.application.arrivalDate, {format: 'short'}) }}</div>
         {% endif %}
+        {% if placeContext.assessment.summaryData.isAbleToShare === true %}
+          <div>Suitable to share: Yes</div>
+        {% endif %}
+        {% if placeContext.assessment.summaryData.isAbleToShare === false %}
+          <div>Suitable to share: No</div>
+        {% endif %}
       </div>
       <a class="govuk-link" href="{{ addPlaceContext(paths.assessments.summary({ id: placeContext.assessment.id })) }}" rel="noreferrer noopener" target="_blank">View referral summary (opens in new tab)</a>
     </div>

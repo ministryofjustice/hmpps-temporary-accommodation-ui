@@ -11,7 +11,7 @@ type ConsentGivenBody = {
 
 @Page({ name: 'consent-given', bodyProperties: ['consentGiven'] })
 export default class ConsentGiven implements TasklistPage {
-  title = 'Has consent for Temporary Accommodation been given?'
+  title = 'Has consent for Transitional Accommodation been given?'
 
   htmlDocumentTitle = this.title
 
@@ -36,7 +36,7 @@ export default class ConsentGiven implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.consentGiven) {
-      errors.consentGiven = 'You must specify if consent for Temporary Accommodation has been given'
+      errors.consentGiven = 'You must specify if consent for Transitional Accommodation has been given'
     }
 
     return errors

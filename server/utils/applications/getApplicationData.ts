@@ -5,6 +5,7 @@ import {
 } from '../../@types/shared'
 import { arrivalDateFromApplication } from '../../form-pages/utils'
 import getSummaryDataFromApplication from './getSummaryDataFromApplication'
+import { isDutyToReferSubmittedFromApplication } from './reportDataFromApplication'
 
 export const getApplicationUpdateData = (application: Application): UpdateApplication => {
   return {
@@ -19,5 +20,6 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     type: 'CAS3',
     arrivalDate: arrivalDateFromApplication(application),
     summaryData: getSummaryDataFromApplication(application),
+    isDutyToReferSubmitted: isDutyToReferSubmittedFromApplication(application),
   }
 }

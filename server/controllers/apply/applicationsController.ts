@@ -58,19 +58,28 @@ export default class ApplicationsController {
       if (crnArr.length) {
         const crn = crnArr[0]
         const person = await this.personService.findByCrn(callConfig, crn)
-        const offences = await this.personService.getOffences(callConfig, crn)
 
-        const offenceId = offences.length === 1 ? offences[0].offenceId : null
+        try {
+          const offences = await this.personService.getOffences(callConfig, crn)
 
-        return res.render(`applications/people/confirm`, {
-          person,
-          date: DateFormats.dateObjtoUIDate(new Date()),
-          crn,
-          offenceId,
-          errors,
-          errorSummary,
-          ...userInput,
-        })
+          const offenceId = offences.length === 1 ? offences[0].offenceId : null
+
+          return res.render(`applications/people/confirm`, {
+            person,
+            date: DateFormats.dateObjtoUIDate(new Date()),
+            crn,
+            offenceId,
+            errors,
+            errorSummary,
+            ...userInput,
+          })
+        } catch (e) {
+          if (e?.data?.status === 404) {
+            return res.render('applications/people/missingNoms')
+          }
+
+          throw e
+        }
       }
 
       return res.render('applications/new', {

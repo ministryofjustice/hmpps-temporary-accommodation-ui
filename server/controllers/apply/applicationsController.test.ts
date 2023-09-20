@@ -14,6 +14,7 @@ import paths from '../../paths/apply'
 import { firstPageOfApplicationJourney, getResponses } from '../../utils/applicationUtils'
 import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
+import { SanitisedError } from '../../sanitisedError'
 
 jest.mock('../../utils/validation')
 jest.mock('../../utils/applicationUtils')
@@ -131,6 +132,20 @@ describe('applicationsController', () => {
         })
         personService.findByCrn.mockResolvedValue(person)
         personService.getOffences.mockResolvedValue([offence])
+      })
+
+      describe('if we fail to fetch offences', () => {
+        it('should render guidance on missing NOMS number', async () => {
+          const err = <SanitisedError>{ data: { status: 404 } }
+          personService.getOffences.mockImplementation(() => {
+            throw err
+          })
+          const requestHandler = applicationsController.new()
+
+          await requestHandler(request, response, next)
+
+          expect(response.render).toHaveBeenCalledWith('applications/people/missingNoms')
+        })
       })
 
       describe('if an error has not been sent to the flash', () => {

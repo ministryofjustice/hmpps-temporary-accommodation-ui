@@ -53,6 +53,7 @@ export default ApplicationFactory.define(() => ({
   submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
   data: {},
   document: applicationTranslatedDocument,
+  offenceId: faker.string.uuid(),
   outdatedSchema: faker.datatype.boolean(),
   risks: risksFactory.build(),
   status: 'inProgress' as const,

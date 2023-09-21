@@ -39,6 +39,7 @@ export default class PlaceContextHeaderComponent extends Component {
         'contain',
         `Accommodation required from: ${DateFormats.isoDateToUIDate(application.arrivalDate, { format: 'short' })}`,
       )
+      cy.root().should('contain', 'Suitable to share: Yes')
     })
   }
 }

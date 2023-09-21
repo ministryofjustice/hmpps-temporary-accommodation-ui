@@ -6,7 +6,7 @@ import Page from '../page'
 
 export default class ListPage extends Page {
   constructor(private readonly inProgressApplications: Array<Application>) {
-    super('Transitional Accommodation (TA) referrals')
+    super('Transitional Accommodation (CAS3) referrals')
   }
 
   static visit(inProgressApplications: Array<Application>): ListPage {

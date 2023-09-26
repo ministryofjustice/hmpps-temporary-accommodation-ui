@@ -33,6 +33,8 @@ export default class RiskManagementPlan implements OasysPage {
 
   latestVersion = '2'
 
+  // test
+
   constructor(readonly body: Partial<RiskManagementPlanBody>) {}
 
   static async initialize(

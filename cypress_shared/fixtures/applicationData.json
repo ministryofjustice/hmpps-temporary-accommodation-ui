@@ -215,7 +215,7 @@
       "accommodationTypes": ["cas1", "cas3"],
       "cas1Detail": "Approved Premises detail",
       "cas2Detail": "",
-      "cas3Detail": "Transitional Accommodation detail"
+      "cas3Detail": "Transitional Accommodation (CAS3) detail"
     }
   },
   "placement-location": {

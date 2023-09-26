@@ -42,7 +42,7 @@
           "id": "eligibility",
           "content": [
             {
-              "How is the person eligible for Transitional Accommodation (TA)?": "Moving on as homeless from an Approved Premises"
+              "How is the person eligible for Transitional Accommodation (CAS3)?": "Moving on as homeless from an Approved Premises"
             },
             { "Release date": "2 September 2123" },
             { "Accommodation required from date": "16 September 2123" }
@@ -51,7 +51,7 @@
         {
           "title": "Consent",
           "id": "consent",
-          "content": [{ "Has consent for Transitional Accommodation been given?": "Yes" }]
+          "content": [{ "Has consent for Transitional Accommodation (CAS3) been given?": "Yes" }]
         }
       ]
     },
@@ -170,7 +170,7 @@
             { "Has the person previously stayed in Community Accommodation Services (CAS)?": "Yes" },
             {
               "Approved Premises (AP or CAS1)": "Approved Premises detail",
-              "Transitional Accommodation (CAS3)": "Transitional Accommodation detail"
+              "Transitional Accommodation (CAS3)": "Transitional Accommodation (CAS3) detail"
             }
           ]
         }

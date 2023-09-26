@@ -4,7 +4,7 @@
 
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = "Make a referral for Transitional Accommodation - " + applicationName %}
+{% set pageTitle = "Make a referral for Transitional Accommodation (CAS3) - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -21,9 +21,9 @@
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.applications.new() }}" method="get">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        <h1 class="govuk-heading-l">Make a referral for Transitional Accommodation</h1>
+        <h1 class="govuk-heading-l">Make a referral for Transitional Accommodation (CAS3)</h1>
 
-        <p class="govuk-body">Transitional Accommodation (TA) is for people on probation who are at risk of homelessness on their first night of release. </p>
+        <p class="govuk-body">Transitional Accommodation (CAS3) is for people on probation who are at risk of homelessness on their first night of release. </p>
 
         <p class="govuk-body">This includes release from prison, an Approved Premises, or Bail Accommodation and Support Services.</p>
 

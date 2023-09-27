@@ -26,6 +26,7 @@ describe('getApplicationSubmissionData', () => {
         releaseType: 'Approved Premises',
       },
       isDutyToReferSubmitted: true,
+      dutyToReferSubmissionDate: '2022-04-12',
     })
   })
 })

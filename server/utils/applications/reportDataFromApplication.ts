@@ -15,4 +15,20 @@ const isDutyToReferSubmittedFromApplication = (application: Application): boolea
   return true
 }
 
-export { isDutyToReferSubmittedFromApplication }
+const dutyToReferSubmissionDateFromApplication = (application: Application): string => {
+  if (!isDutyToReferSubmittedFromApplication(application)) {
+    return ''
+  }
+
+  const dutyToReferSubmissionDate: string = (application.data as Record<string, unknown>)?.[
+    'accommodation-referral-details'
+  ]?.['dtr-details']?.date
+
+  if (!dutyToReferSubmissionDate) {
+    throw new SessionDataError('No duty to refer submitted date')
+  }
+
+  return dutyToReferSubmissionDate
+}
+
+export { dutyToReferSubmissionDateFromApplication, isDutyToReferSubmittedFromApplication }

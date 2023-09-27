@@ -1,3 +1,4 @@
+import { eligibilityReasons } from '../../form-pages/apply/accommodation-need/eligibility/eligibilityReason'
 import { TemporaryAccommodationApplication as Application } from '../../@types/shared'
 import { SessionDataError } from '../errors'
 
@@ -45,8 +46,24 @@ const needsAccessiblePropertyFromApplication = (application: Application): boole
   return true
 }
 
+const isApplicationEligibleFromApplication = (application: Application): boolean => {
+  const eligibilityReason: string = (application.data as Record<string, unknown>)?.eligibility?.['eligibility-reason']
+    ?.reason
+
+  if (!eligibilityReason) {
+    throw new SessionDataError('No application eligibility data')
+  }
+
+  if (Object.keys(eligibilityReasons).includes(eligibilityReason)) {
+    return true
+  }
+
+  return false
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
+  isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
 }

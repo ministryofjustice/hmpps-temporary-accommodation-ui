@@ -1,5 +1,6 @@
 import {
   dutyToReferSubmissionDateFromApplication,
+  isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
 } from './reportDataFromApplication'
@@ -86,6 +87,31 @@ describe('reportDataFromApplication', () => {
 
       expect(() => needsAccessiblePropertyFromApplication(application)).toThrow(
         new SessionDataError('No accessible property data'),
+      )
+    })
+  })
+
+  describe('isApplicationEligibleFromApplication', () => {
+    it('returns whether the application is eligible for CAS3 from the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          eligibility: {
+            'eligibility-reason': { reason: 'homelessFromCustody' },
+          },
+        },
+      })
+      expect(isApplicationEligibleFromApplication(application)).toEqual(true)
+    })
+
+    it('throws an error when the eligibility data is not present', () => {
+      const application = applicationFactory.build({
+        data: {
+          eligibility: {},
+        },
+      })
+
+      expect(() => isApplicationEligibleFromApplication(application)).toThrow(
+        new SessionDataError('No application eligibility data'),
       )
     })
   })

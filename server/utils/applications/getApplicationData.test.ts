@@ -28,6 +28,7 @@ describe('getApplicationSubmissionData', () => {
       isDutyToReferSubmitted: true,
       dutyToReferSubmissionDate: '2022-04-12',
       needsAccessibleProperty: true,
+      isApplicationEligible: true,
     })
   })
 })

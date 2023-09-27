@@ -31,4 +31,22 @@ const dutyToReferSubmissionDateFromApplication = (application: Application): str
   return dutyToReferSubmissionDate
 }
 
-export { dutyToReferSubmissionDateFromApplication, isDutyToReferSubmittedFromApplication }
+const needsAccessiblePropertyFromApplication = (application: Application): boolean => {
+  const needsAccessibleProperty: string = (application.data as Record<string, unknown>)?.[
+    'disability-cultural-and-specific-needs'
+  ]?.['property-attributes-or-adaptations']?.propertyAttributesOrAdaptations
+
+  if (!needsAccessibleProperty) {
+    throw new SessionDataError('No accessible property data')
+  }
+
+  if (needsAccessibleProperty === 'no') return false
+
+  return true
+}
+
+export {
+  dutyToReferSubmissionDateFromApplication,
+  isDutyToReferSubmittedFromApplication,
+  needsAccessiblePropertyFromApplication,
+}

@@ -8,6 +8,7 @@ import getSummaryDataFromApplication from './getSummaryDataFromApplication'
 import {
   dutyToReferSubmissionDateFromApplication,
   isDutyToReferSubmittedFromApplication,
+  needsAccessiblePropertyFromApplication,
 } from './reportDataFromApplication'
 
 export const getApplicationUpdateData = (application: Application): UpdateApplication => {
@@ -25,5 +26,6 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     summaryData: getSummaryDataFromApplication(application),
     isDutyToReferSubmitted: isDutyToReferSubmittedFromApplication(application),
     dutyToReferSubmissionDate: dutyToReferSubmissionDateFromApplication(application),
+    needsAccessibleProperty: needsAccessiblePropertyFromApplication(application),
   }
 }

@@ -74,6 +74,8 @@ generic-service:
     ark-nps-hmcts-ttp3: "194.33.193.0/25"
     ark-nps-hmcts-ttp4: "194.33.196.0/25"
     ark-nps-hmcts-ttp5: "194.33.197.0/25"
+    moj-official-ark-c-expo-e: "51.149.249.0/29"
+    moj-official-ark-f-expo-e: "51.149.249.32/29"
 
 generic-prometheus-alerts:
   targetApplication: hmpps-temporary-accommodation-ui

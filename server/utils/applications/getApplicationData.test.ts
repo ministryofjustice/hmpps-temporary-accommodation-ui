@@ -25,6 +25,10 @@ describe('getApplicationSubmissionData', () => {
         isAbleToShare: true,
         releaseType: 'Approved Premises',
       },
+      isDutyToReferSubmitted: true,
+      dutyToReferSubmissionDate: '2022-04-12',
+      needsAccessibleProperty: true,
+      isApplicationEligible: true,
     })
   })
 })

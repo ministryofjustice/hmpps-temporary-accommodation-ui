@@ -9,8 +9,6 @@ export type OffendingSummaryBody = {
   summary: string
 }
 
-export const offenceIdKey = 'Offence ID'
-
 @Page({ name: 'offending-summary', bodyProperties: ['summary'] })
 export default class OffendingSummary implements TasklistPage {
   title: string
@@ -25,10 +23,7 @@ export default class OffendingSummary implements TasklistPage {
   }
 
   response() {
-    return {
-      [offenceIdKey]: this.application.offenceId,
-      'Summary of offending history': this.body.summary,
-    }
+    return { 'Summary of offending history': this.body.summary }
   }
 
   previous() {

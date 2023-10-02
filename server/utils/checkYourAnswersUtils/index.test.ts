@@ -24,11 +24,6 @@ describe('checkYourAnswersUtils', () => {
   })
 
   describe('getTaskResponsesAsSummaryListItems', () => {
-    beforeEach(() => {
-      ;(formatLines as jest.Mock).mockReset()
-      ;(formatLines as jest.Mock).mockImplementation((value: string) => `Formatted "${value}"`)
-    })
-
     it('returns the task responses as Summary List items and adds the actions object', () => {
       const application = applicationFactory.build()
       ;(forPagesInTask as jest.MockedFunction<typeof forPagesInTask>).mockImplementation((_1, _2, callback) => {
@@ -40,6 +35,7 @@ describe('checkYourAnswersUtils', () => {
 
         callback(page, 'some-page')
       })
+      ;(formatLines as jest.Mock).mockImplementation((value: string) => `Formatted "${value}"`)
 
       expect(
         getTaskResponsesAsSummaryListItems(
@@ -67,39 +63,6 @@ describe('checkYourAnswersUtils', () => {
       ])
 
       expect(formatLines).toHaveBeenCalledWith('An answer')
-    })
-
-    describe('when the item is offence ID', () => {
-      it('returns the task response as a Summary List item without the actions object', () => {
-        const application = applicationFactory.build()
-        ;(forPagesInTask as jest.MockedFunction<typeof forPagesInTask>).mockImplementation((_1, _2, callback) => {
-          const page = createMock<TasklistPage>()
-
-          page.response.mockReturnValue({
-            'Offence ID': '1234455',
-          })
-
-          callback(page, 'some-page')
-        })
-
-        expect(
-          getTaskResponsesAsSummaryListItems(
-            { id: 'some-task', title: 'Some task', actionText: 'Complete some task', pages: {} },
-            application,
-          ),
-        ).toEqual([
-          {
-            key: {
-              text: 'Offence ID',
-            },
-            value: {
-              html: 'Formatted "1234455"',
-            },
-          },
-        ])
-
-        expect(formatLines).toHaveBeenCalledWith('1234455')
-      })
     })
   })
 })

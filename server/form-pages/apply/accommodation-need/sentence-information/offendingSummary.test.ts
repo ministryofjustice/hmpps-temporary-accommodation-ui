@@ -47,7 +47,6 @@ describe('OffendingSummary', () => {
       const page = new OffendingSummary(body, application)
 
       expect(page.response()).toEqual({
-        'Offence ID': application.offenceId,
         'Summary of offending history': 'Offending summary',
       })
     })

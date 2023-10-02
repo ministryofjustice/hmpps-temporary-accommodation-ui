@@ -7,6 +7,7 @@ import reviewSections from '../reviewUtils'
 import { formatLines } from '../viewUtils'
 import { embeddedSummaryListItem } from './embeddedSummaryListItem'
 import { forPagesInTask } from '../applicationUtils'
+import { offenceIdKey } from '../../form-pages/apply/accommodation-need/sentence-information/offendingSummary'
 
 const checkYourAnswersSections = (application: TemporaryAccommodationApplication) =>
   reviewSections(application, getTaskResponsesAsSummaryListItems)
@@ -40,20 +41,22 @@ const summaryListItemForResponse = (
   pageName: string,
   application: TemporaryAccommodationApplication,
 ) => {
+  const actions = {
+    items: [
+      {
+        href: paths.applications.pages.show({ task: task.id, page: pageName, id: application.id }),
+        text: 'Change',
+        visuallyHiddenText: key,
+      },
+    ],
+  }
+
   return {
     key: {
       text: key,
     },
     value,
-    actions: {
-      items: [
-        {
-          href: paths.applications.pages.show({ task: task.id, page: pageName, id: application.id }),
-          text: 'Change',
-          visuallyHiddenText: key,
-        },
-      ],
-    },
+    ...(key === offenceIdKey ? {} : { actions }),
   }
 }
 

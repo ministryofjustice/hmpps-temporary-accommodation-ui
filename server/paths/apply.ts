@@ -20,6 +20,7 @@ const paths = {
     index: applicationsPath,
     show: applicationPath,
     update: applicationPath,
+    full: applicationPath.path('full'),
     checkYourAnswers: applicationPath.path('check-your-answers'),
     submission: applicationPath.path('submission'),
     confirm: applicationPath.path('confirm'),

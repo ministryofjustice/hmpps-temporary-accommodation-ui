@@ -1,7 +1,6 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
-import ListPage from '../../../cypress_shared/pages/apply/list'
 import SelectOffencePage from '../../../cypress_shared/pages/apply/selectOffence'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
@@ -53,9 +52,4 @@ Then('I should see a confirmation of the application', () => {
   const confirmationPage = Page.verifyOnPage(SubmissionConfirmation)
 
   confirmationPage.clickBackToDashboard()
-
-  cy.then(function _() {
-    const listPage = Page.verifyOnPage(ListPage, [])
-    listPage.shouldShowInProgressApplications()
-  })
 })

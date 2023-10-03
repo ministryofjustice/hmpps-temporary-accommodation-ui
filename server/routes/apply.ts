@@ -21,6 +21,7 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.applications.index.pattern, applicationsController.index(), { auditEvent: 'VIEW_APPLICATIONS_LIST' })
   get(paths.applications.new.pattern, applicationsController.new(), { auditEvent: 'VIEW_APPLICATION_NEW' })
   get(paths.applications.show.pattern, applicationsController.show(), { auditEvent: 'VIEW_APPLICATION' })
+  get(paths.applications.full.pattern, applicationsController.full(), { auditEvent: 'VIEW_FULL_APPLICATION' })
   get(paths.applications.confirm.pattern, applicationsController.confirm(), {
     auditEvent: 'VIEW_APPLICATION_CONFIRM',
   })

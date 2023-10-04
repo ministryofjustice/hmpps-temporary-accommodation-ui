@@ -2,6 +2,7 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import ListPage from '../../../cypress_shared/pages/apply/list'
+import ApplicationFullPage from '../../../cypress_shared/pages/apply/full'
 import SelectOffencePage from '../../../cypress_shared/pages/apply/selectOffence'
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
@@ -55,12 +56,16 @@ Given('I see a confirmation of the application', () => {
   confirmationPage.clickBackToDashboard()
 })
 
-Then('I can see the submitted application', () => {
+Then('I can see the full submitted application', () => {
   cy.url().then(function _() {
     const listPage = Page.verifyOnPage(ListPage, [], [])
 
     listPage.clickSubmittedTab()
 
     listPage.shouldShowSubmittedApplication(this.application)
+
+    listPage.clickApplication(this.application)
+
+    Page.verifyOnPage(ApplicationFullPage, this.application)
   })
 })

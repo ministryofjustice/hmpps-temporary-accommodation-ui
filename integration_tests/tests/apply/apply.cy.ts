@@ -1,4 +1,5 @@
 import {
+  ApplicationFullPage,
   EnterCRNPage,
   ListPage,
   MoveOnPlanPage,
@@ -295,5 +296,26 @@ context('Apply', () => {
 
     // Then I check your answers should be marked as completed
     taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
+  })
+
+  it('shows the full submitted application', function test() {
+    // Given there is a complete and submitted application
+    const application = { ...this.application, status: 'submitted' }
+
+    cy.task('stubApplications', [application])
+    cy.task('stubApplicationGet', { application })
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([], [application])
+
+    // And I click on the submitted tab
+    listPage.clickSubmittedTab()
+
+    // And I click on an application
+    listPage.clickApplication(application)
+
+    // Then I should see the full application
+    const applicationFullPage = Page.verifyOnPage(ApplicationFullPage, application)
+    applicationFullPage.shouldShowApplication(application.document)
   })
 })

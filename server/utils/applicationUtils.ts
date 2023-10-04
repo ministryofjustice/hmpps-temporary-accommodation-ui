@@ -21,7 +21,7 @@ const dashboardTableRows = (applications: Array<Application>): Array<TableRow> =
     const arrivalDate = getArrivalDate(application, false)
 
     return [
-      createNameAnchorElement(personName(application.person, 'Limited access offender'), application.id),
+      createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
       textValue(application.person.crn),
       textValue(arrivalDate ? DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }) : 'N/A'),
       htmlValue(getStatus(application)),
@@ -46,8 +46,10 @@ const htmlValue = (value: string) => {
   return { html: value }
 }
 
-const createNameAnchorElement = (name: string, applicationId: string) => {
-  return htmlValue(`<a href=${paths.applications.show({ id: applicationId })}>${name}</a>`)
+const createNameAnchorElement = (name: string, application: Application) => {
+  return application.status === 'submitted'
+    ? htmlValue(`<a href=${paths.applications.full({ id: application.id })}>${name}</a>`)
+    : htmlValue(`<a href=${paths.applications.show({ id: application.id })}>${name}</a>`)
 }
 
 export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>>
@@ -243,6 +245,7 @@ const taskResponsesToSummaryListRowItems = (
 }
 
 export {
+  createNameAnchorElement,
   dashboardTableRows,
   firstPageOfApplicationJourney,
   forPagesInTask,

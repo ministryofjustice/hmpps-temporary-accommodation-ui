@@ -7,6 +7,7 @@ import { isApplicableTier, personName, tierBadge } from './personUtils'
 
 import { FullPerson } from '../@types/shared'
 import {
+  createNameAnchorElement,
   dashboardTableRows,
   firstPageOfApplicationJourney,
   forPagesInTask,
@@ -475,6 +476,28 @@ describe('applicationUtils', () => {
           value: { html: 'answer three' },
         },
       ])
+    })
+  })
+
+  describe('createNameAnchorElement', () => {
+    it('returns the name in an anchor tag to the application show page', () => {
+      const application = applicationFactory.build({ status: 'inProgress' })
+
+      expect(createNameAnchorElement('Limited access offender', application)).toEqual({
+        html: `<a href=/referrals/${application.id}>Limited access offender</a>`,
+      })
+    })
+
+    describe('when the application has submitted status', () => {
+      it('returns the name in an anchor tag to the full application page', () => {
+        const application = applicationFactory.build({
+          status: 'submitted',
+        })
+
+        expect(createNameAnchorElement('Limited access offender', application)).toEqual({
+          html: `<a href=/referrals/${application.id}/full>Limited access offender</a>`,
+        })
+      })
     })
   })
 })

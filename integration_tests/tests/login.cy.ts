@@ -78,6 +78,7 @@ context('SignIn', () => {
     const actingUser = userFactory.build({ region: probationRegion, roles: ['assessor', 'referrer'] })
 
     cy.task('stubActingUser', actingUser)
+    cy.task('stubGetUserById', actingUser)
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')

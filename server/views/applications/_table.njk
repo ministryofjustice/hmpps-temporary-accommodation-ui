@@ -1,26 +1,29 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% macro applicationsTable(title, rows) %}
+{% macro applicationsTable(title, rows, submitted) %}
   {% if rows %}
+    {% set headers = [
+      {
+        text: "Person"
+      },
+      {
+        text: "CRN"
+      },
+      {
+        text: "Status"
+      }
+    ] %}
+
+    {% if submitted %}
+      {% set headers = headers.concat({ text: "Date submitted" }) %}
+    {% endif %}
+
     {{
         govukTable({
           caption: title,
           captionClasses: "govuk-table__caption--m",
           firstCellIsHeader: true,
-          head: [
-            {
-              text: "Person"
-            },
-            {
-              text: "CRN"
-            },
-            {
-              text: "Arrival date"
-            },
-            {
-              text: "Status"
-            }
-          ],
+          head: headers,
           rows: rows
         })
       }}

@@ -11,7 +11,6 @@ import {
   dashboardTableRows,
   firstPageOfApplicationJourney,
   forPagesInTask,
-  getArrivalDate,
   getPage,
   getResponses,
   getSectionAndTask,
@@ -307,60 +306,20 @@ describe('applicationUtils', () => {
     })
   })
 
-  describe('getArrivalDate', () => {
-    it('returns the arrival date when the release date is known and is the same as the start date', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': {
-            'release-date': { knowReleaseDate: 'yes', releaseDate: '2022-11-14' },
-            'placement-date': { startDateSameAsReleaseDate: 'yes' },
-          },
-        },
-      })
-      expect(getArrivalDate(application)).toEqual('2022-11-14')
-    })
-
-    it('returns the arrival date when the release date is known but there is a different start date', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': {
-            'release-date': { knowReleaseDate: 'yes', releaseDate: '2022-11-14' },
-            'placement-date': { startDateSameAsReleaseDate: 'no', startDate: '2023-10-13' },
-          },
-        },
-      })
-
-      expect(getArrivalDate(application)).toEqual('2023-10-13')
-    })
-
-    it('throws an error or returns null when the release date is not known', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': {
-            'release-date': { knowReleaseDate: 'no' },
-          },
-        },
-      })
-
-      expect(() => getArrivalDate(application)).toThrow(new SessionDataError('No known release date'))
-      expect(getArrivalDate(application, false)).toEqual(null)
-    })
-  })
-
   describe('dashboardTableRows', () => {
     it('returns an array of applications as table rows', async () => {
       ;(tierBadge as jest.MockedFunction<typeof tierBadge>).mockReturnValue('TIER_BADGE')
       ;(personName as jest.MockedFunction<typeof personName>).mockImplementation(person => (person as FullPerson).name)
 
-      const arrivalDate = DateFormats.dateObjToIsoDate(new Date(2021, 0, 3))
+      const submittedAtDate = DateFormats.dateObjToIsoDate(new Date(2023, 0, 3))
 
       const applicationA = applicationFactory.build({
         person: personFactory.build({ name: 'A' }),
-        data: {},
         submittedAt: null,
       })
-      const applicationB = applicationFactory.withReleaseDate(arrivalDate).build({
+      const applicationB = applicationFactory.build({
         person: personFactory.build({ name: 'B' }),
+        submittedAt: submittedAtDate,
       })
 
       const result = dashboardTableRows([applicationA, applicationB])
@@ -388,7 +347,7 @@ describe('applicationUtils', () => {
             text: applicationB.person.crn,
           },
           {
-            text: DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(submittedAtDate, { format: 'short' }),
           },
           {
             html: getStatus(applicationB),

@@ -47,8 +47,6 @@ export default class ListPage extends Page {
   }
 
   private shouldShowApplication(application: Application, containerId: string, status: string): void {
-    const releaseDate = application.data['basic-information']?.['release-date']?.releaseDate
-
     cy.get(`#${containerId}`).within(() => {
       cy.get(`a[href*="${paths.applications.show({ id: application.id })}"]`)
         .parent()
@@ -59,8 +57,8 @@ export default class ListPage extends Page {
           cy.get('td')
             .eq(1)
             .contains(
-              releaseDate
-                ? DateFormats.isoDateToUIDate(releaseDate, {
+              application.submittedAt
+                ? DateFormats.isoDateToUIDate(application.submittedAt, {
                     format: 'short',
                   })
                 : 'N/A',

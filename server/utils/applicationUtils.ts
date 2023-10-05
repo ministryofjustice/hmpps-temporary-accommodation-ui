@@ -12,7 +12,6 @@ import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 import { personName } from './personUtils'
-import { kebabCase } from './utils'
 import { formatLines } from './viewUtils'
 import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummaryListItem'
 
@@ -155,27 +154,6 @@ const firstPageOfApplicationJourney = (application: Application) => {
   return paths.applications.show({ id: application.id })
 }
 
-/**
- * Retrieves response for a given question from the application object.
- * @param application the application to fetch the response from.
- * @param task the task to retrieve the response for.
- * @param page the page that we need the response for in camelCase.
- * @param {string} question [question=page] the page that we need the response for. Defaults to the value of `page`.
- * @returns the response for the given task/page/question.
- */
-const retrieveQuestionResponseFromApplication = <T>(
-  application: Application,
-  task: string,
-  page: string,
-  question?: string,
-) => {
-  try {
-    return application.data[task][kebabCase(page)][question || page] as T
-  } catch (e) {
-    throw new SessionDataError(`Question ${question} was not found in the session`)
-  }
-}
-
 const taskResponsesToSummaryListRowItems = (
   taskResponses: TaskResponse['content'],
 ): Array<{ key: string; value: HtmlItem }> => {
@@ -207,6 +185,5 @@ export {
   getResponses,
   getSectionAndTask,
   getStatus,
-  retrieveQuestionResponseFromApplication,
   taskResponsesToSummaryListRowItems,
 }

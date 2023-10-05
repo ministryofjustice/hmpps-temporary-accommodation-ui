@@ -1,4 +1,5 @@
 import {
+  ApplicationFullPage,
   EnterCRNPage,
   ListPage,
   MoveOnPlanPage,
@@ -187,7 +188,7 @@ context('Apply', () => {
     confirmationPage.clickBackToDashboard()
 
     // Then I am taken back to the dashboard
-    Page.verifyOnPage(ListPage, applications)
+    Page.verifyOnPage(ListPage, applications, [])
   })
 
   it('shows an error if the application is submitted without checking the confirm checkbox', function test() {
@@ -198,7 +199,7 @@ context('Apply', () => {
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
-    const listPage = ListPage.visit([this.application])
+    const listPage = ListPage.visit([this.application], [])
 
     // And I click on the application
     listPage.clickApplication(this.application)
@@ -220,7 +221,7 @@ context('Apply', () => {
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
-    const listPage = ListPage.visit([application])
+    const listPage = ListPage.visit([application], [])
 
     // And I click on the application
     listPage.clickApplication(application)
@@ -238,7 +239,7 @@ context('Apply', () => {
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
-    const listPage = ListPage.visit([this.application])
+    const listPage = ListPage.visit([this.application], [])
 
     // And I click on the application
     listPage.clickApplication(this.application)
@@ -277,7 +278,7 @@ context('Apply', () => {
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
-    const listPage = ListPage.visit([this.application])
+    const listPage = ListPage.visit([this.application], [])
 
     // And I click on the application
     listPage.clickApplication(this.application)
@@ -295,5 +296,26 @@ context('Apply', () => {
 
     // Then I check your answers should be marked as completed
     taskListPage.shouldShowTaskStatus('check-your-answers', 'Completed')
+  })
+
+  it('shows the full submitted application', function test() {
+    // Given there is a complete and submitted application
+    const application = { ...this.application, status: 'submitted' }
+
+    cy.task('stubApplications', [application])
+    cy.task('stubApplicationGet', { application })
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([], [application])
+
+    // And I click on the submitted tab
+    listPage.clickSubmittedTab()
+
+    // And I click on an application
+    listPage.clickApplication(application)
+
+    // Then I should see the full application
+    const applicationFullPage = Page.verifyOnPage(ApplicationFullPage, application)
+    applicationFullPage.shouldShowApplication(application.document)
   })
 })

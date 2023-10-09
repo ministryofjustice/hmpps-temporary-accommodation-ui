@@ -74,7 +74,7 @@ describe('PreviousStaysDetails', () => {
           value: 'cas1',
           text: 'Approved Premises (AP or CAS1)',
         },
-        { value: 'cas2', text: 'Bail Accommodation and Support Service (BASS or CAS2)' },
+        { value: 'cas2', text: 'CAS2 (formerly Bail Accommodation Support Services)' },
         { value: 'cas3', text: 'Transitional Accommodation (CAS3)' },
       ])
     })

@@ -309,5 +309,10 @@ export type MessageContents =
 
 export type ApplicationSummaryData = {
   isAbleToShare: boolean | null
-  releaseType: 'Rerelease' | 'Custody' | 'Approved Premises' | 'Bail accommodation and support' | null
+  releaseType:
+    | 'Rerelease'
+    | 'Custody'
+    | 'Approved Premises'
+    | 'CAS2 (formerly Bail Accommodation Support Services)'
+    | null
 }

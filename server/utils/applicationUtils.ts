@@ -18,12 +18,20 @@ import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummary
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
-    const arrivalDate = getArrivalDate(application, false)
+    if (application.status === 'submitted') {
+      return [
+        createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
+        textValue(application.person.crn),
+        textValue(
+          application.submittedAt ? DateFormats.isoDateToUIDate(application.submittedAt, { format: 'short' }) : 'N/A',
+        ),
+        htmlValue(getStatus(application)),
+      ]
+    }
 
     return [
       createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
       textValue(application.person.crn),
-      textValue(arrivalDate ? DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }) : 'N/A'),
       htmlValue(getStatus(application)),
     ]
   })
@@ -151,52 +159,6 @@ const getSectionAndTask = (taskName: string, isAnAssessment?: boolean): { sectio
   throw new UnknownTaskError(taskName)
 }
 
-const getArrivalDate = (application: Application, raiseOnMissing = true): string | null => {
-  const throwOrReturnNull = (message: string): null => {
-    if (raiseOnMissing) {
-      throw new SessionDataError(message)
-    }
-
-    return null
-  }
-
-  const basicInformation = application.data?.['basic-information']
-
-  if (!basicInformation) return throwOrReturnNull('No basic information')
-
-  const {
-    knowReleaseDate = '',
-    startDateSameAsReleaseDate = '',
-    releaseDate = '',
-    startDate = '',
-  } = {
-    ...basicInformation['release-date'],
-    ...basicInformation['placement-date'],
-  }
-
-  if (!knowReleaseDate || knowReleaseDate === 'no') {
-    return throwOrReturnNull('No known release date')
-  }
-
-  if (knowReleaseDate === 'yes' && startDateSameAsReleaseDate === 'yes') {
-    if (!releaseDate) {
-      return throwOrReturnNull('No release date')
-    }
-
-    return releaseDate
-  }
-
-  if (startDateSameAsReleaseDate === 'no') {
-    if (!startDate) {
-      return throwOrReturnNull('No start date')
-    }
-
-    return startDate
-  }
-
-  return null
-}
-
 const firstPageOfApplicationJourney = (application: Application) => {
   return paths.applications.show({ id: application.id })
 }
@@ -249,7 +211,6 @@ export {
   dashboardTableRows,
   firstPageOfApplicationJourney,
   forPagesInTask,
-  getArrivalDate,
   getPage,
   getResponses,
   getSectionAndTask,

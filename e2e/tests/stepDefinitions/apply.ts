@@ -62,7 +62,7 @@ Then('I can see the full submitted application', () => {
 
     listPage.clickSubmittedTab()
 
-    listPage.shouldShowSubmittedApplication(this.application)
+    listPage.shouldShowSubmittedApplication(this.application, false)
 
     listPage.clickApplication(this.application)
 

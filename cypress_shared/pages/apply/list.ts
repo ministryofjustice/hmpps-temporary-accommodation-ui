@@ -42,12 +42,12 @@ export default class ListPage extends Page {
         .within(() => {
           cy.get('th').eq(0).contains(personName(application.person, 'Limited access offender'))
           cy.get('td').eq(0).contains(application.person.crn)
-          cy.get('td').eq(2).contains('In Progress')
+          cy.get('td').eq(1).contains('In Progress')
         })
     })
   }
 
-  shouldShowSubmittedApplication(application: Application): void {
+  shouldShowSubmittedApplication(application: Application, checkSubmittedAtDate = true): void {
     cy.get('#applications-submitted').within(() => {
       cy.get(`a[href*="${paths.applications.full({ id: application.id })}"]`)
         .parent()
@@ -55,10 +55,13 @@ export default class ListPage extends Page {
         .within(() => {
           cy.get('th').eq(0).contains(personName(application.person, 'Limited access offender'))
           cy.get('td').eq(0).contains(application.person.crn)
-          cy.get('td')
-            .eq(1)
-            .contains(DateFormats.isoDateToUIDate(DateFormats.dateObjToIsoDate(new Date()), { format: 'short' }))
           cy.get('td').eq(2).contains('Submitted')
+
+          if (checkSubmittedAtDate) {
+            cy.get('td')
+              .eq(1)
+              .contains(DateFormats.isoDateToUIDate(application.submittedAt, { format: 'short' }))
+          }
         })
     })
   }

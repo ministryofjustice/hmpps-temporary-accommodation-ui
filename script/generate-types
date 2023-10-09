@@ -8,10 +8,8 @@ cd "$(dirname "$0")/.."
 
 echo "==> Generating types..."
 
-npx openapi-typescript-codegen -i https://raw.githubusercontent.com/ministryofjustice/hmpps-approved-premises-api/main/src/main/resources/static/api.yml -o ./server/@types/shared -c axios --exportServices false --exportCore false --useUnionTypes true
+npx openapi-typescript-codegen -i https://raw.githubusercontent.com/ministryofjustice/hmpps-approved-premises-api/main/src/main/resources/static/codegen/built-api-spec.yml -o ./server/@types/shared -c axios --exportServices false --exportCore false --useUnionTypes true
 
 echo "==> Renaming the declaration file..."
 
 mv ./server/@types/shared/index.ts ./server/@types/shared/index.d.ts
-
-

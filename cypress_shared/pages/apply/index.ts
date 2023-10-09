@@ -44,7 +44,6 @@ import SelectOffencePage from './selectOffence'
 import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
 import TaskListPage from './taskListPage'
-import ApplicationFullPage from './full'
 
 export {
   AccommodationRequiredFromDatePage,
@@ -93,5 +92,4 @@ export {
   SubstanceMisusePage,
   SupportInTheCommunityPage,
   TaskListPage,
-  ApplicationFullPage,
 }

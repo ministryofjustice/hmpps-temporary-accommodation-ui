@@ -135,17 +135,4 @@ export default class ApplicationsController {
       return res.render('applications/confirm')
     }
   }
-
-  full(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const callConfig = extractCallConfig(req)
-
-      const { id } = req.params
-      const application = await this.applicationService.findApplication(callConfig, id)
-
-      return res.render('applications/full', {
-        application,
-      })
-    }
-  }
 }

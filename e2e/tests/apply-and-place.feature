@@ -3,8 +3,7 @@ Feature: Apply for and book a Temporary Accommodation bedspace
     Given I am logged in as a referrer
     When I start a new application
     And I fill in and complete an application
-    And I see a confirmation of the application
-    Then I can see the full submitted application
+    Then I should see a confirmation of the application
   Scenario: Booking a bedspace from an assessment
     Given I am logged in as an assessor
     When I view an existing active premises

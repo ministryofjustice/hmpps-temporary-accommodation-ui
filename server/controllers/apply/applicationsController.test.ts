@@ -348,19 +348,4 @@ describe('applicationsController', () => {
       expect(response.render).toHaveBeenCalledWith('applications/confirm')
     })
   })
-
-  describe('full', () => {
-    it('renders the full application page for submitted referrals', async () => {
-      const application = createMock<TemporaryAccommodationApplication>()
-
-      request = createMock<Request>({
-        params: { id: application.id },
-      })
-
-      const requestHandler = applicationsController.full()
-      await requestHandler(request, response, next)
-
-      expect(response.render).toHaveBeenCalledWith('applications/full', application)
-    })
-  })
 })

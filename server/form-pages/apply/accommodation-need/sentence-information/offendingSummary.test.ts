@@ -23,7 +23,7 @@ describe('OffendingSummary', () => {
     it('sets the body', () => {
       const page = new OffendingSummary(body, application)
 
-      expect(page.title).toEqual("Provide a brief summary of John Smith's offending history")
+      expect(page.title).toEqual("Provide a brief summary of John Smith's index offence(s) and offending history")
     })
   })
 
@@ -38,7 +38,9 @@ describe('OffendingSummary', () => {
 
     it('returns an error if the plan is not populated', () => {
       const page = new OffendingSummary({ ...body, summary: undefined }, application)
-      expect(page.errors()).toEqual({ summary: "You must enter a summary of John Smith's offending history" })
+      expect(page.errors()).toEqual({
+        summary: "You must enter a summary of John Smith's index offence(s) and offending history",
+      })
     })
   })
 

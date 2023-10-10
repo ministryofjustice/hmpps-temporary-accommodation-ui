@@ -64,7 +64,7 @@ Then('I can see the full submitted application', () => {
 
     listPage.shouldShowSubmittedApplication(this.application, false)
 
-    listPage.clickApplication(this.application)
+    listPage.clickSubmittedApplication(this.application)
 
     Page.verifyOnPage(ApplicationFullPage, this.application)
   })

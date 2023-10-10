@@ -32,11 +32,27 @@ describe('UserClient', () => {
       const user = userFactory.build()
 
       fakeApprovedPremisesApi
-        .get(paths.users.actingUser.show({}))
+        .get(paths.users.actingUser.profile({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, user)
 
       const result = await userClient.getActingUser()
+
+      expect(result).toEqual(user)
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
+
+  describe('getUserById', () => {
+    it('should return the acting user', async () => {
+      const user = userFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.users.actingUser.show({ id: user.id }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, user)
+
+      const result = await userClient.getUserById(user.id)
 
       expect(result).toEqual(user)
       expect(nock.isDone()).toBeTruthy()

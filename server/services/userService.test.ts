@@ -23,11 +23,12 @@ describe('User service', () => {
   })
 
   describe('getActingUser', () => {
-    it('gets the acting user, collating results from the Community Accommoation API and the HMPPS Auth API', async () => {
+    it('gets the acting user, collating results from the Community Accommodation API and the HMPPS Auth API', async () => {
       const communityAccommodationUser = userFactory.build()
       const hmppsAuthUser = { name: 'john smith' } as User
 
       userClient.getActingUser.mockResolvedValue(communityAccommodationUser)
+      userClient.getUserById.mockResolvedValue(communityAccommodationUser)
       hmppsAuthClient.getActingUser.mockResolvedValue(hmppsAuthUser)
 
       const result = await userService.getActingUser(callConfig)

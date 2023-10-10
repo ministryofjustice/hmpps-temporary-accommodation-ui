@@ -20,4 +20,5 @@ function setupTestWithRoles(roles: Array<UserRole>) {
   cy.wrap(probationRegion).as('actingUserProbationRegion')
 
   cy.task('stubActingUser', actingUser)
+  cy.task('stubGetUserById', actingUser)
 }

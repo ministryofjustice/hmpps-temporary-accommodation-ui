@@ -11,6 +11,10 @@ export default class UserClient {
   }
 
   async getActingUser(): Promise<User> {
-    return (await this.restClient.get({ path: paths.users.actingUser.show({}) })) as User
+    return (await this.restClient.get({ path: paths.users.actingUser.profile({}) })) as User
+  }
+
+  async getUserById(id: string): Promise<User> {
+    return (await this.restClient.get({ path: paths.users.actingUser.show({ id }) })) as User
   }
 }

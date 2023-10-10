@@ -20,7 +20,9 @@ export default class UserService {
     const hmppsAuthUser = await this.hmppsAuthClient.getActingUser(callConfig)
 
     const client = this.userClientFactory(callConfig)
-    const communityAccommodationUser = await client.getActingUser()
+
+    const { id } = await client.getActingUser()
+    const communityAccommodationUser = await client.getUserById(id)
 
     return {
       ...hmppsAuthUser,

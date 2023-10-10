@@ -7,15 +7,14 @@ import { isApplicableTier, personName, tierBadge } from './personUtils'
 
 import { FullPerson } from '../@types/shared'
 import {
+  createNameAnchorElement,
   dashboardTableRows,
   firstPageOfApplicationJourney,
   forPagesInTask,
-  getArrivalDate,
   getPage,
   getResponses,
   getSectionAndTask,
   getStatus,
-  retrieveQuestionResponseFromApplication,
   taskResponsesToSummaryListRowItems,
 } from './applicationUtils'
 import getSections from './assessments/getSections'
@@ -306,60 +305,21 @@ describe('applicationUtils', () => {
     })
   })
 
-  describe('getArrivalDate', () => {
-    it('returns the arrival date when the release date is known and is the same as the start date', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': {
-            'release-date': { knowReleaseDate: 'yes', releaseDate: '2022-11-14' },
-            'placement-date': { startDateSameAsReleaseDate: 'yes' },
-          },
-        },
-      })
-      expect(getArrivalDate(application)).toEqual('2022-11-14')
-    })
-
-    it('returns the arrival date when the release date is known but there is a different start date', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': {
-            'release-date': { knowReleaseDate: 'yes', releaseDate: '2022-11-14' },
-            'placement-date': { startDateSameAsReleaseDate: 'no', startDate: '2023-10-13' },
-          },
-        },
-      })
-
-      expect(getArrivalDate(application)).toEqual('2023-10-13')
-    })
-
-    it('throws an error or returns null when the release date is not known', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': {
-            'release-date': { knowReleaseDate: 'no' },
-          },
-        },
-      })
-
-      expect(() => getArrivalDate(application)).toThrow(new SessionDataError('No known release date'))
-      expect(getArrivalDate(application, false)).toEqual(null)
-    })
-  })
-
   describe('dashboardTableRows', () => {
     it('returns an array of applications as table rows', async () => {
       ;(tierBadge as jest.MockedFunction<typeof tierBadge>).mockReturnValue('TIER_BADGE')
       ;(personName as jest.MockedFunction<typeof personName>).mockImplementation(person => (person as FullPerson).name)
 
-      const arrivalDate = DateFormats.dateObjToIsoDate(new Date(2021, 0, 3))
+      const submittedAtDate = DateFormats.dateObjToIsoDate(new Date(2023, 0, 3))
 
       const applicationA = applicationFactory.build({
         person: personFactory.build({ name: 'A' }),
-        data: {},
-        submittedAt: null,
+        status: 'inProgress',
       })
-      const applicationB = applicationFactory.withReleaseDate(arrivalDate).build({
+      const applicationB = applicationFactory.build({
         person: personFactory.build({ name: 'B' }),
+        status: 'submitted',
+        submittedAt: submittedAtDate,
       })
 
       const result = dashboardTableRows([applicationA, applicationB])
@@ -373,21 +333,18 @@ describe('applicationUtils', () => {
             text: applicationA.person.crn,
           },
           {
-            text: 'N/A',
-          },
-          {
-            html: getStatus(applicationB),
+            html: getStatus(applicationA),
           },
         ],
         [
           {
-            html: `<a href=${paths.applications.show({ id: applicationB.id })}>B</a>`,
+            html: `<a href=${paths.applications.full({ id: applicationB.id })}>B</a>`,
           },
           {
             text: applicationB.person.crn,
           },
           {
-            text: DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(submittedAtDate, { format: 'short' }),
           },
           {
             html: getStatus(applicationB),
@@ -418,42 +375,6 @@ describe('applicationUtils', () => {
     })
   })
 
-  describe('retrieveQuestionResponseFromApplication', () => {
-    it("throws a SessionDataError if the property doesn't exist", () => {
-      const application = applicationFactory.build()
-      expect(() => retrieveQuestionResponseFromApplication(application, 'basic-information', '')).toThrow(
-        SessionDataError,
-      )
-    })
-
-    it('returns the property if it does exist and a question is not provided', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': { 'my-page': { myPage: 'no' } },
-        },
-      })
-
-      const questionResponse = retrieveQuestionResponseFromApplication(application, 'basic-information', 'myPage')
-      expect(questionResponse).toBe('no')
-    })
-
-    it('returns the property if it does exist and a question is provided', () => {
-      const application = applicationFactory.build({
-        data: {
-          'basic-information': { 'my-page': { questionResponse: 'no' } },
-        },
-      })
-
-      const questionResponse = retrieveQuestionResponseFromApplication(
-        application,
-        'basic-information',
-        'myPage',
-        'questionResponse',
-      )
-      expect(questionResponse).toBe('no')
-    })
-  })
-
   describe('taskResponsesToSummaryListRowItems', () => {
     it('returns an array of summary list row items', () => {
       const taskResponses = [
@@ -475,6 +396,28 @@ describe('applicationUtils', () => {
           value: { html: 'answer three' },
         },
       ])
+    })
+  })
+
+  describe('createNameAnchorElement', () => {
+    it('returns the name in an anchor tag to the application show page', () => {
+      const application = applicationFactory.build({ status: 'inProgress' })
+
+      expect(createNameAnchorElement('Limited access offender', application)).toEqual({
+        html: `<a href=/referrals/${application.id}>Limited access offender</a>`,
+      })
+    })
+
+    describe('when the application has submitted status', () => {
+      it('returns the name in an anchor tag to the full application page', () => {
+        const application = applicationFactory.build({
+          status: 'submitted',
+        })
+
+        expect(createNameAnchorElement('Limited access offender', application)).toEqual({
+          html: `<a href=/referrals/${application.id}/full>Limited access offender</a>`,
+        })
+      })
     })
   })
 })

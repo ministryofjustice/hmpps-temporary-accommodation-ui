@@ -28,6 +28,6 @@ context('Application Page', () => {
     page.clickBack()
 
     // Then I navigate to the list application page
-    Page.verifyOnPage(ListPage, inProgressApplications)
+    Page.verifyOnPage(ListPage, inProgressApplications, [])
   })
 })

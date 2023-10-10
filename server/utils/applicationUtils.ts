@@ -12,18 +12,25 @@ import isAssessment from './assessments/isAssessment'
 import { DateFormats } from './dateUtils'
 import { SessionDataError, UnknownPageError, UnknownTaskError } from './errors'
 import { personName } from './personUtils'
-import { kebabCase } from './utils'
 import { formatLines } from './viewUtils'
 import { embeddedSummaryListItem } from './checkYourAnswersUtils/embeddedSummaryListItem'
 
 const dashboardTableRows = (applications: Array<Application>): Array<TableRow> => {
   return applications.map(application => {
-    const arrivalDate = getArrivalDate(application, false)
+    if (application.status === 'submitted') {
+      return [
+        createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
+        textValue(application.person.crn),
+        textValue(
+          application.submittedAt ? DateFormats.isoDateToUIDate(application.submittedAt, { format: 'short' }) : 'N/A',
+        ),
+        htmlValue(getStatus(application)),
+      ]
+    }
 
     return [
-      createNameAnchorElement(personName(application.person, 'Limited access offender'), application.id),
+      createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
       textValue(application.person.crn),
-      textValue(arrivalDate ? DateFormats.isoDateToUIDate(arrivalDate, { format: 'short' }) : 'N/A'),
       htmlValue(getStatus(application)),
     ]
   })
@@ -46,8 +53,10 @@ const htmlValue = (value: string) => {
   return { html: value }
 }
 
-const createNameAnchorElement = (name: string, applicationId: string) => {
-  return htmlValue(`<a href=${paths.applications.show({ id: applicationId })}>${name}</a>`)
+const createNameAnchorElement = (name: string, application: Application) => {
+  return application.status === 'submitted'
+    ? htmlValue(`<a href=${paths.applications.full({ id: application.id })}>${name}</a>`)
+    : htmlValue(`<a href=${paths.applications.show({ id: application.id })}>${name}</a>`)
 }
 
 export type ApplicationOrAssessmentResponse = Record<string, Array<PageResponse>>
@@ -149,75 +158,8 @@ const getSectionAndTask = (taskName: string, isAnAssessment?: boolean): { sectio
   throw new UnknownTaskError(taskName)
 }
 
-const getArrivalDate = (application: Application, raiseOnMissing = true): string | null => {
-  const throwOrReturnNull = (message: string): null => {
-    if (raiseOnMissing) {
-      throw new SessionDataError(message)
-    }
-
-    return null
-  }
-
-  const basicInformation = application.data?.['basic-information']
-
-  if (!basicInformation) return throwOrReturnNull('No basic information')
-
-  const {
-    knowReleaseDate = '',
-    startDateSameAsReleaseDate = '',
-    releaseDate = '',
-    startDate = '',
-  } = {
-    ...basicInformation['release-date'],
-    ...basicInformation['placement-date'],
-  }
-
-  if (!knowReleaseDate || knowReleaseDate === 'no') {
-    return throwOrReturnNull('No known release date')
-  }
-
-  if (knowReleaseDate === 'yes' && startDateSameAsReleaseDate === 'yes') {
-    if (!releaseDate) {
-      return throwOrReturnNull('No release date')
-    }
-
-    return releaseDate
-  }
-
-  if (startDateSameAsReleaseDate === 'no') {
-    if (!startDate) {
-      return throwOrReturnNull('No start date')
-    }
-
-    return startDate
-  }
-
-  return null
-}
-
 const firstPageOfApplicationJourney = (application: Application) => {
   return paths.applications.show({ id: application.id })
-}
-
-/**
- * Retrieves response for a given question from the application object.
- * @param application the application to fetch the response from.
- * @param task the task to retrieve the response for.
- * @param page the page that we need the response for in camelCase.
- * @param {string} question [question=page] the page that we need the response for. Defaults to the value of `page`.
- * @returns the response for the given task/page/question.
- */
-const retrieveQuestionResponseFromApplication = <T>(
-  application: Application,
-  task: string,
-  page: string,
-  question?: string,
-) => {
-  try {
-    return application.data[task][kebabCase(page)][question || page] as T
-  } catch (e) {
-    throw new SessionDataError(`Question ${question} was not found in the session`)
-  }
 }
 
 const taskResponsesToSummaryListRowItems = (
@@ -243,14 +185,13 @@ const taskResponsesToSummaryListRowItems = (
 }
 
 export {
+  createNameAnchorElement,
   dashboardTableRows,
   firstPageOfApplicationJourney,
   forPagesInTask,
-  getArrivalDate,
   getPage,
   getResponses,
   getSectionAndTask,
   getStatus,
-  retrieveQuestionResponseFromApplication,
   taskResponsesToSummaryListRowItems,
 }

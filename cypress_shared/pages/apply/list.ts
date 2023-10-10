@@ -26,6 +26,16 @@ export default class ListPage extends Page {
     }
   }
 
+  clickSubmittedApplication(application: Application) {
+    cy.get('#applications-submitted').within(() => {
+      if (isFullPerson(application.person)) {
+        cy.get('a').contains(application.person.name).click()
+      } else {
+        cy.get(`a[href*="${paths.applications.full({ id: application.id })}"]`).click()
+      }
+    })
+  }
+
   shouldShowInProgressApplications(): void {
     this.shouldShowApplications(this.inProgressApplications, 'in-progress')
   }

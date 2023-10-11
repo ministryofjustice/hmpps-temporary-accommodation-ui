@@ -10,7 +10,7 @@ const accommodationTypes = {
     text: 'Approved Premises (AP or CAS1)',
   },
   cas2: {
-    text: 'Bail Accommodation and Support Service (BASS or CAS2)',
+    text: 'CAS2 (formerly Bail Accommodation Support Services)',
   },
   cas3: {
     text: 'Transitional Accommodation (CAS3)',

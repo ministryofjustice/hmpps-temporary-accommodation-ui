@@ -15,13 +15,13 @@ export const offenceIdKey = 'Offence ID'
 export default class OffendingSummary implements TasklistPage {
   title: string
 
-  htmlDocumentTitle = "Provide a brief summary of the person's offending history"
+  htmlDocumentTitle = "Provide a brief summary of the person's index offence(s) and offending history"
 
   constructor(
     readonly body: Partial<OffendingSummaryBody>,
     readonly application: Application,
   ) {
-    this.title = `Provide a brief summary of ${personName(application.person)}'s offending history`
+    this.title = `Provide a brief summary of ${personName(application.person)}'s index offence(s) and offending history`
   }
 
   response() {
@@ -43,7 +43,9 @@ export default class OffendingSummary implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.summary) {
-      errors.summary = `You must enter a summary of ${personName(this.application.person)}'s offending history`
+      errors.summary = `You must enter a summary of ${personName(
+        this.application.person,
+      )}'s index offence(s) and offending history`
     }
 
     return errors

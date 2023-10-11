@@ -7,10 +7,10 @@ import { personName } from '../../../../utils/personUtils'
 import anonymiseFormContent from '../../../utils/anonymiseFormContent'
 
 export const eligibilityReasons = {
-  homelessFromCustody: 'Moving on as homeless from custody',
-  homelessAfterRerelease: 'Moving on as homeless after re-release following recall',
-  homelessFromApprovedPremises: 'Moving on as homeless from an Approved Premises',
-  homelessFromBailAccommodation: 'Moving on as homeless from Bail Accommodation and Support Service',
+  homelessFromCustody: 'Released as homeless from Prison (Licence/PSS)',
+  homelessAfterRerelease: 'Re-released as homeless following recall',
+  homelessFromApprovedPremises: 'Moving on as homeless from an Approved Premises (CAS1)',
+  homelessFromBailAccommodation: 'Moving on as homeless from CAS2 (formerly Bail Accommodation Support Services)',
 } as const
 
 export type EligibilityReasonsT = keyof typeof eligibilityReasons

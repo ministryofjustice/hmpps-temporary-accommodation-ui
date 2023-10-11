@@ -55,7 +55,7 @@ describe('EligibilityReason', () => {
 
       expect(page.response()).toEqual({
         'How is the person eligible for Transitional Accommodation (CAS3)?':
-          'Moving on as homeless from an Approved Premises',
+          'Moving on as homeless from an Approved Premises (CAS1)',
       })
     })
   })

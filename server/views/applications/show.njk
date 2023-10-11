@@ -26,7 +26,12 @@
 
       {{ showErrorSummary(errorSummary) }}
 
-      <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Referral {{ taskList.status }}</h2>
+      {% if taskList.status === 'complete' %}
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Submit your referral below</h2>
+      {% else %}
+        <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Referral {{ taskList.status }}</h2>
+      {% endif %}
+
       <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{ taskList.completeSectionCount }} of {{ (taskList.sections | length) }} sections.</p>
     </div>
 

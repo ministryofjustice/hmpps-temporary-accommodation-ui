@@ -35,7 +35,7 @@ function getReleaseType(reason?: EligibilityReasonsT) {
   }
 
   if (reason === 'homelessFromBailAccommodation') {
-    return 'Bail accommodation and support'
+    return 'CAS2 (formerly Bail Accommodation Support Services)'
   }
 
   if (reason === 'homelessFromCustody') {

@@ -314,8 +314,13 @@ context('Apply', () => {
     // And I click on an application
     listPage.clickApplication(application)
 
-    // Then I should see the full application
+    // And I can print the full application
     const applicationFullPage = Page.verifyOnPage(ApplicationFullPage, application)
+
+    applicationFullPage.shouldShowPrintButton()
+    applicationFullPage.shouldPrint('integration')
+
+    // Then I should see the full application
     applicationFullPage.shouldShowApplication(application.document)
   })
 })

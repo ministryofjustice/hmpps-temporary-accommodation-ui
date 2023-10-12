@@ -206,6 +206,26 @@ export default abstract class Page extends Component {
     Page.clickBreadCrumbUp()
   }
 
+  clickPrintButton(): void {
+    cy.get('button').contains('Print this page').click()
+  }
+
+  shouldShowPrintButton(): void {
+    cy.get('button').contains('Print this page')
+  }
+
+  shouldPrint(environment: 'integration'): void {
+    if (environment === 'integration') {
+      cy.window().then(win => {
+        cy.stub(win, 'print').as('printStub')
+      })
+
+      this.clickPrintButton()
+
+      cy.get('@printStub').should('be.calledOnce')
+    }
+  }
+
   expectDownload(timeout?: number) {
     // This is a workaround for a Cypress bug to prevent it waiting
     // indefinitely for a new page to load after clicking the download link

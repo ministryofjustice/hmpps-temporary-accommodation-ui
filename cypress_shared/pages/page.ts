@@ -194,8 +194,12 @@ export default abstract class Page extends Component {
     cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())
   }
 
-  clickSubmit(): void {
-    cy.get('button').click()
+  clickSubmit(text = ''): void {
+    if (text) {
+      cy.get('button').contains(text).click()
+    } else {
+      cy.get('button').click()
+    }
   }
 
   clickBack(): void {

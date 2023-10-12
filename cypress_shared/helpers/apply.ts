@@ -798,8 +798,15 @@ export default class ApplyHelper {
     checkYourAnswersPage.shouldShowMoveOnPlanAnswers(this.pages.moveOnPlan)
     checkYourAnswersPage.shouldShowAccommodationReferralDetails(this.pages.accommodationReferralDetails)
 
+    // And it should show a print button
+    checkYourAnswersPage.shouldShowPrintButton()
+
+    if (this.environment === 'integration') {
+      checkYourAnswersPage.shouldPrint(this.environment)
+    }
+
     // When I have checked my answers
-    checkYourAnswersPage.clickSubmit()
+    checkYourAnswersPage.clickSubmit('Continue')
 
     // Then I should be taken back to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

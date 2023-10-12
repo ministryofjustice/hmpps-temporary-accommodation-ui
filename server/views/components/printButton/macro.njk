@@ -3,7 +3,7 @@
 {% macro printButton() %}
   {{ govukButton({
     text: 'Print this page',
-    classes: 'govuk-button--secondary',
+    classes: 'govuk-button--secondary exclude-from-print',
     attributes: { 'data-print-btn': true }
   }) }}
 {% endmacro%}

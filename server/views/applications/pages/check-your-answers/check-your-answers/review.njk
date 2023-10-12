@@ -12,7 +12,8 @@
 {% block beforeContent%}
   {{ govukBackLink({
       text: "Back",
-      href: paths.applications.show({ id: page.application.id })
+      href: paths.applications.show({ id: page.application.id }),
+      classes: 'exclude-from-print'
   }) }}
 {% endblock %}
 
@@ -59,7 +60,8 @@
 
         {{ govukButton({
           text: "Continue",
-          preventDoubleClick: true
+          preventDoubleClick: true,
+          classes: 'exclude-from-print'
         }) }}
       </form>
 

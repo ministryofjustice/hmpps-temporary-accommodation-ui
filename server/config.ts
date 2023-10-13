@@ -104,5 +104,5 @@ export default {
       logErrors: get('AUDIT_LOG_ERRORS', 'false') === 'true',
     },
   },
-  domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  firstDomain: get('FIRST_INGRESS_URL', 'http://localhost:3000', requiredInProduction),
 }

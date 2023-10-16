@@ -9,7 +9,7 @@ import populateCurrentUser from './populateCurrentUser'
 
 jest.mock('../utils/restUtils')
 
-describe('populateUserRegion', () => {
+describe('populateCurrentUser', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const userService = createMock<UserService>()
 

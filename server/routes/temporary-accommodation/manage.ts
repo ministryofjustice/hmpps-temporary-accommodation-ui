@@ -2,16 +2,15 @@
 
 import type { Router } from 'express'
 import type { Controllers } from '../../controllers'
-import { createUserCheckMiddleware } from '../../middleware/userCheckMiddleware'
+import { createUserCheckMiddleware, userIsAuthorisedForManage } from '../../middleware/userCheckMiddleware'
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
-import { userHasAssessorRole } from '../../utils/userUtils'
 import { actions, compose } from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { get, post, put } = compose(
     actions(router, services.auditService),
-    createUserCheckMiddleware(userHasAssessorRole),
+    createUserCheckMiddleware(userIsAuthorisedForManage),
   )
 
   const {

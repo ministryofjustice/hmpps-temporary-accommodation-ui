@@ -1,0 +1,6 @@
+@media print {
+  /* exclude specific elements when printing */
+  .exclude-from-print {
+    display: none;
+  }
+}

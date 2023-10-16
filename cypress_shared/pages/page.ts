@@ -194,8 +194,12 @@ export default abstract class Page extends Component {
     cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())
   }
 
-  clickSubmit(): void {
-    cy.get('button').click()
+  clickSubmit(text = ''): void {
+    if (text) {
+      cy.get('button').contains(text).click()
+    } else {
+      cy.get('button').click()
+    }
   }
 
   clickBack(): void {
@@ -204,6 +208,26 @@ export default abstract class Page extends Component {
 
   clickBreadCrumbUp(): void {
     Page.clickBreadCrumbUp()
+  }
+
+  clickPrintButton(): void {
+    cy.get('button').contains('Print this page').click()
+  }
+
+  shouldShowPrintButton(): void {
+    cy.get('button').contains('Print this page')
+  }
+
+  shouldPrint(environment: 'integration'): void {
+    if (environment === 'integration') {
+      cy.window().then(win => {
+        cy.stub(win, 'print').as('printStub')
+      })
+
+      this.clickPrintButton()
+
+      cy.get('@printStub').should('be.calledOnce')
+    }
   }
 
   expectDownload(timeout?: number) {

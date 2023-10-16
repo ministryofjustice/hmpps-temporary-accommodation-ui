@@ -47,6 +47,7 @@ const summaryListItemForResponse = (
         href: paths.applications.pages.show({ task: task.id, page: pageName, id: application.id }),
         text: 'Change',
         visuallyHiddenText: key,
+        classes: 'exclude-from-print',
       },
     ],
   }

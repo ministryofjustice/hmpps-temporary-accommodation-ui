@@ -704,6 +704,44 @@ describe('BookingsController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
     })
 
+    it('removes empty spaces from the crn before API call', async () => {
+      const requestHandler = bookingsController.create()
+
+      const room = roomFactory.build()
+
+      const crn = 'XJKEGDJHEJ'
+      const crnWithSpaces = `  ${crn}  `
+
+      const booking = bookingFactory.build()
+      const newBooking = newBookingFactory.build({
+        ...booking,
+        crn: crnWithSpaces,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+      }
+      request.body = {
+        ...newBooking,
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newBooking.departureDate, 'departureDate'),
+        assessmentId,
+      }
+
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.createForBedspace.mockResolvedValue(booking)
+
+      await requestHandler(request, response, next)
+
+      expect(bookingService.createForBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        room,
+        expect.objectContaining({ crn }),
+      )
+    })
+
     it('creates a booking without an assessment ID if the given assessment ID is the known "no assessment" ID', async () => {
       const requestHandler = bookingsController.create()
 

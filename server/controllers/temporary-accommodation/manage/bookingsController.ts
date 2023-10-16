@@ -212,7 +212,7 @@ export default class BookingsController {
       const { premisesId, roomId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const { assessmentId } = req.body
+      const { assessmentId, crn } = req.body
 
       const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
       const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
@@ -222,6 +222,7 @@ export default class BookingsController {
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
         ...req.body,
+        crn: crn.trim(),
         assessmentId: assessmentId === noAssessmentId ? undefined : assessmentId,
         arrivalDate,
         departureDate,

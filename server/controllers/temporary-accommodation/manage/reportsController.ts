@@ -4,7 +4,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
-import { filterProbationRegions } from '../../../utils/userUtils'
+import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 
 export default class ReportsController {
@@ -19,7 +19,9 @@ export default class ReportsController {
       const { probationRegions: allProbationRegions } = await this.reportService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/reports/new', {
-        allProbationRegions: filterProbationRegions(allProbationRegions, req),
+        allProbationRegions: userHasReporterRole(res.locals.user)
+          ? allProbationRegions
+          : filterProbationRegions(allProbationRegions, req),
         errors,
         errorSummary: requestErrorSummary,
         probationRegionId: req.session.probationRegion.id,

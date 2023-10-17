@@ -29,22 +29,26 @@ const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
 }
 
 function init(): void {
-  const strategy = new Strategy(
+  const defaultStrategyAttributes = {
+    authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+    tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+    clientID: config.apis.hmppsAuth.apiClientId,
+    clientSecret: config.apis.hmppsAuth.apiClientSecret,
+    state: true,
+    customHeaders: { Authorization: generateOauthClientToken() },
+  }
+
+  const firstDomainStrategy = new Strategy(
     {
-      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
-      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-      clientID: config.apis.hmppsAuth.apiClientId,
-      clientSecret: config.apis.hmppsAuth.apiClientSecret,
+      ...defaultStrategyAttributes,
       callbackURL: `${config.firstDomain}/sign-in/callback`,
-      state: true,
-      customHeaders: { Authorization: generateOauthClientToken() },
     },
     (token, refreshToken, params, profile, done) => {
       return done(null, { token, username: params.user_name, authSource: params.auth_source })
     },
   )
 
-  passport.use(strategy)
+  passport.use(firstDomainStrategy)
 }
 
 export default {

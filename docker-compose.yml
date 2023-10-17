@@ -52,6 +52,10 @@ services:
       - API_CLIENT_SECRET=client-secret
       - SYSTEM_CLIENT_ID=system-client-id
       - SYSTEM_CLIENT_SECRET=system-client-secret
-
+      - SENTRY_DSN=local
+      - SESSION_SECRET=foo
+      - TOKEN_VERIFICATION_API_URL=foo
+      - APPROVED_PREMISES_API_URL=foo
+      - INGRESS_URL=true
 networks:
   hmpps:

@@ -105,5 +105,5 @@ export default {
     },
   },
   firstDomain: get('FIRST_INGRESS_URL', 'http://localhost:3000', requiredInProduction),
-  secondDomain: get('SECOND_INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  secondDomain: get('SECOND_INGRESS_URL', 'http://127.0.0.2:3002', requiredInProduction),
 }

@@ -1,7 +1,7 @@
 import { app, metricsApp } from './server/index'
 import logger from './logger'
 
-app.listen(app.get('port'), () => {
+app.listen(app.get('port'), '127.0.0.2', () => {
   logger.info(`Server listening on port ${app.get('port')}`)
 })
 

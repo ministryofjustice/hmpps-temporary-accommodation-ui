@@ -29,37 +29,22 @@ const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
 }
 
 function init(): void {
-  const defaultStrategyAttributes = {
-    authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
-    tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-    clientID: config.apis.hmppsAuth.apiClientId,
-    clientSecret: config.apis.hmppsAuth.apiClientSecret,
-    state: true,
-    customHeaders: { Authorization: generateOauthClientToken() },
-  }
-
-  const firstDomainStrategy = new Strategy(
+  const strategy = new Strategy(
     {
-      ...defaultStrategyAttributes,
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      clientID: config.apis.hmppsAuth.apiClientId,
+      clientSecret: config.apis.hmppsAuth.apiClientSecret,
       callbackURL: `${config.firstDomain}/sign-in/callback`,
+      state: true,
+      customHeaders: { Authorization: generateOauthClientToken() },
     },
     (token, refreshToken, params, profile, done) => {
       return done(null, { token, username: params.user_name, authSource: params.auth_source })
     },
   )
 
-  const secondDomainStrategy = new Strategy(
-    {
-      ...defaultStrategyAttributes,
-      callbackURL: `${config.secondDomain}/sign-in/callback`,
-    },
-    (token, refreshToken, params, profile, done) => {
-      return done(null, { token, username: params.user_name, authSource: params.auth_source })
-    },
-  )
-
-  passport.use(firstDomainStrategy)
-  passport.use(secondDomainStrategy)
+  passport.use(strategy)
 }
 
 export default {

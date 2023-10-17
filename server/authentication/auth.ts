@@ -48,7 +48,18 @@ function init(): void {
     },
   )
 
+  const secondDomainStrategy = new Strategy(
+    {
+      ...defaultStrategyAttributes,
+      callbackURL: `${config.secondDomain}/sign-in/callback`,
+    },
+    (token, refreshToken, params, profile, done) => {
+      return done(null, { token, username: params.user_name, authSource: params.auth_source })
+    },
+  )
+
   passport.use(firstDomainStrategy)
+  passport.use(secondDomainStrategy)
 }
 
 export default {

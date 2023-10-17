@@ -7,7 +7,6 @@ generic-service:
   ingress:
     hosts:
       - temporary-accommodation-dev.hmpps.service.justice.gov.uk
-      - transitional-accommodation-dev.hmpps.service.justice.gov.uk
     contextColour: green
     tlsSecretName: hmpps-temporary-accommodation-dev-cert
 

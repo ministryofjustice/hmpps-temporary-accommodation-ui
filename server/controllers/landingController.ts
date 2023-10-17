@@ -4,7 +4,12 @@ import applyPaths from '../paths/apply'
 import managePaths from '../paths/temporary-accommodation/manage'
 import staticPaths from '../paths/temporary-accommodation/static'
 import { UnauthorizedError } from '../utils/errors'
-import { isApplyEnabledForUser, userHasAssessorRole, userHasReferrerRole } from '../utils/userUtils'
+import {
+  isApplyEnabledForUser,
+  userHasAssessorRole,
+  userHasReferrerRole,
+  userHasReporterRole,
+} from '../utils/userUtils'
 
 export default class LandingController {
   index(): RequestHandler {
@@ -20,6 +25,10 @@ export default class LandingController {
           return res.redirect(applyPaths.applications.index({}))
         }
         return res.redirect(staticPaths.static.useNDelius.pattern)
+      }
+
+      if (userHasReporterRole(user)) {
+        return res.redirect(managePaths.reports.new({}))
       }
 
       throw new UnauthorizedError()

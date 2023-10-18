@@ -208,6 +208,7 @@ export type { TemporaryAccommodationPremises } from './models/TemporaryAccommoda
 export type { TemporaryAccommodationPremisesSummary } from './models/TemporaryAccommodationPremisesSummary';
 export type { TemporaryAccommodationUser } from './models/TemporaryAccommodationUser';
 export type { TemporaryAccommodationUserRole } from './models/TemporaryAccommodationUserRole';
+export type { TimelineEvent } from './models/TimelineEvent';
 export type { Turnaround } from './models/Turnaround';
 export type { UnknownPerson } from './models/UnknownPerson';
 export type { UpdateApplication } from './models/UpdateApplication';

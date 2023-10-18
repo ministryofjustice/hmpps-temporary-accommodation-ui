@@ -3,8 +3,9 @@ import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { premisesSummaryFactory } from '../../../../server/testutils/factories'
+import { premisesSummaryFactory, referenceDataFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
+import { TemporaryAccommodationUserRole } from '../../../../server/@types/shared'
 
 context('Report', () => {
   beforeEach(() => {
@@ -78,6 +79,63 @@ context('Report', () => {
       // When I fill out the form
       const type = 'bookings'
       const probationRegion = this.actingUserProbationRegion
+      const month = '3'
+      const year = '2023'
+
+      page.completeForm(month, year)
+
+      cy.task('stubReportForRegion', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        month,
+        year,
+        type,
+      })
+      page.expectDownload()
+      page.clickDownload(type)
+
+      // Then a report should have been requested from the API
+      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+        expect(requests).to.have.length(1)
+      })
+
+      // And the report should be downloded
+      const filePath = path.join(
+        Cypress.config('downloadsFolder'),
+        reportForProbationRegionFilename(probationRegion, month, year, type),
+      )
+
+      cy.readFile(filePath).then(file => {
+        expect(file).equals('some-data')
+      })
+    })
+  })
+
+  it('allows reporters to download a booking report for any region', () => {
+    cy.task('reset')
+    setupTestUser('reporter' as TemporaryAccommodationUserRole)
+
+    // Given I am signed in
+    cy.task('stubReportReferenceData')
+    cy.signIn()
+
+    const probationRegions = referenceDataFactory.probationRegions().build()
+
+    // When I visit the report page
+    const page = ReportNewPage.visit()
+
+    cy.then(function _() {
+      const filteredProbationRegions = probationRegions.filter(
+        region => region.name !== this.actingUserProbationRegion.name,
+      )
+      const selectedProbationRegion = filteredProbationRegions[0]
+
+      // Given I need a report for a region that is not mine
+      page.selectProbationRegion(selectedProbationRegion)
+
+      // When I fill out the form
+      const type = 'bookings'
+      const probationRegion = selectedProbationRegion
       const month = '3'
       const year = '2023'
 

@@ -64,6 +64,10 @@ class ReferenceDataFactory extends Factory<ReferenceData> {
     return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(probationRegionsJson) as ReferenceData)
   }
 
+  probationRegions(): Factory<ReferenceData[]> {
+    return Factory.define<ReferenceData[]>(() => probationRegionsJson as ReferenceData[])
+  }
+
   pdu(): Factory<ReferenceData> {
     return Factory.define<ReferenceData>(() => faker.helpers.arrayElement(pdusJson) as ReferenceData)
   }

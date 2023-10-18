@@ -24,6 +24,10 @@ export default class ReportNewPage extends Page {
       .should('be.selected')
   }
 
+  selectProbationRegion(probationRegion: ProbationRegion): void {
+    cy.get('label').contains('Select a probation region').siblings('select').select(probationRegion.name)
+  }
+
   completeForm(month: string, year: string): void {
     this.getLabel('Month')
     this.getSelectInputByIdAndSelectAnEntry('month', month)

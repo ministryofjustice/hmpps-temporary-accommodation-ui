@@ -1,5 +1,6 @@
 import {
   dutyToReferSubmissionDateFromApplication,
+  eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
@@ -111,6 +112,31 @@ describe('reportDataFromApplication', () => {
       })
 
       expect(() => isApplicationEligibleFromApplication(application)).toThrow(
+        new SessionDataError('No application eligibility data'),
+      )
+    })
+  })
+
+  describe('eligibilityReasonFromApplication', () => {
+    it('returns reason for application eligibility for CAS3 from the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          eligibility: {
+            'eligibility-reason': { reason: 'homelessFromCustody' },
+          },
+        },
+      })
+      expect(eligibilityReasonFromApplication(application)).toEqual('homelessFromCustody')
+    })
+
+    it('throws an error when the eligibility data is not present', () => {
+      const application = applicationFactory.build({
+        data: {
+          eligibility: {},
+        },
+      })
+
+      expect(() => eligibilityReasonFromApplication(application)).toThrow(
         new SessionDataError('No application eligibility data'),
       )
     })

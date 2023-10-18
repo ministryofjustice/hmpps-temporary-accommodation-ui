@@ -61,8 +61,24 @@ const isApplicationEligibleFromApplication = (application: Application): boolean
   return false
 }
 
+const eligibilityReasonFromApplication = (application: Application): string => {
+  const eligibilityReason: string = (application.data as Record<string, unknown>)?.eligibility?.['eligibility-reason']
+    ?.reason
+
+  if (!eligibilityReason) {
+    throw new SessionDataError('No application eligibility data')
+  }
+
+  if (Object.keys(eligibilityReasons).includes(eligibilityReason)) {
+    return eligibilityReason
+  }
+
+  return null
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
+  eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,

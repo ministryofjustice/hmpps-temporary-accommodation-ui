@@ -38,8 +38,12 @@ function init(): void {
     customHeaders: { Authorization: generateOauthClientToken() },
   }
 
-  let callbackURL = {
-    callbackURL: `${config.firstDomain}/sign-in/callback`,
+  // TODO: Remove this once our sign in testing on our new domain is complete on
+  // the test env.
+  const redirectToDomain = process.env.NODE_ENV === 'test' ? config.secondDomain : config.firstDomain
+
+  const callbackURL = {
+    callbackURL: `${redirectToDomain}/sign-in/callback`,
   }
 
   const strategy = new Strategy(

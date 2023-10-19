@@ -8,6 +8,7 @@ import { userFactory } from '../testutils/factories'
 import { UnauthorizedError } from '../utils/errors'
 import { isApplyEnabledForUser } from '../utils/userUtils'
 import LandingController from './landingController'
+import { TemporaryAccommodationUserRole } from '../@types/shared'
 
 jest.mock('../utils/userUtils', () => {
   const module = jest.requireActual('../utils/userUtils')
@@ -90,6 +91,21 @@ describe('LandingController', () => {
       const requestHandler = landingController.index()
 
       expect(() => requestHandler(request, response, next)).toThrowError(UnauthorizedError)
+    })
+
+    it('redirects to the reports page when the user is a reporter', () => {
+      const response: DeepMocked<Response> = createMock<Response>({
+        locals: {
+          user: userFactory.build({
+            roles: ['reporter' as TemporaryAccommodationUserRole],
+          }),
+        },
+      })
+
+      const requestHandler = landingController.index()
+      requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(managePaths.reports.new({}))
     })
   })
 })

@@ -8,8 +8,9 @@ import {
   userHasAssessorRoleAndIsApplyEnabled,
   userHasReferrerRole,
   userHasReferrerRoleAndIsApplyEnabled,
+  userHasReporterRole,
 } from './userUtils'
-import { TemporaryAccommodationUserRole as Role } from '../@types/shared'
+import { TemporaryAccommodationUserRole as Role, TemporaryAccommodationUserRole } from '../@types/shared'
 import config from '../config'
 
 jest.mock('./enabledRegions', () => {
@@ -116,6 +117,18 @@ describe('userHasAssessorRole', () => {
   it('returns false when user hasnt got the role "assessor"', () => {
     const user = userFactory.build({ roles: ['referrer'] })
     expect(userHasAssessorRole(user)).toBe(false)
+  })
+})
+
+describe('userHasReporterRole', () => {
+  it('returns true when user has got the role "reporter"', () => {
+    const user = userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] })
+    expect(userHasReporterRole(user)).toBe(true)
+  })
+
+  it('returns false when user hasnt got the role "reporter"', () => {
+    const user = userFactory.build({ roles: ['referrer'] })
+    expect(userHasReporterRole(user)).toBe(false)
   })
 })
 

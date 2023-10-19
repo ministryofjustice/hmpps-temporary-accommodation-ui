@@ -1,5 +1,5 @@
 import { Request } from 'express'
-import { ProbationRegion, TemporaryAccommodationUser as User } from '../@types/shared'
+import { ProbationRegion, TemporaryAccommodationUserRole, TemporaryAccommodationUser as User } from '../@types/shared'
 import enabledRegions from './enabledRegions'
 import config from '../config'
 
@@ -17,6 +17,10 @@ export function userHasReferrerRole(user: User): boolean {
 
 export function userHasAssessorRole(user: User): boolean {
   return user.roles.includes('assessor')
+}
+
+export function userHasReporterRole(user: User): boolean {
+  return user.roles.includes('reporter' as TemporaryAccommodationUserRole)
 }
 
 export function userHasReferrerRoleAndIsApplyEnabled(user: User): boolean {

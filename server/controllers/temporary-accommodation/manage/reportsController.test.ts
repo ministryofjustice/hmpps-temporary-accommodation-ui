@@ -4,15 +4,23 @@ import { ReportsController } from '.'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import ReportService from '../../../services/reportService'
-import { probationRegionFactory } from '../../../testutils/factories'
+import { probationRegionFactory, userFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import { TemporaryAccommodationUserRole } from '../../../@types/shared'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
-jest.mock('../../../utils/userUtils')
+jest.mock('../../../utils/userUtils', () => {
+  const originalUserUtils = jest.requireActual('../../../utils/userUtils')
+
+  return {
+    ...originalUserUtils,
+    filterProbationRegions: jest.fn(),
+  }
+})
 jest.mock('../../../utils/dateUtils')
 jest.mock('../../../utils/reportUtils')
 
@@ -20,8 +28,8 @@ describe('ReportsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
   let request: Request
+  let response: DeepMocked<Response> = createMock<Response>({})
 
-  const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const reportService = createMock<ReportService>({})
@@ -39,7 +47,7 @@ describe('ReportsController', () => {
   })
 
   describe('new', () => {
-    it('renders the form', async () => {
+    it('renders the form with filtered regions', async () => {
       const unfilteredRegions = [
         probationRegionFactory.build({
           name: 'unfiltered-region',
@@ -61,6 +69,10 @@ describe('ReportsController', () => {
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
       ;(getYearsSince as jest.Mock).mockReturnValue([])
 
+      response = createMock<Response>({
+        locals: { user: userFactory.build() },
+      })
+
       await requestHandler(request, response, next)
 
       expect(reportService.getReferenceData).toHaveBeenCalledWith(callConfig)
@@ -73,6 +85,45 @@ describe('ReportsController', () => {
         probationRegionId: request.session.probationRegion.id,
         months: monthsArr,
         years: [],
+      })
+    })
+
+    describe('when the user is a reporter', () => {
+      it('renders the form with all regions', async () => {
+        const allRegions = [
+          probationRegionFactory.build({
+            name: 'region-1',
+          }),
+          probationRegionFactory.build({
+            name: 'region-2',
+          }),
+        ]
+
+        reportService.getReferenceData.mockResolvedValue({
+          probationRegions: allRegions,
+        })
+
+        const requestHandler = reportsController.new()
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+        ;(getYearsSince as jest.Mock).mockReturnValue([])
+
+        response = createMock<Response>({
+          locals: { user: userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] }) },
+        })
+
+        await requestHandler(request, response, next)
+
+        expect(reportService.getReferenceData).toHaveBeenCalledWith(callConfig)
+        expect(filterProbationRegions).not.toHaveBeenCalled()
+
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/new', {
+          allProbationRegions: allRegions,
+          errors: {},
+          errorSummary: [],
+          probationRegionId: request.session.probationRegion.id,
+          months: monthsArr,
+          years: [],
+        })
       })
     })
   })

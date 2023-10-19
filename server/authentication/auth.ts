@@ -40,7 +40,7 @@ function init(): void {
 
   // TODO: Remove this once our sign in testing on our new domain is complete on
   // the test env.
-  const redirectToDomain = process.env.NODE_ENV === 'test' ? config.secondDomain : config.firstDomain
+  const redirectToDomain = config.environment === 'test' ? config.secondDomain : config.firstDomain
 
   const callbackURL = {
     callbackURL: `${redirectToDomain}/sign-in/callback`,

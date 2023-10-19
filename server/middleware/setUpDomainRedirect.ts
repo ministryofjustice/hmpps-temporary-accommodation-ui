@@ -9,7 +9,7 @@ export default function setUpDomainRedirect(): Router {
   const target = new URL(config.secondDomain)
 
   router.use((req, res, next) => {
-    if (process.env.NODE_ENV === 'test' && req.headers.host === source.host) {
+    if (config.environment === 'test' && req.headers.host === source.host) {
       target.pathname = req.path
       return res.redirect(301, `${target.toString()}`)
     }

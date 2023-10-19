@@ -20,27 +20,27 @@ const setupApp = (): Express => {
 }
 describe('setUpDomainRedirect', () => {
   it('should redirect to the target domain when in test mode', () => {
-    process.env.NODE_ENV = 'test'
+    config.environment = 'test'
     const app = setupApp()
     const targetHost = new URL(config.firstDomain).host
     return request(app).get('/known').set('host', targetHost).expect(301)
   })
 
   it('should not redirect requests already coming from the second domain', () => {
-    process.env.NODE_ENV = 'test'
+    config.environment = 'test'
     const app = setupApp()
     const targetHost = new URL(config.secondDomain).host
     return request(app).get('/known').set('host', targetHost).expect(200)
   })
 
   it('should not redirect when not in test mode', () => {
-    process.env.NODE_ENV = 'production'
+    config.environment = 'production'
     const app = setupApp()
     const targetHost = new URL(config.firstDomain).host
     return request(app).get('/known').set('host', targetHost).expect(200)
   })
 
   afterEach(() => {
-    process.env.NODE_ENV = 'test'
+    config.environment = 'test'
   })
 })

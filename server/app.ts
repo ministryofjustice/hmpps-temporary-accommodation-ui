@@ -24,6 +24,7 @@ import { setUpSentryErrorHandler, setUpSentryRequestHandler } from './middleware
 import routes from './routes/temporary-accommodation'
 import type { Controllers } from './controllers'
 import type { Services } from './services'
+import setUpDomainRedirect from './middleware/setUpDomainRedirect'
 
 export default function createApp(controllers: Controllers, services: Services): express.Application {
   const app = express()
@@ -33,6 +34,8 @@ export default function createApp(controllers: Controllers, services: Services):
   app.set('port', process.env.PORT || 3000)
 
   setUpSentryRequestHandler(app)
+
+  app.use(setUpDomainRedirect())
 
   // Add method-override to allow us to use PUT and DELETE methods
   app.use(methodOverride('_method'))

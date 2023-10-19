@@ -14,9 +14,6 @@ export default class PremisesNewPage extends PremisesEditablePage {
   }
 
   completeForm(newPremises: NewPremises): void {
-    this.getLabel('Enter a property reference')
-    this.getTextInputByIdAndEnterDetails('name', newPremises.name)
-
     super.completeEditableForm(newPremises)
   }
 

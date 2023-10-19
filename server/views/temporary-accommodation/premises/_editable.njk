@@ -7,6 +7,20 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
+{{ taInput(
+  {
+    label: {
+      text: 'Enter a property reference',
+      classes: "govuk-label--s"
+    },
+    hint: {
+      text: "This will be used to identify the property"
+    },
+    fieldName: "name"
+  },
+  fetchContext()
+) }}
+
 {% call govukFieldset({
   legend: {
     text: "What is the property address?",

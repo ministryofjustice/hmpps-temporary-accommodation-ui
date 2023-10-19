@@ -78,6 +78,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
   }
 
   clearForm(): void {
+    this.getTextInputByIdAndClear('name')
     this.getTextInputByIdAndClear('addressLine1')
     this.getTextInputByIdAndClear('addressLine2')
     this.getTextInputByIdAndClear('town')

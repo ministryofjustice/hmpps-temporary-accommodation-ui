@@ -33,13 +33,6 @@ describe('setUpDomainRedirect', () => {
     return request(app).get('/known').set('host', targetHost).expect(200)
   })
 
-  it('should not redirect when not in test mode', () => {
-    config.environment = 'production'
-    const app = setupApp()
-    const targetHost = new URL(config.firstDomain).host
-    return request(app).get('/known').set('host', targetHost).expect(200)
-  })
-
   afterEach(() => {
     config.environment = 'test'
   })

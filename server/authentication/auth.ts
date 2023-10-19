@@ -29,27 +29,15 @@ const authenticationMiddleware: AuthenticationMiddleware = verifyToken => {
 }
 
 function init(): void {
-  const defaultStrategyConfig = {
-    authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
-    tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-    clientID: config.apis.hmppsAuth.apiClientId,
-    clientSecret: config.apis.hmppsAuth.apiClientSecret,
-    state: true,
-    customHeaders: { Authorization: generateOauthClientToken() },
-  }
-
-  // TODO: Remove this once our sign in testing on our new domain is complete on
-  // the test env.
-  const redirectToDomain = process.env.NODE_ENV === 'test' ? config.secondDomain : config.firstDomain
-
-  const callbackURL = {
-    callbackURL: `${redirectToDomain}/sign-in/callback`,
-  }
-
   const strategy = new Strategy(
     {
-      ...defaultStrategyConfig,
-      ...callbackURL,
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      clientID: config.apis.hmppsAuth.apiClientId,
+      clientSecret: config.apis.hmppsAuth.apiClientSecret,
+      callbackURL: `${config.firstDomain}/sign-in/callback`,
+      state: true,
+      customHeaders: { Authorization: generateOauthClientToken() },
     },
     (token, refreshToken, params, profile, done) => {
       return done(null, { token, username: params.user_name, authSource: params.auth_source })

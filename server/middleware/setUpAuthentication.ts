@@ -29,10 +29,7 @@ export default function setUpAuth(): Router {
   )
 
   const authUrl = config.apis.hmppsAuth.externalUrl
-  // TODO: Remove this once our sign in testing on our new domain is complete on
-  // the test env.
-  const redirectToDomain = process.env.NODE_ENV === 'test' ? config.secondDomain : config.firstDomain
-  const authSignOutUrl = `${authUrl}/sign-out?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${redirectToDomain}`
+  const authSignOutUrl = `${authUrl}/sign-out?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.firstDomain}`
 
   router.use('/sign-out', (req, res, next) => {
     if (req.user) {

@@ -3,6 +3,9 @@ import Page from '../../page'
 
 export default abstract class PremisesEditablePage extends Page {
   protected completeEditableForm(newOrUpdatePremises: NewPremises | UpdatePremises): void {
+    this.getLabel('Enter a property reference')
+    this.getTextInputByIdAndEnterDetails('name', newOrUpdatePremises.name)
+
     this.getLabel('Address line 1')
     this.getTextInputByIdAndEnterDetails('addressLine1', newOrUpdatePremises.addressLine1)
 

@@ -119,9 +119,16 @@ export default class PremisesController {
       const { premisesId } = req.params
       const callConfig = extractCallConfig(req)
 
+      const { name } = req.body
+
+      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+
+      const newPremisesName = name === premises.name ? null : name
+
       const updatePremises: UpdatePremises = {
         characteristicIds: [],
         ...req.body,
+        name: newPremisesName,
         turnaroundWorkingDayCount: parseNaturalNumber(req.body.turnaroundWorkingDayCount),
       }
 

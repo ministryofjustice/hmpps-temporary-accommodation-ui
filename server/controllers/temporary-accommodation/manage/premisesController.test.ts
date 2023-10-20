@@ -323,12 +323,14 @@ describe('PremisesController', () => {
         ...newPremises,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
       premisesService.update.mockResolvedValue(premises)
 
       await requestHandler(request, response, next)
 
       expect(premisesService.update).toHaveBeenCalledWith(callConfig, premises.id, {
         ...newPremises,
+        name: null,
         characteristicIds: [],
       })
 
@@ -349,12 +351,14 @@ describe('PremisesController', () => {
         ...newPremises,
       }
 
+      premisesService.getPremises.mockResolvedValue(premises)
       premisesService.update.mockResolvedValue(premises)
 
       await requestHandler(request, response, next)
 
       expect(premisesService.update).toHaveBeenCalledWith(callConfig, premises.id, {
         ...newPremises,
+        name: null,
         characteristicIds: [],
       })
 
@@ -369,6 +373,7 @@ describe('PremisesController', () => {
 
       const err = new Error()
 
+      premisesService.getPremises.mockResolvedValue(premises)
       premisesService.update.mockImplementation(() => {
         throw err
       })
@@ -387,6 +392,66 @@ describe('PremisesController', () => {
         err,
         paths.premises.edit({ premisesId: premises.id }),
       )
+    })
+
+    describe('when a new premises name is supplied', () => {
+      it('should send the name', async () => {
+        const requestHandler = premisesController.update()
+
+        const premises = premisesFactory.build({ name: 'old-premises-name' })
+        const newPremises = newPremisesFactory.build({ ...premises, status: 'active', name: 'new-premises-name' })
+
+        delete newPremises.characteristicIds
+
+        request.params.premisesId = premises.id
+        request.body = {
+          ...newPremises,
+        }
+
+        premisesService.getPremises.mockResolvedValue(premises)
+        premisesService.update.mockResolvedValue(premises)
+
+        await requestHandler(request, response, next)
+
+        expect(premisesService.update).toHaveBeenCalledWith(callConfig, premises.id, {
+          ...newPremises,
+          name: newPremises.name,
+          characteristicIds: [],
+        })
+
+        expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')
+        expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      })
+    })
+
+    describe('when the existing premises name is supplied', () => {
+      it('should not send the name', async () => {
+        const requestHandler = premisesController.update()
+
+        const premises = premisesFactory.build({ name: 'old-premises-name' })
+        const newPremises = newPremisesFactory.build({ ...premises, status: 'active', name: 'old-premises-name' })
+
+        delete newPremises.characteristicIds
+
+        request.params.premisesId = premises.id
+        request.body = {
+          ...newPremises,
+        }
+
+        premisesService.getPremises.mockResolvedValue(premises)
+        premisesService.update.mockResolvedValue(premises)
+
+        await requestHandler(request, response, next)
+
+        expect(premisesService.update).toHaveBeenCalledWith(callConfig, premises.id, {
+          ...newPremises,
+          name: null,
+          characteristicIds: [],
+        })
+
+        expect(request.flash).toHaveBeenCalledWith('success', 'Property updated')
+        expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
+      })
     })
   })
 

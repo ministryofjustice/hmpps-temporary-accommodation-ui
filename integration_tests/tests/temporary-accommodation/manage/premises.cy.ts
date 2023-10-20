@@ -262,6 +262,7 @@ context('Premises', () => {
       cy.task('stubPremisesUpdate', premises)
 
       const updatedPremises = premisesFactory.build({
+        name: 'new-premises-name',
         status: 'active',
         probationRegion: this.actingUserProbationRegion,
       })
@@ -273,6 +274,7 @@ context('Premises', () => {
         expect(requests).to.have.length(1)
         const requestBody = JSON.parse(requests[0].body)
 
+        expect(requestBody.name).equal(updatePremises.name)
         expect(requestBody.addressLine1).equal(updatePremises.addressLine1)
         expect(requestBody.addressLine2).equal(updatePremises.addressLine2)
         expect(requestBody.town).equal(updatePremises.town)

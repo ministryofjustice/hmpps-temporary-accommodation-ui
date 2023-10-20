@@ -19,12 +19,6 @@ export default class LocationHeaderComponent extends Component {
         cy.contains('Bedspace reference').should('not.exist')
       }
 
-      if (premises) {
-        cy.get('h2').contains('Property reference').siblings('p').should('contain', premises.name)
-      } else {
-        cy.contains('Property reference').should('not.exist')
-      }
-
       if (premises && !this.hideAddress) {
         cy.get('h2')
           .contains('Property address')

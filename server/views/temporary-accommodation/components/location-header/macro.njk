@@ -12,9 +12,6 @@
   {% endif %}
 
   {% if premises %}
-    <h2>Property reference</h2>
-    <p>{{ premises.name }}</p>
-
     {% if not hideAddress %}
       <h2>Property address</h2>
       <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>

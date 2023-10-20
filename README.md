@@ -118,6 +118,12 @@ view screenshots of what the user sees during each step.
 npm run test:integration:ui
 ```
 
+#### End-to-End tests
+
+```bash
+script/local_e2e
+```
+
 ## Release process
 
 Our release process aligns with the other CAS teams and as such [lives in

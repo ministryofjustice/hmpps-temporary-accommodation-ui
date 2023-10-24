@@ -7,6 +7,7 @@ import { arrivalDateFromApplication } from '../../form-pages/utils'
 import getSummaryDataFromApplication from './getSummaryDataFromApplication'
 import {
   dutyToReferSubmissionDateFromApplication,
+  eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
@@ -29,5 +30,6 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     dutyToReferSubmissionDate: dutyToReferSubmissionDateFromApplication(application),
     needsAccessibleProperty: needsAccessiblePropertyFromApplication(application),
     isApplicationEligible: isApplicationEligibleFromApplication(application),
+    eligibilityReason: eligibilityReasonFromApplication(application),
   }
 }

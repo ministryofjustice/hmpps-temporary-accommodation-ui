@@ -29,6 +29,7 @@ describe('getApplicationSubmissionData', () => {
       dutyToReferSubmissionDate: '2022-04-12',
       needsAccessibleProperty: true,
       isApplicationEligible: true,
+      eligibilityReason: applicationDataJson.eligibility['eligibility-reason'].reason,
     })
   })
 })

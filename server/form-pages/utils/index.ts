@@ -274,7 +274,7 @@ export const personRisksRoshResponse = (risks: PersonRisks): PageResponse => {
   }
   return {
     'Risk of serious harm':
-      'Something went wrong. We are unable to include RoSH information. This risk data must be checked manually outside of this service.',
+      'We were unable to automatically import RoSH information. Check the "Placement considerations" section to find the OASys risk levels. If the risk levels are not present, they must be checked manually outside of this service.',
   }
 }
 

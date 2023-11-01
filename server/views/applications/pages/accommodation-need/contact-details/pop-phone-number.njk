@@ -1,0 +1,23 @@
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+  <h1 class="govuk-heading-l">
+    <span class="govuk-caption-l">{{ task.title }}</span>
+    {{ page.title }}
+  </h1>
+
+  {{ formPageInput({
+    fieldName: "phone",
+    label: {
+      text: "Please provide an up to date contact number for the person on probation.",
+      classes: "govuk-label--s"
+    }
+  }, fetchContext()) }}
+
+
+  {{ govukDetails({
+    summaryText: "Why do we need the person’s telephone number?",
+    html: "<p>The accommodation support worker is required to make regular telephone contact with the person on probation during a CAS3 stay, therefore contact details must be provided.</p>"
+  }) }}
+{% endblock %}

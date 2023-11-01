@@ -51,6 +51,9 @@
     },
     "practitioner-pdu": {
       "pdu": "Some PDU"
+    },
+    "pop-phone-number": {
+      "phone": "01235 467890"
     }
   },
   "eligibility": {

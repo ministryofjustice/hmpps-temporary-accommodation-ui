@@ -26,10 +26,6 @@ function getIsAbleToShare(ableToShare?: YesOrNo) {
 }
 
 function getReleaseType(reason?: EligibilityReasonsT) {
-  if (reason === 'homelessAfterRerelease') {
-    return 'Rerelease'
-  }
-
   if (reason === 'homelessFromApprovedPremises') {
     return 'Approved Premises'
   }

@@ -210,12 +210,7 @@
           "type": "object",
           "properties": {
             "reason": {
-              "enum": [
-                "homelessAfterRerelease",
-                "homelessFromApprovedPremises",
-                "homelessFromBailAccommodation",
-                "homelessFromCustody"
-              ],
+              "enum": ["homelessFromApprovedPremises", "homelessFromBailAccommodation", "homelessFromCustody"],
               "type": "string"
             }
           }

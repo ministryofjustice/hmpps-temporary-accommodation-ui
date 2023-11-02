@@ -1,3 +1,4 @@
+{% from "../../../../temporary-accommodation/components/ta-select/macro.njk" import taSelect %}
 {% extends "../../layout.njk" %}
 
 {% block questions %}
@@ -28,5 +29,18 @@
     },
     items: dateFieldValues('date', errors)
   }, fetchContext()) }}
+
+  {% if page.getLocalAuthorities() | length %}
+    {{ taSelect(
+      {
+        label: {
+          text: "What is the local authority (optional)?",
+          classes: "govuk-label--m"
+        },
+        items: convertObjectsToSelectOptions(page.getLocalAuthorities(), '', 'name', 'name', 'localAuthorityAreaId'),
+        fieldName: "localAuthorityAreaName"
+      }
+    ) }}
+  {% endif %}
 
 {% endblock %}

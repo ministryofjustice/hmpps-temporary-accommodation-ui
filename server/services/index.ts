@@ -103,4 +103,5 @@ export {
   PremisesService,
   TurnaroundService,
   UserService,
+  ReferenceDataService,
 }

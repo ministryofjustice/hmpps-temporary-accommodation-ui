@@ -62,7 +62,6 @@
       "releaseDate-year": "2123",
       "releaseDate-month": "9",
       "releaseDate-day": "2"
-
     },
     "accommodation-required-from-date": {
       "accommodationRequiredFromDate": "2123-09-16",
@@ -281,8 +280,8 @@
       "date": "2022-04-12",
       "date-year": "2022",
       "date-month": "4",
-      "date-day": "12"
-
+      "date-day": "12",
+      "localAuthorityAreaName": "Barking and Dagenham"
     },
     "crs-submitted": {
       "crsSubmitted": "yes"

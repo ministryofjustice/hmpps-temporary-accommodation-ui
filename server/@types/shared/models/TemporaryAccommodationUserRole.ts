@@ -3,4 +3,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type TemporaryAccommodationUserRole = 'assessor' | 'referrer';
+export type TemporaryAccommodationUserRole = 'assessor' | 'referrer' | 'reporter';

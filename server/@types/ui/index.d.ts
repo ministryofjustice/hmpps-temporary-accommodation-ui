@@ -10,6 +10,7 @@ import {
   TemporaryAccommodationAssessment as Assessment,
   Booking,
   Document,
+  LocalAuthorityArea,
   OASysSection,
   OASysSections,
   Person,
@@ -244,6 +245,9 @@ export type DataServices = Partial<{
   }
   userService: {
     getUserById: (callConfig: CallConfig, id: string) => Promise<User>
+  }
+  referenceDataService: {
+    getLocalAuthorities: (CallConfig: CallConfig) => Promise<Array<LocalAuthorityArea>>
   }
 }>
 

@@ -17,8 +17,9 @@ export default class DtrDetailsPage extends ApplyPage {
     )
   }
 
-  completeForm() {
+  completeForm(localAuthorityName?: string) {
     this.completeDateInputsFromPageBody('date')
     this.completeTextInputFromPageBody('reference')
+    this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaName', localAuthorityName || 'Barking and Dagenham')
   }
 }

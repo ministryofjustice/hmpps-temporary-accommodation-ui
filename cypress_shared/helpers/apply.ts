@@ -25,6 +25,7 @@ import {
   acctAlertFactory,
   adjudicationFactory,
   documentFactory,
+  localAuthorityFactory,
   oasysSectionsFactory,
   oasysSelectionFactory,
 } from '../../server/testutils/factories'
@@ -729,6 +730,13 @@ export default class ApplyHelper {
   }
 
   private completeAccommodationReferralDetails() {
+    let localAuthority
+
+    if (this.environment === 'integration') {
+      localAuthority = localAuthorityFactory.build({ name: 'Barking and Dagenham' })
+      cy.task('stubLocalAuthorities', [localAuthority])
+    }
+
     // Given I click on the accommodation referral details task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('accommodation-referral-details')
 
@@ -742,7 +750,7 @@ export default class ApplyHelper {
 
     if (hasSubmittedDtr(this.application)) {
       const dtrDetailsPage = new DtrDetailsPage(this.application)
-      dtrDetailsPage.completeForm()
+      dtrDetailsPage.completeForm(localAuthority?.name)
       dtrDetailsPage.clickSubmit()
       this.pages.accommodationReferralDetails.push(dtrDetailsPage)
     }

@@ -34,8 +34,11 @@
     {{ taSelect(
       {
         label: {
-          text: "What is the local authority (optional)?",
+          text: "Local authority (optional)",
           classes: "govuk-label--m"
+        },
+        hint: {
+          text: "Provide the home local authority used for the DTR/NOP"
         },
         items: convertObjectsToSelectOptions(page.getLocalAuthorities(), '', 'name', 'name', 'localAuthorityAreaId'),
         fieldName: "localAuthorityAreaName"

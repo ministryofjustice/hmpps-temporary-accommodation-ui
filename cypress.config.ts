@@ -19,6 +19,7 @@ import room from './integration_tests/mockApis/room'
 import tokenVerification from './integration_tests/mockApis/tokenVerification'
 import turnaround from './integration_tests/mockApis/turnaround'
 import user from './integration_tests/mockApis/user'
+import referenceData from './integration_tests/mockApis/referenceData'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import accessibilityViolations from './integration_tests/tasks/accessibilityViolations'
 import { resetStubs } from './wiremock'
@@ -61,6 +62,7 @@ export default defineConfig({
         ...bookingSearch,
         ...bedspaceSearch,
         ...accessibilityViolations,
+        ...referenceData,
       })
     },
     baseUrl: 'http://localhost:3007',

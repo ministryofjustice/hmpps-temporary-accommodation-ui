@@ -5,4 +5,6 @@ export default [
   'North West',
   'East Midlands',
   'West Midlands',
+  'South Central',
+  'South West',
 ]

@@ -10,6 +10,7 @@ export type { ApArea } from './models/ApArea';
 export type { Application } from './models/Application';
 export type { ApplicationStatus } from './models/ApplicationStatus';
 export type { ApplicationSummary } from './models/ApplicationSummary';
+export type { ApplicationTimelineNote } from './models/ApplicationTimelineNote';
 export type { ApprovedPremises } from './models/ApprovedPremises';
 export type { ApprovedPremisesApplication } from './models/ApprovedPremisesApplication';
 export type { ApprovedPremisesApplicationSummary } from './models/ApprovedPremisesApplicationSummary';
@@ -130,6 +131,7 @@ export type { NewReferralHistoryUserNote } from './models/NewReferralHistoryUser
 export type { NewRoom } from './models/NewRoom';
 export type { NewTurnaround } from './models/NewTurnaround';
 export type { NewWithdrawal } from './models/NewWithdrawal';
+export type { NomisUser } from './models/NomisUser';
 export type { Nonarrival } from './models/Nonarrival';
 export type { NonArrivalReason } from './models/NonArrivalReason';
 export type { OASysAssessmentId } from './models/OASysAssessmentId';

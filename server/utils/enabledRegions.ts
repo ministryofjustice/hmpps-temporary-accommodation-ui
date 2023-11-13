@@ -7,4 +7,5 @@ export default [
   'West Midlands',
   'South Central',
   'South West',
+  'London',
 ]

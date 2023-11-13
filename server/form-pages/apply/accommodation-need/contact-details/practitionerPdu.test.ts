@@ -29,7 +29,7 @@ describe('PractitionerPdu', () => {
   })
 
   itShouldHavePreviousValue(new PractitionerPdu({}, application), 'backup-contact')
-  itShouldHaveNextValue(new PractitionerPdu({}, application), '')
+  itShouldHaveNextValue(new PractitionerPdu({}, application), 'pop-phone-number')
 
   describe('errors', () => {
     it('returns an empty object if the PDU is defined', () => {

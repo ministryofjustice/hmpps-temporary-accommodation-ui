@@ -31,7 +31,7 @@ export default class PractitionerPdu implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'pop-phone-number'
   }
 
   errors() {

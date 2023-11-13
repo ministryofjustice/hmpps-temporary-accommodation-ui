@@ -58,6 +58,7 @@ import {
   NeedsPage,
   OffendingSummaryPage,
   OtherAccommodationOptionsPage,
+  PopPhoneNumberPage,
   PractitionerPduPage,
   PreviousStaysDetailsPage,
   PreviousStaysPage,
@@ -377,7 +378,11 @@ export default class ApplyHelper {
     practitionerPduPage.completeForm()
     practitionerPduPage.clickSubmit()
 
-    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, practitionerPduPage]
+    const popPhoneNumberPage = new PopPhoneNumberPage(this.application)
+    popPhoneNumberPage.completeForm()
+    popPhoneNumberPage.clickSubmit()
+
+    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, practitionerPduPage, popPhoneNumberPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

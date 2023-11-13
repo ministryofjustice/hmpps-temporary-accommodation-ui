@@ -9,7 +9,7 @@ export default class ReportClient {
   restClient: RestClient
 
   constructor(callConfig: CallConfig) {
-    this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, callConfig)
+    this.restClient = new RestClient('personClient', config.apis.approvedPremisesReports as ApiConfig, callConfig)
   }
 
   async bookings(response: Response, filename: string, month: string, year: string): Promise<void> {

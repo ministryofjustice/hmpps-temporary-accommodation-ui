@@ -15,8 +15,8 @@ describe('ReportClient', () => {
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http://localhost:8080'
-    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
+    config.apis.approvedPremisesReports.url = 'http://localhost:8080'
+    fakeApprovedPremisesApi = nock(config.apis.approvedPremisesReports.url)
     reportClient = new ReportClient(callConfig)
   })
 

@@ -97,6 +97,15 @@ export default {
       agent: new AgentConfig(Number(get('COMMUNITY_ACCOMMODATION_API_TIMEOUT_RESPONSE', 10000))),
       serviceName: 'temporary-accommodation',
     },
+    approvedPremisesReports: {
+      url: get('APPROVED_PREMISES_API_URL', 'http://localhost:9092', requiredInProduction),
+      timeout: {
+        response: 50000,
+        deadline: 50000,
+      },
+      agent: new AgentConfig(Number(get('COMMUNITY_ACCOMMODATION_API_TIMEOUT_RESPONSE', 40000))),
+      serviceName: 'temporary-accommodation',
+    },
     audit: {
       region: get('AUDIT_SQS_REGION', 'eu-west-2'),
       queueUrl: get('AUDIT_SQS_QUEUE_URL', ''),

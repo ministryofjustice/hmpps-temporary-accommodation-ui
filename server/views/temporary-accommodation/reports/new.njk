@@ -13,7 +13,7 @@
 
 {% block content %}
   {% include "../../_messages.njk" %}
-  
+
   <h1 class="govuk-heading-l">Reports</h1>
 
   <div class="govuk-grid-row">
@@ -73,7 +73,8 @@
                 text: "Download booking data",
                 name: "reportType",
                 value: 'bookings',
-                classes: 'govuk-input govuk-!-width-one-half'
+                classes: 'govuk-input govuk-!-width-one-half',
+                preventDoubleClick: true
               }) }}
 
               <br/>
@@ -82,7 +83,8 @@
                 text: "Download bedspace usage",
                 name: "reportType",
                 value: 'bedspace-usage',
-                classes: 'govuk-input govuk-!-width-one-half'
+                classes: 'govuk-input govuk-!-width-one-half',
+                preventDoubleClick: true
               }) }}
 
               <br/>
@@ -91,11 +93,10 @@
                 text: "Download occupancy report",
                 name: "reportType",
                 value: 'occupancy',
-                classes: 'govuk-input govuk-!-width-one-half'
+                classes: 'govuk-input govuk-!-width-one-half',
+                preventDoubleClick: true
               }) }}
 
-       
-      
       </form>
     </div>
   </div>

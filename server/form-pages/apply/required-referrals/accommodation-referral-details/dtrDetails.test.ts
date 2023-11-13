@@ -105,7 +105,7 @@ describe('DtrDetails', () => {
         expect(page.response()).toEqual({
           'DTR / NOP reference number': 'ABC123',
           'Date DTR / NOP was submitted': '23 July 2022',
-          'What is the local authority (optional)?': localAuthorities[0].name,
+          'What is the local authority?': localAuthorities[0].name,
         })
       })
     })
@@ -116,7 +116,7 @@ describe('DtrDetails', () => {
         expect(page.response()).toEqual({
           'DTR / NOP reference number': 'ABC123',
           'Date DTR / NOP was submitted': '23 July 2022',
-          'What is the local authority (optional)?': 'No local authority selected',
+          'What is the local authority?': 'No local authority selected',
         })
       })
     })

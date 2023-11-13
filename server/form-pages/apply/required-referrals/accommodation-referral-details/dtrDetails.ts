@@ -25,7 +25,7 @@ export default class DtrDetails implements TasklistPage {
   questions = {
     reference: 'DTR / NOP reference number',
     date: 'Date DTR / NOP was submitted',
-    localAuthority: 'What is the local authority (optional)?',
+    localAuthority: 'What is the local authority?',
   }
 
   constructor(

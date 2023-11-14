@@ -155,7 +155,7 @@
     "jquery": "^3.6.1",
     "jsonpath": "^1.1.1",
     "jsonschema": "^1.4.1",
-    "jwt-decode": "^3.1.2",
+    "jwt-decode": "^4.0.0",
     "lodash.escaperegexp": "^4.1.2",
     "method-override": "^3.0.0",
     "nocache": "^4.0.0",

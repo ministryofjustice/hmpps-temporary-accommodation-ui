@@ -40,19 +40,15 @@ export default class AccommodationSharing implements TasklistPage {
   }
 
   response() {
+    const formContent = anonymiseFormContent(this.questions.accommodationSharing, this.application.person)
+
     if (this.body.accommodationSharing === 'yes') {
       return {
-        [anonymiseFormContent(
-          this.questions.accommodationSharing,
-          this.application.person,
-        )]: `Yes - ${this.body.accommodationSharingYesDetail}`,
+        [formContent]: `Yes - ${this.body.accommodationSharingYesDetail}`,
       }
     }
     return {
-      [anonymiseFormContent(
-        this.questions.accommodationSharing,
-        this.application.person,
-      )]: `No - ${this.body.accommodationSharingNoDetail}`,
+      [formContent]: `No - ${this.body.accommodationSharingNoDetail}`,
     }
   }
 

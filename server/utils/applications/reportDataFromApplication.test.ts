@@ -37,11 +37,23 @@ describe('reportDataFromApplication', () => {
           data: {
             'accommodation-referral-details': {
               'dtr-submitted': { dtrSubmitted: 'yes' },
-              'dtr-details': { date: 'Duty of care submission date' },
+              'dtr-details': { date: '2023-05-24' },
             },
           },
         })
-        expect(dutyToReferSubmissionDateFromApplication(application)).toEqual('Duty of care submission date')
+        expect(dutyToReferSubmissionDateFromApplication(application)).toEqual('2023-05-24')
+      })
+
+      it('strips the date if it contains whitespace', () => {
+        const application = applicationFactory.build({
+          data: {
+            'accommodation-referral-details': {
+              'dtr-submitted': { dtrSubmitted: 'yes' },
+              'dtr-details': { date: ' 2023 - 05 - 24 ' },
+            },
+          },
+        })
+        expect(dutyToReferSubmissionDateFromApplication(application)).toEqual('2023-05-24')
       })
     })
 

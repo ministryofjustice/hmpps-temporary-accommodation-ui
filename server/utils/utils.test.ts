@@ -12,6 +12,7 @@ import {
   pascalCase,
   removeBlankSummaryListItems,
   sentenceCase,
+  stripWhitespace,
   unique,
 } from './utils'
 
@@ -229,5 +230,11 @@ describe('unique', () => {
     expect(appendQueryString('/some/path?userId=some-user', { bookingId: 'some-booking' })).toEqual(
       '/some/path?userId=some-user&bookingId=some-booking',
     )
+  })
+})
+
+describe('stripWhitespace', () => {
+  it('removes whitespace from a string', () => {
+    expect(stripWhitespace(' 2034 -   05 - 25  ')).toEqual('2034-05-25')
   })
 })

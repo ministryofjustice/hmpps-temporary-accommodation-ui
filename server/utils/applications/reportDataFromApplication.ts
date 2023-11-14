@@ -1,6 +1,7 @@
 import { eligibilityReasons } from '../../form-pages/apply/accommodation-need/eligibility/eligibilityReason'
 import { TemporaryAccommodationApplication as Application } from '../../@types/shared'
 import { SessionDataError } from '../errors'
+import { stripWhitespace } from '../utils'
 
 const isDutyToReferSubmittedFromApplication = (application: Application): boolean => {
   const isDutyToReferSubmitted: string = (application.data as Record<string, unknown>)?.[
@@ -29,7 +30,7 @@ const dutyToReferSubmissionDateFromApplication = (application: Application): str
     throw new SessionDataError('No duty to refer submitted date')
   }
 
-  return dutyToReferSubmissionDate
+  return stripWhitespace(dutyToReferSubmissionDate)
 }
 
 const needsAccessiblePropertyFromApplication = (application: Application): boolean => {

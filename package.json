@@ -38,7 +38,7 @@
     "generate:schema:apply": "npx ts-node --transpile-only ./server/form-pages/apply/generateSchema.ts"
   },
   "engines": {
-    "node": "^18",
+    "node": "^20.0.0",
     "npm": "^10.0.0"
   },
   "jest": {
@@ -192,7 +192,7 @@
     "@types/jsonwebtoken": "^9.0.0",
     "@types/lodash.escaperegexp": "^4.1.7",
     "@types/method-override": "^0.0.34",
-    "@types/node": "^18.8.1",
+    "@types/node": "^20.0.0",
     "@types/nunjucks": "^3.2.1",
     "@types/passport": "^1.0.11",
     "@types/passport-oauth2": "^1.4.11",

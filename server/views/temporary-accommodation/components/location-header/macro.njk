@@ -4,12 +4,6 @@
 
 <div class="location-header">
   {% set premises = locationDetails.premises %}
-  {% set room = locationDetails.room %}
-
-  {% if room %}
-    <h2>Bedspace reference</h2>
-    <p>{{ room.name }}</p>
-  {% endif %}
 
   {% if premises %}
     {% if not hideAddress %}

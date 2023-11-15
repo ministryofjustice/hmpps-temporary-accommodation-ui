@@ -8,6 +8,7 @@ export type { Adjudication } from './models/Adjudication';
 export type { AnyValue } from './models/AnyValue';
 export type { ApArea } from './models/ApArea';
 export type { Application } from './models/Application';
+export type { ApplicationSortField } from './models/ApplicationSortField';
 export type { ApplicationStatus } from './models/ApplicationStatus';
 export type { ApplicationSummary } from './models/ApplicationSummary';
 export type { ApplicationTimelineNote } from './models/ApplicationTimelineNote';

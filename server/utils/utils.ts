@@ -118,3 +118,7 @@ export const appendQueryString = (
   }
   return `${path}${queryString ? `?${queryString}` : ''}`
 }
+
+export const stripWhitespace = (text: string): string => {
+  return text.replace(/\s+/g, '')
+}

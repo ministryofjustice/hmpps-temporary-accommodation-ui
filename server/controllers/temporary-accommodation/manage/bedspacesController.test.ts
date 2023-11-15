@@ -9,6 +9,7 @@ import BedspaceService from '../../../services/bedspaceService'
 import { ListingEntry } from '../../../services/bookingService'
 import {
   characteristicFactory,
+  newRoomFactory,
   premisesFactory,
   referenceDataFactory,
   roomFactory,
@@ -294,6 +295,72 @@ describe('BedspacesController', () => {
         err,
         paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
       )
+    })
+
+    describe('when a new bedspace name is supplied', () => {
+      it('updates the room and redirects to the show page', async () => {
+        const requestHandler = bedspacesController.update()
+
+        const premises = premisesFactory.build({ status: 'active' })
+        const room = roomFactory.build({ name: 'old-room-name' })
+        const newRoom = newRoomFactory.build({ ...room, name: 'new-room-name' })
+
+        request.params = { premisesId: premises.id, roomId: room.id }
+        request.body = {
+          name: newRoom.name,
+          notes: newRoom.notes,
+        }
+
+        premisesService.getPremises.mockResolvedValue(premises)
+        bedspaceService.updateRoom.mockResolvedValue(room)
+
+        await requestHandler(request, response, next)
+
+        expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+        expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id, {
+          name: newRoom.name,
+          notes: newRoom.notes,
+          characteristicIds: [],
+        })
+
+        expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
+        expect(response.redirect).toHaveBeenCalledWith(
+          paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }),
+        )
+      })
+    })
+
+    describe('when the existing bedspace name is supplied', () => {
+      it('updates the room and redirects to the show page', async () => {
+        const requestHandler = bedspacesController.update()
+
+        const premises = premisesFactory.build({ status: 'active' })
+        const room = roomFactory.build({ name: 'old-room-name' })
+        const newRoom = newRoomFactory.build({ ...room, name: 'old-room-name' })
+
+        request.params = { premisesId: premises.id, roomId: room.id }
+        request.body = {
+          name: null,
+          notes: newRoom.notes,
+        }
+
+        premisesService.getPremises.mockResolvedValue(premises)
+        bedspaceService.updateRoom.mockResolvedValue(room)
+
+        await requestHandler(request, response, next)
+
+        expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+        expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id, {
+          name: null,
+          notes: newRoom.notes,
+          characteristicIds: [],
+        })
+
+        expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
+        expect(response.redirect).toHaveBeenCalledWith(
+          paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }),
+        )
+      })
     })
   })
 

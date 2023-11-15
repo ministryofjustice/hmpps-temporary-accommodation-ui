@@ -89,9 +89,16 @@ export default class BedspacesController {
       const { premisesId, roomId } = req.params
       const callConfig = extractCallConfig(req)
 
+      const { name } = req.body
+
+      const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
+
+      const newRoomName = name === room.name ? null : name
+
       const updateRoom: UpdateRoom = {
         characteristicIds: [],
         ...req.body,
+        name: newRoomName,
       }
 
       try {

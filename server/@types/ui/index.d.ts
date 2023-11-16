@@ -97,7 +97,14 @@ export interface HtmlItem {
   html: string
 }
 
-export type TableCell = { text: string; attributes?: HtmlAttributes; classes?: string } | { html: string }
+export type TableCell = {
+  text?: string
+  attributes?: HtmlAttributes
+  classes?: string
+  href?: string
+  html?: string
+}
+
 export interface TableRow {
   [index: number]: TableCell
 }
@@ -187,6 +194,17 @@ export interface ErrorMessage {
   attributes: {
     [K: string]: boolean
   }
+}
+
+export type PaginatedResponse<T> = {
+  url: {
+    params: URLSearchParams
+  }
+  data: Array<T>
+  pageNumber: number
+  totalPages: number
+  totalResults: number
+  pageSize: number
 }
 
 export interface ErrorMessages {

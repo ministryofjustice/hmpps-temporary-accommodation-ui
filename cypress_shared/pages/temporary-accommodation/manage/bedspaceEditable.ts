@@ -3,6 +3,9 @@ import Page from '../../page'
 
 export default abstract class BedspaceEditablePage extends Page {
   protected completeEditableForm(newOrUpdateRoom: NewRoom | UpdateRoom): void {
+    this.getLabel('Enter a bedspace reference')
+    this.getTextInputByIdAndEnterDetails('name', newOrUpdateRoom.name)
+
     newOrUpdateRoom.characteristicIds.forEach(characteristicId => {
       this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)
     })

@@ -204,16 +204,17 @@ context('Bedspace', () => {
 
     // And when I fill out the form
     cy.task('stubRoomUpdate', { premisesId, room })
-    const updatePremises = updateRoomFactory.build()
-    page.completeForm(updatePremises)
+    const updatedRoom = updateRoomFactory.build({ name: 'new-room-name' })
+    page.completeForm(updatedRoom)
 
     // Then the room should have been update in the API
     cy.task('verifyRoomUpdate', { premisesId, room }).then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
 
-      expect(requestBody.characteristicIds).members(updatePremises.characteristicIds)
-      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatePremises.notes)
+      expect(requestBody.name).equal(updatedRoom.name)
+      expect(requestBody.characteristicIds).members(updatedRoom.characteristicIds)
+      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatedRoom.notes)
     })
 
     // And I should be redirected to the show bedspace page

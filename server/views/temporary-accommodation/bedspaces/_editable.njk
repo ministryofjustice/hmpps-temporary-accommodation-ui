@@ -1,6 +1,21 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "../components/ta-input/macro.njk" import taInput %}
+
+{{ taInput(
+  {
+    label: {
+      text: 'Enter a bedspace reference',
+      classes: "govuk-label--m"
+    },
+    hint: {
+      text: "This will be used to identify the bedspace when making bookings and reporting on the service"
+    },
+    fieldName: "name"
+  },
+  fetchContext()
+) }}
 
 {{ govukCheckboxes({
   fieldset: {

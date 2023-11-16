@@ -2,6 +2,7 @@ import type {
   Arrival,
   Booking,
   BookingSearchResults,
+  BookingSearchSortField,
   Cancellation,
   Confirmation,
   Departure,
@@ -122,8 +123,12 @@ export default class BookingClient {
     return response as Turnaround
   }
 
-  async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {
-    const path = appendQueryString(paths.bookings.search({ status }), { status })
+  async search(
+    status: BookingSearchApiStatus,
+    page = 1,
+    sortBy: BookingSearchSortField = 'endDate',
+  ): Promise<BookingSearchResults> {
+    const path = appendQueryString(paths.bookings.search({ status }), { status, page, sortBy })
 
     const response = await this.restClient.get({ path })
 

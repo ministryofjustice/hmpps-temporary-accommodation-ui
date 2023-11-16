@@ -272,11 +272,38 @@ describe('BookingClient', () => {
       const bookings = bookingSearchResultsFactory.build()
 
       fakeApprovedPremisesApi
-        .get(`${paths.bookings.search({})}?status=provisional`)
+        .get(`${paths.bookings.search({})}?status=provisional&page=1&sortBy=endDate`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, bookings)
 
       const result = await bookingClient.search('provisional')
+
+      expect(result).toEqual(bookings)
+      expect(nock.isDone()).toBeTruthy()
+    })
+
+    it('makes a GET request to the bookings/search endpoint with a page number query param', async () => {
+      const bookings = bookingSearchResultsFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`${paths.bookings.search({})}?status=provisional&page=3&sortBy=endDate`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bookings)
+
+      const result = await bookingClient.search('provisional', 3)
+
+      expect(result).toEqual(bookings)
+    })
+
+    it('makes a GET request to the bookings/search endpoint with a sortBy query param', async () => {
+      const bookings = bookingSearchResultsFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(`${paths.bookings.search({})}?status=provisional&page=2&sortBy=name`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bookings)
+
+      const result = await bookingClient.search('provisional', 2, 'name')
 
       expect(result).toEqual(bookings)
     })
@@ -289,7 +316,9 @@ describe('BookingClient', () => {
 
     await bookingClient.search('provisional')
 
-    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=provisional' })
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({
+      path: '/bookings/search?status=provisional&page=1&sortBy=endDate',
+    })
   })
 
   it('calls restClient with the correct path when handed in arrived status', async () => {
@@ -299,6 +328,8 @@ describe('BookingClient', () => {
 
     await bookingClient.search('arrived')
 
-    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=arrived' })
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({
+      path: '/bookings/search?status=arrived&page=1&sortBy=endDate',
+    })
   })
 })

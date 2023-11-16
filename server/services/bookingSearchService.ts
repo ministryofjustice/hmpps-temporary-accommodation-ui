@@ -1,4 +1,5 @@
 import type { BookingSearchApiStatus, TableRow } from '@approved-premises/ui'
+import { BookingSearchSortField } from '@approved-premises/api'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
@@ -8,9 +9,14 @@ import { DateFormats } from '../utils/dateUtils'
 export default class BookingSearchService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}
 
-  async getTableRowsForFindBooking(callConfig: CallConfig, status: BookingSearchApiStatus): Promise<Array<TableRow>> {
+  async getTableRowsForFindBooking(
+    callConfig: CallConfig,
+    status: BookingSearchApiStatus,
+    page: number = 1,
+    sortBy: BookingSearchSortField = 'endDate',
+  ): Promise<Array<TableRow>> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    const bookingSummaries = await bookingClient.search(status)
+    const bookingSummaries = await bookingClient.search(status, page, sortBy)
 
     const { results } = bookingSummaries
 

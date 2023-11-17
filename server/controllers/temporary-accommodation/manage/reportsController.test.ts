@@ -9,7 +9,6 @@ import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import { TemporaryAccommodationUserRole } from '../../../@types/shared'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -108,7 +107,7 @@ describe('ReportsController', () => {
         ;(getYearsSince as jest.Mock).mockReturnValue([])
 
         response = createMock<Response>({
-          locals: { user: userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] }) },
+          locals: { user: userFactory.build({ roles: ['reporter'] }) },
         })
 
         await requestHandler(request, response, next)

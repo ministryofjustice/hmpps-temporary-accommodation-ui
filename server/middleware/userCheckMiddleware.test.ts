@@ -2,7 +2,7 @@ import { createMock } from '@golevelup/ts-jest'
 import { Request, Response } from 'express'
 import { userFactory } from '../testutils/factories'
 import { UnauthorizedError } from '../utils/errors'
-import { TemporaryAccommodationUserRole, TemporaryAccommodationUser as User } from '../@types/shared'
+import { TemporaryAccommodationUser as User } from '../@types/shared'
 import { createUserCheckMiddleware, userIsAuthorisedForManage } from './userCheckMiddleware'
 import paths from '../paths/temporary-accommodation/manage'
 
@@ -91,7 +91,7 @@ describe('createUserCheckMiddleware', () => {
         const request = createMock<Request>({ path: paths.reports.new({}) })
         const response = createMock<Response>({
           locals: {
-            user: userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] }),
+            user: userFactory.build({ roles: ['reporter'] }),
           },
         })
         const next = jest.fn()
@@ -108,7 +108,7 @@ describe('createUserCheckMiddleware', () => {
         const request = createMock<Request>({ path: paths.reports.create({}) })
         const response = createMock<Response>({
           locals: {
-            user: userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] }),
+            user: userFactory.build({ roles: ['reporter'] }),
           },
         })
         const next = jest.fn()
@@ -125,7 +125,7 @@ describe('createUserCheckMiddleware', () => {
         const request = createMock<Request>({ path: paths.assessments.index({}) })
         const response = createMock<Response>({
           locals: {
-            user: userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] }),
+            user: userFactory.build({ roles: ['reporter'] }),
           },
         })
         const next = jest.fn()

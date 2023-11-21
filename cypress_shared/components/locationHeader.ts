@@ -10,15 +10,9 @@ export default class LocationHeaderComponent extends Component {
   }
 
   shouldShowLocationDetails(): void {
-    const { premises, room } = this.details
+    const { premises } = this.details
 
     cy.get('.location-header').within(() => {
-      if (room) {
-        cy.get('h2').contains('Bedspace reference').siblings('p').should('contain', room.name)
-      } else {
-        cy.contains('Bedspace reference').should('not.exist')
-      }
-
       if (premises && !this.hideAddress) {
         cy.get('h2')
           .contains('Property address')

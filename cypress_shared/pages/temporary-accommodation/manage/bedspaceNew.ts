@@ -23,9 +23,6 @@ export default class BedspaceNewPage extends BedspaceEditablePage {
   }
 
   completeForm(newRoom: NewRoom): void {
-    this.getLabel('Enter a bedspace reference')
-    this.getTextInputByIdAndEnterDetails('name', newRoom.name)
-
     super.completeEditableForm(newRoom)
   }
 }

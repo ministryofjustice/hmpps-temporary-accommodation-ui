@@ -45,6 +45,7 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
   }
 
   clearForm(): void {
+    this.getTextInputByIdAndClear('name')
     cy.get('legend')
       .contains('Does the bedspace have any of the following attributes?')
       .parent()

@@ -1,4 +1,4 @@
-import { ApprovedPremisesApplication as Application } from '@approved-premises/api'
+import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 

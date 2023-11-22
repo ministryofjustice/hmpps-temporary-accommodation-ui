@@ -1,4 +1,4 @@
-import type { Adjudication, ApprovedPremisesApplication } from '@approved-premises/api'
+import type { Adjudication, TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { DataServices, PageResponse } from '@approved-premises/ui'
 import { CallConfig } from '../../../../data/restClient'
 import { DateFormats } from '../../../../utils/dateUtils'
@@ -34,12 +34,12 @@ export default class Adjudications implements TasklistPage {
 
   constructor(
     readonly body: Partial<AdjudicationsBody>,
-    readonly application: ApprovedPremisesApplication,
+    readonly application: Application,
   ) {}
 
   static async initialize(
     _: Record<string, unknown>,
-    application: ApprovedPremisesApplication,
+    application: Application,
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {

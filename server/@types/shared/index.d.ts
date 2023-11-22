@@ -14,6 +14,7 @@ export type { ApplicationSummary } from './models/ApplicationSummary';
 export type { ApplicationTimelineNote } from './models/ApplicationTimelineNote';
 export type { ApprovedPremises } from './models/ApprovedPremises';
 export type { ApprovedPremisesApplication } from './models/ApprovedPremisesApplication';
+export type { ApprovedPremisesApplicationStatus } from './models/ApprovedPremisesApplicationStatus';
 export type { ApprovedPremisesApplicationSummary } from './models/ApprovedPremisesApplicationSummary';
 export type { ApprovedPremisesAssessment } from './models/ApprovedPremisesAssessment';
 export type { ApprovedPremisesAssessmentStatus } from './models/ApprovedPremisesAssessmentStatus';

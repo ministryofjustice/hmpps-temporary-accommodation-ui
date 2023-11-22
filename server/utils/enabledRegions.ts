@@ -8,4 +8,5 @@ export default [
   'South Central',
   'South West',
   'London',
+  'Greater Manchester',
 ]

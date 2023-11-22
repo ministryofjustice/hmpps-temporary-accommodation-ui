@@ -1,4 +1,4 @@
-import type { ApprovedPremisesApplication, PersonAcctAlert } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication as Application, PersonAcctAlert } from '@approved-premises/api'
 import type { DataServices, PageResponse } from '@approved-premises/ui'
 import { CallConfig } from '../../../../data/restClient'
 import { DateFormats } from '../../../../utils/dateUtils'
@@ -32,12 +32,12 @@ export default class AcctAlerts implements TasklistPage {
 
   constructor(
     readonly body: Partial<AcctAlertsBody>,
-    readonly application: ApprovedPremisesApplication,
+    readonly application: Application,
   ) {}
 
   static async initialize(
     _: Record<string, unknown>,
-    application: ApprovedPremisesApplication,
+    application: Application,
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {

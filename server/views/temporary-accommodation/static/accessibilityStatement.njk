@@ -1,0 +1,94 @@
+{% extends "partials/layout.njk" %}
+
+{% set pageTitle = "Accessibility Statement - " + applicationName %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Accessibility statement for the Transitional Accommodation service (CAS3)</h1>
+      <p class="govuk-body">This accessibility statement applies to the Transitional Accommodation (CAS3) digital service.</p>
+      <p class="govuk-body">This service is run by the Ministry of Justice. We want as many people as possible to be able to use this service. 
+      For example, that means you should be able to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>change colours and contrast levels using browser or device settings</li>
+        <li>zoom in up to 400% without the text spilling off the screen</li>
+        <li>navigate most of the website using a keyboard or speech recognition software</li>
+        <li>use the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver) although there will be some problems - see below</li>
+        <li>We’ve also made the website text as simple as possible to understand.</li>
+      </ul>
+      <p class="govuk-body">
+      We’ve also made the website text as simple as possible to understand.
+      </p>
+      <p class="govuk-body">
+      <a class="govuk-link" href="https://mcmw.abilitynet.org.uk" target="_blank">AbilityNet</a> has advice on making your device easier to use if you have a disability.
+      </p>
+      <h2 class="govuk-heading-m">How accessible this website is</h2>
+      <p class="govuk-body">
+      We know some parts of this website are not fully accessible:
+      </p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>Screen reader users will find some form questions with checkboxes, radio buttons and text areas are hard to link to the correct question without reading the whole page in sequence. They may also find the table sort feature to be hard to use and will speak too much text.</li>
+        <li>Links in the header may be confusing because the HMPPS” and “Temporary Accommodation” links actually go to the same page.</li>
+        <li>People with low vision may find it hard to see the focus indicator on the View a Bedspace page.</li>
+        <li>The navigation is disorienting when moving from bedspace search to viewing a bedspace on the ‘Search for Available Bedspaces’ page.</li>
+      </ul>
+      <h2 class="govuk-heading-m">Feedback and contact information</h2>
+      <p class="govuk-body">
+      If you find any problems not listed on this page or think we’re not meeting accessibility requirements, email the CAS3 digital team with details of the issue you have experienced.
+      </p>
+      <p class="govuk-body">
+      Email: <a href="mailto:cas3support@digital.justice.gov.uk" class="govuk-link">cas3support@digital.justice.gov.uk</a>
+      </p>
+      <p class="govuk-body">
+      We’ll consider your request and get back to you within 2 working days.
+      </p>
+      <h2 class="govuk-heading-m">Enforcement procedure</h2>
+      <p class="govuk-body">
+      The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies 
+      (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’). 
+      If you’re not happy with how we respond to your complaint, contact the <a href="https://www.equalityadvisoryservice.com" target="blank" class="govuk-link">Equality Advisory and Support Service (EASS)</a>.
+      </p>
+      <h2 class="govuk-heading-m">Technical information about this website’s accessibility</h2>
+      <p class="govuk-body">
+      The Ministry of Justice is committed to making its website accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
+      </p>
+      <h2 class="govuk-heading-m">Compliance status</h2>
+      <p class="govuk-body">
+      This website is partially compliant with the Web Content Accessibility Guidelines version 2.2 AA standard, due to the non-compliances listed below.
+      </p>
+      <h2 class="govuk-heading-m">Non-accessible content</h2>
+      <p class="govuk-body">
+      The content listed below is non-accessible for the following reasons.
+      </p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>Radio buttons are not programmatically associated with the question, and screen reader users may struggle to connect these radio buttons to the respective question (test issue 1.2). This fails WCAG 2.2 success criterion 1.3.1 (A). We plan to fix this by 30/03 2024.</li>
+        <li>Date input fields are not grouped with questions, so screen reader users may find it challenging to associate the date input field with the relevant question (test issue 1.3). This fails WCAG 2.2 success criterion 1.3.1 (A). We plan to fix this by 30/03 2024.</li>
+        <li>Conditionally revealed information is not announced to screen reader users on the Accommodation Needs page (test issue 1.4). This fails WCAG 2.2 success criterion 4.1.3 (AA). We plan to fix this by 30/03 2024.</li>
+        <li>Adjacent links go to the same target. On the page header, both the HMPPS logo and the adjacent text go to the same target URL. This can result in additional navigation and repetition for keyboard and screen reader users. Additionally, screen readers announce the two links differently: the first is announced as “HMPPS” while the second is announced as “Temporary Accommodation”. This could be confusing for screen reader users who might expect both links to go to different targets (test issue 1.5). This fails WCAG 2.2 success criteria 2.4.4 (A) and 3.2.4 (AA). We plan to fix this by 30/03 2024.</li>
+        <li>Throughout the site, the majority of textarea elements are not programmatically associated with the question they are related to. so screen reader users would need to navigate around the page to understand what question that area relates to (test issue 1.6). This fails WCAG 2.2 success criterion 1.3.1 (A). We plan to fix this by 30/03 2024.</li>
+        <li>On the Back Up Contact/Senior Probation Officer Details page, there is no programmatic association between the form fields and the associated question (test issue 2.3). This fails WCAG 2.2 success criterion 1.3.1 (A). We plan to fix this by 30/03 2024.</li>
+        <li>Checkboxes are not associated with the question throughout the services so screen reader users would need to navigate around the page to find what question the checkboxes are related to (test issue 2.4). This fails WCAG 2.2 success criterion 1.3.1 (A). We plan to fix this by 30/03 2024.</li>
+        <li>Sort icon buttons are not informative for screen reader users as they do not describe the function of the arrows and create audible clutter (test issue 3.2). This fails WCAG 2.2 success criterion 1.3.1 (A). We plan to fix this by 30/03 2024.</li>
+        <li>The focus indicator does not meet contrast requirements on View a Bedspace page - white text on yellow background when in focus (test issue 3.3). This fails WCAG 2.2 success criteria 1.4.3 (AA) and 1.4.11 (AA). We plan to fix this by 30/03 2024.</li>
+        <li>The navigation is disorienting when moving from bedspace search to viewing a bedspace on the ‘Search for Available Bedspaces’ page (test issue 3.4). This fails WCAG 2.2 success criterion 3.2.2 (A). We plan to fix this by 30/03 2024.</li>
+      </ul>
+      <h2 class="govuk-heading-m">What we’re doing to improve accessibility</h2>
+      <p class="govuk-body">
+      The improvements to accessibility in order to be fully compliant are in the CAS3 project backlog to be worked on over the course of the next 12 months.
+      </p>
+      <h2 class="govuk-heading-m">Preparation of this accessibility statement</h2>
+      <p class="govuk-body">
+      This statement was prepared on 24 October 2023. It was last reviewed on 24 October 2023.
+      </p>
+      <p class="govuk-body">
+      This website was last tested on 25 September 2023.
+      </p>
+      <p class="govuk-body">
+      The test was carried out by User Vision Ltd, an independent accessibility testing company, to the WCAG 2.2 AA standard.
+      </p>
+      <p class="govuk-body">
+      You can read the full <a href="https://drive.google.com/file/d/1-P_EPeHrneuUwi0p5iTYGm1aLpheiKDx/view?usp=drive_link" class="govuk-link" target="_blank">accessibility test report</a>.
+      </p>
+    </div>
+  </div>
+{% endblock %}

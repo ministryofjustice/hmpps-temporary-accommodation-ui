@@ -7,6 +7,12 @@ export default class StaticController {
     }
   }
 
+  accessibilityStatement(): RequestHandler {
+    return (_req: Request, res: Response) => {
+      res.render('temporary-accommodation/static/accessibilityStatement')
+    }
+  }
+
   useNDelius(): RequestHandler {
     return (_req: Request, res: Response) => {
       res.render('temporary-accommodation/static/useNDelius')

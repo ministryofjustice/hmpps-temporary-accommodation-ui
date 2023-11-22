@@ -10,7 +10,7 @@ import {
   userHasReferrerRoleAndIsApplyEnabled,
   userHasReporterRole,
 } from './userUtils'
-import { TemporaryAccommodationUserRole as Role, TemporaryAccommodationUserRole } from '../@types/shared'
+import { TemporaryAccommodationUserRole as Role } from '../@types/shared'
 import config from '../config'
 
 jest.mock('./enabledRegions', () => {
@@ -122,7 +122,7 @@ describe('userHasAssessorRole', () => {
 
 describe('userHasReporterRole', () => {
   it('returns true when user has got the role "reporter"', () => {
-    const user = userFactory.build({ roles: ['reporter' as TemporaryAccommodationUserRole] })
+    const user = userFactory.build({ roles: ['reporter'] })
     expect(userHasReporterRole(user)).toBe(true)
   })
 

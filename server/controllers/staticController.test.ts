@@ -23,6 +23,15 @@ describe('StaticController', () => {
     })
   })
 
+  describe('accessibility statement', () => {
+    it('should render the page', () => {
+      const requestHandler = staticController.accessibilityStatement()
+      requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/static/accessibilityStatement')
+    })
+  })
+
   describe('useNDelius', () => {
     it('should render the disabled-region page', () => {
       const requestHandler = staticController.useNDelius()

@@ -20,7 +20,7 @@ context('Premises', () => {
   })
 
   it('should navigate to the list premises page', () => {
-    // Given I am signed in
+    // Given I am signed in as user with region config
     cy.signIn()
 
     // And there are premises in the database
@@ -37,8 +37,8 @@ context('Premises', () => {
     Page.verifyOnPage(PremisesListPage)
   })
 
-  it('should list all premises', () => {
-    // Given I am signed in
+  it('should list all premises for PDU based region', () => {
+    // Given I am signed in as a user in a region without config
     cy.signIn()
 
     // And there are premises in the database
@@ -49,7 +49,31 @@ context('Premises', () => {
     const page = PremisesListPage.visit()
 
     // Then I should see all of the premises listed
-    page.shouldShowPremises(premisesSummaries)
+    page.shouldShowPremisesForPDU(premisesSummaries)
+  })
+
+  it('should list all premises for LA based region', () => {
+    // Given I am signed in as a user in a region with config
+    cy.task('reset')
+    setupTestUser('assessor', {
+      flags: {
+        properties: {
+          useLAnotPDU: true,
+        },
+      },
+    })
+
+    cy.signIn()
+
+    // And there are premises in the database
+    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    cy.task('stubPremises', premisesSummaries)
+
+    // When I visit the premises page
+    const page = PremisesListPage.visit()
+
+    // Then I should see all of the premises listed
+    page.shouldShowPremisesForLA(premisesSummaries)
   })
 
   it('should navigate back from the premises list page to the dashboard', () => {

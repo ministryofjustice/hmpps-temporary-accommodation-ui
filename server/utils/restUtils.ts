@@ -1,6 +1,6 @@
 import { Request } from 'express'
-import { CallConfig } from '../data/restClient'
+import { CallConfigLocal } from '../@types/ui'
 
-export default function extractCallConfig(req: Request): CallConfig {
+export default function extractCallConfig(req: Request): CallConfigLocal {
   return { token: req.user.token, probationRegion: req.session.probationRegion }
 }

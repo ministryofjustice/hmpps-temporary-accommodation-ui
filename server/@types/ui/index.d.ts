@@ -17,10 +17,45 @@ import {
   PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
+  ProbationRegion,
   TemporaryAccommodationApplication,
+  TemporaryAccommodationUser,
   User,
 } from '@approved-premises/api'
-import { CallConfig } from '../../data/restClient'
+import type { TemporaryAccommodationUser as User } from '@approved-premises/api'
+
+/*
+ * These types extend the API types where data is augmented by locally held data.
+ * The reason for this is (at time of writing) UI logic.
+ */
+export type RegionConfig = {
+  flags: {
+    properties: {
+      useLAnotPDU?: boolean
+    }
+  }
+}
+
+export type RegionConfigData = {
+  id: string
+  config: RegionConfig
+}
+
+export type RegionsConfigData = Array<RegionConfigData>
+
+export type ProbationRegionLocal = ProbationRegion & {
+  config?: RegionConfig
+}
+
+export type CallConfigLocal = CallConfig & {
+  probationRegion: ProbationRegionLocal
+}
+
+export type TemporaryAccommodationUserLocal = TemporaryAccommodationUser & {
+  region: ProbationRegionLocal
+}
+
+// End of Augmented API types
 
 interface TasklistPage {
   body: Record<string, unknown>
@@ -218,11 +253,14 @@ export type YesNoOrIDK = YesOrNo | 'iDontKnow'
 
 export type PersonStatus = 'InCustody' | 'InCommunity'
 
+export type ServerScope = 'approved-premises' | 'temporary-accommodation' | '*'
+
 export interface ReferenceData {
   id: string
   name: string
   isActive: boolean
-  serviceScope: 'approved-premises' | 'temporary-accommodation' | '*'
+  serviceScope: ServerScope
+  config?: RegionConfig
 }
 
 export type PersonRisksUI = PersonRisks

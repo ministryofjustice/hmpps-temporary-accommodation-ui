@@ -26,7 +26,10 @@ export default class PremisesController {
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
 
       const tableRows = await this.premisesService.tableRows(callConfig, placeContext)
-      return res.render('temporary-accommodation/premises/index', { tableRows })
+      return res.render('temporary-accommodation/premises/index', {
+        tableRows,
+        useLocalAuthorityTableHeader: callConfig.probationRegion?.config?.flags.properties.useLAnotPDU,
+      })
     }
   }
 

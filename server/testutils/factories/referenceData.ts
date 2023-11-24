@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 
-import type { ReferenceData } from '@approved-premises/ui'
+import type { ReferenceData, ServerScope } from '@approved-premises/ui'
 
 import cancellationReasonsJson from '../../../wiremock/stubs/cancellation-reasons.json'
 import characteristicsJson from '../../../wiremock/stubs/characteristics.json'
@@ -73,5 +73,12 @@ export default ReferenceDataFactory.define(() => ({
   id: faker.string.uuid(),
   name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   isActive: true,
-  serviceScope: 'temporary-accommodation',
+  serviceScope: 'temporary-accommodation' as ServerScope,
+  config: {
+    flags: {
+      properties: {
+        useLAnotPDU: false,
+      },
+    },
+  },
 }))

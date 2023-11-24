@@ -1,0 +1,12 @@
+[
+    {
+        "id": "f6db2e41-040e-47c7-8bba-a345b6d35ca1",
+        "config": {
+            "flags": {
+                "properties": {
+                    "useLAnotPDU": true
+                }
+            }
+        }
+    }
+]

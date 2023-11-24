@@ -11,6 +11,7 @@ import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../
 import paths from '../paths/temporary-accommodation/manage'
 
 import { CallConfig } from '../data/restClient'
+import { CallConfigLocal } from '../@types/ui'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { addPlaceContext } from '../utils/placeUtils'
 import { statusTag } from '../utils/premisesUtils'
@@ -62,7 +63,7 @@ export default class PremisesService {
     return { localAuthorities, characteristics, probationRegions, pdus }
   }
 
-  async tableRows(callConfig: CallConfig, placeContext: PlaceContext): Promise<Array<TableRow>> {
+  async tableRows(callConfig: CallConfigLocal, placeContext: PlaceContext): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(callConfig)
     const premises = await premisesClient.all()
 
@@ -73,7 +74,9 @@ export default class PremisesService {
         return [
           this.textValue(entry.shortAddress),
           this.textValue(`${entry.bedCount}`),
-          this.textValue(entry.pdu),
+          this.textValue(
+            callConfig.probationRegion.config?.flags.properties.useLAnotPDU ? entry.localAuthorityAreaName : entry.pdu,
+          ),
           this.htmlValue(statusTag(entry.status)),
           this.htmlValue(
             `<a href="${addPlaceContext(

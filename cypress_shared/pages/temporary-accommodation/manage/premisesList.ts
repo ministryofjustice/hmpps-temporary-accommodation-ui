@@ -55,8 +55,8 @@ export default class PremisesListPage extends Page {
       )
   }
 
-  shouldShowPremises(premises: Array<PremisesSummary>): void {
-    premises.forEach((item: Premises) => {
+  shouldShowPremisesForPDU(premises: Array<PremisesSummary>): void {
+    premises.forEach((item: PremisesSummary) => {
       const shortAddress = `${item.addressLine1}, ${item.postcode}`
 
       cy.contains(shortAddress)
@@ -65,6 +65,25 @@ export default class PremisesListPage extends Page {
           cy.get('td').eq(0).contains(shortAddress)
           cy.get('td').eq(1).contains(item.bedCount)
           cy.get('td').eq(2).contains(item.pdu)
+          cy.get('td').eq(3).contains(statusInfo(item.status).name)
+          cy.get('td')
+            .eq(4)
+            .contains('Manage')
+            .should('have.attr', 'href', paths.premises.show({ premisesId: item.id }))
+        })
+    })
+  }
+
+  shouldShowPremisesForLA(premises: Array<PremisesSummary>): void {
+    premises.forEach((item: PremisesSummary) => {
+      const shortAddress = `${item.addressLine1}, ${item.postcode}`
+
+      cy.contains(shortAddress)
+        .parent()
+        .within(() => {
+          cy.get('td').eq(0).contains(shortAddress)
+          cy.get('td').eq(1).contains(item.bedCount)
+          cy.get('td').eq(2).contains(item.localAuthorityAreaName)
           cy.get('td').eq(3).contains(statusInfo(item.status).name)
           cy.get('td')
             .eq(4)

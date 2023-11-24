@@ -8,7 +8,6 @@ import { userFactory } from '../testutils/factories'
 import { UnauthorizedError } from '../utils/errors'
 import { isApplyEnabledForUser } from '../utils/userUtils'
 import LandingController from './landingController'
-import { TemporaryAccommodationUserRole } from '../@types/shared'
 
 jest.mock('../utils/userUtils', () => {
   const module = jest.requireActual('../utils/userUtils')
@@ -97,7 +96,7 @@ describe('LandingController', () => {
       const response: DeepMocked<Response> = createMock<Response>({
         locals: {
           user: userFactory.build({
-            roles: ['reporter' as TemporaryAccommodationUserRole],
+            roles: ['reporter'],
           }),
         },
       })

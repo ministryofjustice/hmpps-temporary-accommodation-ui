@@ -1,6 +1,8 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
+import { BookingSearchSortField } from '@approved-premises/api'
 import { SideNavObj, TableCell } from '../@types/ui/index'
 import paths from '../paths/temporary-accommodation/manage'
+import { sortHeader } from './sortHeader'
 
 export function createSideNavArr(status: BookingSearchApiStatus): Array<SideNavObj> {
   const uiStatus = convertApiStatusToUiStatus(status)
@@ -28,33 +30,20 @@ export function createSideNavArr(status: BookingSearchApiStatus): Array<SideNavO
   ]
 }
 
-export function createTableHeadings(status: BookingSearchApiStatus): Array<TableCell> {
-  const uiStatus = convertApiStatusToUiStatus(status)
+export function createTableHeadings(
+  status: BookingSearchApiStatus,
+  sort: BookingSearchSortField,
+  ascending: boolean,
+  href: string,
+): Array<TableCell> {
   return [
-    {
-      text: 'Name',
-      attributes: {
-        'aria-sort': 'none',
-      },
-    },
-    {
-      text: 'CRN',
-    },
+    sortHeader('Name', 'name', sort, ascending, href),
+    sortHeader('CRN', 'crn', sort, ascending, href),
     {
       text: 'Address',
     },
-    {
-      text: 'Start date',
-      attributes: {
-        'aria-sort': ['provisional', 'confirmed'].includes(uiStatus) ? 'ascending' : 'none',
-      },
-    },
-    {
-      text: 'End date',
-      attributes: {
-        'aria-sort': ['active', 'departed'].includes(uiStatus) ? 'ascending' : 'none',
-      },
-    },
+    sortHeader('Start date', 'startDate', sort, ascending, href),
+    sortHeader('End date', 'endDate', sort, ascending, href),
     {
       html: '<span class="govuk-visually-hidden">Actions</span>',
     },

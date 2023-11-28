@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+## cheap and nasty (slow) way to get a lot of bookings into the backend.
+## would be better to run only the pagination scenario poss using tags but timeboxed it.
+
+cd "$(dirname "$0")/.."
+
+if ! [ "$(command -v ap-tools)" ];then
+    echo "ap-tools not installed, please ensure you have the Approved Premises Toolkit installed (https://github.com/ministryofjustice/hmpps-approved-premises-tools)"
+    exit
+fi
+
+set -a
+
+. ./e2e.local.env
+
+set +a
+
+npx cypress run --spec e2e/tests/bookingSearch.feature -C cypress.config.e2e.ts --config '{"baseUrl":"http://localhost:3000", "numTestsKeptInMemory": 50}'

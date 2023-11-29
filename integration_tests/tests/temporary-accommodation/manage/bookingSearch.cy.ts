@@ -18,7 +18,13 @@ context('Booking search', () => {
     // And there are bookings in the database
     const bookings = bookingSearchResultsFactory.build()
 
-    cy.task('stubFindBookings', { bookings, status: 'provisional' })
+    cy.task('stubFindBookings', {
+      bookings: {
+        results: bookings.data,
+        resultsCount: bookings.data.length,
+      },
+      status: 'provisional',
+    })
 
     // When I visit the dashboard
     const dashboard = DashboardPage.visit()
@@ -41,7 +47,13 @@ context('Booking search', () => {
     const statuses: Array<BookingSearchApiStatus> = ['provisional', 'arrived', 'departed', 'confirmed', 'closed']
 
     statuses.forEach(status => {
-      cy.task('stubFindBookings', { bookings, status })
+      cy.task('stubFindBookings', {
+        bookings: {
+          results: bookings.data,
+          resultsCount: bookings.data.length,
+        },
+        status,
+      })
     })
 
     // And I visit the Find a provisional booking page
@@ -73,7 +85,13 @@ context('Booking search', () => {
     // And there are bookings in the database
     const bookings = bookingSearchResultsFactory.build()
 
-    cy.task('stubFindBookings', { bookings, status: 'provisional' })
+    cy.task('stubFindBookings', {
+      bookings: {
+        results: bookings.data,
+        resultsCount: bookings.data.length,
+      },
+      status: 'provisional',
+    })
 
     // When I visit the View bookings page
     const page = BookingSearchPage.visit('provisional')

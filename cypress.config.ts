@@ -38,6 +38,11 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on) {
       on('task', {
+        log(...args) {
+          // eslint-disable-next-line
+          console.log(...args)
+          return null
+        },
         reset: resetStubs,
         ...arrival,
         ...nonArrival,

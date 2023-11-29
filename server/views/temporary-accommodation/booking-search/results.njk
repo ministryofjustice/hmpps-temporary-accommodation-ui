@@ -1,4 +1,5 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/pagination/macro.njk" import govukPagination %}
 {%- from "moj/components/side-navigation/macro.njk" import mojSideNavigation -%}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -27,15 +28,15 @@
     <div class="govuk-grid-column-two-thirds">
 
     <h2>{{ uiStatus | capitalize }} bookings</h2>
-
+    
     {{ govukTable({
-    captionClasses: "govuk-table__caption--m",
-    attributes: {
-    'data-module': 'moj-sortable-table'
-    },
-    head: tableHeadings,
-    rows: bookingTableRows
-  }) }}
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+      head: tableHeadings,
+      rows: response.data
+    }) }}
+
+    {{ govukPagination(pagination) }}
 
     </div>
 

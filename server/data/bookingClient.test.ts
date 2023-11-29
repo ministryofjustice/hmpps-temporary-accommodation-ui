@@ -268,37 +268,64 @@ describe('BookingClient', () => {
   })
 
   describe('search', () => {
-    it('should return all provisional bookings', async () => {
+    it('should return all provisional bookings with pagination headers', async () => {
       const bookings = bookingSearchResultsFactory.build()
+      const body = { results: bookings.data }
 
       fakeApprovedPremisesApi
-        .get(`${paths.bookings.search({})}?status=provisional`)
+        .defaultReplyHeaders({
+          'x-pagination-currentpage': String(bookings.pageNumber),
+          'x-pagination-pagesize': String(bookings.pageSize),
+          'x-pagination-totalpages': String(bookings.totalPages),
+          'x-pagination-totalresults': String(bookings.data.length),
+        })
+        .get(`${paths.bookings.search({})}?status=provisional&page=1&sortField=endDate&sortOrder=descending`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, bookings)
+        .reply(200, body)
 
-      const result = await bookingClient.search('provisional')
+      const result = await bookingClient.search('provisional', 1, 'endDate', 'desc')
 
-      expect(result).toEqual(bookings)
+      expect(result.data).toEqual(bookings.data)
+      expect(result.pageNumber).toEqual(bookings.pageNumber)
+      expect(result.pageSize).toEqual(bookings.pageSize)
+      expect(result.totalPages).toEqual(bookings.totalPages)
+      expect(result.totalResults).toEqual(bookings.data.length)
+
+      expect(nock.isDone()).toBeTruthy()
     })
   })
 
-  it('calls restClient with the correct path when handed in provisional status', async () => {
+  it('calls restClient with the correct path when handed in provisional status, default page, default sort by endDate', async () => {
     bookingClient.restClient = {
-      get: jest.fn(),
+      get: jest.fn().mockResolvedValueOnce({
+        body: {},
+        header: {},
+      }),
     } as unknown as jest.Mocked<RestClient>
 
-    await bookingClient.search('provisional')
+    await bookingClient.search('provisional', undefined, undefined, 'asc')
 
-    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=provisional' })
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({
+      path: '/bookings/search?status=provisional&page=1&sortField=endDate&sortOrder=ascending',
+      raw: true,
+    })
+    expect(nock.isDone()).toBeTruthy()
   })
 
-  it('calls restClient with the correct path when handed in arrived status', async () => {
+  it('calls restClient with the correct path when handed in arrived status on page 2, default sort dir desc', async () => {
     bookingClient.restClient = {
-      get: jest.fn(),
+      get: jest.fn().mockResolvedValueOnce({
+        body: {},
+        header: {},
+      }),
     } as unknown as jest.Mocked<RestClient>
 
-    await bookingClient.search('arrived')
+    await bookingClient.search('arrived', 2, 'startDate', undefined)
 
-    expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=arrived' })
+    expect(bookingClient.restClient.get).toHaveBeenCalledWith({
+      path: '/bookings/search?status=arrived&page=2&sortField=startDate&sortOrder=descending',
+      raw: true,
+    })
+    expect(nock.isDone()).toBeTruthy()
   })
 })

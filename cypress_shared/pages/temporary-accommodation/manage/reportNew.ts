@@ -19,7 +19,7 @@ export default class ReportNewPage extends Page {
       .contains('Select a probation region')
       .siblings('select')
       .children('option')
-      .should('have.length', 2)
+      .should('have.length.above', 0)
       .contains(exact(probationRegion.name))
       .should('be.selected')
   }

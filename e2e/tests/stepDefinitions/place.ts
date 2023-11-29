@@ -53,6 +53,15 @@ Given('I mark the assessment as ready to place', () => {
       ...assessment,
       status: 'in_review',
     })
+
+    /*
+     * Resolve a race between the links parent not showing yet.
+     * Likely JS runner for the tab, but pondering whether the API returned before
+     * the object was created fully in DB and races against next call.
+     */
+    // eslint-disable-next-line
+    cy.wait(100)
+
     inReviewAssessmentSummaryPage.clickAction('Ready to place')
 
     const readyToPlaceConfirmationPage = Page.verifyOnPage(

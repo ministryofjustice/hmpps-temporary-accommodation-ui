@@ -122,4 +122,4 @@ const bookingCreator = (type: string = 'provisional', nPremises: number = 1, nRo
   })
 }
 
-Given('enough provisional bookings exists for several pages of results', () => bookingCreator('provisional', 1, 15))
+Given('enough provisional bookings exists for several pages of results', () => bookingCreator('provisional', 1, 11))

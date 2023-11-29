@@ -29,6 +29,7 @@ const actingUserProbationRegion = { id: actingUserProbationRegionId, name: actin
 /*
  * This function creates one or more premises, each with one or more rooms, which are then booked out.
  */
+// eslint-disable-next-line
 const bookingCreator = (type: string = 'provisional', nPremises: number = 1, nRooms: number = 1) => {
   Array.from(Array(nPremises)).forEach(() => {
     cy.visit('/properties/new').then(function newProperty() {
@@ -122,4 +123,8 @@ const bookingCreator = (type: string = 'provisional', nPremises: number = 1, nRo
   })
 }
 
-Given('enough provisional bookings exists for several pages of results', () => bookingCreator('provisional', 1, 15))
+// The bookings are now populated by the api in dev, but leaving the bulk() helper for
+// future use (thinking performance testing)
+Given('enough provisional bookings exists for several pages of results', () => {
+  return null
+})

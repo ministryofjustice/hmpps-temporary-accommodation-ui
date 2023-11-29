@@ -22,21 +22,6 @@ export default class BookingSearchPage extends Page {
     cy.get('h2').contains(`${capitalisedStatus} bookings`)
   }
 
-  checkForPagination() {
-    cy.get('nav.govuk-pagination').should('exist')
-  }
-
-  checkOrderOfDates(column: number, isAscending: boolean) {
-    let prevDate = new Date(`${isAscending ? 1970 : 9999}/01/01`)
-    cy.get('tbody >tr').each($item => {
-      const myDate = new Date($item.children().eq(column).attr('data-sort-value'))
-      if (myDate.valueOf() !== prevDate.valueOf()) {
-        expect(myDate > prevDate).to.equal(isAscending)
-      }
-      prevDate = myDate
-    })
-  }
-
   checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
     cy.get('tr')
       .filter(
@@ -46,18 +31,10 @@ export default class BookingSearchPage extends Page {
           format: 'short',
         })}):contains(${DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })})`,
       )
-      .should('have.length.gte', 0)
-      .then($row => {
-        if ($row.length) {
-          cy.wrap($row).children().eq(5).contains('View').click()
-          return
-        }
-
-        cy.get('.govuk-pagination__next >a').click()
-        cy.then(() => {
-          this.checkBookingDetailsAndClickView(premises, booking)
-        })
-      })
+      .children()
+      .eq(5)
+      .contains('View')
+      .click()
   }
 
   clickOtherBookingStatusLink(status: BookingSearchApiStatus) {

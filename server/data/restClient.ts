@@ -51,11 +51,6 @@ export interface CallConfig {
   probationRegion?: ProbationRegion
 }
 
-type RestClientResponseGet = {
-  body: unknown
-  header: unknown
-}
-
 export default class RestClient {
   private readonly token: string
 
@@ -86,13 +81,7 @@ export default class RestClient {
     return this.config.timeout
   }
 
-  async get({
-    path = null,
-    query = '',
-    headers = {},
-    responseType = '',
-    raw = false,
-  }: GetRequest): Promise<RestClientResponseGet | unknown> {
+  async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
     try {
       const result = await superagent

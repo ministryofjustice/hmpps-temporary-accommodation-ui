@@ -66,10 +66,7 @@ bookingStubs.push({
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: bookingSearchResultsFactory.build({
-      totalResults: bookingSummaries.length,
-      data: bookingSummaries,
-    }),
+    jsonBody: bookingSearchResultsFactory.build({ resultsCount: bookingSummaries.length, results: bookingSummaries }),
   },
 })
 

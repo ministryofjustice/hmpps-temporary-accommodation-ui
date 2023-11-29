@@ -18,14 +18,6 @@ async function setupNodeEvents(
     }),
   )
 
-  on('task', {
-    log(...args) {
-      // eslint-disable-next-line
-      console.log(...args)
-      return null
-    },
-  })
-
   // Make sure to return the config object as it might have been modified by the plugin.
   return config
 }

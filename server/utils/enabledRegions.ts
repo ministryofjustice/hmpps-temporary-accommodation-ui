@@ -9,4 +9,5 @@ export default [
   'South West',
   'London',
   'Greater Manchester',
+  'Yorkshire & The Humber',
 ]

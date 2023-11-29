@@ -67,27 +67,34 @@ describe('bookingSearchUtils', () => {
     it('returns table headings with start date sorted ascending for provisional or confirmed booking status', () => {
       const tableHeadings = [
         {
-          text: 'Name',
+          html: '<a href="?sortBy=name"><button>Name</button></a>',
           attributes: {
             'aria-sort': 'none',
+            'data-cy-sort-field': 'name',
           },
         },
         {
-          text: 'CRN',
+          html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'crn',
+          },
         },
         {
           text: 'Address',
         },
         {
-          text: 'Start date',
+          html: '<a href="?sortBy=startDate&sortDirection=desc"><button>Start date</button></a>',
           attributes: {
             'aria-sort': 'ascending',
+            'data-cy-sort-field': 'startDate',
           },
         },
         {
-          text: 'End date',
+          html: '<a href="?sortBy=endDate"><button>End date</button></a>',
           attributes: {
             'aria-sort': 'none',
+            'data-cy-sort-field': 'endDate',
           },
         },
         {
@@ -95,35 +102,42 @@ describe('bookingSearchUtils', () => {
         },
       ]
 
-      expect(createTableHeadings('provisional')).toEqual(tableHeadings)
-      expect(createTableHeadings('confirmed')).toEqual(tableHeadings)
+      expect(createTableHeadings('provisional', 'startDate', true, '')).toEqual(tableHeadings)
+      expect(createTableHeadings('confirmed', 'startDate', true, '')).toEqual(tableHeadings)
     })
   })
 
   it('returns table headings with end date sorted ascending for arrived and departed booking status', () => {
     const tableHeadings = [
       {
-        text: 'Name',
+        html: '<a href="?sortBy=name"><button>Name</button></a>',
         attributes: {
           'aria-sort': 'none',
+          'data-cy-sort-field': 'name',
         },
       },
       {
-        text: 'CRN',
+        html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'crn',
+        },
       },
       {
         text: 'Address',
       },
       {
-        text: 'Start date',
+        html: '<a href="?sortBy=startDate"><button>Start date</button></a>',
         attributes: {
           'aria-sort': 'none',
+          'data-cy-sort-field': 'startDate',
         },
       },
       {
-        text: 'End date',
+        html: '<a href="?sortBy=endDate&sortDirection=asc"><button>End date</button></a>',
         attributes: {
-          'aria-sort': 'ascending',
+          'aria-sort': 'descending',
+          'data-cy-sort-field': 'endDate',
         },
       },
       {
@@ -131,8 +145,8 @@ describe('bookingSearchUtils', () => {
       },
     ]
 
-    expect(createTableHeadings('arrived')).toEqual(tableHeadings)
-    expect(createTableHeadings('departed')).toEqual(tableHeadings)
+    expect(createTableHeadings('arrived', 'endDate', false, '')).toEqual(tableHeadings)
+    expect(createTableHeadings('departed', 'endDate', false, '')).toEqual(tableHeadings)
   })
 })
 

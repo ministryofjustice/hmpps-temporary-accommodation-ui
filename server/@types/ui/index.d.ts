@@ -10,6 +10,7 @@ import {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentStatus,
   Booking,
+  BookingSearchSortField,
   Document,
   LocalAuthorityArea,
   OASysSection,
@@ -18,6 +19,7 @@ import {
   PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
+  SortDirection,
   TemporaryAccommodationApplication,
   User,
 } from '@approved-premises/api'
@@ -98,7 +100,14 @@ export interface HtmlItem {
   html: string
 }
 
-export type TableCell = { text: string; attributes?: HtmlAttributes; classes?: string } | { html: string }
+export type TableCell = {
+  text?: string
+  attributes?: HtmlAttributes
+  classes?: string
+  href?: string
+  html?: string
+}
+
 export interface TableRow {
   [index: number]: TableCell
 }
@@ -188,6 +197,17 @@ export interface ErrorMessage {
   attributes: {
     [K: string]: boolean
   }
+}
+
+export type PaginatedResponse<T> = {
+  url: {
+    params: URLSearchParams
+  }
+  data: Array<T>
+  pageNumber: number
+  totalPages: number
+  totalResults: number
+  pageSize: number
 }
 
 export interface ErrorMessages {
@@ -289,6 +309,9 @@ export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | '
 
 export type BookingSearchParameters = {
   crn?: string
+  page?: number
+  sortBy?: BookingSearchSortField
+  sortDirection?: SortDirection
 }
 
 export type ReportType = 'bookings' | 'bedspace-usage' | 'occupancy' | 'referrals'

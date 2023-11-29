@@ -1,40 +1,47 @@
 import { SuperAgentRequest } from 'superagent'
-import type { BookingSearchResults } from '@approved-premises/api'
-import type { BookingSearchApiStatus } from '@approved-premises/ui'
+import type { BookingSearchResult, BookingSearchResults } from '@approved-premises/api'
+import type { BookingSearchApiStatus, PaginatedResponse } from '@approved-premises/ui'
 import paths from '../../server/paths/api'
 import { stubFor } from '../../wiremock'
+import { setupBookingStateStubs } from '../../cypress_shared/utils/booking'
 
 export default {
-  stubFindBookings: (args: { bookings: BookingSearchResults; status: BookingSearchApiStatus }): SuperAgentRequest =>
+  stubFindBookings: (args: { bookings: BookingSearchResult[]; status: BookingSearchApiStatus }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        url: `${paths.bookings.search({})}?status=${args.status}`,
+        url: `${paths.bookings.search({})}?status=${args.status}&page=1&sortOrder=descending`,
       },
       response: {
         status: 200,
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        jsonBody: args.bookings,
+        jsonBody: {
+          results: args.bookings,
+          resultsCount: args.bookings.length,
+        },
       },
     }),
   stubFindBookingsByCRN: (args: {
-    bookings: BookingSearchResults
+    bookings: BookingSearchResult[]
     status: BookingSearchApiStatus
     crn: string
   }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
-        url: `${paths.bookings.search({})}?status=${args.status}&crn=${args.crn}`,
+        url: `${paths.bookings.search({})}?status=${args.status}&crn=${args.crn}&page=1&sortOrder=descending`,
       },
       response: {
         status: 200,
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        jsonBody: args.bookings,
+        jsonBody: {
+          results: args.bookings,
+          resultsCount: args.bookings.length,
+        },
       },
     }),
 }

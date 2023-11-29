@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
+{% from "govuk/components/pagination/macro.njk" import govukPagination %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
@@ -54,17 +55,17 @@
     <h2>You have not entered any search terms</h2>
 
     <p>Enter a CRN. This can be found in nDelius.</p>
-  {% elif (bookingTableRows|length > 0) or (not crn) %}
+  {% elif (response.data|length > 0) or (not crn) %}
     {{
       govukTable({
         captionClasses: "govuk-table__caption--m",
-        attributes: {
-          'data-module': 'moj-sortable-table'
-        },
+        firstCellIsHeader: true,
         head: tableHeadings,
-        rows: bookingTableRows
+        rows: response.data
       })
     }}
+
+    {{ govukPagination(pagination) }}
   {% else %}
     <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} bookings.</h2>
 

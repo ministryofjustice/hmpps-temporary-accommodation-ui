@@ -1,4 +1,4 @@
-import type { Booking, BookingSearchResults, Premises } from '@approved-premises/api'
+import type { Booking, BookingSearchResult, BookingSearchResults, Premises } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -23,6 +23,21 @@ export default class BookingSearchPage extends Page {
     cy.get('.moj-sub-navigation a[aria-current="page"]').contains(displayStatus)
   }
 
+  checkForPagination() {
+    cy.get('nav.govuk-pagination').should('exist')
+  }
+
+  checkOrderOfDates(column: number, isAscending: boolean) {
+    let prevDate = new Date(`${isAscending ? 1970 : 9999}/01/01`)
+    cy.get('tbody >tr').each($item => {
+      const myDate = new Date($item.children().eq(column).attr('data-sort-value'))
+      if (myDate.valueOf() !== prevDate.valueOf()) {
+        expect(myDate > prevDate).to.equal(isAscending)
+      }
+      prevDate = myDate
+    })
+  }
+
   checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
     cy.get('tr')
       .filter(
@@ -32,10 +47,18 @@ export default class BookingSearchPage extends Page {
           format: 'short',
         })}):contains(${DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })})`,
       )
-      .children()
-      .eq(5)
-      .contains('View')
-      .click()
+      .should('have.length.gte', 0)
+      .then($row => {
+        if ($row.length) {
+          cy.wrap($row).children().eq(5).contains('View').click()
+          return
+        }
+
+        cy.get('.govuk-pagination__next >a').click()
+        cy.then(() => {
+          this.checkBookingDetailsAndClickView(premises, booking)
+        })
+      })
   }
 
   clickOtherBookingStatusLink(status: BookingSearchApiStatus) {
@@ -46,9 +69,9 @@ export default class BookingSearchPage extends Page {
     this.shouldShowTextInputByLabel(`Search ${status} bookings by CRN (case reference number)`, value)
   }
 
-  checkResults(bookings: BookingSearchResults) {
-    cy.get('main table tbody tr').should('have.length', bookings.resultsCount)
-    bookings.results.forEach(result => {
+  checkResults(bookings: BookingSearchResult[]) {
+    cy.get('main table tbody tr').should('have.length', bookings.length)
+    bookings.forEach(result => {
       cy.get('main table tbody').should('contain', result.person.crn)
     })
   }

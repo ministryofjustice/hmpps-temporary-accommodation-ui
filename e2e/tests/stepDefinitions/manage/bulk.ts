@@ -100,16 +100,15 @@ const bookingCreator = (type: string = 'provisional', nPremises: number = 1, nRo
                         }
                         bookingSelectAssessmentPage.clickSubmit()
 
-                        cy.then(function cNewBooking() {
-                          const bookingConfirmPage = Page.verifyOnPage(
-                            BookingConfirmPage,
-                            this.premises,
-                            this.room,
-                            person,
-                          )
-                          bookingConfirmPage.shouldShowBookingDetails()
-                          bookingConfirmPage.clickSubmit()
-                        })
+                        const bookingConfirmPage = Page.verifyOnPage(
+                          BookingConfirmPage,
+                          this.premises,
+                          this.room,
+                          person,
+                        )
+                        bookingConfirmPage.shouldShowBookingDetails()
+
+                        bookingConfirmPage.clickSubmit()
                       })
                     })
                   })

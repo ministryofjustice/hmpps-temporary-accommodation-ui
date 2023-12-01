@@ -2,14 +2,14 @@ Feature: Manage Temporary Accommodation - Premises
     Background:
         Given I am logged in as an assessor
 
-    Scenario: Listing premises
-        Given I view the list of premises
-        Then I should see only premises for my region
-
     Scenario: Creating a premises
         Given I'm creating a premises
         And I create an active premises with all necessary details
         Then I should see a confirmation for my new premises
+
+    Scenario: Listing premises
+        Given I view the list of premises
+        Then I should see only premises for my region
 
     Scenario: Showing premises creation errors
         Given I'm creating a premises

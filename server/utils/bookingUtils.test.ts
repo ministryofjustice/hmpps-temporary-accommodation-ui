@@ -68,7 +68,7 @@ describe('bookingUtils', () => {
       ])
     })
 
-    it('returns mark as departed and extend actions for an arrived booking', () => {
+    it('returns mark as departed, change date, and extend actions for an arrived booking', () => {
       const booking = bookingFactory.arrived().build({ id: bookingId })
 
       expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
@@ -81,6 +81,11 @@ describe('bookingUtils', () => {
           text: 'Extend or shorten booking',
           classes: 'govuk-button--secondary',
           href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+        },
+        {
+          text: 'Change arrival date',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.arrivals.edit({ premisesId, roomId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])

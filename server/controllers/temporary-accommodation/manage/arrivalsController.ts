@@ -77,4 +77,60 @@ export default class ArrivalsController {
       }
     }
   }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
+      const { premisesId, roomId, bookingId } = req.params
+
+      const callConfig = extractCallConfig(req)
+
+      const [premises, room, booking] = await Promise.all([
+        this.premisesService.getPremises(callConfig, premisesId),
+        this.bedspacesService.getRoom(callConfig, premisesId, roomId),
+        this.bookingsService.getBooking(callConfig, premisesId, bookingId),
+      ])
+
+      return res.render('temporary-accommodation/arrivals/edit', {
+        premises,
+        room,
+        booking,
+        errors,
+        errorSummary,
+        errorTitle,
+        notes: booking.arrival?.notes,
+        ...userInput,
+      })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, roomId, bookingId } = req.params
+      const callConfig = extractCallConfig(req)
+
+      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+      const updateArrival: NewArrival = {
+        notes: req.body.notes,
+        arrivalDate: DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate').arrivalDate,
+        expectedDepartureDate: booking.departureDate,
+        type: 'CAS3',
+      }
+
+      try {
+        // INFO: this may confuse, the API is overloading the POST with a writeback of existing and new data
+        await this.arrivalService.createArrival(callConfig, premisesId, bookingId, updateArrival)
+        req.flash('success', 'Arrival updated')
+        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+      } catch (err) {
+        if (err.status === 409) {
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'singular'))
+          insertGenericError(err, 'arrivalDate', 'conflict')
+        }
+
+        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }))
+      }
+    }
+  }
 }

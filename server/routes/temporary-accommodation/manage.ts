@@ -8,7 +8,7 @@ import { Services } from '../../services'
 import { actions, compose } from '../utils'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
-  const { get, post, put } = compose(
+  const { get, post, put, patch } = compose(
     actions(router, services.auditService),
     createUserCheckMiddleware(userIsAuthorisedForManage),
   )
@@ -138,6 +138,20 @@ export default function routes(controllers: Controllers, services: Services, rou
       {
         path: paths.bookings.show.pattern,
         auditEvent: 'CREATE_BOOKING_ARRIVAL_SUCCESS',
+      },
+    ],
+  })
+
+  get(paths.bookings.arrivals.edit.pattern, arrivalsController.edit(), { auditEvent: 'VIEW_BOOKING_UPDATE_ARRIVAL' })
+  patch(paths.bookings.arrivals.update.pattern, arrivalsController.update(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.bookings.arrivals.edit.pattern,
+        auditEvent: 'UPDATE_BOOKING_ARRIVAL_FAILURE',
+      },
+      {
+        path: paths.bookings.show.pattern,
+        auditEvent: 'UPDATE_BOOKING_ARRIVAL_SUCCESS',
       },
     ],
   })

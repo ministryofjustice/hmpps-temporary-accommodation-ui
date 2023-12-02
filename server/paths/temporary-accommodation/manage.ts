@@ -60,6 +60,8 @@ const paths = {
     arrivals: {
       new: arrivalsPath.path('new'),
       create: arrivalsPath,
+      edit: arrivalsPath.path('edit'),
+      update: arrivalsPath,
     },
     departures: {
       new: departuresPath.path('new'),

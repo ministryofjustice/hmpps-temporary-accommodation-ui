@@ -11,6 +11,7 @@ type Actions = {
   get: RoutingFunction
   post: RoutingFunction
   put: RoutingFunction
+  patch: RoutingFunction
 }
 
 export function actions(router: Router, auditService: AuditService): Actions {
@@ -21,6 +22,8 @@ export function actions(router: Router, auditService: AuditService): Actions {
       router.post(path, asyncMiddleware(auditMiddleware(handler, auditService, auditEventSpec))),
     put: (path: string | string[], handler: RequestHandler, auditEventSpec?: AuditEventSpec) =>
       router.put(path, asyncMiddleware(auditMiddleware(handler, auditService, auditEventSpec))),
+    patch: (path: string | string[], handler: RequestHandler, auditEventSpec?: AuditEventSpec) =>
+      router.patch(path, asyncMiddleware(auditMiddleware(handler, auditService, auditEventSpec))),
   }
 }
 
@@ -32,5 +35,7 @@ export function compose(sourceActions: Actions, middleware: (handler: RequestHan
       sourceActions.post(path, middleware(handler), auditEventSpec),
     put: (path: string | string[], handler: RequestHandler, auditEventSpec?: AuditEventSpec) =>
       sourceActions.put(path, middleware(handler), auditEventSpec),
+    patch: (path: string | string[], handler: RequestHandler, auditEventSpec?: AuditEventSpec) =>
+      sourceActions.patch(path, middleware(handler), auditEventSpec),
   }
 }

@@ -43,6 +43,20 @@ Feature: Manage Temporary Accommodation - Booking
         Then I should see the booking with the edited departure details
         And I should see previous booking states in the booking history
 
+    Scenario: Creating a booking, confirming, marking as arrived, change arrival, change arrival error
+        Given I'm creating a booking
+        When I create a booking with all necessary details
+        Then I should see a confirmation for my new booking
+        When I confirm the booking
+        Then I should see the booking with the confirmed status
+        When I mark the booking as arrived
+        Then I should see the booking with the arrived status
+        When I navigate to change the booking arrival
+        And I enter the change arrival data incorrectly
+        Then I should see a list of the problems encountered whilst changing the booking arrival
+        When I enter change booking data correctly
+        Then I should see the booking with confirmation of arrival change
+        
     Scenario: Editing a booking's turnaround time
         Given I'm creating a booking
         And I create a booking with all necessary details

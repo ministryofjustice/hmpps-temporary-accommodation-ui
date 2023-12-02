@@ -54,6 +54,10 @@ export default class BookingShowPage extends Page {
     this.clickAction('Cancel booking')
   }
 
+  clickEditArrivalButton(): void {
+    this.clickAction('Change arrival date')
+  }
+
   clickEditCancelledBookingButton(): void {
     this.clickAction('Update cancelled booking')
   }

@@ -68,6 +68,12 @@ export default abstract class Page extends Component {
     cy.get(`#${prefix}-year`).should('have.value', parsedDate.getFullYear().toString())
   }
 
+  shouldShowEmptyDateInputs(prefix: string): void {
+    cy.get(`#${prefix}-day`).should('have.value', '')
+    cy.get(`#${prefix}-month`).should('have.value', '')
+    cy.get(`#${prefix}-year`).should('have.value', '')
+  }
+
   shouldShowTextareaInput(id: string, contents: string) {
     cy.get(`textarea[id="${id}"]`).should('contain', contents)
   }

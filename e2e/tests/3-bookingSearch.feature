@@ -14,6 +14,7 @@ Feature: Manage Temporary Accommodation - Booking search
 
     Scenario: Show paginated results with sorting functionality
         When I'm searching bookings
+        And I'm searching departed bookings
         Then I should see pagination functionality
         And I see results for the first page
         When I navigate to the second page

@@ -13,7 +13,6 @@ Feature: Manage Temporary Accommodation - Booking search
 
 
     Scenario: Show paginated results with sorting functionality
-        Given enough provisional bookings exists for several pages of results
         When I'm searching bookings
         Then I should see pagination functionality
         And I see results for the first page

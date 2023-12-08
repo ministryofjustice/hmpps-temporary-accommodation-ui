@@ -50,156 +50,308 @@ describe('ArrivalsController', () => {
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
-  describe('new', () => {
-    it('renders the form prepopulated with the current booking dates', async () => {
-      const premises = premisesFactory.build()
-      const room = roomFactory.build()
-      const booking = bookingFactory.arrived().build()
+  describe('Adding arrival details', () => {
+    describe('new', () => {
+      it('renders the form prepopulated with the current booking dates', async () => {
+        const premises = premisesFactory.build()
+        const room = roomFactory.build()
+        const booking = bookingFactory.arrived().build()
 
-      request.params = {
-        premisesId: premises.id,
-        roomId: room.id,
-        bookingId: booking.id,
-      }
+        request.params = {
+          premisesId: premises.id,
+          roomId: room.id,
+          bookingId: booking.id,
+        }
 
-      premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
-      bookingService.getBooking.mockResolvedValue(booking)
+        premisesService.getPremises.mockResolvedValue(premises)
+        bedspaceService.getRoom.mockResolvedValue(room)
+        bookingService.getBooking.mockResolvedValue(booking)
 
-      const requestHandler = arrivalsController.new()
-      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+        const requestHandler = arrivalsController.new()
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
-      await requestHandler(request, response, next)
+        await requestHandler(request, response, next)
 
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
-      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+        expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+        expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+        expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/new', {
-        premises,
-        room,
-        booking,
-        errors: {},
-        errorSummary: [],
-        ...DateFormats.isoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
-        ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/new', {
+          premises,
+          room,
+          booking,
+          errors: {},
+          errorSummary: [],
+          ...DateFormats.isoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
+        })
+      })
+    })
+
+    describe('create', () => {
+      it('creates an arrival and redirects to the show booking page', async () => {
+        const requestHandler = arrivalsController.create()
+
+        const arrival = arrivalFactory.build()
+        const newArrival = newArrivalFactory.build()
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          notes: newArrival.notes,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        }
+
+        arrivalService.createArrival.mockResolvedValue(arrival)
+
+        await requestHandler(request, response, next)
+
+        expect(arrivalService.createArrival).toHaveBeenCalledWith(
+          callConfig,
+          premisesId,
+          bookingId,
+          expect.objectContaining(newArrival),
+        )
+
+        expect(request.flash).toHaveBeenCalledWith('success', {
+          title: 'Booking marked as active',
+          text: 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+        })
+        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      })
+
+      it('renders with errors if the API returns an error', async () => {
+        const requestHandler = arrivalsController.create()
+
+        const arrival = confirmationFactory.build()
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        }
+
+        const err = new Error()
+        arrivalService.createArrival.mockImplementation(() => {
+          throw err
+        })
+
+        await requestHandler(request, response, next)
+
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+        )
+      })
+
+      it('renders with errors if the API returns a 409 Conflict status', async () => {
+        const requestHandler = arrivalsController.create()
+
+        const arrival = confirmationFactory.build()
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        }
+
+        const err = { status: 409 }
+        arrivalService.createArrival.mockImplementation(() => {
+          throw err
+        })
+        const bespokeError: BespokeError = {
+          errorTitle: 'some-bespoke-error',
+          errorSummary: [],
+        }
+        ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+          bespokeError,
+        )
+
+        await requestHandler(request, response, next)
+
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+        expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'expectedDepartureDate', 'conflict')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+        )
       })
     })
   })
 
-  describe('create', () => {
-    it('creates an arrival and redirects to the show booking page', async () => {
-      const requestHandler = arrivalsController.create()
+  describe('Amending arrival details', () => {
+    describe('edit', () => {
+      it('renders the form', async () => {
+        const premises = premisesFactory.build()
+        const room = roomFactory.build()
+        const booking = bookingFactory.arrived().build()
 
-      const arrival = arrivalFactory.build()
-      const newArrival = newArrivalFactory.build()
+        request.params = {
+          premisesId: premises.id,
+          roomId: room.id,
+          bookingId: booking.id,
+        }
 
-      request.params = {
-        premisesId,
-        roomId,
-        bookingId,
-      }
-      request.body = {
-        notes: newArrival.notes,
-        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
-        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
-      }
+        premisesService.getPremises.mockResolvedValue(premises)
+        bedspaceService.getRoom.mockResolvedValue(room)
+        bookingService.getBooking.mockResolvedValue(booking)
 
-      arrivalService.createArrival.mockResolvedValue(arrival)
+        const requestHandler = arrivalsController.edit()
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
-      await requestHandler(request, response, next)
+        await requestHandler(request, response, next)
 
-      expect(arrivalService.createArrival).toHaveBeenCalledWith(
-        callConfig,
-        premisesId,
-        bookingId,
-        expect.objectContaining(newArrival),
-      )
+        expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+        expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+        expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
-      expect(request.flash).toHaveBeenCalledWith('success', {
-        title: 'Booking marked as active',
-        text: 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/edit', {
+          premises,
+          room,
+          booking,
+          errors: {},
+          errorSummary: [],
+          errorTitle: undefined,
+          notes: booking.arrival.notes,
+        })
       })
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
     })
 
-    it('renders with errors if the API returns an error', async () => {
-      const requestHandler = arrivalsController.create()
+    describe('update', () => {
+      it('updates an arrival and redirects to the show booking page', async () => {
+        const requestHandler = arrivalsController.update()
 
-      const arrival = confirmationFactory.build()
-      const newArrival = newArrivalFactory.build({
-        ...arrival,
+        const arrival = arrivalFactory.build()
+        const newArrival = newArrivalFactory.build()
+        const booking = bookingFactory.build()
+        booking.departureDate = newArrival.expectedDepartureDate
+        bookingService.getBooking.mockResolvedValue(booking)
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          notes: newArrival.notes,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        }
+
+        arrivalService.createArrival.mockResolvedValue(arrival)
+
+        await requestHandler(request, response, next)
+
+        expect(arrivalService.createArrival).toHaveBeenCalledWith(
+          callConfig,
+          premisesId,
+          bookingId,
+          expect.objectContaining(newArrival),
+        )
+
+        expect(request.flash).toHaveBeenCalledWith('success', 'Arrival updated')
+        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
       })
 
-      request.params = {
-        premisesId,
-        roomId,
-        bookingId,
-      }
-      request.body = {
-        ...newArrival,
-        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
-        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
-      }
+      it('renders with errors if the API returns an error', async () => {
+        const requestHandler = arrivalsController.update()
 
-      const err = new Error()
-      arrivalService.createArrival.mockImplementation(() => {
-        throw err
+        const arrival = confirmationFactory.build()
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        }
+
+        const err = new Error()
+        arrivalService.createArrival.mockImplementation(() => {
+          throw err
+        })
+
+        await requestHandler(request, response, next)
+
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+        )
       })
 
-      await requestHandler(request, response, next)
+      it('renders with errors if the API returns a 409 Conflict status', async () => {
+        const requestHandler = arrivalsController.update()
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
-      )
-    })
+        const arrival = confirmationFactory.build()
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
 
-    it('renders with errors if the API returns a 409 Conflict status', async () => {
-      const requestHandler = arrivalsController.create()
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        }
 
-      const arrival = confirmationFactory.build()
-      const newArrival = newArrivalFactory.build({
-        ...arrival,
+        const err = { status: 409 }
+        arrivalService.createArrival.mockImplementation(() => {
+          throw err
+        })
+        const bespokeError: BespokeError = {
+          errorTitle: 'some-bespoke-error',
+          errorSummary: [],
+        }
+        ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
+          bespokeError,
+        )
+
+        await requestHandler(request, response, next)
+
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'singular')
+        expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+        )
       })
-
-      request.params = {
-        premisesId,
-        roomId,
-        bookingId,
-      }
-      request.body = {
-        ...newArrival,
-        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
-        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
-      }
-
-      const err = { status: 409 }
-      arrivalService.createArrival.mockImplementation(() => {
-        throw err
-      })
-      const bespokeError: BespokeError = {
-        errorTitle: 'some-bespoke-error',
-        errorSummary: [],
-      }
-      ;(generateConflictBespokeError as jest.MockedFunction<typeof generateConflictBespokeError>).mockReturnValue(
-        bespokeError,
-      )
-
-      await requestHandler(request, response, next)
-
-      expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
-      expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
-      expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
-      expect(insertGenericError).toHaveBeenCalledWith(err, 'expectedDepartureDate', 'conflict')
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        err,
-        paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
-      )
     })
   })
 })

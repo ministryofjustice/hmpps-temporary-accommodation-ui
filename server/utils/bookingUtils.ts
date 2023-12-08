@@ -55,6 +55,11 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
           classes: 'govuk-button--secondary',
           href: paths.bookings.extensions.new({ premisesId, roomId, bookingId }),
         },
+        {
+          text: 'Change arrival date',
+          classes: 'govuk-button--secondary',
+          href: paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+        },
       )
       break
     case 'departed':

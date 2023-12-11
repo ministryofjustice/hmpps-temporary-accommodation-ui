@@ -10,4 +10,5 @@ export default [
   'London',
   'Greater Manchester',
   'Yorkshire & The Humber',
+  'Wales',
 ]

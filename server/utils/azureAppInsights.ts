@@ -1,5 +1,6 @@
 /* istanbul ignore file */
 
+import { config } from 'dotenv'
 import { DistributedTracingModes, TelemetryClient, defaultClient, setup } from 'applicationinsights'
 import applicationVersion from '../applicationVersion'
 
@@ -16,7 +17,9 @@ function version(): string {
 }
 
 export function initialiseAppInsights(): void {
-  if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
+  // Loads .env file contents into | process.env
+  config()
+  if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
     // eslint-disable-next-line no-console
     console.log('Enabling azure application insights')
 
@@ -25,7 +28,7 @@ export function initialiseAppInsights(): void {
 }
 
 export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
-  if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
+  if (process.env.APPINSIGHTS_INSTRUMENTATIONKEY) {
     defaultClient.context.tags['ai.cloud.role'] = name
     defaultClient.context.tags['ai.application.ver'] = version()
     return defaultClient

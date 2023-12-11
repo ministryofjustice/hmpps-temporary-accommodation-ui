@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import { ServiceName } from '@approved-premises/api'
+import 'dotenv/config'
 
 const production = process.env.NODE_ENV === 'production'
 

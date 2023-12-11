@@ -11,16 +11,6 @@ When(`I'm searching bookings`, () => {
   })
 })
 
-When(`I'm searching departed bookings`, () => {
-  cy.then(function _() {
-    const bookingSearchPage = Page.verifyOnPage(BookingSearchPage)
-    bookingSearchPage.checkBookingStatus('provisional')
-
-    bookingSearchPage.clickOtherBookingStatusLink('departed')
-    bookingSearchPage.checkBookingStatus('departed')
-  })
-})
-
 Then('I should see a summary of the booking on the provisional bookings page', () => {
   cy.then(function _() {
     const bookingSearchPage = Page.verifyOnPage(BookingSearchPage)

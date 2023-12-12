@@ -9,7 +9,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `${paths.bookings.search({})}?status=${args.status}`,
+        url: `${paths.bookings.search({})}?status=${args.status}&page=1&sortField=endDate&sortOrder=descending`,
       },
       response: {
         status: 200,

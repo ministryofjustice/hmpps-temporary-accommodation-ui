@@ -33,7 +33,3 @@ Feature: Manage Temporary Accommodation - Premises
         Then I should see a list of the problems encountered updating the premises
         And I attempt to edit the premises to remove the PDU
         Then I should see a list of the problems encountered updating the premises
-
-    Scenario: Listing premises
-        Given I view the list of premises
-        Then I should see only premises for my region

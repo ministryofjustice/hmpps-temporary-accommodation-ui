@@ -31,19 +31,13 @@ describe('BookingService', () => {
       const booking3 = bookingSearchResultFactory.build({
         person: bookingSearchResultPersonSummaryFactory.build({ name: '' }),
       })
-      const bookings = bookingSearchResultsFactory.build({
-        totalResults: 3,
-        totalPages: 1,
-        pageNumber: 1,
-        pageSize: 10,
-        data: [booking1, booking2, booking3],
-      })
+      const bookings = bookingSearchResultsFactory.build({ resultsCount: 3, results: [booking1, booking2, booking3] })
 
       bookingClient.search.mockResolvedValue(bookings)
 
-      const response = await service.getTableRowsForFindBooking(callConfig, 'provisional', 1, 'endDate', 'asc')
+      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional')
 
-      expect(response.data).toEqual([
+      expect(rows).toEqual([
         [
           { text: booking1.person.name },
           { text: booking1.person.crn },
@@ -126,12 +120,12 @@ describe('BookingService', () => {
     })
 
     it('returns an empty array if no bookings exist', async () => {
-      const bookings = bookingSearchResultsFactory.build({ data: [] })
+      const bookings = bookingSearchResultsFactory.build({ resultsCount: 0, results: [] })
       bookingClient.search.mockResolvedValue(bookings)
 
-      const response = await service.getTableRowsForFindBooking(callConfig, 'provisional', 1, 'endDate', 'asc')
+      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional')
 
-      expect(response.data).toEqual([])
+      expect(rows).toEqual([])
     })
   })
 })

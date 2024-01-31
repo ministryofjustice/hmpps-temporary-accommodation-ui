@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { Arrival } from './Arrival';
 import type { BookingBody } from './BookingBody';
+import type { BookingPremisesSummary } from './BookingPremisesSummary';
 import type { BookingStatus } from './BookingStatus';
 import type { Cancellation } from './Cancellation';
 import type { Confirmation } from './Confirmation';
@@ -12,7 +12,6 @@ import type { Departure } from './Departure';
 import type { Extension } from './Extension';
 import type { Nonarrival } from './Nonarrival';
 import type { Turnaround } from './Turnaround';
-
 export type Booking = (BookingBody & {
     status: BookingStatus;
     extensions: Array<Extension>;
@@ -47,5 +46,6 @@ export type Booking = (BookingBody & {
     effectiveEndDate?: string;
     applicationId?: string;
     assessmentId?: string;
+    premises: BookingPremisesSummary;
 });
 

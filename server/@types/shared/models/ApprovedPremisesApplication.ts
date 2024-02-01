@@ -4,10 +4,12 @@
 /* eslint-disable */
 
 import type { AnyValue } from './AnyValue';
+import type { ApArea } from './ApArea';
 import type { Application } from './Application';
 import type { ApprovedPremisesApplicationStatus } from './ApprovedPremisesApplicationStatus';
 import type { AssessmentDecision } from './AssessmentDecision';
 import type { PersonRisks } from './PersonRisks';
+import type { PersonStatus } from './PersonStatus';
 
 export type ApprovedPremisesApplication = (Application & {
     isWomensApplication?: boolean;
@@ -26,5 +28,7 @@ export type ApprovedPremisesApplication = (Application & {
     assessmentDecision?: AssessmentDecision;
     assessmentDecisionDate?: string;
     submittedAt?: string;
+    personStatusOnSubmission?: PersonStatus;
+    apArea?: ApArea;
 });
 

@@ -4,6 +4,7 @@
 /* eslint-disable */
 
 import type { Person } from './Person';
+import type { PersonStatus } from './PersonStatus';
 
 export type FullPerson = (Person & {
     name: string;
@@ -15,7 +16,7 @@ export type FullPerson = (Person & {
     religionOrBelief?: string;
     sex: string;
     genderIdentity?: string;
-    status: 'InCustody' | 'InCommunity' | 'Unknown';
+    status: PersonStatus;
     prisonName?: string;
     isRestricted?: boolean;
 });

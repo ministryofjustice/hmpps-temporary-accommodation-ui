@@ -46,7 +46,7 @@ describe('PersonClient', () => {
       const person = personFactory.build()
 
       fakeApprovedPremisesApi
-        .get(`/people/search?crn=crn`)
+        .get(`/people/search?crn=CRN`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, person)
 

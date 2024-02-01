@@ -8,9 +8,9 @@ import type { User } from './User';
 import type { UserQualification } from './UserQualification';
 
 export type UserWithWorkload = (User & {
-    numAssessmentsPending?: number;
-    numAssessmentsCompleted7Days?: number;
-    numAssessmentsCompleted30Days?: number;
+    numTasksPending?: number;
+    numTasksCompleted7Days?: number;
+    numTasksCompleted30Days?: number;
     qualifications?: Array<UserQualification>;
     roles?: Array<ApprovedPremisesUserRole>;
 });

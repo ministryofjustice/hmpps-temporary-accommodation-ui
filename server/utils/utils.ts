@@ -122,3 +122,10 @@ export const appendQueryString = (
 export const stripWhitespace = (text: string): string => {
   return text.replace(/\s+/g, '')
 }
+
+/**
+ * Converts a string to upper case
+ * @param string string to be converted.
+ * @returns name converted to upper case.
+ */
+export const normalise = (string: string) => string.toUpperCase().trim()

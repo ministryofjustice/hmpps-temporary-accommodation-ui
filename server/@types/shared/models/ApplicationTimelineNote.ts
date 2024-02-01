@@ -3,12 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { User } from './User';
+
 /**
  * Notes added to an application
  */
 export type ApplicationTimelineNote = {
     id?: string;
-    createdByUserId: string;
+    createdByUser?: User;
     note: string;
     createdAt?: string;
 };

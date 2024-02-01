@@ -9,6 +9,7 @@ import {
   kebabCase,
   lowerCase,
   mapApiPersonRisksForUi,
+  normalise,
   pascalCase,
   removeBlankSummaryListItems,
   sentenceCase,
@@ -236,5 +237,11 @@ describe('unique', () => {
 describe('stripWhitespace', () => {
   it('removes whitespace from a string', () => {
     expect(stripWhitespace(' 2034 -   05 - 25  ')).toEqual('2034-05-25')
+  })
+})
+
+describe('normalise', () => {
+  it('capitalises and removes leading and trailing spaces from string', () => {
+    expect(normalise('abc123')).toEqual('ABC123')
   })
 })

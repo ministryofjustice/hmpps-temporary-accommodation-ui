@@ -11,6 +11,7 @@ import departureFactory from './departure'
 import extensionFactory from './extension'
 import { fullPersonFactory as personFactory } from './person'
 import turnaroundFactory from './turnaround'
+import bookingPremisesSummaryFactory from './bookingPremisesSummary'
 
 const soon = () =>
   DateFormats.dateObjToIsoDate(
@@ -127,5 +128,6 @@ export default BookingFactory.define(() => {
     serviceName: 'temporary-accommodation' as const,
     createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
     assessmentId: faker.string.uuid(),
+    premises: bookingPremisesSummaryFactory.build(),
   }
 })

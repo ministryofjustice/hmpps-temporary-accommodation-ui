@@ -11,5 +11,12 @@ export type SubmitCas2Application = {
      * Id of the application being submitted
      */
     applicationId: string;
+    /**
+     * First and second preferences for where the accommodation should be located, pipe-separated
+     */
+    preferredAreas?: string;
+    hdcEligibilityDate?: string;
+    conditionalReleaseDate?: string;
+    telephoneNumber: string;
 };
 

@@ -15,7 +15,7 @@ import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import RestClient, { CallConfig } from './restClient'
 
-import { appendQueryString } from '../utils/utils'
+import { appendQueryString, normalise } from '../utils/utils'
 import oasysStubs from './stubs/oasysStubs.json'
 
 export default class PersonClient {
@@ -27,7 +27,7 @@ export default class PersonClient {
 
   async search(crn: string): Promise<Person> {
     const response = await this.restClient.get({
-      path: `${paths.people.search({})}?crn=${crn.trim()}`,
+      path: `${paths.people.search({})}?crn=${normalise(crn)}`,
     })
 
     return response as Person

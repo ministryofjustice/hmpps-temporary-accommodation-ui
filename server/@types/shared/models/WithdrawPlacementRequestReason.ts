@@ -3,4 +3,4 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export type WithdrawPlacementRequestReason = 'DuplicatePlacementRequest' | 'AlternativeProvisionIdentified';
+export type WithdrawPlacementRequestReason = 'DuplicatePlacementRequest' | 'AlternativeProvisionIdentified' | 'ChangeInCircumstances' | 'ChangeInReleaseDecision' | 'NoCapacityDueToLostBed' | 'NoCapacityDueToPlacementPrioritisation' | 'NoCapacity' | 'ErrorInPlacementRequest';

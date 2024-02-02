@@ -204,6 +204,53 @@ context('Report', () => {
     })
   })
 
+  it("allows me to download a referrals report for the acting user's region", () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the report page
+    cy.task('stubReportReferenceData')
+    const page = ReportNewPage.visit()
+
+    cy.then(function _() {
+      // Given I need a report for my region
+      page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
+
+      // When I fill out the form
+      const type = 'referrals'
+      const probationRegion = this.actingUserProbationRegion
+      const month = '3'
+      const year = '2023'
+
+      page.completeForm(month, year)
+
+      cy.task('stubReportForRegion', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        month,
+        year,
+        type,
+      })
+      page.expectDownload()
+      page.clickDownload(type)
+
+      // Then a report should have been requested from the API
+      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+        expect(requests).to.have.length(1)
+      })
+
+      // And the report should be downloded
+      const filePath = path.join(
+        Cypress.config('downloadsFolder'),
+        reportForProbationRegionFilename(probationRegion, month, year, type),
+      )
+
+      cy.readFile(filePath).then(file => {
+        expect(file).equals('some-data')
+      })
+    })
+  })
+
   it('should show an error when the user does not select required fields', () => {
     // Given I am signed in
     cy.signIn()

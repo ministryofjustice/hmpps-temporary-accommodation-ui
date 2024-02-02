@@ -41,8 +41,12 @@ export const getApiReportPath = (reportType: ReportType): string => {
   if (reportType === 'bookings') {
     return paths.reports.bookings({})
   }
+  if (reportType === 'referrals') {
+    return paths.reports.referrals({})
+  }
   if (reportType === 'bedspace-usage') {
     return paths.reports.bedspaceUsage({})
   }
+
   return paths.reports.bedspaceUtilisation({})
 }

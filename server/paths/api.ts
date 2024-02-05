@@ -66,7 +66,8 @@ const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
 
 const reportsPath = path('/reports')
-const reportsCas3Path = reportsPath.path('cas3')
+const cas3Path = path('/cas3')
+const reportsCas3Path = cas3Path.path('reports')
 const applyPaths = {
   applications: {
     show: singleApplicationPath,

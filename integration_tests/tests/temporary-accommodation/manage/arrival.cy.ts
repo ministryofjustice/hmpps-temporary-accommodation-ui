@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns'
 import Page from '../../../../cypress_shared/pages/page'
 import BookingArrivalNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalNew'
 import BookingArrivalEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingArrivalEdit'
@@ -11,6 +12,7 @@ import {
   premisesFactory,
   roomFactory,
 } from '../../../../server/testutils/factories'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 context('Booking arrival', () => {
   beforeEach(() => {
@@ -136,6 +138,34 @@ context('Booking arrival', () => {
 
       // Then I should see error messages for the conflict
       page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
+    })
+
+    it('shows errors if arrival date is in future', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      const currentDate = new Date()
+      const futureDate = addDays(currentDate, 7)
+
+      // And there is a premises, a room, and a confirmed booking in the database
+      const booking = bookingFactory.confirmed().build()
+      const { premises, room } = setupBookingStateStubs(booking)
+
+      // When I visit the booking confirmation page
+      const page = BookingArrivalNewPage.visit(premises, room, booking)
+      page.shouldShowBookingDetails()
+
+      // And I fill out the form
+      const arrival = arrivalFactory.build()
+      const newArrival = newArrivalFactory.build({
+        ...arrival,
+        arrivalDate: DateFormats.dateObjToIsoDate(futureDate),
+      })
+
+      page.completeForm(newArrival)
+
+      // Then I should see error messages relating to those fields
+      page.shouldShowErrorMessagesForFields(['arrivalDate'], 'todayOrInThePast')
     })
 
     it('navigates back from the booking arrival page to the show booking page', () => {
@@ -269,6 +299,36 @@ context('Booking arrival', () => {
 
       // Then I should see error messages for the conflict
       page.shouldShowDateConflictErrorMessages(conflictingBooking, 'booking')
+    })
+
+    it('shows errors if arrival date is in future', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      const currentDate = new Date()
+      const futureDate = addDays(currentDate, 7)
+
+      // And there is a confirmed booking in the database
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.arrived().build()
+
+      cy.task('stubSinglePremises', premises)
+      cy.task('stubSingleRoom', { premisesId: premises.id, room })
+      cy.task('stubBooking', { premisesId: premises.id, booking })
+
+      // When I visit the booking confirmation page
+      const page = BookingArrivalEditPage.visit(premises, room, booking)
+
+      // And I fill out the form
+      const newArrival = newArrivalFactory.build()
+      newArrival.arrivalDate = DateFormats.dateObjToIsoDate(futureDate)
+      cy.task('stubArrivalCreate', { premisesId: premises.id, bookingId: booking.id, arrival: newArrival })
+      page.clearForm()
+      page.completeForm(newArrival)
+
+      // Then I should see error messages relating to those fields
+      page.shouldShowErrorMessagesForFields(['arrivalDate'], 'todayOrInThePast')
     })
 
     it('navigates back from the booking arrival page to the show booking page', () => {

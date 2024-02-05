@@ -5,7 +5,7 @@ import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<NewArrival>(() => {
-  const arrivalDate = faker.date.soon()
+  const arrivalDate = faker.date.past()
 
   return {
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),

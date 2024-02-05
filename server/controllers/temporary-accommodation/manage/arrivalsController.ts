@@ -4,7 +4,7 @@ import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
-import { DateFormats } from '../../../utils/dateUtils'
+import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -50,15 +50,19 @@ export default class ArrivalsController {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
-
-      const newArrival: NewArrival = {
-        ...req.body,
-        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
-        ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
-        type: 'CAS3',
-      }
-
       try {
+        const newArrival: NewArrival = {
+          ...req.body,
+          ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate'),
+          ...DateFormats.dateAndTimeInputsToIsoString(req.body, 'expectedDepartureDate'),
+          type: 'CAS3',
+        }
+
+        if (newArrival.arrivalDate && dateIsInFuture(newArrival.arrivalDate)) {
+          const error = new Error()
+          insertGenericError(error, 'arrivalDate', 'todayOrInThePast')
+          throw error
+        }
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, newArrival)
 
         req.flash('success', {
@@ -108,17 +112,22 @@ export default class ArrivalsController {
     return async (req: Request, res: Response) => {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
-
-      const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
-
-      const updateArrival: NewArrival = {
-        notes: req.body.notes,
-        arrivalDate: DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate').arrivalDate,
-        expectedDepartureDate: booking.departureDate,
-        type: 'CAS3',
-      }
-
       try {
+        const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
+
+        const updateArrival: NewArrival = {
+          notes: req.body.notes,
+          arrivalDate: DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate').arrivalDate,
+          expectedDepartureDate: booking.departureDate,
+          type: 'CAS3',
+        }
+
+        if (updateArrival.arrivalDate && dateIsInFuture(updateArrival.arrivalDate)) {
+          const error = new Error()
+          insertGenericError(error, 'arrivalDate', 'todayOrInThePast')
+          throw error
+        }
+
         // INFO: this may confuse, the API is overloading the POST with a writeback of existing and new data
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, updateArrival)
         req.flash('success', 'Arrival updated')

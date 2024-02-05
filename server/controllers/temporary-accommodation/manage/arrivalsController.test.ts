@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { addDays } from 'date-fns'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -90,8 +91,6 @@ describe('ArrivalsController', () => {
 
     describe('create', () => {
       it('creates an arrival and redirects to the show booking page', async () => {
-        const requestHandler = arrivalsController.create()
-
         const arrival = arrivalFactory.build()
         const newArrival = newArrivalFactory.build()
 
@@ -108,6 +107,7 @@ describe('ArrivalsController', () => {
 
         arrivalService.createArrival.mockResolvedValue(arrival)
 
+        const requestHandler = arrivalsController.create()
         await requestHandler(request, response, next)
 
         expect(arrivalService.createArrival).toHaveBeenCalledWith(
@@ -194,6 +194,43 @@ describe('ArrivalsController', () => {
         expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
         expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
         expect(insertGenericError).toHaveBeenCalledWith(err, 'expectedDepartureDate', 'conflict')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+        )
+      })
+
+      it('renders with errors if arrival date is in future', async () => {
+        const requestHandler = arrivalsController.create()
+
+        const arrival = confirmationFactory.build()
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
+
+        const currentDate = new Date()
+        const futureDate = addDays(currentDate, 7)
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(DateFormats.dateObjToIsoDate(futureDate), 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+        }
+
+        const err = new Error()
+        arrivalService.createArrival.mockImplementation(() => {
+          throw err
+        })
+
+        await requestHandler(request, response, next)
+
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,
@@ -345,6 +382,41 @@ describe('ArrivalsController', () => {
         expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'singular')
         expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
         expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+        )
+      })
+
+      it('renders with errors if arrival date is in future', async () => {
+        const currentDate = new Date()
+        const futureDate = addDays(currentDate, 7)
+
+        const arrival = confirmationFactory.build()
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(DateFormats.dateObjToIsoDate(futureDate), 'arrivalDate'),
+        }
+
+        const err = new Error()
+        arrivalService.createArrival.mockImplementation(() => {
+          throw err
+        })
+
+        const requestHandler = arrivalsController.update()
+        await requestHandler(request, response, next)
+
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,

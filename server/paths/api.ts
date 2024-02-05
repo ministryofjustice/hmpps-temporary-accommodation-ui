@@ -66,7 +66,7 @@ const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
 
 const reportsPath = path('/reports')
-
+const reportsCas3Path = reportsPath.path('cas3')
 const applyPaths = {
   applications: {
     show: singleApplicationPath,
@@ -148,6 +148,7 @@ export default {
     bookings: reportsPath.path('bookings'),
     bedspaceUsage: reportsPath.path('bed-usage'),
     bedspaceUtilisation: reportsPath.path('bed-utilisation'),
+    referrals: reportsCas3Path.path('referrals'),
   },
   users: {
     actingUser: {

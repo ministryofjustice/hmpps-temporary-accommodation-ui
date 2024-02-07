@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { AnyValue } from './AnyValue';
 import type { ApArea } from './ApArea';
 import type { Application } from './Application';
@@ -10,7 +9,6 @@ import type { ApprovedPremisesApplicationStatus } from './ApprovedPremisesApplic
 import type { AssessmentDecision } from './AssessmentDecision';
 import type { PersonRisks } from './PersonRisks';
 import type { PersonStatus } from './PersonStatus';
-
 export type ApprovedPremisesApplication = (Application & {
     isWomensApplication?: boolean;
     isPipeApplication?: boolean;

@@ -228,7 +228,7 @@
     "prettier": "^3.0.0",
     "sass": "^1.55.0",
     "shellcheck": "^2.0.0",
-    "start-server-and-test": "^2.0.0",
+    "start-server-and-test": "^2.0.3",
     "supertest": "^6.3.0",
     "ts-jest": "^29.0.0",
     "typescript": "^5.0.0"

@@ -2,10 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { AnyValue } from './AnyValue';
 import type { SubmitApplication } from './SubmitApplication';
-
 export type SubmitTemporaryAccommodationApplication = (SubmitApplication & {
     arrivalDate: string;
     isRegisteredSexOffender?: boolean;
@@ -16,6 +14,7 @@ export type SubmitTemporaryAccommodationApplication = (SubmitApplication & {
     isApplicationEligible?: boolean;
     eligibilityReason?: string;
     dutyToReferLocalAuthorityAreaName?: string;
+    personReleaseDate?: string;
     summaryData: AnyValue;
 });
 

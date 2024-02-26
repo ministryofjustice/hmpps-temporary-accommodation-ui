@@ -18,6 +18,7 @@ export default class LocationHeaderComponent extends Component {
           .contains('Property address')
           .siblings('p')
           .should('contain', premises.addressLine1)
+          .should('contain', premises.town)
           .should('contain', premises.postcode)
       } else {
         cy.contains('Property address').should('not.exist')

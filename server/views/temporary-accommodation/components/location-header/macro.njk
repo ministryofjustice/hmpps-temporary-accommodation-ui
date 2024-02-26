@@ -8,7 +8,9 @@
   {% if premises %}
     {% if not hideAddress %}
       <h2>Property address</h2>
-      <p>{{ premises.addressLine1 }}<br />{{ premises.postcode }}</p>
+      <p>{{ premises.addressLine1 }}
+            {% if premises.town.length %}<br/>{{ premises.town }}{% endif %}
+            <br />{{ premises.postcode }}</p>
     {% endif %}
   {% endif %}
 </div>

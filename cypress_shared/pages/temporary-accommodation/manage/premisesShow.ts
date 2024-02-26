@@ -181,6 +181,7 @@ export default class PremisesShowPage extends Page {
       id,
       name,
       addressLine1: addressLines[0],
+      town: addressLines[addressLines.length - 2],
       postcode: addressLines[addressLines.length - 1],
       status,
       pdu: pdu.name,

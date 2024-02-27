@@ -1,5 +1,10 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { convertApiStatusToUiStatus, createSideNavArr, createTableHeadings } from './bookingSearchUtils'
+import {
+  capitaliseStatus,
+  convertApiStatusToUiStatus,
+  createSideNavArr,
+  createTableHeadings,
+} from './bookingSearchUtils'
 
 describe('bookingSearchUtils', () => {
   describe('createSideNavArr', () => {
@@ -110,5 +115,14 @@ describe('convertApiStatusToUiStatus', () => {
     expect(convertApiStatusToUiStatus('confirmed')).toEqual('confirmed')
     expect(convertApiStatusToUiStatus('arrived')).toEqual('active')
     expect(convertApiStatusToUiStatus('departed')).toEqual('departed')
+  })
+})
+
+describe('capitaliseStatus', () => {
+  it('returns the capitalised version of the given api status', () => {
+    expect(capitaliseStatus('provisional')).toEqual('Provisional')
+    expect(capitaliseStatus('confirmed')).toEqual('Confirmed')
+    expect(capitaliseStatus('arrived')).toEqual('Active')
+    expect(capitaliseStatus('departed')).toEqual('Departed')
   })
 })

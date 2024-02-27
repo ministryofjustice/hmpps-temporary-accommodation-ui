@@ -3,23 +3,23 @@ import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
-import { convertApiStatusToUiStatus } from '../../../../server/utils/bookingSearchUtils'
+import { capitaliseStatus } from '../../../../server/utils/bookingSearchUtils'
 import { personName } from '../../../../server/utils/personUtils'
 
 export default class BookingSearchPage extends Page {
-  constructor() {
-    super('View bookings')
+  constructor(status: BookingSearchApiStatus = 'provisional') {
+    const title = `${capitaliseStatus(status)} bookings`
+    super(title)
   }
 
   static visit(status: BookingSearchApiStatus): BookingSearchPage {
     cy.visit(paths.bookings.search[status].index({}))
-    return new BookingSearchPage()
+    return new BookingSearchPage(status)
   }
 
   checkBookingStatus(status: BookingSearchApiStatus) {
-    const uiStatus = convertApiStatusToUiStatus(status)
-    const capitalisedStatus = uiStatus.charAt(0).toUpperCase() + uiStatus.slice(1)
-    cy.get('h2').contains(`${capitalisedStatus} bookings`)
+    const displayStatus = capitaliseStatus(status)
+    cy.get('.moj-side-navigation a[aria-current="location"]').contains(displayStatus)
   }
 
   checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {
@@ -38,8 +38,6 @@ export default class BookingSearchPage extends Page {
   }
 
   clickOtherBookingStatusLink(status: BookingSearchApiStatus) {
-    const uiStatus = convertApiStatusToUiStatus(status)
-    const capitalisedStatus = uiStatus.charAt(0).toUpperCase() + uiStatus.slice(1)
-    cy.contains(capitalisedStatus).click()
+    cy.contains(capitaliseStatus(status)).click()
   }
 }

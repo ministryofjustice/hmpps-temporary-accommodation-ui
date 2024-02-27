@@ -69,3 +69,8 @@ export function convertApiStatusToUiStatus(status: BookingSearchApiStatus): stri
       return status
   }
 }
+
+export function capitaliseStatus(status: BookingSearchApiStatus) {
+  const uiStatus = convertApiStatusToUiStatus(status)
+  return uiStatus.charAt(0).toUpperCase() + uiStatus.slice(1)
+}

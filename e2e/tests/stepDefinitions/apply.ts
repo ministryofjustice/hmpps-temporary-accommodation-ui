@@ -53,6 +53,7 @@ Given('I fill in and complete an application', () => {
 Given('I see a confirmation of the application', () => {
   const confirmationPage = Page.verifyOnPage(SubmissionConfirmation)
 
+  confirmationPage.linkToFeedbackSurvey()
   confirmationPage.clickBackToDashboard()
 })
 

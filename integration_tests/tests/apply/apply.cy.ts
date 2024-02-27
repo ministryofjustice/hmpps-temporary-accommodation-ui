@@ -174,6 +174,9 @@ context('Apply', () => {
     // And I should be taken to the confirmation page
     const confirmationPage = new SubmissionConfirmation()
 
+    // And I should see a link to provide feedback
+    confirmationPage.linkToFeedbackSurvey()
+
     // Given there are applications in the database
     const applications = applicationFactory.buildList(5)
     cy.task('stubApplications', applications)

@@ -2,7 +2,7 @@ import paths from '../paths/temporary-accommodation/manage'
 import {
   capitaliseStatus,
   convertApiStatusToUiStatus,
-  createSideNavArr,
+  createSubNavArr,
   createTableHeadings,
 } from './bookingSearchUtils'
 
@@ -11,28 +11,28 @@ describe('bookingSearchUtils', () => {
     it('returns side nav with given status selected', () => {
       const sideNavArr = [
         {
-          text: 'Provisional',
+          text: 'Provisional bookings',
           href: paths.bookings.search.provisional.index({}),
           active: true,
         },
         {
-          text: 'Confirmed',
+          text: 'Confirmed bookings',
           href: paths.bookings.search.confirmed.index({}),
           active: false,
         },
         {
-          text: 'Active',
+          text: 'Active bookings',
           href: paths.bookings.search.active.index({}),
           active: false,
         },
         {
-          text: 'Departed',
+          text: 'Departed bookings',
           href: paths.bookings.search.departed.index({}),
           active: false,
         },
       ]
 
-      expect(createSideNavArr('provisional')).toEqual(sideNavArr)
+      expect(createSubNavArr('provisional')).toEqual(sideNavArr)
     })
   })
 

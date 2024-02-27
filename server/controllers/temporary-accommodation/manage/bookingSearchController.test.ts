@@ -4,7 +4,7 @@ import BookingSearchController from './bookingSearchController'
 import { CallConfig } from '../../../data/restClient'
 import { BookingSearchService } from '../../../services'
 import extractCallConfig from '../../../utils/restUtils'
-import { convertApiStatusToUiStatus, createSideNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
+import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/bookingSearchUtils')
@@ -24,7 +24,7 @@ describe('BookingSearchController', () => {
   beforeEach(() => {
     request = createMock<Request>()
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
-    ;(createSideNavArr as jest.MockedFn<typeof createSideNavArr>).mockReturnValue([])
+    ;(createSubNavArr as jest.MockedFn<typeof createSubNavArr>).mockReturnValue([])
     ;(createTableHeadings as jest.MockedFn<typeof createTableHeadings>).mockReturnValue([])
   })
 
@@ -43,7 +43,7 @@ describe('BookingSearchController', () => {
         uiStatus: 'provisional',
         tableHeadings: [],
         bookingTableRows: [],
-        sideNavArr: [],
+        subNavArr: [],
       })
     })
 
@@ -61,7 +61,7 @@ describe('BookingSearchController', () => {
         uiStatus: 'active',
         tableHeadings: [],
         bookingTableRows: [],
-        sideNavArr: [],
+        subNavArr: [],
       })
     })
 
@@ -79,7 +79,7 @@ describe('BookingSearchController', () => {
         uiStatus: 'confirmed',
         tableHeadings: [],
         bookingTableRows: [],
-        sideNavArr: [],
+        subNavArr: [],
       })
     })
 
@@ -97,7 +97,7 @@ describe('BookingSearchController', () => {
         uiStatus: 'departed',
         tableHeadings: [],
         bookingTableRows: [],
-        sideNavArr: [],
+        subNavArr: [],
       })
     })
   })

@@ -2,7 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 import { BookingSearchService } from 'server/services'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import extractCallConfig from '../../../utils/restUtils'
-import { convertApiStatusToUiStatus, createSideNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
+import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
 export default class BookingSearchController {
   constructor(private readonly bookingSearchService: BookingSearchService) {}
@@ -15,7 +15,7 @@ export default class BookingSearchController {
 
       return res.render(`temporary-accommodation/booking-search/results`, {
         uiStatus: convertApiStatusToUiStatus(status),
-        sideNavArr: createSideNavArr(status),
+        subNavArr: createSubNavArr(status),
         tableHeadings: createTableHeadings(status),
         bookingTableRows,
       })

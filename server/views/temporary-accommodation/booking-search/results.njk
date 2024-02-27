@@ -1,5 +1,5 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{%- from "moj/components/side-navigation/macro.njk" import mojSideNavigation -%}
+{%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% set pageTitle = "View bookings - " + applicationName %}
@@ -12,29 +12,23 @@
 {% block content %}
   <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-      {{
-        mojSideNavigation({
-        label: 'Side navigation',
-        items: sideNavArr
-        })
-      }}
-    </div>
+  {{
+    mojSubNavigation({
+    label: 'Secondary navigation',
+    items: subNavArr
+    })
+  }}
 
-    <div class="govuk-grid-column-two-thirds">
-      {{
-        govukTable({
-        captionClasses: "govuk-table__caption--m",
-        attributes: {
-        'data-module': 'moj-sortable-table'
-        },
-        head: tableHeadings,
-        rows: bookingTableRows
-        })
-      }}
-    </div>
-  </div>
+  {{
+    govukTable({
+    captionClasses: "govuk-table__caption--m",
+    attributes: {
+    'data-module': 'moj-sortable-table'
+    },
+    head: tableHeadings,
+    rows: bookingTableRows
+    })
+  }}
 
   {% block extraScripts %}
     <script type="text/javascript" nonce="{{ cspNonce }}">

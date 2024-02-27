@@ -18,8 +18,8 @@ export default class BookingSearchPage extends Page {
   }
 
   checkBookingStatus(status: BookingSearchApiStatus) {
-    const displayStatus = capitaliseStatus(status)
-    cy.get('.moj-side-navigation a[aria-current="location"]').contains(displayStatus)
+    const displayStatus = `${capitaliseStatus(status)} bookings`
+    cy.get('.moj-sub-navigation a[aria-current="page"]').contains(displayStatus)
   }
 
   checkBookingDetailsAndClickView(premises: Premises, booking: Booking) {

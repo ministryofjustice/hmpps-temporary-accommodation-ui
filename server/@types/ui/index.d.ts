@@ -278,7 +278,7 @@ export type OasysImportArrays =
 
 export type JourneyType = 'applications' | 'assessments'
 
-export interface SideNavObj {
+export interface SubNavObj {
   text: string
   href: string
   active: boolean

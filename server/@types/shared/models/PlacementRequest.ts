@@ -2,7 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-
 import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
 import type { AssessmentDecision } from './AssessmentDecision';
 import type { BookingSummary } from './BookingSummary';
@@ -13,7 +12,7 @@ import type { PlacementRequestRequestType } from './PlacementRequestRequestType'
 import type { PlacementRequestStatus } from './PlacementRequestStatus';
 import type { PlacementRequirements } from './PlacementRequirements';
 import type { ReleaseTypeOption } from './ReleaseTypeOption';
-
+import type { WithdrawPlacementRequestReason } from './WithdrawPlacementRequestReason';
 export type PlacementRequest = (PlacementRequirements & PlacementDates & {
     id: string;
     person: Person;
@@ -30,5 +29,7 @@ export type PlacementRequest = (PlacementRequirements & PlacementDates & {
     notes?: string;
     booking?: BookingSummary;
     requestType?: PlacementRequestRequestType;
+    isWithdrawn: boolean;
+    withdrawalReason?: WithdrawPlacementRequestReason;
 });
 

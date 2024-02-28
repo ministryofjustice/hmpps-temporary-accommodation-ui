@@ -22,7 +22,7 @@
   }}
 
   <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-    <form action="" method="get">
+    <form action="{{ paths.bookings.search[uiStatus].index() }}" method="get">
       {{
         govukInput({
           classes: 'moj-search__input',
@@ -44,7 +44,7 @@
       <div class="govuk-button-group">
         {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
 
-        <a class="govuk-link" id="clear-search-button" data-ga-action="click" data-ga-value="1" href="">Clear</a>
+        <a class="govuk-link" href="{{ paths.bookings.search[uiStatus].index() }}">Clear</a>
       </div>
     </form>
   </div>

@@ -67,7 +67,7 @@ context('Booking search', () => {
     page.checkBookingStatus('departed')
   })
 
-  it('shows the result of a crn search', () => {
+  it('shows the result of a crn search and clears the search', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -97,6 +97,17 @@ context('Booking search', () => {
 
     // Then I see the search result for that CRN
     page.checkResults(searchedForBooking)
+
+    // When I clear the search
+    page.clearSearch()
+
+    Page.verifyOnPage(BookingSearchPage, 'provisional')
+
+    // Then the search by CRN form is populated
+    page.checkCRNSearchValue('')
+
+    // Then I see the search result for that CRN
+    page.checkResults(bookings)
   })
 
   it('navigates back to the dashboard from the view bookings page', () => {

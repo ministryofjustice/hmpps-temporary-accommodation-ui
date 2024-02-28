@@ -56,4 +56,8 @@ export default class BookingSearchPage extends Page {
     this.completeTextInputByLabel('Search bookings by CRN (case reference number)', crn)
     this.clickSubmit('Search')
   }
+
+  clearSearch() {
+    cy.get('a').contains('Clear').click()
+  }
 }

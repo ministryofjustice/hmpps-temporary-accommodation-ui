@@ -1,4 +1,5 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
+import { BookingSearchResults } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
@@ -64,6 +65,38 @@ context('Booking search', () => {
 
     // Then I navigate to the Find a departed booking page
     page.checkBookingStatus('departed')
+  })
+
+  it('shows the result of a crn search', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are bookings in the database
+    const bookings = bookingSearchResultsFactory.build()
+    const searchedForBooking: BookingSearchResults = { results: [bookings.results[2]], resultsCount: 1 }
+    const searchCRN = searchedForBooking.results[0].person.crn
+
+    cy.task('stubFindBookings', { bookings, status: 'provisional' })
+
+    // When I visit the Find a provisional booking page
+    const page = BookingSearchPage.visit('provisional')
+
+    // Then the search by CRN form is empty
+    page.checkCRNSearchValue('')
+
+    // And I see all the results
+    page.checkResults(bookings)
+
+    // When I submit a search by CRN
+    page.searchByCRN(searchCRN)
+    Page.verifyOnPage(BookingSearchPage, 'provisional')
+
+    // Then the search by CRN form is populated
+    page.checkCRNSearchValue(searchCRN)
+
+    // TODO: perform actual search
+    // Then I see the search result for that CRN
+    // page.checkResults(searchedForBooking)
   })
 
   it('navigates back to the dashboard from the view bookings page', () => {

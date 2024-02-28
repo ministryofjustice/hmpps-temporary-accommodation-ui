@@ -1,4 +1,4 @@
-import type { Booking, Premises } from '@approved-premises/api'
+import type { Booking, BookingSearchResults, Premises } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -39,5 +39,20 @@ export default class BookingSearchPage extends Page {
 
   clickOtherBookingStatusLink(status: BookingSearchApiStatus) {
     cy.contains(capitaliseStatus(status)).click()
+  }
+
+  checkCRNSearchValue(value: string) {
+    this.shouldShowTextInputByLabel('Search bookings by CRN (case reference number)', value)
+  }
+
+  checkResults(bookings: BookingSearchResults) {
+    cy.get('main table tbody tr').should('have.length', bookings.resultsCount)
+    bookings.results.forEach(result => {
+      cy.get('main table tbody').should('contain', result.person.crn)
+    })
+  }
+
+  searchByCRN(crn: string) {
+    this.completeTextInputByLabel('Search bookings by CRN (case reference number)', crn)
   }
 }

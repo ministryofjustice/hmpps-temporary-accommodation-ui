@@ -3,6 +3,7 @@ import type { NextFunction, Request, Response } from 'express'
 import BookingSearchController from './bookingSearchController'
 import { CallConfig } from '../../../data/restClient'
 import { BookingSearchService } from '../../../services'
+import { bookingSearchParametersFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
@@ -98,6 +99,32 @@ describe('BookingSearchController', () => {
         tableHeadings: [],
         bookingTableRows: [],
         subNavArr: [],
+      })
+    })
+
+    describe('when there is a CRN search parameter', () => {
+      it('renders the filtered table view for provisional bookings', async () => {
+        const searchParameters = bookingSearchParametersFactory.build()
+
+        bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+        ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('provisional')
+
+        request.query = searchParameters
+
+        const requestHandler = bookingSearchController.index('provisional')
+
+        await requestHandler(request, response, next)
+
+        // TODO: call service with params
+        expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'provisional')
+
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
+          uiStatus: 'provisional',
+          tableHeadings: [],
+          bookingTableRows: [],
+          subNavArr: [],
+          crn: searchParameters.crn,
+        })
       })
     })
   })

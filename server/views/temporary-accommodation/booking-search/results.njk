@@ -1,4 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -18,6 +20,34 @@
     items: subNavArr
     })
   }}
+
+  <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
+    <form action="" method="get">
+      {{
+        govukInput({
+          classes: 'moj-search__input',
+          label: {
+            classes: 'govuk-label--m',
+            text: 'Search bookings by CRN (case reference number)'
+          },
+          autocomplete: 'off',
+          hint: {
+            classes: 'moj-search__hint',
+            text: 'For example, XD7364CD'
+          },
+          id: 'crn',
+          name: 'crn',
+          value: crn
+        })
+      }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+
+        <a class="govuk-link" id="clear-search-button" data-ga-action="click" data-ga-value="1" href="">Clear</a>
+      </div>
+    </form>
+  </div>
 
   {{
     govukTable({

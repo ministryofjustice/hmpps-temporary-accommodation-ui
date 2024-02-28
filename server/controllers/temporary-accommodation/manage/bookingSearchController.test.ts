@@ -23,7 +23,7 @@ describe('BookingSearchController', () => {
   const bookingSearchController = new BookingSearchController(bookingSearchService)
 
   beforeEach(() => {
-    request = createMock<Request>()
+    request = createMock<Request>({ query: {} })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(createSubNavArr as jest.MockedFn<typeof createSubNavArr>).mockReturnValue([])
     ;(createTableHeadings as jest.MockedFn<typeof createTableHeadings>).mockReturnValue([])
@@ -38,7 +38,7 @@ describe('BookingSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'provisional')
+      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'provisional', {})
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
         uiStatus: 'provisional',
@@ -56,7 +56,7 @@ describe('BookingSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'arrived')
+      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'arrived', {})
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
         uiStatus: 'active',
@@ -74,7 +74,7 @@ describe('BookingSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'confirmed')
+      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'confirmed', {})
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
         uiStatus: 'confirmed',
@@ -92,7 +92,7 @@ describe('BookingSearchController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'departed')
+      expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'departed', {})
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
         uiStatus: 'departed',
@@ -115,8 +115,11 @@ describe('BookingSearchController', () => {
 
         await requestHandler(request, response, next)
 
-        // TODO: call service with params
-        expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(callConfig, 'provisional')
+        expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(
+          callConfig,
+          'provisional',
+          searchParameters,
+        )
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
           uiStatus: 'provisional',

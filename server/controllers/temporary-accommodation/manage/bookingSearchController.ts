@@ -5,7 +5,9 @@ import extractCallConfig from '../../../utils/restUtils'
 import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 
 // TODO: replace with type generated from API
-export type BookingSearchParameters = Record<string, string>
+export type BookingSearchParameters = {
+  crn?: string
+}
 
 export default class BookingSearchController {
   constructor(private readonly bookingSearchService: BookingSearchService) {}
@@ -16,7 +18,7 @@ export default class BookingSearchController {
 
       const params = req.query as BookingSearchParameters
 
-      const bookingTableRows = await this.bookingSearchService.getTableRowsForFindBooking(callConfig, status)
+      const bookingTableRows = await this.bookingSearchService.getTableRowsForFindBooking(callConfig, status, params)
 
       return res.render(`temporary-accommodation/booking-search/results`, {
         uiStatus: convertApiStatusToUiStatus(status),

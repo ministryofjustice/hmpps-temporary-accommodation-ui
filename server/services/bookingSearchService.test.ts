@@ -35,7 +35,7 @@ describe('BookingService', () => {
 
       bookingClient.search.mockResolvedValue(bookings)
 
-      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional')
+      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional', {})
 
       expect(rows).toEqual([
         [
@@ -123,7 +123,7 @@ describe('BookingService', () => {
       const bookings = bookingSearchResultsFactory.build({ resultsCount: 0, results: [] })
       bookingClient.search.mockResolvedValue(bookings)
 
-      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional')
+      const rows = await service.getTableRowsForFindBooking(callConfig, 'provisional', {})
 
       expect(rows).toEqual([])
     })

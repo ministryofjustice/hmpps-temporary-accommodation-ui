@@ -54,5 +54,6 @@ export default class BookingSearchPage extends Page {
 
   searchByCRN(crn: string) {
     this.completeTextInputByLabel('Search bookings by CRN (case reference number)', crn)
+    this.clickSubmit('Search')
   }
 }

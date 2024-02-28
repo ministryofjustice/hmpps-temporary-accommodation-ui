@@ -7,6 +7,7 @@ import RestClient, { CallConfig } from './restClient'
 import {
   arrivalFactory,
   bookingFactory,
+  bookingSearchResultFactory,
   cancellationFactory,
   confirmationFactory,
   departureFactory,
@@ -276,7 +277,21 @@ describe('BookingClient', () => {
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, bookings)
 
-      const result = await bookingClient.search('provisional')
+      const result = await bookingClient.search('provisional', {})
+
+      expect(result).toEqual(bookings)
+    })
+
+    it('should return confirmed bookings for a given CRN', async () => {
+      const booking = bookingSearchResultFactory.build({ person: { crn: 'C555333' } })
+      const bookings = bookingSearchResultsFactory.build({ resultsCount: 1, results: [booking] })
+
+      fakeApprovedPremisesApi
+        .get(`${paths.bookings.search({})}?status=confirmed&crn=${booking.person.crn}`)
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bookings)
+
+      const result = await bookingClient.search('confirmed', { crn: 'C555333' })
 
       expect(result).toEqual(bookings)
     })
@@ -287,7 +302,7 @@ describe('BookingClient', () => {
       get: jest.fn(),
     } as unknown as jest.Mocked<RestClient>
 
-    await bookingClient.search('provisional')
+    await bookingClient.search('provisional', {})
 
     expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=provisional' })
   })
@@ -297,7 +312,7 @@ describe('BookingClient', () => {
       get: jest.fn(),
     } as unknown as jest.Mocked<RestClient>
 
-    await bookingClient.search('arrived')
+    await bookingClient.search('arrived', {})
 
     expect(bookingClient.restClient.get).toHaveBeenCalledWith({ path: '/bookings/search?status=arrived' })
   })

@@ -22,6 +22,7 @@ import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
+import { BookingSearchParameters } from '../controllers/temporary-accommodation/manage/bookingSearchController'
 
 export default class BookingClient {
   restClient: RestClient
@@ -122,8 +123,8 @@ export default class BookingClient {
     return response as Turnaround
   }
 
-  async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {
-    const path = appendQueryString(paths.bookings.search({ status }), { status })
+  async search(status: BookingSearchApiStatus, params: BookingSearchParameters): Promise<BookingSearchResults> {
+    const path = appendQueryString(paths.bookings.search({ status }), { status, ...params })
 
     const response = await this.restClient.get({ path })
 

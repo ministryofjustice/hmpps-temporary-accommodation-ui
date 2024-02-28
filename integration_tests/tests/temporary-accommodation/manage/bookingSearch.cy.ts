@@ -77,6 +77,7 @@ context('Booking search', () => {
     const searchCRN = searchedForBooking.results[0].person.crn
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
+    cy.task('stubFindBookingsByCRN', { bookings: searchedForBooking, status: 'provisional', crn: searchCRN })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('provisional')
@@ -94,9 +95,8 @@ context('Booking search', () => {
     // Then the search by CRN form is populated
     page.checkCRNSearchValue(searchCRN)
 
-    // TODO: perform actual search
     // Then I see the search result for that CRN
-    // page.checkResults(searchedForBooking)
+    page.checkResults(searchedForBooking)
   })
 
   it('navigates back to the dashboard from the view bookings page', () => {

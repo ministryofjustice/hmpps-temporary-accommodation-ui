@@ -1,5 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
+import { BookingSearchApiStatus } from '@approved-premises/ui'
 import BookingSearchController from './bookingSearchController'
 import { CallConfig } from '../../../data/restClient'
 import { BookingSearchService } from '../../../services'
@@ -103,32 +104,36 @@ describe('BookingSearchController', () => {
     })
 
     describe('when there is a CRN search parameter', () => {
-      it('renders the filtered table view for provisional bookings', async () => {
-        const searchParameters = bookingSearchParametersFactory.build()
+      it.each(['provisional', 'confirmed', 'active', 'departed'])(
+        'renders the filtered table view for %s bookings',
+        async uiStatus => {
+          const status = (uiStatus === 'active' ? 'arrived' : uiStatus) as BookingSearchApiStatus
+          const searchParameters = bookingSearchParametersFactory.build()
 
-        bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
-        ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue('provisional')
+          bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+          ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue(uiStatus)
 
-        request.query = searchParameters
+          request.query = searchParameters
 
-        const requestHandler = bookingSearchController.index('provisional')
+          const requestHandler = bookingSearchController.index(status)
 
-        await requestHandler(request, response, next)
+          await requestHandler(request, response, next)
 
-        expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(
-          callConfig,
-          'provisional',
-          searchParameters,
-        )
+          expect(bookingSearchService.getTableRowsForFindBooking).toHaveBeenCalledWith(
+            callConfig,
+            status,
+            searchParameters,
+          )
 
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
-          uiStatus: 'provisional',
-          tableHeadings: [],
-          bookingTableRows: [],
-          subNavArr: [],
-          crn: searchParameters.crn,
-        })
-      })
+          expect(response.render).toHaveBeenCalledWith('temporary-accommodation/booking-search/results', {
+            uiStatus,
+            tableHeadings: [],
+            bookingTableRows: [],
+            subNavArr: [],
+            crn: searchParameters.crn,
+          })
+        },
+      )
     })
   })
 })

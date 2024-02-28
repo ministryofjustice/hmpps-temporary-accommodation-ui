@@ -110,6 +110,44 @@ context('Booking search', () => {
     page.checkResults(bookings)
   })
 
+  it('shows a message if there are no CRN search results', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are no bookings matching a CRN search in the database
+    const bookings = bookingSearchResultsFactory.build()
+    const noBookings = { results: [], resultsCount: 0 }
+
+    cy.task('stubFindBookings', { bookings, status: 'confirmed' })
+    cy.task('stubFindBookingsByCRN', {
+      bookings: noBookings,
+      status: 'confirmed',
+      crn: 'N0M4TCH',
+    })
+
+    // When I visit the Find a provisional booking page
+    const page = BookingSearchPage.visit('confirmed')
+
+    // Then the search by CRN form is empty
+    page.checkCRNSearchValue('')
+
+    // And I see all the results
+    page.checkResults(bookings)
+
+    // When I submit a search by CRN
+    page.searchByCRN('N0M4TCH')
+    Page.verifyOnPage(BookingSearchPage, 'confirmed')
+
+    // Then the search by CRN form is populated
+    page.checkCRNSearchValue('N0M4TCH')
+
+    // Then I see no search results for that CRN
+    page.checkResults(noBookings)
+
+    // And I see a message
+    page.checkNoResultsByCRN('confirmed', 'N0M4TCH')
+  })
+
   it('navigates back to the dashboard from the view bookings page', () => {
     // Given I am signed in
     cy.signIn()

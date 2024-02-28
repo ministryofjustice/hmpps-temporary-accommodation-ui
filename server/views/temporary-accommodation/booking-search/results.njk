@@ -49,16 +49,24 @@
     </form>
   </div>
 
-  {{
-    govukTable({
-    captionClasses: "govuk-table__caption--m",
-    attributes: {
-    'data-module': 'moj-sortable-table'
-    },
-    head: tableHeadings,
-    rows: bookingTableRows
-    })
-  }}
+  {% if (bookingTableRows|length > 0) or (not crn) %}
+    {{
+      govukTable({
+        captionClasses: "govuk-table__caption--m",
+        attributes: {
+          'data-module': 'moj-sortable-table'
+        },
+        head: tableHeadings,
+        rows: bookingTableRows
+      })
+    }}
+  {% else %}
+    <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} bookings.</h2>
+
+    <p>Check the other lists.</p>
+
+    <p>If the booking is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact support</a> for help.</p>
+  {% endif %}
 
   {% block extraScripts %}
     <script type="text/javascript" nonce="{{ cspNonce }}">

@@ -5,6 +5,7 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 import { capitaliseStatus } from '../../../../server/utils/bookingSearchUtils'
 import { personName } from '../../../../server/utils/personUtils'
+import { supportEmail } from '../../../../server/utils/phaseBannerUtils'
 
 export default class BookingSearchPage extends Page {
   constructor(status: BookingSearchApiStatus = 'provisional') {
@@ -59,5 +60,17 @@ export default class BookingSearchPage extends Page {
 
   clearSearch() {
     cy.get('a').contains('Clear').click()
+  }
+
+  checkNoResults(status: string) {
+    cy.get('main table').should('not.exist')
+    cy.get('p').should('contain', `There are no ${status} bookings to show.`)
+  }
+
+  checkNoResultsByCRN(status: string, crn: string) {
+    cy.get('main table').should('not.exist')
+    cy.get('h2').should('contain', `There are no results for ‘${crn}’ in ${status} bookings.`)
+    cy.get('p').should('contain', 'Check the other lists.')
+    cy.get('main a').contains('contact support').should('have.attr', 'href', `mailto:${supportEmail}`)
   }
 }

@@ -17,12 +17,11 @@ import type {
   Nonarrival,
   Turnaround,
 } from '@approved-premises/api'
-import type { BookingSearchApiStatus } from '@approved-premises/ui'
+import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
-import { BookingSearchParameters } from '../controllers/temporary-accommodation/manage/bookingSearchController'
 
 export default class BookingClient {
   restClient: RestClient

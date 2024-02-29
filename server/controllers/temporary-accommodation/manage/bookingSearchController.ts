@@ -1,13 +1,8 @@
 import type { Request, RequestHandler, Response } from 'express'
 import { BookingSearchService } from 'server/services'
-import type { BookingSearchApiStatus } from '@approved-premises/ui'
+import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
 import extractCallConfig from '../../../utils/restUtils'
 import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
-
-// TODO: replace with type generated from API
-export type BookingSearchParameters = {
-  crn?: string
-}
 
 export default class BookingSearchController {
   constructor(private readonly bookingSearchService: BookingSearchService) {}

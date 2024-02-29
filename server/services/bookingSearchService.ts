@@ -1,10 +1,9 @@
-import type { BookingSearchApiStatus, TableRow } from '@approved-premises/ui'
+import type { BookingSearchApiStatus, BookingSearchParameters, TableRow } from '@approved-premises/ui'
 import type { RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from '../utils/dateUtils'
-import { BookingSearchParameters } from '../controllers/temporary-accommodation/manage/bookingSearchController'
 
 export default class BookingSearchService {
   constructor(private readonly bookingClientFactory: RestClientBuilder<BookingClient>) {}

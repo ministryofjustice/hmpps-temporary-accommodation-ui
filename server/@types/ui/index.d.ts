@@ -286,6 +286,10 @@ export interface SubNavObj {
 
 export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | 'departed' | 'closed'
 
+export type BookingSearchParameters = {
+  crn?: string
+}
+
 export type ReportType = 'bookings' | 'bedspace-usage' | 'occupancy' | 'referrals'
 
 export interface OasysPage extends TasklistPage {

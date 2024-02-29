@@ -15,14 +15,14 @@
 {% block content %}
   <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
 
+  {{ showErrorSummary(errorSummary) }}
+
   {{
     mojSubNavigation({
     label: 'Secondary navigation',
     items: subNavArr
     })
   }}
-
-  {{ showErrorSummary(errorSummary) }}
 
   <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
     <form action="{{ paths.bookings.search[uiStatus].index() }}" method="get">

@@ -83,17 +83,17 @@ context('Booking search', () => {
     const page = BookingSearchPage.visit('provisional')
 
     // Then the search by CRN form is empty
-    page.checkCRNSearchValue('')
+    page.checkCRNSearchValue('', 'provisional')
 
     // And I see all the results
     page.checkResults(bookings)
 
     // When I submit a search by CRN
-    page.searchByCRN(searchCRN)
+    page.searchByCRN(searchCRN, 'provisional')
     Page.verifyOnPage(BookingSearchPage, 'provisional')
 
     // Then the search by CRN form is populated
-    page.checkCRNSearchValue(searchCRN)
+    page.checkCRNSearchValue(searchCRN, 'provisional')
 
     // Then I see the search result for that CRN
     page.checkResults(searchedForBooking)
@@ -104,7 +104,7 @@ context('Booking search', () => {
     Page.verifyOnPage(BookingSearchPage, 'provisional')
 
     // Then the search by CRN form is populated
-    page.checkCRNSearchValue('')
+    page.checkCRNSearchValue('', 'provisional')
 
     // Then I see the search result for that CRN
     page.checkResults(bookings)
@@ -129,17 +129,17 @@ context('Booking search', () => {
     const page = BookingSearchPage.visit('confirmed')
 
     // Then the search by CRN form is empty
-    page.checkCRNSearchValue('')
+    page.checkCRNSearchValue('', 'confirmed')
 
     // And I see all the results
     page.checkResults(bookings)
 
     // When I submit a search by CRN
-    page.searchByCRN('N0M4TCH')
+    page.searchByCRN('N0M4TCH', 'confirmed')
     Page.verifyOnPage(BookingSearchPage, 'confirmed')
 
     // Then the search by CRN form is populated
-    page.checkCRNSearchValue('N0M4TCH')
+    page.checkCRNSearchValue('N0M4TCH', 'confirmed')
 
     // Then I see no search results for that CRN
     page.checkResults(noBookings)
@@ -161,7 +161,7 @@ context('Booking search', () => {
     const page = BookingSearchPage.visit('provisional')
 
     // And I submit a search with a blank CRN
-    page.searchByCRN('  ')
+    page.searchByCRN('  ', 'provisional')
     Page.verifyOnPage(BookingSearchPage, 'provisional')
 
     // Then I see an error message

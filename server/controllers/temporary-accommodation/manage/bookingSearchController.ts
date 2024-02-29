@@ -28,7 +28,7 @@ export default class BookingSearchController {
 
         return res.render(`temporary-accommodation/booking-search/results`, {
           uiStatus: convertApiStatusToUiStatus(status),
-          subNavArr: createSubNavArr(status),
+          subNavArr: createSubNavArr(status, params.crn),
           tableHeadings: createTableHeadings(status),
           bookingTableRows,
           crn: params.crn,

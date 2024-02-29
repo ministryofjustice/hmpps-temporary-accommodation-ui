@@ -34,6 +34,33 @@ describe('bookingSearchUtils', () => {
 
       expect(createSubNavArr('provisional')).toEqual(sideNavArr)
     })
+
+    it('appends the CRN parameter if given', () => {
+      const sideNavArr = [
+        {
+          text: 'Provisional bookings',
+          href: `${paths.bookings.search.provisional.index({})}?crn=X222555`,
+          active: true,
+        },
+        {
+          text: 'Confirmed bookings',
+          href: `${paths.bookings.search.confirmed.index({})}?crn=X222555`,
+          active: false,
+        },
+        {
+          text: 'Active bookings',
+          href: `${paths.bookings.search.active.index({})}?crn=X222555`,
+          active: false,
+        },
+        {
+          text: 'Departed bookings',
+          href: `${paths.bookings.search.departed.index({})}?crn=X222555`,
+          active: false,
+        },
+      ]
+
+      expect(createSubNavArr('provisional', 'X222555')).toEqual(sideNavArr)
+    })
   })
 
   describe('createTableHeadings', () => {

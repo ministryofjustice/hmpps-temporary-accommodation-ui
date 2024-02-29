@@ -168,6 +168,57 @@ context('Booking search', () => {
     page.shouldShowErrorMessagesForFields(['crn'])
   })
 
+  it('retains the CRN search when navigating between booking types', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are bookings in the database
+    const bookings = bookingSearchResultsFactory.build()
+
+    ;['provisional', 'confirmed', 'arrived', 'departed'].forEach(status => {
+      cy.task('stubFindBookings', { bookings, status })
+      cy.task('stubFindBookingsByCRN', { bookings, status, crn: 'X321654' })
+    })
+
+    // When I visit the Find a provisional booking page
+    const page = BookingSearchPage.visit('provisional')
+
+    // And I submit a search by CRN
+    page.searchByCRN('X321654', 'provisional')
+
+    // Then I see the provisional bookings for the given CRN
+    Page.verifyOnPage(BookingSearchPage, 'provisional')
+    page.checkCRNSearchValue('X321654', 'provisional')
+
+    // When I navigate to the confirmed bookings search
+    page.clickOtherBookingStatusLink('confirmed')
+
+    // Then I see the confirmed bookings for the given CRN
+    Page.verifyOnPage(BookingSearchPage, 'confirmed')
+    page.checkCRNSearchValue('X321654', 'confirmed')
+
+    // When I navigate to the active bookings search
+    page.clickOtherBookingStatusLink('arrived')
+
+    // Then I see the active bookings for the given CRN
+    Page.verifyOnPage(BookingSearchPage, 'arrived')
+    page.checkCRNSearchValue('X321654', 'active')
+
+    // When I navigate to the departed bookings search
+    page.clickOtherBookingStatusLink('departed')
+
+    // Then I see the departed bookings for the given CRN
+    Page.verifyOnPage(BookingSearchPage, 'departed')
+    page.checkCRNSearchValue('X321654', 'departed')
+
+    // When I navigate to the provisional bookings search
+    page.clickOtherBookingStatusLink('provisional')
+
+    // Then I see the provisional bookings for the given CRN
+    Page.verifyOnPage(BookingSearchPage, 'provisional')
+    page.checkCRNSearchValue('X321654', 'provisional')
+  })
+
   it('navigates back to the dashboard from the view bookings page', () => {
     // Given I am signed in
     cy.signIn()

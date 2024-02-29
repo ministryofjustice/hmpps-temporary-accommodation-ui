@@ -1,31 +1,15 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import { SubNavObj, TableCell } from '../@types/ui/index'
 import paths from '../paths/temporary-accommodation/manage'
+import { appendQueryString } from './utils'
 
-export function createSubNavArr(status: BookingSearchApiStatus): Array<SubNavObj> {
+export function createSubNavArr(status: BookingSearchApiStatus, crn?: string): Array<SubNavObj> {
   const uiStatus = convertApiStatusToUiStatus(status)
-  return [
-    {
-      text: 'Provisional bookings',
-      href: paths.bookings.search.provisional.index({}),
-      active: uiStatus === 'provisional',
-    },
-    {
-      text: 'Confirmed bookings',
-      href: paths.bookings.search.confirmed.index({}),
-      active: uiStatus === 'confirmed',
-    },
-    {
-      text: 'Active bookings',
-      href: paths.bookings.search.active.index({}),
-      active: uiStatus === 'active',
-    },
-    {
-      text: 'Departed bookings',
-      href: paths.bookings.search.departed.index({}),
-      active: uiStatus === 'departed',
-    },
-  ]
+  return ['provisional', 'confirmed', 'active', 'departed'].map((bookingStatus: BookingSearchApiStatus) => ({
+    text: `${capitaliseStatus(bookingStatus)} bookings`,
+    href: appendQueryString(paths.bookings.search[bookingStatus].index({}), { crn }),
+    active: uiStatus === bookingStatus,
+  }))
 }
 
 export function createTableHeadings(status: BookingSearchApiStatus): Array<TableCell> {

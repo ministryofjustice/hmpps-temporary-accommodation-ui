@@ -7,9 +7,11 @@ import { BookingSearchService } from '../../../services'
 import { bookingSearchParametersFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/bookingSearchUtils')
+jest.mock('../../../utils/validation')
 
 describe('BookingSearchController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -28,6 +30,7 @@ describe('BookingSearchController', () => {
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(createSubNavArr as jest.MockedFn<typeof createSubNavArr>).mockReturnValue([])
     ;(createTableHeadings as jest.MockedFn<typeof createTableHeadings>).mockReturnValue([])
+    ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
   })
 
   describe('index', () => {
@@ -46,6 +49,8 @@ describe('BookingSearchController', () => {
         tableHeadings: [],
         bookingTableRows: [],
         subNavArr: [],
+        errors: {},
+        errorSummary: [],
       })
     })
 
@@ -64,6 +69,8 @@ describe('BookingSearchController', () => {
         tableHeadings: [],
         bookingTableRows: [],
         subNavArr: [],
+        errors: {},
+        errorSummary: [],
       })
     })
 
@@ -82,6 +89,8 @@ describe('BookingSearchController', () => {
         tableHeadings: [],
         bookingTableRows: [],
         subNavArr: [],
+        errors: {},
+        errorSummary: [],
       })
     })
 
@@ -100,6 +109,8 @@ describe('BookingSearchController', () => {
         tableHeadings: [],
         bookingTableRows: [],
         subNavArr: [],
+        errors: {},
+        errorSummary: [],
       })
     })
 
@@ -131,7 +142,36 @@ describe('BookingSearchController', () => {
             bookingTableRows: [],
             subNavArr: [],
             crn: searchParameters.crn,
+            errors: {},
+            errorSummary: [],
           })
+        },
+      )
+    })
+
+    describe('when an blank CRN search is submitted', () => {
+      it.each(['provisional', 'confirmed', 'active', 'departed'])(
+        'renders an error for %s bookings',
+        async uiStatus => {
+          const status = (uiStatus === 'active' ? 'arrived' : uiStatus) as BookingSearchApiStatus
+          const searchParameters = bookingSearchParametersFactory.build({ crn: '   ' })
+
+          bookingSearchService.getTableRowsForFindBooking.mockResolvedValue([])
+          ;(convertApiStatusToUiStatus as jest.MockedFn<typeof convertApiStatusToUiStatus>).mockReturnValue(uiStatus)
+
+          request.query = searchParameters
+
+          const requestHandler = bookingSearchController.index(status)
+
+          await requestHandler(request, response, next)
+
+          expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'crn', 'empty')
+          expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+            request,
+            response,
+            new Error(),
+            `/bookings/${uiStatus}`,
+          )
         },
       )
     })

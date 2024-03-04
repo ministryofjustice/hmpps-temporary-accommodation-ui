@@ -324,3 +324,5 @@ export type ApplicationSummaryData = {
     | 'CAS2 (formerly Bail Accommodation Support Services)'
     | null
 }
+
+export type AssessmentSearchApiStatus = 'unallocated' | 'in_review' | 'ready_to_place'

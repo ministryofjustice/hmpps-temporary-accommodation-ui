@@ -1,6 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
@@ -51,26 +52,35 @@ describe('AssessmentsController', () => {
   })
 
   describe('index', () => {
-    it('returns the table rows to the template', async () => {
-      assessmentsService.getAllForLoggedInUser.mockResolvedValue({
-        unallocatedTableRows: [],
-        inProgressTableRows: [],
-        readyToPlaceTableRows: [],
-        archivedTableRows: [],
-      })
-
+    it('redirects to unallocated assessments if no status is specified', async () => {
       const requestHandler = assessmentsController.index()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
-        unallocatedTableRows: [],
-        inProgressTableRows: [],
-        readyToPlaceTableRows: [],
-        tableHeaders: assessmentsTableHeaders,
-      })
-
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig)
+      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.unallocated.pattern)
     })
+
+    it.each(['unallocated', 'in_review', 'ready_to_place'])(
+      'returns the table rows for assessments with status %s to the template',
+      async (status: AssessmentSearchApiStatus) => {
+        assessmentsService.getAllForLoggedInUser.mockResolvedValue({
+          unallocatedTableRows: [],
+          inProgressTableRows: [],
+          readyToPlaceTableRows: [],
+          archivedTableRows: [],
+        })
+
+        const requestHandler = assessmentsController.index(status)
+        await requestHandler(request, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
+          status,
+          tableRows: [],
+          tableHeaders: assessmentsTableHeaders,
+        })
+
+        expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig)
+      },
+    )
   })
 
   describe('archive', () => {

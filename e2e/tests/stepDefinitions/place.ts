@@ -17,11 +17,11 @@ Given('I view the list of assessments', () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
   dashboardPage.clickReviewAndAssessReferrals()
 
-  Page.verifyOnPage(AssessmentListPage, [], [], [], [])
+  Page.verifyOnPage(AssessmentListPage, 'Referrals unallocated')
 })
 
 Given('I view the assessment', () => {
-  const assessmentListPage = Page.verifyOnPage(AssessmentListPage, [], [], [], [])
+  const assessmentListPage = Page.verifyOnPage(AssessmentListPage, 'Referrals unallocated')
 
   const application = applicationFactory.build({
     person,

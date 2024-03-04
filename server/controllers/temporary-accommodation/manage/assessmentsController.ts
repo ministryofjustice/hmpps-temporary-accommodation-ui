@@ -1,4 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
+import { AssessmentSearchApiStatus, TableRow } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
@@ -69,17 +70,30 @@ export const confirmationPageContent: Record<Assessment['status'], { title: stri
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}
 
-  index(): RequestHandler {
+  index(status?: AssessmentSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
+      if (!status) {
+        return res.redirect(paths.assessments.unallocated.pattern)
+      }
+
       const callConfig = extractCallConfig(req)
 
       const { unallocatedTableRows, inProgressTableRows, readyToPlaceTableRows } =
         await this.assessmentsService.getAllForLoggedInUser(callConfig)
 
+      // TODO: return only required status from service
+      let tableRows: TableRow[]
+      if (status === 'unallocated') {
+        tableRows = unallocatedTableRows
+      } else if (status === 'in_review') {
+        tableRows = inProgressTableRows
+      } else {
+        tableRows = readyToPlaceTableRows
+      }
+
       return res.render('temporary-accommodation/assessments/index', {
-        unallocatedTableRows,
-        inProgressTableRows,
-        readyToPlaceTableRows,
+        status,
+        tableRows,
         tableHeaders: assessmentsTableHeaders,
       })
     }

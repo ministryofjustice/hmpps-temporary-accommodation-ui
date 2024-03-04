@@ -9,13 +9,8 @@ import { isFullPerson, personName } from '../../../server/utils/personUtils'
 import Page from '../page'
 
 export default class ListPage extends Page {
-  constructor(
-    private readonly unallocatedAssessments: Array<AssessmentSummary>,
-    private readonly inProgressAssessments: Array<AssessmentSummary>,
-    private readonly readyToPlaceAssessments: Array<AssessmentSummary>,
-    private readonly archivedAssessments: Array<AssessmentSummary>,
-  ) {
-    super('Referrals')
+  constructor(pageTitle: string) {
+    super(pageTitle)
   }
 
   clickAssessment(assessment: Assessment) {
@@ -26,27 +21,12 @@ export default class ListPage extends Page {
     }
   }
 
-  shouldShowInProgressAssessments(): void {
-    cy.get('#tab_in-review').click()
-    this.shouldShowAssessments(this.inProgressAssessments, 'in-review')
-  }
-
-  shouldShowUnallocatedAssessments(): void {
-    cy.get('#tab_unallocated').click()
-    this.shouldShowAssessments(this.unallocatedAssessments, 'unallocated')
-  }
-
-  shouldShowReadyToPlaceAssessments(): void {
-    cy.get('#tab_ready-to-place').click()
-    this.shouldShowAssessments(this.readyToPlaceAssessments, 'ready-to-place')
-  }
-
   clickViewArchivedReferrals(): void {
     cy.get('a').contains('View archived referrals').click()
   }
 
-  shouldShowArchivedAssessments(): void {
-    this.archivedAssessments.forEach(assessmentSummary => {
+  shouldShowAssessments(assessments: Array<AssessmentSummary>): void {
+    assessments.forEach(assessmentSummary => {
       cy.get(`a[href*="${paths.assessments.full({ id: assessmentSummary.id })}"]`)
         .parent()
         .parent()
@@ -69,47 +49,11 @@ export default class ListPage extends Page {
                   })
                 : 'N/A',
             )
-          cy.get('td')
-            .eq(2)
-            .contains(
-              assessmentSummary?.arrivalDate
-                ? DateFormats.isoDateToUIDate(assessmentSummary?.arrivalDate, {
-                    format: 'short',
-                  })
-                : 'N/A',
-            )
-          cy.get('td').eq(3).contains(statusName(assessmentSummary.status))
         })
     })
   }
 
-  private shouldShowAssessments(assessments: Array<AssessmentSummary>, containerId: string): void {
-    assessments.forEach(assessmentSummary => {
-      cy.get(`#${containerId}`).within(() => {
-        cy.get(`a[href*="${paths.assessments.full({ id: assessmentSummary.id })}"]`)
-          .parent()
-          .parent()
-          .within(() => {
-            cy.get('th').eq(0).contains(personName(assessmentSummary.person, 'Limited access offender'))
-            cy.get('td').eq(0).contains(assessmentSummary.person.crn)
-            cy.get('td')
-              .eq(1)
-              .contains(
-                DateFormats.isoDateToUIDate(assessmentSummary.createdAt, {
-                  format: 'short',
-                }),
-              )
-            cy.get('td')
-              .eq(2)
-              .contains(
-                assessmentSummary?.arrivalDate
-                  ? DateFormats.isoDateToUIDate(assessmentSummary?.arrivalDate, {
-                      format: 'short',
-                    })
-                  : 'N/A',
-              )
-          })
-      })
-    })
+  clickSubNav(label: string) {
+    cy.get('[aria-label="Secondary navigation"] a').contains(label).click()
   }
 }

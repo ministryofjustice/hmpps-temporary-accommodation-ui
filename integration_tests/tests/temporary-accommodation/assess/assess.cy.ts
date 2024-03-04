@@ -47,25 +47,30 @@ context('Apply', () => {
         // And I click on the "Review and assess referrals" link
         dashboardPage.clickReviewAndAssessReferrals()
 
-        // Then I should see the list of referrals
-        const listPage = Page.verifyOnPage(
-          ListPage,
-          unallocatedAssessmentSummaries,
-          inProgressAssessmentSummaries,
-          readyToPlaceAssessmentSummaries,
-          [...rejectedAssessmentSummaries, ...closedAssessmentSummaries],
-        )
+        // Then I should see the list of unallocated referrals
+        const unallocatedListPage = Page.verifyOnPage(ListPage, 'Referrals unallocated')
+        unallocatedListPage.shouldShowAssessments(unallocatedAssessmentSummaries)
 
-        // And I should see the list of referrals
-        listPage.shouldShowUnallocatedAssessments()
-        listPage.shouldShowInProgressAssessments()
-        listPage.shouldShowReadyToPlaceAssessments()
+        // When I click on 'In review'
+        unallocatedListPage.clickSubNav('In review')
 
-        // Given I click on the 'View archived assessments' link
-        listPage.clickViewArchivedReferrals()
+        // Then I should see the list of in review referrals
+        const inReviewListPage = Page.verifyOnPage(ListPage, 'Referrals in_review')
+        inReviewListPage.shouldShowAssessments(inProgressAssessmentSummaries)
+
+        // When I click on 'Ready to place'
+        inReviewListPage.clickSubNav('Ready to place')
+
+        // Then I should see the list of ready to place referrals
+        const readyToPlaceListPage = Page.verifyOnPage(ListPage, 'Referrals ready_to_place')
+        readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
+
+        // When I click on the 'View archived assessments' link
+        readyToPlaceListPage.clickViewArchivedReferrals()
 
         // Then I should see the list of archived assessments
-        listPage.shouldShowArchivedAssessments()
+        const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
+        archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries])
       })
     })
 
@@ -86,7 +91,7 @@ context('Apply', () => {
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
-          const listPage = Page.verifyOnPage(ListPage, assessmentSummary, [], [], [])
+          const listPage = Page.verifyOnPage(ListPage, 'Referrals unallocated')
 
           // When I click on the referral
           listPage.clickAssessment(assessment)
@@ -181,7 +186,7 @@ context('Apply', () => {
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
-          const listPage = Page.verifyOnPage(ListPage, assessmentSummary, [], [], [])
+          const listPage = Page.verifyOnPage(ListPage, 'Referrals unallocated')
 
           // When I click on the referral
           listPage.clickAssessment(assessment)

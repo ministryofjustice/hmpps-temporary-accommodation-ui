@@ -1,7 +1,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
-{% from "../components/ta-input/macro.njk" import taInput %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
@@ -13,9 +13,9 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
+  {% set context = fetchContext() %}
 
-  {{ showErrorSummary(errorSummary) }}
+  <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
 
   {{
     mojSubNavigation({
@@ -27,7 +27,7 @@
   <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
     <form action="{{ paths.bookings.search[uiStatus].index() }}" method="get">
 
-      {{ taInput(
+      {{ govukInput(
         {
           label: {
             classes: 'govuk-label--m',
@@ -36,9 +36,10 @@
           hint: {
             text: 'For example, XD7364CD'
           },
-          fieldName: 'crn'
-        },
-        fetchContext()
+          name: 'crn',
+          id: 'crn',
+          value: crn
+        }
       ) }}
 
       <div class="govuk-button-group">
@@ -49,7 +50,11 @@
     </form>
   </div>
 
-  {% if (bookingTableRows|length > 0) or (not crn) %}
+  {% if context.errors.crn %}
+    <h2>You have not entered any search terms</h2>
+
+    <p>Enter a CRN. This can be found in nDelius.</p>
+  {% elif (bookingTableRows|length > 0) or (not crn) %}
     {{
       govukTable({
         captionClasses: "govuk-table__caption--m",

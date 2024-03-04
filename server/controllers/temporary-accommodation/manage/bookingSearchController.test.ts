@@ -50,7 +50,6 @@ describe('BookingSearchController', () => {
         bookingTableRows: [],
         subNavArr: [],
         errors: {},
-        errorSummary: [],
       })
     })
 
@@ -70,7 +69,6 @@ describe('BookingSearchController', () => {
         bookingTableRows: [],
         subNavArr: [],
         errors: {},
-        errorSummary: [],
       })
     })
 
@@ -90,7 +88,6 @@ describe('BookingSearchController', () => {
         bookingTableRows: [],
         subNavArr: [],
         errors: {},
-        errorSummary: [],
       })
     })
 
@@ -110,7 +107,6 @@ describe('BookingSearchController', () => {
         bookingTableRows: [],
         subNavArr: [],
         errors: {},
-        errorSummary: [],
       })
     })
 
@@ -143,7 +139,6 @@ describe('BookingSearchController', () => {
             subNavArr: [],
             crn: searchParameters.crn,
             errors: {},
-            errorSummary: [],
           })
         },
       )

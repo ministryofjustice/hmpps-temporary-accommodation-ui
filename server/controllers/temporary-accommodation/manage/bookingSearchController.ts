@@ -11,7 +11,7 @@ export default class BookingSearchController {
 
   index(status: BookingSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors, errorSummary } = fetchErrorsAndUserInput(req)
+      const { errors } = fetchErrorsAndUserInput(req)
 
       const callConfig = extractCallConfig(req)
 
@@ -33,7 +33,6 @@ export default class BookingSearchController {
           bookingTableRows,
           crn: params.crn,
           errors,
-          errorSummary,
         })
       } catch (err) {
         return catchValidationErrorOrPropogate(

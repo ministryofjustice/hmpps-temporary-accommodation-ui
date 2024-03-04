@@ -148,7 +148,7 @@ context('Booking search', () => {
     page.checkNoResultsByCRN('confirmed', 'N0M4TCH')
   })
 
-  it('shows an error message if the user has not entered a CRN', () => {
+  it('shows a message if the user has entered a blank CRN', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -165,7 +165,7 @@ context('Booking search', () => {
     Page.verifyOnPage(BookingSearchPage, 'provisional')
 
     // Then I see an error message
-    page.shouldShowErrorMessagesForFields(['crn'])
+    page.checkNoCRNEntered()
   })
 
   it('retains the CRN search when navigating between booking types', () => {

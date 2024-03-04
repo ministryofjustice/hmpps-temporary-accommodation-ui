@@ -73,7 +73,7 @@ context('Apply', () => {
 
         // Then I should see the list of archived assessments
         const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
-        archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries])
+        archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
       })
     })
 

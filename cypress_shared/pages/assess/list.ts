@@ -25,7 +25,7 @@ export default class ListPage extends Page {
     cy.get('a').contains('View archived referrals').click()
   }
 
-  shouldShowAssessments(assessments: Array<AssessmentSummary>): void {
+  shouldShowAssessments(assessments: Array<AssessmentSummary>, checkStatus = false): void {
     assessments.forEach(assessmentSummary => {
       cy.get(`a[href*="${paths.assessments.full({ id: assessmentSummary.id })}"]`)
         .parent()
@@ -49,6 +49,9 @@ export default class ListPage extends Page {
                   })
                 : 'N/A',
             )
+          if (checkStatus) {
+            cy.get('td').eq(3).contains(statusName(assessmentSummary.status))
+          }
         })
     })
   }

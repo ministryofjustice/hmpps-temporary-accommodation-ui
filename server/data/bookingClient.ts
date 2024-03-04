@@ -17,7 +17,7 @@ import type {
   Nonarrival,
   Turnaround,
 } from '@approved-premises/api'
-import type { BookingSearchApiStatus } from '@approved-premises/ui'
+import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
@@ -122,8 +122,8 @@ export default class BookingClient {
     return response as Turnaround
   }
 
-  async search(status: BookingSearchApiStatus): Promise<BookingSearchResults> {
-    const path = appendQueryString(paths.bookings.search({ status }), { status })
+  async search(status: BookingSearchApiStatus, params: BookingSearchParameters): Promise<BookingSearchResults> {
+    const path = appendQueryString(paths.bookings.search({ status }), { status, ...params })
 
     const response = await this.restClient.get({ path })
 

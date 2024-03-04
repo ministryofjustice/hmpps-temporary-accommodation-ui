@@ -278,13 +278,17 @@ export type OasysImportArrays =
 
 export type JourneyType = 'applications' | 'assessments'
 
-export interface SideNavObj {
+export interface SubNavObj {
   text: string
   href: string
   active: boolean
 }
 
 export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | 'departed' | 'closed'
+
+export type BookingSearchParameters = {
+  crn?: string
+}
 
 export type ReportType = 'bookings' | 'bedspace-usage' | 'occupancy' | 'referrals'
 

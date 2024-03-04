@@ -1,33 +1,65 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { convertApiStatusToUiStatus, createSideNavArr, createTableHeadings } from './bookingSearchUtils'
+import {
+  capitaliseStatus,
+  convertApiStatusToUiStatus,
+  createSubNavArr,
+  createTableHeadings,
+} from './bookingSearchUtils'
 
 describe('bookingSearchUtils', () => {
   describe('createSideNavArr', () => {
     it('returns side nav with given status selected', () => {
       const sideNavArr = [
         {
-          text: 'Provisional',
+          text: 'Provisional bookings',
           href: paths.bookings.search.provisional.index({}),
           active: true,
         },
         {
-          text: 'Confirmed',
+          text: 'Confirmed bookings',
           href: paths.bookings.search.confirmed.index({}),
           active: false,
         },
         {
-          text: 'Active',
+          text: 'Active bookings',
           href: paths.bookings.search.active.index({}),
           active: false,
         },
         {
-          text: 'Departed',
+          text: 'Departed bookings',
           href: paths.bookings.search.departed.index({}),
           active: false,
         },
       ]
 
-      expect(createSideNavArr('provisional')).toEqual(sideNavArr)
+      expect(createSubNavArr('provisional')).toEqual(sideNavArr)
+    })
+
+    it('appends the CRN parameter if given', () => {
+      const sideNavArr = [
+        {
+          text: 'Provisional bookings',
+          href: `${paths.bookings.search.provisional.index({})}?crn=X222555`,
+          active: true,
+        },
+        {
+          text: 'Confirmed bookings',
+          href: `${paths.bookings.search.confirmed.index({})}?crn=X222555`,
+          active: false,
+        },
+        {
+          text: 'Active bookings',
+          href: `${paths.bookings.search.active.index({})}?crn=X222555`,
+          active: false,
+        },
+        {
+          text: 'Departed bookings',
+          href: `${paths.bookings.search.departed.index({})}?crn=X222555`,
+          active: false,
+        },
+      ]
+
+      expect(createSubNavArr('provisional', 'X222555')).toEqual(sideNavArr)
     })
   })
 
@@ -110,5 +142,14 @@ describe('convertApiStatusToUiStatus', () => {
     expect(convertApiStatusToUiStatus('confirmed')).toEqual('confirmed')
     expect(convertApiStatusToUiStatus('arrived')).toEqual('active')
     expect(convertApiStatusToUiStatus('departed')).toEqual('departed')
+  })
+})
+
+describe('capitaliseStatus', () => {
+  it('returns the capitalised version of the given api status', () => {
+    expect(capitaliseStatus('provisional')).toEqual('Provisional')
+    expect(capitaliseStatus('confirmed')).toEqual('Confirmed')
+    expect(capitaliseStatus('arrived')).toEqual('Active')
+    expect(capitaliseStatus('departed')).toEqual('Departed')
   })
 })

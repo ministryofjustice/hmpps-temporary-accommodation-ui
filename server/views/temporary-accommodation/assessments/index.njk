@@ -64,15 +64,18 @@
           items: [
             {
               text: 'Unallocated',
-              href: paths.assessments.unallocated()
+              href: paths.assessments.unallocated(),
+              active: status == 'unallocated'
             },
             {
               text: 'In review',
-              href: paths.assessments.inReview()
+              href: paths.assessments.inReview(),
+              active: status == 'in_review'
             },
             {
               text: 'Ready to place',
-              href: paths.assessments.readyToPlace()
+              href: paths.assessments.readyToPlace(),
+              active: status == 'ready_to_place'
             }
           ]
         })

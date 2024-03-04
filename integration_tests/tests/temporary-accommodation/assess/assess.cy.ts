@@ -49,6 +49,7 @@ context('Apply', () => {
 
         // Then I should see the list of unallocated referrals
         const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
+        unallocatedListPage.shouldHaveActiveSubNavItem('Unallocated')
         unallocatedListPage.shouldShowAssessments(unallocatedAssessmentSummaries)
 
         // When I click on 'In review'
@@ -56,6 +57,7 @@ context('Apply', () => {
 
         // Then I should see the list of in review referrals
         const inReviewListPage = Page.verifyOnPage(ListPage, 'In review referrals')
+        unallocatedListPage.shouldHaveActiveSubNavItem('In review')
         inReviewListPage.shouldShowAssessments(inProgressAssessmentSummaries)
 
         // When I click on 'Ready to place'
@@ -63,6 +65,7 @@ context('Apply', () => {
 
         // Then I should see the list of ready to place referrals
         const readyToPlaceListPage = Page.verifyOnPage(ListPage, 'Ready to place referrals')
+        unallocatedListPage.shouldHaveActiveSubNavItem('Ready to place')
         readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
 
         // When I click on the 'View archived assessments' link

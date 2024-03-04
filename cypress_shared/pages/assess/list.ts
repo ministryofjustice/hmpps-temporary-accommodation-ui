@@ -56,4 +56,8 @@ export default class ListPage extends Page {
   clickSubNav(label: string) {
     cy.get('[aria-label="Secondary navigation"] a').contains(label).click()
   }
+
+  shouldHaveActiveSubNavItem(label: string) {
+    cy.get('[aria-label="Secondary navigation"] a').contains(label).should('have.attr', 'aria-current', 'page')
+  }
 }

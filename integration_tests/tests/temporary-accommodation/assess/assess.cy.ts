@@ -48,21 +48,21 @@ context('Apply', () => {
         dashboardPage.clickReviewAndAssessReferrals()
 
         // Then I should see the list of unallocated referrals
-        const unallocatedListPage = Page.verifyOnPage(ListPage, 'Referrals unallocated')
+        const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
         unallocatedListPage.shouldShowAssessments(unallocatedAssessmentSummaries)
 
         // When I click on 'In review'
         unallocatedListPage.clickSubNav('In review')
 
         // Then I should see the list of in review referrals
-        const inReviewListPage = Page.verifyOnPage(ListPage, 'Referrals in_review')
+        const inReviewListPage = Page.verifyOnPage(ListPage, 'In review referrals')
         inReviewListPage.shouldShowAssessments(inProgressAssessmentSummaries)
 
         // When I click on 'Ready to place'
         inReviewListPage.clickSubNav('Ready to place')
 
         // Then I should see the list of ready to place referrals
-        const readyToPlaceListPage = Page.verifyOnPage(ListPage, 'Referrals ready_to_place')
+        const readyToPlaceListPage = Page.verifyOnPage(ListPage, 'Ready to place referrals')
         readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
 
         // When I click on the 'View archived assessments' link
@@ -91,7 +91,7 @@ context('Apply', () => {
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
-          const listPage = Page.verifyOnPage(ListPage, 'Referrals unallocated')
+          const listPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
 
           // When I click on the referral
           listPage.clickAssessment(assessment)
@@ -186,7 +186,7 @@ context('Apply', () => {
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
-          const listPage = Page.verifyOnPage(ListPage, 'Referrals unallocated')
+          const listPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
 
           // When I click on the referral
           listPage.clickAssessment(assessment)

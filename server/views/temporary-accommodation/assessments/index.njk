@@ -54,56 +54,51 @@
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l">{{ status | replace('_', ' ') | capitalize }} referrals</h1>
+  <h1 class="govuk-heading-l">{{ status | replace('_', ' ') | capitalize }} referrals</h1>
 
-      {{
-        mojSubNavigation({
-          label: 'Secondary navigation',
-          items: [
-            {
-              text: 'Unallocated',
-              href: paths.assessments.unallocated(),
-              active: status == 'unallocated'
-            },
-            {
-              text: 'In review',
-              href: paths.assessments.inReview(),
-              active: status == 'in_review'
-            },
-            {
-              text: 'Ready to place',
-              href: paths.assessments.readyToPlace(),
-              active: status == 'ready_to_place'
-            }
-          ]
-        })
-      }}
+  {{
+    mojSubNavigation({
+      label: 'Secondary navigation',
+      items: [
+        {
+          text: 'Unallocated',
+          href: paths.assessments.unallocated(),
+          active: status == 'unallocated'
+        },
+        {
+          text: 'In review',
+          href: paths.assessments.inReview(),
+          active: status == 'in_review'
+        },
+        {
+          text: 'Ready to place',
+          href: paths.assessments.readyToPlace(),
+          active: status == 'ready_to_place'
+        }
+      ]
+    })
+  }}
 
-      {{
-        govukTable({
-          firstCellIsHeader: true,
-          captionClasses: "govuk-table__caption--m",
-          attributes: {
-            'data-module': 'moj-sortable-table'
-          },
-          head: tableHeaders,
-          rows: tableRows
-        })
-      }}
+  {{
+    govukTable({
+      firstCellIsHeader: true,
+      captionClasses: "govuk-table__caption--m",
+      attributes: {
+        'data-module': 'moj-sortable-table'
+      },
+      head: tableHeaders,
+      rows: tableRows
+    })
+  }}
 
-      {{ 
-        govukButton({
-          text: "View archived referrals",
-          type: "button",
-          href: paths.assessments.archive(),
-          classes: "govuk-button--secondary"
-        }) 
-      }}
-
-    </div>
-  </div>
+  {{
+    govukButton({
+      text: "View archived referrals",
+      type: "button",
+      href: paths.assessments.archive(),
+      classes: "govuk-button--secondary"
+    })
+  }}
 {% endblock %}
 
 {% block extraScripts %}

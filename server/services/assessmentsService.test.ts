@@ -1,3 +1,4 @@
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
 import {
@@ -28,80 +29,45 @@ describe('AssessmentsService', () => {
   })
 
   describe('getAllForLoggedInUser', () => {
-    it('returns assessments summaries formatted for presentation in a table', async () => {
-      const unallocatedAssessments = assessmentSummaryFactory
-        .params({
-          status: 'unallocated',
-        })
-        .buildList(2)
-      const inProgressAssessments = assessmentSummaryFactory
-        .params({
-          status: 'in_review',
-        })
-        .buildList(2)
-      const readyToPlaceAssessments = assessmentSummaryFactory
-        .params({
-          status: 'ready_to_place',
-        })
-        .buildList(2)
-      const closedAssessments = assessmentSummaryFactory
-        .params({
-          status: 'closed',
-        })
-        .buildList(1)
-      const rejectedAssessments = assessmentSummaryFactory
-        .params({
-          status: 'rejected',
-        })
-        .buildList(1)
-      const archivedAssessments = [...closedAssessments, ...rejectedAssessments]
+    it.each(['unallocated', 'in_review', 'ready_to_place'])(
+      'returns %s assessments summaries formatted for presentation in a table',
+      async (uiStatus: AssessmentSearchApiStatus) => {
+        const assessments = assessmentSummaryFactory.params({ status: uiStatus }).buildList(2)
 
-      assessmentClient.all.mockResolvedValue([
-        ...unallocatedAssessments,
-        ...inProgressAssessments,
-        ...readyToPlaceAssessments,
-        ...archivedAssessments,
-      ])
+        assessmentClient.all.mockResolvedValue(assessments)
+        ;(assessmentTableRows as jest.MockedFunction<typeof assessmentTableRows>).mockImplementation(assessment => {
+          return [{ text: `Table row: ${assessment.status}` }]
+        })
+
+        const tableRows = await service.getAllForLoggedInUser(callConfig, uiStatus)
+
+        expect(tableRows).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
+
+        expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+        expect(assessmentClient.all).toHaveBeenCalledWith(uiStatus)
+
+        assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, false))
+      },
+    )
+
+    it('returns archived assessment summaries formatted for presentation in a table', async () => {
+      const closedAssessments = assessmentSummaryFactory.params({ status: 'closed' }).buildList(2)
+      const rejectedAssessments = assessmentSummaryFactory.params({ status: 'rejected' }).buildList(2)
+      const assessments = [...closedAssessments, ...rejectedAssessments]
+
+      assessmentClient.all.mockResolvedValue([...closedAssessments, ...rejectedAssessments])
       ;(assessmentTableRows as jest.MockedFunction<typeof assessmentTableRows>).mockImplementation(assessment => {
-        switch (assessment.status) {
-          case 'unallocated':
-            return [{ text: 'Unallocated table row' }]
-          case 'in_review':
-            return [{ text: 'In progress table row' }]
-          case 'ready_to_place':
-            return [{ text: 'Ready to place table row' }]
-          case 'closed':
-            return [{ text: 'Archived table row' }]
-          case 'rejected':
-            return [{ text: 'Archived table row' }]
-          default:
-            return [{ text: 'Unknown table row' }]
-        }
+        return [{ text: `Table row: ${assessment.status}` }]
       })
 
-      const { unallocatedTableRows, inProgressTableRows, readyToPlaceTableRows, archivedTableRows } =
-        await service.getAllForLoggedInUser(callConfig)
+      const tableRows = await service.getAllForLoggedInUser(callConfig, 'archived')
 
-      expect(unallocatedTableRows).toEqual(unallocatedAssessments.map(() => [{ text: 'Unallocated table row' }]))
-      expect(inProgressTableRows).toEqual(inProgressAssessments.map(() => [{ text: 'In progress table row' }]))
-      expect(readyToPlaceTableRows).toEqual(readyToPlaceAssessments.map(() => [{ text: 'Ready to place table row' }]))
-      expect(archivedTableRows).toEqual(archivedAssessments.map(() => [{ text: 'Archived table row' }]))
+      expect(tableRows).toEqual(assessments.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
 
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.all).toHaveBeenCalledWith()
+      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'])
 
-      unallocatedAssessments.forEach(unallocatedAssessment =>
-        expect(assessmentTableRows).toHaveBeenCalledWith(unallocatedAssessment),
-      )
-      inProgressAssessments.forEach(inProgressAssessment =>
-        expect(assessmentTableRows).toHaveBeenCalledWith(inProgressAssessment),
-      )
-      readyToPlaceAssessments.forEach(readyToPlaceAssessment =>
-        expect(assessmentTableRows).toHaveBeenCalledWith(readyToPlaceAssessment),
-      )
-      archivedAssessments.forEach(archivedAssessment =>
-        expect(assessmentTableRows).toHaveBeenCalledWith(archivedAssessment, true),
-      )
+      assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, true))
     })
   })
 

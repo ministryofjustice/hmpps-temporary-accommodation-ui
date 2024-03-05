@@ -80,18 +80,7 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const { unallocatedTableRows, inProgressTableRows, readyToPlaceTableRows } =
-        await this.assessmentsService.getAllForLoggedInUser(callConfig)
-
-      // TODO: return only required status from service
-      let tableRows: TableRow[]
-      if (status === 'unallocated') {
-        tableRows = unallocatedTableRows
-      } else if (status === 'in_review') {
-        tableRows = inProgressTableRows
-      } else {
-        tableRows = readyToPlaceTableRows
-      }
+      const tableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, status)
 
       return res.render('temporary-accommodation/assessments/index', {
         status,
@@ -105,7 +94,7 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const { archivedTableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig)
+      const archivedTableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived')
 
       return res.render('temporary-accommodation/assessments/archive', {
         archivedTableRows,

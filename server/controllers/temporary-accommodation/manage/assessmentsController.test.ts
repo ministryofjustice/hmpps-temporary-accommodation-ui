@@ -57,7 +57,7 @@ describe('AssessmentsController', () => {
       const requestHandler = assessmentsController.index()
       await requestHandler(request, response, next)
 
-      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.unallocated.pattern)
+      expect(response.redirect).toHaveBeenCalledWith(301, paths.assessments.unallocated.pattern)
     })
   })
 

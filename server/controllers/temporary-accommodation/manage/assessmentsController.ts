@@ -72,7 +72,7 @@ export default class AssessmentsController {
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
-      return res.redirect(paths.assessments.unallocated.pattern)
+      return res.redirect(301, paths.assessments.unallocated.pattern)
     }
   }
 

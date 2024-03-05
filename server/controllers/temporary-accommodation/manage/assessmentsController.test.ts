@@ -53,7 +53,7 @@ describe('AssessmentsController', () => {
   })
 
   describe('index', () => {
-    it('redirects to unallocated assessments if no status is specified', async () => {
+    it('redirects to unallocated referrals', async () => {
       const requestHandler = assessmentsController.index()
       await requestHandler(request, response, next)
 

@@ -70,12 +70,14 @@ export const confirmationPageContent: Record<Assessment['status'], { title: stri
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}
 
-  index(status?: AssessmentSearchApiStatus): RequestHandler {
+  index(): RequestHandler {
     return async (req: Request, res: Response) => {
-      if (!status) {
-        return res.redirect(paths.assessments.unallocated.pattern)
-      }
+      return res.redirect(paths.assessments.unallocated.pattern)
+    }
+  }
 
+  list(status: AssessmentSearchApiStatus): RequestHandler {
+    return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
       const { unallocatedTableRows, inProgressTableRows, readyToPlaceTableRows } =

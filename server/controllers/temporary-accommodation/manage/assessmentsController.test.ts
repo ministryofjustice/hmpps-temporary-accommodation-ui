@@ -58,7 +58,9 @@ describe('AssessmentsController', () => {
 
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.unallocated.pattern)
     })
+  })
 
+  describe('list', () => {
     it.each(['unallocated', 'in_review', 'ready_to_place'])(
       'returns the table rows for assessments with status %s to the template',
       async (status: AssessmentSearchApiStatus) => {
@@ -69,7 +71,7 @@ describe('AssessmentsController', () => {
           archivedTableRows: [],
         })
 
-        const requestHandler = assessmentsController.index(status)
+        const requestHandler = assessmentsController.list(status)
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {

@@ -317,15 +317,15 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   get(paths.bedspaces.search.pattern, bedspaceSearchController.index(), { auditEvent: 'VIEW_SEARCH_BEDSPACES' })
 
-  get(paths.assessments.index.pattern, assessmentsController.index())
+  get(paths.assessments.index.pattern, assessmentsController.index(), { auditEvent: 'REDIRECT_ASSESSMENTS_LIST' })
   get(paths.assessments.unallocated.pattern, assessmentsController.list('unallocated'), {
-    auditEvent: 'VIEW_ASSESSMENTS_LIST',
+    auditEvent: 'VIEW_UNALLOCATED_ASSESSMENTS_LIST',
   })
   get(paths.assessments.inReview.pattern, assessmentsController.list('in_review'), {
-    auditEvent: 'VIEW_ASSESSMENTS_LIST',
+    auditEvent: 'VIEW_IN_REVIEW_ASSESSMENTS_LIST',
   })
   get(paths.assessments.readyToPlace.pattern, assessmentsController.list('ready_to_place'), {
-    auditEvent: 'VIEW_ASSESSMENTS_LIST',
+    auditEvent: 'VIEW_READY_TO_PLACE_ASSESSMENTS_LIST',
   })
   get(paths.assessments.archive.pattern, assessmentsController.archive(), {
     auditEvent: 'VIEW_ARCHIVE_ASSESSMENTS_LIST',

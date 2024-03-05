@@ -33,13 +33,7 @@ context('Apply', () => {
         const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'rejected' })
         const closedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'closed' })
 
-        cy.task('stubAssessments', [
-          ...inProgressAssessmentSummaries,
-          ...unallocatedAssessmentSummaries,
-          ...readyToPlaceAssessmentSummaries,
-          ...rejectedAssessmentSummaries,
-          ...closedAssessmentSummaries,
-        ])
+        cy.task('stubAssessments', unallocatedAssessmentSummaries)
 
         // When I visit the dashboard
         const dashboardPage = DashboardPage.visit()
@@ -53,6 +47,7 @@ context('Apply', () => {
         unallocatedListPage.shouldShowAssessments(unallocatedAssessmentSummaries)
 
         // When I click on 'In review'
+        cy.task('stubAssessments', inProgressAssessmentSummaries)
         unallocatedListPage.clickSubNav('In review')
 
         // Then I should see the list of in review referrals
@@ -61,6 +56,7 @@ context('Apply', () => {
         inReviewListPage.shouldShowAssessments(inProgressAssessmentSummaries)
 
         // When I click on 'Ready to place'
+        cy.task('stubAssessments', readyToPlaceAssessmentSummaries)
         inReviewListPage.clickSubNav('Ready to place')
 
         // Then I should see the list of ready to place referrals
@@ -69,6 +65,7 @@ context('Apply', () => {
         readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
 
         // When I click on the 'View archived assessments' link
+        cy.task('stubAssessments', [...closedAssessmentSummaries, ...rejectedAssessmentSummaries])
         readyToPlaceListPage.clickViewArchivedReferrals()
 
         // Then I should see the list of archived assessments

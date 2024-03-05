@@ -1,53 +1,10 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/tag/macro.njk" import govukTag %}
-{% from "moj/components/badge/macro.njk" import mojBadge %}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
-
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = "Referrals - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
-
-{% set unallocatedTableHtml %}
-  {{ 
-    govukTable({
-      firstCellIsHeader: true,
-      attributes: {
-        'data-module': 'moj-sortable-table'
-      },
-      head: tableHeaders,
-      rows: unallocatedTableRows
-    }) 
-  }}
-{% endset %}
-
-{% set inProgressTableHtml %}
-  {{ 
-    govukTable({
-      firstCellIsHeader: true,
-      attributes: {
-        'data-module': 'moj-sortable-table'
-      },
-      head: tableHeaders,
-      rows: inProgressTableRows
-    }) 
-  }}
-{% endset %}
-
-{% set readyToPlaceTableHtml %}
-  {{ 
-    govukTable({
-      firstCellIsHeader: true,
-      attributes: {
-        'data-module': 'moj-sortable-table'
-      },
-      head: tableHeaders,
-      rows: readyToPlaceTableRows
-    }) 
-  }}
-{% endset %}
 
 {% block beforeContent %}
   {{ breadCrumb('Referrals', []) }}
@@ -104,9 +61,7 @@
 {% block extraScripts %}
   <script type="text/javascript" nonce="{{ cspNonce }}">
     $(document).ready(function () {
-      window
-        .MOJFrontend
-        .initAll()
+      window.MOJFrontend.initAll()
     })
   </script>
 {% endblock %}

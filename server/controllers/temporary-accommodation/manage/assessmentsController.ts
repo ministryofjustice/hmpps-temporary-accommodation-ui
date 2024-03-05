@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus, TableRow } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,

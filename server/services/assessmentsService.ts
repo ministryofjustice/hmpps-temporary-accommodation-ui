@@ -1,9 +1,10 @@
-import type { TableRow } from '@approved-premises/ui'
+import type { AssessmentSearchApiStatus, TableRow } from '@approved-premises/ui'
 import type {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
+  TemporaryAccommodationAssessmentStatus,
 } from '../@types/shared'
 import { AssessmentSummary } from '../@types/shared'
 import type { AssessmentClient, RestClientBuilder } from '../data'
@@ -14,46 +15,16 @@ import { assertUnreachable } from '../utils/utils'
 export default class AssessmentsService {
   constructor(private readonly assessmentClientFactory: RestClientBuilder<AssessmentClient>) {}
 
-  async getAllForLoggedInUser(callConfig: CallConfig): Promise<{
-    unallocatedTableRows: Array<TableRow>
-    inProgressTableRows: Array<TableRow>
-    readyToPlaceTableRows: Array<TableRow>
-    archivedTableRows: Array<TableRow>
-  }> {
+  async getAllForLoggedInUser(
+    callConfig: CallConfig,
+    uiStatus: AssessmentSearchApiStatus | 'archived',
+  ): Promise<Array<TableRow>> {
+    const statuses =
+      uiStatus === 'archived' ? (['closed', 'rejected'] as TemporaryAccommodationAssessmentStatus[]) : [uiStatus]
     const assessmentClient = this.assessmentClientFactory(callConfig)
-    const assessmentSummaries = await assessmentClient.all()
-    const result = {
-      unallocatedTableRows: [] as Array<TableRow>,
-      inProgressTableRows: [] as Array<TableRow>,
-      readyToPlaceTableRows: [] as Array<TableRow>,
-      archivedTableRows: [] as Array<TableRow>,
-    }
+    const assessmentSummaries = await assessmentClient.all(statuses)
 
-    await Promise.all(
-      assessmentSummaries.map(async summary => {
-        switch (summary.status) {
-          case 'unallocated':
-            result.unallocatedTableRows.push(assessmentTableRows(summary))
-            break
-          case 'ready_to_place':
-            result.readyToPlaceTableRows.push(assessmentTableRows(summary))
-            break
-          case 'closed':
-            result.archivedTableRows.push(assessmentTableRows(summary, true))
-            break
-          case 'rejected':
-            result.archivedTableRows.push(assessmentTableRows(summary, true))
-            break
-          case 'in_review':
-            result.inProgressTableRows.push(assessmentTableRows(summary))
-            break
-          default:
-            break
-        }
-      }),
-    )
-
-    return result
+    return assessmentSummaries.map(summary => assessmentTableRows(summary, uiStatus === 'archived'))
   }
 
   findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {

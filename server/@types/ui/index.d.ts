@@ -8,6 +8,7 @@ import {
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
   TemporaryAccommodationAssessment as Assessment,
+  AssessmentStatus,
   Booking,
   Document,
   LocalAuthorityArea,
@@ -324,3 +325,5 @@ export type ApplicationSummaryData = {
     | 'CAS2 (formerly Bail Accommodation Support Services)'
     | null
 }
+
+export type AssessmentSearchApiStatus = Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>

@@ -1,4 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
@@ -71,15 +72,19 @@ export default class AssessmentsController {
 
   index(): RequestHandler {
     return async (req: Request, res: Response) => {
+      return res.redirect(301, paths.assessments.unallocated.pattern)
+    }
+  }
+
+  list(status: AssessmentSearchApiStatus): RequestHandler {
+    return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const { unallocatedTableRows, inProgressTableRows, readyToPlaceTableRows } =
-        await this.assessmentsService.getAllForLoggedInUser(callConfig)
+      const tableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, status)
 
       return res.render('temporary-accommodation/assessments/index', {
-        unallocatedTableRows,
-        inProgressTableRows,
-        readyToPlaceTableRows,
+        status,
+        tableRows,
         tableHeaders: assessmentsTableHeaders,
       })
     }
@@ -89,7 +94,7 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const { archivedTableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig)
+      const archivedTableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived')
 
       return res.render('temporary-accommodation/assessments/archive', {
         archivedTableRows,

@@ -115,6 +115,9 @@ const paths = {
   },
   assessments: {
     index: assessmentsPath,
+    unallocated: assessmentsPath.path('unallocated'),
+    inReview: assessmentsPath.path('in-review'),
+    readyToPlace: assessmentsPath.path('ready-to-place'),
     archive: assessmentsPath.path('archive'),
     full: assessmentsPath.path(':id'),
     summary: assessmentPath.path(':id/summary'),

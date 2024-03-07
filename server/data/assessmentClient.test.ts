@@ -6,6 +6,7 @@ import paths from '../paths/api'
 import { assessmentFactory, assessmentSummaryFactory, newReferralHistoryUserNoteFactory } from '../testutils/factories'
 import AssessmentClient from './assessmentClient'
 import { CallConfig } from './restClient'
+import { appendQueryString } from '../utils/utils'
 
 const assessmentId = 'some-id'
 
@@ -33,13 +34,18 @@ describe('AssessmentClient', () => {
   describe('all', () => {
     const assessmentSummaries = assessmentSummaryFactory.buildList(5)
 
-    it('should get all assessments for the current user', async () => {
+    it.each([
+      ['unallocated', ['unallocated' as const]],
+      ['in review', ['in_review' as const]],
+      ['ready to place', ['ready_to_place' as const]],
+      ['archived', ['closed' as const, 'rejected' as const]],
+    ])('should get all %s assessments for the current user', async (_, apiStatuses: AssessmentStatus[]) => {
       fakeApprovedPremisesApi
-        .get(paths.assessments.index({}))
+        .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessmentSummaries)
 
-      const output = await assessmentClient.all()
+      const output = await assessmentClient.all(apiStatuses)
       expect(output).toEqual(assessmentSummaries)
     })
   })

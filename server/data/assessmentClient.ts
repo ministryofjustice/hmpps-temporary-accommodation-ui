@@ -2,6 +2,7 @@ import type {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentAcceptance,
   AssessmentRejection,
+  TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
   NewReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
@@ -19,8 +20,10 @@ export default class AssessmentClient {
     this.restClient = new RestClient('assessmentClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async all(): Promise<Array<AssessmentSummary>> {
-    return (await this.restClient.get({ path: paths.assessments.index.pattern })) as Array<AssessmentSummary>
+  async all(statuses: AssessmentStatus[]): Promise<Array<AssessmentSummary>> {
+    return (await this.restClient.get({
+      path: appendQueryString(paths.assessments.index.pattern, { statuses }),
+    })) as Array<AssessmentSummary>
   }
 
   async readyToPlaceForCrn(crn: string): Promise<Array<AssessmentSummary>> {

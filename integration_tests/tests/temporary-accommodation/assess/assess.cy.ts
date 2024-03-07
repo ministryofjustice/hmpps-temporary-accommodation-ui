@@ -33,13 +33,7 @@ context('Apply', () => {
         const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'rejected' })
         const closedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'closed' })
 
-        cy.task('stubAssessments', [
-          ...inProgressAssessmentSummaries,
-          ...unallocatedAssessmentSummaries,
-          ...readyToPlaceAssessmentSummaries,
-          ...rejectedAssessmentSummaries,
-          ...closedAssessmentSummaries,
-        ])
+        cy.task('stubAssessments', unallocatedAssessmentSummaries)
 
         // When I visit the dashboard
         const dashboardPage = DashboardPage.visit()
@@ -47,25 +41,36 @@ context('Apply', () => {
         // And I click on the "Review and assess referrals" link
         dashboardPage.clickReviewAndAssessReferrals()
 
-        // Then I should see the list of referrals
-        const listPage = Page.verifyOnPage(
-          ListPage,
-          unallocatedAssessmentSummaries,
-          inProgressAssessmentSummaries,
-          readyToPlaceAssessmentSummaries,
-          [...rejectedAssessmentSummaries, ...closedAssessmentSummaries],
-        )
+        // Then I should see the list of unallocated referrals
+        const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
+        unallocatedListPage.shouldHaveActiveSubNavItem('Unallocated')
+        unallocatedListPage.shouldShowAssessments(unallocatedAssessmentSummaries)
 
-        // And I should see the list of referrals
-        listPage.shouldShowUnallocatedAssessments()
-        listPage.shouldShowInProgressAssessments()
-        listPage.shouldShowReadyToPlaceAssessments()
+        // When I click on 'In review'
+        cy.task('stubAssessments', inProgressAssessmentSummaries)
+        unallocatedListPage.clickSubNav('In review')
 
-        // Given I click on the 'View archived assessments' link
-        listPage.clickViewArchivedReferrals()
+        // Then I should see the list of in review referrals
+        const inReviewListPage = Page.verifyOnPage(ListPage, 'In review referrals')
+        unallocatedListPage.shouldHaveActiveSubNavItem('In review')
+        inReviewListPage.shouldShowAssessments(inProgressAssessmentSummaries)
+
+        // When I click on 'Ready to place'
+        cy.task('stubAssessments', readyToPlaceAssessmentSummaries)
+        inReviewListPage.clickSubNav('Ready to place')
+
+        // Then I should see the list of ready to place referrals
+        const readyToPlaceListPage = Page.verifyOnPage(ListPage, 'Ready to place referrals')
+        unallocatedListPage.shouldHaveActiveSubNavItem('Ready to place')
+        readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
+
+        // When I click on the 'View archived assessments' link
+        cy.task('stubAssessments', [...closedAssessmentSummaries, ...rejectedAssessmentSummaries])
+        readyToPlaceListPage.clickViewArchivedReferrals()
 
         // Then I should see the list of archived assessments
-        listPage.shouldShowArchivedAssessments()
+        const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
+        archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
       })
     })
 
@@ -86,7 +91,7 @@ context('Apply', () => {
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
-          const listPage = Page.verifyOnPage(ListPage, assessmentSummary, [], [], [])
+          const listPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
 
           // When I click on the referral
           listPage.clickAssessment(assessment)
@@ -181,7 +186,7 @@ context('Apply', () => {
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
-          const listPage = Page.verifyOnPage(ListPage, assessmentSummary, [], [], [])
+          const listPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
 
           // When I click on the referral
           listPage.clickAssessment(assessment)

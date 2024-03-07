@@ -31,7 +31,7 @@ Given('I mark the booking as departed', () => {
 
     const departedBooking = bookingFactory.build({
       ...this.booking,
-      status: 'departed',
+      status: 'unknown-departed-or-closed' as BookingStatus,
       departureDate: newDeparture.dateTime,
       departure,
     })

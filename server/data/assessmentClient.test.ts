@@ -35,22 +35,19 @@ describe('AssessmentClient', () => {
     const assessmentSummaries = assessmentSummaryFactory.buildList(5)
 
     it.each([
-      ['unallocated', 'unallocated' as const],
-      ['in review', 'in_review' as const],
-      ['ready to place', 'ready_to_place' as const],
+      ['unallocated', ['unallocated' as const]],
+      ['in review', ['in_review' as const]],
+      ['ready to place', ['ready_to_place' as const]],
       ['archived', ['closed' as const, 'rejected' as const]],
-    ])(
-      'should get all %s assessments for the current user',
-      async (_, apiStatuses: AssessmentStatus | AssessmentStatus[]) => {
-        fakeApprovedPremisesApi
-          .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses }))
-          .matchHeader('authorization', `Bearer ${callConfig.token}`)
-          .reply(200, assessmentSummaries)
+    ])('should get all %s assessments for the current user', async (_, apiStatuses: AssessmentStatus[]) => {
+      fakeApprovedPremisesApi
+        .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, assessmentSummaries)
 
-        const output = await assessmentClient.all(apiStatuses)
-        expect(output).toEqual(assessmentSummaries)
-      },
-    )
+      const output = await assessmentClient.all(apiStatuses)
+      expect(output).toEqual(assessmentSummaries)
+    })
   })
 
   describe('readyToPlaceForCrn', () => {

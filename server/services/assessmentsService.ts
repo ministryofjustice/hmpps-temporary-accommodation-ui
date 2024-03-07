@@ -20,7 +20,7 @@ export default class AssessmentsService {
     uiStatus: AssessmentSearchApiStatus | 'archived',
   ): Promise<Array<TableRow>> {
     const statuses =
-      uiStatus === 'archived' ? (['closed', 'rejected'] as TemporaryAccommodationAssessmentStatus[]) : uiStatus
+      uiStatus === 'archived' ? (['closed', 'rejected'] as TemporaryAccommodationAssessmentStatus[]) : [uiStatus]
     const assessmentClient = this.assessmentClientFactory(callConfig)
     const assessmentSummaries = await assessmentClient.all(statuses)
 

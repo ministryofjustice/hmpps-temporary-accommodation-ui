@@ -44,7 +44,7 @@ describe('AssessmentsService', () => {
         expect(tableRows).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
 
         expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-        expect(assessmentClient.all).toHaveBeenCalledWith(uiStatus)
+        expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus])
 
         assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, false))
       },

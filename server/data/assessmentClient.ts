@@ -20,7 +20,7 @@ export default class AssessmentClient {
     this.restClient = new RestClient('assessmentClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async all(statuses: AssessmentStatus | AssessmentStatus[]): Promise<Array<AssessmentSummary>> {
+  async all(statuses: AssessmentStatus[]): Promise<Array<AssessmentSummary>> {
     return (await this.restClient.get({
       path: appendQueryString(paths.assessments.index.pattern, { statuses }),
     })) as Array<AssessmentSummary>

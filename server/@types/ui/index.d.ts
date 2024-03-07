@@ -8,6 +8,7 @@ import {
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
   TemporaryAccommodationAssessment as Assessment,
+  AssessmentStatus,
   Booking,
   Document,
   LocalAuthorityArea,
@@ -325,4 +326,4 @@ export type ApplicationSummaryData = {
     | null
 }
 
-export type AssessmentSearchApiStatus = 'unallocated' | 'in_review' | 'ready_to_place'
+export type AssessmentSearchApiStatus = Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>

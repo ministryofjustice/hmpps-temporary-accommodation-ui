@@ -12,6 +12,7 @@ import {
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
+  personReleaseDateFromApplication,
 } from './reportDataFromApplication'
 
 export const getApplicationUpdateData = (application: Application): UpdateApplication => {
@@ -33,5 +34,6 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     needsAccessibleProperty: needsAccessiblePropertyFromApplication(application),
     isApplicationEligible: isApplicationEligibleFromApplication(application),
     eligibilityReason: eligibilityReasonFromApplication(application),
+    personReleaseDate: personReleaseDateFromApplication(application),
   }
 }

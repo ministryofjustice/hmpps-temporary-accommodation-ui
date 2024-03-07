@@ -89,6 +89,16 @@ const eligibilityReasonFromApplication = (application: Application): string => {
   return null
 }
 
+const personReleaseDateFromApplication = (application: Application): string => {
+  const personReleaseDate = (application.data as Record<string, unknown>)?.eligibility?.['release-date']?.releaseDate
+
+  if (!personReleaseDate) {
+    throw new SessionDataError('No person release date')
+  }
+
+  return stripWhitespace(personReleaseDate)
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
@@ -96,4 +106,5 @@ export {
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
+  personReleaseDateFromApplication,
 }

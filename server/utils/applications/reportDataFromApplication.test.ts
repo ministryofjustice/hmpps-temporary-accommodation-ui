@@ -1,4 +1,5 @@
 import {
+  dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
@@ -75,6 +76,34 @@ describe('reportDataFromApplication', () => {
 
       expect(() => dutyToReferSubmissionDateFromApplication(application)).toThrow(
         new SessionDataError('No duty to refer submitted date'),
+      )
+    })
+  })
+
+  describe('dutyToReferLocalAuthorityAreaName', () => {
+    it('returns the Duty to Refer Local Authority Area Name from the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-details': { localAuthorityAreaName: 'A local authority area name' },
+          },
+        },
+      })
+
+      expect(dutyToReferLocalAuthorityAreaNameFromApplication(application)).toEqual('A local authority area name')
+    })
+
+    it('throws an error if the Duty to Refer Local Authority Area Name data is not present', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-details': {},
+          },
+        },
+      })
+
+      expect(() => dutyToReferLocalAuthorityAreaNameFromApplication(application)).toThrow(
+        new SessionDataError('No duty to refer local authority area name data'),
       )
     })
   })

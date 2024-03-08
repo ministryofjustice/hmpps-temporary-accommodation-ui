@@ -2,8 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas2Assessment = {
-    id: string;
+export type UpdateCas2Assessment = {
     nacroReferralId?: string;
     assessorName?: string;
 };

@@ -1,9 +1,11 @@
 import {
+  dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
+  personReleaseDateFromApplication,
 } from './reportDataFromApplication'
 import { applicationFactory } from '../../testutils/factories'
 import { SessionDataError } from '../errors'
@@ -79,6 +81,34 @@ describe('reportDataFromApplication', () => {
     })
   })
 
+  describe('dutyToReferLocalAuthorityAreaName', () => {
+    it('returns the Duty to Refer Local Authority Area Name from the application', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-details': { localAuthorityAreaName: 'A local authority area name' },
+          },
+        },
+      })
+
+      expect(dutyToReferLocalAuthorityAreaNameFromApplication(application)).toEqual('A local authority area name')
+    })
+
+    it('throws an error if the Duty to Refer Local Authority Area Name data is not present', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {
+            'dtr-details': {},
+          },
+        },
+      })
+
+      expect(() => dutyToReferLocalAuthorityAreaNameFromApplication(application)).toThrow(
+        new SessionDataError('No duty to refer local authority area name data'),
+      )
+    })
+  })
+
   describe('needsAccessiblePropertyFromApplication', () => {
     it('returns data for whether the application is for an accessible property from the application', () => {
       const application = applicationFactory.build({
@@ -150,6 +180,34 @@ describe('reportDataFromApplication', () => {
 
       expect(() => eligibilityReasonFromApplication(application)).toThrow(
         new SessionDataError('No application eligibility data'),
+      )
+    })
+  })
+
+  describe('personReleaseDateFromApplication', () => {
+    it('returns the person release date from the application', () => {
+      const application = applicationFactory.build({
+        data: { eligibility: { 'release-date': { releaseDate: '2022-08-09' } } },
+      })
+
+      expect(personReleaseDateFromApplication(application)).toEqual('2022-08-09')
+    })
+
+    it('strips whitespace from the submitted date', () => {
+      const application = applicationFactory.build({
+        data: { eligibility: { 'release-date': { releaseDate: ' 2024 -  07 -  03 ' } } },
+      })
+
+      expect(personReleaseDateFromApplication(application)).toEqual('2024-07-03')
+    })
+
+    it('throws an error if teh person release date is not present', () => {
+      const application = applicationFactory.build({
+        data: { eligibility: {} },
+      })
+
+      expect(() => personReleaseDateFromApplication(application)).toThrow(
+        new SessionDataError('No person release date'),
       )
     })
   })

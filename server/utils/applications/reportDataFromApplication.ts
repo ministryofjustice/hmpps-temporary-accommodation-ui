@@ -33,6 +33,18 @@ const dutyToReferSubmissionDateFromApplication = (application: Application): str
   return stripWhitespace(dutyToReferSubmissionDate)
 }
 
+const dutyToReferLocalAuthorityAreaNameFromApplication = (application: Application) => {
+  const dutyToReferLocalAuthorityAreaName: string = (application.data as Record<string, unknown>)?.[
+    'accommodation-referral-details'
+  ]?.['dtr-details']?.localAuthorityAreaName
+
+  if (!dutyToReferLocalAuthorityAreaName) {
+    throw new SessionDataError('No duty to refer local authority area name data')
+  }
+
+  return dutyToReferLocalAuthorityAreaName
+}
+
 const needsAccessiblePropertyFromApplication = (application: Application): boolean => {
   const needsAccessibleProperty: string = (application.data as Record<string, unknown>)?.[
     'disability-cultural-and-specific-needs'
@@ -77,10 +89,22 @@ const eligibilityReasonFromApplication = (application: Application): string => {
   return null
 }
 
+const personReleaseDateFromApplication = (application: Application): string => {
+  const personReleaseDate = (application.data as Record<string, unknown>)?.eligibility?.['release-date']?.releaseDate
+
+  if (!personReleaseDate) {
+    throw new SessionDataError('No person release date')
+  }
+
+  return stripWhitespace(personReleaseDate)
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
+  dutyToReferLocalAuthorityAreaNameFromApplication,
   eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
+  personReleaseDateFromApplication,
 }

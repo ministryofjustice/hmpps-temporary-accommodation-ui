@@ -27,9 +27,11 @@ describe('getApplicationSubmissionData', () => {
       },
       isDutyToReferSubmitted: true,
       dutyToReferSubmissionDate: '2022-04-12',
+      dutyToReferLocalAuthorityAreaName: 'Barking and Dagenham',
       needsAccessibleProperty: true,
       isApplicationEligible: true,
       eligibilityReason: applicationDataJson.eligibility['eligibility-reason'].reason,
+      personReleaseDate: '2123-09-02',
     })
   })
 })

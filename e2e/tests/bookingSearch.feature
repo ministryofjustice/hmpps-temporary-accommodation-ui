@@ -1,13 +1,13 @@
 Feature: Manage Temporary Accommodation - Booking search
     Background:
         Given I am logged in as an assessor
-
-    Scenario: Showing bookings of all statuses
-        Given I view an existing active premises
+        And I view an existing active premises
         And I'm creating a bedspace
         And I create a bedspace with all necessary details
         And I'm creating a booking
         And I create a booking with all necessary details
+
+    Scenario: Showing bookings of all statuses
         When I'm searching bookings
         Then I should see a summary of the booking on the provisional bookings page
         And I confirm the booking

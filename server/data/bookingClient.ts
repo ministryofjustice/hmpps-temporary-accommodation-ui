@@ -140,7 +140,7 @@ export default class BookingClient {
       status,
       crn: params.crn,
       page: !params.page ? 1 : params.page, // also handles NaN & <1
-      sortField: params.sortBy,
+      sortField: params.sortBy || 'endDate',
       sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',
     })
 

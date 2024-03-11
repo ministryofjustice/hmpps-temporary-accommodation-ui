@@ -301,7 +301,11 @@ describe('BookingClient', () => {
       const body = { results: bookings, resultsCount: bookings.length }
 
       fakeApprovedPremisesApi
-        .get(`${paths.bookings.search({})}?status=confirmed&crn=${booking.person.crn}&page=1&sortOrder=descending`)
+        .get(
+          `${paths.bookings.search({})}?status=confirmed&crn=${
+            booking.person.crn
+          }&page=1&sortField=endDate&sortOrder=descending`,
+        )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, body)
 
@@ -311,7 +315,7 @@ describe('BookingClient', () => {
       expect(nock.isDone()).toBeTruthy()
     })
 
-    it('calls restClient with the correct path when handed in provisional status, with no other parameters', async () => {
+    it('calls restClient with the correct path when handed in provisional status, and defaults to sorting by end date descending', async () => {
       bookingClient.restClient = {
         get: jest.fn().mockResolvedValueOnce({
           body: {},
@@ -322,7 +326,7 @@ describe('BookingClient', () => {
       await bookingClient.search('provisional', {})
 
       expect(bookingClient.restClient.get).toHaveBeenCalledWith({
-        path: '/bookings/search?status=provisional&page=1&sortOrder=descending',
+        path: '/bookings/search?status=provisional&page=1&sortField=endDate&sortOrder=descending',
         raw: true,
       })
       expect(nock.isDone()).toBeTruthy()

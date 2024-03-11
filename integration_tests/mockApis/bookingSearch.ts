@@ -10,7 +10,7 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `${paths.bookings.search({})}?status=${args.status}&page=1&sortOrder=descending`,
+        url: `${paths.bookings.search({})}?status=${args.status}&page=1&sortField=endDate&sortOrder=descending`,
       },
       response: {
         status: 200,
@@ -31,7 +31,9 @@ export default {
     stubFor({
       request: {
         method: 'GET',
-        url: `${paths.bookings.search({})}?status=${args.status}&crn=${args.crn}&page=1&sortOrder=descending`,
+        url: `${paths.bookings.search({})}?status=${args.status}&crn=${
+          args.crn
+        }&page=1&sortField=endDate&sortOrder=descending`,
       },
       response: {
         status: 200,

@@ -56,8 +56,8 @@ describe('sortHeader', () => {
     })
   })
 
-  it('should retain any non-sorting-related existing parameters in the hrefPrefix', () => {
-    const prefixWithParams = `${hrefPrefix}crn=N999888`
+  it('should retain any non-sorting-related existing parameters in the hrefPrefix apart from page', () => {
+    const prefixWithParams = `${hrefPrefix}crn=N999888&page=13`
     expect(sortHeader<SortHeaders>('Some text', 'myField', 'myField', false, prefixWithParams)).toEqual({
       html: `<a href="${hrefPrefix}${createQueryString({
         crn: 'N999888',

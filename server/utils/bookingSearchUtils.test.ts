@@ -160,6 +160,17 @@ describe('bookingSearchUtils', () => {
         .forEach(heading => expect(heading.html).toContain('crn=N777666'))
     },
   )
+
+  it.each(['provisional', 'confirmed', 'arrived', 'departed'])(
+    'removes the existing page query parameter so the new view shows the first page of %s bookings',
+    (status: BookingSearchApiStatus) => {
+      const tableHeadings = createTableHeadings(status, undefined, undefined, '?page=13')
+
+      tableHeadings
+        .filter(heading => !!heading.attributes)
+        .forEach(heading => expect(heading.html).not.toContain('page='))
+    },
+  )
 })
 
 describe('convertApiStatusToUiStatus', () => {

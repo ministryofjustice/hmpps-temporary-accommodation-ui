@@ -31,6 +31,7 @@ export const sortHeader = <T extends string>(
   return {
     html: `<a href="${basePath}?${createQueryString({
       ...qsArgs,
+      page: undefined,
       sortBy: targetField,
       sortDirection,
     })}"><button>${text}</button></a>`,

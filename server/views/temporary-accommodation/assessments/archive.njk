@@ -12,10 +12,10 @@
 
 {% block beforeContent %}
 
-  {{ govukBackLink({
-    text: "Back",
-    href: paths.assessments.index()
-  }) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.assessments.index()
+    }) }}
 
 {% endblock %}
 
@@ -26,40 +26,12 @@
 
             {{ govukTable({
                 firstCellIsHeader: true,
-                attributes: {
-                'data-module': 'moj-sortable-table'
-                },
                 head: [
-                  {
-                    text: 'Name',
-                    attributes: {
-                    'aria-sort': 'ascending'
-                    }
-                  },
-                  {
-                    text: 'CRN',
-                    attributes: {
-                    'aria-sort': 'none'
-                    }
-                  },
-                  {
-                    text: 'Referral received',
-                    attributes: {
-                    'aria-sort': 'none'
-                    }
-                  },
-                  {
-                    text: 'Bedspace required',
-                    attributes: {
-                    'aria-sort': 'none'
-                    }
-                  }, 
-                  {
-                    text: 'Status',
-                    attributes: {
-                    'aria-sort': 'ascending'
-                    }
-                  }
+                    { text: 'Name' },
+                    { text: 'CRN' },
+                    { text: 'Referral received' },
+                    { text: 'Bedspace required' },
+                    { text: 'Status' }
                 ],
                 rows: archivedTableRows
             }) }}
@@ -70,10 +42,10 @@
 
 {% block extraScripts %}
     <script type="text/javascript" nonce="{{ cspNonce }}">
-        $(document).ready(function () {
-            window
-                .MOJFrontend
-                .initAll()
-        })
+      $(document).ready(function() {
+        window
+          .MOJFrontend
+          .initAll()
+      })
     </script>
 {% endblock %}

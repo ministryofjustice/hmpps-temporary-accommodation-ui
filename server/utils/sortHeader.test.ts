@@ -42,10 +42,25 @@ describe('sortHeader', () => {
     })
   })
 
-  it('should override and replace the existing parameters in the hrefPrefix', () => {
-    const prefixWithParams = `${hrefPrefix}?sortBy=myField&sortDirection=desc`
+  it('should override and replace the existing sorting parameters in the hrefPrefix', () => {
+    const prefixWithParams = `${hrefPrefix}sortBy=myField&sortDirection=desc`
     expect(sortHeader<SortHeaders>('Some text', 'myField', 'myField', false, prefixWithParams)).toEqual({
       html: `<a href="${hrefPrefix}${createQueryString({
+        sortBy: 'myField',
+        sortDirection: 'asc',
+      })}"><button>Some text</button></a>`,
+      attributes: {
+        'aria-sort': 'descending',
+        'data-cy-sort-field': 'myField',
+      },
+    })
+  })
+
+  it('should retain any non-sorting-related existing parameters in the hrefPrefix', () => {
+    const prefixWithParams = `${hrefPrefix}crn=N999888`
+    expect(sortHeader<SortHeaders>('Some text', 'myField', 'myField', false, prefixWithParams)).toEqual({
+      html: `<a href="${hrefPrefix}${createQueryString({
+        crn: 'N999888',
         sortBy: 'myField',
         sortDirection: 'asc',
       })}"><button>Some text</button></a>`,

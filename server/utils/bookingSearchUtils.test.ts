@@ -1,3 +1,4 @@
+import { BookingSearchApiStatus } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import {
   capitaliseStatus,
@@ -148,6 +149,17 @@ describe('bookingSearchUtils', () => {
     expect(createTableHeadings('arrived', 'endDate', false, '')).toEqual(tableHeadings)
     expect(createTableHeadings('departed', 'endDate', false, '')).toEqual(tableHeadings)
   })
+
+  it.each(['provisional', 'confirmed', 'arrived', 'departed'])(
+    'retains the CRN search parameter in the urls for sorting %s bookings',
+    (status: BookingSearchApiStatus) => {
+      const tableHeadings = createTableHeadings(status, undefined, undefined, '?crn=N777666')
+
+      tableHeadings
+        .filter(heading => !!heading.attributes)
+        .forEach(heading => expect(heading.html).toContain('crn=N777666'))
+    },
+  )
 })
 
 describe('convertApiStatusToUiStatus', () => {

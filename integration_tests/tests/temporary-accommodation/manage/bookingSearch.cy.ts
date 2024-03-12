@@ -196,7 +196,7 @@ context('Booking search', () => {
     page.checkNoCRNEntered()
   })
 
-  it('retains the CRN search when navigating between booking types', () => {
+  it('retains the CRN search when ordering and navigating between booking types', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -206,6 +206,11 @@ context('Booking search', () => {
     ;['provisional', 'confirmed', 'arrived', 'departed'].forEach(status => {
       cy.task('stubFindBookings', { bookings, status })
       cy.task('stubFindBookings', { bookings, status, params: { crn: 'X321654' } })
+      cy.task('stubFindBookings', {
+        bookings,
+        status,
+        params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc' },
+      })
     })
 
     // When I visit the Find a provisional booking page
@@ -217,6 +222,16 @@ context('Booking search', () => {
     // Then I see the provisional bookings for the given CRN
     Page.verifyOnPage(BookingSearchPage, 'provisional')
     page.checkCRNSearchValue('X321654', 'provisional')
+
+    // When I order by end date
+    page.sortColumn('End date')
+
+    // Then I see the provisional bookings for the given CRN
+    page.checkCRNSearchValue('X321654', 'provisional')
+
+    // And I see the results are ordered by end date ascending
+    page.checkUrl('sortBy=endDate&sortDirection=asc')
+    page.checkColumnOrder('End date', 'ascending')
 
     // When I navigate to the confirmed bookings search
     page.clickOtherBookingStatusLink('confirmed')

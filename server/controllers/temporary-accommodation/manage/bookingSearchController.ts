@@ -7,6 +7,7 @@ import { pagination } from '../../../utils/pagination'
 import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import paths from '../../../paths/temporary-accommodation/manage'
+import { appendQueryString } from '../../../utils/utils'
 
 export default class BookingSearchController {
   constructor(private readonly bookingSearchService: BookingSearchService) {}
@@ -35,7 +36,7 @@ export default class BookingSearchController {
         return res.render(`temporary-accommodation/booking-search/results`, {
           uiStatus: convertApiStatusToUiStatus(status),
           subNavArr: createSubNavArr(status, params.crn),
-          tableHeadings: createTableHeadings(status, sortBy, ascending, ''), // dont send the page, will revert to 1 on sort change
+          tableHeadings: createTableHeadings(status, sortBy, ascending, appendQueryString('', params)), // dont send the page, will revert to 1 on sort change
           pagination: pagination(
             response.pageNumber,
             response.totalPages,

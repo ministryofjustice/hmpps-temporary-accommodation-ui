@@ -67,6 +67,38 @@ context('Booking search', () => {
     page.checkBookingStatus('departed')
   })
 
+  it('orders the results', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are bookings in the database
+    const { data: bookings } = bookingSearchResultsFactory.build()
+    cy.task('stubFindBookings', { bookings, status: 'provisional' })
+    cy.task('stubFindBookings', { bookings, status: 'provisional', params: { sortBy: 'startDate' } })
+    cy.task('stubFindBookings', {
+      bookings,
+      status: 'provisional',
+      params: { sortBy: 'startDate', sortDirection: 'asc' },
+    })
+
+    // When I visit the Find a provisional booking page
+    const page = BookingSearchPage.visit('provisional')
+
+    // And I order results by start date
+    page.sortColumn('Start date')
+
+    // Then I see the results are ordered by start date descending
+    page.checkUrl('sortBy=startDate')
+    page.checkColumnOrder('Start date', 'descending')
+
+    // When I order the results by start date again
+    page.sortColumn('Start date')
+
+    // Then I see the results are ordered by start date ascending
+    page.checkUrl('sortBy=startDate&sortDirection=asc')
+    page.checkColumnOrder('Start date', 'ascending')
+  })
+
   it('shows the result of a crn search and clears the search', () => {
     // Given I am signed in
     cy.signIn()

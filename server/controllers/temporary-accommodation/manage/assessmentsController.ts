@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, AssessmentSearchParameters } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
@@ -94,10 +94,12 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const { data: archivedTableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived')
+      const params = req.query as AssessmentSearchParameters
+
+      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
 
       return res.render('temporary-accommodation/assessments/archive', {
-        archivedTableRows,
+        archivedTableRows: response.data,
       })
     }
   }

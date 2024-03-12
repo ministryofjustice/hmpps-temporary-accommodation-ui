@@ -44,12 +44,12 @@ describe('AssessmentsController', () => {
     },
   ]
 
+  const session = {
+    probationRegion: probationRegionFactory.build(),
+  }
+
   beforeEach(() => {
-    request = createMock<Request>({
-      session: {
-        probationRegion: probationRegionFactory.build(),
-      },
-    })
+    request = createMock<Request>({ session, query: {} })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
@@ -103,7 +103,26 @@ describe('AssessmentsController', () => {
         archivedTableRows: [[{ text: assessment.createdAt }]],
       })
 
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived')
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {})
+    })
+
+    it('returns the correct page results to the template', async () => {
+      request = createMock<Request>({ session, query: { page: '2' } })
+      const assessments = assessmentSummaries.build({
+        totalResults: 13,
+        pageNumber: 2,
+        totalPages: 2,
+      })
+      assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+
+      const requestHandler = assessmentsController.archive()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
+        archivedTableRows: assessments.data,
+      })
+
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: '2' })
     })
   })
 

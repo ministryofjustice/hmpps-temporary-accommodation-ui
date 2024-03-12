@@ -114,4 +114,8 @@ export default class BookingSearchPage extends Page {
   checkColumnOrder(label: string, order: 'ascending' | 'descending' | 'none') {
     cy.get('main table thead').contains(label).closest('th').should('have.attr', 'aria-sort', order)
   }
+
+  clickPageLink(number: number) {
+    cy.get('main nav[aria-label="Pagination navigation"] a').contains(number.toString()).click()
+  }
 }

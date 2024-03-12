@@ -4,7 +4,8 @@ import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingSearchResultsFactory } from '../../../../server/testutils/factories/index'
+import { bookingSearchResultFactory, bookingSearchResultsFactory } from '../../../../server/testutils/factories/index'
+import { MockPagination } from '../../../mockApis/bookingSearch'
 
 context('Booking search', () => {
   beforeEach(() => {
@@ -196,21 +197,40 @@ context('Booking search', () => {
     page.checkNoCRNEntered()
   })
 
-  it('retains the CRN search when ordering and navigating between booking types', () => {
+  it('retains the CRN search when ordering, paginating and navigating between booking types', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there are bookings in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
+    const bookings = bookingSearchResultFactory.buildList(23)
+    const pagination: MockPagination = {
+      totalResults: 76,
+      totalPages: 8,
+      pageNumber: 1,
+      pageSize: 10,
+    }
 
-    ;['provisional', 'confirmed', 'arrived', 'departed'].forEach(status => {
+    ;['confirmed', 'arrived', 'departed'].forEach(status => {
       cy.task('stubFindBookings', { bookings, status })
       cy.task('stubFindBookings', { bookings, status, params: { crn: 'X321654' } })
-      cy.task('stubFindBookings', {
-        bookings,
-        status,
-        params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc' },
-      })
+    })
+
+    cy.task('stubFindBookings', { bookings, status: 'provisional', pagination })
+    cy.task('stubFindBookings', { bookings, status: 'provisional', params: { crn: 'X321654' }, pagination })
+    cy.task('stubFindBookings', {
+      bookings,
+      status: 'provisional',
+      params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc' },
+      pagination,
+    })
+    cy.task('stubFindBookings', {
+      bookings,
+      status: 'provisional',
+      params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc', page: 2 },
+      pagination: {
+        ...pagination,
+        pageNumber: 2,
+      },
     })
 
     // When I visit the Find a provisional booking page
@@ -227,6 +247,17 @@ context('Booking search', () => {
     page.sortColumn('End date')
 
     // Then I see the provisional bookings for the given CRN
+    page.checkCRNSearchValue('X321654', 'provisional')
+
+    // And I see the results are ordered by end date ascending
+    page.checkUrl('sortBy=endDate&sortDirection=asc')
+    page.checkColumnOrder('End date', 'ascending')
+
+    // When I navigate to the second page of results
+    page.clickPageLink(2)
+
+    // Then I see the second page of provisional bookings for the given CRN
+    page.checkUrl('page=2')
     page.checkCRNSearchValue('X321654', 'provisional')
 
     // And I see the results are ordered by end date ascending

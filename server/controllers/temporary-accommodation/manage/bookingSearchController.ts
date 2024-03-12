@@ -37,11 +37,7 @@ export default class BookingSearchController {
           uiStatus: convertApiStatusToUiStatus(status),
           subNavArr: createSubNavArr(status, params.crn),
           tableHeadings: createTableHeadings(status, sortBy, ascending, appendQueryString('', params)), // dont send the page, will revert to 1 on sort change
-          pagination: pagination(
-            response.pageNumber,
-            response.totalPages,
-            `?sortBy=${sortBy}&sortDirection=${ascending ? 'asc' : 'desc'}`,
-          ),
+          pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
           response,
           crn: params.crn,
           errors,

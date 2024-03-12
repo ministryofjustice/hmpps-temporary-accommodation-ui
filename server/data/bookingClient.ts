@@ -1,7 +1,6 @@
 import type {
   Arrival,
   Booking,
-  BookingSearchResults,
   Cancellation,
   Confirmation,
   Departure,

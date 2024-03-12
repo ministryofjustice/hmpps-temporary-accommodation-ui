@@ -1,4 +1,4 @@
-import type { Booking, BookingSearchResult, BookingSearchResults, Premises } from '@approved-premises/api'
+import type { Booking, BookingSearchResult, Premises } from '@approved-premises/api'
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
 import Page from '../../page'
 import paths from '../../../../server/paths/temporary-accommodation/manage'

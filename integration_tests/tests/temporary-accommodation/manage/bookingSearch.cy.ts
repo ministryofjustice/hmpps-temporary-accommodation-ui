@@ -1,5 +1,5 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
-import { BookingSearchResult, BookingSearchResults } from '@approved-premises/api'
+import { BookingSearchResult } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'

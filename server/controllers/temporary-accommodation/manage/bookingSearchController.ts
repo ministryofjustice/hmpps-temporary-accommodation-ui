@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 import { BookingSearchService } from 'server/services'
-import { BookingSearchSortField, SortDirection } from '@approved-premises/api'
+import { BookingSearchSortField } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
 import extractCallConfig from '../../../utils/restUtils'
 import { pagination } from '../../../utils/pagination'

@@ -63,6 +63,19 @@ describe('AssessmentClient', () => {
         expect(result.totalResults).toEqual(assessments.data.length)
       },
     )
+
+    it('should take a page parameter', async () => {
+      const assessments = assessmentSummaries.build()
+
+      fakeApprovedPremisesApi
+        .get(appendQueryString(paths.assessments.index({}), { statuses: 'unallocated', page: 2 }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, assessments.data)
+
+      const result = await assessmentClient.all(['unallocated'], { page: 2 })
+
+      expect(result.data).toEqual(assessments.data)
+    })
   })
 
   describe('readyToPlaceForCrn', () => {

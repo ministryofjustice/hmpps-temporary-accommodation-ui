@@ -31,7 +31,7 @@ describe('AssessmentsService', () => {
 
   describe('getAllForLoggedInUser', () => {
     it.each(['unallocated', 'in_review', 'ready_to_place'])(
-      'returns %s assessments summaries formatted for presentation in a table',
+      'returns paginated %s assessments summaries formatted for presentation in a table',
       async (uiStatus: AssessmentSearchApiStatus) => {
         const assessments = assessmentSummaryFactory.params({ status: uiStatus }).buildList(2)
         const response = assessmentSummaries.build({ data: assessments, totalResults: 2 })
@@ -41,18 +41,18 @@ describe('AssessmentsService', () => {
           return [{ text: `Table row: ${assessment.status}` }]
         })
 
-        const tableRows = await service.getAllForLoggedInUser(callConfig, uiStatus)
+        const tableRows = await service.getAllForLoggedInUser(callConfig, uiStatus, { page: 2 })
 
         expect(tableRows).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
 
         expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-        expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus])
+        expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus], { page: 2 })
 
         assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, false))
       },
     )
 
-    it('returns archived assessment summaries formatted for presentation in a table', async () => {
+    it('returns paginated archived assessment summaries formatted for presentation in a table', async () => {
       const closedAssessments = assessmentSummaryFactory.params({ status: 'closed' }).buildList(2)
       const rejectedAssessments = assessmentSummaryFactory.params({ status: 'rejected' }).buildList(2)
       const response = assessmentSummaries.build({ data: [...closedAssessments, ...rejectedAssessments] })
@@ -62,12 +62,12 @@ describe('AssessmentsService', () => {
         return [{ text: `Table row: ${assessment.status}` }]
       })
 
-      const tableRows = await service.getAllForLoggedInUser(callConfig, 'archived')
+      const tableRows = await service.getAllForLoggedInUser(callConfig, 'archived', { page: 1 })
 
       expect(tableRows).toEqual(response.data.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
 
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'])
+      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'], { page: 1 })
 
       response.data.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, true))
     })

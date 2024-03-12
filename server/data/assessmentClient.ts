@@ -8,7 +8,7 @@ import type {
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
 
-import { PaginatedResponse } from '@approved-premises/ui'
+import { AssessmentSearchParameters, PaginatedResponse } from '@approved-premises/ui'
 import { URLSearchParams } from 'url'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -27,8 +27,11 @@ export default class AssessmentClient {
     this.restClient = new RestClient('assessmentClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async all(statuses: AssessmentStatus[]): Promise<PaginatedResponse<AssessmentSummary>> {
-    const path = appendQueryString(paths.assessments.index.pattern, { statuses })
+  async all(
+    statuses: AssessmentStatus[],
+    params?: AssessmentSearchParameters,
+  ): Promise<PaginatedResponse<AssessmentSummary>> {
+    const path = appendQueryString(paths.assessments.index.pattern, { statuses, ...params })
     const response = await this.restClient.get({ path, raw: true })
 
     const { body, header } = response as searchResponse

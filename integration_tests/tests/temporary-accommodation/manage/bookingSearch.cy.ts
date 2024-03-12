@@ -109,7 +109,7 @@ context('Booking search', () => {
     const searchCRN = searchedForBooking.person.crn
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
-    cy.task('stubFindBookingsByCRN', { bookings: [searchedForBooking], status: 'provisional', crn: searchCRN })
+    cy.task('stubFindBookings', { bookings: [searchedForBooking], status: 'provisional', params: { crn: searchCRN } })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('provisional')
@@ -151,11 +151,7 @@ context('Booking search', () => {
     const noBookings: BookingSearchResult[] = []
 
     cy.task('stubFindBookings', { bookings, status: 'confirmed' })
-    cy.task('stubFindBookingsByCRN', {
-      bookings: noBookings,
-      status: 'confirmed',
-      crn: 'N0M4TCH',
-    })
+    cy.task('stubFindBookings', { bookings: noBookings, status: 'confirmed', params: { crn: 'N0M4TCH' } })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('confirmed')
@@ -209,7 +205,7 @@ context('Booking search', () => {
 
     ;['provisional', 'confirmed', 'arrived', 'departed'].forEach(status => {
       cy.task('stubFindBookings', { bookings, status })
-      cy.task('stubFindBookingsByCRN', { bookings, status, crn: 'X321654' })
+      cy.task('stubFindBookings', { bookings, status, params: { crn: 'X321654' } })
     })
 
     // When I visit the Find a provisional booking page

@@ -13,10 +13,10 @@ export default {
   }): SuperAgentRequest => {
     const url = appendQueryString(paths.bookings.search({}), {
       status: args.status,
+      crn: args.params?.crn,
       page: args.params?.page || 1,
       sortField: args.params?.sortBy || 'endDate',
       sortOrder: args.params?.sortDirection === 'asc' ? 'ascending' : 'descending',
-      crn: args.params?.crn,
     })
 
     return stubFor({
@@ -36,27 +36,4 @@ export default {
       },
     })
   },
-  stubFindBookingsByCRN: (args: {
-    bookings: BookingSearchResult[]
-    status: BookingSearchApiStatus
-    crn: string
-  }): SuperAgentRequest =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: `${paths.bookings.search({})}?status=${args.status}&crn=${
-          args.crn
-        }&page=1&sortField=endDate&sortOrder=descending`,
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        jsonBody: {
-          results: args.bookings,
-          resultsCount: args.bookings.length,
-        },
-      },
-    }),
 }

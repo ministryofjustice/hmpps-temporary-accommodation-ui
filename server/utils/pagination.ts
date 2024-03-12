@@ -2,19 +2,18 @@ import qs from 'qs'
 import { createQueryString } from './utils'
 
 export type PaginationPreviousOrNext = {
-  href: string
+  href?: string
   text?: string
-  attributes?: Record<string, string>
 }
 
 export type PaginationItem =
   | {
-      number: number
-      href: string
-      current?: boolean
+      text?: string
+      href?: string
+      selected?: boolean
     }
   | {
-      ellipsis: true
+      type: 'dots'
     }
 
 export type Pagination = {
@@ -25,12 +24,9 @@ export type Pagination = {
 }
 
 /**
- * Produces parameters for GOV.UK Pagination component macro
+ * Produces parameters for the MoJ Pagination component macro
+ * https://design-patterns.service.justice.gov.uk/components/pagination/
  * NB: `page` starts at 1
- *
- * Accessibility notes:
- * - set `landmarkLabel` on the returned object otherwise the navigation box is announced as "results"
- * - set `previous.attributes.aria-label` and `next.attributes.aria-label` on the returned object if "Previous" and "Next" are not clear enough
  */
 export function pagination(currentPage: number, pageCount: number, hrefPrefix: string): Pagination {
   const params: Pagination = {}
@@ -74,15 +70,15 @@ export function pagination(currentPage: number, pageCount: number, hrefPrefix: s
   params.items = pages.map((somePage: number | null): PaginationItem => {
     if (somePage) {
       const item: PaginationItem = {
-        number: somePage,
+        text: somePage.toString(),
         href: genUrl(somePage),
       }
       if (somePage === currentPage) {
-        item.current = true
+        item.selected = true
       }
       return item
     }
-    return { ellipsis: true }
+    return { type: 'dots' }
   })
 
   return params

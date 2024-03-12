@@ -2,7 +2,8 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
-{% from "govuk/components/pagination/macro.njk" import govukPagination %}
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
@@ -10,75 +11,72 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('View bookings', []) }}
+    {{ breadCrumb('View bookings', []) }}
 {% endblock %}
 
 {% block content %}
-  {% set context = fetchContext() %}
+    {% set context = fetchContext() %}
 
-  <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
+    <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
 
-  {{
-    mojSubNavigation({
-    label: 'Secondary navigation',
-    items: subNavArr
-    })
-  }}
+    {{ mojSubNavigation({
+        label: 'Secondary navigation',
+        items: subNavArr
+    }) }}
 
-  <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-    <form action="{{ paths.bookings.search[uiStatus].index() }}" method="get">
+    <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
+        <form action="{{ paths.bookings.search[uiStatus].index() }}" method="get">
 
-      {{ govukInput(
-        {
-          label: {
-            classes: 'govuk-label--m',
-            text: 'Search ' + uiStatus + ' bookings by CRN (case reference number)'
-          },
-          hint: {
-            text: 'For example, XD7364CD'
-          },
-          name: 'crn',
-          id: 'crn',
-          value: crn
-        }
-      ) }}
+            {{ govukInput(
+                {
+                    label: {
+                    classes: 'govuk-label--m',
+                    text: 'Search ' + uiStatus + ' bookings by CRN (case reference number)'
+                },
+                    hint: {
+                    text: 'For example, XD7364CD'
+                },
+                    name: 'crn',
+                    id: 'crn',
+                    value: crn
+                }
+            ) }}
 
-      <div class="govuk-button-group">
-        {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+            <div class="govuk-button-group">
+                {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
 
-        <a class="govuk-link" href="{{ paths.bookings.search[uiStatus].index() }}">Clear</a>
-      </div>
-    </form>
-  </div>
+                <a class="govuk-link" href="{{ paths.bookings.search[uiStatus].index() }}">Clear</a>
+            </div>
+        </form>
+    </div>
 
-  {% if context.errors.crn %}
-    <h2>You have not entered any search terms</h2>
+    {% if context.errors.crn %}
+        <h2>You have not entered any search terms</h2>
 
-    <p>Enter a CRN. This can be found in nDelius.</p>
-  {% elif (response.data|length > 0) or (not crn) %}
-    {{
-      govukTable({
-        captionClasses: "govuk-table__caption--m",
-        firstCellIsHeader: true,
-        head: tableHeadings,
-        rows: response.data
-      })
-    }}
+        <p>Enter a CRN. This can be found in nDelius.</p>
+        {% elif (response.data|length > 0) or (not crn) %}
+        {{ govukTable({
+            captionClasses: "govuk-table__caption--m",
+            firstCellIsHeader: true,
+            head: tableHeadings,
+            rows: response.data
+        }) }}
 
-    {{ govukPagination(pagination) }}
-  {% else %}
-    <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} bookings.</h2>
+        {{ mojPagination(pagination) }}
+    {% else %}
+        <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} bookings.</h2>
 
-    <p>Check the other lists.</p>
+        <p>Check the other lists.</p>
 
-    <p>If the booking is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact support</a> for help.</p>
-  {% endif %}
+        <p>If the booking is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+                support</a> for help.</p>
+    {% endif %}
 
-  {% block extraScripts %}
-    <script type="text/javascript" nonce="{{ cspNonce }}">
-      $(document).ready(function () {
-        window.MOJFrontend.initAll()
-      })
-    </script>
-  {% endblock %}
+    {% block extraScripts %}
+        <script type="text/javascript" nonce="{{ cspNonce }}">
+          $(document).ready(function() {
+            window.MOJFrontend.initAll()
+          })
+        </script>
+    {% endblock %}
 {% endblock %}

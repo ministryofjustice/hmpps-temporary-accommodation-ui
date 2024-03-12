@@ -80,7 +80,7 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const tableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, status)
+      const { data: tableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig, status)
 
       return res.render('temporary-accommodation/assessments/index', {
         status,
@@ -94,7 +94,7 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const archivedTableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived')
+      const { data: archivedTableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived')
 
       return res.render('temporary-accommodation/assessments/archive', {
         archivedTableRows,

@@ -41,9 +41,9 @@ describe('AssessmentsService', () => {
           return [{ text: `Table row: ${assessment.status}` }]
         })
 
-        const tableRows = await service.getAllForLoggedInUser(callConfig, uiStatus, { page: 2 })
+        const result = await service.getAllForLoggedInUser(callConfig, uiStatus, { page: 2 })
 
-        expect(tableRows).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
+        expect(result.data).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
 
         expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
         expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus], { page: 2 })
@@ -62,9 +62,9 @@ describe('AssessmentsService', () => {
         return [{ text: `Table row: ${assessment.status}` }]
       })
 
-      const tableRows = await service.getAllForLoggedInUser(callConfig, 'archived', { page: 1 })
+      const result = await service.getAllForLoggedInUser(callConfig, 'archived', { page: 1 })
 
-      expect(tableRows).toEqual(response.data.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
+      expect(result.data).toEqual(response.data.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
 
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'], { page: 1 })

@@ -17,6 +17,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
+import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 
 jest.mock('../../../utils/assessmentUtils')
 jest.mock('../../../utils/restUtils')
@@ -65,15 +66,19 @@ describe('AssessmentsController', () => {
     it.each(['unallocated', 'in_review', 'ready_to_place'])(
       'returns the table rows for assessments with status %s to the template',
       async (status: AssessmentSearchApiStatus) => {
-        const assessments = assessmentSummaryFactory.buildList(5, { status })
-        assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+        const assessment = assessmentSummaryFactory.build()
+        const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
+        assessmentsService.getAllForLoggedInUser.mockResolvedValue({
+          ...assessments,
+          data: assessments.data.map(summary => [{ text: summary.createdAt }]),
+        })
 
         const requestHandler = assessmentsController.list(status)
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
           status,
-          tableRows: assessments,
+          tableRows: [[{ text: assessment.createdAt }]],
           tableHeaders: assessmentsTableHeaders,
         })
 
@@ -83,15 +88,19 @@ describe('AssessmentsController', () => {
   })
 
   describe('archive', () => {
-    it('returns the table rows to the archived template', async () => {
-      const assessments = assessmentSummaryFactory.buildList(5, { status: 'closed' })
-      assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+    it('returns the paginated table rows to the archived template', async () => {
+      const assessment = assessmentSummaryFactory.build()
+      const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
+      assessmentsService.getAllForLoggedInUser.mockResolvedValue({
+        ...assessments,
+        data: assessments.data.map(summary => [{ text: summary.createdAt }]),
+      })
 
       const requestHandler = assessmentsController.archive()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
-        archivedTableRows: assessments,
+        archivedTableRows: [[{ text: assessment.createdAt }]],
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived')

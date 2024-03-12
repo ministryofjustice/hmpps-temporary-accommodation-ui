@@ -24,7 +24,7 @@ export default class AssessmentsService {
     const assessmentClient = this.assessmentClientFactory(callConfig)
     const assessmentSummaries = await assessmentClient.all(statuses)
 
-    return assessmentSummaries.map(summary => assessmentTableRows(summary, uiStatus === 'archived'))
+    return assessmentSummaries.data.map(summary => assessmentTableRows(summary, uiStatus === 'archived'))
   }
 
   findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {

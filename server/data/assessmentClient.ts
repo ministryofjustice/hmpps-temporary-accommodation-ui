@@ -8,10 +8,17 @@ import type {
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
 
+import { PaginatedResponse } from '@approved-premises/ui'
+import { URLSearchParams } from 'url'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
+
+type searchResponse = {
+  body: Array<AssessmentSummary>
+  header: unknown
+}
 
 export default class AssessmentClient {
   restClient: RestClient
@@ -20,10 +27,22 @@ export default class AssessmentClient {
     this.restClient = new RestClient('assessmentClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async all(statuses: AssessmentStatus[]): Promise<Array<AssessmentSummary>> {
-    return (await this.restClient.get({
-      path: appendQueryString(paths.assessments.index.pattern, { statuses }),
-    })) as Array<AssessmentSummary>
+  async all(statuses: AssessmentStatus[]): Promise<PaginatedResponse<AssessmentSummary>> {
+    const path = appendQueryString(paths.assessments.index.pattern, { statuses })
+    const response = await this.restClient.get({ path, raw: true })
+
+    const { body, header } = response as searchResponse
+
+    return {
+      url: {
+        params: new URLSearchParams(path),
+      },
+      data: body,
+      pageNumber: Number(header['x-pagination-currentpage']),
+      pageSize: Number(header['x-pagination-pagesize']),
+      totalPages: Number(header['x-pagination-totalpages']),
+      totalResults: Number(header['x-pagination-totalresults']),
+    }
   }
 
   async readyToPlaceForCrn(crn: string): Promise<Array<AssessmentSummary>> {

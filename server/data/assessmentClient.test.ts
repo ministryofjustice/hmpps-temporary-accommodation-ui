@@ -7,6 +7,7 @@ import { assessmentFactory, assessmentSummaryFactory, newReferralHistoryUserNote
 import AssessmentClient from './assessmentClient'
 import { CallConfig } from './restClient'
 import { appendQueryString } from '../utils/utils'
+import assessmentSummaries from '../testutils/factories/assessmentSummaries'
 
 const assessmentId = 'some-id'
 
@@ -32,37 +33,51 @@ describe('AssessmentClient', () => {
   })
 
   describe('all', () => {
-    const assessmentSummaries = assessmentSummaryFactory.buildList(5)
-
     it.each([
       ['unallocated', ['unallocated' as const]],
       ['in review', ['in_review' as const]],
       ['ready to place', ['ready_to_place' as const]],
       ['archived', ['closed' as const, 'rejected' as const]],
-    ])('should get all %s assessments for the current user', async (_, apiStatuses: AssessmentStatus[]) => {
-      fakeApprovedPremisesApi
-        .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, assessmentSummaries)
+    ])(
+      'should get all %s assessments for the current user with pagination headers',
+      async (_, apiStatuses: AssessmentStatus[]) => {
+        const assessments = assessmentSummaries.build()
 
-      const output = await assessmentClient.all(apiStatuses)
-      expect(output).toEqual(assessmentSummaries)
-    })
+        fakeApprovedPremisesApi
+          .defaultReplyHeaders({
+            'x-pagination-currentpage': String(assessments.pageNumber),
+            'x-pagination-pagesize': String(assessments.pageSize),
+            'x-pagination-totalpages': String(assessments.totalPages),
+            'x-pagination-totalresults': String(assessments.data.length),
+          })
+          .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses }))
+          .matchHeader('authorization', `Bearer ${callConfig.token}`)
+          .reply(200, assessments.data)
+
+        const result = await assessmentClient.all(apiStatuses)
+
+        expect(result.data).toEqual(assessments.data)
+        expect(result.pageNumber).toEqual(assessments.pageNumber)
+        expect(result.pageSize).toEqual(assessments.pageSize)
+        expect(result.totalPages).toEqual(assessments.totalPages)
+        expect(result.totalResults).toEqual(assessments.data.length)
+      },
+    )
   })
 
   describe('readyToPlaceForCrn', () => {
     it('should get all ready to place assessments for the given CRN', async () => {
       const crn = 'some-crn'
       const status = 'ready_to_place' as AssessmentStatus
-      const assessmentSummaries = assessmentSummaryFactory.buildList(5)
+      const assessments = assessmentSummaryFactory.buildList(5)
 
       fakeApprovedPremisesApi
         .get(`${paths.assessments.index({})}?crn=${crn}&statuses=${status}`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, assessmentSummaries)
+        .reply(200, assessments)
 
       const output = await assessmentClient.readyToPlaceForCrn(crn)
-      expect(output).toEqual(assessmentSummaries)
+      expect(output).toEqual(assessments)
     })
   })
 

@@ -121,9 +121,9 @@ When('I see results for the first page', () => {
 
 When('I navigate to the second page', () => {
   cy.then(function _() {
-    cy.get('a.govuk-pagination__link').eq(1).click()
-    cy.url({ timeout: 10000 }).should('include', '&page=2')
-    cy.get('.govuk-pagination__item').eq(1).should('have.class', 'govuk-pagination__item--current')
+    cy.get('a.moj-pagination__link').contains(/^2$/).click()
+    cy.url({ timeout: 10000 }).should('include', 'page=2')
+    cy.get('.moj-pagination__item').contains(/^2$/).should('have.class', 'moj-pagination__item--active')
   })
 })
 
@@ -136,9 +136,9 @@ Then('I should see different results', () => {
 
 When('I navigate to the first page', () => {
   cy.then(function _() {
-    cy.get('a.govuk-pagination__link').eq(0).click()
-    cy.url({ timeout: 10000 }).should('include', '&page=1')
-    cy.get('.govuk-pagination__item').eq(0).should('have.class', 'govuk-pagination__item--current')
+    cy.get('a.moj-pagination__link').contains(/^1$/).click()
+    cy.url({ timeout: 10000 }).should('include', 'page=1')
+    cy.get('.moj-pagination__item').contains(/^1$/).should('have.class', 'moj-pagination__item--active')
   })
 })
 

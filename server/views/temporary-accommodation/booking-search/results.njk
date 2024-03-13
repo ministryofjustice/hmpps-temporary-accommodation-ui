@@ -57,7 +57,6 @@
         {% elif (response.data|length > 0) or (not crn) %}
         {{ govukTable({
             captionClasses: "govuk-table__caption--m",
-            firstCellIsHeader: true,
             head: tableHeadings,
             rows: response.data
         }) }}

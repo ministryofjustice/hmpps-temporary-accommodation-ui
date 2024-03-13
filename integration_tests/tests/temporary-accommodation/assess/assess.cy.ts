@@ -74,6 +74,81 @@ context('Apply', () => {
         archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
       })
 
+      it('shows pagination and ordering on unallocated referrals', () => {
+        const pagination: MockPagination = {
+          totalResults: 23,
+          totalPages: 3,
+          pageNumber: 1,
+          pageSize: 10,
+        }
+
+        // Given there are assessments in the database
+        const data = assessmentSummaryFactory.buildList(6, { status: 'unallocated' })
+        cy.task('stubAssessments', { data, pagination })
+
+        // When I visit the dashboard
+        const dashboardPage = DashboardPage.visit()
+
+        // And I click on the "Review and assess referrals" link
+        dashboardPage.clickReviewAndAssessReferrals()
+
+        // When I click on the 'View archived assessments' link
+        const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
+
+        // Then I should see a list of assessments
+        unallocatedListPage.shouldShowAssessments(data)
+        unallocatedListPage.shouldShowPageNumber(1)
+
+        // When I navigate to the second page of results
+        cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 2 } })
+        unallocatedListPage.clickPaginationLink(2)
+
+        // Then I see the second page of results
+        unallocatedListPage.shouldShowPageNumber(2)
+
+        // When I navigate to the next page of results
+        cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
+        unallocatedListPage.clickPaginationLink('Next')
+
+        // Then I see the third page of results
+        unallocatedListPage.shouldShowPageNumber(3)
+
+        // When I order by Bedspace required
+        cy.task('stubAssessments', { data, pagination })
+        unallocatedListPage.sortColumn('Bedspace required')
+
+        // Then I see the first page of results ordered by status ascending
+        unallocatedListPage.shouldHaveURLSearchParam('sortBy=arrivedAt')
+        unallocatedListPage.shouldShowPageNumber(1)
+        unallocatedListPage.checkColumnOrder('Bedspace required', 'ascending')
+
+        // When I navigate to page 3
+        cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
+        unallocatedListPage.clickPaginationLink(3)
+
+        // Then I see the third page of results ordered by status ascending
+        unallocatedListPage.shouldHaveURLSearchParam('sortBy=arrivedAt&sortDirection=asc')
+        unallocatedListPage.shouldShowPageNumber(3)
+        unallocatedListPage.checkColumnOrder('Bedspace required', 'ascending')
+
+        // When I order by Referral received
+        cy.task('stubAssessments', { data, pagination })
+        unallocatedListPage.sortColumn('Referral received')
+
+        // Then I see the first page of results ordered by Referral received ascending
+        unallocatedListPage.shouldHaveURLSearchParam('sortBy=createdAt')
+        unallocatedListPage.shouldShowPageNumber(1)
+        unallocatedListPage.checkColumnOrder('Referral received', 'ascending')
+
+        // When I order by Referral received again
+        unallocatedListPage.sortColumn('Referral received')
+
+        // Then I see the first page of results ordered by Referral received ascending
+        unallocatedListPage.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=desc')
+        unallocatedListPage.shouldShowPageNumber(1)
+        unallocatedListPage.checkColumnOrder('Referral received', 'descending')
+      })
+
       it('shows pagination and ordering on archived referrals', () => {
         const pagination: MockPagination = {
           totalResults: 34,

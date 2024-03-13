@@ -52,7 +52,7 @@ describe('AssessmentsService', () => {
       },
     )
 
-    it('returns paginated archived assessment summaries formatted for presentation in a table', async () => {
+    it('returns paginated and sorted archived assessment summaries formatted for presentation in a table', async () => {
       const closedAssessments = assessmentSummaryFactory.params({ status: 'closed' }).buildList(2)
       const rejectedAssessments = assessmentSummaryFactory.params({ status: 'rejected' }).buildList(2)
       const response = assessmentSummaries.build({ data: [...closedAssessments, ...rejectedAssessments] })
@@ -62,12 +62,20 @@ describe('AssessmentsService', () => {
         return [{ text: `Table row: ${assessment.status}` }]
       })
 
-      const result = await service.getAllForLoggedInUser(callConfig, 'archived', { page: 1 })
+      const result = await service.getAllForLoggedInUser(callConfig, 'archived', {
+        page: 1,
+        sortBy: 'arrivalDate',
+        sortDirection: 'desc',
+      })
 
       expect(result.data).toEqual(response.data.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
 
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'], { page: 1 })
+      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'], {
+        page: 1,
+        sortBy: 'arrivalDate',
+        sortDirection: 'desc',
+      })
 
       response.data.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, true))
     })

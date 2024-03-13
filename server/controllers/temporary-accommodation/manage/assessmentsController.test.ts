@@ -106,8 +106,8 @@ describe('AssessmentsController', () => {
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: 1 })
     })
 
-    it('returns the correct page results to the template', async () => {
-      request = createMock<Request>({ session, query: { page: '2' } })
+    it('returns the correct page and sorted results to the template', async () => {
+      request = createMock<Request>({ session, query: { page: '2', sortBy: 'name', sortDirection: 'desc' } })
       const assessments = assessmentSummaries.build({
         totalResults: 13,
         pageNumber: 2,
@@ -122,14 +122,18 @@ describe('AssessmentsController', () => {
         archivedTableRows: assessments.data,
         pagination: {
           items: [
-            { text: '1', href: '?page=1' },
-            { text: '2', href: '?page=2', selected: true },
+            { text: '1', href: '?page=1&sortBy=name&sortDirection=desc' },
+            { text: '2', href: '?page=2&sortBy=name&sortDirection=desc', selected: true },
           ],
-          previous: { text: 'Previous', href: '?page=1' },
+          previous: { text: 'Previous', href: '?page=1&sortBy=name&sortDirection=desc' },
         },
       })
 
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: 2 })
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
+        page: 2,
+        sortBy: 'name',
+        sortDirection: 'desc',
+      })
     })
   })
 

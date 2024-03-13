@@ -8,6 +8,7 @@ import {
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
   TemporaryAccommodationAssessment as Assessment,
+  AssessmentSortField,
   AssessmentStatus,
   Booking,
   BookingSearchSortField,
@@ -354,4 +355,6 @@ export type AssessmentSearchApiStatus = Extract<AssessmentStatus, 'unallocated' 
 
 export type AssessmentSearchParameters = {
   page?: number
+  sortBy?: AssessmentSortField
+  sortDirection?: SortDirection
 }

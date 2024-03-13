@@ -8,7 +8,14 @@ import {
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
-import { assessmentActions, assessmentTableRows, statusChangeMessage, timelineItems } from './assessmentUtils'
+import {
+  assessmentActions,
+  assessmentTableRows,
+  createTableHeadings,
+  getParams,
+  statusChangeMessage,
+  timelineItems,
+} from './assessmentUtils'
 import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
 import { formatLines } from './viewUtils'
 
@@ -327,6 +334,109 @@ describe('assessmentUtils', () => {
       })
 
       expect(addPlaceContextFromAssessmentId).toHaveBeenCalledWith(paths.bedspaces.search({}), assessment.id)
+    })
+  })
+
+  describe('createTableHeadings', () => {
+    it('returns table headings for assessment lists', () => {
+      const result = createTableHeadings('crn', true, '?foo=bar')
+
+      expect(result).toEqual([
+        {
+          html: '<a href="?foo=bar&sortBy=name"><button>Name</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'name',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=crn&sortDirection=desc"><button>CRN</button></a>',
+          attributes: {
+            'aria-sort': 'ascending',
+            'data-cy-sort-field': 'crn',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=createdAt"><button>Referral received</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'createdAt',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=arrivedAt"><button>Bedspace required</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'arrivedAt',
+          },
+        },
+      ])
+    })
+
+    it('returns table headings for archived assessment lists', () => {
+      const result = createTableHeadings('status', false, '?foo=bar', true)
+
+      expect(result).toEqual([
+        {
+          html: '<a href="?foo=bar&sortBy=name"><button>Name</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'name',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=crn"><button>CRN</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'crn',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=createdAt"><button>Referral received</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'createdAt',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=arrivedAt"><button>Bedspace required</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'arrivedAt',
+          },
+        },
+        {
+          html: '<a href="?foo=bar&sortBy=status&sortDirection=asc"><button>Status</button></a>',
+          attributes: {
+            'aria-sort': 'descending',
+            'data-cy-sort-field': 'status',
+          },
+        },
+      ])
+    })
+  })
+
+  describe('getParams', () => {
+    it('applies some defaults', () => {
+      expect(getParams({})).toEqual({
+        page: 1,
+        sortBy: 'name',
+        sortDirection: 'asc',
+      })
+    })
+
+    it('returns query values', () => {
+      const query = {
+        page: '3',
+        sortBy: 'arrivedAt',
+        sortDirection: 'desc',
+      }
+
+      expect(getParams(query)).toEqual({
+        page: 3,
+        sortBy: 'arrivedAt',
+        sortDirection: 'desc',
+      })
     })
   })
 })

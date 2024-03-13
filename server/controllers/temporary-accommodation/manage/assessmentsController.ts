@@ -1,21 +1,18 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus, AssessmentSearchParameters } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessment as Assessment,
-  AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
-  SortDirection,
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
-import { assessmentActions, statusChangeMessage } from '../../../utils/assessmentUtils'
+import { assessmentActions, createTableHeadings, getParams, statusChangeMessage } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
-import { sortHeader } from '../../../utils/sortHeader'
 
 export const assessmentsTableHeaders = [
   {
@@ -84,12 +81,15 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const { data: tableRows } = await this.assessmentsService.getAllForLoggedInUser(callConfig, status)
+      const params = getParams(req.query)
+
+      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
       return res.render('temporary-accommodation/assessments/index', {
         status,
-        tableRows,
-        tableHeaders: assessmentsTableHeaders,
+        tableRows: response.data,
+        tableHeaders: createTableHeadings(params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
+        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
       })
     }
   }
@@ -98,36 +98,17 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      // Default is page 1, sorted by name ascending
-      const params: AssessmentSearchParameters = {
-        ...req.query,
-        page: Number(!req.query.page ? 1 : req.query.page),
-        sortBy: (req.query.sortBy || 'name') as AssessmentSortField,
-        sortDirection: (req.query.sortDirection || 'asc') as SortDirection,
-      }
+      const params = getParams(req.query)
 
       const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
 
       return res.render('temporary-accommodation/assessments/archive', {
-        tableHeaders: [
-          sortHeader('Name', 'name', params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
-          sortHeader('CRN', 'crn', params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
-          sortHeader(
-            'Referral received',
-            'createdAt',
-            params.sortBy,
-            params.sortDirection === 'asc',
-            appendQueryString('', params),
-          ),
-          sortHeader(
-            'Bedspace required',
-            'arrivedAt',
-            params.sortBy,
-            params.sortDirection === 'asc',
-            appendQueryString('', params),
-          ),
-          sortHeader('Status', 'status', params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
-        ],
+        tableHeaders: createTableHeadings(
+          params.sortBy,
+          params.sortDirection === 'asc',
+          appendQueryString('', params),
+          true,
+        ),
         archivedTableRows: response.data,
         pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
       })

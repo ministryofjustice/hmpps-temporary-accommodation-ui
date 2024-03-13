@@ -24,7 +24,7 @@ export default class BookingSearchPage extends Page {
   }
 
   checkForPagination() {
-    cy.get('nav.govuk-pagination').should('exist')
+    cy.get('nav.moj-pagination').should('exist')
   }
 
   checkOrderOfDates(column: number, isAscending: boolean) {
@@ -54,7 +54,7 @@ export default class BookingSearchPage extends Page {
           return
         }
 
-        cy.get('.govuk-pagination__next >a').click()
+        cy.get('.moj-pagination__item--next >a').click()
         cy.then(() => {
           this.checkBookingDetailsAndClickView(premises, booking)
         })

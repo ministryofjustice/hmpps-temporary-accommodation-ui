@@ -14,7 +14,7 @@ import {
 import { assessmentActions, statusChangeMessage } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { appendQueryString } from '../../../utils/utils'
+import * as utils from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
@@ -22,7 +22,6 @@ import assessmentSummaries from '../../../testutils/factories/assessmentSummarie
 jest.mock('../../../utils/assessmentUtils')
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
-jest.mock('../../../utils/utils')
 jest.mock('../../../utils/placeUtils')
 
 describe('AssessmentsController', () => {
@@ -101,6 +100,7 @@ describe('AssessmentsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
         archivedTableRows: [[{ text: assessment.createdAt }]],
+        pagination: {},
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {})
@@ -120,6 +120,13 @@ describe('AssessmentsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
         archivedTableRows: assessments.data,
+        pagination: {
+          items: [
+            { text: '1', href: '?page=1' },
+            { text: '2', href: '?page=2', selected: true },
+          ],
+          previous: { href: '?page=1' },
+        },
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: '2' })
@@ -218,14 +225,14 @@ describe('AssessmentsController', () => {
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
-      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/success/token')
+      jest.spyOn(utils, 'appendQueryString').mockReturnValue('/path/with/success/token')
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.createNote).toHaveBeenCalledWith(callConfig, assessmentId, newNote)
       expect(request.flash).toHaveBeenCalledWith('success', 'Note saved')
       expect(response.redirect).toHaveBeenCalledWith('/path/with/success/token')
-      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+      expect(utils.appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
         success: 'true',
       })
     })
@@ -238,7 +245,7 @@ describe('AssessmentsController', () => {
       const err = new Error()
 
       assessmentsService.createNote.mockRejectedValue(err)
-      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/failure/token')
+      jest.spyOn(utils, 'appendQueryString').mockReturnValue('/path/with/failure/token')
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
@@ -246,7 +253,7 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '/path/with/failure/token')
-      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+      expect(utils.appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
         success: 'false',
       })
     })

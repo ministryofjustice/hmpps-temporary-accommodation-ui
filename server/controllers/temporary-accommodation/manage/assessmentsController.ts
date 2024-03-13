@@ -12,6 +12,7 @@ import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { pagination } from '../../../utils/pagination'
 
 export const assessmentsTableHeaders = [
   {
@@ -100,6 +101,7 @@ export default class AssessmentsController {
 
       return res.render('temporary-accommodation/assessments/archive', {
         archivedTableRows: response.data,
+        pagination: pagination(response.pageNumber, response.totalPages, ''),
       })
     }
   }

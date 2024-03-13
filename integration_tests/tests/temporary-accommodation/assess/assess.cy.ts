@@ -11,6 +11,7 @@ import {
   newReferralHistoryUserNoteFactory,
   referralHistoryUserNoteFactory,
 } from '../../../../server/testutils/factories'
+import { MockPagination } from '../../../mockApis/bookingSearch'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -33,7 +34,7 @@ context('Apply', () => {
         const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'rejected' })
         const closedAssessmentSummaries = assessmentSummaryFactory.buildList(2, { status: 'closed' })
 
-        cy.task('stubAssessments', unallocatedAssessmentSummaries)
+        cy.task('stubAssessments', { data: unallocatedAssessmentSummaries })
 
         // When I visit the dashboard
         const dashboardPage = DashboardPage.visit()
@@ -47,7 +48,7 @@ context('Apply', () => {
         unallocatedListPage.shouldShowAssessments(unallocatedAssessmentSummaries)
 
         // When I click on 'In review'
-        cy.task('stubAssessments', inProgressAssessmentSummaries)
+        cy.task('stubAssessments', { data: inProgressAssessmentSummaries })
         unallocatedListPage.clickSubNav('In review')
 
         // Then I should see the list of in review referrals
@@ -56,7 +57,7 @@ context('Apply', () => {
         inReviewListPage.shouldShowAssessments(inProgressAssessmentSummaries)
 
         // When I click on 'Ready to place'
-        cy.task('stubAssessments', readyToPlaceAssessmentSummaries)
+        cy.task('stubAssessments', { data: readyToPlaceAssessmentSummaries })
         inReviewListPage.clickSubNav('Ready to place')
 
         // Then I should see the list of ready to place referrals
@@ -65,12 +66,48 @@ context('Apply', () => {
         readyToPlaceListPage.shouldShowAssessments(readyToPlaceAssessmentSummaries)
 
         // When I click on the 'View archived assessments' link
-        cy.task('stubAssessments', [...closedAssessmentSummaries, ...rejectedAssessmentSummaries])
+        cy.task('stubAssessments', { data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries] })
         readyToPlaceListPage.clickViewArchivedReferrals()
 
         // Then I should see the list of archived assessments
         const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
         archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
+      })
+
+      it.only('shows pagination on archived referrals', () => {
+        const pagination: MockPagination = {
+          totalResults: 34,
+          totalPages: 4,
+          pageNumber: 1,
+          pageSize: 10,
+        }
+
+        // Given there are assessments in the database
+        const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(6, { status: 'rejected' })
+        const closedAssessmentSummaries = assessmentSummaryFactory.buildList(4, { status: 'closed' })
+
+        cy.task('stubAssessments', { data: [...rejectedAssessmentSummaries, ...closedAssessmentSummaries], pagination })
+
+        // When I visit the dashboard
+        const dashboardPage = DashboardPage.visit()
+
+        // And I click on the "Review and assess referrals" link
+        dashboardPage.clickReviewAndAssessReferrals()
+
+        // When I click on the 'View archived assessments' link
+        const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
+        cy.task('stubAssessments', { data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries] })
+        unallocatedListPage.clickViewArchivedReferrals()
+
+        // Then I should see the list of archived assessments
+        const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
+        archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
+
+        // When I navigate to the second page of results
+        archivedListPage.clickPageLink(2)
+
+        // Then I see the second page of results
+        archivedListPage.checkUrl('page=2')
       })
     })
 
@@ -85,7 +122,7 @@ context('Apply', () => {
             id: assessment.id,
           })
 
-          cy.task('stubAssessments', assessmentSummary)
+          cy.task('stubAssessments', { data: assessmentSummary })
           cy.task('stubFindAssessment', assessment)
 
           // Given I visit the referral list page
@@ -180,7 +217,7 @@ context('Apply', () => {
             id: assessment.id,
           })
 
-          cy.task('stubAssessments', assessmentSummary)
+          cy.task('stubAssessments', { data: assessmentSummary })
           cy.task('stubFindAssessment', assessment)
 
           // Given I visit the referral list page

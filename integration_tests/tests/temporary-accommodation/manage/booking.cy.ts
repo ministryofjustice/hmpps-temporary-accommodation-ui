@@ -85,7 +85,7 @@ context('Booking', () => {
 
     // And there are assessments in the database
     const assessmentSummaries = assessmentSummaryFactory.buildList(5)
-    cy.task('stubAssessments', assessmentSummaries)
+    cy.task('stubAssessments', { data: assessmentSummaries })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -150,7 +150,7 @@ context('Booking', () => {
     cy.task('stubFindPerson', { person })
 
     // And there are assessments in the database
-    cy.task('stubAssessments', [])
+    cy.task('stubAssessments', { data: [] })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -264,7 +264,7 @@ context('Booking', () => {
     cy.task('stubFindPerson', { person })
 
     // And there are no assessments in the database
-    cy.task('stubAssessments', [])
+    cy.task('stubAssessments', { data: [] })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -293,7 +293,7 @@ context('Booking', () => {
     cy.task('stubFindPerson', { person })
 
     // And there are no assessments in the database
-    cy.task('stubAssessments', [])
+    cy.task('stubAssessments', { data: [] })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -379,7 +379,7 @@ context('Booking', () => {
 
     // And there are assessments in the database
     const assessmentSummaries = assessmentSummaryFactory.buildList(5)
-    cy.task('stubAssessments', assessmentSummaries)
+    cy.task('stubAssessments', { data: assessmentSummaries })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)
@@ -437,7 +437,7 @@ context('Booking', () => {
     cy.task('stubFindPerson', { person })
 
     // And there are no assessments in the database
-    cy.task('stubAssessments', [])
+    cy.task('stubAssessments', { data: [] })
 
     // When I visit the new booking page
     const bookingNewPage = BookingNewPage.visit(premises, room)

@@ -103,7 +103,7 @@ describe('AssessmentsController', () => {
         pagination: {},
       })
 
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {})
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: 1 })
     })
 
     it('returns the correct page results to the template', async () => {
@@ -129,7 +129,7 @@ describe('AssessmentsController', () => {
         },
       })
 
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: '2' })
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: 2 })
     })
   })
 

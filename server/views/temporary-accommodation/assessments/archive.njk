@@ -4,6 +4,7 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "moj/components/badge/macro.njk" import mojBadge %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -36,6 +37,7 @@
                 rows: archivedTableRows
             }) }}
 
+            {{ mojPagination(pagination) }}
         </div>
     </div>
 {% endblock %}

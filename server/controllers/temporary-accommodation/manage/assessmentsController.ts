@@ -95,13 +95,16 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const params = req.query as AssessmentSearchParameters
+      const params: AssessmentSearchParameters = {
+        ...req.query,
+        page: Number(!req.query.page ? 1 : req.query.page),
+      }
 
       const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
 
       return res.render('temporary-accommodation/assessments/archive', {
         archivedTableRows: response.data,
-        pagination: pagination(response.pageNumber, response.totalPages, ''),
+        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
       })
     }
   }

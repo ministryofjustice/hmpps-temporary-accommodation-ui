@@ -74,7 +74,7 @@ context('Apply', () => {
         archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
       })
 
-      it('shows pagination on archived referrals', () => {
+      it('shows pagination and ordering on archived referrals', () => {
         const pagination: MockPagination = {
           totalResults: 34,
           totalPages: 4,
@@ -85,8 +85,9 @@ context('Apply', () => {
         // Given there are assessments in the database
         const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(6, { status: 'rejected' })
         const closedAssessmentSummaries = assessmentSummaryFactory.buildList(4, { status: 'closed' })
+        const data = [...rejectedAssessmentSummaries, ...closedAssessmentSummaries]
 
-        cy.task('stubAssessments', { data: [...rejectedAssessmentSummaries, ...closedAssessmentSummaries] })
+        cy.task('stubAssessments', { data })
 
         // When I visit the dashboard
         const dashboardPage = DashboardPage.visit()
@@ -96,33 +97,62 @@ context('Apply', () => {
 
         // When I click on the 'View archived assessments' link
         const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
-        cy.task('stubAssessments', { data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries], pagination })
+        cy.task('stubAssessments', { data, pagination })
         unallocatedListPage.clickViewArchivedReferrals()
 
         // Then I should see the list of archived assessments
         const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
-        archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
+        archivedListPage.shouldShowAssessments(data, true)
         archivedListPage.shouldShowPageNumber(1)
 
         // When I navigate to the second page of results
-        cy.task('stubAssessments', {
-          data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries],
-          pagination: { ...pagination, pageNumber: 2 },
-        })
+        cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 2 } })
         archivedListPage.clickPaginationLink(2)
 
         // Then I see the second page of results
         archivedListPage.shouldShowPageNumber(2)
 
         // When I navigate to the next page of results
-        cy.task('stubAssessments', {
-          data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries],
-          pagination: { ...pagination, pageNumber: 3 },
-        })
+        cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
         archivedListPage.clickPaginationLink('Next')
 
         // Then I see the third page of results
         archivedListPage.shouldShowPageNumber(3)
+
+        // When I order by status
+        cy.task('stubAssessments', { data, pagination })
+        archivedListPage.sortColumn('Status')
+
+        // Then I see the first page of results ordered by status ascending
+        archivedListPage.shouldHaveURLSearchParam('sortBy=status')
+        archivedListPage.shouldShowPageNumber(1)
+        archivedListPage.checkColumnOrder('Status', 'ascending')
+
+        // When I navigate to page 3
+        cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
+        archivedListPage.clickPaginationLink(3)
+
+        // Then I see the third page of results ordered by status ascending
+        archivedListPage.shouldHaveURLSearchParam('sortBy=status&sortDirection=asc')
+        archivedListPage.shouldShowPageNumber(3)
+        archivedListPage.checkColumnOrder('Status', 'ascending')
+
+        // When I order by Referral received
+        cy.task('stubAssessments', { data, pagination })
+        archivedListPage.sortColumn('Referral received')
+
+        // Then I see the first page of results ordered by Referral received ascending
+        archivedListPage.shouldHaveURLSearchParam('sortBy=createdAt')
+        archivedListPage.shouldShowPageNumber(1)
+        archivedListPage.checkColumnOrder('Referral received', 'ascending')
+
+        // When I order by Referral received again
+        archivedListPage.sortColumn('Referral received')
+
+        // Then I see the first page of results ordered by Referral received ascending
+        archivedListPage.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=desc')
+        archivedListPage.shouldShowPageNumber(1)
+        archivedListPage.checkColumnOrder('Referral received', 'descending')
       })
     })
 

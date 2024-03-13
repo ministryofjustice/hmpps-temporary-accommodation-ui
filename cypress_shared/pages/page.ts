@@ -381,7 +381,7 @@ export default abstract class Page extends Component {
   }
 
   shouldHaveURLSearchParam(qsFragment: string) {
-    cy.location('search', { timeout: 10000 }).should('include', qsFragment)
+    qsFragment.split('&').forEach(fragment => cy.location('search', { timeout: 10000 }).should('include', fragment))
   }
 
   shouldShowPageNumber(number: number) {
@@ -392,5 +392,13 @@ export default abstract class Page extends Component {
       .contains(new RegExp(`^${number}$`))
       .should('have.class', 'moj-pagination__item--active')
       .should('have.attr', 'aria-current', 'page')
+  }
+
+  sortColumn(label: string) {
+    cy.get('main table thead a').contains(label).click()
+  }
+
+  checkColumnOrder(label: string, order: 'ascending' | 'descending' | 'none') {
+    cy.get('main table thead').contains(label).closest('th').should('have.attr', 'aria-sort', order)
   }
 }

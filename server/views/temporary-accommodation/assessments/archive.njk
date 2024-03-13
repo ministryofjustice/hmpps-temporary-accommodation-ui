@@ -27,13 +27,7 @@
 
             {{ govukTable({
                 firstCellIsHeader: true,
-                head: [
-                    { text: 'Name' },
-                    { text: 'CRN' },
-                    { text: 'Referral received' },
-                    { text: 'Bedspace required' },
-                    { text: 'Status' }
-                ],
+                head: tableHeaders,
                 rows: archivedTableRows
             }) }}
 

@@ -102,12 +102,4 @@ export default class BookingSearchPage extends Page {
     cy.get('h2').should('contain', 'You have not entered any search terms')
     cy.get('p').should('contain', 'Enter a CRN. This can be found in nDelius.')
   }
-
-  sortColumn(label: string) {
-    cy.get('main table thead a').contains(label).click()
-  }
-
-  checkColumnOrder(label: string, order: 'ascending' | 'descending' | 'none') {
-    cy.get('main table thead').contains(label).closest('th').should('have.attr', 'aria-sort', order)
-  }
 }

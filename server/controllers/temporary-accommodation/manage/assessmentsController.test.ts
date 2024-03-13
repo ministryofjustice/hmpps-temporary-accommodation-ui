@@ -87,6 +87,44 @@ describe('AssessmentsController', () => {
   })
 
   describe('archive', () => {
+    const tableHeaders = [
+      {
+        html: '<a href="?sortBy=name&sortDirection=desc"><button>Name</button></a>',
+        attributes: {
+          'aria-sort': 'ascending',
+          'data-cy-sort-field': 'name',
+        },
+      },
+      {
+        html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'crn',
+        },
+      },
+      {
+        html: '<a href="?sortBy=createdAt"><button>Referral received</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'createdAt',
+        },
+      },
+      {
+        html: '<a href="?sortBy=arrivedAt"><button>Bedspace required</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'arrivedAt',
+        },
+      },
+      {
+        html: '<a href="?sortBy=status"><button>Status</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'status',
+        },
+      },
+    ]
+
     it('returns the paginated table rows to the archived template', async () => {
       const assessment = assessmentSummaryFactory.build()
       const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
@@ -98,16 +136,21 @@ describe('AssessmentsController', () => {
       const requestHandler = assessmentsController.archive()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
+      expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
+        tableHeaders,
         archivedTableRows: [[{ text: assessment.createdAt }]],
         pagination: {},
       })
 
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', { page: 1 })
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
+        page: 1,
+        sortBy: 'name',
+        sortDirection: 'asc',
+      })
     })
 
     it('returns the correct page and sorted results to the template', async () => {
-      request = createMock<Request>({ session, query: { page: '2', sortBy: 'name', sortDirection: 'desc' } })
+      request = createMock<Request>({ session, query: { page: '2', sortBy: 'status', sortDirection: 'asc' } })
       const assessments = assessmentSummaries.build({
         totalResults: 13,
         pageNumber: 2,
@@ -118,21 +161,40 @@ describe('AssessmentsController', () => {
       const requestHandler = assessmentsController.archive()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
+      expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
         archivedTableRows: assessments.data,
+        tableHeaders: [
+          {
+            html: '<a href="?sortBy=name"><button>Name</button></a>',
+            attributes: {
+              'aria-sort': 'none',
+              'data-cy-sort-field': 'name',
+            },
+          },
+          tableHeaders[1],
+          tableHeaders[2],
+          tableHeaders[3],
+          {
+            html: '<a href="?sortBy=status&sortDirection=desc"><button>Status</button></a>',
+            attributes: {
+              'aria-sort': 'ascending',
+              'data-cy-sort-field': 'status',
+            },
+          },
+        ],
         pagination: {
           items: [
-            { text: '1', href: '?page=1&sortBy=name&sortDirection=desc' },
-            { text: '2', href: '?page=2&sortBy=name&sortDirection=desc', selected: true },
+            { text: '1', href: '?page=1&sortBy=status&sortDirection=asc' },
+            { text: '2', href: '?page=2&sortBy=status&sortDirection=asc', selected: true },
           ],
-          previous: { text: 'Previous', href: '?page=1&sortBy=name&sortDirection=desc' },
+          previous: { text: 'Previous', href: '?page=1&sortBy=status&sortDirection=asc' },
         },
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
         page: 2,
-        sortBy: 'name',
-        sortDirection: 'desc',
+        sortBy: 'status',
+        sortDirection: 'asc',
       })
     })
   })

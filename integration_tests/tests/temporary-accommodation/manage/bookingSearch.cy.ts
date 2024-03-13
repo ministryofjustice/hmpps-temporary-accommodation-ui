@@ -1,10 +1,11 @@
 import type { BookingSearchApiStatus } from '@approved-premises/ui'
-import { BookingSearchResults } from '@approved-premises/api'
+import { BookingSearchResult } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BookingSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingSearch'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
-import { bookingSearchResultsFactory } from '../../../../server/testutils/factories/index'
+import { bookingSearchResultFactory, bookingSearchResultsFactory } from '../../../../server/testutils/factories/index'
+import { MockPagination } from '../../../mockApis/bookingSearch'
 
 context('Booking search', () => {
   beforeEach(() => {
@@ -17,7 +18,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const bookings = bookingSearchResultsFactory.build()
+    const { data: bookings } = bookingSearchResultsFactory.build()
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
 
@@ -37,7 +38,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings of all relevant status types in the database
-    const bookings = bookingSearchResultsFactory.build()
+    const { data: bookings } = bookingSearchResultsFactory.build()
 
     const statuses: Array<BookingSearchApiStatus> = ['provisional', 'arrived', 'departed', 'confirmed', 'closed']
 
@@ -67,17 +68,49 @@ context('Booking search', () => {
     page.checkBookingStatus('departed')
   })
 
+  it('orders the results', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are bookings in the database
+    const { data: bookings } = bookingSearchResultsFactory.build()
+    cy.task('stubFindBookings', { bookings, status: 'provisional' })
+    cy.task('stubFindBookings', { bookings, status: 'provisional', params: { sortBy: 'startDate' } })
+    cy.task('stubFindBookings', {
+      bookings,
+      status: 'provisional',
+      params: { sortBy: 'startDate', sortDirection: 'asc' },
+    })
+
+    // When I visit the Find a provisional booking page
+    const page = BookingSearchPage.visit('provisional')
+
+    // And I order results by start date
+    page.sortColumn('Start date')
+
+    // Then I see the results are ordered by start date descending
+    page.checkUrl('sortBy=startDate')
+    page.checkColumnOrder('Start date', 'descending')
+
+    // When I order the results by start date again
+    page.sortColumn('Start date')
+
+    // Then I see the results are ordered by start date ascending
+    page.checkUrl('sortBy=startDate&sortDirection=asc')
+    page.checkColumnOrder('Start date', 'ascending')
+  })
+
   it('shows the result of a crn search and clears the search', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there are bookings in the database
-    const bookings = bookingSearchResultsFactory.build()
-    const searchedForBooking: BookingSearchResults = { results: [bookings.results[2]], resultsCount: 1 }
-    const searchCRN = searchedForBooking.results[0].person.crn
+    const { data: bookings } = bookingSearchResultsFactory.build()
+    const searchedForBooking = bookings[2]
+    const searchCRN = searchedForBooking.person.crn
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
-    cy.task('stubFindBookingsByCRN', { bookings: searchedForBooking, status: 'provisional', crn: searchCRN })
+    cy.task('stubFindBookings', { bookings: [searchedForBooking], status: 'provisional', params: { crn: searchCRN } })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('provisional')
@@ -96,7 +129,7 @@ context('Booking search', () => {
     page.checkCRNSearchValue(searchCRN, 'provisional')
 
     // Then I see the search result for that CRN
-    page.checkResults(searchedForBooking)
+    page.checkResults([searchedForBooking])
 
     // When I clear the search
     page.clearSearch()
@@ -115,15 +148,11 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are no bookings matching a CRN search in the database
-    const bookings = bookingSearchResultsFactory.build()
-    const noBookings = { results: [], resultsCount: 0 }
+    const { data: bookings } = bookingSearchResultsFactory.build()
+    const noBookings: BookingSearchResult[] = []
 
     cy.task('stubFindBookings', { bookings, status: 'confirmed' })
-    cy.task('stubFindBookingsByCRN', {
-      bookings: noBookings,
-      status: 'confirmed',
-      crn: 'N0M4TCH',
-    })
+    cy.task('stubFindBookings', { bookings: noBookings, status: 'confirmed', params: { crn: 'N0M4TCH' } })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('confirmed')
@@ -153,7 +182,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const bookings = bookingSearchResultsFactory.build()
+    const { data: bookings } = bookingSearchResultsFactory.build()
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
 
@@ -168,16 +197,40 @@ context('Booking search', () => {
     page.checkNoCRNEntered()
   })
 
-  it('retains the CRN search when navigating between booking types', () => {
+  it('retains the CRN search when ordering, paginating and navigating between booking types', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there are bookings in the database
-    const bookings = bookingSearchResultsFactory.build()
+    const bookings = bookingSearchResultFactory.buildList(23)
+    const pagination: MockPagination = {
+      totalResults: 76,
+      totalPages: 8,
+      pageNumber: 1,
+      pageSize: 10,
+    }
 
-    ;['provisional', 'confirmed', 'arrived', 'departed'].forEach(status => {
+    ;['confirmed', 'arrived', 'departed'].forEach(status => {
       cy.task('stubFindBookings', { bookings, status })
-      cy.task('stubFindBookingsByCRN', { bookings, status, crn: 'X321654' })
+      cy.task('stubFindBookings', { bookings, status, params: { crn: 'X321654' } })
+    })
+
+    cy.task('stubFindBookings', { bookings, status: 'provisional', pagination })
+    cy.task('stubFindBookings', { bookings, status: 'provisional', params: { crn: 'X321654' }, pagination })
+    cy.task('stubFindBookings', {
+      bookings,
+      status: 'provisional',
+      params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc' },
+      pagination,
+    })
+    cy.task('stubFindBookings', {
+      bookings,
+      status: 'provisional',
+      params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc', page: 2 },
+      pagination: {
+        ...pagination,
+        pageNumber: 2,
+      },
     })
 
     // When I visit the Find a provisional booking page
@@ -189,6 +242,27 @@ context('Booking search', () => {
     // Then I see the provisional bookings for the given CRN
     Page.verifyOnPage(BookingSearchPage, 'provisional')
     page.checkCRNSearchValue('X321654', 'provisional')
+
+    // When I order by end date
+    page.sortColumn('End date')
+
+    // Then I see the provisional bookings for the given CRN
+    page.checkCRNSearchValue('X321654', 'provisional')
+
+    // And I see the results are ordered by end date ascending
+    page.checkUrl('sortBy=endDate&sortDirection=asc')
+    page.checkColumnOrder('End date', 'ascending')
+
+    // When I navigate to the second page of results
+    page.clickPageLink(2)
+
+    // Then I see the second page of provisional bookings for the given CRN
+    page.checkUrl('page=2')
+    page.checkCRNSearchValue('X321654', 'provisional')
+
+    // And I see the results are ordered by end date ascending
+    page.checkUrl('sortBy=endDate&sortDirection=asc')
+    page.checkColumnOrder('End date', 'ascending')
 
     // When I navigate to the confirmed bookings search
     page.clickOtherBookingStatusLink('confirmed')
@@ -224,7 +298,7 @@ context('Booking search', () => {
     cy.signIn()
 
     // And there are bookings in the database
-    const bookings = bookingSearchResultsFactory.build()
+    const { data: bookings } = bookingSearchResultsFactory.build()
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
 

@@ -1,7 +1,6 @@
 import type {
   Arrival,
   Booking,
-  BookingSearchResults,
   Cancellation,
   Confirmation,
   Departure,
@@ -18,10 +17,20 @@ import type {
   Turnaround,
 } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
+import { URLSearchParams } from 'url'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
+import { PaginatedResponse } from '../@types/ui'
+import { BookingSearchResult } from '../@types/shared'
+
+type searchResponse = {
+  body: {
+    results: Array<BookingSearchResult>
+  }
+  header: unknown
+}
 
 export default class BookingClient {
   restClient: RestClient
@@ -122,12 +131,31 @@ export default class BookingClient {
     return response as Turnaround
   }
 
-  async search(status: BookingSearchApiStatus, params: BookingSearchParameters): Promise<BookingSearchResults> {
-    const path = appendQueryString(paths.bookings.search({ status }), { status, ...params })
+  async search(
+    status: BookingSearchApiStatus,
+    params: BookingSearchParameters,
+  ): Promise<PaginatedResponse<BookingSearchResult>> {
+    const path = appendQueryString(paths.bookings.search({ status }), {
+      status,
+      crn: params.crn,
+      page: !params.page ? 1 : params.page, // also handles NaN & <1
+      sortField: params.sortBy || 'endDate',
+      sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',
+    })
 
-    const response = await this.restClient.get({ path })
+    const response = await this.restClient.get({ path, raw: true })
+    const { body, header } = response as searchResponse
 
-    return response as BookingSearchResults
+    return {
+      url: {
+        params: new URLSearchParams(path),
+      },
+      data: body.results,
+      pageNumber: Number(header['x-pagination-currentpage']),
+      pageSize: Number(header['x-pagination-pagesize']),
+      totalPages: Number(header['x-pagination-totalpages']),
+      totalResults: Number(header['x-pagination-totalresults']),
+    }
   }
 
   private bookingsPath(premisesId: string): string {

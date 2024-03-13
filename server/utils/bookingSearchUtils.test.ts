@@ -1,3 +1,4 @@
+import { BookingSearchApiStatus } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import {
   capitaliseStatus,
@@ -67,27 +68,34 @@ describe('bookingSearchUtils', () => {
     it('returns table headings with start date sorted ascending for provisional or confirmed booking status', () => {
       const tableHeadings = [
         {
-          text: 'Name',
+          html: '<a href="?sortBy=name"><button>Name</button></a>',
           attributes: {
             'aria-sort': 'none',
+            'data-cy-sort-field': 'name',
           },
         },
         {
-          text: 'CRN',
+          html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'crn',
+          },
         },
         {
           text: 'Address',
         },
         {
-          text: 'Start date',
+          html: '<a href="?sortBy=startDate&sortDirection=desc"><button>Start date</button></a>',
           attributes: {
             'aria-sort': 'ascending',
+            'data-cy-sort-field': 'startDate',
           },
         },
         {
-          text: 'End date',
+          html: '<a href="?sortBy=endDate"><button>End date</button></a>',
           attributes: {
             'aria-sort': 'none',
+            'data-cy-sort-field': 'endDate',
           },
         },
         {
@@ -95,35 +103,42 @@ describe('bookingSearchUtils', () => {
         },
       ]
 
-      expect(createTableHeadings('provisional')).toEqual(tableHeadings)
-      expect(createTableHeadings('confirmed')).toEqual(tableHeadings)
+      expect(createTableHeadings('provisional', 'startDate', true, '')).toEqual(tableHeadings)
+      expect(createTableHeadings('confirmed', 'startDate', true, '')).toEqual(tableHeadings)
     })
   })
 
   it('returns table headings with end date sorted ascending for arrived and departed booking status', () => {
     const tableHeadings = [
       {
-        text: 'Name',
+        html: '<a href="?sortBy=name"><button>Name</button></a>',
         attributes: {
           'aria-sort': 'none',
+          'data-cy-sort-field': 'name',
         },
       },
       {
-        text: 'CRN',
+        html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'crn',
+        },
       },
       {
         text: 'Address',
       },
       {
-        text: 'Start date',
+        html: '<a href="?sortBy=startDate"><button>Start date</button></a>',
         attributes: {
           'aria-sort': 'none',
+          'data-cy-sort-field': 'startDate',
         },
       },
       {
-        text: 'End date',
+        html: '<a href="?sortBy=endDate&sortDirection=asc"><button>End date</button></a>',
         attributes: {
-          'aria-sort': 'ascending',
+          'aria-sort': 'descending',
+          'data-cy-sort-field': 'endDate',
         },
       },
       {
@@ -131,9 +146,31 @@ describe('bookingSearchUtils', () => {
       },
     ]
 
-    expect(createTableHeadings('arrived')).toEqual(tableHeadings)
-    expect(createTableHeadings('departed')).toEqual(tableHeadings)
+    expect(createTableHeadings('arrived', 'endDate', false, '')).toEqual(tableHeadings)
+    expect(createTableHeadings('departed', 'endDate', false, '')).toEqual(tableHeadings)
   })
+
+  it.each(['provisional', 'confirmed', 'arrived', 'departed'])(
+    'retains the CRN search parameter in the urls for sorting %s bookings',
+    (status: BookingSearchApiStatus) => {
+      const tableHeadings = createTableHeadings(status, undefined, undefined, '?crn=N777666')
+
+      tableHeadings
+        .filter(heading => !!heading.attributes)
+        .forEach(heading => expect(heading.html).toContain('crn=N777666'))
+    },
+  )
+
+  it.each(['provisional', 'confirmed', 'arrived', 'departed'])(
+    'removes the existing page query parameter so the new view shows the first page of %s bookings',
+    (status: BookingSearchApiStatus) => {
+      const tableHeadings = createTableHeadings(status, undefined, undefined, '?page=13')
+
+      tableHeadings
+        .filter(heading => !!heading.attributes)
+        .forEach(heading => expect(heading.html).not.toContain('page='))
+    },
+  )
 })
 
 describe('convertApiStatusToUiStatus', () => {

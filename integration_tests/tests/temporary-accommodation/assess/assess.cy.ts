@@ -74,7 +74,7 @@ context('Apply', () => {
         archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
       })
 
-      it.only('shows pagination on archived referrals', () => {
+      it('shows pagination on archived referrals', () => {
         const pagination: MockPagination = {
           totalResults: 34,
           totalPages: 4,
@@ -86,7 +86,7 @@ context('Apply', () => {
         const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(6, { status: 'rejected' })
         const closedAssessmentSummaries = assessmentSummaryFactory.buildList(4, { status: 'closed' })
 
-        cy.task('stubAssessments', { data: [...rejectedAssessmentSummaries, ...closedAssessmentSummaries], pagination })
+        cy.task('stubAssessments', { data: [...rejectedAssessmentSummaries, ...closedAssessmentSummaries] })
 
         // When I visit the dashboard
         const dashboardPage = DashboardPage.visit()
@@ -96,18 +96,33 @@ context('Apply', () => {
 
         // When I click on the 'View archived assessments' link
         const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
-        cy.task('stubAssessments', { data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries] })
+        cy.task('stubAssessments', { data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries], pagination })
         unallocatedListPage.clickViewArchivedReferrals()
 
         // Then I should see the list of archived assessments
         const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
         archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
+        archivedListPage.shouldShowPageNumber(1)
 
         // When I navigate to the second page of results
-        archivedListPage.clickPageLink(2)
+        cy.task('stubAssessments', {
+          data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries],
+          pagination: { ...pagination, pageNumber: 2 },
+        })
+        archivedListPage.clickPaginationLink(2)
 
         // Then I see the second page of results
-        archivedListPage.checkUrl('page=2')
+        archivedListPage.shouldShowPageNumber(2)
+
+        // When I navigate to the next page of results
+        cy.task('stubAssessments', {
+          data: [...closedAssessmentSummaries, ...rejectedAssessmentSummaries],
+          pagination: { ...pagination, pageNumber: 3 },
+        })
+        archivedListPage.clickPaginationLink('Next')
+
+        // Then I see the third page of results
+        archivedListPage.shouldShowPageNumber(3)
       })
     })
 

@@ -11,7 +11,7 @@ describe('pagination', () => {
 
   it('should work on page 1 of 2', () => {
     expect(pagination(1, 2, '?a=b&')).toEqual<Pagination>({
-      next: { href: '?a=b&page=2' },
+      next: { text: 'Next', href: '?a=b&page=2' },
       items: [
         { text: '1', href: '?a=b&page=1', selected: true },
         { text: '2', href: '?a=b&page=2' },
@@ -21,7 +21,7 @@ describe('pagination', () => {
 
   it('should work on page 2 of 2', () => {
     expect(pagination(2, 2, '?a=b&')).toEqual<Pagination>({
-      previous: { href: '?a=b&page=1' },
+      previous: { text: 'Previous', href: '?a=b&page=1' },
       items: [
         { text: '1', href: '?a=b&page=1' },
         { text: '2', href: '?a=b&page=2', selected: true },
@@ -31,8 +31,8 @@ describe('pagination', () => {
 
   it('should work on page 2 of 3', () => {
     expect(pagination(2, 3, '?a=b&')).toEqual<Pagination>({
-      previous: { href: '?a=b&page=1' },
-      next: { href: '?a=b&page=3' },
+      previous: { text: 'Previous', href: '?a=b&page=1' },
+      next: { text: 'Next', href: '?a=b&page=3' },
       items: [
         { text: '1', href: '?a=b&page=1' },
         { text: '2', href: '?a=b&page=2', selected: true },

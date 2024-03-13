@@ -369,4 +369,28 @@ export default abstract class Page extends Component {
 
     cy.task('logAccessibilityViolationsTable', violationData)
   }
+
+  clickPaginationLink(label: number | 'Previous' | 'Next') {
+    if (typeof label === 'number') {
+      cy.get('main nav[aria-label="Pagination navigation"] a')
+        .contains(new RegExp(`^${label}$`))
+        .click()
+    } else {
+      cy.get('main nav[aria-label="Pagination navigation"] a').contains(label).click()
+    }
+  }
+
+  shouldHaveURLSearchParam(qsFragment: string) {
+    cy.location('search', { timeout: 10000 }).should('include', qsFragment)
+  }
+
+  shouldShowPageNumber(number: number) {
+    if (number !== 1) {
+      this.shouldHaveURLSearchParam(`page=${number}`)
+    }
+    cy.get('main nav[aria-label="Pagination navigation"]')
+      .contains(new RegExp(`^${number}$`))
+      .should('have.class', 'moj-pagination__item--active')
+      .should('have.attr', 'aria-current', 'page')
+  }
 }

@@ -125,7 +125,7 @@ describe('AssessmentsController', () => {
             { text: '1', href: '?page=1' },
             { text: '2', href: '?page=2', selected: true },
           ],
-          previous: { href: '?page=1' },
+          previous: { text: 'Previous', href: '?page=1' },
         },
       })
 

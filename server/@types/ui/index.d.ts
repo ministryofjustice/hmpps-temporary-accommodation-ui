@@ -8,6 +8,7 @@ import {
   ArrayOfOASysRiskToSelfQuestions,
   ArrayOfOASysSupportingInformationQuestions,
   TemporaryAccommodationAssessment as Assessment,
+  AssessmentSortField,
   AssessmentStatus,
   Booking,
   BookingSearchSortField,
@@ -29,6 +30,7 @@ interface TasklistPage {
   body: Record<string, unknown>
   htmlDocumentTitle: string
 }
+
 interface PersonService {}
 
 // A utility type that allows us to define an object with a date attribute split into
@@ -350,3 +352,9 @@ export type ApplicationSummaryData = {
 }
 
 export type AssessmentSearchApiStatus = Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>
+
+export type AssessmentSearchParameters = {
+  page?: number
+  sortBy?: AssessmentSortField
+  sortDirection?: SortDirection
+}

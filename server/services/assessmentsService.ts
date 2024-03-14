@@ -1,4 +1,9 @@
-import type { AssessmentSearchApiStatus, TableRow } from '@approved-premises/ui'
+import type {
+  AssessmentSearchApiStatus,
+  AssessmentSearchParameters,
+  PaginatedResponse,
+  TableRow,
+} from '@approved-premises/ui'
 import type {
   TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
@@ -18,13 +23,17 @@ export default class AssessmentsService {
   async getAllForLoggedInUser(
     callConfig: CallConfig,
     uiStatus: AssessmentSearchApiStatus | 'archived',
-  ): Promise<Array<TableRow>> {
+    params?: AssessmentSearchParameters,
+  ): Promise<PaginatedResponse<TableRow>> {
     const statuses =
       uiStatus === 'archived' ? (['closed', 'rejected'] as TemporaryAccommodationAssessmentStatus[]) : [uiStatus]
     const assessmentClient = this.assessmentClientFactory(callConfig)
-    const assessmentSummaries = await assessmentClient.all(statuses)
+    const assessmentSummaries = await assessmentClient.all(statuses, params)
 
-    return assessmentSummaries.map(summary => assessmentTableRows(summary, uiStatus === 'archived'))
+    return {
+      ...assessmentSummaries,
+      data: assessmentSummaries.data.map(summary => assessmentTableRows(summary, uiStatus === 'archived')),
+    }
   }
 
   findAssessment(callConfig: CallConfig, assessmentId: string): Promise<Assessment> {

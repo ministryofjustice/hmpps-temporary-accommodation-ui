@@ -61,7 +61,7 @@ export default class PlaceHelper {
     cy.task('stubSinglePremises', this.premises)
     cy.task('stubSingleRoom', { premisesId: this.premises.id, room: this.room })
     cy.task('stubFindPerson', { person: this.person })
-    cy.task('stubAssessments', this.assessmentSummaries)
+    cy.task('stubAssessments', { data: this.assessmentSummaries })
     cy.task('stubBookingCreate', { premisesId: this.premises.id, booking: this.booking })
     cy.task('stubBooking', { premisesId: this.premises.id, booking: this.booking })
   }

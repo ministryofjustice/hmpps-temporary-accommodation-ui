@@ -4,9 +4,10 @@ import { Assessment, AssessmentSummary } from '../../server/@types/shared'
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
+import { MockPagination } from './bookingSearch'
 
 export default {
-  stubAssessments: (assessments: Array<AssessmentSummary>): SuperAgentRequest =>
+  stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'GET',
@@ -14,8 +15,14 @@ export default {
       },
       response: {
         status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: assessments,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'x-pagination-currentpage': args.pagination?.pageNumber.toString(),
+          'x-pagination-pagesize': args.pagination?.pageSize.toString(),
+          'x-pagination-totalpages': args.pagination?.totalPages.toString(),
+          'x-pagination-totalresults': args.pagination?.totalResults.toString(),
+        },
+        jsonBody: args.data,
       },
     }),
   stubFindAssessment: (assessment: Assessment): SuperAgentRequest =>

@@ -7,11 +7,12 @@ import {
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
-import { assessmentActions, statusChangeMessage } from '../../../utils/assessmentUtils'
+import { assessmentActions, createTableHeadings, getParams, statusChangeMessage } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { pagination } from '../../../utils/pagination'
 
 export const assessmentsTableHeaders = [
   {
@@ -80,12 +81,15 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const tableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, status)
+      const params = getParams(req.query)
+
+      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
       return res.render('temporary-accommodation/assessments/index', {
         status,
-        tableRows,
-        tableHeaders: assessmentsTableHeaders,
+        tableRows: response.data,
+        tableHeaders: createTableHeadings(params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
+        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
       })
     }
   }
@@ -94,10 +98,19 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
-      const archivedTableRows = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived')
+      const params = getParams(req.query)
+
+      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
 
       return res.render('temporary-accommodation/assessments/archive', {
-        archivedTableRows,
+        tableHeaders: createTableHeadings(
+          params.sortBy,
+          params.sortDirection === 'asc',
+          appendQueryString('', params),
+          true,
+        ),
+        archivedTableRows: response.data,
+        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
       })
     }
   }

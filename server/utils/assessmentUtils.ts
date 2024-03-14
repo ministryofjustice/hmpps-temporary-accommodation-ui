@@ -1,12 +1,15 @@
 import {
   TemporaryAccommodationAssessment as Assessment,
+  AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
   ReferralHistoryNote as Note,
+  SortDirection,
   ReferralHistorySystemNote as SystemNote,
   ReferralHistoryUserNote as UserNote,
 } from '@approved-premises/api'
-import { MessageContents, TableRow, TimelineItem } from '../@types/ui'
+import QueryString from 'qs'
+import { AssessmentSearchParameters, MessageContents, TableRow, TimelineItem } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 import { personName } from './personUtils'
@@ -14,6 +17,7 @@ import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } 
 import { assertUnreachable, convertToTitleCase } from './utils'
 import { formatLines } from './viewUtils'
 import { statusName, statusTag } from './assessmentStatusUtils'
+import { sortHeader } from './sortHeader'
 
 export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showStatus: boolean = false): TableRow => {
   const row = [
@@ -201,3 +205,29 @@ const systemNoteLabelText = (note: SystemNote) => {
       return assertUnreachable(note.category)
   }
 }
+export const createTableHeadings = (
+  currentSortBy: AssessmentSortField,
+  sortIsAscending: boolean,
+  href: string,
+  includeStatusColumn: boolean = false,
+) => {
+  const headings = [
+    sortHeader('Name', 'name', currentSortBy, sortIsAscending, href),
+    sortHeader('CRN', 'crn', currentSortBy, sortIsAscending, href),
+    sortHeader('Referral received', 'createdAt', currentSortBy, sortIsAscending, href),
+    sortHeader('Bedspace required', 'arrivedAt', currentSortBy, sortIsAscending, href),
+  ]
+
+  if (includeStatusColumn) {
+    headings.push(sortHeader('Status', 'status', currentSortBy, sortIsAscending, href))
+  }
+
+  return headings
+}
+export const getParams = (query?: QueryString.ParsedQs): AssessmentSearchParameters => ({
+  // Default is page 1, sorted by name ascending
+  ...query,
+  page: Number(!query.page ? 1 : query.page),
+  sortBy: (query.sortBy || 'name') as AssessmentSortField,
+  sortDirection: (query.sortDirection || 'asc') as SortDirection,
+})

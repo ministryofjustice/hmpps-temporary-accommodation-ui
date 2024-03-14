@@ -41,11 +41,13 @@ export function pagination(currentPage: number, pageCount: number, hrefPrefix: s
 
   if (currentPage > 1) {
     params.previous = {
+      text: 'Previous',
       href: genUrl(currentPage - 1),
     }
   }
   if (currentPage < pageCount) {
     params.next = {
+      text: 'Next',
       href: genUrl(currentPage + 1),
     }
   }

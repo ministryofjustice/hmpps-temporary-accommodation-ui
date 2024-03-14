@@ -4,6 +4,7 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "moj/components/badge/macro.njk" import mojBadge %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -12,10 +13,10 @@
 
 {% block beforeContent %}
 
-  {{ govukBackLink({
-    text: "Back",
-    href: paths.assessments.index()
-  }) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.assessments.index()
+    }) }}
 
 {% endblock %}
 
@@ -26,54 +27,21 @@
 
             {{ govukTable({
                 firstCellIsHeader: true,
-                attributes: {
-                'data-module': 'moj-sortable-table'
-                },
-                head: [
-                  {
-                    text: 'Name',
-                    attributes: {
-                    'aria-sort': 'ascending'
-                    }
-                  },
-                  {
-                    text: 'CRN',
-                    attributes: {
-                    'aria-sort': 'none'
-                    }
-                  },
-                  {
-                    text: 'Referral received',
-                    attributes: {
-                    'aria-sort': 'none'
-                    }
-                  },
-                  {
-                    text: 'Bedspace required',
-                    attributes: {
-                    'aria-sort': 'none'
-                    }
-                  }, 
-                  {
-                    text: 'Status',
-                    attributes: {
-                    'aria-sort': 'ascending'
-                    }
-                  }
-                ],
+                head: tableHeaders,
                 rows: archivedTableRows
             }) }}
 
+            {{ mojPagination(pagination) }}
         </div>
     </div>
 {% endblock %}
 
 {% block extraScripts %}
     <script type="text/javascript" nonce="{{ cspNonce }}">
-        $(document).ready(function () {
-            window
-                .MOJFrontend
-                .initAll()
-        })
+      $(document).ready(function() {
+        window
+          .MOJFrontend
+          .initAll()
+      })
     </script>
 {% endblock %}

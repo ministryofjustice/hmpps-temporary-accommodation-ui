@@ -9,6 +9,7 @@ import {
 } from '../testutils/factories'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
+import assessmentSummaries from '../testutils/factories/assessmentSummaries'
 
 jest.mock('../data/assessmentClient')
 jest.mock('../utils/assessmentUtils')
@@ -30,44 +31,53 @@ describe('AssessmentsService', () => {
 
   describe('getAllForLoggedInUser', () => {
     it.each(['unallocated', 'in_review', 'ready_to_place'])(
-      'returns %s assessments summaries formatted for presentation in a table',
+      'returns paginated %s assessments summaries formatted for presentation in a table',
       async (uiStatus: AssessmentSearchApiStatus) => {
         const assessments = assessmentSummaryFactory.params({ status: uiStatus }).buildList(2)
+        const response = assessmentSummaries.build({ data: assessments, totalResults: 2 })
 
-        assessmentClient.all.mockResolvedValue(assessments)
+        assessmentClient.all.mockResolvedValue(response)
         ;(assessmentTableRows as jest.MockedFunction<typeof assessmentTableRows>).mockImplementation(assessment => {
           return [{ text: `Table row: ${assessment.status}` }]
         })
 
-        const tableRows = await service.getAllForLoggedInUser(callConfig, uiStatus)
+        const result = await service.getAllForLoggedInUser(callConfig, uiStatus, { page: 2 })
 
-        expect(tableRows).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
+        expect(result.data).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
 
         expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-        expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus])
+        expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus], { page: 2 })
 
         assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, false))
       },
     )
 
-    it('returns archived assessment summaries formatted for presentation in a table', async () => {
+    it('returns paginated and sorted archived assessment summaries formatted for presentation in a table', async () => {
       const closedAssessments = assessmentSummaryFactory.params({ status: 'closed' }).buildList(2)
       const rejectedAssessments = assessmentSummaryFactory.params({ status: 'rejected' }).buildList(2)
-      const assessments = [...closedAssessments, ...rejectedAssessments]
+      const response = assessmentSummaries.build({ data: [...closedAssessments, ...rejectedAssessments] })
 
-      assessmentClient.all.mockResolvedValue([...closedAssessments, ...rejectedAssessments])
+      assessmentClient.all.mockResolvedValue(response)
       ;(assessmentTableRows as jest.MockedFunction<typeof assessmentTableRows>).mockImplementation(assessment => {
         return [{ text: `Table row: ${assessment.status}` }]
       })
 
-      const tableRows = await service.getAllForLoggedInUser(callConfig, 'archived')
+      const result = await service.getAllForLoggedInUser(callConfig, 'archived', {
+        page: 1,
+        sortBy: 'arrivalDate',
+        sortDirection: 'desc',
+      })
 
-      expect(tableRows).toEqual(assessments.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
+      expect(result.data).toEqual(response.data.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
 
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'])
+      expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'], {
+        page: 1,
+        sortBy: 'arrivalDate',
+        sortDirection: 'desc',
+      })
 
-      assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, true))
+      response.data.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, true))
     })
   })
 
@@ -125,12 +135,12 @@ describe('AssessmentsService', () => {
     it('returns ready to place assessment summaries for the given CRN', async () => {
       const crn = 'some-crn'
 
-      const assessmentSummaries = assessmentSummaryFactory.buildList(5)
-      assessmentClient.readyToPlaceForCrn.mockResolvedValue(assessmentSummaries)
+      const assessments = assessmentSummaryFactory.buildList(5)
+      assessmentClient.readyToPlaceForCrn.mockResolvedValue(assessments)
 
       const result = await service.getReadyToPlaceForCrn(callConfig, crn)
 
-      expect(result).toEqual(assessmentSummaries)
+      expect(result).toEqual(assessments)
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.readyToPlaceForCrn).toHaveBeenCalledWith(crn)
     })

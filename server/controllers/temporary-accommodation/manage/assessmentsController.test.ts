@@ -11,17 +11,16 @@ import {
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
 } from '../../../testutils/factories'
-import { assessmentActions, statusChangeMessage } from '../../../utils/assessmentUtils'
+import * as assessmentUtils from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { appendQueryString } from '../../../utils/utils'
+import * as utils from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
-import AssessmentsController, { assessmentsTableHeaders, confirmationPageContent } from './assessmentsController'
+import AssessmentsController, { confirmationPageContent } from './assessmentsController'
+import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 
-jest.mock('../../../utils/assessmentUtils')
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
-jest.mock('../../../utils/utils')
 jest.mock('../../../utils/placeUtils')
 
 describe('AssessmentsController', () => {
@@ -43,12 +42,43 @@ describe('AssessmentsController', () => {
     },
   ]
 
-  beforeEach(() => {
-    request = createMock<Request>({
-      session: {
-        probationRegion: probationRegionFactory.build(),
+  const session = {
+    probationRegion: probationRegionFactory.build(),
+  }
+
+  const tableHeaders = [
+    {
+      html: '<a href="?sortBy=name&sortDirection=desc"><button>Name</button></a>',
+      attributes: {
+        'aria-sort': 'ascending',
+        'data-cy-sort-field': 'name',
       },
-    })
+    },
+    {
+      html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+      attributes: {
+        'aria-sort': 'none',
+        'data-cy-sort-field': 'crn',
+      },
+    },
+    {
+      html: '<a href="?sortBy=createdAt"><button>Referral received</button></a>',
+      attributes: {
+        'aria-sort': 'none',
+        'data-cy-sort-field': 'createdAt',
+      },
+    },
+    {
+      html: '<a href="?sortBy=arrivedAt"><button>Bedspace required</button></a>',
+      attributes: {
+        'aria-sort': 'none',
+        'data-cy-sort-field': 'arrivedAt',
+      },
+    },
+  ]
+
+  beforeEach(() => {
+    request = createMock<Request>({ session, query: {} })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
@@ -62,39 +92,169 @@ describe('AssessmentsController', () => {
   })
 
   describe('list', () => {
-    it.each(['unallocated', 'in_review', 'ready_to_place'])(
-      'returns the table rows for assessments with status %s to the template',
-      async (status: AssessmentSearchApiStatus) => {
-        const assessments = assessmentSummaryFactory.buildList(5, { status })
-        assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+    describe.each(['unallocated', 'in_review', 'ready_to_place'])(
+      'when viewing assessments with status %s',
+      (status: AssessmentSearchApiStatus) => {
+        it('returns the pagination and table rows to the template', async () => {
+          const assessment = assessmentSummaryFactory.build()
+          const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
+          assessmentsService.getAllForLoggedInUser.mockResolvedValue({
+            ...assessments,
+            data: assessments.data.map(summary => [{ text: summary.createdAt }]),
+          })
 
-        const requestHandler = assessmentsController.list(status)
-        await requestHandler(request, response, next)
+          const requestHandler = assessmentsController.list(status)
+          await requestHandler(request, response, next)
 
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
-          status,
-          tableRows: assessments,
-          tableHeaders: assessmentsTableHeaders,
+          expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
+            status,
+            tableRows: [[{ text: assessment.createdAt }]],
+            tableHeaders,
+            pagination: {},
+          })
+
+          expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
+            page: 1,
+            sortBy: 'name',
+            sortDirection: 'asc',
+          })
         })
 
-        expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status)
+        it('returns the correct page and sorted assessments to the template', async () => {
+          request = createMock<Request>({ session, query: { page: '2', sortBy: 'arrivedAt', sortDirection: 'asc' } })
+          const assessments = assessmentSummaries.build({
+            totalResults: 13,
+            pageNumber: 2,
+            totalPages: 2,
+          })
+          assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+
+          const requestHandler = assessmentsController.list(status)
+          await requestHandler(request, response, next)
+
+          expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/index', {
+            status,
+            tableHeaders: [
+              {
+                html: '<a href="?sortBy=name"><button>Name</button></a>',
+                attributes: {
+                  'aria-sort': 'none',
+                  'data-cy-sort-field': 'name',
+                },
+              },
+              tableHeaders[1],
+              tableHeaders[2],
+              {
+                html: '<a href="?sortBy=arrivedAt&sortDirection=desc"><button>Bedspace required</button></a>',
+                attributes: {
+                  'aria-sort': 'ascending',
+                  'data-cy-sort-field': 'arrivedAt',
+                },
+              },
+            ],
+            tableRows: assessments.data,
+            pagination: {
+              items: [
+                { text: '1', href: '?page=1&sortBy=arrivedAt&sortDirection=asc' },
+                { text: '2', href: '?page=2&sortBy=arrivedAt&sortDirection=asc', selected: true },
+              ],
+              previous: { text: 'Previous', href: '?page=1&sortBy=arrivedAt&sortDirection=asc' },
+            },
+          })
+
+          expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
+            page: 2,
+            sortBy: 'arrivedAt',
+            sortDirection: 'asc',
+          })
+        })
       },
     )
   })
 
   describe('archive', () => {
-    it('returns the table rows to the archived template', async () => {
-      const assessments = assessmentSummaryFactory.buildList(5, { status: 'closed' })
+    const archivedTableHeaders = [
+      ...tableHeaders,
+      {
+        html: '<a href="?sortBy=status"><button>Status</button></a>',
+        attributes: {
+          'aria-sort': 'none',
+          'data-cy-sort-field': 'status',
+        },
+      },
+    ]
+
+    it('returns the paginated table rows to the archived template', async () => {
+      const assessment = assessmentSummaryFactory.build()
+      const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
+      assessmentsService.getAllForLoggedInUser.mockResolvedValue({
+        ...assessments,
+        data: assessments.data.map(summary => [{ text: summary.createdAt }]),
+      })
+
+      const requestHandler = assessmentsController.archive()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
+        tableHeaders: archivedTableHeaders,
+        archivedTableRows: [[{ text: assessment.createdAt }]],
+        pagination: {},
+      })
+
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
+        page: 1,
+        sortBy: 'name',
+        sortDirection: 'asc',
+      })
+    })
+
+    it('returns the correct page and sorted results to the template', async () => {
+      request = createMock<Request>({ session, query: { page: '2', sortBy: 'status', sortDirection: 'asc' } })
+      const assessments = assessmentSummaries.build({
+        totalResults: 13,
+        pageNumber: 2,
+        totalPages: 2,
+      })
       assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
 
       const requestHandler = assessmentsController.archive()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/archive', {
-        archivedTableRows: assessments,
+      expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
+        archivedTableRows: assessments.data,
+        tableHeaders: [
+          {
+            html: '<a href="?sortBy=name"><button>Name</button></a>',
+            attributes: {
+              'aria-sort': 'none',
+              'data-cy-sort-field': 'name',
+            },
+          },
+          tableHeaders[1],
+          tableHeaders[2],
+          tableHeaders[3],
+          {
+            html: '<a href="?sortBy=status&sortDirection=desc"><button>Status</button></a>',
+            attributes: {
+              'aria-sort': 'ascending',
+              'data-cy-sort-field': 'status',
+            },
+          },
+        ],
+        pagination: {
+          items: [
+            { text: '1', href: '?page=1&sortBy=status&sortDirection=asc' },
+            { text: '2', href: '?page=2&sortBy=status&sortDirection=asc', selected: true },
+          ],
+          previous: { text: 'Previous', href: '?page=1&sortBy=status&sortDirection=asc' },
+        },
       })
 
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived')
+      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
+        page: 2,
+        sortBy: 'status',
+        sortDirection: 'asc',
+      })
     })
   })
 
@@ -104,7 +264,7 @@ describe('AssessmentsController', () => {
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
-      ;(assessmentActions as jest.MockedFunction<typeof assessmentActions>).mockReturnValue(actions)
+      jest.spyOn(assessmentUtils, 'assessmentActions').mockReturnValue(actions)
       request.params = { id: assessmentId }
 
       const requestHandler = assessmentsController.summary()
@@ -126,7 +286,7 @@ describe('AssessmentsController', () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
-      ;(assessmentActions as jest.MockedFunction<typeof assessmentActions>).mockReturnValue(actions)
+      jest.spyOn(assessmentUtils, 'assessmentActions').mockReturnValue(actions)
       request.params = { id: assessmentId }
 
       const requestHandler = assessmentsController.full()
@@ -168,7 +328,7 @@ describe('AssessmentsController', () => {
       const newStatus = 'in_review'
       const assessmentId = 'some-id'
 
-      ;(statusChangeMessage as jest.MockedFunction<typeof statusChangeMessage>).mockReturnValue('some info message')
+      jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
 
       const requestHandler = assessmentsController.update()
       request.params = { id: assessmentId, status: newStatus }
@@ -176,7 +336,7 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(assessmentsService.updateAssessmentStatus).toHaveBeenCalledWith(callConfig, assessmentId, newStatus)
-      expect(statusChangeMessage).toHaveBeenCalledWith(assessmentId, newStatus)
+      expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, newStatus)
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
       expect(request.flash).toHaveBeenCalledWith('success', 'some info message')
     })
@@ -190,14 +350,14 @@ describe('AssessmentsController', () => {
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
-      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/success/token')
+      jest.spyOn(utils, 'appendQueryString').mockReturnValue('/path/with/success/token')
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.createNote).toHaveBeenCalledWith(callConfig, assessmentId, newNote)
       expect(request.flash).toHaveBeenCalledWith('success', 'Note saved')
       expect(response.redirect).toHaveBeenCalledWith('/path/with/success/token')
-      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+      expect(utils.appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
         success: 'true',
       })
     })
@@ -210,7 +370,7 @@ describe('AssessmentsController', () => {
       const err = new Error()
 
       assessmentsService.createNote.mockRejectedValue(err)
-      ;(appendQueryString as jest.MockedFunction<typeof appendQueryString>).mockReturnValue('/path/with/failure/token')
+      jest.spyOn(utils, 'appendQueryString').mockReturnValue('/path/with/failure/token')
 
       request.params = { id: assessmentId }
       request.body = { message: newNote.message }
@@ -218,7 +378,7 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '/path/with/failure/token')
-      expect(appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
+      expect(utils.appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
         success: 'false',
       })
     })

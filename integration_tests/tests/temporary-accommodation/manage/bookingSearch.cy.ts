@@ -89,14 +89,14 @@ context('Booking search', () => {
     page.sortColumn('Start date')
 
     // Then I see the results are ordered by start date descending
-    page.checkUrl('sortBy=startDate')
+    page.shouldHaveURLSearchParam('sortBy=startDate')
     page.checkColumnOrder('Start date', 'descending')
 
     // When I order the results by start date again
     page.sortColumn('Start date')
 
     // Then I see the results are ordered by start date ascending
-    page.checkUrl('sortBy=startDate&sortDirection=asc')
+    page.shouldHaveURLSearchParam('sortBy=startDate&sortDirection=asc')
     page.checkColumnOrder('Start date', 'ascending')
   })
 
@@ -250,18 +250,18 @@ context('Booking search', () => {
     page.checkCRNSearchValue('X321654', 'provisional')
 
     // And I see the results are ordered by end date ascending
-    page.checkUrl('sortBy=endDate&sortDirection=asc')
+    page.shouldHaveURLSearchParam('sortBy=endDate&sortDirection=asc')
     page.checkColumnOrder('End date', 'ascending')
 
     // When I navigate to the second page of results
-    page.clickPageLink(2)
+    page.clickPaginationLink(2)
 
     // Then I see the second page of provisional bookings for the given CRN
-    page.checkUrl('page=2')
+    page.shouldHaveURLSearchParam('page=2')
     page.checkCRNSearchValue('X321654', 'provisional')
 
     // And I see the results are ordered by end date ascending
-    page.checkUrl('sortBy=endDate&sortDirection=asc')
+    page.shouldHaveURLSearchParam('sortBy=endDate&sortDirection=asc')
     page.checkColumnOrder('End date', 'ascending')
 
     // When I navigate to the confirmed bookings search

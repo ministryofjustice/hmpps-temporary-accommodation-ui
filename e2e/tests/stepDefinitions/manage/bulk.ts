@@ -1,4 +1,3 @@
-import { Given } from '@badeball/cypress-cucumber-preprocessor'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesNew'
@@ -122,9 +121,3 @@ const bookingCreator = (type: string = 'provisional', nPremises: number = 1, nRo
     })
   })
 }
-
-// The bookings are now populated by the api in dev, but leaving the bulk() helper for
-// future use (thinking performance testing)
-Given('enough provisional bookings exists for several pages of results', () => {
-  return null
-})

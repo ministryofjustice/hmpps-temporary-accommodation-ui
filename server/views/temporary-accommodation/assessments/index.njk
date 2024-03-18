@@ -35,6 +35,10 @@
         ]
     }) }}
 
+    <div class="govuk-!-margin-bottom-4">
+        {{ mojPagination(pagination) }}
+    </div>
+
     {{ govukTable({
         firstCellIsHeader: true,
         head: tableHeaders,
@@ -42,7 +46,7 @@
     }) }}
 
     <div class="govuk-!-margin-bottom-9">
-        {{ mojPagination(pagination) }}
+        {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
     </div>
 
     {{ govukButton({

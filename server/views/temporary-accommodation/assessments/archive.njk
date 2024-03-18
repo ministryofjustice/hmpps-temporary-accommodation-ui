@@ -25,13 +25,17 @@
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-l">Archived referrals</h1>
 
+            <div class="govuk-!-margin-bottom-4">
+                {{ mojPagination(pagination) }}
+            </div>
+
             {{ govukTable({
                 firstCellIsHeader: true,
                 head: tableHeaders,
                 rows: archivedTableRows
             }) }}
 
-            {{ mojPagination(pagination) }}
+            {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
         </div>
     </div>
 {% endblock %}

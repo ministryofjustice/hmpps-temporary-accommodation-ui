@@ -86,6 +86,7 @@ describe('reportDataFromApplication', () => {
       const application = applicationFactory.build({
         data: {
           'accommodation-referral-details': {
+            'dtr-submitted': { dtrSubmitted: 'yes' },
             'dtr-details': { localAuthorityAreaName: 'A local authority area name' },
           },
         },
@@ -94,17 +95,27 @@ describe('reportDataFromApplication', () => {
       expect(dutyToReferLocalAuthorityAreaNameFromApplication(application)).toEqual('A local authority area name')
     })
 
-    it('throws an error if the Duty to Refer Local Authority Area Name data is not present', () => {
+    it('returns an empty string if the Duty to Refer has not been submitted', () => {
       const application = applicationFactory.build({
         data: {
           'accommodation-referral-details': {
-            'dtr-details': {},
+            'dtr-submitted': { dtrSubmitted: 'no' },
           },
         },
       })
 
+      expect(dutyToReferLocalAuthorityAreaNameFromApplication(application)).toEqual('')
+    })
+
+    it('throws an error if the Duty to Refer Local Authority Area Name data is not present', () => {
+      const application = applicationFactory.build({
+        data: {
+          'accommodation-referral-details': {},
+        },
+      })
+
       expect(() => dutyToReferLocalAuthorityAreaNameFromApplication(application)).toThrow(
-        new SessionDataError('No duty to refer local authority area name data'),
+        new SessionDataError('No duty to refer submitted data'),
       )
     })
   })

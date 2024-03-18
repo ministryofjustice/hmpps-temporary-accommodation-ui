@@ -34,13 +34,13 @@ const dutyToReferSubmissionDateFromApplication = (application: Application): str
 }
 
 const dutyToReferLocalAuthorityAreaNameFromApplication = (application: Application) => {
+  if (!isDutyToReferSubmittedFromApplication(application)) {
+    return ''
+  }
+
   const dutyToReferLocalAuthorityAreaName: string = (application.data as Record<string, unknown>)?.[
     'accommodation-referral-details'
   ]?.['dtr-details']?.localAuthorityAreaName
-
-  if (!dutyToReferLocalAuthorityAreaName) {
-    throw new SessionDataError('No duty to refer local authority area name data')
-  }
 
   return dutyToReferLocalAuthorityAreaName
 }

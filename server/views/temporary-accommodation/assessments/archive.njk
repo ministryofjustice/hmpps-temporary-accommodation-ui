@@ -21,58 +21,60 @@
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l">Archived referrals</h1>
+    {% set context = fetchContext() %}
 
-            <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-                <form action="{{ paths.assessments.archive() }}" method="get">
+    <h1 class="govuk-heading-l">Archived referrals</h1>
 
-                    {{ govukInput(
-                        {
-                            label: {
-                            classes: 'govuk-label--m',
-                            text: 'Search archived referrals by CRN (case reference number)'
-                        },
-                            hint: {
-                            text: 'For example, XD7364CD'
-                        },
-                            name: 'crn',
-                            id: 'crn',
-                            value: crn
-                        }
-                    ) }}
+    <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
+        <form action="{{ paths.assessments.archive() }}" method="get">
 
-                    <div class="govuk-button-group">
-                        {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+            {{ govukInput(
+                {
+                    label: {
+                    classes: 'govuk-label--m',
+                    text: 'Search archived referrals by CRN (case reference number)'
+                },
+                    hint: {
+                    text: 'For example, XD7364CD'
+                },
+                    name: 'crn',
+                    id: 'crn',
+                    value: crn
+                }
+            ) }}
 
-                        <a class="govuk-link" href="{{ paths.assessments.archive() }}">Clear</a>
-                    </div>
-                </form>
+            <div class="govuk-button-group">
+                {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+
+                <a class="govuk-link" href="{{ paths.assessments.archive() }}">Clear</a>
             </div>
-
-            <div class="govuk-!-margin-bottom-4">
-                {{ mojPagination(pagination) }}
-            </div>
-
-            {% if (archivedTableRows|length > 0) or (not crn) %}
-                {{ govukTable({
-                    firstCellIsHeader: true,
-                    head: tableHeaders,
-                    rows: archivedTableRows
-                }) }}
-
-                {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
-            {% else %}
-                <h2>There are no results for ‘{{ crn }}’ in archived referrals.</h2>
-
-                <p>Check the other lists.</p>
-
-                <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
-                        support</a> for help.</p>
-            {% endif %}
-        </div>
+        </form>
     </div>
+
+    <div class="govuk-!-margin-bottom-4">
+                {{ mojPagination(pagination) }}
+            </div>{% if context.errors.crn %}
+        <h2>You have not entered any search terms</h2>
+
+        <p>Enter a CRN. This can be found in nDelius.</p>
+
+        {% elif (archivedTableRows|length > 0) or (not crn) %}
+
+        {{ govukTable({
+            firstCellIsHeader: true,
+            head: tableHeaders,
+            rows: archivedTableRows
+        }) }}
+
+        {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
+    {% else %}
+        <h2>There are no results for ‘{{ crn }}’ in archived referrals.</h2>
+
+        <p>Check the other lists.</p>
+
+        <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+                support</a> for help.</p>
+    {% endif %}
 {% endblock %}
 
 {% block extraScripts %}

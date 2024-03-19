@@ -17,7 +17,7 @@ import * as assessmentUtils from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import * as utils from '../../../utils/utils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import AssessmentsController, { confirmationPageContent } from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 
@@ -82,6 +82,7 @@ describe('AssessmentsController', () => {
   beforeEach(() => {
     request = createMock<Request>({ session, query: {} })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
+    ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
   })
 
   describe('index', () => {
@@ -201,6 +202,7 @@ describe('AssessmentsController', () => {
         tableHeaders: archivedTableHeaders,
         archivedTableRows: [[{ text: assessment.createdAt }]],
         pagination: {},
+        errors: {},
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
@@ -250,6 +252,7 @@ describe('AssessmentsController', () => {
           ],
           previous: { text: 'Previous', href: '?page=1&sortBy=status&sortDirection=asc' },
         },
+        errors: {},
       })
 
       expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
@@ -283,7 +286,27 @@ describe('AssessmentsController', () => {
           tableHeaders: [],
           pagination: {},
           crn: searchParameters.crn,
+          errors: {},
         })
+      })
+    })
+
+    describe('when an blank CRN search is submitted', () => {
+      it('renders an error for archived referrals', async () => {
+        const searchParameters = assessmentSearchParametersFactory.build({ crn: '  ' })
+
+        request.query = searchParameters as ParsedQs
+
+        const requestHandler = assessmentsController.archive()
+        await requestHandler(request, response, next)
+
+        expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'crn', 'empty')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          new Error(),
+          `/review-and-assess/archive`,
+        )
       })
     })
   })

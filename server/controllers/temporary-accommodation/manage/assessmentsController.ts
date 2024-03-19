@@ -11,35 +11,8 @@ import { assessmentActions, createTableHeadings, getParams, statusChangeMessage 
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
-
-export const assessmentsTableHeaders = [
-  {
-    text: 'Name',
-    attributes: {
-      'aria-sort': 'ascending',
-    },
-  },
-  {
-    text: 'CRN',
-    attributes: {
-      'aria-sort': 'none',
-    },
-  },
-  {
-    text: 'Referral received',
-    attributes: {
-      'aria-sort': 'none',
-    },
-  },
-  {
-    text: 'Bedspace required',
-    attributes: {
-      'aria-sort': 'none',
-    },
-  },
-]
 
 export const confirmationPageContent: Record<Assessment['status'], { title: string; text: string }> = {
   in_review: {
@@ -96,23 +69,36 @@ export default class AssessmentsController {
 
   archive(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors } = fetchErrorsAndUserInput(req)
+
       const callConfig = extractCallConfig(req)
 
       const params = getParams(req.query)
 
-      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
+      try {
+        if (params.crn !== undefined && !params.crn.trim().length) {
+          const error = new Error()
+          insertGenericError(error, 'crn', 'empty')
+          throw error
+        }
 
-      return res.render('temporary-accommodation/assessments/archive', {
-        tableHeaders: createTableHeadings(
-          params.sortBy,
-          params.sortDirection === 'asc',
-          appendQueryString('', params),
-          true,
-        ),
-        archivedTableRows: response.data,
-        crn: params.crn,
-        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
-      })
+        const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
+
+        return res.render('temporary-accommodation/assessments/archive', {
+          tableHeaders: createTableHeadings(
+            params.sortBy,
+            params.sortDirection === 'asc',
+            appendQueryString('', params),
+            true,
+          ),
+          archivedTableRows: response.data,
+          errors,
+          crn: params.crn,
+          pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
+        })
+      } catch (err) {
+        return catchValidationErrorOrPropogate(req, res, err, paths.assessments.archive({}))
+      }
     }
   }
 

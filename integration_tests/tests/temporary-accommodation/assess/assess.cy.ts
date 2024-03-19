@@ -1,4 +1,4 @@
-import { AssessmentSummary, TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
+import { TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
@@ -221,6 +221,22 @@ context('Apply', () => {
 
           // And I see a message
           page.checkNoResultsByCRN('archived', 'N0M4TCH')
+        })
+
+        it('shows an error when submitting a blank CRN', () => {
+          const assessments = assessmentSummaryFactory.buildList(9, { status: 'rejected' })
+
+          cy.task('stubAssessments', { data: assessments })
+
+          // When I visit the Archived referrals page
+          const page = ListPage.visit('archive')
+
+          // And I submit a search with a blank CRN
+          page.searchByCRN('  ', 'archived')
+          Page.verifyOnPage(ListPage, 'Archived referrals')
+
+          // Then I see an error message
+          page.checkNoCRNEntered()
         })
 
         it('shows pagination and ordering', () => {

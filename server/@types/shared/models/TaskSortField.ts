@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TaskSortField = 'createdAt' | 'dueAt';
+export type TaskSortField = 'createdAt' | 'dueAt' | 'person' | 'allocatedTo';

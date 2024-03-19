@@ -31,7 +31,11 @@ export default class AssessmentClient {
     statuses: AssessmentStatus[],
     params?: AssessmentSearchParameters,
   ): Promise<PaginatedResponse<AssessmentSummary>> {
-    const path = appendQueryString(paths.assessments.index.pattern, { statuses, ...params })
+    const path = appendQueryString(paths.assessments.index.pattern, {
+      statuses,
+      ...params,
+      perPage: config.assessmentsDefaultPageSize,
+    })
     const response = await this.restClient.get({ path, raw: true })
 
     const { body, header } = response as searchResponse

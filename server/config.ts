@@ -105,4 +105,5 @@ export default {
   },
   firstDomain: get('FIRST_INGRESS_URL', 'http://localhost:3000', requiredInProduction),
   secondDomain: get('SECOND_INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  assessmentsDefaultPageSize: Number(get('PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE', 10)),
 }

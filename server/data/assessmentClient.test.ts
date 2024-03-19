@@ -1,5 +1,6 @@
 import nock from 'nock'
 
+import superagent from 'superagent'
 import { TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
@@ -50,7 +51,7 @@ describe('AssessmentClient', () => {
             'x-pagination-totalpages': String(assessments.totalPages),
             'x-pagination-totalresults': String(assessments.data.length),
           })
-          .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses }))
+          .get(appendQueryString(paths.assessments.index({}), { statuses: apiStatuses, perPage: 10 }))
           .matchHeader('authorization', `Bearer ${callConfig.token}`)
           .reply(200, assessments.data)
 
@@ -68,7 +69,7 @@ describe('AssessmentClient', () => {
       const assessments = assessmentSummaries.build()
 
       fakeApprovedPremisesApi
-        .get(appendQueryString(paths.assessments.index({}), { statuses: 'unallocated', page: 2 }))
+        .get(appendQueryString(paths.assessments.index({}), { statuses: 'unallocated', page: 2, perPage: 10 }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessments.data)
 
@@ -86,6 +87,7 @@ describe('AssessmentClient', () => {
             statuses: 'unallocated',
             sortBy: 'name',
             sortDirection: 'asc',
+            perPage: 10,
           }),
         )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
@@ -94,6 +96,33 @@ describe('AssessmentClient', () => {
       const result = await assessmentClient.all(['unallocated'], { sortBy: 'name', sortDirection: 'asc' })
 
       expect(result.data).toEqual(assessments.data)
+    })
+
+    describe('default page size', () => {
+      const envAssessmentsDefaultPageSize = config.assessmentsDefaultPageSize
+
+      beforeEach(() => {
+        config.assessmentsDefaultPageSize = 42
+      })
+
+      afterEach(() => {
+        config.assessmentsDefaultPageSize = envAssessmentsDefaultPageSize
+      })
+
+      it('applies the default page size set for the environment', async () => {
+        jest.spyOn(superagent, 'get')
+
+        fakeApprovedPremisesApi
+          .get(appendQueryString(paths.assessments.index({}), { statuses: 'unallocated', page: 1, perPage: 42 }))
+          .matchHeader('authorization', `Bearer ${callConfig.token}`)
+          .reply(200, [])
+
+        await assessmentClient.all(['unallocated'], { page: 1 })
+
+        expect(superagent.get).toHaveBeenCalledWith(
+          'http://localhost:8080/assessments?statuses=unallocated&page=1&perPage=42',
+        )
+      })
     })
   })
 

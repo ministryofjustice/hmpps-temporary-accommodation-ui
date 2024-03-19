@@ -2,11 +2,13 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { ParsedQs } from 'qs'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import {
   assessmentFactory,
+  assessmentSearchParametersFactory,
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
@@ -254,6 +256,34 @@ describe('AssessmentsController', () => {
         page: 2,
         sortBy: 'status',
         sortDirection: 'asc',
+      })
+    })
+
+    describe('when there is a CRN search parameter', () => {
+      it('renders the filtered table view for archived referrals', async () => {
+        const assessments = assessmentSummaries.build()
+        const searchParameters = assessmentSearchParametersFactory.build()
+
+        jest.spyOn(assessmentUtils, 'createTableHeadings').mockReturnValue([])
+        assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+        request.query = searchParameters as ParsedQs
+
+        const requestHandler = assessmentsController.archive()
+        await requestHandler(request, response, next)
+
+        expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
+          crn: searchParameters.crn,
+          page: 1,
+          sortBy: 'name',
+          sortDirection: 'asc',
+        })
+
+        expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
+          archivedTableRows: assessments.data,
+          tableHeaders: [],
+          pagination: {},
+          crn: searchParameters.crn,
+        })
       })
     })
   })

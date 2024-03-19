@@ -110,6 +110,7 @@ export default class AssessmentsController {
           true,
         ),
         archivedTableRows: response.data,
+        crn: params.crn,
         pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
       })
     }

@@ -7,10 +7,27 @@ import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { DateFormats } from '../../../server/utils/dateUtils'
 import { isFullPerson, personName } from '../../../server/utils/personUtils'
 import Page from '../page'
+import type { AssessmentSearchApiStatus } from '../../../server/@types/ui'
 
 export default class ListPage extends Page {
   constructor(pageTitle: string) {
     super(pageTitle)
+  }
+
+  static visit(status: AssessmentSearchApiStatus | 'archive'): ListPage {
+    cy.visit(paths.assessments[status]())
+
+    let pageTitle = 'Archived referrals'
+
+    if (status === 'unallocated') {
+      pageTitle = 'Unallocated referrals'
+    } else if (status === 'in_review') {
+      pageTitle = 'In review referrals'
+    } else if (status === 'ready_to_place') {
+      pageTitle = 'Ready to place referrals'
+    }
+
+    return new ListPage(pageTitle)
   }
 
   clickAssessment(assessment: Assessment) {
@@ -62,5 +79,25 @@ export default class ListPage extends Page {
 
   shouldHaveActiveSubNavItem(label: string) {
     cy.get('[aria-label="Secondary navigation"] a').contains(label).should('have.attr', 'aria-current', 'page')
+  }
+
+  checkCRNSearchValue(value: string, status: string) {
+    this.shouldShowTextInputByLabel(`Search ${status} referrals by CRN (case reference number)`, value)
+  }
+
+  checkResults(assessments: AssessmentSummary[]) {
+    cy.get('main table tbody tr').should('have.length', assessments.length)
+    assessments.forEach(result => {
+      cy.get('main table tbody').should('contain', result.person.crn)
+    })
+  }
+
+  searchByCRN(crn: string, status: string) {
+    this.completeTextInputByLabel(`Search ${status} referrals by CRN (case reference number)`, crn)
+    this.clickSubmit('Search')
+  }
+
+  clearSearch() {
+    cy.get('a').contains('Clear').click()
   }
 }

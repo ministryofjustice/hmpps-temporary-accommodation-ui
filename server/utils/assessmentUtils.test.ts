@@ -430,9 +430,11 @@ describe('assessmentUtils', () => {
         page: '3',
         sortBy: 'arrivedAt',
         sortDirection: 'desc',
+        crn: 'X567345',
       }
 
       expect(getParams(query)).toEqual({
+        crn: 'X567345',
         page: 3,
         sortBy: 'arrivedAt',
         sortDirection: 'desc',

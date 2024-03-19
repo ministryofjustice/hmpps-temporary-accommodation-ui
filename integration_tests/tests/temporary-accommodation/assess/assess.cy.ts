@@ -1,3 +1,4 @@
+import { AssessmentSummary, TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
@@ -157,7 +158,7 @@ context('Apply', () => {
           const searchCRN = searchedForReferral.person.crn
           cy.task('stubAssessments', { data: assessments, pagination })
 
-          // When I visit the Unallocated referrals page
+          // When I visit the Archived referrals page
           const page = ListPage.visit('archive')
 
           // Then the search by CRN form is empty
@@ -189,6 +190,37 @@ context('Apply', () => {
 
           // Then I see the search result for that CRN
           page.checkResults(assessments)
+        })
+
+        it('shows a message if there are no CRN search results', () => {
+          const assessments = assessmentSummaryFactory.buildList(9, { status: 'rejected' })
+          const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
+          const searchCRN = 'N0M4TCH'
+
+          cy.task('stubAssessments', { data: assessments })
+
+          // When I visit the Archived referrals page
+          const page = ListPage.visit('archive')
+
+          // Then the search by CRN form is empty
+          page.checkCRNSearchValue('', 'archived')
+
+          // And I see all the results
+          page.checkResults(assessments)
+
+          // When I submit a search by CRN
+          cy.task('stubAssessments', { data: noAssessments })
+          page.searchByCRN(searchCRN, 'archived')
+          Page.verifyOnPage(ListPage, 'Archived referrals')
+
+          // Then the search by CRN form is populated
+          page.checkCRNSearchValue(searchCRN, 'archived')
+
+          // Then I see no search results for that CRN
+          page.checkResults(noAssessments)
+
+          // And I see a message
+          page.checkNoResultsByCRN('archived', 'N0M4TCH')
         })
 
         it('shows pagination and ordering', () => {

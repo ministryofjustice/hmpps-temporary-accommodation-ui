@@ -55,13 +55,22 @@
                 {{ mojPagination(pagination) }}
             </div>
 
-            {{ govukTable({
-                firstCellIsHeader: true,
-                head: tableHeaders,
-                rows: archivedTableRows
-            }) }}
+            {% if (archivedTableRows|length > 0) or (not crn) %}
+                {{ govukTable({
+                    firstCellIsHeader: true,
+                    head: tableHeaders,
+                    rows: archivedTableRows
+                }) }}
 
-            {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
+                {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
+            {% else %}
+                <h2>There are no results for ‘{{ crn }}’ in archived referrals.</h2>
+
+                <p>Check the other lists.</p>
+
+                <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+                        support</a> for help.</p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

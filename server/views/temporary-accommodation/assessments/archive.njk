@@ -51,19 +51,21 @@
         </form>
     </div>
 
-    <div class="govuk-!-margin-bottom-4">
-                {{ mojPagination(pagination) }}
-            </div>{% if context.errors.crn %}
+    {% if context.errors.crn %}
         <h2>You have not entered any search terms</h2>
 
         <p>Enter a CRN. This can be found in nDelius.</p>
 
-        {% elif (archivedTableRows|length > 0) or (not crn) %}
+        {% elif (tableRows|length > 0) or (not crn) %}
+
+        <div class="govuk-!-margin-bottom-4">
+            {{ mojPagination(pagination) }}
+        </div>
 
         {{ govukTable({
             firstCellIsHeader: true,
             head: tableHeaders,
-            rows: archivedTableRows
+            rows: tableRows
         }) }}
 
         {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}

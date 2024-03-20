@@ -1,4 +1,5 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { TemporaryAccommodationAssessmentStatus } from '@approved-premises/api'
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
 import {
@@ -33,7 +34,9 @@ describe('AssessmentsService', () => {
     it.each(['unallocated', 'in_review', 'ready_to_place'])(
       'returns paginated %s assessments summaries formatted for presentation in a table',
       async (uiStatus: AssessmentSearchApiStatus) => {
-        const assessments = assessmentSummaryFactory.params({ status: uiStatus }).buildList(2)
+        const assessments = assessmentSummaryFactory
+          .params({ status: uiStatus as TemporaryAccommodationAssessmentStatus })
+          .buildList(2)
         const response = assessmentSummaries.build({ data: assessments, totalResults: 2 })
 
         assessmentClient.all.mockResolvedValue(response)

@@ -64,6 +64,11 @@ export default class AssessmentsController {
 
       const params = getParams(req.query)
 
+      const template =
+        status === 'archived'
+          ? 'temporary-accommodation/assessments/archive'
+          : 'temporary-accommodation/assessments/index'
+
       try {
         if (params.crn !== undefined && !params.crn.trim().length) {
           const error = new Error()
@@ -75,7 +80,7 @@ export default class AssessmentsController {
           ? null
           : await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
-        return res.render('temporary-accommodation/assessments/index', {
+        return res.render(template, {
           status,
           basePath: pathFromStatus(status),
           tableRows: response?.data,
@@ -83,6 +88,7 @@ export default class AssessmentsController {
             params.sortBy,
             params.sortDirection === 'asc',
             appendQueryString('', params),
+            status === 'archived',
           ),
           crn: params.crn,
           pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
@@ -90,43 +96,6 @@ export default class AssessmentsController {
         })
       } catch (err) {
         return catchValidationErrorOrPropogate(req, res, err, pathFromStatus(status))
-      }
-    }
-  }
-
-  archive(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const { errors } = fetchErrorsAndUserInput(req)
-
-      const callConfig = extractCallConfig(req)
-
-      const params = getParams(req.query)
-
-      try {
-        if (params.crn !== undefined && !params.crn.trim().length) {
-          const error = new Error()
-          insertGenericError(error, 'crn', 'empty')
-          throw error
-        }
-
-        const response = errors.crn
-          ? null
-          : await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
-
-        return res.render('temporary-accommodation/assessments/archive', {
-          tableHeaders: createTableHeadings(
-            params.sortBy,
-            params.sortDirection === 'asc',
-            appendQueryString('', params),
-            true,
-          ),
-          archivedTableRows: response?.data,
-          errors,
-          crn: params.crn,
-          pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
-        })
-      } catch (err) {
-        return catchValidationErrorOrPropogate(req, res, err, paths.assessments.archive({}))
       }
     }
   }

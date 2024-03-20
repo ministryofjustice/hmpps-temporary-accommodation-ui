@@ -22,7 +22,7 @@ export default class AssessmentsService {
 
   async getAllForLoggedInUser(
     callConfig: CallConfig,
-    uiStatus: AssessmentSearchApiStatus | 'archived',
+    uiStatus: AssessmentSearchApiStatus,
     params?: AssessmentSearchParameters,
   ): Promise<PaginatedResponse<TableRow>> {
     const statuses =

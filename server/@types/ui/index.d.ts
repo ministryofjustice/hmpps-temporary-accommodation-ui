@@ -351,7 +351,9 @@ export type ApplicationSummaryData = {
     | null
 }
 
-export type AssessmentSearchApiStatus = Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>
+export type AssessmentSearchApiStatus =
+  | Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>
+  | 'archived'
 
 export type AssessmentSearchParameters = {
   page?: number

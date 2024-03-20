@@ -449,7 +449,7 @@ describe('assessmentUtils', () => {
       ['/review-and-assess/unallocated', 'unallocated'],
       ['/review-and-assess/in-review', 'in_review'],
       ['/review-and-assess/ready-to-place', 'ready_to_place'],
-      ['/review-and-assess/archive', 'archive'],
+      ['/review-and-assess/archive', 'archived'],
     ])('returns %s for status %s', (path, status: AssessmentSearchApiStatus) => {
       expect(pathFromStatus(status)).toEqual(path)
     })

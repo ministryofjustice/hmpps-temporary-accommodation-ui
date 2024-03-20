@@ -238,11 +238,12 @@ export const getParams = (query?: QueryString.ParsedQs): AssessmentSearchParamet
   sortDirection: (query.sortDirection || 'asc') as SortDirection,
 })
 
-export const pathFromStatus = (status: AssessmentSearchApiStatus | 'archive') => {
+export const pathFromStatus = (status: AssessmentSearchApiStatus) => {
   let pathStatus: string = status
 
   if (status === 'in_review') pathStatus = 'inReview'
   if (status === 'ready_to_place') pathStatus = 'readyToPlace'
+  if (status === 'archived') pathStatus = 'archive'
 
   return paths.assessments[pathStatus]({})
 }

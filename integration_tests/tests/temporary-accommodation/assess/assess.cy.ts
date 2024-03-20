@@ -1,4 +1,6 @@
 import { TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { sentence } from 'case'
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
@@ -82,325 +84,163 @@ context('Apply', () => {
         archivedListPage.shouldShowAssessments([...rejectedAssessmentSummaries, ...closedAssessmentSummaries], true)
       })
 
-      describe(`when viewing unallocated referrals`, () => {
-        it('shows the result of a CRN search and clears the search', () => {
-          // Given there are assessments in the database
-          const assessments = assessmentSummaryFactory.buildList(6, { status: 'unallocated' })
-          const searchedForReferral = assessments[1]
-          const searchCRN = searchedForReferral.person.crn
-          cy.task('stubAssessments', { data: assessments, pagination })
+      const statuses: AssessmentSearchApiStatus[] = ['unallocated', 'in_review', 'ready_to_place', 'archived']
 
-          // When I visit the Archived referrals page
-          const page = ListPage.visit('unallocated')
+      statuses.forEach(status => {
+        const factoryStatus = status === 'archived' ? 'closed' : status
+        const uiStatus = status.replace(/_/g, ' ')
+        const pageTitle = sentence(`${uiStatus} referrals`)
 
-          // Then the search by CRN form is empty
-          page.checkCRNSearchValue('', 'unallocated')
+        describe(`when viewing ${uiStatus} referrals`, () => {
+          it('shows the result of a CRN search and clears the search', () => {
+            // Given there are assessments in the database
+            const assessments = assessmentSummaryFactory.buildList(6, { status: factoryStatus })
+            const searchedForReferral = assessments[1]
+            const searchCRN = searchedForReferral.person.crn
+            cy.task('stubAssessments', { data: assessments, pagination })
 
-          // And I see all the results
-          page.checkResults(assessments)
+            // When I visit the Archived referrals page
+            const page = ListPage.visit(status)
 
-          // When I submit a search by CRN
-          cy.task('stubAssessments', { data: [searchedForReferral] })
-          page.searchByCRN(searchCRN, 'unallocated')
-          Page.verifyOnPage(ListPage, `Unallocated referrals`)
+            // Then the search by CRN form is empty
+            page.checkCRNSearchValue('', uiStatus)
 
-          // Then the search by CRN form is populated
-          page.checkCRNSearchValue(searchCRN, 'unallocated')
+            // And I see all the results
+            page.checkResults(assessments)
 
-          // Then I see the search result for that CRN
-          page.checkResults([searchedForReferral])
+            // When I submit a search by CRN
+            cy.task('stubAssessments', { data: [searchedForReferral] })
+            page.searchByCRN(searchCRN, uiStatus)
+            Page.verifyOnPage(ListPage, pageTitle)
 
-          // When I clear the search
-          cy.task('stubAssessments', { data: assessments, pagination })
-          page.clearSearch()
+            // Then the search by CRN form is populated
+            page.checkCRNSearchValue(searchCRN, uiStatus)
 
-          // Then I see the list page
-          Page.verifyOnPage(ListPage, `Unallocated referrals`)
+            // Then I see the search result for that CRN
+            page.checkResults([searchedForReferral])
 
-          // Then the search by CRN form is populated
-          page.checkCRNSearchValue('', 'unallocated')
+            // When I clear the search
+            cy.task('stubAssessments', { data: assessments, pagination })
+            page.clearSearch()
 
-          // Then I see the search result for that CRN
-          page.checkResults(assessments)
-        })
+            // Then I see the list page
+            Page.verifyOnPage(ListPage, pageTitle)
 
-        it('shows a message if there are no CRN search results', () => {
-          const assessments = assessmentSummaryFactory.buildList(9, { status: 'unallocated' })
-          const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
-          const searchCRN = 'N0M4TCH'
+            // Then the search by CRN form is populated
+            page.checkCRNSearchValue('', uiStatus)
 
-          cy.task('stubAssessments', { data: assessments })
+            // Then I see the search result for that CRN
+            page.checkResults(assessments)
+          })
 
-          // When I visit the Archived referrals page
-          const page = ListPage.visit('unallocated')
+          it('shows a message if there are no CRN search results', () => {
+            const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
+            const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
+            const searchCRN = 'N0M4TCH'
 
-          // Then the search by CRN form is empty
-          page.checkCRNSearchValue('', 'unallocated')
+            cy.task('stubAssessments', { data: assessments })
 
-          // And I see all the results
-          page.checkResults(assessments)
+            // When I visit the Archived referrals page
+            const page = ListPage.visit(status)
 
-          // When I submit a search by CRN
-          cy.task('stubAssessments', { data: noAssessments })
-          page.searchByCRN(searchCRN, 'unallocated')
-          Page.verifyOnPage(ListPage, `Unallocated referrals`)
+            // Then the search by CRN form is empty
+            page.checkCRNSearchValue('', uiStatus)
 
-          // Then the search by CRN form is populated
-          page.checkCRNSearchValue(searchCRN, 'unallocated')
+            // And I see all the results
+            page.checkResults(assessments)
 
-          // Then I see no search results for that CRN
-          page.checkResults(noAssessments)
+            // When I submit a search by CRN
+            cy.task('stubAssessments', { data: noAssessments })
+            page.searchByCRN(searchCRN, uiStatus)
+            Page.verifyOnPage(ListPage, pageTitle)
 
-          // And I see a message
-          page.checkNoResultsByCRN('unallocated', 'N0M4TCH')
-        })
+            // Then the search by CRN form is populated
+            page.checkCRNSearchValue(searchCRN, uiStatus)
 
-        it('shows an error when submitting a blank CRN', () => {
-          const assessments = assessmentSummaryFactory.buildList(9, { status: 'unallocated' })
+            // Then I see no search results for that CRN
+            page.checkResults(noAssessments)
 
-          cy.task('stubAssessments', { data: assessments })
+            // And I see a message
+            page.checkNoResultsByCRN(uiStatus, 'N0M4TCH')
+          })
 
-          // When I visit the Archived referrals page
-          const page = ListPage.visit('unallocated')
+          it('shows an error when submitting a blank CRN', () => {
+            const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
 
-          // And I submit a search with a blank CRN
-          page.searchByCRN('  ', 'unallocated')
-          Page.verifyOnPage(ListPage, `Unallocated referrals`)
+            cy.task('stubAssessments', { data: assessments })
 
-          // Then I see an error message
-          page.checkNoCRNEntered()
-        })
+            // When I visit the referrals page
+            const page = ListPage.visit(status)
 
-        it('shows pagination and ordering', () => {
-          // Given there are assessments in the database
-          const data = assessmentSummaryFactory.buildList(6, { status: 'unallocated' })
-          cy.task('stubAssessments', { data, pagination })
+            // And I submit a search with a blank CRN
+            page.searchByCRN('  ', uiStatus)
+            Page.verifyOnPage(ListPage, pageTitle)
 
-          // When I visit the dashboard
-          const dashboardPage = DashboardPage.visit()
+            // Then I see an error message
+            page.checkNoCRNEntered()
+          })
 
-          // And I click on the "Review and assess referrals" link
-          dashboardPage.clickReviewAndAssessReferrals()
+          it('shows pagination and ordering', () => {
+            // Given there are assessments in the database
+            const data = assessmentSummaryFactory.buildList(6, { status: factoryStatus })
+            cy.task('stubAssessments', { data, pagination })
 
-          // When I click on the 'View archived assessments' link
-          const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
-
-          // Then I should see a list of assessments
-          unallocatedListPage.shouldShowAssessments(data)
-          unallocatedListPage.shouldShowPageNumber(1)
-
-          // When I navigate to the second page of results
-          cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 2 } })
-          unallocatedListPage.clickPaginationLink(2)
-
-          // Then I see the second page of results
-          unallocatedListPage.shouldShowPageNumber(2)
-
-          // When I navigate to the next page of results
-          cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
-          unallocatedListPage.clickPaginationLink('Next')
-
-          // Then I see the third page of results
-          unallocatedListPage.shouldShowPageNumber(3)
-
-          // When I order by Bedspace required
-          cy.task('stubAssessments', { data, pagination })
-          unallocatedListPage.sortColumn('Bedspace required')
-
-          // Then I see the first page of results ordered by status ascending
-          unallocatedListPage.shouldHaveURLSearchParam('sortBy=arrivedAt')
-          unallocatedListPage.shouldShowPageNumber(1)
-          unallocatedListPage.checkColumnOrder('Bedspace required', 'ascending')
-
-          // When I navigate to page 3
-          cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
-          unallocatedListPage.clickPaginationLink(3)
-
-          // Then I see the third page of results ordered by status ascending
-          unallocatedListPage.shouldHaveURLSearchParam('sortBy=arrivedAt&sortDirection=asc')
-          unallocatedListPage.shouldShowPageNumber(3)
-          unallocatedListPage.checkColumnOrder('Bedspace required', 'ascending')
-
-          // When I order by Referral received
-          cy.task('stubAssessments', { data, pagination })
-          unallocatedListPage.sortColumn('Referral received')
-
-          // Then I see the first page of results ordered by Referral received ascending
-          unallocatedListPage.shouldHaveURLSearchParam('sortBy=createdAt')
-          unallocatedListPage.shouldShowPageNumber(1)
-          unallocatedListPage.checkColumnOrder('Referral received', 'ascending')
-
-          // When I order by Referral received again
-          unallocatedListPage.sortColumn('Referral received')
-
-          // Then I see the first page of results ordered by Referral received ascending
-          unallocatedListPage.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=desc')
-          unallocatedListPage.shouldShowPageNumber(1)
-          unallocatedListPage.checkColumnOrder('Referral received', 'descending')
-        })
-      })
-
-      describe('for archived referrals', () => {
-        it('shows the result of a CRN search and clears the search', () => {
-          // Given there are assessments in the database
-          const assessments = assessmentSummaryFactory.buildList(6, { status: 'rejected' })
-          const searchedForReferral = assessments[1]
-          const searchCRN = searchedForReferral.person.crn
-          cy.task('stubAssessments', { data: assessments, pagination })
-
-          // When I visit the Archived referrals page
-          const page = ListPage.visit('archive')
-
-          // Then the search by CRN form is empty
-          page.checkCRNSearchValue('', 'archived')
-
-          // And I see all the results
-          page.checkResults(assessments)
-
-          // When I submit a search by CRN
-          cy.task('stubAssessments', { data: [searchedForReferral] })
-          page.searchByCRN(searchCRN, 'archived')
-          Page.verifyOnPage(ListPage, 'Archived referrals')
-
-          // Then the search by CRN form is populated
-          page.checkCRNSearchValue(searchCRN, 'archived')
-
-          // Then I see the search result for that CRN
-          page.checkResults([searchedForReferral])
-
-          // When I clear the search
-          cy.task('stubAssessments', { data: assessments, pagination })
-          page.clearSearch()
-
-          // Then I see the list page
-          Page.verifyOnPage(ListPage, 'Archived referrals')
-
-          // Then the search by CRN form is populated
-          page.checkCRNSearchValue('', 'archived')
-
-          // Then I see the search result for that CRN
-          page.checkResults(assessments)
-        })
-
-        it('shows a message if there are no CRN search results', () => {
-          const assessments = assessmentSummaryFactory.buildList(9, { status: 'rejected' })
-          const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
-          const searchCRN = 'N0M4TCH'
-
-          cy.task('stubAssessments', { data: assessments })
-
-          // When I visit the Archived referrals page
-          const page = ListPage.visit('archive')
-
-          // Then the search by CRN form is empty
-          page.checkCRNSearchValue('', 'archived')
-
-          // And I see all the results
-          page.checkResults(assessments)
-
-          // When I submit a search by CRN
-          cy.task('stubAssessments', { data: noAssessments })
-          page.searchByCRN(searchCRN, 'archived')
-          Page.verifyOnPage(ListPage, 'Archived referrals')
-
-          // Then the search by CRN form is populated
-          page.checkCRNSearchValue(searchCRN, 'archived')
-
-          // Then I see no search results for that CRN
-          page.checkResults(noAssessments)
-
-          // And I see a message
-          page.checkNoResultsByCRN('archived', 'N0M4TCH')
-        })
-
-        it('shows an error when submitting a blank CRN', () => {
-          const assessments = assessmentSummaryFactory.buildList(9, { status: 'rejected' })
-
-          cy.task('stubAssessments', { data: assessments })
-
-          // When I visit the Archived referrals page
-          const page = ListPage.visit('archive')
-
-          // And I submit a search with a blank CRN
-          page.searchByCRN('  ', 'archived')
-          Page.verifyOnPage(ListPage, 'Archived referrals')
-
-          // Then I see an error message
-          page.checkNoCRNEntered()
-        })
-
-        it('shows pagination and ordering', () => {
-          // Given there are assessments in the database
-          const rejectedAssessmentSummaries = assessmentSummaryFactory.buildList(6, { status: 'rejected' })
-          const closedAssessmentSummaries = assessmentSummaryFactory.buildList(4, { status: 'closed' })
-          const data = [...rejectedAssessmentSummaries, ...closedAssessmentSummaries]
-
-          cy.task('stubAssessments', { data })
-
-          // When I visit the dashboard
-          const dashboardPage = DashboardPage.visit()
-
-          // And I click on the "Review and assess referrals" link
-          dashboardPage.clickReviewAndAssessReferrals()
-
-          // When I click on the 'View archived assessments' link
-          const unallocatedListPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
-          cy.task('stubAssessments', { data, pagination })
-          unallocatedListPage.clickViewArchivedReferrals()
-
-          // Then I should see the list of archived assessments
-          const archivedListPage = Page.verifyOnPage(ListPage, 'Archived referrals')
-          archivedListPage.shouldShowAssessments(data, true)
-          archivedListPage.shouldShowPageNumber(1)
-
-          // When I navigate to the second page of results
-          cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 2 } })
-          archivedListPage.clickPaginationLink(2)
-
-          // Then I see the second page of results
-          archivedListPage.shouldShowPageNumber(2)
-
-          // When I navigate to the next page of results
-          cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
-          archivedListPage.clickPaginationLink('Next')
-
-          // Then I see the third page of results
-          archivedListPage.shouldShowPageNumber(3)
-
-          // When I order by status
-          cy.task('stubAssessments', { data, pagination })
-          archivedListPage.sortColumn('Status')
-
-          // Then I see the first page of results ordered by status ascending
-          archivedListPage.shouldHaveURLSearchParam('sortBy=status')
-          archivedListPage.shouldShowPageNumber(1)
-          archivedListPage.checkColumnOrder('Status', 'ascending')
-
-          // When I navigate to page 3
-          cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
-          archivedListPage.clickPaginationLink(3)
-
-          // Then I see the third page of results ordered by status ascending
-          archivedListPage.shouldHaveURLSearchParam('sortBy=status&sortDirection=asc')
-          archivedListPage.shouldShowPageNumber(3)
-          archivedListPage.checkColumnOrder('Status', 'ascending')
-
-          // When I order by Referral received
-          cy.task('stubAssessments', { data, pagination })
-          archivedListPage.sortColumn('Referral received')
-
-          // Then I see the first page of results ordered by Referral received ascending
-          archivedListPage.shouldHaveURLSearchParam('sortBy=createdAt')
-          archivedListPage.shouldShowPageNumber(1)
-          archivedListPage.checkColumnOrder('Referral received', 'ascending')
-
-          // When I order by Referral received again
-          archivedListPage.sortColumn('Referral received')
-
-          // Then I see the first page of results ordered by Referral received ascending
-          archivedListPage.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=desc')
-          archivedListPage.shouldShowPageNumber(1)
-          archivedListPage.checkColumnOrder('Referral received', 'descending')
+            // When I visit the referrals page
+            const page = ListPage.visit(status)
+
+            // Then I should see a list of assessments
+            page.shouldShowAssessments(data)
+            page.shouldShowPageNumber(1)
+
+            // When I navigate to the second page of results
+            cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 2 } })
+            page.clickPaginationLink(2)
+
+            // Then I see the second page of results
+            page.shouldShowPageNumber(2)
+
+            // When I navigate to the next page of results
+            cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
+            page.clickPaginationLink('Next')
+
+            // Then I see the third page of results
+            page.shouldShowPageNumber(3)
+
+            // When I order by Bedspace required
+            cy.task('stubAssessments', { data, pagination })
+            page.sortColumn('Bedspace required')
+
+            // Then I see the first page of results ordered by status ascending
+            page.shouldHaveURLSearchParam('sortBy=arrivedAt')
+            page.shouldShowPageNumber(1)
+            page.checkColumnOrder('Bedspace required', 'ascending')
+
+            // When I navigate to page 3
+            cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
+            page.clickPaginationLink(3)
+
+            // Then I see the third page of results ordered by status ascending
+            page.shouldHaveURLSearchParam('sortBy=arrivedAt&sortDirection=asc')
+            page.shouldShowPageNumber(3)
+            page.checkColumnOrder('Bedspace required', 'ascending')
+
+            // When I order by Referral received
+            cy.task('stubAssessments', { data, pagination })
+            page.sortColumn('Referral received')
+
+            // Then I see the first page of results ordered by Referral received ascending
+            page.shouldHaveURLSearchParam('sortBy=createdAt')
+            page.shouldShowPageNumber(1)
+            page.checkColumnOrder('Referral received', 'ascending')
+
+            // When I order by Referral received again
+            page.sortColumn('Referral received')
+
+            // Then I see the first page of results ordered by Referral received ascending
+            page.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=desc')
+            page.shouldShowPageNumber(1)
+            page.checkColumnOrder('Referral received', 'descending')
+          })
         })
       })
     })

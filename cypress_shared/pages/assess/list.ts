@@ -16,7 +16,7 @@ export default class ListPage extends Page {
     super(pageTitle)
   }
 
-  static visit(status: AssessmentSearchApiStatus | 'archive'): ListPage {
+  static visit(status: AssessmentSearchApiStatus): ListPage {
     cy.visit(pathFromStatus(status))
 
     let pageTitle = 'Archived referrals'

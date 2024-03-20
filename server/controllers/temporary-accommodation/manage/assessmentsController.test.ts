@@ -87,6 +87,7 @@ describe('AssessmentsController', () => {
   })
 
   afterEach(() => {
+    jest.clearAllMocks()
     jest.restoreAllMocks()
   })
 
@@ -212,7 +213,7 @@ describe('AssessmentsController', () => {
           })
         })
 
-        describe('when an blank CRN search is submitted', () => {
+        describe('when a blank CRN search is submitted', () => {
           it('renders an error', async () => {
             const searchParameters = assessmentSearchParametersFactory.build({ crn: '  ' })
 
@@ -228,6 +229,21 @@ describe('AssessmentsController', () => {
               new Error(),
               pathFromStatus(status),
             )
+          })
+        })
+
+        describe('when there is a CRN search error', () => {
+          it('does not call the API to fetch results', async () => {
+            ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+              errors: { crn: { text: 'You must enter a CRN', attributes: {} } },
+              errorSummary: [],
+              userInput: {},
+            })
+
+            const requestHandler = assessmentsController.list(status)
+            await requestHandler(request, response, next)
+
+            expect(assessmentsService.getAllForLoggedInUser).not.toHaveBeenCalled()
           })
         })
       },
@@ -350,7 +366,7 @@ describe('AssessmentsController', () => {
       })
     })
 
-    describe('when an blank CRN search is submitted', () => {
+    describe('when a blank CRN search is submitted', () => {
       it('renders an error for archived referrals', async () => {
         const searchParameters = assessmentSearchParametersFactory.build({ crn: '  ' })
 
@@ -366,6 +382,21 @@ describe('AssessmentsController', () => {
           new Error(),
           `/review-and-assess/archive`,
         )
+      })
+    })
+
+    describe('when there is a CRN search error', () => {
+      it('does not call the API to fetch results', async () => {
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+          errors: { crn: { text: 'You must enter a CRN', attributes: {} } },
+          errorSummary: [],
+          userInput: {},
+        })
+
+        const requestHandler = assessmentsController.archive()
+        await requestHandler(request, response, next)
+
+        expect(assessmentsService.getAllForLoggedInUser).not.toHaveBeenCalled()
       })
     })
   })

@@ -71,19 +71,21 @@ export default class AssessmentsController {
           throw error
         }
 
-        const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
+        const response = errors.crn
+          ? null
+          : await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
         return res.render('temporary-accommodation/assessments/index', {
           status,
           basePath: pathFromStatus(status),
-          tableRows: response.data,
+          tableRows: response?.data,
           tableHeaders: createTableHeadings(
             params.sortBy,
             params.sortDirection === 'asc',
             appendQueryString('', params),
           ),
           crn: params.crn,
-          pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
+          pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
           errors,
         })
       } catch (err) {
@@ -107,7 +109,9 @@ export default class AssessmentsController {
           throw error
         }
 
-        const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
+        const response = errors.crn
+          ? null
+          : await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
 
         return res.render('temporary-accommodation/assessments/archive', {
           tableHeaders: createTableHeadings(
@@ -116,10 +120,10 @@ export default class AssessmentsController {
             appendQueryString('', params),
             true,
           ),
-          archivedTableRows: response.data,
+          archivedTableRows: response?.data,
           errors,
           crn: params.crn,
-          pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
+          pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
         })
       } catch (err) {
         return catchValidationErrorOrPropogate(req, res, err, paths.assessments.archive({}))

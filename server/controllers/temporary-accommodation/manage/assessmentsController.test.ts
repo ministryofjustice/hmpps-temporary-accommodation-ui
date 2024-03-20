@@ -20,6 +20,7 @@ import * as utils from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import AssessmentsController, { confirmationPageContent } from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
+import { pathFromStatus } from '../../../utils/assessmentUtils'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
@@ -85,6 +86,10 @@ describe('AssessmentsController', () => {
     ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
   })
 
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   describe('index', () => {
     it('redirects to unallocated referrals', async () => {
       const requestHandler = assessmentsController.index()
@@ -111,9 +116,11 @@ describe('AssessmentsController', () => {
 
           expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
             status,
+            basePath: pathFromStatus(status),
             tableRows: [[{ text: assessment.createdAt }]],
             tableHeaders,
             pagination: {},
+            errors: {},
           })
 
           expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
@@ -137,6 +144,7 @@ describe('AssessmentsController', () => {
 
           expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/index', {
             status,
+            basePath: pathFromStatus(status),
             tableHeaders: [
               {
                 html: '<a href="?sortBy=name"><button>Name</button></a>',
@@ -163,12 +171,63 @@ describe('AssessmentsController', () => {
               ],
               previous: { text: 'Previous', href: '?page=1&sortBy=arrivedAt&sortDirection=asc' },
             },
+            errors: {},
           })
 
           expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
             page: 2,
             sortBy: 'arrivedAt',
             sortDirection: 'asc',
+          })
+        })
+
+        describe('when there is a CRN search parameter', () => {
+          it('renders the filtered table view', async () => {
+            const assessments = assessmentSummaries.build()
+            const searchParameters = assessmentSearchParametersFactory.build()
+
+            jest.spyOn(assessmentUtils, 'createTableHeadings').mockReturnValue([])
+            assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+            request.query = searchParameters as ParsedQs
+
+            const requestHandler = assessmentsController.list(status)
+            await requestHandler(request, response, next)
+
+            expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
+              crn: searchParameters.crn,
+              page: 1,
+              sortBy: 'name',
+              sortDirection: 'asc',
+            })
+
+            expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
+              status,
+              basePath: pathFromStatus(status),
+              tableRows: assessments.data,
+              tableHeaders: [],
+              pagination: {},
+              crn: searchParameters.crn,
+              errors: {},
+            })
+          })
+        })
+
+        describe('when an blank CRN search is submitted', () => {
+          it('renders an error', async () => {
+            const searchParameters = assessmentSearchParametersFactory.build({ crn: '  ' })
+
+            request.query = searchParameters as ParsedQs
+
+            const requestHandler = assessmentsController.list(status)
+            await requestHandler(request, response, next)
+
+            expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'crn', 'empty')
+            expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+              request,
+              response,
+              new Error(),
+              pathFromStatus(status),
+            )
           })
         })
       },

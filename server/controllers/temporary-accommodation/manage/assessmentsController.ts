@@ -7,7 +7,13 @@ import {
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
-import { assessmentActions, createTableHeadings, getParams, statusChangeMessage } from '../../../utils/assessmentUtils'
+import {
+  assessmentActions,
+  createTableHeadings,
+  getParams,
+  pathFromStatus,
+  statusChangeMessage,
+} from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
@@ -52,18 +58,37 @@ export default class AssessmentsController {
 
   list(status: AssessmentSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors } = fetchErrorsAndUserInput(req)
+
       const callConfig = extractCallConfig(req)
 
       const params = getParams(req.query)
 
-      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
+      try {
+        if (params.crn !== undefined && !params.crn.trim().length) {
+          const error = new Error()
+          insertGenericError(error, 'crn', 'empty')
+          throw error
+        }
 
-      return res.render('temporary-accommodation/assessments/index', {
-        status,
-        tableRows: response.data,
-        tableHeaders: createTableHeadings(params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
-        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
-      })
+        const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
+
+        return res.render('temporary-accommodation/assessments/index', {
+          status,
+          basePath: pathFromStatus(status),
+          tableRows: response.data,
+          tableHeaders: createTableHeadings(
+            params.sortBy,
+            params.sortDirection === 'asc',
+            appendQueryString('', params),
+          ),
+          crn: params.crn,
+          pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
+          errors,
+        })
+      } catch (err) {
+        return catchValidationErrorOrPropogate(req, res, err, pathFromStatus(status))
+      }
     }
   }
 

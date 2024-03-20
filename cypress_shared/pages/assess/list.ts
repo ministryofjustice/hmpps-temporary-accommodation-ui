@@ -9,6 +9,7 @@ import { isFullPerson, personName } from '../../../server/utils/personUtils'
 import Page from '../page'
 import type { AssessmentSearchApiStatus } from '../../../server/@types/ui'
 import { supportEmail } from '../../../server/utils/phaseBannerUtils'
+import { pathFromStatus } from '../../../server/utils/assessmentUtils'
 
 export default class ListPage extends Page {
   constructor(pageTitle: string) {
@@ -16,7 +17,7 @@ export default class ListPage extends Page {
   }
 
   static visit(status: AssessmentSearchApiStatus | 'archive'): ListPage {
-    cy.visit(paths.assessments[status]())
+    cy.visit(pathFromStatus(status))
 
     let pageTitle = 'Archived referrals'
 

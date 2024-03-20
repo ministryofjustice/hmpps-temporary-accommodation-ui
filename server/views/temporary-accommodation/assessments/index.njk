@@ -20,26 +20,28 @@
 
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
-    {{ mojSubNavigation({
-        label: 'Secondary navigation',
-        items: [
-            {
-                text: 'Unallocated',
-                href: paths.assessments.unallocated(),
-                active: status == 'unallocated'
-            },
-            {
-                text: 'In review',
-                href: paths.assessments.inReview(),
-                active: status == 'in_review'
-            },
-            {
-                text: 'Ready to place',
-                href: paths.assessments.readyToPlace(),
-                active: status == 'ready_to_place'
-            }
-        ]
-    }) }}
+    {% block tabs %}
+        {{ mojSubNavigation({
+            label: 'Secondary navigation',
+            items: [
+                {
+                    text: 'Unallocated',
+                    href: paths.assessments.unallocated(),
+                    active: status == 'unallocated'
+                },
+                {
+                    text: 'In review',
+                    href: paths.assessments.inReview(),
+                    active: status == 'in_review'
+                },
+                {
+                    text: 'Ready to place',
+                    href: paths.assessments.readyToPlace(),
+                    active: status == 'ready_to_place'
+                }
+            ]
+        }) }}
+    {% endblock %}
 
     <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
         <form action="{{ basePath }}" method="get">
@@ -95,15 +97,16 @@
                 support</a> for help.</p>
     {% endif %}
 
-
-    <div class="govuk-!-margin-top-9">
-        {{ govukButton({
-            text: "View archived referrals",
-            type: "button",
-            href: paths.assessments.archive(),
-            classes: "govuk-button--secondary"
-        }) }}
-    </div>
+    {% block archivedLink %}
+        <div class="govuk-!-margin-top-9">
+            {{ govukButton({
+                text: "View archived referrals",
+                type: "button",
+                href: paths.assessments.archive(),
+                classes: "govuk-button--secondary"
+            }) }}
+        </div>
+    {% endblock %}
 {% endblock %}
 
 {% block extraScripts %}

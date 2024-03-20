@@ -1,90 +1,13 @@
-{% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "govuk/components/tag/macro.njk" import govukTag %}
-{% from "moj/components/badge/macro.njk" import mojBadge %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
-{% extends "../../partials/layout.njk" %}
-
-{% set pageTitle = "Archived referrals - " + applicationName %}
-{% set mainClasses = "app-container govuk-body" %}
+{% extends "./index.njk" %}
 
 {% block beforeContent %}
-
     {{ govukBackLink({
         text: "Back",
         href: paths.assessments.index()
     }) }}
-
 {% endblock %}
 
-{% block content %}
-    {% set context = fetchContext() %}
-
-    <h1 class="govuk-heading-l">Archived referrals</h1>
-
-    <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-        <form action="{{ paths.assessments.archive() }}" method="get">
-
-            {{ govukInput(
-                {
-                    label: {
-                    classes: 'govuk-label--m',
-                    text: 'Search archived referrals by CRN (case reference number)'
-                },
-                    hint: {
-                    text: 'For example, XD7364CD'
-                },
-                    name: 'crn',
-                    id: 'crn',
-                    value: crn
-                }
-            ) }}
-
-            <div class="govuk-button-group">
-                {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
-
-                <a class="govuk-link" href="{{ paths.assessments.archive() }}">Clear</a>
-            </div>
-        </form>
-    </div>
-
-    {% if context.errors.crn %}
-        <h2>You have not entered any search terms</h2>
-
-        <p>Enter a CRN. This can be found in nDelius.</p>
-
-        {% elif (tableRows|length > 0) or (not crn) %}
-
-        <div class="govuk-!-margin-bottom-4">
-            {{ mojPagination(pagination) }}
-        </div>
-
-        {{ govukTable({
-            firstCellIsHeader: true,
-            head: tableHeaders,
-            rows: tableRows
-        }) }}
-
-        {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
-    {% else %}
-        <h2>There are no results for ‘{{ crn }}’ in archived referrals.</h2>
-
-        <p>Check the other lists.</p>
-
-        <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
-                support</a> for help.</p>
-    {% endif %}
-{% endblock %}
-
-{% block extraScripts %}
-    <script type="text/javascript" nonce="{{ cspNonce }}">
-      $(document).ready(function() {
-        window
-          .MOJFrontend
-          .initAll()
-      })
-    </script>
-{% endblock %}
+{% block tabs %}{% endblock %}
+{% block archivedLink %}{% endblock %}

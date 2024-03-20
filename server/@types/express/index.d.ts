@@ -44,6 +44,8 @@ type FlashMessage = string | ErrorMessages | Array<ErrorSummary> | Record<string
 
 export declare global {
   namespace Express {
+    import CookieSessionRequest = CookieSessionInterfaces.CookieSessionRequest
+
     interface User {
       username: string
       token: string
@@ -53,8 +55,13 @@ export declare global {
     interface Request {
       verified?: boolean
       id: string
+      user?: User
+      session?: CookieSessionRequest['session']
+
       logout(done: (err: unknown) => void): void
+
       flash(type: string, message: FlashMessage): number
+
       flash(type: string): FlashMessage
     }
   }

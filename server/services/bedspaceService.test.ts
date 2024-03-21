@@ -60,6 +60,7 @@ describe('BedspaceService', () => {
         name: 'ABC',
         characteristics: [characteristicFactory.build({ name: 'Characteristic 3' })],
         notes: 'Some more notes',
+        beds: [bedFactory.build({ bedEndDate: undefined })],
       })
 
       roomClient.all.mockResolvedValue([room1, room2])
@@ -104,7 +105,7 @@ describe('BedspaceService', () => {
               },
               {
                 key: { text: 'Bedspace end date' },
-                value: { text: 'No end date added' },
+                value: { text: DateFormats.isoDateToUIDate(room1.beds[0].bedEndDate) },
               },
               {
                 key: { text: 'Attributes' },

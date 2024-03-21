@@ -134,6 +134,7 @@ context('Bedspace', () => {
       expect(requestBody.name).equal(newRoom.name)
       expect(requestBody.characteristicIds).members(newRoom.characteristicIds)
       expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newRoom.notes)
+      expect(requestBody.bedEndDate).equal(newRoom.bedEndDate)
     })
 
     // And I should be redirected to the show bedspace page
@@ -191,7 +192,9 @@ context('Bedspace', () => {
 
     // And there is a premises and a room in the database
     const premises = premisesFactory.build()
-    const room = roomFactory.build()
+    const room = roomFactory.build({
+      beds: [bedFactory.build({ bedEndDate: undefined })],
+    })
 
     const premisesId = premises.id
 
@@ -364,7 +367,7 @@ context('Bedspace', () => {
     describe('when the bedspace has no end date', () => {
       it('shows the bedspace as Online', () => {
         // And there is a bedspace with no end date for the premises
-        const bed = bedFactory.build()
+        const bed = bedFactory.build({ bedEndDate: undefined })
         const room = roomFactory.build({ beds: [bed] })
         cy.task('stubSingleRoom', { premisesId: premises.id, room })
 

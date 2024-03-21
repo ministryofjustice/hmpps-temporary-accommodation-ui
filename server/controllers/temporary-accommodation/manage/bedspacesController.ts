@@ -8,6 +8,7 @@ import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { DateFormats } from '../../../utils/dateUtils'
 
 export default class BedspacesController {
   constructor(
@@ -41,10 +42,12 @@ export default class BedspacesController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { premisesId } = req.params
+      const { bedEndDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'bedEndDate')
 
       const newRoom: NewRoom = {
         characteristicIds: [],
         ...req.body,
+        bedEndDate,
       }
 
       try {

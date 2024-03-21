@@ -3,6 +3,7 @@ import { Factory } from 'fishery'
 import type { NewRoom, Room } from '@approved-premises/api'
 import { unique } from '../../utils/utils'
 import referenceDataFactory from './referenceData'
+import { DateFormats } from '../../utils/dateUtils'
 
 class NewRoomFactory extends Factory<NewRoom> {
   /* istanbul ignore next */
@@ -20,4 +21,5 @@ export default NewRoomFactory.define(() => ({
     characteristic => characteristic.id,
   ),
   notes: faker.lorem.lines(),
+  bedEndDate: DateFormats.dateObjToIsoDate(faker.date.future({ years: 1 })),
 }))

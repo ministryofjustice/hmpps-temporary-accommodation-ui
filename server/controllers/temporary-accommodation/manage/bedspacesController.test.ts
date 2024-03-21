@@ -20,6 +20,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspacesController from './bedspacesController'
 import { preservePlaceContext } from '../../../utils/placeUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -92,17 +93,23 @@ describe('BedspacesController', () => {
       request.body = {
         name: room.name,
         notes: room.notes,
+        ...DateFormats.isoToDateAndTimeInputs(room.beds[0].bedEndDate, 'bedEndDate'),
       }
 
       bedspaceService.createRoom.mockResolvedValue(room)
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.createRoom).toHaveBeenCalledWith(callConfig, premisesId, {
-        name: room.name,
-        characteristicIds: [],
-        notes: room.notes,
-      })
+      expect(bedspaceService.createRoom).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        expect.objectContaining({
+          name: room.name,
+          characteristicIds: [],
+          notes: room.notes,
+          bedEndDate: room.beds[0].bedEndDate,
+        }),
+      )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace created')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))

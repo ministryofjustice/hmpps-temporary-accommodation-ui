@@ -7,7 +7,9 @@ export default abstract class BedspaceEditablePage extends Page {
     this.getTextInputByIdAndEnterDetails('name', newOrUpdateRoom.name)
 
     this.getLegend('Enter the bedspace end date (optional)')
-    this.completeDateInputs('bedEndDate', newOrUpdateRoom.bedEndDate)
+    if (newOrUpdateRoom.bedEndDate) {
+      this.completeDateInputs('bedEndDate', newOrUpdateRoom.bedEndDate)
+    }
 
     newOrUpdateRoom.characteristicIds.forEach(characteristicId => {
       this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)

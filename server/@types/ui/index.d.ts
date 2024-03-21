@@ -361,3 +361,5 @@ export type AssessmentSearchParameters = {
   sortDirection?: SortDirection
   crn?: string
 }
+
+export type BedspaceStatus = 'online' | 'archived'

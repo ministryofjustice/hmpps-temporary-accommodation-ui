@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
@@ -13,6 +14,7 @@ import {
   roomFactory,
   updateRoomFactory,
 } from '../../../../server/testutils/factories'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -292,16 +294,19 @@ context('Bedspace', () => {
 
     // And there is an archived premises, a room, bookings, and a lost bed in the database
     const premises = premisesFactory.archived().build()
-    const room = roomFactory.build()
-    const bed = bedFactory.build({
-      id: room.beds[0].id,
+    const room = roomFactory.build({
+      beds: [
+        bedFactory.build({
+          bedEndDate: DateFormats.dateObjToIsoDate(addDays(new Date(), -7)),
+        }),
+      ],
     })
     const bookings = bookingFactory
       .params({
-        bed,
+        bed: room.beds[0],
       })
       .buildList(5)
-    const lostBed = lostBedFactory.active().build({ bedId: bed.id })
+    const lostBed = lostBedFactory.active().build({ bedId: room.beds[0].id })
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
@@ -342,5 +347,82 @@ context('Bedspace', () => {
 
     // Then I navigate to the show premises page
     Page.verifyOnPage(PremisesShowPage, premises)
+  })
+
+  describe('viewing a bedspace', () => {
+    let premises
+
+    beforeEach(() => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is an active premises in the database
+      premises = premisesFactory.active().build()
+      cy.task('stubSinglePremises', premises)
+    })
+
+    describe('when the bedspace has no end date', () => {
+      it('shows the bedspace as Online', () => {
+        // And there is a bedspace with no end date for the premises
+        const bed = bedFactory.build()
+        const room = roomFactory.build({ beds: [bed] })
+        cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+        // When I visit the show bedspace page
+        const page = BedspaceShowPage.visit(premises, room)
+
+        // Then I should see that the bedspace is Online
+        page.shouldShowAsActive()
+
+        // And I should see the bedspace has no end date
+        page.shouldShowBedspaceEndDate(null)
+      })
+    })
+
+    describe('when the bedspace has an end date in the future', () => {
+      it('shows the bedspace as Online', () => {
+        const currentDate = new Date()
+        const futureDate = addDays(currentDate, 7)
+
+        // And there is a bedspace with no end date for the premises
+        const bed = bedFactory.build({
+          bedEndDate: DateFormats.dateObjToIsoDate(futureDate),
+        })
+        const room = roomFactory.build({ beds: [bed] })
+        cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+        // When I visit the show bedspace page
+        const page = BedspaceShowPage.visit(premises, room)
+
+        // Then I should see that the bedspace is Online
+        page.shouldShowAsActive()
+
+        // And I should see the bedspace end date
+        page.shouldShowBedspaceEndDate(DateFormats.dateObjtoUIDate(futureDate))
+      })
+    })
+
+    describe('when the bedspace has an end date in the past', () => {
+      it('shows the bedspace as Archived', () => {
+        const currentDate = new Date()
+        const pastDate = addDays(currentDate, -7)
+
+        // And there is a bedspace with no end date for the premises
+        const bed = bedFactory.build({
+          bedEndDate: DateFormats.dateObjToIsoDate(pastDate),
+        })
+        const room = roomFactory.build({ beds: [bed] })
+        cy.task('stubSingleRoom', { premisesId: premises.id, room })
+
+        // When I visit the show bedspace page
+        const page = BedspaceShowPage.visit(premises, room)
+
+        // Then I should see that the bedspace is Archived
+        page.shouldShowAsArchived(false)
+
+        // And I should see the bedspace end date
+        page.shouldShowBedspaceEndDate(DateFormats.dateObjtoUIDate(pastDate))
+      })
+    })
   })
 })

@@ -70,12 +70,4 @@
         <p>If the booking is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
                 support</a> for help.</p>
     {% endif %}
-
-    {% block extraScripts %}
-        <script type="text/javascript" nonce="{{ cspNonce }}">
-          $(document).ready(function() {
-            window.MOJFrontend.initAll()
-          })
-        </script>
-    {% endblock %}
 {% endblock %}

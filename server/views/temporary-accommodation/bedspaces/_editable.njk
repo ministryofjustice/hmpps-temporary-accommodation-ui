@@ -2,52 +2,69 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "../components/ta-input/macro.njk" import taInput %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
 
 {{ taInput(
-  {
-    label: {
-      text: 'Enter a bedspace reference',
-      classes: "govuk-label--m"
+    {
+        label: {
+        text: 'Enter a bedspace reference',
+        classes: "govuk-label--m"
     },
+        hint: {
+        text: "This will be used to identify the bedspace when making bookings and reporting on the service"
+    },
+        fieldName: "name"
+    },
+    fetchContext()
+) }}
+
+{{ taDateInput({
+    fieldset: {
+        legend: {
+            text: "Enter the bedspace end date (optional)",
+            classes: "govuk-fieldset__legend--m"
+        }
+    },
+    fieldName: "bedEndDate",
     hint: {
-      text: "This will be used to identify the bedspace when making bookings and reporting on the service"
+        html: '<p>This is the last date the bedspace can be used by the service. It\'ll then be archived. You cannot edit the date after adding it.</p><p class="govuk-hint">For example, 27 3 2025</p>'
     },
-    fieldName: "name"
-  },
-  fetchContext()
+    items: dateFieldValues('bedEndDate', errors)
+},
+    fetchContext()
 ) }}
 
 {{ govukCheckboxes({
-  fieldset: {
-    legend: {
-      text: "Does the bedspace have any of the following attributes?",
-      classes: "govuk-fieldset__legend--m"
-    }
-  },
-  hint: {
-    text: "Select all that apply"
-  },
-  items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
-  id: "characteristicIds",
-  name: "characteristicIds[]",
-  errorMessage: errors.characteristicIds
+    fieldset: {
+        legend: {
+            text: "Does the bedspace have any of the following attributes?",
+            classes: "govuk-fieldset__legend--m"
+        }
+    },
+    hint: {
+        text: "Select all that apply"
+    },
+    items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
+    id: "characteristicIds",
+    name: "characteristicIds[]",
+    errorMessage: errors.characteristicIds
 }) }}
 
 {{ govukTextarea({
-  label: {
-    text: "Please provide any further bedspace details",
-    classes: "govuk-label--m"
-  },
-  hint: {
-    text: "This information will be used to help find a suitable bedspace for the person on probation"
-  },
-  id: "notes",
-  name: "notes",
-  value: notes,
-  errorMessage: errors.notes
+    label: {
+        text: "Please provide any further bedspace details",
+        classes: "govuk-label--m"
+    },
+    hint: {
+        text: "This information will be used to help find a suitable bedspace for the person on probation"
+    },
+    id: "notes",
+    name: "notes",
+    value: notes,
+    errorMessage: errors.notes
 }) }}
 
 {{ govukButton({
-  text: "Submit",
-  preventDoubleClick: true
+    text: "Submit",
+    preventDoubleClick: true
 }) }}

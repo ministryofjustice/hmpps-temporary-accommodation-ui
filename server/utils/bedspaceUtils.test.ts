@@ -1,12 +1,14 @@
+import { addDays } from 'date-fns'
 import paths from '../paths/temporary-accommodation/manage'
-import { placeContextFactory, premisesFactory, roomFactory } from '../testutils/factories'
-import { bedspaceActions } from './bedspaceUtils'
+import { bedFactory, placeContextFactory, premisesFactory, roomFactory } from '../testutils/factories'
+import { bedspaceActions, bedspaceStatus } from './bedspaceUtils'
 import { addPlaceContext } from './placeUtils'
+import { DateFormats } from './dateUtils'
 
 jest.mock('./placeUtils')
 
 describe('bedspaceUtils', () => {
-  describe('bedspaceUtils', () => {
+  describe('bedspaceActions', () => {
     it('returns book bedspace and void bedspace for an active premises', () => {
       const premises = premisesFactory.build({
         status: 'active',
@@ -44,6 +46,71 @@ describe('bedspaceUtils', () => {
       const room = roomFactory.build()
 
       expect(bedspaceActions(premises, room, placeContext)).toEqual(null)
+    })
+
+    it('returns null for an archived bedspace in an active premises', () => {
+      const placeContext = placeContextFactory.build()
+
+      const premises = premisesFactory.build({
+        status: 'active',
+      })
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            bedEndDate: DateFormats.dateObjToIsoDate(addDays(new Date(), -14)),
+          }),
+        ],
+      })
+
+      expect(bedspaceActions(premises, room, placeContext)).toEqual(null)
+    })
+  })
+
+  describe('bedspaceStatus', () => {
+    it('returns online if the bedspace has no end date', () => {
+      const room = roomFactory.build()
+      const status = bedspaceStatus(room)
+
+      expect(status).toEqual('online')
+    })
+
+    it('returns online if the bedspace has an end date in the future', () => {
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            bedEndDate: DateFormats.dateObjToIsoDate(addDays(new Date(), 7)),
+          }),
+        ],
+      })
+      const status = bedspaceStatus(room)
+
+      expect(status).toEqual('online')
+    })
+
+    it('returns archived if the bedspace has an end date in the past', () => {
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            bedEndDate: DateFormats.dateObjToIsoDate(addDays(new Date(), -7)),
+          }),
+        ],
+      })
+      const status = bedspaceStatus(room)
+
+      expect(status).toEqual('archived')
+    })
+
+    it('returns archived if the bedspace has today as an end date', () => {
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            bedEndDate: DateFormats.dateObjToIsoDate(new Date()),
+          }),
+        ],
+      })
+      const status = bedspaceStatus(room)
+
+      expect(status).toEqual('archived')
     })
   })
 })

@@ -1,10 +1,11 @@
 import { Premises, Room } from '../@types/shared'
-import { PageHeadingBarItem, PlaceContext } from '../@types/ui'
+import { BedspaceStatus, PageHeadingBarItem, PlaceContext } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { addPlaceContext } from './placeUtils'
+import { dateIsInThePast } from './dateUtils'
 
 export function bedspaceActions(premises: Premises, room: Room, placeContext: PlaceContext): Array<PageHeadingBarItem> {
-  if (premises.status === 'archived') {
+  if (premises.status === 'archived' || bedspaceStatus(room) === 'archived') {
     return null
   }
   const items = [
@@ -22,4 +23,14 @@ export function bedspaceActions(premises: Premises, room: Room, placeContext: Pl
   })
 
   return items
+}
+
+export function bedspaceStatus(room: Room): BedspaceStatus {
+  if (room.beds[0].bedEndDate) {
+    if (dateIsInThePast(room.beds[0].bedEndDate)) {
+      return 'archived'
+    }
+  }
+
+  return 'online'
 }

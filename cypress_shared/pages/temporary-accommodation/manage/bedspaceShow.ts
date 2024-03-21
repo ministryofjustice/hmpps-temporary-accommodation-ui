@@ -6,6 +6,7 @@ import BookingListingComponent from '../../../components/bookingListing'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import LostBedListingComponent from '../../../components/lostBedListing'
 import Page from '../../page'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 export default class BedspaceShowPage extends Page {
   private readonly locationHeaderComponent: LocationHeaderComponent
@@ -66,14 +67,28 @@ export default class BedspaceShowPage extends Page {
     })
 
     cy.root().should('not.contain', 'This bedspace is in an archived property.')
+
+    this.shouldShowKeyAndValue('Bedspace status', 'Online')
   }
 
-  shouldShowAsArchived(): void {
+  shouldShowAsArchived(premiseIsArchived = true): void {
     cy.get('.moj-page-header-actions').within(() => {
       cy.root().should('not.contain', 'Actions')
     })
 
-    cy.root().should('contain', 'This bedspace is in an archived property.')
+    if (premiseIsArchived) {
+      cy.root().should('contain', 'This bedspace is in an archived property.')
+    }
+
+    this.shouldShowKeyAndValue('Bedspace status', 'Archived')
+  }
+
+  shouldShowBedspaceEndDate(endDate: string | null): void {
+    if (!endDate) {
+      this.shouldShowKeyAndValue('Bedspace end date', 'No end date added')
+    } else {
+      this.shouldShowKeyAndValue('Bedspace end date', DateFormats.isoDateToUIDate(this.room.beds[0].bedEndDate))
+    }
   }
 
   clickBedspaceEditLink(): void {

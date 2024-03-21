@@ -422,7 +422,7 @@ describe('assessmentUtils', () => {
     it('applies some defaults', () => {
       expect(getParams({})).toEqual({
         page: 1,
-        sortBy: 'name',
+        sortBy: 'arrivedAt',
         sortDirection: 'asc',
       })
     })
@@ -430,7 +430,7 @@ describe('assessmentUtils', () => {
     it('returns query values', () => {
       const query = {
         page: '3',
-        sortBy: 'arrivedAt',
+        sortBy: 'createdAt',
         sortDirection: 'desc',
         crn: 'X567345',
       }
@@ -438,7 +438,7 @@ describe('assessmentUtils', () => {
       expect(getParams(query)).toEqual({
         crn: 'X567345',
         page: 3,
-        sortBy: 'arrivedAt',
+        sortBy: 'createdAt',
         sortDirection: 'desc',
       })
     })

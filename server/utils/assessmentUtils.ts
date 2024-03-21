@@ -234,7 +234,7 @@ export const getParams = (query?: QueryString.ParsedQs): AssessmentSearchParamet
   // Default is page 1, sorted by name ascending
   ...query,
   page: Number(!query.page ? 1 : query.page),
-  sortBy: (query.sortBy || 'name') as AssessmentSortField,
+  sortBy: (query.sortBy || 'arrivedAt') as AssessmentSortField,
   sortDirection: (query.sortDirection || 'asc') as SortDirection,
 })
 

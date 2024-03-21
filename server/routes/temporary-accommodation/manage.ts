@@ -327,7 +327,7 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.assessments.readyToPlace.pattern, assessmentsController.list('ready_to_place'), {
     auditEvent: 'VIEW_READY_TO_PLACE_ASSESSMENTS_LIST',
   })
-  get(paths.assessments.archive.pattern, assessmentsController.archive(), {
+  get(paths.assessments.archive.pattern, assessmentsController.list('archived'), {
     auditEvent: 'VIEW_ARCHIVE_ASSESSMENTS_LIST',
   })
   get(paths.assessments.full.pattern, assessmentsController.full(), {

@@ -7,39 +7,18 @@ import {
 } from '../../../@types/shared'
 import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
-import { assessmentActions, createTableHeadings, getParams, statusChangeMessage } from '../../../utils/assessmentUtils'
+import {
+  assessmentActions,
+  createTableHeadings,
+  getParams,
+  pathFromStatus,
+  statusChangeMessage,
+} from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
-
-export const assessmentsTableHeaders = [
-  {
-    text: 'Name',
-    attributes: {
-      'aria-sort': 'ascending',
-    },
-  },
-  {
-    text: 'CRN',
-    attributes: {
-      'aria-sort': 'none',
-    },
-  },
-  {
-    text: 'Referral received',
-    attributes: {
-      'aria-sort': 'none',
-    },
-  },
-  {
-    text: 'Bedspace required',
-    attributes: {
-      'aria-sort': 'none',
-    },
-  },
-]
 
 export const confirmationPageContent: Record<Assessment['status'], { title: string; text: string }> = {
   in_review: {
@@ -79,39 +58,45 @@ export default class AssessmentsController {
 
   list(status: AssessmentSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors } = fetchErrorsAndUserInput(req)
+
       const callConfig = extractCallConfig(req)
 
       const params = getParams(req.query)
 
-      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
+      const template =
+        status === 'archived'
+          ? 'temporary-accommodation/assessments/archive'
+          : 'temporary-accommodation/assessments/index'
 
-      return res.render('temporary-accommodation/assessments/index', {
-        status,
-        tableRows: response.data,
-        tableHeaders: createTableHeadings(params.sortBy, params.sortDirection === 'asc', appendQueryString('', params)),
-        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
-      })
-    }
-  }
+      try {
+        if (params.crn !== undefined && !params.crn.trim().length) {
+          const error = new Error()
+          insertGenericError(error, 'crn', 'empty')
+          throw error
+        }
 
-  archive(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const callConfig = extractCallConfig(req)
+        const response = errors.crn
+          ? null
+          : await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
-      const params = getParams(req.query)
-
-      const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, 'archived', params)
-
-      return res.render('temporary-accommodation/assessments/archive', {
-        tableHeaders: createTableHeadings(
-          params.sortBy,
-          params.sortDirection === 'asc',
-          appendQueryString('', params),
-          true,
-        ),
-        archivedTableRows: response.data,
-        pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
-      })
+        return res.render(template, {
+          status,
+          basePath: pathFromStatus(status),
+          tableRows: response?.data,
+          tableHeaders: createTableHeadings(
+            params.sortBy,
+            params.sortDirection === 'asc',
+            appendQueryString('', params),
+            status === 'archived',
+          ),
+          crn: params.crn,
+          pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
+          errors,
+        })
+      } catch (err) {
+        return catchValidationErrorOrPropogate(req, res, err, pathFromStatus(status))
+      }
     }
   }
 

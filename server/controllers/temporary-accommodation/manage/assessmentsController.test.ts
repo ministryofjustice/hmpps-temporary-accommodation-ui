@@ -2,11 +2,13 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { ParsedQs } from 'qs'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import {
   assessmentFactory,
+  assessmentSearchParametersFactory,
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
@@ -15,9 +17,10 @@ import * as assessmentUtils from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import * as utils from '../../../utils/utils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import AssessmentsController, { confirmationPageContent } from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
+import { pathFromStatus } from '../../../utils/assessmentUtils'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
@@ -80,6 +83,12 @@ describe('AssessmentsController', () => {
   beforeEach(() => {
     request = createMock<Request>({ session, query: {} })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
+    ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   describe('index', () => {
@@ -92,12 +101,30 @@ describe('AssessmentsController', () => {
   })
 
   describe('list', () => {
-    describe.each(['unallocated', 'in_review', 'ready_to_place'])(
+    describe.each(['unallocated', 'in_review', 'ready_to_place', 'archived'])(
       'when viewing assessments with status %s',
       (status: AssessmentSearchApiStatus) => {
+        let expectedTemplate = 'temporary-accommodation/assessments/index'
+        let expectedHeaders = [...tableHeaders]
+        const statusHeader = {
+          html: '<a href="?sortBy=status"><button>Status</button></a>',
+          attributes: {
+            'aria-sort': 'none',
+            'data-cy-sort-field': 'status',
+          },
+        }
+
+        beforeEach(() => {
+          if (status === 'archived') {
+            expectedTemplate = 'temporary-accommodation/assessments/archive'
+            expectedHeaders.push(statusHeader)
+          }
+        })
+
         it('returns the pagination and table rows to the template', async () => {
           const assessment = assessmentSummaryFactory.build()
           const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
+
           assessmentsService.getAllForLoggedInUser.mockResolvedValue({
             ...assessments,
             data: assessments.data.map(summary => [{ text: summary.createdAt }]),
@@ -106,11 +133,13 @@ describe('AssessmentsController', () => {
           const requestHandler = assessmentsController.list(status)
           await requestHandler(request, response, next)
 
-          expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/index', {
+          expect(response.render).toHaveBeenCalledWith(expectedTemplate, {
             status,
+            basePath: pathFromStatus(status),
             tableRows: [[{ text: assessment.createdAt }]],
-            tableHeaders,
+            tableHeaders: expectedHeaders,
             pagination: {},
+            errors: {},
           })
 
           expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
@@ -129,29 +158,36 @@ describe('AssessmentsController', () => {
           })
           assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
 
+          expectedHeaders = [
+            {
+              html: '<a href="?sortBy=name"><button>Name</button></a>',
+              attributes: {
+                'aria-sort': 'none',
+                'data-cy-sort-field': 'name',
+              },
+            },
+            tableHeaders[1],
+            tableHeaders[2],
+            {
+              html: '<a href="?sortBy=arrivedAt&sortDirection=desc"><button>Bedspace required</button></a>',
+              attributes: {
+                'aria-sort': 'ascending',
+                'data-cy-sort-field': 'arrivedAt',
+              },
+            },
+          ]
+
+          if (status === 'archived') {
+            expectedHeaders.push(statusHeader)
+          }
+
           const requestHandler = assessmentsController.list(status)
           await requestHandler(request, response, next)
 
-          expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/index', {
+          expect(response.render).toHaveBeenLastCalledWith(expectedTemplate, {
             status,
-            tableHeaders: [
-              {
-                html: '<a href="?sortBy=name"><button>Name</button></a>',
-                attributes: {
-                  'aria-sort': 'none',
-                  'data-cy-sort-field': 'name',
-                },
-              },
-              tableHeaders[1],
-              tableHeaders[2],
-              {
-                html: '<a href="?sortBy=arrivedAt&sortDirection=desc"><button>Bedspace required</button></a>',
-                attributes: {
-                  'aria-sort': 'ascending',
-                  'data-cy-sort-field': 'arrivedAt',
-                },
-              },
-            ],
+            basePath: pathFromStatus(status),
+            tableHeaders: expectedHeaders,
             tableRows: assessments.data,
             pagination: {
               items: [
@@ -160,6 +196,7 @@ describe('AssessmentsController', () => {
               ],
               previous: { text: 'Previous', href: '?page=1&sortBy=arrivedAt&sortDirection=asc' },
             },
+            errors: {},
           })
 
           expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
@@ -168,94 +205,73 @@ describe('AssessmentsController', () => {
             sortDirection: 'asc',
           })
         })
+
+        describe('when there is a CRN search parameter', () => {
+          it('renders the filtered table view', async () => {
+            const assessments = assessmentSummaries.build()
+            const searchParameters = assessmentSearchParametersFactory.build()
+
+            jest.spyOn(assessmentUtils, 'createTableHeadings').mockReturnValue([])
+            assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
+            request.query = searchParameters as ParsedQs
+
+            const requestHandler = assessmentsController.list(status)
+            await requestHandler(request, response, next)
+
+            expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
+              crn: searchParameters.crn,
+              page: 1,
+              sortBy: 'name',
+              sortDirection: 'asc',
+            })
+
+            expect(response.render).toHaveBeenCalledWith(expectedTemplate, {
+              status,
+              basePath: pathFromStatus(status),
+              tableRows: assessments.data,
+              tableHeaders: [],
+              pagination: {},
+              crn: searchParameters.crn,
+              errors: {},
+            })
+          })
+        })
+
+        describe('when a blank CRN search is submitted', () => {
+          it('renders an error', async () => {
+            const searchParameters = assessmentSearchParametersFactory.build({ crn: '  ' })
+
+            request.query = searchParameters as ParsedQs
+
+            const requestHandler = assessmentsController.list(status)
+            await requestHandler(request, response, next)
+
+            expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'crn', 'empty')
+            expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+              request,
+              response,
+              new Error(),
+              pathFromStatus(status),
+            )
+          })
+        })
+
+        describe('when there is a CRN search error', () => {
+          it('does not call the API to fetch results', async () => {
+            ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+              errors: { crn: { text: 'You must enter a CRN', attributes: {} } },
+              errorSummary: [],
+              userInput: {},
+            })
+
+            const requestHandler = assessmentsController.list(status)
+            await requestHandler(request, response, next)
+
+            expect(assessmentsService.getAllForLoggedInUser).not.toHaveBeenCalled()
+          })
+        })
       },
     )
-  })
-
-  describe('archive', () => {
-    const archivedTableHeaders = [
-      ...tableHeaders,
-      {
-        html: '<a href="?sortBy=status"><button>Status</button></a>',
-        attributes: {
-          'aria-sort': 'none',
-          'data-cy-sort-field': 'status',
-        },
-      },
-    ]
-
-    it('returns the paginated table rows to the archived template', async () => {
-      const assessment = assessmentSummaryFactory.build()
-      const assessments = assessmentSummaries.build({ data: [assessment], totalResults: 1 })
-      assessmentsService.getAllForLoggedInUser.mockResolvedValue({
-        ...assessments,
-        data: assessments.data.map(summary => [{ text: summary.createdAt }]),
-      })
-
-      const requestHandler = assessmentsController.archive()
-      await requestHandler(request, response, next)
-
-      expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
-        tableHeaders: archivedTableHeaders,
-        archivedTableRows: [[{ text: assessment.createdAt }]],
-        pagination: {},
-      })
-
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
-        page: 1,
-        sortBy: 'name',
-        sortDirection: 'asc',
-      })
-    })
-
-    it('returns the correct page and sorted results to the template', async () => {
-      request = createMock<Request>({ session, query: { page: '2', sortBy: 'status', sortDirection: 'asc' } })
-      const assessments = assessmentSummaries.build({
-        totalResults: 13,
-        pageNumber: 2,
-        totalPages: 2,
-      })
-      assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
-
-      const requestHandler = assessmentsController.archive()
-      await requestHandler(request, response, next)
-
-      expect(response.render).toHaveBeenLastCalledWith('temporary-accommodation/assessments/archive', {
-        archivedTableRows: assessments.data,
-        tableHeaders: [
-          {
-            html: '<a href="?sortBy=name"><button>Name</button></a>',
-            attributes: {
-              'aria-sort': 'none',
-              'data-cy-sort-field': 'name',
-            },
-          },
-          tableHeaders[1],
-          tableHeaders[2],
-          tableHeaders[3],
-          {
-            html: '<a href="?sortBy=status&sortDirection=desc"><button>Status</button></a>',
-            attributes: {
-              'aria-sort': 'ascending',
-              'data-cy-sort-field': 'status',
-            },
-          },
-        ],
-        pagination: {
-          items: [
-            { text: '1', href: '?page=1&sortBy=status&sortDirection=asc' },
-            { text: '2', href: '?page=2&sortBy=status&sortDirection=asc', selected: true },
-          ],
-          previous: { text: 'Previous', href: '?page=1&sortBy=status&sortDirection=asc' },
-        },
-      })
-
-      expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, 'archived', {
-        page: 2,
-        sortBy: 'status',
-        sortDirection: 'asc',
-      })
-    })
   })
 
   describe('summary', () => {

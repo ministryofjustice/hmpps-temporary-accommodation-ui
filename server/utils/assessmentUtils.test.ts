@@ -1,3 +1,4 @@
+import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import {
   assessmentFactory,
@@ -13,6 +14,7 @@ import {
   assessmentTableRows,
   createTableHeadings,
   getParams,
+  pathFromStatus,
   statusChangeMessage,
   timelineItems,
 } from './assessmentUtils'
@@ -430,13 +432,26 @@ describe('assessmentUtils', () => {
         page: '3',
         sortBy: 'arrivedAt',
         sortDirection: 'desc',
+        crn: 'X567345',
       }
 
       expect(getParams(query)).toEqual({
+        crn: 'X567345',
         page: 3,
         sortBy: 'arrivedAt',
         sortDirection: 'desc',
       })
+    })
+  })
+
+  describe('pathFromStatus', () => {
+    it.each([
+      ['/review-and-assess/unallocated', 'unallocated'],
+      ['/review-and-assess/in-review', 'in_review'],
+      ['/review-and-assess/ready-to-place', 'ready_to_place'],
+      ['/review-and-assess/archive', 'archived'],
+    ])('returns %s for status %s', (path, status: AssessmentSearchApiStatus) => {
+      expect(pathFromStatus(status)).toEqual(path)
     })
   })
 })

@@ -9,7 +9,13 @@ import {
   ReferralHistoryUserNote as UserNote,
 } from '@approved-premises/api'
 import QueryString from 'qs'
-import { AssessmentSearchParameters, MessageContents, TableRow, TimelineItem } from '../@types/ui'
+import {
+  AssessmentSearchApiStatus,
+  AssessmentSearchParameters,
+  MessageContents,
+  TableRow,
+  TimelineItem,
+} from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
 import { personName } from './personUtils'
@@ -231,3 +237,13 @@ export const getParams = (query?: QueryString.ParsedQs): AssessmentSearchParamet
   sortBy: (query.sortBy || 'name') as AssessmentSortField,
   sortDirection: (query.sortDirection || 'asc') as SortDirection,
 })
+
+export const pathFromStatus = (status: AssessmentSearchApiStatus) => {
+  let pathStatus: string = status
+
+  if (status === 'in_review') pathStatus = 'inReview'
+  if (status === 'ready_to_place') pathStatus = 'readyToPlace'
+  if (status === 'archived') pathStatus = 'archive'
+
+  return paths.assessments[pathStatus]({})
+}

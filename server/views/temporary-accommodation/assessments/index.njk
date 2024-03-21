@@ -1,10 +1,14 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% extends "../../partials/layout.njk" %}
-{% set pageTitle = "Referrals - " + applicationName %}
+
+{% set uiStatus = status | replace('_', ' ') %}
+{% set title = (uiStatus + ' referrals') | sentenceCase %}
+{% set pageTitle = title + " - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -12,49 +16,97 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="govuk-heading-l">{{ status | replace('_', ' ') | capitalize }} referrals</h1>
+    {% set context = fetchContext() %}
 
-    {{ mojSubNavigation({
-        label: 'Secondary navigation',
-        items: [
-            {
-                text: 'Unallocated',
-                href: paths.assessments.unallocated(),
-                active: status == 'unallocated'
-            },
-            {
-                text: 'In review',
-                href: paths.assessments.inReview(),
-                active: status == 'in_review'
-            },
-            {
-                text: 'Ready to place',
-                href: paths.assessments.readyToPlace(),
-                active: status == 'ready_to_place'
-            }
-        ]
-    }) }}
+    <h1 class="govuk-heading-l">{{ title }}</h1>
 
-    <div class="govuk-!-margin-bottom-4">
-        {{ mojPagination(pagination) }}
+    {% block tabs %}
+        {{ mojSubNavigation({
+            label: 'Secondary navigation',
+            items: [
+                {
+                    text: 'Unallocated',
+                    href: paths.assessments.unallocated(),
+                    active: status == 'unallocated'
+                },
+                {
+                    text: 'In review',
+                    href: paths.assessments.inReview(),
+                    active: status == 'in_review'
+                },
+                {
+                    text: 'Ready to place',
+                    href: paths.assessments.readyToPlace(),
+                    active: status == 'ready_to_place'
+                }
+            ]
+        }) }}
+    {% endblock %}
+
+    <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
+        <form action="{{ basePath }}" method="get">
+
+            {{ govukInput(
+                {
+                    label: {
+                    classes: 'govuk-label--m',
+                    text: 'Search ' + uiStatus + ' referrals by CRN (case reference number)'
+                },
+                    hint: {
+                    text: 'For example, XD7364CD'
+                },
+                    name: 'crn',
+                    id: 'crn',
+                    value: crn
+                }
+            ) }}
+
+            <div class="govuk-button-group">
+                {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+
+                <a class="govuk-link" href="{{ basePath }}">Clear</a>
+            </div>
+        </form>
     </div>
 
-    {{ govukTable({
-        firstCellIsHeader: true,
-        head: tableHeaders,
-        rows: tableRows
-    }) }}
+    {% if context.errors.crn %}
+        <h2>You have not entered any search terms</h2>
 
-    <div class="govuk-!-margin-bottom-9">
+        <p>Enter a CRN. This can be found in nDelius.</p>
+
+        {% elif (tableRows|length > 0) or (not crn) %}
+
+        <div class="govuk-!-margin-bottom-4">
+            {{ mojPagination(pagination) }}
+        </div>
+
+        {{ govukTable({
+            firstCellIsHeader: true,
+            head: tableHeaders,
+            rows: tableRows
+        }) }}
+
         {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
-    </div>
 
-    {{ govukButton({
-        text: "View archived referrals",
-        type: "button",
-        href: paths.assessments.archive(),
-        classes: "govuk-button--secondary"
-    }) }}
+    {% else %}
+        <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} referrals.</h2>
+
+        <p>Check the other lists.</p>
+
+        <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+                support</a> for help.</p>
+    {% endif %}
+
+    {% block archivedLink %}
+        <div class="govuk-!-margin-top-9">
+            {{ govukButton({
+                text: "View archived referrals",
+                type: "button",
+                href: paths.assessments.archive(),
+                classes: "govuk-button--secondary"
+            }) }}
+        </div>
+    {% endblock %}
 {% endblock %}
 
 {% block extraScripts %}

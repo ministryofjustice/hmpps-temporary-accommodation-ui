@@ -1,4 +1,4 @@
-import { EligibilityReasonsT } from 'server/form-pages/apply/accommodation-need/eligibility/eligibilityReason'
+import { EligibilityReasonsT } from '../../form-pages/apply/accommodation-need/eligibility/eligibilityReason'
 import { TemporaryAccommodationApplication as Application } from '../../@types/shared'
 import { ApplicationSummaryData, YesOrNo } from '../../@types/ui'
 

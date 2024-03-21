@@ -69,34 +69,22 @@ describe('bookingSearchUtils', () => {
       const tableHeadings = [
         {
           html: '<a href="?sortBy=name"><button>Name</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'name',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?sortBy=crn"><button>CRN</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'crn',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           text: 'Address',
         },
         {
           html: '<a href="?sortBy=startDate&sortDirection=desc"><button>Start date</button></a>',
-          attributes: {
-            'aria-sort': 'ascending',
-            'data-cy-sort-field': 'startDate',
-          },
+          attributes: { 'aria-sort': 'ascending' },
         },
         {
           html: '<a href="?sortBy=endDate"><button>End date</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'endDate',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<span class="govuk-visually-hidden">Actions</span>',
@@ -112,34 +100,22 @@ describe('bookingSearchUtils', () => {
     const tableHeadings = [
       {
         html: '<a href="?sortBy=name"><button>Name</button></a>',
-        attributes: {
-          'aria-sort': 'none',
-          'data-cy-sort-field': 'name',
-        },
+        attributes: { 'aria-sort': 'none' },
       },
       {
         html: '<a href="?sortBy=crn"><button>CRN</button></a>',
-        attributes: {
-          'aria-sort': 'none',
-          'data-cy-sort-field': 'crn',
-        },
+        attributes: { 'aria-sort': 'none' },
       },
       {
         text: 'Address',
       },
       {
         html: '<a href="?sortBy=startDate"><button>Start date</button></a>',
-        attributes: {
-          'aria-sort': 'none',
-          'data-cy-sort-field': 'startDate',
-        },
+        attributes: { 'aria-sort': 'none' },
       },
       {
         html: '<a href="?sortBy=endDate&sortDirection=asc"><button>End date</button></a>',
-        attributes: {
-          'aria-sort': 'descending',
-          'data-cy-sort-field': 'endDate',
-        },
+        attributes: { 'aria-sort': 'descending' },
       },
       {
         html: '<span class="govuk-visually-hidden">Actions</span>',

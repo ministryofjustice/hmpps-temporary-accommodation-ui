@@ -54,28 +54,24 @@ describe('AssessmentsController', () => {
       html: '<a href="?sortBy=name"><button>Name</button></a>',
       attributes: {
         'aria-sort': 'none',
-        'data-cy-sort-field': 'name',
       },
     },
     {
       html: '<a href="?sortBy=crn"><button>CRN</button></a>',
       attributes: {
         'aria-sort': 'none',
-        'data-cy-sort-field': 'crn',
       },
     },
     {
       html: '<a href="?sortBy=createdAt"><button>Referral received</button></a>',
       attributes: {
         'aria-sort': 'none',
-        'data-cy-sort-field': 'createdAt',
       },
     },
     {
       html: '<a href="?sortBy=arrivedAt&sortDirection=desc"><button>Bedspace required</button></a>',
       attributes: {
         'aria-sort': 'ascending',
-        'data-cy-sort-field': 'arrivedAt',
       },
     },
   ]
@@ -110,7 +106,6 @@ describe('AssessmentsController', () => {
           html: '<a href="?sortBy=status"><button>Status</button></a>',
           attributes: {
             'aria-sort': 'none',
-            'data-cy-sort-field': 'status',
           },
         }
 
@@ -165,14 +160,12 @@ describe('AssessmentsController', () => {
               html: '<a href="?sortBy=createdAt&sortDirection=asc"><button>Referral received</button></a>',
               attributes: {
                 'aria-sort': 'descending',
-                'data-cy-sort-field': 'createdAt',
               },
             },
             {
               html: '<a href="?sortBy=arrivedAt"><button>Bedspace required</button></a>',
               attributes: {
                 'aria-sort': 'none',
-                'data-cy-sort-field': 'arrivedAt',
               },
             },
           ]

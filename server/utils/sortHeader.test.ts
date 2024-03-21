@@ -9,10 +9,7 @@ describe('sortHeader', () => {
   it("should return a header when the current view is not sorted by the header's field`", () => {
     expect(sortHeader<SortHeaders>('Some text', 'myField', 'otherField', true, hrefPrefix)).toEqual({
       html: `<a href="${hrefPrefix}${createQueryString({ sortBy: 'myField' })}"><button>Some text</button></a>`,
-      attributes: {
-        'aria-sort': 'none',
-        'data-cy-sort-field': 'myField',
-      },
+      attributes: { 'aria-sort': 'none' },
     })
   })
 
@@ -22,10 +19,7 @@ describe('sortHeader', () => {
         sortBy: 'myField',
         sortDirection: 'desc',
       })}"><button>Some text</button></a>`,
-      attributes: {
-        'aria-sort': 'ascending',
-        'data-cy-sort-field': 'myField',
-      },
+      attributes: { 'aria-sort': 'ascending' },
     })
   })
 
@@ -35,10 +29,7 @@ describe('sortHeader', () => {
         sortBy: 'myField',
         sortDirection: 'asc',
       })}"><button>Some text</button></a>`,
-      attributes: {
-        'aria-sort': 'descending',
-        'data-cy-sort-field': 'myField',
-      },
+      attributes: { 'aria-sort': 'descending' },
     })
   })
 
@@ -49,10 +40,7 @@ describe('sortHeader', () => {
         sortBy: 'myField',
         sortDirection: 'asc',
       })}"><button>Some text</button></a>`,
-      attributes: {
-        'aria-sort': 'descending',
-        'data-cy-sort-field': 'myField',
-      },
+      attributes: { 'aria-sort': 'descending' },
     })
   })
 
@@ -64,10 +52,7 @@ describe('sortHeader', () => {
         sortBy: 'myField',
         sortDirection: 'asc',
       })}"><button>Some text</button></a>`,
-      attributes: {
-        'aria-sort': 'descending',
-        'data-cy-sort-field': 'myField',
-      },
+      attributes: { 'aria-sort': 'descending' },
     })
   })
 })

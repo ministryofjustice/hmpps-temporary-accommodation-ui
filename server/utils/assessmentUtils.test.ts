@@ -346,31 +346,19 @@ describe('assessmentUtils', () => {
       expect(result).toEqual([
         {
           html: '<a href="?foo=bar&sortBy=name"><button>Name</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'name',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?foo=bar&sortBy=crn&sortDirection=desc"><button>CRN</button></a>',
-          attributes: {
-            'aria-sort': 'ascending',
-            'data-cy-sort-field': 'crn',
-          },
+          attributes: { 'aria-sort': 'ascending' },
         },
         {
           html: '<a href="?foo=bar&sortBy=createdAt"><button>Referral received</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'createdAt',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?foo=bar&sortBy=arrivedAt"><button>Bedspace required</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'arrivedAt',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
       ])
     })
@@ -381,38 +369,23 @@ describe('assessmentUtils', () => {
       expect(result).toEqual([
         {
           html: '<a href="?foo=bar&sortBy=name"><button>Name</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'name',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?foo=bar&sortBy=crn"><button>CRN</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'crn',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?foo=bar&sortBy=createdAt"><button>Referral received</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'createdAt',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?foo=bar&sortBy=arrivedAt"><button>Bedspace required</button></a>',
-          attributes: {
-            'aria-sort': 'none',
-            'data-cy-sort-field': 'arrivedAt',
-          },
+          attributes: { 'aria-sort': 'none' },
         },
         {
           html: '<a href="?foo=bar&sortBy=status&sortDirection=asc"><button>Status</button></a>',
-          attributes: {
-            'aria-sort': 'descending',
-            'data-cy-sort-field': 'status',
-          },
+          attributes: { 'aria-sort': 'descending' },
         },
       ])
     })

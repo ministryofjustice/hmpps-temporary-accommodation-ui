@@ -89,6 +89,7 @@ export type { Cas2ApplicationStatusDetail } from './models/Cas2ApplicationStatus
 export type { Cas2ApplicationStatusUpdate } from './models/Cas2ApplicationStatusUpdate';
 export type { Cas2ApplicationSummary } from './models/Cas2ApplicationSummary';
 export type { Cas2Assessment } from './models/Cas2Assessment';
+export type { Cas2ReportName } from './models/Cas2ReportName';
 export type { Cas2StatusUpdate } from './models/Cas2StatusUpdate';
 export type { Cas2StatusUpdateDetail } from './models/Cas2StatusUpdateDetail';
 export type { Cas2SubmittedApplication } from './models/Cas2SubmittedApplication';

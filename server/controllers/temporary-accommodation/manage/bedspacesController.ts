@@ -93,6 +93,7 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
 
       const { name } = req.body
+      const { bedEndDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'bedEndDate')
 
       const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
 
@@ -102,6 +103,7 @@ export default class BedspacesController {
         characteristicIds: [],
         ...req.body,
         name: newRoomName,
+        bedEndDate,
       }
 
       try {

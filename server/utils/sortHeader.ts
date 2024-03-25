@@ -11,7 +11,7 @@ export const sortHeader = <T extends string>(
   hrefPrefix: string,
 ): TableCell => {
   let sortDirection: SortDirection
-  let ariaSort = 'none'
+  let ariaSort: string
 
   const [basePath, queryString] = hrefPrefix.split('?')
   const qsArgs = qs.parse(queryString)
@@ -37,7 +37,6 @@ export const sortHeader = <T extends string>(
     })}"><button>${text}</button></a>`,
     attributes: {
       'aria-sort': ariaSort,
-      'data-cy-sort-field': targetField,
     },
   }
 }

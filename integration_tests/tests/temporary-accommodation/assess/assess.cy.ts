@@ -206,24 +206,6 @@ context('Apply', () => {
             // Then I see the third page of results
             page.shouldShowPageNumber(3)
 
-            // When I order by Bedspace required
-            cy.task('stubAssessments', { data, pagination })
-            page.sortColumn('Bedspace required')
-
-            // Then I see the first page of results ordered by status ascending
-            page.shouldHaveURLSearchParam('sortBy=arrivedAt')
-            page.shouldShowPageNumber(1)
-            page.checkColumnOrder('Bedspace required', 'ascending')
-
-            // When I navigate to page 3
-            cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
-            page.clickPaginationLink(3)
-
-            // Then I see the third page of results ordered by status ascending
-            page.shouldHaveURLSearchParam('sortBy=arrivedAt&sortDirection=asc')
-            page.shouldShowPageNumber(3)
-            page.checkColumnOrder('Bedspace required', 'ascending')
-
             // When I order by Referral received
             cy.task('stubAssessments', { data, pagination })
             page.sortColumn('Referral received')
@@ -233,13 +215,31 @@ context('Apply', () => {
             page.shouldShowPageNumber(1)
             page.checkColumnOrder('Referral received', 'ascending')
 
-            // When I order by Referral received again
-            page.sortColumn('Referral received')
+            // When I navigate to page 3
+            cy.task('stubAssessments', { data, pagination: { ...pagination, pageNumber: 3 } })
+            page.clickPaginationLink(3)
 
-            // Then I see the first page of results ordered by Referral received ascending
-            page.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=desc')
+            // Then I see the third page of results ordered by Referral received ascending
+            page.shouldHaveURLSearchParam('sortBy=createdAt&sortDirection=asc')
+            page.shouldShowPageNumber(3)
+            page.checkColumnOrder('Referral received', 'ascending')
+
+            // When I order by Bedspace required
+            cy.task('stubAssessments', { data, pagination })
+            page.sortColumn('Bedspace required')
+
+            // Then I see the first page of results ordered by Bedspace required ascending
+            page.shouldHaveURLSearchParam('sortBy=arrivedAt')
             page.shouldShowPageNumber(1)
-            page.checkColumnOrder('Referral received', 'descending')
+            page.checkColumnOrder('Bedspace required', 'ascending')
+
+            // When I order by Bedspace required again
+            page.sortColumn('Bedspace required')
+
+            // Then I see the first page of results ordered by Bedspace required descending
+            page.shouldHaveURLSearchParam('sortBy=arrivedAt&sortDirection=desc')
+            page.shouldShowPageNumber(1)
+            page.checkColumnOrder('Bedspace required', 'descending')
           })
         })
       })

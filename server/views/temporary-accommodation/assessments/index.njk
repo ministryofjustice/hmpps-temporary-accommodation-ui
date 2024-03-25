@@ -108,11 +108,3 @@
         </div>
     {% endblock %}
 {% endblock %}
-
-{% block extraScripts %}
-    <script type="text/javascript" nonce="{{ cspNonce }}">
-      $(document).ready(function() {
-        window.MOJFrontend.initAll()
-      })
-    </script>
-{% endblock %}

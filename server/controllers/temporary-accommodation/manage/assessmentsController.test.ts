@@ -51,31 +51,27 @@ describe('AssessmentsController', () => {
 
   const tableHeaders = [
     {
-      html: '<a href="?sortBy=name&sortDirection=desc"><button>Name</button></a>',
+      html: '<a href="?sortBy=name"><button>Name</button></a>',
       attributes: {
-        'aria-sort': 'ascending',
-        'data-cy-sort-field': 'name',
+        'aria-sort': 'none',
       },
     },
     {
       html: '<a href="?sortBy=crn"><button>CRN</button></a>',
       attributes: {
         'aria-sort': 'none',
-        'data-cy-sort-field': 'crn',
       },
     },
     {
       html: '<a href="?sortBy=createdAt"><button>Referral received</button></a>',
       attributes: {
         'aria-sort': 'none',
-        'data-cy-sort-field': 'createdAt',
       },
     },
     {
-      html: '<a href="?sortBy=arrivedAt"><button>Bedspace required</button></a>',
+      html: '<a href="?sortBy=arrivedAt&sortDirection=desc"><button>Bedspace required</button></a>',
       attributes: {
-        'aria-sort': 'none',
-        'data-cy-sort-field': 'arrivedAt',
+        'aria-sort': 'ascending',
       },
     },
   ]
@@ -110,7 +106,6 @@ describe('AssessmentsController', () => {
           html: '<a href="?sortBy=status"><button>Status</button></a>',
           attributes: {
             'aria-sort': 'none',
-            'data-cy-sort-field': 'status',
           },
         }
 
@@ -144,13 +139,13 @@ describe('AssessmentsController', () => {
 
           expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
             page: 1,
-            sortBy: 'name',
+            sortBy: 'arrivedAt',
             sortDirection: 'asc',
           })
         })
 
         it('returns the correct page and sorted assessments to the template', async () => {
-          request = createMock<Request>({ session, query: { page: '2', sortBy: 'arrivedAt', sortDirection: 'asc' } })
+          request = createMock<Request>({ session, query: { page: '2', sortBy: 'createdAt', sortDirection: 'desc' } })
           const assessments = assessmentSummaries.build({
             totalResults: 13,
             pageNumber: 2,
@@ -159,20 +154,18 @@ describe('AssessmentsController', () => {
           assessmentsService.getAllForLoggedInUser.mockResolvedValue(assessments)
 
           expectedHeaders = [
+            tableHeaders[0],
+            tableHeaders[1],
             {
-              html: '<a href="?sortBy=name"><button>Name</button></a>',
+              html: '<a href="?sortBy=createdAt&sortDirection=asc"><button>Referral received</button></a>',
               attributes: {
-                'aria-sort': 'none',
-                'data-cy-sort-field': 'name',
+                'aria-sort': 'descending',
               },
             },
-            tableHeaders[1],
-            tableHeaders[2],
             {
-              html: '<a href="?sortBy=arrivedAt&sortDirection=desc"><button>Bedspace required</button></a>',
+              html: '<a href="?sortBy=arrivedAt"><button>Bedspace required</button></a>',
               attributes: {
-                'aria-sort': 'ascending',
-                'data-cy-sort-field': 'arrivedAt',
+                'aria-sort': 'none',
               },
             },
           ]
@@ -191,18 +184,18 @@ describe('AssessmentsController', () => {
             tableRows: assessments.data,
             pagination: {
               items: [
-                { text: '1', href: '?page=1&sortBy=arrivedAt&sortDirection=asc' },
-                { text: '2', href: '?page=2&sortBy=arrivedAt&sortDirection=asc', selected: true },
+                { text: '1', href: '?page=1&sortBy=createdAt&sortDirection=desc' },
+                { text: '2', href: '?page=2&sortBy=createdAt&sortDirection=desc', selected: true },
               ],
-              previous: { text: 'Previous', href: '?page=1&sortBy=arrivedAt&sortDirection=asc' },
+              previous: { text: 'Previous', href: '?page=1&sortBy=createdAt&sortDirection=desc' },
             },
             errors: {},
           })
 
           expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
             page: 2,
-            sortBy: 'arrivedAt',
-            sortDirection: 'asc',
+            sortBy: 'createdAt',
+            sortDirection: 'desc',
           })
         })
 
@@ -221,7 +214,7 @@ describe('AssessmentsController', () => {
             expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
               crn: searchParameters.crn,
               page: 1,
-              sortBy: 'name',
+              sortBy: 'arrivedAt',
               sortDirection: 'asc',
             })
 

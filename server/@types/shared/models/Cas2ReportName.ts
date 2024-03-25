@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ApType = 'normal' | 'pipe' | 'esap' | 'rfap' | 'mhapStJosephs' | 'mhapElliottHouse';
+export type Cas2ReportName = 'submitted-applications' | 'application-status-updates' | 'unsubmitted-applications';

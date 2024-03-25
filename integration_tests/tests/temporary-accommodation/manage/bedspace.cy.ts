@@ -183,48 +183,77 @@ context('Bedspace', () => {
     Page.verifyOnPage(PremisesShowPage, premises)
   })
 
-  it('allows me to edit a bedspace', () => {
-    // Given I am signed in
-    cy.signIn()
+  describe('editing a bedspace', () => {
+    describe('when a bedspace end date has not been entered', () => {
+      it('allows me to edit the full bedspace details', () => {
+        // Given I am signed in
+        cy.signIn()
 
-    // And there is reference data in the database
-    cy.task('stubRoomReferenceData')
+        // And there is reference data in the database
+        cy.task('stubRoomReferenceData')
 
-    // And there is a premises and a room in the database
-    const premises = premisesFactory.build()
-    const room = roomFactory.build({
-      beds: [bedFactory.build({ bedEndDate: undefined })],
+        // And there is a premises and a room in the database
+        const premises = premisesFactory.build()
+        const room = roomFactory.build({
+          beds: [bedFactory.build({ bedEndDate: undefined })],
+        })
+
+        const premisesId = premises.id
+
+        cy.task('stubSinglePremises', premises)
+        cy.task('stubSingleRoom', { premisesId, room })
+
+        // When I visit the edit bedspace page
+        const page = BedspaceEditPage.visit(premises, room)
+
+        // Then I should see the bedspace details
+        page.shouldShowBedspaceDetails()
+
+        // And when I fill out the form
+        cy.task('stubRoomUpdate', { premisesId, room })
+        const updatedRoom = updateRoomFactory.build({ name: 'new-room-name' })
+        page.completeForm(updatedRoom)
+
+        // Then the room should have been update in the API
+        cy.task('verifyRoomUpdate', { premisesId, room }).then(requests => {
+          expect(requests).to.have.length(1)
+          const requestBody = JSON.parse(requests[0].body)
+
+          expect(requestBody.name).equal(updatedRoom.name)
+          expect(requestBody.characteristicIds).members(updatedRoom.characteristicIds)
+          expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatedRoom.notes)
+        })
+
+        // And I should be redirected to the show bedspace page
+        const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
+        bedspaceShowPage.shouldShowBanner('Bedspace updated')
+      })
     })
 
-    const premisesId = premises.id
+    describe('when a bedspace end date has already been entered', () => {
+      it('does not allow me to edit the bedspace end date', () => {
+        // Given I am signed in
+        cy.signIn()
 
-    cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId, room })
+        // And there is reference data in the database
+        cy.task('stubRoomReferenceData')
 
-    // When I visit the edit bedspace page
-    const page = BedspaceEditPage.visit(premises, room)
+        // And there is a premises and a room in the database
+        const premises = premisesFactory.build()
+        const room = roomFactory.build()
 
-    // Then I should see the bedspace details
-    page.shouldShowBedspaceDetails()
+        const premisesId = premises.id
 
-    // And when I fill out the form
-    cy.task('stubRoomUpdate', { premisesId, room })
-    const updatedRoom = updateRoomFactory.build({ name: 'new-room-name' })
-    page.completeForm(updatedRoom)
+        cy.task('stubSinglePremises', premises)
+        cy.task('stubSingleRoom', { premisesId, room })
 
-    // Then the room should have been update in the API
-    cy.task('verifyRoomUpdate', { premisesId, room }).then(requests => {
-      expect(requests).to.have.length(1)
-      const requestBody = JSON.parse(requests[0].body)
+        // When I visit the edit bedspace page
+        const page = BedspaceEditPage.visit(premises, room)
 
-      expect(requestBody.name).equal(updatedRoom.name)
-      expect(requestBody.characteristicIds).members(updatedRoom.characteristicIds)
-      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatedRoom.notes)
+        // Then I should not be able to edit the bedspace end date
+        page.showCannotEditBedspaceEndDate(room.beds[0].bedEndDate)
+      })
     })
-
-    // And I should be redirected to the show bedspace page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
-    bedspaceShowPage.shouldShowBanner('Bedspace updated')
   })
 
   it('navigates back from the edit bedspace page to the show bedspace page', () => {

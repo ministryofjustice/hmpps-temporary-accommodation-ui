@@ -2,6 +2,7 @@ import type { Premises, Room, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import BedspaceEditablePage from './bedspaceEditable'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 export default class BedspaceEditPage extends BedspaceEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
@@ -54,5 +55,12 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
       })
 
     this.getTextInputByIdAndClear('notes')
+  }
+
+  showCannotEditBedspaceEndDate(bedEndDate: string) {
+    cy.get('dt').contains('Bedspace end date')
+    cy.get('dd').contains(DateFormats.isoDateToUIDate(bedEndDate))
+    cy.get('p').contains('The bedspace end date cannot be edited.')
+    cy.get('label').contains('Enter the bedspace end date (optional)').should('not.exist')
   }
 }

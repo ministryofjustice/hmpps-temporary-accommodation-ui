@@ -224,6 +224,7 @@ describe('BedspacesController', () => {
       request.body = {
         name: room.name,
         notes: room.notes,
+        ...DateFormats.isoToDateAndTimeInputs(room.beds[0].bedEndDate, 'bedEndDate'),
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
@@ -232,11 +233,17 @@ describe('BedspacesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id, {
-        name: room.name,
-        notes: room.notes,
-        characteristicIds: [],
-      })
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(
+        callConfig,
+        premises.id,
+        room.id,
+        expect.objectContaining({
+          name: room.name,
+          notes: room.notes,
+          characteristicIds: [],
+          bedEndDate: room.beds[0].bedEndDate,
+        }),
+      )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
       expect(response.redirect).toHaveBeenCalledWith(

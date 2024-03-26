@@ -6,8 +6,8 @@ export default abstract class BedspaceEditablePage extends Page {
     this.getLabel('Enter a bedspace reference')
     this.getTextInputByIdAndEnterDetails('name', newOrUpdateRoom.name)
 
-    this.getLegend('Enter the bedspace end date (optional)')
-    if (newOrUpdateRoom.bedEndDate) {
+    if (this.bedEndDateIsEditable() && newOrUpdateRoom.bedEndDate) {
+      this.getLegend('Enter the bedspace end date (optional)')
       this.completeDateInputs('bedEndDate', newOrUpdateRoom.bedEndDate)
     }
 
@@ -23,5 +23,9 @@ export default abstract class BedspaceEditablePage extends Page {
 
   assignCharacteristics(alias: string): void {
     this.getCheckboxItemsAsReferenceData('Does the bedspace have any of the following attributes?', alias)
+  }
+
+  bedEndDateIsEditable() {
+    return Boolean(cy.get('body').then($body => $body.find('input[name^=bedEndDate]').length > 0))
   }
 }

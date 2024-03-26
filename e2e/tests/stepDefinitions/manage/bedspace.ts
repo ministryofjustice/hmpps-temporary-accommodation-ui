@@ -4,7 +4,7 @@ import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommo
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
-import { newRoomFactory, roomFactory, updateRoomFactory } from '../../../../server/testutils/factories'
+import { bedFactory, newRoomFactory, roomFactory, updateRoomFactory } from '../../../../server/testutils/factories'
 
 Given("I'm creating a bedspace", () => {
   cy.get('@premises').then(premises => {
@@ -25,8 +25,9 @@ Given('I create a bedspace with all necessary details', () => {
     cy.then(function _() {
       const room = roomFactory.forEnvironment(this.characteristics).build({
         id: 'unknown',
+        beds: [bedFactory.build({ bedEndDate: undefined })],
       })
-      const newRoom = newRoomFactory.fromRoom(room).build()
+      const newRoom = newRoomFactory.fromRoom(room).build({ bedEndDate: undefined })
 
       cy.wrap(room).as('room')
       page.completeForm(newRoom)
@@ -55,7 +56,7 @@ Given('I edit the bedspace details', () => {
         id: this.room.id,
         name: this.room.name,
       })
-      const updateRoom = updateRoomFactory.fromRoom(updatedRoom).build()
+      const updateRoom = updateRoomFactory.fromRoom(updatedRoom).build({ bedEndDate: updatedRoom.beds[0].bedEndDate })
 
       cy.wrap(updatedRoom).as('room')
       page.completeForm(updateRoom)

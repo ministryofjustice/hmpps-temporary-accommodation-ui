@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker/locale/en_GB'
 import { Factory } from 'fishery'
 import type { NewRoom, Room } from '@approved-premises/api'
+import { addYears } from 'date-fns'
 import { unique } from '../../utils/utils'
 import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
@@ -21,5 +22,5 @@ export default NewRoomFactory.define(() => ({
     characteristic => characteristic.id,
   ),
   notes: faker.lorem.lines(),
-  bedEndDate: DateFormats.dateObjToIsoDate(faker.date.future({ years: 1 })),
+  bedEndDate: DateFormats.dateObjToIsoDate(addYears(faker.date.future({ years: 1 }), 2)),
 }))

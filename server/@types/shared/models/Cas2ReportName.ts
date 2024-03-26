@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type AssessmentSortField = 'name' | 'crn' | 'arrivalDate' | 'status' | 'createdAt' | 'dueAt';
+export type Cas2ReportName = 'submitted-applications' | 'application-status-updates' | 'unsubmitted-applications';

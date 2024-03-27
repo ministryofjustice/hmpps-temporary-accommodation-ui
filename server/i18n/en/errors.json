@@ -58,8 +58,12 @@
       "expectedNumber": "The duration is not a valid number of days",
       "mustBeAtLeast1": "The duration is not a valid number of days"
     },
-    "moveOnCategoryId": { "empty": "You must choose a move on category" },
-    "destinationProvider": { "empty": "You must enter a destination provider" },
+    "moveOnCategoryId": {
+      "empty": "You must choose a move on category"
+    },
+    "destinationProvider": {
+      "empty": "You must enter a destination provider"
+    },
     "newDepartureDate": {
       "empty": "You must enter a new departure date",
       "invalid": "The departure date is an invalid date",
@@ -80,8 +84,12 @@
     "reason": {
       "empty": "You must choose a reason"
     },
-    "numberOfBeds": { "empty": "You must enter the number of beds lost" },
-    "referenceNumber": { "empty": "You must enter a reference number" },
+    "numberOfBeds": {
+      "empty": "You must enter the number of beds lost"
+    },
+    "referenceNumber": {
+      "empty": "You must enter a reference number"
+    },
     "addressLine1": {
       "empty": "You must enter an address"
     },
@@ -122,6 +130,9 @@
     },
     "message": {
       "empty": "Enter text to save as a note"
+    },
+    "bedEndDate": {
+      "invalid": "The bedspace end date is an invalid date"
     }
   },
   "bookingCancellation": {

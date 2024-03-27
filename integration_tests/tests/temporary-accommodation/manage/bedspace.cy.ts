@@ -142,25 +142,48 @@ context('Bedspace', () => {
     bedspaceShowPage.shouldShowBanner('Bedspace created')
   })
 
-  it('shows errors when the API returns an error', () => {
-    // Given I am signed in
-    cy.signIn()
+  describe('shows errors', () => {
+    it('when no bedspace reference is entered', () => {
+      // Given I am signed in
+      cy.signIn()
 
-    // And there is reference data in the database
-    cy.task('stubRoomReferenceData')
+      // And there is reference data in the database
+      cy.task('stubRoomReferenceData')
 
-    // When I visit the new bedspace page
-    const premises = premisesFactory.build()
-    cy.task('stubSinglePremises', premises)
+      // When I visit the new bedspace page
+      const premises = premisesFactory.build()
+      cy.task('stubSinglePremises', premises)
 
-    const page = BedspaceNewPage.visit(premises)
+      const page = BedspaceNewPage.visit(premises)
 
-    // And I miss required fields
-    cy.task('stubRoomCreateErrors', { premisesId: premises.id, params: ['name'] })
-    page.clickSubmit()
+      // And I miss required fields
+      cy.task('stubRoomCreateErrors', { premisesId: premises.id, errors: [{ field: 'name' }] })
+      page.clickSubmit()
 
-    // Then I should see error messages relating to those fields
-    page.shouldShowErrorMessagesForFields(['name'])
+      // Then I should see error messages relating to those fields
+      page.shouldShowErrorMessagesForFields(['name'])
+    })
+
+    it('when an invalid bedspace end date is entered', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is reference data in the database
+      cy.task('stubRoomReferenceData')
+
+      // When I visit the new bedspace page
+      const premises = premisesFactory.build()
+      cy.task('stubSinglePremises', premises)
+
+      const page = BedspaceNewPage.visit(premises)
+
+      // And I enter an invalid date
+      cy.task('stubRoomCreateErrors', { premisesId: premises.id, errors: [{ field: 'bedEndDate', type: 'invalid' }] })
+      page.clickSubmit()
+
+      // Then I should see error messages relating to those fields
+      page.shouldShowErrorMessagesForFields(['bedEndDate'], 'invalid')
+    })
   })
 
   it('navigates back from the new bedspace page to the show premises page', () => {

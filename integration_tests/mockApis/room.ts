@@ -59,8 +59,29 @@ export default {
         url: paths.premises.rooms.create({ premisesId }),
       })
     ).body.requests,
-  stubRoomCreateErrors: (args: { premisesId: string; params: Array<string> }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, paths.premises.rooms.create({ premisesId: args.premisesId }), 'POST')),
+  stubRoomCreateErrors: (args: {
+    premisesId: string
+    errors: Array<{ field: keyof Room; type?: string }>
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'POST',
+        url: paths.premises.rooms.create({ premisesId: args.premisesId }),
+      },
+      response: {
+        status: 400,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': args.errors.map(error => ({
+            propertyName: `$.${error.field}`,
+            errorType: error.type || 'empty',
+          })),
+        },
+      },
+    }),
   stubRoomUpdate: (args: { premisesId: string; room: Room }): SuperAgentRequest =>
     stubFor({
       request: {

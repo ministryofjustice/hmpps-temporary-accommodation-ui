@@ -89,7 +89,7 @@ export default class BedspaceService {
     return { characteristics }
   }
 
-  private summaryListForRoom(room: Room): SummaryList {
+  summaryListForBedspaceStatus(room: Room): SummaryList {
     return {
       rows: [
         {
@@ -106,6 +106,14 @@ export default class BedspaceService {
             room.beds[0].bedEndDate ? DateFormats.isoDateToUIDate(room.beds[0].bedEndDate) : 'No end date added',
           ),
         },
+      ],
+    }
+  }
+
+  private summaryListForRoom(room: Room): SummaryList {
+    return {
+      rows: [
+        ...this.summaryListForBedspaceStatus(room).rows,
         {
           key: this.textValue('Attributes'),
           value: formatCharacteristics(room.characteristics),

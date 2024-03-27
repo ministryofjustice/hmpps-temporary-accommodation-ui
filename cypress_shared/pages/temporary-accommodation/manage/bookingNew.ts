@@ -4,10 +4,13 @@ import { PlaceContext } from '../../../../server/@types/ui'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
+import BedspaceStatusComponent from '../../../components/bedspaceStatus'
 import BookingEditablePage from './bookingEditable'
 
 export default class BookingNewPage extends BookingEditablePage {
   private readonly locationHeaderComponent: LocationHeaderComponent
+
+  private readonly bedspaceStatusComponent: BedspaceStatusComponent
 
   constructor(
     private readonly premises: Premises,
@@ -16,6 +19,7 @@ export default class BookingNewPage extends BookingEditablePage {
     super('Book bedspace', premises, room)
 
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
+    this.bedspaceStatusComponent = new BedspaceStatusComponent(room)
   }
 
   static visit(premises: Premises, room: Room): BookingNewPage {
@@ -47,8 +51,9 @@ export default class BookingNewPage extends BookingEditablePage {
 
   shouldShowBookingDetails(): void {
     this.locationHeaderComponent.shouldShowLocationDetails()
+    this.bedspaceStatusComponent.shouldShowStatusDetails('Online')
 
-    cy.get('p').should('contain', this.turnaroundText())
+    cy.contains('p', this.turnaroundText())
   }
 
   shouldShowPrefilledBookingDetails(newBooking: NewBooking): void {

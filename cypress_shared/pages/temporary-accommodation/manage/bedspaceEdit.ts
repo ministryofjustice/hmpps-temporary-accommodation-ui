@@ -76,4 +76,10 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
       'The bedspace end date must be on or after the date the bedspace was created',
     )
   }
+
+  shouldShowErrorMessageForBookingConflict(bookingPath: string) {
+    cy.get('.govuk-error-summary').should('contain', `This bedspace end date conflicts with an existing booking`)
+    cy.get('a').contains('an existing booking').should('have.attr', 'href', bookingPath)
+    cy.get(`[data-cy-error-bedEndDate]`).should('contain', 'This bedspace end date conflicts with an existing booking')
+  }
 }

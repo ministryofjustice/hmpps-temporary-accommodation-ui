@@ -133,7 +133,8 @@
     },
     "bedEndDate": {
       "invalid": "The bedspace end date is an invalid date",
-      "beforeCreatedAt": "The bedspace end date must be on or after the date the bedspace was created"
+      "beforeCreatedAt": "The bedspace end date must be on or after the date the bedspace was created",
+      "conflict": "This bedspace end date conflicts with an existing booking"
     }
   },
   "bookingCancellation": {

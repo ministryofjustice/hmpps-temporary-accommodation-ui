@@ -94,10 +94,22 @@ export default {
         jsonBody: args.room,
       },
     }),
-  stubRoomUpdateErrors: (args: { premisesId: string; room: Room; params: Array<string> }): SuperAgentRequest =>
-    stubFor(
-      errorStub(args.params, paths.premises.rooms.update({ premisesId: args.premisesId, roomId: args.room.id }), 'PUT'),
-    ),
+  stubRoomUpdateConflictError: (args: { premisesId: string; room: Room; detail: string }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        url: paths.premises.rooms.update({ premisesId: args.premisesId, roomId: args.room.id }),
+      },
+      response: {
+        status: 409,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          title: 'Conflict',
+          status: 409,
+          detail: args.detail,
+        },
+      },
+    }),
   verifyRoomUpdate: async (args: { premisesId: string; room: Room }) =>
     (
       await getMatchingRequests({

@@ -63,4 +63,17 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
     cy.get('p').contains('The bedspace end date cannot be edited.')
     cy.get('label').contains('Enter the bedspace end date (optional)').should('not.exist')
   }
+
+  shouldShowErrorMessageForEndDateBeforeCreationDate(createdAt: string) {
+    cy.get('.govuk-error-summary').should(
+      'contain',
+      `The bedspace end date must be on or after the date the bedspace was created (${DateFormats.isoDateToUIDate(
+        createdAt,
+      )})`,
+    )
+    cy.get(`[data-cy-error-bedEndDate]`).should(
+      'contain',
+      'The bedspace end date must be on or after the date the bedspace was created',
+    )
+  }
 }

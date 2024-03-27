@@ -106,6 +106,22 @@ describe('BookingsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/new', {
         premises,
         room,
+        bedspaceStatus: {
+          rows: [
+            {
+              key: 'Bedspace status',
+              value: {
+                html: '<span class="govuk-tag govuk-tag--green">Online</span>',
+              },
+            },
+            {
+              key: 'Bedspace end date',
+              value: {
+                text: DateFormats.isoDateToUIDate(room.beds[0].bedEndDate),
+              },
+            },
+          ],
+        },
         errors: {},
         errorSummary: [],
         crn: 'some-crn',

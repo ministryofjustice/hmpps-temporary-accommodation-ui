@@ -17,7 +17,12 @@ import {
 } from '../../../testutils/factories'
 import { bedspaceActions } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  insertBespokeError,
+  insertGenericError,
+} from '../../../utils/validation'
 import BedspacesController from './bedspacesController'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -303,6 +308,45 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
+      )
+    })
+
+    it('renders an error if the bedspace end date is before the created date', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      const err = {
+        status: 409,
+        data: {
+          title: 'Conflict',
+          detail: 'The bedspace end date must be on or after the bedspace createdAt date: 2024-03-27',
+        },
+      }
+
+      bedspaceService.updateRoom.mockImplementation(() => {
+        throw err
+      })
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertBespokeError).toHaveBeenCalledWith(err, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          { text: `The bedspace end date must be on or after the date the bedspace was created (27 March 2024)` },
+        ],
+      })
+      expect(insertGenericError).toHaveBeenCalledWith(err, 'bedEndDate', 'beforeCreatedAt')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,

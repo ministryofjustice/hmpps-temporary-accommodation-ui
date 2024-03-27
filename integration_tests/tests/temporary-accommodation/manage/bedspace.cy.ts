@@ -251,6 +251,42 @@ context('Bedspace', () => {
         const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
         bedspaceShowPage.shouldShowBanner('Bedspace updated')
       })
+
+      describe('when a bedspace end date before the creation date is entered', () => {
+        it('shows an error', () => {
+          // Given I am signed in
+          cy.signIn()
+
+          // And there is reference data in the database
+          cy.task('stubRoomReferenceData')
+
+          // And there is a premises and a room in the database
+          const premises = premisesFactory.build()
+          const room = roomFactory.build({
+            beds: [bedFactory.build({ bedEndDate: undefined })],
+          })
+
+          const premisesId = premises.id
+
+          cy.task('stubSinglePremises', premises)
+          cy.task('stubSingleRoom', { premisesId, room })
+
+          // When I visit the edit bedspace page
+          const page = BedspaceEditPage.visit(premises, room)
+
+          // And I enter a bedspace end date on or before the bedspace creation date
+          const createdAt = DateFormats.dateObjToIsoDate(addDays(new Date(), -3))
+          cy.task('stubRoomUpdateConflictError', {
+            premisesId: premises.id,
+            room,
+            detail: `The bedspace end date must be on or after the bedspace createdAt date: ${createdAt}`,
+          })
+          page.clickSubmit()
+
+          // Then I should see an error message
+          page.shouldShowErrorMessageForEndDateBeforeCreationDate(createdAt)
+        })
+      })
     })
 
     describe('when a bedspace end date has already been entered', () => {

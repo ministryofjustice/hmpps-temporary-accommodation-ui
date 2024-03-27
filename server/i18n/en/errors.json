@@ -132,7 +132,8 @@
       "empty": "Enter text to save as a note"
     },
     "bedEndDate": {
-      "invalid": "The bedspace end date is an invalid date"
+      "invalid": "The bedspace end date is an invalid date",
+      "beforeCreatedAt": "The bedspace end date must be on or after the date the bedspace was created"
     }
   },
   "bookingCancellation": {

@@ -4,15 +4,10 @@ import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { bedspaceActions } from '../../../utils/bedspaceUtils'
+import { bedspaceActions, insertConflictErrors } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
-import {
-  catchValidationErrorOrPropogate,
-  fetchErrorsAndUserInput,
-  insertBespokeError,
-  insertGenericError,
-} from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import { DateFormats } from '../../../utils/dateUtils'
 
 export default class BedspacesController {
@@ -124,20 +119,7 @@ export default class BedspacesController {
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
       } catch (err) {
         if (err.status === 409) {
-          if (err.data.detail.match('The bedspace end date must be on or after the bedspace createdAt date:')) {
-            const createdAt = err.data.detail.split(':')[1].trim()
-            insertBespokeError(err, {
-              errorTitle: 'There is a problem',
-              errorSummary: [
-                {
-                  text: `The bedspace end date must be on or after the date the bedspace was created (${DateFormats.isoDateToUIDate(
-                    createdAt,
-                  )})`,
-                },
-              ],
-            })
-            insertGenericError(err, 'bedEndDate', 'beforeCreatedAt')
-          }
+          insertConflictErrors(err, premisesId, roomId)
         }
         catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, roomId }))
       }

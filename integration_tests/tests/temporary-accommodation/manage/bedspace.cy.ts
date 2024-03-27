@@ -287,6 +287,43 @@ context('Bedspace', () => {
           page.shouldShowErrorMessageForEndDateBeforeCreationDate(createdAt)
         })
       })
+
+      describe('when a bedspace end date conflicts with a booking', () => {
+        it('shows an error', () => {
+          // Given I am signed in
+          cy.signIn()
+
+          // And there is reference data in the database
+          cy.task('stubRoomReferenceData')
+
+          // And there is a premises and a room in the database
+          const premises = premisesFactory.build()
+          const room = roomFactory.build({
+            beds: [bedFactory.build({ bedEndDate: undefined })],
+          })
+
+          const premisesId = premises.id
+
+          cy.task('stubSinglePremises', premises)
+          cy.task('stubSingleRoom', { premisesId, room })
+
+          // When I visit the edit bedspace page
+          const page = BedspaceEditPage.visit(premises, room)
+
+          // And I enter a date that conflicts with a booking
+          cy.task('stubRoomUpdateConflictError', {
+            premisesId: premises.id,
+            room,
+            detail: 'Conflict booking exists for the room: 82c03c63-321a-45dd-811d-be87a41f5780',
+          })
+          page.clickSubmit()
+
+          // Then I should see an error message
+          page.shouldShowErrorMessageForBookingConflict(
+            `/properties/${premisesId}/bedspaces/${room.id}/bookings/82c03c63-321a-45dd-811d-be87a41f5780`,
+          )
+        })
+      })
     })
 
     describe('when a bedspace end date has already been entered', () => {

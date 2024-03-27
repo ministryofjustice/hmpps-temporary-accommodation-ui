@@ -1,9 +1,10 @@
 import { addDays } from 'date-fns'
 import paths from '../paths/temporary-accommodation/manage'
 import { bedFactory, placeContextFactory, premisesFactory, roomFactory } from '../testutils/factories'
-import { bedspaceActions, bedspaceStatus } from './bedspaceUtils'
+import { bedspaceActions, bedspaceStatus, insertConflictErrors } from './bedspaceUtils'
 import { addPlaceContext } from './placeUtils'
 import { DateFormats } from './dateUtils'
+import * as validation from './validation'
 
 jest.mock('./placeUtils')
 
@@ -111,6 +112,61 @@ describe('bedspaceUtils', () => {
       const status = bedspaceStatus(room)
 
       expect(status).toEqual('archived')
+    })
+  })
+
+  describe('insertConflictErrors', () => {
+    beforeEach(() => {
+      jest.spyOn(validation, 'insertBespokeError')
+      jest.spyOn(validation, 'insertGenericError')
+    })
+
+    it('inserts an error for a date before created at conflict', () => {
+      const error = {
+        data: {
+          detail: 'The bedspace end date must be on or after the bedspace createdAt date: 2024-04-14',
+        },
+        stack: '',
+        message: '',
+      }
+
+      insertConflictErrors(error, 'premiseId', 'roomId')
+
+      expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          {
+            text: 'The bedspace end date must be on or after the date the bedspace was created (14 April 2024)',
+          },
+        ],
+      })
+      expect(validation.insertGenericError).toHaveBeenCalledWith(error, 'bedEndDate', 'beforeCreatedAt')
+    })
+
+    it('inserts an error for an existing booking conflict', () => {
+      const error = {
+        data: {
+          detail: 'Conflict booking exists for the room: bookingId',
+        },
+        stack: '',
+        message: '',
+      }
+
+      insertConflictErrors(error, 'premiseId', 'roomId')
+
+      expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          {
+            html: `This bedspace end date conflicts with <a href="${paths.bookings.show({
+              premisesId: 'premiseId',
+              roomId: 'roomId',
+              bookingId: 'bookingId',
+            })}">an existing booking</a>`,
+          },
+        ],
+      })
+      expect(validation.insertGenericError).toHaveBeenCalledWith(error, 'bedEndDate', 'conflict')
     })
   })
 })

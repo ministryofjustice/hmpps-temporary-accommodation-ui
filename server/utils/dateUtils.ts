@@ -4,7 +4,6 @@ import { isFuture, isPast } from 'date-fns'
 
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
-import parseISO from 'date-fns/parseISO'
 
 export class DateFormats {
   /**
@@ -42,7 +41,7 @@ export class DateFormats {
    * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
    */
   static isoToDateObj(date: string) {
-    const parsedDate = parseISO(date)
+    const parsedDate = new Date(date)
 
     if (Number.isNaN(parsedDate.getTime())) {
       throw new InvalidDateStringError(`Invalid Date: ${date}`)
@@ -174,6 +173,7 @@ export const getYearsSince = (startYear: number): Array<{ year: string }> => {
 
 export const dateIsInThePast = (dateString: string): boolean => {
   const date = DateFormats.isoToDateObj(dateString)
+  console.log(dateString, date)
   return isPast(date)
 }
 

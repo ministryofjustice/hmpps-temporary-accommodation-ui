@@ -1,4 +1,5 @@
 import { addDays } from 'date-fns'
+import { Premises, Room } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceEdit'
 import BedspaceNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceNew'
@@ -20,16 +21,16 @@ context('Bedspace', () => {
   beforeEach(() => {
     cy.task('reset')
     setupTestUser('assessor')
-  })
 
-  it('should navigate to the create bedspace page', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there is reference data in the database
     cy.task('stubPremisesReferenceData')
     cy.task('stubRoomReferenceData')
+  })
 
+  it('should navigate to the create bedspace page', () => {
     // And there is an active premises in the database
     const premises = premisesFactory.active().build()
     cy.task('stubSinglePremises', premises)
@@ -45,13 +46,6 @@ context('Bedspace', () => {
   })
 
   it('should navigate to the edit bedspace page', () => {
-    // Given I am signed in
-    cy.signIn()
-
-    // And there is reference data in the database
-    cy.task('stubPremisesReferenceData')
-    cy.task('stubRoomReferenceData')
-
     // And there is a premises with rooms in the database
     const premises = premisesFactory.build()
     const rooms = roomFactory.buildList(5)
@@ -74,13 +68,6 @@ context('Bedspace', () => {
   })
 
   it('should navigate to the show bedspace page', () => {
-    // Given I am signed in
-    cy.signIn()
-
-    // And there is reference data in the database
-    cy.task('stubPremisesReferenceData')
-    cy.task('stubRoomReferenceData')
-
     // And there is a premises with rooms in the database
     const premises = premisesFactory.build()
     const rooms = roomFactory.buildList(5)
@@ -98,137 +85,102 @@ context('Bedspace', () => {
     Page.verifyOnPage(BedspaceShowPage, premises, rooms[0])
   })
 
-  it('allows me to create a bedspace', () => {
-    // Given I am signed in
-    cy.signIn()
+  describe('creating a bedspace', () => {
+    let premises: Premises
+    let page: BedspaceNewPage
 
-    // And there is reference data in the database
-    cy.task('stubRoomReferenceData')
-
-    // When I visit the new bedspace page
-    const premises = premisesFactory.build()
-    cy.task('stubSinglePremises', premises)
-
-    const page = BedspaceNewPage.visit(premises)
-
-    // Then I should see the bedspace details
-    page.shouldShowBedspaceDetails()
-
-    // And when I fill out the form
-    const room = roomFactory.build()
-    const newRoom = newRoomFactory.build({
-      name: room.name,
-      characteristicIds: room.characteristics.map(characteristic => characteristic.id),
-      notes: room.notes,
-    })
-    cy.task('stubRoomCreate', { premisesId: premises.id, room })
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
-
-    page.completeForm(newRoom)
-
-    // Then a room should have been created in the API
-    cy.task('verifyRoomCreate', premises.id).then(requests => {
-      expect(requests).to.have.length(1)
-      const requestBody = JSON.parse(requests[0].body)
-
-      expect(requestBody.name).equal(newRoom.name)
-      expect(requestBody.characteristicIds).members(newRoom.characteristicIds)
-      expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newRoom.notes)
-      expect(requestBody.bedEndDate).equal(newRoom.bedEndDate)
-    })
-
-    // And I should be redirected to the show bedspace page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
-    bedspaceShowPage.shouldShowBanner('Bedspace created')
-  })
-
-  describe('shows errors', () => {
-    it('when no bedspace reference is entered', () => {
-      // Given I am signed in
-      cy.signIn()
-
-      // And there is reference data in the database
-      cy.task('stubRoomReferenceData')
-
+    beforeEach(() => {
       // When I visit the new bedspace page
-      const premises = premisesFactory.build()
+      premises = premisesFactory.build()
       cy.task('stubSinglePremises', premises)
 
-      const page = BedspaceNewPage.visit(premises)
-
-      // And I miss required fields
-      cy.task('stubRoomCreateErrors', { premisesId: premises.id, errors: [{ field: 'name' }] })
-      page.clickSubmit()
-
-      // Then I should see error messages relating to those fields
-      page.shouldShowErrorMessagesForFields(['name'])
+      page = BedspaceNewPage.visit(premises)
     })
 
-    it('when an invalid bedspace end date is entered', () => {
-      // Given I am signed in
-      cy.signIn()
+    it('allows me to create a bedspace', () => {
+      // Then I should see the bedspace details
+      page.shouldShowBedspaceDetails()
 
-      // And there is reference data in the database
-      cy.task('stubRoomReferenceData')
+      // And when I fill out the form
+      const room = roomFactory.build()
+      const newRoom = newRoomFactory.build({
+        name: room.name,
+        characteristicIds: room.characteristics.map(characteristic => characteristic.id),
+        notes: room.notes,
+      })
+      cy.task('stubRoomCreate', { premisesId: premises.id, room })
+      cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
-      // When I visit the new bedspace page
-      const premises = premisesFactory.build()
-      cy.task('stubSinglePremises', premises)
+      page.completeForm(newRoom)
 
-      const page = BedspaceNewPage.visit(premises)
+      // Then a room should have been created in the API
+      cy.task('verifyRoomCreate', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
 
-      // And I enter an invalid date
-      cy.task('stubRoomCreateErrors', { premisesId: premises.id, errors: [{ field: 'bedEndDate', type: 'invalid' }] })
-      page.clickSubmit()
+        expect(requestBody.name).equal(newRoom.name)
+        expect(requestBody.characteristicIds).members(newRoom.characteristicIds)
+        expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newRoom.notes)
+        expect(requestBody.bedEndDate).equal(newRoom.bedEndDate)
+      })
 
-      // Then I should see error messages relating to those fields
-      page.shouldShowErrorMessagesForFields(['bedEndDate'], 'invalid')
+      // And I should be redirected to the show bedspace page
+      const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, room)
+      bedspaceShowPage.shouldShowBanner('Bedspace created')
     })
-  })
 
-  it('navigates back from the new bedspace page to the show premises page', () => {
-    // Given I am signed in
-    cy.signIn()
+    describe('shows errors', () => {
+      it('when no bedspace reference is entered', () => {
+        // And I miss required fields
+        cy.task('stubRoomCreateErrors', { premisesId: premises.id, errors: [{ field: 'name' }] })
+        page.clickSubmit()
 
-    // And there is reference data in the database
-    cy.task('stubRoomReferenceData')
+        // Then I should see error messages relating to those fields
+        page.shouldShowErrorMessagesForFields(['name'])
+      })
 
-    // When I visit the new bedspace page
-    const premises = premisesFactory.build()
-    cy.task('stubSinglePremises', premises)
+      it('when an invalid bedspace end date is entered', () => {
+        // And I enter an invalid date
+        cy.task('stubRoomCreateErrors', { premisesId: premises.id, errors: [{ field: 'bedEndDate', type: 'invalid' }] })
+        page.clickSubmit()
 
-    const page = BedspaceNewPage.visit(premises)
+        // Then I should see error messages relating to those fields
+        page.shouldShowErrorMessagesForFields(['bedEndDate'], 'invalid')
+      })
+    })
 
-    // And I click the previous bread crumb
-    page.clickBreadCrumbUp()
+    it('navigates back from the new bedspace page to the show premises page', () => {
+      // And I click the previous bread crumb
+      page.clickBreadCrumbUp()
 
-    // Then I navigate to the show premises page
-    Page.verifyOnPage(PremisesShowPage, premises)
+      // Then I navigate to the show premises page
+      Page.verifyOnPage(PremisesShowPage, premises)
+    })
   })
 
   describe('editing a bedspace', () => {
-    describe('when a bedspace end date has not been entered', () => {
-      it('allows me to edit the full bedspace details', () => {
-        // Given I am signed in
-        cy.signIn()
+    describe('when the bedspace does not have en end date', () => {
+      let premises: Premises
+      let premisesId: string
+      let room: Room
+      let page: BedspaceEditPage
 
-        // And there is reference data in the database
-        cy.task('stubRoomReferenceData')
-
+      beforeEach(() => {
         // And there is a premises and a room in the database
-        const premises = premisesFactory.build()
-        const room = roomFactory.build({
+        premises = premisesFactory.build()
+        premisesId = premises.id
+        room = roomFactory.build({
           beds: [bedFactory.build({ bedEndDate: undefined })],
         })
-
-        const premisesId = premises.id
 
         cy.task('stubSinglePremises', premises)
         cy.task('stubSingleRoom', { premisesId, room })
 
         // When I visit the edit bedspace page
-        const page = BedspaceEditPage.visit(premises, room)
+        page = BedspaceEditPage.visit(premises, room)
+      })
 
+      it('allows me to edit the full bedspace details', () => {
         // Then I should see the bedspace details
         page.shouldShowBedspaceDetails()
 
@@ -252,28 +204,8 @@ context('Bedspace', () => {
         bedspaceShowPage.shouldShowBanner('Bedspace updated')
       })
 
-      describe('when a bedspace end date before the creation date is entered', () => {
-        it('shows an error', () => {
-          // Given I am signed in
-          cy.signIn()
-
-          // And there is reference data in the database
-          cy.task('stubRoomReferenceData')
-
-          // And there is a premises and a room in the database
-          const premises = premisesFactory.build()
-          const room = roomFactory.build({
-            beds: [bedFactory.build({ bedEndDate: undefined })],
-          })
-
-          const premisesId = premises.id
-
-          cy.task('stubSinglePremises', premises)
-          cy.task('stubSingleRoom', { premisesId, room })
-
-          // When I visit the edit bedspace page
-          const page = BedspaceEditPage.visit(premises, room)
-
+      describe('shows errors', () => {
+        it('when a bedspace end date before the creation date is entered', () => {
           // And I enter a bedspace end date on or before the bedspace creation date
           const createdAt = DateFormats.dateObjToIsoDate(addDays(new Date(), -3))
           cy.task('stubRoomUpdateConflictError', {
@@ -286,30 +218,8 @@ context('Bedspace', () => {
           // Then I should see an error message
           page.shouldShowErrorMessageForEndDateBeforeCreationDate(createdAt)
         })
-      })
 
-      describe('when a bedspace end date conflicts with a booking', () => {
-        it('shows an error', () => {
-          // Given I am signed in
-          cy.signIn()
-
-          // And there is reference data in the database
-          cy.task('stubRoomReferenceData')
-
-          // And there is a premises and a room in the database
-          const premises = premisesFactory.build()
-          const room = roomFactory.build({
-            beds: [bedFactory.build({ bedEndDate: undefined })],
-          })
-
-          const premisesId = premises.id
-
-          cy.task('stubSinglePremises', premises)
-          cy.task('stubSingleRoom', { premisesId, room })
-
-          // When I visit the edit bedspace page
-          const page = BedspaceEditPage.visit(premises, room)
-
+        it('when a bedspace end date conflicts with a booking', () => {
           // And I enter a date that conflicts with a booking
           cy.task('stubRoomUpdateConflictError', {
             premisesId: premises.id,
@@ -326,14 +236,8 @@ context('Bedspace', () => {
       })
     })
 
-    describe('when a bedspace end date has already been entered', () => {
+    describe('when the bedspace already has an end date', () => {
       it('does not allow me to edit the bedspace end date', () => {
-        // Given I am signed in
-        cy.signIn()
-
-        // And there is reference data in the database
-        cy.task('stubRoomReferenceData')
-
         // And there is a premises and a room in the database
         const premises = premisesFactory.build()
         const room = roomFactory.build()
@@ -353,12 +257,6 @@ context('Bedspace', () => {
   })
 
   it('navigates back from the edit bedspace page to the show bedspace page', () => {
-    // Given I am signed in
-    cy.signIn()
-
-    // And there is reference data in the database
-    cy.task('stubRoomReferenceData')
-
     // And there is a premises and a room in the database
     const premises = premisesFactory.build()
     const room = roomFactory.build()
@@ -377,9 +275,6 @@ context('Bedspace', () => {
   })
 
   it('shows a single bedspace in an active premises', () => {
-    // Given I am signed in
-    cy.signIn()
-
     // And there is an active premises, a room, bookings and a lost bed in the database
     const premises = premisesFactory.active().build()
     const room = roomFactory.build()
@@ -417,9 +312,6 @@ context('Bedspace', () => {
   })
 
   it('shows a single bedspace in an archived premises', () => {
-    // Given I am signed in
-    cy.signIn()
-
     // And there is an archived premises, a room, bookings, and a lost bed in the database
     const premises = premisesFactory.archived().build()
     const room = roomFactory.build({
@@ -457,9 +349,6 @@ context('Bedspace', () => {
   })
 
   it('navigates back from the show bedspace page to the show premises page', () => {
-    // Given I am signed in
-    cy.signIn()
-
     // And there is a premises with rooms in the database
     const premises = premisesFactory.build()
     const rooms = roomFactory.buildList(5)
@@ -481,9 +370,6 @@ context('Bedspace', () => {
     let premises
 
     beforeEach(() => {
-      // Given I am signed in
-      cy.signIn()
-
       // And there is an active premises in the database
       premises = premisesFactory.active().build()
       cy.task('stubSinglePremises', premises)

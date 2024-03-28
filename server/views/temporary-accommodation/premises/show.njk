@@ -12,85 +12,90 @@
 {% set bodyClasses = "temporary-accommodation-premises-show" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('View a property', [
-    {title: 'List of properties', href: addPlaceContext(paths.premises.index())}
-  ]) }}
-  {{ placeContextHeader(placeContext) }}
+    {{ breadCrumb('View a property', [
+        {title: 'List of properties', href: addPlaceContext(paths.premises.index())}
+    ]) }}
+    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  {% if premises.status === 'archived' %}
-    {% if not successMessages.length %}
-      {% set archivedBannerHtml %}
-        <p class="govuk-notification-banner__heading">This is an archived property.</p>
-        <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
-      {% endset %}
+    {% if premises.status === 'archived' %}
+        {% if not successMessages.length %}
+            {% set archivedBannerHtml %}
+                <p class="govuk-notification-banner__heading">This is an archived property.</p>
+                <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
+            {% endset %}
 
-      {{ govukNotificationBanner({
-        html: archivedBannerHtml
-      }) }}
+            {{ govukNotificationBanner({
+                html: archivedBannerHtml
+            }) }}
+        {% endif %}
     {% endif %}
-  {% endif %}
 
-  <h1 class="govuk-heading-l">View a property</h1>
+    <h1 class="govuk-heading-l">View a property</h1>
 
-  {{ mojPageHeaderActions({
-    heading: {
-      text: premises.addressLine1 + ', ' + premises.postcode,
-      classes: 'govuk-heading-m',
-      level: 2
-    },
-    items: actions
-  }) }}
-
-  <div data-cy-premises="true">
-    <div class="edit-bar">
-      <div class="edit-bar__container">
-        <div class="edit-bar__title">
-          <h3>{{ premises.name }}</h3>
-        </div>
-        <div class="edit-bar__action">
-          <a href="{{ paths.premises.edit({ premisesId: premises.id }) }}">Edit</a>
-        </div>
-      </div>
-    </div>
-
-    {{ govukSummaryList({
-      rows: summaryList.rows,
-      classes: 'govuk-summary-list--no-border details'
+    {{ mojPageHeaderActions({
+        heading: {
+            text: premises.addressLine1 + ', ' + premises.postcode,
+            classes: 'govuk-heading-m',
+            level: 2
+        },
+        items: actions
     }) }}
-  </div>
 
-  <h3>Bedspace details</h3>
-
-  {% for bedspace in bedspaces %}
-    <div data-cy-bedspace="true">
-      <div class="edit-bar">
-        <div class="edit-bar__container">
-          <div class="edit-bar__title">
-            <h4>{{ bedspace.room.name }}</h4>
-          </div>
-          <div class="edit-bar__action">
-            <a href="{{ addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: bedspace.room.id })) }}">View</a>
-          </div>
+    <div data-cy-premises="true">
+        <div class="edit-bar">
+            <div class="edit-bar__container">
+                <div class="edit-bar__title">
+                    <h3>{{ premises.name }}</h3>
+                </div>
+                <div class="edit-bar__action">
+                    <a href="{{ paths.premises.edit({ premisesId: premises.id }) }}">Edit</a>
+                </div>
+            </div>
         </div>
-      </div>
 
-      {{ govukSummaryList({
-        rows: bedspace.summaryList.rows,
-        classes: 'govuk-summary-list--no-border details'
-      }) }}
+        {{ govukSummaryList({
+            rows: summaryList.rows,
+            classes: 'govuk-summary-list--no-border details'
+        }) }}
     </div>
-  {% endfor %}
+
+    <h3>Bedspace details</h3>
+
+    {% for bedspace in bedspaces %}
+        <div data-cy-bedspace="true">
+            <div class="edit-bar">
+                <div class="edit-bar__container">
+                    <div class="edit-bar__title">
+                        <h4>Bedspace name: {{ bedspace.room.name }}</h4>
+                    </div>
+                    <div class="edit-bar__action">
+                        <a href="{{ addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: bedspace.room.id })) }}">View</a>
+                    </div>
+                </div>
+            </div>
+
+            {{ govukSummaryList({
+                rows: bedspace.summaryList.rows,
+                classes: 'govuk-summary-list--no-border details'
+            }) }}
+        </div>
+    {% endfor %}
 
 {% endblock %}
 
 {% block extraScripts %}
-  {% if actions %}
-    <script type="text/javascript" nonce="{{ cspNonce }}">
-      new MOJFrontend.ButtonMenu({container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"});
-    </script>
-  {% endif %}
+    {% if actions %}
+        <script type="text/javascript" nonce="{{ cspNonce }}">
+          new MOJFrontend.ButtonMenu({
+            container: $('.moj-button-menu'),
+            mq: '(min-width: 200em)',
+            buttonText: 'Actions',
+            menuClasses: 'moj-button-menu__wrapper--right',
+          })
+        </script>
+    {% endif %}
 {% endblock %}

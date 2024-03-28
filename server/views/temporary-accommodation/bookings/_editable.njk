@@ -1,4 +1,5 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "../components/ta-input/macro.njk" import taInput %}
 {% from "../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../components/place-context-value/macro.njk" import placeContextValue %}
@@ -7,58 +8,63 @@
 
 {{ taInput(
     {
-      label: {
+        label: {
         text: "What is the person's CRN",
         classes: "govuk-label--m"
-      },
-      hint: {
+    },
+        hint: {
         text: "Enter the CRN for the person you are booking the bedspace for"
-      },
-      classes: "govuk-input--width-10",
-      fieldName: "crn"
+    },
+        classes: "govuk-input--width-10",
+        fieldName: "crn"
     },
     fetchContext()
-  )
-}}
+) }}
+
+<h2>Bedspace status summary</h2>
+
+{{ govukSummaryList({
+    rows: bedspaceStatus.rows,
+    classes: 'govuk-summary-list--no-border details'
+}) }}
 
 {{ taDateInput(
     {
-      fieldset: {
+        fieldset: {
         legend: {
-          text: "What is the start date?",
-          classes: "govuk-fieldset__legend--m"
+            text: "What is the start date?",
+            classes: "govuk-fieldset__legend--m"
         }
-      },
-      fieldName: "arrivalDate",
-      items: dateFieldValues('arrivalDate', errors)
+    },
+        fieldName: "arrivalDate",
+        items: dateFieldValues('arrivalDate', errors)
     },
     fetchContext()
-  )
-}}
+) }}
 
 {{ taDateInput(
     {
-      fieldset: {
+        fieldset: {
         legend: {
-          text: "What is the end date?",
-          classes: "govuk-fieldset__legend--m"
+            text: "What is the end date?",
+            classes: "govuk-fieldset__legend--m"
         }
-      },
-      hint: {
+    },
+        hint: {
         html: "<span id='departureDate-hint'></span>"
-      },
-      fieldName: "departureDate",
-      items: dateFieldValues('departureDate', errors)
+    },
+        fieldName: "departureDate",
+        items: dateFieldValues('departureDate', errors)
     },
     fetchContext()
-  )
-}}
+) }}
 
 {% if not disableTurnarounds %}
-  <p>There will be a turnaround time of {{ premises.turnaroundWorkingDayCount }} working {{ 'day' if premises.turnaroundWorkingDayCount === 1 else 'days' }} after this booking</p>
+    <p>There will be a turnaround time of {{ premises.turnaroundWorkingDayCount }}
+        working {{ 'day' if premises.turnaroundWorkingDayCount === 1 else 'days' }} after this booking</p>
 {% endif %}
 
 {{ govukButton({
-  text: "Continue",
-  preventDoubleClick: true
+    text: "Continue",
+    preventDoubleClick: true
 }) }}

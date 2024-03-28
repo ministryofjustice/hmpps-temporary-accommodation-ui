@@ -23,6 +23,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import ArrivalsController from './arrivalsController'
+import config from '../../../config'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -85,6 +86,7 @@ describe('ArrivalsController', () => {
           errorSummary: [],
           ...DateFormats.isoToDateAndTimeInputs(booking.arrivalDate, 'arrivalDate'),
           ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'expectedDepartureDate'),
+          nDeliusUpdateMessage: true,
         })
       })
     })
@@ -423,6 +425,75 @@ describe('ArrivalsController', () => {
           err,
           paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
         )
+      })
+    })
+  })
+
+  describe('if the domainEvent feature flag contains personArrived', () => {
+    beforeEach(() => {
+      jest.mock('../../../config')
+      config.flags.domainEventsEmit = 'personArrived'
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    it('does not show the nDelius update message when creating', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.arrived().build()
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        bookingId: booking.id,
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      const requestHandler = arrivalsController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/arrivals/new',
+        expect.objectContaining({
+          nDeliusUpdateMessage: false,
+        }),
+      )
+    })
+
+    it('renders a different success message after creating', async () => {
+      const arrival = arrivalFactory.build()
+      const newArrival = newArrivalFactory.build()
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId,
+      }
+      request.body = {
+        notes: newArrival.notes,
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+        ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
+      }
+
+      arrivalService.createArrival.mockResolvedValue(arrival)
+
+      const requestHandler = arrivalsController.create()
+      await requestHandler(request, response, next)
+
+      expect(request.flash).toHaveBeenCalledWith('success', {
+        title: 'Booking marked as active',
+        text: 'You no longer need to update nDelius with this change.',
       })
     })
   })

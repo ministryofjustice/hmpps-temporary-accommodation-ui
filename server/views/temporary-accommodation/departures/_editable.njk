@@ -5,59 +5,61 @@
 {% from "../components/ta-select/macro.njk" import taSelect %}
 
 {{ taDateInput(
-  {
-    fieldset: {
-      legend: {
-        text: "What was the departure date?",
-        classes: "govuk-fieldset__legend--m"
-      }
+    {
+        fieldset: {
+        legend: {
+            text: "What was the departure date?",
+            classes: "govuk-fieldset__legend--m"
+        }
     },
-    fieldName: "dateTime",
-    items: dateFieldValues('dateTime', errors)
-  },
-  fetchContext()
+        fieldName: "dateTime",
+        items: dateFieldValues('dateTime', errors)
+    },
+    fetchContext()
 ) }}
 
 {{ taSelect(
-  {
-    label: {
+    {
+        label: {
         text: "What was the departure reason?",
         classes: "govuk-label--m"
     },
-    items: convertObjectsToSelectOptions(allDepartureReasons, "Select a departure reason", "name", "id", "reasonId"),
-    fieldName: "reasonId"
-  },
-  fetchContext()
+        items: convertObjectsToSelectOptions(allDepartureReasons, "Select a departure reason", "name", "id", "reasonId"),
+        fieldName: "reasonId"
+    },
+    fetchContext()
 ) }}
 
 {{ taSelect(
-  {
-    label: {
+    {
+        label: {
         text: "What was the move on category?",
         classes: "govuk-label--m"
     },
-    items: convertObjectsToSelectOptions(allMoveOnCategories, "Select a move on category", "name", "id", "moveOnCategoryId"),
-    fieldName: "moveOnCategoryId"
-  },
-  fetchContext()
+        items: convertObjectsToSelectOptions(allMoveOnCategories, "Select a move on category", "name", "id", "moveOnCategoryId"),
+        fieldName: "moveOnCategoryId"
+    },
+    fetchContext()
 ) }}
 
 {{ taTextarea(
-  {
-    label: {
-      text: "Please provide any further details"
+    {
+        label: {
+        text: "Please provide any further details"
     },
-    fieldName: "notes"
-  },
-  fetchContext()
+        fieldName: "notes"
+    },
+    fetchContext()
 ) }}
 
-{{ govukWarningText({
-  text: "You will need to record address and accommodation changes in nDelius. The CAS3 digital service does not automatically update nDelius.",
-  iconFallbackText: "Warning"
-}) }}
+{% if nDeliusUpdateMessage %}
+    {{ govukWarningText({
+        text: "You will need to record address and accommodation changes in nDelius. The CAS3 digital service does not automatically update nDelius.",
+        iconFallbackText: "Warning"
+    }) }}
+{% endif %}
 
 {{ govukButton({
-  text: "Submit",
-  preventDoubleClick: true
+    text: "Submit",
+    preventDoubleClick: true
 }) }}

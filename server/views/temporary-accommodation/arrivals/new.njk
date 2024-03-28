@@ -6,7 +6,7 @@
 {% from "../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../components/location-header/macro.njk" import locationHeader %}
-{% from "../components/pop-details-header/macro.njk" import popDetailsHeader%}
+{% from "../components/pop-details-header/macro.njk" import popDetailsHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -14,78 +14,81 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
-  }) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+    }) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  <h1 class="govuk-heading-l">Mark booking as active</h1>
+    <h1 class="govuk-heading-l">Mark booking as active</h1>
 
-  {{ showErrorSummary(errorSummary, errorTitle) }}
+    {{ showErrorSummary(errorSummary, errorTitle) }}
 
-  {{ popDetailsHeader(booking.person) }}
-  {{ locationHeader({ premises: premises, room: room }) }}
+    {{ popDetailsHeader(booking.person) }}
+    {{ locationHeader({ premises: premises, room: room }) }}
 
-  {{ bookingInfo(booking) }}
+    {{ bookingInfo(booking) }}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.arrivals.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.bookings.arrivals.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}"
+                  method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {{ taDateInput(
-          {
-            fieldset: {
-              legend: {
-                text: "What was the arrival date?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
-            fieldName: "arrivalDate",
-            items: dateFieldValues('arrivalDate', errors)
-          },
-          fetchContext()
-        ) }}
+                {{ taDateInput(
+                    {
+                        fieldset: {
+                        legend: {
+                            text: "What was the arrival date?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                        fieldName: "arrivalDate",
+                        items: dateFieldValues('arrivalDate', errors)
+                    },
+                    fetchContext()
+                ) }}
 
-        {{ taDateInput(
-          {
-            fieldset: {
-              legend: {
-                text: "What is the expected departure date?",
-                classes: "govuk-fieldset__legend--m"
-              }
-            },
-            fieldName: "expectedDepartureDate",
-            items: dateFieldValues('expectedDepartureDate', errors)
-          },
-          fetchContext()
-        ) }}
+                {{ taDateInput(
+                    {
+                        fieldset: {
+                        legend: {
+                            text: "What is the expected departure date?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                        fieldName: "expectedDepartureDate",
+                        items: dateFieldValues('expectedDepartureDate', errors)
+                    },
+                    fetchContext()
+                ) }}
 
-        {{ taTextarea(
-          {
-            label: {
-              text: "Please provide any further details"
-            },
-            fieldName: "notes"
-          },
-          fetchContext()
-        ) }}
+                {{ taTextarea(
+                    {
+                        label: {
+                        text: "Please provide any further details"
+                    },
+                        fieldName: "notes"
+                    },
+                    fetchContext()
+                ) }}
 
-        {{ govukWarningText({
-          text: "You will need to record address and accommodation changes in nDelius. The CAS3 digital service does not automatically update nDelius.",
-          iconFallbackText: "Warning"
-        }) }}
+                {% if nDeliusUpdateMessage %}
+                    {{ govukWarningText({
+                        text: "You will need to record address and accommodation changes in nDelius. The CAS3 digital service does not automatically update nDelius.",
+                        iconFallbackText: "Warning"
+                    }) }}
+                {% endif %}
 
-        {{ govukButton({
-          text: "Submit",
-          preventDoubleClick: true
-        }) }}
-      </form>
+                {{ govukButton({
+                    text: "Submit",
+                    preventDoubleClick: true
+                }) }}
+            </form>
+        </div>
     </div>
-  </div>
 
 {% endblock %}

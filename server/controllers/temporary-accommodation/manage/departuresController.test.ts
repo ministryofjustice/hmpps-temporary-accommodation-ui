@@ -14,6 +14,7 @@ import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import DeparturesController from './departuresController'
+import config from '../../../config'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -83,6 +84,7 @@ describe('DeparturesController', () => {
         allMoveOnCategories: [],
         errors: {},
         errorSummary: [],
+        nDeliusUpdateMessage: true,
       })
     })
   })
@@ -268,6 +270,75 @@ describe('DeparturesController', () => {
         err,
         paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
       )
+    })
+  })
+
+  describe('if the domainEvent feature flag contains personDeparted', () => {
+    beforeEach(() => {
+      jest.mock('../../../config')
+      config.flags.domainEventsEmit = 'personDeparted'
+    })
+
+    afterEach(() => {
+      jest.restoreAllMocks()
+    })
+
+    it('does not show the nDelius update message when creating', async () => {
+      const premises = premisesFactory.build()
+      const room = roomFactory.build()
+      const booking = bookingFactory.build()
+
+      request.params = {
+        premisesId: premises.id,
+        roomId: room.id,
+        bookingId: booking.id,
+      }
+
+      premisesService.getPremises.mockResolvedValue(premises)
+      bedspaceService.getRoom.mockResolvedValue(room)
+      bookingService.getBooking.mockResolvedValue(booking)
+
+      departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
+
+      const requestHandler = departuresController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith(
+        'temporary-accommodation/departures/new',
+        expect.objectContaining({
+          nDeliusUpdateMessage: false,
+        }),
+      )
+    })
+
+    it('renders a different success message after creating', async () => {
+      const requestHandler = departuresController.create()
+
+      const departure = departureFactory.build()
+      const newDeparture = newDepartureFactory.build({
+        ...departure,
+      })
+
+      request.params = {
+        premisesId,
+        roomId,
+        bookingId,
+      }
+      request.body = {
+        ...newDeparture,
+        ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
+      }
+
+      departureService.createDeparture.mockResolvedValue(departure)
+
+      await requestHandler(request, response, next)
+
+      expect(request.flash).toHaveBeenCalledWith('success', {
+        title: 'Booking marked as departed',
+        text: 'You no longer need to update nDelius with this change.',
+      })
     })
   })
 })

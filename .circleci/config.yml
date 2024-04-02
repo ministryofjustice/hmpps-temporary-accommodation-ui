@@ -85,6 +85,21 @@ workflows:
               only:
                 - main
 
+      - request-preview-approval:
+          type: approval
+      - hmpps/build_docker:
+          name: build_docker_preview
+          requires:
+            - request-preview-approval
+      - hmpps/deploy_env:
+          name: deploy_preview
+          env: 'test'
+          context:
+            - hmpps-common-vars
+            - hmpps-temporary-accommodation-ui-stage
+          requires:
+            - build_docker_preview
+
       - hmpps/deploy_env:
           name: deploy_dev
           env: 'dev'

@@ -22,7 +22,7 @@ generic-service:
     COMMUNITY_ACCOMMODATION_API_TIMEOUT_RESPONSE: 30000
     COMMUNITY_ACCOMMODATION_API_TIMEOUT_DEADLINE: 30000
     PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE: 100
-    DOMAIN-EVENTS_CAS3_EMIT-ENABLED: 'personArrived,personDeparted'
+    DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
 
   namespace_secrets:
     sqs-hmpps-audit-secret:

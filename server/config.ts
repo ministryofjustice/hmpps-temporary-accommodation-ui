@@ -49,7 +49,7 @@ export default {
   flags: {
     oasysDisabled: process.env.OASYS_DISABLED || false,
     applyEnabledForAllRegions: ['local', 'dev', 'test'].includes(environment),
-    domainEventsEmit: get('DOMAIN-EVENTS_CAS3_EMIT-ENABLED', ''),
+    domainEventsEmit: get('DOMAIN_EVENTS_EMIT_ENABLED', ''),
   },
   environment,
   sentry: {

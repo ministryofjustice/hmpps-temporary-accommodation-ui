@@ -211,7 +211,7 @@ context('Bedspace', () => {
           cy.task('stubRoomUpdateConflictError', {
             premisesId: premises.id,
             room,
-            detail: `The bedspace end date must be on or after the bedspace createdAt date: ${createdAt}`,
+            detail: `Bedspace end date cannot be prior to the Bedspace creation date: ${createdAt}`,
           })
           page.clickSubmit()
 
@@ -224,7 +224,8 @@ context('Bedspace', () => {
           cy.task('stubRoomUpdateConflictError', {
             premisesId: premises.id,
             room,
-            detail: 'Conflict booking exists for the room: 82c03c63-321a-45dd-811d-be87a41f5780',
+            detail:
+              'Conflict booking exists for the room with end date 2024-04-14: 82c03c63-321a-45dd-811d-be87a41f5780',
           })
           page.clickSubmit()
 

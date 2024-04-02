@@ -4,7 +4,7 @@ import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
-import { bedspaceActions, insertConflictErrors } from '../../../utils/bedspaceUtils'
+import { bedspaceActions, insertEndDateErrors } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
@@ -118,8 +118,12 @@ export default class BedspacesController {
 
         res.redirect(paths.premises.bedspaces.show({ premisesId, roomId }))
       } catch (err) {
-        if (err.status === 409) {
-          insertConflictErrors(err, premisesId, roomId)
+        if (
+          err.status === 409 ||
+          (err.status === 400 &&
+            err.data.detail.match('Bedspace end date cannot be prior to the Bedspace creation date'))
+        ) {
+          insertEndDateErrors(err, premisesId, roomId)
         }
         catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, roomId }))
       }

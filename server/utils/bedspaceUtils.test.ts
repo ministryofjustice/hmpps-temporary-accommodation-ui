@@ -1,7 +1,7 @@
 import { addDays } from 'date-fns'
 import paths from '../paths/temporary-accommodation/manage'
 import { bedFactory, placeContextFactory, premisesFactory, roomFactory } from '../testutils/factories'
-import { bedspaceActions, bedspaceStatus, insertConflictErrors } from './bedspaceUtils'
+import { bedspaceActions, bedspaceStatus, insertEndDateErrors } from './bedspaceUtils'
 import { addPlaceContext } from './placeUtils'
 import { DateFormats } from './dateUtils'
 import * as validation from './validation'
@@ -123,14 +123,15 @@ describe('bedspaceUtils', () => {
 
     it('inserts an error for a date before created at conflict', () => {
       const error = {
+        status: 400,
         data: {
-          detail: 'The bedspace end date must be on or after the bedspace createdAt date: 2024-04-14',
+          detail: 'Bedspace end date cannot be prior to the Bedspace creation date: 2024-04-14',
         },
         stack: '',
         message: '',
       }
 
-      insertConflictErrors(error, 'premiseId', 'roomId')
+      insertEndDateErrors(error, 'premiseId', 'roomId')
 
       expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
         errorTitle: 'There is a problem',
@@ -145,14 +146,15 @@ describe('bedspaceUtils', () => {
 
     it('inserts an error for an existing booking conflict', () => {
       const error = {
+        status: 409,
         data: {
-          detail: 'Conflict booking exists for the room: bookingId',
+          detail: 'Conflict booking exists for the room with end date 2024-05-27: bookingId',
         },
         stack: '',
         message: '',
       }
 
-      insertConflictErrors(error, 'premiseId', 'roomId')
+      insertEndDateErrors(error, 'premiseId', 'roomId')
 
       expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
         errorTitle: 'There is a problem',

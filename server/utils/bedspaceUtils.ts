@@ -37,12 +37,12 @@ export function bedspaceStatus(room: Room): BedspaceStatus {
   return 'online'
 }
 
-export function insertConflictErrors(err: SanitisedError, premisesId: Premises['id'], roomId: Room['id']) {
+export function insertEndDateErrors(err: SanitisedError, premisesId: Premises['id'], roomId: Room['id']) {
   const { detail } = err.data as { detail: string }
   const errorSummary: ErrorSummary[] = []
   let errorType: string
 
-  if (detail.match('The bedspace end date must be on or after the bedspace createdAt date:')) {
+  if (detail.match('Bedspace end date cannot be prior to the Bedspace creation date')) {
     const createdAt = detail.split(':')[1].trim()
     errorSummary.push({
       text: `The bedspace end date must be on or after the date the bedspace was created (${DateFormats.isoDateToUIDate(
@@ -52,7 +52,7 @@ export function insertConflictErrors(err: SanitisedError, premisesId: Premises['
     errorType = 'beforeCreatedAt'
   }
 
-  if (detail.match('Conflict booking exists for the room:')) {
+  if (detail.match('Conflict booking exists for the room with end date')) {
     const bookingId = detail.split(':')[1].trim()
     errorSummary.push({
       html: `This bedspace end date conflicts with <a href="${paths.bookings.show({

@@ -15,7 +15,7 @@ import {
   roomFactory,
   updateRoomFactory,
 } from '../../../testutils/factories'
-import { bedspaceActions, insertConflictErrors } from '../../../utils/bedspaceUtils'
+import { bedspaceActions, insertEndDateErrors } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspacesController from './bedspacesController'
@@ -317,10 +317,10 @@ describe('BedspacesController', () => {
       const room = roomFactory.build()
 
       const err = {
-        status: 409,
+        status: 400,
         data: {
-          title: 'Conflict',
-          detail: 'The bedspace end date must be on or after the bedspace createdAt date: 2024-03-27',
+          title: 'Bad Request',
+          detail: 'Bedspace end date cannot be prior to the Bedspace creation date: 2024-03-28',
         },
       }
 
@@ -335,7 +335,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(insertConflictErrors).toHaveBeenCalledWith(err, premisesId, room.id)
+      expect(insertEndDateErrors).toHaveBeenCalledWith(err, premisesId, room.id)
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
@@ -353,7 +353,7 @@ describe('BedspacesController', () => {
         status: 409,
         data: {
           title: 'Conflict',
-          detail: 'Conflict booking exists for the room: 82c03c63-321a-45dd-811d-be87a41f5780',
+          detail: 'Conflict booking exists for the room with end date 2024-07-07: 82c03c63-321a-45dd-811d-be87a41f5780',
         },
       }
 
@@ -368,7 +368,7 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(insertConflictErrors).toHaveBeenCalledWith(err, premisesId, room.id)
+      expect(insertEndDateErrors).toHaveBeenCalledWith(err, premisesId, room.id)
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,

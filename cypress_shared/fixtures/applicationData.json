@@ -1,4 +1,9 @@
 {
+  "offence-and-behaviour-summary": {
+    "sexual-offence-conviction": {
+      "sexualOffenceConviction": "yes"
+    }
+  },
   "sentence-information": {
     "offending-summary": {
       "summary": "A brief summary of offending history"
@@ -19,7 +24,10 @@
       "sentenceExpiryDate-day": "19"
     },
     "release-type": {
-      "releaseTypes": ["licence", "pss"],
+      "releaseTypes": [
+        "licence",
+        "pss"
+      ],
       "licenceStartDate": "2024-01-19",
       "licenceStartDate-year": "2024",
       "licenceStartDate-month": "1",
@@ -80,7 +88,12 @@
   },
   "licence-conditions": {
     "additional-licence-conditions": {
-      "conditions": ["civilOrders", "nonAssociation", "nonContact", "other"],
+      "conditions": [
+        "civilOrders",
+        "nonAssociation",
+        "nonContact",
+        "other"
+      ],
       "alcoholMonitoringDetail": "",
       "civilOrdersDetail": "Civil orders detail",
       "curfewDetail": "",
@@ -214,7 +227,10 @@
       "previousStays": "yes"
     },
     "previous-stays-details": {
-      "accommodationTypes": ["cas1", "cas3"],
+      "accommodationTypes": [
+        "cas1",
+        "cas3"
+      ],
       "cas1Detail": "Approved Premises detail",
       "cas2Detail": "",
       "cas3Detail": "Transitional Accommodation (CAS3) detail"
@@ -228,7 +244,11 @@
   },
   "disability-cultural-and-specific-needs": {
     "needs": {
-      "needs": ["hearingImpairment", "neurodivergence", "other"],
+      "needs": [
+        "hearingImpairment",
+        "neurodivergence",
+        "other"
+      ],
       "hearingImpairmentDetail": "Hearing impairment detail",
       "mentalHealthDetail": "",
       "languageDetail": "",

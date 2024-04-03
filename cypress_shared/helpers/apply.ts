@@ -79,9 +79,11 @@ import {
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
+import SexualOffenceConvictionPage from '../pages/apply/accommodation-need/offence-and-behaviour-summary/sexualOffenceConviction'
 
 export default class ApplyHelper {
   pages = {
+    offenceAndBehaviourSummary: [] as Array<ApplyPage>,
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
@@ -165,6 +167,7 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
+    this.completeOffenceAndBehaviourSummary()
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeEligibility()
@@ -187,6 +190,7 @@ export default class ApplyHelper {
 
   numberOfPages() {
     return [
+      ...this.pages.offenceAndBehaviourSummary,
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
@@ -313,6 +317,32 @@ export default class ApplyHelper {
     cy.task('stubApplicationSubmit', { application: this.application })
   }
 
+  completeOffenceAndBehaviourSummary() {
+    // Given I click the offence and behaviour summary task
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('offence-and-behaviour-summary')
+
+    // When I complete the form
+    const sexualOffenceConvictionPage = new SexualOffenceConvictionPage(this.application)
+    sexualOffenceConvictionPage.completeForm()
+    sexualOffenceConvictionPage.clickSubmit()
+
+    this.pages.offenceAndBehaviourSummary = [sexualOffenceConvictionPage]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('sentence-information', 'Not started')
+
+    // And the risk widgets should be visible
+    if (this.uiRisks) {
+      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+  }
+
   completeSentenceInformation() {
     // Given I click the sentence information task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('sentence-information')
@@ -354,11 +384,6 @@ export default class ApplyHelper {
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('contact-details', 'Not started')
-
-    // And the risk widgets should be visible
-    if (this.uiRisks) {
-      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
-    }
   }
 
   private completeContactDetails() {

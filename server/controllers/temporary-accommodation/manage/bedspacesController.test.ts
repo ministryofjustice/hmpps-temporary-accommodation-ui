@@ -15,11 +15,12 @@ import {
   roomFactory,
   updateRoomFactory,
 } from '../../../testutils/factories'
-import { bedspaceActions } from '../../../utils/bedspaceUtils'
+import { bedspaceActions, insertEndDateErrors } from '../../../utils/bedspaceUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import BedspacesController from './bedspacesController'
 import { preservePlaceContext } from '../../../utils/placeUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -92,17 +93,23 @@ describe('BedspacesController', () => {
       request.body = {
         name: room.name,
         notes: room.notes,
+        ...DateFormats.isoToDateAndTimeInputs(room.beds[0].bedEndDate, 'bedEndDate'),
       }
 
       bedspaceService.createRoom.mockResolvedValue(room)
 
       await requestHandler(request, response, next)
 
-      expect(bedspaceService.createRoom).toHaveBeenCalledWith(callConfig, premisesId, {
-        name: room.name,
-        characteristicIds: [],
-        notes: room.notes,
-      })
+      expect(bedspaceService.createRoom).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        expect.objectContaining({
+          name: room.name,
+          characteristicIds: [],
+          notes: room.notes,
+          bedEndDate: room.beds[0].bedEndDate,
+        }),
+      )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace created')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, roomId: room.id }))
@@ -217,6 +224,7 @@ describe('BedspacesController', () => {
       request.body = {
         name: room.name,
         notes: room.notes,
+        ...DateFormats.isoToDateAndTimeInputs(room.beds[0].bedEndDate, 'bedEndDate'),
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
@@ -225,11 +233,17 @@ describe('BedspacesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id, {
-        name: room.name,
-        notes: room.notes,
-        characteristicIds: [],
-      })
+      expect(bedspaceService.updateRoom).toHaveBeenCalledWith(
+        callConfig,
+        premises.id,
+        room.id,
+        expect.objectContaining({
+          name: room.name,
+          notes: room.notes,
+          characteristicIds: [],
+          bedEndDate: room.beds[0].bedEndDate,
+        }),
+      )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace updated')
       expect(response.redirect).toHaveBeenCalledWith(
@@ -289,6 +303,72 @@ describe('BedspacesController', () => {
 
       await requestHandler(request, response, next)
 
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
+      )
+    })
+
+    it('renders an error if the bedspace end date is before the created date', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      const err = {
+        status: 400,
+        data: {
+          title: 'Bad Request',
+          detail: 'Bedspace end date cannot be prior to the Bedspace creation date: 2024-03-28',
+        },
+      }
+
+      bedspaceService.updateRoom.mockImplementation(() => {
+        throw err
+      })
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertEndDateErrors).toHaveBeenCalledWith(err, premisesId, room.id)
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.bedspaces.edit({ premisesId, roomId: room.id }),
+      )
+    })
+
+    it('renders an error if the bedspace end date conflicts with a booking', async () => {
+      const requestHandler = bedspacesController.update()
+
+      const room = roomFactory.build()
+
+      const err = {
+        status: 409,
+        data: {
+          title: 'Conflict',
+          detail: 'Conflict booking exists for the room with end date 2024-07-07: 82c03c63-321a-45dd-811d-be87a41f5780',
+        },
+      }
+
+      bedspaceService.updateRoom.mockImplementation(() => {
+        throw err
+      })
+
+      request.params = { premisesId, roomId: room.id }
+      request.body = {
+        name: room.name,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertEndDateErrors).toHaveBeenCalledWith(err, premisesId, room.id)
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,

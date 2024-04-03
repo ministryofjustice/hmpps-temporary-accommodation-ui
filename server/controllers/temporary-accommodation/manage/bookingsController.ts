@@ -48,10 +48,12 @@ export default class BookingsController {
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspaceStatus = this.bedspacesService.summaryListForBedspaceStatus(room)
 
       return res.render('temporary-accommodation/bookings/new', {
         premises,
         room,
+        bedspaceStatus,
         errors,
         errorSummary,
         errorTitle,

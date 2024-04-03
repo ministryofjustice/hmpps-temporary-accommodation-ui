@@ -1,10 +1,12 @@
+import { addDays } from 'date-fns'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
 import RoomClient from '../data/roomClient'
-import { characteristicFactory, newRoomFactory, roomFactory } from '../testutils/factories'
+import { bedFactory, characteristicFactory, newRoomFactory, roomFactory } from '../testutils/factories'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { formatLines } from '../utils/viewUtils'
 import BedspaceService from './bedspaceService'
+import { DateFormats } from '../utils/dateUtils'
 
 jest.mock('../data/roomClient')
 jest.mock('../data/referenceDataClient')
@@ -58,6 +60,7 @@ describe('BedspaceService', () => {
         name: 'ABC',
         characteristics: [characteristicFactory.build({ name: 'Characteristic 3' })],
         notes: 'Some more notes',
+        beds: [bedFactory.build({ bedEndDate: undefined })],
       })
 
       roomClient.all.mockResolvedValue([room1, room2])
@@ -74,6 +77,14 @@ describe('BedspaceService', () => {
           summaryList: {
             rows: [
               {
+                key: { text: 'Bedspace status' },
+                value: { html: '<span class="govuk-tag govuk-tag--green">Online</span>' },
+              },
+              {
+                key: { text: 'Bedspace end date' },
+                value: { text: 'No end date added' },
+              },
+              {
                 key: { text: 'Attributes' },
                 value: { text: 'Some attributes' },
               },
@@ -88,6 +99,14 @@ describe('BedspaceService', () => {
           room: room1,
           summaryList: {
             rows: [
+              {
+                key: { text: 'Bedspace status' },
+                value: { html: '<span class="govuk-tag govuk-tag--green">Online</span>' },
+              },
+              {
+                key: { text: 'Bedspace end date' },
+                value: { text: DateFormats.isoDateToUIDate(room1.beds[0].bedEndDate) },
+              },
               {
                 key: { text: 'Attributes' },
                 value: { text: 'Some attributes' },
@@ -125,12 +144,14 @@ describe('BedspaceService', () => {
 
   describe('getSingleBedspaceDetails', () => {
     it('returns a room and a summary list, for the given premises ID and room ID', async () => {
+      const bedEndDate = DateFormats.dateObjToIsoDate(addDays(new Date(), -14))
       const room = roomFactory.build({
         characteristics: [
           characteristicFactory.build({ name: 'Characteristic 1' }),
           characteristicFactory.build({ name: 'Characteristic 2' }),
         ],
         notes: 'Some notes',
+        beds: [bedFactory.build({ bedEndDate })],
       })
 
       roomClient.find.mockResolvedValue(room)
@@ -145,6 +166,14 @@ describe('BedspaceService', () => {
         room,
         summaryList: {
           rows: [
+            {
+              key: { text: 'Bedspace status' },
+              value: { html: `<span class="govuk-tag govuk-tag--grey">Archived</span>` },
+            },
+            {
+              key: { text: 'Bedspace end date' },
+              value: { text: DateFormats.isoDateToUIDate(bedEndDate) },
+            },
             {
               key: { text: 'Attributes' },
               value: { text: 'Some attributes' },

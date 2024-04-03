@@ -5,6 +5,8 @@ import { CallConfig } from '../data/restClient'
 import RoomClient from '../data/roomClient'
 import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
 import { formatLines } from '../utils/viewUtils'
+import { DateFormats } from '../utils/dateUtils'
+import { bedspaceStatus } from '../utils/bedspaceUtils'
 
 export type BedspaceReferenceData = {
   characteristics: Array<Characteristic>
@@ -87,9 +89,31 @@ export default class BedspaceService {
     return { characteristics }
   }
 
+  summaryListForBedspaceStatus(room: Room): SummaryList {
+    return {
+      rows: [
+        {
+          key: this.textValue('Bedspace status'),
+          value: this.htmlValue(
+            bedspaceStatus(room) === 'online'
+              ? `<span class="govuk-tag govuk-tag--green">Online</span>`
+              : `<span class="govuk-tag govuk-tag--grey">Archived</span>`,
+          ),
+        },
+        {
+          key: this.textValue('Bedspace end date'),
+          value: this.textValue(
+            room.beds[0].bedEndDate ? DateFormats.isoDateToUIDate(room.beds[0].bedEndDate) : 'No end date added',
+          ),
+        },
+      ],
+    }
+  }
+
   private summaryListForRoom(room: Room): SummaryList {
     return {
       rows: [
+        ...this.summaryListForBedspaceStatus(room).rows,
         {
           key: this.textValue('Attributes'),
           value: formatCharacteristics(room.characteristics),

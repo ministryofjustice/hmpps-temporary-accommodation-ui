@@ -12,9 +12,17 @@ export default class bedspaceStatusComponent extends Component {
 
   shouldShowStatusDetails(status: 'Online' | 'Archived'): void {
     this.shouldShowKeyAndValue('Bedspace status', status)
-    this.shouldShowKeyAndValue(
-      'Bedspace end date',
-      this.bedEndDate ? DateFormats.isoDateToUIDate(this.bedEndDate) : 'No end date added',
-    )
+
+    let endDateText = 'No end date added'
+
+    if (this.bedEndDate) {
+      endDateText = DateFormats.isoDateToUIDate(this.bedEndDate)
+
+      if (status === 'Online') {
+        endDateText += ` (${DateFormats.isoDateToDaysFromNow(this.bedEndDate)})`
+      }
+    }
+
+    this.shouldShowKeyAndValue('Bedspace end date', endDateText)
   }
 }

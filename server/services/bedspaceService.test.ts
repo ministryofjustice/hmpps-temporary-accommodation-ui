@@ -105,7 +105,11 @@ describe('BedspaceService', () => {
               },
               {
                 key: { text: 'Bedspace end date' },
-                value: { text: DateFormats.isoDateToUIDate(room1.beds[0].bedEndDate) },
+                value: {
+                  text: `${DateFormats.isoDateToUIDate(room1.beds[0].bedEndDate)} (${DateFormats.isoDateToDaysFromNow(
+                    room1.beds[0].bedEndDate,
+                  )})`,
+                },
               },
               {
                 key: { text: 'Attributes' },
@@ -172,7 +176,9 @@ describe('BedspaceService', () => {
             },
             {
               key: { text: 'Bedspace end date' },
-              value: { text: DateFormats.isoDateToUIDate(bedEndDate) },
+              value: {
+                text: DateFormats.isoDateToUIDate(bedEndDate),
+              },
             },
             {
               key: { text: 'Attributes' },

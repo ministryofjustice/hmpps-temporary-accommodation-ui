@@ -184,6 +184,33 @@ describe('DateFormats', () => {
       expect(result.date.toString()).toEqual('twothousandtwentytwo-20-oo')
     })
   })
+
+  describe('isoDateToDaysFromNow', () => {
+    beforeEach(() => {
+      jest.useFakeTimers()
+      jest.setSystemTime(new Date('2024-04-08T00:01:00.000'))
+    })
+
+    it('returns days ago if the date is in the past', () => {
+      expect(DateFormats.isoDateToDaysFromNow('2024-03-12')).toEqual('27 days ago')
+    })
+
+    it('returns one day ago if the date is yesterday', () => {
+      expect(DateFormats.isoDateToDaysFromNow('2024-04-07')).toEqual('1 day ago')
+    })
+
+    it('returns today if the date is today', () => {
+      expect(DateFormats.isoDateToDaysFromNow('2024-04-08')).toEqual('today')
+    })
+
+    it('returns the number of days if the date is in the future', () => {
+      expect(DateFormats.isoDateToDaysFromNow('2024-04-16')).toEqual('in 8 days')
+    })
+
+    it('returns one day if the date is tomorrow', () => {
+      expect(DateFormats.isoDateToDaysFromNow('2024-04-09')).toEqual('in 1 day')
+    })
+  })
 })
 
 describe('isoToDateAndTimeInputs', () => {
@@ -276,7 +303,9 @@ describe('dateIsBlank', () => {
 })
 
 describe('getYearsSince', () => {
-  jest.useFakeTimers().setSystemTime(new Date('2027-01-01'))
+  beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2027-01-01'))
+  })
 
   it('returns correct years array', () => {
     const years = [{ year: '2023' }, { year: '2024' }, { year: '2025' }, { year: '2026' }, { year: '2027' }]

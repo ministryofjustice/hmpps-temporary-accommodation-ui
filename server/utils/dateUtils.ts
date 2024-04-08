@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { isFuture, isPast } from 'date-fns'
+import { differenceInDays, isFuture, isPast } from 'date-fns'
 
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
@@ -118,6 +118,20 @@ export class DateFormats {
       [`${key}-month`]: `${date.getMonth() + 1}`,
       [`${key}-year`]: `${date.getFullYear()}`,
     } as ObjectWithDateParts<K>
+  }
+
+  static isoDateToDaysFromNow(dateString: string) {
+    const difference = differenceInDays(new Date(dateString).setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0))
+    const numDays = Math.abs(difference)
+    const text = `${numDays} ${numDays === 1 ? 'day' : 'days'}`
+
+    if (difference < 0) {
+      return `${text} ago`
+    } else if (difference > 0) {
+      return `in ${text}`
+    } else {
+      return 'today'
+    }
   }
 }
 

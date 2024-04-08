@@ -59,7 +59,9 @@ export default class BedspaceEditPage extends BedspaceEditablePage {
 
   showCannotEditBedspaceEndDate(bedEndDate: string) {
     cy.get('dt').contains('Bedspace end date')
-    cy.get('dd').contains(DateFormats.isoDateToUIDate(bedEndDate))
+    cy.get('dd').contains(
+      `${DateFormats.isoDateToUIDate(bedEndDate)} (${DateFormats.isoDateToDaysFromNow(bedEndDate)})`,
+    )
     cy.get('p').contains('The bedspace end date cannot be edited.')
     cy.get('label').contains('Enter the bedspace end date (optional)').should('not.exist')
   }

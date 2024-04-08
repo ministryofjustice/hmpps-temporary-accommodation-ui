@@ -90,6 +90,16 @@ export default class BedspaceService {
   }
 
   summaryListForBedspaceStatus(room: Room): SummaryList {
+    let endDate = 'No end date added'
+
+    if (room.beds[0].bedEndDate) {
+      endDate = DateFormats.isoDateToUIDate(room.beds[0].bedEndDate)
+
+      if (bedspaceStatus(room) === 'online') {
+        endDate += ` (${DateFormats.isoDateToDaysFromNow(room.beds[0].bedEndDate)})`
+      }
+    }
+
     return {
       rows: [
         {
@@ -102,9 +112,7 @@ export default class BedspaceService {
         },
         {
           key: this.textValue('Bedspace end date'),
-          value: this.textValue(
-            room.beds[0].bedEndDate ? DateFormats.isoDateToUIDate(room.beds[0].bedEndDate) : 'No end date added',
-          ),
+          value: this.textValue(endDate),
         },
       ],
     }

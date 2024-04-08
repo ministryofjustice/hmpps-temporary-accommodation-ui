@@ -103,6 +103,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('dateFieldValues', dateFieldValues)
   njkEnv.addGlobal('formatDate', DateFormats.isoDateToUIDate)
   njkEnv.addGlobal('formatDateTime', DateFormats.isoDateTimeToUIDateTime)
+  njkEnv.addGlobal('formatDaysFromNow', DateFormats.isoDateToDaysFromNow)
   njkEnv.addGlobal('parseNaturalNumber', parseNaturalNumber)
   njkEnv.addGlobal('dateInputHint', dateInputHint)
   njkEnv.addGlobal('personName', personName)

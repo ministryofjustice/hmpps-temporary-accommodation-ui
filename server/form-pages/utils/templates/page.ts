@@ -2,21 +2,30 @@
 
 const pageTemplate = (
   pageClassName: string,
-  pageName: string,
-) => `import type { TaskListErrors } from '@approved-premises/ui'
+  pageSlug: string,
+) => `import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
+import type { TaskListErrors, TasklistPage } from '@approved-premises/ui'
+import { Page } from '../../../utils/decorators'
 
-import TasklistPage from '../../tasklistPage'
+type ${pageClassName}Body = {}
 
+@Page({ name: '${pageSlug}', bodyProperties: [] })
 export default class ${pageClassName} implements TasklistPage {
-  name = '${pageName}'
-
   // TODO: Add title of page
-  title = ''
+  title = 'Page title'
 
-  body: {}
+  htmlDocumentTitle = this.title
 
   // TODO: Add the body params to the constructor
-  constructor(body: Record<string, unknown>) {}
+  constructor(
+    readonly body: Partial<${pageClassName}Body>,
+    readonly application: Application,
+  ) {}
+
+  // TODO: Add logic to translate the response (if applicable)
+  response() {
+    return {}
+  }
 
   // TODO: Set the previous page (if applicable)
   previous() {
@@ -27,9 +36,6 @@ export default class ${pageClassName} implements TasklistPage {
   next() {
     return ''
   }
-
-  // TODO: Add logic to translate the response (if applicable)
-  response() {}
 
   // TODO: Add logic for error handling
   errors() {

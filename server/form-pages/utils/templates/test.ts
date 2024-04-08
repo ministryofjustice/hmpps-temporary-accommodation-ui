@@ -3,23 +3,26 @@
 const testTemplate = (
   pageClassName: string,
   pageFileName: string,
-) => `import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../shared-examples'
-
+) => `import { applicationFactory } from '../../../../testutils/factories'
+import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ${pageClassName} from './${pageFileName}'
 
+const body = {}
+
 describe('${pageClassName}', () => {
+  const application = applicationFactory.build()
 
-  // TODO: Add title tests (if applicable)
-  describe('title', () => {})
-
-  // TODO: Add body tests (if applicable)
   describe('body', () => {
-    it('should strip unknown attributes from the body', () => {})
+    it('sets the body', () => {
+      const page = new ${pageClassName}(body, application)
+
+      expect(page.body).toEqual(body)
+    })
   })
 
   // TODO: Update next and previous values and add logic tests (if applicable)
-  itShouldHaveNextValue(new ${pageClassName}({}), '')
-  itShouldHavePreviousValue(new ${pageClassName}({}), '')
+  itShouldHavePreviousValue(new ${pageClassName}({}, application), 'dashboard')
+  itShouldHaveNextValue(new ${pageClassName}({}, application), '')
 
   // TODO: Add error tests (if applicable)
   describe('errors', () => {})

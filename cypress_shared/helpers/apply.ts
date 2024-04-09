@@ -66,7 +66,6 @@ import {
   PreviousStaysPage,
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
-  RegisteredSexOffenderPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,

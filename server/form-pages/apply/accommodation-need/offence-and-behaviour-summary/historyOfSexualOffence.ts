@@ -1,5 +1,5 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
+import type { TaskListErrors, YesOrNo } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import { personName } from '../../../../utils/personUtils'

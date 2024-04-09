@@ -32,6 +32,9 @@ describe('getApplicationSubmissionData', () => {
       isApplicationEligible: true,
       eligibilityReason: applicationDataJson.eligibility['eligibility-reason'].reason,
       personReleaseDate: '2123-09-02',
+      isHistoryOfSexualOffence: false,
+      isRegisteredSexOffender: undefined,
+      isConcerningSexualBehaviour: true,
     })
   })
 })

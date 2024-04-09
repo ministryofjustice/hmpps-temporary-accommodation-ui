@@ -2,7 +2,9 @@ import {
   dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
+  hasHistoryOfArsonFromApplication,
   isApplicationEligibleFromApplication,
+  isConcerningArsonBehaviourFromApplication,
   isConcerningSexualBehaviourFromApplication,
   isDutyToReferSubmittedFromApplication,
   isHistoryOfSexualOffenceFromApplication,
@@ -288,7 +290,50 @@ describe('reportDataFromApplication', () => {
     it('returns undefined if not set in the application', () => {
       const application = applicationFactory.build()
 
-      expect(isHistoryOfSexualOffenceFromApplication(application)).toEqual(undefined)
+      expect(isConcerningSexualBehaviourFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('hasHistoryOfArsonFromApplication', () => {
+    it.each([true, false])('returns if the person has a history of arson offence from the application if %s', value => {
+      const application = applicationFactory.build({
+        data: {
+          'offence-and-behaviour-summary': {
+            'history-of-arson-offence': { historyOfArsonOffence: value ? 'yes' : 'no' },
+          },
+        },
+      })
+
+      expect(hasHistoryOfArsonFromApplication(application)).toEqual(value)
+    })
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(hasHistoryOfArsonFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('isConcerningArsonBehaviourFromApplication', () => {
+    it.each([true, false])(
+      "returns if there are concerns with the person's arson behaviour from the application if %s",
+      value => {
+        const application = applicationFactory.build({
+          data: {
+            'offence-and-behaviour-summary': {
+              'concerning-arson-behaviour': { concerningArsonBehaviour: value ? 'yes' : 'no' },
+            },
+          },
+        })
+
+        expect(isConcerningArsonBehaviourFromApplication(application)).toEqual(value)
+      },
+    )
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(isConcerningArsonBehaviourFromApplication(application)).toEqual(undefined)
     })
   })
 })

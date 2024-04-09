@@ -131,6 +131,22 @@ const isConcerningSexualBehaviourFromApplication = (application: Application): b
   return yesOrNoToBoolOrUndefined(concerningSexualBehaviour)
 }
 
+const hasHistoryOfArsonFromApplication = (application: Application): boolean => {
+  const historyOfArsonOffence = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'history-of-arson-offence'
+  ]?.historyOfArsonOffence
+
+  return yesOrNoToBoolOrUndefined(historyOfArsonOffence)
+}
+
+const isConcerningArsonBehaviourFromApplication = (application: Application): boolean => {
+  const concerningArsonBehaviour = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'concerning-arson-behaviour'
+  ]?.concerningArsonBehaviour
+
+  return yesOrNoToBoolOrUndefined(concerningArsonBehaviour)
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
@@ -142,4 +158,6 @@ export {
   isRegisteredSexOffenderFromApplication,
   isHistoryOfSexualOffenceFromApplication,
   isConcerningSexualBehaviourFromApplication,
+  hasHistoryOfArsonFromApplication,
+  isConcerningArsonBehaviourFromApplication,
 }

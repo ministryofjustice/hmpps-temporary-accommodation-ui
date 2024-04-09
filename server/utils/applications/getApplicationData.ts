@@ -9,7 +9,9 @@ import {
   dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
+  hasHistoryOfArsonFromApplication,
   isApplicationEligibleFromApplication,
+  isConcerningArsonBehaviourFromApplication,
   isConcerningSexualBehaviourFromApplication,
   isDutyToReferSubmittedFromApplication,
   isHistoryOfSexualOffenceFromApplication,
@@ -41,5 +43,7 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     isRegisteredSexOffender: isRegisteredSexOffenderFromApplication(application),
     isHistoryOfSexualOffence: isHistoryOfSexualOffenceFromApplication(application),
     isConcerningSexualBehaviour: isConcerningSexualBehaviourFromApplication(application),
+    hasHistoryOfArson: hasHistoryOfArsonFromApplication(application),
+    isConcerningArsonBehaviour: isConcerningArsonBehaviourFromApplication(application),
   }
 }

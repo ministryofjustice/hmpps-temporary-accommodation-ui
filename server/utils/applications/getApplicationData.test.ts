@@ -35,6 +35,8 @@ describe('getApplicationSubmissionData', () => {
       isHistoryOfSexualOffence: false,
       isRegisteredSexOffender: undefined,
       isConcerningSexualBehaviour: true,
+      hasHistoryOfArson: false,
+      isConcerningArsonBehaviour: true,
     })
   })
 })

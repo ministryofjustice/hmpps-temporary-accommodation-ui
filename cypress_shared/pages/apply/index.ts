@@ -50,6 +50,7 @@ import HistoryOfSexualOffencePage from './accommodation-need/offence-and-behavio
 import RegisteredSexOffenderPage from './accommodation-need/offence-and-behaviour-summary/registeredSexOffender'
 import ConcerningSexualBehaviourPage from './accommodation-need/offence-and-behaviour-summary/concerningSexualBehaviour'
 import HistoryOfArsonOffencePage from './accommodation-need/offence-and-behaviour-summary/historyOfArsonOffence'
+import ConcerningArsonBehaviourPage from './accommodation-need/offence-and-behaviour-summary/concerningArsonBehaviour'
 
 export {
   AccommodationRequiredFromDatePage,
@@ -63,6 +64,7 @@ export {
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
+  ConcerningArsonBehaviourPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
   CooperationPage,

@@ -1,5 +1,4 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { itShouldHaveNextValue } from '../../../shared-examples'
 import HistoryOfArsonOffence from './historyOfArsonOffence'
 
 const body = {
@@ -41,7 +40,31 @@ describe('HistoryOfArsonOffence', () => {
     })
   })
 
-  itShouldHaveNextValue(new HistoryOfArsonOffence({}, application), '')
+  describe('next', () => {
+    it('returns empty when the person has had a conviction', () => {
+      expect(
+        new HistoryOfArsonOffence(
+          {
+            ...body,
+            historyOfArsonOffence: 'yes',
+          },
+          application,
+        ).next(),
+      ).toEqual('')
+    })
+
+    it('returns the arson behaviour concerns page ID when the person has not had a conviction', () => {
+      expect(
+        new HistoryOfArsonOffence(
+          {
+            ...body,
+            historyOfArsonOffence: 'no',
+          },
+          application,
+        ).next(),
+      ).toEqual('concerning-arson-behaviour')
+    })
+  })
 
   describe('errors', () => {
     it('returns an empty object if all fields are populated', () => {

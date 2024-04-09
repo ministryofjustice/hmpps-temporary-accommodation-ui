@@ -9,6 +9,10 @@
     },
     "history-of-arson-offence": {
       "historyOfArsonOffence": "no"
+    },
+    "concerning-arson-behaviour": {
+      "concerningArsonBehaviour": "yes",
+      "concerningArsonBehaviourDetail": "Arson behaviour concerns details"
     }
   },
   "sentence-information": {

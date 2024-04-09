@@ -33,7 +33,7 @@ export default class HistoryOfArsonOffence implements TasklistPage {
   }
 
   next() {
-    return ''
+    return this.body.historyOfArsonOffence === 'yes' ? '' : 'concerning-arson-behaviour'
   }
 
   errors() {

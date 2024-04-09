@@ -15,6 +15,9 @@
             },
             {
               "Has the person ever been convicted of arson?": "No"
+            },
+            {
+              "Are there concerns about the person's arson behaviour?": "Yes - Arson behaviour concerns details"
             }
           ]
         },

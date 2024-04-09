@@ -44,6 +44,7 @@ import {
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
+  ConcerningArsonBehaviourPage,
   ConcerningSexualBehaviourPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
@@ -336,10 +337,15 @@ export default class ApplyHelper {
     historyOfArsonOffence.completeForm()
     historyOfArsonOffence.clickSubmit()
 
+    const concerningArsonBehaviourPage = new ConcerningArsonBehaviourPage(this.application)
+    concerningArsonBehaviourPage.completeForm()
+    concerningArsonBehaviourPage.clickSubmit()
+
     this.pages.offenceAndBehaviourSummary = [
       historyOfSexualOffencePage,
       concerningSexualBehaviourPage,
       historyOfArsonOffence,
+      concerningArsonBehaviourPage,
     ]
 
     // Then I should be redirected to the task list

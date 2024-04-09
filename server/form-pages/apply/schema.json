@@ -37,6 +37,18 @@
               "type": "string"
             }
           }
+        },
+        "registered-sex-offender": {
+          "type": "object",
+          "properties": {
+            "registeredSexOffender": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            }
+          }
         }
       }
     },

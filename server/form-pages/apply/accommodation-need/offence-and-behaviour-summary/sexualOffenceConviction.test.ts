@@ -1,6 +1,6 @@
 import { applicationFactory } from '../../../../testutils/factories'
 import SexualOffenceConviction from './sexualOffenceConviction'
-import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
+import { itShouldHavePreviousValue } from '../../../shared-examples'
 
 const body = { sexualOffenceConviction: 'yes' as const }
 
@@ -16,7 +16,24 @@ describe('SexualOffenceConviction', () => {
   })
 
   itShouldHavePreviousValue(new SexualOffenceConviction({}, application), 'dashboard')
-  itShouldHaveNextValue(new SexualOffenceConviction({}, application), '')
+
+  describe('next', () => {
+    it('returns the registered sex offender page ID when the person has had a conviction', () => {
+      expect(
+        new SexualOffenceConviction(
+          {
+            ...body,
+            sexualOffenceConviction: 'yes',
+          },
+          application,
+        ).next(),
+      ).toEqual('registered-sex-offender')
+    })
+
+    it('returns an empty page ID when the person has not had a conviction', () => {
+      expect(new SexualOffenceConviction({ ...body, sexualOffenceConviction: 'no' }, application).next()).toEqual('')
+    })
+  })
 
   describe('errors', () => {
     it('returns an empty object if all fields are populated', () => {
@@ -24,7 +41,7 @@ describe('SexualOffenceConviction', () => {
       expect(page.errors()).toEqual({})
     })
 
-    it('returns an error if the consent given field is not populated', () => {
+    it('returns an error if the sexual offence conviction field is not populated', () => {
       const page = new SexualOffenceConviction({ ...body, sexualOffenceConviction: undefined }, application)
       expect(page.errors()).toEqual({
         sexualOffenceConviction: 'Select yes if the person has ever been convicted of a sexual offence',

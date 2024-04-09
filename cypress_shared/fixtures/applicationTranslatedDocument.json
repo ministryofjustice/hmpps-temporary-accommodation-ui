@@ -9,6 +9,9 @@
           "content": [
             {
               "Has the person ever been convicted of a sexual offence?": "Yes"
+            },
+            {
+              "Is the person a Registered Sex Offender (RSO)?": "Yes"
             }
           ]
         },

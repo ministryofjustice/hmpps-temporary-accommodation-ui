@@ -2,6 +2,9 @@
   "offence-and-behaviour-summary": {
     "sexual-offence-conviction": {
       "sexualOffenceConviction": "yes"
+    },
+    "registered-sex-offender": {
+      "registeredSexOffender": "yes"
     }
   },
   "sentence-information": {

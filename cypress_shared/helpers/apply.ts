@@ -64,6 +64,7 @@ import {
   PreviousStaysPage,
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
+  RegisteredSexOffenderPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
@@ -73,13 +74,13 @@ import {
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
+  SexualOffenceConvictionPage,
   StartPage,
   SubstanceMisusePage,
   SupportInTheCommunityPage,
   TaskListPage,
 } from '../pages/apply'
 import ApplyPage from '../pages/apply/applyPage'
-import SexualOffenceConvictionPage from '../pages/apply/accommodation-need/offence-and-behaviour-summary/sexualOffenceConviction'
 
 export default class ApplyHelper {
   pages = {
@@ -326,7 +327,11 @@ export default class ApplyHelper {
     sexualOffenceConvictionPage.completeForm()
     sexualOffenceConvictionPage.clickSubmit()
 
-    this.pages.offenceAndBehaviourSummary = [sexualOffenceConvictionPage]
+    const registeredSexOffenderPage = new RegisteredSexOffenderPage(this.application)
+    registeredSexOffenderPage.completeForm()
+    registeredSexOffenderPage.clickSubmit()
+
+    this.pages.offenceAndBehaviourSummary = [sexualOffenceConvictionPage, registeredSexOffenderPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

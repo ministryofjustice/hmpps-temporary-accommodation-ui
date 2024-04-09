@@ -24,7 +24,7 @@ export default class SexualOffenceConvictionPage implements TasklistPage {
   }
 
   next() {
-    return ''
+    return this.body.sexualOffenceConviction === 'yes' ? 'registered-sex-offender' : ''
   }
 
   previous() {

@@ -1,10 +1,11 @@
 {
   "offence-and-behaviour-summary": {
     "sexual-offence-conviction": {
-      "sexualOffenceConviction": "yes"
+      "sexualOffenceConviction": "no"
     },
-    "registered-sex-offender": {
-      "registeredSexOffender": "yes"
+    "sexual-behaviour-concerns": {
+      "sexualBehaviourConcerns": "yes",
+      "sexualBehaviourConcernsDetail": "Sexual behaviour concerns details"
     }
   },
   "sentence-information": {

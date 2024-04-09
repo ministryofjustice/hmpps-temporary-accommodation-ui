@@ -116,7 +116,7 @@ context('Apply', () => {
 
       expect(
         firstRequestData['offence-and-behaviour-summary']['sexual-offence-conviction'].sexualOffenceConviction,
-      ).equal('yes')
+      ).equal('no')
     })
   })
 

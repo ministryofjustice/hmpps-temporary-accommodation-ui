@@ -30,8 +30,16 @@ describe('SexualOffenceConviction', () => {
       ).toEqual('registered-sex-offender')
     })
 
-    it('returns an empty page ID when the person has not had a conviction', () => {
-      expect(new SexualOffenceConviction({ ...body, sexualOffenceConviction: 'no' }, application).next()).toEqual('')
+    it('returns the sexual behaviour concerns page ID when the person has not had a conviction', () => {
+      expect(
+        new SexualOffenceConviction(
+          {
+            ...body,
+            sexualOffenceConviction: 'no',
+          },
+          application,
+        ).next(),
+      ).toEqual('sexual-behaviour-concerns')
     })
   })
 

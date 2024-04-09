@@ -8,10 +8,10 @@
           "id": "offence-and-behaviour-summary",
           "content": [
             {
-              "Has the person ever been convicted of a sexual offence?": "Yes"
+              "Has the person ever been convicted of a sexual offence?": "No"
             },
             {
-              "Is the person a Registered Sex Offender (RSO)?": "Yes"
+              "Are there concerns about the person's sexual behaviour?": "Yes - Sexual behaviour concerns details"
             }
           ]
         },

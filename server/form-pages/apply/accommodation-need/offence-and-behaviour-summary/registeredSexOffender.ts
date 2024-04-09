@@ -30,7 +30,7 @@ export default class RegisteredSexOffender implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'history-of-arson-offence'
   }
 
   errors() {

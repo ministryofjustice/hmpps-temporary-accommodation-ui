@@ -39,7 +39,7 @@ export default class ConcerningSexualBehaviour implements TasklistPage {
   }
 
   next() {
-    return ''
+    return 'history-of-arson-offence'
   }
 
   errors() {

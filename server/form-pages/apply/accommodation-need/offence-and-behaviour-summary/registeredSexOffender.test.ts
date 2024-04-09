@@ -16,7 +16,7 @@ describe('RegisteredSexOffender', () => {
   })
 
   itShouldHavePreviousValue(new RegisteredSexOffender({}, application), 'history-of-sexual-offence')
-  itShouldHaveNextValue(new RegisteredSexOffender({}, application), '')
+  itShouldHaveNextValue(new RegisteredSexOffender({}, application), 'history-of-arson-offence')
 
   describe('errors', () => {
     it('returns an empty object if all fields are populated', () => {

@@ -54,6 +54,7 @@ import {
   EligibilityReasonPage,
   EnterCRNPage,
   FoodAllergiesPage,
+  HistoryOfArsonOffencePage,
   HistoryOfSexualOffencePage,
   LocalConnectionsPage,
   MoveOnPlanPage,
@@ -331,7 +332,15 @@ export default class ApplyHelper {
     concerningSexualBehaviourPage.completeForm()
     concerningSexualBehaviourPage.clickSubmit()
 
-    this.pages.offenceAndBehaviourSummary = [historyOfSexualOffencePage, concerningSexualBehaviourPage]
+    const historyOfArsonOffence = new HistoryOfArsonOffencePage(this.application)
+    historyOfArsonOffence.completeForm()
+    historyOfArsonOffence.clickSubmit()
+
+    this.pages.offenceAndBehaviourSummary = [
+      historyOfSexualOffencePage,
+      concerningSexualBehaviourPage,
+      historyOfArsonOffence,
+    ]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

@@ -49,6 +49,7 @@ import ApplicationFullPage from './full'
 import HistoryOfSexualOffencePage from './accommodation-need/offence-and-behaviour-summary/historyOfSexualOffence'
 import RegisteredSexOffenderPage from './accommodation-need/offence-and-behaviour-summary/registeredSexOffender'
 import ConcerningSexualBehaviourPage from './accommodation-need/offence-and-behaviour-summary/concerningSexualBehaviour'
+import HistoryOfArsonOffencePage from './accommodation-need/offence-and-behaviour-summary/historyOfArsonOffence'
 
 export {
   AccommodationRequiredFromDatePage,
@@ -71,6 +72,7 @@ export {
   EligibilityReasonPage,
   EnterCRNPage,
   FoodAllergiesPage,
+  HistoryOfArsonOffencePage,
   ListPage,
   LocalConnectionsPage,
   MoveOnPlanPage,

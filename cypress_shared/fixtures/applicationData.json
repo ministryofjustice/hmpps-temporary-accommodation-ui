@@ -6,6 +6,9 @@
     "concerning-sexual-behaviour": {
       "concerningSexualBehaviour": "yes",
       "concerningSexualBehaviourDetail": "Sexual behaviour concerns details"
+    },
+    "history-of-arson-offence": {
+      "historyOfArsonOffence": "no"
     }
   },
   "sentence-information": {

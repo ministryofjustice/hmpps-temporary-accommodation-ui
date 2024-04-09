@@ -26,7 +26,7 @@ export default class RegisteredSexOffender implements TasklistPage {
   }
 
   previous() {
-    return 'sexual-offence-conviction'
+    return 'history-of-sexual-offence'
   }
 
   next() {

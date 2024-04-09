@@ -46,9 +46,9 @@ import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
 import TaskListPage from './taskListPage'
 import ApplicationFullPage from './full'
-import SexualOffenceConvictionPage from './accommodation-need/offence-and-behaviour-summary/sexualOffenceConviction'
+import HistoryOfSexualOffencePage from './accommodation-need/offence-and-behaviour-summary/historyOfSexualOffence'
 import RegisteredSexOffenderPage from './accommodation-need/offence-and-behaviour-summary/registeredSexOffender'
-import SexualBehaviourConcernsPage from './accommodation-need/offence-and-behaviour-summary/sexualBehaviourConcerns'
+import ConcerningSexualBehaviourPage from './accommodation-need/offence-and-behaviour-summary/concerningSexualBehaviour'
 
 export {
   AccommodationRequiredFromDatePage,
@@ -94,8 +94,8 @@ export {
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
-  SexualBehaviourConcernsPage,
-  SexualOffenceConvictionPage,
+  ConcerningSexualBehaviourPage,
+  HistoryOfSexualOffencePage,
   StartPage,
   SubmissionConfirmation,
   SubstanceMisusePage,

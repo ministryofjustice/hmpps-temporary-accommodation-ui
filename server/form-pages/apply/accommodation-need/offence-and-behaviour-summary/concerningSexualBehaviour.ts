@@ -4,22 +4,22 @@ import { Page } from '../../../utils/decorators'
 import { personName } from '../../../../utils/personUtils'
 import { BodyWithYesOrNoWithDetail, yesOrNoResponseWithDetail } from '../../../utils'
 
-type SexualBehaviourConcernsBody = {
-  sexualBehaviourConcerns: YesOrNo
-  sexualBehaviourConcernsDetail: string
+type ConcerningSexualBehaviourBody = {
+  concerningSexualBehaviour: YesOrNo
+  concerningSexualBehaviourDetail: string
 }
 
 @Page({
-  name: 'sexual-behaviour-concerns',
-  bodyProperties: ['sexualBehaviourConcerns', 'sexualBehaviourConcernsDetail'],
+  name: 'concerning-sexual-behaviour',
+  bodyProperties: ['concerningSexualBehaviour', 'concerningSexualBehaviourDetail'],
 })
-export default class SexualBehaviourConcerns implements TasklistPage {
+export default class ConcerningSexualBehaviour implements TasklistPage {
   title: string
 
   htmlDocumentTitle = "Are there concerns about the person's sexual behaviour?"
 
   constructor(
-    readonly body: Partial<SexualBehaviourConcernsBody>,
+    readonly body: Partial<ConcerningSexualBehaviourBody>,
     readonly application: Application,
   ) {
     this.title = `Are there concerns about ${personName(application.person)}'s sexual behaviour?`
@@ -28,14 +28,14 @@ export default class SexualBehaviourConcerns implements TasklistPage {
   response() {
     return {
       [this.htmlDocumentTitle]: yesOrNoResponseWithDetail(
-        'sexualBehaviourConcerns',
-        this.body as BodyWithYesOrNoWithDetail<'sexualBehaviourConcerns'>,
+        'concerningSexualBehaviour',
+        this.body as BodyWithYesOrNoWithDetail<'concerningSexualBehaviour'>,
       ),
     }
   }
 
   previous() {
-    return 'sexual-offence-conviction'
+    return 'history-of-sexual-offence'
   }
 
   next() {
@@ -45,11 +45,11 @@ export default class SexualBehaviourConcerns implements TasklistPage {
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (!this.body.sexualBehaviourConcerns) {
-      errors.sexualBehaviourConcerns = "Select yes if there are concerns about the person's sexual behaviour"
+    if (!this.body.concerningSexualBehaviour) {
+      errors.concerningSexualBehaviour = "Select yes if there are concerns about the person's sexual behaviour"
     }
-    if (this.body.sexualBehaviourConcerns === 'yes' && !this.body.sexualBehaviourConcernsDetail) {
-      errors.sexualBehaviourConcernsDetail = "Enter details about the person's sexual behaviour"
+    if (this.body.concerningSexualBehaviour === 'yes' && !this.body.concerningSexualBehaviourDetail) {
+      errors.concerningSexualBehaviourDetail = "Enter details about the person's sexual behaviour"
     }
 
     return errors

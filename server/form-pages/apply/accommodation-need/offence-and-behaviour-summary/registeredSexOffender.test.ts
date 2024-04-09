@@ -15,7 +15,7 @@ describe('RegisteredSexOffender', () => {
     })
   })
 
-  itShouldHavePreviousValue(new RegisteredSexOffender({}, application), 'sexual-offence-conviction')
+  itShouldHavePreviousValue(new RegisteredSexOffender({}, application), 'history-of-sexual-offence')
   itShouldHaveNextValue(new RegisteredSexOffender({}, application), '')
 
   describe('errors', () => {

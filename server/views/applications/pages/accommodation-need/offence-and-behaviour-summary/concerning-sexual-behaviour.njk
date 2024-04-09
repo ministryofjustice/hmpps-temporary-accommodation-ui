@@ -1,9 +1,9 @@
 {% extends "../../layout.njk" %}
 
 {% block questions %}
-    {% set sexualBehaviourConcernsDetailHtml %}
+    {% set concerningSexualBehaviourDetailHtml %}
         {{ formPageTextarea({
-            fieldName: 'sexualBehaviourConcernsDetail',
+            fieldName: 'concerningSexualBehaviourDetail',
             label: {
                 text: "Explain what the behaviour is and how it could be managed",
                 classes: "govuk-label--s"
@@ -17,7 +17,7 @@
     </h1>
 
     {{ formPageRadios({
-        fieldName: "sexualBehaviourConcerns",
+        fieldName: "concerningSexualBehaviour",
         hint: {
             text: "This is about sexual behaviour which might introduce risk in an accommodation placement."
         },
@@ -26,7 +26,7 @@
                 value: "yes",
                 text: "Yes",
                 conditional: {
-                html: sexualBehaviourConcernsDetailHtml
+                html: concerningSexualBehaviourDetailHtml
             }
             },
             {

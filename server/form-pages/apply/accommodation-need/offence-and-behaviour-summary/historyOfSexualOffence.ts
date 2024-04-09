@@ -6,25 +6,25 @@ import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 import { sentenceCase } from '../../../../utils/utils'
 
-type SexualOffenceConvictionBody = {
-  sexualOffenceConviction: YesOrNo
+type HistoryOfSexualOffenceBody = {
+  historyOfSexualOffence: YesOrNo
 }
 
-@Page({ name: 'sexual-offence-conviction', bodyProperties: ['sexualOffenceConviction'] })
-export default class SexualOffenceConvictionPage implements TasklistPage {
+@Page({ name: 'history-of-sexual-offence', bodyProperties: ['historyOfSexualOffence'] })
+export default class HistoryOfSexualOffencePage implements TasklistPage {
   title: string
 
   htmlDocumentTitle = 'Has the person ever been convicted of a sexual offence?'
 
   constructor(
-    readonly body: Partial<SexualOffenceConvictionBody>,
+    readonly body: Partial<HistoryOfSexualOffenceBody>,
     readonly application: Application,
   ) {
     this.title = `Has ${personName(application.person)} ever been convicted of a sexual offence?`
   }
 
   next() {
-    return this.body.sexualOffenceConviction === 'yes' ? 'registered-sex-offender' : 'sexual-behaviour-concerns'
+    return this.body.historyOfSexualOffence === 'yes' ? 'registered-sex-offender' : 'concerning-sexual-behaviour'
   }
 
   previous() {
@@ -32,14 +32,14 @@ export default class SexualOffenceConvictionPage implements TasklistPage {
   }
 
   response() {
-    return { [this.htmlDocumentTitle]: sentenceCase(this.body.sexualOffenceConviction) }
+    return { [this.htmlDocumentTitle]: sentenceCase(this.body.historyOfSexualOffence) }
   }
 
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (!this.body.sexualOffenceConviction) {
-      errors.sexualOffenceConviction = 'Select yes if the person has ever been convicted of a sexual offence'
+    if (!this.body.historyOfSexualOffence) {
+      errors.historyOfSexualOffence = 'Select yes if the person has ever been convicted of a sexual offence'
     }
 
     return errors

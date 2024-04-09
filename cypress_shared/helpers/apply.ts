@@ -44,6 +44,7 @@ import {
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
+  ConcerningSexualBehaviourPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
   CooperationPage,
@@ -53,6 +54,7 @@ import {
   EligibilityReasonPage,
   EnterCRNPage,
   FoodAllergiesPage,
+  HistoryOfSexualOffencePage,
   LocalConnectionsPage,
   MoveOnPlanPage,
   NeedsPage,
@@ -74,8 +76,6 @@ import {
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
-  SexualBehaviourConcernsPage,
-  SexualOffenceConvictionPage,
   StartPage,
   SubstanceMisusePage,
   SupportInTheCommunityPage,
@@ -324,15 +324,15 @@ export default class ApplyHelper {
     Page.verifyOnPage(TaskListPage, this.application).clickTask('offence-and-behaviour-summary')
 
     // When I complete the form
-    const sexualOffenceConvictionPage = new SexualOffenceConvictionPage(this.application)
-    sexualOffenceConvictionPage.completeForm()
-    sexualOffenceConvictionPage.clickSubmit()
+    const historyOfSexualOffencePage = new HistoryOfSexualOffencePage(this.application)
+    historyOfSexualOffencePage.completeForm()
+    historyOfSexualOffencePage.clickSubmit()
 
-    const sexualBehaviourConcernsPage = new SexualBehaviourConcernsPage(this.application)
-    sexualBehaviourConcernsPage.completeForm()
-    sexualBehaviourConcernsPage.clickSubmit()
+    const concerningSexualBehaviourPage = new ConcerningSexualBehaviourPage(this.application)
+    concerningSexualBehaviourPage.completeForm()
+    concerningSexualBehaviourPage.clickSubmit()
 
-    this.pages.offenceAndBehaviourSummary = [sexualOffenceConvictionPage, sexualBehaviourConcernsPage]
+    this.pages.offenceAndBehaviourSummary = [historyOfSexualOffencePage, concerningSexualBehaviourPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

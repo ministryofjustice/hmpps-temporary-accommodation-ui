@@ -26,10 +26,10 @@
     "offence-and-behaviour-summary": {
       "type": "object",
       "properties": {
-        "sexual-offence-conviction": {
+        "history-of-sexual-offence": {
           "type": "object",
           "properties": {
-            "sexualOffenceConviction": {
+            "historyOfSexualOffence": {
               "enum": [
                 "no",
                 "yes"

@@ -1,11 +1,11 @@
 {
   "offence-and-behaviour-summary": {
-    "sexual-offence-conviction": {
-      "sexualOffenceConviction": "no"
+    "history-of-sexual-offence": {
+      "historyOfSexualOffence": "no"
     },
-    "sexual-behaviour-concerns": {
-      "sexualBehaviourConcerns": "yes",
-      "sexualBehaviourConcernsDetail": "Sexual behaviour concerns details"
+    "concerning-sexual-behaviour": {
+      "concerningSexualBehaviour": "yes",
+      "concerningSexualBehaviourDetail": "Sexual behaviour concerns details"
     }
   },
   "sentence-information": {

@@ -115,7 +115,7 @@ context('Apply', () => {
       const firstRequestData = JSON.parse(requests[0].body).data
 
       expect(
-        firstRequestData['offence-and-behaviour-summary']['sexual-offence-conviction'].sexualOffenceConviction,
+        firstRequestData['offence-and-behaviour-summary']['history-of-sexual-offence'].historyOfSexualOffence,
       ).equal('no')
     })
   })

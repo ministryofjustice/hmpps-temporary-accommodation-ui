@@ -1,5 +1,6 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
+import { ReportType } from '@approved-premises/ui'
 import { ReportClient } from '../data'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
@@ -58,11 +59,34 @@ describe('ReportService', () => {
       await service.pipeReportForProbationRegion(callConfig, response, probationRegions[0].id, month, year, type)
 
       expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(reportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0], month, year, type)
+      expect(reportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0].name, month, year, type)
       expect(reportClient.reportForProbationRegion).toHaveBeenCalledWith(
         response,
         'some-filename',
         probationRegions[0].id,
+        month,
+        year,
+        type,
+      )
+    })
+
+    it('produces a report for all regions', async () => {
+      const response = createMock<Response>()
+      ;(
+        reportForProbationRegionFilename as jest.MockedFunction<typeof reportForProbationRegionFilename>
+      ).mockReturnValue('some-filename')
+
+      const month = '1'
+      const year = '2023'
+      const type: ReportType = 'occupancy'
+
+      await service.pipeReportForProbationRegion(callConfig, response, 'all', month, year, type)
+
+      expect(reportForProbationRegionFilename).toHaveBeenCalledWith('All regions', month, year, type)
+      expect(reportClient.reportForProbationRegion).toHaveBeenCalledWith(
+        response,
+        'some-filename',
+        '',
         month,
         year,
         type,

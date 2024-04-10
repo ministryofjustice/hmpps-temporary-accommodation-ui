@@ -98,10 +98,10 @@ context('Report', () => {
         expect(requests).to.have.length(1)
       })
 
-      // And the report should be downloded
+      // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, month, year, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -145,10 +145,10 @@ context('Report', () => {
         expect(requests).to.have.length(1)
       })
 
-      // And the report should be downloded
+      // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, month, year, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -192,10 +192,10 @@ context('Report', () => {
         expect(requests).to.have.length(1)
       })
 
-      // And the report should be downloded
+      // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, month, year, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -239,10 +239,10 @@ context('Report', () => {
         expect(requests).to.have.length(1)
       })
 
-      // And the report should be downloded
+      // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, month, year, type),
       )
 
       cy.readFile(filePath).then(file => {

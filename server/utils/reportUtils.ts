@@ -14,13 +14,11 @@ export const reportFilename = () => {
 }
 
 export const reportForProbationRegionFilename = (
-  probationRegion: ProbationRegion,
+  regionName: ProbationRegion['name'],
   month: string,
   year: string,
   type: ReportType,
 ) => {
-  const regionName = probationRegion.name
-
   const monthName = monthsArr.find(monthObj => monthObj.value === month).name
 
   const concatenatedName = `${type === 'bedspace-usage' ? 'bedspace usage' : type} ${regionName} ${monthName} ${year}`
@@ -50,3 +48,11 @@ export const getApiReportPath = (reportType: ReportType): string => {
 
   return paths.reports.bedspaceUtilisation({})
 }
+
+export const allReportProbationRegions = (regions: Array<ProbationRegion>): Array<ProbationRegion> => [
+  {
+    id: 'all',
+    name: 'All regions',
+  },
+  ...regions.filter(region => region.name !== 'National'),
+]

@@ -1,6 +1,5 @@
 import { Response } from 'express'
-import type { ProbationRegion } from '@approved-premises/api'
-import type { ReportType } from '@approved-premises/ui'
+import type { Cas3ReportType, ProbationRegion } from '@approved-premises/api'
 import type { ReferenceDataClient, RestClientBuilder } from '../data'
 import ReportClient from '../data/reportClient'
 import { CallConfig } from '../data/restClient'
@@ -28,9 +27,9 @@ export default class ReportService {
     callConfig: CallConfig,
     response: Response,
     probationRegionId: string,
-    month: string,
-    year: string,
-    type: ReportType,
+    startDate: string,
+    endDate: string,
+    type: Cas3ReportType,
   ): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
@@ -40,11 +39,11 @@ export default class ReportService {
         : (await this.getReferenceData(callConfig)).probationRegions.find(region => region.id === probationRegionId)
             .name
 
-    const filename = reportForProbationRegionFilename(probationRegionName, month, year, type)
+    const filename = reportForProbationRegionFilename(probationRegionName, startDate, endDate, type)
 
     const queryRegionId = probationRegionId === 'all' ? '' : probationRegionId
 
-    await reportClient.reportForProbationRegion(response, filename, queryRegionId, month, year, type)
+    await reportClient.reportForProbationRegion(response, filename, queryRegionId, startDate, endDate, type)
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<ReportReferenceData> {

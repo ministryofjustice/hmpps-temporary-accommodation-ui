@@ -3,112 +3,111 @@
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../components/ta-select/macro.njk" import taSelect %}
+{% from "../components/ta-input/macro.njk" import taInput %}
 
 {% set pageTitle = "Reports - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('Reports', []) }}
+    {{ breadCrumb('Reports', []) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  <h1 class="govuk-heading-l">Reports</h1>
+    <h1 class="govuk-heading-l">Reports</h1>
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.reports.create() }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.reports.create() }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {{ showErrorSummary(errorSummary) }}
+                {{ showErrorSummary(errorSummary) }}
 
-        {{ taSelect(
-          {
-            label: {
-                text: "Select a probation region",
-                classes: "govuk-label--m"
-            },
-            items: convertObjectsToSelectOptions(allProbationRegions, 'Select a probation region', "name", "id", "probationRegionId"),
-            fieldName: "probationRegionId"
-          },
-          fetchContext()
-        ) }}
+                {{ taSelect(
+                    {
+                        label: {
+                        text: "Select a probation region",
+                        classes: "govuk-label--m"
+                    },
+                        items: convertObjectsToSelectOptions(allProbationRegions, 'Select a probation region', "name", "id", "probationRegionId"),
+                        fieldName: "probationRegionId"
+                    },
+                    fetchContext()
+                ) }}
 
-        <div class="govuk-grid-row">
-           <div class="govuk-grid-column-one-third">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-one-third">
 
-              {{ taSelect(
-                {
-                  label: {
-                    text: "Month",
-                    classes: "govuk-label--s"
-                  },
-                  items: convertObjectsToSelectOptions(months, 'Choose month', 'name', 'value', 'month'),
-                  fieldName: "month"
-                },
-                fetchContext()
-              ) }}
+                        {{ taInput({
+                            label: {
+                                text: "Start date",
+                                classes: "govuk-label--m"
+                            },
+                            classes: "govuk-input--width-10",
+                            fieldName: "startDate"
+                        },
+                            fetchContext()
+                        ) }}
 
-           </div>
-           <div class="govuk-grid-column-one-third govuk-!-margin-left-5">
+                    </div>
+                    <div class="govuk-grid-column-one-third govuk-!-margin-left-5">
 
-            {{ taSelect(
-              {
-                label: {
-                  text: "Year",
-                  classes: "govuk-label--s"
-                },
-                items: convertObjectsToSelectOptions(years, 'Choose year', 'year', 'year', 'year'),
-                fieldName: "year"
-              },
-              fetchContext()
-            ) }}
+                        {{ taInput({
+                            label: {
+                                text: "End date",
+                                classes: "govuk-label--m"
+                            },
+                            classes: "govuk-input--width-10",
+                            fieldName: "endDate"
+                        },
+                            fetchContext()
+                        ) }}
 
-           </div>
-        </div>
+                    </div>
+                </div>
 
 
                 {{ govukButton({
-                text: "Download booking data",
-                name: "reportType",
-                value: 'bookings',
-                classes: 'govuk-input govuk-!-width-one-half',
-                preventDoubleClick: true
-              }) }}
+                    text: "Download booking data",
+                    name: "reportType",
+                    value: 'booking',
+                    classes: 'govuk-input govuk-!-width-one-half',
+                    preventDoubleClick: true
+                }) }}
 
-              <br/>
+                <br />
 
-              {{ govukButton({
-                text: "Download bedspace usage",
-                name: "reportType",
-                value: 'bedspace-usage',
-                classes: 'govuk-input govuk-!-width-one-half',
-                preventDoubleClick: true
-              }) }}
+                {{ govukButton({
+                    text: "Download bedspace usage",
+                    name: "reportType",
+                    value: 'bedUsage',
+                    classes: 'govuk-input govuk-!-width-one-half',
+                    preventDoubleClick: true
+                }) }}
 
-              <br/>
+                <br />
 
-              {{ govukButton({
-                text: "Download occupancy report",
-                name: "reportType",
-                value: 'occupancy',
-                classes: 'govuk-input govuk-!-width-one-half',
-                preventDoubleClick: true
-              }) }}
+                {{ govukButton({
+                    text: "Download occupancy report",
+                    name: "reportType",
+                    value: 'bedOccupancy',
+                    classes: 'govuk-input govuk-!-width-one-half',
+                    preventDoubleClick: true
+                }) }}
 
-              <br/>
+                <br />
 
-             {{ govukButton({
-                  text: "Download referrals report",
-                  name: "reportType",
-                  value: 'referrals',
-                  classes: 'govuk-input govuk-!-width-one-half',
-                  preventDoubleClick: true
-             }) }}
+                {{ govukButton({
+                    text: "Download referrals report",
+                    name: "reportType",
+                    value: 'referral',
+                    classes: 'govuk-input govuk-!-width-one-half',
+                    preventDoubleClick: true
+                }) }}
 
-      </form>
+            </form>
+        </div>
     </div>
-  </div>
 
 {% endblock %}

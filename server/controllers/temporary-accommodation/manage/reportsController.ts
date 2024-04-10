@@ -5,7 +5,6 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGeneric
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
-import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 import { allReportProbationRegions } from '../../../utils/reportUtils'
 
 export default class ReportsController {
@@ -26,8 +25,6 @@ export default class ReportsController {
         errors,
         errorSummary: requestErrorSummary,
         probationRegionId: req.session.probationRegion.id,
-        months: monthsArr,
-        years: getYearsSince(2023),
         ...userInput,
       })
     }
@@ -36,15 +33,15 @@ export default class ReportsController {
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
       try {
-        const { probationRegionId, month, year, reportType } = req.body
+        const { probationRegionId, startDate, endDate, reportType } = req.body
         const callConfig = extractCallConfig(req)
 
         const error = new Error()
 
         const fields = [
           { name: 'probationRegionId', value: probationRegionId },
-          { name: 'month', value: month },
-          { name: 'year', value: year },
+          { name: 'startDate', value: startDate },
+          { name: 'endDate', value: endDate },
         ]
 
         fields.forEach(field => {
@@ -61,8 +58,8 @@ export default class ReportsController {
           callConfig,
           res,
           probationRegionId,
-          month,
-          year,
+          startDate,
+          endDate,
           reportType,
         )
       } catch (err) {

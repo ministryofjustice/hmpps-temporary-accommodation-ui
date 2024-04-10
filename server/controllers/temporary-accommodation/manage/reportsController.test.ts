@@ -81,8 +81,6 @@ describe('ReportsController', () => {
         errors: {},
         errorSummary: [],
         probationRegionId: request.session.probationRegion.id,
-        months: monthsArr,
-        years: [],
       })
     })
 
@@ -129,8 +127,6 @@ describe('ReportsController', () => {
           errors: {},
           errorSummary: [],
           probationRegionId: request.session.probationRegion.id,
-          months: monthsArr,
-          years: [],
         })
       })
     })
@@ -142,9 +138,9 @@ describe('ReportsController', () => {
 
       request.body = {
         probationRegionId: 'probation-region',
-        month: '6',
-        year: '2024',
-        reportType: 'bookings',
+        startDate: '2024-02-03',
+        endDate: '2024-04-03',
+        reportType: 'booking',
       }
 
       await requestHandler(request, response, next)
@@ -153,9 +149,9 @@ describe('ReportsController', () => {
         callConfig,
         response,
         'probation-region',
-        '6',
-        '2024',
-        'bookings',
+        '2024-02-03',
+        '2024-04-03',
+        'booking',
       )
     })
 
@@ -163,9 +159,9 @@ describe('ReportsController', () => {
       const requestHandler = reportsController.create()
 
       request.body = {
-        month: '2',
-        year: '2023',
-        reportType: 'occupancy',
+        startDate: '2024-01-12',
+        endDate: '2024-01-24',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
@@ -179,18 +175,18 @@ describe('ReportsController', () => {
       )
     })
 
-    it('renders with errors if the month is not specified', async () => {
+    it('renders with errors if the startDate is not specified', async () => {
       const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
-        year: '2023',
-        reportType: 'occupancy',
+        endDate: '2024-01-24',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
 
-      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'month', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'startDate', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
@@ -199,18 +195,18 @@ describe('ReportsController', () => {
       )
     })
 
-    it('renders with errors if the year is not specified', async () => {
+    it('renders with errors if the endDate is not specified', async () => {
       const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
-        month: '3',
-        reportType: 'occupancy',
+        startDate: '2024-01-20',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
 
-      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'year', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'endDate', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
@@ -224,8 +220,8 @@ describe('ReportsController', () => {
 
       request.body = {
         probationRegionId: '',
-        month: '',
-        year: '',
+        startDate: '',
+        endDate: '',
         reportType: 'occupancy',
       }
 
@@ -233,8 +229,8 @@ describe('ReportsController', () => {
 
       expect(insertGenericError).toHaveBeenCalledTimes(3)
       expect(insertGenericError).toHaveBeenNthCalledWith(1, new Error(), 'probationRegionId', 'empty')
-      expect(insertGenericError).toHaveBeenNthCalledWith(2, new Error(), 'month', 'empty')
-      expect(insertGenericError).toHaveBeenNthCalledWith(3, new Error(), 'year', 'empty')
+      expect(insertGenericError).toHaveBeenNthCalledWith(2, new Error(), 'startDate', 'empty')
+      expect(insertGenericError).toHaveBeenNthCalledWith(3, new Error(), 'endDate', 'empty')
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,

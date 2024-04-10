@@ -316,8 +316,6 @@ export type BookingSearchParameters = {
   sortDirection?: SortDirection
 }
 
-export type ReportType = 'bookings' | 'bedspace-usage' | 'occupancy' | 'referrals'
-
 export interface OasysPage extends TasklistPage {
   risks: PersonRisksUI
   oasysSuccess: boolean

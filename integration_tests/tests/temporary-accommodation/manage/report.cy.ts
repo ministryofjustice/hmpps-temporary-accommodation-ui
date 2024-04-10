@@ -1,4 +1,5 @@
 import path from 'path'
+import { Cas3ReportType } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
@@ -39,19 +40,19 @@ context('Report', () => {
     const page = ReportNewPage.visit()
 
     // And I fill out the form
-    const type = 'bookings'
+    const type: Cas3ReportType = 'booking'
     cy.then(function _() {
       const probationRegion = this.actingUserProbationRegion
-      const month = '3'
-      const year = '2023'
+      const startDate = '2024-01-12'
+      const endDate = '2024-03-12'
 
-      page.completeForm(month, year)
+      page.completeForm(startDate, endDate)
 
       cy.task('stubReportError', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       })
     })
@@ -76,32 +77,37 @@ context('Report', () => {
       page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
 
       // When I fill out the form
-      const type = 'bookings'
+      const type = 'booking'
       const probationRegion = this.actingUserProbationRegion
-      const month = '3'
-      const year = '2023'
+      const startDate = '2024-02-01'
+      const endDate = '2024-03-01'
 
-      page.completeForm(month, year)
+      page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       })
       page.expectDownload()
       page.clickDownload(type)
 
       // Then a report should have been requested from the API
-      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+      cy.task('verifyReportForRegion', {
+        probationRegionId: probationRegion.id,
+        startDate,
+        endDate,
+        type,
+      }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -123,32 +129,37 @@ context('Report', () => {
       page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
 
       // When I fill out the form
-      const type = 'occupancy'
+      const type = 'bedOccupancy'
       const probationRegion = this.actingUserProbationRegion
-      const month = '3'
-      const year = '2023'
+      const startDate = '2024-02-01'
+      const endDate = '2024-03-01'
 
-      page.completeForm(month, year)
+      page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       })
       page.expectDownload()
       page.clickDownload(type)
 
       // Then a report should have been requested from the API
-      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+      cy.task('verifyReportForRegion', {
+        probationRegionId: probationRegion.id,
+        startDate,
+        endDate,
+        type,
+      }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -170,32 +181,37 @@ context('Report', () => {
       page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
 
       // When I fill out the form
-      const type = 'bedspace-usage'
+      const type = 'bedUsage'
       const probationRegion = this.actingUserProbationRegion
-      const month = '3'
-      const year = '2023'
+      const startDate = '2024-02-01'
+      const endDate = '2024-03-01'
 
-      page.completeForm(month, year)
+      page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       })
       page.expectDownload()
       page.clickDownload(type)
 
       // Then a report should have been requested from the API
-      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+      cy.task('verifyReportForRegion', {
+        probationRegionId: probationRegion.id,
+        startDate,
+        endDate,
+        type,
+      }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -217,32 +233,37 @@ context('Report', () => {
       page.shouldPreselectProbationRegion(this.actingUserProbationRegion)
 
       // When I fill out the form
-      const type = 'referrals'
+      const type = 'referral'
       const probationRegion = this.actingUserProbationRegion
-      const month = '3'
-      const year = '2023'
+      const startDate = '2024-02-01'
+      const endDate = '2024-03-01'
 
-      page.completeForm(month, year)
+      page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       })
       page.expectDownload()
       page.clickDownload(type)
 
       // Then a report should have been requested from the API
-      cy.task('verifyReportForRegion', { probationRegionId: probationRegion.id, month, year, type }).then(requests => {
+      cy.task('verifyReportForRegion', {
+        probationRegionId: probationRegion.id,
+        startDate,
+        endDate,
+        type,
+      }).then(requests => {
         expect(requests).to.have.length(1)
       })
 
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, month, year, type),
+        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -261,10 +282,10 @@ context('Report', () => {
 
     // And I clear the probation region
     page.clearForm()
-    page.clickDownload('occupancy')
+    page.clickDownload('bedOccupancy')
 
     // Then I should see an messages relating to the probation region
-    page.shouldShowErrorMessagesForFields(['probationRegionId', 'month', 'year'])
+    page.shouldShowErrorMessagesForFields(['probationRegionId', 'startDate', 'endDate'])
   })
 
   it('navigates back from the booking report page to the dashboard page', () => {

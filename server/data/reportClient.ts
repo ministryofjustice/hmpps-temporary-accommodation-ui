@@ -1,5 +1,5 @@
 import { Response } from 'express'
-import { ReportType } from '@approved-premises/ui'
+import { Cas3ReportType } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import RestClient, { CallConfig } from './restClient'
@@ -24,13 +24,13 @@ export default class ReportClient {
     response: Response,
     filename: string,
     probationRegionId: string,
-    month: string,
-    year: string,
-    type: ReportType,
+    startDate: string,
+    endDate: string,
+    type: Cas3ReportType,
   ): Promise<void> {
     await this.restClient.pipe(response, {
       path: getApiReportPath(type),
-      query: { probationRegionId, year, month },
+      query: { probationRegionId, startDate, endDate },
       filename,
     })
   }

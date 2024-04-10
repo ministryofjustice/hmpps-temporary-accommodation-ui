@@ -7,7 +7,6 @@ import ReportService from '../../../services/reportService'
 import { probationRegionFactory, userFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
-import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 
 jest.mock('../../../utils/validation')
@@ -20,7 +19,6 @@ jest.mock('../../../utils/userUtils', () => {
     filterProbationRegions: jest.fn(),
   }
 })
-jest.mock('../../../utils/dateUtils')
 
 describe('ReportsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -65,7 +63,6 @@ describe('ReportsController', () => {
 
       const requestHandler = reportsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
-      ;(getYearsSince as jest.Mock).mockReturnValue([])
 
       response = createMock<Response>({
         locals: { user: userFactory.build() },
@@ -104,7 +101,6 @@ describe('ReportsController', () => {
 
         const requestHandler = reportsController.new()
         ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
-        ;(getYearsSince as jest.Mock).mockReturnValue([])
 
         response = createMock<Response>({
           locals: { user: userFactory.build({ roles: ['reporter'] }) },

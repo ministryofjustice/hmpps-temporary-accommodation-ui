@@ -8,7 +8,6 @@ import {
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
-  getYearsSince,
 } from './dateUtils'
 
 jest.mock('date-fns/isPast')
@@ -299,18 +298,6 @@ describe('dateIsBlank', () => {
     }
 
     expect(dateIsBlank(date, 'field')).toEqual(false)
-  })
-})
-
-describe('getYearsSince', () => {
-  beforeEach(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2027-01-01'))
-  })
-
-  it('returns correct years array', () => {
-    const years = [{ year: '2023' }, { year: '2024' }, { year: '2025' }, { year: '2026' }, { year: '2027' }]
-
-    expect(getYearsSince(2023)).toEqual(years)
   })
 })
 

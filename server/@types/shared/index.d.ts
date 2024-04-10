@@ -185,6 +185,7 @@ export type { PlacementRequestRequestType } from './models/PlacementRequestReque
 export type { PlacementRequestSortField } from './models/PlacementRequestSortField';
 export type { PlacementRequestStatus } from './models/PlacementRequestStatus';
 export type { PlacementRequestTask } from './models/PlacementRequestTask';
+export type { PlacementRequestTaskOutcome } from './models/PlacementRequestTaskOutcome';
 export type { PlacementRequirements } from './models/PlacementRequirements';
 export type { PlacementType } from './models/PlacementType';
 export type { Premises } from './models/Premises';

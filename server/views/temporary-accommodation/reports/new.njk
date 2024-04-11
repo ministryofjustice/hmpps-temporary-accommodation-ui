@@ -43,7 +43,7 @@
                 ) }}
 
                 <div class="govuk-grid-row">
-                    <div class="govuk-grid-column-one-third">
+                    <div class="govuk-grid-column-one-half">
 
                         {{ hmppsDatepicker({
                             id: "startDate",
@@ -52,13 +52,16 @@
                                 text: "Start date",
                                 classes: "govuk-label--m"
                             },
+                            hint: {
+                                text: 'For example, 27/3/2024'
+                            },
                             errorMessage: context.errors.startDate,
                             classes: 'hmpps-datepicker--fixed-width',
                             value: context.startDate
                         }) }}
 
                     </div>
-                    <div class="govuk-grid-column-one-third govuk-!-margin-left-5">
+                    <div class="govuk-grid-column-one-half">
 
                         {{ hmppsDatepicker({
                             id: "endDate",
@@ -66,6 +69,9 @@
                             label: {
                                 text: "End date",
                                 classes: "govuk-label--m"
+                            },
+                            hint: {
+                                text: 'For example, 27/3/2024'
                             },
                             errorMessage: context.errors.endDate,
                             classes: 'hmpps-datepicker--fixed-width',

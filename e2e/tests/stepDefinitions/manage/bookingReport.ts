@@ -7,6 +7,7 @@ import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodat
 import { probationRegionFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 import { getUrlEncodedCypressEnv, throwMissingCypressEnvError } from '../utils'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 const actingUserProbationRegionId =
   Cypress.env('acting_user_probation_region_id') || throwMissingCypressEnvError('acting_user_probation_region_id')
@@ -27,8 +28,8 @@ Given('I download a booking report for the preselected probation region', () => 
     id: actingUserProbationRegionId,
     name: actingUserProbationRegionName,
   })
-  const startDate = '2024-03-01'
-  const endDate = '2024-04-01'
+  const startDate = '01/03/2024'
+  const endDate = '01/04/2024'
   const type: Cas3ReportType = 'booking'
 
   reportPage.shouldPreselectProbationRegion(probationRegion)
@@ -36,7 +37,14 @@ Given('I download a booking report for the preselected probation region', () => 
   reportPage.expectDownload(10000)
   reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)).as('filename')
+  cy.wrap(
+    reportForProbationRegionFilename(
+      probationRegion.name,
+      DateFormats.datepickerInputToIsoString(startDate),
+      DateFormats.datepickerInputToIsoString(endDate),
+      type,
+    ),
+  ).as('filename')
 })
 
 Given('I download a bedspace usage report for the preselected probation region', () => {
@@ -46,8 +54,8 @@ Given('I download a bedspace usage report for the preselected probation region',
     id: actingUserProbationRegionId,
     name: actingUserProbationRegionName,
   })
-  const startDate = '2024-03-01'
-  const endDate = '2024-04-01'
+  const startDate = '01/03/2024'
+  const endDate = '01/04/2024'
   const type: Cas3ReportType = 'bedUsage'
 
   reportPage.shouldPreselectProbationRegion(probationRegion)
@@ -55,7 +63,14 @@ Given('I download a bedspace usage report for the preselected probation region',
   reportPage.expectDownload(10000)
   reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)).as('filename')
+  cy.wrap(
+    reportForProbationRegionFilename(
+      probationRegion.name,
+      DateFormats.datepickerInputToIsoString(startDate),
+      DateFormats.datepickerInputToIsoString(endDate),
+      type,
+    ),
+  ).as('filename')
 })
 
 Given('I download an occupancy report for the preselected probation region', () => {
@@ -65,8 +80,8 @@ Given('I download an occupancy report for the preselected probation region', () 
     id: actingUserProbationRegionId,
     name: actingUserProbationRegionName,
   })
-  const startDate = '2024-03-01'
-  const endDate = '2024-04-01'
+  const startDate = '01/03/2024'
+  const endDate = '01/04/2024'
   const type: Cas3ReportType = 'bedOccupancy'
 
   reportPage.shouldPreselectProbationRegion(probationRegion)
@@ -74,7 +89,14 @@ Given('I download an occupancy report for the preselected probation region', () 
   reportPage.expectDownload(10000)
   reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)).as('filename')
+  cy.wrap(
+    reportForProbationRegionFilename(
+      probationRegion.name,
+      DateFormats.datepickerInputToIsoString(startDate),
+      DateFormats.datepickerInputToIsoString(endDate),
+      type,
+    ),
+  ).as('filename')
 })
 
 Given('I clear the form and attempt to download a booking report', () => {

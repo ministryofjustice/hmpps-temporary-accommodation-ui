@@ -134,8 +134,8 @@ describe('ReportsController', () => {
 
       request.body = {
         probationRegionId: 'probation-region',
-        startDate: '2024-02-03',
-        endDate: '2024-04-03',
+        startDate: '03/02/2024',
+        endDate: '03/04/2024',
         reportType: 'booking',
       }
 
@@ -155,8 +155,8 @@ describe('ReportsController', () => {
       const requestHandler = reportsController.create()
 
       request.body = {
-        startDate: '2024-01-12',
-        endDate: '2024-01-24',
+        startDate: '12/01/2024',
+        endDate: '24/01/2024',
         reportType: 'bedOccupancy',
       }
 
@@ -176,7 +176,7 @@ describe('ReportsController', () => {
 
       request.body = {
         probationRegionId: 'probation-region',
-        endDate: '2024-01-24',
+        endDate: '24/01/2024',
         reportType: 'bedOccupancy',
       }
 
@@ -196,7 +196,7 @@ describe('ReportsController', () => {
 
       request.body = {
         probationRegionId: 'probation-region',
-        startDate: '2024-01-20',
+        startDate: '20/01/2024',
         reportType: 'bedOccupancy',
       }
 

@@ -120,6 +120,16 @@ export class DateFormats {
     } as ObjectWithDateParts<K>
   }
 
+  /**
+   * Converts input from the Datepicker component into an ISO8601 date string
+   * @param dateString a date string formatted in the GB locale, with or without leading zeros (e.g. `6/04/2024`)
+   * @returns an ISO8601 date string
+   */
+  static datepickerInputToIsoString(dateString: string) {
+    const [day, month, year] = dateString.split('/')
+    return `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
+  }
+
   static isoDateToDaysFromNow(dateString: string) {
     const difference = differenceInDays(new Date(dateString).setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0))
     const numDays = Math.abs(difference)

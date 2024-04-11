@@ -6,6 +6,7 @@ import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodat
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { premisesSummaryFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 context('Report', () => {
   beforeEach(() => {
@@ -43,16 +44,16 @@ context('Report', () => {
     const type: Cas3ReportType = 'booking'
     cy.then(function _() {
       const probationRegion = this.actingUserProbationRegion
-      const startDate = '2024-01-12'
-      const endDate = '2024-03-12'
+      const startDate = '12/01/2024'
+      const endDate = '12/03/2024'
 
       page.completeForm(startDate, endDate)
 
       cy.task('stubReportError', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: DateFormats.datepickerInputToIsoString(startDate),
+        endDate: DateFormats.datepickerInputToIsoString(endDate),
         type,
       })
     })
@@ -79,16 +80,18 @@ context('Report', () => {
       // When I fill out the form
       const type = 'booking'
       const probationRegion = this.actingUserProbationRegion
-      const startDate = '2024-02-01'
-      const endDate = '2024-03-01'
+      const startDate = '01/02/2024'
+      const startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+      const endDate = '01/03/2024'
+      const endDateIso = DateFormats.datepickerInputToIsoString(endDate)
 
       page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       })
       page.expectDownload()
@@ -97,8 +100,8 @@ context('Report', () => {
       // Then a report should have been requested from the API
       cy.task('verifyReportForRegion', {
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       }).then(requests => {
         expect(requests).to.have.length(1)
@@ -107,7 +110,7 @@ context('Report', () => {
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
+        reportForProbationRegionFilename(probationRegion.name, startDateIso, endDateIso, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -131,16 +134,18 @@ context('Report', () => {
       // When I fill out the form
       const type = 'bedOccupancy'
       const probationRegion = this.actingUserProbationRegion
-      const startDate = '2024-02-01'
-      const endDate = '2024-03-01'
+      const startDate = '01/02/2024'
+      const startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+      const endDate = '01/03/2024'
+      const endDateIso = DateFormats.datepickerInputToIsoString(endDate)
 
       page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       })
       page.expectDownload()
@@ -149,8 +154,8 @@ context('Report', () => {
       // Then a report should have been requested from the API
       cy.task('verifyReportForRegion', {
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       }).then(requests => {
         expect(requests).to.have.length(1)
@@ -159,7 +164,7 @@ context('Report', () => {
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
+        reportForProbationRegionFilename(probationRegion.name, startDateIso, endDateIso, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -183,16 +188,18 @@ context('Report', () => {
       // When I fill out the form
       const type = 'bedUsage'
       const probationRegion = this.actingUserProbationRegion
-      const startDate = '2024-02-01'
-      const endDate = '2024-03-01'
+      const startDate = '01/02/2024'
+      const startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+      const endDate = '01/03/2024'
+      const endDateIso = DateFormats.datepickerInputToIsoString(endDate)
 
       page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       })
       page.expectDownload()
@@ -201,8 +208,8 @@ context('Report', () => {
       // Then a report should have been requested from the API
       cy.task('verifyReportForRegion', {
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       }).then(requests => {
         expect(requests).to.have.length(1)
@@ -211,7 +218,7 @@ context('Report', () => {
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
+        reportForProbationRegionFilename(probationRegion.name, startDateIso, endDateIso, type),
       )
 
       cy.readFile(filePath).then(file => {
@@ -235,16 +242,18 @@ context('Report', () => {
       // When I fill out the form
       const type = 'referral'
       const probationRegion = this.actingUserProbationRegion
-      const startDate = '2024-02-01'
-      const endDate = '2024-03-01'
+      const startDate = '01/02/2024'
+      const startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+      const endDate = '01/03/2024'
+      const endDateIso = DateFormats.datepickerInputToIsoString(endDate)
 
       page.completeForm(startDate, endDate)
 
       cy.task('stubReportForRegion', {
         data: 'some-data',
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       })
       page.expectDownload()
@@ -253,8 +262,8 @@ context('Report', () => {
       // Then a report should have been requested from the API
       cy.task('verifyReportForRegion', {
         probationRegionId: probationRegion.id,
-        startDate,
-        endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         type,
       }).then(requests => {
         expect(requests).to.have.length(1)
@@ -263,7 +272,7 @@ context('Report', () => {
       // And the report should be downloaded
       const filePath = path.join(
         Cypress.config('downloadsFolder'),
-        reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type),
+        reportForProbationRegionFilename(probationRegion.name, startDateIso, endDateIso, type),
       )
 
       cy.readFile(filePath).then(file => {

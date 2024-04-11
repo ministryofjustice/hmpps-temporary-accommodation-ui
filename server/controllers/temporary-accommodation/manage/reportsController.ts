@@ -5,6 +5,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGeneric
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 import { allReportProbationRegions } from '../../../utils/reportUtils'
 
 export default class ReportsController {
@@ -58,8 +59,8 @@ export default class ReportsController {
           callConfig,
           res,
           probationRegionId,
-          startDate,
-          endDate,
+          DateFormats.datepickerInputToIsoString(startDate),
+          DateFormats.datepickerInputToIsoString(endDate),
           reportType,
         )
       } catch (err) {

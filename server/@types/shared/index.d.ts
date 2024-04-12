@@ -115,6 +115,7 @@ export type { FlagsEnvelope } from './models/FlagsEnvelope';
 export type { FullPerson } from './models/FullPerson';
 export type { Gender } from './models/Gender';
 export type { InvalidParam } from './models/InvalidParam';
+export type { LatestCas2StatusUpdate } from './models/LatestCas2StatusUpdate';
 export type { LocalAuthorityArea } from './models/LocalAuthorityArea';
 export type { LostBed } from './models/LostBed';
 export type { LostBedCancellation } from './models/LostBedCancellation';
@@ -185,6 +186,7 @@ export type { PlacementRequestRequestType } from './models/PlacementRequestReque
 export type { PlacementRequestSortField } from './models/PlacementRequestSortField';
 export type { PlacementRequestStatus } from './models/PlacementRequestStatus';
 export type { PlacementRequestTask } from './models/PlacementRequestTask';
+export type { PlacementRequestTaskOutcome } from './models/PlacementRequestTaskOutcome';
 export type { PlacementRequirements } from './models/PlacementRequirements';
 export type { PlacementType } from './models/PlacementType';
 export type { Premises } from './models/Premises';

@@ -5,7 +5,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGeneric
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
-import { DateFormats } from '../../../utils/dateUtils'
+import { DateFormats, dateExists } from '../../../utils/dateUtils'
 import { allReportProbationRegions } from '../../../utils/reportUtils'
 
 export default class ReportsController {
@@ -37,34 +37,53 @@ export default class ReportsController {
         const { probationRegionId, startDate, endDate, reportType } = req.body
         const callConfig = extractCallConfig(req)
 
-        const error = new Error()
+        let error: Error
+        let startDateIso: string
+        let endDateIso: string
 
-        const fields = [
-          { name: 'probationRegionId', value: probationRegionId },
-          { name: 'startDate', value: startDate },
-          { name: 'endDate', value: endDate },
-        ]
-
-        fields.forEach(field => {
-          if (!field.value) {
-            insertGenericError(error, field.name, 'empty')
-          }
-        })
-
-        if (!fields.every(field => Boolean(field.value))) {
-          throw error
+        if (!probationRegionId) {
+          error = new Error()
+          insertGenericError(error, 'probationRegionId', 'empty')
         }
 
-        await this.reportService.pipeReportForProbationRegion(
+        if (!startDate) {
+          error = error || new Error()
+          insertGenericError(error, 'startDate', 'empty')
+        } else {
+          startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+
+          if (!dateExists(startDateIso)) {
+            error = error || new Error()
+            insertGenericError(error, 'startDate', 'invalid')
+          }
+        }
+
+        if (!endDate) {
+          error = error || new Error()
+          insertGenericError(error, 'endDate', 'empty')
+        } else {
+          endDateIso = DateFormats.datepickerInputToIsoString(endDate)
+
+          if (!dateExists(endDateIso)) {
+            error = error || new Error()
+            insertGenericError(error, 'endDate', 'invalid')
+          }
+        }
+
+        if (error) {
+          return catchValidationErrorOrPropogate(req, res, error, paths.reports.new({}))
+        }
+
+        return this.reportService.pipeReportForProbationRegion(
           callConfig,
           res,
           probationRegionId,
-          DateFormats.datepickerInputToIsoString(startDate),
-          DateFormats.datepickerInputToIsoString(endDate),
+          startDateIso,
+          endDateIso,
           reportType,
         )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
+        return catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
       }
     }
   }

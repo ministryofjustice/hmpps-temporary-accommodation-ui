@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, isFuture, isPast } from 'date-fns'
+import { differenceInDays, isExists, isFuture, isPast } from 'date-fns'
 
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
@@ -160,6 +160,15 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   }
 
   return true
+}
+
+export const dateExists = (dateString: string) => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  try {
+    return isExists(year, month - 1, day)
+  } catch (err) {
+    return false
+  }
 }
 
 export const dateIsBlank = <K extends string | number>(

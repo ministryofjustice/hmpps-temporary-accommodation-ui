@@ -129,6 +129,11 @@ describe('ReportsController', () => {
   })
 
   describe('create', () => {
+    beforeEach(() => {
+      jest.useFakeTimers()
+      jest.setSystemTime(new Date('2024-04-11'))
+    })
+
     it('creates a booking report for the probation region and pipes it into the express response', async () => {
       const requestHandler = reportsController.create()
 
@@ -218,7 +223,7 @@ describe('ReportsController', () => {
         probationRegionId: '',
         startDate: '',
         endDate: '',
-        reportType: 'occupancy',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
@@ -227,6 +232,29 @@ describe('ReportsController', () => {
       expect(insertGenericError).toHaveBeenNthCalledWith(1, new Error(), 'probationRegionId', 'empty')
       expect(insertGenericError).toHaveBeenNthCalledWith(2, new Error(), 'startDate', 'empty')
       expect(insertGenericError).toHaveBeenNthCalledWith(3, new Error(), 'endDate', 'empty')
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
+        paths.reports.new({}),
+      )
+    })
+
+    it('renders invalid date errors if the dates are invalid', async () => {
+      const requestHandler = reportsController.create()
+
+      request.body = {
+        probationRegionId: 'all',
+        startDate: '01/04/20',
+        endDate: '01/13/2024',
+        reportType: 'bedOccupancy',
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'startDate', 'invalid')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'endDate', 'invalid')
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,

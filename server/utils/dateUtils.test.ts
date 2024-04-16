@@ -4,6 +4,7 @@ import {
   DateFormats,
   InvalidDateStringError,
   dateAndTimeInputsAreValidDates,
+  dateExists,
   dateInputHint,
   dateIsBlank,
   dateIsInFuture,
@@ -351,5 +352,20 @@ describe('dateInputHint', () => {
     jest.useFakeTimers().setSystemTime(new Date('2027-03-11'))
 
     expect(dateInputHint('future')).toEqual('For example, 27 3 2028')
+  })
+})
+
+describe('dateExists', () => {
+  it.each([
+    ['2024-01-01', true],
+    ['1999-12-12', true],
+    ['2024-02-29', true],
+    ['2021-02-29', false],
+    ['2024-02-30', false],
+    ['2020-13-01', false],
+    ['24-01-01', false],
+    ['not even a date', false],
+  ])('for %s returns %s', (input, expected) => {
+    expect(dateExists(input)).toEqual(expected)
   })
 })

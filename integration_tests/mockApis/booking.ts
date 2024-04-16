@@ -40,7 +40,7 @@ export default {
   stubBookingCreateConflictError: (args: {
     premisesId: string
     conflictingEntityId: string
-    conflictingEntityType: 'booking' | 'lost-bed'
+    conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date'
   }) =>
     stubFor({
       request: {

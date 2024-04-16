@@ -16,8 +16,8 @@ export default class BedspaceConflictErrorComponent extends Component {
 
   shouldShowDateConflictErrorMessages(
     fields: Array<string>,
-    conflictingEntity: Booking | LostBed,
-    conflictingEntityType: 'booking' | 'lost-bed',
+    conflictingEntity: Booking | LostBed | null,
+    conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
   ): void {
     fields.forEach(field => {
       cy.get(`[data-cy-error-${field}]`).should('contain', errorLookups.generic[field].conflict)
@@ -29,15 +29,16 @@ export default class BedspaceConflictErrorComponent extends Component {
     cy.get('.govuk-error-summary h2').should('contain', title)
     cy.get('.govuk-error-summary ul').should('contain', message)
 
-    cy.get('.govuk-error-summary a').click()
+    if (conflictingEntity) {
+      cy.get('.govuk-error-summary a').click()
 
-    if (conflictingEntityType === 'booking') {
-      Page.verifyOnPage(BookingShowPage, this.premises, this.room, conflictingEntity as Booking)
-    } else {
-      Page.verifyOnPage(LostBedShowPage, this.premises, this.room, conflictingEntity as LostBed)
+      if (conflictingEntityType === 'booking') {
+        Page.verifyOnPage(BookingShowPage, this.premises, this.room, conflictingEntity as Booking)
+      } else {
+        Page.verifyOnPage(LostBedShowPage, this.premises, this.room, conflictingEntity as LostBed)
+      }
+      cy.go('back')
     }
-
-    cy.go('back')
   }
 
   private getTitle(fields: Array<string>): string {
@@ -49,7 +50,14 @@ export default class BedspaceConflictErrorComponent extends Component {
     return 'The turnaround time could not be changed'
   }
 
-  private getMessage(fields: Array<string>, conflictingEntityType: 'booking' | 'lost-bed'): string {
+  private getMessage(
+    fields: Array<string>,
+    conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
+  ): string {
+    if (conflictingEntityType === 'bedspace-end-date') {
+      return 'This booking conflicts with the bedspace end date.'
+    }
+
     const noun = conflictingEntityType === 'booking' ? 'booking' : 'void'
 
     if (this.source === 'booking' || this.source === 'lost-bed') {

@@ -13,8 +13,8 @@ export default abstract class BookingEditablePage extends Page {
   }
 
   shouldShowDateConflictErrorMessages(
-    conflictingEntity: Booking | LostBed,
-    conflictingEntityType: 'booking' | 'lost-bed',
+    conflictingEntity: Booking | LostBed | null,
+    conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date',
   ): void {
     this.bedspaceConflictErrorComponent.shouldShowDateConflictErrorMessages(
       ['arrivalDate', 'departureDate'],

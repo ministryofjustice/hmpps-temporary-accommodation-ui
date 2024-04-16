@@ -6,8 +6,8 @@ import { DateFormats } from './dateUtils'
 import { isFullPerson } from './personUtils'
 
 type ParsedConflictError = {
-  conflictingEntityId: string
-  conflictingEntityType: 'booking' | 'lost-bed'
+  conflictingEntityId: string | null
+  conflictingEntityType: 'booking' | 'lost-bed' | 'bedspace-end-date'
 }
 
 export const noAssessmentId = 'no-assessment'
@@ -195,22 +195,28 @@ export const generateConflictBespokeError = (
       ? 'This bedspace is not available for the dates entered'
       : 'This bedspace is not available for the date entered'
 
-  const link =
-    conflictingEntityType === 'lost-bed'
-      ? `<a href="${paths.lostBeds.show({
-          premisesId,
-          roomId,
-          lostBedId: conflictingEntityId,
-        })}">existing void</a>`
-      : `<a href="${paths.bookings.show({
-          premisesId,
-          roomId,
-          bookingId: conflictingEntityId,
-        })}">existing booking</a>`
+  let message: string
 
-  const message = datesGrammaticalNumber === 'plural' ? `They conflict with an ${link}` : `It conflicts with an ${link}`
+  if (conflictingEntityId) {
+    const link =
+      conflictingEntityType === 'lost-bed'
+        ? `<a href="${paths.lostBeds.show({
+            premisesId,
+            roomId,
+            lostBedId: conflictingEntityId,
+          })}">existing void</a>`
+        : `<a href="${paths.bookings.show({
+            premisesId,
+            roomId,
+            bookingId: conflictingEntityId,
+          })}">existing booking</a>`
 
-  return { errorTitle: title, errorSummary: [{ html: message }] }
+    message = datesGrammaticalNumber === 'plural' ? `They conflict with an ${link}` : `It conflicts with an ${link}`
+  } else {
+    message = 'This booking conflicts with the bedspace end date.'
+  }
+
+  return { errorTitle: title, errorSummary: [{ [conflictingEntityId ? 'html' : 'text']: message }] }
 }
 
 export const generateTurnaroundConflictBespokeError = (
@@ -263,6 +269,10 @@ export const assessmentRadioItems = (assessmentSummaries: Array<AssessmentSummar
 }
 
 const parseConflictError = (detail: string): ParsedConflictError => {
+  if (detail.match(/^BedSpace is archived from/)) {
+    return { conflictingEntityId: null, conflictingEntityType: 'bedspace-end-date' }
+  }
+
   const detailWords = detail.split(' ')
   const conflictingEntityId = detailWords[detailWords.length - 1]
   const conflictingEntityType = detail.includes('Lost Bed') ? 'lost-bed' : 'booking'

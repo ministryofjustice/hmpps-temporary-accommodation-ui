@@ -162,50 +162,34 @@ export default class RestClient {
   async pipe(
     response: Response,
     { path = null, headers = {}, query = '', filename = null }: PipeRequest,
-  ): Promise<void> {
+  ): Promise<unknown> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
-    return new Promise((resolve, reject) => {
-      superagent
+    try {
+      const result = await superagent
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
         .auth(this.token, { type: 'bearer' })
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, _res) => {
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
         .query(query)
         .timeout(this.timeoutConfig())
         .set({ ...this.defaultHeaders, ...headers })
-        .buffer(false)
-        .parse((apiResponse, callback) => {
-          // We use parse, and the response manually, rather than using Superagent's pipe method, to workaround
-          // pipe ignoring errors. See https://github.com/ladjs/superagent/issues/1575
-          if (apiResponse.statusCode === 200) {
-            response.set({
-              'Content-Type': apiResponse.headers['content-type'],
-              'Content-Disposition': filename
-                ? `attachment; filename="${filename}"`
-                : apiResponse.headers['content-disposition'],
-            })
 
-            apiResponse.on('data', chunk => {
-              response.write(chunk)
-            })
+      if (result.statusCode === 200) {
+        response.set({
+          'Content-Type': result.headers['content-type'],
+          'Content-Disposition': filename
+            ? `attachment; filename="${filename}"`
+            : result.headers['content-disposition'],
+        })
+        response.send(result.body)
+      }
 
-            apiResponse.on('end', () => {
-              response.end()
-              callback(null, undefined)
-              resolve()
-            })
-          } else {
-            callback(null, undefined)
-          }
-        })
-        .catch(err => {
-          reject(err)
-        })
-    })
+      return result.body
+    } catch (error) {
+      const sanitisedError = sanitiseError(error)
+      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}'`)
+      throw sanitisedError
+    }
   }
 
   private async postPutOrDelete(

@@ -1,24 +1,9 @@
 import { Cas3ReportType } from '@approved-premises/api'
-import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { probationRegions } from '../../wiremock/referenceDataStubs'
 import { getApiReportPath } from '../../server/utils/reportUtils'
 
 export default {
-  stubReport: (data: string) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: api.reports.bookings({}),
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: data,
-      },
-    }),
   stubReportError: (args: {
     data: string
     probationRegionId: string
@@ -78,13 +63,6 @@ export default {
         body: args.data,
       },
     }),
-  verifyReport: async () =>
-    (
-      await getMatchingRequests({
-        method: 'GET',
-        url: api.reports.bookings({}),
-      })
-    ).body.requests,
   verifyReportForRegion: async (args: {
     probationRegionId: string
     startDate: string

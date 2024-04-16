@@ -32,6 +32,7 @@ export default class ReportsController {
   }
 
   create(): RequestHandler {
+    // eslint-disable-next-line consistent-return
     return async (req: Request, res: Response) => {
       try {
         const { probationRegionId, startDate, endDate, reportType } = req.body
@@ -74,7 +75,7 @@ export default class ReportsController {
           return catchValidationErrorOrPropogate(req, res, error, paths.reports.new({}))
         }
 
-        return this.reportService.pipeReportForProbationRegion(
+        await this.reportService.pipeReportForProbationRegion(
           callConfig,
           res,
           probationRegionId,

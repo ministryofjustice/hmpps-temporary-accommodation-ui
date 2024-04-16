@@ -4,6 +4,7 @@ import nock from 'nock'
 import type { ApiConfig } from '../config'
 import { probationRegionFactory } from '../testutils/factories'
 import RestClient, { CallConfig } from './restClient'
+import * as sanitiseError from '../sanitisedError'
 
 describe('restClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -162,7 +163,7 @@ describe('restClient', () => {
         'Content-Disposition': 'attachment; filename="some-filename"',
       })
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
+      expect(response.send).toHaveBeenCalledWith(Buffer.from(data))
       expect(nock.isDone()).toBeTruthy()
     })
 
@@ -182,20 +183,29 @@ describe('restClient', () => {
         'Content-Disposition': 'attachment; filename="some-filename"',
       })
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
+      expect(response.send).toHaveBeenCalledWith(Buffer.from(data))
       expect(nock.isDone()).toBeTruthy()
     })
-  })
 
-  it('should reject when the API returns an error', async () => {
-    fakeApprovedPremisesApi.get(`/some/path`).reply(500, { some: 'data' })
+    it('should throw with a sanitised error when the API returns an error', async () => {
+      jest.spyOn(sanitiseError, 'default')
+      fakeApprovedPremisesApi.get(`/some/path`).reply(400, { some: 'data' })
 
-    const response = createMock<Response>()
+      const response = createMock<Response>()
+      let error: Error
 
-    await expect(restClient.pipe(response, { path: '/some/path' })).rejects.toBeDefined()
+      try {
+        await restClient.pipe(response, { path: '/some/path' })
+      } catch (e) {
+        error = e
+      }
 
-    expect(response.set).not.toHaveBeenCalledWith()
-    expect(response.write).not.toHaveBeenCalled()
-    expect(nock.isDone()).toBeTruthy()
+      expect(sanitiseError.default).toHaveBeenCalledWith(new Error(error.message))
+
+      expect(response.set).not.toHaveBeenCalled()
+      expect(response.send).not.toHaveBeenCalled()
+
+      expect(nock.isDone()).toBeTruthy()
+    })
   })
 })

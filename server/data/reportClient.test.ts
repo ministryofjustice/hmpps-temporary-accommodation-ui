@@ -46,11 +46,11 @@ describe('ReportClient', () => {
 
       await reportClient.bookings(response, 'some-filename', month, year)
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 
@@ -71,11 +71,11 @@ describe('ReportClient', () => {
 
       await reportClient.bookings(response, 'some-filename', month, year)
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 
@@ -105,11 +105,11 @@ describe('ReportClient', () => {
         type,
       )
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 })

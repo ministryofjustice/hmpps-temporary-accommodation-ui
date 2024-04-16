@@ -73,13 +73,16 @@
     "startDate": {
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
-      "conflict": "This bedspace is not available for these dates"
+      "conflict": "This bedspace is not available for these dates",
+      "afterEndDate": "The start date must be before the end date"
     },
     "endDate": {
-      "empty": "You must enter a end date",
+      "empty": "You must enter an end date",
       "invalid": "The end date is an invalid date",
       "conflict": "This bedspace is not available for these dates",
-      "beforeStartDate": "The end date must be before the start date"
+      "beforeStartDate": "The end date must be before the start date",
+      "inFuture": "The end date must be today or a past date",
+      "rangeTooLarge": "The end date cannot be more than 3 months after the start date"
     },
     "reason": {
       "empty": "You must choose a reason"

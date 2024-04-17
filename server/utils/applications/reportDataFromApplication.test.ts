@@ -2,8 +2,13 @@ import {
   dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
+  hasHistoryOfArsonFromApplication,
   isApplicationEligibleFromApplication,
+  isConcerningArsonBehaviourFromApplication,
+  isConcerningSexualBehaviourFromApplication,
   isDutyToReferSubmittedFromApplication,
+  isHistoryOfSexualOffenceFromApplication,
+  isRegisteredSexOffenderFromApplication,
   needsAccessiblePropertyFromApplication,
   personReleaseDateFromApplication,
 } from './reportDataFromApplication'
@@ -220,6 +225,115 @@ describe('reportDataFromApplication', () => {
       expect(() => personReleaseDateFromApplication(application)).toThrow(
         new SessionDataError('No person release date'),
       )
+    })
+  })
+
+  describe('isRegisteredSexOffenderFromApplication', () => {
+    it.each([true, false])('returns if the person is a registered sex offender from the application if %s', value => {
+      const application = applicationFactory.build({
+        data: {
+          'offence-and-behaviour-summary': {
+            'registered-sex-offender': { registeredSexOffender: value ? 'yes' : 'no' },
+          },
+        },
+      })
+
+      expect(isRegisteredSexOffenderFromApplication(application)).toEqual(value)
+    })
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(isRegisteredSexOffenderFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('isHistoryOfSexualOffenceFromApplication', () => {
+    it.each([true, false])(
+      'returns if the person has a history of sexual offence from the application if %s',
+      value => {
+        const application = applicationFactory.build({
+          data: {
+            'offence-and-behaviour-summary': {
+              'history-of-sexual-offence': { historyOfSexualOffence: value ? 'yes' : 'no' },
+            },
+          },
+        })
+
+        expect(isHistoryOfSexualOffenceFromApplication(application)).toEqual(value)
+      },
+    )
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(isHistoryOfSexualOffenceFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('isConcerningSexualBehaviourFromApplication', () => {
+    it.each([true, false])(
+      "returns if there are concerns with the person's sexual behaviour from the application if %s",
+      value => {
+        const application = applicationFactory.build({
+          data: {
+            'offence-and-behaviour-summary': {
+              'concerning-sexual-behaviour': { concerningSexualBehaviour: value ? 'yes' : 'no' },
+            },
+          },
+        })
+
+        expect(isConcerningSexualBehaviourFromApplication(application)).toEqual(value)
+      },
+    )
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(isConcerningSexualBehaviourFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('hasHistoryOfArsonFromApplication', () => {
+    it.each([true, false])('returns if the person has a history of arson offence from the application if %s', value => {
+      const application = applicationFactory.build({
+        data: {
+          'offence-and-behaviour-summary': {
+            'history-of-arson-offence': { historyOfArsonOffence: value ? 'yes' : 'no' },
+          },
+        },
+      })
+
+      expect(hasHistoryOfArsonFromApplication(application)).toEqual(value)
+    })
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(hasHistoryOfArsonFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('isConcerningArsonBehaviourFromApplication', () => {
+    it.each([true, false])(
+      "returns if there are concerns with the person's arson behaviour from the application if %s",
+      value => {
+        const application = applicationFactory.build({
+          data: {
+            'offence-and-behaviour-summary': {
+              'concerning-arson-behaviour': { concerningArsonBehaviour: value ? 'yes' : 'no' },
+            },
+          },
+        })
+
+        expect(isConcerningArsonBehaviourFromApplication(application)).toEqual(value)
+      },
+    )
+
+    it('returns undefined if not set in the application', () => {
+      const application = applicationFactory.build()
+
+      expect(isConcerningArsonBehaviourFromApplication(application)).toEqual(undefined)
     })
   })
 })

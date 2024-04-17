@@ -46,6 +46,11 @@ import StartPage from './startPage'
 import SubmissionConfirmation from './submissionConfirmation'
 import TaskListPage from './taskListPage'
 import ApplicationFullPage from './full'
+import HistoryOfSexualOffencePage from './accommodation-need/offence-and-behaviour-summary/historyOfSexualOffence'
+import RegisteredSexOffenderPage from './accommodation-need/offence-and-behaviour-summary/registeredSexOffender'
+import ConcerningSexualBehaviourPage from './accommodation-need/offence-and-behaviour-summary/concerningSexualBehaviour'
+import HistoryOfArsonOffencePage from './accommodation-need/offence-and-behaviour-summary/historyOfArsonOffence'
+import ConcerningArsonBehaviourPage from './accommodation-need/offence-and-behaviour-summary/concerningArsonBehaviour'
 
 export {
   AccommodationRequiredFromDatePage,
@@ -59,6 +64,7 @@ export {
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
+  ConcerningArsonBehaviourPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
   CooperationPage,
@@ -68,6 +74,7 @@ export {
   EligibilityReasonPage,
   EnterCRNPage,
   FoodAllergiesPage,
+  HistoryOfArsonOffencePage,
   ListPage,
   LocalConnectionsPage,
   MoveOnPlanPage,
@@ -80,6 +87,7 @@ export {
   PreviousStaysPage,
   ProbationPractitionerPage,
   PropertyAttributesOrAdaptationsPage,
+  RegisteredSexOffenderPage,
   ReleaseDatePage,
   ReleaseTypePage,
   ReligiousOrCulturalNeedsPage,
@@ -90,6 +98,8 @@ export {
   SentenceExpiryPage,
   SentenceLengthPage,
   SentenceTypePage,
+  ConcerningSexualBehaviourPage,
+  HistoryOfSexualOffencePage,
   StartPage,
   SubmissionConfirmation,
   SubstanceMisusePage,

@@ -1,3 +1,4 @@
+import { YesOrNo } from '@approved-premises/ui'
 import { eligibilityReasons } from '../../form-pages/apply/accommodation-need/eligibility/eligibilityReason'
 import { TemporaryAccommodationApplication as Application } from '../../@types/shared'
 import { SessionDataError } from '../errors'
@@ -99,6 +100,53 @@ const personReleaseDateFromApplication = (application: Application): string => {
   return stripWhitespace(personReleaseDate)
 }
 
+const yesOrNoToBoolOrUndefined = (value?: YesOrNo) => {
+  if (value === 'yes') return true
+  if (value === 'no') return false
+
+  return undefined
+}
+
+const isRegisteredSexOffenderFromApplication = (application: Application): boolean => {
+  const registeredSexOffender = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'registered-sex-offender'
+  ]?.registeredSexOffender
+
+  return yesOrNoToBoolOrUndefined(registeredSexOffender)
+}
+
+const isHistoryOfSexualOffenceFromApplication = (application: Application): boolean => {
+  const historyOfSexualOffence = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'history-of-sexual-offence'
+  ]?.historyOfSexualOffence
+
+  return yesOrNoToBoolOrUndefined(historyOfSexualOffence)
+}
+
+const isConcerningSexualBehaviourFromApplication = (application: Application): boolean => {
+  const concerningSexualBehaviour = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'concerning-sexual-behaviour'
+  ]?.concerningSexualBehaviour
+
+  return yesOrNoToBoolOrUndefined(concerningSexualBehaviour)
+}
+
+const hasHistoryOfArsonFromApplication = (application: Application): boolean => {
+  const historyOfArsonOffence = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'history-of-arson-offence'
+  ]?.historyOfArsonOffence
+
+  return yesOrNoToBoolOrUndefined(historyOfArsonOffence)
+}
+
+const isConcerningArsonBehaviourFromApplication = (application: Application): boolean => {
+  const concerningArsonBehaviour = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
+    'concerning-arson-behaviour'
+  ]?.concerningArsonBehaviour
+
+  return yesOrNoToBoolOrUndefined(concerningArsonBehaviour)
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
@@ -107,4 +155,9 @@ export {
   isDutyToReferSubmittedFromApplication,
   needsAccessiblePropertyFromApplication,
   personReleaseDateFromApplication,
+  isRegisteredSexOffenderFromApplication,
+  isHistoryOfSexualOffenceFromApplication,
+  isConcerningSexualBehaviourFromApplication,
+  hasHistoryOfArsonFromApplication,
+  isConcerningArsonBehaviourFromApplication,
 }

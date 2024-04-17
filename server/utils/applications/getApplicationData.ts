@@ -9,8 +9,13 @@ import {
   dutyToReferLocalAuthorityAreaNameFromApplication,
   dutyToReferSubmissionDateFromApplication,
   eligibilityReasonFromApplication,
+  hasHistoryOfArsonFromApplication,
   isApplicationEligibleFromApplication,
+  isConcerningArsonBehaviourFromApplication,
+  isConcerningSexualBehaviourFromApplication,
   isDutyToReferSubmittedFromApplication,
+  isHistoryOfSexualOffenceFromApplication,
+  isRegisteredSexOffenderFromApplication,
   needsAccessiblePropertyFromApplication,
   personReleaseDateFromApplication,
 } from './reportDataFromApplication'
@@ -35,5 +40,10 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     isApplicationEligible: isApplicationEligibleFromApplication(application),
     eligibilityReason: eligibilityReasonFromApplication(application),
     personReleaseDate: personReleaseDateFromApplication(application),
+    isRegisteredSexOffender: isRegisteredSexOffenderFromApplication(application),
+    isHistoryOfSexualOffence: isHistoryOfSexualOffenceFromApplication(application),
+    isConcerningSexualBehaviour: isConcerningSexualBehaviourFromApplication(application),
+    hasHistoryOfArson: hasHistoryOfArsonFromApplication(application),
+    isConcerningArsonBehaviour: isConcerningArsonBehaviourFromApplication(application),
   }
 }

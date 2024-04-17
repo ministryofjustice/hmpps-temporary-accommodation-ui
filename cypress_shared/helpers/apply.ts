@@ -44,6 +44,8 @@ import {
   BackupContactPage,
   CaringResponsibilitiesPage,
   CheckYourAnswersPage,
+  ConcerningArsonBehaviourPage,
+  ConcerningSexualBehaviourPage,
   ConfirmDetailsPage,
   ConsentGivenPage,
   CooperationPage,
@@ -53,6 +55,8 @@ import {
   EligibilityReasonPage,
   EnterCRNPage,
   FoodAllergiesPage,
+  HistoryOfArsonOffencePage,
+  HistoryOfSexualOffencePage,
   LocalConnectionsPage,
   MoveOnPlanPage,
   NeedsPage,
@@ -82,6 +86,7 @@ import ApplyPage from '../pages/apply/applyPage'
 
 export default class ApplyHelper {
   pages = {
+    offenceAndBehaviourSummary: [] as Array<ApplyPage>,
     sentenceInformation: [] as Array<ApplyPage>,
     contactDetails: [] as Array<ApplyPage>,
     eligibility: [] as Array<ApplyPage>,
@@ -165,6 +170,7 @@ export default class ApplyHelper {
   }
 
   completeApplication() {
+    this.completeOffenceAndBehaviourSummary()
     this.completeSentenceInformation()
     this.completeContactDetails()
     this.completeEligibility()
@@ -187,6 +193,7 @@ export default class ApplyHelper {
 
   numberOfPages() {
     return [
+      ...this.pages.offenceAndBehaviourSummary,
       ...this.pages.sentenceInformation,
       ...this.pages.contactDetails,
       ...this.pages.eligibility,
@@ -313,6 +320,49 @@ export default class ApplyHelper {
     cy.task('stubApplicationSubmit', { application: this.application })
   }
 
+  completeOffenceAndBehaviourSummary() {
+    // Given I click the offence and behaviour summary task
+    Page.verifyOnPage(TaskListPage, this.application).clickTask('offence-and-behaviour-summary')
+
+    // When I complete the form
+    const historyOfSexualOffencePage = new HistoryOfSexualOffencePage(this.application)
+    historyOfSexualOffencePage.completeForm()
+    historyOfSexualOffencePage.clickSubmit()
+
+    const concerningSexualBehaviourPage = new ConcerningSexualBehaviourPage(this.application)
+    concerningSexualBehaviourPage.completeForm()
+    concerningSexualBehaviourPage.clickSubmit()
+
+    const historyOfArsonOffence = new HistoryOfArsonOffencePage(this.application)
+    historyOfArsonOffence.completeForm()
+    historyOfArsonOffence.clickSubmit()
+
+    const concerningArsonBehaviourPage = new ConcerningArsonBehaviourPage(this.application)
+    concerningArsonBehaviourPage.completeForm()
+    concerningArsonBehaviourPage.clickSubmit()
+
+    this.pages.offenceAndBehaviourSummary = [
+      historyOfSexualOffencePage,
+      concerningSexualBehaviourPage,
+      historyOfArsonOffence,
+      concerningArsonBehaviourPage,
+    ]
+
+    // Then I should be redirected to the task list
+    const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)
+
+    // And the task should be marked as completed
+    tasklistPage.shouldShowTaskStatus('offence-and-behaviour-summary', 'Completed')
+
+    // And the next task should be marked as not started
+    tasklistPage.shouldShowTaskStatus('sentence-information', 'Not started')
+
+    // And the risk widgets should be visible
+    if (this.uiRisks) {
+      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
+    }
+  }
+
   completeSentenceInformation() {
     // Given I click the sentence information task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('sentence-information')
@@ -354,11 +404,6 @@ export default class ApplyHelper {
 
     // And the next task should be marked as not started
     tasklistPage.shouldShowTaskStatus('contact-details', 'Not started')
-
-    // And the risk widgets should be visible
-    if (this.uiRisks) {
-      tasklistPage.shouldShowRiskWidgets(this.uiRisks)
-    }
   }
 
   private completeContactDetails() {

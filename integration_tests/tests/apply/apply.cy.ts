@@ -107,16 +107,16 @@ context('Apply', () => {
       expect(body.offenceId).equal(offence.offenceId)
     })
 
-    // And I complete the sentence information task
-    apply.completeSentenceInformation()
+    // And I complete the offence and behaviour summary task
+    apply.completeOffenceAndBehaviourSummary()
 
-    // Then the API should have recieved the updated application
+    // Then the API should have received the updated application
     cy.task('verifyApplicationUpdate', this.application.id).then(requests => {
       const firstRequestData = JSON.parse(requests[0].body).data
 
-      expect(firstRequestData['sentence-information']['offending-summary'].summary).equal(
-        'A brief summary of offending history',
-      )
+      expect(
+        firstRequestData['offence-and-behaviour-summary']['history-of-sexual-offence'].historyOfSexualOffence,
+      ).equal('no')
     })
   })
 

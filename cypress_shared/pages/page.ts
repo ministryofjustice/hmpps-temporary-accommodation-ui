@@ -395,7 +395,7 @@ export default abstract class Page extends Component {
   }
 
   sortColumn(label: string) {
-    cy.get('main table thead a').contains(label).click()
+    cy.get('main table thead').contains(label).click()
   }
 
   checkColumnOrder(label: string, order: 'ascending' | 'descending' | 'none') {

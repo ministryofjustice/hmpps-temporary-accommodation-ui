@@ -18,7 +18,7 @@ export default class LostBedNewPage extends LostBedEditablePage {
   }
 
   shouldShowBedspaceDetails(): void {
-    this.locationHeaderComponent.shouldShowLocationDetails()
+    this.locationHeaderComponent.shouldShowLocationDetails(true)
   }
 
   completeForm(newLostBed: NewLostBed): void {

@@ -38,7 +38,7 @@ export default class BookingTurnaroundNewPage extends Page {
 
   shouldShowBookingDetails(): void {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
-    this.locationHeaderComponent.shouldShowLocationDetails()
+    this.locationHeaderComponent.shouldShowLocationDetails(true)
     this.bookingInfoComponent.shouldShowBookingDetails()
 
     this.shouldShowTextInputByLabel(workingDaysLabel, `${this.booking.turnaround.workingDays}`)

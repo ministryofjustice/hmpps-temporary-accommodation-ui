@@ -50,7 +50,7 @@ export default class BookingNewPage extends BookingEditablePage {
   }
 
   shouldShowBookingDetails(): void {
-    this.locationHeaderComponent.shouldShowLocationDetails()
+    this.locationHeaderComponent.shouldShowLocationDetails(true)
     this.bedspaceStatusComponent.shouldShowStatusDetails('Online')
 
     cy.contains('p', this.turnaroundText())

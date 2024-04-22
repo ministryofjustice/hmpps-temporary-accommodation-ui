@@ -43,6 +43,10 @@ describe('ReportsController', () => {
   })
 
   describe('new', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2024-04-22'))
+    })
+
     it('renders the form with filtered regions', async () => {
       const unfilteredRegions = [
         probationRegionFactory.build({
@@ -78,6 +82,8 @@ describe('ReportsController', () => {
         errors: {},
         errorSummary: [],
         probationRegionId: request.session.probationRegion.id,
+        maxStartDate: '21/04/2024',
+        maxEndDate: '22/04/2024',
       })
     })
 
@@ -123,6 +129,8 @@ describe('ReportsController', () => {
           errors: {},
           errorSummary: [],
           probationRegionId: request.session.probationRegion.id,
+          maxStartDate: '21/04/2024',
+          maxEndDate: '22/04/2024',
         })
       })
     })

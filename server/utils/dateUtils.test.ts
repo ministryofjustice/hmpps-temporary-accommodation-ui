@@ -196,6 +196,15 @@ describe('DateFormats', () => {
     })
   })
 
+  describe('isoDateToDatepickerInput', () => {
+    it.each([
+      ['2024-04-14', '14/04/2024'],
+      ['1970-12-01', '01/12/1970'],
+    ])('parses %s as %s', (input, output) => {
+      expect(DateFormats.isoDateToDatepickerInput(input)).toEqual(output)
+    })
+  })
+
   describe('isoDateToDaysFromNow', () => {
     beforeEach(() => {
       jest.useFakeTimers()

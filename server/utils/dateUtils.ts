@@ -130,6 +130,10 @@ export class DateFormats {
     return `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
   }
 
+  static isoDateToDatepickerInput(dateString: string) {
+    return dateString.split('-').reverse().join('/')
+  }
+
   static isoDateToDaysFromNow(dateString: string) {
     const difference = differenceInDays(new Date(dateString).setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0))
     const numDays = Math.abs(difference)

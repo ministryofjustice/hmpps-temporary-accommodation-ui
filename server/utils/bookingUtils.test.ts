@@ -461,6 +461,23 @@ describe('bookingUtils', () => {
       })
     })
 
+    it('generates a bespoke error when there is a conflict with the bedspace end date', () => {
+      const err = {
+        data: {
+          detail: `BedSpace is archived from 2024-06-06 which overlaps with the desired dates`,
+        },
+      }
+
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'plural')).toEqual({
+        errorTitle: 'This bedspace is not available for the dates entered',
+        errorSummary: [
+          {
+            text: 'This booking conflicts with the bedspace end date.',
+          },
+        ],
+      })
+    })
+
     it('generates a bespoke error for a single date', () => {
       const err = {
         data: {

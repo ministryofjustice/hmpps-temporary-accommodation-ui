@@ -277,7 +277,7 @@ context('Booking', () => {
     returnedBookingNewPage.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
   })
 
-  it('shows errors when the API returns a 409 Conflict error', () => {
+  it('shows errors when the API returns a 409 Conflict with a void', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -328,6 +328,57 @@ context('Booking', () => {
 
     returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
     returnedBookingNewPage.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
+  })
+
+  it('shows errors when the API returns a 409 Conflict with the bedspace end date', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, and a room in the database
+    const premises = premisesFactory.build()
+    const room = roomFactory.build()
+    const person = personFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubFindPerson', { person })
+
+    // And there are no assessments in the database
+    cy.task('stubAssessments', { data: [] })
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises, room)
+
+    // And I fill out the form with dates that conflict with the bedspace end date
+    const booking = bookingFactory.build({
+      person,
+    })
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    // And I select no assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    bookingSelectAssessmentPage.clickSubmit()
+
+    // And I confirm the booking
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
+
+    cy.task('stubBookingCreateConflictError', {
+      premisesId: premises.id,
+      conflictingEntityId: '',
+      conflictingEntityType: 'bedspace-end-date',
+    })
+    bookingConfirmPage.clickSubmit()
+
+    // Then I should see error messages for the conflict
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
+
+    returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
+    returnedBookingNewPage.shouldShowDateConflictErrorMessages(null, 'bedspace-end-date')
   })
 
   it('shows errors when the API returns a 403 Forbidden error', () => {

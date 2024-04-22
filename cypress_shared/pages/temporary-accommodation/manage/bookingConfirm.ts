@@ -25,6 +25,6 @@ export default class BookingConfirmPage extends Page {
 
   shouldShowBookingDetails(): void {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
-    this.locationHeaderComponent.shouldShowLocationDetails()
+    this.locationHeaderComponent.shouldShowLocationDetails(true)
   }
 }

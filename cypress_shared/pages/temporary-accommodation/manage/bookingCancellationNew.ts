@@ -27,7 +27,7 @@ export default class BookingCancellationNewPage extends BookingCancellationEdita
 
   shouldShowBookingDetails(): void {
     this.popDetailsHeaderComponent.shouldShowPopDetails()
-    this.locationHeaderComponent.shouldShowLocationDetails()
+    this.locationHeaderComponent.shouldShowLocationDetails(true)
     this.bookingInfoComponent.shouldShowBookingDetails()
   }
 }

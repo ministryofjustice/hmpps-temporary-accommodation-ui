@@ -21,7 +21,6 @@ jest.mock('../../../utils/userUtils', () => {
   }
 })
 jest.mock('../../../utils/dateUtils')
-jest.mock('../../../utils/reportUtils')
 
 describe('ReportsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -88,18 +87,21 @@ describe('ReportsController', () => {
     })
 
     describe('when the user is a reporter', () => {
-      it('renders the form with all regions', async () => {
-        const allRegions = [
+      it('renders the form with all reportable regions', async () => {
+        const regionsReferenceData = [
           probationRegionFactory.build({
             name: 'region-1',
           }),
           probationRegionFactory.build({
             name: 'region-2',
           }),
+          probationRegionFactory.build({
+            name: 'National',
+          }),
         ]
 
         reportService.getReferenceData.mockResolvedValue({
-          probationRegions: allRegions,
+          probationRegions: regionsReferenceData,
         })
 
         const requestHandler = reportsController.new()
@@ -116,7 +118,14 @@ describe('ReportsController', () => {
         expect(filterProbationRegions).not.toHaveBeenCalled()
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/new', {
-          allProbationRegions: allRegions,
+          allProbationRegions: [
+            {
+              id: 'all',
+              name: 'All regions',
+            },
+            regionsReferenceData[0],
+            regionsReferenceData[1],
+          ],
           errors: {},
           errorSummary: [],
           probationRegionId: request.session.probationRegion.id,

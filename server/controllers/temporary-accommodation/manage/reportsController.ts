@@ -6,6 +6,7 @@ import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
 import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
+import { allReportProbationRegions } from '../../../utils/reportUtils'
 
 export default class ReportsController {
   constructor(private readonly reportService: ReportService) {}
@@ -20,7 +21,7 @@ export default class ReportsController {
 
       return res.render('temporary-accommodation/reports/new', {
         allProbationRegions: userHasReporterRole(res.locals.user)
-          ? allProbationRegions
+          ? allReportProbationRegions(allProbationRegions)
           : filterProbationRegions(allProbationRegions, req),
         errors,
         errorSummary: requestErrorSummary,

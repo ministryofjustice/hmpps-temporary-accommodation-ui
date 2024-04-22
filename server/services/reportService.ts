@@ -34,13 +34,17 @@ export default class ReportService {
   ): Promise<void> {
     const reportClient = this.reportClientFactory(callConfig)
 
-    const probationRegion = (await this.getReferenceData(callConfig)).probationRegions.find(
-      region => region.id === probationRegionId,
-    )
+    const probationRegionName =
+      probationRegionId === 'all'
+        ? 'All regions'
+        : (await this.getReferenceData(callConfig)).probationRegions.find(region => region.id === probationRegionId)
+            .name
 
-    const filename = reportForProbationRegionFilename(probationRegion, month, year, type)
+    const filename = reportForProbationRegionFilename(probationRegionName, month, year, type)
 
-    await reportClient.reportForProbationRegion(response, filename, probationRegionId, month, year, type)
+    const queryRegionId = probationRegionId === 'all' ? '' : probationRegionId
+
+    await reportClient.reportForProbationRegion(response, filename, queryRegionId, month, year, type)
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<ReportReferenceData> {

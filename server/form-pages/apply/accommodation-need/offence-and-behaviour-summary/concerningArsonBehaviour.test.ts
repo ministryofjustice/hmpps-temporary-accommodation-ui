@@ -30,7 +30,7 @@ describe('ConcerningArsonBehaviour', () => {
     it('returns an error if the arson behaviour concerns field is not populated', () => {
       const page = new ConcerningArsonBehaviour({ ...body, concerningArsonBehaviour: undefined }, application)
       expect(page.errors()).toEqual({
-        concerningArsonBehaviour: "Select yes if there are concerns about the person's arson behaviour",
+        concerningArsonBehaviour: 'Select yes if there are concerns about arson for the person',
       })
     })
 
@@ -44,7 +44,7 @@ describe('ConcerningArsonBehaviour', () => {
         application,
       )
       expect(page.errors()).toEqual({
-        concerningArsonBehaviourDetail: "Enter details about the person's arson behaviour",
+        concerningArsonBehaviourDetail: "Enter details about the person's behaviour around arson",
       })
     })
   })
@@ -53,14 +53,14 @@ describe('ConcerningArsonBehaviour', () => {
     it('returns a translated version of the response with the details', () => {
       const page = new ConcerningArsonBehaviour(body, application)
       expect(page.response()).toEqual({
-        "Are there concerns about the person's arson behaviour?": 'Yes - Details',
+        'Are there concerns about arson for the person?': 'Yes - Details',
       })
     })
 
     it('returns a translated version of the response without the details if answered no', () => {
       const page = new ConcerningArsonBehaviour({ concerningArsonBehaviour: 'no' as const }, application)
       expect(page.response()).toEqual({
-        "Are there concerns about the person's arson behaviour?": 'No',
+        'Are there concerns about arson for the person?': 'No',
       })
     })
   })

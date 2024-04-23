@@ -35,7 +35,7 @@ Given('I download a booking report for the preselected probation region', () => 
   reportPage.expectDownload(10000)
   reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year, type)).as('filename')
+  cy.wrap(reportForProbationRegionFilename(probationRegion.name, month, year, type)).as('filename')
 })
 
 Given('I download a bedspace usage report for the preselected probation region', () => {
@@ -54,7 +54,7 @@ Given('I download a bedspace usage report for the preselected probation region',
   reportPage.expectDownload(10000)
   reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year, type)).as('filename')
+  cy.wrap(reportForProbationRegionFilename(probationRegion.name, month, year, type)).as('filename')
 })
 
 Given('I download an occupancy report for the preselected probation region', () => {
@@ -73,7 +73,7 @@ Given('I download an occupancy report for the preselected probation region', () 
   reportPage.expectDownload(10000)
   reportPage.clickDownload(type)
 
-  cy.wrap(reportForProbationRegionFilename(probationRegion, month, year, type)).as('filename')
+  cy.wrap(reportForProbationRegionFilename(probationRegion.name, month, year, type)).as('filename')
 })
 
 Given('I clear the form and attempt to download a booking report', () => {

@@ -10,44 +10,59 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('List of properties', []) }}
-  {{ placeContextHeader(placeContext) }}
+    {{ breadCrumb('List of properties', []) }}
+    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  {{ mojPageHeaderActions({
-    heading: {
-      text: 'List of properties',
-      classes: 'govuk-heading-l'
-    },
-    items: [{
-        text: "Add a property",
-        href: paths.premises.new()
-      }]
-  }) }}
+    {{ mojPageHeaderActions({
+        heading: {
+            text: 'List of properties',
+            classes: 'govuk-heading-l'
+        },
+        items: [{
+            text: "Add a property",
+            href: paths.premises.new()
+        }]
+    }) }}
 
-  {{ govukTable({
-    captionClasses: "govuk-table__caption--m",
-    head: [
-      {
-        text: "Address"
-      },
-      {
-        text: "Bedspaces"
-      },
-      {
-        text: "PDU"
-      },
-      {
-        text: "Status"
-      },
-      {
-        html: '<span class="govuk-visually-hidden">Actions</span>'
-      }
-    ],
-    rows: tableRows
-  }) }} 
+    {{ govukTable({
+        attributes: {
+            'data-module': 'moj-sortable-table'
+        },
+        captionClasses: "govuk-table__caption--m",
+        head: [
+            {
+                text: "Address"
+            },
+            {
+                text: "Bedspaces"
+            },
+            {
+                text: "PDU",
+                attributes: { "aria-sort": "ascending" }
+            },
+            {
+                text: "Status",
+                attributes: { "aria-sort": "none" }
+            },
+            {
+                html: '<span class="govuk-visually-hidden">Actions</span>'
+            }
+        ],
+        rows: tableRows
+    }) }}
 
+{% endblock %}
+
+{% block extraScripts %}
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      $(document).ready(function() {
+        window
+          .MOJFrontend
+          .initAll()
+      })
+    </script>
 {% endblock %}

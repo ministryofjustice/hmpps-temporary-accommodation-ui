@@ -37,7 +37,7 @@ context('Premises', () => {
     Page.verifyOnPage(PremisesListPage)
   })
 
-  it('should list all premises', () => {
+  it('should list all premises and sort by PDU or status', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -50,6 +50,21 @@ context('Premises', () => {
 
     // Then I should see all of the premises listed
     page.shouldShowPremises(premisesSummaries)
+
+    // And they should be sorted by PDU ascending
+    page.checkColumnOrder('PDU', 'ascending')
+
+    // When I sort by PDU
+    page.sortColumn('PDU')
+
+    // Then they should be sorted by PDU descending
+    page.checkColumnOrder('PDU', 'descending')
+
+    // When I sort by Status
+    page.sortColumn('Status')
+
+    // Then they should be sorted by Status ascending
+    page.checkColumnOrder('Status', 'ascending')
   })
 
   it('should navigate back from the premises list page to the dashboard', () => {

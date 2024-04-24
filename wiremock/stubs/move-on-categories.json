@@ -25,13 +25,25 @@
   },
   {
     "id": "5d1f4d82-6830-43bf-b197-c5975c0c721b",
-    "name": "N/A (only to be used where person on probation is deceased)",
+    "name": "They’re deceased",
     "isActive": true,
     "serviceScope": "temporary-accommodation"
   },
   {
     "id": "24e80792-1eee-48fc-9a02-51275c3a6217",
-    "name": "N/A (only to be used where person on probation has moved to another CAS3 property)",
+    "name": "Another CAS3 property or bedspace",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "ab35e40c-17c3-460b-9986-16352e1286a9",
+    "name": "Unknown (the probation practitioner has not added the move-on category to NDelius)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "4874c13a-fced-4d73-869d-1ac0eff45f66",
+    "name": "They’re unlawfully at large or at large",
     "isActive": true,
     "serviceScope": "temporary-accommodation"
   }

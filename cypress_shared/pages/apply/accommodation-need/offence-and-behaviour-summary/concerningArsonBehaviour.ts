@@ -6,7 +6,7 @@ import { personName } from '../../../../../server/utils/personUtils'
 export default class ConcerningArsonBehaviourPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `Are there concerns about ${personName(application.person)}'s arson behaviour?`,
+      `Are there concerns about arson for ${personName(application.person)}?`,
       application,
       'offence-and-behaviour-summary',
       'concerning-arson-behaviour',

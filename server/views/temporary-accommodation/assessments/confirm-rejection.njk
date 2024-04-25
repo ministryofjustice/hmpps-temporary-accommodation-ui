@@ -1,0 +1,28 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "Reject referral - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.assessments.summary({ id: id })
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <h1 class="govuk-heading-l">Reject referral</h1>
+
+    <form action="?_method=PUT" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukButton({
+            text: "Save and continue",
+            preventDoubleClick: true
+        }) }}
+
+    </form>
+{% endblock %}

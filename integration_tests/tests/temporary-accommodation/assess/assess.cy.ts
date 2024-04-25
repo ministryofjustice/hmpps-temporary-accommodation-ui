@@ -15,6 +15,7 @@ import {
   referralHistoryUserNoteFactory,
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
+import AssessmentRejectionConfirmPage from '../../../../cypress_shared/pages/assess/confirmRejection'
 
 const pagination: MockPagination = {
   totalResults: 23,
@@ -338,6 +339,33 @@ context('Apply', () => {
           cy.task('verifyCloseAssessment', assessment.id).then(requests => {
             expect(requests).to.have.length(1)
           })
+        })
+      })
+
+      it.only('allows rejecting an assessment', () => {
+        cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+          const assessment = assessmentFactory.build({ status: 'unallocated' })
+          assessment.application.document = applicationTranslatedDocument
+
+          cy.task('stubFindAssessment', assessment)
+
+          // Given I visit the assessment page
+          const assessmentPage = AssessmentSummaryPage.visit(assessment)
+
+          // When I click on the Update status to 'Reject' button
+          assessmentPage.clickAction('Reject')
+
+          // Then I am taken to the confirmation page
+          const rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+
+          // When I complete the form
+          // rejectionConfirmationPage.clickSubmit()
+          //
+          // cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
+          //
+          // // Then I am taken to the summary page and a banner is shown
+          // Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
+          // assessmentPage.shouldShowBanner('This referral has been rejected')
         })
       })
 

@@ -310,6 +310,19 @@ describe('AssessmentsController', () => {
     })
   })
 
+  describe('confirmRejection', () => {
+    it('calls render with the assessment id', async () => {
+      const assessmentId = 'some-assessment-id'
+      const requestHandler = assessmentsController.confirmRejection()
+      request.params = { id: assessmentId }
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
+        id: assessmentId,
+      })
+    })
+  })
+
   describe('confirm', () => {
     it.each([
       'null' as const,
@@ -317,7 +330,6 @@ describe('AssessmentsController', () => {
       'in_review' as const,
       'ready_to_place' as const,
       'closed' as const,
-      'rejected' as const,
     ])('calls render with a confirmation message for the %s status', async status => {
       const assessmentId = 'some-assessment-id'
       const requestHandler = assessmentsController.confirm()

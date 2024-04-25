@@ -1,7 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import {
-  TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
 } from '../../../@types/shared'
@@ -20,7 +19,7 @@ import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
 
-export const confirmationPageContent: Record<Assessment['status'], { title: string; text: string }> = {
+export const confirmationPageContent: Record<Exclude<AssessmentStatus, 'rejected'>, { title: string; text: string }> = {
   in_review: {
     title: 'Mark this referral as in review',
     text: '<p class="govuk-body">Mark this referral as in review if you or a HPT colleague are working on this referral.</p>',
@@ -30,11 +29,6 @@ export const confirmationPageContent: Record<Assessment['status'], { title: stri
     text: `<p class="govuk-body">Mark this referral as ready to place to find a suitable bedspace.</p>
       <p class="govuk-body">Some regions will require approval before a bedspace is booked. Other regions require an address before approvals can be given. Check with your manager if you are unsure.</p>
       <p class="govuk-body">Once a person has been placed the referral should be archived.</p>`,
-  },
-  rejected: {
-    title: 'Confirm rejection',
-    text: `<p class="govuk-body">You will need to email the community probation practitioner to let them know their referral has been rejected.</p>
-      <p class="govuk-body">Once a referral has been rejected it cannot be undone.</p>`,
   },
   closed: {
     title: 'Archive this referral',
@@ -132,6 +126,14 @@ export default class AssessmentsController {
       return res.render('temporary-accommodation/assessments/full', {
         assessment,
         actions: assessmentActions(assessment),
+      })
+    }
+  }
+
+  confirmRejection(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      return res.render('temporary-accommodation/assessments/confirm-rejection', {
+        id: req.params.id,
       })
     }
   }

@@ -19,6 +19,9 @@
     <form action="?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
+        {% for reason in referralRejectionReasons %}
+            {{ reason.id }} / {{ reason.name }}<br />
+        {% endfor %}
         {{ govukButton({
             text: "Save and continue",
             preventDoubleClick: true

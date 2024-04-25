@@ -132,8 +132,13 @@ export default class AssessmentsController {
 
   confirmRejection(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
+
       return res.render('temporary-accommodation/assessments/confirm-rejection', {
         id: req.params.id,
+        referralRejectionReasons,
       })
     }
   }

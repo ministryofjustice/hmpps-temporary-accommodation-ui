@@ -3,6 +3,7 @@ import type {
   AssessmentSearchParameters,
   AssessmentUpdateStatus,
   PaginatedResponse,
+  ReferenceData,
   TableRow,
 } from '@approved-premises/ui'
 import type {
@@ -12,13 +13,20 @@ import type {
   TemporaryAccommodationAssessmentStatus,
 } from '../@types/shared'
 import { AssessmentSummary } from '../@types/shared'
-import type { AssessmentClient, RestClientBuilder } from '../data'
+import type { AssessmentClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import { assertUnreachable } from '../utils/utils'
 
+export type AssessmentReferenceData = {
+  referralRejectionReasons: Array<ReferenceData>
+}
+
 export default class AssessmentsService {
-  constructor(private readonly assessmentClientFactory: RestClientBuilder<AssessmentClient>) {}
+  constructor(
+    private readonly assessmentClientFactory: RestClientBuilder<AssessmentClient>,
+    private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
+  ) {}
 
   async getAllForLoggedInUser(
     callConfig: CallConfig,
@@ -40,6 +48,14 @@ export default class AssessmentsService {
     const assessmentClient = this.assessmentClientFactory(callConfig)
 
     return assessmentClient.find(assessmentId)
+  }
+
+  async getReferenceData(callConfig: CallConfig): Promise<AssessmentReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
+
+    return {
+      referralRejectionReasons: await referenceDataClient.getReferenceData('referral-rejection-reasons'),
+    }
   }
 
   async rejectAssessment(

@@ -6,28 +6,35 @@ import {
   assessmentFactory,
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
+  referenceDataFactory,
   referralHistoryUserNoteFactory,
 } from '../testutils/factories'
 import { assessmentTableRows } from '../utils/assessmentUtils'
 import AssessmentsService from './assessmentsService'
 import assessmentSummaries from '../testutils/factories/assessmentSummaries'
+import ReferenceDataClient from '../data/referenceDataClient'
 
 jest.mock('../data/assessmentClient')
 jest.mock('../utils/assessmentUtils')
+jest.mock('../data/referenceDataClient.ts')
 
 const assessmentId = 'some-id'
 
 describe('AssessmentsService', () => {
   const assessmentClient = new AssessmentClient(null) as jest.Mocked<AssessmentClient>
+  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
 
-  const asessmentClientFactory = jest.fn()
-
-  const service = new AssessmentsService(asessmentClientFactory)
   const callConfig = { token: 'some-token' } as CallConfig
+
+  const AssessmentClientFactory = jest.fn()
+  const ReferenceDataClientFactory = jest.fn()
+
+  const service = new AssessmentsService(AssessmentClientFactory, ReferenceDataClientFactory)
 
   beforeEach(() => {
     jest.resetAllMocks()
-    asessmentClientFactory.mockReturnValue(assessmentClient)
+    AssessmentClientFactory.mockReturnValue(assessmentClient)
+    ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
   describe('getAllForLoggedInUser', () => {
@@ -48,7 +55,7 @@ describe('AssessmentsService', () => {
 
         expect(result.data).toEqual(assessments.map(() => [{ text: `Table row: ${uiStatus}` }]))
 
-        expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+        expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
         expect(assessmentClient.all).toHaveBeenCalledWith([uiStatus], { page: 2 })
 
         assessments.forEach(assessment => expect(assessmentTableRows).toHaveBeenCalledWith(assessment, false))
@@ -73,7 +80,7 @@ describe('AssessmentsService', () => {
 
       expect(result.data).toEqual(response.data.map(assessment => [{ text: `Table row: ${assessment.status}` }]))
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.all).toHaveBeenCalledWith(['closed', 'rejected'], {
         page: 1,
         sortBy: 'arrivalDate',
@@ -92,8 +99,24 @@ describe('AssessmentsService', () => {
 
       expect(await service.findAssessment(callConfig, assessmentId)).toEqual(assessment)
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.find).toHaveBeenCalledWith(assessmentId)
+    })
+  })
+
+  describe('getReferenceData', () => {
+    it('should return the reference data needed to create departures', async () => {
+      const referralRejectionReasons = referenceDataFactory.buildList(5)
+
+      referenceDataClient.getReferenceData.mockResolvedValue(referralRejectionReasons)
+
+      const result = await service.getReferenceData(callConfig)
+
+      expect(result).toEqual({ referralRejectionReasons })
+
+      expect(ReferenceDataClientFactory).toHaveBeenCalledWith(callConfig)
+
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('referral-rejection-reasons')
     })
   })
 
@@ -101,7 +124,7 @@ describe('AssessmentsService', () => {
     it('calls the rejectAssessment method on the client with rejection details', async () => {
       await service.rejectAssessment(callConfig, assessmentId, 'rejection-reason-id', true)
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId, 'rejection-reason-id', true)
     })
   })
@@ -110,28 +133,28 @@ describe('AssessmentsService', () => {
     it("calls the unallocateAssessment method on the client when the new status is 'unallocated'", async () => {
       await service.updateAssessmentStatus(callConfig, assessmentId, 'unallocated')
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.unallocateAssessment).toHaveBeenCalledWith(assessmentId)
     })
 
     it("calls the allocateAssessment method on the client when the new status is 'in_review'", async () => {
       await service.updateAssessmentStatus(callConfig, assessmentId, 'in_review')
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.allocateAssessment).toHaveBeenCalledWith(assessmentId)
     })
 
     it("calls the acceptAssessment method on the client when the new status is 'ready_to_place'", async () => {
       await service.updateAssessmentStatus(callConfig, assessmentId, 'ready_to_place')
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.acceptAssessment).toHaveBeenCalledWith(assessmentId)
     })
 
     it("calls the closeAssessment method on the client when the new status is 'closed'", async () => {
       await service.updateAssessmentStatus(callConfig, assessmentId, 'closed')
 
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.closeAssessment).toHaveBeenCalledWith(assessmentId)
     })
   })
@@ -146,7 +169,7 @@ describe('AssessmentsService', () => {
       const result = await service.getReadyToPlaceForCrn(callConfig, crn)
 
       expect(result).toEqual(assessments)
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.readyToPlaceForCrn).toHaveBeenCalledWith(crn)
     })
   })
@@ -160,7 +183,7 @@ describe('AssessmentsService', () => {
       const result = await service.createNote(callConfig, assessmentId, newNote)
 
       expect(result).toEqual(note)
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.createNote).toHaveBeenCalledWith(assessmentId, newNote)
     })
   })

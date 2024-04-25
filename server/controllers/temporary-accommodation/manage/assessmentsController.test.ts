@@ -12,6 +12,7 @@ import {
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
+  referenceDataFactory,
 } from '../../../testutils/factories'
 import * as assessmentUtils from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
@@ -311,14 +312,22 @@ describe('AssessmentsController', () => {
   })
 
   describe('confirmRejection', () => {
-    it('calls render with the assessment id', async () => {
+    it('calls render with the assessment id and the rejection reasons', async () => {
       const assessmentId = 'some-assessment-id'
+      const referralRejectionReasons = referenceDataFactory.buildList(3)
+
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+
       const requestHandler = assessmentsController.confirmRejection()
+
       request.params = { id: assessmentId }
+
       await requestHandler(request, response, next)
 
+      expect(assessmentsService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
         id: assessmentId,
+        referralRejectionReasons,
       })
     })
   })

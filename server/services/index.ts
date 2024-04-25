@@ -58,7 +58,7 @@ export const services = () => {
   const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder, referenceDataClientBuilder)
   const bookingSearchService = new BookingSearchService(bookingClientBuilder)
   const turnaroundService = new TurnaroundService(bookingClientBuilder)
-  const assessmentsService = new AssessmentsService(assessmentClientBuilder)
+  const assessmentsService = new AssessmentsService(assessmentClientBuilder, referenceDataClientBuilder)
   const referenceDataService = new ReferenceDataService(referenceDataClientBuilder)
 
   return {

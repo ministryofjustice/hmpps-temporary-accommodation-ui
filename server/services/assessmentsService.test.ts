@@ -97,6 +97,15 @@ describe('AssessmentsService', () => {
     })
   })
 
+  describe('rejectAssessment', () => {
+    it('calls the rejectAssessment method on the client with rejection details', async () => {
+      await service.rejectAssessment(callConfig, assessmentId, 'rejection-reason-id', true)
+
+      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId, 'rejection-reason-id', true)
+    })
+  })
+
   describe('updateAssessment', () => {
     it("calls the unallocateAssessment method on the client when the new status is 'unallocated'", async () => {
       await service.updateAssessmentStatus(callConfig, assessmentId, 'unallocated')
@@ -110,13 +119,6 @@ describe('AssessmentsService', () => {
 
       expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.allocateAssessment).toHaveBeenCalledWith(assessmentId)
-    })
-
-    it("calls the rejectAssessment method on the client when the new status is 'rejected'", async () => {
-      await service.updateAssessmentStatus(callConfig, assessmentId, 'rejected')
-
-      expect(asessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId)
     })
 
     it("calls the acceptAssessment method on the client when the new status is 'ready_to_place'", async () => {

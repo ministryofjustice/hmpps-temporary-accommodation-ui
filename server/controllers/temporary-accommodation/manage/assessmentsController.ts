@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, AssessmentUpdateStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
@@ -19,7 +19,7 @@ import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
 
-export const confirmationPageContent: Record<Exclude<AssessmentStatus, 'rejected'>, { title: string; text: string }> = {
+export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
     title: 'Mark this referral as in review',
     text: '<p class="govuk-body">Mark this referral as in review if you or a HPT colleague are working on this referral.</p>',
@@ -138,6 +138,20 @@ export default class AssessmentsController {
     }
   }
 
+  reject(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { id } = req.params
+      const { referralRejectionReasonId, isWithdrawn } = req.body
+
+      await this.assessmentsService.rejectAssessment(callConfig, id, referralRejectionReasonId, isWithdrawn)
+
+      req.flash('success', statusChangeMessage(id, 'rejected'))
+      res.redirect(paths.assessments.summary({ id }))
+    }
+  }
+
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       return res.render('temporary-accommodation/assessments/confirm', {
@@ -154,7 +168,7 @@ export default class AssessmentsController {
 
       const { id, status } = req.params
 
-      await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentStatus)
+      await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentUpdateStatus)
 
       req.flash('success', statusChangeMessage(id, status as AssessmentStatus))
       res.redirect(paths.assessments.summary({ id }))

@@ -22,6 +22,7 @@ import {
   PrisonCaseNote,
   SortDirection,
   TemporaryAccommodationApplication,
+  TemporaryAccommodationAssessmentStatus,
   User,
 } from '@approved-premises/api'
 import { CallConfig } from '../../data/restClient'
@@ -352,6 +353,8 @@ export type ApplicationSummaryData = {
 export type AssessmentSearchApiStatus =
   | Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>
   | 'archived'
+
+export type AssessmentUpdateStatus = Exclude<TemporaryAccommodationAssessmentStatus, 'rejected'>
 
 export type AssessmentSearchParameters = {
   page?: number

@@ -76,10 +76,15 @@ export default class AssessmentClient {
     })
   }
 
-  async rejectAssessment(id: string): Promise<void> {
+  async rejectAssessment(id: string, referralRejectionReasonId: string, isWithdrawn: boolean): Promise<void> {
     await this.restClient.post({
       path: paths.assessments.rejection({ id }),
-      data: { document: {}, rejectionRationale: 'default' } as AssessmentRejection,
+      data: {
+        document: {},
+        rejectionRationale: 'default',
+        referralRejectionReasonId,
+        isWithdrawn,
+      } as AssessmentRejection,
     })
   }
 

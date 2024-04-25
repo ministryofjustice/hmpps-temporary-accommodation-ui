@@ -1,12 +1,12 @@
 import type {
   AssessmentSearchApiStatus,
   AssessmentSearchParameters,
+  AssessmentUpdateStatus,
   PaginatedResponse,
   TableRow,
 } from '@approved-premises/ui'
 import type {
   TemporaryAccommodationAssessment as Assessment,
-  TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
   ReferralHistoryNote as Note,
   TemporaryAccommodationAssessmentStatus,
@@ -42,7 +42,22 @@ export default class AssessmentsService {
     return assessmentClient.find(assessmentId)
   }
 
-  async updateAssessmentStatus(callConfig: CallConfig, assessmentId: string, status: AssessmentStatus): Promise<void> {
+  async rejectAssessment(
+    callConfig: CallConfig,
+    assessmentId: string,
+    referralRejectionReasonId: string,
+    isWithdrawn: boolean,
+  ): Promise<void> {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+
+    await assessmentClient.rejectAssessment(assessmentId, referralRejectionReasonId, isWithdrawn)
+  }
+
+  async updateAssessmentStatus(
+    callConfig: CallConfig,
+    assessmentId: string,
+    status: AssessmentUpdateStatus,
+  ): Promise<void> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
 
     switch (status) {
@@ -51,9 +66,6 @@ export default class AssessmentsService {
         break
       case 'in_review':
         await assessmentClient.allocateAssessment(assessmentId)
-        break
-      case 'rejected':
-        await assessmentClient.rejectAssessment(assessmentId)
         break
       case 'ready_to_place':
         await assessmentClient.acceptAssessment(assessmentId)

@@ -180,12 +180,20 @@ describe('AssessmentClient', () => {
 
   describe('rejectAssessment', () => {
     it('posts a new rejection for the assessment', async () => {
+      const referralRejectionReasonId = 'rejection-reason-id'
+      const isWithdrawn = false
+
       fakeApprovedPremisesApi
-        .post(paths.assessments.rejection({ id: assessmentId }), { document: {}, rejectionRationale: 'default' })
+        .post(paths.assessments.rejection({ id: assessmentId }), {
+          document: {},
+          rejectionRationale: 'default',
+          referralRejectionReasonId,
+          isWithdrawn,
+        })
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200)
 
-      await assessmentClient.rejectAssessment(assessmentId)
+      await assessmentClient.rejectAssessment(assessmentId, referralRejectionReasonId, isWithdrawn)
     })
   })
 

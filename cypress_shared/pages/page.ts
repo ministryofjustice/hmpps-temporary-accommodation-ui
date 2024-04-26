@@ -30,7 +30,7 @@ export default abstract class Page extends Component {
 
   checkOnPage(): void {
     cy.get('h1').contains(this.title)
-    if (!process.env.SKIP_AXE) {
+    if (!Cypress.env('SKIP_AXE')) {
       cy.injectAxe()
       cy.configureAxe({
         rules: [

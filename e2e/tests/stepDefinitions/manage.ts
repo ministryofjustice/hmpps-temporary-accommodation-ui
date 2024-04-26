@@ -21,11 +21,10 @@ Given('I go up a breadcrumb level', () => {
 const signIn = (usernameVariable: string, passwordVariable: string) => {
   const username = Cypress.env(usernameVariable) || throwMissingCypressEnvError(usernameVariable)
   const password = Cypress.env(passwordVariable) || throwMissingCypressEnvError(passwordVariable)
-  cy.session([username, password], () => {
-    cy.visit('/')
-    cy.get('input[name="username"]').type(username)
-    cy.get('input[name="password"]').type(password, { log: false })
 
-    cy.get('.govuk-button').contains('Sign in').click()
-  })
+  cy.visit('/')
+  cy.get('input[name="username"]').type(username)
+  cy.get('input[name="password"]').type(password, { log: false })
+
+  cy.get('.govuk-button').contains('Sign in').click()
 }

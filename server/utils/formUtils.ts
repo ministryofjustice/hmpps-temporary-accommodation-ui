@@ -23,20 +23,38 @@ export const dateFieldValues = (fieldName: string, context: Record<string, unkno
   ]
 }
 
+export type ConditionalDefinition = {
+  match: string
+  html: string
+}
+
 export const convertObjectsToRadioItems = (
   items: Array<Record<string, string>>,
   textKey: string,
   valueKey: string,
   fieldName: string,
   context: Record<string, unknown>,
+  conditionals: Array<ConditionalDefinition> = [],
 ): Array<RadioItem> => {
-  return items.map(item => {
-    return {
-      text: item[textKey],
-      value: item[valueKey],
-      checked: context[fieldName] === item[valueKey],
+  const radios = items.map(
+    item =>
+      ({
+        text: item[textKey],
+        value: item[valueKey],
+        checked: context[fieldName] === item[valueKey],
+      }) as RadioItem,
+  )
+
+  conditionals.forEach(conditional => {
+    const { match, html } = conditional
+    const target = radios.find(radio => 'text' in radio && radio.text.match(match))
+
+    if (target && 'text' in target) {
+      target.conditional = { html }
     }
   })
+
+  return radios
 }
 
 export const convertObjectsToSelectOptions = (

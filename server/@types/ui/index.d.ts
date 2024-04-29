@@ -120,6 +120,9 @@ export type RadioItem =
       text: string
       value: string
       checked?: boolean
+      conditional?: {
+        html: string
+      }
     }
   | {
       divider: string

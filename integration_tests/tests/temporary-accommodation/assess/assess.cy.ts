@@ -361,11 +361,10 @@ context('Apply', () => {
 
           // When I complete the form
           rejectionConfirmationPage.completeForm()
-          // rejectionConfirmationPage.clickSubmit()
-          //
-          // cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
-          //
-          // // Then I am taken to the summary page and a banner is shown
+          cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
+          rejectionConfirmationPage.clickSubmit()
+
+          // Then I am taken to the summary page and a banner is shown
           // Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
           // assessmentPage.shouldShowBanner('This referral has been rejected')
         })

@@ -1,6 +1,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../components/ta-radios/macro.njk" import taRadios %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -15,6 +16,16 @@
 {% endblock %}
 
 {% block content %}
+    {% set conditionalHtml %}
+        {{ taTextarea({
+            fieldName: 'referralRejectionReasonDetail',
+            label: {
+                text: "Add details about why the referral is being rejected",
+                classes: "govuk-label--s"
+            }
+        }, fetchContext()) }}
+    {% endset %}
+
     <h1 class="govuk-heading-l">Reject referral</h1>
 
     <form action="?_method=PUT" method="post">
@@ -31,7 +42,10 @@
                 hint: {
                 text: 'This helps the organisation understand why CAS3 referrals are rejected.'
             },
-                items: convertObjectsToRadioItems(referralRejectionReasons, 'name', 'id', 'status'),
+                items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReason', [{
+                match: 'Other',
+                html: conditionalHtml
+            }]),
                 fieldName: "referralRejectionReason"
             }, fetchContext()
         ) }}

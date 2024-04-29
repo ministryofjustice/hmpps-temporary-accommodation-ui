@@ -6,6 +6,7 @@ export default class AssessmentRejectionConfirmPage extends Page {
   }
 
   completeForm() {
-    this.checkRadioByNameAndLabel('referralRejectionReason', 'There was not enough time to place them')
+    this.checkRadioByNameAndLabel('referralRejectionReason', 'Other (please add)')
+    this.completeTextArea('referralRejectionReasonDetail', 'Details about the rejection reason')
   }
 }

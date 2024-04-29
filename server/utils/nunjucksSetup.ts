@@ -9,6 +9,7 @@ import type { ErrorMessages, PersonStatus } from '@approved-premises/ui'
 import { statusTag as assessmentStatusTag } from './assessmentStatusUtils'
 import { DateFormats, dateInputHint } from './dateUtils'
 import {
+  ConditionalDefinition,
   convertObjectsToCheckboxItems,
   convertObjectsToRadioItems,
   convertObjectsToSelectOptions,
@@ -120,8 +121,9 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
       textKey: string,
       valueKey: string,
       fieldName: string,
+      conditionals?: Array<ConditionalDefinition>,
     ) {
-      return convertObjectsToRadioItems(items, textKey, valueKey, fieldName, this.ctx)
+      return convertObjectsToRadioItems(items, textKey, valueKey, fieldName, this.ctx, conditionals)
     },
   )
 

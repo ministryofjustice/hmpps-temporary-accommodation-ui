@@ -28,7 +28,7 @@
 
     <h1 class="govuk-heading-l">Reject referral</h1>
 
-    <form action="?_method=PUT" method="post">
+    <form action="{{ paths.assessments.reject({ id: id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
         {{ taRadios(
@@ -42,11 +42,11 @@
                 hint: {
                 text: 'This helps the organisation understand why CAS3 referrals are rejected.'
             },
-                items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReason', [{
+                items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReasonId', [{
                 match: 'Other',
                 html: conditionalHtml
             }]),
-                fieldName: "referralRejectionReason"
+                fieldName: "referralRejectionReasonId"
             }, fetchContext()
         ) }}
 

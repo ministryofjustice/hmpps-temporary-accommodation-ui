@@ -172,7 +172,9 @@ export const statusChangeMessage = (assessmentId: string, status: AssessmentStat
     case 'rejected':
       return {
         title: 'This referral has been rejected',
-        html: `<a class="govuk-link" href="${paths.assessments.index({})}">Return to the referrals dashboard</a>`,
+        html: `It's been moved to archived referrals. You now need to email the probation practitioner to tell them it's been rejected.<br><br><a class="govuk-link" href="${paths.assessments.index(
+          {},
+        )}">Return to the referrals dashboard</a>`,
       }
     case 'unallocated':
       return {

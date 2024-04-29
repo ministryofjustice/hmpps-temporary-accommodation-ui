@@ -336,7 +336,7 @@ describe('AssessmentsController', () => {
     it('calls the rejectAssessment method on the service with rejection details', async () => {
       const assessmentId = 'assessment-id'
       const referralRejectionReasonId = 'rejection-reason-id'
-      const isWithdrawn = true
+      const isWithdrawn = 'yes'
 
       jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
 
@@ -350,7 +350,7 @@ describe('AssessmentsController', () => {
         callConfig,
         assessmentId,
         referralRejectionReasonId,
-        isWithdrawn,
+        true,
       )
       expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, 'rejected')
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))

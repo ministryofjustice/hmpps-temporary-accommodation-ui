@@ -342,7 +342,7 @@ context('Apply', () => {
         })
       })
 
-      it.only('allows rejecting an assessment', () => {
+      it('allows rejecting an assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })
           assessment.application.document = applicationTranslatedDocument
@@ -359,14 +359,16 @@ context('Apply', () => {
           // Then I am taken to the confirmation page
           const rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
 
+          cy.task('stubRejectAssessment', assessment)
+          cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
+
           // When I complete the form
           rejectionConfirmationPage.completeForm()
-          cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
           rejectionConfirmationPage.clickSubmit()
 
           // Then I am taken to the summary page and a banner is shown
-          // Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
-          // assessmentPage.shouldShowBanner('This referral has been rejected')
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
+          assessmentPage.shouldShowBanner('This referral has been rejected')
         })
       })
 

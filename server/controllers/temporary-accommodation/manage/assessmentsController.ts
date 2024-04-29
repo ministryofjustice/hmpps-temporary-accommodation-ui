@@ -150,7 +150,7 @@ export default class AssessmentsController {
       const { id } = req.params
       const { referralRejectionReasonId, isWithdrawn } = req.body
 
-      await this.assessmentsService.rejectAssessment(callConfig, id, referralRejectionReasonId, isWithdrawn)
+      await this.assessmentsService.rejectAssessment(callConfig, id, referralRejectionReasonId, isWithdrawn === 'yes')
 
       req.flash('success', statusChangeMessage(id, 'rejected'))
       res.redirect(paths.assessments.summary({ id }))

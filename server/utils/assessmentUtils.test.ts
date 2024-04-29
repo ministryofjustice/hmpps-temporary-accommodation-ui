@@ -319,7 +319,9 @@ describe('assessmentUtils', () => {
 
       expect(statusChangeMessage(assessment.id, assessment.status)).toEqual({
         title: 'This referral has been rejected',
-        html: `<a class="govuk-link" href="${paths.assessments.index({})}">Return to the referrals dashboard</a>`,
+        html: `It's been moved to archived referrals. You now need to email the probation practitioner to tell them it's been rejected.<br><br><a class="govuk-link" href="${paths.assessments.index(
+          {},
+        )}">Return to the referrals dashboard</a>`,
       })
     })
 

@@ -50,6 +50,28 @@
             }, fetchContext()
         ) }}
 
+        {{ taRadios(
+            {
+                fieldset: {
+                legend: {
+                    text: "Did the probation practitioner ask for it to be withdrawn?",
+                    classes: "govuk-fieldset__legend--m"
+                }
+            },
+                items: [
+                {
+                    value: "yes",
+                    text: "Yes"
+                },
+                {
+                    value: "no",
+                    text: "No"
+                }
+            ],
+                fieldName: "isWithdrawn"
+            }, fetchContext()
+        ) }}
+
         {{ govukButton({
             text: "Save and continue",
             preventDoubleClick: true

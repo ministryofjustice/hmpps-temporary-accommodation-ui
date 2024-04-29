@@ -348,6 +348,7 @@ context('Apply', () => {
           assessment.application.document = applicationTranslatedDocument
 
           cy.task('stubFindAssessment', assessment)
+          cy.task('stubReferralRejectionReasons')
 
           // Given I visit the assessment page
           const assessmentPage = AssessmentSummaryPage.visit(assessment)
@@ -359,6 +360,7 @@ context('Apply', () => {
           const rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
 
           // When I complete the form
+          rejectionConfirmationPage.completeForm()
           // rejectionConfirmationPage.clickSubmit()
           //
           // cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })

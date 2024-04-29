@@ -8,6 +8,7 @@ import lostBedReasonsJson from './stubs/lost-bed-reasons.json'
 import moveOnCategoriesJson from './stubs/move-on-categories.json'
 import pdusJson from './stubs/pdus.json'
 import probationRegionsJson from './stubs/probation-regions.json'
+import rejectionReasonsJson from './stubs/referral-rejection-reasons.json'
 
 const departureReasons = {
   request: {
@@ -149,6 +150,20 @@ const pdus = {
   },
 }
 
+const referralRejectionReasons = {
+  request: {
+    method: 'GET',
+    urlPath: '/reference-data/referral-rejection-reasons',
+  },
+  response: {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    jsonBody: rejectionReasonsJson,
+  },
+}
+
 export {
   departureReasons,
   moveOnCategories,
@@ -160,4 +175,5 @@ export {
   localAuthorities,
   probationRegions,
   pdus,
+  referralRejectionReasons,
 }

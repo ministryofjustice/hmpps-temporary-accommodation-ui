@@ -5,6 +5,7 @@ import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { errorStub } from '../../wiremock/utils'
 import { MockPagination } from './bookingSearch'
+import { referralRejectionReasons } from '../../wiremock/referenceDataStubs'
 
 export default {
   stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
@@ -75,6 +76,7 @@ export default {
         url: api.assessments.allocation({ id: assessmentId }),
       })
     ).body.requests,
+  stubReferralRejectionReasons: (): SuperAgentRequest => stubFor(referralRejectionReasons),
   stubRejectAssessment: (assessment: Assessment): SuperAgentRequest =>
     stubFor({
       request: {

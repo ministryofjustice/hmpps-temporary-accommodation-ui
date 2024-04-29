@@ -1,5 +1,6 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-radios/macro.njk" import taRadios %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -19,9 +20,22 @@
     <form action="?_method=PUT" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {% for reason in referralRejectionReasons %}
-            {{ reason.id }} / {{ reason.name }}<br />
-        {% endfor %}
+        {{ taRadios(
+            {
+                fieldset: {
+                legend: {
+                    text: "Why are you rejecting this referral?",
+                    classes: "govuk-fieldset__legend--m"
+                }
+            },
+                hint: {
+                text: 'This helps the organisation understand why CAS3 referrals are rejected.'
+            },
+                items: convertObjectsToRadioItems(referralRejectionReasons, 'name', 'id', 'status'),
+                fieldName: "referralRejectionReason"
+            }, fetchContext()
+        ) }}
+
         {{ govukButton({
             text: "Save and continue",
             preventDoubleClick: true

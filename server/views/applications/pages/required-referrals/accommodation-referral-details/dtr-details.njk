@@ -34,7 +34,7 @@
     {{ taSelect(
       {
         label: {
-          text: "Local authority",
+          text: "Home local authority",
           classes: "govuk-label--m"
         },
         hint: {
@@ -45,5 +45,35 @@
       }
     ) }}
   {% endif %}
+
+  {% set itemsWithDetail = [] %}
+  {% set conditionalHtml %}
+    {{ formPageTextarea({
+      fieldName: "dutyToReferOutcomeOtherDetails",
+      label: {
+        text: "Add details about the reason",
+        classes: "govuk-label--s"
+      }
+    },fetchContext()) }}
+  {% endset %}
+
+  {% for item in page.items() %}
+    {% set itemsWithDetail = (
+      itemsWithDetail.push(mergeObjects(item, {
+        conditional: { html: conditionalHtml } if item.value === 'rejectedOther' else undefined
+      })), itemsWithDetail)
+    %}
+  {% endfor %}
+
+  {{ formPageRadios({
+    fieldset: {
+      legend: {
+        text: page.questions.dutyToReferOutcome,
+        classes: "govuk-fieldset__legend--m"
+      }
+    },
+    fieldName: "dutyToReferOutcome",
+    items: itemsWithDetail
+  }, fetchContext()) }}
 
 {% endblock %}

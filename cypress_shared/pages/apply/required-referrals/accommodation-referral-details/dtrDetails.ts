@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class DtrDetailsPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Provide further details',
+      'Enter details about the Duty to refer (England) or Application for Assistance (Wales)',
       application,
       'accommodation-referral-details',
       'dtr-details',
@@ -21,5 +21,6 @@ export default class DtrDetailsPage extends ApplyPage {
     this.completeDateInputsFromPageBody('date')
     this.completeTextInputFromPageBody('reference')
     this.getSelectInputByIdAndSelectAnEntry('localAuthorityAreaName', localAuthorityName || 'Barking and Dagenham')
+    this.checkRadioButtonFromPageBody('dutyToReferOutcome')
   }
 }

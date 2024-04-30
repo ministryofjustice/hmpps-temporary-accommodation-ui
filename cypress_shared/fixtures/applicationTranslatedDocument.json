@@ -301,12 +301,13 @@
           "id": "accommodation-referral-details",
           "content": [
             {
-              "Has the Duty to Refer (DTR) / National Offender Pathway (NOP) been submitted?": "Yes"
+              "Has the Duty to refer (England) or Application for Assistance (Wales) been submitted?": "Yes"
             },
             {
-              "DTR / NOP reference number": "ABC123",
-              "Date DTR / NOP was submitted": "12 April 2022",
-              "What is the local authority?": "Barking and Dagenham"
+              "Reference number": "ABC123",
+              "Submission date": "12 April 2022",
+              "What is the local authority?": "Barking and Dagenham",
+              "Have you received an outcome from the local authority?": "Yes, it was accepted on prevention and relief duty"
             },
             {
               "Has a referral to Commissioned Rehabilitative Services (CRS) been submitted?": "Yes"

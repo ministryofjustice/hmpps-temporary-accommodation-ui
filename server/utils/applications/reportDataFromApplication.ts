@@ -46,6 +46,22 @@ const dutyToReferLocalAuthorityAreaNameFromApplication = (application: Applicati
   return dutyToReferLocalAuthorityAreaName
 }
 
+const dutyToReferOutcomeFromApplication = (application: Application): string => {
+  if (!isDutyToReferSubmittedFromApplication(application)) {
+    return ''
+  }
+
+  const dutyToReferOutcome: string = (application.data as Record<string, unknown>)?.[
+    'accommodation-referral-details'
+  ]?.['dtr-details']?.dutyToReferOutcome
+
+  if (!dutyToReferOutcome) {
+    throw new SessionDataError('No duty to refer outcome data')
+  }
+
+  return dutyToReferOutcome
+}
+
 const needsAccessiblePropertyFromApplication = (application: Application): boolean => {
   const needsAccessibleProperty: string = (application.data as Record<string, unknown>)?.[
     'disability-cultural-and-specific-needs'
@@ -150,6 +166,7 @@ const isConcerningArsonBehaviourFromApplication = (application: Application): bo
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
+  dutyToReferOutcomeFromApplication,
   eligibilityReasonFromApplication,
   isApplicationEligibleFromApplication,
   isDutyToReferSubmittedFromApplication,

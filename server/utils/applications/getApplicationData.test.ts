@@ -28,6 +28,7 @@ describe('getApplicationSubmissionData', () => {
       isDutyToReferSubmitted: true,
       dutyToReferSubmissionDate: '2022-04-12',
       dutyToReferLocalAuthorityAreaName: 'Barking and Dagenham',
+      dutyToReferOutcome: applicationDataJson['accommodation-referral-details']['dtr-details'].dutyToReferOutcome,
       needsAccessibleProperty: true,
       isApplicationEligible: true,
       eligibilityReason: applicationDataJson.eligibility['eligibility-reason'].reason,

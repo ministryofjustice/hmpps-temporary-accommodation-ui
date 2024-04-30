@@ -11,7 +11,7 @@ type DtrSubmittedBody = {
 
 @Page({ name: 'dtr-submitted', bodyProperties: ['dtrSubmitted'] })
 export default class DtrSubmitted implements TasklistPage {
-  title = 'Has the Duty to Refer (DTR) / National Offender Pathway (NOP) been submitted?'
+  title = 'Has the Duty to refer (England) or Application for Assistance (Wales) been submitted?'
 
   htmlDocumentTitle = this.title
 

@@ -42,7 +42,7 @@ export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: st
   },
 }
 
-export const referralRejectionReasonOtherMatch = 'other'
+export const referralRejectionReasonOtherMatch = 'Another reason'
 
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}

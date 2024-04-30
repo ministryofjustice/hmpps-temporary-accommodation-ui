@@ -8,7 +8,7 @@ export default class AssessmentRejectionConfirmPage extends Page {
   }
 
   completeForm() {
-    this.checkRadioByNameAndLabel('referralRejectionReasonId', 'Other (please add)')
+    this.checkRadioByNameAndLabel('referralRejectionReasonId', 'Another reason (please add)')
     this.completeTextArea('referralRejectionReasonDetail', 'Details about the rejection reason')
     this.checkRadioByNameAndLabel('isWithdrawn', 'Yes')
   }

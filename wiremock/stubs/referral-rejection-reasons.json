@@ -31,13 +31,25 @@
   },
   {
     "id": "155ee6dc-ac2a-40d2-a350-90b63fb34a06",
-    "name": "There’s no capacity",
+    "name": "The PDU has no available bedspaces at all",
+    "serviceScope": "temporary-accommodation",
+    "isActive": true
+  },
+  {
+    "id": "b19ba749-408f-48c0-907c-11eace2dcf67",
+    "name": "No single occupancy bedspace is available",
+    "serviceScope": "temporary-accommodation",
+    "isActive": true
+  },
+  {
+    "id": "311de468-078b-4c39-ae42-8d41575b7726",
+    "name": "No suitable bedspace is available (not because of single occupancy)",
     "serviceScope": "temporary-accommodation",
     "isActive": true
   },
   {
     "id": "85799bf8-8b64-4903-9ab8-b08a77f1a9d3",
-    "name": "Other (please add)",
+    "name": "Another reason (please add)",
     "serviceScope": "temporary-accommodation",
     "isActive": true
   }

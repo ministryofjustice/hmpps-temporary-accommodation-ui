@@ -76,8 +76,8 @@ describe('ReportService', () => {
         reportForProbationRegionFilename as jest.MockedFunction<typeof reportForProbationRegionFilename>
       ).mockReturnValue('some-filename')
 
-      const startDate = '01/02/2024'
-      const endDate = '01/03/2024'
+      const startDate = '2024-02-01'
+      const endDate = '2024-03-01'
       const type: Cas3ReportType = 'bedOccupancy'
 
       await service.pipeReportForProbationRegion(callConfig, response, 'all', startDate, endDate, type)

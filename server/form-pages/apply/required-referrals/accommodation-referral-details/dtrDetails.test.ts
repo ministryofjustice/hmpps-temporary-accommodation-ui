@@ -4,7 +4,7 @@ import { dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInFuture } from '../
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import { CallConfig } from '../../../../data/restClient'
 import { ReferenceDataService } from '../../../../services'
-import DtrDetails from './dtrDetails'
+import DtrDetails, { DtrDetailsBody } from './dtrDetails'
 
 jest.mock('../../../../utils/dateUtils', () => {
   const module = jest.requireActual('../../../../utils/dateUtils')
@@ -24,7 +24,8 @@ const body = {
   'date-month': '7',
   'date-day': '23',
   localAuthorityAreaName: localAuthorities[0].name,
-}
+  dutyToReferOutcome: 'acceptedPriorityNeeded',
+} as DtrDetailsBody
 
 describe('DtrDetails', () => {
   const application = applicationFactory.build()
@@ -37,6 +38,25 @@ describe('DtrDetails', () => {
         ...body,
         date: '2022-07-23',
       })
+    })
+  })
+
+  describe('items', () => {
+    it('marks an option as selected when the reason is set', () => {
+      const page = new DtrDetails(body, application, localAuthorities)
+
+      const selectedOptions = page.items().filter(item => item.checked)
+
+      expect(selectedOptions.length).toEqual(1)
+      expect(selectedOptions[0].value).toEqual('acceptedPriorityNeeded')
+    })
+
+    it('marks no options selected when the reason is not set', () => {
+      const page = new DtrDetails({}, application, localAuthorities)
+
+      const selectedOptions = page.items().filter(item => item.checked)
+
+      expect(selectedOptions.length).toEqual(0)
     })
   })
 
@@ -71,7 +91,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails(body, application, localAuthorities)
       expect(page.errors()).toEqual({
-        date: 'You must specify the date DTR / NOP was submitted',
+        date: 'Enter a submission date',
       })
     })
 
@@ -82,7 +102,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails(body, application, localAuthorities)
       expect(page.errors()).toEqual({
-        date: 'You must specify a valid date DTR / NOP was submitted',
+        date: 'You must specify a valid submission date',
       })
     })
 
@@ -96,6 +116,28 @@ describe('DtrDetails', () => {
         date: 'The date DTR / NOP was submitted must not be in the future',
       })
     })
+
+    it('returns an error if a duty to refer outcome is not selected', () => {
+      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
+      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
+      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
+
+      const page = new DtrDetails({ ...body, dutyToReferOutcome: undefined }, application, localAuthorities)
+      expect(page.errors()).toEqual({
+        dutyToReferOutcome: 'Select whether you have received an outcome from the local authority',
+      })
+    })
+
+    it('returns an error if duty to refer outcome rejectedOther is selected and other details is not populated', () => {
+      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
+      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
+      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
+
+      const page = new DtrDetails({ ...body, dutyToReferOutcome: 'rejectedOther' }, application, localAuthorities)
+      expect(page.errors()).toEqual({
+        dutyToReferOutcomeOtherDetails: 'You must add details about the reason',
+      })
+    })
   })
 
   describe('response', () => {
@@ -103,9 +145,10 @@ describe('DtrDetails', () => {
       it('returns a translated version of the response', () => {
         const page = new DtrDetails(body, application, localAuthorities)
         expect(page.response()).toEqual({
-          'DTR / NOP reference number': 'ABC123',
-          'Date DTR / NOP was submitted': '23 July 2022',
+          'Reference number': 'ABC123',
+          'Submission date': '23 July 2022',
           'What is the local authority?': localAuthorities[0].name,
+          'Have you received an outcome from the local authority?': 'Yes, it was accepted on a priority need',
         })
       })
     })
@@ -114,9 +157,27 @@ describe('DtrDetails', () => {
       it('returns placeholder copy for local authority', () => {
         const page = new DtrDetails({ ...body, localAuthorityAreaName: null }, application, localAuthorities)
         expect(page.response()).toEqual({
-          'DTR / NOP reference number': 'ABC123',
-          'Date DTR / NOP was submitted': '23 July 2022',
+          'Reference number': 'ABC123',
+          'Submission date': '23 July 2022',
+          'Have you received an outcome from the local authority?': 'Yes, it was accepted on a priority need',
           'What is the local authority?': 'No local authority selected',
+        })
+      })
+    })
+
+    describe('when duty to refer rejectedOther outcome is selected and other details is populated', () => {
+      it('returns a translated version of the response', () => {
+        const page = new DtrDetails(
+          { ...body, dutyToReferOutcome: 'rejectedOther', dutyToReferOutcomeOtherDetails: 'rejected reason' },
+          application,
+          localAuthorities,
+        )
+        expect(page.response()).toEqual({
+          'Reference number': 'ABC123',
+          'Submission date': '23 July 2022',
+          'What is the local authority?': localAuthorities[0].name,
+          'Have you received an outcome from the local authority?': 'Yes, it was rejected for another reason',
+          'Other outcome details': 'rejected reason',
         })
       })
     })
@@ -131,7 +192,7 @@ describe('DtrDetails', () => {
           getLocalAuthorities: getLocalAuthoritiesMock,
         })
 
-        await DtrDetails.initialize({}, application, callConfig, { referenceDataService })
+        await DtrDetails.initialize({} as DtrDetailsBody, application, callConfig, { referenceDataService })
 
         expect(getLocalAuthoritiesMock).toHaveBeenCalledWith(callConfig)
       })
@@ -147,7 +208,9 @@ describe('DtrDetails', () => {
           getLocalAuthorities: getLocalAuthoritiesMock,
         })
 
-        const page = await DtrDetails.initialize({}, application, callConfig, { referenceDataService })
+        const page = await DtrDetails.initialize({} as DtrDetailsBody, application, callConfig, {
+          referenceDataService,
+        })
 
         expect(page.getLocalAuthorities()).toEqual([])
       })
@@ -162,7 +225,7 @@ describe('DtrDetails', () => {
         getLocalAuthorities: getLocalAuthoritiesMock,
       })
 
-      const page = await DtrDetails.initialize({}, application, callConfig, { referenceDataService })
+      const page = await DtrDetails.initialize({} as DtrDetailsBody, application, callConfig, { referenceDataService })
 
       expect(page.getLocalAuthorities()).toEqual(localAuthorities)
     })

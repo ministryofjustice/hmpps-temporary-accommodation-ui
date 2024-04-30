@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class DtrSubmittedPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Has the Duty to Refer (DTR) / National Offender Pathway (NOP) been submitted?',
+      'Has the Duty to refer (England) or Application for Assistance (Wales) been submitted?',
       application,
       'accommodation-referral-details',
       'dtr-submitted',

@@ -11,21 +11,43 @@ import { CallConfig } from '../../../../data/restClient'
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 
-type DtrDetailsBody = {
+export const dutyToReferOutcomes = {
+  acceptedPreventionReliefDuty: 'Yes, it was accepted on prevention and relief duty',
+  acceptedPriorityNeeded: 'Yes, it was accepted on a priority need',
+  rejectedNoLocalConnection: "Yes, it was rejected as there's no local connection",
+  rejectedIntentionallyHomeless: "Yes, it was rejected as they're considered intentionally homeless",
+  rejectedOther: 'Yes, it was rejected for another reason',
+  rejectedPending: 'No, an outcome has not been received yet',
+} as const
+
+export type DtrDetailsBody = {
   reference: string
   localAuthorityAreaName?: string
+  dutyToReferOutcome: keyof typeof dutyToReferOutcomes
+  dutyToReferOutcomeOtherDetails: string
 } & ObjectWithDateParts<'date'>
 
-@Page({ name: 'dtr-details', bodyProperties: ['reference', 'localAuthorityAreaName', ...dateBodyProperties('date')] })
+@Page({
+  name: 'dtr-details',
+  bodyProperties: [
+    'reference',
+    'localAuthorityAreaName',
+    'dutyToReferOutcome',
+    'dutyToReferOutcomeOtherDetails',
+    ...dateBodyProperties('date'),
+  ],
+})
 export default class DtrDetails implements TasklistPage {
-  title = 'Provide further details'
+  title = 'Enter details about the Duty to refer (England) or Application for Assistance (Wales)'
 
   htmlDocumentTitle = this.title
 
   questions = {
-    reference: 'DTR / NOP reference number',
-    date: 'Date DTR / NOP was submitted',
+    reference: 'Reference number',
+    date: 'Submission date',
     localAuthority: 'What is the local authority?',
+    dutyToReferOutcome: 'Have you received an outcome from the local authority?',
+    dutyToReferOutcomeOtherDetails: 'Other outcome details',
   }
 
   constructor(
@@ -37,7 +59,7 @@ export default class DtrDetails implements TasklistPage {
   }
 
   static async initialize(
-    body: Record<string, unknown>,
+    body: DtrDetailsBody,
     application: TemporaryAccommodationApplication,
     callConfig: CallConfig,
     dataServices: DataServices,
@@ -59,6 +81,8 @@ export default class DtrDetails implements TasklistPage {
     this._body = {
       reference: value.reference,
       localAuthorityAreaName: value.localAuthorityAreaName,
+      dutyToReferOutcome: value.dutyToReferOutcome,
+      dutyToReferOutcomeOtherDetails: value.dutyToReferOutcomeOtherDetails,
       ...DateFormats.dateAndTimeInputsToIsoString(value, 'date'),
     }
   }
@@ -74,6 +98,10 @@ export default class DtrDetails implements TasklistPage {
       [this.questions.localAuthority]: this.body.localAuthorityAreaName
         ? this.body.localAuthorityAreaName
         : 'No local authority selected',
+      [this.questions.dutyToReferOutcome]: dutyToReferOutcomes[this.body.dutyToReferOutcome],
+      ...(this.body.dutyToReferOutcomeOtherDetails && {
+        [this.questions.dutyToReferOutcomeOtherDetails]: this.body.dutyToReferOutcomeOtherDetails,
+      }),
     }
   }
 
@@ -93,11 +121,23 @@ export default class DtrDetails implements TasklistPage {
     }
 
     if (dateIsBlank(this.body, 'date')) {
-      errors.date = 'You must specify the date DTR / NOP was submitted'
+      errors.date = 'Enter a submission date'
     } else if (!dateAndTimeInputsAreValidDates(this.body, 'date')) {
-      errors.date = 'You must specify a valid date DTR / NOP was submitted'
+      errors.date = 'You must specify a valid submission date'
     } else if (dateIsInFuture(this.body.date)) {
       errors.date = 'The date DTR / NOP was submitted must not be in the future'
+    }
+
+    if (!this.body.localAuthorityAreaName) {
+      errors.localAuthorityAreaName = 'Enter a home local authority'
+    }
+
+    if (!this.body.dutyToReferOutcome) {
+      errors.dutyToReferOutcome = 'Select whether you have received an outcome from the local authority'
+    }
+
+    if (this.body.dutyToReferOutcome === 'rejectedOther' && !this.body.dutyToReferOutcomeOtherDetails) {
+      errors.dutyToReferOutcomeOtherDetails = 'You must add details about the reason'
     }
 
     return errors
@@ -105,5 +145,15 @@ export default class DtrDetails implements TasklistPage {
 
   getLocalAuthorities() {
     return this.localAuthorities
+  }
+
+  items() {
+    return Object.keys(dutyToReferOutcomes).map(key => {
+      return {
+        value: key,
+        text: dutyToReferOutcomes[key],
+        checked: this.body.dutyToReferOutcome === key,
+      }
+    })
   }
 }

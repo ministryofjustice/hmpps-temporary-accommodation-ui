@@ -17,6 +17,7 @@
 {% endblock %}
 
 {% block content %}
+    {% set context = fetchContext() %}
     {% set conditionalHtml %}
         {{ taTextarea({
             fieldName: 'referralRejectionReasonDetail',
@@ -24,8 +25,10 @@
                 text: "Add details about why the referral is being rejected",
                 classes: "govuk-label--s"
             }
-        }, fetchContext()) }}
+        }, context) }}
     {% endset %}
+
+    {{ context.isWithdrawn }}
 
     <h1 class="govuk-heading-l">Reject {{ personName(assessment.application.person) }}'s referral</h1>
 
@@ -51,7 +54,7 @@
                 html: conditionalHtml
             }]),
                 fieldName: "referralRejectionReasonId"
-            }, fetchContext()
+            }, context
         ) }}
 
         {{ taRadios(
@@ -65,15 +68,17 @@
                 items: [
                 {
                     value: "yes",
-                    text: "Yes"
+                    text: "Yes",
+                    checked: context.isWithdrawn === 'yes'
                 },
                 {
                     value: "no",
-                    text: "No"
+                    text: "No",
+                    checked: context.isWithdrawn === 'no'
                 }
             ],
                 fieldName: "isWithdrawn"
-            }, fetchContext()
+            }, context
         ) }}
 
         {{ govukButton({

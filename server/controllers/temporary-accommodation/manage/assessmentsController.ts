@@ -164,20 +164,22 @@ export default class AssessmentsController {
 
       try {
         let error: Error
+        let isOtherReason = false
 
         if (!referralRejectionReasonId) {
           error = new Error()
           insertGenericError(error, 'referralRejectionReasonId', 'empty')
-        } else if (
-          referralRejectionReasonIsOther(
+        } else {
+          isOtherReason = referralRejectionReasonIsOther(
             referralRejectionReasonId,
             referralRejectionReasonOtherMatch,
             referralRejectionReasons,
-          ) &&
-          (!referralRejectionReasonDetail || referralRejectionReasonDetail.trim() === '')
-        ) {
-          error = new Error()
-          insertGenericError(error, 'referralRejectionReasonDetail', 'empty')
+          )
+
+          if (isOtherReason && (!referralRejectionReasonDetail || referralRejectionReasonDetail.trim() === '')) {
+            error = new Error()
+            insertGenericError(error, 'referralRejectionReasonDetail', 'empty')
+          }
         }
 
         if (!isWithdrawn) {
@@ -189,7 +191,11 @@ export default class AssessmentsController {
           throw error
         }
 
-        await this.assessmentsService.rejectAssessment(callConfig, id, referralRejectionReasonId, isWithdrawn === 'yes')
+        await this.assessmentsService.rejectAssessment(callConfig, id, {
+          referralRejectionReasonId,
+          referralRejectionReasonDetail: isOtherReason ? referralRejectionReasonDetail : undefined,
+          isWithdrawn: isWithdrawn === 'yes',
+        })
 
         req.flash('success', statusChangeMessage(id, 'rejected'))
         res.redirect(paths.assessments.summary({ id }))

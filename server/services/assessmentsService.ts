@@ -4,6 +4,7 @@ import type {
   AssessmentUpdateStatus,
   PaginatedResponse,
   ReferenceData,
+  ReferralRejectionBody,
   TableRow,
 } from '@approved-premises/ui'
 import type {
@@ -61,12 +62,11 @@ export default class AssessmentsService {
   async rejectAssessment(
     callConfig: CallConfig,
     assessmentId: string,
-    referralRejectionReasonId: string,
-    isWithdrawn: boolean,
+    referralRejectionBody: ReferralRejectionBody,
   ): Promise<void> {
     const assessmentClient = this.assessmentClientFactory(callConfig)
 
-    await assessmentClient.rejectAssessment(assessmentId, referralRejectionReasonId, isWithdrawn)
+    await assessmentClient.rejectAssessment(assessmentId, referralRejectionBody)
   }
 
   async updateAssessmentStatus(

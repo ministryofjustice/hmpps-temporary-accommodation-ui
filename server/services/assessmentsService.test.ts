@@ -122,10 +122,14 @@ describe('AssessmentsService', () => {
 
   describe('rejectAssessment', () => {
     it('calls the rejectAssessment method on the client with rejection details', async () => {
-      await service.rejectAssessment(callConfig, assessmentId, 'rejection-reason-id', true)
+      const referralRejectionReasonBody = {
+        referralRejectionReasonId: 'rejection-reason-id',
+        isWithdrawn: true,
+      }
+      await service.rejectAssessment(callConfig, assessmentId, referralRejectionReasonBody)
 
       expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId, 'rejection-reason-id', true)
+      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId, referralRejectionReasonBody)
     })
   })
 

@@ -384,28 +384,57 @@ describe('AssessmentsController', () => {
   })
 
   describe('reject', () => {
+    beforeEach(() => {
+      const referralRejectionReasons = [
+        referenceDataFactory.build({ id: 'reason-one-id' }),
+        referenceDataFactory.build({ id: 'reason-two-id' }),
+        referenceDataFactory.build({ id: 'other-reason-id', name: 'Other reason' }),
+      ]
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+    })
+
     it('calls the rejectAssessment method on the service with rejection details', async () => {
       const assessmentId = 'assessment-id'
-      const referralRejectionReasonId = 'rejection-reason-id'
+      const referralRejectionReasonId = 'other-reason-id'
+      const referralRejectionReasonDetail = 'Some details'
       const isWithdrawn = 'yes'
 
       jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
 
       const requestHandler = assessmentsController.reject()
       request.params = { id: assessmentId }
-      request.body = { referralRejectionReasonId, isWithdrawn }
+      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, isWithdrawn }
 
       await requestHandler(request, response, next)
 
-      expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(
-        callConfig,
-        assessmentId,
-        referralRejectionReasonId,
-        true,
-      )
+      expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+        ...request.body,
+        isWithdrawn: true,
+      })
       expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, 'rejected')
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
       expect(request.flash).toHaveBeenCalledWith('success', 'some info message')
+    })
+
+    it('does not send the rejection reason details if not other reason', async () => {
+      const assessmentId = 'assessment-id'
+      const referralRejectionReasonId = 'reason-one-id'
+      const referralRejectionReasonDetail = 'Some details'
+      const isWithdrawn = 'no'
+
+      jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
+
+      const requestHandler = assessmentsController.reject()
+      request.params = { id: assessmentId }
+      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, isWithdrawn }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+        referralRejectionReasonId,
+        referralRejectionReasonDetail: undefined,
+        isWithdrawn: false,
+      })
     })
 
     it('redirects to the reject confirmation page with errors if the questions are not answered', async () => {

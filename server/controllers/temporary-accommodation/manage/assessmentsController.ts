@@ -139,10 +139,11 @@ export default class AssessmentsController {
 
       const callConfig = extractCallConfig(req)
 
+      const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
       const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/assessments/confirm-rejection', {
-        id: req.params.id,
+        assessment,
         referralRejectionReasons,
         referralRejectionReasonOtherMatch,
         errors,

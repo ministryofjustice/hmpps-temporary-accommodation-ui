@@ -357,7 +357,7 @@ context('Apply', () => {
           assessmentPage.clickAction('Reject')
 
           // Then I am taken to the confirmation page
-          const rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+          const rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
 
           cy.task('stubRejectAssessment', assessment)
           cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
@@ -387,7 +387,7 @@ context('Apply', () => {
           assessmentPage.clickAction('Reject')
 
           // Then I am taken to the confirmation page
-          let rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+          let rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
 
           cy.task('stubRejectAssessment', assessment)
           cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
@@ -396,7 +396,7 @@ context('Apply', () => {
           rejectionConfirmationPage.clickSubmit()
 
           // Then I see errors
-          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
           rejectionConfirmationPage.shouldShowErrorMessagesForFields(['referralRejectionReasonId', 'isWithdrawn'])
 
           // When I complete the form but clear the details
@@ -405,7 +405,7 @@ context('Apply', () => {
           rejectionConfirmationPage.clickSubmit()
 
           // Then I see one error
-          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
           rejectionConfirmationPage.shouldShowErrorMessagesForFields(['referralRejectionReasonDetail'])
         })
       })

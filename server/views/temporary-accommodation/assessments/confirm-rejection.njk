@@ -12,7 +12,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: paths.assessments.summary({ id: id })
+        href: paths.assessments.summary({ id: assessment.id })
     }) }}
 {% endblock %}
 
@@ -27,11 +27,11 @@
         }, fetchContext()) }}
     {% endset %}
 
-    <h1 class="govuk-heading-l">Reject referral</h1>
+    <h1 class="govuk-heading-l">Reject {{ personName(assessment.application.person) }}'s referral</h1>
 
     {{ showErrorSummary(errorSummary) }}
 
-    <form action="{{ paths.assessments.reject({ id: id }) }}" method="post">
+    <form action="{{ paths.assessments.reject({ id: assessment.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
 

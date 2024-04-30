@@ -316,21 +316,22 @@ describe('AssessmentsController', () => {
 
   describe('confirmRejection', () => {
     it('calls render with the assessment id and the rejection reasons', async () => {
-      const assessmentId = 'some-assessment-id'
+      const assessment = assessmentFactory.build()
       const referralRejectionReasons = referenceDataFactory.buildList(3)
 
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
       assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
 
       const requestHandler = assessmentsController.confirmRejection()
 
-      request.params = { id: assessmentId }
+      request.params = { id: assessment.id }
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
-        id: assessmentId,
+        assessment,
         referralRejectionReasons,
         referralRejectionReasonOtherMatch,
         errors: {},
@@ -339,7 +340,7 @@ describe('AssessmentsController', () => {
     })
 
     it('calls render with errors', async () => {
-      const assessmentId = 'some-assessment-id'
+      const assessment = assessmentFactory.build()
       const referralRejectionReasons = referenceDataFactory.buildList(3)
       const errors = {
         referralRejectionReasonId: {
@@ -362,17 +363,18 @@ describe('AssessmentsController', () => {
         errorSummary,
         userInput: undefined,
       })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
       assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
 
       const requestHandler = assessmentsController.confirmRejection()
 
-      request.params = { id: assessmentId }
+      request.params = { id: assessment.id }
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
-        id: assessmentId,
+        assessment,
         referralRejectionReasons,
         referralRejectionReasonOtherMatch,
         errors,

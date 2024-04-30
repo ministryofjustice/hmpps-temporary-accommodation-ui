@@ -1,8 +1,10 @@
 import Page from '../page'
+import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
+import { personName } from '../../../server/utils/personUtils'
 
 export default class AssessmentRejectionConfirmPage extends Page {
-  constructor(title: string) {
-    super(title)
+  constructor(private readonly assessment: Assessment) {
+    super(`Reject ${personName(assessment.application.person)}'s referral`)
   }
 
   completeForm() {

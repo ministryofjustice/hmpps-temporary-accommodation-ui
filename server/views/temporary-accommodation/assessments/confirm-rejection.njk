@@ -34,57 +34,61 @@
 
     {{ showErrorSummary(errorSummary) }}
 
-    <form action="{{ paths.assessments.reject({ id: assessment.id }) }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.assessments.reject({ id: assessment.id }) }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
 
-        {{ taRadios(
-            {
-                fieldset: {
-                legend: {
-                    text: "Why are you rejecting this referral?",
-                    classes: "govuk-fieldset__legend--m"
-                }
-            },
-                hint: {
-                text: 'This helps the organisation understand why CAS3 referrals are rejected.'
-            },
-                items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReasonId', [{
-                match: referralRejectionReasonOtherMatch,
-                html: conditionalHtml
-            }]),
-                fieldName: "referralRejectionReasonId"
-            }, context
-        ) }}
+                {{ taRadios(
+                    {
+                        fieldset: {
+                        legend: {
+                            text: "Why are you rejecting this referral?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                        hint: {
+                        text: 'This helps the organisation understand why CAS3 referrals are rejected.'
+                    },
+                        items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReasonId', [{
+                        match: referralRejectionReasonOtherMatch,
+                        html: conditionalHtml
+                    }]),
+                        fieldName: "referralRejectionReasonId"
+                    }, context
+                ) }}
 
-        {{ taRadios(
-            {
-                fieldset: {
-                legend: {
-                    text: "Did the probation practitioner ask for it to be withdrawn?",
-                    classes: "govuk-fieldset__legend--m"
-                }
-            },
-                items: [
-                {
-                    value: "yes",
-                    text: "Yes",
-                    checked: context.isWithdrawn === 'yes'
-                },
-                {
-                    value: "no",
-                    text: "No",
-                    checked: context.isWithdrawn === 'no'
-                }
-            ],
-                fieldName: "isWithdrawn"
-            }, context
-        ) }}
+                {{ taRadios(
+                    {
+                        fieldset: {
+                        legend: {
+                            text: "Did the probation practitioner ask for it to be withdrawn?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                        items: [
+                        {
+                            value: "yes",
+                            text: "Yes",
+                            checked: context.isWithdrawn === 'yes'
+                        },
+                        {
+                            value: "no",
+                            text: "No",
+                            checked: context.isWithdrawn === 'no'
+                        }
+                    ],
+                        fieldName: "isWithdrawn"
+                    }, context
+                ) }}
 
-        {{ govukButton({
-            text: "Save and continue",
-            preventDoubleClick: true
-        }) }}
+                {{ govukButton({
+                    text: "Save and continue",
+                    preventDoubleClick: true
+                }) }}
 
-    </form>
+            </form>
+        </div>
+    </div>
 {% endblock %}

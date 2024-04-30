@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../components/ta-radios/macro.njk" import taRadios %}
 {% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -28,8 +29,11 @@
 
     <h1 class="govuk-heading-l">Reject referral</h1>
 
+    {{ showErrorSummary(errorSummary) }}
+
     <form action="{{ paths.assessments.reject({ id: id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
 
         {{ taRadios(
             {
@@ -43,7 +47,7 @@
                 text: 'This helps the organisation understand why CAS3 referrals are rejected.'
             },
                 items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReasonId', [{
-                match: 'Other',
+                match: referralRejectionReasonOtherMatch,
                 html: conditionalHtml
             }]),
                 fieldName: "referralRejectionReasonId"

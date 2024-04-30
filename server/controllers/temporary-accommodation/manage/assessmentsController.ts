@@ -11,6 +11,7 @@ import {
   createTableHeadings,
   getParams,
   pathFromStatus,
+  referralRejectionReasonIsOther,
   statusChangeMessage,
 } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
@@ -40,6 +41,8 @@ export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: st
             <p class="govuk-body"> The referral will be updated to 'unallocated'.</p>`,
   },
 }
+
+export const referralRejectionReasonOtherMatch = 'other'
 
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}
@@ -132,6 +135,8 @@ export default class AssessmentsController {
 
   confirmRejection(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
       const callConfig = extractCallConfig(req)
 
       const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
@@ -139,6 +144,10 @@ export default class AssessmentsController {
       return res.render('temporary-accommodation/assessments/confirm-rejection', {
         id: req.params.id,
         referralRejectionReasons,
+        referralRejectionReasonOtherMatch,
+        errors,
+        errorSummary,
+        ...userInput,
       })
     }
   }
@@ -147,13 +156,45 @@ export default class AssessmentsController {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
+      const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
+
       const { id } = req.params
-      const { referralRejectionReasonId, isWithdrawn } = req.body
+      const { referralRejectionReasonId, referralRejectionReasonDetail, isWithdrawn } = req.body
 
-      await this.assessmentsService.rejectAssessment(callConfig, id, referralRejectionReasonId, isWithdrawn === 'yes')
+      try {
+        let error: Error
 
-      req.flash('success', statusChangeMessage(id, 'rejected'))
-      res.redirect(paths.assessments.summary({ id }))
+        if (!referralRejectionReasonId) {
+          error = new Error()
+          insertGenericError(error, 'referralRejectionReasonId', 'empty')
+        } else if (
+          referralRejectionReasonIsOther(
+            referralRejectionReasonId,
+            referralRejectionReasonOtherMatch,
+            referralRejectionReasons,
+          ) &&
+          (!referralRejectionReasonDetail || referralRejectionReasonDetail.trim() === '')
+        ) {
+          error = new Error()
+          insertGenericError(error, 'referralRejectionReasonDetail', 'empty')
+        }
+
+        if (!isWithdrawn) {
+          error = error || new Error()
+          insertGenericError(error, 'isWithdrawn', 'empty')
+        }
+
+        if (error) {
+          throw error
+        }
+
+        await this.assessmentsService.rejectAssessment(callConfig, id, referralRejectionReasonId, isWithdrawn === 'yes')
+
+        req.flash('success', statusChangeMessage(id, 'rejected'))
+        res.redirect(paths.assessments.summary({ id }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.assessments.confirmRejection({ id }))
+      }
     }
   }
 

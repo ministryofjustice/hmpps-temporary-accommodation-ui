@@ -138,6 +138,15 @@
       "invalid": "The bedspace end date is an invalid date",
       "beforeCreatedAt": "The bedspace end date must be on or after the date the bedspace was created",
       "conflict": "This bedspace end date conflicts with an existing booking"
+    },
+    "referralRejectionReasonId": {
+      "empty": "Select a reason for rejecting this referral"
+    },
+    "referralRejectionReasonDetail": {
+      "empty": "Add details about the reason for the rejection"
+    },
+    "isWithdrawn": {
+      "empty": "Select yes if the probation practitioner asked for the referral to be withdrawn"
     }
   },
   "bookingCancellation": {

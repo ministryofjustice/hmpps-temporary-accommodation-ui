@@ -19,7 +19,10 @@ import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import * as utils from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import AssessmentsController, { confirmationPageContent } from './assessmentsController'
+import AssessmentsController, {
+  confirmationPageContent,
+  referralRejectionReasonOtherMatch,
+} from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 import { pathFromStatus } from '../../../utils/assessmentUtils'
 
@@ -316,6 +319,7 @@ describe('AssessmentsController', () => {
       const assessmentId = 'some-assessment-id'
       const referralRejectionReasons = referenceDataFactory.buildList(3)
 
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
       assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
 
       const requestHandler = assessmentsController.confirmRejection()
@@ -328,6 +332,51 @@ describe('AssessmentsController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
         id: assessmentId,
         referralRejectionReasons,
+        referralRejectionReasonOtherMatch,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('calls render with errors', async () => {
+      const assessmentId = 'some-assessment-id'
+      const referralRejectionReasons = referenceDataFactory.buildList(3)
+      const errors = {
+        referralRejectionReasonId: {
+          text: 'Select a reason for rejecting this referral',
+        },
+        isWithdrawn: {
+          text: 'Select yes if the probation practitioner asked for the referral to be withdrawn',
+        },
+      }
+      const errorSummary = [
+        {
+          text: 'Select a reason for rejecting this referral',
+        },
+        {
+          text: 'Select yes if the probation practitioner asked for the referral to be withdrawn',
+        },
+      ]
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+        errors,
+        errorSummary,
+        userInput: undefined,
+      })
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+
+      const requestHandler = assessmentsController.confirmRejection()
+
+      request.params = { id: assessmentId }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
+        id: assessmentId,
+        referralRejectionReasons,
+        referralRejectionReasonOtherMatch,
+        errors,
+        errorSummary,
       })
     })
   })
@@ -355,6 +404,54 @@ describe('AssessmentsController', () => {
       expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, 'rejected')
       expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
       expect(request.flash).toHaveBeenCalledWith('success', 'some info message')
+    })
+
+    it('redirects to the reject confirmation page with errors if the questions are not answered', async () => {
+      const requestHandler = assessmentsController.reject()
+      const assessmentId = 'some-id'
+
+      request.params = { id: assessmentId }
+      request.body = {}
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledTimes(2)
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'referralRejectionReasonId', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'isWithdrawn', 'empty')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        new Error(),
+        paths.assessments.confirmRejection({ id: assessmentId }),
+      )
+    })
+
+    it('redirects to the reject confirmation page with an error if more details are not provided', async () => {
+      const requestHandler = assessmentsController.reject()
+      const assessmentId = 'other-reason-id'
+      const referralRejectionReasons = [
+        referenceDataFactory.build({ id: 'reason-id', name: 'A reason' }),
+        referenceDataFactory.build({ id: 'other-reason-id', name: 'Some other reason' }),
+      ]
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+
+      request.params = { id: assessmentId }
+      request.body = {
+        referralRejectionReasonId: 'other-reason-id',
+        isWithdrawn: 'no',
+        referralRejectionReasonDetail: '   ',
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledTimes(1)
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'referralRejectionReasonDetail', 'empty')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        new Error(),
+        paths.assessments.confirmRejection({ id: assessmentId }),
+      )
     })
   })
 

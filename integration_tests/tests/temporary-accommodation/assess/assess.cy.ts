@@ -372,6 +372,44 @@ context('Apply', () => {
         })
       })
 
+      it('shows errors when rejecting an assessment', () => {
+        cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+          const assessment = assessmentFactory.build({ status: 'unallocated' })
+          assessment.application.document = applicationTranslatedDocument
+
+          cy.task('stubFindAssessment', assessment)
+          cy.task('stubReferralRejectionReasons')
+
+          // Given I visit the assessment page
+          const assessmentPage = AssessmentSummaryPage.visit(assessment)
+
+          // When I click on the Update status to 'Reject' button
+          assessmentPage.clickAction('Reject')
+
+          // Then I am taken to the confirmation page
+          let rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+
+          cy.task('stubRejectAssessment', assessment)
+          cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
+
+          // When I submit the form empty
+          rejectionConfirmationPage.clickSubmit()
+
+          // Then I see errors
+          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+          rejectionConfirmationPage.shouldShowErrorMessagesForFields(['referralRejectionReasonId', 'isWithdrawn'])
+
+          // When I complete the form but clear the details
+          rejectionConfirmationPage.completeForm()
+          rejectionConfirmationPage.clearRejectionReasonDetail()
+          rejectionConfirmationPage.clickSubmit()
+
+          // Then I see one error
+          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, 'Reject referral')
+          rejectionConfirmationPage.shouldShowErrorMessagesForFields(['referralRejectionReasonDetail'])
+        })
+      })
+
       it('shows the full assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })

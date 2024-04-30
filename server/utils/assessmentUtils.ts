@@ -13,6 +13,7 @@ import {
   AssessmentSearchApiStatus,
   AssessmentSearchParameters,
   MessageContents,
+  ReferenceData,
   TableRow,
   TimelineItem,
 } from '../@types/ui'
@@ -154,6 +155,12 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
     }
   })
 }
+
+export const referralRejectionReasonIsOther = (
+  id: string,
+  match: string,
+  referralRejectionReasons: Array<ReferenceData>,
+) => Boolean(referralRejectionReasons.find(reason => reason.id === id)?.name.match(new RegExp(match, 'i')))
 
 export const statusChangeMessage = (assessmentId: string, status: AssessmentStatus): MessageContents => {
   switch (status) {

@@ -10,4 +10,8 @@ export default class AssessmentRejectionConfirmPage extends Page {
     this.completeTextArea('referralRejectionReasonDetail', 'Details about the rejection reason')
     this.checkRadioByNameAndLabel('isWithdrawn', 'Yes')
   }
+
+  clearRejectionReasonDetail() {
+    this.clearTextInputByLabel('Add details about why the referral is being rejected')
+  }
 }

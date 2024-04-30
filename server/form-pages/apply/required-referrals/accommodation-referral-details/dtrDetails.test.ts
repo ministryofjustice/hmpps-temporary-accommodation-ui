@@ -80,7 +80,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails({ ...body, reference: undefined }, application, localAuthorities)
       expect(page.errors()).toEqual({
-        reference: 'You must specify the DTR / NOP reference number',
+        reference: 'You must specify the reference number',
       })
     })
 
@@ -113,7 +113,7 @@ describe('DtrDetails', () => {
 
       const page = new DtrDetails(body, application, localAuthorities)
       expect(page.errors()).toEqual({
-        date: 'The date DTR / NOP was submitted must not be in the future',
+        date: 'The submission date must not be in the future',
       })
     })
 

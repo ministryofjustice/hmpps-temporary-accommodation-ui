@@ -117,7 +117,7 @@ export default class DtrDetails implements TasklistPage {
     const errors: TaskListErrors<this> = {}
 
     if (!this.body.reference) {
-      errors.reference = 'You must specify the DTR / NOP reference number'
+      errors.reference = 'You must specify the reference number'
     }
 
     if (dateIsBlank(this.body, 'date')) {
@@ -125,7 +125,7 @@ export default class DtrDetails implements TasklistPage {
     } else if (!dateAndTimeInputsAreValidDates(this.body, 'date')) {
       errors.date = 'You must specify a valid submission date'
     } else if (dateIsInFuture(this.body.date)) {
-      errors.date = 'The date DTR / NOP was submitted must not be in the future'
+      errors.date = 'The submission date must not be in the future'
     }
 
     if (!this.body.localAuthorityAreaName) {

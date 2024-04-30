@@ -105,7 +105,7 @@ describe('AssessmentsService', () => {
   })
 
   describe('getReferenceData', () => {
-    it('should return the reference data needed to create departures', async () => {
+    it('should return the reference data needed to reject referrals', async () => {
       const referralRejectionReasons = referenceDataFactory.buildList(5)
 
       referenceDataClient.getReferenceData.mockResolvedValue(referralRejectionReasons)

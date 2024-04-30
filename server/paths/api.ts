@@ -65,7 +65,6 @@ const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
 
-const reportsPath = path('/reports')
 const cas3Path = path('/cas3')
 const reportsCas3Path = cas3Path.path('reports')
 const applyPaths = {
@@ -146,10 +145,10 @@ export default {
     },
   },
   reports: {
-    bookings: reportsPath.path('bookings'),
-    bedspaceUsage: reportsPath.path('bed-usage'),
-    bedspaceUtilisation: reportsPath.path('bed-utilisation'),
-    referrals: reportsCas3Path.path('referrals'),
+    bookings: reportsCas3Path.path('booking'),
+    bedspaceUsage: reportsCas3Path.path('bedUsage'),
+    bedspaceUtilisation: reportsCas3Path.path('bedOccupancy'),
+    referrals: reportsCas3Path.path('referral'),
   },
   users: {
     actingUser: {

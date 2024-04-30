@@ -19,39 +19,39 @@ describe('reportUtils', () => {
       const probationRegion = probationRegionFactory.build({
         name: 'Kent, Surrey & Sussex',
       })
-      const month = '3'
-      const year = '2023'
-      const type = 'bedspace-usage'
+      const startDate = '2023-06-06'
+      const endDate = '2023-12-06'
+      const type = 'bedUsage'
 
-      const result = reportForProbationRegionFilename(probationRegion.name, month, year, type)
+      const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
 
-      expect(result).toEqual('bedspace-usage-kent-surrey-sussex-march-2023.xlsx')
+      expect(result).toEqual('bedspace-usage-kent-surrey-sussex-06-06-2023-to-06-12-2023.xlsx')
     })
 
     it('returns the correct filename for an occupancy report', () => {
       const probationRegion = probationRegionFactory.build({
         name: 'Kent, Surrey & Sussex',
       })
-      const month = '6'
-      const year = '2024'
-      const type = 'occupancy'
+      const startDate = '2023-08-11'
+      const endDate = '2023-11-23'
+      const type = 'bedOccupancy'
 
-      const result = reportForProbationRegionFilename(probationRegion.name, month, year, type)
+      const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
 
-      expect(result).toEqual('occupancy-kent-surrey-sussex-june-2024.xlsx')
+      expect(result).toEqual('occupancy-kent-surrey-sussex-11-08-2023-to-23-11-2023.xlsx')
     })
 
     it('returns the correct filename for a bookings report', () => {
       const probationRegion = probationRegionFactory.build({
         name: 'Kent, Surrey & Sussex',
       })
-      const month = '1'
-      const year = '2023'
-      const type = 'bookings'
+      const startDate = '2024-01-08'
+      const endDate = '2024-02-13'
+      const type = 'booking'
 
-      const result = reportForProbationRegionFilename(probationRegion.name, month, year, type)
+      const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
 
-      expect(result).toEqual('bookings-kent-surrey-sussex-january-2023.xlsx')
+      expect(result).toEqual('bookings-kent-surrey-sussex-08-01-2024-to-13-02-2024.xlsx')
     })
   })
 

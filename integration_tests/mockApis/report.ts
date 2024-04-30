@@ -1,25 +1,16 @@
-import { ReportType } from '@approved-premises/ui'
-import api from '../../server/paths/api'
+import { Cas3ReportType } from '@approved-premises/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
 import { probationRegions } from '../../wiremock/referenceDataStubs'
 import { getApiReportPath } from '../../server/utils/reportUtils'
 
 export default {
-  stubReport: (data: string) =>
-    stubFor({
-      request: {
-        method: 'GET',
-        url: api.reports.bookings({}),
-      },
-      response: {
-        status: 200,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: data,
-      },
-    }),
-  stubReportError: (args: { data: string; probationRegionId: string; month: string; year: string; type: ReportType }) =>
+  stubReportError: (args: {
+    data: string
+    probationRegionId: string
+    startDate: string
+    endDate: string
+    type: Cas3ReportType
+  }) =>
     stubFor({
       request: {
         method: 'GET',
@@ -28,11 +19,11 @@ export default {
           probationRegionId: {
             equalTo: args.probationRegionId,
           },
-          month: {
-            equalTo: args.month,
+          startDate: {
+            equalTo: args.startDate,
           },
-          year: {
-            equalTo: args.year,
+          endDate: {
+            equalTo: args.endDate,
           },
         },
       },
@@ -44,9 +35,9 @@ export default {
   stubReportForRegion: (args: {
     data: string
     probationRegionId: string
-    month: string
-    year: string
-    type: ReportType
+    startDate: string
+    endDate: string
+    type: Cas3ReportType
   }) =>
     stubFor({
       request: {
@@ -56,11 +47,11 @@ export default {
           probationRegionId: {
             equalTo: args.probationRegionId,
           },
-          month: {
-            equalTo: args.month,
+          startDate: {
+            equalTo: args.startDate,
           },
-          year: {
-            equalTo: args.year,
+          endDate: {
+            equalTo: args.endDate,
           },
         },
       },
@@ -72,14 +63,12 @@ export default {
         body: args.data,
       },
     }),
-  verifyReport: async () =>
-    (
-      await getMatchingRequests({
-        method: 'GET',
-        url: api.reports.bookings({}),
-      })
-    ).body.requests,
-  verifyReportForRegion: async (args: { probationRegionId: string; month: string; year: string; type: ReportType }) =>
+  verifyReportForRegion: async (args: {
+    probationRegionId: string
+    startDate: string
+    endDate: string
+    type: Cas3ReportType
+  }) =>
     (
       await getMatchingRequests({
         method: 'GET',
@@ -88,11 +77,11 @@ export default {
           probationRegionId: {
             equalTo: args.probationRegionId,
           },
-          month: {
-            equalTo: args.month,
+          startDate: {
+            equalTo: args.startDate,
           },
-          year: {
-            equalTo: args.year,
+          endDate: {
+            equalTo: args.endDate,
           },
         },
       })

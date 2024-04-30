@@ -4,11 +4,11 @@ import {
   DateFormats,
   InvalidDateStringError,
   dateAndTimeInputsAreValidDates,
+  dateExists,
   dateInputHint,
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
-  getYearsSince,
 } from './dateUtils'
 
 jest.mock('date-fns/isPast')
@@ -185,6 +185,26 @@ describe('DateFormats', () => {
     })
   })
 
+  describe('datepickerInputToIsoString', () => {
+    it.each([
+      ['01/01/1970', '1970-01-01'],
+      ['03/04/2023', '2023-04-03'],
+      ['12/10/2020', '2020-10-12'],
+      ['3/7/1999', '1999-07-03'],
+    ])('parses %s as %s', (input, output) => {
+      expect(DateFormats.datepickerInputToIsoString(input)).toEqual(output)
+    })
+  })
+
+  describe('isoDateToDatepickerInput', () => {
+    it.each([
+      ['2024-04-14', '14/04/2024'],
+      ['1970-12-01', '01/12/1970'],
+    ])('parses %s as %s', (input, output) => {
+      expect(DateFormats.isoDateToDatepickerInput(input)).toEqual(output)
+    })
+  })
+
   describe('isoDateToDaysFromNow', () => {
     beforeEach(() => {
       jest.useFakeTimers()
@@ -302,18 +322,6 @@ describe('dateIsBlank', () => {
   })
 })
 
-describe('getYearsSince', () => {
-  beforeEach(() => {
-    jest.useFakeTimers().setSystemTime(new Date('2027-01-01'))
-  })
-
-  it('returns correct years array', () => {
-    const years = [{ year: '2023' }, { year: '2024' }, { year: '2025' }, { year: '2026' }, { year: '2027' }]
-
-    expect(getYearsSince(2023)).toEqual(years)
-  })
-})
-
 describe('dateIsInThePast', () => {
   it('returns true if the date is in the past', () => {
     ;(isPast as jest.Mock).mockReturnValue(true)
@@ -353,5 +361,20 @@ describe('dateInputHint', () => {
     jest.useFakeTimers().setSystemTime(new Date('2027-03-11'))
 
     expect(dateInputHint('future')).toEqual('For example, 27 3 2028')
+  })
+})
+
+describe('dateExists', () => {
+  it.each([
+    ['2024-01-01', true],
+    ['1999-12-12', true],
+    ['2024-02-29', true],
+    ['2021-02-29', false],
+    ['2024-02-30', false],
+    ['2020-13-01', false],
+    ['24-01-01', false],
+    ['not even a date', false],
+  ])('for %s returns %s', (input, expected) => {
+    expect(dateExists(input)).toEqual(expected)
   })
 })

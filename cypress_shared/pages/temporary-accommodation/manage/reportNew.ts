@@ -1,5 +1,4 @@
-import type { ProbationRegion } from '@approved-premises/api'
-import { ReportType } from '@approved-premises/ui'
+import type { Cas3ReportType, ProbationRegion } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { exact } from '../../../../server/utils/utils'
 import Page from '../../page'
@@ -24,28 +23,28 @@ export default class ReportNewPage extends Page {
       .should('be.selected')
   }
 
-  completeForm(month: string, year: string): void {
-    this.getLabel('Month')
-    this.getSelectInputByIdAndSelectAnEntry('month', month)
+  completeForm(startDate: string, endDate: string): void {
+    this.getLabel('Start date')
+    this.getTextInputByIdAndEnterDetails('startDate', startDate)
 
-    this.getLabel('Year')
-    this.getSelectInputByIdAndSelectAnEntry('year', year)
+    this.getLabel('End date')
+    this.getTextInputByIdAndEnterDetails('endDate', endDate)
   }
 
   clearForm(): void {
     this.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
-    this.getSelectInputByIdAndSelectAnEntry('month', '')
-    this.getSelectInputByIdAndSelectAnEntry('year', '')
+    this.getTextInputByIdAndClear('startDate')
+    this.getTextInputByIdAndClear('endDate')
   }
 
-  clickDownload(type: ReportType): void {
-    if (type === 'bedspace-usage') {
+  clickDownload(type: Cas3ReportType): void {
+    if (type === 'bedUsage') {
       cy.get('button').contains('Download bedspace usage').click()
-    } else if (type === 'bookings') {
+    } else if (type === 'booking') {
       cy.get('button').contains('Download booking data').click()
-    } else if (type === 'occupancy') {
+    } else if (type === 'bedOccupancy') {
       cy.get('button').contains('Download occupancy report').click()
-    } else if (type === 'referrals') {
+    } else if (type === 'referral') {
       cy.get('button').contains('Download referrals report').click()
     }
   }

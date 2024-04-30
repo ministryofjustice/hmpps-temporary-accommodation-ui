@@ -1,11 +1,12 @@
 import type { Request, RequestHandler, Response } from 'express'
 
+import { addDays } from 'date-fns'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
-import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
+import { DateFormats, dateExists } from '../../../utils/dateUtils'
 import { allReportProbationRegions } from '../../../utils/reportUtils'
 
 export default class ReportsController {
@@ -26,47 +27,67 @@ export default class ReportsController {
         errors,
         errorSummary: requestErrorSummary,
         probationRegionId: req.session.probationRegion.id,
-        months: monthsArr,
-        years: getYearsSince(2023),
+        maxStartDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(addDays(new Date(), -1))),
+        maxEndDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(new Date())),
         ...userInput,
       })
     }
   }
 
   create(): RequestHandler {
+    // eslint-disable-next-line consistent-return
     return async (req: Request, res: Response) => {
       try {
-        const { probationRegionId, month, year, reportType } = req.body
+        const { probationRegionId, startDate, endDate, reportType } = req.body
         const callConfig = extractCallConfig(req)
 
-        const error = new Error()
+        let error: Error
+        let startDateIso: string
+        let endDateIso: string
 
-        const fields = [
-          { name: 'probationRegionId', value: probationRegionId },
-          { name: 'month', value: month },
-          { name: 'year', value: year },
-        ]
+        if (!probationRegionId) {
+          error = new Error()
+          insertGenericError(error, 'probationRegionId', 'empty')
+        }
 
-        fields.forEach(field => {
-          if (!field.value) {
-            insertGenericError(error, field.name, 'empty')
+        if (!startDate) {
+          error = error || new Error()
+          insertGenericError(error, 'startDate', 'empty')
+        } else {
+          startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+
+          if (!dateExists(startDateIso)) {
+            error = error || new Error()
+            insertGenericError(error, 'startDate', 'invalid')
           }
-        })
+        }
 
-        if (!fields.every(field => Boolean(field.value))) {
-          throw error
+        if (!endDate) {
+          error = error || new Error()
+          insertGenericError(error, 'endDate', 'empty')
+        } else {
+          endDateIso = DateFormats.datepickerInputToIsoString(endDate)
+
+          if (!dateExists(endDateIso)) {
+            error = error || new Error()
+            insertGenericError(error, 'endDate', 'invalid')
+          }
+        }
+
+        if (error) {
+          return catchValidationErrorOrPropogate(req, res, error, paths.reports.new({}))
         }
 
         await this.reportService.pipeReportForProbationRegion(
           callConfig,
           res,
           probationRegionId,
-          month,
-          year,
+          startDateIso,
+          endDateIso,
           reportType,
         )
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
+        return catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
       }
     }
   }

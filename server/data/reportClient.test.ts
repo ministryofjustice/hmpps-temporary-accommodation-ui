@@ -46,11 +46,11 @@ describe('ReportClient', () => {
 
       await reportClient.bookings(response, 'some-filename', month, year)
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 
@@ -71,11 +71,11 @@ describe('ReportClient', () => {
 
       await reportClient.bookings(response, 'some-filename', month, year)
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 
@@ -84,25 +84,32 @@ describe('ReportClient', () => {
       const probationRegion = probationRegionFactory.build()
 
       const data = 'some-data'
-      const year = '2020'
-      const month = '1'
-      const type = 'occupancy'
+      const startDate = '2024-01-01'
+      const endDate = '2024-04-01'
+      const type = 'bedOccupancy'
 
       fakeApprovedPremisesApi
         .get(paths.reports.bedspaceUtilisation({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .query({ probationRegionId: probationRegion.id, year, month })
+        .query({ probationRegionId: probationRegion.id, startDate, endDate })
         .reply(200, data, { 'content-type': 'some-content-type' })
 
       const response = createMock<Response>()
 
-      await reportClient.reportForProbationRegion(response, 'some-filename', probationRegion.id, month, year, type)
+      await reportClient.reportForProbationRegion(
+        response,
+        'some-filename',
+        probationRegion.id,
+        startDate,
+        endDate,
+        type,
+      )
 
-      expect(response.write).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
       expect(response.set).toHaveBeenCalledWith({
         'Content-Type': 'some-content-type',
         'Content-Disposition': `attachment; filename="some-filename"`,
       })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 })

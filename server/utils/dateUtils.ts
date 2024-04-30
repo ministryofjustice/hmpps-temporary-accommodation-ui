@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, isFuture, isPast } from 'date-fns'
+import { differenceInDays, isExists, isFuture, isPast } from 'date-fns'
 
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
@@ -120,6 +120,20 @@ export class DateFormats {
     } as ObjectWithDateParts<K>
   }
 
+  /**
+   * Converts input from the Datepicker component into an ISO8601 date string
+   * @param dateString a date string formatted in the GB locale, with or without leading zeros (e.g. `6/04/2024`)
+   * @returns an ISO8601 date string
+   */
+  static datepickerInputToIsoString(dateString: string) {
+    const [day, month, year] = dateString.split('/')
+    return `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
+  }
+
+  static isoDateToDatepickerInput(dateString: string) {
+    return dateString.split('-').reverse().join('/')
+  }
+
   static isoDateToDaysFromNow(dateString: string) {
     const difference = differenceInDays(new Date(dateString).setHours(0, 0, 0, 0), new Date().setHours(0, 0, 0, 0))
     const numDays = Math.abs(difference)
@@ -152,6 +166,15 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   return true
 }
 
+export const dateExists = (dateString: string) => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  try {
+    return isExists(year, month - 1, day)
+  } catch (err) {
+    return false
+  }
+}
+
 export const dateIsBlank = <K extends string | number>(
   dateInputObj: Partial<ObjectWithDateParts<K>>,
   key: K,
@@ -160,30 +183,6 @@ export const dateIsBlank = <K extends string | number>(
 }
 
 export class InvalidDateStringError extends Error {}
-
-export const monthsArr = [
-  { name: 'January', value: '1' },
-  { name: 'February', value: '2' },
-  { name: 'March', value: '3' },
-  { name: 'April', value: '4' },
-  { name: 'May', value: '5' },
-  { name: 'June', value: '6' },
-  { name: 'July', value: '7' },
-  { name: 'August', value: '8' },
-  { name: 'September', value: '9' },
-  { name: 'October', value: '10' },
-  { name: 'November', value: '11' },
-  { name: 'December', value: '12' },
-]
-
-export const getYearsSince = (startYear: number): Array<{ year: string }> => {
-  let years = []
-  const thisYear = new Date().getFullYear()
-  while (startYear <= thisYear) {
-    years.push({ year: (startYear++).toString() })
-  }
-  return years
-}
 
 export const dateIsInThePast = (dateString: string): boolean => {
   const date = DateFormats.isoToDateObj(dateString)

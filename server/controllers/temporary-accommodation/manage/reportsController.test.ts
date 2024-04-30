@@ -7,7 +7,6 @@ import ReportService from '../../../services/reportService'
 import { probationRegionFactory, userFactory } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
-import { getYearsSince, monthsArr } from '../../../utils/dateUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 
 jest.mock('../../../utils/validation')
@@ -20,7 +19,6 @@ jest.mock('../../../utils/userUtils', () => {
     filterProbationRegions: jest.fn(),
   }
 })
-jest.mock('../../../utils/dateUtils')
 
 describe('ReportsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -45,6 +43,10 @@ describe('ReportsController', () => {
   })
 
   describe('new', () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2024-04-22'))
+    })
+
     it('renders the form with filtered regions', async () => {
       const unfilteredRegions = [
         probationRegionFactory.build({
@@ -65,7 +67,6 @@ describe('ReportsController', () => {
 
       const requestHandler = reportsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
-      ;(getYearsSince as jest.Mock).mockReturnValue([])
 
       response = createMock<Response>({
         locals: { user: userFactory.build() },
@@ -81,8 +82,8 @@ describe('ReportsController', () => {
         errors: {},
         errorSummary: [],
         probationRegionId: request.session.probationRegion.id,
-        months: monthsArr,
-        years: [],
+        maxStartDate: '21/04/2024',
+        maxEndDate: '22/04/2024',
       })
     })
 
@@ -106,7 +107,6 @@ describe('ReportsController', () => {
 
         const requestHandler = reportsController.new()
         ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
-        ;(getYearsSince as jest.Mock).mockReturnValue([])
 
         response = createMock<Response>({
           locals: { user: userFactory.build({ roles: ['reporter'] }) },
@@ -129,22 +129,27 @@ describe('ReportsController', () => {
           errors: {},
           errorSummary: [],
           probationRegionId: request.session.probationRegion.id,
-          months: monthsArr,
-          years: [],
+          maxStartDate: '21/04/2024',
+          maxEndDate: '22/04/2024',
         })
       })
     })
   })
 
   describe('create', () => {
+    beforeEach(() => {
+      jest.useFakeTimers()
+      jest.setSystemTime(new Date('2024-04-11'))
+    })
+
     it('creates a booking report for the probation region and pipes it into the express response', async () => {
       const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
-        month: '6',
-        year: '2024',
-        reportType: 'bookings',
+        startDate: '03/02/2024',
+        endDate: '03/04/2024',
+        reportType: 'booking',
       }
 
       await requestHandler(request, response, next)
@@ -153,9 +158,9 @@ describe('ReportsController', () => {
         callConfig,
         response,
         'probation-region',
-        '6',
-        '2024',
-        'bookings',
+        '2024-02-03',
+        '2024-04-03',
+        'booking',
       )
     })
 
@@ -163,9 +168,9 @@ describe('ReportsController', () => {
       const requestHandler = reportsController.create()
 
       request.body = {
-        month: '2',
-        year: '2023',
-        reportType: 'occupancy',
+        startDate: '12/01/2024',
+        endDate: '24/01/2024',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
@@ -179,18 +184,18 @@ describe('ReportsController', () => {
       )
     })
 
-    it('renders with errors if the month is not specified', async () => {
+    it('renders with errors if the startDate is not specified', async () => {
       const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
-        year: '2023',
-        reportType: 'occupancy',
+        endDate: '24/01/2024',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
 
-      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'month', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'startDate', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
@@ -199,18 +204,18 @@ describe('ReportsController', () => {
       )
     })
 
-    it('renders with errors if the year is not specified', async () => {
+    it('renders with errors if the endDate is not specified', async () => {
       const requestHandler = reportsController.create()
 
       request.body = {
         probationRegionId: 'probation-region',
-        month: '3',
-        reportType: 'occupancy',
+        startDate: '20/01/2024',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
 
-      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'year', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'endDate', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
@@ -224,17 +229,40 @@ describe('ReportsController', () => {
 
       request.body = {
         probationRegionId: '',
-        month: '',
-        year: '',
-        reportType: 'occupancy',
+        startDate: '',
+        endDate: '',
+        reportType: 'bedOccupancy',
       }
 
       await requestHandler(request, response, next)
 
       expect(insertGenericError).toHaveBeenCalledTimes(3)
       expect(insertGenericError).toHaveBeenNthCalledWith(1, new Error(), 'probationRegionId', 'empty')
-      expect(insertGenericError).toHaveBeenNthCalledWith(2, new Error(), 'month', 'empty')
-      expect(insertGenericError).toHaveBeenNthCalledWith(3, new Error(), 'year', 'empty')
+      expect(insertGenericError).toHaveBeenNthCalledWith(2, new Error(), 'startDate', 'empty')
+      expect(insertGenericError).toHaveBeenNthCalledWith(3, new Error(), 'endDate', 'empty')
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
+        paths.reports.new({}),
+      )
+    })
+
+    it('renders invalid date errors if the dates are invalid', async () => {
+      const requestHandler = reportsController.create()
+
+      request.body = {
+        probationRegionId: 'all',
+        startDate: '01/04/20',
+        endDate: '01/13/2024',
+        reportType: 'bedOccupancy',
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'startDate', 'invalid')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'endDate', 'invalid')
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,

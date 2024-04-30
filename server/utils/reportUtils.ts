@@ -1,9 +1,8 @@
-import { ProbationRegion } from '@approved-premises/api'
-import type { ReportType } from '@approved-premises/ui'
-import { DateFormats, monthsArr } from './dateUtils'
+import { Cas3ReportType, ProbationRegion } from '@approved-premises/api'
+import { DateFormats } from './dateUtils'
 import paths from '../paths/api'
 
-const permittedFilenameCharacters = 'abcdefghijklmnopqrstuvwxyz01234567890 '
+const permittedFilenameCharacters = 'abcdefghijklmnopqrstuvwxyz01234567890 -'
 
 export const reportFilename = () => {
   const date = DateFormats.dateObjtoUIDate(new Date(), { format: 'short' })
@@ -13,15 +12,23 @@ export const reportFilename = () => {
   return `${filterFilename(concatenatedName)}.xlsx`
 }
 
+const reverseISODate = (isoDate: string) => isoDate.split('-').reverse().join('-')
+const reportNames: Record<Cas3ReportType, string> = {
+  referral: 'referrals',
+  booking: 'bookings',
+  bedUsage: 'bedspace usage',
+  bedOccupancy: 'occupancy',
+}
+
 export const reportForProbationRegionFilename = (
   regionName: ProbationRegion['name'],
-  month: string,
-  year: string,
-  type: ReportType,
+  startDate: string,
+  endDate: string,
+  type: Cas3ReportType,
 ) => {
-  const monthName = monthsArr.find(monthObj => monthObj.value === month).name
-
-  const concatenatedName = `${type === 'bedspace-usage' ? 'bedspace usage' : type} ${regionName} ${monthName} ${year}`
+  const concatenatedName = `${reportNames[type]} ${regionName} ${reverseISODate(startDate)} to ${reverseISODate(
+    endDate,
+  )}`
 
   return `${filterFilename(concatenatedName)}.xlsx`
 }
@@ -32,17 +39,17 @@ const filterFilename = (filename: string): string => {
     .split('')
     .filter(character => permittedFilenameCharacters.includes(character))
     .join('')
-    .replace(/([ ])+/g, '-')
+    .replace(/ +/g, '-')
 }
 
-export const getApiReportPath = (reportType: ReportType): string => {
-  if (reportType === 'bookings') {
+export const getApiReportPath = (reportType: Cas3ReportType): string => {
+  if (reportType === 'booking') {
     return paths.reports.bookings({})
   }
-  if (reportType === 'referrals') {
+  if (reportType === 'referral') {
     return paths.reports.referrals({})
   }
-  if (reportType === 'bedspace-usage') {
+  if (reportType === 'bedUsage') {
     return paths.reports.bedspaceUsage({})
   }
 

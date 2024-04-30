@@ -1,6 +1,6 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
-import { ReportType } from '@approved-premises/ui'
+import { Cas3ReportType } from '@approved-premises/api'
 import { ReportClient } from '../data'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
@@ -52,20 +52,20 @@ describe('ReportService', () => {
       ;(
         reportForProbationRegionFilename as jest.MockedFunction<typeof reportForProbationRegionFilename>
       ).mockReturnValue('some-filename')
-      const month = '1'
-      const year = '2023'
-      const type = 'bedspace-usage'
+      const startDate = '2023-10-11'
+      const endDate = '2023-12-11'
+      const type = 'bedUsage'
 
-      await service.pipeReportForProbationRegion(callConfig, response, probationRegions[0].id, month, year, type)
+      await service.pipeReportForProbationRegion(callConfig, response, probationRegions[0].id, startDate, endDate, type)
 
       expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(reportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0].name, month, year, type)
+      expect(reportForProbationRegionFilename).toHaveBeenCalledWith(probationRegions[0].name, startDate, endDate, type)
       expect(reportClient.reportForProbationRegion).toHaveBeenCalledWith(
         response,
         'some-filename',
         probationRegions[0].id,
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       )
     })
@@ -76,19 +76,19 @@ describe('ReportService', () => {
         reportForProbationRegionFilename as jest.MockedFunction<typeof reportForProbationRegionFilename>
       ).mockReturnValue('some-filename')
 
-      const month = '1'
-      const year = '2023'
-      const type: ReportType = 'occupancy'
+      const startDate = '2024-02-01'
+      const endDate = '2024-03-01'
+      const type: Cas3ReportType = 'bedOccupancy'
 
-      await service.pipeReportForProbationRegion(callConfig, response, 'all', month, year, type)
+      await service.pipeReportForProbationRegion(callConfig, response, 'all', startDate, endDate, type)
 
-      expect(reportForProbationRegionFilename).toHaveBeenCalledWith('All regions', month, year, type)
+      expect(reportForProbationRegionFilename).toHaveBeenCalledWith('All regions', startDate, endDate, type)
       expect(reportClient.reportForProbationRegion).toHaveBeenCalledWith(
         response,
         'some-filename',
         '',
-        month,
-        year,
+        startDate,
+        endDate,
         type,
       )
     })

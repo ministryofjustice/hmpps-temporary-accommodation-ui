@@ -311,17 +311,16 @@ describe('assessmentUtils', () => {
 
   describe('referralRejectionReasonIsOther', () => {
     const rejectionReasons = [
-      referenceDataFactory.build({ id: 'another-id', name: 'Another reason' }),
+      referenceDataFactory.build({ id: 'another-reason-id', name: 'Another reason' }),
       referenceDataFactory.build({ id: 'other-id', name: 'Other' }),
       referenceDataFactory.build({ id: 'valid-id', name: 'A valid reason' }),
     ]
 
     it.each([
-      [true, 'other-id', 'other'],
-      [true, 'another-id', 'Another reason'],
-      [false, 'valid-id', 'other'],
-      [false, 'does-not-exist', 'other'],
-    ])(`returns %s} if the referral rejection id %s reason matches '%s'`, (expected, id, match) => {
+      [true, 'another-reason-id', 'Another reason'],
+      [false, 'other-id', 'Another reason'],
+      [false, 'does-not-exist', 'Another reason'],
+    ])(`returns %s if the referral rejection id %s reason matches '%s'`, (expected, id, match) => {
       expect(referralRejectionReasonIsOther(id, match, rejectionReasons)).toEqual(expected)
     })
   })

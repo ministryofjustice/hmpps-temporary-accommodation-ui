@@ -133,7 +133,7 @@ describe('formUtils', () => {
     it('adds conditional reveals to items with matching text', () => {
       const result = convertObjectsToRadioItems(objects, 'name', 'id', 'field', {}, [
         {
-          match: 'DE',
+          match: 'def',
           html: '<p>Conditional HTML</p>',
         },
       ])

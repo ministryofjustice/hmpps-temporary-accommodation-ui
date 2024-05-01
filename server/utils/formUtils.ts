@@ -47,7 +47,7 @@ export const convertObjectsToRadioItems = (
 
   conditionals.forEach(conditional => {
     const { match, html } = conditional
-    const target = radios.find(radio => 'text' in radio && radio.text.match(new RegExp(match, 'i')))
+    const target = radios.find(radio => 'text' in radio && radio.text === match)
 
     if (target && 'text' in target) {
       target.conditional = { html }

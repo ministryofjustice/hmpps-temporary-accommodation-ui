@@ -285,7 +285,7 @@ context('Report', () => {
     })
   })
 
-  it('should show an error when the user does not select required fields', () => {
+  it('should show an error when the user does not select required fields, then clear them when they are corrected', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -293,12 +293,37 @@ context('Report', () => {
     cy.task('stubReportReferenceData')
     const page = ReportNewPage.visit()
 
-    // And I clear the probation region
-    page.clearForm()
-    page.clickDownload('bedOccupancy')
+    cy.then(function _() {
+      // And I clear all the fields
+      page.clearForm()
+      page.clickDownload('bedOccupancy')
 
-    // Then I should see an messages relating to the probation region
-    page.shouldShowErrorMessagesForFields(['probationRegionId', 'startDate', 'endDate'])
+      // Then I should see error messages for all fields
+      page.shouldShowErrorMessagesForFields(['probationRegionId', 'startDate', 'endDate'])
+
+      // When I complete the form
+      const type = 'referral'
+      const probationRegion = this.actingUserProbationRegion
+      const startDate = '01/02/2024'
+      const startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+      const endDate = '01/03/2024'
+      const endDateIso = DateFormats.datepickerInputToIsoString(endDate)
+
+      page.completeForm(startDate, endDate, probationRegion.id)
+
+      cy.task('stubReportForRegion', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        startDate: startDateIso,
+        endDate: endDateIso,
+        type,
+      })
+      // page.expectDownload()
+      page.clickDownload(type)
+
+      // Then I should no longer see any error
+      page.shouldNotShowErrors()
+    })
   })
 
   it('navigates back from the booking report page to the dashboard page', () => {

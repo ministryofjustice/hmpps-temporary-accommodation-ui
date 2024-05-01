@@ -129,6 +129,31 @@ describe('formUtils', () => {
         },
       ])
     })
+
+    it('adds conditional reveals to items with matching text', () => {
+      const result = convertObjectsToRadioItems(objects, 'name', 'id', 'field', {}, [
+        {
+          match: 'def',
+          html: '<p>Conditional HTML</p>',
+        },
+      ])
+
+      expect(result).toEqual([
+        {
+          text: 'abc',
+          value: '123',
+          checked: false,
+        },
+        {
+          text: 'def',
+          value: '345',
+          checked: false,
+          conditional: {
+            html: '<p>Conditional HTML</p>',
+          },
+        },
+      ])
+    })
   })
 
   describe('convertKeyValuePairToCheckBoxItems', () => {

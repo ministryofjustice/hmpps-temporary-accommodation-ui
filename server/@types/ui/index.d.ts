@@ -22,6 +22,7 @@ import {
   PrisonCaseNote,
   SortDirection,
   TemporaryAccommodationApplication,
+  TemporaryAccommodationAssessmentStatus,
   User,
 } from '@approved-premises/api'
 import { CallConfig } from '../../data/restClient'
@@ -119,6 +120,9 @@ export type RadioItem =
       text: string
       value: string
       checked?: boolean
+      conditional?: {
+        html: string
+      }
     }
   | {
       divider: string
@@ -353,6 +357,8 @@ export type AssessmentSearchApiStatus =
   | Extract<AssessmentStatus, 'unallocated' | 'in_review' | 'ready_to_place'>
   | 'archived'
 
+export type AssessmentUpdateStatus = Exclude<TemporaryAccommodationAssessmentStatus, 'rejected'>
+
 export type AssessmentSearchParameters = {
   page?: number
   sortBy?: AssessmentSortField
@@ -361,3 +367,10 @@ export type AssessmentSearchParameters = {
 }
 
 export type BedspaceStatus = 'online' | 'archived'
+
+// TODO: Remove once it exists in generated types
+export type ReferralRejectionBody = {
+  referralRejectionReasonId: string
+  referralRejectionReasonDetail?: string
+  isWithdrawn: boolean
+}

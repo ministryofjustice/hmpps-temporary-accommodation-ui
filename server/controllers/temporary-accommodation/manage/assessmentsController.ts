@@ -1,7 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, AssessmentUpdateStatus } from '@approved-premises/ui'
 import {
-  TemporaryAccommodationAssessment as Assessment,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
 } from '../../../@types/shared'
@@ -12,6 +11,7 @@ import {
   createTableHeadings,
   getParams,
   pathFromStatus,
+  referralRejectionReasonIsOther,
   statusChangeMessage,
 } from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
@@ -20,7 +20,7 @@ import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
 
-export const confirmationPageContent: Record<Assessment['status'], { title: string; text: string }> = {
+export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
     title: 'Mark this referral as in review',
     text: '<p class="govuk-body">Mark this referral as in review if you or a HPT colleague are working on this referral.</p>',
@@ -30,11 +30,6 @@ export const confirmationPageContent: Record<Assessment['status'], { title: stri
     text: `<p class="govuk-body">Mark this referral as ready to place to find a suitable bedspace.</p>
       <p class="govuk-body">Some regions will require approval before a bedspace is booked. Other regions require an address before approvals can be given. Check with your manager if you are unsure.</p>
       <p class="govuk-body">Once a person has been placed the referral should be archived.</p>`,
-  },
-  rejected: {
-    title: 'Confirm rejection',
-    text: `<p class="govuk-body">You will need to email the community probation practitioner to let them know their referral has been rejected.</p>
-      <p class="govuk-body">Once a referral has been rejected it cannot be undone.</p>`,
   },
   closed: {
     title: 'Archive this referral',
@@ -46,6 +41,8 @@ export const confirmationPageContent: Record<Assessment['status'], { title: stri
             <p class="govuk-body"> The referral will be updated to 'unallocated'.</p>`,
   },
 }
+
+export const referralRejectionReasonOtherMatch = 'Another reason (please add)'
 
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}
@@ -136,6 +133,78 @@ export default class AssessmentsController {
     }
   }
 
+  confirmRejection(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const callConfig = extractCallConfig(req)
+
+      const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
+      const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
+
+      return res.render('temporary-accommodation/assessments/confirm-rejection', {
+        assessment,
+        referralRejectionReasons,
+        referralRejectionReasonOtherMatch,
+        errors,
+        errorSummary,
+        ...userInput,
+      })
+    }
+  }
+
+  reject(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
+
+      const { id } = req.params
+      const { referralRejectionReasonId, referralRejectionReasonDetail, ppRequestedWithdrawal } = req.body
+
+      try {
+        let error: Error
+        let isOtherReason = false
+
+        if (!referralRejectionReasonId) {
+          error = new Error()
+          insertGenericError(error, 'referralRejectionReasonId', 'empty')
+        } else {
+          isOtherReason = referralRejectionReasonIsOther(
+            referralRejectionReasonId,
+            referralRejectionReasonOtherMatch,
+            referralRejectionReasons,
+          )
+
+          if (isOtherReason && (!referralRejectionReasonDetail || referralRejectionReasonDetail.trim() === '')) {
+            error = new Error()
+            insertGenericError(error, 'referralRejectionReasonDetail', 'empty')
+          }
+        }
+
+        if (!ppRequestedWithdrawal) {
+          error = error || new Error()
+          insertGenericError(error, 'ppRequestedWithdrawal', 'empty')
+        }
+
+        if (error) {
+          throw error
+        }
+
+        await this.assessmentsService.rejectAssessment(callConfig, id, {
+          referralRejectionReasonId,
+          referralRejectionReasonDetail: isOtherReason ? referralRejectionReasonDetail : undefined,
+          isWithdrawn: ppRequestedWithdrawal === 'yes',
+        })
+
+        req.flash('success', statusChangeMessage(id, 'rejected'))
+        res.redirect(paths.assessments.summary({ id }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.assessments.confirmRejection({ id }))
+      }
+    }
+  }
+
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       return res.render('temporary-accommodation/assessments/confirm', {
@@ -152,7 +221,7 @@ export default class AssessmentsController {
 
       const { id, status } = req.params
 
-      await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentStatus)
+      await this.assessmentsService.updateAssessmentStatus(callConfig, id, status as AssessmentUpdateStatus)
 
       req.flash('success', statusChangeMessage(id, status as AssessmentStatus))
       res.redirect(paths.assessments.summary({ id }))

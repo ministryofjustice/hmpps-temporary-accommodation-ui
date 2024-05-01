@@ -1,0 +1,92 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../components/ta-radios/macro.njk" import taRadios %}
+{% from "../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "Reject referral - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.assessments.summary({ id: assessment.id })
+    }) }}
+{% endblock %}
+
+{% block content %}
+    {% set context = fetchContext() %}
+    {% set conditionalHtml %}
+        {{ taTextarea({
+            fieldName: 'referralRejectionReasonDetail',
+            label: {
+                text: "Add details about why the referral is being rejected",
+                classes: "govuk-label--s"
+            }
+        }, context) }}
+    {% endset %}
+
+    <h1 class="govuk-heading-l">Reject {{ personName(assessment.application.person) }}'s referral</h1>
+
+    {{ showErrorSummary(errorSummary) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.assessments.reject({ id: assessment.id }) }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+
+                {{ taRadios(
+                    {
+                        fieldset: {
+                        legend: {
+                            text: "Why are you rejecting this referral?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                        hint: {
+                        text: 'This helps the organisation understand why CAS3 referrals are rejected.'
+                    },
+                        items: convertObjectsToRadioItems( referralRejectionReasons, 'name', 'id', 'referralRejectionReasonId', [{
+                        match: referralRejectionReasonOtherMatch,
+                        html: conditionalHtml
+                    }]),
+                        fieldName: "referralRejectionReasonId"
+                    }, context
+                ) }}
+
+                {{ taRadios(
+                    {
+                        fieldset: {
+                        legend: {
+                            text: "Did the probation practitioner ask for it to be withdrawn?",
+                            classes: "govuk-fieldset__legend--m"
+                        }
+                    },
+                        items: [
+                        {
+                            value: "yes",
+                            text: "Yes",
+                            checked: context.ppRequestedWithdrawal === 'yes'
+                        },
+                        {
+                            value: "no",
+                            text: "No",
+                            checked: context.ppRequestedWithdrawal === 'no'
+                        }
+                    ],
+                        fieldName: "ppRequestedWithdrawal"
+                    }, context
+                ) }}
+
+                {{ govukButton({
+                    text: "Save and continue",
+                    preventDoubleClick: true
+                }) }}
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

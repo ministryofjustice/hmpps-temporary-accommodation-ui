@@ -1,17 +1,36 @@
-import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor'
 
+import type { Assessment, TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '@approved-premises/api'
 import PlaceHelper from '../../../cypress_shared/helpers/place'
 import AssessmentConfirmPage from '../../../cypress_shared/pages/assess/confirm'
 import AssessmentListPage from '../../../cypress_shared/pages/assess/list'
 import AssessmentSummaryPage from '../../../cypress_shared/pages/assess/summary'
 import Page from '../../../cypress_shared/pages/page'
 import DashboardPage from '../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import type { Assessment } from '../../../server/@types/shared/index'
+import AssessmentRejectionConfirmPage from '../../../cypress_shared/pages/assess/confirmRejection'
 import { applicationFactory, assessmentFactory, placeContextFactory } from '../../../server/testutils/factories'
 import { DateFormats } from '../../../server/utils/dateUtils'
 import { person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
+
+const getAssessment = (status: AssessmentStatus) => {
+  const application = applicationFactory.build({
+    person,
+    data: applicationData,
+    arrivalDate: applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
+  })
+
+  const assessment = assessmentFactory.build({
+    application,
+    status,
+    createdAt: DateFormats.dateObjToIsoDate(new Date()),
+  })
+
+  cy.wrap(assessment).as('assessment')
+
+  return assessment
+}
 
 Given('I view the list of assessments', () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
@@ -22,21 +41,9 @@ Given('I view the list of assessments', () => {
 
 Given('I view the assessment', () => {
   const assessmentListPage = Page.verifyOnPage(AssessmentListPage, 'Unallocated referrals')
-
-  const application = applicationFactory.build({
-    person,
-    data: applicationData,
-    arrivalDate: applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
-  })
-
-  const assessment = assessmentFactory.build({
-    application,
-    status: 'unallocated',
-    createdAt: DateFormats.dateObjToIsoDate(new Date()),
-  })
+  const assessment = getAssessment('unallocated')
 
   assessmentListPage.clickAssessment(assessment)
-  cy.wrap(assessment).as('assessment')
 })
 
 Given('I mark the assessment as ready to place', () => {
@@ -77,5 +84,39 @@ Then('I can place the assessment', () => {
 
     const placeHelper = new PlaceHelper(placeContext, this.premises, this.room)
     placeHelper.completePlace()
+  })
+})
+
+Given('I view the list of ready to place assessments', () => {
+  AssessmentListPage.visit('ready_to_place')
+  Page.verifyOnPage(AssessmentListPage, 'Ready to place referrals')
+})
+
+Given('I view the ready to place assessment', () => {
+  const assessmentListPage = Page.verifyOnPage(AssessmentListPage, 'Ready to place referrals')
+  const assessment = getAssessment('ready_to_place')
+
+  assessmentListPage.clickAssessment(assessment)
+})
+
+When('I reject the assessment with the reason other', () => {
+  cy.then(function _() {
+    const { assessment } = this
+
+    const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+    assessmentSummaryPage.clickAction('Reject')
+
+    const assessmentRejectionConfirmPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
+    assessmentRejectionConfirmPage.completeForm()
+    assessmentRejectionConfirmPage.clickSubmit()
+  })
+})
+
+Then('I see the assessment has been rejected', () => {
+  cy.then(function _() {
+    const { assessment } = this
+
+    const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
+    assessmentSummaryPage.shouldShowBanner('This referral has been rejected')
   })
 })

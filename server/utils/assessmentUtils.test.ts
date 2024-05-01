@@ -5,6 +5,7 @@ import {
   assessmentSummaryFactory,
   personFactory,
   placeContextFactory,
+  referenceDataFactory,
   referralHistorySystemNoteFactory,
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
@@ -15,6 +16,7 @@ import {
   createTableHeadings,
   getParams,
   pathFromStatus,
+  referralRejectionReasonIsOther,
   statusChangeMessage,
   timelineItems,
 } from './assessmentUtils'
@@ -307,6 +309,22 @@ describe('assessmentUtils', () => {
     })
   })
 
+  describe('referralRejectionReasonIsOther', () => {
+    const rejectionReasons = [
+      referenceDataFactory.build({ id: 'another-reason-id', name: 'Another reason' }),
+      referenceDataFactory.build({ id: 'other-id', name: 'Other' }),
+      referenceDataFactory.build({ id: 'valid-id', name: 'A valid reason' }),
+    ]
+
+    it.each([
+      [true, 'another-reason-id', 'Another reason'],
+      [false, 'other-id', 'Another reason'],
+      [false, 'does-not-exist', 'Another reason'],
+    ])(`returns %s if the referral rejection id %s reason matches '%s'`, (expected, id, match) => {
+      expect(referralRejectionReasonIsOther(id, match, rejectionReasons)).toEqual(expected)
+    })
+  })
+
   describe('statusChangeMessage', () => {
     it('returns a simple string info message', () => {
       const assessment = assessmentFactory.build({ status: 'in_review' })
@@ -319,7 +337,9 @@ describe('assessmentUtils', () => {
 
       expect(statusChangeMessage(assessment.id, assessment.status)).toEqual({
         title: 'This referral has been rejected',
-        html: `<a class="govuk-link" href="${paths.assessments.index({})}">Return to the referrals dashboard</a>`,
+        html: `It's been moved to archived referrals. You now need to email the probation practitioner to tell them it's been rejected.<br><br><a class="govuk-link" href="${paths.assessments.index(
+          {},
+        )}">Return to the referrals dashboard</a>`,
       })
     })
 

@@ -15,6 +15,7 @@ import {
   referralHistoryUserNoteFactory,
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
+import AssessmentRejectionConfirmPage from '../../../../cypress_shared/pages/assess/confirmRejection'
 
 const pagination: MockPagination = {
   totalResults: 23,
@@ -338,6 +339,77 @@ context('Apply', () => {
           cy.task('verifyCloseAssessment', assessment.id).then(requests => {
             expect(requests).to.have.length(1)
           })
+        })
+      })
+
+      it('allows rejecting an assessment', () => {
+        cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+          const assessment = assessmentFactory.build({ status: 'unallocated' })
+          assessment.application.document = applicationTranslatedDocument
+
+          cy.task('stubFindAssessment', assessment)
+          cy.task('stubReferralRejectionReasons')
+
+          // Given I visit the assessment page
+          const assessmentPage = AssessmentSummaryPage.visit(assessment)
+
+          // When I click on the Update status to 'Reject' button
+          assessmentPage.clickAction('Reject')
+
+          // Then I am taken to the confirmation page
+          const rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
+
+          cy.task('stubRejectAssessment', assessment)
+          cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
+
+          // When I complete the form
+          rejectionConfirmationPage.completeForm()
+          rejectionConfirmationPage.clickSubmit()
+
+          // Then I am taken to the summary page and a banner is shown
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
+          assessmentPage.shouldShowBanner('This referral has been rejected')
+        })
+      })
+
+      it('shows errors when rejecting an assessment', () => {
+        cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+          const assessment = assessmentFactory.build({ status: 'unallocated' })
+          assessment.application.document = applicationTranslatedDocument
+
+          cy.task('stubFindAssessment', assessment)
+          cy.task('stubReferralRejectionReasons')
+
+          // Given I visit the assessment page
+          const assessmentPage = AssessmentSummaryPage.visit(assessment)
+
+          // When I click on the Update status to 'Reject' button
+          assessmentPage.clickAction('Reject')
+
+          // Then I am taken to the confirmation page
+          let rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
+
+          cy.task('stubRejectAssessment', assessment)
+          cy.task('stubFindAssessment', { ...assessment, status: 'rejected' })
+
+          // When I submit the form empty
+          rejectionConfirmationPage.clickSubmit()
+
+          // Then I see errors
+          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
+          rejectionConfirmationPage.shouldShowErrorMessagesForFields([
+            'referralRejectionReasonId',
+            'ppRequestedWithdrawal',
+          ])
+
+          // When I complete the form but clear the details
+          rejectionConfirmationPage.completeForm()
+          rejectionConfirmationPage.clearRejectionReasonDetail()
+          rejectionConfirmationPage.clickSubmit()
+
+          // Then I see one error
+          rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
+          rejectionConfirmationPage.shouldShowErrorMessagesForFields(['referralRejectionReasonDetail'])
         })
       })
 

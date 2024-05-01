@@ -336,6 +336,18 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.assessments.summary.pattern, assessmentsController.summary(), {
     auditEvent: 'VIEW_ASSESSMENT_SUMMARY',
   })
+  get(paths.assessments.confirmRejection.pattern, assessmentsController.confirmRejection(), {
+    auditEvent: 'VIEW_ASSESSMENT_REJECTION_CONFIRM',
+  })
+  post(paths.assessments.reject.pattern, assessmentsController.reject(), {
+    auditEvent: 'REJECT_ASSESSMENT',
+    redirectAuditEventSpecs: [
+      {
+        path: paths.assessments.full.pattern,
+        auditEvent: 'REJECT_ASSESSMENT_SUCCESS',
+      },
+    ],
+  })
   get(paths.assessments.confirm.pattern, assessmentsController.confirm(), {
     auditEvent: 'VIEW_ASSESSMENT_STATUS_CHANGE_CONFIRM',
   })

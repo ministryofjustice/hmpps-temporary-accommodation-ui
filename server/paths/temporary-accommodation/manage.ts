@@ -121,6 +121,8 @@ const paths = {
     archive: assessmentsPath.path('archive'),
     full: assessmentsPath.path(':id'),
     summary: assessmentPath.path(':id/summary'),
+    confirmRejection: assessmentPath.path('rejected'),
+    reject: assessmentPath.path('rejected'),
     confirm: assessmentPath.path(':status'),
     update: assessmentPath.path(':status'),
     notes: { create: assessmentPath.path('/notes') },

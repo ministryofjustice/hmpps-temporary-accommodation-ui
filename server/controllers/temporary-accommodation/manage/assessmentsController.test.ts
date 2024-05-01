@@ -12,13 +12,17 @@ import {
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
+  referenceDataFactory,
 } from '../../../testutils/factories'
 import * as assessmentUtils from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import * as utils from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
-import AssessmentsController, { confirmationPageContent } from './assessmentsController'
+import AssessmentsController, {
+  confirmationPageContent,
+  referralRejectionReasonOtherMatch,
+} from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 import { pathFromStatus } from '../../../utils/assessmentUtils'
 
@@ -310,6 +314,174 @@ describe('AssessmentsController', () => {
     })
   })
 
+  describe('confirmRejection', () => {
+    it('calls render with the assessment id and the rejection reasons', async () => {
+      const assessment = assessmentFactory.build()
+      const referralRejectionReasons = referenceDataFactory.buildList(3)
+
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+
+      const requestHandler = assessmentsController.confirmRejection()
+
+      request.params = { id: assessment.id }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
+        assessment,
+        referralRejectionReasons,
+        referralRejectionReasonOtherMatch,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('calls render with errors', async () => {
+      const assessment = assessmentFactory.build()
+      const referralRejectionReasons = referenceDataFactory.buildList(3)
+      const errors = {
+        referralRejectionReasonId: {
+          text: 'Select a reason for rejecting this referral',
+        },
+        ppRequestedWithdrawal: {
+          text: 'Select yes if the probation practitioner asked for the referral to be withdrawn',
+        },
+      }
+      const errorSummary = [
+        {
+          text: 'Select a reason for rejecting this referral',
+        },
+        {
+          text: 'Select yes if the probation practitioner asked for the referral to be withdrawn',
+        },
+      ]
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+        errors,
+        errorSummary,
+        userInput: undefined,
+      })
+      assessmentsService.findAssessment.mockResolvedValue(assessment)
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+
+      const requestHandler = assessmentsController.confirmRejection()
+
+      request.params = { id: assessment.id }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm-rejection', {
+        assessment,
+        referralRejectionReasons,
+        referralRejectionReasonOtherMatch,
+        errors,
+        errorSummary,
+      })
+    })
+  })
+
+  describe('reject', () => {
+    beforeEach(() => {
+      const referralRejectionReasons = [
+        referenceDataFactory.build({ id: 'reason-one-id' }),
+        referenceDataFactory.build({ id: 'reason-two-id' }),
+        referenceDataFactory.build({ id: 'other-reason-id', name: 'Another reason (please add)' }),
+      ]
+      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
+    })
+
+    it('calls the rejectAssessment method on the service with rejection details', async () => {
+      const assessmentId = 'assessment-id'
+      const referralRejectionReasonId = 'other-reason-id'
+      const referralRejectionReasonDetail = 'Some details'
+      const ppRequestedWithdrawal = 'yes'
+
+      jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
+
+      const requestHandler = assessmentsController.reject()
+      request.params = { id: assessmentId }
+      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, ppRequestedWithdrawal }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+        referralRejectionReasonId,
+        referralRejectionReasonDetail,
+        isWithdrawn: true,
+      })
+      expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, 'rejected')
+      expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
+      expect(request.flash).toHaveBeenCalledWith('success', 'some info message')
+    })
+
+    it('does not send the rejection reason details if not other reason', async () => {
+      const assessmentId = 'assessment-id'
+      const referralRejectionReasonId = 'reason-one-id'
+      const referralRejectionReasonDetail = 'Some details'
+      const ppRequestedWithdrawal = 'no'
+
+      jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
+
+      const requestHandler = assessmentsController.reject()
+      request.params = { id: assessmentId }
+      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, ppRequestedWithdrawal }
+
+      await requestHandler(request, response, next)
+
+      expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+        referralRejectionReasonId,
+        referralRejectionReasonDetail: undefined,
+        isWithdrawn: false,
+      })
+    })
+
+    it('redirects to the reject confirmation page with errors if the questions are not answered', async () => {
+      const requestHandler = assessmentsController.reject()
+      const assessmentId = 'some-id'
+
+      request.params = { id: assessmentId }
+      request.body = {}
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledTimes(2)
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'referralRejectionReasonId', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'ppRequestedWithdrawal', 'empty')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        new Error(),
+        paths.assessments.confirmRejection({ id: assessmentId }),
+      )
+    })
+
+    it('redirects to the reject confirmation page with an error if more details are not provided', async () => {
+      const requestHandler = assessmentsController.reject()
+      const assessmentId = 'other-reason-id'
+
+      request.params = { id: assessmentId }
+      request.body = {
+        referralRejectionReasonId: 'other-reason-id',
+        ppRequestedWithdrawal: 'no',
+        referralRejectionReasonDetail: '   ',
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(insertGenericError).toHaveBeenCalledTimes(1)
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'referralRejectionReasonDetail', 'empty')
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        new Error(),
+        paths.assessments.confirmRejection({ id: assessmentId }),
+      )
+    })
+  })
+
   describe('confirm', () => {
     it.each([
       'null' as const,
@@ -317,7 +489,6 @@ describe('AssessmentsController', () => {
       'in_review' as const,
       'ready_to_place' as const,
       'closed' as const,
-      'rejected' as const,
     ])('calls render with a confirmation message for the %s status', async status => {
       const assessmentId = 'some-assessment-id'
       const requestHandler = assessmentsController.confirm()

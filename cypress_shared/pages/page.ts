@@ -192,7 +192,7 @@ export default abstract class Page extends Component {
   }
 
   clearTextInputByLabel(label: string): void {
-    cy.get('label').contains(label).parent().find('input').clear()
+    cy.get('label').contains(label).parent().find('input, textarea').clear()
   }
 
   completeDateInputs(prefix: string, date: string): void {

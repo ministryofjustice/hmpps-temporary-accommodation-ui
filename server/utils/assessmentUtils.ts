@@ -13,6 +13,7 @@ import {
   AssessmentSearchApiStatus,
   AssessmentSearchParameters,
   MessageContents,
+  ReferenceData,
   TableRow,
   TimelineItem,
 } from '../@types/ui'
@@ -155,6 +156,12 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
   })
 }
 
+export const referralRejectionReasonIsOther = (
+  id: string,
+  match: string,
+  referralRejectionReasons: Array<ReferenceData>,
+) => Boolean(referralRejectionReasons.find(reason => reason.id === id)?.name === match)
+
 export const statusChangeMessage = (assessmentId: string, status: AssessmentStatus): MessageContents => {
   switch (status) {
     case 'closed':
@@ -172,7 +179,9 @@ export const statusChangeMessage = (assessmentId: string, status: AssessmentStat
     case 'rejected':
       return {
         title: 'This referral has been rejected',
-        html: `<a class="govuk-link" href="${paths.assessments.index({})}">Return to the referrals dashboard</a>`,
+        html: `It's been moved to archived referrals. You now need to email the probation practitioner to tell them it's been rejected.<br><br><a class="govuk-link" href="${paths.assessments.index(
+          {},
+        )}">Return to the referrals dashboard</a>`,
       }
     case 'unallocated':
       return {

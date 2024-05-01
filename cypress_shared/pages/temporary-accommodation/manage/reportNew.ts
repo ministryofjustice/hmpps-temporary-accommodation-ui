@@ -23,7 +23,11 @@ export default class ReportNewPage extends Page {
       .should('be.selected')
   }
 
-  completeForm(startDate: string, endDate: string): void {
+  completeForm(startDate: string, endDate: string, probationRegionId?: string): void {
+    if (probationRegionId) {
+      this.getSelectInputByIdAndSelectAnEntry('probationRegionId', probationRegionId)
+    }
+
     this.getLabel('Start date')
     this.getTextInputByIdAndEnterDetails('startDate', startDate)
 
@@ -47,5 +51,11 @@ export default class ReportNewPage extends Page {
     } else if (type === 'referral') {
       cy.get('button').contains('Download referrals report').click()
     }
+  }
+
+  shouldNotShowErrors() {
+    cy.get('.govuk-error-summary').should('not.exist')
+    cy.get('.govuk-form-group--error').should('not.exist')
+    cy.get('.govuk-error-message').should('not.exist')
   }
 }

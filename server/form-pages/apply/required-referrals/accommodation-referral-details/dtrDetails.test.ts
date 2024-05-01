@@ -24,7 +24,7 @@ const body = {
   'date-month': '7',
   'date-day': '23',
   localAuthorityAreaName: localAuthorities[0].name,
-  dutyToReferOutcome: 'acceptedPriorityNeeded',
+  dutyToReferOutcome: 'acceptedPriorityNeed',
 } as DtrDetailsBody
 
 describe('DtrDetails', () => {
@@ -48,7 +48,7 @@ describe('DtrDetails', () => {
       const selectedOptions = page.items().filter(item => item.checked)
 
       expect(selectedOptions.length).toEqual(1)
-      expect(selectedOptions[0].value).toEqual('acceptedPriorityNeeded')
+      expect(selectedOptions[0].value).toEqual('acceptedPriorityNeed')
     })
 
     it('marks no options selected when the reason is not set', () => {

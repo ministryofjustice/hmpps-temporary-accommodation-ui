@@ -346,7 +346,7 @@ describe('AssessmentsController', () => {
         referralRejectionReasonId: {
           text: 'Select a reason for rejecting this referral',
         },
-        isWithdrawn: {
+        ppRequestedWithdrawal: {
           text: 'Select yes if the probation practitioner asked for the referral to be withdrawn',
         },
       }
@@ -388,7 +388,7 @@ describe('AssessmentsController', () => {
       const referralRejectionReasons = [
         referenceDataFactory.build({ id: 'reason-one-id' }),
         referenceDataFactory.build({ id: 'reason-two-id' }),
-        referenceDataFactory.build({ id: 'other-reason-id', name: 'Another reason' }),
+        referenceDataFactory.build({ id: 'other-reason-id', name: 'Another reason (please add)' }),
       ]
       assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
     })
@@ -397,18 +397,19 @@ describe('AssessmentsController', () => {
       const assessmentId = 'assessment-id'
       const referralRejectionReasonId = 'other-reason-id'
       const referralRejectionReasonDetail = 'Some details'
-      const isWithdrawn = 'yes'
+      const ppRequestedWithdrawal = 'yes'
 
       jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
 
       const requestHandler = assessmentsController.reject()
       request.params = { id: assessmentId }
-      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, isWithdrawn }
+      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, ppRequestedWithdrawal }
 
       await requestHandler(request, response, next)
 
       expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
-        ...request.body,
+        referralRejectionReasonId,
+        referralRejectionReasonDetail,
         isWithdrawn: true,
       })
       expect(assessmentUtils.statusChangeMessage).toHaveBeenCalledWith(assessmentId, 'rejected')
@@ -420,13 +421,13 @@ describe('AssessmentsController', () => {
       const assessmentId = 'assessment-id'
       const referralRejectionReasonId = 'reason-one-id'
       const referralRejectionReasonDetail = 'Some details'
-      const isWithdrawn = 'no'
+      const ppRequestedWithdrawal = 'no'
 
       jest.spyOn(assessmentUtils, 'statusChangeMessage').mockReturnValue('some info message')
 
       const requestHandler = assessmentsController.reject()
       request.params = { id: assessmentId }
-      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, isWithdrawn }
+      request.body = { referralRejectionReasonId, referralRejectionReasonDetail, ppRequestedWithdrawal }
 
       await requestHandler(request, response, next)
 
@@ -448,7 +449,7 @@ describe('AssessmentsController', () => {
 
       expect(insertGenericError).toHaveBeenCalledTimes(2)
       expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'referralRejectionReasonId', 'empty')
-      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'isWithdrawn', 'empty')
+      expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'ppRequestedWithdrawal', 'empty')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
@@ -460,16 +461,11 @@ describe('AssessmentsController', () => {
     it('redirects to the reject confirmation page with an error if more details are not provided', async () => {
       const requestHandler = assessmentsController.reject()
       const assessmentId = 'other-reason-id'
-      const referralRejectionReasons = [
-        referenceDataFactory.build({ id: 'reason-id', name: 'A reason' }),
-        referenceDataFactory.build({ id: 'other-reason-id', name: 'Another reason' }),
-      ]
-      assessmentsService.getReferenceData.mockResolvedValue({ referralRejectionReasons })
 
       request.params = { id: assessmentId }
       request.body = {
         referralRejectionReasonId: 'other-reason-id',
-        isWithdrawn: 'no',
+        ppRequestedWithdrawal: 'no',
         referralRejectionReasonDetail: '   ',
       }
 

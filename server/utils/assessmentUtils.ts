@@ -160,7 +160,7 @@ export const referralRejectionReasonIsOther = (
   id: string,
   match: string,
   referralRejectionReasons: Array<ReferenceData>,
-) => Boolean(referralRejectionReasons.find(reason => reason.id === id)?.name.match(new RegExp(match, 'i')))
+) => Boolean(referralRejectionReasons.find(reason => reason.id === id)?.name === match)
 
 export const statusChangeMessage = (assessmentId: string, status: AssessmentStatus): MessageContents => {
   switch (status) {

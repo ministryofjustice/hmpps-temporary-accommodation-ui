@@ -145,7 +145,7 @@
     "referralRejectionReasonDetail": {
       "empty": "Add details about the reason for the rejection"
     },
-    "isWithdrawn": {
+    "ppRequestedWithdrawal": {
       "empty": "Select yes if the probation practitioner asked for the referral to be withdrawn"
     }
   },

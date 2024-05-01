@@ -397,7 +397,10 @@ context('Apply', () => {
 
           // Then I see errors
           rejectionConfirmationPage = Page.verifyOnPage(AssessmentRejectionConfirmPage, assessment)
-          rejectionConfirmationPage.shouldShowErrorMessagesForFields(['referralRejectionReasonId', 'isWithdrawn'])
+          rejectionConfirmationPage.shouldShowErrorMessagesForFields([
+            'referralRejectionReasonId',
+            'ppRequestedWithdrawal',
+          ])
 
           // When I complete the form but clear the details
           rejectionConfirmationPage.completeForm()

@@ -160,7 +160,7 @@ export default class AssessmentsController {
       const { referralRejectionReasons } = await this.assessmentsService.getReferenceData(callConfig)
 
       const { id } = req.params
-      const { referralRejectionReasonId, referralRejectionReasonDetail, isWithdrawn } = req.body
+      const { referralRejectionReasonId, referralRejectionReasonDetail, ppRequestedWithdrawal } = req.body
 
       try {
         let error: Error
@@ -182,9 +182,9 @@ export default class AssessmentsController {
           }
         }
 
-        if (!isWithdrawn) {
+        if (!ppRequestedWithdrawal) {
           error = error || new Error()
-          insertGenericError(error, 'isWithdrawn', 'empty')
+          insertGenericError(error, 'ppRequestedWithdrawal', 'empty')
         }
 
         if (error) {
@@ -194,7 +194,7 @@ export default class AssessmentsController {
         await this.assessmentsService.rejectAssessment(callConfig, id, {
           referralRejectionReasonId,
           referralRejectionReasonDetail: isOtherReason ? referralRejectionReasonDetail : undefined,
-          isWithdrawn: isWithdrawn === 'yes',
+          isWithdrawn: ppRequestedWithdrawal === 'yes',
         })
 
         req.flash('success', statusChangeMessage(id, 'rejected'))

@@ -28,8 +28,6 @@
         }, context) }}
     {% endset %}
 
-    {{ context.isWithdrawn }}
-
     <h1 class="govuk-heading-l">Reject {{ personName(assessment.application.person) }}'s referral</h1>
 
     {{ showErrorSummary(errorSummary) }}
@@ -71,15 +69,15 @@
                         {
                             value: "yes",
                             text: "Yes",
-                            checked: context.isWithdrawn === 'yes'
+                            checked: context.ppRequestedWithdrawal === 'yes'
                         },
                         {
                             value: "no",
                             text: "No",
-                            checked: context.isWithdrawn === 'no'
+                            checked: context.ppRequestedWithdrawal === 'no'
                         }
                     ],
-                        fieldName: "isWithdrawn"
+                        fieldName: "ppRequestedWithdrawal"
                     }, context
                 ) }}
 

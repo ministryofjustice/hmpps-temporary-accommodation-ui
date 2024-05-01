@@ -12,12 +12,12 @@ import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 
 export const dutyToReferOutcomes = {
-  acceptedPreventionReliefDuty: 'Yes, it was accepted on prevention and relief duty',
-  acceptedPriorityNeeded: 'Yes, it was accepted on a priority need',
+  acceptedPreventionAndReliefDuty: 'Yes, it was accepted on prevention and relief duty',
+  acceptedPriorityNeed: 'Yes, it was accepted on a priority need',
   rejectedNoLocalConnection: "Yes, it was rejected as there's no local connection",
   rejectedIntentionallyHomeless: "Yes, it was rejected as they're considered intentionally homeless",
   rejectedOther: 'Yes, it was rejected for another reason',
-  rejectedPending: 'No, an outcome has not been received yet',
+  pending: 'No, an outcome has not been received yet',
 } as const
 
 export type DtrDetailsBody = {

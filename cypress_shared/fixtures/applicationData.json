@@ -316,7 +316,7 @@
       "date-month": "4",
       "date-day": "12",
       "localAuthorityAreaName": "Barking and Dagenham",
-      "dutyToReferOutcome": "acceptedPreventionReliefDuty",
+      "dutyToReferOutcome": "acceptedPreventionAndReliefDuty",
       "dutyToReferOutcomeOtherDetails": ""
     },
     "crs-submitted": {

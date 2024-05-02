@@ -2,4 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type TaskSortField = 'createdAt' | 'dueAt' | 'person' | 'allocatedTo' | 'completedAt' | 'taskType' | 'decision';
+export type ReferralRejectionReason = {
+    id: string;
+    name: string;
+    serviceScope: string;
+    isActive: boolean;
+};
+

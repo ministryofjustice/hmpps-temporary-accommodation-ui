@@ -83,9 +83,9 @@ export class DateFormats {
     const dayKey = `${key}-day`
     const timeKey = `${key}-time`
 
-    const year = dateInputObj[yearKey] as string
-    const month = `0${dateInputObj[monthKey]}`.slice(-2)
-    const day = `0${dateInputObj[dayKey]}`.slice(-2)
+    const year = (dateInputObj[yearKey] || '').trim() as string
+    const month = `0${(dateInputObj[monthKey] || '').trim()}`.slice(-2)
+    const day = `0${(dateInputObj[dayKey] || '').trim()}`.slice(-2)
     const time = dateInputObj[timeKey] as string
 
     let date: string

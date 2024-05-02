@@ -26,7 +26,6 @@ import ReferenceDataService from './referenceDataService'
 
 export const services = () => {
   const {
-    hmppsAuthClient,
     premisesClientBuilder,
     bookingClientBuilder,
     referenceDataClientBuilder,
@@ -40,7 +39,7 @@ export const services = () => {
     assessmentClientBuilder,
   } = dataAccess()
 
-  const userService = new UserService(hmppsAuthClient, userClientBuilder)
+  const userService = new UserService(userClientBuilder)
   const auditService = new AuditService(config.apis.audit)
   const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClientBuilder)

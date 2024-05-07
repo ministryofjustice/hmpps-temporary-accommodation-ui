@@ -1,98 +1,66 @@
- {% extends "../../layout.njk" %}
+{% extends "../../layout.njk" %}
+
+{% macro startAndEndDatesFields(prefix) %}
+    {{ formPageDateInput( {
+        fieldName: prefix + "StartDate",
+        fieldset: {
+            legend: {
+                text: "Start date",
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        hint: {
+            text: dateInputHint('future')
+        },
+        items: dateFieldValues(prefix + "StartDate", errors)
+    }, fetchContext()) }}
+
+    {{ formPageDateInput( {
+        fieldName: prefix + "EndDate",
+        fieldset: {
+            legend: {
+                text: "End date",
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        hint: {
+            text: dateInputHint('future')
+        },
+        items: dateFieldValues(prefix + "EndDate", errors)
+    }, fetchContext()) }}
+{% endmacro %}
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ task.title }}</span>
-    {{ page.title }}
-  </h1>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ task.title }}</span>
+        {{ page.title }}
+    </h1>
 
-  {% set licenceConditionalHtml %}
-    {{ formPageDateInput( {
-      fieldName: "licenceStartDate",
-      fieldset: {
-        legend: {
-          text: "Start date",
-          classes: "govuk-fieldset__legend--m"
-        }
-      },
-      hint: {
-        text: dateInputHint('future')
-      },
-      items: dateFieldValues("licenceStartDate", errors)
+    {{ formPageCheckboxes({
+        fieldName: "releaseTypes",
+        fieldset: {
+            legend: {
+                text: "Select all that apply",
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        items: [
+            {
+                value: "licence",
+                text: "Licence",
+                conditional: {
+                html: startAndEndDatesFields('licence')
+            }
+            },
+            {
+                value: "pss",
+                text: "Post sentence supervision (PSS)",
+                conditional: {
+                html: startAndEndDatesFields('pss')
+            }
+            }
+        ]
     }, fetchContext()) }}
-
-    {{ formPageDateInput( {
-      fieldName: "licenceEndDate",
-      fieldset: {
-        legend: {
-          text: "End date",
-          classes: "govuk-fieldset__legend--m"
-        }
-      },
-      hint: {
-        text: dateInputHint('future')
-      },
-      items: dateFieldValues("licenceEndDate", errors)
-    }, fetchContext()) }}
-  {% endset %}
-
-
-  {% set pssConditionalHtml %}
-    {{ formPageDateInput( {
-      fieldName: "pssStartDate",
-      fieldset: {
-        legend: {
-          text: "Start date",
-          classes: "govuk-fieldset__legend--m"
-        }
-      },
-      hint: {
-        text: dateInputHint('future')
-      },
-      items: dateFieldValues("pssStartDate", errors)
-    }, fetchContext()) }}
-
-    {{ formPageDateInput( {
-      fieldName: "pssEndDate",
-      fieldset: {
-        legend: {
-          text: "End date",
-          classes: "govuk-fieldset__legend--m"
-        }
-      },
-      hint: {
-        text: dateInputHint('future')
-      },
-      items: dateFieldValues("pssEndDate", errors)
-    }, fetchContext()) }}
-  {% endset %}
-
-
-  {{ formPageCheckboxes({
-    fieldName: "releaseTypes",
-    fieldset: {
-      legend: {
-        text: "Select all that apply",
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    items: [
-      {
-        value: "licence",
-        text: "Licence",
-        conditional: {
-          html: licenceConditionalHtml
-        }
-      },
-      {
-        value: "pss",
-        text: "Post sentence supervision (PSS)",
-        conditional: {
-          html: pssConditionalHtml
-        }
-      }
-    ]
-  }, fetchContext()) }}
 
 {% endblock %}

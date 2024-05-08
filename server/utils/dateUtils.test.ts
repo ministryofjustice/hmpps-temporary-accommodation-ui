@@ -122,6 +122,18 @@ describe('DateFormats', () => {
       expect(result.date).toEqual('2022-01-01')
     })
 
+    it('trims the entered month, day and year of whitespace', () => {
+      const obj: ObjectWithDateParts<'date'> = {
+        'date-year': '  2024',
+        'date-month': '11  ',
+        'date-day': '  5  ',
+      }
+
+      const result = DateFormats.dateAndTimeInputsToIsoString(obj, 'date')
+
+      expect(result.date).toEqual('2024-11-05')
+    })
+
     it('returns the date with a time if passed one', () => {
       const obj: ObjectWithDateParts<'date'> = {
         'date-year': '2022',

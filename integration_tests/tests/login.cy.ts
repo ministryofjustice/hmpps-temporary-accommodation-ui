@@ -70,12 +70,15 @@ context('SignIn', () => {
     cy.request('/').its('body').should('contain', 'Sign in')
 
     cy.task('stubVerifyToken', true)
-    cy.task('stubAuthUser', 'bobby brown')
 
     const probationRegion = referenceDataFactory.probationRegion().build({
       name: 'Another region',
     })
-    const actingUser = userFactory.build({ region: probationRegion, roles: ['assessor', 'referrer'] })
+    const actingUser = userFactory.build({
+      name: 'bobby brown',
+      region: probationRegion,
+      roles: ['assessor', 'referrer'],
+    })
 
     cy.task('stubActingUser', actingUser)
     cy.task('stubGetUserById', actingUser)

@@ -4,7 +4,6 @@ import superagent from 'superagent'
 import logger from '../../logger'
 import generateOauthClientToken from '../authentication/clientCredentials'
 import config from '../config'
-import RestClient, { CallConfig } from './restClient'
 import type TokenStore from './tokenStore'
 
 const timeoutSpec = config.apis.hmppsAuth.timeout
@@ -42,21 +41,6 @@ export interface UserRole {
 
 export default class HmppsAuthClient {
   constructor(private readonly tokenStore: TokenStore) {}
-
-  private static restClient(callConfig: CallConfig): RestClient {
-    return new RestClient('HMPPS Auth Client', config.apis.hmppsAuth, callConfig)
-  }
-
-  getActingUser(callConfig: CallConfig): Promise<User> {
-    logger.info(`Getting user details: calling HMPPS Auth`)
-    return HmppsAuthClient.restClient(callConfig).get({ path: '/api/user/me' }) as Promise<User>
-  }
-
-  getUserRoles(callConfig: CallConfig): Promise<string[]> {
-    return HmppsAuthClient.restClient(callConfig)
-      .get({ path: '/api/user/me/roles' })
-      .then(roles => (<UserRole[]>roles).map(role => role.roleCode))
-  }
 
   async getSystemClientToken(username?: string): Promise<string> {
     const key = username || '%ANONYMOUS%'

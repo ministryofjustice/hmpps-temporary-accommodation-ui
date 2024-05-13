@@ -297,6 +297,18 @@ describe('dateAndTimeInputsAreValidDates', () => {
 
     expect(result).toEqual(false)
   })
+
+  it('returns false when the year is not 4 digits', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': '202',
+      'date-month': '01',
+      'date-day': '01',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(false)
+  })
 })
 
 describe('dateIsBlank', () => {

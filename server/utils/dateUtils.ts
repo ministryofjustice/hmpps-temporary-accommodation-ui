@@ -41,7 +41,13 @@ export class DateFormats {
    * @throws {InvalidDateStringError} If the string is not a valid ISO8601 datetime string
    */
   static isoToDateObj(date: string) {
-    const parsedDate = new Date(date)
+    let parsedDate: Date
+
+    try {
+      parsedDate = new Date(date)
+    } catch (error) {
+      throw new InvalidDateStringError(`Invalid Date: ${date}`)
+    }
 
     if (Number.isNaN(parsedDate.getTime())) {
       throw new InvalidDateStringError(`Invalid Date: ${date}`)
@@ -153,6 +159,10 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   dateInputObj: Partial<ObjectWithDateParts<K>>,
   key: K,
 ): boolean => {
+  const inputYear = dateInputObj?.[`${key}-year`] as string
+
+  if (inputYear && inputYear.length !== 4) return false
+  
   const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)
 
   try {

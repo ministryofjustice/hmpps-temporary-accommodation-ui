@@ -6,8 +6,8 @@ import PropertyAttributesOrAdaptations from './propertyAttributesOrAdaptations'
 import ReligiousOrCulturalNeeds from './religiousOrCulturalNeeds'
 
 @Task({
-  name: 'Disability, cultural and specific needs',
-  actionText: 'Add disability, cultural and specific needs',
+  name: 'Health, disability and cultural needs',
+  actionText: 'Add health, disability, and cultural needs',
   slug: 'disability-cultural-and-specific-needs',
   pages: [Needs, PropertyAttributesOrAdaptations, ReligiousOrCulturalNeeds],
 })

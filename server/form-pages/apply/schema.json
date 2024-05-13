@@ -655,6 +655,7 @@
                   "neurodivergence",
                   "none",
                   "other",
+                  "physicalHealth",
                   "visualImpairment"
                 ],
                 "type": "string"
@@ -679,6 +680,9 @@
               "type": "string"
             },
             "neurodivergenceDetail": {
+              "type": "string"
+            },
+            "physicalHealthDetail": {
               "type": "string"
             },
             "visualImpairmentDetail": {

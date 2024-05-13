@@ -10,10 +10,6 @@ const personNeeds = {
     text: 'Hearing impairment',
     error: "You must provide details about the person's hearing impairment",
   },
-  mentalHealth: {
-    text: 'Mental health',
-    error: 'You must provide details about mental health needs',
-  },
   language: {
     text: 'Language',
     detailLabel: 'Provide details including whether the person needs an interpreter and for what language',
@@ -23,6 +19,10 @@ const personNeeds = {
     text: 'Learning disability',
     error: "You must provide details about the person's learning disability",
   },
+  mentalHealth: {
+    text: 'Mental health',
+    error: 'You must provide details about mental health needs',
+  },
   mobility: {
     text: 'Mobility needs',
     error: "You must provide details about the person's mobility needs",
@@ -31,12 +31,16 @@ const personNeeds = {
     text: 'Neurodivergence',
     error: "You must provide details about the person's neurodivergence",
   },
+  physicalHealth: {
+    text: 'Physical health condition, for example diabetes, epilepsy, asthma',
+    error: "You must provide details about the person's physical health condition",
+  },
   visualImpairment: {
     text: 'Visual impairment',
     error: "You must provide details about the person's visual impairment",
   },
   other: {
-    text: 'Other',
+    text: 'Another need',
     detailLabel: 'Please specify',
     error: "You must provide details about the person's other needs",
   },

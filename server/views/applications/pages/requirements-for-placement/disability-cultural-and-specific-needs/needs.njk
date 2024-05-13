@@ -2,48 +2,52 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ section.title }}</span>
-    {{ task.title }}
-  </h1>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ task.title }}
+    </h1>
 
-  {% set itemsWithDetail = [] %}
+    {% set itemsWithDetail = [] %}
 
-  {% for item in page.items() %}
+    {% for item in page.items() %}
+        {% if item.value !== 'none' %}
+            {% set conditionalHtml %}
+                {{ formPageTextarea({
+                    fieldName: item.value + "Detail",
+                    label: {
+                        text: item.detailLabel or "Specify any additional details about the person's needs",
+                        classes: "govuk-label--s"
+                    }
+                }, fetchContext()) }}
+            {% endset %}
 
-    {% set conditionalHtml %}
-      {{ formPageTextarea({
-        fieldName: item.value + "Detail",
-        label: {
-          text: item.detailLabel or "Specify any additional details about the person's needs",
-          classes: "govuk-label--s"
-        }
-      },fetchContext()) }}
-    {% endset %}
+            {% set itemsWithDetail = itemsWithDetail.concat(mergeObjects(item, {
+                conditional: {
+                    html: conditionalHtml
+                }
+            })) %}
+        {% else %}
+            {% set itemsWithDetail = itemsWithDetail.concat({
+                divider: 'or'
+            }) %}
+            {% set itemsWithDetail = itemsWithDetail.concat(mergeObjects(item, {
+                behaviour: "exclusive"
+            })) %}
+        {% endif %}
+    {% endfor %}
 
-    {% set itemsWithDetail = (
-      itemsWithDetail.push(mergeObjects(item, {
-        conditional: {
-          html: conditionalHtml
-        }
-      } if item.value !== 'none' else {
-        behaviour: "exclusive"
-      } )), itemsWithDetail)
-    %}
-  {% endfor %}
-
-  {{ formPageCheckboxes({
-    fieldset: {
-      legend: {
-        text: page.title,
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    hint: {
-      text: "For example, if the person uses a hearing aid or has an ADHD diagnosis."
-    },
-    fieldName: "needs",
-    items: itemsWithDetail
-  }, fetchContext()) }}
+    {{ formPageCheckboxes({
+        fieldset: {
+            legend: {
+                text: page.title,
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        hint: {
+            text: "For example, if the person uses a hearing aid or has an ADHD diagnosis."
+        },
+        fieldName: "needs",
+        items: itemsWithDetail
+    }, fetchContext()) }}
 
 {% endblock %}

@@ -76,7 +76,7 @@ export default class CheckYourAnswersPage extends ApplyPage {
   shouldShowDisabilityCulturalAndSpecificNeedsAnswers(pages: Array<ApplyPage>) {
     this.shouldShowCheckYourAnswersTitle(
       'disability-cultural-and-specific-needs',
-      'Disability, cultural and specific needs',
+      'Health, disability and cultural needs',
     )
     this.shouldShowAnswersForTask('disability-cultural-and-specific-needs', pages)
   }

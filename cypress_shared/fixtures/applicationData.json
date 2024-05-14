@@ -258,14 +258,16 @@
       "needs": [
         "hearingImpairment",
         "neurodivergence",
+        "physicalHealth",
         "other"
       ],
       "hearingImpairmentDetail": "Hearing impairment detail",
-      "mentalHealthDetail": "",
       "languageDetail": "",
       "learningDisabilityDetail": "",
+      "mentalHealthDetail": "",
       "mobilityDetail": "",
       "neurodivergenceDetail": "Neurodivergence detail",
+      "physicalHealthDetail": "Physical health detail",
       "visualImpairmentDetail": "",
       "otherDetail": "Other needs detail"
     },

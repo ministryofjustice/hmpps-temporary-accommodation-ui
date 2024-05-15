@@ -1,32 +1,21 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import ReleaseType from './releaseType'
-
-jest.mock('../../../../utils/dateUtils', () => {
-  const module = jest.requireActual('../../../../utils/dateUtils')
-
-  return {
-    ...module,
-    dateIsBlank: jest.fn(),
-    dateAndTimeInputsAreValidDates: jest.fn(),
-  }
-})
+import ReleaseType, { type ReleaseTypeKey, releaseTypes } from './releaseType'
 
 const body = {
-  releaseTypes: ['licence' as const, 'pss' as const],
-  'licenceStartDate-year': '2024',
-  'licenceStartDate-month': '1',
-  'licenceStartDate-day': '19',
-  'licenceEndDate-year': '2024',
-  'licenceEndDate-month': '7',
-  'licenceEndDate-day': '9',
-  'pssStartDate-year': '2122',
-  'pssStartDate-month': '4',
-  'pssStartDate-day': '1',
-  'pssEndDate-year': '2122',
-  'pssEndDate-month': '7',
-  'pssEndDate-day': '18',
+  releaseTypes: ['fixedTermRecall' as const, 'parole' as const],
+  'fixedTermRecallStartDate-year': '2024',
+  'fixedTermRecallStartDate-month': '1',
+  'fixedTermRecallStartDate-day': '19',
+  'fixedTermRecallEndDate-year': '2024',
+  'fixedTermRecallEndDate-month': '7',
+  'fixedTermRecallEndDate-day': '9',
+  'paroleStartDate-year': '2122',
+  'paroleStartDate-month': '4',
+  'paroleStartDate-day': '1',
+  'paroleEndDate-year': '2122',
+  'paroleEndDate-month': '7',
+  'paroleEndDate-day': '18',
 }
 
 describe('SentenceExpiry', () => {
@@ -38,10 +27,10 @@ describe('SentenceExpiry', () => {
 
       expect(page.body).toEqual({
         ...body,
-        licenceStartDate: '2024-01-19',
-        licenceEndDate: '2024-07-09',
-        pssStartDate: '2122-04-01',
-        pssEndDate: '2122-07-18',
+        fixedTermRecallStartDate: '2024-01-19',
+        fixedTermRecallEndDate: '2024-07-09',
+        paroleStartDate: '2122-04-01',
+        paroleEndDate: '2122-07-18',
       })
     })
   })
@@ -50,88 +39,71 @@ describe('SentenceExpiry', () => {
   itShouldHaveNextValue(new ReleaseType({}, application), '')
 
   describe('errors', () => {
-    it('returns an empty object if the all fields are populated', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-
+    it('returns an empty object if fields are populated without error', () => {
       const page = new ReleaseType(body, application)
       expect(page.errors()).toEqual({})
     })
 
-    it('returns an empty object if the licence release type is specified and only the licence dates are specified', () => {
-      ;(dateIsBlank as jest.MockedFunction<typeof dateIsBlank>).mockImplementation(
-        (_, field) => !(field as string).startsWith('licence'),
-      )
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
+    it.each(Object.keys(releaseTypes))(
+      'returns an empty object if the %s release type is specified and only the %s dates are specified',
+      (key: ReleaseTypeKey) => {
+        const bodyOneType = {
+          releaseTypes: [key],
+          [`${key}StartDate-year`]: '2122',
+          [`${key}StartDate-month`]: '4',
+          [`${key}StartDate-day`]: '1',
+          [`${key}EndDate-year`]: '2122',
+          [`${key}EndDate-month`]: '7',
+          [`${key}EndDate-day`]: '18',
+        }
 
-      const page = new ReleaseType({ ...body, releaseTypes: ['licence'] }, application)
-      expect(page.errors()).toEqual({})
-    })
+        const page = new ReleaseType(bodyOneType, application)
 
-    it('returns an empty object if the PSS release type is specified and only the PSS dates are specified', () => {
-      ;(dateIsBlank as jest.MockedFunction<typeof dateIsBlank>).mockImplementation(
-        (_, field) => !(field as string).startsWith('pss'),
-      )
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
+        expect(page.errors()).toEqual({})
+      },
+    )
 
-      const page = new ReleaseType({ ...body, releaseTypes: ['pss'] }, application)
-      expect(page.errors()).toEqual({})
-    })
+    it.each(Object.keys(releaseTypes))(
+      'returns errors if the %s release type is specified and the %s dates are blank',
+      (key: ReleaseTypeKey) => {
+        const bodyMissingDates = {
+          releaseTypes: [key],
+        }
 
-    it('returns errors if the licence release type is specified and the licence dates are blank', () => {
-      ;(dateIsBlank as jest.MockedFunction<typeof dateIsBlank>).mockImplementation((_, field) =>
-        (field as string).startsWith('licence'),
-      )
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
+        const page = new ReleaseType(bodyMissingDates, application)
 
-      const page = new ReleaseType(body, application)
-      expect(page.errors()).toEqual({
-        licenceStartDate: 'You must specify the licence start date',
-        licenceEndDate: 'You must specify the licence end date',
-      })
-    })
+        expect(page.errors()).toEqual({
+          [`${key}StartDate`]: `You must specify the ${releaseTypes[key].abbr} start date`,
+          [`${key}EndDate`]: `You must specify the ${releaseTypes[key].abbr} end date`,
+        })
+      },
+    )
 
-    it('returns errors if the licence release type is specified and the licence dates are invalid', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(
-        dateAndTimeInputsAreValidDates as jest.MockedFunction<typeof dateAndTimeInputsAreValidDates>
-      ).mockImplementation((_, field) => !(field as string).startsWith('licence'))
+    it.each(Object.keys(releaseTypes))(
+      'returns errors if the %s release type is specified and the %s dates are invalid',
+      (key: ReleaseTypeKey) => {
+        const bodyInvalidDates = {
+          releaseTypes: [key],
+          [`${key}StartDate-year`]: '202',
+          [`${key}StartDate-month`]: '44',
+          [`${key}StartDate-day`]: '43',
+          [`${key}EndDate-year`]: '2024',
+          [`${key}EndDate-month`]: '13',
+          [`${key}EndDate-day`]: '18',
+        }
 
-      const page = new ReleaseType(body, application)
-      expect(page.errors()).toEqual({
-        licenceStartDate: 'You must specify a valid licence start date',
-        licenceEndDate: 'You must specify a valid licence end date',
-      })
-    })
+        const page = new ReleaseType(bodyInvalidDates, application)
 
-    it('returns errors if the PSS release type is specified and the PSS dates are blank', () => {
-      ;(dateIsBlank as jest.MockedFunction<typeof dateIsBlank>).mockImplementation((_, field) =>
-        (field as string).startsWith('pss'),
-      )
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-
-      const page = new ReleaseType(body, application)
-      expect(page.errors()).toEqual({
-        pssStartDate: 'You must specify the PSS start date',
-        pssEndDate: 'You must specify the PSS end date',
-      })
-    })
-
-    it('returns errors if the PSS release type is specified and the PSS dates are invalid', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(
-        dateAndTimeInputsAreValidDates as jest.MockedFunction<typeof dateAndTimeInputsAreValidDates>
-      ).mockImplementation((_, field) => !(field as string).startsWith('pss'))
-
-      const page = new ReleaseType(body, application)
-      expect(page.errors()).toEqual({
-        pssStartDate: 'You must specify a valid PSS start date',
-        pssEndDate: 'You must specify a valid PSS end date',
-      })
-    })
+        expect(page.errors()).toEqual({
+          [`${key}StartDate`]: `You must specify a valid ${releaseTypes[key].abbr} start date`,
+          [`${key}EndDate`]: `You must specify a valid ${releaseTypes[key].abbr} end date`,
+        })
+      },
+    )
 
     it('returns an error if release types are not specified', () => {
       const page = new ReleaseType({}, application)
+
       expect(page.errors()).toEqual({
         releaseTypes: 'You must specify the release types',
       })
@@ -139,6 +111,7 @@ describe('SentenceExpiry', () => {
 
     it('returns an error if release types are empty', () => {
       const page = new ReleaseType({ releaseTypes: [] }, application)
+
       expect(page.errors()).toEqual({
         releaseTypes: 'You must specify the release types',
       })
@@ -146,32 +119,15 @@ describe('SentenceExpiry', () => {
   })
 
   describe('response', () => {
-    it('returns a translated version of the response when both release types are selected', () => {
+    it('returns a translated version of the response', () => {
       const page = new ReleaseType(body, application)
-      expect(page.response()).toEqual({
-        'What is the release type?': 'Licence\nPost sentence supervision (PSS)',
-        'Licence start date': '19 January 2024',
-        'Licence end date': '9 July 2024',
-        'PSS start date': '1 April 2122',
-        'PSS end date': '18 July 2122',
-      })
-    })
 
-    it('returns a translated version of the response when the licence release type is selected', () => {
-      const page = new ReleaseType({ ...body, releaseTypes: ['licence'] }, application)
       expect(page.response()).toEqual({
-        'What is the release type?': 'Licence',
-        'Licence start date': '19 January 2024',
-        'Licence end date': '9 July 2024',
-      })
-    })
-
-    it('returns a translated version of the response when the PSS release type is selected', () => {
-      const page = new ReleaseType({ ...body, releaseTypes: ['pss'] }, application)
-      expect(page.response()).toEqual({
-        'What is the release type?': 'Post sentence supervision (PSS)',
-        'PSS start date': '1 April 2122',
-        'PSS end date': '18 July 2122',
+        'What is the release type?': 'Fixed-term recall\nParole',
+        'Fixed-term recall start date': '19 January 2024',
+        'Fixed-term recall end date': '9 July 2024',
+        'Parole start date': '1 April 2122',
+        'Parole end date': '18 July 2122',
       })
     })
   })

@@ -6,21 +6,52 @@ import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 
-type ReleaseTypeBody = {
-  releaseTypes: Array<'licence' | 'pss'>
-} & ObjectWithDateParts<'licenceStartDate'> &
-  ObjectWithDateParts<'licenceEndDate'> &
-  ObjectWithDateParts<'pssStartDate'> &
-  ObjectWithDateParts<'pssEndDate'>
+export const releaseTypes = {
+  crdLicence: {
+    text: 'Conditional release date (CRD) licence',
+    abbr: 'CRD licence',
+  },
+  ecsl: {
+    text: 'End of custody supervised licence (ECSL)',
+    abbr: 'ECSL',
+  },
+  fixedTermRecall: {
+    text: 'Licence, following fixed-term recall',
+    abbr: 'Fixed-term recall',
+  },
+  standardRecall: {
+    text: 'Licence, following standard recall',
+    abbr: 'Standard recall',
+  },
+  parole: {
+    text: 'Parole',
+    abbr: 'Parole',
+  },
+  pss: {
+    text: 'Post sentence supervision (PSS)',
+    abbr: 'PSS',
+  },
+}
+
+export type ReleaseTypeKey = keyof typeof releaseTypes
+
+export type ReleaseTypeBody = {
+  releaseTypes: Array<ReleaseTypeKey>
+} & ObjectWithDateParts<`${ReleaseTypeKey}StartDate`> &
+  ObjectWithDateParts<`${ReleaseTypeKey}EndDate`>
 
 @Page({
   name: 'release-type',
   bodyProperties: [
     'releaseTypes',
-    ...dateBodyProperties('licenceStartDate'),
-    ...dateBodyProperties('licenceEndDate'),
-    ...dateBodyProperties('pssStartDate'),
-    ...dateBodyProperties('pssEndDate'),
+    ...Object.keys(releaseTypes).reduce(
+      (properties, key: ReleaseTypeKey) => [
+        ...properties,
+        ...dateBodyProperties(`${key}StartDate`),
+        ...dateBodyProperties(`${key}EndDate`),
+      ],
+      [],
+    ),
   ],
 })
 export default class ReleaseType implements TasklistPage {
@@ -35,11 +66,16 @@ export default class ReleaseType implements TasklistPage {
 
   public set body(value: Partial<ReleaseTypeBody>) {
     this._body = {
-      ...value,
-      ...DateFormats.dateAndTimeInputsToIsoString(value, 'licenceStartDate'),
-      ...DateFormats.dateAndTimeInputsToIsoString(value, 'licenceEndDate'),
-      ...DateFormats.dateAndTimeInputsToIsoString(value, 'pssStartDate'),
-      ...DateFormats.dateAndTimeInputsToIsoString(value, 'pssEndDate'),
+      releaseTypes: value.releaseTypes,
+      ...Object.keys(releaseTypes)
+        .filter((key: ReleaseTypeKey) => value.releaseTypes?.includes(key))
+        .reduce((properties, key: ReleaseTypeKey) => {
+          return {
+            ...properties,
+            ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}StartDate`),
+            ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}EndDate`),
+          }
+        }, {}),
     }
   }
 
@@ -49,20 +85,13 @@ export default class ReleaseType implements TasklistPage {
 
   response() {
     const response = {
-      [this.title]: this.body.releaseTypes
-        .map(releaseType => (releaseType === 'licence' ? 'Licence' : 'Post sentence supervision (PSS)'))
-        .join('\n'),
+      [this.title]: this.body.releaseTypes.map(key => releaseTypes[key].abbr).join('\n'),
     }
 
-    if (this.body.releaseTypes.includes('licence')) {
-      response['Licence start date'] = DateFormats.isoDateToUIDate(this.body.licenceStartDate)
-      response['Licence end date'] = DateFormats.isoDateToUIDate(this.body.licenceEndDate)
-    }
-
-    if (this.body.releaseTypes.includes('pss')) {
-      response['PSS start date'] = DateFormats.isoDateToUIDate(this.body.pssStartDate)
-      response['PSS end date'] = DateFormats.isoDateToUIDate(this.body.pssEndDate)
-    }
+    this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
+      response[`${releaseTypes[key].abbr} start date`] = DateFormats.isoDateToUIDate(this.body[`${key}StartDate`])
+      response[`${releaseTypes[key].abbr} end date`] = DateFormats.isoDateToUIDate(this.body[`${key}EndDate`])
+    })
 
     return response
   }
@@ -82,34 +111,33 @@ export default class ReleaseType implements TasklistPage {
       errors.releaseTypes = 'You must specify the release types'
     }
 
-    if (this.body.releaseTypes?.includes('licence')) {
-      if (dateIsBlank(this.body, 'licenceStartDate')) {
-        errors.licenceStartDate = 'You must specify the licence start date'
-      } else if (!dateAndTimeInputsAreValidDates(this.body, 'licenceStartDate')) {
-        errors.licenceStartDate = 'You must specify a valid licence start date'
+    this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
+      if (dateIsBlank(this.body, `${key}StartDate`)) {
+        errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
+      } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {
+        errors[`${key}StartDate`] = `You must specify a valid ${releaseTypes[key].abbr} start date`
       }
 
-      if (dateIsBlank(this.body, 'licenceEndDate')) {
-        errors.licenceEndDate = 'You must specify the licence end date'
-      } else if (!dateAndTimeInputsAreValidDates(this.body, 'licenceEndDate')) {
-        errors.licenceEndDate = 'You must specify a valid licence end date'
+      if (dateIsBlank(this.body, `${key}EndDate`)) {
+        errors[`${key}EndDate`] = `You must specify the ${releaseTypes[key].abbr} end date`
+      } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}EndDate`)) {
+        errors[`${key}EndDate`] = `You must specify a valid ${releaseTypes[key].abbr} end date`
       }
-    }
-
-    if (this.body.releaseTypes?.includes('pss')) {
-      if (dateIsBlank(this.body, 'pssStartDate')) {
-        errors.pssStartDate = 'You must specify the PSS start date'
-      } else if (!dateAndTimeInputsAreValidDates(this.body, 'pssStartDate')) {
-        errors.pssStartDate = 'You must specify a valid PSS start date'
-      }
-
-      if (dateIsBlank(this.body, 'pssEndDate')) {
-        errors.pssEndDate = 'You must specify the PSS end date'
-      } else if (!dateAndTimeInputsAreValidDates(this.body, 'pssEndDate')) {
-        errors.pssEndDate = 'You must specify a valid PSS end date'
-      }
-    }
+    })
 
     return errors
+  }
+
+  getReleaseTypeOptions() {
+    return Object.entries(releaseTypes).reduce(
+      (options, [key, releaseType]) => [
+        ...options,
+        {
+          name: releaseType.text,
+          value: key,
+        },
+      ],
+      [],
+    )
   }
 }

@@ -37,6 +37,14 @@
         {{ page.title }}
     </h1>
 
+    {% set releaseTypeOptions = [] %}
+    {% for option in convertObjectsToCheckboxItems(page.getReleaseTypeOptions(), 'name', 'value', 'releaseTypes') %}
+        {% set releaseTypeOptions = releaseTypeOptions.concat(mergeObjects(
+            option,
+            { conditional: { html: startAndEndDatesFields(option.value) } }
+        )) %}
+    {% endfor %}
+
     {{ formPageCheckboxes({
         fieldName: "releaseTypes",
         fieldset: {
@@ -45,22 +53,7 @@
                 classes: "govuk-fieldset__legend--m"
             }
         },
-        items: [
-            {
-                value: "licence",
-                text: "Licence",
-                conditional: {
-                html: startAndEndDatesFields('licence')
-            }
-            },
-            {
-                value: "pss",
-                text: "Post sentence supervision (PSS)",
-                conditional: {
-                html: startAndEndDatesFields('pss')
-            }
-            }
-        ]
+        items: releaseTypeOptions
     }, fetchContext()) }}
 
 {% endblock %}

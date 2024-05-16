@@ -151,4 +151,37 @@ describe('SentenceExpiry', () => {
       })
     })
   })
+
+  describe('getReleaseTypeOptions', () => {
+    it('renders the options as an object for the template', () => {
+      const page = new ReleaseType(body, application)
+
+      expect(page.getReleaseTypeOptions()).toEqual([
+        {
+          name: 'Conditional release date (CRD) licence',
+          value: 'crdLicence',
+        },
+        {
+          name: 'End of custody supervised licence (ECSL)',
+          value: 'ecsl',
+        },
+        {
+          name: 'Licence, following fixed-term recall',
+          value: 'fixedTermRecall',
+        },
+        {
+          name: 'Licence, following standard recall',
+          value: 'standardRecall',
+        },
+        {
+          name: 'Parole',
+          value: 'parole',
+        },
+        {
+          name: 'Post sentence supervision (PSS)',
+          value: 'pss',
+        },
+      ])
+    })
+  })
 })

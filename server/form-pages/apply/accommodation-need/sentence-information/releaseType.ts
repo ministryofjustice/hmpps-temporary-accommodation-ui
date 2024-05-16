@@ -109,21 +109,31 @@ export default class ReleaseType implements TasklistPage {
 
     if (!this.body.releaseTypes?.length) {
       errors.releaseTypes = 'You must specify the release types'
+    } else if (
+      this.body.releaseTypes?.includes('fixedTermRecall') &&
+      this.body.releaseTypes?.includes('standardRecall')
+    ) {
+      errors.releaseTypes = 'Select one type of recall licence'
+    } else if (
+      this.body.releaseTypes?.includes('parole') &&
+      (this.body.releaseTypes?.includes('crdLicence') || this.body.releaseTypes?.includes('pss'))
+    ) {
+      errors.releaseTypes = 'Parole cannot be selected alongside the CRD licence or PSS'
+    } else {
+      this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
+        if (dateIsBlank(this.body, `${key}StartDate`)) {
+          errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
+        } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {
+          errors[`${key}StartDate`] = `You must specify a valid ${releaseTypes[key].abbr} start date`
+        }
+
+        if (dateIsBlank(this.body, `${key}EndDate`)) {
+          errors[`${key}EndDate`] = `You must specify the ${releaseTypes[key].abbr} end date`
+        } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}EndDate`)) {
+          errors[`${key}EndDate`] = `You must specify a valid ${releaseTypes[key].abbr} end date`
+        }
+      })
     }
-
-    this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
-      if (dateIsBlank(this.body, `${key}StartDate`)) {
-        errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
-      } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {
-        errors[`${key}StartDate`] = `You must specify a valid ${releaseTypes[key].abbr} start date`
-      }
-
-      if (dateIsBlank(this.body, `${key}EndDate`)) {
-        errors[`${key}EndDate`] = `You must specify the ${releaseTypes[key].abbr} end date`
-      } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}EndDate`)) {
-        errors[`${key}EndDate`] = `You must specify a valid ${releaseTypes[key].abbr} end date`
-      }
-    })
 
     return errors
   }

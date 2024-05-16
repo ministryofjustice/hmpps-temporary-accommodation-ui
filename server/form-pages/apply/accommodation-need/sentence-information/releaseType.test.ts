@@ -116,6 +116,26 @@ describe('SentenceExpiry', () => {
         releaseTypes: 'You must specify the release types',
       })
     })
+
+    it('returns an error if both licence checkboxes are selected', () => {
+      const page = new ReleaseType({ releaseTypes: ['fixedTermRecall', 'standardRecall'] }, application)
+
+      expect(page.errors()).toEqual({
+        releaseTypes: 'Select one type of recall licence',
+      })
+    })
+
+    it.each([
+      ['Parole and CRD licence', ['parole', 'crdLicence']],
+      ['Parole and PSS', ['parole', 'pss']],
+      ['Parole, CRD licence and PSS', ['parole', 'crdLicence', 'pss']],
+    ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
+      const page = new ReleaseType({ releaseTypes: selected }, application)
+
+      expect(page.errors()).toEqual({
+        releaseTypes: 'Parole cannot be selected alongside the CRD licence or PSS',
+      })
+    })
   })
 
   describe('response', () => {

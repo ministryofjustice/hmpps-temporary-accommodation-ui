@@ -38,7 +38,7 @@ describe('getApplicationSubmissionData', () => {
       isConcerningSexualBehaviour: true,
       hasHistoryOfArson: false,
       isConcerningArsonBehaviour: true,
-      prisonReleaseTypes: ['CRD licence', 'Parole'],
+      prisonReleaseTypes: ['Fixed-term recall', 'Parole'],
     })
   })
 })

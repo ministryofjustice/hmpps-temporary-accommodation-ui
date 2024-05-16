@@ -15,15 +15,9 @@ export default class ReleaseTypePage extends ApplyPage {
 
   completeForm() {
     this.checkCheckboxesFromPageBody('releaseTypes')
-
-    if ((this.tasklistPage.body.releaseTypes as Array<string>).includes('licence')) {
-      this.completeDateInputsFromPageBody('licenceStartDate')
-      this.completeDateInputsFromPageBody('licenceEndDate')
-    }
-
-    if ((this.tasklistPage.body.releaseTypes as Array<string>).includes('pss')) {
-      this.completeDateInputsFromPageBody('pssStartDate')
-      this.completeDateInputsFromPageBody('pssEndDate')
-    }
+    ;(this.tasklistPage.body.releaseTypes as Array<string>).forEach(key => {
+      this.completeDateInputsFromPageBody(`${key}StartDate`)
+      this.completeDateInputsFromPageBody(`${key}EndDate`)
+    })
   }
 }

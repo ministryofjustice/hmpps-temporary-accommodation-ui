@@ -4,7 +4,7 @@ import type { DataServices, TaskListErrors } from '@approved-premises/ui'
 
 import ApplicationClient from '../data/applicationClient'
 import type TasklistPage from '../form-pages/tasklistPage'
-import { getBody, getPageName, getTaskName, pageBodyShallowEquals } from '../form-pages/utils'
+import * as formPageUtils from '../form-pages/utils'
 import { ValidationError } from '../utils/errors'
 import ApplicationService from './applicationService'
 
@@ -41,7 +41,6 @@ Apply.pages['my-task'] = {
 jest.mock('../data/applicationClient.ts')
 jest.mock('../data/personClient.ts')
 jest.mock('../utils/applicationUtils')
-jest.mock('../form-pages/utils')
 jest.mock('../utils/applicationUtils')
 jest.mock('../utils/applications/getApplicationData')
 
@@ -194,7 +193,7 @@ describe('ApplicationService', () => {
     it('should fetch the application from the API if it is not in the session', async () => {
       request.session.application = undefined
       applicationClient.find.mockResolvedValue(application)
-      ;(getBody as jest.Mock).mockReturnValue(request.body)
+      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(request.body)
 
       const result = await service.initializePage(callConfig, Page, request, dataServices)
 
@@ -205,7 +204,7 @@ describe('ApplicationService', () => {
     })
 
     it('should return the session and a page from a page list', async () => {
-      ;(getBody as jest.Mock).mockReturnValue(request.body)
+      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(request.body)
 
       const result = await service.initializePage(callConfig, Page, request, dataServices)
 
@@ -216,7 +215,7 @@ describe('ApplicationService', () => {
 
     it('should initialize the page with the session and the userInput if specified', async () => {
       const userInput = { foo: 'bar' }
-      ;(getBody as jest.Mock).mockReturnValue(userInput)
+      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(userInput)
 
       const result = await service.initializePage(callConfig, Page, request, dataServices, userInput)
 
@@ -228,7 +227,7 @@ describe('ApplicationService', () => {
     it('should load from the session if the body and userInput are blank', async () => {
       request.body = {}
       request.session.application.data = { 'my-task': { first: { foo: 'bar' } } }
-      ;(getBody as jest.Mock).mockReturnValue(request.session.application.data['my-task'].first)
+      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(request.session.application.data['my-task'].first)
 
       const result = await service.initializePage(callConfig, Page, request, dataServices)
 
@@ -239,7 +238,7 @@ describe('ApplicationService', () => {
 
     it("should call a service's initialize method if it exists", async () => {
       const OtherPage = { initialize: jest.fn() } as unknown as TasklistPageInterface
-      ;(getBody as jest.Mock).mockReturnValue(request.body)
+      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(request.body)
 
       await service.initializePage(callConfig, OtherPage, request, dataServices)
 
@@ -247,7 +246,7 @@ describe('ApplicationService', () => {
     })
 
     it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {
-      ;(getBody as jest.Mock).mockReturnValue(request.body)
+      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(request.body)
 
       request.session.previousPage = 'previous-page-name'
       await service.initializePage(callConfig, Page, request, dataServices)
@@ -275,12 +274,14 @@ describe('ApplicationService', () => {
           },
           body: { foo: 'bar' },
         })
-        ;(getPageName as jest.Mock).mockImplementation(pageClass => (pageClass === Review ? 'review' : 'some-page'))
-        ;(getTaskName as jest.Mock).mockImplementation(pageClass =>
-          pageClass === Review ? 'check-your-answers' : 'some-task',
-        )
+        jest
+          .spyOn(formPageUtils, 'getPageName')
+          .mockImplementation(pageClass => (pageClass === Review ? 'review' : 'some-page'))
+        jest
+          .spyOn(formPageUtils, 'getTaskName')
+          .mockImplementation(pageClass => (pageClass === Review ? 'check-your-answers' : 'some-task'))
+        jest.spyOn(formPageUtils, 'pageBodyShallowEquals').mockReturnValue(false)
         ;(getApplicationUpdateData as jest.Mock).mockReturnValue(applicationData)
-        ;(pageBodyShallowEquals as jest.Mock).mockReturnValue(false)
       })
 
       it('does not throw an error', () => {
@@ -357,7 +358,7 @@ describe('ApplicationService', () => {
           'some-task': { 'some-page': { foo: 'bar' } },
           'check-your-answers': { review: { reviewed: '1' } },
         }
-        ;(pageBodyShallowEquals as jest.Mock).mockReturnValue(true)
+        jest.spyOn(formPageUtils, 'pageBodyShallowEquals').mockReturnValue(true)
 
         await service.save(callConfig, page, request)
 
@@ -385,8 +386,8 @@ describe('ApplicationService', () => {
         application.data = {
           'some-task': { 'other-page': { question: 'answer' } },
         }
-        ;(getTaskName as jest.Mock).mockReturnValue('check-your-answers')
-        ;(getPageName as jest.Mock).mockReturnValue('review')
+        jest.spyOn(formPageUtils, 'getTaskName').mockReturnValue('check-your-answers')
+        jest.spyOn(formPageUtils, 'getPageName').mockReturnValue('review')
 
         await service.save(callConfig, page, request)
 

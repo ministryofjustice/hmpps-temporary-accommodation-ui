@@ -39,13 +39,13 @@ describe('SentenceExpiry', () => {
   itShouldHaveNextValue(new ReleaseType({}, application), '')
 
   describe('errors', () => {
-    it('returns an empty object if fields are populated without error', () => {
+    it('returns no errors if fields are populated correctly', () => {
       const page = new ReleaseType(body, application)
       expect(page.errors()).toEqual({})
     })
 
     it.each(Object.keys(releaseTypes))(
-      'returns an empty object if the %s release type is specified and only the %s dates are specified',
+      'returns no error if the %s release type is specified and only the %s dates are specified',
       (key: ReleaseTypeKey) => {
         const bodyOneType = {
           releaseTypes: [key],
@@ -64,7 +64,7 @@ describe('SentenceExpiry', () => {
     )
 
     it.each(Object.keys(releaseTypes))(
-      'returns errors if the %s release type is specified and the %s dates are blank',
+      'returns date required errors if the %s release type is specified and the %s dates are blank',
       (key: ReleaseTypeKey) => {
         const bodyMissingDates = {
           releaseTypes: [key],
@@ -80,7 +80,7 @@ describe('SentenceExpiry', () => {
     )
 
     it.each(Object.keys(releaseTypes))(
-      'returns errors if the %s release type is specified and the %s dates are invalid',
+      'returns date invalid errors if the %s release type is specified and the %s dates are invalid',
       (key: ReleaseTypeKey) => {
         const bodyInvalidDates = {
           releaseTypes: [key],

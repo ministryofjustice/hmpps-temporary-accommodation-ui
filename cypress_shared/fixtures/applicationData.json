@@ -197,7 +197,8 @@
       "riskToChildren": "Risk to children detail",
       "riskToPublic": "Risk to public detail",
       "riskToKnownAdult": "Risk to known adult detail",
-      "riskToStaff": "Risk to staff detail"
+      "riskToStaff": "Risk to staff detail",
+      "riskToSelf": "Risk to self detail"
     },
     "risk-management-plan": {
       "version": "2",

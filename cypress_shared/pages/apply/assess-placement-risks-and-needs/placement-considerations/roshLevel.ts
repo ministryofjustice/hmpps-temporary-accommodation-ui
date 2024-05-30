@@ -22,5 +22,6 @@ export default class RoshLevelPage extends ApplyPage {
     this.completeTextInputFromPageBody('riskToPublic')
     this.completeTextInputFromPageBody('riskToKnownAdult')
     this.completeTextInputFromPageBody('riskToStaff')
+    this.completeTextInputFromPageBody('riskToSelf')
   }
 }

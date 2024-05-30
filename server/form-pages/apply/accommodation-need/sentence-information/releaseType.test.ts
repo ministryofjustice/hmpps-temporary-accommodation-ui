@@ -136,6 +136,14 @@ describe('SentenceExpiry', () => {
         releaseTypes: 'Parole cannot be selected alongside the CRD licence or PSS',
       })
     })
+
+    it('returns a single error if an old release type is submitted', () => {
+      const page = new ReleaseType({ releaseTypes: ['licence'] as unknown as Array<ReleaseTypeKey> }, application)
+
+      expect(page.errors()).toEqual({
+        releaseTypes: 'You must specify the release types',
+      })
+    })
   })
 
   describe('response', () => {

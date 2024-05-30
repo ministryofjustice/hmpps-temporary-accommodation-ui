@@ -107,20 +107,19 @@ export default class ReleaseType implements TasklistPage {
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (!this.body.releaseTypes?.length) {
+    const submittedReleaseTypes = this.body.releaseTypes?.filter(key => Boolean(releaseTypes[key]))
+
+    if (!submittedReleaseTypes?.length) {
       errors.releaseTypes = 'You must specify the release types'
-    } else if (
-      this.body.releaseTypes?.includes('fixedTermRecall') &&
-      this.body.releaseTypes?.includes('standardRecall')
-    ) {
+    } else if (submittedReleaseTypes.includes('fixedTermRecall') && submittedReleaseTypes.includes('standardRecall')) {
       errors.releaseTypes = 'Select one type of recall licence'
     } else if (
-      this.body.releaseTypes?.includes('parole') &&
-      (this.body.releaseTypes?.includes('crdLicence') || this.body.releaseTypes?.includes('pss'))
+      submittedReleaseTypes.includes('parole') &&
+      (submittedReleaseTypes.includes('crdLicence') || submittedReleaseTypes.includes('pss'))
     ) {
       errors.releaseTypes = 'Parole cannot be selected alongside the CRD licence or PSS'
     } else {
-      this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
+      submittedReleaseTypes.forEach((key: ReleaseTypeKey) => {
         if (dateIsBlank(this.body, `${key}StartDate`)) {
           errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {

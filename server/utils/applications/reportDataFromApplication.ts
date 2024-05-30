@@ -3,6 +3,7 @@ import { eligibilityReasons } from '../../form-pages/apply/accommodation-need/el
 import { TemporaryAccommodationApplication as Application } from '../../@types/shared'
 import { SessionDataError } from '../errors'
 import { stripWhitespace } from '../utils'
+import { releaseTypes } from '../../form-pages/apply/accommodation-need/sentence-information/releaseType'
 
 const isDutyToReferSubmittedFromApplication = (application: Application): boolean => {
   const isDutyToReferSubmitted: string = (application.data as Record<string, unknown>)?.[
@@ -163,6 +164,17 @@ const isConcerningArsonBehaviourFromApplication = (application: Application): bo
   return yesOrNoToBoolOrUndefined(concerningArsonBehaviour)
 }
 
+const releaseTypesFromApplication = (application: Application): Array<string> => {
+  const releaseTypesData: Array<string> =
+    (application.data as Record<string, unknown>)?.['sentence-information']?.['release-type']?.releaseTypes || []
+
+  if (!releaseTypesData.every(key => Boolean(releaseTypes[key]))) {
+    return []
+  }
+
+  return releaseTypesData.map(key => releaseTypes[key].abbr)
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
@@ -177,4 +189,5 @@ export {
   isConcerningSexualBehaviourFromApplication,
   hasHistoryOfArsonFromApplication,
   isConcerningArsonBehaviourFromApplication,
+  releaseTypesFromApplication,
 }

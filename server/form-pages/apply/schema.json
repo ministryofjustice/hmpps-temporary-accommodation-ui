@@ -122,41 +122,15 @@
               "type": "array",
               "items": {
                 "enum": [
-                  "licence",
-                  "pss"
+                  "pss",
+                  "crdLicence",
+                  "ecsl",
+                  "parole",
+                  "fixedTermRecall",
+                  "standardRecall"
                 ],
                 "type": "string"
               }
-            },
-            "licenceStartDate-year": {
-              "type": "string"
-            },
-            "licenceStartDate-month": {
-              "type": "string"
-            },
-            "licenceStartDate-day": {
-              "type": "string"
-            },
-            "licenceStartDate-time": {
-              "type": "string"
-            },
-            "licenceStartDate": {
-              "type": "string"
-            },
-            "licenceEndDate-year": {
-              "type": "string"
-            },
-            "licenceEndDate-month": {
-              "type": "string"
-            },
-            "licenceEndDate-day": {
-              "type": "string"
-            },
-            "licenceEndDate-time": {
-              "type": "string"
-            },
-            "licenceEndDate": {
-              "type": "string"
             },
             "pssStartDate-year": {
               "type": "string"
@@ -186,6 +160,156 @@
               "type": "string"
             },
             "pssEndDate": {
+              "type": "string"
+            },
+            "crdLicenceStartDate-year": {
+              "type": "string"
+            },
+            "crdLicenceStartDate-month": {
+              "type": "string"
+            },
+            "crdLicenceStartDate-day": {
+              "type": "string"
+            },
+            "crdLicenceStartDate-time": {
+              "type": "string"
+            },
+            "crdLicenceStartDate": {
+              "type": "string"
+            },
+            "crdLicenceEndDate-year": {
+              "type": "string"
+            },
+            "crdLicenceEndDate-month": {
+              "type": "string"
+            },
+            "crdLicenceEndDate-day": {
+              "type": "string"
+            },
+            "crdLicenceEndDate-time": {
+              "type": "string"
+            },
+            "crdLicenceEndDate": {
+              "type": "string"
+            },
+            "ecslStartDate-year": {
+              "type": "string"
+            },
+            "ecslStartDate-month": {
+              "type": "string"
+            },
+            "ecslStartDate-day": {
+              "type": "string"
+            },
+            "ecslStartDate-time": {
+              "type": "string"
+            },
+            "ecslStartDate": {
+              "type": "string"
+            },
+            "ecslEndDate-year": {
+              "type": "string"
+            },
+            "ecslEndDate-month": {
+              "type": "string"
+            },
+            "ecslEndDate-day": {
+              "type": "string"
+            },
+            "ecslEndDate-time": {
+              "type": "string"
+            },
+            "ecslEndDate": {
+              "type": "string"
+            },
+            "paroleStartDate-year": {
+              "type": "string"
+            },
+            "paroleStartDate-month": {
+              "type": "string"
+            },
+            "paroleStartDate-day": {
+              "type": "string"
+            },
+            "paroleStartDate-time": {
+              "type": "string"
+            },
+            "paroleStartDate": {
+              "type": "string"
+            },
+            "paroleEndDate-year": {
+              "type": "string"
+            },
+            "paroleEndDate-month": {
+              "type": "string"
+            },
+            "paroleEndDate-day": {
+              "type": "string"
+            },
+            "paroleEndDate-time": {
+              "type": "string"
+            },
+            "paroleEndDate": {
+              "type": "string"
+            },
+            "fixedTermRecallStartDate-year": {
+              "type": "string"
+            },
+            "fixedTermRecallStartDate-month": {
+              "type": "string"
+            },
+            "fixedTermRecallStartDate-day": {
+              "type": "string"
+            },
+            "fixedTermRecallStartDate-time": {
+              "type": "string"
+            },
+            "fixedTermRecallStartDate": {
+              "type": "string"
+            },
+            "fixedTermRecallEndDate-year": {
+              "type": "string"
+            },
+            "fixedTermRecallEndDate-month": {
+              "type": "string"
+            },
+            "fixedTermRecallEndDate-day": {
+              "type": "string"
+            },
+            "fixedTermRecallEndDate-time": {
+              "type": "string"
+            },
+            "fixedTermRecallEndDate": {
+              "type": "string"
+            },
+            "standardTermRecallStartDate-year": {
+              "type": "string"
+            },
+            "standardTermRecallStartDate-month": {
+              "type": "string"
+            },
+            "standardTermRecallStartDate-day": {
+              "type": "string"
+            },
+            "standardTermRecallStartDate-time": {
+              "type": "string"
+            },
+            "standardTermRecallStartDate": {
+              "type": "string"
+            },
+            "standardTermRecallEndDate-year": {
+              "type": "string"
+            },
+            "standardTermRecallEndDate-month": {
+              "type": "string"
+            },
+            "standardTermRecallEndDate-day": {
+              "type": "string"
+            },
+            "standardTermRecallEndDate-time": {
+              "type": "string"
+            },
+            "standardTermRecallEndDate": {
               "type": "string"
             }
           }

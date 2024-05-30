@@ -11,6 +11,7 @@ import {
   isRegisteredSexOffenderFromApplication,
   needsAccessiblePropertyFromApplication,
   personReleaseDateFromApplication,
+  releaseTypesFromApplication,
 } from './reportDataFromApplication'
 import { applicationFactory } from '../../testutils/factories'
 import { SessionDataError } from '../errors'
@@ -334,6 +335,43 @@ describe('reportDataFromApplication', () => {
       const application = applicationFactory.build()
 
       expect(isConcerningArsonBehaviourFromApplication(application)).toEqual(undefined)
+    })
+  })
+
+  describe('releaseTypesFromApplication', () => {
+    it('returns the translated release types', () => {
+      const application = applicationFactory.build({
+        data: {
+          'sentence-information': {
+            'release-type': {
+              releaseTypes: ['crdLicence', 'ecsl', 'fixedTermRecall', 'standardRecall', 'parole', 'pss'],
+            },
+          },
+        },
+      })
+
+      expect(releaseTypesFromApplication(application)).toEqual([
+        'CRD licence',
+        'ECSL',
+        'Fixed-term recall',
+        'Standard recall',
+        'Parole',
+        'PSS',
+      ])
+    })
+
+    it('returns an empty array if the application release types do not match the latest list', () => {
+      const application = applicationFactory.build({
+        data: {
+          'sentence-information': {
+            'release-type': {
+              releaseTypes: ['licence', 'pss'],
+            },
+          },
+        },
+      })
+
+      expect(releaseTypesFromApplication(application)).toEqual([])
     })
   })
 })

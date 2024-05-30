@@ -38,6 +38,7 @@ describe('getApplicationSubmissionData', () => {
       isConcerningSexualBehaviour: true,
       hasHistoryOfArson: false,
       isConcerningArsonBehaviour: true,
+      prisonReleaseTypes: ['Fixed-term recall', 'Parole'],
     })
   })
 })

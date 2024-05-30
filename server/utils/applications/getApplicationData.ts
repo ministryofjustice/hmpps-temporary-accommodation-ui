@@ -19,6 +19,7 @@ import {
   isRegisteredSexOffenderFromApplication,
   needsAccessiblePropertyFromApplication,
   personReleaseDateFromApplication,
+  releaseTypesFromApplication,
 } from './reportDataFromApplication'
 
 export const getApplicationUpdateData = (application: Application): UpdateApplication => {
@@ -47,5 +48,6 @@ export const getApplicationSubmissionData = (application: Application): SubmitAp
     isConcerningSexualBehaviour: isConcerningSexualBehaviourFromApplication(application),
     hasHistoryOfArson: hasHistoryOfArsonFromApplication(application),
     isConcerningArsonBehaviour: isConcerningArsonBehaviourFromApplication(application),
+    prisonReleaseTypes: releaseTypesFromApplication(application),
   }
 }

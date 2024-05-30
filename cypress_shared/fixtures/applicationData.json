@@ -36,25 +36,25 @@
     },
     "release-type": {
       "releaseTypes": [
-        "licence",
-        "pss"
+        "fixedTermRecall",
+        "parole"
       ],
-      "licenceStartDate": "2024-01-19",
-      "licenceStartDate-year": "2024",
-      "licenceStartDate-month": "1",
-      "licenceStartDate-day": "19",
-      "licenceEndDate": "2024-07-09",
-      "licenceEndDate-year": "2024",
-      "licenceEndDate-month": "7",
-      "licenceEndDate-day": "9",
-      "pssStartDate": "2122-04-01",
-      "pssStartDate-year": "2122",
-      "pssStartDate-month": "4",
-      "pssStartDate-day": "1",
-      "pssEndDate": "2122-07-18",
-      "pssEndDate-year": "2122",
-      "pssEndDate-month": "7",
-      "pssEndDate-day": "18"
+      "fixedTermRecallStartDate": "2024-01-19",
+      "fixedTermRecallStartDate-year": "2024",
+      "fixedTermRecallStartDate-month": "1",
+      "fixedTermRecallStartDate-day": "19",
+      "fixedTermRecallEndDate": "2024-07-09",
+      "fixedTermRecallEndDate-year": "2024",
+      "fixedTermRecallEndDate-month": "7",
+      "fixedTermRecallEndDate-day": "9",
+      "paroleStartDate": "2122-04-01",
+      "paroleStartDate-year": "2122",
+      "paroleStartDate-month": "4",
+      "paroleStartDate-day": "1",
+      "paroleEndDate": "2122-07-18",
+      "paroleEndDate-year": "2122",
+      "paroleEndDate-month": "7",
+      "paroleEndDate-day": "18"
     }
   },
   "contact-details": {

@@ -1,6 +1,6 @@
 import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import ReleaseType, { type ReleaseTypeKey, releaseTypes } from './releaseType'
+import ReleaseType, { type ReleaseTypeBody, type ReleaseTypeKey, releaseTypes } from './releaseType'
 
 const body = {
   releaseTypes: ['fixedTermRecall' as const, 'parole' as const],
@@ -31,6 +31,23 @@ describe('SentenceExpiry', () => {
         fixedTermRecallEndDate: '2024-07-09',
         paroleStartDate: '2122-04-01',
         paroleEndDate: '2122-07-18',
+      })
+    })
+
+    it('excludes invalid or old release types', () => {
+      const oldBody = {
+        releaseTypes: ['licence'],
+        'licenceStartDate-year': '2024',
+        'licenceStartDate-month': '1',
+        'licenceStartDate-day': '19',
+        'licenceEndDate-year': '2024',
+        'licenceEndDate-month': '7',
+        'licenceEndDate-day': '9',
+      }
+      const page = new ReleaseType(oldBody as unknown as ReleaseTypeBody, application)
+
+      expect(page.body).toEqual({
+        releaseTypes: [],
       })
     })
   })
@@ -156,6 +173,17 @@ describe('SentenceExpiry', () => {
         'Fixed-term recall end date': '9 July 2024',
         'Parole start date': '1 April 2122',
         'Parole end date': '18 July 2122',
+      })
+    })
+
+    it('does not display invalid release types', () => {
+      const oldBody = {
+        releaseTypes: ['licence'],
+      }
+      const page = new ReleaseType(oldBody as unknown as ReleaseTypeBody, application)
+
+      expect(page.response()).toEqual({
+        'What is the release type?': '',
       })
     })
   })

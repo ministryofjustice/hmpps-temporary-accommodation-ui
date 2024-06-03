@@ -9,68 +9,67 @@
 {% set pageTitle = page.title + " - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
-{% block beforeContent%}
-  {{ govukBackLink({
-      text: "Back",
-      href: paths.applications.show({ id: page.application.id }),
-      classes: 'exclude-from-print'
-  }) }}
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.applications.show({ id: page.application.id }),
+        classes: 'exclude-from-print'
+    }) }}
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-width-container">
-      <h1 class="govuk-heading-xl">
-        {{ page.title }}
-      </h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-width-container">
+            <h1 class="govuk-heading-xl">
+                {{ page.title }}
+            </h1>
 
-      {{ printButton() }}
+            {{ printButton() }}
 
-      <div class="main-box">
-        <h2 class="box-title govuk-heading-m">
-          Person Details
-        </h2>
-        <div class="box-content" data-cy-check-your-answers-section="person-details">
-          {{ personDetails(page.application.person) }}
-        </div>
-      </div>
-
-      {% for section in checkYourAnswersSections(page.application) %}
-        <h2 class="govuk-heading-l">{{ section.title }}</h2>
-        {% for task in section.tasks %}
-          <div class="main-box" data-cy-check-your-answers-section="{{ task.id }}">
-            <h3 class="box-title govuk-heading-m">
-              {{ task.title }}
-            </h3>
-            <div class="box-content">
-              {{
-                govukSummaryList({
-                  rows: task.rows
-                })
-              }}
+            <div class="main-box">
+                <h2 class="box-title govuk-heading-m">
+                    Person Details
+                </h2>
+                <div class="box-content" data-cy-check-your-answers-section="person-details">
+                    {{ personDetails(page.application.person) }}
+                </div>
             </div>
-          </div>
-        {% endfor %}
-      {% endfor %}
 
-      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+            {% for section in checkYourAnswersSections(page.application) %}
+                <h2 class="govuk-heading-l">{{ section.title }}</h2>
+                {% for task in section.tasks %}
+                    <div class="main-box" data-cy-check-your-answers-section="{{ task.id }}">
+                        <h3 class="box-title govuk-heading-m">
+                            {{ task.title }}
+                        </h3>
+                        <div class="box-content">
+                            {{ govukSummaryList({
+                                rows: task.rows
+                            }) }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
 
-        <input type="hidden" name="reviewed" value="1"/>
+            <form action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT"
+                  method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {{ govukButton({
-          text: "Continue",
-          preventDoubleClick: true,
-          classes: 'exclude-from-print'
-        }) }}
-      </form>
+                <input type="hidden" name="reviewed" value="1" />
 
+                {{ govukButton({
+                    text: "Continue",
+                    preventDoubleClick: true,
+                    classes: 'exclude-from-print'
+                }) }}
+            </form>
+
+        </div>
     </div>
-  </div>
 
 
 {% endblock %}
 
 {% block extraScripts %}
-  {{ printButtonScript(cspNonce) }}
+    {{ printButtonScript(cspNonce) }}
 {% endblock %}

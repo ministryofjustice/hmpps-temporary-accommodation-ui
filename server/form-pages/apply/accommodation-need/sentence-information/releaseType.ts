@@ -65,17 +65,16 @@ export default class ReleaseType implements TasklistPage {
   ) {}
 
   public set body(value: Partial<ReleaseTypeBody>) {
+    const selectedTypes = value.releaseTypes?.filter(key => Boolean(releaseTypes[key]))
     this._body = {
-      releaseTypes: value.releaseTypes,
-      ...Object.keys(releaseTypes)
-        .filter((key: ReleaseTypeKey) => value.releaseTypes?.includes(key))
-        .reduce((properties, key: ReleaseTypeKey) => {
-          return {
-            ...properties,
-            ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}StartDate`),
-            ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}EndDate`),
-          }
-        }, {}),
+      releaseTypes: selectedTypes,
+      ...selectedTypes?.reduce((properties, key: ReleaseTypeKey) => {
+        return {
+          ...properties,
+          ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}StartDate`),
+          ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}EndDate`),
+        }
+      }, {}),
     }
   }
 
@@ -85,7 +84,7 @@ export default class ReleaseType implements TasklistPage {
 
   response() {
     const response = {
-      [this.title]: this.body.releaseTypes.map(key => releaseTypes[key].abbr).join('\n'),
+      [this.title]: this.body.releaseTypes?.map(key => releaseTypes[key].abbr).join('\n'),
     }
 
     this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
@@ -107,19 +106,20 @@ export default class ReleaseType implements TasklistPage {
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    const submittedReleaseTypes = this.body.releaseTypes?.filter(key => Boolean(releaseTypes[key]))
-
-    if (!submittedReleaseTypes?.length) {
+    if (!this.body.releaseTypes?.length) {
       errors.releaseTypes = 'You must specify the release types'
-    } else if (submittedReleaseTypes.includes('fixedTermRecall') && submittedReleaseTypes.includes('standardRecall')) {
+    } else if (
+      this.body.releaseTypes.includes('fixedTermRecall') &&
+      this.body.releaseTypes.includes('standardRecall')
+    ) {
       errors.releaseTypes = 'Select one type of recall licence'
     } else if (
-      submittedReleaseTypes.includes('parole') &&
-      (submittedReleaseTypes.includes('crdLicence') || submittedReleaseTypes.includes('pss'))
+      this.body.releaseTypes.includes('parole') &&
+      (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
     ) {
       errors.releaseTypes = 'Parole cannot be selected alongside the CRD licence or PSS'
     } else {
-      submittedReleaseTypes.forEach((key: ReleaseTypeKey) => {
+      this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
         if (dateIsBlank(this.body, `${key}StartDate`)) {
           errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {

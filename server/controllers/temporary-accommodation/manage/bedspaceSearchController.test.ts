@@ -16,7 +16,7 @@ import { DateFormats } from '../../../utils/dateUtils'
 import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDate } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
-import BedspaceSearchController from './bedspaceSearchController'
+import BedspaceSearchController, { DEFAULT_DURATION_DAYS } from './bedspaceSearchController'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
@@ -45,7 +45,7 @@ describe('BedspaceSearchController', () => {
   })
 
   describe('index', () => {
-    it('renders the search page when not given a search query', async () => {
+    it('renders the search page with default duration when not given a search query', async () => {
       request.query = {
         'other-parameter': 'other-data',
       }
@@ -65,6 +65,7 @@ describe('BedspaceSearchController', () => {
         allPdus: referenceData.pdus,
         errors: {},
         errorSummary: [],
+        durationDays: DEFAULT_DURATION_DAYS,
       })
     })
 

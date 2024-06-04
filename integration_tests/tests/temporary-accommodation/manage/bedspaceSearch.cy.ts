@@ -21,7 +21,7 @@ context('Bedspace Search', () => {
     setupTestUser('assessor')
   })
 
-  it('navigates to the bedspace search page', () => {
+  it('navigates to the bedspace search page with a default number of days', () => {
     // Given I am signed in
     cy.signIn()
 
@@ -35,7 +35,9 @@ context('Bedspace Search', () => {
     page.clickSearchBedspacesLink()
 
     // Then I navigate to the bedspace search page
-    Page.verifyOnPage(BedspaceSearchPage)
+    const searchPage = Page.verifyOnPage(BedspaceSearchPage)
+
+    searchPage.shouldShowTextInputByLabel('Number of days required', '84')
   })
 
   it('shows search results', () => {
@@ -206,6 +208,7 @@ context('Bedspace Search', () => {
 
     // And I miss required fields
     cy.task('stubBedSearchErrors', ['startDate', 'durationDays', 'probationDeliveryUnit'])
+    page.clearTextInputByLabel('Number of days required')
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields

@@ -11,6 +11,7 @@ const body = {
   riskToPublic: 'Risk to public detail',
   riskToKnownAdult: 'Risk to known adult detail',
   riskToStaff: 'Risk to staff detail',
+  riskToSelf: 'Risk to self detail',
 }
 const personRisksUi = { flags: { value: ['Some flag'] } } as PersonRisksUI
 
@@ -70,6 +71,13 @@ describe('RoshLevel', () => {
         riskToStaff: 'You must provide details on how risk to staff will impact placement',
       })
     })
+
+    it('returns an error if the risk to self field is not populated', () => {
+      const page = new RoshLevel({ ...body, riskToSelf: undefined }, application)
+      expect(page.errors()).toEqual({
+        riskToSelf: 'You must provide details on how risk to self will impact placement',
+      })
+    })
   })
 
   describe('response', () => {
@@ -80,6 +88,7 @@ describe('RoshLevel', () => {
         'How will risk to public impact placement?': 'Risk to public detail',
         'How will risk to known adult impact placement?': 'Risk to known adult detail',
         'How will risk to staff impact placement?': 'Risk to staff detail',
+        'How will risk to self impact placement?': 'Risk to self detail',
       })
     })
   })

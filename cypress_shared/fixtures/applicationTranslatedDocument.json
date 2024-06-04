@@ -201,7 +201,8 @@
               "How will risk to children impact placement?": "Risk to children detail",
               "How will risk to public impact placement?": "Risk to public detail",
               "How will risk to known adult impact placement?": "Risk to known adult detail",
-              "How will risk to staff impact placement?": "Risk to staff detail"
+              "How will risk to staff impact placement?": "Risk to staff detail",
+              "How will risk to self impact placement?": "Risk to self detail"
             },
             {
               "Victim safety planning": "Victim safety planning detail",

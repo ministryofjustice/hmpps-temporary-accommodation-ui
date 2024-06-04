@@ -10,11 +10,12 @@ type RoshLevelBody = {
   riskToPublic: string
   riskToKnownAdult: string
   riskToStaff: string
+  riskToSelf: string
 }
 
 @Page({
   name: 'rosh-level',
-  bodyProperties: ['riskToChildren', 'riskToPublic', 'riskToKnownAdult', 'riskToStaff'],
+  bodyProperties: ['riskToChildren', 'riskToPublic', 'riskToKnownAdult', 'riskToStaff', 'riskToSelf'],
 })
 export default class RoshLevel implements TasklistPage {
   title = 'RoSH level'
@@ -36,6 +37,7 @@ export default class RoshLevel implements TasklistPage {
       'How will risk to public impact placement?': this.body.riskToPublic,
       'How will risk to known adult impact placement?': this.body.riskToKnownAdult,
       'How will risk to staff impact placement?': this.body.riskToStaff,
+      'How will risk to self impact placement?': this.body.riskToSelf,
     }
   }
 
@@ -64,6 +66,10 @@ export default class RoshLevel implements TasklistPage {
 
     if (!this.body.riskToStaff) {
       errors.riskToStaff = 'You must provide details on how risk to staff will impact placement'
+    }
+
+    if (!this.body.riskToSelf) {
+      errors.riskToSelf = 'You must provide details on how risk to self will impact placement'
     }
 
     return errors

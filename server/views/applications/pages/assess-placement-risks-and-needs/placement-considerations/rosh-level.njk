@@ -4,109 +4,135 @@
 {% from "../../../../components/riskWidgets/rosh-widget/macro.njk" import roshWidget %}
 {% from "../../../../components/riskWidgets/risk-flag-widget/macro.njk" import riskFlagWidget %}
 {% extends "../../layout.njk" %}
-
 {% set disableButton = true %}
-
 {% set columnClasses = "govuk-grid-column-full" %}
 {% block questions %}
+    {% include "./partials/_navigation.njk" %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% if page.risks.roshRisks.status !== 'retrieved' %}
+                {{ govukWarningText({
+                    text: "The RoSH levels could not be imported from OASys. Check OASys and enter the RoSH level in each corresponding textbox.",
+                    iconFallbackText: "Warning"
+                }) }}
+            {% endif %}
 
-  {% include "./partials/_navigation.njk" %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+            <h2>Risk to children</h2>
+            {% set riskToChildrenHintHtml %}
+                <p class="govuk-hint">Consider if the person:</p>
+                <ul class="govuk-list govuk-list--bullet govuk-hint">
+                    <li>can be placed near a school or a park</li>
+                    <li>has children and is allowed supervised or unsupervised access to them</li>
+                    <li>can be placed in shared accommodation with a person who may have children</li>
+                </ul>
+            {% endset %}
 
-      {% if page.risks.roshRisks.status !== 'retrieved' %}
-        {{ govukWarningText({
-          text: "The RoSH levels could not be imported from OASys. Check OASys and enter the RoSH level in each corresponding textbox.",
-          iconFallbackText: "Warning"
-        }) }}
-      {% endif %}
+            {{ formPageTextarea({
+                fieldName: 'riskToChildren',
+                label: {
+                    text: 'Provide details on how this will impact placement',
+                    classes: "govuk-label--m"
+                },
+                hint: {
+                    html: riskToChildrenHintHtml
+                }
+            }, fetchContext()) }}
 
-      <h2>Risk to children</h2>
-      {% set riskToChildrenHintHtml %}
-        <p class="govuk-hint">Consider if the person:</p>
-        <ul class="govuk-list govuk-list--bullet govuk-hint">
-          <li>can be placed near a school or a park</li>
-          <li>has children and is allowed supervised or unsupervised access to them</li>
-          <li>can be placed in shared accommodation with a person who may have children</li>
-        </ul>
-      {% endset %}
+            <h2>Risk to public</h2>
+            {% set riskToPublicHintHtml %}
+                <p class="govuk-hint">
+                    Consider whether specific groups of people are at risk, and whether placement in a certain location
+                    would increase the risk.
+                </p>
+                <p class="govuk-hint">For example, placement:</p>
+                <ul class="govuk-list govuk-list--bullet govuk-hint">
+                    <li>in culturally diverse areas</li>
+                    <li>near women's shelters</li>
+                    <li>near care homes</li>
+                </ul>
+                <p class="govuk-hint">
+                    Any use of weapons, arson or fire setting behaviour should also be described here.
+                </p>
+            {% endset %}
 
-      {{ formPageTextarea({
-        fieldName: 'riskToChildren',
-        label: {
-          text: 'Provide details on how this will impact placement',
-          classes: "govuk-label--m"
-        },
-        hint: {
-          html: riskToChildrenHintHtml
-        }
-      }, fetchContext()) }}
+            {{ formPageTextarea({
+                fieldName: 'riskToPublic',
+                label: {
+                    text: 'Provide details on how this will impact placement',
+                    classes: "govuk-label--m"
+                },
+                hint: {
+                    html: riskToPublicHintHtml
+                }
+            }, fetchContext()) }}
 
-      <h2>Risk to public</h2>
-      {% set riskToPublicHintHtml %}
-        <p class="govuk-hint">Consider whether specific groups of people are at risk, and whether placement in a certain location would increase the risk.</p>
-        <p class="govuk-hint">For example, placement:</p>
-        <ul class="govuk-list govuk-list--bullet govuk-hint">
-          <li>in culturally diverse areas</li>
-          <li>near women's shelters</li>
-          <li>near care homes</li>
-        </ul>
-        <p class="govuk-hint">Any use of weapons, arson or fire setting behaviour should also be described here.</p>
-      {% endset %}
+            <h2>Risk to known adult</h2>
+            {% set riskToKnownAdultHintHtml %}
+                <p class="govuk-hint">
+                    Consider who is at risk, and what the nature of that risk is. For example, if the person is a
+                    domestic abuse perpetrator.
+                </p>
+            {% endset %}
 
-      {{ formPageTextarea({
-        fieldName: 'riskToPublic',
-        label: {
-          text: 'Provide details on how this will impact placement',
-          classes: "govuk-label--m"
-        },
-        hint: {
-          html: riskToPublicHintHtml
-        }
-      }, fetchContext()) }}
+            {{ formPageTextarea({
+                fieldName: 'riskToKnownAdult',
+                label: {
+                    text: 'Provide details on how this will impact placement',
+                    classes: "govuk-label--m"
+                },
+                hint: {
+                    html: riskToKnownAdultHintHtml
+                }
+            }, fetchContext()) }}
 
-      <h2>Risk to known adult</h2>
-      {% set riskToKnownAdultHintHtml %}
-        <p class="govuk-hint">Consider who is at risk, and what the nature of that risk is. For example, if the person is a domestic abuse perpetrator.</p>
-      {% endset %}
+            <h2>Risk to staff</h2>
+            {% set riskToStaffHintHtml %}
+                <p class="govuk-hint">
+                    Include details of the nature of the risk to staff, and the circumstances under which the risk would
+                    be greatest.
+                </p>
+                <p class="govuk-hint">For example, if there any concerns in relation to lone working staff.</p>
+            {% endset %}
 
-      {{ formPageTextarea({
-        fieldName: 'riskToKnownAdult',
-        label: {
-          text: 'Provide details on how this will impact placement',
-          classes: "govuk-label--m"
-        },
-        hint: {
-          html: riskToKnownAdultHintHtml
-        }
-      }, fetchContext()) }}
+            {{ formPageTextarea({
+                fieldName: 'riskToStaff',
+                label: {
+                    text: 'Provide details on how this will impact placement',
+                    classes: "govuk-label--m"
+                },
+                hint: {
+                    html: riskToStaffHintHtml
+                }
+            }, fetchContext()) }}
 
-      <h2>Risk to staff</h2>
-      {% set riskToStaffHintHtml %}
-        <p class="govuk-hint">Include details of the nature of the risk to staff, and the circumstances under which the risk would be greatest.</p>
-        <p class="govuk-hint">For example, if there any concerns in relation to lone working staff.</p>
-      {% endset %}
+            <h2>Risk to self</h2>
+            {% set riskToSelfHintHtml %}
+                <p class="govuk-hint">
+                    Explain what the risk is, the triggers and why it happens. Include details about whether it's severe
+                    and how often it happens. Consider how the risk could be managed in the placement.
+                </p>
+            {% endset %}
 
-      {{ formPageTextarea({
-        fieldName: 'riskToStaff',
-        label: {
-          text: 'Provide details on how this will impact placement',
-          classes: "govuk-label--m"
-        },
-        hint: {
-          html: riskToStaffHintHtml
-        }
-      }, fetchContext()) }}
+            {{ formPageTextarea({
+                fieldName: 'riskToSelf',
+                label: {
+                    text: 'Provide details on how this will impact placement',
+                    classes: "govuk-label--m"
+                },
+                hint: {
+                    html: riskToSelfHintHtml
+                }
+            }, fetchContext()) }}
 
-      {{ govukButton({
-        text: "Next",
-        preventDoubleClick: true
-      }) }}
+            {{ govukButton({
+                text: "Next",
+                preventDoubleClick: true
+            }) }}
+        </div>
+        <div class="govuk-grid-column-one-third">
+            {{ roshWidget(page.risks.roshRisks) }}
+            {{ mappaWidget(page.risks.mappa) }}
+            {{ riskFlagWidget(page.risks.flags) }}
+        </div>
     </div>
-    <div class="govuk-grid-column-one-third">
-      {{ roshWidget(page.risks.roshRisks) }}
-      {{ mappaWidget(page.risks.mappa) }}
-      {{ riskFlagWidget(page.risks.flags) }}
-    </div>
-  </div>
 {% endblock %}

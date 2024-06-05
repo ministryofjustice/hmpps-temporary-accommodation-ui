@@ -5,9 +5,6 @@
   padding-left: 0;
   margin-top: 0;
   margin-bottom: 0;
-  @include govuk-media-query($from: tablet) {
-    min-width: 550px;
-  }
 }
 
 .app-task-list__section {
@@ -26,7 +23,7 @@
 
 .app-task-list__items {
   @include govuk-responsive-margin(9, "bottom");
-  
+
   @include govuk-media-query($from: tablet) {
     padding-left: govuk-spacing(6);
   }

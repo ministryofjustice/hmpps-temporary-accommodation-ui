@@ -11,38 +11,41 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('View a void booking', [
-    {title: 'List of bedspaces', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
-    {title: 'View bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
-  ]) }}
-  {{ placeContextHeader(placeContext) }}
+    {{ breadCrumb('View a void booking', [
+        {title: 'List of bedspaces', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
+        {title: 'View bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
+    ]) }}
+    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  {{ mojPageHeaderActions({
-    heading: {
-      text: 'Void booking',
-      classes: 'govuk-heading-l'
-    },
-    items: actions
-  }) }}
+    {{ mojPageHeaderActions({
+        heading: {
+            text: 'Void booking',
+            classes: 'govuk-heading-l'
+        },
+        items: actions
+    }) }}
 
-  {{ locationHeader({ premises: premises, room: room }) }}
+    {{ locationHeader({ premises: premises, room: room }) }}
 
-  {{ lostBedInfo(lostBed) }}
+    {{ lostBedInfo(lostBed) }}
 
 {% endblock %}
 
 {% block extraScripts %}
 
-  {% if actions %}
-    <script type="text/javascript" nonce="{{ cspNonce }}">
-      new MOJFrontend.ButtonMenu(
-        {container: $('.moj-button-menu'), mq: "(min-width: 200em)", buttonText: "Actions", menuClasses: "moj-button-menu__wrapper--right"}
-      );
-    </script>
-  {% endif %}
+    {% if actions %}
+        <script type="text/javascript" nonce="{{ cspNonce }}">
+          new MOJFrontend.ButtonMenu({
+            container: $('.moj-button-menu'),
+            mq: '(min-width: 200em)',
+            buttonText: 'Actions',
+            menuClasses: 'moj-button-menu__wrapper--right',
+          })
+        </script>
+    {% endif %}
 
 {% endblock %}

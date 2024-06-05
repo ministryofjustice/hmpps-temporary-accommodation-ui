@@ -1,20 +1,23 @@
 <ol class="app-task-list">
-  {% for section in taskList.sections %}
-    <li>
-      <h2 class="app-task-list__section">
-        <span class="app-task-list__section-number">{{ section.sectionNumber }}. </span>
-        {{ section.title }}
-      </h2>
-      <ul class="app-task-list__items">
-        {% for task in section.tasks %}
-          <li class="app-task-list__item">
-            <span class="app-task-list__task-name">
-              {{ TasklistUtils.taskLink(task, applicationOrAssessment) | safe   }}
-            </span>
-            {{ TasklistUtils.statusTag(task) | safe  }}
-          </li>
-        {% endfor %}
-      </ul>
-    </li>
-  {% endfor %}
+    {% for section in taskList.sections %}
+        <li>
+            <h2 class="app-task-list__section">
+                <span class="app-task-list__section-number">{{ section.sectionNumber }}. </span>
+                {{ section.title }}
+            </h2>
+            <ul class="govuk-task-list app-task-list__items">
+                {% for task in section.tasks %}
+                    <li class="govuk-task-list__item{{ ' govuk-task-list__item--with-link' if task.status != 'cannot_start' }}">
+                        <div class="govuk-task-list__name-and-hint">
+                            {{ TasklistUtils.taskLink(task, applicationOrAssessment) | safe }}
+                        </div>
+                        <div id="{{ task.id }}-status"
+                             class="govuk-task-list__status{{ ' govuk-task-list__status--cannot-start-yet' if task.status == 'cannot_start' }}">
+                            {{ TasklistUtils.statusTag(task) | safe }}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
 </ol>

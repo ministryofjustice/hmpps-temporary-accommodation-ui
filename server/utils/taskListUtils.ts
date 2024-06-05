@@ -10,13 +10,13 @@ import isAssessment from './assessments/isAssessment'
 export const statusTag = (task: TaskWithStatus): string => {
   switch (task.status) {
     case 'complete':
-      return `<strong class="govuk-tag app-task-list__tag" id="${task.id}-status">Completed</strong>`
+      return 'Completed'
     case 'in_progress':
-      return `<strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="${task.id}-status">In progress</strong>`
+      return `<strong class="govuk-tag govuk-tag--light-blue">In progress</strong>`
     case 'not_started':
-      return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task.id}-status">Not started</strong>`
+      return `<strong class="govuk-tag govuk-tag--blue">Not started</strong>`
     default:
-      return `<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="${task.id}-status">Cannot start yet</strong>`
+      return 'Cannot start yet'
   }
 }
 
@@ -36,7 +36,7 @@ export const taskLink = (task: TaskWithStatus, applicationOrAssessment: Applicat
           page: firstPage,
         })
 
-    return `<a href="${link}" aria-describedby="eligibility-${task.id}" data-cy-task-name="${task.id}">${task.actionText}</a>`
+    return `<a class="govuk-link govuk-task-list__link" href="${link}" aria-describedby="${task.id}-status" data-cy-task-name="${task.id}">${task.actionText}</a>`
   }
   return task.actionText
 }

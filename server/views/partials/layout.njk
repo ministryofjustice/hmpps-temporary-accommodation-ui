@@ -24,10 +24,8 @@
 {% block bodyStart %}{% endblock %}
 
 {% block bodyEnd %}
-    {# Run JavaScript at end of the
-  <body>, to avoid blocking the initial render. #}
-    <script src="/assets/govuk/all.js"></script>
-    <script src="/assets/govukFrontendInit.js"></script>
+    {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+    <script type="module" src="/assets/govukFrontendInit.js"></script>
     <script src="/assets/moj/all.js"></script>
     {% block extraScripts %}{% endblock %}
 {% endblock %}

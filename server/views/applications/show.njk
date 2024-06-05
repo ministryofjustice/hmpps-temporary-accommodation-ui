@@ -11,74 +11,74 @@
 {% set pageTitle = "Make a referral for Transitional Accommodation (CAS3) - " + applicationName %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: paths.applications.index()
-  }) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.applications.index()
+    }) }}
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-width-container">
-      <h1 class="govuk-heading-xl">
+    <h1 class="govuk-heading-xl">
         Make a referral for Transitional Accommodation (CAS3)
-      </h1>
+    </h1>
 
-      {{ showErrorSummary(errorSummary) }}
+    {{ showErrorSummary(errorSummary) }}
 
-      {% if taskList.status === 'complete' %}
+    {% if taskList.status === 'complete' %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Submit your referral below</h2>
-      {% else %}
+    {% else %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Referral {{ taskList.status }}</h2>
-      {% endif %}
-
-      <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{ taskList.completeSectionCount }} of {{ (taskList.sections | length) }} sections.</p>
-    </div>
-
-    <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.applications.submission({id: application.id}) }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-        {% set applicationOrAssessment = application %}
-        {% include '../partials/taskList.njk' %}
-
-        {% if taskList.status === 'complete' %}
-          {{ govukCheckboxes({
-            idPrefix: "confirmation",
-            name: "confirmation",
-            items: [
-              {
-                value: "submit",
-                text: "I confirm the information provided is complete, accurate and up to date."
-              }
-            ],
-            errorMessage: errors.confirmation
-          }) }}
-
-          <div class="govuk-!-margin-bottom-6">
-            <p>You can access your referral once it's been submitted</p>
-          </div>
-
-          {{ govukButton({
-            text: "Submit referral",
-            preventDoubleClick: true
-          }) }}
-        {% endif %}
-      </form>
-
-      {{ govukButton({
-        text: "Save and come back later",
-        classes: "govuk-button--secondary",
-        href: paths.applications.index({})
-      }) }}
-    </div>
-
-    {% if not oasysDisabled %}
-      <div class="govuk-grid-column-one-third">
-        {{ widgets(application.risks | mapApiPersonRisksForUi) }}
-      </div>
     {% endif %}
 
-  </div>
+    <p class="govuk-body govuk-!-margin-bottom-7">You have completed {{ taskList.completeSectionCount }}
+        of {{ (taskList.sections | length) }} sections.</p>
+
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.applications.submission({id: application.id}) }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {% set applicationOrAssessment = application %}
+                {% include '../partials/taskList.njk' %}
+
+                {% if taskList.status === 'complete' %}
+                    {{ govukCheckboxes({
+                        idPrefix: "confirmation",
+                        name: "confirmation",
+                        items: [
+                            {
+                                value: "submit",
+                                text: "I confirm the information provided is complete, accurate and up to date."
+                            }
+                        ],
+                        errorMessage: errors.confirmation
+                    }) }}
+
+                    <div class="govuk-!-margin-bottom-6">
+                        <p>You can access your referral once it's been submitted</p>
+                    </div>
+
+                    {{ govukButton({
+                        text: "Submit referral",
+                        preventDoubleClick: true
+                    }) }}
+                {% endif %}
+            </form>
+
+            {{ govukButton({
+                text: "Save and come back later",
+                classes: "govuk-button--secondary",
+                href: paths.applications.index({})
+            }) }}
+        </div>
+
+        {% if not oasysDisabled %}
+            <div class="govuk-grid-column-one-third">
+                {{ widgets(application.risks | mapApiPersonRisksForUi) }}
+            </div>
+        {% endif %}
+
+    </div>
 
 {% endblock %}

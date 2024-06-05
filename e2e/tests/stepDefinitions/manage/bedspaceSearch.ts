@@ -33,6 +33,7 @@ Given('I search for a bedspace', () => {
 Given('I attempt to search for a bedspace with required details missing', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceSearchPage)
+    page.clearTextInputByLabel('Number of days required')
     page.clickSubmit()
   })
 })

@@ -11,6 +11,8 @@ import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDat
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
 
+export const DEFAULT_DURATION_DAYS = 84
+
 type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & { probationDeliveryUnit: string; durationDays: string }
 
 export default class BedspaceSearchController {
@@ -64,6 +66,7 @@ export default class BedspaceSearchController {
           startDate,
           errors,
           errorSummary,
+          durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
           ...startDatePrefill,
           ...query,
           ...userInput,

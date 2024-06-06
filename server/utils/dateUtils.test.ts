@@ -1,4 +1,3 @@
-import { isFuture, isPast } from 'date-fns'
 import type { ObjectWithDateParts } from '@approved-premises/ui'
 import {
   DateFormats,
@@ -10,9 +9,6 @@ import {
   dateIsInFuture,
   dateIsInThePast,
 } from './dateUtils'
-
-jest.mock('date-fns/isPast')
-jest.mock('date-fns/isFuture')
 
 describe('DateFormats', () => {
   describe('dateObjToIsoDate', () => {
@@ -347,29 +343,37 @@ describe('dateIsBlank', () => {
 })
 
 describe('dateIsInThePast', () => {
-  it('returns true if the date is in the past', () => {
-    ;(isPast as jest.Mock).mockReturnValue(true)
+  beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2024-06-06T14:07:00.000Z'))
+  })
 
+  it('returns true if the date is in the past', () => {
     expect(dateIsInThePast('2020-01-01')).toEqual(true)
   })
 
-  it('returns false if the date is not in the past', () => {
-    ;(isPast as jest.Mock).mockReturnValue(false)
+  it('returns false if the date is today', () => {
+    expect(dateIsInThePast('2024-06-06')).toEqual(false)
+  })
 
-    expect(dateIsInThePast('2020-01-01')).toEqual(false)
+  it('returns false if the date is not in the past', () => {
+    expect(dateIsInThePast('2024-06-07')).toEqual(false)
   })
 })
 
 describe('dateIsInTheFuture', () => {
-  it('returns true if the date is in the future', () => {
-    ;(isFuture as jest.Mock).mockReturnValue(true)
+  beforeEach(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2024-06-06T14:07:00.000Z'))
+  })
 
-    expect(dateIsInFuture('2020-01-01')).toEqual(true)
+  it('returns true if the date is in the future', () => {
+    expect(dateIsInFuture('2024-06-07')).toEqual(true)
+  })
+
+  it('returns false if the date is today', () => {
+    expect(dateIsInFuture('2024-06-06')).toEqual(false)
   })
 
   it('returns false if the date is not in the future', () => {
-    ;(isFuture as jest.Mock).mockReturnValue(false)
-
     expect(dateIsInFuture('2020-01-01')).toEqual(false)
   })
 })

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, isExists, isFuture, isPast } from 'date-fns'
+import { differenceInDays, isExists } from 'date-fns'
 
 import format from 'date-fns/format'
 import formatISO from 'date-fns/formatISO'
@@ -162,7 +162,7 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
   const inputYear = dateInputObj?.[`${key}-year`] as string
 
   if (inputYear && inputYear.length !== 4) return false
-  
+
   const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)
 
   try {
@@ -195,13 +195,11 @@ export const dateIsBlank = <K extends string | number>(
 export class InvalidDateStringError extends Error {}
 
 export const dateIsInThePast = (dateString: string): boolean => {
-  const date = DateFormats.isoToDateObj(dateString)
-  return isPast(date)
+  return dateString < DateFormats.dateObjToIsoDate(new Date())
 }
 
 export const dateIsInFuture = (dateString: string): boolean => {
-  const date = DateFormats.isoToDateObj(dateString)
-  return isFuture(date)
+  return dateString > DateFormats.dateObjToIsoDate(new Date())
 }
 
 export const dateInputHint = (direction: 'past' | 'future') => {

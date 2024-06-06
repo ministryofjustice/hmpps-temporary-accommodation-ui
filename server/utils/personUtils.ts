@@ -3,10 +3,10 @@ import { FullPerson, Person } from '../@types/shared'
 
 const statusTag = (status: PersonStatus): string => {
   if (status === 'InCommunity') {
-    return `<strong class="govuk-tag" data-cy-status="${status}">In Community</strong>`
+    return `<strong class="govuk-tag" data-cy-status="${status}">In community</strong>`
   }
 
-  return `<strong class="govuk-tag" data-cy-status="${status}">In Custody</strong>`
+  return `<strong class="govuk-tag" data-cy-status="${status}">In custody</strong>`
 }
 
 const tierBadge = (tier: string): string => {

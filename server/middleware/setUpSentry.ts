@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/node'
-import * as Tracing from '@sentry/tracing'
 import express from 'express'
 import applicationVersion from '../applicationVersion'
 import config from '../config'
@@ -19,7 +18,7 @@ export function setUpSentryRequestHandler(app: express.Express): void {
         // enable HTTP calls tracing
         new Sentry.Integrations.Http({ tracing: true }),
         // enable Express.js middleware tracing
-        new Tracing.Integrations.Express({ app }),
+        new Sentry.Integrations.Express({ app }),
       ],
       tracesSampler: samplingContext => {
         const transactionName = samplingContext?.transactionContext?.name

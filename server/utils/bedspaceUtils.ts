@@ -2,7 +2,7 @@ import { Premises, Room } from '../@types/shared'
 import { BedspaceStatus, ErrorSummary, PageHeadingBarItem, PlaceContext } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { addPlaceContext } from './placeUtils'
-import { DateFormats, dateIsInThePast } from './dateUtils'
+import { DateFormats, dateIsInFuture } from './dateUtils'
 import { insertBespokeError, insertGenericError } from './validation'
 import { SanitisedError } from '../sanitisedError'
 
@@ -29,7 +29,7 @@ export function bedspaceActions(premises: Premises, room: Room, placeContext: Pl
 
 export function bedspaceStatus(room: Room): BedspaceStatus {
   if (room.beds[0].bedEndDate) {
-    if (dateIsInThePast(room.beds[0].bedEndDate)) {
+    if (!dateIsInFuture(room.beds[0].bedEndDate)) {
       return 'archived'
     }
   }

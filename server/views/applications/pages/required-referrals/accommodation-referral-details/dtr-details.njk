@@ -39,7 +39,7 @@
             hint: {
                 text: "Provide the home local authority used for the DTR/NOP"
             },
-            items: convertObjectsToSelectOptions(page.getLocalAuthorities(), '', 'name', 'name', 'localAuthorityAreaId'),
+            items: convertObjectsToSelectOptions(page.getLocalAuthorities(), '', 'name', 'name', 'localAuthorityAreaName'),
             fieldName: "localAuthorityAreaName"
         }, fetchContext()) }}
     {% endif %}

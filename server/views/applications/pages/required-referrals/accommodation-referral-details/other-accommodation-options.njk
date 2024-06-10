@@ -2,44 +2,45 @@
 
 {% block questions %}
 
-  {% set otherOptionsDetailHtml %}
-  {{ formPageTextarea({
-      fieldName: 'otherOptionsDetail',
-      label: {
-        text: "Provide details",
-        classes: "govuk-label--m"
-      }
-    },fetchContext()) }}
-  {% endset %}
+    {% set otherOptionsDetailHtml %}
+        {{ formPageTextarea({
+            fieldName: 'otherOptionsDetail',
+            label: {
+                text: "Provide details",
+                classes: "govuk-label--s"
+            }
+        },fetchContext()) }}
+    {% endset %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ task.title }}</span>
-    {{ page.title }}
-  </h1>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ task.title }}</span>
+        {{ page.title }}
+    </h1>
 
-  <p>All accommodation services available through the person's local authority or HMPPS should be explored before an application to Transitional Accommodation (CAS3) is made.</p>
+    <p>All accommodation services available through the person's local authority or HMPPS should be explored before an
+        application to Transitional Accommodation (CAS3) is made.</p>
 
-  {{ formPageRadios({
-      fieldName: "otherOptions",
-      fieldset: {
-        legend: {
-          text: page.title,
-          classes: "govuk-fieldset__legend--m"
-        }
-      },
-      items: [
-        {
-          value: "yes",
-          text: "Yes",
-          conditional: {
-            html: otherOptionsDetailHtml
-          }
+    {{ formPageRadios({
+        fieldName: "otherOptions",
+        fieldset: {
+            legend: {
+                text: page.title,
+                classes: "govuk-fieldset__legend--m"
+            }
         },
-        {
-          value: "no",
-          text: "No"
-        }
-      ]
+        items: [
+            {
+                value: "yes",
+                text: "Yes",
+                conditional: {
+                html: otherOptionsDetailHtml
+            }
+            },
+            {
+                value: "no",
+                text: "No"
+            }
+        ]
     },fetchContext()) }}
-	
+
 {% endblock %}

@@ -26,11 +26,11 @@ describe('taskListUtils', () => {
         task.status = 'in_progress'
 
         expect(taskLink(task, application)).toEqual(
-          `<a href="${applyPaths.applications.pages.show({
+          `<a class="govuk-link govuk-task-list__link" href="${applyPaths.applications.pages.show({
             id: 'some-uuid',
             task: 'second-task',
             page: 'foo',
-          })}" aria-describedby="eligibility-second-task" data-cy-task-name="second-task">Complete Second Task</a>`,
+          })}" aria-describedby="second-task-status" data-cy-task-name="second-task">Complete Second Task</a>`,
         )
       })
 
@@ -50,11 +50,11 @@ describe('taskListUtils', () => {
         task.status = 'in_progress'
 
         expect(taskLink(task, assessment)).toEqual(
-          `<a href="${assessPaths.assessments.pages.show({
+          `<a class="govuk-link govuk-task-list__link" href="${assessPaths.assessments.pages.show({
             id: 'some-uuid',
             task: 'second-task',
             page: 'foo',
-          })}" aria-describedby="eligibility-second-task" data-cy-task-name="second-task">Complete Second Task</a>`,
+          })}" aria-describedby="second-task-status" data-cy-task-name="second-task">Complete Second Task</a>`,
         )
       })
 
@@ -67,36 +67,28 @@ describe('taskListUtils', () => {
   })
 
   describe('statusTag', () => {
-    it('returns a an in progress tag when the task is in progress', () => {
-      task.status = 'in_progress'
+    it('returns a Complete text when the task is complete', () => {
+      task.status = 'complete'
 
-      expect(statusTag(task)).toEqual(
-        '<strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="second-task-status">In progress</strong>',
-      )
+      expect(statusTag(task)).toEqual('Completed')
     })
 
-    it('returns an in progress tag when the task is has not been started', () => {
+    it('returns an in progress tag when the task is in progress', () => {
       task.status = 'in_progress'
 
-      expect(statusTag(task)).toEqual(
-        '<strong class="govuk-tag govuk-tag--blue app-task-list__tag" id="second-task-status">In progress</strong>',
-      )
+      expect(statusTag(task)).toEqual('<strong class="govuk-tag govuk-tag--light-blue">In progress</strong>')
     })
 
-    it('returns a not started tag when the task is has not been started', () => {
+    it('returns a not started tag when the task has not been started', () => {
       task.status = 'not_started'
 
-      expect(statusTag(task)).toEqual(
-        '<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="second-task-status">Not started</strong>',
-      )
+      expect(statusTag(task)).toEqual('<strong class="govuk-tag govuk-tag--blue">Not started</strong>')
     })
 
-    it('returns a cannot start tag when the task cannot be started', () => {
+    it('returns a cannot start text when the task cannot be started', () => {
       task.status = 'cannot_start'
 
-      expect(statusTag(task)).toEqual(
-        '<strong class="govuk-tag govuk-tag--grey app-task-list__tag" id="second-task-status">Cannot start yet</strong>',
-      )
+      expect(statusTag(task)).toEqual('Cannot start yet')
     })
   })
 })

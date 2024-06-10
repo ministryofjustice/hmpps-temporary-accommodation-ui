@@ -2,58 +2,42 @@
 {% from "govuk/components/footer/macro.njk" import govukFooter %}
 
 {% block head %}
-  <!--[if !IE 8]><!-->
-  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
-  <!--<![endif]-->
-
-  <!--[if lt IE 9]>
-  <link href="/assets/stylesheets/application-ie8.css?{{ version }}" rel="stylesheet"/>
-  <script src="/assets/js/html5shiv-3.7.3.min.js"></script>
-  <![endif]-->
-
-  <script src="/assets/js/jquery.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-          integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
-          nonce="{{ cspNonce }}"
-          crossorigin="anonymous"></script>
-  <link href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css" rel="stylesheet" nonce="{{ cspNonce }}" crossorigin>
-
+    <script src="/assets/js/jquery.min.js"></script>
+    <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet" />
 {% endblock %}
 
-{% block pageTitle %}{{pageTitle | default(applicationName)}}
+{% block pageTitle %}{{ pageTitle | default(applicationName) }}
 {% endblock %}
 
 {% block header %}
-  {% include "./header.njk" %}
-  {% include "./probationRegionHeader.njk" %}
-  {% include "./phaseBanner.njk" %}
+    {% include "./header.njk" %}
+    {% include "./probationRegionHeader.njk" %}
+    {% include "./phaseBanner.njk" %}
 {% endblock %}
 
 {% block bodyStart %}{% endblock %}
 
 {% block bodyEnd %}
-  {# Run JavaScript at end of the
-  <body>, to avoid blocking the initial render. #}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
-  <script src="/assets/moj/all.js"></script>
-  {% block extraScripts %}{% endblock %}
+    {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
+    <script type="module" src="/assets/govukFrontendInit.js"></script>
+    <script src="/assets/moj/all.js"></script>
+    {% block extraScripts %}{% endblock %}
 {% endblock %}
 
 {% block footer %}
-  {{ govukFooter({
-    meta: {
-      items: [
-        {
-          href: paths.static.cookies({}),
-          text: "Cookies"
+    {{ govukFooter({
+        meta: {
+            items: [
+                {
+                    href: paths.static.cookies({}),
+                    text: "Cookies"
+                },
+                {
+                    href: paths.static.accessibilityStatement({}),
+                    text: "Accessibility statement"
+                }
+            ]
         },
-        {
-          href: paths.static.accessibilityStatement({}),
-          text: "Accessibility statement"
-        }
-      ]
-    },
-    classes: 'exclude-from-print'
-  }) }}
+        classes: 'exclude-from-print'
+    }) }}
 {% endblock %}

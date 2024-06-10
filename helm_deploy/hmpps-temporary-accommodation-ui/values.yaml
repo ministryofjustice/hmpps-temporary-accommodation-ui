@@ -61,35 +61,11 @@ generic-service:
       REDIS_AUTH_TOKEN: 'auth_token'
 
   allowlist:
-    office: '217.33.148.210/32'
-    health-kick: '35.177.252.195/32'
-    petty-france-wifi: '213.121.161.112/28'
-    global-protect: '35.176.93.186/32'
-    mojvpn: '81.134.202.29/32'
-    cloudplatform-live1-1: '35.178.209.113/32'
-    cloudplatform-live1-2: '3.8.51.207/32'
-    cloudplatform-live1-3: '35.177.252.54/32'
-    ark-nps-hmcts-ttp1: "195.59.75.0/24"
-    ark-nps-hmcts-ttp2: "194.33.192.0/25"
-    ark-nps-hmcts-ttp3: "194.33.193.0/25"
-    ark-nps-hmcts-ttp4: "194.33.196.0/25"
-    ark-nps-hmcts-ttp5: "194.33.197.0/25"
-    moj-official-ark-c-expo-e: "51.149.249.0/29"
-    moj-official-ark-f-expo-e: "51.149.249.32/29"
-    moj-production-account-byoip-cidr: "51.149.250.0/24"
-    ark-corsham-internet-egress-exponential-e: "51.149.249.0/29"
-    ark-corsham-internet-egress-vodafone: "194.33.249.0/29"
-    ark-farnborough-internet-egress-exponential-e: "51.149.249.32/29"
-    ark-farnborough-internet-egress-vodafone: "194.33.248.0/29"
-    azure-landing-zone-egress-1: "20.49.214.199/32"
-    azure-landing-zone-egress-2: "20.49.214.228/32"
-    azure-landing-zone-egress-3: "20.26.11.71/32"
-    azure-landing-zone-egress-4: "20.26.11.108/32"
+    groups:
+      - internal
+      - prisons
     palo-alto-prisma-access-egress: "128.77.75.128/26"
     palo-alto-prisma-access-egress-2: "128.77.75.64/26"
-    prp-dia-sites-1: "194.33.200.0/21"
-    prp-dia-sites-2: "194.33.216.0/23"
-    prp-dia-sites-3: "194.33.218.0/24"
 
 generic-prometheus-alerts:
   targetApplication: hmpps-temporary-accommodation-ui

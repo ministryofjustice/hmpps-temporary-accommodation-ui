@@ -104,4 +104,9 @@ export default class AssessmentsService {
     const assessmentClient = this.assessmentClientFactory(callConfig)
     return assessmentClient.createNote(assessmentId, newNote)
   }
+
+  async updateAssessment(callConfig: CallConfig, assessmentId: string, updateData: Partial<Assessment>) {
+    const assessmentClient = this.assessmentClientFactory(callConfig)
+    return assessmentClient.update(assessmentId, updateData)
+  }
 }

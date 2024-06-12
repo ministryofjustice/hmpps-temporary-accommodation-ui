@@ -397,6 +397,57 @@ describe('applicationUtils', () => {
         },
       ])
     })
+
+    it('adds actions to the relevant rows', () => {
+      const taskResponses = [
+        { 'question one': 'answer one' },
+        { 'question two': 'answer two', 'question three': 'answer three' },
+      ]
+      const questionOneActions = [
+        {
+          text: 'Change',
+          href: '/edit/1',
+          visuallyHiddenText: 'question one',
+        },
+        {
+          text: 'Remove',
+          href: '/remove/1',
+          visuallyHiddenText: 'question one',
+        },
+      ]
+      const questionThreeActions = [
+        {
+          text: 'Change',
+          href: '/edit/3',
+          visuallyHiddenText: 'question three',
+        },
+      ]
+      const actions = {
+        'question one': questionOneActions,
+        'question three': questionThreeActions,
+      }
+
+      expect(taskResponsesToSummaryListRowItems(taskResponses, actions)).toEqual([
+        {
+          key: { text: 'question one' },
+          value: { html: 'answer one' },
+          actions: {
+            items: questionOneActions,
+          },
+        },
+        {
+          key: { text: 'question two' },
+          value: { html: 'answer two' },
+        },
+        {
+          key: { text: 'question three' },
+          value: { html: 'answer three' },
+          actions: {
+            items: questionThreeActions,
+          },
+        },
+      ])
+    })
   })
 
   describe('createNameAnchorElement', () => {

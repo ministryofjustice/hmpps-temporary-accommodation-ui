@@ -55,4 +55,8 @@ export default class AssessmentFullPage extends Page {
       })
     })
   }
+
+  clickChange(label: string) {
+    cy.get('a').contains(`Change ${label}`).click()
+  }
 }

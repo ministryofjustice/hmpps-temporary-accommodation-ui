@@ -1,5 +1,10 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus, AssessmentUpdateStatus } from '@approved-premises/ui'
+import {
+  AssessmentSearchApiStatus,
+  AssessmentUpdatableDateField,
+  AssessmentUpdateStatus,
+  SummaryListActionItem,
+} from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
@@ -8,8 +13,10 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
 import {
   assessmentActions,
+  changeDatePageContent,
   createTableHeadings,
   getParams,
+  insertUpdateDateError,
   pathFromStatus,
   referralRejectionReasonIsOther,
   statusChangeMessage,
@@ -19,6 +26,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
+import { DateFormats, dateExists } from '../../../utils/dateUtils'
 
 export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
@@ -126,9 +134,26 @@ export default class AssessmentsController {
 
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 
+      const rowActions: Record<string, SummaryListActionItem[]> = {
+        'Release date': [
+          {
+            text: 'Change',
+            href: paths.assessments.changeDate.releaseDate({ id: assessment.id }),
+            visuallyHiddenText: "the person's release date",
+          },
+        ],
+        'Accommodation required from date': [
+          {
+            text: 'Change',
+            href: paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessment.id }),
+            visuallyHiddenText: 'the date accommodation is required',
+          },
+        ],
+      }
+
       return res.render('temporary-accommodation/assessments/full', {
         assessment,
-        actions: assessmentActions(assessment),
+        rowActions,
       })
     }
   }
@@ -251,6 +276,76 @@ export default class AssessmentsController {
           res,
           err,
           appendQueryString(paths.assessments.summary({ id }), { success: 'false' }),
+        )
+      }
+    }
+  }
+
+  changeDate(dateField: AssessmentUpdatableDateField): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const callConfig = extractCallConfig(req)
+
+      const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
+
+      return res.render('temporary-accommodation/assessments/change-date', {
+        content: changeDatePageContent(dateField, assessment),
+        dateField,
+        assessment,
+        errors,
+        errorSummary,
+        ...(assessment[dateField] ? DateFormats.isoToDateAndTimeInputs(assessment[dateField], dateField) : {}),
+        ...userInput,
+      })
+    }
+  }
+
+  updateDate(dateField: AssessmentUpdatableDateField): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { id } = req.params
+
+      try {
+        const updatedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, dateField)[dateField]
+
+        if (!updatedDate) {
+          const error = new Error()
+          insertGenericError(error, dateField, 'empty')
+          throw error
+        } else if (!dateExists(updatedDate)) {
+          const error = new Error()
+          insertGenericError(error, dateField, 'invalid')
+          throw error
+        }
+
+        await this.assessmentsService.updateAssessment(callConfig, id, {
+          [dateField]: updatedDate,
+        })
+
+        req.flash('success', {
+          title: 'Update successful',
+          html: `The referral has been updated with your changes.<br><br><a class="govuk-link" href="${paths.assessments.index(
+            {},
+          )}">View all referrals</a>`,
+        })
+        res.redirect(paths.assessments.summary({ id }))
+      } catch (err) {
+        if (err.status === 400) {
+          if (
+            err.data?.detail?.includes('Release date cannot be after accommodation required from date') ||
+            err.data?.detail?.includes('Accommodation required from date cannot be before release date')
+          ) {
+            insertUpdateDateError(err, id)
+          }
+        }
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.assessments.changeDate[dateField]({ id }),
+          'assessmentUpdate',
         )
       }
     }

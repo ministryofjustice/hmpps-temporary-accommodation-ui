@@ -1,7 +1,11 @@
 import nock from 'nock'
 
 import superagent from 'superagent'
-import { AssessmentRejection, TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '../@types/shared'
+import {
+  TemporaryAccommodationAssessment as Assessment,
+  AssessmentRejection,
+  TemporaryAccommodationAssessmentStatus as AssessmentStatus,
+} from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import { assessmentFactory, assessmentSummaryFactory, newReferralHistoryUserNoteFactory } from '../testutils/factories'
@@ -228,6 +232,19 @@ describe('AssessmentClient', () => {
         .reply(200)
 
       await assessmentClient.createNote(assessmentId, newNote)
+    })
+  })
+
+  describe('update', () => {
+    it('puts updated data to the assessment', async () => {
+      const updatedData: Partial<Assessment> = { accommodationRequiredFromDate: '2024-08-08' }
+
+      fakeApprovedPremisesApi
+        .put(paths.assessments.update({ id: assessmentId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200)
+
+      await assessmentClient.update(assessmentId, updatedData)
     })
   })
 })

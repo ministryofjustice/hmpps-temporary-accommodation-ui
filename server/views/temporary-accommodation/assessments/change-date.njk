@@ -1,0 +1,51 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = content.docTitle + " - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.assessments.full({ id: assessment.id })
+    }) }}
+{% endblock %}
+
+{% block content %}
+    {% set hintHtml %}
+        {% if content.hint %}
+            <p class="govuk-hint">{{ content.hint }}</p>
+        {% endif %}
+        <p class="govuk-hint">{{ dateInputHint('future') }}</p>
+    {% endset %}
+
+    <h1 class="govuk-heading-l">{{ content.title }}</h1>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.assessments.updateDate[dateField]({ id: assessment.id }) }}" method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+                {{ showErrorSummary(errorSummary) }}
+
+                {{ taDateInput({
+                    fieldName: dateField,
+                    items: dateFieldValues(dateField, errors),
+                    hint: {
+                        html: hintHtml
+                    }
+                }, fetchContext()) }}
+
+                {{ govukButton({
+                    text: "Save and continue",
+                    preventDoubleClick: true
+                }) }}
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

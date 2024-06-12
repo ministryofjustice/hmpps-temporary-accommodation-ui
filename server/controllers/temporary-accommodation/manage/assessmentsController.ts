@@ -19,6 +19,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
+import { DateFormats } from '../../../utils/dateUtils'
 
 export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
@@ -253,6 +254,41 @@ export default class AssessmentsController {
           appendQueryString(paths.assessments.summary({ id }), { success: 'false' }),
         )
       }
+    }
+  }
+
+  changeDate(dateType: 'releaseDate' | 'accommodationRequiredFromDate'): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+
+      const callConfig = extractCallConfig(req)
+
+      const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
+
+      return res.render('temporary-accommodation/assessments/change-date', {
+        dateType,
+        assessment,
+        errors,
+        errorSummary,
+        ...userInput,
+      })
+    }
+  }
+
+  updateDate(dateType: 'releaseDate' | 'accommodationRequiredFromDate'): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+
+      const { id } = req.params
+
+      await this.assessmentsService.updateAssessment(callConfig, id, {
+        [dateType]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType],
+      })
+      req.flash('success', {
+        title: 'Update successful',
+        text: 'The referral summary has been updated with your changes',
+      })
+      res.redirect(paths.assessments.summary({ id }))
     }
   }
 }

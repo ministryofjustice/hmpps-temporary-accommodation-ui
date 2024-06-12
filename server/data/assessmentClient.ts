@@ -99,4 +99,8 @@ export default class AssessmentClient {
   async createNote(id: string, data: NewNote): Promise<Note> {
     return (await this.restClient.post({ path: paths.assessments.notes({ id }), data })) as Note
   }
+
+  update() {
+    return Promise.resolve('ok')
+  }
 }

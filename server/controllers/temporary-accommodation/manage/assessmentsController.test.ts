@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, ErrorMessages, ErrorSummary } from '@approved-premises/ui'
 import { ParsedQs } from 'qs'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -25,6 +25,7 @@ import AssessmentsController, {
 } from './assessmentsController'
 import assessmentSummaries from '../../../testutils/factories/assessmentSummaries'
 import { pathFromStatus } from '../../../utils/assessmentUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
@@ -564,6 +565,106 @@ describe('AssessmentsController', () => {
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, '/path/with/failure/token')
       expect(utils.appendQueryString).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }), {
         success: 'false',
+      })
+    })
+  })
+
+  describe('changeDate', () => {
+    describe('when changing the release date', () => {
+      it('calls render with the correct date type and the assessment details', async () => {
+        const assessment = assessmentFactory.build()
+        const errors: ErrorMessages = {}
+        const errorSummary: Array<ErrorSummary> = []
+
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors, errorSummary })
+        assessmentsService.findAssessment.mockResolvedValue(assessment)
+
+        const requestHandler = assessmentsController.changeDate('releaseDate')
+
+        request.params = { id: assessment.id }
+
+        await requestHandler(request, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/change-date', {
+          assessment,
+          dateType: 'releaseDate',
+          errors,
+          errorSummary,
+        })
+      })
+    })
+
+    describe('when changing the accommodation required from date', () => {
+      it('calls render with the date type and the assessment details', async () => {
+        const assessment = assessmentFactory.build()
+        const errors: ErrorMessages = {}
+        const errorSummary: Array<ErrorSummary> = []
+
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors, errorSummary })
+        assessmentsService.findAssessment.mockResolvedValue(assessment)
+
+        const requestHandler = assessmentsController.changeDate('accommodationRequiredFromDate')
+
+        request.params = { id: assessment.id }
+
+        await requestHandler(request, response, next)
+
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/change-date', {
+          assessment,
+          dateType: 'accommodationRequiredFromDate',
+          errors,
+          errorSummary,
+        })
+      })
+    })
+  })
+
+  describe('updateDate', () => {
+    describe('when updating the release date', () => {
+      it('calls the updateAssessment method on the service with new release date details', async () => {
+        const assessmentId = 'assessment-id'
+        const releaseDate = '2024-06-09'
+
+        const requestHandler = assessmentsController.updateDate('releaseDate')
+        request.params = { id: assessmentId }
+        request.body = {
+          ...DateFormats.isoToDateAndTimeInputs(releaseDate, 'releaseDate'),
+        }
+
+        await requestHandler(request, response, next)
+
+        expect(assessmentsService.updateAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+          releaseDate,
+        })
+        expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
+        expect(request.flash).toHaveBeenCalledWith('success', {
+          title: 'Update successful',
+          text: 'The referral summary has been updated with your changes',
+        })
+      })
+    })
+
+    describe('when updating the accommodation required from date', () => {
+      it('calls the updateAssessment method on the service with new accommodation required from date details', async () => {
+        const assessmentId = 'assessment-id'
+        const accommodationRequiredFromDate = '2024-06-09'
+
+        const requestHandler = assessmentsController.updateDate('accommodationRequiredFromDate')
+        request.params = { id: assessmentId }
+        request.body = {
+          ...DateFormats.isoToDateAndTimeInputs(accommodationRequiredFromDate, 'accommodationRequiredFromDate'),
+        }
+
+        await requestHandler(request, response, next)
+
+        expect(assessmentsService.updateAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+          accommodationRequiredFromDate,
+        })
+        expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
+        expect(request.flash).toHaveBeenCalledWith('success', {
+          title: 'Update successful',
+          text: 'The referral summary has been updated with your changes',
+        })
       })
     })
   })

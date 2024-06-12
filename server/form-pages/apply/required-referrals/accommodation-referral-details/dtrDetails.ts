@@ -95,9 +95,7 @@ export default class DtrDetails implements TasklistPage {
     return {
       [this.questions.reference]: this.body.reference,
       [this.questions.date]: DateFormats.isoDateToUIDate(this.body.date),
-      [this.questions.localAuthority]: this.body.localAuthorityAreaName
-        ? this.body.localAuthorityAreaName
-        : 'No local authority selected',
+      [this.questions.localAuthority]: this.body.localAuthorityAreaName,
       [this.questions.dutyToReferOutcome]: dutyToReferOutcomes[this.body.dutyToReferOutcome],
       ...(this.body.dutyToReferOutcomeOtherDetails && {
         [this.questions.dutyToReferOutcomeOtherDetails]: this.body.dutyToReferOutcomeOtherDetails,
@@ -129,7 +127,7 @@ export default class DtrDetails implements TasklistPage {
     }
 
     if (!this.body.localAuthorityAreaName) {
-      errors.localAuthorityAreaName = 'Enter a home local authority'
+      errors.localAuthorityAreaName = 'Select a home local authority'
     }
 
     if (!this.body.dutyToReferOutcome) {

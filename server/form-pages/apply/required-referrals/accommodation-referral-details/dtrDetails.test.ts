@@ -1,21 +1,9 @@
 import { createMock } from '@golevelup/ts-jest'
 import { applicationFactory, localAuthorityFactory } from '../../../../testutils/factories'
-import { dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInFuture } from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import { CallConfig } from '../../../../data/restClient'
 import { ReferenceDataService } from '../../../../services'
 import DtrDetails, { DtrDetailsBody } from './dtrDetails'
-
-jest.mock('../../../../utils/dateUtils', () => {
-  const module = jest.requireActual('../../../../utils/dateUtils')
-
-  return {
-    ...module,
-    dateIsBlank: jest.fn(),
-    dateAndTimeInputsAreValidDates: jest.fn(),
-    dateIsInFuture: jest.fn(),
-  }
-})
 
 const localAuthorities = localAuthorityFactory.buildList(3)
 const body = {
@@ -29,6 +17,14 @@ const body = {
 
 describe('DtrDetails', () => {
   const application = applicationFactory.build()
+
+  beforeEach(() => {
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.clearAllTimers()
+  })
 
   describe('body', () => {
     it('sets the body', () => {
@@ -65,63 +61,72 @@ describe('DtrDetails', () => {
 
   describe('errors', () => {
     it('returns an empty object if the DTR details are populated', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
-
       const page = new DtrDetails(body, application, localAuthorities)
+
       expect(page.errors()).toEqual({})
     })
 
     it('returns an error if the reference is not populated', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
-
       const page = new DtrDetails({ ...body, reference: undefined }, application, localAuthorities)
+
       expect(page.errors()).toEqual({
         reference: 'You must specify the reference number',
       })
     })
 
     it('returns an error if the date is not populated', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(true)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
+      const page = new DtrDetails(
+        {
+          ...body,
+          'date-year': '',
+          'date-month': '',
+          'date-day': '',
+        },
+        application,
+        localAuthorities,
+      )
 
-      const page = new DtrDetails(body, application, localAuthorities)
       expect(page.errors()).toEqual({
         date: 'Enter a submission date',
       })
     })
 
     it('returns an error if the date is invalid', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(false)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
+      const page = new DtrDetails(
+        {
+          ...body,
+          'date-year': '2022',
+          'date-month': '13',
+          'date-day': '33',
+        },
+        application,
+        localAuthorities,
+      )
 
-      const page = new DtrDetails(body, application, localAuthorities)
       expect(page.errors()).toEqual({
         date: 'You must specify a valid submission date',
       })
     })
 
     it('returns an error if the date is in the future', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(true)
+      jest.setSystemTime(new Date('2022-01-01'))
 
       const page = new DtrDetails(body, application, localAuthorities)
+
       expect(page.errors()).toEqual({
         date: 'The submission date must not be in the future',
       })
     })
 
-    it('returns an error if a duty to refer outcome is not selected', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
+    it('returns an error if the Local Authority Area name is not selected', () => {
+      const page = new DtrDetails({ ...body, localAuthorityAreaName: undefined }, application, localAuthorities)
 
+      expect(page.errors()).toEqual({
+        localAuthorityAreaName: 'Select a home local authority',
+      })
+    })
+
+    it('returns an error if a duty to refer outcome is not selected', () => {
       const page = new DtrDetails({ ...body, dutyToReferOutcome: undefined }, application, localAuthorities)
       expect(page.errors()).toEqual({
         dutyToReferOutcome: 'Select whether you have received an outcome from the local authority',
@@ -129,10 +134,6 @@ describe('DtrDetails', () => {
     })
 
     it('returns an error if duty to refer outcome rejectedOther is selected and other details is not populated', () => {
-      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
-      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
-      ;(dateIsInFuture as jest.Mock).mockReturnValue(false)
-
       const page = new DtrDetails({ ...body, dutyToReferOutcome: 'rejectedOther' }, application, localAuthorities)
       expect(page.errors()).toEqual({
         dutyToReferOutcomeOtherDetails: 'You must add details about the reason',
@@ -141,27 +142,13 @@ describe('DtrDetails', () => {
   })
 
   describe('response', () => {
-    describe('when local authority is selected', () => {
-      it('returns a translated version of the response', () => {
-        const page = new DtrDetails(body, application, localAuthorities)
-        expect(page.response()).toEqual({
-          'Reference number': 'ABC123',
-          'Submission date': '23 July 2022',
-          'What is the local authority?': localAuthorities[0].name,
-          'Have you received an outcome from the local authority?': 'Yes, it was accepted on a priority need',
-        })
-      })
-    })
-
-    describe('when local authority is not selected', () => {
-      it('returns placeholder copy for local authority', () => {
-        const page = new DtrDetails({ ...body, localAuthorityAreaName: null }, application, localAuthorities)
-        expect(page.response()).toEqual({
-          'Reference number': 'ABC123',
-          'Submission date': '23 July 2022',
-          'Have you received an outcome from the local authority?': 'Yes, it was accepted on a priority need',
-          'What is the local authority?': 'No local authority selected',
-        })
+    it('returns a translated version of the response', () => {
+      const page = new DtrDetails(body, application, localAuthorities)
+      expect(page.response()).toEqual({
+        'Reference number': 'ABC123',
+        'Submission date': '23 July 2022',
+        'What is the local authority?': localAuthorities[0].name,
+        'Have you received an outcome from the local authority?': 'Yes, it was accepted on a priority need',
       })
     })
 

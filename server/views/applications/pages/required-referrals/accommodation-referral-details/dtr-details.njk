@@ -3,77 +3,74 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ task.title }}</span>
-    {{ page.title }}
-  </h1>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ task.title }}</span>
+        {{ page.title }}
+    </h1>
 
-  {{ formPageInput({
-    fieldName: "reference",
-    label: {
-      text: page.questions.reference,
-      classes: "govuk-label--m"
-    }
-  }, fetchContext()) }}
-
-  {{ formPageDateInput( {
-    fieldName: "date",
-    hint: {
-      text: dateInputHint('past')
-    },
-    fieldset: {
-      legend: {
-        text: page.questions.date,
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    items: dateFieldValues('date', errors)
-  }, fetchContext()) }}
-
-  {% if page.getLocalAuthorities() | length %}
-    {{ taSelect(
-      {
+    {{ formPageInput({
+        fieldName: "reference",
         label: {
-          text: "Home local authority",
-          classes: "govuk-label--m"
-        },
+            text: page.questions.reference,
+            classes: "govuk-label--m"
+        }
+    }, fetchContext()) }}
+
+    {{ formPageDateInput({
+        fieldName: "date",
         hint: {
-          text: "Provide the home local authority used for the DTR/NOP"
+            text: dateInputHint('past')
         },
-        items: convertObjectsToSelectOptions(page.getLocalAuthorities(), '', 'name', 'name', 'localAuthorityAreaId'),
-        fieldName: "localAuthorityAreaName"
-      }
-    ) }}
-  {% endif %}
+        fieldset: {
+            legend: {
+                text: page.questions.date,
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        items: dateFieldValues('date', errors)
+    }, fetchContext()) }}
 
-  {% set itemsWithDetail = [] %}
-  {% set conditionalHtml %}
-    {{ formPageTextarea({
-      fieldName: "dutyToReferOutcomeOtherDetails",
-      label: {
-        text: "Add details about the reason",
-        classes: "govuk-label--s"
-      }
-    },fetchContext()) }}
-  {% endset %}
+    {% if page.getLocalAuthorities() | length %}
+        {{ taSelect({
+            label: {
+                text: "Home local authority",
+                classes: "govuk-label--m"
+            },
+            hint: {
+                text: "Provide the home local authority used for the DTR/NOP"
+            },
+            items: convertObjectsToSelectOptions(page.getLocalAuthorities(), '', 'name', 'name', 'localAuthorityAreaName'),
+            fieldName: "localAuthorityAreaName"
+        }, fetchContext()) }}
+    {% endif %}
 
-  {% for item in page.items() %}
-    {% set itemsWithDetail = (
-      itemsWithDetail.push(mergeObjects(item, {
-        conditional: { html: conditionalHtml } if item.value === 'rejectedOther' else undefined
-      })), itemsWithDetail)
-    %}
-  {% endfor %}
+    {% set itemsWithDetail = [] %}
+    {% set conditionalHtml %}
+        {{ formPageTextarea({
+            fieldName: "dutyToReferOutcomeOtherDetails",
+            label: {
+                text: "Add details about the reason",
+                classes: "govuk-label--s"
+            }
+        }, fetchContext()) }}
+    {% endset %}
 
-  {{ formPageRadios({
-    fieldset: {
-      legend: {
-        text: page.questions.dutyToReferOutcome,
-        classes: "govuk-fieldset__legend--m"
-      }
-    },
-    fieldName: "dutyToReferOutcome",
-    items: itemsWithDetail
-  }, fetchContext()) }}
+    {% for item in page.items() %}
+        {% set itemsWithDetail = (
+            itemsWithDetail.push(mergeObjects(item, {
+                conditional: { html: conditionalHtml } if item.value === 'rejectedOther' else undefined
+            })), itemsWithDetail) %}
+    {% endfor %}
+
+    {{ formPageRadios({
+        fieldset: {
+            legend: {
+                text: page.questions.dutyToReferOutcome,
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        fieldName: "dutyToReferOutcome",
+        items: itemsWithDetail
+    }, fetchContext()) }}
 
 {% endblock %}

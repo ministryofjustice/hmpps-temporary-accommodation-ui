@@ -679,6 +679,36 @@ describe('AssessmentsController', () => {
           paths.assessments.changeDate.releaseDate({ id: assessmentId }),
         )
       })
+
+      it.each([
+        ['empty', ''],
+        ['invalid', '2024-13-32'],
+      ])('creates errors without calling the API if the date is %s', async (errorType, submittedDate) => {
+        const assessmentId = 'assessment-id'
+        const dateParts = submittedDate.split('-')
+
+        const requestHandler = assessmentsController.updateDate('releaseDate')
+
+        request.params = { id: assessmentId }
+        request.body = submittedDate
+          ? {
+              'releaseDate-day': dateParts[2],
+              'releaseDate-month': dateParts[1],
+              'releaseDate-year': dateParts[0],
+            }
+          : {}
+
+        await requestHandler(request, response, next)
+
+        expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'releaseDate', errorType)
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          new Error(),
+          paths.assessments.changeDate.releaseDate({ id: assessmentId }),
+        )
+        expect(assessmentsService.updateAssessment).not.toHaveBeenCalled()
+      })
     })
 
     describe('when updating the accommodation required from date', () => {
@@ -739,6 +769,36 @@ describe('AssessmentsController', () => {
           error,
           paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessmentId }),
         )
+      })
+
+      it.each([
+        ['empty', ''],
+        ['invalid', '2024-13-32'],
+      ])('creates errors without calling the API if the date is %s', async (errorType, submittedDate) => {
+        const assessmentId = 'assessment-id'
+        const dateParts = submittedDate.split('-')
+
+        const requestHandler = assessmentsController.updateDate('accommodationRequiredFromDate')
+
+        request.params = { id: assessmentId }
+        request.body = submittedDate
+          ? {
+              'accommodationRequiredFromDate-day': dateParts[2],
+              'accommodationRequiredFromDate-month': dateParts[1],
+              'accommodationRequiredFromDate-year': dateParts[0],
+            }
+          : {}
+
+        await requestHandler(request, response, next)
+
+        expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'accommodationRequiredFromDate', errorType)
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          new Error(),
+          paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessmentId }),
+        )
+        expect(assessmentsService.updateAssessment).not.toHaveBeenCalled()
       })
     })
   })

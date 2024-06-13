@@ -19,7 +19,7 @@ import extractCallConfig from '../../../utils/restUtils'
 import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
-import { DateFormats } from '../../../utils/dateUtils'
+import { DateFormats, dateExists } from '../../../utils/dateUtils'
 
 export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
@@ -282,6 +282,22 @@ export default class AssessmentsController {
       const { id } = req.params
 
       try {
+        let error: Error
+
+        const updatedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType]
+
+        if (!updatedDate) {
+          error = error || new Error()
+          insertGenericError(error, dateType, 'empty')
+        } else if (!dateExists(updatedDate)) {
+          error = error || new Error()
+          insertGenericError(error, dateType, 'invalid')
+        }
+
+        if (error) {
+          throw error
+        }
+
         await this.assessmentsService.updateAssessment(callConfig, id, {
           [dateType]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType],
         })

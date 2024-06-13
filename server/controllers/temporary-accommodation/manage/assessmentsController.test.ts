@@ -1,7 +1,12 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { AssessmentSearchApiStatus, ErrorMessages, ErrorSummary } from '@approved-premises/ui'
+import {
+  AssessmentSearchApiStatus,
+  AssessmentUpdatableDateField,
+  ErrorMessages,
+  ErrorSummary,
+} from '@approved-premises/ui'
 import { ParsedQs } from 'qs'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -570,7 +575,10 @@ describe('AssessmentsController', () => {
   })
 
   describe('changeDate', () => {
-    describe('when changing the release date', () => {
+    describe.each([
+      ['release date', 'releaseDate'],
+      ['accommodation required from date', 'accommodationRequiredFromDate'],
+    ])('when changing the %s', (_, dateField: AssessmentUpdatableDateField) => {
       it('calls render with the correct date type and the assessment details', async () => {
         const assessment = assessmentFactory.build()
         const errors: ErrorMessages = {}
@@ -579,7 +587,7 @@ describe('AssessmentsController', () => {
         ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors, errorSummary })
         assessmentsService.findAssessment.mockResolvedValue(assessment)
 
-        const requestHandler = assessmentsController.changeDate('releaseDate')
+        const requestHandler = assessmentsController.changeDate(dateField)
 
         request.params = { id: assessment.id }
 
@@ -587,31 +595,7 @@ describe('AssessmentsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/change-date', {
           assessment,
-          dateType: 'releaseDate',
-          errors,
-          errorSummary,
-        })
-      })
-    })
-
-    describe('when changing the accommodation required from date', () => {
-      it('calls render with the date type and the assessment details', async () => {
-        const assessment = assessmentFactory.build()
-        const errors: ErrorMessages = {}
-        const errorSummary: Array<ErrorSummary> = []
-
-        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors, errorSummary })
-        assessmentsService.findAssessment.mockResolvedValue(assessment)
-
-        const requestHandler = assessmentsController.changeDate('accommodationRequiredFromDate')
-
-        request.params = { id: assessment.id }
-
-        await requestHandler(request, response, next)
-
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/change-date', {
-          assessment,
-          dateType: 'accommodationRequiredFromDate',
+          dateField,
           errors,
           errorSummary,
         })
@@ -620,21 +604,24 @@ describe('AssessmentsController', () => {
   })
 
   describe('updateDate', () => {
-    describe('when updating the release date', () => {
-      it('calls the updateAssessment method on the service with new release date details', async () => {
+    describe.each([
+      ['release date', 'releaseDate'],
+      ['accommodation required from date', 'accommodationRequiredFromDate'],
+    ])('when changing the %s', (_, dateField: AssessmentUpdatableDateField) => {
+      it('calls the updateAssessment method on the service with new date', async () => {
         const assessmentId = 'assessment-id'
-        const releaseDate = '2024-06-09'
+        const updatedDate = '2024-06-09'
 
-        const requestHandler = assessmentsController.updateDate('releaseDate')
+        const requestHandler = assessmentsController.updateDate(dateField)
         request.params = { id: assessmentId }
         request.body = {
-          ...DateFormats.isoToDateAndTimeInputs(releaseDate, 'releaseDate'),
+          ...DateFormats.isoToDateAndTimeInputs(updatedDate, dateField),
         }
 
         await requestHandler(request, response, next)
 
         expect(assessmentsService.updateAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
-          releaseDate,
+          [dateField]: updatedDate,
         })
         expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
         expect(request.flash).toHaveBeenCalledWith('success', {
@@ -645,15 +632,15 @@ describe('AssessmentsController', () => {
 
       it('redirects to the change release date with errors from the API', async () => {
         const assessmentId = 'assessment-id'
-        const releaseDate = '2024-06-20'
+        const updatedDate = '2024-06-20'
         const error = {
           status: 400,
           data: {
             title: 'Bad request',
             'invalid-params': [
               {
-                propertyName: '$.releaseDate',
-                errorType: 'afterAccommodationRequiredFromDate',
+                propertyName: `$.${dateField}`,
+                errorType: 'apiErrorCode',
               },
             ],
           },
@@ -663,11 +650,11 @@ describe('AssessmentsController', () => {
           throw error
         })
 
-        const requestHandler = assessmentsController.updateDate('releaseDate')
+        const requestHandler = assessmentsController.updateDate(dateField)
 
         request.params = { id: assessmentId }
         request.body = {
-          ...DateFormats.isoToDateAndTimeInputs(releaseDate, 'releaseDate'),
+          ...DateFormats.isoToDateAndTimeInputs(updatedDate, dateField),
         }
 
         await requestHandler(request, response, next)
@@ -676,7 +663,7 @@ describe('AssessmentsController', () => {
           request,
           response,
           error,
-          paths.assessments.changeDate.releaseDate({ id: assessmentId }),
+          paths.assessments.changeDate[dateField]({ id: assessmentId }),
         )
       })
 
@@ -687,116 +674,25 @@ describe('AssessmentsController', () => {
         const assessmentId = 'assessment-id'
         const dateParts = submittedDate.split('-')
 
-        const requestHandler = assessmentsController.updateDate('releaseDate')
+        const requestHandler = assessmentsController.updateDate(dateField)
 
         request.params = { id: assessmentId }
         request.body = submittedDate
           ? {
-              'releaseDate-day': dateParts[2],
-              'releaseDate-month': dateParts[1],
-              'releaseDate-year': dateParts[0],
+              [`${dateField}-day`]: dateParts[2],
+              [`${dateField}-month`]: dateParts[1],
+              [`${dateField}-year`]: dateParts[0],
             }
           : {}
 
         await requestHandler(request, response, next)
 
-        expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'releaseDate', errorType)
+        expect(insertGenericError).toHaveBeenCalledWith(new Error(), dateField, errorType)
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,
           new Error(),
-          paths.assessments.changeDate.releaseDate({ id: assessmentId }),
-        )
-        expect(assessmentsService.updateAssessment).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('when updating the accommodation required from date', () => {
-      it('calls the updateAssessment method on the service with new accommodation required from date details', async () => {
-        const assessmentId = 'assessment-id'
-        const accommodationRequiredFromDate = '2024-06-09'
-
-        const requestHandler = assessmentsController.updateDate('accommodationRequiredFromDate')
-        request.params = { id: assessmentId }
-        request.body = {
-          ...DateFormats.isoToDateAndTimeInputs(accommodationRequiredFromDate, 'accommodationRequiredFromDate'),
-        }
-
-        await requestHandler(request, response, next)
-
-        expect(assessmentsService.updateAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
-          accommodationRequiredFromDate,
-        })
-        expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
-        expect(request.flash).toHaveBeenCalledWith('success', {
-          title: 'Update successful',
-          text: 'The referral summary has been updated with your changes',
-        })
-      })
-
-      it('redirects to the change accommodation required from date with errors from the API', async () => {
-        const assessmentId = 'assessment-id'
-        const accommodationRequiredFromDate = '2024-06-20'
-        const error = {
-          status: 400,
-          data: {
-            title: 'Bad request',
-            'invalid-params': [
-              {
-                propertyName: '$.accommodationRequiredFromDate',
-                errorType: 'beforeReleaseDate',
-              },
-            ],
-          },
-        }
-
-        assessmentsService.updateAssessment.mockImplementationOnce(() => {
-          throw error
-        })
-
-        const requestHandler = assessmentsController.updateDate('accommodationRequiredFromDate')
-
-        request.params = { id: assessmentId }
-        request.body = {
-          ...DateFormats.isoToDateAndTimeInputs(accommodationRequiredFromDate, 'accommodationRequiredFromDate'),
-        }
-
-        await requestHandler(request, response, next)
-
-        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-          request,
-          response,
-          error,
-          paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessmentId }),
-        )
-      })
-
-      it.each([
-        ['empty', ''],
-        ['invalid', '2024-13-32'],
-      ])('creates errors without calling the API if the date is %s', async (errorType, submittedDate) => {
-        const assessmentId = 'assessment-id'
-        const dateParts = submittedDate.split('-')
-
-        const requestHandler = assessmentsController.updateDate('accommodationRequiredFromDate')
-
-        request.params = { id: assessmentId }
-        request.body = submittedDate
-          ? {
-              'accommodationRequiredFromDate-day': dateParts[2],
-              'accommodationRequiredFromDate-month': dateParts[1],
-              'accommodationRequiredFromDate-year': dateParts[0],
-            }
-          : {}
-
-        await requestHandler(request, response, next)
-
-        expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'accommodationRequiredFromDate', errorType)
-        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-          request,
-          response,
-          new Error(),
-          paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessmentId }),
+          paths.assessments.changeDate[dateField]({ id: assessmentId }),
         )
         expect(assessmentsService.updateAssessment).not.toHaveBeenCalled()
       })

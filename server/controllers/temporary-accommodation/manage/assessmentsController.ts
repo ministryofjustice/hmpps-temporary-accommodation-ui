@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus, AssessmentUpdateStatus } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, AssessmentUpdatableDateField, AssessmentUpdateStatus } from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
@@ -257,7 +257,7 @@ export default class AssessmentsController {
     }
   }
 
-  changeDate(dateType: 'releaseDate' | 'accommodationRequiredFromDate'): RequestHandler {
+  changeDate(dateField: AssessmentUpdatableDateField): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
@@ -266,7 +266,7 @@ export default class AssessmentsController {
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 
       return res.render('temporary-accommodation/assessments/change-date', {
-        dateType,
+        dateField,
         assessment,
         errors,
         errorSummary,
@@ -275,7 +275,7 @@ export default class AssessmentsController {
     }
   }
 
-  updateDate(dateType: 'releaseDate' | 'accommodationRequiredFromDate'): RequestHandler {
+  updateDate(dateField: AssessmentUpdatableDateField): RequestHandler {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)
 
@@ -284,14 +284,14 @@ export default class AssessmentsController {
       try {
         let error: Error
 
-        const updatedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType]
+        const updatedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, dateField)[dateField]
 
         if (!updatedDate) {
           error = error || new Error()
-          insertGenericError(error, dateType, 'empty')
+          insertGenericError(error, dateField, 'empty')
         } else if (!dateExists(updatedDate)) {
           error = error || new Error()
-          insertGenericError(error, dateType, 'invalid')
+          insertGenericError(error, dateField, 'invalid')
         }
 
         if (error) {
@@ -299,7 +299,7 @@ export default class AssessmentsController {
         }
 
         await this.assessmentsService.updateAssessment(callConfig, id, {
-          [dateType]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType],
+          [dateField]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateField)[dateField],
         })
         req.flash('success', {
           title: 'Update successful',
@@ -307,7 +307,7 @@ export default class AssessmentsController {
         })
         res.redirect(paths.assessments.summary({ id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.assessments.changeDate[dateType]({ id }))
+        catchValidationErrorOrPropogate(req, res, err, paths.assessments.changeDate[dateField]({ id }))
       }
     }
   }

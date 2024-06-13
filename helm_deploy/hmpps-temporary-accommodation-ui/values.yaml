@@ -64,8 +64,7 @@ generic-service:
     groups:
       - internal
       - prisons
-    palo-alto-prisma-access-egress: "128.77.75.128/26"
-    palo-alto-prisma-access-egress-2: "128.77.75.64/26"
+    palo-alto-prisma-access-corporate: "128.77.75.64/26"
 
 generic-prometheus-alerts:
   targetApplication: hmpps-temporary-accommodation-ui

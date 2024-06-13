@@ -10,6 +10,7 @@ import {
   assessmentActions,
   createTableHeadings,
   getParams,
+  insertUpdateDateError,
   pathFromStatus,
   referralRejectionReasonIsOther,
   statusChangeMessage,
@@ -307,6 +308,14 @@ export default class AssessmentsController {
         })
         res.redirect(paths.assessments.summary({ id }))
       } catch (err) {
+        if (err.status === 400) {
+          if (
+            err.data?.detail?.includes('Release date cannot be before accommodation required from date') ||
+            err.data?.detail?.includes('Accommodation required from date cannot be after the release date')
+          ) {
+            insertUpdateDateError(err, id)
+          }
+        }
         catchValidationErrorOrPropogate(req, res, err, paths.assessments.changeDate[dateField]({ id }))
       }
     }

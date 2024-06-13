@@ -579,7 +579,7 @@ describe('AssessmentsController', () => {
       ['release date', 'releaseDate'],
       ['accommodation required from date', 'accommodationRequiredFromDate'],
     ])('when changing the %s', (_, dateField: AssessmentUpdatableDateField) => {
-      it('calls render with the correct date type and the assessment details', async () => {
+      it('renders the form with the correct date type and the assessment details', async () => {
         const assessment = assessmentFactory.build()
         const errors: ErrorMessages = {}
         const errorSummary: Array<ErrorSummary> = []
@@ -630,19 +630,18 @@ describe('AssessmentsController', () => {
         })
       })
 
-      it('redirects to the change release date with errors from the API', async () => {
+      it('redirects to the change date form with a date error from the API', async () => {
+        jest.spyOn(assessmentUtils, 'insertUpdateDateError')
         const assessmentId = 'assessment-id'
         const updatedDate = '2024-06-20'
         const error = {
           status: 400,
           data: {
             title: 'Bad request',
-            'invalid-params': [
-              {
-                propertyName: `$.${dateField}`,
-                errorType: 'apiErrorCode',
-              },
-            ],
+            detail:
+              dateField === 'releaseDate'
+                ? 'Release date cannot be before accommodation required from date: 2024-07-01'
+                : 'Accommodation required from date cannot be after the release date: 2024-07-10',
           },
         }
 
@@ -659,6 +658,7 @@ describe('AssessmentsController', () => {
 
         await requestHandler(request, response, next)
 
+        expect(assessmentUtils.insertUpdateDateError).toHaveBeenCalledWith(error, assessmentId)
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,

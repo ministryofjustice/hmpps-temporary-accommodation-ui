@@ -115,7 +115,7 @@ describe('bedspaceUtils', () => {
     })
   })
 
-  describe('insertConflictErrors', () => {
+  describe('insertEndDateErrors', () => {
     beforeEach(() => {
       jest.spyOn(validation, 'insertBespokeError')
       jest.spyOn(validation, 'insertGenericError')

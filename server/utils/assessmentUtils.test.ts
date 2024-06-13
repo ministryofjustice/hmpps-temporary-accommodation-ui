@@ -11,11 +11,13 @@ import {
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
+import * as validation from './validation'
 import {
   assessmentActions,
   assessmentTableRows,
   createTableHeadings,
   getParams,
+  insertUpdateDateError,
   pathFromStatus,
   referralRejectionReasonIsOther,
   renderNote,
@@ -527,6 +529,71 @@ describe('assessmentUtils', () => {
       ['/review-and-assess/archive', 'archived'],
     ])('returns %s for status %s', (path, status: AssessmentSearchApiStatus) => {
       expect(pathFromStatus(status)).toEqual(path)
+    })
+  })
+
+  describe('insertUpdateDateErrors', () => {
+    beforeEach(() => {
+      jest.spyOn(validation, 'insertBespokeError')
+      jest.spyOn(validation, 'insertGenericError')
+    })
+
+    it('inserts an error for a release date after the accommodation required date', () => {
+      const error = {
+        status: 400,
+        data: {
+          detail: 'Release date cannot be before accommodation required from date: 2024-06-06',
+        },
+        stack: '',
+        message: '',
+      }
+
+      insertUpdateDateError(error, 'assessment-id')
+
+      expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          {
+            html: `Enter a date which is on or before when accommodation is required from (6 June 2024). You can <a href="${paths.assessments.changeDate.accommodationRequiredFromDate(
+              { id: 'assessment-id' },
+            )}">edit the ‘accommodation required from’ date</a>`,
+          },
+        ],
+      })
+      expect(validation.insertGenericError).toHaveBeenCalledWith(
+        error,
+        'releaseDate',
+        'afterAccommodationRequiredFromDate',
+      )
+    })
+
+    it('inserts an error for an accommodation required from date before the release date', () => {
+      const error = {
+        status: 400,
+        data: {
+          detail: 'Accommodation required from date cannot be after the release date: 2024-07-07',
+        },
+        stack: '',
+        message: '',
+      }
+
+      insertUpdateDateError(error, 'assessment-id')
+
+      expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          {
+            html: `Enter a date which is on or after the release date (7 July 2024). You can <a href="${paths.assessments.changeDate.releaseDate(
+              { id: 'assessment-id' },
+            )}">edit the release date</a>`,
+          },
+        ],
+      })
+      expect(validation.insertGenericError).toHaveBeenCalledWith(
+        error,
+        'accommodationRequiredFromDate',
+        'beforeReleaseDate',
+      )
     })
   })
 })

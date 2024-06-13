@@ -178,5 +178,11 @@
     "confirmation": {
       "invalid": "You must confirm the information provided is complete, accurate and up to date"
     }
+  },
+  "assessmentUpdate": {
+    "releaseDate": {
+      "beforeReleaseDate": "Enter a date which is on or after the release date",
+      "afterAccommodationRequiredFromDate": "Enter a date which is on or before when accommodation is required from"
+    }
   }
 }

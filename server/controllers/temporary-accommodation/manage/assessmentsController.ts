@@ -281,14 +281,18 @@ export default class AssessmentsController {
 
       const { id } = req.params
 
-      await this.assessmentsService.updateAssessment(callConfig, id, {
-        [dateType]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType],
-      })
-      req.flash('success', {
-        title: 'Update successful',
-        text: 'The referral summary has been updated with your changes',
-      })
-      res.redirect(paths.assessments.summary({ id }))
+      try {
+        await this.assessmentsService.updateAssessment(callConfig, id, {
+          [dateType]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateType)[dateType],
+        })
+        req.flash('success', {
+          title: 'Update successful',
+          text: 'The referral summary has been updated with your changes',
+        })
+        res.redirect(paths.assessments.summary({ id }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.assessments.changeDate[dateType]({ id }))
+      }
     }
   }
 }

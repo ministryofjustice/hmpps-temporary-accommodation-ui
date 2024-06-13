@@ -642,6 +642,43 @@ describe('AssessmentsController', () => {
           text: 'The referral summary has been updated with your changes',
         })
       })
+
+      it('redirects to the change release date with errors from the API', async () => {
+        const assessmentId = 'assessment-id'
+        const releaseDate = '2024-06-20'
+        const error = {
+          status: 400,
+          data: {
+            title: 'Bad request',
+            'invalid-params': [
+              {
+                propertyName: '$.releaseDate',
+                errorType: 'afterAccommodationRequiredFromDate',
+              },
+            ],
+          },
+        }
+
+        assessmentsService.updateAssessment.mockImplementationOnce(() => {
+          throw error
+        })
+
+        const requestHandler = assessmentsController.updateDate('releaseDate')
+
+        request.params = { id: assessmentId }
+        request.body = {
+          ...DateFormats.isoToDateAndTimeInputs(releaseDate, 'releaseDate'),
+        }
+
+        await requestHandler(request, response, next)
+
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          error,
+          paths.assessments.changeDate.releaseDate({ id: assessmentId }),
+        )
+      })
     })
 
     describe('when updating the accommodation required from date', () => {
@@ -665,6 +702,43 @@ describe('AssessmentsController', () => {
           title: 'Update successful',
           text: 'The referral summary has been updated with your changes',
         })
+      })
+
+      it('redirects to the change accommodation required from date with errors from the API', async () => {
+        const assessmentId = 'assessment-id'
+        const accommodationRequiredFromDate = '2024-06-20'
+        const error = {
+          status: 400,
+          data: {
+            title: 'Bad request',
+            'invalid-params': [
+              {
+                propertyName: '$.accommodationRequiredFromDate',
+                errorType: 'beforeReleaseDate',
+              },
+            ],
+          },
+        }
+
+        assessmentsService.updateAssessment.mockImplementationOnce(() => {
+          throw error
+        })
+
+        const requestHandler = assessmentsController.updateDate('accommodationRequiredFromDate')
+
+        request.params = { id: assessmentId }
+        request.body = {
+          ...DateFormats.isoToDateAndTimeInputs(accommodationRequiredFromDate, 'accommodationRequiredFromDate'),
+        }
+
+        await requestHandler(request, response, next)
+
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          error,
+          paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessmentId }),
+        )
       })
     })
   })

@@ -4,7 +4,7 @@
 
 {% block head %}
     <script src="/assets/js/jquery.min.js"></script>
-    <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet" />
+    <link href="/assets/css/app.css?{{ version }}" rel="stylesheet" />
 {% endblock %}
 
 {% block pageTitle %}{{ pageTitle | default(applicationName) }}
@@ -22,9 +22,7 @@
 {% block bodyStart %}{% endblock %}
 
 {% block bodyEnd %}
-    {# Run JavaScript at end of the <body>, to avoid blocking the initial render. #}
-    <script type="module" src="/assets/govukFrontendInit.js"></script>
-    <script src="/assets/moj/all.js"></script>
+    <script type="module" src="/assets/js/app.js"></script>
     {% block extraScripts %}{% endblock %}
 {% endblock %}
 

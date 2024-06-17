@@ -62,6 +62,12 @@
         "no-underscore-dangle": ["error", { "allowAfterThis": true }],
         "no-empty-function": ["error", { "allow": ["constructors"] }]
       }
+    },
+    {
+      "files": ["esbuild/**/*"],
+      "rules": {
+        "no-console": "off"
+      }
     }
   ],
 
@@ -106,7 +112,8 @@
           "**/testutils/**",
           "cypress_shared/**",
           "cypress.config.ts",
-          "cypress.config.e2e.ts"
+          "cypress.config.e2e.ts",
+          "esbuild/**/*"
         ]
       }
     ],

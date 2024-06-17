@@ -1,0 +1,32 @@
+$govuk-global-styles: true;
+
+// Width of main container
+$govuk-page-width: 1170px;
+$moj-page-width: $govuk-page-width;
+
+$path: "/assets/images/";
+
+@import 'govuk/all';
+@import 'moj/all';
+
+@import './components/header-bar';
+@import './components/page-header-bar';
+@import './components/task-list';
+@import './components/risk-widgets';
+@import './components/_edit-bar';
+@import './components/_location-header';
+@import './components/_booking-info';
+@import './components/_listing-entry';
+@import './components/_probation-region-header';
+@import './components/_attributes-header';
+@import './components/_place-context-header';
+@import './components/_form-row-dl';
+@import './components/_date-picker';
+@import './components/_result-card';
+@import 'components/filter';
+@import './local';
+
+@import './pages/temporary-accommodation/show';
+@import './pages/temporary-accommodation/dashboard/index';
+@import './pages/temporary-accommodation/bookings/show';
+@import './pages/temporary-accommodation/applications/pages/accommodation-need/sentence-information/sentence-length';

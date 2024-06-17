@@ -336,6 +336,18 @@ export default function routes(controllers: Controllers, services: Services, rou
   get(paths.assessments.summary.pattern, assessmentsController.summary(), {
     auditEvent: 'VIEW_ASSESSMENT_SUMMARY',
   })
+
+  get(paths.assessments.changeDate.releaseDate.pattern, assessmentsController.changeDate('releaseDate'), {
+    auditEvent: 'VIEW_ASSESSMENT_CHANGE_RELEASE_DATE',
+  })
+  get(
+    paths.assessments.changeDate.accommodationRequiredFromDate.pattern,
+    assessmentsController.changeDate('accommodationRequiredFromDate'),
+    {
+      auditEvent: 'VIEW_ASSESSMENT_CHANGE_ACCOMMODATION_REQUIRED_FROM_DATE',
+    },
+  )
+
   get(paths.assessments.confirmRejection.pattern, assessmentsController.confirmRejection(), {
     auditEvent: 'VIEW_ASSESSMENT_REJECTION_CONFIRM',
   })

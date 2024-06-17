@@ -506,6 +506,38 @@ context('Apply', () => {
         // And I should see an error messags
         postSumbmitSummaryAssessmentPage.shouldShowErrorMessagesForFields(['message'])
       })
+
+      describe('editing dates', () => {
+        it("allows me to edit the person's release date", () => {
+          cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+            const assessment = assessmentFactory.build({ status: 'in_review' })
+            assessment.application.document = applicationTranslatedDocument
+
+            cy.task('stubFindAssessment', assessment)
+
+            // Given I visit the full assessment page
+            const assessmentPage = AssessmentFullPage.visit(assessment)
+
+            // When I click on Change next to Release date
+            assessmentPage.clickChange("the person's release date")
+          })
+        })
+
+        it('allows me to edit the date the accommodation is required', () => {
+          cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
+            const assessment = assessmentFactory.build({ status: 'in_review' })
+            assessment.application.document = applicationTranslatedDocument
+
+            cy.task('stubFindAssessment', assessment)
+
+            // Given I visit the full assessment page
+            const assessmentPage = AssessmentFullPage.visit(assessment)
+
+            // When I click on Change next to Accommodation required from date
+            assessmentPage.clickChange('the date accommodation is required')
+          })
+        })
+      })
     })
   })
 })

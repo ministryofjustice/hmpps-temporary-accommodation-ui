@@ -1,5 +1,10 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { AssessmentSearchApiStatus, AssessmentUpdatableDateField, AssessmentUpdateStatus } from '@approved-premises/ui'
+import {
+  AssessmentSearchApiStatus,
+  AssessmentUpdatableDateField,
+  AssessmentUpdateStatus,
+  SummaryListActionItem,
+} from '@approved-premises/ui'
 import {
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   NewReferralHistoryUserNote as NewNote,
@@ -128,9 +133,26 @@ export default class AssessmentsController {
 
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 
+      const rowActions: Record<string, SummaryListActionItem[]> = {
+        'Release date': [
+          {
+            text: 'Change',
+            href: paths.assessments.changeDate.releaseDate({ id: assessment.id }),
+            visuallyHiddenText: "the person's release date",
+          },
+        ],
+        'Accommodation required from date': [
+          {
+            text: 'Change',
+            href: paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessment.id }),
+            visuallyHiddenText: 'the date accommodation is required',
+          },
+        ],
+      }
+
       return res.render('temporary-accommodation/assessments/full', {
         assessment,
-        actions: assessmentActions(assessment),
+        rowActions,
       })
     }
   }

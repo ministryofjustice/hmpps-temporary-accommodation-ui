@@ -36,14 +36,13 @@
         {% for section in assessment.application.document.sections %}
             <h2 class="govuk-heading-l govuk-!-margin-top-3">{{ section.title }}</h2>
             {% for task in section.tasks %}
-
                 {{ govukSummaryList({
                     card: {
                         title: {
                             text: task.title
                         }
                     },
-                    rows: taskResponsesToSummaryListRowItems(task.content)
+                    rows: taskResponsesToSummaryListRowItems(task.content, rowActions)
                 }) }}
             {% endfor %}
         {% endfor %}

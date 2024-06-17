@@ -301,11 +301,10 @@ describe('AssessmentsController', () => {
   })
 
   describe('full', () => {
-    it('shows a readonly view of an application', async () => {
+    it('shows a full view of a referral with row actions', async () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
-      jest.spyOn(assessmentUtils, 'assessmentActions').mockReturnValue(actions)
       request.params = { id: assessmentId }
 
       const requestHandler = assessmentsController.full()
@@ -313,7 +312,22 @@ describe('AssessmentsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/full', {
         assessment,
-        actions,
+        rowActions: {
+          'Release date': [
+            {
+              text: 'Change',
+              href: paths.assessments.changeDate.releaseDate({ id: assessmentId }),
+              visuallyHiddenText: "the person's release date",
+            },
+          ],
+          'Accommodation required from date': [
+            {
+              text: 'Change',
+              href: paths.assessments.changeDate.accommodationRequiredFromDate({ id: assessmentId }),
+              visuallyHiddenText: 'the date accommodation is required',
+            },
+          ],
+        },
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentsService)

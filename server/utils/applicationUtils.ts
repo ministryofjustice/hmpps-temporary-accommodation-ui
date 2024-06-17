@@ -2,7 +2,14 @@ import type {
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
-import type { FormSection, HtmlItem, PageResponse, TableRow, Task } from '@approved-premises/ui'
+import type {
+  FormSection,
+  PageResponse,
+  SummaryListActionItem,
+  SummaryListItem,
+  TableRow,
+  Task,
+} from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import TasklistPage, { TasklistPageInterface } from '../form-pages/tasklistPage'
@@ -164,10 +171,12 @@ const firstPageOfApplicationJourney = (application: Application) => {
 
 const taskResponsesToSummaryListRowItems = (
   taskResponses: TaskResponse['content'],
-): Array<{ key: string; value: HtmlItem }> => {
-  const transformedResult = taskResponses
+  actions?: Record<string, SummaryListActionItem[]>,
+): SummaryListItem[] => {
+  return taskResponses
     .map(taskResponse => {
       return Object.entries(taskResponse).map(([key, value]) => {
+        const actionItems = actions?.[key]
         return {
           key: { text: key },
           value: {
@@ -176,12 +185,11 @@ const taskResponsesToSummaryListRowItems = (
                 ? formatLines(value as string)
                 : embeddedSummaryListItem(value as Array<Record<string, unknown>>),
           },
+          actions: actionItems ? { items: actionItems } : undefined,
         }
       })
     })
     .flat()
-
-  return transformedResult as unknown as Array<{ key: string; value: HtmlItem }>
 }
 
 export {

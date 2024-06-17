@@ -1,0 +1,19 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% extends "../../partials/layout.njk" %}
+
+{% set pageTitle = "Change date - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.assessments.full({ id: assessment.id })
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+    <h1 class="govuk-heading-l">Change date</h1>
+
+{% endblock %}

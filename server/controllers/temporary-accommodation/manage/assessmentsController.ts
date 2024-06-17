@@ -13,6 +13,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import AssessmentsService from '../../../services/assessmentsService'
 import {
   assessmentActions,
+  changeDatePageContent,
   createTableHeadings,
   getParams,
   insertUpdateDateError,
@@ -289,6 +290,7 @@ export default class AssessmentsController {
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
 
       return res.render('temporary-accommodation/assessments/change-date', {
+        content: changeDatePageContent(dateField, assessment),
         dateField,
         assessment,
         errors,
@@ -326,7 +328,7 @@ export default class AssessmentsController {
         })
         req.flash('success', {
           title: 'Update successful',
-          text: 'The referral summary has been updated with your changes',
+          text: 'The referral has been updated with your changes',
         })
         res.redirect(paths.assessments.summary({ id }))
       } catch (err) {

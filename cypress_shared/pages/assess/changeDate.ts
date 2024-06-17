@@ -1,0 +1,27 @@
+import Page from '../page'
+import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
+import { AssessmentUpdatableDateField } from '../../../server/@types/ui'
+import { personName } from '../../../server/utils/personUtils'
+
+export default class ChangeDatePage extends Page {
+  dateField: AssessmentUpdatableDateField
+
+  constructor(
+    dateField: AssessmentUpdatableDateField,
+    private readonly assessment: Assessment,
+  ) {
+    const title =
+      dateField === 'releaseDate'
+        ? `What is ${personName(assessment.application.person)}'s release date?`
+        : 'What date is accommodation required from?'
+    super(title)
+
+    this.dateField = dateField
+  }
+
+  completeForm(date: string) {
+    this.clearDateInputs(this.dateField)
+    this.completeDateInputs(this.dateField, date)
+    this.clickSubmit('Save and continue')
+  }
+}

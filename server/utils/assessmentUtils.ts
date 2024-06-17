@@ -324,3 +324,27 @@ export const insertUpdateDateError = (err: SanitisedError, assessmentId: string)
     insertGenericError(err, dateField, errorType)
   }
 }
+
+type DatePageContent = {
+  docTitle: string
+  title: string
+  hint?: string
+}
+
+export const changeDatePageContent = (
+  dateField: AssessmentUpdatableDateField,
+  assessment: Assessment,
+): DatePageContent => {
+  if (dateField === 'releaseDate') {
+    return {
+      docTitle: 'Change release date',
+      title: `What is ${personName(assessment.application.person)}'s release date?`,
+      hint: 'This could include the release date from custody, an Approved Premises, or CAS2 (formerly Bail Accommodation Support Services)',
+    }
+  }
+
+  return {
+    docTitle: 'Change date accommodation is required from',
+    title: 'What date is accommodation required from?',
+  }
+}

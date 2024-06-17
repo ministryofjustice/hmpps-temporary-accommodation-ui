@@ -594,11 +594,10 @@ describe('AssessmentsController', () => {
       ['accommodation required from date', 'accommodationRequiredFromDate'],
     ])('when changing the %s', (_, dateField: AssessmentUpdatableDateField) => {
       it('renders the form with the correct date type and the assessment details', async () => {
+        const content = { docTitle: 'foo', title: 'bar' }
         const assessment = assessmentFactory.build()
-        const errors: ErrorMessages = {}
-        const errorSummary: Array<ErrorSummary> = []
 
-        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors, errorSummary })
+        jest.spyOn(assessmentUtils, 'changeDatePageContent').mockReturnValue(content)
         assessmentsService.findAssessment.mockResolvedValue(assessment)
 
         const requestHandler = assessmentsController.changeDate(dateField)
@@ -609,9 +608,10 @@ describe('AssessmentsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/change-date', {
           assessment,
+          content,
           dateField,
-          errors,
-          errorSummary,
+          errors: {},
+          errorSummary: [],
         })
       })
     })
@@ -640,7 +640,7 @@ describe('AssessmentsController', () => {
         expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
         expect(request.flash).toHaveBeenCalledWith('success', {
           title: 'Update successful',
-          text: 'The referral summary has been updated with your changes',
+          text: 'The referral has been updated with your changes',
         })
       })
 

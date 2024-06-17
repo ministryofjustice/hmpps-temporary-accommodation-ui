@@ -130,6 +130,10 @@ const paths = {
       releaseDate: assessmentPath.path('change-release-date'),
       accommodationRequiredFromDate: assessmentPath.path('change-accommodation-required-from-date'),
     },
+    updateDate: {
+      releaseDate: assessmentPath.path('update-release-date'),
+      accommodationRequiredFromDate: assessmentPath.path('update-accommodation-required-from-date'),
+    },
   },
 }
 

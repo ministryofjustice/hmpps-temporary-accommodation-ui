@@ -2,6 +2,7 @@ import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import type { ReferralHistoryNoteMessageDetails } from '@approved-premises/api'
 import paths from '../paths/temporary-accommodation/manage'
 import {
+  applicationFactory,
   assessmentFactory,
   assessmentSummaryFactory,
   personFactory,
@@ -15,6 +16,7 @@ import * as validation from './validation'
 import {
   assessmentActions,
   assessmentTableRows,
+  changeDatePageContent,
   createTableHeadings,
   getParams,
   insertUpdateDateError,
@@ -594,6 +596,29 @@ describe('assessmentUtils', () => {
         'accommodationRequiredFromDate',
         'beforeReleaseDate',
       )
+    })
+  })
+
+  describe('changeDatePageContent', () => {
+    it('returns page content for a release date change', () => {
+      const person = personFactory.build({ name: 'John Foo' })
+      const application = applicationFactory.build({ person })
+      const assessment = assessmentFactory.build({ application })
+
+      expect(changeDatePageContent('releaseDate', assessment)).toEqual({
+        docTitle: 'Change release date',
+        title: `What is John Foo's release date?`,
+        hint: 'This could include the release date from custody, an Approved Premises, or CAS2 (formerly Bail Accommodation Support Services)',
+      })
+    })
+
+    it('returns page content for a change of accommodation required from date', () => {
+      const assessment = assessmentFactory.build()
+
+      expect(changeDatePageContent('accommodationRequiredFromDate', assessment)).toEqual({
+        docTitle: 'Change date accommodation is required from',
+        title: `What date is accommodation required from?`,
+      })
     })
   })
 })

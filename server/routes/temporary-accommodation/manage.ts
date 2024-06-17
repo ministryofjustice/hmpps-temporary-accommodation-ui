@@ -347,6 +347,28 @@ export default function routes(controllers: Controllers, services: Services, rou
       auditEvent: 'VIEW_ASSESSMENT_CHANGE_ACCOMMODATION_REQUIRED_FROM_DATE',
     },
   )
+  post(paths.assessments.updateDate.releaseDate.pattern, assessmentsController.updateDate('releaseDate'), {
+    auditEvent: 'UPDATE_ASSESSMENT_RELEASE_DATE',
+    redirectAuditEventSpecs: [
+      {
+        path: paths.assessments.full.pattern,
+        auditEvent: 'UPDATE_ASSESSMENT_RELEASE_DATE_SUCCESS',
+      },
+    ],
+  })
+  post(
+    paths.assessments.updateDate.accommodationRequiredFromDate.pattern,
+    assessmentsController.updateDate('accommodationRequiredFromDate'),
+    {
+      auditEvent: 'UPDATE_ASSESSMENT_ACCOMMODATION_REQUIRED_FROM_DATE',
+      redirectAuditEventSpecs: [
+        {
+          path: paths.assessments.full.pattern,
+          auditEvent: 'UPDATE_ASSESSMENT_ACCOMMODATION_REQUIRED_FROM_DATE_SUCCESS',
+        },
+      ],
+    },
+  )
 
   get(paths.assessments.confirmRejection.pattern, assessmentsController.confirmRejection(), {
     auditEvent: 'VIEW_ASSESSMENT_REJECTION_CONFIRM',

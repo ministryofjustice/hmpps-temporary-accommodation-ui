@@ -1,6 +1,7 @@
 import { TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import { sentence } from 'case'
+import { addDays } from 'date-fns'
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
@@ -16,6 +17,8 @@ import {
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
 import AssessmentRejectionConfirmPage from '../../../../cypress_shared/pages/assess/confirmRejection'
+import ChangeDatePage from '../../../../cypress_shared/pages/assess/changeDate'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 const pagination: MockPagination = {
   totalResults: 23,
@@ -509,9 +512,12 @@ context('Apply', () => {
 
       describe('editing dates', () => {
         it("allows me to edit the person's release date", () => {
-          cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
-            const assessment = assessmentFactory.build({ status: 'in_review' })
-            assessment.application.document = applicationTranslatedDocument
+          cy.fixture('applicationData.json').then(applicationData => {
+            const assessment = assessmentFactory.build()
+            assessment.application.data = applicationData
+
+            const existingDate = applicationData.eligibility['release-date'].releaseDate
+            const updatedDate = DateFormats.dateObjToIsoDate(addDays(DateFormats.isoToDateObj(existingDate), -2))
 
             cy.task('stubFindAssessment', assessment)
 
@@ -520,13 +526,28 @@ context('Apply', () => {
 
             // When I click on Change next to Release date
             assessmentPage.clickChange("the person's release date")
+
+            // Then I see the form to change the release date
+            const changeReleaseDatePage = Page.verifyOnPage(ChangeDatePage, 'releaseDate', assessment)
+
+            // When I submit a new date
+            changeReleaseDatePage.completeForm(updatedDate)
+
+            // Then I should see the full referral page with a success message
+            const fullReferralPage = Page.verifyOnPage(AssessmentFullPage, assessment)
+
+            fullReferralPage.shouldShowBanner('The referral has been updated with your changes')
           })
         })
 
         it('allows me to edit the date the accommodation is required', () => {
-          cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
-            const assessment = assessmentFactory.build({ status: 'in_review' })
-            assessment.application.document = applicationTranslatedDocument
+          cy.fixture('applicationData.json').then(applicationData => {
+            const assessment = assessmentFactory.build()
+            assessment.application.data = applicationData
+
+            const existingDate =
+              applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate
+            const updatedDate = DateFormats.dateObjToIsoDate(addDays(DateFormats.isoToDateObj(existingDate), 3))
 
             cy.task('stubFindAssessment', assessment)
 
@@ -535,6 +556,21 @@ context('Apply', () => {
 
             // When I click on Change next to Accommodation required from date
             assessmentPage.clickChange('the date accommodation is required')
+
+            // Then I see the form to change the accommodation required from date
+            const changeAccommodationRequiredFromPage = Page.verifyOnPage(
+              ChangeDatePage,
+              'accommodationRequiredFromDate',
+              assessment,
+            )
+
+            // When I submit a new date
+            changeAccommodationRequiredFromPage.completeForm(updatedDate)
+
+            // Then I should see the full referral page with a success message
+            const fullReferralPage = Page.verifyOnPage(AssessmentFullPage, assessment)
+
+            fullReferralPage.shouldShowBanner('The referral has been updated with your changes')
           })
         })
       })

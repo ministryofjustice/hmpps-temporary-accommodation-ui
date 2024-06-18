@@ -544,7 +544,7 @@ describe('assessmentUtils', () => {
       const error = {
         status: 400,
         data: {
-          detail: 'Release date cannot be before accommodation required from date: 2024-06-06',
+          detail: 'Release date cannot be after accommodation required from date: 2024-06-06',
         },
         stack: '',
         message: '',
@@ -556,7 +556,7 @@ describe('assessmentUtils', () => {
         errorTitle: 'There is a problem',
         errorSummary: [
           {
-            html: `Enter a date which is on or before when accommodation is required from (6 June 2024). You can <a href="${paths.assessments.changeDate.accommodationRequiredFromDate(
+            html: `Enter a date which is on or before when accommodation is required from (6 June 2024). You can <a class="govuk-link" href="${paths.assessments.changeDate.accommodationRequiredFromDate(
               { id: 'assessment-id' },
             )}">edit the ‘accommodation required from’ date</a>`,
           },
@@ -573,7 +573,7 @@ describe('assessmentUtils', () => {
       const error = {
         status: 400,
         data: {
-          detail: 'Accommodation required from date cannot be after the release date: 2024-07-07',
+          detail: 'Accommodation required from date cannot be before the release date: 2024-07-07',
         },
         stack: '',
         message: '',
@@ -585,7 +585,7 @@ describe('assessmentUtils', () => {
         errorTitle: 'There is a problem',
         errorSummary: [
           {
-            html: `Enter a date which is on or after the release date (7 July 2024). You can <a href="${paths.assessments.changeDate.releaseDate(
+            html: `Enter a date which is on or after the release date (7 July 2024). You can <a class="govuk-link" href="${paths.assessments.changeDate.releaseDate(
               { id: 'assessment-id' },
             )}">edit the release date</a>`,
           },

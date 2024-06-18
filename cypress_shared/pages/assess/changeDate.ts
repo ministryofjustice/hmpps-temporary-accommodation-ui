@@ -2,6 +2,7 @@ import Page from '../page'
 import { TemporaryAccommodationAssessment as Assessment } from '../../../server/@types/shared'
 import { AssessmentUpdatableDateField } from '../../../server/@types/ui'
 import { personName } from '../../../server/utils/personUtils'
+import paths from '../../../server/paths/temporary-accommodation/manage'
 
 export default class ChangeDatePage extends Page {
   dateField: AssessmentUpdatableDateField
@@ -17,6 +18,12 @@ export default class ChangeDatePage extends Page {
     super(title)
 
     this.dateField = dateField
+  }
+
+  static visit(dateField: AssessmentUpdatableDateField, assessment: Assessment): ChangeDatePage {
+    cy.visit(paths.assessments.changeDate[dateField]({ id: assessment.id }))
+
+    return new ChangeDatePage(dateField, assessment)
   }
 
   completeForm(date: string) {

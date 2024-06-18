@@ -290,12 +290,12 @@ export const insertUpdateDateError = (err: SanitisedError, assessmentId: string)
   let errorType: string
   let dateField: AssessmentUpdatableDateField
 
-  if (detail.match('Release date cannot be before accommodation required from date')) {
+  if (detail.match('Release date cannot be after accommodation required from date')) {
     const requiredFromDate = detail.split(':')[1].trim()
     errorSummary.push({
       html: `Enter a date which is on or before when accommodation is required from (${DateFormats.isoDateToUIDate(
         requiredFromDate,
-      )}). You can <a href="${paths.assessments.changeDate.accommodationRequiredFromDate({
+      )}). You can <a class="govuk-link" href="${paths.assessments.changeDate.accommodationRequiredFromDate({
         id: assessmentId,
       })}">edit the ‘accommodation required from’ date</a>`,
     })
@@ -303,12 +303,12 @@ export const insertUpdateDateError = (err: SanitisedError, assessmentId: string)
     errorType = 'afterAccommodationRequiredFromDate'
   }
 
-  if (detail.match('Accommodation required from date cannot be after the release date')) {
+  if (detail.match('Accommodation required from date cannot be before the release date')) {
     const releaseDate = detail.split(':')[1].trim()
     errorSummary.push({
       html: `Enter a date which is on or after the release date (${DateFormats.isoDateToUIDate(
         releaseDate,
-      )}). You can <a href="${paths.assessments.changeDate.releaseDate({
+      )}). You can <a class="govuk-link" href="${paths.assessments.changeDate.releaseDate({
         id: assessmentId,
       })}">edit the release date</a>`,
     })

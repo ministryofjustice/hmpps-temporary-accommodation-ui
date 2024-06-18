@@ -1,5 +1,9 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
-import { AssessmentRejection, TemporaryAccommodationAssessmentStatus } from '@approved-premises/api'
+import {
+  TemporaryAccommodationAssessment as Assessment,
+  AssessmentRejection,
+  TemporaryAccommodationAssessmentStatus,
+} from '@approved-premises/api'
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
 import {
@@ -191,6 +195,19 @@ describe('AssessmentsService', () => {
       expect(result).toEqual(note)
       expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
       expect(assessmentClient.createNote).toHaveBeenCalledWith(assessmentId, newNote)
+    })
+  })
+
+  describe('updateAssessment', () => {
+    it('updates the given assessment', async () => {
+      const data: Partial<Assessment> = {
+        releaseDate: '2024-06-08',
+      }
+
+      await service.updateAssessment(callConfig, assessmentId, data)
+
+      expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(assessmentClient.update).toHaveBeenCalledWith(assessmentId, data)
     })
   })
 })

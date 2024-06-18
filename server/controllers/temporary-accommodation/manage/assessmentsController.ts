@@ -333,8 +333,8 @@ export default class AssessmentsController {
       } catch (err) {
         if (err.status === 400) {
           if (
-            err.data?.detail?.includes('Release date cannot be before accommodation required from date') ||
-            err.data?.detail?.includes('Accommodation required from date cannot be after the release date')
+            err.data?.detail?.includes('Release date cannot be after accommodation required from date') ||
+            err.data?.detail?.includes('Accommodation required from date cannot be before the release date')
           ) {
             insertUpdateDateError(err, id)
           }

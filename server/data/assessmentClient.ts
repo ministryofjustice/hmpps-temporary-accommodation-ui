@@ -100,7 +100,8 @@ export default class AssessmentClient {
     return (await this.restClient.post({ path: paths.assessments.notes({ id }), data })) as Note
   }
 
-  update() {
-    return Promise.resolve('ok')
+  async update(id: string, data: Partial<Assessment>): Promise<void> {
+    const updateData = { data: {}, ...data }
+    await this.restClient.put({ path: paths.assessments.update({ id }), data: updateData })
   }
 }

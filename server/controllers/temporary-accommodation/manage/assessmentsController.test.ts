@@ -656,8 +656,8 @@ describe('AssessmentsController', () => {
             title: 'Bad request',
             detail:
               dateField === 'releaseDate'
-                ? 'Release date cannot be before accommodation required from date: 2024-07-01'
-                : 'Accommodation required from date cannot be after the release date: 2024-07-10',
+                ? 'Release date cannot be after accommodation required from date: 2024-07-01'
+                : 'Accommodation required from date cannot be before the release date: 2024-07-10',
           },
         }
 

@@ -678,6 +678,7 @@ describe('AssessmentsController', () => {
           response,
           error,
           paths.assessments.changeDate[dateField]({ id: assessmentId }),
+          'assessmentUpdate',
         )
       })
 
@@ -707,6 +708,7 @@ describe('AssessmentsController', () => {
           response,
           new Error(),
           paths.assessments.changeDate[dateField]({ id: assessmentId }),
+          'assessmentUpdate',
         )
         expect(assessmentsService.updateAssessment).not.toHaveBeenCalled()
       })

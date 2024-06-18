@@ -181,8 +181,14 @@
   },
   "assessmentUpdate": {
     "releaseDate": {
-      "beforeReleaseDate": "Enter a date which is on or after the release date",
+      "empty": "You must enter a date",
+      "invalid": "You must enter a real date",
       "afterAccommodationRequiredFromDate": "Enter a date which is on or before when accommodation is required from"
+    },
+    "afterAccommodationRequiredFromDate": {
+      "empty": "You must enter a date",
+      "invalid": "You must enter a real date",
+      "beforeReleaseDate": "Enter a date which is on or after the release date"
     }
   }
 }

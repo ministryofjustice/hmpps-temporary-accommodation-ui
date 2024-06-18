@@ -307,25 +307,22 @@ export default class AssessmentsController {
       const { id } = req.params
 
       try {
-        let error: Error
-
         const updatedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, dateField)[dateField]
 
         if (!updatedDate) {
-          error = error || new Error()
+          const error = new Error()
           insertGenericError(error, dateField, 'empty')
+          throw error
         } else if (!dateExists(updatedDate)) {
-          error = error || new Error()
+          const error = new Error()
           insertGenericError(error, dateField, 'invalid')
-        }
-
-        if (error) {
           throw error
         }
 
         await this.assessmentsService.updateAssessment(callConfig, id, {
-          [dateField]: DateFormats.dateAndTimeInputsToIsoString(req.body, dateField)[dateField],
+          [dateField]: updatedDate,
         })
+
         req.flash('success', {
           title: 'Update successful',
           text: 'The referral has been updated with your changes',
@@ -340,7 +337,13 @@ export default class AssessmentsController {
             insertUpdateDateError(err, id)
           }
         }
-        catchValidationErrorOrPropogate(req, res, err, paths.assessments.changeDate[dateField]({ id }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.assessments.changeDate[dateField]({ id }),
+          'assessmentUpdate',
+        )
       }
     }
   }

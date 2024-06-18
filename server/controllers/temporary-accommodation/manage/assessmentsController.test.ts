@@ -640,7 +640,9 @@ describe('AssessmentsController', () => {
         expect(response.redirect).toHaveBeenCalledWith(paths.assessments.summary({ id: assessmentId }))
         expect(request.flash).toHaveBeenCalledWith('success', {
           title: 'Update successful',
-          text: 'The referral has been updated with your changes',
+          html: `The referral has been updated with your changes.<br><br><a class="govuk-link" href="${paths.assessments.index(
+            {},
+          )}">View all referrals</a>`,
         })
       })
 

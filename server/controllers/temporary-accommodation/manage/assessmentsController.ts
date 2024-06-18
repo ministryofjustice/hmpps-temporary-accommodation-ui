@@ -295,6 +295,7 @@ export default class AssessmentsController {
         assessment,
         errors,
         errorSummary,
+        ...(assessment[dateField] ? DateFormats.isoToDateAndTimeInputs(assessment[dateField], dateField) : {}),
         ...userInput,
       })
     }

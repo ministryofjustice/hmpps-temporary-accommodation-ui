@@ -610,9 +610,40 @@ describe('AssessmentsController', () => {
           assessment,
           content,
           dateField,
+          ...DateFormats.isoToDateAndTimeInputs(assessment[dateField], dateField),
           errors: {},
           errorSummary: [],
         })
+      })
+
+      it('replaces the existing date with user input', async () => {
+        const userInput = {
+          [`${dateField}-day`]: '18',
+          [`${dateField}-month`]: '8',
+          [`${dateField}-year`]: '2024',
+        }
+        ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+          errors: {},
+          errorSummary: [],
+          userInput,
+        })
+        const assessment = assessmentFactory.build({
+          [dateField]: '2024-06-10',
+        })
+        assessmentsService.findAssessment.mockResolvedValue(assessment)
+
+        const requestHandler = assessmentsController.changeDate(dateField)
+
+        request.params = { id: assessment.id }
+
+        await requestHandler(request, response, next)
+
+        expect(response.render).toHaveBeenCalledWith(
+          'temporary-accommodation/assessments/change-date',
+          expect.objectContaining({
+            ...userInput,
+          }),
+        )
       })
     })
   })

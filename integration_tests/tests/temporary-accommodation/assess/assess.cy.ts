@@ -529,6 +529,9 @@ context('Apply', () => {
           // Then I see the form to change the release date
           const changeReleaseDatePage = Page.verifyOnPage(ChangeDatePage, 'releaseDate', assessment)
 
+          // And the form shows the existing date
+          changeReleaseDatePage.shouldShowDateInputs('releaseDate', assessment.releaseDate)
+
           // When I submit a new date
           changeReleaseDatePage.completeForm(updatedDate)
 
@@ -560,6 +563,12 @@ context('Apply', () => {
             assessment,
           )
 
+          // And the form shows the existing date
+          changeAccommodationRequiredFromPage.shouldShowDateInputs(
+            'accommodationRequiredFromDate',
+            assessment.accommodationRequiredFromDate,
+          )
+
           // When I submit a new date
           changeAccommodationRequiredFromPage.completeForm(updatedDate)
 
@@ -582,6 +591,7 @@ context('Apply', () => {
               const changeDatePage = ChangeDatePage.visit(dateField, assessment)
 
               // When I submit the form with no date
+              changeDatePage.clearDateInputs(dateField)
               changeDatePage.clickSubmit('Save and continue')
 
               // Then I see an error

@@ -198,9 +198,9 @@ export default abstract class Page extends Component {
   completeDateInputs(prefix: string, datetime: string): void {
     const date = datetime.split('T')[0]
     const [year, month, day] = date.split('-').map(Number).map(String)
-    cy.get(`#${prefix}-day`).type(day)
-    cy.get(`#${prefix}-month`).type(month)
-    cy.get(`#${prefix}-year`).type(year)
+    cy.get(`#${prefix}-day`).clear().type(day)
+    cy.get(`#${prefix}-month`).clear().type(month)
+    cy.get(`#${prefix}-year`).clear().type(year)
   }
 
   clickSubmit(text = ''): void {

@@ -27,7 +27,6 @@ export default class ChangeDatePage extends Page {
   }
 
   completeForm(date: string) {
-    this.clearDateInputs(this.dateField)
     this.completeDateInputs(this.dateField, date)
     this.clickSubmit('Save and continue')
   }

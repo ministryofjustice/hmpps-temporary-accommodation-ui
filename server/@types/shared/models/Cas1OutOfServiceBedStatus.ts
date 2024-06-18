@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type SituationOption = 'riskManagement' | 'residencyManagement' | 'bailAssessment' | 'bailSentence' | 'awaitingSentence';
+export type Cas1OutOfServiceBedStatus = 'active' | 'cancelled';

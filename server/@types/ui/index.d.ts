@@ -367,10 +367,3 @@ export type AssessmentSearchParameters = {
 }
 
 export type BedspaceStatus = 'online' | 'archived'
-
-// TODO: Remove once it exists in generated types
-export type ReferralRejectionBody = {
-  referralRejectionReasonId: string
-  referralRejectionReasonDetail?: string
-  isWithdrawn: boolean
-}

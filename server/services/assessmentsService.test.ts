@@ -1,5 +1,5 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
-import { TemporaryAccommodationAssessmentStatus } from '@approved-premises/api'
+import { AssessmentRejection, TemporaryAccommodationAssessmentStatus } from '@approved-premises/api'
 import AssessmentClient from '../data/assessmentClient'
 import { CallConfig } from '../data/restClient'
 import {
@@ -122,14 +122,16 @@ describe('AssessmentsService', () => {
 
   describe('rejectAssessment', () => {
     it('calls the rejectAssessment method on the client with rejection details', async () => {
-      const referralRejectionReasonBody = {
+      const assessmentRejection: AssessmentRejection = {
+        document: {},
+        rejectionRationale: 'default',
         referralRejectionReasonId: 'rejection-reason-id',
         isWithdrawn: true,
       }
-      await service.rejectAssessment(callConfig, assessmentId, referralRejectionReasonBody)
+      await service.rejectAssessment(callConfig, assessmentId, assessmentRejection)
 
       expect(AssessmentClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId, referralRejectionReasonBody)
+      expect(assessmentClient.rejectAssessment).toHaveBeenCalledWith(assessmentId, assessmentRejection)
     })
   })
 

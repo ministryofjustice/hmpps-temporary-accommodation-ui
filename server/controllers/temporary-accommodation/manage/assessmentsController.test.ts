@@ -408,6 +408,8 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+        document: {},
+        rejectionRationale: 'default',
         referralRejectionReasonId,
         referralRejectionReasonDetail,
         isWithdrawn: true,
@@ -432,6 +434,8 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(assessmentsService.rejectAssessment).toHaveBeenCalledWith(callConfig, assessmentId, {
+        document: {},
+        rejectionRationale: 'default',
         referralRejectionReasonId,
         referralRejectionReasonDetail: undefined,
         isWithdrawn: false,

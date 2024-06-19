@@ -26,6 +26,11 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body govuk-!-margin-bottom-8">Reporting data must not be shared outside MoJ without
+                permission. Contact
+                <a href="mailto:centralhpt@justice.gov.uk" class="govuk-link">centralhpt@justice.gov.uk</a>
+                to request this.</p>
+
             <form action="{{ paths.reports.create() }}" method="post" data-reset-errors-on-submit="true">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 

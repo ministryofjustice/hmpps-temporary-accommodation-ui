@@ -8,7 +8,7 @@ import type {
   ReferralHistoryNote as Note,
 } from '@approved-premises/api'
 
-import { AssessmentSearchParameters, PaginatedResponse, ReferralRejectionBody } from '@approved-premises/ui'
+import { AssessmentSearchParameters, PaginatedResponse } from '@approved-premises/ui'
 import { URLSearchParams } from 'url'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
@@ -76,14 +76,10 @@ export default class AssessmentClient {
     })
   }
 
-  async rejectAssessment(id: string, referralRejectionBody: ReferralRejectionBody): Promise<void> {
+  async rejectAssessment(id: string, assessmentRejection: AssessmentRejection): Promise<void> {
     await this.restClient.post({
       path: paths.assessments.rejection({ id }),
-      data: {
-        document: {},
-        rejectionRationale: 'default',
-        ...referralRejectionBody,
-      } as AssessmentRejection,
+      data: assessmentRejection,
     })
   }
 

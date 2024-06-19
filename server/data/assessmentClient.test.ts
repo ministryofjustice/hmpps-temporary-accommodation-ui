@@ -1,7 +1,7 @@
 import nock from 'nock'
 
 import superagent from 'superagent'
-import { TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '../@types/shared'
+import { AssessmentRejection, TemporaryAccommodationAssessmentStatus as AssessmentStatus } from '../@types/shared'
 import config from '../config'
 import paths from '../paths/api'
 import { assessmentFactory, assessmentSummaryFactory, newReferralHistoryUserNoteFactory } from '../testutils/factories'
@@ -180,21 +180,19 @@ describe('AssessmentClient', () => {
 
   describe('rejectAssessment', () => {
     it('posts a new rejection for the assessment', async () => {
-      const referralRejectionReasonBody = {
+      const assessmentRejection: AssessmentRejection = {
+        document: {},
+        rejectionRationale: 'default',
         referralRejectionReasonId: 'rejection-reason-id',
         isWithdrawn: false,
       }
 
       fakeApprovedPremisesApi
-        .post(paths.assessments.rejection({ id: assessmentId }), {
-          document: {},
-          rejectionRationale: 'default',
-          ...referralRejectionReasonBody,
-        })
+        .post(paths.assessments.rejection({ id: assessmentId }), assessmentRejection)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200)
 
-      await assessmentClient.rejectAssessment(assessmentId, referralRejectionReasonBody)
+      await assessmentClient.rejectAssessment(assessmentId, assessmentRejection)
     })
   })
 

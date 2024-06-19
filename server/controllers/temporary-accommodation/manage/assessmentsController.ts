@@ -192,6 +192,8 @@ export default class AssessmentsController {
         }
 
         await this.assessmentsService.rejectAssessment(callConfig, id, {
+          document: {},
+          rejectionRationale: 'default',
           referralRejectionReasonId,
           referralRejectionReasonDetail: isOtherReason ? referralRejectionReasonDetail : undefined,
           isWithdrawn: ppRequestedWithdrawal === 'yes',

@@ -2,4 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type SituationOption = 'riskManagement' | 'residencyManagement' | 'bailAssessment' | 'bailSentence' | 'awaitingSentence';
+/**
+ * A generic stub for an object with a name and an ID.
+ */
+export type NamedId = {
+    id: string;
+    name: string;
+};
+

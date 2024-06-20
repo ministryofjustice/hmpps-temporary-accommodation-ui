@@ -24,3 +24,4 @@ Feature: Apply for and book a Temporary Accommodation bedspace
     And I view the ready to place assessment
     When I reject the assessment with the reason other
     Then I see the assessment has been rejected
+    And I see the rejection reason in the referral notes

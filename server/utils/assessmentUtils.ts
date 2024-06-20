@@ -3,7 +3,7 @@ import {
   AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
-  ReferralHistoryNote as Note,
+  ReferralHistorySystemNote,
   SortDirection,
   ReferralHistorySystemNote as SystemNote,
   ReferralHistoryUserNote as UserNote,
@@ -146,7 +146,7 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
       label: {
         text: isUserNote(note) ? 'Note' : systemNoteLabelText(note),
       },
-      ...(isUserNote(note) ? { html: userNoteHtml(note) } : {}),
+      html: renderNote(note),
       datetime: {
         timestamp: note.createdAt,
         type: 'datetime',
@@ -196,13 +196,36 @@ export const statusChangeMessage = (assessmentId: string, status: AssessmentStat
   }
 }
 
-const isUserNote = (note: Note): note is UserNote => {
+const isUserNote = (note: UserNote | SystemNote): note is UserNote => {
   return note.type === 'user'
 }
 
-const userNoteHtml = (note: UserNote) => formatLines(note.message)
+const isSystemNoteWithDetails = (note: UserNote | SystemNote): note is ReferralHistorySystemNote => {
+  return Boolean(note.type === 'system' && note.messageDetails)
+}
 
-const systemNoteLabelText = (note: SystemNote) => {
+export const renderSystemNote = (note: ReferralHistorySystemNote): TimelineItem['html'] => {
+  const reason = note.messageDetails.rejectionReasonDetails || note.messageDetails.rejectionReason
+  const isWithdrawn = note.messageDetails.isWithdrawn ? 'Yes' : 'No'
+
+  const lines = [`Rejection reason: ${reason}`, `Withdrawal requested by the probation practitioner: ${isWithdrawn}`]
+
+  return formatLines(lines.join('\n\n'))
+}
+
+export const renderNote = (note: UserNote | SystemNote): TimelineItem['html'] => {
+  if (isSystemNoteWithDetails(note)) {
+    return renderSystemNote(note)
+  }
+
+  if (isUserNote(note)) {
+    return formatLines(note.message)
+  }
+
+  return undefined
+}
+
+const systemNoteLabelText = (note: SystemNote): TimelineItem['label']['text'] => {
   switch (note.category) {
     case 'submitted':
       return 'Referral submitted'

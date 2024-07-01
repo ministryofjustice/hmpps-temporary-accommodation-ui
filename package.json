@@ -132,7 +132,7 @@
     "@sentry/node": "^7.14.1",
     "@types/path-to-regexp": "^1.7.0",
     "agentkeepalive": "^4.2.1",
-    "applicationinsights": "^2.3.5",
+    "applicationinsights": "^3.0.0",
     "axe-core": "^4.9.1",
     "body-parser": "^1.20.0",
     "bunyan": "^1.8.15",

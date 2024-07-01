@@ -120,3 +120,15 @@ Then('I see the assessment has been rejected', () => {
     assessmentSummaryPage.shouldShowBanner('This referral has been rejected')
   })
 })
+
+Then('I see the rejection reason in the referral notes', () => {
+  cy.then(function _() {
+    const { assessment } = this
+
+    const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
+    assessmentSummaryPage.shouldShowNote('Referral marked as rejected', [
+      'Rejection reason: Details about the rejection reason',
+      'Withdrawal requested by the probation practitioner: Yes',
+    ])
+  })
+})

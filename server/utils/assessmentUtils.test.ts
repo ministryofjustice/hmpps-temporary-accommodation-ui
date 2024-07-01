@@ -1,4 +1,5 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import type { ReferralHistoryNoteMessageDetails } from '@approved-premises/api'
 import paths from '../paths/temporary-accommodation/manage'
 import {
   assessmentFactory,
@@ -17,15 +18,21 @@ import {
   getParams,
   pathFromStatus,
   referralRejectionReasonIsOther,
+  renderNote,
+  renderSystemNote,
   statusChangeMessage,
   timelineItems,
 } from './assessmentUtils'
+import * as assessmentUtils from './assessmentUtils'
+import * as viewUtils from './viewUtils'
 import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
-import { formatLines } from './viewUtils'
 
-jest.mock('./viewUtils')
 jest.mock('./userUtils')
 jest.mock('./placeUtils')
+
+afterEach(() => {
+  jest.restoreAllMocks()
+})
 
 describe('assessmentUtils', () => {
   describe('assessmentTableRows', () => {
@@ -224,6 +231,83 @@ describe('assessmentUtils', () => {
     })
   })
 
+  describe('renderNote', () => {
+    it('renders the contents of a user note with paragraphs and line breaks', () => {
+      jest.spyOn(viewUtils, 'formatLines').mockReturnValue('formatted lines')
+      const note = referralHistoryUserNoteFactory.build({
+        message: 'message contents',
+      })
+
+      const result = renderNote(note)
+
+      expect(result).toEqual('formatted lines')
+      expect(viewUtils.formatLines).toHaveBeenCalledWith('message contents')
+    })
+
+    it('renders the contents of a system note with message details', () => {
+      jest.spyOn(assessmentUtils, 'renderSystemNote').mockReturnValue('formatted message')
+      const note = referralHistorySystemNoteFactory.build({
+        message: '',
+        messageDetails: {
+          foo: 'bar',
+        } as ReferralHistoryNoteMessageDetails,
+      })
+
+      const result = renderNote(note)
+
+      expect(result).toEqual('formatted message')
+      expect(assessmentUtils.renderSystemNote).toHaveBeenCalledWith(note)
+    })
+
+    it('returns undefined for a system note with no message details', () => {
+      const note = referralHistorySystemNoteFactory.build({
+        message: '',
+        messageDetails: undefined,
+      })
+
+      expect(renderNote(note)).toBeUndefined()
+    })
+  })
+
+  describe('renderSystemNote', () => {
+    describe('for a rejection note', () => {
+      it('returns HTML for a standard rejection reason', () => {
+        const note = referralHistorySystemNoteFactory.build({
+          category: 'rejected',
+          message: '',
+          messageDetails: {
+            rejectionReason: 'A standard reason',
+            isWithdrawn: true,
+          },
+        })
+
+        const result = renderSystemNote(note)
+
+        expect(result).toEqual(
+          '<p>Rejection reason: A standard reason</p><p>Withdrawal requested by the probation practitioner: Yes</p>',
+        )
+      })
+
+      it('returns HTML with user provided details for a another rejection reason', () => {
+        const note = referralHistorySystemNoteFactory.build({
+          category: 'rejected',
+          message: '',
+          messageDetails: {
+            rejectionReason: 'Another reason (please add)',
+            rejectionReasonDetails: 'Some details',
+            isWithdrawn: false,
+          },
+        })
+
+        const result = renderSystemNote(note)
+
+        expect(result).toEqual(
+          '<p>Rejection reason: Some details</p><p>Withdrawal requested by the probation practitioner: No</p>',
+        )
+      })
+    })
+  })
+
   describe('timelineItems', () => {
     it('returns a notes in a format compatible with the MoJ timeline component', () => {
       const userNote1 = referralHistoryUserNoteFactory.build({
@@ -234,7 +318,6 @@ describe('assessmentUtils', () => {
         createdByUserName: 'ANOTHER USER',
         createdAt: '2024-05-01',
       })
-
       const systemNote1 = referralHistorySystemNoteFactory.build({
         createdByUserName: 'SOME USER',
         createdAt: '2024-04-02',
@@ -247,11 +330,10 @@ describe('assessmentUtils', () => {
       })
 
       const notes = [systemNote1, systemNote2, userNote2, userNote1]
-
       const assessment = assessmentFactory.build({ referralHistoryNotes: notes })
       const userNoteHtml = 'some formatted html'
 
-      ;(formatLines as jest.MockedFunction<typeof formatLines>).mockImplementation(_text => userNoteHtml)
+      jest.spyOn(viewUtils, 'formatLines').mockReturnValue(userNoteHtml)
       const result = timelineItems(assessment)
 
       expect(result).toEqual([

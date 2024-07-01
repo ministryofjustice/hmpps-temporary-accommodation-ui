@@ -72,4 +72,15 @@ export default class AssessmentSummaryPage extends Page {
           })
       })
   }
+
+  shouldShowNote(title: string, content: string[]) {
+    cy.get('.moj-timeline__item')
+      .contains(title)
+      .closest('.moj-timeline__item')
+      .within(() => {
+        content.forEach(text => {
+          cy.get('.moj-timeline__description').should('contain.text', text)
+        })
+      })
+  }
 }

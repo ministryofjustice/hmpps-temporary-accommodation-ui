@@ -150,10 +150,15 @@ export default class AssessmentsController {
           },
         ],
       }
+      const updatedResponses = {
+        'Release date': DateFormats.isoDateToUIDate(assessment.releaseDate),
+        'Accommodation required from date': DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate),
+      }
 
       return res.render('temporary-accommodation/assessments/full', {
         assessment,
         rowActions,
+        updatedResponses,
       })
     }
   }

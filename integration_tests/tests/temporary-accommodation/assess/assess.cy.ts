@@ -425,29 +425,32 @@ context('Apply', () => {
             person: assessment.application.person,
             id: assessment.id,
           })
-
           cy.task('stubAssessments', { data: assessmentSummary })
-          cy.task('stubFindAssessment', assessment)
 
+          cy.task('stubFindAssessment', assessment)
           // Given I visit the referral list page
+
           const dashboardPage = DashboardPage.visit()
           dashboardPage.clickReviewAndAssessReferrals()
           const listPage = Page.verifyOnPage(ListPage, 'Unallocated referrals')
-
           // When I click on the referral
-          listPage.clickAssessment(assessment)
 
+          listPage.clickAssessment(assessment)
           // Then I should be taken to the referral summary page
+
           const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
           // And I can view an assessment summary
           assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
-
           // And I can view the full assessment
-          assessmentSummaryPage.clickFullReferral()
 
+          assessmentSummaryPage.clickFullReferral()
           const assessmentFullPage = Page.verifyOnPage(AssessmentFullPage, assessment)
 
-          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
+          const updatedResponses = {
+            'Release date': DateFormats.isoDateToUIDate(assessment.releaseDate),
+            'Accommodation required from date': DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate),
+          }
+          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument, updatedResponses)
         })
       })
 

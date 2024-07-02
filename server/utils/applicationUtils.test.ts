@@ -376,12 +376,12 @@ describe('applicationUtils', () => {
   })
 
   describe('taskResponsesToSummaryListRowItems', () => {
-    it('returns an array of summary list row items', () => {
-      const taskResponses = [
-        { 'question one': 'answer one' },
-        { 'question two': 'answer two', 'question three': 'answer three' },
-      ]
+    const taskResponses = [
+      { 'question one': 'answer one' },
+      { 'question two': 'answer two', 'question three': 'answer three' },
+    ]
 
+    it('returns an array of summary list row items', () => {
       expect(taskResponsesToSummaryListRowItems(taskResponses)).toEqual([
         {
           key: { text: 'question one' },
@@ -399,10 +399,6 @@ describe('applicationUtils', () => {
     })
 
     it('adds actions to the relevant rows', () => {
-      const taskResponses = [
-        { 'question one': 'answer one' },
-        { 'question two': 'answer two', 'question three': 'answer three' },
-      ]
       const questionOneActions = [
         {
           text: 'Change',
@@ -427,7 +423,7 @@ describe('applicationUtils', () => {
         'question three': questionThreeActions,
       }
 
-      expect(taskResponsesToSummaryListRowItems(taskResponses, actions)).toEqual([
+      expect(taskResponsesToSummaryListRowItems(taskResponses, {}, actions)).toEqual([
         {
           key: { text: 'question one' },
           value: { html: 'answer one' },
@@ -445,6 +441,27 @@ describe('applicationUtils', () => {
           actions: {
             items: questionThreeActions,
           },
+        },
+      ])
+    })
+
+    it('updates any row with the given updated data', () => {
+      const updatedResponses = {
+        'question two': 'updated answer two',
+      }
+
+      expect(taskResponsesToSummaryListRowItems(taskResponses, updatedResponses)).toEqual([
+        {
+          key: { text: 'question one' },
+          value: { html: 'answer one' },
+        },
+        {
+          key: { text: 'question two' },
+          value: { html: 'updated answer two' },
+        },
+        {
+          key: { text: 'question three' },
+          value: { html: 'answer three' },
         },
       ])
     })

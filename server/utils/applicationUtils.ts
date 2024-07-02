@@ -171,11 +171,13 @@ const firstPageOfApplicationJourney = (application: Application) => {
 
 const taskResponsesToSummaryListRowItems = (
   taskResponses: TaskResponse['content'],
-  actions?: Record<string, SummaryListActionItem[]>,
+  updatedResponses: PageResponse = {},
+  actions: Record<string, SummaryListActionItem[]> = {},
 ): SummaryListItem[] => {
   return taskResponses
     .map(taskResponse => {
-      return Object.entries(taskResponse).map(([key, value]) => {
+      return Object.entries(taskResponse).map(([key, response]) => {
+        const value = updatedResponses?.[key] || response
         const actionItems = actions?.[key]
         return {
           key: { text: key },

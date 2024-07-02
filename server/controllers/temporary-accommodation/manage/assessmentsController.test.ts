@@ -296,7 +296,7 @@ describe('AssessmentsController', () => {
   })
 
   describe('full', () => {
-    it('shows a full view of a referral with row actions', async () => {
+    it('shows a full view of a referral with row actions and updated information', async () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
       assessmentsService.findAssessment.mockResolvedValue(assessment)
@@ -322,6 +322,10 @@ describe('AssessmentsController', () => {
               visuallyHiddenText: 'the date accommodation is required',
             },
           ],
+        },
+        updatedResponses: {
+          'Release date': DateFormats.isoDateToUIDate(assessment.releaseDate),
+          'Accommodation required from date': DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate),
         },
       })
       expect(assessmentsService.findAssessment).toHaveBeenCalledWith(callConfig, assessmentId)

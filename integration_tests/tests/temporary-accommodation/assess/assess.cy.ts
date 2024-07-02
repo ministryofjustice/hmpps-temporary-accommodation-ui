@@ -439,15 +439,19 @@ context('Apply', () => {
 
           // Then I should be taken to the referral summary page
           const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+
           // And I can view an assessment summary
           assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
 
           // And I can view the full assessment
           assessmentSummaryPage.clickFullReferral()
-
           const assessmentFullPage = Page.verifyOnPage(AssessmentFullPage, assessment)
 
-          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
+          const updatedResponses = {
+            'Release date': DateFormats.isoDateToUIDate(assessment.releaseDate),
+            'Accommodation required from date': DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate),
+          }
+          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument, updatedResponses)
         })
       })
 

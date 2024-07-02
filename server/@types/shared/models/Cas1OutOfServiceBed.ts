@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { Cas1OutOfServiceBedCancellation } from './Cas1OutOfServiceBedCancellation';
 import type { Cas1OutOfServiceBedReason } from './Cas1OutOfServiceBedReason';
+import type { Cas1OutOfServiceBedRevision } from './Cas1OutOfServiceBedRevision';
 import type { Cas1OutOfServiceBedStatus } from './Cas1OutOfServiceBedStatus';
 import type { NamedId } from './NamedId';
 import type { Temporality } from './Temporality';
@@ -23,5 +24,6 @@ export type Cas1OutOfServiceBed = {
     temporality: Temporality;
     status: Cas1OutOfServiceBedStatus;
     cancellation?: Cas1OutOfServiceBedCancellation | null;
+    revisionHistory: Array<Cas1OutOfServiceBedRevision>;
 };
 

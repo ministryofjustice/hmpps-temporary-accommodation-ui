@@ -2,9 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {% from "../components/place-context-header/macro.njk" import placeContextHeader %}
-
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = "The person's referral - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
@@ -15,7 +13,6 @@
     }) }}
     {{ placeContextHeader(placeContext) }}
 {% endblock %}
-
 {% set name = personName(assessment.application.person, 'Limited access offender') %}
 {% block content %}
     {% include "../../_messages.njk" %}
@@ -23,11 +20,13 @@
     <div class="moj-identity-bar">
         <div class="moj-identity-bar__container">
             <div class="moj-identity-bar__details">
-        <span class="moj-identity-bar__title">
-          <span class="govuk-caption-xl">Review referral</span>
-          <h1 class="govuk-heading-xl">{{ name }}
-              {{ assessmentStatusTag(assessment.status) | safe }}</h1>
-        </span>
+                <span class="moj-identity-bar__title">
+                    <span class="govuk-caption-xl">Review referral</span>
+                    <h1 class="govuk-heading-xl">
+                        {{ name }}
+                        {{ assessmentStatusTag(assessment.status) | safe }}
+                    </h1>
+                </span>
             </div>
         </div>
     </div>
@@ -36,17 +35,15 @@
         {% for section in assessment.application.document.sections %}
             <h2 class="govuk-heading-l govuk-!-margin-top-3">{{ section.title }}</h2>
             {% for task in section.tasks %}
-
                 {{ govukSummaryList({
                     card: {
                         title: {
                             text: task.title
                         }
                     },
-                    rows: taskResponsesToSummaryListRowItems(task.content)
+                    rows: taskResponsesToSummaryListRowItems(task.content, updatedResponses, rowActions)
                 }) }}
             {% endfor %}
         {% endfor %}
     </div>
-
 {% endblock %}

@@ -10,42 +10,34 @@ import { fakeObject } from '../utils'
 import applicationFactory from './application'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 
-class AssessmentFactory extends Factory<Assessment> {
-  createdXDaysAgo(days: number) {
-    const today = new Date()
-    return this.params({
-      createdAt: DateFormats.dateObjToIsoDate(new Date(today.getFullYear(), today.getMonth(), today.getDate() - days)),
-    })
-  }
+export default Factory.define<Assessment>(() => {
+  const releaseDate = DateFormats.dateObjToIsoDate(faker.date.soon({ days: 10 }))
+  const accommodationRequiredFromDate = DateFormats.dateObjToIsoDate(faker.date.soon({ days: 3, refDate: releaseDate }))
 
-  acceptedAssessment() {
-    return this.params({
-      data: { 'make-a-decision': { 'make-a-decision': { decision: 'releaseDate' } } },
-    })
+  return {
+    id: faker.string.uuid(),
+    application: applicationFactory.build(),
+    summaryData,
+    allocatedToStaffMemberId: faker.string.uuid(),
+    schemaVersion: faker.string.uuid(),
+    outdatedSchema: false,
+    createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    allocatedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+    decision: faker.helpers.arrayElement(['accepted' as const, 'rejected' as const, undefined]),
+    data: fakeObject(),
+    clarificationNotes: [],
+    rejectionRationale: faker.lorem.sentence(),
+    referralHistoryNotes: referralHistoryUserNoteFactory.buildList(5),
+    service: 'CAS3',
+    status: faker.helpers.arrayElement([
+      'unallocated' as const,
+      'in_review' as const,
+      'ready_to_place' as const,
+      'closed' as const,
+      'rejected' as const,
+    ]),
+    releaseDate,
+    accommodationRequiredFromDate,
   }
-}
-
-export default AssessmentFactory.define(() => ({
-  id: faker.string.uuid(),
-  application: applicationFactory.withReleaseDate().build(),
-  summaryData,
-  allocatedToStaffMemberId: faker.string.uuid(),
-  schemaVersion: faker.string.uuid(),
-  outdatedSchema: false,
-  createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-  allocatedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-  submittedAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-  decision: faker.helpers.arrayElement(['accepted' as const, 'rejected' as const, undefined]),
-  data: fakeObject(),
-  clarificationNotes: [],
-  rejectionRationale: faker.lorem.sentence(),
-  referralHistoryNotes: referralHistoryUserNoteFactory.buildList(5),
-  service: 'CAS3',
-  status: faker.helpers.arrayElement([
-    'unallocated' as const,
-    'in_review' as const,
-    'ready_to_place' as const,
-    'closed' as const,
-    'rejected' as const,
-  ]),
-}))
+})

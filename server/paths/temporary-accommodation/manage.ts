@@ -126,6 +126,14 @@ const paths = {
     confirm: assessmentPath.path(':status'),
     update: assessmentPath.path(':status'),
     notes: { create: assessmentPath.path('/notes') },
+    changeDate: {
+      releaseDate: assessmentPath.path('change-release-date'),
+      accommodationRequiredFromDate: assessmentPath.path('change-accommodation-required-from-date'),
+    },
+    updateDate: {
+      releaseDate: assessmentPath.path('update-release-date'),
+      accommodationRequiredFromDate: assessmentPath.path('update-accommodation-required-from-date'),
+    },
   },
 }
 

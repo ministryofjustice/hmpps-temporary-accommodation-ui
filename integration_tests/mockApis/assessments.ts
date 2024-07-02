@@ -1,5 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, AssessmentSummary } from '../../server/@types/shared'
+import { AnyValue, Assessment, AssessmentSummary } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
@@ -155,4 +155,37 @@ export default {
     ).body.requests,
   stubCreateAssessmentNoteErrors: (args: { assessmentId: string; params: Array<string> }): SuperAgentRequest =>
     stubFor(errorStub(args.params, api.assessments.notes({ id: args.assessmentId }), 'POST')),
+  stubUpdateAssessment: (assessment: Assessment): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        url: api.assessments.update({ id: assessment.id }),
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {},
+      },
+    }),
+  stubUpdateAssessmentError: (args: {
+    assessment: Assessment
+    errorBody: Record<string, AnyValue>
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'PUT',
+        url: api.assessments.update({ id: args.assessment.id }),
+      },
+      response: {
+        status: 400,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: {
+          type: 'https://example.net/validation-error',
+          title: 'Bad request',
+          status: 400,
+          detail: 'You provided invalid request parameters',
+          ...args.errorBody,
+        },
+      },
+    }),
 }

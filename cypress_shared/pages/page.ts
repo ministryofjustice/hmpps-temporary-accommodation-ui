@@ -195,11 +195,12 @@ export default abstract class Page extends Component {
     cy.get('label').contains(label).parent().find('input, textarea').clear()
   }
 
-  completeDateInputs(prefix: string, date: string): void {
-    const parsedDate = DateFormats.isoToDateObj(date)
-    cy.get(`#${prefix}-day`).type(parsedDate.getDate().toString())
-    cy.get(`#${prefix}-month`).type(`${parsedDate.getMonth() + 1}`)
-    cy.get(`#${prefix}-year`).type(parsedDate.getFullYear().toString())
+  completeDateInputs(prefix: string, datetime: string): void {
+    const date = datetime.split('T')[0]
+    const [year, month, day] = date.split('-').map(Number).map(String)
+    cy.get(`#${prefix}-day`).clear().type(day)
+    cy.get(`#${prefix}-month`).clear().type(month)
+    cy.get(`#${prefix}-year`).clear().type(year)
   }
 
   clickSubmit(text = ''): void {

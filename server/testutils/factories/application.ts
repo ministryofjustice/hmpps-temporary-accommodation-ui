@@ -10,18 +10,6 @@ import { fullPersonFactory } from './person'
 import risksFactory from './risks'
 
 class ApplicationFactory extends Factory<TemporaryAccommodationApplication> {
-  withReleaseDate(releaseDate = DateFormats.dateObjToIsoDate(faker.date.soon())) {
-    return this.params({
-      data: {
-        ...fakeObject(),
-        'basic-information': {
-          'release-date': { releaseDate, knowReleaseDate: 'yes' },
-          'placement-date': { startDateSameAsReleaseDate: 'yes' },
-        },
-      },
-    })
-  }
-
   withOptionalOasysSectionsSelected(needsLinkedToReoffending: Array<OASysSection>, otherNeeds: Array<OASysSection>) {
     return this.params({
       data: {

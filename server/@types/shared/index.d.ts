@@ -86,6 +86,8 @@ export type { Cas1ApplicationUserDetails } from './models/Cas1ApplicationUserDet
 export type { Cas1OutOfServiceBed } from './models/Cas1OutOfServiceBed';
 export type { Cas1OutOfServiceBedCancellation } from './models/Cas1OutOfServiceBedCancellation';
 export type { Cas1OutOfServiceBedReason } from './models/Cas1OutOfServiceBedReason';
+export type { Cas1OutOfServiceBedRevision } from './models/Cas1OutOfServiceBedRevision';
+export type { Cas1OutOfServiceBedRevisionType } from './models/Cas1OutOfServiceBedRevisionType';
 export type { Cas1OutOfServiceBedSortField } from './models/Cas1OutOfServiceBedSortField';
 export type { Cas1OutOfServiceBedStatus } from './models/Cas1OutOfServiceBedStatus';
 export type { Cas1ReportName } from './models/Cas1ReportName';
@@ -207,6 +209,7 @@ export type { PrisonCaseNote } from './models/PrisonCaseNote';
 export type { ProbationDeliveryUnit } from './models/ProbationDeliveryUnit';
 export type { ProbationRegion } from './models/ProbationRegion';
 export type { Problem } from './models/Problem';
+export type { ProfileResponse } from './models/ProfileResponse';
 export type { PropertyStatus } from './models/PropertyStatus';
 export type { Reallocation } from './models/Reallocation';
 export type { ReferralHistoryNote } from './models/ReferralHistoryNote';

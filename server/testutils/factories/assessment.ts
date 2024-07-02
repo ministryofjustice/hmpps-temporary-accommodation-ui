@@ -16,7 +16,7 @@ export default Factory.define<Assessment>(() => {
 
   return {
     id: faker.string.uuid(),
-    application: applicationFactory.withReleaseDate().build(),
+    application: applicationFactory.build(),
     summaryData,
     allocatedToStaffMemberId: faker.string.uuid(),
     schemaVersion: faker.string.uuid(),

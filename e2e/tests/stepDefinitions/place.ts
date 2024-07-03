@@ -18,13 +18,14 @@ const getAssessment = (status: AssessmentStatus) => {
   const application = applicationFactory.build({
     person,
     data: applicationData,
-    arrivalDate: applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
   })
 
   const assessment = assessmentFactory.build({
     application,
     status,
     createdAt: DateFormats.dateObjToIsoDate(new Date()),
+    accommodationRequiredFromDate:
+      applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
   })
 
   cy.wrap(assessment).as('assessment')

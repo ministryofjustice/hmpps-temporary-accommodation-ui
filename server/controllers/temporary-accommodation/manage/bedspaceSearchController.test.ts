@@ -5,7 +5,6 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import {
-  applicationFactory,
   assessmentFactory,
   bedSearchParametersFactory,
   bedSearchResultsFactory,
@@ -73,9 +72,7 @@ describe('BedspaceSearchController', () => {
       request.query = {}
       const placeContext = placeContextFactory.build({
         assessment: assessmentFactory.build({
-          application: applicationFactory.build({
-            arrivalDate: '2024-02-01',
-          }),
+          accommodationRequiredFromDate: '2024-02-01',
         }),
       })
 

@@ -69,6 +69,11 @@ jobs:
       - store_artifacts:
           path: e2e/videos
           destination: videos
+      - slack/notify:
+          event: fail
+          channel: << pipeline.parameters.alerts-slack-channel >>
+          template: basic_fail_1
+
 workflows:
   version: 2
   build-test-and-deploy:

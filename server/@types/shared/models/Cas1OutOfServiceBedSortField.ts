@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas1OutOfServiceBedSortField = 'premisesName' | 'roomName' | 'bedName' | 'outOfServiceFrom' | 'outOfServiceTo' | 'reason' | 'daysLost';
+export type Cas1OutOfServiceBedSortField = 'premisesName' | 'roomName' | 'bedName' | 'startDate' | 'endDate' | 'reason' | 'daysLost';

@@ -1,5 +1,77 @@
 [
   {
+    "id": "d8e04fa1-9757-4681-bfab-6c61913c8463",
+    "name": "Approved Premises",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "247ae3f4-7958-4c59-97ed-272a39ad411c",
+    "name": "Friends/Family (settled)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "2236cd7e-32c5-4784-a461-8f0aead1d386",
+    "name": "Householder (Owner - freehold or leasehold)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "d3b9f02e-c3a5-475b-a5dd-124c058900d9",
+    "name": "Long Term Residential Healthcare",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "587dc0dc-9073-4992-9d58-5576753050e9",
+    "name": "Rental accommodation - private rental",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "12c739fa-7bb1-416d-bbf2-71362578a7f3",
+    "name": "Rental accommodation - social rental",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "3de4665a-c848-4797-ba80-502cacc6f7d7",
+    "name": "Friends/Family (transient)",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "a90a77a3-5662-4fa8-85ab-07d0c085052f",
+    "name": "Homeless - Shelter/Emergency Hostel/Campsite",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "33244330-87e9-4cc6-9940-f78586585436",
+    "name": "Homeless - Rough Sleeping",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "15fb0af2-3406-49c9-81ed-5e42bddf9fc2",
+    "name": "Homeless - Squat",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "91158ed5-467e-4ee8-90d9-4f17a5dac82f",
+    "name": "Transient/Short term accommodation",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
+    "id": "9e18dc4d-297b-4a9c-86cc-31238d339b3a",
+    "name": "Accommodation secured via AfEO – Accommodation for Ex-Offenders Scheme",
+    "isActive": true,
+    "serviceScope": "temporary-accommodation"
+  },
+  {
     "id": "bd7425b0-ee9a-491c-a64b-c6a034847778",
     "name": "CAS2",
     "isActive": true,
@@ -36,14 +108,14 @@
     "serviceScope": "temporary-accommodation"
   },
   {
-    "id": "ab35e40c-17c3-460b-9986-16352e1286a9",
-    "name": "Unknown (the probation practitioner has not added the move-on category to NDelius)",
+    "id": "4874c13a-fced-4d73-869d-1ac0eff45f66",
+    "name": "They’re unlawfully at large or at large",
     "isActive": true,
     "serviceScope": "temporary-accommodation"
   },
   {
-    "id": "4874c13a-fced-4d73-869d-1ac0eff45f66",
-    "name": "They’re unlawfully at large or at large",
+    "id": "5d622186-0ffe-4daf-9bd8-03b8bb8086e8",
+    "name": "Pending (no category has been added to NDelius)",
     "isActive": true,
     "serviceScope": "temporary-accommodation"
   }

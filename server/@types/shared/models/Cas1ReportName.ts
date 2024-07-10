@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas1ReportName = 'applications' | 'applicationsV2' | 'dailyMetrics' | 'lostBeds' | 'placementApplications' | 'placementMatchingOutcomes' | 'requestsForPlacement';
+export type Cas1ReportName = 'applications' | 'applicationsV2' | 'dailyMetrics' | 'lostBeds' | 'placementApplications' | 'placementMatchingOutcomes' | 'placementMatchingOutcomesV2' | 'requestsForPlacement';

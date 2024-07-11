@@ -376,12 +376,12 @@ describe('applicationUtils', () => {
   })
 
   describe('taskResponsesToSummaryListRowItems', () => {
-    it('returns an array of summary list row items', () => {
-      const taskResponses = [
-        { 'question one': 'answer one' },
-        { 'question two': 'answer two', 'question three': 'answer three' },
-      ]
+    const taskResponses = [
+      { 'question one': 'answer one' },
+      { 'question two': 'answer two', 'question three': 'answer three' },
+    ]
 
+    it('returns an array of summary list row items', () => {
       expect(taskResponsesToSummaryListRowItems(taskResponses)).toEqual([
         {
           key: { text: 'question one' },
@@ -390,6 +390,74 @@ describe('applicationUtils', () => {
         {
           key: { text: 'question two' },
           value: { html: 'answer two' },
+        },
+        {
+          key: { text: 'question three' },
+          value: { html: 'answer three' },
+        },
+      ])
+    })
+
+    it('adds actions to the relevant rows', () => {
+      const questionOneActions = [
+        {
+          text: 'Change',
+          href: '/edit/1',
+          visuallyHiddenText: 'question one',
+        },
+        {
+          text: 'Remove',
+          href: '/remove/1',
+          visuallyHiddenText: 'question one',
+        },
+      ]
+      const questionThreeActions = [
+        {
+          text: 'Change',
+          href: '/edit/3',
+          visuallyHiddenText: 'question three',
+        },
+      ]
+      const actions = {
+        'question one': questionOneActions,
+        'question three': questionThreeActions,
+      }
+
+      expect(taskResponsesToSummaryListRowItems(taskResponses, {}, actions)).toEqual([
+        {
+          key: { text: 'question one' },
+          value: { html: 'answer one' },
+          actions: {
+            items: questionOneActions,
+          },
+        },
+        {
+          key: { text: 'question two' },
+          value: { html: 'answer two' },
+        },
+        {
+          key: { text: 'question three' },
+          value: { html: 'answer three' },
+          actions: {
+            items: questionThreeActions,
+          },
+        },
+      ])
+    })
+
+    it('updates any row with the given updated data', () => {
+      const updatedResponses = {
+        'question two': 'updated answer two',
+      }
+
+      expect(taskResponsesToSummaryListRowItems(taskResponses, updatedResponses)).toEqual([
+        {
+          key: { text: 'question one' },
+          value: { html: 'answer one' },
+        },
+        {
+          key: { text: 'question two' },
+          value: { html: 'updated answer two' },
         },
         {
           key: { text: 'question three' },

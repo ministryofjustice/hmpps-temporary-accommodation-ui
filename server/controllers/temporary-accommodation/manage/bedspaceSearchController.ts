@@ -34,7 +34,7 @@ export default class BedspaceSearchController {
       const query =
         (req.query as BedspaceSearchQuery).durationDays !== undefined ? (req.query as BedspaceSearchQuery) : undefined
 
-      const placeContextArrivalDate = placeContext?.assessment.application.arrivalDate
+      const placeContextArrivalDate = placeContext?.assessment.accommodationRequiredFromDate
       const startDatePrefill = placeContextArrivalDate
         ? DateFormats.isoToDateAndTimeInputs(placeContextArrivalDate, 'startDate')
         : {}

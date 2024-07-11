@@ -54,7 +54,7 @@ export default class BedspaceSearchPage extends Page {
   }
 
   shouldShowPrefilledSearchParametersFromPlaceContext(placeContext: NonNullable<PlaceContext>) {
-    this.shouldShowDateInputsByLegend('Available from', placeContext.assessment.application.arrivalDate)
+    this.shouldShowDateInputsByLegend('Available from', placeContext.assessment.accommodationRequiredFromDate)
   }
 
   completeForm(searchParameters: BedSearchParameters) {

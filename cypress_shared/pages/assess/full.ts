@@ -4,6 +4,7 @@ import type { Section } from '../../../server/utils/applicationUtils'
 import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { personName } from '../../../server/utils/personUtils'
 import Page from '../page'
+import { PageResponse } from '../../../server/@types/ui'
 
 export default class AssessmentFullPage extends Page {
   constructor(private readonly assessment: Assessment) {
@@ -17,7 +18,10 @@ export default class AssessmentFullPage extends Page {
     return new AssessmentFullPage(assessment)
   }
 
-  shouldShowAssessment(applicationTranslatedDocument: Record<'sections', Array<Section>>) {
+  shouldShowAssessment(
+    applicationTranslatedDocument: Record<'sections', Array<Section>>,
+    updatedResponses: PageResponse = {},
+  ) {
     applicationTranslatedDocument.sections.forEach(section => {
       cy.get('h2').contains(section.title)
 
@@ -28,7 +32,8 @@ export default class AssessmentFullPage extends Page {
           .next('div')
           .within(() => {
             task.content.forEach(content => {
-              Object.entries(content).forEach(([key, value]) => {
+              Object.entries(content).forEach(([key, response]) => {
+                const value = updatedResponses?.[key] || response
                 if (typeof value === 'string') {
                   value.split('\n').forEach(line => {
                     this.assertDefinition(key, line)
@@ -54,5 +59,9 @@ export default class AssessmentFullPage extends Page {
           })
       })
     })
+  }
+
+  clickChange(label: string) {
+    cy.get('a').contains(`Change ${label}`).click()
   }
 }

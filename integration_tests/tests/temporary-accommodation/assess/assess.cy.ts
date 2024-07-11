@@ -1,6 +1,7 @@
 import { TemporaryAccommodationAssessmentSummary } from '@approved-premises/api'
-import { AssessmentSearchApiStatus } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, AssessmentUpdatableDateField } from '@approved-premises/ui'
 import { sentence } from 'case'
+import { addDays } from 'date-fns'
 import AssessmentConfirmPage from '../../../../cypress_shared/pages/assess/confirm'
 import AssessmentFullPage from '../../../../cypress_shared/pages/assess/full'
 import ListPage from '../../../../cypress_shared/pages/assess/list'
@@ -16,6 +17,8 @@ import {
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
 import AssessmentRejectionConfirmPage from '../../../../cypress_shared/pages/assess/confirmRejection'
+import ChangeDatePage from '../../../../cypress_shared/pages/assess/changeDate'
+import { DateFormats } from '../../../../server/utils/dateUtils'
 
 const pagination: MockPagination = {
   totalResults: 23,
@@ -436,15 +439,19 @@ context('Apply', () => {
 
           // Then I should be taken to the referral summary page
           const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+
           // And I can view an assessment summary
           assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
 
           // And I can view the full assessment
           assessmentSummaryPage.clickFullReferral()
-
           const assessmentFullPage = Page.verifyOnPage(AssessmentFullPage, assessment)
 
-          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument)
+          const updatedResponses = {
+            'Release date': DateFormats.isoDateToUIDate(assessment.releaseDate),
+            'Accommodation required from date': DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate),
+          }
+          assessmentFullPage.shouldShowAssessment(applicationTranslatedDocument, updatedResponses)
         })
       })
 
@@ -505,6 +512,159 @@ context('Apply', () => {
 
         // And I should see an error messags
         postSumbmitSummaryAssessmentPage.shouldShowErrorMessagesForFields(['message'])
+      })
+
+      describe('editing dates', () => {
+        it("allows me to edit the person's release date", () => {
+          const assessment = assessmentFactory.build()
+
+          cy.task('stubFindAssessment', assessment)
+          cy.task('stubUpdateAssessment', assessment)
+
+          const existingDate = assessment.releaseDate
+          const updatedDate = DateFormats.dateObjToIsoDate(addDays(DateFormats.isoToDateObj(existingDate), -2))
+
+          // Given I visit the full assessment page
+          const assessmentPage = AssessmentFullPage.visit(assessment)
+
+          // When I click on Change next to Release date
+          assessmentPage.clickChange("the person's release date")
+
+          // Then I see the form to change the release date
+          const changeReleaseDatePage = Page.verifyOnPage(ChangeDatePage, 'releaseDate', assessment)
+
+          // And the form shows the existing date
+          changeReleaseDatePage.shouldShowDateInputs('releaseDate', assessment.releaseDate)
+
+          // When I submit a new date
+          changeReleaseDatePage.completeForm(updatedDate)
+
+          // Then I should see the full referral page with a success message
+          const fullReferralPage = Page.verifyOnPage(AssessmentFullPage, assessment)
+
+          fullReferralPage.shouldShowBanner('The referral has been updated with your changes')
+        })
+
+        it('allows me to edit the date the accommodation is required', () => {
+          const assessment = assessmentFactory.build()
+
+          cy.task('stubFindAssessment', assessment)
+          cy.task('stubUpdateAssessment', assessment)
+
+          const existingDate = assessment.accommodationRequiredFromDate
+          const updatedDate = DateFormats.dateObjToIsoDate(addDays(DateFormats.isoToDateObj(existingDate), 3))
+
+          // Given I visit the full assessment page
+          const assessmentPage = AssessmentFullPage.visit(assessment)
+
+          // When I click on Change next to Accommodation required from date
+          assessmentPage.clickChange('the date accommodation is required')
+
+          // Then I see the form to change the accommodation required from date
+          const changeAccommodationRequiredFromPage = Page.verifyOnPage(
+            ChangeDatePage,
+            'accommodationRequiredFromDate',
+            assessment,
+          )
+
+          // And the form shows the existing date
+          changeAccommodationRequiredFromPage.shouldShowDateInputs(
+            'accommodationRequiredFromDate',
+            assessment.accommodationRequiredFromDate,
+          )
+
+          // When I submit a new date
+          changeAccommodationRequiredFromPage.completeForm(updatedDate)
+
+          // Then I should see the full referral page with a success message
+          const fullReferralPage = Page.verifyOnPage(AssessmentFullPage, assessment)
+
+          fullReferralPage.shouldShowBanner('The referral has been updated with your changes')
+        })
+
+        describe('with errors', () => {
+          const dateFields: AssessmentUpdatableDateField[] = ['releaseDate', 'accommodationRequiredFromDate']
+
+          dateFields.forEach(dateField => {
+            it(`shows when the ${dateField} field is empty`, () => {
+              const assessment = assessmentFactory.build()
+
+              cy.task('stubFindAssessment', assessment)
+
+              // Given I am changing the release date for a referral
+              const changeDatePage = ChangeDatePage.visit(dateField, assessment)
+
+              // When I submit the form with no date
+              changeDatePage.clearDateInputs(dateField)
+              changeDatePage.clickSubmit('Save and continue')
+
+              // Then I see an error
+              changeDatePage.shouldShowErrorMessagesForFields([dateField], 'empty', 'assessmentUpdate')
+            })
+
+            it(`shows when the ${dateField} field is invalid`, () => {
+              const assessment = assessmentFactory.build()
+
+              cy.task('stubFindAssessment', assessment)
+
+              // Given I am changing the release date for a referral
+              const changeDatePage = ChangeDatePage.visit(dateField, assessment)
+
+              // When I submit the form with an invalid date
+              changeDatePage.completeForm('32-32-32')
+
+              // Then I see an error
+              changeDatePage.shouldShowErrorMessagesForFields([dateField], 'invalid', 'assessmentUpdate')
+            })
+          })
+
+          it(`shows when the release date submitted is after the accommodation required from date`, () => {
+            const assessment = assessmentFactory.build()
+
+            cy.task('stubFindAssessment', assessment)
+            cy.task('stubUpdateAssessmentError', {
+              assessment,
+              errorBody: { detail: 'Release date cannot be after accommodation required from date: 2024-06-19' },
+            })
+
+            // Given I am changing the release date for a referral
+            const changeDatePage = ChangeDatePage.visit('releaseDate', assessment)
+
+            // When I submit the form with a date that returns an error
+            changeDatePage.completeForm('2024-06-20')
+
+            // Then I see an error
+            changeDatePage.shouldShowErrorMessagesForFields(
+              ['releaseDate'],
+              'afterAccommodationRequiredFromDate',
+              'assessmentUpdate',
+            )
+          })
+
+          it(`shows when the accommodation required from date submitted is before the release date`, () => {
+            const assessment = assessmentFactory.build()
+
+            cy.task('stubFindAssessment', assessment)
+            cy.task('stubUpdateAssessmentError', {
+              assessment,
+              errorBody: { detail: 'Accommodation required from date cannot be before release date: 2024-06-19' },
+            })
+
+            // Given I am changing the release date for a referral
+            const changeDatePage = ChangeDatePage.visit('accommodationRequiredFromDate', assessment)
+
+            // When I submit the form with a date that returns an error
+            changeDatePage.completeForm('2024-06-18')
+
+            // Then I see an error
+            // changeDatePage.shouldShowCustomSummaryError('Enter a date which is ')
+            changeDatePage.shouldShowErrorMessagesForFields(
+              ['accommodationRequiredFromDate'],
+              'beforeReleaseDate',
+              'assessmentUpdate',
+            )
+          })
+        })
       })
     })
   })

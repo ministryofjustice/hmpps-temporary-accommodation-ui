@@ -366,4 +366,6 @@ export type AssessmentSearchParameters = {
   crn?: string
 }
 
+export type AssessmentUpdatableDateField = 'releaseDate' | 'accommodationRequiredFromDate'
+
 export type BedspaceStatus = 'online' | 'archived'

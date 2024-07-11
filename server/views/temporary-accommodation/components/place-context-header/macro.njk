@@ -2,34 +2,37 @@
 
 {% macro placeContextHeader(placeContext) %}
 
-  {% if placeContext %}
-    {% set person = placeContext.assessment.application.person %}
+    {% if placeContext %}
+        {% set person = placeContext.assessment.application.person %}
 
-    <div class="place-context-header govuk-body">
-      <strong class="govuk-heading-s govuk-!-margin-bottom-2">Person to place</strong>
-      <div class="place-context-header__attribute-container govuk-!-margin-bottom-2">
-        <div>{{ personName(person, 'Limited access offender') }}</div>
-        {% if isFullPerson(person) %}
-          <div>Date of birth: {{ formatDate(person.dateOfBirth, {format: 'short'}) }}</div>
-          {% if person.genderIdentity %}
-            <div>Gender identity: {{ person.genderIdentity }}</div>
-          {% else %}
-            <div>Sex: {{ person.sex }}</div>
-          {% endif %}
-        {% endif %}
-        <div>CRN: {{ person.crn }}</div>
-        {% if placeContext.assessment.application.arrivalDate %}
-          <div>Accommodation required from: {{ formatDate(placeContext.assessment.application.arrivalDate, {format: 'short'}) }}</div>
-        {% endif %}
-        {% if placeContext.assessment.summaryData.isAbleToShare === true %}
-          <div>Suitable to share: Yes</div>
-        {% endif %}
-        {% if placeContext.assessment.summaryData.isAbleToShare === false %}
-          <div>Suitable to share: No</div>
-        {% endif %}
-      </div>
-      <a class="govuk-link" href="{{ addPlaceContext(paths.assessments.summary({ id: placeContext.assessment.id })) }}" rel="noreferrer noopener" target="_blank">View referral summary (opens in new tab)</a>
-    </div>
-  {% endif %}
+        <div class="place-context-header govuk-body">
+            <strong class="govuk-heading-s govuk-!-margin-bottom-2">Person to place</strong>
+            <div class="place-context-header__attribute-container govuk-!-margin-bottom-2">
+                <div>{{ personName(person, 'Limited access offender') }}</div>
+                {% if isFullPerson(person) %}
+                    <div>Date of birth: {{ formatDate(person.dateOfBirth, {format: 'short'}) }}</div>
+                    {% if person.genderIdentity %}
+                        <div>Gender identity: {{ person.genderIdentity }}</div>
+                    {% else %}
+                        <div>Sex: {{ person.sex }}</div>
+                    {% endif %}
+                {% endif %}
+                <div>CRN: {{ person.crn }}</div>
+                {% if placeContext.assessment.accommodationRequiredFromDate %}
+                    {% set accommodationRequiredFromDate = formatDate(placeContext.assessment.accommodationRequiredFromDate, {format: 'short'}) %}
+                    <div>Accommodation required from: {{ accommodationRequiredFromDate }}</div>
+                {% endif %}
+                {% if placeContext.assessment.summaryData.isAbleToShare === true %}
+                    <div>Suitable to share: Yes</div>
+                {% endif %}
+                {% if placeContext.assessment.summaryData.isAbleToShare === false %}
+                    <div>Suitable to share: No</div>
+                {% endif %}
+            </div>
+            <a class="govuk-link"
+               href="{{ addPlaceContext(paths.assessments.summary({ id: placeContext.assessment.id })) }}"
+               rel="noreferrer noopener" target="_blank">View referral summary (opens in new tab)</a>
+        </div>
+    {% endif %}
 
 {% endmacro %}

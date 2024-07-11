@@ -12,6 +12,8 @@ import QueryString from 'qs'
 import {
   AssessmentSearchApiStatus,
   AssessmentSearchParameters,
+  AssessmentUpdatableDateField,
+  ErrorSummary,
   MessageContents,
   ReferenceData,
   TableRow,
@@ -25,6 +27,8 @@ import { assertUnreachable, convertToTitleCase } from './utils'
 import { formatLines } from './viewUtils'
 import { statusName, statusTag } from './assessmentStatusUtils'
 import { sortHeader } from './sortHeader'
+import { SanitisedError } from '../sanitisedError'
+import { insertBespokeError, insertGenericError } from './validation'
 
 export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showStatus: boolean = false): TableRow => {
   const row = [
@@ -278,4 +282,69 @@ export const pathFromStatus = (status: AssessmentSearchApiStatus) => {
   if (status === 'archived') pathStatus = 'archive'
 
   return paths.assessments[pathStatus]({})
+}
+
+export const insertUpdateDateError = (err: SanitisedError, assessmentId: string) => {
+  const { detail } = err.data as { detail: string }
+  const errorSummary: ErrorSummary[] = []
+  let errorType: string
+  let dateField: AssessmentUpdatableDateField
+
+  if (detail.match('Release date cannot be after accommodation required from date')) {
+    const requiredFromDate = detail.split(':')[1].trim()
+    errorSummary.push({
+      html: `Enter a date which is on or before when accommodation is required from (${DateFormats.isoDateToUIDate(
+        requiredFromDate,
+      )}). You can <a class="govuk-link" href="${paths.assessments.changeDate.accommodationRequiredFromDate({
+        id: assessmentId,
+      })}">edit the ‘accommodation required from’ date</a>`,
+    })
+    dateField = 'releaseDate'
+    errorType = 'afterAccommodationRequiredFromDate'
+  }
+
+  if (detail.match('Accommodation required from date cannot be before release date')) {
+    const releaseDate = detail.split(':')[1].trim()
+    errorSummary.push({
+      html: `Enter a date which is on or after the release date (${DateFormats.isoDateToUIDate(
+        releaseDate,
+      )}). You can <a class="govuk-link" href="${paths.assessments.changeDate.releaseDate({
+        id: assessmentId,
+      })}">edit the release date</a>`,
+    })
+    dateField = 'accommodationRequiredFromDate'
+    errorType = 'beforeReleaseDate'
+  }
+
+  if (errorSummary.length && errorType) {
+    insertBespokeError(err, {
+      errorTitle: 'There is a problem',
+      errorSummary,
+    })
+    insertGenericError(err, dateField, errorType)
+  }
+}
+
+type ChangeDatePageContent = {
+  docTitle: string
+  title: string
+  hint?: string
+}
+
+export const changeDatePageContent = (
+  dateField: AssessmentUpdatableDateField,
+  assessment: Assessment,
+): ChangeDatePageContent => {
+  if (dateField === 'releaseDate') {
+    return {
+      docTitle: 'Change release date',
+      title: `What is ${personName(assessment.application.person)}'s release date?`,
+      hint: 'This could include the release date from custody, an Approved Premises, or CAS2 (formerly Bail Accommodation Support Services)',
+    }
+  }
+
+  return {
+    docTitle: 'Change date accommodation is required from',
+    title: 'What date is accommodation required from?',
+  }
 }

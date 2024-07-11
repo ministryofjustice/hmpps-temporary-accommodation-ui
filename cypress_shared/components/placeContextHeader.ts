@@ -14,8 +14,8 @@ export default class PlaceContextHeaderComponent extends Component {
 
   shouldShowPlaceContextDetails(): void {
     cy.get('.place-context-header').within(() => {
-      const { application } = this.placeContext!.assessment
-      const { person } = application
+      const { assessment } = this.placeContext
+      const { person } = assessment.application
 
       cy.root().should('contain', personName(person, 'Limited access offender'))
       cy.root().should('contain', 'View referral summary (opens in new tab)')
@@ -37,7 +37,7 @@ export default class PlaceContextHeaderComponent extends Component {
       cy.root().should('contain', `CRN: ${person.crn}`)
       cy.root().should(
         'contain',
-        `Accommodation required from: ${DateFormats.isoDateToUIDate(application.arrivalDate, { format: 'short' })}`,
+        `Accommodation required from: ${DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate, { format: 'short' })}`,
       )
       cy.root().should('contain', 'Suitable to share: Yes')
     })

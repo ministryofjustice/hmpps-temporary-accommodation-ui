@@ -2,6 +2,7 @@ import { AssessmentSearchApiStatus } from '@approved-premises/ui'
 import type { ReferralHistoryNoteMessageDetails } from '@approved-premises/api'
 import paths from '../paths/temporary-accommodation/manage'
 import {
+  applicationFactory,
   assessmentFactory,
   assessmentSummaryFactory,
   personFactory,
@@ -11,11 +12,14 @@ import {
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
+import * as validation from './validation'
 import {
   assessmentActions,
   assessmentTableRows,
+  changeDatePageContent,
   createTableHeadings,
   getParams,
+  insertUpdateDateError,
   pathFromStatus,
   referralRejectionReasonIsOther,
   renderNote,
@@ -527,6 +531,94 @@ describe('assessmentUtils', () => {
       ['/review-and-assess/archive', 'archived'],
     ])('returns %s for status %s', (path, status: AssessmentSearchApiStatus) => {
       expect(pathFromStatus(status)).toEqual(path)
+    })
+  })
+
+  describe('insertUpdateDateErrors', () => {
+    beforeEach(() => {
+      jest.spyOn(validation, 'insertBespokeError')
+      jest.spyOn(validation, 'insertGenericError')
+    })
+
+    it('inserts an error for a release date after the accommodation required date', () => {
+      const error = {
+        status: 400,
+        data: {
+          detail: 'Release date cannot be after accommodation required from date: 2024-06-06',
+        },
+        stack: '',
+        message: '',
+      }
+
+      insertUpdateDateError(error, 'assessment-id')
+
+      expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          {
+            html: `Enter a date which is on or before when accommodation is required from (6 June 2024). You can <a class="govuk-link" href="${paths.assessments.changeDate.accommodationRequiredFromDate(
+              { id: 'assessment-id' },
+            )}">edit the ‘accommodation required from’ date</a>`,
+          },
+        ],
+      })
+      expect(validation.insertGenericError).toHaveBeenCalledWith(
+        error,
+        'releaseDate',
+        'afterAccommodationRequiredFromDate',
+      )
+    })
+
+    it('inserts an error for an accommodation required from date before the release date', () => {
+      const error = {
+        status: 400,
+        data: {
+          detail: 'Accommodation required from date cannot be before release date: 2024-07-07',
+        },
+        stack: '',
+        message: '',
+      }
+
+      insertUpdateDateError(error, 'assessment-id')
+
+      expect(validation.insertBespokeError).toHaveBeenCalledWith(error, {
+        errorTitle: 'There is a problem',
+        errorSummary: [
+          {
+            html: `Enter a date which is on or after the release date (7 July 2024). You can <a class="govuk-link" href="${paths.assessments.changeDate.releaseDate(
+              { id: 'assessment-id' },
+            )}">edit the release date</a>`,
+          },
+        ],
+      })
+      expect(validation.insertGenericError).toHaveBeenCalledWith(
+        error,
+        'accommodationRequiredFromDate',
+        'beforeReleaseDate',
+      )
+    })
+  })
+
+  describe('changeDatePageContent', () => {
+    it('returns page content for a release date change', () => {
+      const person = personFactory.build({ name: 'John Foo' })
+      const application = applicationFactory.build({ person })
+      const assessment = assessmentFactory.build({ application })
+
+      expect(changeDatePageContent('releaseDate', assessment)).toEqual({
+        docTitle: 'Change release date',
+        title: `What is John Foo's release date?`,
+        hint: 'This could include the release date from custody, an Approved Premises, or CAS2 (formerly Bail Accommodation Support Services)',
+      })
+    })
+
+    it('returns page content for a change of accommodation required from date', () => {
+      const assessment = assessmentFactory.build()
+
+      expect(changeDatePageContent('accommodationRequiredFromDate', assessment)).toEqual({
+        docTitle: 'Change date accommodation is required from',
+        title: `What date is accommodation required from?`,
+      })
     })
   })
 })

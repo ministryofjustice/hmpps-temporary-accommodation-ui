@@ -342,6 +342,27 @@ describe('assessmentUtils', () => {
         )
       })
     })
+
+    describe('for a date update note', () => {
+      it.each([
+        ['Release date', 'releaseDate'],
+        ['Accommodation required from date', 'accommodationRequiredFromDate'],
+      ])('returns HTML with details about a change of %s', (dateLabel, dateField) => {
+        const note = referralHistorySystemNoteFactory.build({
+          category: 'updated',
+          message: '',
+          messageDetails: {
+            dateField,
+            old: '2024-08-17',
+            new: '2024-07-15',
+          },
+        })
+
+        const result = renderSystemNote(note)
+
+        expect(result).toEqual(`${dateLabel} was changed from 17 August 2024 to 15 July 2024`)
+      })
+    })
   })
 
   describe('timelineItems', () => {

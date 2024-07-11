@@ -72,7 +72,35 @@ jobs:
       - slack/notify:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>
-          template: basic_fail_1
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*${CIRCLE_PROJECT_REPONAME}* Author: *${CIRCLE_USERNAME}*"
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View job"
+                    },
+                    "url": "${CIRCLE_BUILD_URL}"
+                  }
+                }
+              ]
+            }
 
 workflows:
   version: 2

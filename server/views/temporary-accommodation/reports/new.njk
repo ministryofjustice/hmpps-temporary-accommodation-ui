@@ -22,6 +22,8 @@
     {% include "../../_messages.njk" %}
     {% set context = fetchContext() %}
 
+    {{ showErrorSummary(errorSummary) }}
+
     <h1 class="govuk-heading-l">Reports</h1>
 
     <div class="govuk-grid-row">
@@ -33,9 +35,7 @@
 
             <form action="{{ paths.reports.create() }}" method="post" data-reset-errors-on-submit="true">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-                {{ showErrorSummary(errorSummary) }}
-
+    
                 {{ taSelect(
                     {
                         label: {

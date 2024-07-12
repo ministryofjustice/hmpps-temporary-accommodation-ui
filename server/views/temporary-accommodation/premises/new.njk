@@ -15,6 +15,8 @@
 {% block content %}
 
   {% include "../../_messages.njk" %}
+
+  {{ showErrorSummary(errorSummary) }}  
   
   <h1 class="govuk-heading-l">Add a property</h1>
 
@@ -22,8 +24,6 @@
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.premises.create() }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-        {{ showErrorSummary(errorSummary) }}
       
         {% include "./_editable.njk" %}  
       </form>

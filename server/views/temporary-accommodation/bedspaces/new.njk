@@ -18,14 +18,14 @@
 {% block content %}
   {% include "../../_messages.njk" %}
   
+  {{ showErrorSummary(errorSummary) }}
+  
   <h1 class="govuk-heading-l">Add a bedspace</h1>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.premises.bedspaces.create({ premisesId: premises.id })}}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-
-        {{ showErrorSummary(errorSummary) }}
 
         {{ locationHeader({ premises: premises }) }}
 

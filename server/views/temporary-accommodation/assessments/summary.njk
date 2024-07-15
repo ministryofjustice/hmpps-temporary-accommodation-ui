@@ -33,9 +33,11 @@
         <div class="moj-identity-bar__container">
             <div class="moj-identity-bar__details">
         <span class="moj-identity-bar__title">
-          <span class="govuk-caption-xl">Referral summary</span>
-          <h1 class="govuk-heading-xl">{{ name }}
-              {{ assessmentStatusTag(assessment.status) | safe }}</h1>
+            <h1 class="govuk-heading-xl">
+                <span class="govuk-caption-xl">Referral summary</span>
+                {{ name }}
+                {{ assessmentStatusTag(assessment.status) | safe }}
+            </h1>
         </span>
             </div>
 

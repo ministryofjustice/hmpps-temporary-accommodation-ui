@@ -18,28 +18,6 @@ parameters:
     default: 18.16-browsers
 
 jobs:
-  check_outdated:
-    executor:
-      name: hmpps/node
-      tag: << pipeline.parameters.node-version >>
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package-lock.json" }}
-      - run:
-          name: install-npm
-          command: 'npm ci --no-audit'
-      - run:
-          name: Check version
-          command: 'npm --version'
-      - run:
-          name: Run check
-          command: 'npm outdated typescript govuk-frontend'
-      - slack/notify:
-          event: fail
-          channel: << pipeline.parameters.alerts-slack-channel >>
-          template: basic_fail_1
-
   e2e_environment_test:
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
@@ -72,7 +50,35 @@ jobs:
       - slack/notify:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>
-          template: basic_fail_1
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": ":circleci-${CCI_STATUS}: CircleCI job *${CIRCLE_JOB}* ${CCI_STATUS}"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*${CIRCLE_PROJECT_REPONAME}* Author: *${CIRCLE_USERNAME}*"
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View job"
+                    },
+                    "url": "${CIRCLE_BUILD_URL}"
+                  }
+                }
+              ]
+            }
 
 workflows:
   version: 2

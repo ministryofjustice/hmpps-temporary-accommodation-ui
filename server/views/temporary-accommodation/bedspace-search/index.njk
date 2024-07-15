@@ -22,9 +22,11 @@
 {% block content %}
   {% include "../../_messages.njk" %}
 
+  {{ showErrorSummary(errorSummary) }}
+
   <h1 class="govuk-heading-l">Search for available bedspaces</h1>
+
   <form action="{{ paths.bedspaces.search({}) }}" method="get">
-    {{ showErrorSummary(errorSummary) }}
 
     {{ placeContextValue(placeContext) }}
 

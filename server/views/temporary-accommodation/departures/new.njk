@@ -19,9 +19,9 @@
 {% block content %}
   {% include "../../_messages.njk" %}
 
-  <h1 class="govuk-heading-l">Mark booking as departed</h1>
-
   {{ showErrorSummary(errorSummary) }}
+
+  <h1 class="govuk-heading-l">Mark booking as departed</h1>
 
   {{ popDetailsHeader(booking.person) }}
   {{ locationHeader({ premises: premises, room: room }) }}

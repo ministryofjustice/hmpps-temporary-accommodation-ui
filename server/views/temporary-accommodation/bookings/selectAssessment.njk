@@ -20,6 +20,9 @@
 {% endblock %}
 
 {% block content %}
+
+  {{ showErrorSummary(errorSummary, errorTitle) }}
+  
   {% if applyDisabled %}
     <h1 class="govuk-heading-l">Book bedspace for a person referred through nDelius</h1>
   {% elif forceAssessmentId %}
@@ -27,8 +30,6 @@
   {% else %}
     <h1 class="govuk-heading-l">Confirm which referral this booking is for</h1>
   {% endif %}
-
-  {{ showErrorSummary(errorSummary, errorTitle) }}
   
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">

@@ -23,9 +23,9 @@
 {% block content %}
   {% include "../../_messages.njk" %}
 
-  <h1 class="govuk-heading-l">Change arrival</h1>
-
   {{ showErrorSummary(errorSummary, errorTitle) }}
+
+  <h1 class="govuk-heading-l">Change arrival</h1>
 
   {{ popDetailsHeader(booking.person) }}
   {{ locationHeader({ premises: premises, room: room }) }}

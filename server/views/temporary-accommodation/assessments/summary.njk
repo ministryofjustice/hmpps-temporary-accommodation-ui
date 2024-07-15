@@ -26,7 +26,9 @@
 
 {% block content %}
     {% include "../../_messages.njk" %}
-
+ 
+    {{ showErrorSummary(errorSummary, errorTitle) }}
+    
     <div class="moj-identity-bar">
         <div class="moj-identity-bar__container">
             <div class="moj-identity-bar__details">
@@ -54,8 +56,6 @@
             </div>
         </div>
     </div>
-
-    {{ showErrorSummary(errorSummary, errorTitle) }}
 
     {{ personDetails(assessment.application.person) }}
 

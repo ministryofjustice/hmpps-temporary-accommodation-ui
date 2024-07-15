@@ -18,11 +18,12 @@
 {% endblock %}
 
 {% block content %}
+
+    {{ showErrorSummary(errorSummary) }}
+    
     <h1 class="govuk-heading-xl">
         Make a referral for Transitional Accommodation (CAS3)
     </h1>
-
-    {{ showErrorSummary(errorSummary) }}
 
     {% if taskList.status === 'complete' %}
         <h2 class="govuk-heading-s govuk-!-margin-bottom-2" data-cy-status>Submit your referral below</h2>

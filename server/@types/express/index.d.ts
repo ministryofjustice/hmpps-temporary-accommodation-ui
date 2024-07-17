@@ -1,5 +1,6 @@
 import type { TemporaryAccommodationApplication as Application, ProbationRegion } from '@approved-premises/api'
 import type { ErrorMessages, PlaceContext } from '@approved-premises/ui'
+import { UserDetails } from '../../services/userService'
 
 export default {}
 
@@ -34,18 +35,12 @@ declare module 'express' {
   interface ShowParams {
     id: string
   }
-
-  type ShowRequest = TypedRequest<ShowParams>
-
-  type ShowRequestHandler = TypedRequestHandler<ShowParams>
 }
 
 type FlashMessage = string | ErrorMessages | Array<ErrorSummary> | Record<string, unknown>
 
 export declare global {
   namespace Express {
-    import CookieSessionRequest = CookieSessionInterfaces.CookieSessionRequest
-
     interface User {
       username: string
       token: string
@@ -56,7 +51,6 @@ export declare global {
       verified?: boolean
       id: string
       user?: User
-      session?: CookieSessionRequest['session']
 
       logout(done: (err: unknown) => void): void
 

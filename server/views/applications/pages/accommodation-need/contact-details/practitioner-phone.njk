@@ -1,0 +1,22 @@
+{% extends "../../layout.njk" %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% block questions %}
+
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ task.title }}</span>
+        {{ page.title }}
+    </h1>
+
+    {{ formPageInput({
+        fieldName: "phone",
+        label: {
+            text: "Phone number"
+        }
+    }, fetchContext()) }}
+
+    {{ govukWarningText({
+        html: 'This will not update these details in nDelius. To do this, you need to <a href="https://mojprod.service-now.com/moj_sp?id=emp_taxonomy_topic&topic_id=ef2eede21b1a11503393a797b04bcb87" class="govuk-link">raise a ServiceNow request in the Technology Portal</a>'
+    }) }}
+
+{% endblock %}

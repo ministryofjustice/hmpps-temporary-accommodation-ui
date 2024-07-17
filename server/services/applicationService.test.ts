@@ -199,7 +199,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(Page)
 
-      expect(Page).toHaveBeenCalledWith(request.body, application, '')
+      expect(Page).toHaveBeenCalledWith(request.body, application, request.session)
       expect(applicationClient.find).toHaveBeenCalledWith(request.params.id)
     })
 
@@ -210,7 +210,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(Page)
 
-      expect(Page).toHaveBeenCalledWith(request.body, application, '')
+      expect(Page).toHaveBeenCalledWith(request.body, application, request.session)
     })
 
     it('should initialize the page with the session and the userInput if specified', async () => {
@@ -221,7 +221,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(Page)
 
-      expect(Page).toHaveBeenCalledWith(userInput, application, '')
+      expect(Page).toHaveBeenCalledWith(userInput, application, request.session)
     })
 
     it('should load from the session if the body and userInput are blank', async () => {
@@ -233,7 +233,7 @@ describe('ApplicationService', () => {
 
       expect(result).toBeInstanceOf(Page)
 
-      expect(Page).toHaveBeenCalledWith({ foo: 'bar' }, application, '')
+      expect(Page).toHaveBeenCalledWith({ foo: 'bar' }, application, request.session)
     })
 
     it("should call a service's initialize method if it exists", async () => {
@@ -243,15 +243,6 @@ describe('ApplicationService', () => {
       await service.initializePage(callConfig, OtherPage, request, dataServices)
 
       expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, callConfig, dataServices)
-    })
-
-    it("retrieve the 'previousPage' value from the session and call the Page object's constructor with that value", async () => {
-      jest.spyOn(formPageUtils, 'getBody').mockReturnValue(request.body)
-
-      request.session.previousPage = 'previous-page-name'
-      await service.initializePage(callConfig, Page, request, dataServices)
-
-      expect(Page).toHaveBeenCalledWith(request.body, application, 'previous-page-name')
     })
   })
 

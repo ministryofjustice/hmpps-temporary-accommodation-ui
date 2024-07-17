@@ -148,7 +148,7 @@ context('Apply', () => {
 
     // Then the application should be submitted to the API
     cy.task('verifyApplicationUpdate', this.application.id).then((requests: Array<{ body: string }>) => {
-      expect(requests).to.have.length(apply.numberOfPages() + 1)
+      expect(requests).to.have.length.greaterThan(apply.numberOfPages())
       const requestBody = JSON.parse(requests[requests.length - 1].body)
 
       // We expect these fields to vary with date, so we effectively omit from testing

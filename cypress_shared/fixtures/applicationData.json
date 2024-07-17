@@ -58,6 +58,15 @@
     }
   },
   "contact-details": {
+    "practitioner-name": {
+      "name": "Practitioner Name"
+    },
+    "practitioner-email": {
+      "email": "name@example.com"
+    },
+    "practitioner-phone": {
+      "phone": "01234 56780"
+    },
     "probation-practitioner": {
       "name": "Practitioner Name",
       "phone": "01234 56780",

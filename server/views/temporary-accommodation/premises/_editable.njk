@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
-{% from "../../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 {% from "../../components/ta-checkboxes/macro.njk" import taCheckboxes %}
 {% from "../../components/ta-radios/macro.njk" import taRadios %}
 {% from "../../components/ta-select/macro.njk" import taSelect %}
@@ -164,7 +164,7 @@
   }, fetchContext()
 ) }}
 
-{{ taTextarea(
+{{ formPageTextarea(
   {
     label: {
       text: "Please provide any further property details",

@@ -2,7 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 {% from "../../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
@@ -51,7 +51,7 @@
           fetchContext()
         ) }}
 
-        {{ taTextarea(
+        {{ formPageTextarea(
           {
             label: {
               text: "Please provide any further details"

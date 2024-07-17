@@ -1,7 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../../components/ta-select/macro.njk" import taSelect %}
-{% from "../../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 
 {{ taDateInput(
     {
@@ -40,7 +40,7 @@
           },
           fetchContext()
         ) }}
-{{ taTextarea(
+{{ formPageTextarea(
           {
             label: {
               text: "Please provide further details"

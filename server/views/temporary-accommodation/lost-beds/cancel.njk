@@ -3,7 +3,7 @@
 {% from "../../components/lost-bed-info/macro.njk" import lostBedInfo %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
-{% from "../../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "../../partials/layout.njk" %}
@@ -32,19 +32,20 @@
   {{ lostBedInfo(lostBed) }}
 
   <form action="{{ paths.lostBeds.cancellations.create({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }) }}" method="post">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> {{ taTextarea(
-          {
-            label: {
-              text: "Notes",
-              classes: "govuk-!-font-weight-bold"
-            },
-            fieldName: "notes"
-          },
-          fetchContext()
-        ) }}
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> 
+    
+    {{ formPageTextarea({
+      fieldName: "notes",
+      label: {
+        text: "Notes",
+        classes: "govuk-!-font-weight-bold"
+      }
+    },
+      fetchContext()
+    ) }}
     {{ govukButton({
-            text: "Submit"
-        }) }}
+      text: "Submit"
+    }) }}
   </form>
   
 {% endblock %}

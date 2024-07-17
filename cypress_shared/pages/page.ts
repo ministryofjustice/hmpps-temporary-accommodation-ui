@@ -211,6 +211,10 @@ export default abstract class Page extends Component {
     }
   }
 
+  clickLink(text: string): void {
+    cy.get('a').contains(text).click()
+  }
+
   clickBack(): void {
     cy.get('a').contains('Back').click()
   }

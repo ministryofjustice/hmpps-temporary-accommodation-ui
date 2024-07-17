@@ -76,7 +76,7 @@ export default class ApplicationService {
 
     const page = Page.initialize
       ? await Page.initialize(body, application, callConfig, dataServices)
-      : new Page(body, application, request.session.previousPage)
+      : new Page(body, application, request.session)
 
     return page
   }
@@ -107,7 +107,7 @@ export default class ApplicationService {
         }
       }
 
-      this.saveToSession(application, page, request)
+      await this.saveToSession(application, page, request)
       await this.saveToApi(callConfig, application)
     }
   }

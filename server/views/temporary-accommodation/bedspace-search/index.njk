@@ -2,7 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "../../components/ta-date-input/macro.njk" import taDateInput %}
-{% from "../../components/ta-input/macro.njk" import taInput %}
+{% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../components/ta-select/macro.njk" import taSelect %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -47,7 +47,7 @@
       fetchContext()
     ) }}
 
-    {{ taInput(
+    {{ formPageInput(
       {
         label: {
         text: 'Number of days required',

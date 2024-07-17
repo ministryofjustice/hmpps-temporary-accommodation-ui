@@ -1,5 +1,5 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "../../components/ta-input/macro.njk" import taInput %}
+{% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../components/ta-textarea/macro.njk" import taTextarea %}
 {% from "../../components/ta-checkboxes/macro.njk" import taCheckboxes %}
 {% from "../../components/ta-radios/macro.njk" import taRadios %}
@@ -7,7 +7,7 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{{ taInput(
+{{ formPageInput(
   {
     label: {
       text: 'Enter a property reference',
@@ -28,7 +28,7 @@
   }
 }) %}
 
-{{ taInput(
+{{ formPageInput(
   {
     label: {
       text: 'Address line 1',
@@ -40,7 +40,7 @@
   fetchContext()
 ) }}
 
-{{ taInput(
+{{ formPageInput(
   {
     label: {
       text: 'Address line 2 (optional)',
@@ -52,7 +52,7 @@
   fetchContext()
 ) }}
 
-{{ taInput(
+{{ formPageInput(
   {
     label: {
       text: 'Town or city (optional)',
@@ -65,7 +65,7 @@
   fetchContext()
 ) }}
 
-{{ taInput(
+{{ formPageInput(
   {
     label: {
       text: "Postcode",
@@ -177,7 +177,7 @@
   }, fetchContext()
 ) }}
 
-{{ taInput(
+{{ formPageInput(
   {
     label: {
       text: "Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days",

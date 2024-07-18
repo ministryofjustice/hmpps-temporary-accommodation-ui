@@ -1,10 +1,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "../../components/ta-input/macro.njk" import taInput %}
-{% from "../../components/ta-date-input/macro.njk" import taDateInput %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
-{% from "../../components/ta-textarea/macro.njk" import taTextarea %}
+{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
+{% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 
-{{ taDateInput(
+{{ formPageDateInput(
     {
       fieldset: {
         legend: {
@@ -17,7 +16,7 @@
     },
     fetchContext()
   ) }}
-{{ taDateInput(
+{{ formPageDateInput(
     {
       fieldset: {
         legend: {
@@ -30,7 +29,7 @@
     },
     fetchContext()
   ) }}
-{{ taSelect(
+{{ formPageSelect(
     {
         label: {
             text: "What is the reason for this void?",
@@ -41,7 +40,7 @@
           },
           fetchContext()
         ) }}
-{{ taTextarea(
+{{ formPageTextarea(
           {
             label: {
               text: "Please provide further details"

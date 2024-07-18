@@ -1,10 +1,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-{% from "../../components/ta-textarea/macro.njk" import taTextarea %}
-{% from "../../components/ta-date-input/macro.njk" import taDateInput %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
+{% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
+{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 
-{{ taDateInput(
+{{ formPageDateInput(
     {
         fieldset: {
         legend: {
@@ -18,7 +18,7 @@
     fetchContext()
 ) }}
 
-{{ taSelect(
+{{ formPageSelect(
     {
         label: {
         text: "What was the departure reason?",
@@ -30,7 +30,7 @@
     fetchContext()
 ) }}
 
-{{ taSelect(
+{{ formPageSelect(
     {
         label: {
         text: "What was the move on category?",
@@ -42,7 +42,7 @@
     fetchContext()
 ) }}
 
-{{ taTextarea(
+{{ formPageTextarea(
     {
         label: {
         text: "Please provide any further details"

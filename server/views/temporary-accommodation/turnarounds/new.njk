@@ -1,7 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../../components/ta-input/macro.njk" import taInput %}
+{% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
 {% from "../../components/pop-details-header/macro.njk" import popDetailsHeader%}
@@ -35,7 +35,7 @@
       <form action="{{ paths.bookings.turnarounds.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-        {{ taInput({
+        {{ formPageInput({
             label: {
               text: "What is the new turnaround time?",
               classes: "govuk-label--m"

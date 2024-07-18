@@ -1,10 +1,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
-{% from "../../components/ta-input/macro.njk" import taInput %}
-{% from "../../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
+{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 
-{{ taInput(
+{{ formPageInput(
     {
         label: {
         text: 'Enter a bedspace reference',
@@ -32,7 +32,7 @@
         <p>The bedspace end date cannot be edited.</p>
     </div>
 {% else %}
-    {{ taDateInput({
+    {{ formPageDateInput({
         fieldset: {
             legend: {
                 text: "Enter the bedspace end date (optional)",

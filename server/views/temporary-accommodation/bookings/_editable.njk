@@ -1,7 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
-{% from "../../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../components/place-context-value/macro.njk" import placeContextValue %}
 
 {{ placeContextValue(placeContext) }}
@@ -28,7 +28,7 @@
     classes: 'govuk-summary-list--no-border details'
 }) }}
 
-{{ taDateInput(
+{{ formPageDateInput(
     {
         fieldset: {
         legend: {
@@ -42,7 +42,7 @@
     fetchContext()
 ) }}
 
-{{ taDateInput(
+{{ formPageDateInput(
     {
         fieldset: {
         legend: {

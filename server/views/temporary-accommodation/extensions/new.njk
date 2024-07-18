@@ -2,7 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
-{% from "../../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
 {% from "../../components/pop-details-header/macro.njk" import popDetailsHeader%}
@@ -36,7 +36,7 @@
       <form action="{{ paths.bookings.extensions.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
-        {{ taDateInput(
+        {{ formPageDateInput(
           {
             fieldset: {
               legend: {

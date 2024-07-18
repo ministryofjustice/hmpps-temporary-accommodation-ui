@@ -1,6 +1,6 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../../components/ta-date-input/macro.njk" import taDateInput %}
+{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% extends "../../partials/layout.njk" %}
@@ -32,7 +32,7 @@
             <form action="{{ paths.assessments.updateDate[dateField]({ id: assessment.id }) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-                {{ taDateInput({
+                {{ formPageDateInput({
                     fieldName: dateField,
                     items: dateFieldValues(dateField, errors),
                     hint: {

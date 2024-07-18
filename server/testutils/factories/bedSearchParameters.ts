@@ -8,6 +8,6 @@ import referenceData from './referenceData'
 export default Factory.define<BedSearchParameters>(() => ({
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   durationDays: faker.number.int({ min: 1, max: 10 }),
-  probationDeliveryUnit: referenceData.pdu().build().id,
+  probationDeliveryUnit: referenceData.pdu().build().name,
   serviceName: 'temporary-accommodation',
 }))

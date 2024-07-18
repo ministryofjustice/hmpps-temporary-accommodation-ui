@@ -5,7 +5,6 @@ import UserClient from '../data/userClient'
 import { convertToTitleCase } from '../utils/utils'
 
 export type UserDetails = User & {
-  name: string
   displayName: string
 }
 
@@ -21,10 +20,13 @@ export default class UserService {
     return {
       name: communityAccommodationUser.name,
       displayName: convertToTitleCase(communityAccommodationUser.name),
+      email: communityAccommodationUser.email,
+      telephoneNumber: communityAccommodationUser.telephoneNumber,
       id: communityAccommodationUser.id,
       roles: communityAccommodationUser.roles,
       service: communityAccommodationUser.service,
       region: communityAccommodationUser.region,
+      probationDeliveryUnit: communityAccommodationUser.probationDeliveryUnit,
       deliusUsername: communityAccommodationUser.deliusUsername,
     }
   }

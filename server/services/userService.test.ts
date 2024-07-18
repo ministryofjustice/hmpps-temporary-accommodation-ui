@@ -32,10 +32,13 @@ describe('User service', () => {
       expect(result).toEqual({
         name: communityAccommodationUser.name,
         displayName: convertToTitleCase(communityAccommodationUser.name),
+        email: communityAccommodationUser.email,
+        telephoneNumber: communityAccommodationUser.telephoneNumber,
         id: communityAccommodationUser.id,
         roles: communityAccommodationUser.roles,
         service: communityAccommodationUser.service,
         region: communityAccommodationUser.region,
+        probationDeliveryUnit: communityAccommodationUser.probationDeliveryUnit,
         deliusUsername: communityAccommodationUser.deliusUsername,
       })
 

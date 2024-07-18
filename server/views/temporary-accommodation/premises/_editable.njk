@@ -3,7 +3,7 @@
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 {% from "../../components/ta-checkboxes/macro.njk" import taCheckboxes %}
 {% from "../../components/ta-radios/macro.njk" import taRadios %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
@@ -80,7 +80,7 @@
 
 {% endcall %}
 
-{{ taSelect(
+{{ formPageSelect(
   {
     label: {
       text: "What is the local authority (optional)?",
@@ -92,7 +92,7 @@
   fetchContext()
 ) }}
 
-{{ taSelect(
+{{ formPageSelect(
   {
     label: {
       text: "What is the probation region?",
@@ -104,7 +104,7 @@
   fetchContext()
 ) }}
 
-{{ taSelect(
+{{ formPageSelect(
   {
     label: {
       text: "What is the PDU?",

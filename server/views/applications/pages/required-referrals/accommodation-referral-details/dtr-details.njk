@@ -1,4 +1,4 @@
-{% from "../../../../components/ta-select/macro.njk" import taSelect %}
+{% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% extends "../../layout.njk" %}
 
 {% block questions %}
@@ -31,7 +31,7 @@
     }, fetchContext()) }}
 
     {% if page.getLocalAuthorities() | length %}
-        {{ taSelect({
+        {{ formPageSelect({
             label: {
                 text: "Home local authority",
                 classes: "govuk-label--m"

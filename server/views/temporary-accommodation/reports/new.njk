@@ -2,7 +2,7 @@
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% from "../../components/datePicker/macro.njk" import hmppsDatepicker %}
 
 {% set pageTitle = "Reports - " + applicationName %}
@@ -35,7 +35,7 @@
             <form action="{{ paths.reports.create() }}" method="post" data-reset-errors-on-submit="true">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
     
-                {{ taSelect(
+                {{ formPageSelect(
                     {
                         label: {
                         text: "Select a probation region",

@@ -1,7 +1,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
 {% from "../../components/ta-date-input/macro.njk" import taDateInput %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 
 {{ taDateInput(
   {
@@ -17,7 +17,7 @@
   fetchContext()
 ) }}
 
-{{ taSelect(
+{{ formPageSelect(
   {
     label: {
         text: "What was the reason for cancellation?",

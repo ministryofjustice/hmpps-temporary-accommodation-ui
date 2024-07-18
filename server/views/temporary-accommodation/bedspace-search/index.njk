@@ -3,7 +3,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "../../components/ta-date-input/macro.njk" import taDateInput %}
 {% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
-{% from "../../components/ta-select/macro.njk" import taSelect %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
@@ -60,8 +60,8 @@
       },
       fetchContext()
     ) }}
-
-    {{ taSelect(
+   
+    {{ formPageSelect(
       {
         label: {
           text: "Probation Delivery Unit (PDU)",

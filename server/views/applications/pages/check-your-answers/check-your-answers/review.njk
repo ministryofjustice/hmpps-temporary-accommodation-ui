@@ -13,7 +13,7 @@
     {{ govukBackLink({
         text: "Back",
         href: paths.applications.show({ id: page.application.id }),
-        classes: 'exclude-from-print'
+        classes: 'govuk-!-display-none-print'
     }) }}
 {% endblock %}
 
@@ -60,7 +60,7 @@
                 {{ govukButton({
                     text: "Continue",
                     preventDoubleClick: true,
-                    classes: 'exclude-from-print'
+                    classes: 'govuk-!-display-none-print'
                 }) }}
             </form>
 

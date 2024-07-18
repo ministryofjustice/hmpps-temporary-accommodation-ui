@@ -216,7 +216,8 @@ context('Premises', () => {
       'probationDeliveryUnitId',
       'status',
     ])
-    page.getSelectInputByIdAndSelectAnEntry('probationRegionId', '')
+    page.getSelectInputByIdAndSelectAnEntry('probationRegionId', 'Select a probation region')
+    page.getSelectInputByIdAndSelectAnEntry('probationDeliveryUnitId', 'Select a PDU')
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields

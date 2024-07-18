@@ -69,7 +69,7 @@ export default PremisesFactory.define(() => {
     probationRegion: referenceDataFactory.probationRegion().build(),
     apArea: apAreaFactory.build(),
     localAuthorityArea: referenceDataFactory.localAuthority().build(),
-    pdu: pdu.id,
+    pdu: pdu.name,
     probationDeliveryUnit: pdu,
     characteristics: unique(
       referenceDataFactory.characteristic('premises').buildList(faker.number.int({ min: 1, max: 5 })),

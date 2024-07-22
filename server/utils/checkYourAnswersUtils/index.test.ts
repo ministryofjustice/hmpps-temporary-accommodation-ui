@@ -51,7 +51,7 @@ describe('checkYourAnswersUtils', () => {
           actions: {
             items: [
               {
-                classes: 'exclude-from-print',
+                classes: 'govuk-!-display-none-print',
                 href: paths.applications.pages.show({ id: application.id, task: 'some-task', page: 'some-page' }),
                 text: 'Change',
                 visuallyHiddenText: 'A question',

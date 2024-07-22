@@ -6,19 +6,21 @@ import { Page } from '../../../utils/decorators'
 import { errorMessages } from './updatePractitionerDetail'
 import paths from '../../../../paths/apply'
 
+const bodyProperties = ['name', 'email', 'phone']
+
 export type ProbationPractitionerBody = {
   name: string
   email: string
   phone: string
 }
 
-@Page({ name: 'probation-practitioner', bodyProperties: ['name', 'phone', 'email'] })
+@Page({ name: 'probation-practitioner', bodyProperties })
 export default class ProbationPractitioner implements TasklistPage {
   title = 'Confirm probation practitioner details'
 
   htmlDocumentTitle = this.title
 
-  private userDetails: Partial<ProbationPractitionerBody>
+  private readonly userDetails: Partial<ProbationPractitionerBody>
 
   constructor(
     private _body: Partial<ProbationPractitionerBody>,
@@ -33,7 +35,7 @@ export default class ProbationPractitioner implements TasklistPage {
   }
 
   set body(existingValues) {
-    this._body = ['name', 'email', 'phone'].reduce((values, key) => {
+    this._body = bodyProperties.reduce((values, key) => {
       const updatedValue = this.application.data?.['contact-details']?.[`practitioner-${key}`]?.[key]
 
       values[key] = updatedValue || existingValues[key] || this.userDetails[key]
@@ -118,5 +120,9 @@ export default class ProbationPractitioner implements TasklistPage {
       this.summaryListItem('email', 'Email address'),
       this.summaryListItem('phone', 'Phone number'),
     ]
+  }
+
+  disableButton(): boolean {
+    return Object.values(this._body).filter(Boolean).length !== bodyProperties.length
   }
 }

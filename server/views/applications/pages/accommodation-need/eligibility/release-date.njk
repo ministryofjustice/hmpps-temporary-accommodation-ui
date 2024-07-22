@@ -2,10 +2,10 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
+  {% set pageTitleHTML %}
     <span class="govuk-caption-l">{{ task.title }}</span>
     {{ page.title }}
-  </h1>
+  {% endset %}
 
   {% set hintHtml %}
     <p class="govuk-hint">This could include the release date from custody, an Approved Premises, or CAS2 (formerly Bail Accommodation Support Services)</p>
@@ -14,6 +14,13 @@
 
   {{ formPageDateInput( {
     fieldName: "releaseDate",
+    fieldset: {
+      legend: {
+        html: pageTitleHTML,
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
     hint: {
       html: hintHtml
     },

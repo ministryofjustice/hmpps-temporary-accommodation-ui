@@ -189,4 +189,18 @@ describe('ProbationPractitioner', () => {
       })
     })
   })
+
+  describe('disableButton', () => {
+    it('returns true if some of the body properties are missing', () => {
+      const page = new ProbationPractitioner({ name: 'Jane' }, application)
+
+      expect(page.disableButton()).toBe(true)
+    })
+
+    it('returns false if all the body properties are present', () => {
+      const page = new ProbationPractitioner(body, application)
+
+      expect(page.disableButton()).toBe(false)
+    })
+  })
 })

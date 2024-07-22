@@ -17,9 +17,11 @@ export default class ProbationPractitioner extends ApplyPage {
   }
 
   completeForm() {
+    this.canSaveAndContinue(false)
     this.updateName()
     this.updateEmail()
     this.addPhoneNumber()
+    this.canSaveAndContinue(true)
     this.clickSubmit()
   }
 
@@ -39,5 +41,9 @@ export default class ProbationPractitioner extends ApplyPage {
     this.clickLink('Enter a phone number')
     this.completeTextInputByLabel('Phone number', this.application.data['contact-details']['practitioner-phone'].phone)
     this.clickSubmit()
+  }
+
+  private canSaveAndContinue(buttonShown: boolean) {
+    cy.contains('Save and continue').should(buttonShown ? 'exist' : 'not.exist')
   }
 }

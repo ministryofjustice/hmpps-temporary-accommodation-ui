@@ -3,9 +3,10 @@
 
 {% extends "../../layout.njk" %}
 
-{% block questions %}
-    {% set context = fetchContext() %}
+{% set context = fetchContext() %}
+{% set disableButton = page.disableButton() %}
 
+{% block questions %}
     <h1 class="govuk-heading-l">
         <span class="govuk-caption-l">{{ section.title }}</span>
         {{ page.title }}

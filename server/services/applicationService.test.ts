@@ -242,7 +242,13 @@ describe('ApplicationService', () => {
 
       await service.initializePage(callConfig, OtherPage, request, dataServices)
 
-      expect(OtherPage.initialize).toHaveBeenCalledWith(request.body, application, callConfig, dataServices)
+      expect(OtherPage.initialize).toHaveBeenCalledWith(
+        request.body,
+        application,
+        callConfig,
+        dataServices,
+        request.session,
+      )
     })
   })
 

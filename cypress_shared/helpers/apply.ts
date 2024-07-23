@@ -11,6 +11,8 @@ import {
   OASysSection,
   Person,
   PersonAcctAlert,
+  TemporaryAccommodationApplication,
+  TemporaryAccommodationUser,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import {
@@ -28,6 +30,7 @@ import {
   localAuthorityFactory,
   oasysSectionsFactory,
   oasysSelectionFactory,
+  referenceDataFactory,
 } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import applicationDataJson from '../fixtures/applicationData.json'
@@ -129,10 +132,11 @@ export default class ApplyHelper {
   selectedDocuments: Array<Document> = []
 
   constructor(
-    private readonly application: Application,
+    private readonly application: TemporaryAccommodationApplication,
     private readonly person: Person,
     private readonly offences: Array<ActiveOffence>,
     private readonly environment: 'e2e' | 'integration',
+    private readonly actingUser: TemporaryAccommodationUser,
   ) {}
 
   initializeE2e(oasysSectionsLinkedToReoffending: Array<OASysSection>, otherOasysSections: Array<OASysSection>) {
@@ -407,6 +411,14 @@ export default class ApplyHelper {
   }
 
   private completeContactDetails() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build({
+        name: 'County Durham and Darlington',
+        id: '616497bf-3e6b-40e2-830b-8bfaeeaec157',
+      })
+      cy.task('stubPdus', { pdus: [pdu], probationRegionId: this.actingUser.region.id })
+    }
+
     // Given I click the contact details task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('contact-details')
 

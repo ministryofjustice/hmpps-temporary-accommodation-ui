@@ -16,6 +16,6 @@ export default class PractitionerPdu extends ApplyPage {
   }
 
   completeForm() {
-    this.completeTextInputFromPageBody('pdu')
+    this.selectSelectOptionFromPageBody('id')
   }
 }

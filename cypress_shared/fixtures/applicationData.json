@@ -78,7 +78,8 @@
       "email": "backup-name@example.com"
     },
     "practitioner-pdu": {
-      "pdu": "Some PDU"
+      "id": "616497bf-3e6b-40e2-830b-8bfaeeaec157",
+      "name": "County Durham and Darlington"
     },
     "pop-phone-number": {
       "phone": "01235 467890"

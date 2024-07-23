@@ -20,6 +20,7 @@ import {
   PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
+  ProbationDeliveryUnit,
   SortDirection,
   TemporaryAccommodationApplication,
   TemporaryAccommodationAssessmentStatus,
@@ -275,6 +276,7 @@ export type DataServices = Partial<{
   }
   referenceDataService: {
     getLocalAuthorities: (CallConfig: CallConfig) => Promise<Array<LocalAuthorityArea>>
+    getRegionPdus: (CallConfig: CallConfig) => Promise<Array<ProbationDeliveryUnit>>
   }
 }>
 

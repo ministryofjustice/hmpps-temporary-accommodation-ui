@@ -2,11 +2,30 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ task.title }}</span>
-    {{ page.title }}
-  </h1>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ task.title }}</span>
+        {{ page.title }}
+    </h1>
 
-  {% include "../../partials/_contact-details.njk" %}
+    {{ formPageInput({
+        fieldName: "name",
+        label: {
+            text: "Name"
+        }
+    }, fetchContext()) }}
+
+    {{ formPageInput({
+        fieldName: "phone",
+        label: {
+            text: "Phone number"
+        }
+    }, fetchContext()) }}
+
+    {{ formPageInput({
+        fieldName: "email",
+        label: {
+            text: "Email"
+        }
+    }, fetchContext()) }}
 
 {% endblock %}

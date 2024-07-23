@@ -1,17 +1,24 @@
 import { PageResponse, SummaryListItem, type TaskListErrors } from '@approved-premises/ui'
-import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
+import { TemporaryAccommodationApplication as Application, ProbationDeliveryUnit } from '@approved-premises/api'
 import { SessionData } from 'express-session'
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
-import { errorMessages } from './updatePractitionerDetail'
 import paths from '../../../../paths/apply'
 
-const bodyProperties = ['name', 'email', 'phone']
+const bodyProperties = ['name', 'email', 'phone', 'pdu']
 
 export type ProbationPractitionerBody = {
   name: string
   email: string
   phone: string
+  pdu: ProbationDeliveryUnit
+}
+
+export const errorMessages = {
+  name: 'You must specify a name',
+  email: 'You must specify an email address',
+  phone: 'You must specify a phone number',
+  pdu: 'You must select a PDU',
 }
 
 @Page({ name: 'probation-practitioner', bodyProperties })
@@ -31,12 +38,23 @@ export default class ProbationPractitioner implements TasklistPage {
       name: session?.userDetails?.displayName,
       email: session?.userDetails?.email,
       phone: session?.userDetails?.telephoneNumber,
+      pdu: session?.userDetails?.probationDeliveryUnit,
     }
   }
 
   set body(existingValues) {
     this._body = bodyProperties.reduce((values, key) => {
-      const updatedValue = this.application.data?.['contact-details']?.[`practitioner-${key}`]?.[key]
+      const applicationData = this.application.data?.['contact-details']?.[`practitioner-${key}`]
+      let updatedValue: string | ProbationDeliveryUnit
+
+      if (key === 'pdu' && applicationData) {
+        updatedValue = {
+          id: applicationData.id,
+          name: applicationData.name,
+        }
+      } else {
+        updatedValue = applicationData?.[key]
+      }
 
       values[key] = updatedValue || existingValues[key] || this.userDetails[key]
 
@@ -71,6 +89,10 @@ export default class ProbationPractitioner implements TasklistPage {
       errors.phone = errorMessages.phone
     }
 
+    if (!this.body.pdu) {
+      errors.pdu = errorMessages.pdu
+    }
+
     return errors
   }
 
@@ -81,32 +103,34 @@ export default class ProbationPractitioner implements TasklistPage {
           Name: this.body.name,
           Email: this.body.email,
           Phone: this.body.phone,
+          PDU: this.body.pdu?.name,
         },
       ],
     }
   }
 
-  private summaryListItem(key: keyof ProbationPractitionerBody, label: string): SummaryListItem {
+  private summaryListItem(key: keyof ProbationPractitionerBody, label: string, addLabel: string): SummaryListItem {
     const editPath = paths.applications.pages.show({
       id: this.application.id,
       task: 'contact-details',
       page: `practitioner-${key}`,
     })
+    const value = key === 'pdu' ? this.body.pdu?.name : this.body[key]
 
     return {
       key: { text: label },
-      value: this.body[key]
-        ? { text: this.body[key] }
+      value: value
+        ? { text: value }
         : {
-            html: `<a href="${editPath}" class="govuk-link">Enter a${key === 'email' ? 'n' : ''} ${label.toLowerCase()}</a>`,
+            html: `<a href="${editPath}" class="govuk-link">${addLabel}</a>`,
           },
-      actions: this.body[key]
+      actions: value
         ? {
             items: [
               {
                 href: editPath,
                 text: 'Change',
-                visuallyHiddenText: label.toLowerCase(),
+                visuallyHiddenText: label,
               },
             ],
           }
@@ -116,13 +140,17 @@ export default class ProbationPractitioner implements TasklistPage {
 
   summaryListItems(): Array<SummaryListItem> {
     return [
-      this.summaryListItem('name', 'Name'),
-      this.summaryListItem('email', 'Email address'),
-      this.summaryListItem('phone', 'Phone number'),
+      this.summaryListItem('name', 'Name', 'Enter a name'),
+      this.summaryListItem('email', 'Email address', 'Enter an email address'),
+      this.summaryListItem('phone', 'Phone number', 'Enter a phone number'),
+      this.summaryListItem('pdu', 'PDU (Probation delivery unit)', 'Enter a PDU'),
     ]
   }
 
   disableButton(): boolean {
-    return Object.values(this._body).filter(Boolean).length !== bodyProperties.length
+    return (
+      Object.values(this._body).filter(value => (typeof value === 'string' ? value : value?.name)).length !==
+      bodyProperties.length
+    )
   }
 }

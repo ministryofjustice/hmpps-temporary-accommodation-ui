@@ -1,7 +1,6 @@
 import {
   ActiveOffence,
   Adjudication,
-  TemporaryAccommodationApplication as Application,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
@@ -66,7 +65,6 @@ import {
   OffendingSummaryPage,
   OtherAccommodationOptionsPage,
   PopPhoneNumberPage,
-  PractitionerPduPage,
   PreviousStaysDetailsPage,
   PreviousStaysPage,
   ProbationPractitionerPage,
@@ -412,10 +410,7 @@ export default class ApplyHelper {
 
   private completeContactDetails() {
     if (this.environment === 'integration') {
-      const pdu = referenceDataFactory.pdu().build({
-        name: 'County Durham and Darlington',
-        id: '616497bf-3e6b-40e2-830b-8bfaeeaec157',
-      })
+      const pdu = referenceDataFactory.pdu().build(this.application.data['contact-details']['practitioner-pdu'])
       cy.task('stubPdus', { pdus: [pdu], probationRegionId: this.actingUser.region.id })
     }
 
@@ -431,15 +426,11 @@ export default class ApplyHelper {
     backupContactPage.completeForm()
     backupContactPage.clickSubmit()
 
-    const practitionerPduPage = new PractitionerPduPage(this.application)
-    practitionerPduPage.completeForm()
-    practitionerPduPage.clickSubmit()
-
     const popPhoneNumberPage = new PopPhoneNumberPage(this.application)
     popPhoneNumberPage.completeForm()
     popPhoneNumberPage.clickSubmit()
 
-    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, practitionerPduPage, popPhoneNumberPage]
+    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, popPhoneNumberPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

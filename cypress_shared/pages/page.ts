@@ -211,7 +211,7 @@ export default abstract class Page extends Component {
     }
   }
 
-  clickLink(text: string): void {
+  clickLink(text: string | RegExp): void {
     cy.get('a').contains(text).click()
   }
 

@@ -82,8 +82,8 @@ describe('PractitionerPdu', () => {
     })
   })
 
-  itShouldHavePreviousValue(new PractitionerPdu({}, application), 'backup-contact')
-  itShouldHaveNextValue(new PractitionerPdu({}, application), 'pop-phone-number')
+  itShouldHavePreviousValue(new PractitionerPdu({}, application), 'probation-practitioner')
+  itShouldHaveNextValue(new PractitionerPdu({}, application), 'probation-practitioner')
 
   describe('errors', () => {
     it('returns no errors if the PDU is defined', () => {
@@ -122,6 +122,10 @@ describe('PractitionerPdu', () => {
       const renderedPdus = page.getRegionPdus()
 
       expect(renderedPdus).toEqual([
+        {
+          value: '',
+          text: 'Select an option',
+        },
         {
           value: pdus[0].id,
           text: pdus[0].name,

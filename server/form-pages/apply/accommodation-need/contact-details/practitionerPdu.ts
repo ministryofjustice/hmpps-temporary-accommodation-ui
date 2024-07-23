@@ -8,15 +8,14 @@ import { SessionData } from 'express-session'
 import { Page } from '../../../utils/decorators'
 import TasklistPage from '../../../tasklistPage'
 import { CallConfig } from '../../../../data/restClient'
-import { getProbationPractitionerName } from '../../../utils'
 
 export type PractitionerPduBody = ProbationDeliveryUnit
 
 @Page({ name: 'practitioner-pdu', bodyProperties: ['id'] })
 export default class PractitionerPdu implements TasklistPage {
-  title: string
+  title: string = 'Update probation practitioner PDU'
 
-  htmlDocumentTitle = "What is the person's PDU?"
+  htmlDocumentTitle = this.title
 
   private readonly userPdu: ProbationDeliveryUnit
 
@@ -26,8 +25,6 @@ export default class PractitionerPdu implements TasklistPage {
     readonly session?: Partial<SessionData>,
     readonly pdus?: Array<ProbationDeliveryUnit>,
   ) {
-    const name = getProbationPractitionerName(application)
-    this.title = `What is ${name}'s PDU?`
     this.pdus = pdus || []
     this.userPdu = session?.userDetails?.probationDeliveryUnit
   }
@@ -63,17 +60,17 @@ export default class PractitionerPdu implements TasklistPage {
   }
 
   previous() {
-    return 'backup-contact'
+    return 'probation-practitioner'
   }
 
   next() {
-    return 'pop-phone-number'
+    return 'probation-practitioner'
   }
 
   errors() {
     const errors: TaskListErrors<this> = {}
 
-    if (!this.body.id) {
+    if (!this._body.id) {
       errors.id = 'You must specify a PDU'
     }
 
@@ -81,10 +78,16 @@ export default class PractitionerPdu implements TasklistPage {
   }
 
   getRegionPdus() {
-    return this.pdus.map(pdu => ({
-      value: pdu.id,
-      text: pdu.name,
-      selected: this._body.id === pdu.id || undefined,
-    }))
+    return [
+      {
+        value: '',
+        text: 'Select an option',
+      },
+      ...this.pdus.map(pdu => ({
+        value: pdu.id,
+        text: pdu.name,
+        selected: this._body.id === pdu.id || undefined,
+      })),
+    ]
   }
 }

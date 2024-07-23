@@ -3,10 +3,10 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
+  {% set pageTitleHTML %}
     <span class="govuk-caption-l">{{ section.title }}</span>
     {{ page.title }}
-  </h1>
+  {% endset %}
 
   {% set alternativePduDetailHtml %}
     {{ formPageTextarea({
@@ -20,6 +20,13 @@
 
   {{ formPageRadios({
     fieldName: "alternativePdu",
+    fieldset: {
+      legend: {
+        html: pageTitleHTML,
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
     hint: {
       text: "If placement is required in a PDU that's different to the person's current PDU, select 'yes'"
     },

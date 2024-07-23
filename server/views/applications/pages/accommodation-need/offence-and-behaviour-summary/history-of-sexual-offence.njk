@@ -1,13 +1,20 @@
 {% extends "../../layout.njk" %}
 
 {% block questions %}
-    <h1 class="govuk-heading-l">
+    {% set pageTitleHTML %}
         <span class="govuk-caption-l">{{ section.title }}</span>
         {{ page.title }}
-    </h1>
+    {% endset %}
 
     {{ formPageRadios({
         fieldName: "historyOfSexualOffence",
+        fieldset: {
+            legend: {
+                html: pageTitleHTML,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+            }
+        },
         hint: {
             text: "You'll need to explain in the referral how this could affect the accommodation placement."
         },

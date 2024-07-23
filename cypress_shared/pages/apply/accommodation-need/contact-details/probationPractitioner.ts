@@ -20,26 +20,33 @@ export default class ProbationPractitioner extends ApplyPage {
     this.canSaveAndContinue(false)
     this.updateName()
     this.updateEmail()
-    this.addPhoneNumber()
+    this.updatePhoneNumber()
+    this.updatePDU()
     this.canSaveAndContinue(true)
     this.clickSubmit()
   }
 
   updateName() {
-    this.clickLink('Change name')
+    this.clickLink(/(Change Name|Enter a name)/)
     this.completeTextInputByLabel('Full name', this.application.data['contact-details']['practitioner-name'].name)
     this.clickSubmit()
   }
 
   updateEmail() {
-    this.clickLink('Change email address')
+    this.clickLink(/(Change Email address|Enter an email address)/)
     this.completeTextInputByLabel('Email address', this.application.data['contact-details']['practitioner-email'].email)
     this.clickSubmit()
   }
 
-  addPhoneNumber() {
-    this.clickLink('Enter a phone number')
+  updatePhoneNumber() {
+    this.clickLink(/(Change Phone number|Enter a phone number)/)
     this.completeTextInputByLabel('Phone number', this.application.data['contact-details']['practitioner-phone'].phone)
+    this.clickSubmit()
+  }
+
+  updatePDU() {
+    this.clickLink(/(Change PDU|Enter a PDU)/)
+    this.completeSelectInputByLabel('Select the PDU', this.application.data['contact-details']['practitioner-pdu'].name)
     this.clickSubmit()
   }
 

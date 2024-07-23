@@ -1,7 +1,6 @@
 import ConsentGivenPage from './accommodation-need/consent/consentGiven'
 import BackupContactPage from './accommodation-need/contact-details/backupContact'
 import PopPhoneNumberPage from './accommodation-need/contact-details/popPhoneNumber'
-import PractitionerPduPage from './accommodation-need/contact-details/practitionerPdu'
 import ProbationPractitionerPage from './accommodation-need/contact-details/probationPractitioner'
 import AccommodationRequiredFromDatePage from './accommodation-need/eligibility/accommodationRequiredFromDate'
 import EligibilityReasonPage from './accommodation-need/eligibility/eligibilityReason'
@@ -82,7 +81,6 @@ export {
   OffendingSummaryPage,
   OtherAccommodationOptionsPage,
   PopPhoneNumberPage,
-  PractitionerPduPage,
   PreviousStaysDetailsPage,
   PreviousStaysPage,
   ProbationPractitionerPage,

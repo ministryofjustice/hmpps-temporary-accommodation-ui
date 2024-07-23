@@ -1,8 +1,9 @@
 import { SessionData } from 'express-session'
 import { applicationFactory } from '../../../../testutils/factories'
-import UpdatePractitionerDetail, { UpdatePractitionerDetailKey, errorMessages } from './updatePractitionerDetail'
+import UpdatePractitionerDetail, { UpdatePractitionerDetailKey } from './updatePractitionerDetail'
 import TasklistPage from '../../../tasklistPage'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
+import { errorMessages } from './probationPractitioner'
 
 const testBody = {
   name: 'Jane Doe',

@@ -1,16 +1,10 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import { PageResponse, type TaskListErrors } from '@approved-premises/ui'
 import { SessionData } from 'express-session'
-import logger from '../../../../../logger'
+import { errorMessages } from './probationPractitioner'
 
 export type UpdatePractitionerDetailKey = 'name' | 'email' | 'phone'
 export type UpdatePractitionerDetailBody = Record<UpdatePractitionerDetailKey, string>
-
-export const errorMessages = {
-  name: 'You must specify a name',
-  email: 'You must specify an email address',
-  phone: 'You must specify a phone number',
-}
 
 export default abstract class UpdatePractitionerDetail {
   abstract title: string
@@ -39,7 +33,6 @@ export default abstract class UpdatePractitionerDetail {
   }
 
   set body(value) {
-    logger.debug('Set body value:', value)
     if (value[this.propertyName] !== undefined) {
       this._body = value
     } else if (!this._body[this.propertyName]) {
@@ -65,8 +58,6 @@ export default abstract class UpdatePractitionerDetail {
 
   errors(): Partial<Record<keyof this['body'], unknown>> {
     const errors: TaskListErrors<this> = {}
-
-    logger.debug('Error prop name:', this.propertyName)
 
     if (!this.body[this.propertyName]) {
       errors[this.propertyName] = errorMessages[this.propertyName]

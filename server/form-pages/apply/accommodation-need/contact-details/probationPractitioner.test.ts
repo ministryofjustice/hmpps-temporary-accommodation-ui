@@ -1,13 +1,18 @@
 import { SessionData } from 'express-session'
 import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import ProbationPractitioner, { ProbationPractitionerBody } from './probationPractitioner'
-import { errorMessages } from './updatePractitionerDetail'
+import ProbationPractitioner, { ProbationPractitionerBody, errorMessages } from './probationPractitioner'
 import paths from '../../../../paths/apply'
+import { UserDetails } from '../../../../services/userService'
 
 describe('ProbationPractitioner', () => {
   const application = applicationFactory.build()
-  const body = { name: 'Jane Doe', email: 'jane.doe@example.org', phone: '0123456789' } as ProbationPractitionerBody
+  const body: ProbationPractitionerBody = {
+    name: 'Jane Doe',
+    email: 'jane.doe@example.org',
+    phone: '0123456789',
+    pdu: { id: 'pdu-id', name: 'PDU Name' },
+  }
 
   describe('body', () => {
     it('sets the body from updated values in application', () => {
@@ -23,6 +28,10 @@ describe('ProbationPractitioner', () => {
           'practitioner-phone': {
             phone: '0333222111',
           },
+          'practitioner-pdu': {
+            id: 'updated-pdu-id',
+            name: 'Updated PDU Name',
+          },
         },
       }
       const page = new ProbationPractitioner(body, updatedApplication)
@@ -31,6 +40,10 @@ describe('ProbationPractitioner', () => {
         name: 'Jack Black',
         email: 'jack.black@example.org',
         phone: '0333222111',
+        pdu: {
+          id: 'updated-pdu-id',
+          name: 'Updated PDU Name',
+        },
       })
     })
 
@@ -41,10 +54,14 @@ describe('ProbationPractitioner', () => {
     })
 
     it('sets the body to the value found in the user session details if no updated or existing value', () => {
-      const userDetails = {
+      const userDetails: Partial<UserDetails> = {
         displayName: 'John Smith',
         email: 'john.smith@example.org',
         telephoneNumber: '0987654321',
+        probationDeliveryUnit: {
+          id: 'user-pdu-id',
+          name: 'User PDU Name',
+        },
       }
       const page = new ProbationPractitioner({}, application, { userDetails } as SessionData)
 
@@ -52,6 +69,10 @@ describe('ProbationPractitioner', () => {
         name: 'John Smith',
         email: 'john.smith@example.org',
         phone: '0987654321',
+        pdu: {
+          id: 'user-pdu-id',
+          name: 'User PDU Name',
+        },
       })
     })
   })
@@ -69,6 +90,7 @@ describe('ProbationPractitioner', () => {
             Name: 'Jane Doe',
             Email: 'jane.doe@example.org',
             Phone: '0123456789',
+            PDU: 'PDU Name',
           },
         ],
       })
@@ -82,7 +104,7 @@ describe('ProbationPractitioner', () => {
       expect(page.errors()).toEqual({})
     })
 
-    it.each(['name', 'email', 'phone'])('returns an error if the %s property is missing', key => {
+    it.each(['name', 'email', 'phone', 'pdu'])('returns an error if the %s property is missing', key => {
       const bodyIncomplete = { ...body, [key]: undefined } as Partial<ProbationPractitionerBody>
       const page = new ProbationPractitioner(bodyIncomplete, application)
 
@@ -126,6 +148,16 @@ describe('ProbationPractitioner', () => {
               })}" class="govuk-link">Enter a phone number</a>`,
             },
           },
+          {
+            key: { text: 'PDU (Probation delivery unit)' },
+            value: {
+              html: `<a href="${paths.applications.pages.show({
+                id: application.id,
+                task: 'contact-details',
+                page: 'practitioner-pdu',
+              })}" class="govuk-link">Enter a PDU</a>`,
+            },
+          },
         ])
       })
     })
@@ -146,7 +178,7 @@ describe('ProbationPractitioner', () => {
                     page: 'practitioner-name',
                   }),
                   text: 'Change',
-                  visuallyHiddenText: 'name',
+                  visuallyHiddenText: 'Name',
                 },
               ],
             },
@@ -163,7 +195,7 @@ describe('ProbationPractitioner', () => {
                     page: 'practitioner-email',
                   }),
                   text: 'Change',
-                  visuallyHiddenText: 'email address',
+                  visuallyHiddenText: 'Email address',
                 },
               ],
             },
@@ -180,7 +212,24 @@ describe('ProbationPractitioner', () => {
                     page: 'practitioner-phone',
                   }),
                   text: 'Change',
-                  visuallyHiddenText: 'phone number',
+                  visuallyHiddenText: 'Phone number',
+                },
+              ],
+            },
+          },
+          {
+            key: { text: 'PDU (Probation delivery unit)' },
+            value: { text: 'PDU Name' },
+            actions: {
+              items: [
+                {
+                  href: paths.applications.pages.show({
+                    id: application.id,
+                    task: 'contact-details',
+                    page: 'practitioner-pdu',
+                  }),
+                  text: 'Change',
+                  visuallyHiddenText: 'PDU (Probation delivery unit)',
                 },
               ],
             },

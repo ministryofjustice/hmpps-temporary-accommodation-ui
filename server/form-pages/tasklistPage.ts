@@ -17,6 +17,7 @@ export interface TasklistPageInterface {
     document: TemporaryAccommodationApplication | TemporaryAccommodationAssessment,
     callConfig: CallConfig,
     dataServices: DataServices,
+    session?: Partial<SessionData>,
   ): Promise<TasklistPage>
 }
 

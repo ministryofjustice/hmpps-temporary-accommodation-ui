@@ -75,7 +75,7 @@ export default class ApplicationService {
     const body = getBody(Page, application, request, userInput)
 
     const page = Page.initialize
-      ? await Page.initialize(body, application, callConfig, dataServices)
+      ? await Page.initialize(body, application, callConfig, dataServices, request.session)
       : new Page(body, application, request.session)
 
     return page

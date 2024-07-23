@@ -1,4 +1,4 @@
-import { LocalAuthorityArea } from '../../server/@types/shared/models/LocalAuthorityArea'
+import { LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
 import { stubFor } from '../../wiremock'
 
 const stubLocalAuthorities = (localAuthorities: Array<LocalAuthorityArea>) =>
@@ -16,6 +16,22 @@ const stubLocalAuthorities = (localAuthorities: Array<LocalAuthorityArea>) =>
     },
   })
 
+const stubPdus = (args: { pdus: Array<ProbationDeliveryUnit>; probationRegionId: string }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      url: `/reference-data/probation-delivery-units?probationRegionId=${args.probationRegionId}`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: args.pdus,
+    },
+  })
+
 export default {
   stubLocalAuthorities,
+  stubPdus,
 }

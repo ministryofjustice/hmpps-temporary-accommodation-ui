@@ -1,17 +1,19 @@
 {% extends "../../layout.njk" %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ task.title }}</span>
-    {{ page.title }}
-  </h1>
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ task.title }}</span>
+        {{ page.title }}
+    </h1>
 
-  {{ formPageInput({
-    fieldName: "pdu",
-    label: {
-      text: "Provide the PDU",
-      classes: "govuk-label--s"
-    }
-  }, fetchContext()) }}
+    {{ formPageSelect({
+        fieldName: 'id',
+        label: {
+            text: "Select the PDU",
+            classes: "govuk-label--s"
+        },
+        items: page.getRegionPdus()
+    }, fetchContext()) }}
 {% endblock %}

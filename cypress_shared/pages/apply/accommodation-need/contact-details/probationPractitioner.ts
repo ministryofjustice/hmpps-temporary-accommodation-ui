@@ -45,8 +45,11 @@ export default class ProbationPractitioner extends ApplyPage {
   }
 
   updatePDU() {
+    const pdu = this.application.data['contact-details']['practitioner-pdu'].name
     this.clickLink(/(Change PDU|Enter a PDU)/)
-    this.completeSelectInputByLabel('Select the PDU', this.application.data['contact-details']['practitioner-pdu'].name)
+    // Type the first 3 letters of the PDU then click the option shown
+    this.completeTextInputByLabel('PDU (probation delivery unit)', pdu.slice(0, 3))
+    cy.get('li[role="option"]').contains(pdu).click()
     this.clickSubmit()
   }
 

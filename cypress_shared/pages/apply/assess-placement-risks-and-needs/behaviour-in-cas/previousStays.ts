@@ -2,10 +2,12 @@ import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../../../server/paths/apply'
 import ApplyPage from '../../applyPage'
 
+import { personName } from '../../../../../server/utils/personUtils'
+
 export default class PreviousStaysPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Behaviour in previous accommodation',
+      `Has ${personName(application.person)} previously stayed in Community Accommodation Services (CAS)?`,
       application,
       'behaviour-in-cas',
       'previous-stays',

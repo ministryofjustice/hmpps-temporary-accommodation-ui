@@ -2,10 +2,10 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
+  {% set pageTitleHTML %}
     <span class="govuk-caption-l">{{ section.title }}</span>
     {{ page.title }}
-  </h1>
+  {% endset %}
 
   {% set itemsWithDetail = [] %}
 
@@ -35,6 +35,13 @@
 
   {{ formPageCheckboxes({
     fieldName: "conditions",
+    fieldset: {
+      legend: {
+        html: pageTitleHTML,
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
     items: itemsWithDetail
   }, fetchContext()) }}
 

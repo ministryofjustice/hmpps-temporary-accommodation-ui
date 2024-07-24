@@ -2,13 +2,20 @@
 
 {% block questions %}
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ task.title }}</span>
-    {{ page.title }}
-  </h1>
+  {% set pageTitleHTML %}
+      <span class="govuk-caption-l">{{ task.title }}</span>
+      {{ page.title }}
+  {% endset %}
 
   {{ formPageRadios({
     fieldName: "sentenceType",
+    fieldset: {
+      legend: {
+        html: pageTitleHTML,
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      }
+    },
     hint: {
       text: "Select the option which best describes the situation"
     },

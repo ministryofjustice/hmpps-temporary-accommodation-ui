@@ -32,10 +32,10 @@
 
 {% block questions %}
 
-    <h1 class="govuk-heading-l">
+    {% set pageTitleHTML %}
         <span class="govuk-caption-l">{{ task.title }}</span>
         {{ page.title }}
-    </h1>
+    {% endset %}
 
     {% set releaseTypeOptions = [] %}
     {% for option in convertObjectsToCheckboxItems(page.getReleaseTypeOptions(), 'name', 'value', 'releaseTypes') %}
@@ -49,9 +49,13 @@
         fieldName: "releaseTypes",
         fieldset: {
             legend: {
-                text: "Select all that apply",
-                classes: "govuk-fieldset__legend--m"
+                html: pageTitleHTML,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
             }
+        },
+        hint: {
+            text: "Select all that apply"
         },
         items: releaseTypeOptions
     }, fetchContext()) }}

@@ -1,6 +1,11 @@
 {% extends "../../layout.njk" %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
+{% block head %}
+    {{ super() }}
+    <link href="/assets/css/accessible-autocomplete.min.css?{{ version }}" rel="stylesheet" />
+{% endblock %}
+
 {% block questions %}
 
     <h1 class="govuk-heading-l">
@@ -11,7 +16,7 @@
     {{ formPageSelect({
         fieldName: 'id',
         label: {
-            text: "Select the PDU"
+            text: "PDU (probation delivery unit)"
         },
         items: page.getRegionPdus()
     }, fetchContext()) }}
@@ -19,4 +24,21 @@
     {{ govukWarningText({
         html: 'This will not update these details in nDelius. To do this, you need to <a href="https://mojprod.service-now.com/moj_sp?id=emp_taxonomy_topic&topic_id=ef2eede21b1a11503393a797b04bcb87" class="govuk-link">raise a ServiceNow request in the Technology Portal</a>'
     }) }}
+{% endblock %}
+
+{% block extraScripts %}
+
+    <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      accessibleAutocomplete.enhanceSelectElement({
+        selectElement: document.querySelector('select#id'),
+        defaultValue: '',
+      })
+      
+      const hint = document.createElement('p')
+      hint.className = 'govuk-hint'
+      hint.textContent = 'Start typing and then select an option'
+      document.querySelector('label[for="id"]').insertAdjacentElement('afterend', hint)
+    </script>
+
 {% endblock %}

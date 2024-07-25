@@ -17,13 +17,13 @@ export default class TasklistService {
 
     this.formSections.forEach(section => {
       section.tasks.forEach(task => {
-        const previousTaskKey = Object.keys(this.taskStatuses).at(-1)
-        const previousTaskStatus = this.taskStatuses[previousTaskKey]
-
-        if (!previousTaskStatus || previousTaskStatus === 'complete') {
-          this.taskStatuses[task.id] = getTaskStatus(task, applicationOrAssessment)
-        } else {
+        if (
+          task.id === 'check-your-answers' &&
+          Object.values(this.taskStatuses).some(status => status !== 'complete')
+        ) {
           this.taskStatuses[task.id] = 'cannot_start'
+        } else {
+          this.taskStatuses[task.id] = getTaskStatus(task, applicationOrAssessment)
         }
       })
     })

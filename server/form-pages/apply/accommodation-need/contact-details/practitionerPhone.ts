@@ -4,7 +4,7 @@ import UpdatePractitionerDetail, { UpdatePractitionerDetailKey } from './updateP
 
 @Page({ name: 'practitioner-phone', bodyProperties: ['phone'] })
 export default class PractitionerPhone extends UpdatePractitionerDetail implements TasklistPage {
-  title: string = 'Update probation practitioner phone number'
+  title: string = 'What’s your phone number?'
 
   htmlDocumentTitle = this.title
 

@@ -134,11 +134,11 @@ export default abstract class Page extends Component {
   }
 
   completeTextInputByLabel(label: string, value: string): void {
-    cy.get('label').contains(label).parent().find('input').clear().type(value)
+    cy.get('label').contains(label).closest('.govuk-form-group').find('input').clear().type(value)
   }
 
   completeSelectInputByLabel(label: string, value: string): void {
-    cy.get('label').contains(label).siblings('select').select(value)
+    cy.get('label').contains(label).closest('.govuk-form-group').find('select').select(value)
   }
 
   getLabel(labelName: string): void {

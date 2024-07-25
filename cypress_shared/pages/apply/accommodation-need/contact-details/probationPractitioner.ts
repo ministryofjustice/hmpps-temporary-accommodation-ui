@@ -28,19 +28,28 @@ export default class ProbationPractitioner extends ApplyPage {
 
   updateName() {
     this.clickLink(/(Change Name|Enter a name)/)
-    this.completeTextInputByLabel('Full name', this.application.data['contact-details']['practitioner-name'].name)
+    this.completeTextInputByLabel(
+      'What’s your name?',
+      this.application.data['contact-details']['practitioner-name'].name,
+    )
     this.clickSubmit()
   }
 
   updateEmail() {
     this.clickLink(/(Change Email address|Enter an email address)/)
-    this.completeTextInputByLabel('Email address', this.application.data['contact-details']['practitioner-email'].email)
+    this.completeTextInputByLabel(
+      'What’s your email address?',
+      this.application.data['contact-details']['practitioner-email'].email,
+    )
     this.clickSubmit()
   }
 
   updatePhoneNumber() {
     this.clickLink(/(Change Phone number|Enter a phone number)/)
-    this.completeTextInputByLabel('Phone number', this.application.data['contact-details']['practitioner-phone'].phone)
+    this.completeTextInputByLabel(
+      'What’s your phone number?',
+      this.application.data['contact-details']['practitioner-phone'].phone,
+    )
     this.clickSubmit()
   }
 
@@ -48,7 +57,7 @@ export default class ProbationPractitioner extends ApplyPage {
     const pdu = this.application.data['contact-details']['practitioner-pdu'].name
     this.clickLink(/(Change PDU|Enter a PDU)/)
     // Type the first 3 letters of the PDU then click the option shown
-    this.completeTextInputByLabel('PDU (probation delivery unit)', pdu.slice(0, 3))
+    this.completeTextInputByLabel('What’s your PDU (probation delivery unit)?', pdu.slice(0, 3))
     cy.get('li[role="option"]').contains(pdu).click()
     this.clickSubmit()
   }

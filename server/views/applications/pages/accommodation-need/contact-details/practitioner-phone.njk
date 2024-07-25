@@ -3,16 +3,19 @@
 
 {% block questions %}
 
-    <h1 class="govuk-heading-l">
+    {% set pageTitleHTML %}
         <span class="govuk-caption-l">{{ task.title }}</span>
         {{ page.title }}
-    </h1>
+    {% endset %}
 
     {{ formPageInput({
         fieldName: "phone",
         label: {
-            text: "Phone number"
-        }
+            html: pageTitleHTML,
+            isPageHeading: true,
+            classes: "govuk-label--l"
+        },
+        classes: "govuk-input--width-20"
     }, fetchContext()) }}
 
     {{ govukWarningText({

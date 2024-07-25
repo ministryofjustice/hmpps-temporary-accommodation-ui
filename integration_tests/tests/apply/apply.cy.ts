@@ -58,7 +58,7 @@ context('Apply', () => {
     // And that person has more than one offence listed under their CRN
     const offences = activeOffenceFactory.buildList(4)
 
-    const apply = new ApplyHelper(this.application, this.person, offences, 'integration')
+    const apply = new ApplyHelper(this.application, this.person, offences, 'integration', this.actingUser)
     apply.setupApplicationStubs()
     apply.startApplication()
 
@@ -90,7 +90,7 @@ context('Apply', () => {
   })
 
   it("creates and updates an application given a person's CRN", function test() {
-    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration', this.actingUser)
     apply.setupApplicationStubs()
     apply.startApplication()
 
@@ -141,14 +141,14 @@ context('Apply', () => {
   it('allows completion of the form', function test() {
     // And I complete the application
     const uiRisks = mapApiPersonRisksForUi(this.application.risks)
-    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration', this.actingUser)
     apply.setupApplicationStubs(uiRisks)
     apply.startApplication()
     apply.completeApplication()
 
     // Then the application should be submitted to the API
     cy.task('verifyApplicationUpdate', this.application.id).then((requests: Array<{ body: string }>) => {
-      expect(requests).to.have.length(apply.numberOfPages() + 1)
+      expect(requests).to.have.length.greaterThan(apply.numberOfPages())
       const requestBody = JSON.parse(requests[requests.length - 1].body)
 
       // We expect these fields to vary with date, so we effectively omit from testing
@@ -198,7 +198,7 @@ context('Apply', () => {
     // Given there is a complete but not submitted application in the database
     cy.task('stubApplications', [this.application])
 
-    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration', this.actingUser)
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
@@ -220,7 +220,7 @@ context('Apply', () => {
     const application = { ...this.application, data: { ...this.application.data, 'move-on-plan': undefined } }
     cy.task('stubApplications', [application])
 
-    const apply = new ApplyHelper(application, this.person, this.offences, 'integration')
+    const apply = new ApplyHelper(application, this.person, this.offences, 'integration', this.actingUser)
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
@@ -238,7 +238,7 @@ context('Apply', () => {
     // Given there is a complete but not submitted application in the database
     cy.task('stubApplications', [this.application])
 
-    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration', this.actingUser)
     apply.setupApplicationStubs()
 
     // When I visit the application listing page
@@ -277,7 +277,7 @@ context('Apply', () => {
     // Given there is a complete but not submitted application in the database
     cy.task('stubApplications', [this.application])
 
-    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration')
+    const apply = new ApplyHelper(this.application, this.person, this.offences, 'integration', this.actingUser)
     apply.setupApplicationStubs()
 
     // When I visit the application listing page

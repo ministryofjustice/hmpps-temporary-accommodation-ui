@@ -58,18 +58,32 @@
     }
   },
   "contact-details": {
+    "practitioner-name": {
+      "name": "Practitioner Name"
+    },
+    "practitioner-email": {
+      "email": "name@example.com"
+    },
+    "practitioner-phone": {
+      "phone": "01234 56780"
+    },
+    "practitioner-pdu": {
+      "id": "de1bf2c5-fd1b-4a73-b725-f4fc38a67dc8",
+      "name": "Devon and Torbay"
+    },
     "probation-practitioner": {
       "name": "Practitioner Name",
       "phone": "01234 56780",
-      "email": "name@example.com"
+      "email": "name@example.com",
+      "pdu": {
+        "id": "de1bf2c5-fd1b-4a73-b725-f4fc38a67dc8",
+        "name": "Devon and Torbay"
+      }
     },
     "backup-contact": {
       "name": "Backup Name",
       "phone": "09876 54321",
       "email": "backup-name@example.com"
-    },
-    "practitioner-pdu": {
-      "pdu": "Some PDU"
     },
     "pop-phone-number": {
       "phone": "01235 467890"

@@ -13,7 +13,12 @@ function setupTestWithRoles(roles: Array<UserRole>) {
   cy.task('stubSignIn')
 
   const probationRegion = referenceDataFactory.probationRegion().build()
-  const actingUser = userFactory.build({ name: 'john smith', region: probationRegion, roles })
+  const actingUser = userFactory.build({
+    name: 'john smith',
+    region: probationRegion,
+    roles,
+    telephoneNumber: undefined,
+  })
 
   cy.wrap(actingUser).as('actingUser')
   cy.wrap(probationRegion).as('actingUserProbationRegion')

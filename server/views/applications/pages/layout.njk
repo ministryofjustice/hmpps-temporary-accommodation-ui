@@ -14,6 +14,7 @@
 {% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../components/formFields/form-page-checkboxes/macro.njk" import formPageCheckboxes %}
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
+{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -21,37 +22,38 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {% if page.previous() === 'dashboard' %}
-    {{ govukBackLink({
-      text: "Back",
-      href: paths.applications.show({ id: applicationId })
-    }) }}
-  {% elif page.previous() %}
-    {{ govukBackLink({
-      text: "Back",
-      href: paths.applications.pages.show({ id: applicationId, task: task.id, page: page.previous() })
-    }) }}
-  {% endif %}
+    {% if page.previous() === 'dashboard' %}
+        {{ govukBackLink({
+            text: "Back",
+            href: paths.applications.show({ id: applicationId })
+        }) }}
+        {% elif page.previous() %}
+        {{ govukBackLink({
+            text: "Back",
+            href: paths.applications.pages.show({ id: applicationId, task: task.id, page: page.previous() })
+        }) }}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
 
-  {{ showErrorSummary(errorSummary) }}
+    {{ showErrorSummary(errorSummary) }}
 
-  <div class="govuk-grid-row">
-    <div class="{{ columnClasses | default("govuk-grid-column-two-thirds") }}">
-      <form action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    <div class="govuk-grid-row">
+        <div class="{{ columnClasses | default("govuk-grid-column-two-thirds") }}">
+            <form action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT"
+                  method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {% block questions %}{% endblock %}
+                {% block questions %}{% endblock %}
 
-        {% if not disableButton %}
-          {{ govukButton({
-            text: buttonText if buttonText else "Save and continue",
-            preventDoubleClick: true
-          }) }}
-        {% endif %}
-      </form>
+                {% if not disableButton %}
+                    {{ govukButton({
+                        text: buttonText if buttonText else "Save and continue",
+                        preventDoubleClick: true
+                    }) }}
+                {% endif %}
+            </form>
+        </div>
     </div>
-  </div>
 {% endblock %}

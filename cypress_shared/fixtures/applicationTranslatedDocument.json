@@ -55,7 +55,8 @@
                 {
                   "Name": "Practitioner Name",
                   "Phone": "01234 56780",
-                  "Email": "name@example.com"
+                  "Email": "name@example.com",
+                  "PDU": "Devon and Torbay"
                 }
               ]
             },
@@ -67,9 +68,6 @@
                   "Email": "backup-name@example.com"
                 }
               ]
-            },
-            {
-              "PDU": "Some PDU"
             }
           ]
         },

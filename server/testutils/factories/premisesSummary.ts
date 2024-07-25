@@ -14,6 +14,6 @@ export default Factory.define<PremisesSummary>(() => ({
   postcode: faker.location.zipCode(),
   bedCount: 50,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),
-  pdu: referenceDataFactory.pdu().build().id,
+  pdu: referenceDataFactory.pdu().build().name,
   service: 'CAS3',
 }))

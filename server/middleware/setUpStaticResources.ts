@@ -26,12 +26,19 @@ export default function setUpStaticResources(): Router {
     router.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })
 
-  Array.of('/node_modules/govuk_frontend_toolkit/images').forEach(dir => {
-    router.use('/assets/images/icons', express.static(path.join(process.cwd(), dir), cacheControl))
+  Array.of(
+    '/node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.css',
+    '/node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.css.map',
+  ).forEach(file => {
+    router.use(`/assets/css/${path.basename(file)}`, express.static(path.join(process.cwd(), file), cacheControl))
   })
 
-  Array.of('/node_modules/jquery/dist/jquery.min.js').forEach(dir => {
-    router.use('/assets/js/jquery.min.js', express.static(path.join(process.cwd(), dir), cacheControl))
+  Array.of(
+    '/node_modules/jquery/dist/jquery.min.js',
+    '/node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.js',
+    '/node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.js.map',
+  ).forEach(file => {
+    router.use(`/assets/js/${path.basename(file)}`, express.static(path.join(process.cwd(), file), cacheControl))
   })
 
   // Don't cache dynamic resources

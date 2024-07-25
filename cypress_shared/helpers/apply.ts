@@ -1,7 +1,6 @@
 import {
   ActiveOffence,
   Adjudication,
-  TemporaryAccommodationApplication as Application,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
   ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
@@ -11,6 +10,8 @@ import {
   OASysSection,
   Person,
   PersonAcctAlert,
+  TemporaryAccommodationApplication,
+  TemporaryAccommodationUser,
 } from '@approved-premises/api'
 import { PersonRisksUI } from '@approved-premises/ui'
 import {
@@ -28,6 +29,7 @@ import {
   localAuthorityFactory,
   oasysSectionsFactory,
   oasysSelectionFactory,
+  referenceDataFactory,
 } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
 import applicationDataJson from '../fixtures/applicationData.json'
@@ -63,7 +65,6 @@ import {
   OffendingSummaryPage,
   OtherAccommodationOptionsPage,
   PopPhoneNumberPage,
-  PractitionerPduPage,
   PreviousStaysDetailsPage,
   PreviousStaysPage,
   ProbationPractitionerPage,
@@ -129,10 +130,11 @@ export default class ApplyHelper {
   selectedDocuments: Array<Document> = []
 
   constructor(
-    private readonly application: Application,
+    private readonly application: TemporaryAccommodationApplication,
     private readonly person: Person,
     private readonly offences: Array<ActiveOffence>,
     private readonly environment: 'e2e' | 'integration',
+    private readonly actingUser: TemporaryAccommodationUser,
   ) {}
 
   initializeE2e(oasysSectionsLinkedToReoffending: Array<OASysSection>, otherOasysSections: Array<OASysSection>) {
@@ -407,6 +409,11 @@ export default class ApplyHelper {
   }
 
   private completeContactDetails() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build(this.application.data['contact-details']['practitioner-pdu'])
+      cy.task('stubPdus', { pdus: [pdu], probationRegionId: this.actingUser.region.id })
+    }
+
     // Given I click the contact details task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('contact-details')
 
@@ -419,15 +426,11 @@ export default class ApplyHelper {
     backupContactPage.completeForm()
     backupContactPage.clickSubmit()
 
-    const practitionerPduPage = new PractitionerPduPage(this.application)
-    practitionerPduPage.completeForm()
-    practitionerPduPage.clickSubmit()
-
     const popPhoneNumberPage = new PopPhoneNumberPage(this.application)
     popPhoneNumberPage.completeForm()
     popPhoneNumberPage.clickSubmit()
 
-    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, practitionerPduPage, popPhoneNumberPage]
+    this.pages.contactDetails = [probationPractitionerPage, backupContactPage, popPhoneNumberPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

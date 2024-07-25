@@ -1,12 +1,25 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
 {% extends "../../layout.njk" %}
 
+{% set context = fetchContext() %}
+{% set disableButton = page.disableButton() %}
+
 {% block questions %}
+    <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    </h1>
 
-  <h1 class="govuk-heading-l">
-    <span class="govuk-caption-l">{{ section.title }}</span>
-    {{ page.title }}
-  </h1>
+    <p>This information has come from nDelius.</p>
 
-  {% include "../../partials/_contact-details.njk" %}
+    {{ govukInsetText({
+        text: 'You need to update anything that is incorrect or missing.'
+    }) }}
+
+    {{ govukSummaryList({
+        rows: page.summaryListItems()
+    }) }}
 
 {% endblock %}

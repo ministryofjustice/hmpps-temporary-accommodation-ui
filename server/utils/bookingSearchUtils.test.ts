@@ -68,11 +68,11 @@ describe('bookingSearchUtils', () => {
     it('returns table headings with start date sorted ascending for provisional or confirmed booking status', () => {
       const tableHeadings = [
         {
-          html: '<a href="?sortBy=name"><button>Name</button></a>',
+          html: '<a href="?sortBy=name&sortDirection=asc"><button>Name</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+          html: '<a href="?sortBy=crn&sortDirection=asc"><button>CRN</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
@@ -83,7 +83,7 @@ describe('bookingSearchUtils', () => {
           attributes: { 'aria-sort': 'ascending' },
         },
         {
-          html: '<a href="?sortBy=endDate"><button>End date</button></a>',
+          html: '<a href="?sortBy=endDate&sortDirection=asc"><button>End date</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
@@ -99,18 +99,18 @@ describe('bookingSearchUtils', () => {
   it('returns table headings with end date sorted ascending for arrived and departed booking status', () => {
     const tableHeadings = [
       {
-        html: '<a href="?sortBy=name"><button>Name</button></a>',
+        html: '<a href="?sortBy=name&sortDirection=asc"><button>Name</button></a>',
         attributes: { 'aria-sort': 'none' },
       },
       {
-        html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+        html: '<a href="?sortBy=crn&sortDirection=asc"><button>CRN</button></a>',
         attributes: { 'aria-sort': 'none' },
       },
       {
         text: 'Address',
       },
       {
-        html: '<a href="?sortBy=startDate"><button>Start date</button></a>',
+        html: '<a href="?sortBy=startDate&sortDirection=asc"><button>Start date</button></a>',
         attributes: { 'aria-sort': 'none' },
       },
       {

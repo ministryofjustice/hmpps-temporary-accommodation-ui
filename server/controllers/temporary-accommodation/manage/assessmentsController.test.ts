@@ -56,19 +56,19 @@ describe('AssessmentsController', () => {
 
   const tableHeaders = [
     {
-      html: '<a href="?sortBy=name"><button>Name</button></a>',
+      html: '<a href="?sortBy=name&sortDirection=asc"><button>Name</button></a>',
       attributes: {
         'aria-sort': 'none',
       },
     },
     {
-      html: '<a href="?sortBy=crn"><button>CRN</button></a>',
+      html: '<a href="?sortBy=crn&sortDirection=asc"><button>CRN</button></a>',
       attributes: {
         'aria-sort': 'none',
       },
     },
     {
-      html: '<a href="?sortBy=createdAt"><button>Referral received</button></a>',
+      html: '<a href="?sortBy=createdAt&sortDirection=asc"><button>Referral received</button></a>',
       attributes: {
         'aria-sort': 'none',
       },
@@ -108,7 +108,7 @@ describe('AssessmentsController', () => {
         let expectedTemplate = 'temporary-accommodation/assessments/index'
         let expectedHeaders = [...tableHeaders]
         const statusHeader = {
-          html: '<a href="?sortBy=status"><button>Status</button></a>',
+          html: '<a href="?sortBy=status&sortDirection=asc"><button>Status</button></a>',
           attributes: {
             'aria-sort': 'none',
           },
@@ -168,7 +168,7 @@ describe('AssessmentsController', () => {
               },
             },
             {
-              html: '<a href="?sortBy=arrivedAt"><button>Bedspace required</button></a>',
+              html: '<a href="?sortBy=arrivedAt&sortDirection=asc"><button>Bedspace required</button></a>',
               attributes: {
                 'aria-sort': 'none',
               },

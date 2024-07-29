@@ -69,12 +69,7 @@
         </form>
     </div>
 
-    {% if context.errors.query %}
-        <h2>You have not entered any search terms</h2>
-
-        <p>Enter a CRN or any part of the name. The CRN can be found in nDelius.</p>
-
-    {% elif (tableRows|length > 0) or (not query) %}
+    {% if (tableRows|length > 0)%}
 
         <div class="govuk-!-margin-bottom-4">
             {{ mojPagination(pagination) }}

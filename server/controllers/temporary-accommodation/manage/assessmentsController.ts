@@ -75,12 +75,6 @@ export default class AssessmentsController {
           : 'temporary-accommodation/assessments/index'
 
       try {
-        if (params.query !== undefined && !params.query.trim().length) {
-          const error = new Error()
-          insertGenericError(error, 'query', 'empty')
-          throw error
-        }
-
         const response = errors.query
           ? null
           : await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)

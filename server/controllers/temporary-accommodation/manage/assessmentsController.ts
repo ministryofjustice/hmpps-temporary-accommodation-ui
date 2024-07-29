@@ -75,13 +75,13 @@ export default class AssessmentsController {
           : 'temporary-accommodation/assessments/index'
 
       try {
-        if (params.crn !== undefined && !params.crn.trim().length) {
+        if (params.query !== undefined && !params.query.trim().length) {
           const error = new Error()
-          insertGenericError(error, 'crn', 'empty')
+          insertGenericError(error, 'query', 'empty')
           throw error
         }
 
-        const response = errors.crn
+        const response = errors.query
           ? null
           : await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
@@ -95,7 +95,7 @@ export default class AssessmentsController {
             appendQueryString('', params),
             status === 'archived',
           ),
-          crn: params.crn,
+          query: params.query,
           pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
           errors,
         })

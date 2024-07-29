@@ -204,7 +204,7 @@ describe('AssessmentsController', () => {
           })
         })
 
-        describe('when there is a CRN search parameter', () => {
+        describe('when there is a search', () => {
           it('renders the filtered table view', async () => {
             const assessments = assessmentSummaries.build()
             const searchParameters = assessmentSearchParametersFactory.build()
@@ -217,7 +217,7 @@ describe('AssessmentsController', () => {
             await requestHandler(request, response, next)
 
             expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
-              crn: searchParameters.crn,
+              query: searchParameters.query,
               page: 1,
               sortBy: 'arrivedAt',
               sortDirection: 'asc',
@@ -229,22 +229,22 @@ describe('AssessmentsController', () => {
               tableRows: assessments.data,
               tableHeaders: [],
               pagination: {},
-              crn: searchParameters.crn,
+              query: searchParameters.query,
               errors: {},
             })
           })
         })
 
-        describe('when a blank CRN search is submitted', () => {
+        describe('when a blank search is submitted', () => {
           it('renders an error', async () => {
-            const searchParameters = assessmentSearchParametersFactory.build({ crn: '  ' })
+            const searchParameters = assessmentSearchParametersFactory.build({ query: '  ' })
 
             request.query = searchParameters as ParsedQs
 
             const requestHandler = assessmentsController.list(status)
             await requestHandler(request, response, next)
 
-            expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'crn', 'empty')
+            expect(insertGenericError).toHaveBeenCalledWith(new Error(), 'query', 'empty')
             expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
               request,
               response,
@@ -254,10 +254,10 @@ describe('AssessmentsController', () => {
           })
         })
 
-        describe('when there is a CRN search error', () => {
+        describe('when there is a search error', () => {
           it('does not call the API to fetch results', async () => {
             ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
-              errors: { crn: { text: 'You must enter a CRN', attributes: {} } },
+              errors: { query: { text: 'You must enter a CRN', attributes: {} } },
               errorSummary: [],
               userInput: {},
             })

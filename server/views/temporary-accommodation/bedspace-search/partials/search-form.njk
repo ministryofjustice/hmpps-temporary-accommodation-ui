@@ -1,3 +1,4 @@
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
@@ -8,42 +9,61 @@
 
     {{ placeContextValue(placeContext) }}
 
-    {{ formPageDateInput({
-        fieldset: {
-            legend: {
-                text: "Available from",
-                classes: "govuk-fieldset__legend--s"
-            }
-        },
-        fieldName: "startDate",
-        items: dateFieldValues('startDate', errors),
-        hint: {
-            text: dateInputHint('future')
+    {% call govukFieldset({
+        legend: {
+            text: "Dates",
+            classes: "govuk-fieldset__legend--m"
         }
-    }, fetchContext()) }}
+    }) %}
 
-    {{ formPageInput({
-        label: {
-            text: 'Number of days required',
-            classes: "govuk-label--s"
-        },
-        classes: "govuk-input--width-2",
-        fieldName: "durationDays",
-        inputmode: "numeric",
-        spellcheck: false
-    }, fetchContext()) }}
+        {{ formPageDateInput({
+            fieldset: {
+                legend: {
+                    text: "Available from",
+                    classes: "govuk-fieldset__legend--s"
+                }
+            },
+            fieldName: "startDate",
+            items: dateFieldValues('startDate', errors),
+            hint: {
+                text: dateInputHint('future')
+            }
+        }, fetchContext()) }}
+
+        {{ formPageInput({
+            label: {
+                text: 'Number of days required',
+                classes: "govuk-label--s"
+            },
+            classes: "govuk-input--width-2",
+            fieldName: "durationDays",
+            inputmode: "numeric",
+            spellcheck: false
+        }, fetchContext()) }}
+
+    {% endcall %}
 
     {{ formPageSelect({
         label: {
             text: "Probation Delivery Unit (PDU)",
-            classes: "govuk-label--s"
+            classes: "govuk-label--m"
         },
         items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnit'),
         fieldName: "probationDeliveryUnit"
     }, fetchContext()) }}
 
-    {{ govukButton({
-        text: "Update" if results else "Search",
-        preventDoubleClick: true
-    }) }}
+    <div class="govuk-button-group">
+        {{ govukButton({
+            text: "Apply filters" if results else "Search",
+            preventDoubleClick: true
+        }) }}
+
+        {% if not results %}
+            {{ govukButton({
+                text: "Clear all",
+                classes: "govuk-button--secondary",
+                href: paths.bedspaces.search({})
+            }) }}
+        {% endif %}
+    </div>
 </form>

@@ -60,7 +60,11 @@ export default class BedspaceSearchController {
           updatePlaceContextWithArrivalDate(res, placeContext, startDate)
         }
 
-        res.render('temporary-accommodation/bedspace-search/index', {
+        const template = results
+          ? 'temporary-accommodation/bedspace-search/results'
+          : 'temporary-accommodation/bedspace-search/index'
+
+        res.render(template, {
           allPdus,
           results,
           startDate,

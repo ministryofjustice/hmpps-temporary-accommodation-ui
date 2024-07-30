@@ -138,7 +138,7 @@ describe('BedspaceSearchController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/results', {
           allPdus: referenceData.pdus,
           results: searchResults,
           errors: {},

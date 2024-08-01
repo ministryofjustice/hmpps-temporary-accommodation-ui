@@ -1,7 +1,6 @@
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -14,7 +13,6 @@
     {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
     {title: 'View a bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
   ]) }}
-  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

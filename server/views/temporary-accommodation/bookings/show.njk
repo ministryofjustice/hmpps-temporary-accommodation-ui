@@ -3,7 +3,6 @@
 {% from "../../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
 {% from "../../components/pop-details-header/macro.njk" import popDetailsHeader %}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -19,7 +18,6 @@
         {title: 'View a property', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
         {title: 'View a bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
     ]) }}
-    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

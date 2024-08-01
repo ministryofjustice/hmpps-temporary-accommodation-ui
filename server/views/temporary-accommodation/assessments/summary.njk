@@ -7,7 +7,6 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -21,7 +20,6 @@
     {{ breadCrumb(breadCrumbTitle, [
         {title: 'Referrals', href: paths.assessments.index()}
     ]) }}
-    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

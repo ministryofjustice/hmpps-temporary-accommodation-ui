@@ -1,3 +1,4 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/place-context-value/macro.njk" import placeContextValue %}
@@ -19,6 +20,21 @@
 
     <h1 class="govuk-heading-l">Search for available bedspaces</h1>
 
-    {% include './partials/search-form.njk' %}
+    <form action="{{ paths.bedspaces.search({}) }}" method="get">
+        {% include './partials/search-fields.njk' %}
+
+        <div class="govuk-button-group">
+            {{ govukButton({
+                text: "Apply filters YO" if results else "Search",
+                preventDoubleClick: true
+            }) }}
+
+            {{ govukButton({
+                text: "Clear all",
+                classes: "govuk-button--secondary",
+                href: paths.bedspaces.search({})
+            }) }}
+        </div>
+    </form>
 
 {% endblock %}

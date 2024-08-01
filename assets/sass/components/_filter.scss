@@ -1,0 +1,13 @@
+/**
+ * Local style overrides for the MoJ Filter component
+ * https://design-patterns.service.justice.gov.uk/components/filter/
+ */
+
+.moj-filter__header {
+  border: 1px solid govuk-colour('mid-grey');
+  background: govuk-colour("light-grey");
+}
+
+.moj-filter .govuk-select {
+  min-width: 0;
+}

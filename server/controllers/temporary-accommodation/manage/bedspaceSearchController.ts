@@ -39,7 +39,7 @@ export default class BedspaceSearchController {
         ? DateFormats.isoToDateAndTimeInputs(placeContextArrivalDate, 'startDate')
         : {}
 
-      let results: BedSearchResults
+      let results: BedSearchResults['results']
       let startDate: string
 
       try {
@@ -51,11 +51,13 @@ export default class BedspaceSearchController {
 
           const durationDays = parseNaturalNumber(query.durationDays)
 
-          results = await this.searchService.search(callConfig, {
-            ...query,
-            startDate,
-            durationDays,
-          })
+          results = (
+            await this.searchService.search(callConfig, {
+              ...query,
+              startDate,
+              durationDays,
+            })
+          )?.results
 
           updatePlaceContextWithArrivalDate(res, placeContext, startDate)
         }

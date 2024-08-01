@@ -1,9 +1,13 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% from "moj/components/filter/macro.njk" import mojFilter %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "Search for available bedspaces - " + applicationName %}
+{% set pageTitle = "Bedspace search results (" + results.length + ") - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -13,112 +17,123 @@
 {% block content %}
     {% include "../../_messages.njk" %}
 
-    <h1 class="govuk-heading-l">Search for available bedspaces</h1>
+    <h1 class="govuk-heading-l">Bedspace search results ({{ results.length }})</h1>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-third govuk-!-margin-bottom-8">
-            {% include './partials/search-form.njk' %}
+            {% set filterOptionsHtml %}
+                {% include './partials/search-fields.njk' %}
 
-            <a href="{{ paths.bedspaces.search({}) }}" class="govuk-link">Clear filters</a>
+                <div class="govuk-button-group">
+                    {{ govukButton({
+                        text: "Apply filters",
+                        preventDoubleClick: true
+                    }) }}
+
+                    <a href="{{ paths.bedspaces.search({}) }}" class="govuk-link">Clear filters</a>
+                </div>
+            {% endset %}
+
+            <form action="{{ paths.bedspaces.search({}) }}" method="get">
+                {{ mojFilter({
+                    heading: {
+                        text: 'Filter'
+                    },
+                    optionsHtml: filterOptionsHtml
+                }) }}
+            </form>
         </div>
 
         <div class="govuk-grid-column-two-thirds">
-            {% if results.results.length === 0 %}
-                <p class="govuk-body-l">
-                    There are no available bedspaces
+            {% if results.length === 0 %}
+                <h2 class="govuk-heading-m">
+                    There are no available bedspaces for
                     {{ parseNaturalNumber(durationDays) }} {{ 'day' if parseNaturalNumber(durationDays) === 1 else 'days' }}
                     from {{ formatDate(startDate) }}.
-                </p>
-                <p class="govuk-body-l">Try changing one or more of your search criteria to get more results.</p>
+                </h2>
+                <p class="govuk-body">Try changing one or more of your search criteria to get more results.</p>
             {% else %}
-                <p class="govuk-heading-m">
-                    {{ results.results.length }} {{ 'result' if results.results.length === 1 else 'results' }}
-                    for your bedspace search
-                </p>
+                {% for result in results %}
+                    <article class="result-card" data-cy-bedspace>
+                        <header class="result-card__header">
+                            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                                <a class="govuk-link"
+                                   href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id})) }}">
+                                    Bedspace reference: {{ result.room.name }}
+                                </a>
+                            </h2>
+                        </header>
 
-                {% for result in results.results %}
-                    <div data-cy-bedspace>
-                        <h2 class="govuk-heading-m">
-                            <a class="govuk-link--no-underline"
-                               href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id})) }}">{{ result.room.name }}</a>
-                        </h2>
-                        <h3 class="govuk-heading-s">{{ PremisesUtils.shortAddress(result.premises) }}</h3>
+                        <div class="result-card__body">
+                            {{ govukSummaryList({
+                                rows: [
+                                    {
+                                        key: { text: 'Address' },
+                                        value: { text: PremisesUtils.shortAddress(result.premises) }
+                                    },
+                                    {
+                                        key: { text: 'Bedspaces' },
+                                        value: { text: result.premises.bedCount + ' total' }
+                                    }
+                                ]
+                            }) }}
 
-                        {% set premisesKeyCharacteristics = BedspaceSearchResultUtils.premisesKeyCharacteristics(result) %}
-                        {% set bedspaceKeyCharacteristics = BedspaceSearchResultUtils.bedspaceKeyCharacteristics(result) %}
-
-                        {% if premisesKeyCharacteristics.length or bedspaceKeyCharacteristics.length %}
-                            {% set keyCharacteristicsHtml %}
-                                {% if premisesKeyCharacteristics.length %}
-                                    <p class="govuk-body govuk-!-static-margin-bottom-1">Property</p>
-                                    <ul class="govuk-list govuk-list--bullet" data-cy-premises-key-characteristics>
-                                        {% for characteristic in premisesKeyCharacteristics %}
-                                            <li>{{ characteristic }}</li>
+                            {% if result.overlaps.length %}
+                                {% set otherPeopleStayingHtml %}
+                                    <ul class="govuk-list govuk-list--spaced" data-cy-overlaps>
+                                        {% for overlap in result.overlaps %}
+                                            <li>
+                                                CRN: {{ overlap.crn }}<br>
+                                                {{ overlap.days }} {{ 'day' if overlap.days == '1' else 'days' }}
+                                                overlap<br>
+                                                <a class="govuk-link"
+                                                   href="{{ addPlaceContext(paths.bookings.show({premisesId: result.premises.id, roomId: overlap.roomId, bookingId: overlap.bookingId})) }}">
+                                                    View booking
+                                                </a>
+                                            </li>
                                         {% endfor %}
                                     </ul>
-                                {% endif %}
+                                {% endset %}
 
-                                {% if bedspaceKeyCharacteristics.length %}
-                                    <p class="govuk-body govuk-!-static-margin-bottom-1">Bedspace</p>
-                                    <ul class="govuk-list govuk-list--bullet" data-cy-bedspace-key-characteristics>
-                                        {% for characteristic in bedspaceKeyCharacteristics %}
-                                            <li>{{ characteristic }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
+                                {{ govukDetails({
+                                    summaryText: "Other people staying",
+                                    html: otherPeopleStayingHtml
+                                }) }}
+                            {% endif %}
+
+                            {% set bedspaceKeyCharacteristics = BedspaceSearchResultUtils.bedspaceKeyCharacteristics(result) %}
+                            {% set premisesKeyCharacteristics = BedspaceSearchResultUtils.premisesKeyCharacteristics(result) %}
+                            {% set attributesHtml %}
+                                <div class="govuk-grid-row">
+                                    <div class="govuk-grid-column-one-half">
+                                        <h3 class="govuk-heading-s">Bedspace attributes</h3>
+
+                                        <ul class="govuk-list" data-cy-bedspace-key-characteristics>
+                                            {% for characteristic in bedspaceKeyCharacteristics %}
+                                                <li>{{ characteristic }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+
+                                    <div class="govuk-grid-column-one-half">
+                                        <h3 class="govuk-heading-s">Property attributes</h3>
+
+                                        <ul class="govuk-list" data-cy-premises-key-characteristics>
+                                            {% for characteristic in premisesKeyCharacteristics %}
+                                                <li>{{ characteristic }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+
                             {% endset %}
-                        {% else %}
-                            {% set keyCharacteristicsHtml = undefined %}
-                        {% endif %}
 
-                        {% if result.overlaps.length %}
-                            {% set overlapsHtml %}
-                                <ul class="govuk-list" data-cy-overlaps>
-                                    {% for overlap in result.overlaps %}
-                                        <li>
-                                            <a class="govuk-link"
-                                               href="{{ addPlaceContext(paths.bookings.show({premisesId: result.premises.id, roomId: overlap.roomId, bookingId: overlap.bookingId})) }}">{{ overlap.crn }}</a>
-                                            ({{ overlap.days }} day overlap)
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endset %}
-                        {% else %}
-                            {% set overlapsHtml = undefined %}
-                        {% endif %}
-
-                        {{ govukSummaryList({
-                            classes: 'govuk-summary-list--no-border',
-                            rows: [
-                                {
-                                    key: {
-                                    text: "Attributes"
-                                },
-                                    value: {
-                                    html: keyCharacteristicsHtml
-                                }
-                                } if keyCharacteristicsHtml else undefined,
-                                {
-                                    key: {
-                                    text: "Number of bedspaces"
-                                },
-                                    value: {
-                                    text: result.premises.bedCount
-                                }
-                                },
-                                {
-                                    key: {
-                                    text: "People who will be in the shared property"
-                                },
-                                    value: {
-                                    html: overlapsHtml
-                                }
-                                } if overlapsHtml else undefined
-                            ]
-                        }) }}
-
-                        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-                    </div>
+                            {{ govukDetails({
+                                summaryText: "Bedspace and property attributes",
+                                html: attributesHtml
+                            }) }}
+                        </div>
+                    </article>
                 {% endfor %}
             {% endif %}
         </div>

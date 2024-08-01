@@ -140,7 +140,7 @@ describe('BedspaceSearchController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/results', {
           allPdus: referenceData.pdus,
-          results: searchResults,
+          results: searchResults.results,
           errors: {},
           errorSummary: [],
           ...request.query,

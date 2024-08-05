@@ -23,14 +23,14 @@ npm run test:ci
 echo "==> Starting the backing services in Docker..."
 
 script/utils/launch-docker.sh
-docker-compose -f docker-compose-test.yml up -d
+docker compose -f docker-compose-test.yml up -d
 
 echo "==> Running integration tests..."
 
 npm run test:integration
 
 cleanup() {
-  docker-compose -f docker-compose-test.yml down --remove-orphans
+  docker compose -f docker-compose-test.yml down --remove-orphans
 }
 
 trap cleanup EXIT

@@ -9,7 +9,7 @@ cd "$(dirname "$0")/.."
 
 cleanup() {
   echo "==> Tearing down any old containers..."
-  docker-compose down
+  docker compose down
 }
 trap cleanup EXIT
 

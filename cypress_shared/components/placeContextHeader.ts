@@ -21,25 +21,25 @@ export default class PlaceContextHeaderComponent extends Component {
       cy.root().should('contain', 'View referral summary (opens in new tab)')
 
       if (isFullPerson(person)) {
-        cy.root().should(
-          'contain',
-          `Date of birth: ${DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' })}`,
-        )
+        cy.root()
+          .contains('Date of birth:')
+          .next()
+          .should('contain', DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }))
 
         if (person.genderIdentity) {
-          cy.root().should('contain', `Gender identity: ${person.genderIdentity}`)
+          cy.root().contains('Gender identity:').next().should('contain', person.genderIdentity)
           cy.root().should('not.contain', 'Sex')
         } else {
-          cy.root().should('contain', `Sex: ${person.sex}`)
+          cy.root().contains('Sex:').next().should('contain', person.sex)
           cy.root().should('not.contain', 'Gender identity')
         }
       }
-      cy.root().should('contain', `CRN: ${person.crn}`)
-      cy.root().should(
-        'contain',
-        `Accommodation required from: ${DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate, { format: 'short' })}`,
-      )
-      cy.root().should('contain', 'Suitable to share: Yes')
+      cy.root().contains('CRN:').next().should('contain', person.crn)
+      cy.root()
+        .contains('Accommodation required')
+        .next()
+        .should('contain', DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate, { format: 'short' }))
+      cy.root().contains('Suitable to share:').next().should('contain', 'Yes')
     })
   }
 }

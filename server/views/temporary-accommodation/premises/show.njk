@@ -1,7 +1,6 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -15,7 +14,6 @@
     {{ breadCrumb('View a property', [
         {title: 'List of properties', href: addPlaceContext(paths.premises.index())}
     ]) }}
-    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

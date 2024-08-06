@@ -85,19 +85,22 @@ context('Booking search', () => {
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('provisional')
 
-    // And I order results by start date
+    // Then I see the results are ordered by End date descending
+    page.checkColumnOrder('End date', 'descending')
+
+    // When I order results by start date
     page.sortColumn('Start date')
 
-    // Then I see the results are ordered by start date descending
+    // Then I see the results are ordered by start date ascending
     page.shouldHaveURLSearchParam('sortBy=startDate')
-    page.checkColumnOrder('Start date', 'descending')
+    page.checkColumnOrder('Start date', 'ascending')
 
     // When I order the results by start date again
     page.sortColumn('Start date')
 
-    // Then I see the results are ordered by start date ascending
-    page.shouldHaveURLSearchParam('sortBy=startDate&sortDirection=asc')
-    page.checkColumnOrder('Start date', 'ascending')
+    // Then I see the results are ordered by start date descending
+    page.shouldHaveURLSearchParam('sortBy=startDate&sortDirection=desc')
+    page.checkColumnOrder('Start date', 'descending')
   })
 
   it('shows the result of a crn search and clears the search', () => {

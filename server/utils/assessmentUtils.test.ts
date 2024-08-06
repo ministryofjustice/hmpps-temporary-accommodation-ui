@@ -451,7 +451,7 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: '<a href="?foo=bar&sortBy=name"><button>Name</button></a>',
+          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
@@ -459,11 +459,11 @@ describe('assessmentUtils', () => {
           attributes: { 'aria-sort': 'ascending' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=createdAt"><button>Referral received</button></a>',
+          html: '<a href="?foo=bar&sortBy=createdAt&sortDirection=asc"><button>Referral received</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=arrivedAt"><button>Bedspace required</button></a>',
+          html: '<a href="?foo=bar&sortBy=arrivedAt&sortDirection=asc"><button>Bedspace required</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
       ])
@@ -474,19 +474,19 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: '<a href="?foo=bar&sortBy=name"><button>Name</button></a>',
+          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=crn"><button>CRN</button></a>',
+          html: '<a href="?foo=bar&sortBy=crn&sortDirection=asc"><button>CRN</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=createdAt"><button>Referral received</button></a>',
+          html: '<a href="?foo=bar&sortBy=createdAt&sortDirection=asc"><button>Referral received</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=arrivedAt"><button>Bedspace required</button></a>',
+          html: '<a href="?foo=bar&sortBy=arrivedAt&sortDirection=asc"><button>Bedspace required</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {

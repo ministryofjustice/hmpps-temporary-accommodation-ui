@@ -3,7 +3,6 @@
 {% from "../../components/lost-bed-info/macro.njk" import lostBedInfo %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -15,7 +14,6 @@
         {title: 'List of bedspaces', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
         {title: 'View bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
     ]) }}
-    {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

@@ -305,6 +305,30 @@ describe('dateAndTimeInputsAreValidDates', () => {
 
     expect(result).toEqual(false)
   })
+
+  it('returns false when the date is well formatted but does not exist', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': '2024',
+      'date-month': '11',
+      'date-day': '31',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(false)
+  })
+
+  it('returns false when the date is gibberish', () => {
+    const obj: ObjectWithDateParts<'date'> = {
+      'date-year': 'not',
+      'date-month': 'a',
+      'date-day': 'date',
+    }
+
+    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+
+    expect(result).toEqual(false)
+  })
 })
 
 describe('dateIsBlank', () => {

@@ -10,15 +10,19 @@ export default class BedspaceSearchResult extends Component {
   shouldShowResult(checkCount = true): void {
     cy.get('h2')
       .contains(this.result.room.name)
-      .parents('div[data-cy-bedspace]')
+      .parents('article[data-cy-bedspace]')
       .within(() => {
-        if (this.result.premises.town) {
-          cy.get('h3').should(
-            'contain',
-            `${this.result.premises.addressLine1}, ${this.result.premises.town}, ${this.result.premises.postcode}`,
-          )
-        } else {
-          cy.get('h3').should('contain', `${this.result.premises.addressLine1},${this.result.premises.postcode}`)
+        const fullAddress = [
+          this.result.premises.addressLine1,
+          this.result.premises.town,
+          this.result.premises.postcode,
+        ]
+          .filter(Boolean)
+          .join(', ')
+        this.shouldShowKeyAndValue('Address', fullAddress)
+
+        if (checkCount) {
+          this.shouldShowKeyAndValue('Bedspaces', `${this.result.premises.bedCount} total`)
         }
 
         this.result.premises.characteristics.forEach(characteristic => {
@@ -29,16 +33,14 @@ export default class BedspaceSearchResult extends Component {
           cy.get('ul[data-cy-bedspace-key-characteristics] > li').should('contain', characteristic.name)
         })
 
-        if (checkCount) {
-          this.shouldShowKeyAndValue('Number of bedspaces', `${this.result.premises.bedCount}`)
-        }
-
         this.result.overlaps.forEach((overlap, i) => {
           cy.get('ul[data-cy-overlaps] > li')
             .eq(i)
             .within(() => {
+              cy.root().contains(`CRN: ${overlap.crn}`)
+              cy.root().contains(overlap.days === 1 ? '1 day overlap' : `${overlap.days} days overlap`)
               cy.get('a')
-                .contains(overlap.crn)
+                .contains('View booking')
                 .should(
                   'have.attr',
                   'href',
@@ -48,14 +50,13 @@ export default class BedspaceSearchResult extends Component {
                     bookingId: overlap.bookingId,
                   }),
                 )
-
-              cy.root().contains(`(${overlap.days} day overlap)`)
             })
         })
       })
   }
 
   clickOverlapLink(crn: string) {
-    cy.get('ul[data-cy-overlaps] > li > a').contains(crn).click()
+    cy.get('summary').contains('Other people staying').click()
+    cy.get('ul[data-cy-overlaps] > li').contains(crn).find('a').click()
   }
 }

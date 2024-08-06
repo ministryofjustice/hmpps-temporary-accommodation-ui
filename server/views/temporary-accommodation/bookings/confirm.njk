@@ -3,7 +3,6 @@
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
 {% from "../../components/pop-details-header/macro.njk" import popDetailsHeader%}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 {% from "../../components/place-context-value/macro.njk" import placeContextValue %}
 
 {% extends "../../partials/layout.njk" %}
@@ -16,7 +15,6 @@
     text: "Back",
     href: backLink
   }) }}
-  {{ placeContextHeader(placeContext) }}
 {% endblock %}
 
 {% block content %}

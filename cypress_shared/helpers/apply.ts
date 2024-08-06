@@ -134,7 +134,7 @@ export default class ApplyHelper {
     private readonly person: Person,
     private readonly offences: Array<ActiveOffence>,
     private readonly environment: 'e2e' | 'integration',
-    private readonly actingUser: TemporaryAccommodationUser,
+    private readonly actingUser?: TemporaryAccommodationUser,
   ) {}
 
   initializeE2e(oasysSectionsLinkedToReoffending: Array<OASysSection>, otherOasysSections: Array<OASysSection>) {

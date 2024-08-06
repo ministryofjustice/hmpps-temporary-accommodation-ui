@@ -1,12 +1,6 @@
-{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
-{% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
-{% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
-{% from "../../components/place-context-header/macro.njk" import placeContextHeader %}
 {% from "../../components/place-context-value/macro.njk" import placeContextValue %}
 
 {% extends "../../partials/layout.njk" %}
@@ -15,172 +9,32 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('Search for available bedspaces', []) }}
-  {{ placeContextHeader(placeContext) }}
+    {{ breadCrumb('Search for available bedspaces', []) }}
+
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  {{ showErrorSummary(errorSummary) }}
+    {{ showErrorSummary(errorSummary) }}
 
-  <h1 class="govuk-heading-l">Search for available bedspaces</h1>
+    <h1 class="govuk-heading-l">Search for available bedspaces</h1>
 
-  <form action="{{ paths.bedspaces.search({}) }}" method="get">
+    <form action="{{ paths.bedspaces.search({}) }}" method="get">
+        {% include './partials/search-fields.njk' %}
 
-    {{ placeContextValue(placeContext) }}
-
-    {{ formPageDateInput(
-      {
-        fieldset: {
-          legend: {
-          text: "Available from",
-          classes: "govuk-fieldset__legend--s"
-          }
-        },
-        fieldName: "startDate",
-        items: dateFieldValues('startDate', errors),
-        hint: {
-          text: dateInputHint('future')
-        }
-      },
-      fetchContext()
-    ) }}
-
-    {{ formPageInput(
-      {
-        label: {
-        text: 'Number of days required',
-        classes: "govuk-label--s"
-      },
-        classes: "govuk-input--width-2",
-        fieldName: "durationDays",
-        inputmode: "numeric",
-        spellcheck: false
-      },
-      fetchContext()
-    ) }}
-   
-    {{ formPageSelect(
-      {
-        label: {
-          text: "Probation Delivery Unit (PDU)",
-          classes: "govuk-label--s"
-        },
-        items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnit'),
-        fieldName: "probationDeliveryUnit"
-      },
-      fetchContext()
-    ) }}
-
-    {{ govukButton({
-      text: "Update" if results else "Search",
-      preventDoubleClick: true
-    }) }}
-  </form>
-
-  {% if results %}
-      {% if results.results.length === 0 %}
-        <p>
-          <p class="govuk-body-l">
-            There are no available bedspaces {{ parseNaturalNumber(durationDays) }} {{ 'day' if parseNaturalNumber(durationDays) === 1 else 'days' }} from {{ formatDate(startDate) }}.
-          </p>
-          <p class="govuk-body-l">
-            Try changing one or more of your search criteria to get more results.
-          </p>
-        </p>
-      {% else  %}
-        <p>
-          {{ results.results.length }} {{ 'result' if results.results.length === 1 else 'results' }}
-        </p>
-
-        {% for result in results.results %}
-          <div data-cy-bedspace>
-            <h2 class="govuk-heading-m">
-              <a class="govuk-link--no-underline" href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id})) }}">{{ result.room.name }}</a>
-            </h2>
-            <h3 class="govuk-heading-s">{{ PremisesUtils.shortAddress(result.premises) }}</h3>
-
-            {% set premisesKeyCharacteristics = BedspaceSearchResultUtils.premisesKeyCharacteristics(result)  %}
-            {% set bedspaceKeyCharacteristics = BedspaceSearchResultUtils.bedspaceKeyCharacteristics(result)  %}
-
-            {% if premisesKeyCharacteristics.length or bedspaceKeyCharacteristics.length %}
-              {% set keyCharacteristicsHtml %}
-                {% if premisesKeyCharacteristics.length %}
-                  <p class="govuk-body govuk-!-static-margin-bottom-1">Property</p>
-                  <ul class="govuk-list govuk-list--bullet" data-cy-premises-key-characteristics>
-                    {% for characteristic in premisesKeyCharacteristics %}
-                      <li>{{ characteristic }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-
-                {% if bedspaceKeyCharacteristics.length %}
-                  <p class="govuk-body govuk-!-static-margin-bottom-1">Bedspace</p>
-                  <ul class="govuk-list govuk-list--bullet" data-cy-bedspace-key-characteristics>
-                    {% for characteristic in bedspaceKeyCharacteristics %}
-                      <li>{{ characteristic }}</li>
-                    {% endfor %}
-                  </ul>
-                {% endif %}
-              {% endset %}
-            {% else %}
-              {% set keyCharacteristicsHtml = undefined %}
-            {% endif %}
-
-            {% if result.overlaps.length %}
-              {% set overlapsHtml %}
-                <ul class="govuk-list" data-cy-overlaps>
-                  {% for overlap in result.overlaps %}
-                    <li>
-                      <a class="govuk-link" href="{{ addPlaceContext(paths.bookings.show({premisesId: result.premises.id, roomId: overlap.roomId, bookingId: overlap.bookingId})) }}">{{ overlap.crn }}</a>
-                      ({{ overlap.days }} day overlap)
-                    </li>
-                  {% endfor %}
-                </ul>
-              {% endset %}
-            {% else %}
-              {% set overlapsHtml = undefined %}
-            {% endif %}
-
-            {{ govukSummaryList({
-              classes: 'govuk-summary-list--no-border',
-              rows: [
-                {
-                  key: {
-                    text: "Attributes"
-                  },
-                  value: {
-                    html: keyCharacteristicsHtml
-                  }
-                } if keyCharacteristicsHtml else undefined,
-                {
-                  key: {
-                    text: "Number of bedspaces"
-                  },
-                  value: {
-                    text: result.premises.bedCount
-                  }
-                },
-                {
-                  key: {
-                    text: "People who will be in the shared property"
-                  },
-                  value: {
-                    html: overlapsHtml
-                  }
-                } if overlapsHtml else undefined
-              ]
+        <div class="govuk-button-group">
+            {{ govukButton({
+                text: "Apply filters YO" if results else "Search",
+                preventDoubleClick: true
             }) }}
 
-            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
-          </div>
-        {% endfor %}
-
-      {% endif %}
-
-  {% endif %}
-
-
+            {{ govukButton({
+                text: "Clear all",
+                classes: "govuk-button--secondary",
+                href: paths.bedspaces.search({})
+            }) }}
+        </div>
+    </form>
 
 {% endblock %}

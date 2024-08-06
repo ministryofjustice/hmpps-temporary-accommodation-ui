@@ -10,23 +10,20 @@ export const sortHeader = <T extends string>(
   currentSortAscending: boolean,
   hrefPrefix: string,
 ): TableCell => {
-  let sortDirection: SortDirection
-  let ariaSort: string
-
-  const [basePath, queryString] = hrefPrefix.split('?')
-  const qsArgs = qs.parse(queryString)
+  const sortDirection: SortDirection = currentSortAscending && currentSortField === targetField ? 'desc' : 'asc'
+  let ariaSort: string = 'none'
 
   if (targetField === currentSortField) {
     if (currentSortAscending) {
-      sortDirection = 'desc'
       ariaSort = 'ascending'
     } else {
-      sortDirection = 'asc'
       ariaSort = 'descending'
     }
-  } else {
-    ariaSort = 'none'
   }
+
+  const [basePath, queryString] = hrefPrefix.split('?')
+
+  const qsArgs = qs.parse(queryString)
 
   return {
     html: `<a href="${basePath}?${createQueryString({

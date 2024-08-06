@@ -1,38 +1,59 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% macro placeContextHeader(placeContext) %}
-
     {% if placeContext %}
         {% set person = placeContext.assessment.application.person %}
 
-        <div class="place-context-header govuk-body">
-            <strong class="govuk-heading-s govuk-!-margin-bottom-2">Person to place</strong>
-            <div class="place-context-header__attribute-container govuk-!-margin-bottom-2">
-                <div>{{ personName(person, 'Limited access offender') }}</div>
-                {% if isFullPerson(person) %}
-                    <div>Date of birth: {{ formatDate(person.dateOfBirth, {format: 'short'}) }}</div>
-                    {% if person.genderIdentity %}
-                        <div>Gender identity: {{ person.genderIdentity }}</div>
-                    {% else %}
-                        <div>Sex: {{ person.sex }}</div>
+        <section class="place-context-header">
+            <div class="govuk-width-container govuk-body govuk-!-margin-bottom-0">
+                <h2 class="place-context-header__heading govuk-heading-m govuk-!-margin-bottom-1">
+                    <span class="govuk-visually-hidden">Person to place: </span>{{ personName(person, 'Limited access offender') }}
+                </h2>
+                <dl class="place-context-header__attributes">
+                    <div class="place-context-header__row">
+                        <dt class="place-context-header__key">CRN: </dt>
+                        <dd class="place-context-header__value">{{ person.crn }}</dd>
+                    </div>
+                    {% if isFullPerson(person) %}
+                        <div class="place-context-header__row">
+                            <dt class="place-context-header__key">Date of birth: </dt>
+                            <dd class="place-context-header__value">{{ formatDate(person.dateOfBirth, {format: 'short'}) }}</dd>
+                        </div>
+                        {% if person.genderIdentity %}
+                            <div class="place-context-header__row">
+                                <dt class="place-context-header__key">Gender identity: </dt>
+                                <dd class="place-context-header__value">{{ person.genderIdentity }}</dd>
+                            </div>
+                        {% else %}
+                            <div class="place-context-header__row">
+                                <dt class="place-context-header__key">Sex: </dt>
+                                <dd class="place-context-header__value">{{ person.sex }}</dd>
+                            </div>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-                <div>CRN: {{ person.crn }}</div>
-                {% if placeContext.assessment.accommodationRequiredFromDate %}
-                    {% set accommodationRequiredFromDate = formatDate(placeContext.assessment.accommodationRequiredFromDate, {format: 'short'}) %}
-                    <div>Accommodation required from: {{ accommodationRequiredFromDate }}</div>
-                {% endif %}
-                {% if placeContext.assessment.summaryData.isAbleToShare === true %}
-                    <div>Suitable to share: Yes</div>
-                {% endif %}
-                {% if placeContext.assessment.summaryData.isAbleToShare === false %}
-                    <div>Suitable to share: No</div>
-                {% endif %}
-            </div>
-            <a class="govuk-link"
-               href="{{ addPlaceContext(paths.assessments.summary({ id: placeContext.assessment.id })) }}"
-               rel="noreferrer noopener" target="_blank">View referral summary (opens in new tab)</a>
-        </div>
-    {% endif %}
 
+                    {% if placeContext.assessment.accommodationRequiredFromDate %}
+                        <div class="place-context-header__row">
+                            <dt class="place-context-header__key">Accommodation required: </dt>
+                            <dd class="place-context-header__value">
+                                {% set accommodationRequiredFromDate = formatDate(placeContext.assessment.accommodationRequiredFromDate, {format: 'short'}) %}
+                                {{ accommodationRequiredFromDate }}
+                            </dd>
+                        </div>
+                    {% endif %}
+
+                    <div class="place-context-header__row">
+                        <dt class="place-context-header__key">Suitable to share: </dt>
+                        <dd class="place-context-header__value"> 
+                            {{ "Yes" if placeContext.assessment.summaryData.isAbleToShare === true else "No" }}
+                        </dd>
+                    </div>
+                </dl>
+
+                <a class="govuk-link govuk-link--inverse" href="{{ addPlaceContext(paths.assessments.summary({ id: placeContext.assessment.id })) }}" rel="noreferrer noopener" target="_blank">
+                View referral summary (opens in new tab)
+                </a>
+            </div>
+        </section>
+    {% endif %}
 {% endmacro %}

@@ -1,0 +1,51 @@
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
+{% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
+{% from "../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
+{% from "../../../components/place-context-value/macro.njk" import placeContextValue %}
+
+{{ placeContextValue(placeContext) }}
+
+{% call govukFieldset({
+    legend: {
+        text: "Dates",
+        classes: "govuk-fieldset__legend--m"
+    },
+    classes: "govuk-!-margin-bottom-4"
+}) %}
+
+    {{ formPageDateInput({
+        fieldset: {
+            legend: {
+                text: "Available from",
+                classes: "govuk-fieldset__legend--s"
+            }
+        },
+        fieldName: "startDate",
+        items: dateFieldValues('startDate', errors),
+        hint: {
+            text: dateInputHint('future')
+        }
+    }, fetchContext()) }}
+
+    {{ formPageInput({
+        label: {
+            text: 'Number of days required',
+            classes: "govuk-label--s"
+        },
+        classes: "govuk-input--width-2",
+        fieldName: "durationDays",
+        inputmode: "numeric",
+        spellcheck: false
+    }, fetchContext()) }}
+
+{% endcall %}
+
+{{ formPageSelect({
+    label: {
+        text: "Probation Delivery Unit (PDU)",
+        classes: "govuk-label--m"
+    },
+    items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnit'),
+    fieldName: "probationDeliveryUnit"
+}, fetchContext()) }}

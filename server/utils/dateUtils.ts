@@ -163,17 +163,12 @@ export const dateAndTimeInputsAreValidDates = <K extends string | number>(
 
   if (inputYear && inputYear.length !== 4) return false
 
-  const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)
-
   try {
-    DateFormats.isoToDateObj(dateString[key])
-  } catch (err) {
-    if (err instanceof InvalidDateStringError) {
-      return false
-    }
+    const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)
+    return dateExists(dateString[key])
+  } catch (e) {
+    return false
   }
-
-  return true
 }
 
 export const dateExists = (dateString: string) => {

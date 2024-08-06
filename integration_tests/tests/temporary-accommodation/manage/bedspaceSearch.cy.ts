@@ -11,6 +11,7 @@ import {
   bookingFactory,
   overlapFactory,
   personFactory,
+  placeContextFactory,
   premisesFactory,
   roomFactory,
 } from '../../../../server/testutils/factories'
@@ -97,7 +98,7 @@ context('Bedspace Search', () => {
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
-    // Then a search should have been recieved by the API
+    // Then a search should have been received by the API
     cy.task('verifyBedSearch').then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
@@ -108,7 +109,7 @@ context('Bedspace Search', () => {
     })
 
     // And I should see empty search results
-    const postSearchPage = Page.verifyOnPage(BedspaceSearchPage)
+    const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
     postSearchPage.shouldShowPrefilledSearchParameters(searchParameters)
     postSearchPage.shouldShowEmptySearchResults()
   })
@@ -217,6 +218,72 @@ context('Bedspace Search', () => {
       'empty',
       'bedspaceSearch',
     )
+  })
+
+  it('clears search results', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
+
+    // When I visit the search bedspaces page
+    const preSearchPage = BedspaceSearchPage.visit()
+
+    // And when I fill out the form
+    const results = bedSearchResultsFactory.build()
+    cy.task('stubBedSearch', results)
+
+    const searchParameters = bedSearchParametersFactory.build()
+    preSearchPage.completeForm(searchParameters)
+    preSearchPage.clickSubmit()
+
+    // Then I should see the search results
+    const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
+    postSearchPage.shouldShowPrefilledSearchParameters(searchParameters)
+    postSearchPage.shouldShowSearchResults()
+
+    // When I click Clear filters
+    postSearchPage.clickClearFilters()
+
+    // Then I should see the search form with default values
+    const searchPage = Page.verifyOnPage(BedspaceSearchPage)
+    searchPage.shouldShowDefaultSearchParameters()
+  })
+
+  it('clears search results but retains the place context', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is reference data in the database
+    cy.task('stubBedspaceSearchReferenceData')
+
+    // When I visit the search bedspaces page with a place context
+    const placeContext = placeContextFactory.build()
+    cy.task('stubFindAssessment', placeContext.assessment)
+    const preSearchPage = BedspaceSearchPage.visit(placeContext)
+
+    // And when I fill out the form
+    const results = bedSearchResultsFactory.build()
+    cy.task('stubBedSearch', results)
+
+    const searchParameters = bedSearchParametersFactory.build()
+    preSearchPage.completeForm(searchParameters)
+    preSearchPage.clickSubmit()
+
+    // Then I should see the search results with the place context
+    const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
+    postSearchPage.shouldShowPlaceContextHeader(placeContext)
+
+    // When I click Clear filters
+    postSearchPage.clickClearFilters()
+
+    // Then I should see the search form with default values
+    const searchPage = Page.verifyOnPage(BedspaceSearchPage)
+    searchPage.shouldShowDefaultSearchParameters(placeContext)
+
+    // And I should see the place context
+    searchPage.shouldShowPlaceContextHeader(placeContext)
   })
 
   it('navigates back from the bedspace search page to the dashboard', () => {

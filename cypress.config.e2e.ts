@@ -47,5 +47,5 @@ export default defineConfig({
     supportFile: false,
   },
   numTestsKeptInMemory: 0,
-  retries: 1,
+  retries: 0,
 })

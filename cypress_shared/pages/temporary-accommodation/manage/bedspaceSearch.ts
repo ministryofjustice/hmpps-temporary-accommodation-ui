@@ -9,6 +9,7 @@ import { PlaceContext } from '../../../../server/@types/ui'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
 import Page from '../../page'
+import { addPlaceContext } from '../../../../server/utils/placeUtils'
 
 export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSearchResults: Map<string, BedspaceSearchResult>
@@ -26,8 +27,8 @@ export default class BedspaceSearchPage extends Page {
     })
   }
 
-  static visit(): BedspaceSearchPage {
-    cy.visit(paths.bedspaces.search({}))
+  static visit(placeContext?: PlaceContext): BedspaceSearchPage {
+    cy.visit(addPlaceContext(paths.bedspaces.search({}), placeContext))
     return new BedspaceSearchPage()
   }
 
@@ -71,8 +72,12 @@ export default class BedspaceSearchPage extends Page {
     cy.get('a').contains('Clear filters').click()
   }
 
-  shouldShowDefaultSearchParameters() {
-    this.shouldShowEmptyDateInputs('startDate')
+  shouldShowDefaultSearchParameters(placeContext?: PlaceContext) {
+    if (placeContext) {
+      this.shouldShowDateInputs('startDate', placeContext.assessment.accommodationRequiredFromDate)
+    } else {
+      this.shouldShowEmptyDateInputs('startDate')
+    }
     this.shouldShowTextInputByLabel('Number of days required', '84')
     this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', 'Select a PDU')
   }

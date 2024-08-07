@@ -340,7 +340,7 @@ describe('applicationsController', () => {
     })
   })
 
-  describe('submit', () => {
+  describe('confirm', () => {
     it('renders the application submission confirmation page', async () => {
       const requestHandler = applicationsController.confirm()
       await requestHandler(request, response, next)

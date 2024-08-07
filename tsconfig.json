@@ -33,7 +33,8 @@
     "dist",
     "cypress.config.ts",
     "cypress.config.e2e.ts",
-    "coverage/**"
+    "coverage/**",
+    "esbuild"
   ],
   "include": ["**/*.js", "**/*.ts"]
 }

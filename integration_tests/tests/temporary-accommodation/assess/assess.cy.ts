@@ -100,7 +100,7 @@ context('Apply', () => {
             // Given there are assessments in the database
             const assessments = assessmentSummaryFactory.buildList(6, { status: factoryStatus })
             const searchedForReferral = assessments[1]
-            const searchCRN = searchedForReferral.person.crn
+            const searchQuery = searchedForReferral.person.query
             cy.task('stubAssessments', { data: assessments, pagination })
 
             // When I visit the Archived referrals page
@@ -114,11 +114,11 @@ context('Apply', () => {
 
             // When I submit a search by CRN
             cy.task('stubAssessments', { data: [searchedForReferral] })
-            page.searchByCRN(searchCRN, uiStatus)
+            page.searchByCRN(searchQuery, uiStatus)
             Page.verifyOnPage(ListPage, pageTitle)
 
             // Then the search by CRN form is populated
-            page.checkCRNSearchValue(searchCRN, uiStatus)
+            page.checkCRNSearchValue(searchQuery, uiStatus)
 
             // Then I see the search result for that CRN
             page.checkResults([searchedForReferral])
@@ -140,7 +140,7 @@ context('Apply', () => {
           it('shows a message if there are no CRN search results', () => {
             const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
             const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
-            const searchCRN = 'N0M4TCH'
+            const searchQuery = 'N0M4TCH'
 
             cy.task('stubAssessments', { data: assessments })
 
@@ -155,11 +155,11 @@ context('Apply', () => {
 
             // When I submit a search by CRN
             cy.task('stubAssessments', { data: noAssessments })
-            page.searchByCRN(searchCRN, uiStatus)
+            page.searchByCRN(searchQuery, uiStatus)
             Page.verifyOnPage(ListPage, pageTitle)
 
             // Then the search by CRN form is populated
-            page.checkCRNSearchValue(searchCRN, uiStatus)
+            page.checkCRNSearchValue(searchQuery, uiStatus)
 
             // Then I see no search results for that CRN
             page.checkResults(noAssessments)

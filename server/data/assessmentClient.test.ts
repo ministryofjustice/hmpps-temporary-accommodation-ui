@@ -132,16 +132,16 @@ describe('AssessmentClient', () => {
 
   describe('readyToPlaceForCrn', () => {
     it('should get all ready to place assessments for the given CRN', async () => {
-      const crn = 'some-crn'
+      const query = 'some-crn'
       const status = 'ready_to_place' as AssessmentStatus
       const assessments = assessmentSummaryFactory.buildList(5)
 
       fakeApprovedPremisesApi
-        .get(`${paths.assessments.index({})}?crn=${crn}&statuses=${status}`)
+        .get(`${paths.assessments.index({})}?query=${query}&statuses=${status}`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessments)
 
-      const output = await assessmentClient.readyToPlaceForCrn(crn)
+      const output = await assessmentClient.readyToPlaceForCrn(query)
       expect(output).toEqual(assessments)
     })
   })

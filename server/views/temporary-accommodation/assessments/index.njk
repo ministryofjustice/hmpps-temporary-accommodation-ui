@@ -50,14 +50,14 @@
                 {
                     label: {
                     classes: 'govuk-label--m',
-                    text: 'Search ' + uiStatus + ' referrals by CRN (case reference number)'
+                    text: 'Search ' + uiStatus + ' referrals with the person’s name or CRN'
                 },
                     hint: {
-                    text: 'For example, XD7364CD'
+                    text: 'For example, James or XD7364CD'
                 },
-                    name: 'crn',
-                    id: 'crn',
-                    value: crn
+                    name: 'query',
+                    id: 'query',
+                    value: query
                 }
             ) }}
 
@@ -69,12 +69,7 @@
         </form>
     </div>
 
-    {% if context.errors.crn %}
-        <h2>You have not entered any search terms</h2>
-
-        <p>Enter a CRN. This can be found in nDelius.</p>
-
-        {% elif (tableRows|length > 0) or (not crn) %}
+    {% if (tableRows|length > 0)%}
 
         <div class="govuk-!-margin-bottom-4">
             {{ mojPagination(pagination) }}
@@ -89,7 +84,7 @@
         {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
 
     {% else %}
-        <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} referrals.</h2>
+        <h2>There are no results for ‘{{ query }}’ in {{ uiStatus }} referrals.</h2>
 
         <p>Check the other lists.</p>
 

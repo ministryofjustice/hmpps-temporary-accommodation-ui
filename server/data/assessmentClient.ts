@@ -52,11 +52,11 @@ export default class AssessmentClient {
     }
   }
 
-  async readyToPlaceForCrn(crn: string): Promise<Array<AssessmentSummary>> {
+  async readyToPlaceForCrn(query: string): Promise<Array<AssessmentSummary>> {
     const status: AssessmentSummary['status'] = 'ready_to_place'
 
     return (await this.restClient.get({
-      path: appendQueryString(paths.assessments.index.pattern, { crn: crn.trim(), statuses: status }),
+      path: appendQueryString(paths.assessments.index.pattern, { query: query.trim(), statuses: status }),
     })) as Array<AssessmentSummary>
   }
 

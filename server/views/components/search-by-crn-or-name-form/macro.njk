@@ -1,6 +1,14 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+
+{# params - Type of Object - Description #}
+{# uiStatus - String - Specific status the record would be in #}
+{# type - String - Either "bookings" or "referrals" #}
+{# basePath - String - URL used to define where form should be submitted to and the link the "Clear" should take the user too  #}
+{# crnOrName - String - Either a CRN or Name which the user would like to search for#}
+
+
 {% macro searchByCrnOrNameForm(params) %}
     {% set searchLabel = 'Search ' + params.uiStatus + ' ' +  params.type + ' by CRN (case reference number)' %}
 

@@ -1,6 +1,14 @@
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
 
+{# params - Type of Object - Description #}
+{# errors - Object - Errors object from the view, soon to be removed #}
+{# resultsHtml - String - HTML string containing the pagination and results. Currently parent view is responsible for this. We will look to moving that logic into this component #}
+{# crnOrName - String - Either a CRN or Name which the user would like to search for #}
+{# uiStatus - String - Specific status the record would be in #}
+{# type - String - Either "bookings" or "referrals".  #}
+
+
 {% macro searchByCrnOrNameResults(params) %}
     {% if params.errors.crn %}
         <h2>You have not entered any search terms</h2>

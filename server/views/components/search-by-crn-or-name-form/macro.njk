@@ -1,0 +1,38 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{# params - Type of Object - Description #}
+{# uiStatus - String - Specific status the record would be in #}
+{# type - String - Either "bookings" or "referrals" #}
+{# basePath - String - URL used to define where form should be submitted to and the link the "Clear" should take the user too  #}
+{# crnOrName - String - Either a CRN or Name which the user would like to search for#}
+
+
+{% macro searchByCrnOrNameForm(params) %}
+    {% set searchLabel = 'Search ' + params.uiStatus + ' ' +  params.type + ' by CRN (case reference number)' %}
+
+    <form action="{{ params.basePath }}" method="get">
+
+        {{ govukInput(
+            {
+                label: {
+                classes: 'govuk-label--m',
+                text: searchLabel
+            },
+                hint: {
+                text: 'For example, XD7364CD'
+            },
+                name: 'crn',
+                id: 'crn',
+                value: params.crnOrName
+            }
+        ) }}
+
+        <div class="govuk-button-group">
+            {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+
+            <a class="govuk-link" href="{{ params.basePath }}">Clear</a>
+        </div>
+    </form>
+{% endmacro %}

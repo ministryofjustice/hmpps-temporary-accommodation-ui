@@ -15,10 +15,6 @@
       "stabilityDays": 5
     },
     {
-      "matchDepTypes": ["engines"],
-      "enabled": false
-    },
-    {
       "matchPackageNames": ["typescript", "govuk-frontend"],
       "matchUpdateTypes": ["major"],
       "enabled": true,
@@ -40,5 +36,6 @@
   ],
   "vulnerabilityAlerts": {
     "stabilityDays": 0
-  }
+  },
+  "rebaseWhen": "conflicted"
 }

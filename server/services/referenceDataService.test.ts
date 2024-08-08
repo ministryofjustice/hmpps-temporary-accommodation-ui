@@ -33,22 +33,31 @@ describe('ReferenceDataService', () => {
     })
   })
 
-  describe('getRegionPdus', () => {
-    it('returns a list of PDUs from the current region sorted by name', async () => {
-      const pdu1 = referenceDataFactory.pdu().build({ name: 'XYZ' })
-      const pdu2 = referenceDataFactory.pdu().build({ name: 'ABC' })
-      const pdu3 = referenceDataFactory.pdu().build({ name: 'FOO' })
+  describe('getPdus', () => {
+    const pduXYZ = referenceDataFactory.pdu().build({ name: 'XYZ' })
+    const pduABC = referenceDataFactory.pdu().build({ name: 'ABC' })
+    const pduFOO = referenceDataFactory.pdu().build({ name: 'FOO' })
 
+    beforeEach(() => {
       referenceDataClient.getReferenceData.mockImplementation(async () => {
-        return [pdu1, pdu2, pdu3]
+        return [pduXYZ, pduABC, pduFOO]
       })
+    })
 
-      const result = await referenceDataService.getRegionPdus(callConfig)
+    it('returns a list of all PDUs sorted by name', async () => {
+      const result = await referenceDataService.getPdus(callConfig)
+
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {})
+      expect(result).toEqual([pduABC, pduFOO, pduXYZ])
+    })
+
+    it("returns a list of PDUs from the current user's region sorted by name", async () => {
+      const result = await referenceDataService.getPdus(callConfig, { regional: true })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
         probationRegionId: probationRegion.id,
       })
-      expect(result).toEqual([pdu2, pdu3, pdu1])
+      expect(result).toEqual([pduABC, pduFOO, pduXYZ])
     })
   })
 })

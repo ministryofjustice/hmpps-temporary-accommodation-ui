@@ -1,4 +1,5 @@
 import { LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
+import { GetPdusOptions } from '@approved-premises/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 
@@ -13,12 +14,12 @@ export default class ReferenceDataService {
     )
   }
 
-  async getRegionPdus(callConfig: CallConfig) {
+  async getPdus(callConfig: CallConfig, options: GetPdusOptions = {}) {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
 
     return (
       await referenceDataClient.getReferenceData<ProbationDeliveryUnit>('probation-delivery-units', {
-        probationRegionId: callConfig.probationRegion.id,
+        probationRegionId: options.regional ? callConfig.probationRegion.id : undefined,
       })
     ).sort((a, b) => a.name.localeCompare(b.name))
   }

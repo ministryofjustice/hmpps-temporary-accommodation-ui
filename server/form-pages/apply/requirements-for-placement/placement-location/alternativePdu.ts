@@ -1,13 +1,17 @@
-import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { TaskListErrors, YesOrNoWithDetail } from '@approved-premises/ui'
+import { TemporaryAccommodationApplication as Application, ProbationDeliveryUnit } from '@approved-premises/api'
+import type { DataServices, TaskListErrors, YesOrNo } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
-import { yesOrNoResponseWithDetail } from '../../../utils'
+import { sentenceCase } from '../../../../utils/utils'
+import { CallConfig } from '../../../../data/restClient'
 
-type AlternativePduBody = YesOrNoWithDetail<'alternativePdu'>
+export type AlternativePduBody = {
+  alternativePdu: YesOrNo
+  pdu?: ProbationDeliveryUnit
+}
 
-@Page({ name: 'alternative-pdu', bodyProperties: ['alternativePdu', 'alternativePduDetail'] })
+@Page({ name: 'alternative-pdu', bodyProperties: ['alternativePdu', 'pdu'] })
 export default class AlternativePdu implements TasklistPage {
   title = 'Is placement required in an alternative PDU?'
 
@@ -16,12 +20,29 @@ export default class AlternativePdu implements TasklistPage {
   constructor(
     readonly body: Partial<AlternativePduBody>,
     readonly application: Application,
+    readonly pdus?: Array<ProbationDeliveryUnit>,
   ) {}
 
+  static async initialize(
+    body: AlternativePduBody,
+    application: Application,
+    callConfig: CallConfig,
+    dataServices: DataServices,
+  ) {
+    const pdus = await dataServices.referenceDataService.getPdus(callConfig)
+    return new AlternativePdu(body, application, pdus)
+  }
+
   response() {
-    return {
-      [this.title]: yesOrNoResponseWithDetail('alternativePdu', this.body),
+    const translatedResponse = {
+      [this.title]: sentenceCase(this.body.alternativePdu),
     }
+
+    if (this.body.alternativePdu === 'yes') {
+      translatedResponse['PDU for placement'] = this.body.pdu.name
+    }
+
+    return translatedResponse
   }
 
   previous() {
@@ -29,7 +50,7 @@ export default class AlternativePdu implements TasklistPage {
   }
 
   next() {
-    return ''
+    return this.body.alternativePdu === 'yes' ? 'alternative-pdu-reason' : ''
   }
 
   errors() {
@@ -37,12 +58,24 @@ export default class AlternativePdu implements TasklistPage {
 
     if (!this.body.alternativePdu) {
       errors.alternativePdu = 'You must specify if placement is required in an alternative PDU'
-    }
-
-    if (this.body.alternativePdu === 'yes' && !this.body.alternativePduDetail) {
-      errors.alternativePduDetail = 'You must provide the alternative PDU and the reason it is preferred'
+    } else if (this.body.alternativePdu === 'yes' && !this.body.pdu) {
+      errors.pdu = 'You must select a PDU'
     }
 
     return errors
+  }
+
+  getAllPdus() {
+    return [
+      {
+        value: '',
+        text: 'Select an option',
+      },
+      ...this.pdus.map(pdu => ({
+        value: pdu.id,
+        text: pdu.name,
+        selected: this.body.pdu?.id === pdu.id || undefined,
+      })),
+    ]
   }
 }

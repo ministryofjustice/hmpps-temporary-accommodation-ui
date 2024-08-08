@@ -20,6 +20,8 @@
     },
     {
       "matchPackageNames": ["typescript", "govuk-frontend"],
+      "matchUpdateTypes": ["major"],
+      "enabled": true,
       "rangeStrategy": "bump",
       "stabilityDays": 0
     },

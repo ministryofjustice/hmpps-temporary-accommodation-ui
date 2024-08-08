@@ -1,0 +1,23 @@
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+
+
+{% macro searchByCrnOrNameResults(params) %}
+    {% if params.errors.crn %}
+        <h2>You have not entered any search terms</h2>
+
+        <p>Enter a CRN. This can be found in nDelius.</p>
+
+    {% elif (params.resultsHtml| trim |length > 0) or (not params.crn_or_name) %}
+        
+        {{ params.resultsHtml | safe | trim | indent(8)}}
+
+    {% else %}
+        <h2>There are no results for ‘{{ params.crn_or_name }}’ in {{ params.uiStatus }} {{ params.type }}.</h2>
+
+        <p>Check the other lists.</p>
+
+        <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+                support</a> for help.</p>
+    {% endif %}
+
+{% endmacro %}

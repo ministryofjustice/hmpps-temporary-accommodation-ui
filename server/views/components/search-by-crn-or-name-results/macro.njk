@@ -7,12 +7,12 @@
 
         <p>Enter a CRN. This can be found in nDelius.</p>
 
-    {% elif (params.resultsHtml| trim |length > 0) or (not params.crn_or_name) %}
+    {% elif (params.resultsHtml| trim |length > 0) or (not params.crnOrName) %}
         
         {{ params.resultsHtml | safe | trim | indent(8)}}
 
     {% else %}
-        <h2>There are no results for ‘{{ params.crn_or_name }}’ in {{ params.uiStatus }} {{ params.type }}.</h2>
+        <h2>There are no results for ‘{{ params.crnOrName }}’ in {{ params.uiStatus }} {{ params.type }}.</h2>
 
         <p>Check the other lists.</p>
 

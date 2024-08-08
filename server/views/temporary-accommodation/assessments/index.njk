@@ -1,6 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "../../components/search-by-crn-or-name-form/macro.njk" import searchByCrnOrNameForm%}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -44,29 +44,12 @@
     {% endblock %}
 
     <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-        <form action="{{ basePath }}" method="get">
-
-            {{ govukInput(
-                {
-                    label: {
-                    classes: 'govuk-label--m',
-                    text: 'Search ' + uiStatus + ' referrals by CRN (case reference number)'
-                },
-                    hint: {
-                    text: 'For example, XD7364CD'
-                },
-                    name: 'crn',
-                    id: 'crn',
-                    value: crn
-                }
-            ) }}
-
-            <div class="govuk-button-group">
-                {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
-
-                <a class="govuk-link" href="{{ basePath }}">Clear</a>
-            </div>
-        </form>
+        {{ searchByCrnOrNameForm({
+            type: 'referrals',
+            basePath: basePath, 
+            uiStatus: uiStatus, 
+            crnOrName: crn
+        })}}
     </div>
 
     {% if context.errors.crn %}

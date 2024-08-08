@@ -1,5 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "../../components/search-by-crn-or-name-form/macro.njk" import searchByCrnOrNameForm%}
+{% from "../../components/search-by-crn-or-name-results/macro.njk" import searchByCrnOrNameResults%}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
@@ -7,6 +8,19 @@
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% set pageTitle = "View bookings - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
+
+{# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
+{% set resultsHtml %}
+    {% if (not context.errors.prn) and ((response.data|length > 0) or (not crn)) %}
+        {{ govukTable({
+            captionClasses: "govuk-table__caption--m",
+            head: tableHeadings,
+            rows: response.data
+        }) }}
+
+        {{ mojPagination(pagination) }}
+    {% endif %}
+{% endset %}
 
 {% block beforeContent %}
     {{ breadCrumb('View bookings', []) }}
@@ -31,24 +45,12 @@
         })}}
     </div>
 
-    {% if context.errors.crn %}
-        <h2>You have not entered any search terms</h2>
+    {{ searchByCrnOrNameResults({
+        type: 'bookings',
+        errors: context.errors,
+        resultsHtml: resultsHtml,
+        uiStatus: uiStatus,
+        crnOrName: crn
+    })}}
 
-        <p>Enter a CRN. This can be found in nDelius.</p>
-        {% elif (response.data|length > 0) or (not crn) %}
-        {{ govukTable({
-            captionClasses: "govuk-table__caption--m",
-            head: tableHeadings,
-            rows: response.data
-        }) }}
-
-        {{ mojPagination(pagination) }}
-    {% else %}
-        <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} bookings.</h2>
-
-        <p>Check the other lists.</p>
-
-        <p>If the booking is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
-                support</a> for help.</p>
-    {% endif %}
 {% endblock %}

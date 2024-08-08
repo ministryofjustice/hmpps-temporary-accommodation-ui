@@ -1,6 +1,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../components/search-by-crn-or-name-form/macro.njk" import searchByCrnOrNameForm%}
+{% from "../../components/search-by-crn-or-name-results/macro.njk" import searchByCrnOrNameResults%}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
@@ -10,6 +11,24 @@
 {% set title = (uiStatus + ' referrals') | sentenceCase %}
 {% set pageTitle = title + " - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
+
+{# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
+{% set resultsHtml %}
+    {% if (not context.errors.prn) and ((tableRows|length > 0) or (not crn)) %}
+        <div class="govuk-!-margin-bottom-4">
+            {{ mojPagination(pagination) }}
+        </div>
+
+        {{ govukTable({
+            firstCellIsHeader: true,
+            head: tableHeaders,
+            rows: tableRows
+        }) }}
+
+        {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
+    {% endif %}
+{% endset %}
+
 
 {% block beforeContent %}
     {{ breadCrumb('Referrals', []) }}
@@ -52,33 +71,14 @@
         })}}
     </div>
 
-    {% if context.errors.crn %}
-        <h2>You have not entered any search terms</h2>
-
-        <p>Enter a CRN. This can be found in nDelius.</p>
-
-        {% elif (tableRows|length > 0) or (not crn) %}
-
-        <div class="govuk-!-margin-bottom-4">
-            {{ mojPagination(pagination) }}
-        </div>
-
-        {{ govukTable({
-            firstCellIsHeader: true,
-            head: tableHeaders,
-            rows: tableRows
-        }) }}
-
-        {{ mojPagination(pagination) | replace('Pagination navigation', 'Pagination navigation after results') }}
-
-    {% else %}
-        <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} referrals.</h2>
-
-        <p>Check the other lists.</p>
-
-        <p>If the referral is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
-                support</a> for help.</p>
-    {% endif %}
+    {{ searchByCrnOrNameResults({
+        type: 'referrals',
+        errors: context.errors,
+        uiStatus: uiStatus,
+        tableRows: tableRows,
+        resultsHtml: resultsHtml,
+        crnOrName: crn
+    })}}
 
     {% block archivedLink %}
         <div class="govuk-!-margin-top-9">

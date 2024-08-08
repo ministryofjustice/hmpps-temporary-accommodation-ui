@@ -1,0 +1,30 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% macro searchByCrnOrNameForm(params) %}
+    {% set searchLabel = 'Search ' + params.uiStatus + ' ' +  params.type + ' by CRN (case reference number)' %}
+
+    <form action="{{ params.basePath }}" method="get">
+
+        {{ govukInput(
+            {
+                label: {
+                classes: 'govuk-label--m',
+                text: searchLabel
+            },
+                hint: {
+                text: 'For example, XD7364CD'
+            },
+                name: 'crn',
+                id: 'crn',
+                value: params.crnOrName
+            }
+        ) }}
+
+        <div class="govuk-button-group">
+            {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+
+            <a class="govuk-link" href="{{ params.basePath }}">Clear</a>
+        </div>
+    </form>
+{% endmacro %}

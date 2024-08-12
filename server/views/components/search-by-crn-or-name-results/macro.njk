@@ -1,0 +1,37 @@
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+
+
+{# params - Type of Object - Description #}
+{# errors - Object - Errors object from the view, soon to be removed #}
+{# resultsHtml - String - HTML string containing the pagination and results. Currently parent view is responsible for this. We will look to moving that logic into this component #}
+{# crnOrName - String - Either a CRN or Name which the user would like to search for #}
+{# uiStatus - String - Specific status the record would be in #}
+{# type - String - Either "bookings" or "referrals".  #}
+
+
+{% macro searchByCrnOrNameResults(params) %}
+    {% if params.errors.crn %}
+        <h2>You have not entered any search terms</h2>
+
+        <p>Enter a CRN. This can be found in nDelius.</p>
+
+    {% elif (params.resultsHtml| trim |length > 0) or (not params.crnOrName) %}
+        {{ params.resultsHtml | safe | trim | indent(8)}}
+
+    {% else %}
+        <h2>There are no results for ‘{{ params.crnOrName }}’ in {{ params.uiStatus }} {{ params.type }}.</h2>
+
+        <p>Check the other lists.</p>
+
+        {% if params.type === 'bookings' %}
+            {% set type_name = 'booking' %}
+        {% elif params.type ==='referrals' %}
+            {% set type_name = 'referral' %}
+        {% endif %}
+
+        <p>
+            If the {{ type_name }} is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+            support</a> for help.
+        </p>
+    {% endif %}
+{% endmacro %}

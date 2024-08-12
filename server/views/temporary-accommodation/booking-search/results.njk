@@ -1,6 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "../../components/search-by-crn-or-name-form/macro.njk" import searchByCrnOrNameForm%}
+{% from "../../components/search-by-crn-or-name-results/macro.njk" import searchByCrnOrNameResults%}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
@@ -8,6 +8,19 @@
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% set pageTitle = "View bookings - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
+
+{# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
+{% set resultsHtml %}
+    {% if (not context.errors.prn) and ((response.data|length > 0) or (not crn)) %}
+        {{ govukTable({
+            captionClasses: "govuk-table__caption--m",
+            head: tableHeadings,
+            rows: response.data
+        }) }}
+
+        {{ mojPagination(pagination) }}
+    {% endif %}
+{% endset %}
 
 {% block beforeContent %}
     {{ breadCrumb('View bookings', []) }}
@@ -24,49 +37,20 @@
     }) }}
 
     <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-        <form action="{{ paths.bookings.search[uiStatus].index() }}" method="get">
-
-            {{ govukInput(
-                {
-                    label: {
-                    classes: 'govuk-label--m',
-                    text: 'Search ' + uiStatus + ' bookings by CRN (case reference number)'
-                },
-                    hint: {
-                    text: 'For example, XD7364CD'
-                },
-                    name: 'crn',
-                    id: 'crn',
-                    value: crn
-                }
-            ) }}
-
-            <div class="govuk-button-group">
-                {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
-
-                <a class="govuk-link" href="{{ paths.bookings.search[uiStatus].index() }}">Clear</a>
-            </div>
-        </form>
+        {{ searchByCrnOrNameForm({ 
+            type: 'bookings',
+            basePath: paths.bookings.search[uiStatus].index(), 
+            uiStatus: uiStatus, 
+            crnOrName: crn
+        })}}
     </div>
 
-    {% if context.errors.crn %}
-        <h2>You have not entered any search terms</h2>
+    {{ searchByCrnOrNameResults({
+        type: 'bookings',
+        errors: context.errors,
+        resultsHtml: resultsHtml,
+        uiStatus: uiStatus,
+        crnOrName: crn
+    })}}
 
-        <p>Enter a CRN. This can be found in nDelius.</p>
-        {% elif (response.data|length > 0) or (not crn) %}
-        {{ govukTable({
-            captionClasses: "govuk-table__caption--m",
-            head: tableHeadings,
-            rows: response.data
-        }) }}
-
-        {{ mojPagination(pagination) }}
-    {% else %}
-        <h2>There are no results for ‘{{ crn }}’ in {{ uiStatus }} bookings.</h2>
-
-        <p>Check the other lists.</p>
-
-        <p>If the booking is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
-                support</a> for help.</p>
-    {% endif %}
 {% endblock %}

@@ -36,7 +36,7 @@ export default class PractitionerPdu implements TasklistPage {
     dataServices: DataServices,
     session?: Partial<SessionData>,
   ) {
-    const pdus = await dataServices.referenceDataService.getRegionPdus(callConfig)
+    const pdus = await dataServices.referenceDataService.getPdus(callConfig, { regional: true })
     return new PractitionerPdu(body, application, session, pdus)
   }
 

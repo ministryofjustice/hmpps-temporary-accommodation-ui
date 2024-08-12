@@ -41,6 +41,7 @@ import {
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AlternativePduPage,
+  AlternativePduReasonPage,
   AntiSocialBehaviourPage,
   ApprovalsForSpecificRisksPage,
   BackupContactPage,
@@ -649,6 +650,16 @@ export default class ApplyHelper {
   }
 
   private completePlacementLocation() {
+    if (this.environment === 'integration') {
+      const pdu = referenceDataFactory.pdu().build({
+        id: this.application.data['placement-location']['alternative-pdu'].pduId,
+        name: this.application.data['placement-location']['alternative-pdu'].pduName,
+      })
+      cy.task('stubPdus', {
+        pdus: [pdu, ...referenceDataFactory.pdu().buildList(5)],
+      })
+    }
+
     // Given I click on the safeguarding and support task
     Page.verifyOnPage(TaskListPage, this.application).clickTask('placement-location')
 
@@ -657,7 +668,11 @@ export default class ApplyHelper {
     alternativePduPage.completeForm()
     alternativePduPage.clickSubmit()
 
-    this.pages.placementLocation = [alternativePduPage]
+    const alternativePduReasonPage = new AlternativePduReasonPage(this.application)
+    alternativePduReasonPage.completeForm()
+    alternativePduReasonPage.clickSubmit()
+
+    this.pages.placementLocation = [alternativePduPage, alternativePduReasonPage]
 
     // Then I should be redirected to the task list
     const tasklistPage = Page.verifyOnPage(TaskListPage, this.application)

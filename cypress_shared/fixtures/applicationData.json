@@ -265,7 +265,11 @@
   "placement-location": {
     "alternative-pdu": {
       "alternativePdu": "yes",
-      "alternativePduDetail": "Some PDU, for reasons X, Y, Z"
+      "pduId": "616497bf-3e6b-40e2-830b-8bfaeeaec157",
+      "pduName": "County Durham and Darlington"
+    },
+    "alternative-pdu-reason": {
+      "reason": "Reasons X, Y, Z"
     }
   },
   "disability-cultural-and-specific-needs": {

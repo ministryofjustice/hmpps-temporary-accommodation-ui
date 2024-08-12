@@ -1,47 +1,48 @@
-{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% extends "../../layout.njk" %}
 
 {% block questions %}
 
-  {% set pageTitleHTML %}
-    <span class="govuk-caption-l">{{ section.title }}</span>
-    {{ page.title }}
-  {% endset %}
+    {% set pageTitleHTML %}
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    {% endset %}
 
-  {% set alternativePduDetailHtml %}
-    {{ formPageTextarea({
-      fieldName: "alternativePduDetail",
-      label: {
-        text: "Provide the alternative PDU and the reason it is preferred",
-        classes: "govuk-label--s"
-      }
+    {% set alternativePduDetailHtml %}
+        {{ formPageSelect({
+            fieldName: 'pduId',
+            label: {
+                text: "Select a PDU",
+                classes: "govuk-label--s"
+            },
+            items: page.getAllPdus()
+        }, fetchContext()) }}
+    {% endset %}
+
+    {{ formPageRadios({
+        fieldName: "alternativePdu",
+        fieldset: {
+            legend: {
+                html: pageTitleHTML,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+            }
+        },
+        hint: {
+            text: "If placement is required in a PDU that's different to the person's current PDU, select 'yes'"
+        },
+        items: [
+            {
+                value: "yes",
+                text: "Yes",
+                conditional: {
+                html: alternativePduDetailHtml
+            }
+            },
+            {
+                value: "no",
+                text: "No"
+            }
+        ]
     },fetchContext()) }}
-  {% endset %}
-
-  {{ formPageRadios({
-    fieldName: "alternativePdu",
-    fieldset: {
-      legend: {
-        html: pageTitleHTML,
-        isPageHeading: true,
-        classes: "govuk-fieldset__legend--l"
-      }
-    },
-    hint: {
-      text: "If placement is required in a PDU that's different to the person's current PDU, select 'yes'"
-    },
-    items: [
-      {
-        value: "yes",
-        text: "Yes",
-        conditional: {
-          html: alternativePduDetailHtml
-        }
-      },
-      {
-        value: "no",
-        text: "No"
-      }
-    ]
-  },fetchContext()) }}
 {% endblock %}

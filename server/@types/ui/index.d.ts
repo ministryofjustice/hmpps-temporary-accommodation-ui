@@ -259,6 +259,7 @@ export type GroupedListofBookings = {
   [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<Booking>
 }
 
+export type GetPdusOptions = { regional?: boolean }
 export type DataServices = Partial<{
   personService: {
     getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>
@@ -276,7 +277,7 @@ export type DataServices = Partial<{
   }
   referenceDataService: {
     getLocalAuthorities: (CallConfig: CallConfig) => Promise<Array<LocalAuthorityArea>>
-    getRegionPdus: (CallConfig: CallConfig) => Promise<Array<ProbationDeliveryUnit>>
+    getPdus: (CallConfig: CallConfig, options: GetPdusOptions = {}) => Promise<Array<ProbationDeliveryUnit>>
   }
 }>
 

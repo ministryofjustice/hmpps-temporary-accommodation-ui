@@ -36,6 +36,7 @@ import ReligiousOrCulturalNeedsPage from './requirements-for-placement/disabilit
 import FoodAllergiesPage from './requirements-for-placement/food-allergies/foodAllergies'
 import MoveOnPlanPage from './requirements-for-placement/move-on-plan/moveOnPlan'
 import AlternativePduPage from './requirements-for-placement/placement-location/alternativePdu'
+import AlternativePduReasonPage from './requirements-for-placement/placement-location/alternativePduReason'
 import CaringResponsibilitiesPage from './requirements-for-placement/safeguarding-and-support/caringResponsibilities'
 import LocalConnectionsPage from './requirements-for-placement/safeguarding-and-support/localConnections'
 import SafeguardingAndVulnerabilityPage from './requirements-for-placement/safeguarding-and-support/safeguardingAndVulnerability'
@@ -58,6 +59,7 @@ export {
   AdditionalLicenceConditionsPage,
   AdjudicationsPage,
   AlternativePduPage,
+  AlternativePduReasonPage,
   AntiSocialBehaviourPage,
   ApprovalsForSpecificRisksPage,
   BackupContactPage,

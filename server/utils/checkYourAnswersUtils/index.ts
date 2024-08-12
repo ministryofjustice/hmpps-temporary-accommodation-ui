@@ -8,6 +8,7 @@ import { formatLines } from '../viewUtils'
 import { embeddedSummaryListItem } from './embeddedSummaryListItem'
 import { forPagesInTask } from '../applicationUtils'
 import { offenceIdKey } from '../../form-pages/apply/accommodation-need/sentence-information/offendingSummary'
+import logger from '../../../logger'
 
 const checkYourAnswersSections = (application: TemporaryAccommodationApplication) =>
   reviewSections(application, getTaskResponsesAsSummaryListItems)
@@ -21,14 +22,19 @@ export const getTaskResponsesAsSummaryListItems = (
   forPagesInTask(application, task, (page, pageName) => {
     const response = page.response()
 
-    Object.keys(response).forEach(key => {
-      const value =
-        typeof response[key] === 'string' || response[key] instanceof String
-          ? ({ html: formatLines(response[key] as string) } as HtmlItem)
-          : ({ html: embeddedSummaryListItem(response[key] as Array<Record<string, unknown>>) } as HtmlItem)
+    try {
+      Object.keys(response).forEach(key => {
+        const value =
+          typeof response[key] === 'string' || response[key] instanceof String
+            ? ({ html: formatLines(response[key] as string) } as HtmlItem)
+            : ({ html: embeddedSummaryListItem(response[key] as Array<Record<string, unknown>>) } as HtmlItem)
 
-      items.push(summaryListItemForResponse(key, value, task, pageName, application))
-    })
+        items.push(summaryListItemForResponse(key, value, task, pageName, application))
+      })
+    } catch (e) {
+      logger.error(e)
+      logger.debug('response:', response)
+    }
   })
 
   return items

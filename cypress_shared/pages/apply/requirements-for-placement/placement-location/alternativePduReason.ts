@@ -2,13 +2,13 @@ import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import paths from '../../../../../server/paths/apply'
 import ApplyPage from '../../applyPage'
 
-export default class AlternativePduPage extends ApplyPage {
+export default class AlternativePduReasonPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Is placement required in an alternative PDU (probation delivery unit)?',
+      'Provide a reason for choosing a different PDU (probation delivery unit)',
       application,
       'placement-location',
-      'alternative-pdu',
+      'alternative-pdu-reason',
       paths.applications.show({
         id: application.id,
       }),
@@ -16,10 +16,6 @@ export default class AlternativePduPage extends ApplyPage {
   }
 
   completeForm() {
-    this.checkRadioButtonFromPageBody('alternativePdu')
-
-    if (this.tasklistPage.body.alternativePdu === 'yes') {
-      this.selectSelectOptionFromPageBody('pduId')
-    }
+    this.completeTextInputFromPageBody('reason')
   }
 }

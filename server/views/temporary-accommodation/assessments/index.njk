@@ -14,7 +14,7 @@
 
 {# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
 {% set resultsHtml %}
-    {% if tableRows|length > 0 %}
+    {% if (tableRows|length > 0 ) or (not crn) %}
         <div class="govuk-!-margin-bottom-4">
             {{ mojPagination(pagination) }}
         </div>

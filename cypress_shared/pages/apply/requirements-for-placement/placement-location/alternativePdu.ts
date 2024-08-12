@@ -19,7 +19,9 @@ export default class AlternativePduPage extends ApplyPage {
     this.checkRadioButtonFromPageBody('alternativePdu')
 
     if (this.tasklistPage.body.alternativePdu === 'yes') {
-      this.selectSelectOptionFromPageBody('pduId')
+      const pduName = this.tasklistPage.body.pduName as string
+      this.completeTextInputByLabel('Select a PDU', pduName.slice(0, 3))
+      cy.get('li[role="option"]').contains(pduName).click()
     }
   }
 }

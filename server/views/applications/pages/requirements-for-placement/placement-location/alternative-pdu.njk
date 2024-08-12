@@ -1,6 +1,11 @@
 {% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% extends "../../layout.njk" %}
 
+{% block head %}
+    {{ super() }}
+    <link href="/assets/css/accessible-autocomplete.min.css?{{ version }}" rel="stylesheet" />
+{% endblock %}
+
 {% block questions %}
 
     {% set pageTitleHTML %}
@@ -45,4 +50,21 @@
             }
         ]
     },fetchContext()) }}
+{% endblock %}
+
+{% block extraScripts %}
+
+    <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      accessibleAutocomplete.enhanceSelectElement({
+        selectElement: document.querySelector('select#pduId'),
+        defaultValue: '',
+      })
+
+      const hint = document.createElement('p')
+      hint.className = 'govuk-hint'
+      hint.textContent = 'Start typing and then select an option'
+      document.querySelector('label[for="pduId"]').insertAdjacentElement('afterend', hint)
+    </script>
+
 {% endblock %}

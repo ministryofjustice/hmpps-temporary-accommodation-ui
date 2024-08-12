@@ -180,26 +180,6 @@ context('Booking search', () => {
     page.checkNoResultsByCRN('confirmed', 'N0M4TCH')
   })
 
-  it('shows a message if the user has entered a blank CRN', () => {
-    // Given I am signed in
-    cy.signIn()
-
-    // And there are bookings in the database
-    const { data: bookings } = bookingSearchResultsFactory.build()
-
-    cy.task('stubFindBookings', { bookings, status: 'provisional' })
-
-    // When I visit the Find a provisional booking page
-    const page = BookingSearchPage.visit('provisional')
-
-    // And I submit a search with a blank CRN
-    page.searchByCRN('  ', 'provisional')
-    Page.verifyOnPage(BookingSearchPage, 'provisional')
-
-    // Then I see an error message
-    page.checkNoCRNEntered()
-  })
-
   it('retains the CRN search when ordering, paginating and navigating between booking types', () => {
     // Given I am signed in
     cy.signIn()

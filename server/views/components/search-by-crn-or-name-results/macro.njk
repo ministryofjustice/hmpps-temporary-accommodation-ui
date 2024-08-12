@@ -2,7 +2,6 @@
 
 
 {# params - Type of Object - Description #}
-{# errors - Object - Errors object from the view, soon to be removed #}
 {# resultsHtml - String - HTML string containing the pagination and results. Currently parent view is responsible for this. We will look to moving that logic into this component #}
 {# crnOrName - String - Either a CRN or Name which the user would like to search for #}
 {# uiStatus - String - Specific status the record would be in #}
@@ -10,12 +9,7 @@
 
 
 {% macro searchByCrnOrNameResults(params) %}
-    {% if params.errors.crn %}
-        <h2>You have not entered any search terms</h2>
-
-        <p>Enter a CRN. This can be found in nDelius.</p>
-
-    {% elif (params.resultsHtml| trim |length > 0) or (not params.crnOrName) %}
+    {% if (params.resultsHtml| trim |length > 0) %}
         {{ params.resultsHtml | safe | trim | indent(8)}}
 
     {% else %}

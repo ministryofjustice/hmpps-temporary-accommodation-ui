@@ -16,11 +16,11 @@ const stubLocalAuthorities = (localAuthorities: Array<LocalAuthorityArea>) =>
     },
   })
 
-const stubPdus = (args: { pdus: Array<ProbationDeliveryUnit>; probationRegionId: string }) =>
+const stubPdus = (args: { pdus: Array<ProbationDeliveryUnit>; probationRegionId?: string }) =>
   stubFor({
     request: {
       method: 'GET',
-      url: `/reference-data/probation-delivery-units?probationRegionId=${args.probationRegionId}`,
+      url: `/reference-data/probation-delivery-units${args.probationRegionId ? `?probationRegionId=${args.probationRegionId}` : ''}`,
     },
     response: {
       status: 200,

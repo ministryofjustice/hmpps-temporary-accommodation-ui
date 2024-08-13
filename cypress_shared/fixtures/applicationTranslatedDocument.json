@@ -233,7 +233,9 @@
           "id": "placement-location",
           "content": [
             {
-              "Is placement required in an alternative PDU?": "Yes - Some PDU, for reasons X, Y, Z"
+              "Is placement required in an alternative PDU?": "Yes",
+              "PDU for placement": "County Durham and Darlington",
+              "Reason for choosing an alternative PDU": "Reasons X, Y, Z"
             }
           ]
         },

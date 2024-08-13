@@ -30,9 +30,9 @@ describe('PractitionerPdu', () => {
   describe('initialize', () => {
     it('returns the page with PDUs fetched from the API', async () => {
       const pdus = referenceDataFactory.pdu().buildList(10)
-      const getRegionPdusMock = jest.fn().mockResolvedValue(pdus)
+      const getPdusMock = jest.fn().mockResolvedValue(pdus)
       const referenceDataService = createMock<ReferenceDataService>({
-        getRegionPdus: getRegionPdusMock,
+        getPdus: getPdusMock,
       })
 
       const page = await PractitionerPdu.initialize(
@@ -45,7 +45,7 @@ describe('PractitionerPdu', () => {
         mockSessionUser,
       )
 
-      expect(getRegionPdusMock).toHaveBeenCalledWith(callConfig)
+      expect(getPdusMock).toHaveBeenCalledWith(callConfig, { regional: true })
       expect(page).toBeInstanceOf(PractitionerPdu)
       expect(page.pdus).toEqual(pdus)
     })
@@ -111,11 +111,7 @@ describe('PractitionerPdu', () => {
 
   describe('getRegionPdus', () => {
     it('returns the PDUs formatted for use in a select element', () => {
-      const pdus = [
-        referenceDataFactory.pdu().build(),
-        referenceDataFactory.pdu().build(),
-        referenceDataFactory.pdu().build(),
-      ]
+      const pdus = referenceDataFactory.pdu().buildList(3)
 
       const page = new PractitionerPdu({ id: pdus[1].id, name: pdus[1].name }, application, mockSessionUser, pdus)
 

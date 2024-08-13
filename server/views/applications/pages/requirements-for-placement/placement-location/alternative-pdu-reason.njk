@@ -1,0 +1,19 @@
+{% extends "../../layout.njk" %}
+
+{% block questions %}
+
+    {% set pageTitleHTML %}
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    {% endset %}
+
+    {{ formPageTextarea({
+        fieldName: "reason",
+        label: {
+            html: pageTitleHTML,
+            isPageHeading: true,
+            classes: "govuk-label--l"
+        }
+    },fetchContext()) }}
+
+{% endblock %}

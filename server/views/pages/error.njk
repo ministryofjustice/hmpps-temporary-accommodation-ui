@@ -8,7 +8,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">Sorry, there is a problem with the service</h1>
       <p class="govuk-body">Try again later or contact</p>
-      <p class="govuk-body"><a class="govuk-link" href="mailto:cas3support@digital.justice.gov.uk">cas3support@digital.justice.gov.uk</a> for help.</p>
+      <p class="govuk-body"><a class="govuk-link" href="mailto:{{ PhaseBannerUtils.supportEmail }}">{{ PhaseBannerUtils.supportEmail }}</a> for help.</p>
 
       {% if stack %}
         <h1>{{ message }}</h1>

@@ -200,7 +200,7 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "audit-ci": "^6.3.0",
+    "audit-ci": "^7.0.0",
     "concurrently": "^8.0.0",
     "cookie-session": "^2.1.0",
     "cypress": "^13.12.0",

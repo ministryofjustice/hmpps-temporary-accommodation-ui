@@ -5,7 +5,7 @@ import { BookingSearchService } from '../../../services'
 import extractCallConfig from '../../../utils/restUtils'
 import { pagination } from '../../../utils/pagination'
 import { convertApiStatusToUiStatus, createSubNavArr, createTableHeadings } from '../../../utils/bookingSearchUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate } from '../../../utils/validation'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { appendQueryString } from '../../../utils/utils'
 
@@ -14,19 +14,11 @@ export default class BookingSearchController {
 
   index(status: BookingSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors } = fetchErrorsAndUserInput(req)
-
       const callConfig = extractCallConfig(req)
 
       const params = req.query as BookingSearchParameters
 
       try {
-        if (params.crn !== undefined && !params.crn.trim().length) {
-          const error = new Error()
-          insertGenericError(error, 'crn', 'empty')
-          throw error
-        }
-
         const response = await this.bookingSearchService.getTableRowsForFindBooking(callConfig, status, params)
 
         // the params are defaulted downstream, inspect to find out what they are
@@ -40,7 +32,6 @@ export default class BookingSearchController {
           pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
           response,
           crn: params.crn,
-          errors,
         })
       } catch (err) {
         return catchValidationErrorOrPropogate(

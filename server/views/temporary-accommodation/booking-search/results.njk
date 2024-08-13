@@ -11,7 +11,7 @@
 
 {# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
 {% set resultsHtml %}
-    {% if (not context.errors.prn) and ((response.data|length > 0) or (not crn)) %}
+    {% if (response.data|length > 0) or (not crn) %}
         {{ govukTable({
             captionClasses: "govuk-table__caption--m",
             head: tableHeadings,

@@ -168,22 +168,6 @@ context('Apply', () => {
             page.checkNoResultsByCRN(uiStatus, 'N0M4TCH')
           })
 
-          it('shows an error when submitting a blank CRN', () => {
-            const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
-
-            cy.task('stubAssessments', { data: assessments })
-
-            // When I visit the referrals page
-            const page = ListPage.visit(status)
-
-            // And I submit a search with a blank CRN
-            page.searchByCRN('  ', uiStatus)
-            Page.verifyOnPage(ListPage, pageTitle)
-
-            // Then I see an error message
-            page.checkNoCRNEntered()
-          })
-
           it('shows pagination and ordering', () => {
             // Given there are assessments in the database
             const data = assessmentSummaryFactory.buildList(6, { status: factoryStatus })

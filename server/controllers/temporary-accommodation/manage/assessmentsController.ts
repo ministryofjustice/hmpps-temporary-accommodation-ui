@@ -63,8 +63,6 @@ export default class AssessmentsController {
 
   list(status: AssessmentSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { errors } = fetchErrorsAndUserInput(req)
-
       const callConfig = extractCallConfig(req)
 
       const params = getParams(req.query)
@@ -75,15 +73,7 @@ export default class AssessmentsController {
           : 'temporary-accommodation/assessments/index'
 
       try {
-        if (params.crn !== undefined && !params.crn.trim().length) {
-          const error = new Error()
-          insertGenericError(error, 'crn', 'empty')
-          throw error
-        }
-
-        const response = errors.crn
-          ? null
-          : await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
+        const response = await this.assessmentsService.getAllForLoggedInUser(callConfig, status, params)
 
         return res.render(template, {
           status,
@@ -97,7 +87,6 @@ export default class AssessmentsController {
           ),
           crn: params.crn,
           pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
-          errors,
         })
       } catch (err) {
         return catchValidationErrorOrPropogate(req, res, err, pathFromStatus(status))

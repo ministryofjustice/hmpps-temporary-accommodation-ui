@@ -5,6 +5,7 @@
 import type { ApArea } from './ApArea';
 import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
 import type { PersonSummary } from './PersonSummary';
+import type { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
 import type { TaskStatus } from './TaskStatus';
 import type { TaskType } from './TaskType';
 export type Task = {
@@ -27,6 +28,7 @@ export type Task = {
     allocatedToStaffMember?: ApprovedPremisesUser;
     status: TaskStatus;
     apArea?: ApArea;
+    probationDeliveryUnit?: ProbationDeliveryUnit;
     outcomeRecordedAt?: string;
 };
 

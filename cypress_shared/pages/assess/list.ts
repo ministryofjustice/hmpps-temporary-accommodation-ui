@@ -109,10 +109,4 @@ export default class ListPage extends Page {
     cy.get('p').should('contain', 'Check the other lists.')
     cy.get('main a').contains('contact support').should('have.attr', 'href', `mailto:${supportEmail}`)
   }
-
-  checkNoCRNEntered() {
-    cy.get('main table').should('not.exist')
-    cy.get('h2').should('contain', 'You have not entered any search terms')
-    cy.get('p').should('contain', 'Enter a CRN. This can be found in nDelius.')
-  }
 }

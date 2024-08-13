@@ -175,6 +175,16 @@ const releaseTypesFromApplication = (application: Application): Array<string> =>
   return releaseTypesData.map(key => releaseTypes[key].abbr)
 }
 
+const probationDeliveryUnitIdFromApplication = (application: Application): string => {
+  const pduId = (application.data as Record<string, unknown>)?.['contact-details']?.['probation-practitioner']?.pdu?.id
+
+  if (!pduId) {
+    throw new SessionDataError('No probation practitioner PDU')
+  }
+
+  return pduId
+}
+
 export {
   dutyToReferSubmissionDateFromApplication,
   dutyToReferLocalAuthorityAreaNameFromApplication,
@@ -190,4 +200,5 @@ export {
   hasHistoryOfArsonFromApplication,
   isConcerningArsonBehaviourFromApplication,
   releaseTypesFromApplication,
+  probationDeliveryUnitIdFromApplication,
 }

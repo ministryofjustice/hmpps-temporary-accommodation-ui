@@ -11,9 +11,10 @@ import {
   isRegisteredSexOffenderFromApplication,
   needsAccessiblePropertyFromApplication,
   personReleaseDateFromApplication,
+  probationDeliveryUnitIdFromApplication,
   releaseTypesFromApplication,
 } from './reportDataFromApplication'
-import { applicationFactory } from '../../testutils/factories'
+import { applicationFactory, pduFactory } from '../../testutils/factories'
 import { SessionDataError } from '../errors'
 
 describe('reportDataFromApplication', () => {
@@ -372,6 +373,31 @@ describe('reportDataFromApplication', () => {
       })
 
       expect(releaseTypesFromApplication(application)).toEqual([])
+    })
+  })
+
+  describe('probationDeliveryUnitIdFromApplication', () => {
+    it("returns the probation practitioner's PDU id", () => {
+      const pdu = pduFactory.build()
+      const application = applicationFactory.build({
+        data: {
+          'contact-details': {
+            'probation-practitioner': {
+              pdu,
+            },
+          },
+        },
+      })
+
+      expect(probationDeliveryUnitIdFromApplication(application)).toEqual(pdu.id)
+    })
+
+    it("throws an error if the probation practitioner's PDU is not present", () => {
+      const application = applicationFactory.build()
+
+      expect(() => probationDeliveryUnitIdFromApplication(application)).toThrow(
+        new SessionDataError('No probation practitioner PDU'),
+      )
     })
   })
 })

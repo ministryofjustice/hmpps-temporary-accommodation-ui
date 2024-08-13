@@ -14,7 +14,7 @@
 
 {# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
 {% set resultsHtml %}
-    {% if (tableRows|length > 0 ) or (not crn) %}
+    {% if (tableRows|length > 0 ) or (not crnOrName) %}
         <div class="govuk-!-margin-bottom-4">
             {{ mojPagination(pagination) }}
         </div>
@@ -67,7 +67,7 @@
             type: 'referrals',
             basePath: basePath, 
             uiStatus: uiStatus, 
-            crnOrName: crn
+            crnOrName: crnOrName
         })}}
     </div>
 
@@ -77,7 +77,7 @@
         uiStatus: uiStatus,
         tableRows: tableRows,
         resultsHtml: resultsHtml,
-        crnOrName: crn
+        crnOrName: crnOrName
     })}}
 
     {% block archivedLink %}

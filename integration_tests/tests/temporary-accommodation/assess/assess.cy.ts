@@ -96,31 +96,31 @@ context('Apply', () => {
         const pageTitle = sentence(`${uiStatus} referrals`)
 
         describe(`when viewing ${uiStatus} referrals`, () => {
-          it('shows the result of a CRN search and clears the search', () => {
+          it('shows the result of a CRN or Name search and clears the search', () => {
             // Given there are assessments in the database
             const assessments = assessmentSummaryFactory.buildList(6, { status: factoryStatus })
             const searchedForReferral = assessments[1]
-            const searchCRN = searchedForReferral.person.crn
+            const searchCrnOrName = searchedForReferral.person.crn
             cy.task('stubAssessments', { data: assessments, pagination })
 
             // When I visit the Archived referrals page
             const page = ListPage.visit(status)
 
-            // Then the search by CRN form is empty
-            page.checkCRNSearchValue('', uiStatus)
+            // Then the search by CRN or Name form is empty
+            page.checkCrnOrNameSearchValue('', uiStatus)
 
             // And I see all the results
             page.checkResults(assessments)
 
-            // When I submit a search by CRN
+            // When I submit a search by CRN or Name
             cy.task('stubAssessments', { data: [searchedForReferral] })
-            page.searchByCRN(searchCRN, uiStatus)
+            page.searchByCrnOrName(searchCrnOrName, uiStatus)
             Page.verifyOnPage(ListPage, pageTitle)
 
-            // Then the search by CRN form is populated
-            page.checkCRNSearchValue(searchCRN, uiStatus)
+            // Then the search by CRN or Name form is populated
+            page.checkCrnOrNameSearchValue(searchCrnOrName, uiStatus)
 
-            // Then I see the search result for that CRN
+            // Then I see the search result for that CRN or Name
             page.checkResults([searchedForReferral])
 
             // When I clear the search
@@ -130,36 +130,36 @@ context('Apply', () => {
             // Then I see the list page
             Page.verifyOnPage(ListPage, pageTitle)
 
-            // Then the search by CRN form is populated
-            page.checkCRNSearchValue('', uiStatus)
+            // Then the search by CRN or Name form is populated
+            page.checkCrnOrNameSearchValue('', uiStatus)
 
-            // Then I see the search result for that CRN
+            // Then I see the search result for that CRN or Name
             page.checkResults(assessments)
           })
 
-          it('shows a message if there are no CRN search results', () => {
+          it('shows a message if there are no CRN or Name search results', () => {
             const assessments = assessmentSummaryFactory.buildList(9, { status: factoryStatus })
             const noAssessments: TemporaryAccommodationAssessmentSummary[] = []
-            const searchCRN = 'N0M4TCH'
+            const searchCrnOrName = 'N0M4TCH'
 
             cy.task('stubAssessments', { data: assessments })
 
             // When I visit the Archived referrals page
             const page = ListPage.visit(status)
 
-            // Then the search by CRN form is empty
-            page.checkCRNSearchValue('', uiStatus)
+            // Then the search by CRN or Name form is empty
+            page.checkCrnOrNameSearchValue('', uiStatus)
 
             // And I see all the results
             page.checkResults(assessments)
 
-            // When I submit a search by CRN
+            // When I submit a search by CRN or Name
             cy.task('stubAssessments', { data: noAssessments })
-            page.searchByCRN(searchCRN, uiStatus)
+            page.searchByCrnOrName(searchCrnOrName, uiStatus)
             Page.verifyOnPage(ListPage, pageTitle)
 
-            // Then the search by CRN form is populated
-            page.checkCRNSearchValue(searchCRN, uiStatus)
+            // Then the search by CRN or Name form is populated
+            page.checkCrnOrNameSearchValue(searchCrnOrName, uiStatus)
 
             // Then I see no search results for that CRN
             page.checkResults(noAssessments)

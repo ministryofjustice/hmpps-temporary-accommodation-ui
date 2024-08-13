@@ -83,8 +83,8 @@ export default class ListPage extends Page {
     cy.get('[aria-label="Secondary navigation"] a').contains(label).should('have.attr', 'aria-current', 'page')
   }
 
-  checkCRNSearchValue(value: string, status: string) {
-    this.shouldShowTextInputByLabel(`Search ${status} referrals by CRN (case reference number)`, value)
+  checkCrnOrNameSearchValue(value: string, status: string) {
+    this.shouldShowTextInputByLabel(`Search ${status} referrals with the person’s name or CRN`, value)
   }
 
   checkResults(assessments: AssessmentSummary[]) {
@@ -94,8 +94,8 @@ export default class ListPage extends Page {
     })
   }
 
-  searchByCRN(crn: string, status: string) {
-    this.completeTextInputByLabel(`Search ${status} referrals by CRN (case reference number)`, crn)
+  searchByCrnOrName(crn: string, status: string) {
+    this.completeTextInputByLabel(`Search ${status} referrals with the person’s name or CRN`, crn)
     this.clickSubmit('Search')
   }
 

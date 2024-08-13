@@ -365,7 +365,7 @@ export type AssessmentSearchParameters = {
   page?: number
   sortBy?: AssessmentSortField
   sortDirection?: SortDirection
-  crn?: string
+  crnOrName?: string
 }
 
 export type AssessmentUpdatableDateField = 'releaseDate' | 'accommodationRequiredFromDate'

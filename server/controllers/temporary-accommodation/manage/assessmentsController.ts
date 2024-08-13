@@ -85,7 +85,7 @@ export default class AssessmentsController {
             appendQueryString('', params),
             status === 'archived',
           ),
-          crn: params.crn,
+          crnOrName: params.crnOrName,
           pagination: response && pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
         })
       } catch (err) {

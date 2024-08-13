@@ -202,7 +202,7 @@ describe('AssessmentsController', () => {
           })
         })
 
-        describe('when there is a CRN search parameter', () => {
+        describe('when there is a CRN or Name search parameter', () => {
           it('renders the filtered table view', async () => {
             const assessments = assessmentSummaries.build()
             const searchParameters = assessmentSearchParametersFactory.build()
@@ -215,7 +215,7 @@ describe('AssessmentsController', () => {
             await requestHandler(request, response, next)
 
             expect(assessmentsService.getAllForLoggedInUser).toHaveBeenCalledWith(callConfig, status, {
-              crn: searchParameters.crn,
+              crnOrName: searchParameters.crnOrName,
               page: 1,
               sortBy: 'arrivedAt',
               sortDirection: 'asc',
@@ -227,7 +227,7 @@ describe('AssessmentsController', () => {
               tableRows: assessments.data,
               tableHeaders: [],
               pagination: {},
-              crn: searchParameters.crn,
+              crnOrName: searchParameters.crnOrName,
             })
           })
         })

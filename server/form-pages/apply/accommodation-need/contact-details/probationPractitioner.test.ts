@@ -149,7 +149,7 @@ describe('ProbationPractitioner', () => {
             },
           },
           {
-            key: { text: 'PDU (Probation delivery unit)' },
+            key: { text: 'PDU (Probation Delivery Unit)' },
             value: {
               html: `<a href="${paths.applications.pages.show({
                 id: application.id,
@@ -218,7 +218,7 @@ describe('ProbationPractitioner', () => {
             },
           },
           {
-            key: { text: 'PDU (Probation delivery unit)' },
+            key: { text: 'PDU (Probation Delivery Unit)' },
             value: { text: 'PDU Name' },
             actions: {
               items: [
@@ -229,7 +229,7 @@ describe('ProbationPractitioner', () => {
                     page: 'practitioner-pdu',
                   }),
                   text: 'Change',
-                  visuallyHiddenText: 'PDU (Probation delivery unit)',
+                  visuallyHiddenText: 'PDU (Probation Delivery Unit)',
                 },
               ],
             },

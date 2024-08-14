@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class AlternativePduPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Is placement required in an alternative PDU (probation delivery unit)?',
+      'Is placement required in an alternative PDU (Probation Delivery Unit)?',
       application,
       'placement-location',
       'alternative-pdu',

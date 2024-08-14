@@ -5,7 +5,7 @@ import ApplyPage from '../../applyPage'
 export default class AlternativePduReasonPage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      'Provide a reason for choosing a different PDU (probation delivery unit)',
+      'Provide a reason for choosing a different PDU (Probation Delivery Unit)',
       application,
       'placement-location',
       'alternative-pdu-reason',

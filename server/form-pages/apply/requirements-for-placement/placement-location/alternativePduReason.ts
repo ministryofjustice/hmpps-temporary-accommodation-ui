@@ -9,7 +9,7 @@ export type AlternativePduReasonBody = {
 
 @Page({ name: 'alternative-pdu-reason', bodyProperties: ['reason'] })
 export default class AlternativePduReason implements TasklistPage {
-  title = 'Provide a reason for choosing a different PDU (probation delivery unit)'
+  title = 'Provide a reason for choosing a different PDU (Probation Delivery Unit)'
 
   htmlDocumentTitle = this.title
 

@@ -141,7 +141,7 @@ const getPage = (taskName: string, pageName: string, isAnAssessment?: boolean): 
     throw new UnknownPageError(pageName)
   }
 
-  return Page as TasklistPageInterface
+  return Page
 }
 
 const getSectionAndTask = (taskName: string, isAnAssessment?: boolean): { section: FormSection; task: Task } => {

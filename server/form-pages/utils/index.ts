@@ -1,9 +1,12 @@
 import type { Request } from 'express'
 import type {
+  FormPages,
   FormSection,
+  FormSections,
   JourneyType,
   PageResponse,
   Task,
+  TaskPages,
   YesNoOrIDK,
   YesOrNo,
   YesOrNoWithDetail,
@@ -52,7 +55,7 @@ export const applyYesOrNo = <K extends string>(key: K, body: Record<string, unkn
 }
 
 export const yesOrNoResponseWithDetail = <K extends string>(key: K, body: BodyWithYesOrNoWithDetail<K>) => {
-  return body[key] === 'yes' ? `Yes - ${body[`${key}Detail` as string]}` : 'No'
+  return body[key] === 'yes' ? `Yes - ${body[`${key}Detail` as K]}` : 'No'
 }
 
 export const yesNoOrDontKnowResponseWithDetail = <K extends string>(key: K, body: BodyWithYesNoOrIDKWithDetail<K>) => {
@@ -65,16 +68,16 @@ export const yesNoOrDontKnowResponse = <K extends string>(key: K, body: BodyWith
   return body[key] === 'iDontKnow' ? "Don't know" : sentenceCase(body[key])
 }
 
-export const getTask = <T>(task: T) => {
-  const taskPages = {}
+export const getTask = <T>(task: T): Task => {
+  const taskPages: TaskPages = {}
   const slug = Reflect.getMetadata('task:slug', task)
   const name = Reflect.getMetadata('task:name', task)
   const actionText = Reflect.getMetadata('task:actionText', task)
-  const pageClasses = Reflect.getMetadata('task:pages', task)
+  const pageClasses: Array<FormPages> = Reflect.getMetadata('task:pages', task)
 
-  pageClasses.forEach(<PageType>(page: PageType) => {
+  pageClasses.forEach(page => {
     const pageName = Reflect.getMetadata('page:name', page)
-    taskPages[pageName] = page
+    taskPages[pageName] = page as unknown as TasklistPageInterface
   })
 
   return {
@@ -85,14 +88,14 @@ export const getTask = <T>(task: T) => {
   }
 }
 
-export const getSection = <T>(section: T) => {
+export const getSection = (section: unknown): FormSection => {
   const tasks: Array<Task> = []
   const title = Reflect.getMetadata('section:title', section)
   const name = Reflect.getMetadata('section:name', section)
-  const taskClasses = Reflect.getMetadata('section:tasks', section)
+  const taskClasses: Array<TasklistPageInterface> = Reflect.getMetadata('section:tasks', section)
 
-  taskClasses.forEach(<PageType>(task: PageType) => {
-    tasks.push(getTask(task))
+  taskClasses.forEach(taskClass => {
+    tasks.push(getTask(taskClass))
   })
 
   return {
@@ -102,8 +105,9 @@ export const getSection = <T>(section: T) => {
   }
 }
 
-export const getPagesForSections = <T>(sections: Array<T>) => {
-  const pages = {}
+export const getFormPages = (sections: FormSections) => {
+  const pages: FormPages = {}
+
   sections.forEach(sectionClass => {
     const section = getSection(sectionClass)
     const { tasks } = section
@@ -111,7 +115,12 @@ export const getPagesForSections = <T>(sections: Array<T>) => {
       pages[t.id] = t.pages
     })
   })
+
   return pages
+}
+
+export const getFormSections = (sections: FormSections): FormSections => {
+  return sections.map(s => getSection(s))
 }
 
 export const viewPath = (section: FormSection, task: Task, page: TasklistPage, journeyType: JourneyType) => {
@@ -166,7 +175,7 @@ export const responsesForYesNoAndCommentsSections = (
   body: Record<string, string>,
 ) => {
   return Object.keys(sections).reduce((prev, section) => {
-    const response = {
+    const response: Record<string, unknown> = {
       ...prev,
       [sections[section]]: sentenceCase(body[section]),
     }
@@ -200,9 +209,8 @@ export const hasSubmittedDtr = (application: Application): boolean => {
 }
 
 export const arrivalDateFromApplication = (application: Application): string => {
-  const dateOfArrival: string = (application.data as Record<string, unknown>)?.eligibility?.[
-    'accommodation-required-from-date'
-  ]?.accommodationRequiredFromDate
+  const dateOfArrival: string =
+    application.data?.eligibility?.['accommodation-required-from-date']?.accommodationRequiredFromDate
 
   if (!dateOfArrival) {
     throw new SessionDataError('No arrival date')

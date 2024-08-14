@@ -72,12 +72,10 @@ export default class DtrDetails implements TasklistPage {
       localAuthorities = []
     }
 
-    const page = new DtrDetails(body, application, localAuthorities)
-
-    return page
+    return new DtrDetails(body, application, localAuthorities)
   }
 
-  public set body(value: Partial<DtrDetailsBody>) {
+  public set body(value) {
     this._body = {
       reference: value.reference,
       localAuthorityAreaName: value.localAuthorityAreaName,
@@ -87,7 +85,7 @@ export default class DtrDetails implements TasklistPage {
     }
   }
 
-  public get body(): Partial<DtrDetailsBody> {
+  public get body() {
     return this._body
   }
 
@@ -112,7 +110,7 @@ export default class DtrDetails implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, string> = {}
 
     if (!this.body.reference) {
       errors.reference = 'You must specify the reference number'
@@ -138,7 +136,7 @@ export default class DtrDetails implements TasklistPage {
       errors.dutyToReferOutcomeOtherDetails = 'You must add details about the reason'
     }
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 
   getLocalAuthorities() {
@@ -146,10 +144,10 @@ export default class DtrDetails implements TasklistPage {
   }
 
   items() {
-    return Object.keys(dutyToReferOutcomes).map(key => {
+    return Object.entries(dutyToReferOutcomes).map(([key, value]) => {
       return {
         value: key,
-        text: dutyToReferOutcomes[key],
+        text: value,
         checked: this.body.dutyToReferOutcome === key,
       }
     })

@@ -15,9 +15,9 @@ import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
 
-type searchResponse = {
+type SearchResponse = {
   body: Array<AssessmentSummary>
-  header: unknown
+  header: Record<string, string>
 }
 
 export default class AssessmentClient {
@@ -38,7 +38,7 @@ export default class AssessmentClient {
     })
     const response = await this.restClient.get({ path, raw: true })
 
-    const { body, header } = response as searchResponse
+    const { body, header } = response as SearchResponse
 
     return {
       url: {

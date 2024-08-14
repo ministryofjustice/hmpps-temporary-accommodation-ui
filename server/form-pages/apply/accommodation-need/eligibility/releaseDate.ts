@@ -52,7 +52,7 @@ export default class ReleaseDate implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, string> = {}
 
     if (dateIsBlank(this.body, 'releaseDate')) {
       errors.releaseDate = 'You must specify the release date'
@@ -62,6 +62,6 @@ export default class ReleaseDate implements TasklistPage {
       errors.releaseDate = 'The release date must not be in the past'
     }
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 }

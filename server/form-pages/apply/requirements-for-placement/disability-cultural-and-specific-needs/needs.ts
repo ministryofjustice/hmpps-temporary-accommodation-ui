@@ -1,11 +1,17 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { TaskListErrors } from '@approved-premises/ui'
+import type { PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import { personName } from '../../../../utils/personUtils'
 import TasklistPage from '../../../tasklistPage'
 
-const personNeeds = {
+type PersonNeedField = {
+  text: string
+  error?: string
+  detailLabel?: string
+}
+
+const personNeeds: Record<string, PersonNeedField> = {
   hearingImpairment: {
     text: 'Hearing impairment',
     error: "You must provide details about the person's hearing impairment",
@@ -54,7 +60,7 @@ type PersonNeedsDetail = { [T in PersonNeeds as `${T}Detail`]: string }
 
 type NeedsBody = {
   needs: Array<PersonNeeds>
-} & PersonNeedsDetail
+} & Omit<PersonNeedsDetail, 'none'>
 
 @Page({
   name: 'needs',
@@ -78,7 +84,7 @@ export default class Needs implements TasklistPage {
   }
 
   response() {
-    const response = {}
+    const response: PageResponse = {}
 
     this.body.needs?.forEach(need => {
       if (need !== 'none') {
@@ -98,7 +104,7 @@ export default class Needs implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, string> = {}
 
     if (!this.body.needs?.length) {
       errors.needs = `You must specify whether ${personName(this.application.person)} has any of the following needs`
@@ -108,14 +114,14 @@ export default class Needs implements TasklistPage {
 
     this.body.needs?.forEach(need => {
       if (need !== 'none') {
-        const detailKey = `${need}Detail`
+        const detailKey = `${need}Detail` as keyof PersonNeedsDetail
         if (!this.body[detailKey]) {
           errors[detailKey] = personNeeds[need].error
         }
       }
     })
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 
   items() {

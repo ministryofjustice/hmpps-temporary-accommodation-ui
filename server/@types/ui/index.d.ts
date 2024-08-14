@@ -27,6 +27,7 @@ import {
   User,
 } from '@approved-premises/api'
 import { CallConfig } from '../../data/restClient'
+import { TasklistPageInterface } from '../../form-pages/tasklistPage'
 
 interface TasklistPage {
   body: Record<string, unknown>
@@ -38,24 +39,15 @@ interface PersonService {}
 // A utility type that allows us to define an object with a date attribute split into
 // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
 // date input
-export type ObjectWithDateParts<K extends string | number> = { [P in `${K}-${'year' | 'month' | 'day'}`]: string } & {
+export type ObjectWithDateParts<K extends string> = {
+  [P in `${K}-${'year' | 'month' | 'day'}` as string]: string
+} & {
   [P in `${K}-time`]?: string
 } & {
   [P in K]?: string
 }
 
 export type BookingStatus = 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled'
-
-export type TaskNames =
-  | 'basic-information'
-  | 'type-of-ap'
-  | 'risk-management-features'
-  | 'prison-information'
-  | 'location-factors'
-  | 'access-and-healthcare'
-  | 'further-considerations'
-  | 'move-on'
-  | 'check-your-answers'
 
 export type YesOrNoWithDetail<T extends string> = {
   [K in T]: YesOrNo
@@ -69,11 +61,13 @@ export type YesNoOrIDKWithDetail<T extends string> = {
   [K in `${T}Detail`]: string
 }
 
+export type TaskPages = Record<string, TasklistPageInterface>
+
 export type Task = {
   id: string
   title: string
   actionText: string
-  pages: Record<string, unknown>
+  pages: TaskPages
 }
 
 export type TaskStatus = 'not_started' | 'in_progress' | 'complete' | 'cannot_start'
@@ -88,7 +82,7 @@ export type FormSection = {
 
 export type FormSections = Array<FormSection>
 
-export type FormPages = { [key in TaskNames]: Record<string, unknown> }
+export type FormPages = Record<string, TaskPages>
 
 export type PageResponse = Record<string, string | Array<Record<string, unknown>>>
 

@@ -44,7 +44,7 @@ export default class SentenceExpiry implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, string> = {}
 
     if (dateIsBlank(this.body, 'sentenceExpiryDate')) {
       errors.sentenceExpiryDate = 'You must specify the sentence expiry date'
@@ -52,6 +52,6 @@ export default class SentenceExpiry implements TasklistPage {
       errors.sentenceExpiryDate = 'You must specify a valid sentence expiry date'
     }
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 }

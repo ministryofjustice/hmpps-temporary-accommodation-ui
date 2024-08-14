@@ -5,6 +5,7 @@ import type { BespokeError, ErrorMessage, ErrorMessages, ErrorSummary, ErrorsAnd
 import errorLookup from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError, ValidationError } from './errors'
+import { FlashMessage } from '../@types/express'
 
 interface InvalidParams {
   propertyName: string
@@ -55,10 +56,10 @@ export const catchAPIErrorOrPropogate = (request: Request, response: Response, e
 }
 
 export const fetchErrorsAndUserInput = (request: Request): ErrorsAndUserInput => {
-  const errors = firstFlashItem(request, 'errors') || {}
+  const errors = (firstFlashItem(request, 'errors') as ErrorMessages) || {}
   const errorSummary = (request.flash('errorSummary') || []) as Array<ErrorSummary>
-  const errorTitle = firstFlashItem(request, 'errorTitle')
-  const userInput = firstFlashItem(request, 'userInput') || {}
+  const errorTitle = firstFlashItem(request, 'errorTitle') as string
+  const userInput = (firstFlashItem(request, 'userInput') as Record<string, unknown>) || {}
 
   return { errors, errorSummary, errorTitle, userInput }
 }
@@ -153,7 +154,7 @@ const generateErrorSummary = (errors: Record<string, string>): Array<ErrorSummar
   return Object.keys(errors).map(k => errorSummary(k, errors[k]))
 }
 
-const firstFlashItem = (request: Request, key: string) => {
+const firstFlashItem = (request: Request, key: string): FlashMessage => {
   const message = request.flash(key)
   return message ? message[0] : undefined
 }

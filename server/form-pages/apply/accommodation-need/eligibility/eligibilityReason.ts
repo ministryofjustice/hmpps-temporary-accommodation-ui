@@ -52,10 +52,10 @@ export default class EligibilityReason implements TasklistPage {
   }
 
   items() {
-    return Object.keys(eligibilityReasons).map(key => {
+    return Object.entries(eligibilityReasons).map(([key, value]) => {
       return {
         value: key,
-        text: eligibilityReasons[key],
+        text: value,
         checked: this.body.reason === key,
       }
     })

@@ -104,7 +104,7 @@ describe('ProbationPractitioner', () => {
       expect(page.errors()).toEqual({})
     })
 
-    it.each(['name', 'email', 'phone', 'pdu'])('returns an error if the %s property is missing', key => {
+    it.each(['name', 'email', 'phone', 'pdu'] as const)('returns an error if the %s property is missing', key => {
       const bodyIncomplete = { ...body, [key]: undefined } as Partial<ProbationPractitionerBody>
       const page = new ProbationPractitioner(bodyIncomplete, application)
 

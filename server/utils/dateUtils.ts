@@ -24,6 +24,7 @@ export class DateFormats {
 
   /**
    * @param date JS Date object.
+   * @param options an optional object to specify UI date format (default is 'long')
    * @returns the date in the to be shown in the UI: "20 December 2012".
    */
   static dateObjtoUIDate(date: Date, options: { format: 'short' | 'long' } = { format: 'long' }) {
@@ -58,6 +59,7 @@ export class DateFormats {
 
   /**
    * @param isoDate an ISO date string.
+   * @param options an optional object to specify UI date format (default is 'long')
    * @returns the date in the to be shown in the UI: "20 December 2012".
    */
   static isoDateToUIDate(isoDate: string, options: { format: 'short' | 'long' } = { format: 'long' }) {
@@ -77,9 +79,10 @@ export class DateFormats {
    * into an ISO8601 date string
    * @param dateInputObj an object with date parts (i.e. `-month` `-day` `-year`), which come from a `govukDateInput`.
    * @param key the key that prefixes each item in the dateInputObj, also the name of the property which the date object will be returned in the return value.
+   * @param options an optional object to specify representation (default is 'auto')
    * @returns an ISO8601 date string.
    */
-  static dateAndTimeInputsToIsoString<K extends string | number>(
+  static dateAndTimeInputsToIsoString<K extends string>(
     dateInputObj: Partial<ObjectWithDateParts<K>>,
     key: K,
     options: { representation: 'auto' | 'complete' } = { representation: 'auto' },
@@ -116,7 +119,7 @@ export class DateFormats {
     } as ObjectWithDateParts<K>
   }
 
-  static isoToDateAndTimeInputs<K extends string | number>(isoDate: string, key: K): ObjectWithDateParts<K> {
+  static isoToDateAndTimeInputs<K extends string>(isoDate: string, key: K): ObjectWithDateParts<K> {
     const date = this.isoToDateObj(isoDate)
 
     return {
@@ -155,7 +158,7 @@ export class DateFormats {
   }
 }
 
-export const dateAndTimeInputsAreValidDates = <K extends string | number>(
+export const dateAndTimeInputsAreValidDates = <K extends string>(
   dateInputObj: Partial<ObjectWithDateParts<K>>,
   key: K,
 ): boolean => {
@@ -180,10 +183,7 @@ export const dateExists = (dateString: string) => {
   }
 }
 
-export const dateIsBlank = <K extends string | number>(
-  dateInputObj: Partial<ObjectWithDateParts<K>>,
-  key: K,
-): boolean => {
+export const dateIsBlank = <K extends string>(dateInputObj: Partial<ObjectWithDateParts<K>>, key: K): boolean => {
   return !['year' as const, 'month' as const, 'day' as const].every(part => !!dateInputObj[`${key}-${part}`])
 }
 

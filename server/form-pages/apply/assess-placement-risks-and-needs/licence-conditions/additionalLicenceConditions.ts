@@ -1,10 +1,17 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { TaskListErrors } from '@approved-premises/ui'
+import type { PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
 
-const conditions = {
+type AdditionalLicenceConditionField = {
+  text: string
+  error: string
+  detailLabel?: string
+  detailHint?: string
+}
+
+const conditions: Record<string, AdditionalLicenceConditionField> = {
   alcoholMonitoring: {
     text: 'Alcohol monitoring',
     error: 'You must provide details about alcohol monitoring',
@@ -84,7 +91,7 @@ export default class AdditionalLicenceConditions implements TasklistPage {
   ) {}
 
   response() {
-    const response = {}
+    const response: PageResponse = {}
 
     this.body.conditions?.forEach(condition => {
       response[conditions[condition].text] = this.body[`${condition}Detail`]
@@ -102,25 +109,25 @@ export default class AdditionalLicenceConditions implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, string> = {}
 
     this.body.conditions?.forEach(condition => {
-      const detailKey = `${condition}Detail`
+      const detailKey = `${condition}Detail` as keyof ConditionsDetail
       if (!this.body[detailKey]) {
         errors[detailKey] = conditions[condition].error
       }
     })
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 
   items() {
-    return Object.keys(conditions).map(key => {
+    return Object.entries(conditions).map(([key, value]) => {
       return {
         value: key,
-        text: conditions[key].text,
-        detailLabel: conditions[key].detailLabel,
-        detailHint: conditions[key].detailHint,
+        text: value.text,
+        detailLabel: value.detailLabel,
+        detailHint: value.detailHint,
       }
     })
   }

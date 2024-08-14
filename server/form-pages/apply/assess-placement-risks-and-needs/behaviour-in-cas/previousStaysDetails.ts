@@ -1,5 +1,5 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
-import type { TaskListErrors } from '@approved-premises/ui'
+import type { PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import { personName } from '../../../../utils/personUtils'
@@ -43,7 +43,7 @@ export default class PreviousStaysDetails implements TasklistPage {
   }
 
   response() {
-    const response = {}
+    const response: PageResponse = {}
 
     this.body.accommodationTypes?.forEach(accommodationType => {
       response[accommodationTypes[accommodationType].text] = this.body[`${accommodationType}Detail`]
@@ -70,7 +70,7 @@ export default class PreviousStaysDetails implements TasklistPage {
     }
 
     this.body.accommodationTypes?.forEach(accommodationType => {
-      const detailKey = `${accommodationType}Detail`
+      const detailKey = `${accommodationType}Detail` as keyof AccommodationTypesDetail
       if (!this.body[detailKey]) {
         errors[detailKey] = 'You must provide details about their behaviour during their stay'
       }
@@ -80,10 +80,10 @@ export default class PreviousStaysDetails implements TasklistPage {
   }
 
   items() {
-    return Object.keys(accommodationTypes).map(key => {
+    return Object.entries(accommodationTypes).map(([key, value]) => {
       return {
         value: key,
-        text: accommodationTypes[key].text,
+        text: value.text,
       }
     })
   }

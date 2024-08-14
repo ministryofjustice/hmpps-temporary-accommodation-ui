@@ -229,7 +229,7 @@ export default class AssessmentsController {
   confirm(): RequestHandler {
     return async (req: Request, res: Response) => {
       return res.render('temporary-accommodation/assessments/confirm', {
-        content: confirmationPageContent[req.params.status as string],
+        content: confirmationPageContent[req.params.status as AssessmentUpdateStatus],
         status: req.params.status,
         id: req.params.id,
       })

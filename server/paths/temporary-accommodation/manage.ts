@@ -27,7 +27,8 @@ const reportsPath = temporaryAccommodationPath.path('reports')
 const assessmentsPath = temporaryAccommodationPath.path('review-and-assess')
 const assessmentPath = assessmentsPath.path(':id')
 
-const paths = {
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+const paths: Record<string, any> = {
   dashboard: {
     index: dashboardPath,
   },

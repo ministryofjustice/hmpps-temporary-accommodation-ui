@@ -82,10 +82,10 @@ export default class ApprovalsForSpecificRisks implements TasklistPage {
   }
 
   items() {
-    return Object.keys(approvals).map(key => {
+    return Object.entries(approvals).map(([key, value]) => {
       return {
         value: key,
-        text: approvals[key],
+        text: value,
       }
     })
   }

@@ -56,7 +56,7 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a>`,
+          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a><div class="govuk-body govuk-!-margin-bottom-0"> ABC123</div>`,
           attributes: { 'data-sort-value': 'John Smith' },
         },
         { text: 'ABC123' },
@@ -76,7 +76,7 @@ describe('assessmentUtils', () => {
       expect(result).toEqual(
         expect.arrayContaining([
           {
-            html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">Limited access offender</a>`,
+            html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">Limited access offender</a><div class="govuk-body govuk-!-margin-bottom-0"> ${assessmentSummary.person.crn}</div>`,
             attributes: { 'data-sort-value': '' },
           },
         ]),
@@ -99,7 +99,7 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a>`,
+          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a><div class="govuk-body govuk-!-margin-bottom-0"> ABC123</div>`,
           attributes: { 'data-sort-value': 'John Smith' },
         },
         { text: 'ABC123' },
@@ -451,7 +451,7 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name</button></a>',
+          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name / CRN</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
@@ -474,7 +474,7 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name</button></a>',
+          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name / CRN</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {

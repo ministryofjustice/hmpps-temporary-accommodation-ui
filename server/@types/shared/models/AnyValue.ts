@@ -5,6 +5,4 @@
 /**
  * Any object that conforms to the current JSON schema for an application
  */
-export type AnyValue = {
-};
-
+export type AnyValue = Record<string, any>;

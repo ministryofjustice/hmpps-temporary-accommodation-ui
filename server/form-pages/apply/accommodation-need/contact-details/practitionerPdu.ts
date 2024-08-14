@@ -13,7 +13,7 @@ export type PractitionerPduBody = ProbationDeliveryUnit
 
 @Page({ name: 'practitioner-pdu', bodyProperties: ['id'] })
 export default class PractitionerPdu implements TasklistPage {
-  title: string = 'What’s your PDU (probation delivery unit)?'
+  title: string = 'What’s your PDU (Probation Delivery Unit)?'
 
   htmlDocumentTitle = this.title
 

@@ -143,7 +143,7 @@ export default class ProbationPractitioner implements TasklistPage {
       this.summaryListItem('name', 'Name', 'Enter a name'),
       this.summaryListItem('email', 'Email address', 'Enter an email address'),
       this.summaryListItem('phone', 'Phone number', 'Enter a phone number'),
-      this.summaryListItem('pdu', 'PDU (Probation delivery unit)', 'Enter a PDU'),
+      this.summaryListItem('pdu', 'PDU (Probation Delivery Unit)', 'Enter a PDU'),
     ]
   }
 

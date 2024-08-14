@@ -14,7 +14,7 @@ export type AlternativePduBody = {
 
 @Page({ name: 'alternative-pdu', bodyProperties: ['alternativePdu', 'pduId', 'pduName'] })
 export default class AlternativePdu implements TasklistPage {
-  title = 'Is placement required in an alternative PDU (probation delivery unit)?'
+  title = 'Is placement required in an alternative PDU (Probation Delivery Unit)?'
 
   htmlDocumentTitle = this.title
 

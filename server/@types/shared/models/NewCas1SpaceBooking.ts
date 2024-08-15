@@ -7,7 +7,6 @@ export type NewCas1SpaceBooking = {
     arrivalDate: string;
     departureDate: string;
     premisesId: string;
-    placementRequestId: string;
     requirements: Cas1SpaceBookingRequirements;
 };
 

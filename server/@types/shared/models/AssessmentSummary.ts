@@ -5,6 +5,7 @@
 import type { AssessmentDecision } from './AssessmentDecision';
 import type { Person } from './Person';
 import type { PersonRisks } from './PersonRisks';
+import { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
 export type AssessmentSummary = {
     type: string;
     id: string;
@@ -15,5 +16,6 @@ export type AssessmentSummary = {
     decision?: AssessmentDecision;
     risks?: PersonRisks;
     person: Person;
+    probationDeliveryUnitName: ProbationDeliveryUnit["name"];
 };
 

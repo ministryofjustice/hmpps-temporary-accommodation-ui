@@ -39,7 +39,7 @@ export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showSt
       )}</a><div class="govuk-body govuk-!-margin-bottom-0"> ${assessmentSummary.person.crn}</div>`,
       personName(assessmentSummary.person, ''),
     ),
-    textValue(assessmentSummary.person.crn),
+    textValue(assessmentSummary.probationDeliveryUnitName),
     dateValue(assessmentSummary.createdAt),
     dateValue(assessmentSummary.arrivalDate),
   ]
@@ -255,7 +255,7 @@ export const createTableHeadings = (
 ) => {
   const headings = [
     sortHeader('Name / CRN', 'name', currentSortBy, sortIsAscending, href),
-    sortHeader('CRN', 'crn', currentSortBy, sortIsAscending, href),
+    sortHeader('PDU (Probation Delivery Unit)', 'probationDeliveryUnitName', currentSortBy, sortIsAscending, href),
     sortHeader('Referral received', 'createdAt', currentSortBy, sortIsAscending, href),
     sortHeader('Bedspace required', 'arrivedAt', currentSortBy, sortIsAscending, href),
   ]

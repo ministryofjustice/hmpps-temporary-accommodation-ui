@@ -50,8 +50,12 @@ export default class ListPage extends Page {
         .parent()
         .parent()
         .within(() => {
-          cy.get('th').eq(0).contains(personName(assessmentSummary.person, 'Limited access offender'))
-          cy.get('td').eq(0).contains(assessmentSummary.person.crn)
+          cy.get('th')
+            .eq(0)
+            .contains(personName(assessmentSummary.person, 'Limited access offender'))
+            .parent()
+            .contains(assessmentSummary.person.crn)
+          cy.get('td').eq(0).contains(assessmentSummary.probationDeliveryUnitName)
           cy.get('td')
             .eq(1)
             .contains(

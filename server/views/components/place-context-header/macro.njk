@@ -19,14 +19,15 @@
                             <dt class="place-context-header__key">Date of birth: </dt>
                             <dd class="place-context-header__value">{{ formatDate(person.dateOfBirth, {format: 'short'}) }}</dd>
                         </div>
-                        <div class="place-context-header__row">
-                            <dt class="place-context-header__key">Sex: </dt>
-                            <dd class="place-context-header__value">{{ person.sex }}</dd>
-                        </div>
                         {% if person.genderIdentity %}
                             <div class="place-context-header__row">
                                 <dt class="place-context-header__key">Gender identity: </dt>
                                 <dd class="place-context-header__value">{{ person.genderIdentity }}</dd>
+                            </div>
+                        {% else %}
+                            <div class="place-context-header__row">
+                                <dt class="place-context-header__key">Sex: </dt>
+                                <dd class="place-context-header__value">{{ person.sex }}</dd>
                             </div>
                         {% endif %}
                     {% endif %}

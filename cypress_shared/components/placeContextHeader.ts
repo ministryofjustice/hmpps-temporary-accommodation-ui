@@ -26,11 +26,12 @@ export default class PlaceContextHeaderComponent extends Component {
           .next()
           .should('contain', DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }))
 
+        cy.root().contains('Sex:').next().should('contain', person.sex)
+
         if (person.genderIdentity) {
           cy.root().contains('Gender identity:').next().should('contain', person.genderIdentity)
           cy.root().should('not.contain', 'Sex')
         } else {
-          cy.root().contains('Sex:').next().should('contain', person.sex)
           cy.root().should('not.contain', 'Gender identity')
         }
       }

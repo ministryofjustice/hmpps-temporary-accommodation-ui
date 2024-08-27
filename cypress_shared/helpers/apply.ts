@@ -665,6 +665,7 @@ export default class ApplyHelper {
 
     // When I complete the form
     const alternativePduPage = new AlternativePduPage(this.application)
+    alternativePduPage.checkNotificationBannerHasLinkToExternalGuidance()
     alternativePduPage.completeForm()
     alternativePduPage.clickSubmit()
 

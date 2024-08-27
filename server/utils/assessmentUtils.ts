@@ -36,10 +36,10 @@ export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showSt
       `<a href="${paths.assessments.summary({ id: assessmentSummary.id })}">${personName(
         assessmentSummary.person,
         'Limited access offender',
-      )}</a>`,
+      )}</a><div class="govuk-body govuk-!-margin-bottom-0"> ${assessmentSummary.person.crn}</div>`,
       personName(assessmentSummary.person, ''),
     ),
-    textValue(assessmentSummary.person.crn),
+    textValue(assessmentSummary.probationDeliveryUnitName),
     dateValue(assessmentSummary.createdAt),
     dateValue(assessmentSummary.arrivalDate),
   ]
@@ -254,8 +254,8 @@ export const createTableHeadings = (
   includeStatusColumn: boolean = false,
 ) => {
   const headings = [
-    sortHeader('Name', 'name', currentSortBy, sortIsAscending, href),
-    sortHeader('CRN', 'crn', currentSortBy, sortIsAscending, href),
+    sortHeader('Name / CRN', 'name', currentSortBy, sortIsAscending, href),
+    sortHeader('PDU (Probation Delivery Unit)', 'probationDeliveryUnitName', currentSortBy, sortIsAscending, href),
     sortHeader('Referral received', 'createdAt', currentSortBy, sortIsAscending, href),
     sortHeader('Bedspace required', 'arrivedAt', currentSortBy, sortIsAscending, href),
   ]

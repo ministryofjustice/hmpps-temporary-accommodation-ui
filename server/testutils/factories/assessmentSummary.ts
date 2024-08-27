@@ -4,6 +4,7 @@ import { TemporaryAccommodationAssessmentSummary as AssessmentSummary } from '@a
 import { DateFormats } from '../../utils/dateUtils'
 import { fullPersonFactory as personFactory } from './person'
 import risksFactory from './risks'
+import referenceDataFactory from './referenceData'
 
 class AssessmentSummaryFactory extends Factory<AssessmentSummary> {
   /* istanbul ignore next */
@@ -25,4 +26,5 @@ export default AssessmentSummaryFactory.define(() => ({
   status: 'closed' as const,
   risks: risksFactory.build(),
   person: personFactory.build(),
+  probationDeliveryUnitName: referenceDataFactory.pdu().build().name,
 }))

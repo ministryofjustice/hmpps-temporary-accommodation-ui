@@ -56,13 +56,13 @@ describe('AssessmentsController', () => {
 
   const tableHeaders = [
     {
-      html: '<a href="?sortBy=name&sortDirection=asc"><button>Name</button></a>',
+      html: '<a href="?sortBy=name&sortDirection=asc"><button>Name / CRN</button></a>',
       attributes: {
         'aria-sort': 'none',
       },
     },
     {
-      html: '<a href="?sortBy=crn&sortDirection=asc"><button>CRN</button></a>',
+      html: '<a href="?sortBy=probationDeliveryUnitName&sortDirection=asc"><button>PDU (Probation Delivery Unit)</button></a>',
       attributes: {
         'aria-sort': 'none',
       },

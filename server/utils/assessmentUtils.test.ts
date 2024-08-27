@@ -56,10 +56,10 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a>`,
+          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a><div class="govuk-body govuk-!-margin-bottom-0"> ABC123</div>`,
           attributes: { 'data-sort-value': 'John Smith' },
         },
-        { text: 'ABC123' },
+        { text: assessmentSummary.probationDeliveryUnitName },
         { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
         { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
       ])
@@ -76,7 +76,7 @@ describe('assessmentUtils', () => {
       expect(result).toEqual(
         expect.arrayContaining([
           {
-            html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">Limited access offender</a>`,
+            html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">Limited access offender</a><div class="govuk-body govuk-!-margin-bottom-0"> ${assessmentSummary.person.crn}</div>`,
             attributes: { 'data-sort-value': '' },
           },
         ]),
@@ -99,10 +99,42 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a>`,
+          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a><div class="govuk-body govuk-!-margin-bottom-0"> ABC123</div>`,
           attributes: { 'data-sort-value': 'John Smith' },
         },
-        { text: 'ABC123' },
+        { text: assessmentSummary.probationDeliveryUnitName },
+        { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
+        { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
+        {
+          attributes: {
+            'data-sort-value': 'Unallocated',
+          },
+          html: '<strong class="govuk-tag govuk-tag--grey">Unallocated</strong>',
+        },
+      ])
+    })
+
+    it('returns a table row for the given assessment summary for the assessments table when the referral has no PDU', () => {
+      const assessmentSummary = assessmentSummaryFactory.build({
+        id: 'some-id',
+        person: personFactory.build({
+          name: 'John Smith',
+          crn: 'ABC123',
+        }),
+        arrivalDate: '2023-04-13',
+        createdAt: '2023-02-27',
+        status: 'unallocated',
+        probationDeliveryUnitName: undefined,
+      })
+
+      const result = assessmentTableRows(assessmentSummary, true)
+
+      expect(result).toEqual([
+        {
+          html: `<a href="${paths.assessments.summary({ id: 'some-id' })}">John Smith</a><div class="govuk-body govuk-!-margin-bottom-0"> ABC123</div>`,
+          attributes: { 'data-sort-value': 'John Smith' },
+        },
+        { text: undefined },
         { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
         { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
         {
@@ -447,15 +479,15 @@ describe('assessmentUtils', () => {
 
   describe('createTableHeadings', () => {
     it('returns table headings for assessment lists', () => {
-      const result = createTableHeadings('crn', true, '?foo=bar')
+      const result = createTableHeadings('probationDeliveryUnitName', true, '?foo=bar')
 
       expect(result).toEqual([
         {
-          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name</button></a>',
+          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name / CRN</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=crn&sortDirection=desc"><button>CRN</button></a>',
+          html: '<a href="?foo=bar&sortBy=probationDeliveryUnitName&sortDirection=desc"><button>PDU (Probation Delivery Unit)</button></a>',
           attributes: { 'aria-sort': 'ascending' },
         },
         {
@@ -474,11 +506,11 @@ describe('assessmentUtils', () => {
 
       expect(result).toEqual([
         {
-          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name</button></a>',
+          html: '<a href="?foo=bar&sortBy=name&sortDirection=asc"><button>Name / CRN</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {
-          html: '<a href="?foo=bar&sortBy=crn&sortDirection=asc"><button>CRN</button></a>',
+          html: '<a href="?foo=bar&sortBy=probationDeliveryUnitName&sortDirection=asc"><button>PDU (Probation Delivery Unit)</button></a>',
           attributes: { 'aria-sort': 'none' },
         },
         {

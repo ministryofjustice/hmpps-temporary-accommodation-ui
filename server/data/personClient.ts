@@ -25,66 +25,48 @@ export default class PersonClient {
     this.restClient = new RestClient('personClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async search(crn: string): Promise<Person> {
-    const response = await this.restClient.get({
+  async search(crn: string) {
+    return this.restClient.get<Person>({
       path: `${paths.people.search({})}?crn=${normalise(crn)}`,
     })
-
-    return response as Person
   }
 
-  async risks(crn: string): Promise<PersonRisks> {
-    const response = await this.restClient.get({
+  async risks(crn: string) {
+    return this.restClient.get<PersonRisks>({
       path: paths.people.risks.show({ crn: crn.trim() }),
     })
-
-    return response as PersonRisks
   }
 
-  async prisonCaseNotes(crn: string): Promise<Array<PrisonCaseNote>> {
-    const response = await this.restClient.get({ path: paths.people.prisonCaseNotes({ crn: crn.trim() }) })
-
-    return response as Array<PrisonCaseNote>
+  async prisonCaseNotes(crn: string) {
+    return this.restClient.get<Array<PrisonCaseNote>>({ path: paths.people.prisonCaseNotes({ crn: crn.trim() }) })
   }
 
-  async adjudications(crn: string): Promise<Array<Adjudication>> {
-    const response = await this.restClient.get({ path: paths.people.adjudications({ crn: crn.trim() }) })
-
-    return response as Array<Adjudication>
+  async adjudications(crn: string) {
+    return this.restClient.get<Array<Adjudication>>({ path: paths.people.adjudications({ crn: crn.trim() }) })
   }
 
-  async acctAlerts(crn: string): Promise<Array<PersonAcctAlert>> {
-    const response = await this.restClient.get({ path: paths.people.acctAlerts({ crn }) })
-
-    return response as Array<PersonAcctAlert>
+  async acctAlerts(crn: string) {
+    return this.restClient.get<Array<PersonAcctAlert>>({ path: paths.people.acctAlerts({ crn }) })
   }
 
-  async offences(crn: string): Promise<Array<ActiveOffence>> {
-    const response = await this.restClient.get({ path: paths.people.offences({ crn: crn.trim() }) })
-
-    return response as Array<ActiveOffence>
+  async offences(crn: string) {
+    return this.restClient.get<Array<ActiveOffence>>({ path: paths.people.offences({ crn: crn.trim() }) })
   }
 
-  async oasysSelections(crn: string): Promise<Array<OASysSection>> {
-    const response = await this.restClient.get({ path: paths.people.oasys.selection({ crn: crn.trim() }) })
-
-    return response as Array<OASysSection>
+  async oasysSelections(crn: string) {
+    return this.restClient.get<Array<OASysSection>>({ path: paths.people.oasys.selection({ crn: crn.trim() }) })
   }
 
-  async oasysSections(crn: string, selectedSections?: Array<number>): Promise<OASysSections> {
-    let response: OASysSections
-
+  async oasysSections(crn: string, selectedSections?: Array<number>) {
     if (config.flags.oasysDisabled) {
-      response = oasysStubs as OASysSections
-    } else {
-      const path = appendQueryString(paths.people.oasys.sections({ crn: crn.trim() }), {
-        'selected-sections': selectedSections,
-      })
-
-      response = (await this.restClient.get({ path })) as OASysSections
+      return oasysStubs as OASysSections
     }
 
-    return response as OASysSections
+    const path = appendQueryString(paths.people.oasys.sections({ crn: crn.trim() }), {
+      'selected-sections': selectedSections,
+    })
+
+    return this.restClient.get<OASysSections>({ path })
   }
 
   async document(crn: string, documentId: string, response: Response): Promise<void> {

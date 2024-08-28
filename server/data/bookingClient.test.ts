@@ -325,10 +325,12 @@ describe('BookingClient', () => {
 
       await bookingClient.search('provisional', {})
 
-      expect(bookingClient.restClient.get).toHaveBeenCalledWith({
-        path: '/bookings/search?status=provisional&page=1&sortField=endDate&sortOrder=descending',
-        raw: true,
-      })
+      expect(bookingClient.restClient.get).toHaveBeenCalledWith(
+        {
+          path: '/bookings/search?status=provisional&page=1&sortField=endDate&sortOrder=descending',
+        },
+        true,
+      )
       expect(nock.isDone()).toBeTruthy()
     })
 
@@ -342,10 +344,12 @@ describe('BookingClient', () => {
 
       await bookingClient.search('arrived', { page: 2, sortBy: 'startDate', sortDirection: 'asc' })
 
-      expect(bookingClient.restClient.get).toHaveBeenCalledWith({
-        path: '/bookings/search?status=arrived&page=2&sortField=startDate&sortOrder=ascending',
-        raw: true,
-      })
+      expect(bookingClient.restClient.get).toHaveBeenCalledWith(
+        {
+          path: '/bookings/search?status=arrived&page=2&sortField=startDate&sortOrder=ascending',
+        },
+        true,
+      )
       expect(nock.isDone()).toBeTruthy()
     })
   })

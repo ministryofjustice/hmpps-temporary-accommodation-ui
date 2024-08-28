@@ -16,38 +16,36 @@ export default class LostBedClient {
     this.restClient = new RestClient('lostBedClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async create(premisesId: string, lostBed: NewLostBed): Promise<LostBed> {
-    const response = await this.restClient.post({
+  async create(premisesId: string, lostBed: NewLostBed) {
+    return this.restClient.post<LostBed>({
       path: paths.premises.lostBeds.create({ premisesId }),
       data: lostBed,
     })
-
-    return response as LostBed
   }
 
-  async find(premisesId: string, lostBedId: string): Promise<LostBed> {
-    return (await this.restClient.get({
+  async find(premisesId: string, lostBedId: string) {
+    return this.restClient.get<LostBed>({
       path: paths.premises.lostBeds.show({ premisesId, lostBedId }),
-    })) as LostBed
+    })
   }
 
-  async update(premisesId: string, lostBedId: string, data: UpdateLostBed): Promise<LostBed> {
-    return (await this.restClient.put({
+  async update(premisesId: string, lostBedId: string, data: UpdateLostBed) {
+    return this.restClient.put<LostBed>({
       path: paths.premises.lostBeds.update({ premisesId, lostBedId }),
       data,
-    })) as LostBed
+    })
   }
 
-  async allLostBedsForPremisesId(premisesId: string): Promise<Array<LostBed>> {
-    return (await this.restClient.get({
+  async allLostBedsForPremisesId(premisesId: string) {
+    return this.restClient.get<Array<LostBed>>({
       path: paths.premises.lostBeds.index({ premisesId }),
-    })) as Array<LostBed>
+    })
   }
 
-  async cancel(premisesId: string, lostBedId: string, data: NewLostBedCancellation): Promise<LostBedCancellation> {
-    return (await this.restClient.post({
+  async cancel(premisesId: string, lostBedId: string, data: NewLostBedCancellation) {
+    return this.restClient.post<LostBedCancellation>({
       path: paths.premises.lostBeds.cancel({ premisesId, lostBedId }),
       data,
-    })) as LostBedCancellation
+    })
   }
 }

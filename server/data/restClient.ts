@@ -18,7 +18,6 @@ interface GetRequest {
   query?: string | Record<string, string>
   headers?: Record<string, string>
   responseType?: string
-  raw?: boolean
 }
 
 interface PostRequest {
@@ -51,9 +50,9 @@ export interface CallConfig {
   probationRegion?: ProbationRegion
 }
 
-type RestClientResponseGet = {
-  body: unknown
-  header: unknown
+type RestClientResponseGet<T> = {
+  body: T
+  header: Record<string, string>
 }
 
 export default class RestClient {
@@ -86,47 +85,51 @@ export default class RestClient {
     return this.config.timeout
   }
 
-  async get({
-    path = null,
-    query = '',
-    headers = {},
-    responseType = '',
-    raw = false,
-  }: GetRequest): Promise<RestClientResponseGet | unknown> {
-    logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
+  async get<T = unknown>(options: GetRequest): Promise<T>
+
+  async get<T = unknown>(options: GetRequest, raw: true): Promise<RestClientResponseGet<T>>
+
+  async get<T = unknown>(options: GetRequest, raw: boolean = false): Promise<T | RestClientResponseGet<T>> {
+    logger.info(`Get using user credentials: calling ${this.name}: ${options.path} ${options.query}`)
     try {
       const result = await superagent
-        .get(`${this.apiUrl()}${path}`)
+        .get(`${this.apiUrl()}${options.path}`)
         .agent(this.agent)
         .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
-        .query(query)
+        .query(options.query)
         .auth(this.token, { type: 'bearer' })
-        .set({ ...this.defaultHeaders, ...headers })
-        .responseType(responseType)
+        .set({ ...this.defaultHeaders, ...options.headers })
+        .responseType(options.responseType)
         .timeout(this.timeoutConfig())
 
-      return raw ? result : result.body
+      return raw ? (result as RestClientResponseGet<T>) : (result.body as T)
     } catch (error) {
       const sanitisedError = sanitiseError(error)
-      logger.warn({ ...sanitisedError, query }, `Error calling ${this.name}, path: '${path}', verb: 'GET'`)
+      logger.warn(
+        {
+          ...sanitisedError,
+          query: options.query,
+        },
+        `Error calling ${this.name}, path: '${options.path}', verb: 'GET'`,
+      )
       throw sanitisedError
     }
   }
 
-  async post(request: PostRequest = {}): Promise<unknown> {
-    return this.postPutOrDelete('post', request)
+  async post<T>(request: PostRequest = {}) {
+    return this.postPutOrDelete<T>('post', request)
   }
 
-  async put(request: PutRequest = {}): Promise<unknown> {
-    return this.postPutOrDelete('put', request)
+  async put<T>(request: PutRequest = {}) {
+    return this.postPutOrDelete<T>('put', request)
   }
 
-  async delete(request: DeleteRequest = {}): Promise<unknown> {
-    return this.postPutOrDelete('delete', request)
+  async delete<T>(request: DeleteRequest = {}) {
+    return this.postPutOrDelete<T>('delete', request)
   }
 
   async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<unknown> {
@@ -159,10 +162,10 @@ export default class RestClient {
     })
   }
 
-  async pipe(
+  async pipe<T = unknown>(
     response: Response,
     { path = null, headers = {}, query = '', filename = null }: PipeRequest,
-  ): Promise<unknown> {
+  ): Promise<T> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
     try {
       const result = await superagent
@@ -192,10 +195,10 @@ export default class RestClient {
     }
   }
 
-  private async postPutOrDelete(
+  private async postPutOrDelete<T = unknown>(
     method: 'post' | 'put' | 'delete',
     { path = null, headers = {}, responseType = '', data = {}, raw = false }: PutRequest | PostRequest = {},
-  ): Promise<unknown> {
+  ): Promise<T> {
     logger.info(`${method} using user credentials: calling ${this.name}: ${path}`)
     try {
       const request = this.createRequest(method, path)

@@ -1,6 +1,5 @@
 import {
   Adjudication,
-  Application,
   TemporaryAccommodationApplicationSummary as ApplicationSummary,
   ArrayOfOASysOffenceDetailsQuestions,
   ArrayOfOASysRiskManagementPlanQuestions,
@@ -10,13 +9,11 @@ import {
   TemporaryAccommodationAssessment as Assessment,
   AssessmentSortField,
   AssessmentStatus,
-  Booking,
   BookingSearchSortField,
   Document,
   LocalAuthorityArea,
   OASysSection,
   OASysSections,
-  Person,
   PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
@@ -157,16 +154,6 @@ export interface SummaryListItem {
   actions?: { items: Array<SummaryListActionItem> }
 }
 
-export interface IdentityBarMenu {
-  items: Array<IdentityBarMenuItem>
-}
-
-export interface IdentityBarMenuItem {
-  classes: string
-  href: string
-  text: string
-}
-
 export interface PageHeadingBarItem {
   classes: string
   href: string
@@ -249,10 +236,6 @@ export interface ReferenceData {
 
 export type PersonRisksUI = PersonRisks
 
-export type GroupedListofBookings = {
-  [K in 'arrivingToday' | 'departingToday' | 'upcomingArrivals' | 'upcomingDepartures']: Array<Booking>
-}
-
 export type GetPdusOptions = { regional?: boolean }
 export type DataServices = Partial<{
   personService: {
@@ -275,22 +258,9 @@ export type DataServices = Partial<{
   }
 }>
 
-export interface GroupedAssessments {
-  completed: Array<Assessment>
-  awaiting: Array<Assessment>
-}
-
 export interface GroupedApplications {
   inProgress: Array<ApplicationSummary>
   submitted: Array<ApplicationSummary>
-}
-
-export interface ApplicationWithRisks extends Application {
-  person: PersonWithRisks
-}
-
-export interface PersonWithRisks extends Person {
-  risks: PersonRisks
 }
 
 export type OasysImportArrays =

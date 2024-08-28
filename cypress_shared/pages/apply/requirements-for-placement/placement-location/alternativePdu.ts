@@ -24,4 +24,12 @@ export default class AlternativePduPage extends ApplyPage {
       cy.get('li[role="option"]').contains(pduName).click()
     }
   }
+
+  checkNotificationBannerHasLinkToExternalGuidance() {
+    cy.get('.moj-banner a').should(
+      'have.attr',
+      'href',
+      'https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/diagram/0:FF2D8D3F16B44268B814F7F8177A16F7.303E3A0E23194CF082C1598E11FA3314',
+    )
+  }
 }

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
 import 'reflect-metadata'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 type Constructor = new (...args: Array<any>) => {}
 
 const Section = (options: { title: string; tasks: Array<Constructor> }) => {

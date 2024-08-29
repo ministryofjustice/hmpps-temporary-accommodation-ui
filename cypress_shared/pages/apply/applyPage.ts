@@ -17,8 +17,7 @@ export default class ApplyPage extends Page {
   ) {
     super(title)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const Class = Apply.pages[taskName][pageName] as any
+    const Class = Apply.pages[taskName][pageName]
 
     this.tasklistPage = new Class(application.data?.[taskName]?.[pageName], application)
 

@@ -1,5 +1,5 @@
 {% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% extends "../../layout.njk" %}
 
 {% block head %}
@@ -14,12 +14,12 @@
             Before you continue
         </h2>
         <p class="govuk-body">
-            Selecting an out of region PDU will not guarantee accommodation. You must contact the relevant Homelessness Prevention Team about the 
+            Out of region referrals are not support in the CAS3 digital system. You must contact the relevant Homelessness Prevention Team about the 
             referral and <a class="govuk-link" href="https://equip-portal.equip.service.justice.gov.uk/CtrlWebIsapi.dll/app/diagram/0:FF2D8D3F16B44268B814F7F8177A16F7.303E3A0E23194CF082C1598E11FA3314" rel="noreferrer noopener" target="_blank">follow this guidance (opens in a new window)</a>
         </p>
     {% endset %}
 
-    {{ mojBanner({
+    {{ govukNotificationBanner({
         type: 'information',
         html: notificationBannerHTML,
         iconFallbackText: 'information'

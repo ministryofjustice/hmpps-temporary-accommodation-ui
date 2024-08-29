@@ -78,25 +78,25 @@ export default class AssessmentClient {
     })
   }
 
-  async acceptAssessment(id: string): Promise<void> {
-    await this.restClient.post({
+  async acceptAssessment(id: string) {
+    return this.restClient.post<void>({
       path: paths.assessments.acceptance({ id }),
       data: { document: {} } as AssessmentAcceptance,
     })
   }
 
-  async closeAssessment(id: string): Promise<void> {
-    await this.restClient.post({
+  async closeAssessment(id: string) {
+    return this.restClient.post<void>({
       path: paths.assessments.closure({ id }),
     })
   }
 
-  async createNote(id: string, data: NewNote): Promise<Note> {
-    return (await this.restClient.post({ path: paths.assessments.notes({ id }), data })) as Note
+  async createNote(id: string, data: NewNote) {
+    return this.restClient.post<Note>({ path: paths.assessments.notes({ id }), data })
   }
 
-  async update(id: string, data: Partial<Assessment>): Promise<void> {
+  async update(id: string, data: Partial<Assessment>) {
     const updateData = { data: {}, ...data }
-    await this.restClient.put({ path: paths.assessments.update({ id }), data: updateData })
+    return this.restClient.put<void>({ path: paths.assessments.update({ id }), data: updateData })
   }
 }

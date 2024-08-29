@@ -36,11 +36,11 @@ export default class BookingClient {
     this.restClient = new RestClient('bookingClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async create(premisesId: string, data: NewBooking): Promise<Booking> {
-    return (await this.restClient.post({
+  async create(premisesId: string, data: NewBooking) {
+    return this.restClient.post<Booking>({
       path: this.bookingsPath(premisesId),
       data: { crn: data.crn.trim(), ...data },
-    })) as Booking
+    })
   }
 
   async find(premisesId: string, bookingId: string) {
@@ -58,31 +58,25 @@ export default class BookingClient {
     })
   }
 
-  async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation): Promise<Confirmation> {
-    const response = await this.restClient.post({
+  async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation) {
+    return this.restClient.post<Confirmation>({
       path: `${this.bookingPath(premisesId, bookingId)}/confirmations`,
       data: confirmation,
     })
-
-    return response as Confirmation
   }
 
-  async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival): Promise<Arrival> {
-    const response = await this.restClient.post({
+  async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival) {
+    return this.restClient.post<Arrival>({
       path: `${this.bookingPath(premisesId, bookingId)}/arrivals`,
       data: arrival,
     })
-
-    return response as Arrival
   }
 
-  async cancel(premisesId: string, bookingId: string, cancellation: NewCancellation): Promise<Cancellation> {
-    const response = await this.restClient.post({
+  async cancel(premisesId: string, bookingId: string, cancellation: NewCancellation) {
+    return this.restClient.post<Cancellation>({
       path: `${this.bookingPath(premisesId, bookingId)}/cancellations`,
       data: cancellation,
     })
-
-    return response as Cancellation
   }
 
   async findCancellation(premisesId: string, bookingId: string, departureId: string) {

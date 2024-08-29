@@ -44,7 +44,7 @@ export const getOasysSections = async <T extends OasysPage>(
       selectedSections,
     )
     oasysSuccess = true
-  } catch (e) {
+  } catch (err) {
     oasysSections = oasysStubs
     oasysSuccess = false
   }

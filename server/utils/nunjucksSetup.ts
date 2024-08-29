@@ -41,7 +41,7 @@ import staticPaths from '../paths/temporary-accommodation/static'
 import { checkYourAnswersSections } from './checkYourAnswersUtils'
 import { addPlaceContext } from './placeUtils'
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
 
 const production = process.env.NODE_ENV === 'production'

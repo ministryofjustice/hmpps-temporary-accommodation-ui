@@ -68,7 +68,7 @@ export default class DtrDetails implements TasklistPage {
 
     try {
       localAuthorities = await dataServices.referenceDataService.getLocalAuthorities(callConfig)
-    } catch (e) {
+    } catch (err) {
       localAuthorities = []
     }
 

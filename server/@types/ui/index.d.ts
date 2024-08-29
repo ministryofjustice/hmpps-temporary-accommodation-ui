@@ -31,8 +31,6 @@ interface TasklistPage {
   htmlDocumentTitle: string
 }
 
-interface PersonService {}
-
 // A utility type that allows us to define an object with a date attribute split into
 // date, month, year (and optionally, time) attributes. Designed for use with the GOV.UK
 // date input

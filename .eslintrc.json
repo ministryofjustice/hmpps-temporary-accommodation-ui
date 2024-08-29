@@ -4,28 +4,41 @@
     "node": true,
     "jest": true
   },
-
-  "plugins": ["import", "no-only-tests"],
-
+  "plugins": [
+    "import",
+    "no-only-tests"
+  ],
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [
+        ".ts",
+        ".tsx"
+      ]
     },
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true
       },
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx",
+          ".json"
+        ]
       }
     }
   },
-
   "overrides": [
     {
-      "plugins": ["@typescript-eslint"],
+      "plugins": [
+        "@typescript-eslint"
+      ],
       "parser": "@typescript-eslint/parser",
-      "files": ["**/*.ts"],
+      "files": [
+        "**/*.ts"
+      ],
       "excludedFiles": "*.js",
       "extends": [
         "plugin:@typescript-eslint/eslint-recommended",
@@ -44,10 +57,16 @@
           1,
           {
             "argsIgnorePattern": "res|next|^err|_",
+            "caughtErrorsIgnorePattern": "^err$",
             "ignoreRestSiblings": true
           }
         ],
-        "no-param-reassign": ["error", { "props": false }],
+        "no-param-reassign": [
+          "error",
+          {
+            "props": false
+          }
+        ],
         "@typescript-eslint/semi": 0,
         "import/no-unresolved": "error",
         "prettier/prettier": [
@@ -59,14 +78,27 @@
             "semi": false
           }
         ],
-        "no-underscore-dangle": ["error", { "allowAfterThis": true }],
-        "no-empty-function": ["error", { "allow": ["constructors"] }]
+        "no-underscore-dangle": [
+          "error",
+          {
+            "allowAfterThis": true
+          }
+        ],
+        "no-empty-function": [
+          "error",
+          {
+            "allow": [
+              "constructors"
+            ]
+          }
+        ]
       }
     }
   ],
-
-  "extends": ["airbnb-base", "plugin:prettier/recommended"],
-
+  "extends": [
+    "airbnb-base",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
     "sort-imports": [
       "error",
@@ -96,7 +128,10 @@
         "tsx": "never"
       }
     ],
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
     "import/no-extraneous-dependencies": [
       "error",
       {

@@ -13,10 +13,10 @@ export default class BedClient {
     this.restClient = new RestClient('bedClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async search(searchParameters: BedSearchParameters): Promise<BedSearchResults> {
-    return (await this.restClient.post({
+  async search(searchParameters: BedSearchParameters) {
+    return this.restClient.post<BedSearchResults>({
       path: paths.beds.search({}),
       data: searchParameters,
-    })) as BedSearchResults
+    })
   }
 }

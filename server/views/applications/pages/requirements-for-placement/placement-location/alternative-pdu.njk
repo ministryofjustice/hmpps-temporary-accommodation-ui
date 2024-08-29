@@ -1,5 +1,5 @@
 {% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
-{%- from "moj/components/banner/macro.njk" import mojBanner -%}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% extends "../../layout.njk" %}
 
 {% block head %}
@@ -19,7 +19,7 @@
         </p>
     {% endset %}
 
-    {{ mojBanner({
+    {{ govukNotificationBanner({
         type: 'information',
         html: notificationBannerHTML,
         iconFallbackText: 'information'

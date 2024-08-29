@@ -11,19 +11,19 @@ export default class RoomClient {
     this.restClient = new RestClient('bedspaceClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async all(premisesId: string): Promise<Array<Room>> {
-    return (await this.restClient.get({ path: api.premises.rooms.index({ premisesId }) })) as Array<Room>
+  async all(premisesId: string) {
+    return this.restClient.get<Array<Room>>({ path: api.premises.rooms.index({ premisesId }) })
   }
 
-  async find(premisesId: string, roomId: string): Promise<Room> {
-    return (await this.restClient.get({ path: api.premises.rooms.show({ premisesId, roomId }) })) as Room
+  async find(premisesId: string, roomId: string) {
+    return this.restClient.get<Room>({ path: api.premises.rooms.show({ premisesId, roomId }) })
   }
 
-  async create(premisesId: string, data: NewRoom): Promise<Room> {
-    return (await this.restClient.post({ path: api.premises.rooms.create({ premisesId }), data })) as Room
+  async create(premisesId: string, data: NewRoom) {
+    return this.restClient.post<Room>({ path: api.premises.rooms.create({ premisesId }), data })
   }
 
-  async update(premisesId: string, roomId: string, data: UpdateRoom): Promise<Room> {
-    return (await this.restClient.put({ path: api.premises.rooms.update({ premisesId, roomId }), data })) as Room
+  async update(premisesId: string, roomId: string, data: UpdateRoom) {
+    return this.restClient.put<Room>({ path: api.premises.rooms.update({ premisesId, roomId }), data })
   }
 }

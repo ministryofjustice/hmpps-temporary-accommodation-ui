@@ -26,10 +26,7 @@ import { PaginatedResponse } from '../@types/ui'
 import { BookingSearchResult } from '../@types/shared'
 
 type SearchResponse = {
-  body: {
-    results: Array<BookingSearchResult>
-  }
-  header: Record<string, string>
+  results: Array<BookingSearchResult>
 }
 
 export default class BookingClient {
@@ -46,19 +43,19 @@ export default class BookingClient {
     })) as Booking
   }
 
-  async find(premisesId: string, bookingId: string): Promise<Booking> {
-    return (await this.restClient.get({ path: this.bookingPath(premisesId, bookingId) })) as Booking
+  async find(premisesId: string, bookingId: string) {
+    return this.restClient.get<Booking>({ path: this.bookingPath(premisesId, bookingId) })
   }
 
-  async allBookingsForPremisesId(premisesId: string): Promise<Array<Booking>> {
-    return (await this.restClient.get({ path: this.bookingsPath(premisesId) })) as Array<Booking>
+  async allBookingsForPremisesId(premisesId: string) {
+    return this.restClient.get<Array<Booking>>({ path: this.bookingsPath(premisesId) })
   }
 
-  async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension): Promise<Extension> {
-    return (await this.restClient.post({
+  async extendBooking(premisesId: string, bookingId: string, bookingExtension: NewExtension) {
+    return this.restClient.post<Extension>({
       path: `/premises/${premisesId}/bookings/${bookingId}/extensions`,
       data: bookingExtension,
-    })) as Extension
+    })
   }
 
   async markAsConfirmed(premisesId: string, bookingId: string, confirmation: NewConfirmation): Promise<Confirmation> {
@@ -88,47 +85,37 @@ export default class BookingClient {
     return response as Cancellation
   }
 
-  async findCancellation(premisesId: string, bookingId: string, departureId: string): Promise<Cancellation> {
-    const response = await this.restClient.get({
+  async findCancellation(premisesId: string, bookingId: string, departureId: string) {
+    return this.restClient.get<Cancellation>({
       path: `${this.bookingPath(premisesId, bookingId)}/cancellations/${departureId}`,
     })
-
-    return response as Cancellation
   }
 
-  async markDeparture(premisesId: string, bookingId: string, departure: NewDeparture): Promise<Departure> {
-    const response = await this.restClient.post({
+  async markDeparture(premisesId: string, bookingId: string, departure: NewDeparture) {
+    return this.restClient.post<Departure>({
       path: `${this.bookingPath(premisesId, bookingId)}/departures`,
       data: departure,
     })
-
-    return response as Departure
   }
 
-  async findDeparture(premisesId: string, bookingId: string, departureId: string): Promise<Departure> {
-    const response = await this.restClient.get({
+  async findDeparture(premisesId: string, bookingId: string, departureId: string) {
+    return this.restClient.get<Departure>({
       path: `${this.bookingPath(premisesId, bookingId)}/departures/${departureId}`,
     })
-
-    return response as Departure
   }
 
-  async markNonArrival(premisesId: string, bookingId: string, nonArrival: NewNonarrival): Promise<Nonarrival> {
-    const response = await this.restClient.post({
+  async markNonArrival(premisesId: string, bookingId: string, nonArrival: NewNonarrival) {
+    return this.restClient.post<Nonarrival>({
       path: `${this.bookingPath(premisesId, bookingId)}/non-arrivals`,
       data: nonArrival,
     })
-
-    return response as Nonarrival
   }
 
-  async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround): Promise<Turnaround> {
-    const response = await this.restClient.post({
+  async createTurnaround(premisesId: string, bookingId: string, turnaround: NewTurnaround) {
+    return this.restClient.post<Turnaround>({
       path: `${this.bookingPath(premisesId, bookingId)}/turnarounds`,
       data: turnaround,
     })
-
-    return response as Turnaround
   }
 
   async search(
@@ -143,8 +130,8 @@ export default class BookingClient {
       sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',
     })
 
-    const response = await this.restClient.get({ path, raw: true })
-    const { body, header } = response as SearchResponse
+    const response = await this.restClient.get<SearchResponse>({ path }, true)
+    const { body, header } = response
 
     return {
       url: {

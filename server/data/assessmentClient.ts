@@ -15,11 +15,6 @@ import paths from '../paths/api'
 import { appendQueryString } from '../utils/utils'
 import RestClient, { CallConfig } from './restClient'
 
-type SearchResponse = {
-  body: Array<AssessmentSummary>
-  header: Record<string, string>
-}
-
 export default class AssessmentClient {
   restClient: RestClient
 
@@ -36,9 +31,9 @@ export default class AssessmentClient {
       ...params,
       perPage: config.assessmentsDefaultPageSize,
     })
-    const response = await this.restClient.get({ path, raw: true })
+    const response = await this.restClient.get<Array<AssessmentSummary>>({ path }, true)
 
-    const { body, header } = response as SearchResponse
+    const { body, header } = response
 
     return {
       url: {
@@ -52,32 +47,32 @@ export default class AssessmentClient {
     }
   }
 
-  async readyToPlaceForCrn(crn: string): Promise<Array<AssessmentSummary>> {
+  async readyToPlaceForCrn(crn: string) {
     const status: AssessmentSummary['status'] = 'ready_to_place'
 
-    return (await this.restClient.get({
+    return this.restClient.get<Array<AssessmentSummary>>({
       path: appendQueryString(paths.assessments.index.pattern, { crn: crn.trim(), statuses: status }),
-    })) as Array<AssessmentSummary>
+    })
   }
 
-  async find(assessmentId: string): Promise<Assessment> {
-    return (await this.restClient.get({ path: paths.assessments.show({ id: assessmentId }) })) as Assessment
+  async find(assessmentId: string) {
+    return this.restClient.get<Assessment>({ path: paths.assessments.show({ id: assessmentId }) })
   }
 
-  async unallocateAssessment(id: string): Promise<void> {
-    await this.restClient.delete({
+  async unallocateAssessment(id: string) {
+    return this.restClient.delete<void>({
       path: paths.assessments.allocation({ id }),
     })
   }
 
-  async allocateAssessment(id: string): Promise<void> {
-    await this.restClient.post({
+  async allocateAssessment(id: string) {
+    return this.restClient.post<void>({
       path: paths.assessments.allocation({ id }),
     })
   }
 
-  async rejectAssessment(id: string, assessmentRejection: AssessmentRejection): Promise<void> {
-    await this.restClient.post({
+  async rejectAssessment(id: string, assessmentRejection: AssessmentRejection) {
+    return this.restClient.post<void>({
       path: paths.assessments.rejection({ id }),
       data: assessmentRejection,
     })

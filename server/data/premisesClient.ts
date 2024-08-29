@@ -17,34 +17,34 @@ export default class PremisesClient {
     this.restClient = new RestClient('premisesClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async all(): Promise<Array<PremisesSummary>> {
-    return (await this.restClient.get({ path: paths.premises.index({}) })) as Array<PremisesSummary>
+  async all() {
+    return this.restClient.get<Array<PremisesSummary>>({ path: paths.premises.index({}) })
   }
 
-  async find(id: string): Promise<Premises> {
-    return (await this.restClient.get({
+  async find(id: string) {
+    return this.restClient.get<Premises>({
       path: paths.premises.show({ premisesId: id }),
-    })) as Premises
+    })
   }
 
-  async capacity(id: string): Promise<DateCapacity[]> {
-    return (await this.restClient.get({ path: paths.premises.capacity({ premisesId: id }) })) as DateCapacity[]
+  async capacity(id: string) {
+    return this.restClient.get<DateCapacity[]>({ path: paths.premises.capacity({ premisesId: id }) })
   }
 
-  async getStaffMembers(premisesId: string): Promise<Array<StaffMember>> {
-    return (await this.restClient.get({
+  async getStaffMembers(premisesId: string) {
+    return this.restClient.get<Array<StaffMember>>({
       path: paths.premises.staffMembers.index({ premisesId }),
-    })) as StaffMember[]
+    })
   }
 
-  async create(data: NewPremises): Promise<Premises> {
-    return (await this.restClient.post({ path: paths.premises.create({}), data })) as Premises
+  async create(data: NewPremises) {
+    return this.restClient.post<Premises>({ path: paths.premises.create({}), data })
   }
 
-  async update(id: string, data: UpdatePremises): Promise<Premises> {
-    return (await this.restClient.put({
+  async update(id: string, data: UpdatePremises) {
+    return this.restClient.put<Premises>({
       path: paths.premises.update({ premisesId: id }),
       data,
-    })) as Premises
+    })
   }
 }

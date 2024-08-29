@@ -17,42 +17,42 @@ export default class ApplicationClient {
     this.restClient = new RestClient('applicationClient', config.apis.approvedPremises as ApiConfig, callConfig)
   }
 
-  async find(applicationId: string): Promise<Application> {
-    return (await this.restClient.get({
+  async find(applicationId: string) {
+    return this.restClient.get<Application>({
       path: paths.applications.show({ id: applicationId }),
-    })) as Application
+    })
   }
 
-  async create(crn: string, activeOffence: ActiveOffence): Promise<Application> {
+  async create(crn: string, activeOffence: ActiveOffence) {
     const { convictionId, deliusEventNumber, offenceId } = activeOffence
 
-    return (await this.restClient.post({
+    return this.restClient.post<Application>({
       path: `${paths.applications.new.pattern}?createWithRisks=${!config.flags.oasysDisabled}`,
       data: { crn: crn.trim(), convictionId, deliusEventNumber, offenceId },
-    })) as Application
+    })
   }
 
-  async update(applicationId: string, updateData: UpdateApplication): Promise<UpdateApplication> {
-    return (await this.restClient.put({
+  async update(applicationId: string, updateData: UpdateApplication) {
+    return this.restClient.put<UpdateApplication>({
       path: paths.applications.update({ id: applicationId }),
       data: updateData,
-    })) as UpdateApplication
+    })
   }
 
-  async all(): Promise<Array<ApplicationSummary>> {
-    return (await this.restClient.get({ path: paths.applications.index.pattern })) as Array<ApplicationSummary>
+  async all() {
+    return this.restClient.get<Array<ApplicationSummary>>({ path: paths.applications.index.pattern })
   }
 
-  async submit(applicationId: string, submissionData: SubmitApplication): Promise<void> {
-    await this.restClient.post({
+  async submit(applicationId: string, submissionData: SubmitApplication) {
+    return this.restClient.post<void>({
       path: paths.applications.submission({ id: applicationId }),
       data: submissionData,
     })
   }
 
-  async documents(application: Application): Promise<Array<Document>> {
-    return (await this.restClient.get({
+  async documents(application: Application) {
+    return this.restClient.get<Array<Document>>({
       path: paths.applications.documents({ id: application.id }),
-    })) as Array<Document>
+    })
   }
 }

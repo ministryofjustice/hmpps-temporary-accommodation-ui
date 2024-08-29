@@ -28,9 +28,9 @@ interface PostRequest {
   raw?: boolean
 }
 
-interface PutRequest extends PostRequest {}
+type PutRequest = PostRequest
 
-interface DeleteRequest extends Omit<PostRequest, 'data'> {}
+type DeleteRequest = Omit<PostRequest, 'data'>
 
 interface PipeRequest {
   path?: string

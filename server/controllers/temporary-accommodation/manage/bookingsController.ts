@@ -107,7 +107,7 @@ export default class BookingsController {
         } else {
           try {
             DateFormats.isoToDateObj(arrivalDate)
-          } catch (er) {
+          } catch (err) {
             error = error || new Error()
             insertGenericError(error, 'arrivalDate', 'invalid')
           }
@@ -118,7 +118,7 @@ export default class BookingsController {
         } else {
           try {
             DateFormats.isoToDateObj(departureDate)
-          } catch (er) {
+          } catch (err) {
             error = error || new Error()
             insertGenericError(error, 'departureDate', 'invalid')
           }

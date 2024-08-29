@@ -2,8 +2,8 @@ import 'reflect-metadata'
 import { FormSections } from '@approved-premises/ui'
 import { getFormPages, getFormSections } from '../index'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-type Constructor = new (...args: Array<any>) => {}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Constructor = new (...args: Array<any>) => object
 
 const Form = (options: { sections: Array<unknown> }) => {
   return <T extends Constructor>(constructor: T) => {

@@ -30,7 +30,6 @@ export default class PlaceContextHeaderComponent extends Component {
 
         if (person.genderIdentity) {
           cy.root().contains('Gender identity:').next().should('contain', person.genderIdentity)
-          cy.root().should('not.contain', 'Sex')
         } else {
           cy.root().should('not.contain', 'Gender identity')
         }

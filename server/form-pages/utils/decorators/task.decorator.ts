@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/ban-types */
-
 import TasklistPage from '../../tasklistPage'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 type Constructor = new (...args: Array<any>) => {}
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 interface Type<T> extends Function {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   new (...args: Array<any>): T
 }
 

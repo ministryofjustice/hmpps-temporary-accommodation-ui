@@ -8,7 +8,7 @@ import { Page } from '../../../utils/decorators'
 import { CallConfig } from '../../../../data/restClient'
 import { getOasysSections, oasysImportReponse, validateOasysEntries } from '../../../../utils/oasysImportUtils'
 
-type RiskManagementPlanBody = {
+export type RiskManagementPlanBody = {
   version: string
   riskManagementAnswers: Record<string, string>
   riskManagementSummaries: ArrayOfOASysRiskManagementPlanQuestions

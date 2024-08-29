@@ -6,7 +6,7 @@ import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 
-export const releaseTypes = {
+export const releaseTypes: Record<string, { text: string; abbr: string }> = {
   crdLicence: {
     text: 'Conditional release date (CRD) licence',
     abbr: 'CRD licence',
@@ -75,7 +75,7 @@ export default class ReleaseType implements TasklistPage {
           ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}EndDate`),
         }
       }, {}),
-    }
+    } as ReleaseTypeBody
   }
 
   public get body(): Partial<ReleaseTypeBody> {
@@ -104,7 +104,7 @@ export default class ReleaseType implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, unknown> = {}
 
     if (!this.body.releaseTypes?.length) {
       errors.releaseTypes = 'You must specify the release types'
@@ -134,7 +134,7 @@ export default class ReleaseType implements TasklistPage {
       })
     }
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 
   getReleaseTypeOptions() {

@@ -7,7 +7,7 @@ import { TemporaryAccommodationApplication } from '../../@types/shared'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
-import { FormSection, Task } from '../../@types/ui'
+import type { FormSection, FormSections, PageResponse, Task as TaskType } from '../../@types/ui'
 import {
   acctAlertFactory,
   adjudicationFactory,
@@ -19,6 +19,7 @@ import {
   roshRisksFactory,
 } from '../../testutils/factories'
 import { SessionDataError } from '../../utils/errors'
+import { Page, Section, Task } from './decorators'
 
 describe('utils', () => {
   describe('applyYesOrNo', () => {
@@ -90,35 +91,63 @@ describe('utils', () => {
   })
 
   describe('Decorator metadata utils', () => {
-    class SomeSection {}
+    @Page({ bodyProperties: [], name: 'page-1' })
+    class Page1 implements TasklistPage {
+      title: string
 
+      htmlDocumentTitle: string
+
+      body: Record<string, unknown>
+
+      previous(): string {
+        throw new Error('Method not implemented.')
+      }
+
+      next(): string {
+        throw new Error('Method not implemented.')
+      }
+
+      errors(): Partial<Record<keyof this['body'], unknown>> {
+        throw new Error('Method not implemented.')
+      }
+
+      response(): PageResponse {
+        throw new Error('Method not implemented.')
+      }
+    }
+
+    @Page({ bodyProperties: [], name: 'page-2' })
+    class Page2 extends Page1 {}
+
+    @Page({ bodyProperties: [], name: 'page-3' })
+    class Page3 extends Page1 {}
+
+    @Page({ bodyProperties: [], name: 'page-4' })
+    class Page4 extends Page1 {}
+
+    @Task({ actionText: 'Task action text', name: 'Task name', pages: [Page1, Page2], slug: 'task-slug' })
     class SomeTask {}
 
-    class Page1 {}
-    class Page2 {}
-
-    beforeEach(() => {
-      Reflect.defineMetadata('page:name', 'page-1', Page1)
-      Reflect.defineMetadata('page:name', 'page-2', Page2)
-
-      Reflect.defineMetadata('page:task', 'task-1', Page1)
-      Reflect.defineMetadata('page:task', 'task-2', Page2)
-
-      Reflect.defineMetadata('task:slug', 'slug', SomeTask)
-      Reflect.defineMetadata('task:name', 'Name', SomeTask)
-      Reflect.defineMetadata('task:actionText', 'Action text', SomeTask)
-      Reflect.defineMetadata('task:pages', [Page1, Page2], SomeTask)
-
-      Reflect.defineMetadata('section:title', 'Section', SomeSection)
-      Reflect.defineMetadata('section:tasks', [SomeTask], SomeSection)
+    @Task({
+      actionText: 'Other task action text',
+      name: 'Other task name',
+      pages: [Page3, Page4],
+      slug: 'other-task-slug',
     })
+    class SomeOtherTask {}
+
+    @Section({ title: 'Section', tasks: [SomeTask] })
+    class SomeSection {}
+
+    @Section({ title: 'Another Section', tasks: [SomeOtherTask] })
+    class SomeOtherSection {}
 
     describe('getTask', () => {
       it('fetches metadata for a specific task and pages', () => {
         expect(utils.getTask(SomeTask)).toEqual({
-          id: 'slug',
-          title: 'Name',
-          actionText: 'Action text',
+          id: 'task-slug',
+          title: 'Task name',
+          actionText: 'Task action text',
           pages: { 'page-1': Page1, 'page-2': Page2 },
         })
       })
@@ -128,6 +157,7 @@ describe('utils', () => {
       it('fetches metadata for a specific section and tasks', () => {
         expect(utils.getSection(SomeSection)).toEqual({
           title: 'Section',
+          name: 'SomeSection',
           tasks: [utils.getTask(SomeTask)],
         })
       })
@@ -135,32 +165,14 @@ describe('utils', () => {
 
     describe('getPagesForSections', () => {
       it('fetches pages for all supplied sections', () => {
-        class Section1 {}
-        class Section2 {}
-
-        jest.spyOn(utils, 'getSection').mockImplementation((section: Section1 | Section2) => {
-          if (section === Section1) {
-            return {
-              title: 'Section 1',
-              name: 'Section1',
-              tasks: [{ id: 'foo', title: 'Foo', actionText: 'Do Foo', pages: { 'page-1': Page1, 'page-2': Page2 } }],
-            }
-          }
-          return {
-            title: 'Section 2',
-            name: 'Section2',
-            tasks: [{ id: 'bar', title: 'Bar', actionText: 'Do Bar', pages: { 'page-3': Page1, 'page-4': Page2 } }],
-          }
-        })
-
-        expect(utils.getPagesForSections([Section1, Section2])).toEqual({
-          foo: {
+        expect(utils.getFormPages([SomeSection, SomeOtherSection] as unknown as FormSections)).toEqual({
+          'task-slug': {
             'page-1': Page1,
             'page-2': Page2,
           },
-          bar: {
-            'page-3': Page1,
-            'page-4': Page2,
+          'other-task-slug': {
+            'page-3': Page3,
+            'page-4': Page4,
           },
         })
       })
@@ -173,7 +185,7 @@ describe('utils', () => {
 
         const task = {
           id: 'some-task',
-        } as Task
+        } as TaskType
 
         const section = {
           name: 'Some section',
@@ -196,7 +208,7 @@ describe('utils', () => {
 
     describe('getTaskName', () => {
       it('returns the task name', () => {
-        expect(utils.getTaskName(Page1)).toEqual('task-1')
+        expect(utils.getTaskName(Page1)).toEqual('task-slug')
       })
     })
   })

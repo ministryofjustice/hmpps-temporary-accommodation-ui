@@ -1,6 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewBooking } from '@approved-premises/api'
+import { ObjectWithDateParts } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
@@ -69,10 +70,16 @@ export default class BookingsController {
       const { errors, errorSummary, errorTitle } = fetchErrorsAndUserInput(req)
       const { premisesId, roomId } = req.params
 
-      const crn: string = req.query.crn as string
+      const crn = req.query.crn as string
 
-      const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.query, 'arrivalDate')
-      const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.query, 'departureDate')
+      const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(
+        req.query as ObjectWithDateParts<'arrivalDate'>,
+        'arrivalDate',
+      )
+      const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(
+        req.query as ObjectWithDateParts<'departureDate'>,
+        'departureDate',
+      )
 
       const callConfig = extractCallConfig(req)
 

@@ -1,5 +1,5 @@
 import { TemporaryAccommodationApplication as Application, ProbationDeliveryUnit } from '@approved-premises/api'
-import type { DataServices, TaskListErrors, YesOrNo } from '@approved-premises/ui'
+import type { DataServices, PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
@@ -53,7 +53,7 @@ export default class AlternativePdu implements TasklistPage {
   }
 
   response() {
-    const translatedResponse = {
+    const translatedResponse: PageResponse = {
       'Is placement required in an alternative PDU?': sentenceCase(this.body.alternativePdu),
     }
 

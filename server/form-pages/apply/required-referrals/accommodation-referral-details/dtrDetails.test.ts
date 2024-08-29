@@ -13,7 +13,7 @@ const body = {
   'date-day': '23',
   localAuthorityAreaName: localAuthorities[0].name,
   dutyToReferOutcome: 'acceptedPriorityNeed',
-} as DtrDetailsBody
+} as unknown as DtrDetailsBody
 
 describe('DtrDetails', () => {
   const application = applicationFactory.build()

@@ -1,6 +1,8 @@
 import fs from 'fs'
 
+import { FormPages } from '@approved-premises/ui'
 import SchemaGenerator from './schemaGenerator'
+import { TasklistPageInterface } from '../tasklistPage'
 
 type SomeComplexType = {
   id: number
@@ -22,7 +24,7 @@ describe('schemaGenerator', () => {
         return null
       })
 
-      const pages = { section: { page: Page } }
+      const pages: FormPages = { section: { page: Page as unknown as TasklistPageInterface } }
 
       jest.spyOn(Reflect, 'getMetadata').mockReturnValue('Page')
 

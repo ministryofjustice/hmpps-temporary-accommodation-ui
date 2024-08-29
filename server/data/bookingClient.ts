@@ -25,11 +25,11 @@ import RestClient, { CallConfig } from './restClient'
 import { PaginatedResponse } from '../@types/ui'
 import { BookingSearchResult } from '../@types/shared'
 
-type searchResponse = {
+type SearchResponse = {
   body: {
     results: Array<BookingSearchResult>
   }
-  header: unknown
+  header: Record<string, string>
 }
 
 export default class BookingClient {
@@ -144,7 +144,7 @@ export default class BookingClient {
     })
 
     const response = await this.restClient.get({ path, raw: true })
-    const { body, header } = response as searchResponse
+    const { body, header } = response as SearchResponse
 
     return {
       url: {

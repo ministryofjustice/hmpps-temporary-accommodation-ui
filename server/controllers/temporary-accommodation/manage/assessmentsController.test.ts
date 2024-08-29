@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { AssessmentSearchApiStatus, AssessmentUpdatableDateField } from '@approved-premises/ui'
+import { AssessmentSearchApiStatus, AssessmentUpdatableDateField, AssessmentUpdateStatus } from '@approved-premises/ui'
 import { ParsedQs } from 'qs'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -482,7 +482,7 @@ describe('AssessmentsController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/confirm', {
-        content: confirmationPageContent[status],
+        content: confirmationPageContent[status as AssessmentUpdateStatus],
         status,
         id: assessmentId,
       })

@@ -6,17 +6,14 @@ import { stripWhitespace } from '../utils'
 import { releaseTypes } from '../../form-pages/apply/accommodation-need/sentence-information/releaseType'
 
 const isDutyToReferSubmittedFromApplication = (application: Application): boolean => {
-  const isDutyToReferSubmitted: string = (application.data as Record<string, unknown>)?.[
-    'accommodation-referral-details'
-  ]?.['dtr-submitted']?.dtrSubmitted
+  const isDutyToReferSubmitted: string =
+    application.data?.['accommodation-referral-details']?.['dtr-submitted']?.dtrSubmitted
 
   if (!isDutyToReferSubmitted) {
     throw new SessionDataError('No duty to refer submitted data')
   }
 
-  if (isDutyToReferSubmitted === 'no') return false
-
-  return true
+  return isDutyToReferSubmitted !== 'no'
 }
 
 const dutyToReferSubmissionDateFromApplication = (application: Application): string => {
@@ -24,9 +21,7 @@ const dutyToReferSubmissionDateFromApplication = (application: Application): str
     return ''
   }
 
-  const dutyToReferSubmissionDate: string = (application.data as Record<string, unknown>)?.[
-    'accommodation-referral-details'
-  ]?.['dtr-details']?.date
+  const dutyToReferSubmissionDate: string = application.data?.['accommodation-referral-details']?.['dtr-details']?.date
 
   if (!dutyToReferSubmissionDate) {
     throw new SessionDataError('No duty to refer submitted date')
@@ -40,9 +35,8 @@ const dutyToReferLocalAuthorityAreaNameFromApplication = (application: Applicati
     return ''
   }
 
-  const dutyToReferLocalAuthorityAreaName: string = (application.data as Record<string, unknown>)?.[
-    'accommodation-referral-details'
-  ]?.['dtr-details']?.localAuthorityAreaName
+  const dutyToReferLocalAuthorityAreaName: string =
+    application.data?.['accommodation-referral-details']?.['dtr-details']?.localAuthorityAreaName
 
   return dutyToReferLocalAuthorityAreaName
 }
@@ -52,9 +46,8 @@ const dutyToReferOutcomeFromApplication = (application: Application): string => 
     return ''
   }
 
-  const dutyToReferOutcome: string = (application.data as Record<string, unknown>)?.[
-    'accommodation-referral-details'
-  ]?.['dtr-details']?.dutyToReferOutcome
+  const dutyToReferOutcome: string =
+    application.data?.['accommodation-referral-details']?.['dtr-details']?.dutyToReferOutcome
 
   if (!dutyToReferOutcome) {
     throw new SessionDataError('No duty to refer outcome data')
@@ -64,37 +57,29 @@ const dutyToReferOutcomeFromApplication = (application: Application): string => 
 }
 
 const needsAccessiblePropertyFromApplication = (application: Application): boolean => {
-  const needsAccessibleProperty: string = (application.data as Record<string, unknown>)?.[
-    'disability-cultural-and-specific-needs'
-  ]?.['property-attributes-or-adaptations']?.propertyAttributesOrAdaptations
+  const needsAccessibleProperty: string =
+    application.data?.['disability-cultural-and-specific-needs']?.['property-attributes-or-adaptations']
+      ?.propertyAttributesOrAdaptations
 
   if (!needsAccessibleProperty) {
     throw new SessionDataError('No accessible property data')
   }
 
-  if (needsAccessibleProperty === 'no') return false
-
-  return true
+  return needsAccessibleProperty !== 'no'
 }
 
 const isApplicationEligibleFromApplication = (application: Application): boolean => {
-  const eligibilityReason: string = (application.data as Record<string, unknown>)?.eligibility?.['eligibility-reason']
-    ?.reason
+  const eligibilityReason: string = application.data?.eligibility?.['eligibility-reason']?.reason
 
   if (!eligibilityReason) {
     throw new SessionDataError('No application eligibility data')
   }
 
-  if (Object.keys(eligibilityReasons).includes(eligibilityReason)) {
-    return true
-  }
-
-  return false
+  return Object.keys(eligibilityReasons).includes(eligibilityReason)
 }
 
 const eligibilityReasonFromApplication = (application: Application): string => {
-  const eligibilityReason: string = (application.data as Record<string, unknown>)?.eligibility?.['eligibility-reason']
-    ?.reason
+  const eligibilityReason: string = application.data?.eligibility?.['eligibility-reason']?.reason
 
   if (!eligibilityReason) {
     throw new SessionDataError('No application eligibility data')
@@ -108,7 +93,7 @@ const eligibilityReasonFromApplication = (application: Application): string => {
 }
 
 const personReleaseDateFromApplication = (application: Application): string => {
-  const personReleaseDate = (application.data as Record<string, unknown>)?.eligibility?.['release-date']?.releaseDate
+  const personReleaseDate = application.data?.eligibility?.['release-date']?.releaseDate
 
   if (!personReleaseDate) {
     throw new SessionDataError('No person release date')
@@ -125,48 +110,43 @@ const yesOrNoToBoolOrUndefined = (value?: YesOrNo) => {
 }
 
 const isRegisteredSexOffenderFromApplication = (application: Application): boolean => {
-  const registeredSexOffender = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
-    'registered-sex-offender'
-  ]?.registeredSexOffender
+  const registeredSexOffender =
+    application.data?.['offence-and-behaviour-summary']?.['registered-sex-offender']?.registeredSexOffender
 
   return yesOrNoToBoolOrUndefined(registeredSexOffender)
 }
 
 const isHistoryOfSexualOffenceFromApplication = (application: Application): boolean => {
-  const historyOfSexualOffence = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
-    'history-of-sexual-offence'
-  ]?.historyOfSexualOffence
+  const historyOfSexualOffence =
+    application.data?.['offence-and-behaviour-summary']?.['history-of-sexual-offence']?.historyOfSexualOffence
 
   return yesOrNoToBoolOrUndefined(historyOfSexualOffence)
 }
 
 const isConcerningSexualBehaviourFromApplication = (application: Application): boolean => {
-  const concerningSexualBehaviour = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
-    'concerning-sexual-behaviour'
-  ]?.concerningSexualBehaviour
+  const concerningSexualBehaviour =
+    application.data?.['offence-and-behaviour-summary']?.['concerning-sexual-behaviour']?.concerningSexualBehaviour
 
   return yesOrNoToBoolOrUndefined(concerningSexualBehaviour)
 }
 
 const hasHistoryOfArsonFromApplication = (application: Application): boolean => {
-  const historyOfArsonOffence = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
-    'history-of-arson-offence'
-  ]?.historyOfArsonOffence
+  const historyOfArsonOffence =
+    application.data?.['offence-and-behaviour-summary']?.['history-of-arson-offence']?.historyOfArsonOffence
 
   return yesOrNoToBoolOrUndefined(historyOfArsonOffence)
 }
 
 const isConcerningArsonBehaviourFromApplication = (application: Application): boolean => {
-  const concerningArsonBehaviour = (application.data as Record<string, unknown>)?.['offence-and-behaviour-summary']?.[
-    'concerning-arson-behaviour'
-  ]?.concerningArsonBehaviour
+  const concerningArsonBehaviour =
+    application.data?.['offence-and-behaviour-summary']?.['concerning-arson-behaviour']?.concerningArsonBehaviour
 
   return yesOrNoToBoolOrUndefined(concerningArsonBehaviour)
 }
 
 const releaseTypesFromApplication = (application: Application): Array<string> => {
   const releaseTypesData: Array<string> =
-    (application.data as Record<string, unknown>)?.['sentence-information']?.['release-type']?.releaseTypes || []
+    application.data?.['sentence-information']?.['release-type']?.releaseTypes || []
 
   if (!releaseTypesData.every(key => Boolean(releaseTypes[key]))) {
     return []
@@ -176,7 +156,7 @@ const releaseTypesFromApplication = (application: Application): Array<string> =>
 }
 
 const probationDeliveryUnitIdFromApplication = (application: Application): string => {
-  const pduId = (application.data as Record<string, unknown>)?.['contact-details']?.['probation-practitioner']?.pdu?.id
+  const pduId = application.data?.['contact-details']?.['probation-practitioner']?.pdu?.id
 
   if (!pduId) {
     throw new SessionDataError('No probation practitioner PDU')

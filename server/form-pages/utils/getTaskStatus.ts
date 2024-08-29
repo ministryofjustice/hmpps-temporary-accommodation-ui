@@ -3,7 +3,6 @@ import {
   TemporaryAccommodationAssessment as Assessment,
 } from '@approved-premises/api'
 import type { Task, TaskStatus } from '@approved-premises/ui'
-import { TasklistPageInterface } from '../tasklistPage'
 
 const getPageData = (applicationOrAssessment: Application | Assessment, taskName: string, pageName: string) => {
   return applicationOrAssessment.data?.[taskName]?.[pageName]
@@ -23,7 +22,7 @@ const getTaskStatus = (task: Task, applicationOrAssessment: Application | Assess
         : 'not_started'
     }
 
-    const Page = task.pages[pageId] as TasklistPageInterface
+    const Page = task.pages[pageId]
     const page = new Page(pageData, applicationOrAssessment)
 
     // If there's errors for this page, then we know the task incomplete

@@ -48,10 +48,10 @@ export default class SentenceType implements TasklistPage {
   }
 
   items() {
-    return Object.keys(sentenceTypes).map(key => {
+    return Object.entries(sentenceTypes).map(([key, value]) => {
       return {
         value: key,
-        text: sentenceTypes[key],
+        text: value,
         checked: this.body.sentenceType === key,
       }
     })

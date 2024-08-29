@@ -37,7 +37,7 @@ declare module 'express' {
   }
 }
 
-type FlashMessage = string | ErrorMessages | Array<ErrorSummary> | Record<string, unknown>
+export type FlashMessage = string | ErrorMessages | Array<ErrorSummary> | Record<string, unknown>
 
 export declare global {
   namespace Express {
@@ -56,7 +56,7 @@ export declare global {
 
       flash(type: string, message: FlashMessage): number
 
-      flash(type: string): FlashMessage
+      flash(type: string): Array<FlashMessage>
     }
   }
 }

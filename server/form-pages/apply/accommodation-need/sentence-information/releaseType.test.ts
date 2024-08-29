@@ -3,7 +3,7 @@ import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../share
 import ReleaseType, { type ReleaseTypeBody, type ReleaseTypeKey, releaseTypes } from './releaseType'
 
 const body = {
-  releaseTypes: ['fixedTermRecall' as const, 'parole' as const],
+  releaseTypes: ['fixedTermRecall', 'parole'],
   'fixedTermRecallStartDate-year': '2024',
   'fixedTermRecallStartDate-month': '1',
   'fixedTermRecallStartDate-day': '19',
@@ -16,7 +16,7 @@ const body = {
   'paroleEndDate-year': '2122',
   'paroleEndDate-month': '7',
   'paroleEndDate-day': '18',
-}
+} as unknown as ReleaseTypeBody
 
 describe('SentenceExpiry', () => {
   const application = applicationFactory.build()
@@ -43,8 +43,8 @@ describe('SentenceExpiry', () => {
         'licenceEndDate-year': '2024',
         'licenceEndDate-month': '7',
         'licenceEndDate-day': '9',
-      }
-      const page = new ReleaseType(oldBody as unknown as ReleaseTypeBody, application)
+      } as unknown as ReleaseTypeBody
+      const page = new ReleaseType(oldBody, application)
 
       expect(page.body).toEqual({
         releaseTypes: [],
@@ -72,7 +72,7 @@ describe('SentenceExpiry', () => {
           [`${key}EndDate-year`]: '2122',
           [`${key}EndDate-month`]: '7',
           [`${key}EndDate-day`]: '18',
-        }
+        } as ReleaseTypeBody
 
         const page = new ReleaseType(bodyOneType, application)
 
@@ -85,7 +85,7 @@ describe('SentenceExpiry', () => {
       (key: ReleaseTypeKey) => {
         const bodyMissingDates = {
           releaseTypes: [key],
-        }
+        } as ReleaseTypeBody
 
         const page = new ReleaseType(bodyMissingDates, application)
 
@@ -107,7 +107,7 @@ describe('SentenceExpiry', () => {
           [`${key}EndDate-year`]: '2024',
           [`${key}EndDate-month`]: '13',
           [`${key}EndDate-day`]: '18',
-        }
+        } as unknown as ReleaseTypeBody
 
         const page = new ReleaseType(bodyInvalidDates, application)
 
@@ -127,7 +127,7 @@ describe('SentenceExpiry', () => {
     })
 
     it('returns an error if release types are empty', () => {
-      const page = new ReleaseType({ releaseTypes: [] }, application)
+      const page = new ReleaseType({ releaseTypes: [] } as ReleaseTypeBody, application)
 
       expect(page.errors()).toEqual({
         releaseTypes: 'You must specify the release types',
@@ -135,7 +135,10 @@ describe('SentenceExpiry', () => {
     })
 
     it('returns an error if both licence checkboxes are selected', () => {
-      const page = new ReleaseType({ releaseTypes: ['fixedTermRecall', 'standardRecall'] }, application)
+      const page = new ReleaseType(
+        { releaseTypes: ['fixedTermRecall', 'standardRecall'] } as ReleaseTypeBody,
+        application,
+      )
 
       expect(page.errors()).toEqual({
         releaseTypes: 'Select one type of recall licence',
@@ -147,7 +150,7 @@ describe('SentenceExpiry', () => {
       ['Parole and PSS', ['parole', 'pss']],
       ['Parole, CRD licence and PSS', ['parole', 'crdLicence', 'pss']],
     ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
-      const page = new ReleaseType({ releaseTypes: selected }, application)
+      const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
 
       expect(page.errors()).toEqual({
         releaseTypes: 'Parole cannot be selected alongside the CRD licence or PSS',
@@ -155,7 +158,7 @@ describe('SentenceExpiry', () => {
     })
 
     it('returns a single error if an old release type is submitted', () => {
-      const page = new ReleaseType({ releaseTypes: ['licence'] as unknown as Array<ReleaseTypeKey> }, application)
+      const page = new ReleaseType({ releaseTypes: ['licence'] } as ReleaseTypeBody, application)
 
       expect(page.errors()).toEqual({
         releaseTypes: 'You must specify the release types',

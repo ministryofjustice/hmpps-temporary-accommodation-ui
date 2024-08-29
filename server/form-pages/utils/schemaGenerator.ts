@@ -3,6 +3,9 @@ import 'reflect-metadata'
 import fs from 'fs'
 import path from 'path'
 import * as TJS from 'typescript-json-schema'
+import { FormPages } from '@approved-premises/ui'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { JSONSchema } from '@apidevtools/json-schema-ref-parser'
 
 export default class SchemaGenerator {
   program = TJS.programFromConfig(path.resolve(__dirname, '..', '..', '..', 'tsconfig.json'))
@@ -23,22 +26,22 @@ export default class SchemaGenerator {
     this.generator = TJS.buildGenerator(this.program, this.schemaGeneratorSettings)
   }
 
-  run<T>(pages: T) {
+  run<T extends FormPages>(pages: T) {
     const pageKeys = Object.keys(pages)
 
-    const schema = {
+    const schema: JSONSchema = {
       $schema: 'https://json-schema.org/draft/2019-09/schema',
       type: 'object',
       title: 'Apply Schema',
       additionalProperties: false,
-      required: Object.keys(pages),
+      required: pageKeys,
       properties: {},
     }
 
     pageKeys.forEach(key => {
-      const properties = {}
+      const properties: Record<string, unknown> = {}
 
-      Object.keys(pages[key]).forEach((k: string) => {
+      Object.keys(pages[key]).forEach(k => {
         properties[k] = this.getSchemaForPage(pages[key][k])
       })
 
@@ -50,7 +53,7 @@ export default class SchemaGenerator {
     })
   }
 
-  static run<T>(pages: T, filePath: string) {
+  static run<T extends FormPages>(pages: T, filePath: string) {
     const generator = new SchemaGenerator(filePath)
     generator.run(pages)
   }

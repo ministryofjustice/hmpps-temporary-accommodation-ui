@@ -1,6 +1,7 @@
 import { applicationFactory } from '../testutils/factories'
 import getSections from './assessments/getSections'
 import reviewSections from './reviewUtils'
+import { TasklistPageInterface } from '../form-pages/tasklistPage'
 
 jest.mock('./assessments/getSections')
 
@@ -12,7 +13,10 @@ const sections = [
       {
         id: 'basic-information',
         title: 'Basic information',
-        pages: { 'basic-information': {}, 'type-of-ap': {} },
+        pages: {
+          'basic-information': {} as TasklistPageInterface,
+          'type-of-ap': {} as TasklistPageInterface,
+        },
         actionText: 'Complete basic information',
       },
     ],

@@ -56,8 +56,7 @@ describe('OASysImportUtils', () => {
         throw new OasysNotFoundError()
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result: any = await getOasysSections({}, application, callConfig, { personService }, constructor, {
+      const result = await getOasysSections({}, application, callConfig, { personService }, constructor, {
         sectionName: 'offenceDetails',
         summaryKey: 'offenceDetailsSummary',
         answerKey: 'offenceDetailsAnswers',
@@ -65,7 +64,6 @@ describe('OASysImportUtils', () => {
 
       expect(result.oasysSuccess).toEqual(false)
       expect(result.body.offenceDetailsSummary).toEqual(sortOasysImportSummaries(oasysStubs.offenceDetails))
-      expect(result.offenceDetailsSummary).toEqual(oasysStubs.offenceDetails)
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
     })
 
@@ -79,8 +77,7 @@ describe('OASysImportUtils', () => {
 
       getOasysSectionsMock.mockResolvedValue(oasysSections)
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result: any = await getOasysSections({}, application, callConfig, { personService }, constructor, {
+      const result = await getOasysSections({}, application, callConfig, { personService }, constructor, {
         sectionName: 'offenceDetails',
         summaryKey: 'offenceDetailsSummary',
         answerKey: 'offenceDetailsAnswers',
@@ -90,7 +87,6 @@ describe('OASysImportUtils', () => {
       expect(result.body.offenceDetailsSummary).toEqual(sortOasysImportSummaries(oasysSections.offenceDetails))
       expect(result.body.oasysCompleted).toEqual(oasysSections.dateCompleted)
       expect(result.body.oasysImported).toEqual('2024-05-01')
-      expect(result.offenceDetailsSummary).toEqual(oasysSections.offenceDetails)
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
 
       jest.useRealTimers()
@@ -112,8 +108,7 @@ describe('OASysImportUtils', () => {
 
       getOasysSectionsMock.mockResolvedValue(oasysSections)
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result: any = await getOasysSections(
+      const result = await getOasysSections(
         {
           offenceDetailsAnswers: { [questionKeyFromNumber('1')]: 'My Response' },
           oasysImported: '2022-01-01',
@@ -150,8 +145,7 @@ describe('OASysImportUtils', () => {
         throw new OasysNotFoundError()
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result: any = await getOasysSections({}, application, callConfig, { personService }, constructor, {
+      const result = await getOasysSections({}, application, callConfig, { personService }, constructor, {
         sectionName: 'riskManagementPlan',
         summaryKey: 'riskManagementPlanSummary',
         answerKey: 'riskManagementPlanAnswers',
@@ -182,7 +176,6 @@ describe('OASysImportUtils', () => {
 
       expect(result.oasysSuccess).toEqual(false)
       expect(result.body.riskManagementPlanSummary).toEqual(sortOasysImportSummaries(questions))
-      expect(result.riskManagementPlanSummary).toEqual(questions)
       expect(result.risks).toEqual(mapApiPersonRisksForUi(application.risks))
     })
   })

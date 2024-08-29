@@ -1,3 +1,4 @@
+import { Task } from '@approved-premises/ui'
 import Apply from '../form-pages/apply'
 import Assess from '../form-pages/assess'
 import paths from '../paths/apply'
@@ -199,7 +200,7 @@ describe('applicationUtils', () => {
 
       const application = applicationFactory.build({ data: applyData })
 
-      forPagesInTask(application, applySection1Task1, spy)
+      forPagesInTask(application, applySection1Task1 as unknown as Task, spy)
 
       expect(spy).toHaveBeenCalledWith(firstApplyPageInstance, 'first')
       expect(spy).toHaveBeenCalledWith(secondApplyPageInstance, 'second')
@@ -216,7 +217,7 @@ describe('applicationUtils', () => {
       const spy = jest.fn()
 
       const application = applicationFactory.build({ data: applyData })
-      forPagesInTask(application, applySection1Task1, spy)
+      forPagesInTask(application, applySection1Task1 as unknown as Task, spy)
 
       expect(spy).toHaveBeenCalledWith(firstApplyPageInstance, 'first')
       expect(spy).toHaveBeenCalledTimes(1)
@@ -232,7 +233,7 @@ describe('applicationUtils', () => {
 
       const application = applicationFactory.build()
 
-      expect(() => forPagesInTask(application, applySection1Task1, spy)).toThrow(
+      expect(() => forPagesInTask(application, applySection1Task1 as unknown as Task, spy)).toThrow(
         new SessionDataError('No data for page first-apply-section-task-1:first'),
       )
 
@@ -258,7 +259,7 @@ describe('applicationUtils', () => {
         },
       })
 
-      expect(() => forPagesInTask(application, applySection1Task1, spy)).toThrow(
+      expect(() => forPagesInTask(application, applySection1Task1 as unknown as Task, spy)).toThrow(
         new SessionDataError('Errors for page first-apply-section-task-1:first'),
       )
 

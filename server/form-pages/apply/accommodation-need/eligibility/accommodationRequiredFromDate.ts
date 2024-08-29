@@ -47,7 +47,7 @@ export default class AccommodationRequiredFromDate implements TasklistPage {
   }
 
   errors() {
-    const errors: TaskListErrors<this> = {}
+    const errors: Record<string, string> = {}
 
     if (dateIsBlank(this.body, 'accommodationRequiredFromDate')) {
       errors.accommodationRequiredFromDate = 'You must specify the date accommodation is required from'
@@ -57,6 +57,6 @@ export default class AccommodationRequiredFromDate implements TasklistPage {
       errors.accommodationRequiredFromDate = 'The date accommodation is required from must not be in the past'
     }
 
-    return errors
+    return errors as TaskListErrors<this>
   }
 }

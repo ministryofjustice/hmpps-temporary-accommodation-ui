@@ -12,7 +12,9 @@ import { SessionDataError } from './errors'
 import { mapApiPersonRisksForUi, sentenceCase } from './utils'
 import { escape } from './viewUtils'
 
-export type Constructor<T> = new (body: unknown) => T
+type OASysQuestionsSections = Omit<OASysSections, 'assessmentId' | 'assessmentState' | 'dateStarted' | 'dateCompleted'>
+
+export type Constructor<T> = new (body: Record<string, unknown>) => T
 
 export const getOasysSections = async <T extends OasysPage>(
   body: Record<string, unknown>,
@@ -26,7 +28,7 @@ export const getOasysSections = async <T extends OasysPage>(
     answerKey,
     selectedSections = [],
   }: {
-    sectionName: string
+    sectionName: keyof OASysQuestionsSections
     summaryKey: string
     answerKey: string
     selectedSections?: Array<number>
@@ -50,18 +52,18 @@ export const getOasysSections = async <T extends OasysPage>(
   oasysSections = filterOasysSections(oasysSections)
 
   const summaries = sortOasysImportSummaries(oasysSections[sectionName]).map(question => {
-    const answer = body[answerKey]?.[`${questionKeyFromNumber(question.questionNumber)}`] || question.answer
+    const answer =
+      (body[answerKey] as Record<string, unknown>)?.[questionKeyFromNumber(question.questionNumber)] || question.answer
     return {
       label: question.label,
       questionNumber: question.questionNumber,
       answer,
-    }
+    } as OASysQuestion
   })
 
   const page = new constructor(body)
 
   page.body[summaryKey] = summaries
-  page[summaryKey] = summaries
   page.body.oasysImported = body.oasysImported || DateFormats.dateObjToIsoDate(new Date())
   page.body.oasysCompleted = body.oasysCompleted || oasysSections?.dateCompleted || oasysSections?.dateStarted
   page.oasysSuccess = oasysSuccess
@@ -70,15 +72,15 @@ export const getOasysSections = async <T extends OasysPage>(
   return page
 }
 
-export const validateOasysEntries = <T>(body: Partial<T>, questionKey: string, answerKey: string) => {
-  const errors = {}
-  const questions = body[questionKey]
-  const answers = body[answerKey]
+export const validateOasysEntries = <T>(body: Partial<T>, questionKey: keyof T, answerKey: keyof T) => {
+  const errors: Record<string, string> = {}
+  const questions = body[questionKey] as Array<OASysQuestion>
+  const answers = body[answerKey] as Record<string, unknown>
 
-  Object.keys(questions).forEach(key => {
-    const question = questions[key]
-    if (!answers[`${questionKeyFromNumber(question.questionNumber)}`]) {
-      const errorAnswerKey = `${answerKey}[${questionKeyFromNumber(question.questionNumber)}]`
+  Object.values(questions).forEach(value => {
+    const question = value
+    if (!answers?.[questionKeyFromNumber(question.questionNumber)]) {
+      const errorAnswerKey = `${answerKey as string}[${questionKeyFromNumber(question.questionNumber)}]`
 
       errors[errorAnswerKey] = `You must enter a response for the '${question.label}' question`
     }
@@ -161,7 +163,7 @@ export const sectionCheckBoxes = (fullList: Array<OASysSection>, selectedList: A
   })
 }
 
-const filterOasysSections = (oasysSections: OASysSections) => {
+const filterOasysSections = (oasysSections: OASysSections): OASysSections => {
   const permittedRiskManagementQuestions = ['RM30', 'RM31', 'RM32', 'RM33']
 
   return {
@@ -169,5 +171,5 @@ const filterOasysSections = (oasysSections: OASysSections) => {
     riskManagementPlan: oasysSections.riskManagementPlan.filter(question =>
       permittedRiskManagementQuestions.includes(question.questionNumber),
     ),
-  } as OASysSections
+  }
 }

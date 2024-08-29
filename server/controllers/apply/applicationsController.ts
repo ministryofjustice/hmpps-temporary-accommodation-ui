@@ -53,10 +53,10 @@ export default class ApplicationsController {
       const callConfig = extractCallConfig(req)
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const crnArr = req.flash('crn') as string
+      const crnArr = req.flash('crn')
 
       if (crnArr.length) {
-        const crn = crnArr[0]
+        const crn = crnArr[0] as string
         const person = await this.personService.findByCrn(callConfig, crn)
 
         try {

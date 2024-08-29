@@ -43,7 +43,7 @@ export default class ProbationPractitioner implements TasklistPage {
   }
 
   set body(existingValues) {
-    this._body = bodyProperties.reduce((values, key) => {
+    this._body = bodyProperties.reduce((values: Record<string, string | ProbationDeliveryUnit>, key) => {
       const applicationData = this.application.data?.['contact-details']?.[`practitioner-${key}`]
       let updatedValue: string | ProbationDeliveryUnit
 
@@ -56,7 +56,10 @@ export default class ProbationPractitioner implements TasklistPage {
         updatedValue = applicationData?.[key]
       }
 
-      values[key] = updatedValue || existingValues[key] || this.userDetails[key]
+      values[key] =
+        updatedValue ||
+        existingValues[key as keyof ProbationPractitionerBody] ||
+        this.userDetails[key as keyof ProbationPractitionerBody]
 
       return values
     }, {})

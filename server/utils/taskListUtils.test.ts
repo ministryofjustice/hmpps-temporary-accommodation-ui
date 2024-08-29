@@ -4,17 +4,21 @@ import assessPaths from '../paths/assess'
 import { applicationFactory, assessmentFactory } from '../testutils/factories'
 import isAssessment from './assessments/isAssessment'
 import { statusTag, taskLink } from './taskListUtils'
+import { TasklistPageInterface } from '../form-pages/tasklistPage'
 
 jest.mock('./assessments/isAssessment')
 
 describe('taskListUtils', () => {
-  const task = {
+  const task: TaskWithStatus = {
     id: 'second-task',
     title: 'Second Task',
     actionText: 'Complete Second Task',
-    pages: { foo: 'bar', bar: 'baz' },
+    pages: {
+      foo: {} as TasklistPageInterface,
+      bar: {} as TasklistPageInterface,
+    },
     status: 'in_progress',
-  } as TaskWithStatus
+  }
 
   describe('taskLink', () => {
     describe('with an application', () => {

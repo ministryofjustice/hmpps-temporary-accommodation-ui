@@ -8,5 +8,13 @@ export type TemporaryAccommodationBedSearchParameters = (BedSearchParameters & {
      * The pdu to search within
      */
     probationDeliveryUnit: string;
+    /**
+     * Is a shared property
+     */
+    sharedProperty?: boolean;
+    /**
+     * Is the property for single occupancy
+     */
+    singleOccupancy?: boolean;
 });
 

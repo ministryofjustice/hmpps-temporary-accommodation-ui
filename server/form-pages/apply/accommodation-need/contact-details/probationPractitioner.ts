@@ -48,9 +48,8 @@ export default class ProbationPractitioner implements TasklistPage {
       let updatedValue: string | ProbationDeliveryUnit
 
       if (key === 'pdu' && applicationData) {
-        updatedValue = {
-          id: applicationData.id,
-          name: applicationData.name,
+        if (applicationData.id && applicationData.name) {
+          updatedValue = applicationData
         }
       } else {
         updatedValue = applicationData?.[key]
@@ -92,7 +91,7 @@ export default class ProbationPractitioner implements TasklistPage {
       errors.phone = errorMessages.phone
     }
 
-    if (!this.body.pdu) {
+    if (!this.body.pdu?.name || !this.body.pdu?.id) {
       errors.pdu = errorMessages.pdu
     }
 

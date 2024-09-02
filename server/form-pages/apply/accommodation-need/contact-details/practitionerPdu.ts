@@ -3,7 +3,7 @@ import {
   ProbationDeliveryUnit,
   TemporaryAccommodationApplication,
 } from '@approved-premises/api'
-import type { DataServices, TaskListErrors } from '@approved-premises/ui'
+import { DataServices, SelectOption, TaskListErrors } from '@approved-premises/ui'
 import { SessionData } from 'express-session'
 import { Page } from '../../../utils/decorators'
 import TasklistPage from '../../../tasklistPage'
@@ -77,7 +77,7 @@ export default class PractitionerPdu implements TasklistPage {
     return errors
   }
 
-  getRegionPdus() {
+  getRegionPdus(): Array<SelectOption> {
     return [
       {
         value: '',

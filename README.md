@@ -88,12 +88,6 @@ There is a complete suite of unit and integration tests that run as part of CI.
 The integration tests are run using [Cypress](https://www.cypress.io/), and API
 calls are mocked using [Wiremock](https://wiremock.org/).
 
-To run linting, unit and integration tests, from the root directory, run:
-
-```bash
-script/test
-```
-
 ### Run each type of test
 
 #### Units (via Jest)

@@ -2,10 +2,6 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
-      - develop
 
 env:
   NODE_ENV: test
@@ -13,9 +9,50 @@ env:
   API_CLIENT_SECRET: clientsecret
 
 jobs:
-  test:
+  type_checking:
+    name: "Type check 🔎"
     runs-on: ubuntu-latest
+    steps: 
+      - name: Check out code
+        uses: actions/checkout@v4.1.7
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Installing dependencies
+        run: npm ci       
+    
+      - name: Pulling the latest type from the API repo
+        run: npm run generate-types
+
+      - name: Typechecking the code
+        run: npm run typecheck
+
+  linting: 
+    name: "Linting 🔎"
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Check out code
+        uses: actions/checkout@v4.1.7
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Installing dependencies
+        run: npm ci       
+     
+      - name: Running Lint checks 🔎
+        run: npm run lint
+  
+  unit_test:
+    name: "Unit testing 🧪"
+    runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v4.1.7
@@ -24,17 +61,32 @@ jobs:
         uses: actions/setup-node@v4.0.3
         with:
           node-version-file: '.node-version'
-
-      - uses: actions/setup-node@v4
-        with:
           cache: 'npm'
 
       - name: Installing dependencies
-        run: npm install
+        run: npm ci        
+
+      - name: Running Unit tests
+        run: npm run test:ci
+
+  integration_test:
+    name: "Integration testing 🧪"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4.1.7
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Installing dependencies
+        run: npm ci       
 
       - name: Building source
         run: npm run build
 
-      - name: Run tests
-        id: test
-        run: script/test
+      - name: Running Integration tests
+        run: npm run test:integration   

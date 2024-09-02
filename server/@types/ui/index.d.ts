@@ -279,7 +279,7 @@ export interface SubNavObj {
 export type BookingSearchApiStatus = 'provisional' | 'confirmed' | 'arrived' | 'departed' | 'closed'
 
 export type BookingSearchParameters = {
-  crn?: string
+  crnOrName?: string
   page?: number
   sortBy?: BookingSearchSortField
   sortDirection?: SortDirection

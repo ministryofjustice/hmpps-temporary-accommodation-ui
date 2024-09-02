@@ -5,11 +5,11 @@ import paths from '../paths/temporary-accommodation/manage'
 import { appendQueryString } from './utils'
 import { sortHeader } from './sortHeader'
 
-export function createSubNavArr(status: BookingSearchApiStatus, crn?: string): Array<SubNavObj> {
+export function createSubNavArr(status: BookingSearchApiStatus, crnOrName?: string): Array<SubNavObj> {
   const uiStatus = convertApiStatusToUiStatus(status)
   return ['provisional', 'confirmed', 'active', 'departed'].map((bookingStatus: BookingSearchApiStatus) => ({
     text: `${capitaliseStatus(bookingStatus)} bookings`,
-    href: appendQueryString(paths.bookings.search[bookingStatus].index({}), { crn }),
+    href: appendQueryString(paths.bookings.search[bookingStatus].index({}), { crnOrName }),
     active: uiStatus === bookingStatus,
   }))
 }

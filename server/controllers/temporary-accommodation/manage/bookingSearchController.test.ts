@@ -132,7 +132,7 @@ describe('BookingSearchController', () => {
       })
     })
 
-    describe('when there is a CRN search parameter', () => {
+    describe('when there is a CRN or Name search parameter', () => {
       it.each(['provisional', 'confirmed', 'active', 'departed'])(
         'renders the filtered table view for %s bookings',
         async uiStatus => {
@@ -157,7 +157,7 @@ describe('BookingSearchController', () => {
             uiStatus,
             tableHeadings: [],
             subNavArr: [],
-            crn: searchParameters.crn,
+            crnOrName: searchParameters.crnOrName,
             response: paginatedResponse,
             pagination: {},
           })

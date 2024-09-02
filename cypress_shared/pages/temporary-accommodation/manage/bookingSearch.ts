@@ -65,8 +65,8 @@ export default class BookingSearchPage extends Page {
     cy.contains(capitaliseStatus(status)).click()
   }
 
-  checkCRNSearchValue(value: string, status: string) {
-    this.shouldShowTextInputByLabel(`Search ${status} bookings by CRN (case reference number)`, value)
+  checkCrnOrNameSearchValue(value: string, status: string) {
+    this.shouldShowTextInputByLabel(`Search ${status} bookings with the person’s name or CRN`, value)
   }
 
   checkResults(bookings: BookingSearchResult[]) {
@@ -76,8 +76,8 @@ export default class BookingSearchPage extends Page {
     })
   }
 
-  searchByCRN(crn: string, status: string) {
-    this.completeTextInputByLabel(`Search ${status} bookings by CRN (case reference number)`, crn)
+  searchByCrnOrName(crnOrName: string, status: string) {
+    this.completeTextInputByLabel(`Search ${status} bookings with the person’s name or CRN`, crnOrName)
     this.clickSubmit('Search')
   }
 

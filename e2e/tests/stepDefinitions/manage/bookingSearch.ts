@@ -59,7 +59,7 @@ Then('I should see a summary of the booking on the departed bookings page', () =
 When('I search for a CRN that does not exist in provisional bookings', () => {
   cy.then(function _() {
     const bookingSearchPage = Page.verifyOnPage(BookingSearchPage, 'provisional')
-    bookingSearchPage.searchByCRN('N000000', 'provisional')
+    bookingSearchPage.searchByCrnOrName('N000000', 'provisional')
   })
 })
 
@@ -94,7 +94,7 @@ When('I click on the Provisional bookings tab', () => {
 When('I search for a valid CRN in provisional bookings', () => {
   cy.then(function _() {
     const bookingSearchPage = Page.verifyOnPage(BookingSearchPage, 'provisional')
-    bookingSearchPage.searchByCRN(this.booking.person.crn, 'provisional')
+    bookingSearchPage.searchByCrnOrName(this.booking.person.crn, 'provisional')
   })
 })
 

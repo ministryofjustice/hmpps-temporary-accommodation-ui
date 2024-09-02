@@ -27,11 +27,11 @@ export default class BookingSearchController {
 
         return res.render(`temporary-accommodation/booking-search/results`, {
           uiStatus: convertApiStatusToUiStatus(status),
-          subNavArr: createSubNavArr(status, params.crn),
+          subNavArr: createSubNavArr(status, params.crnOrName),
           tableHeadings: createTableHeadings(status, sortBy, ascending, appendQueryString('', params)), // dont send the page, will revert to 1 on sort change
           pagination: pagination(response.pageNumber, response.totalPages, appendQueryString('', params)),
           response,
-          crn: params.crn,
+          crnOrName: params.crnOrName,
         })
       } catch (err) {
         return catchValidationErrorOrPropogate(

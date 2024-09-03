@@ -75,6 +75,22 @@ describe('ProbationPractitioner', () => {
         },
       })
     })
+
+    describe('backwards compatibility', () => {
+      it('sets the value to undefined if the PDU had been entered in a free text field', () => {
+        const updatedApplication = applicationFactory.build()
+        updatedApplication.data = {
+          'contact-details': {
+            'practitioner-pdu': {
+              pdu: 'Some PDU',
+            },
+          },
+        }
+        const page = new ProbationPractitioner({}, updatedApplication)
+
+        expect(page.body.pdu).toBeUndefined()
+      })
+    })
   })
 
   itShouldHavePreviousValue(new ProbationPractitioner({}, application), 'dashboard')
@@ -110,6 +126,16 @@ describe('ProbationPractitioner', () => {
 
       expect(page.errors()).toEqual({ [key]: errorMessages[key] })
     })
+
+    it.each([{}, { id: 'pdu-id' }, { name: 'PDU name' }, { pdu: 'Some PDU' }])(
+      'returns a PDU error if the PDU data is invalid',
+      pduData => {
+        const bodyInvalidPDU = { ...body, pdu: pduData } as Partial<ProbationPractitionerBody>
+        const page = new ProbationPractitioner(bodyInvalidPDU, application)
+
+        expect(page.errors()).toEqual({ pdu: errorMessages.pdu })
+      },
+    )
   })
 
   describe('summaryListItems', () => {

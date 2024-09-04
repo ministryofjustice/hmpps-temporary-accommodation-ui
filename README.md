@@ -112,10 +112,21 @@ view screenshots of what the user sees during each step.
 npm run test:integration:ui
 ```
 
-#### End-to-End tests
+#### End-to-End tests (via Cypress)
+
+The end-to-end tests run against an actual API and database. To run them locally, you must ensure a local full stack is
+running (for instance, using AP Tools).
+
+Run E2E tests via a headless Chrome browser, with reporting matching that seen on CI:
 
 ```bash
-script/local_e2e
+npm run test:e2e
+```
+
+Spin up a real browser that gives you an interface to run individual E2E features:
+
+```bash
+npm run test:e2e:ui
 ```
 
 ## Release process

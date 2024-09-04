@@ -3,10 +3,8 @@ import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ProbationPractitioner, { ProbationPractitionerBody, errorMessages } from './probationPractitioner'
 import paths from '../../../../paths/apply'
-import { UserDetails } from '../../../../services/userService'
 
 describe('ProbationPractitioner', () => {
-  const application = applicationFactory.build()
   const body: ProbationPractitionerBody = {
     name: 'Jane Doe',
     email: 'jane.doe@example.org',
@@ -14,11 +12,32 @@ describe('ProbationPractitioner', () => {
     pdu: { id: 'pdu-id', name: 'PDU Name' },
   }
 
+  const application = applicationFactory.build({
+    data: {
+      'contact-details': {
+        'probation-practitioner': body,
+      },
+    },
+  })
+
+  const session = {
+    userDetails: {
+      displayName: 'John Smith',
+      email: 'john.smith@example.org',
+      telephoneNumber: '0987654321',
+      probationDeliveryUnit: {
+        id: 'user-pdu-id',
+        name: 'User PDU Name',
+      },
+    },
+  } as SessionData
+
   describe('body', () => {
     it('sets the body from updated values in application', () => {
       const updatedApplication = applicationFactory.build()
       updatedApplication.data = {
         'contact-details': {
+          'probation-practitioner': body,
           'practitioner-name': {
             name: 'Jack Black',
           },
@@ -34,7 +53,8 @@ describe('ProbationPractitioner', () => {
           },
         },
       }
-      const page = new ProbationPractitioner(body, updatedApplication)
+
+      const page = new ProbationPractitioner({}, updatedApplication, session)
 
       expect(page.body).toEqual({
         name: 'Jack Black',
@@ -48,22 +68,15 @@ describe('ProbationPractitioner', () => {
     })
 
     it('sets the body from the existing value if no updated values in application', () => {
-      const page = new ProbationPractitioner(body, application)
+      const page = new ProbationPractitioner({}, application, session)
 
       expect(page.body).toEqual(body)
     })
 
     it('sets the body to the value found in the user session details if no updated or existing value', () => {
-      const userDetails: Partial<UserDetails> = {
-        displayName: 'John Smith',
-        email: 'john.smith@example.org',
-        telephoneNumber: '0987654321',
-        probationDeliveryUnit: {
-          id: 'user-pdu-id',
-          name: 'User PDU Name',
-        },
-      }
-      const page = new ProbationPractitioner({}, application, { userDetails } as SessionData)
+      const applicationNoData = applicationFactory.build()
+
+      const page = new ProbationPractitioner({}, applicationNoData, session)
 
       expect(page.body).toEqual({
         name: 'John Smith',
@@ -77,18 +90,32 @@ describe('ProbationPractitioner', () => {
     })
 
     describe('backwards compatibility', () => {
-      it('sets the value to undefined if the PDU had been entered in a free text field', () => {
-        const updatedApplication = applicationFactory.build()
-        updatedApplication.data = {
+      it('sets the PDU id and name values to undefined if the PDU had been entered in a free text field', () => {
+        const oldApplication = applicationFactory.build()
+        oldApplication.data = {
           'contact-details': {
+            'probation-practitioner': {
+              name: 'Jane Doe',
+              email: 'jane.doe@example.org',
+              phone: '0123456789',
+            },
             'practitioner-pdu': {
               pdu: 'Some PDU',
             },
           },
         }
-        const page = new ProbationPractitioner({}, updatedApplication)
 
-        expect(page.body.pdu).toBeUndefined()
+        const page = new ProbationPractitioner({}, oldApplication, session)
+
+        expect(page.body).toEqual({
+          name: 'Jane Doe',
+          email: 'jane.doe@example.org',
+          phone: '0123456789',
+          pdu: {
+            id: undefined,
+            name: undefined,
+          },
+        })
       })
     })
   })
@@ -98,7 +125,7 @@ describe('ProbationPractitioner', () => {
 
   describe('response', () => {
     it('should return the full data', () => {
-      const page = new ProbationPractitioner(body, application)
+      const page = new ProbationPractitioner({}, application)
 
       expect(page.response()).toEqual({
         'Probation practitioner details': [
@@ -114,24 +141,41 @@ describe('ProbationPractitioner', () => {
   })
 
   describe('errors', () => {
-    it('returns an empty object if all properties are present', () => {
-      const page = new ProbationPractitioner(body, application)
+    it('returns an empty object if all properties are saved in the application', () => {
+      const page = new ProbationPractitioner({}, application)
 
       expect(page.errors()).toEqual({})
     })
 
-    it.each(['name', 'email', 'phone', 'pdu'] as const)('returns an error if the %s property is missing', key => {
-      const bodyIncomplete = { ...body, [key]: undefined } as Partial<ProbationPractitionerBody>
-      const page = new ProbationPractitioner(bodyIncomplete, application)
+    it.each(['name', 'email', 'phone', 'pdu'] as const)(
+      'returns an error if the %s property is missing in the application',
+      key => {
+        const bodyIncomplete = { ...body, [key]: undefined } as Partial<ProbationPractitionerBody>
+        const applicationIncomplete = applicationFactory.build()
+        applicationIncomplete.data = {
+          'contact-details': {
+            'probation-practitioner': bodyIncomplete,
+          },
+        }
 
-      expect(page.errors()).toEqual({ [key]: errorMessages[key] })
-    })
+        const page = new ProbationPractitioner({}, applicationIncomplete)
+
+        expect(page.errors()).toEqual({ [key]: errorMessages[key] })
+      },
+    )
 
     it.each([{}, { id: 'pdu-id' }, { name: 'PDU name' }, { pdu: 'Some PDU' }])(
-      'returns a PDU error if the PDU data is invalid',
+      'returns a PDU error if the PDU data is missing id or name',
       pduData => {
         const bodyInvalidPDU = { ...body, pdu: pduData } as Partial<ProbationPractitionerBody>
-        const page = new ProbationPractitioner(bodyInvalidPDU, application)
+        const applicationInvalidPDU = applicationFactory.build()
+        applicationInvalidPDU.data = {
+          'contact-details': {
+            'probation-practitioner': bodyInvalidPDU,
+          },
+        }
+
+        const page = new ProbationPractitioner({}, applicationInvalidPDU)
 
         expect(page.errors()).toEqual({ pdu: errorMessages.pdu })
       },
@@ -141,14 +185,15 @@ describe('ProbationPractitioner', () => {
   describe('summaryListItems', () => {
     describe('when there is no data', () => {
       it('returns items formatted as summary list rows with links', () => {
-        const page = new ProbationPractitioner({}, application)
+        const applicationNoData = applicationFactory.build()
+        const page = new ProbationPractitioner({}, applicationNoData)
 
         expect(page.summaryListItems()).toEqual([
           {
             key: { text: 'Name' },
             value: {
               html: `<a href="${paths.applications.pages.show({
-                id: application.id,
+                id: applicationNoData.id,
                 task: 'contact-details',
                 page: 'practitioner-name',
               })}" class="govuk-link">Enter a name</a>`,
@@ -158,7 +203,7 @@ describe('ProbationPractitioner', () => {
             key: { text: 'Email address' },
             value: {
               html: `<a href="${paths.applications.pages.show({
-                id: application.id,
+                id: applicationNoData.id,
                 task: 'contact-details',
                 page: 'practitioner-email',
               })}" class="govuk-link">Enter an email address</a>`,
@@ -168,7 +213,7 @@ describe('ProbationPractitioner', () => {
             key: { text: 'Phone number' },
             value: {
               html: `<a href="${paths.applications.pages.show({
-                id: application.id,
+                id: applicationNoData.id,
                 task: 'contact-details',
                 page: 'practitioner-phone',
               })}" class="govuk-link">Enter a phone number</a>`,
@@ -178,7 +223,7 @@ describe('ProbationPractitioner', () => {
             key: { text: 'PDU (Probation Delivery Unit)' },
             value: {
               html: `<a href="${paths.applications.pages.show({
-                id: application.id,
+                id: applicationNoData.id,
                 task: 'contact-details',
                 page: 'practitioner-pdu',
               })}" class="govuk-link">Enter a PDU</a>`,
@@ -189,7 +234,7 @@ describe('ProbationPractitioner', () => {
     })
     describe('when there is data', () => {
       it('returns items formatted as summary list rows with value and action', () => {
-        const page = new ProbationPractitioner(body, application)
+        const page = new ProbationPractitioner({}, application)
 
         expect(page.summaryListItems()).toEqual([
           {
@@ -266,14 +311,15 @@ describe('ProbationPractitioner', () => {
   })
 
   describe('disableButton', () => {
-    it('returns true if some of the body properties are missing', () => {
-      const page = new ProbationPractitioner({ name: 'Jane' }, application)
+    it('returns true if some of the data is missing', () => {
+      const applicationNoData = applicationFactory.build()
+      const page = new ProbationPractitioner({}, applicationNoData)
 
       expect(page.disableButton()).toBe(true)
     })
 
-    it('returns false if all the body properties are present', () => {
-      const page = new ProbationPractitioner(body, application)
+    it('returns false if all the data is present', () => {
+      const page = new ProbationPractitioner({}, application)
 
       expect(page.disableButton()).toBe(false)
     })

@@ -42,25 +42,30 @@ export default class ProbationPractitioner implements TasklistPage {
     }
   }
 
-  set body(existingValues) {
-    this._body = bodyProperties.reduce((values: Record<string, string | ProbationDeliveryUnit>, key) => {
-      const applicationData = this.application.data?.['contact-details']?.[`practitioner-${key}`]
+  set body(_submittedValues) {
+    // This page does not submit any usable fields, so we ignore submitted values
+    // and instead use values inferred from application data or session directly
+    const existingValues = this.application.data?.['contact-details']?.['probation-practitioner']
+
+    this._body = bodyProperties.reduce((body: Record<string, string | ProbationDeliveryUnit>, key) => {
+      const updatedApplicationData = this.application.data?.['contact-details']?.[`practitioner-${key}`]
       let updatedValue: string | ProbationDeliveryUnit
 
-      if (key === 'pdu' && applicationData) {
-        if (applicationData.id && applicationData.name) {
-          updatedValue = applicationData
+      if (key === 'pdu' && updatedApplicationData) {
+        updatedValue = {
+          id: updatedApplicationData.id,
+          name: updatedApplicationData.name,
         }
       } else {
-        updatedValue = applicationData?.[key]
+        updatedValue = updatedApplicationData?.[key]
       }
 
-      values[key] =
+      body[key] =
         updatedValue ||
-        existingValues[key as keyof ProbationPractitionerBody] ||
-        this.userDetails[key as keyof ProbationPractitionerBody]
+        existingValues?.[key as keyof ProbationPractitionerBody] ||
+        this.userDetails?.[key as keyof ProbationPractitionerBody]
 
-      return values
+      return body
     }, {})
   }
 

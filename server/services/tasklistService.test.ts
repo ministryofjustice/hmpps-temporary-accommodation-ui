@@ -73,11 +73,51 @@ describe('tasklistService', () => {
   })
 
   describe('taskStatuses', () => {
-    it('returns a status for each task', () => {
+    it('shows the first task as not_started and subsequent tasks as cannot_start_yet', () => {
+      ;(getTaskStatus as jest.Mock).mockReturnValue('not_started')
+
+      const tasklistService = new TasklistService(application)
+
+      expect(tasklistService.taskStatuses).toEqual({
+        'first-task': 'not_started',
+        'second-task': 'cannot_start',
+        'third-task': 'cannot_start',
+        'fourth-task': 'cannot_start',
+        'fifth-task': 'cannot_start',
+        'check-your-answers': 'cannot_start',
+      })
+
+      expect(getTaskStatus).toHaveBeenCalledTimes(5)
+    })
+
+    it('shows the not started task after a complete task as not_started and subsequent tasks as cannot_start_yet', () => {
       ;(getTaskStatus as jest.Mock).mockImplementation(t => {
         switch (t.id) {
           case 'first-task':
-          case 'fourth-task':
+            return 'complete'
+          default:
+            return 'not_started'
+        }
+      })
+
+      const tasklistService = new TasklistService(application)
+
+      expect(tasklistService.taskStatuses).toEqual({
+        'first-task': 'complete',
+        'second-task': 'not_started',
+        'third-task': 'cannot_start',
+        'fourth-task': 'cannot_start',
+        'fifth-task': 'cannot_start',
+        'check-your-answers': 'cannot_start',
+      })
+
+      expect(getTaskStatus).toHaveBeenCalledTimes(5)
+    })
+
+    it('shows the first incomplete task as in_progress and subsequent tasks as cannot_start_yet', () => {
+      ;(getTaskStatus as jest.Mock).mockImplementation(t => {
+        switch (t.id) {
+          case 'first-task':
             return 'complete'
           case 'second-task':
             return 'in_progress'
@@ -91,9 +131,36 @@ describe('tasklistService', () => {
       expect(tasklistService.taskStatuses).toEqual({
         'first-task': 'complete',
         'second-task': 'in_progress',
-        'third-task': 'not_started',
-        'fourth-task': 'complete',
-        'fifth-task': 'not_started',
+        'third-task': 'cannot_start',
+        'fourth-task': 'cannot_start',
+        'fifth-task': 'cannot_start',
+        'check-your-answers': 'cannot_start',
+      })
+
+      expect(getTaskStatus).toHaveBeenCalledTimes(5)
+    })
+
+    it('can show in_progress tasks amongst complete tasks', () => {
+      ;(getTaskStatus as jest.Mock).mockImplementation(t => {
+        switch (t.id) {
+          case 'first-task':
+          case 'third-task':
+            return 'complete'
+          case 'second-task':
+            return 'in_progress'
+          default:
+            return 'not_started'
+        }
+      })
+
+      const tasklistService = new TasklistService(application)
+
+      expect(tasklistService.taskStatuses).toEqual({
+        'first-task': 'complete',
+        'second-task': 'in_progress',
+        'third-task': 'complete',
+        'fourth-task': 'not_started',
+        'fifth-task': 'cannot_start',
         'check-your-answers': 'cannot_start',
       })
 
@@ -197,7 +264,7 @@ describe('tasklistService', () => {
               title: 'Second task',
               actionText: 'Complete second task',
               pages: {},
-              status: 'not_started',
+              status: 'cannot_start',
             },
           ],
         },
@@ -210,21 +277,21 @@ describe('tasklistService', () => {
               title: 'Third task',
               actionText: 'Complete third task',
               pages: {},
-              status: 'not_started',
+              status: 'cannot_start',
             },
             {
               id: 'fourth-task',
               title: 'Fourth task',
               actionText: 'Complete fourth task',
               pages: {},
-              status: 'not_started',
+              status: 'cannot_start',
             },
             {
               id: 'fifth-task',
               title: 'Fifth task',
               actionText: 'Complete fifth task',
               pages: {},
-              status: 'not_started',
+              status: 'cannot_start',
             },
           ],
         },

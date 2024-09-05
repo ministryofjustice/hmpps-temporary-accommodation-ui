@@ -13,17 +13,31 @@ export default class TasklistService {
 
   constructor(applicationOrAssessment: Application | Assessment) {
     this.formSections = getSections(applicationOrAssessment)
-    this.taskStatuses = {}
 
+    this.taskStatuses = {}
     this.formSections.forEach(section => {
       section.tasks.forEach(task => {
-        const previousTaskKey = Object.keys(this.taskStatuses).at(-1)
-        const previousTaskStatus = this.taskStatuses[previousTaskKey]
-
-        if (!previousTaskStatus || previousTaskStatus === 'complete') {
-          this.taskStatuses[task.id] = getTaskStatus(task, applicationOrAssessment)
-        } else {
+        if (
+          task.id === 'check-your-answers' &&
+          Object.values(this.taskStatuses).some(status => status !== 'complete')
+        ) {
           this.taskStatuses[task.id] = 'cannot_start'
+        } else {
+          const taskStatus = getTaskStatus(task, applicationOrAssessment)
+
+          this.taskStatuses[task.id] = taskStatus
+
+          // This stops the user from starting tasks beyond the ones that have been completed,
+          // but enables showing 'in progress' tasks amongst the ones that have been completed.
+          // This is useful for showing tasks that may require more information because of a
+          // change to the questions.
+          if (taskStatus === 'not_started') {
+            const previousTaskKey = Object.keys(this.taskStatuses).at(-2)
+
+            if (previousTaskKey && this.taskStatuses[previousTaskKey] !== 'complete') {
+              this.taskStatuses[task.id] = 'cannot_start'
+            }
+          }
         }
       })
     })

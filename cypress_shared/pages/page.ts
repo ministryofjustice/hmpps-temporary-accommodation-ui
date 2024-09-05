@@ -50,7 +50,7 @@ export default abstract class Page extends Component {
 
   headerUserName = (): PageElement => cy.get('[data-qa=header-user-name]')
 
-  headerProbationRegion = (): PageElement => cy.get('.region-header')
+  headerProbationRegion = (): PageElement => cy.get('.cas-primary-navigation__regional_header')
 
   shouldShowErrorMessagesForFields(fields: Array<string>, error = 'empty', context = 'generic'): void {
     fields.forEach(field => {

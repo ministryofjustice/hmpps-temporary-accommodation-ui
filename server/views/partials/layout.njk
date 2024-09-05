@@ -1,5 +1,6 @@
 {% extends "govuk/template.njk" %}
 {% from "../components/place-context-header/macro.njk" import placeContextHeader %}
+{% from "../components/primary-navigation/macro.njk" import primaryNavigation %}
 {% from "govuk/components/footer/macro.njk" import govukFooter %}
 
 {% block head %}
@@ -12,7 +13,7 @@
 
 {% block header %}
     {% include "./header.njk" %}
-    {% include "./probationRegionHeader.njk" %}
+    {{ primaryNavigation({ regionName: actingUserProbationRegion.name }) }}
     {% if placeContext|length %}
         {{ placeContextHeader(placeContext) }}
     {% endif %}

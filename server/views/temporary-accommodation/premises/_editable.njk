@@ -7,195 +7,169 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-{{ formPageInput(
-  {
+{{ formPageInput({
     label: {
-      text: 'Enter a property reference',
-      classes: "govuk-label--s"
+        text: 'Enter a property reference',
+        classes: "govuk-label--s"
     },
     hint: {
-      text: "This will be used to identify the property"
+        text: "This will be used to identify the property"
     },
     fieldName: "name"
-  },
-  fetchContext()
-) }}
+}, fetchContext()) }}
 
 {% call govukFieldset({
-  legend: {
-    text: "What is the property address?",
-    classes: "govuk-fieldset__legend--m"
-  }
+    legend: {
+        text: "What is the property address?",
+        classes: "govuk-fieldset__legend--m"
+    }
 }) %}
 
-{{ formPageInput(
-  {
-    label: {
-      text: 'Address line 1',
-      classes: "govuk-label--s"
-    },
-    fieldName: "addressLine1",
-    autocomplete: "address-line1"
-  },
-  fetchContext()
-) }}
+    {{ formPageInput({
+        label: {
+            text: 'Address line 1',
+            classes: "govuk-label--s"
+        },
+        fieldName: "addressLine1",
+        autocomplete: "address-line1"
+    }, fetchContext()) }}
 
-{{ formPageInput(
-  {
-    label: {
-      text: 'Address line 2 (optional)',
-      classes: "govuk-label--s"
-    },
-    fieldName: "addressLine2",
-    autocomplete: "address-line2"
-  },
-  fetchContext()
-) }}
+    {{ formPageInput({
+        label: {
+            text: 'Address line 2 (optional)',
+            classes: "govuk-label--s"
+        },
+        fieldName: "addressLine2",
+        autocomplete: "address-line2"
+    }, fetchContext()) }}
 
-{{ formPageInput(
-  {
-    label: {
-      text: 'Town or city (optional)',
-      classes: "govuk-label--s"
-    },
-    classes: "govuk-!-width-two-thirds",
-    fieldName: "town",
-    autocomplete: "address-level2"
-  },
-  fetchContext()
-) }}
+    {{ formPageInput({
+        label: {
+            text: 'Town or city (optional)',
+            classes: "govuk-label--s"
+        },
+        classes: "govuk-!-width-two-thirds",
+        fieldName: "town",
+        autocomplete: "address-level2"
+    }, fetchContext()) }}
 
-{{ formPageInput(
-  {
-    label: {
-      text: "Postcode",
-      classes: "govuk-label--s"
-    },
-    classes: "govuk-input--width-10",
-    fieldName: "postcode",
-    autocomplete: "postal-code"
-  },
-  fetchContext()
-) }}
+    {{ formPageInput({
+        label: {
+            text: "Postcode",
+            classes: "govuk-label--s"
+        },
+        classes: "govuk-input--width-10",
+        fieldName: "postcode",
+        autocomplete: "postal-code"
+    }, fetchContext()) }}
 
 {% endcall %}
 
-{{ formPageSelect(
-  {
+{{ formPageSelect({
     label: {
-      text: "What is the local authority (optional)?",
-      classes: "govuk-label--m"
+        text: "What is the local authority (optional)?",
+        classes: "govuk-label--m"
     },
     items: convertObjectsToSelectOptions(allLocalAuthorities, '', 'name', 'id', 'localAuthorityAreaId'),
     fieldName: "localAuthorityAreaId"
-  },
-  fetchContext()
-) }}
+}, fetchContext()) }}
 
-{{ formPageSelect(
-  {
+{{ formPageSelect({
     label: {
-      text: "What is the probation region?",
-      classes: "govuk-label--m"
+        text: "What is the probation region?",
+        classes: "govuk-label--m"
     },
     items: convertObjectsToSelectOptions(allProbationRegions, 'Select a probation region', 'name', 'id', 'probationRegionId'),
     fieldName: "probationRegionId"
-  },
-  fetchContext()
-) }}
+}, fetchContext()) }}
 
-{{ formPageSelect(
-  {
+{{ formPageSelect({
     label: {
-      text: "What is the PDU?",
-      classes: "govuk-label--m"
+        text: "What is the PDU?",
+        classes: "govuk-label--m"
     },
     items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnitId'),
     fieldName: "probationDeliveryUnitId"
-  },
-  fetchContext()
-) }}
+}, fetchContext()) }}
 
-{{ taCheckboxes(
-  {
+{{ taCheckboxes({
     fieldset: {
-      legend: {
-        text: "Does the property have any of the following attributes?",
-        classes: "govuk-fieldset__legend--m"
-      }
+        legend: {
+            text: "Does the property have any of the following attributes?",
+            classes: "govuk-fieldset__legend--m"
+        }
     },
     hint: {
-      text: "Select all that apply"
+        text: "Select all that apply"
     },
     items: convertObjectsToCheckboxItems(allCharacteristics, 'name', 'id', 'characteristicIds'),
     fieldName: "characteristicIds"
-  },
-  fetchContext()
-) }}
+}, fetchContext()) }}
 
 {% set statusHintText %}
-  <h4 class="govuk-heading-s">Online</h4>
-  <p>The service can use this property. Selecting this status will make all bedspaces in this property available for bookings.</p>
-  <h4 class="govuk-heading-s">Archived</h4>
-  <p>The service cannot use this property. For example, when the contract has expired. Selecting this status will make all bedspaces in this property unavailable for bookings.</p> 
+    <h4 class="govuk-heading-s">Online</h4>
+    <p>The service can use this property. Selecting this status will make all bedspaces in this property available for
+        bookings.</p>
+    <h4 class="govuk-heading-s">Archived</h4>
+    <p>The service cannot use this property. For example, when the contract has expired. Selecting this status will make
+        all bedspaces in this property unavailable for bookings.</p>
 {% endset %}
 
 {% set statusHint %}
-  <p>Select the relevant property status from the list below. The status will be applied to all bedspaces in this property.</p>
-  {{ govukDetails({
-    summaryText: "View guidance on statuses",
-    html: statusHintText
-  }) }}
+    <p>Select the relevant property status from the list below. The status will be applied to all bedspaces in this
+        property.</p>
+    {{ govukDetails({
+        summaryText: "View guidance on statuses",
+        html: statusHintText
+    }) }}
 {% endset %}
 
-{{ taRadios(
-  {
+{{ taRadios({
     fieldset: {
-      legend: {
-        text: "What is the status of this property?",
-        classes: "govuk-fieldset__legend--m"
-      }
+        legend: {
+            text: "What is the status of this property?",
+            classes: "govuk-fieldset__legend--m"
+        }
     },
     hint: {
-      html: statusHint
+        html: statusHint
     },
     items: convertObjectsToRadioItems(allStatuses, 'name', 'id', 'status'),
     fieldName: "status"
-  }, fetchContext()
-) }}
+}, fetchContext()) }}
 
-{{ formPageTextarea(
-  {
+{{ formPageTextarea({
     label: {
-      text: "Please provide any further property details",
-      classes: "govuk-label--m"
+        text: "Please provide any further property details",
+        classes: "govuk-label--m"
     },
     hint: {
-      text: "This information will be used to help find a suitable property for the person on probation"
+        text: "This information will be used to help find a suitable property for the person on probation"
     },
     fieldName: "notes"
-  }, fetchContext()
-) }}
+}, fetchContext()) }}
 
-{{ formPageInput(
-  {
+{% set workingDaysHintHtml %}
+    <p class="govuk-hint">Weekends and bank holidays will be automatically added to the turnaround time</p>
+    <p class="govuk-hint">Enter 0 for a same-day turnaround</p>
+{% endset %}
+
+{{ formPageInput({
     label: {
-      text: "Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days",
-      classes: "govuk-label--m"
+        text: "Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days",
+        classes: "govuk-label--m"
     },
     classes: "govuk-input--width-3",
     fieldName: "turnaroundWorkingDayCount",
     hint: {
-      text: "Weekends and bank holidays will be automatically added to the turnaround time"
+        html: workingDaysHintHtml
     },
     suffix: {
-    text: "working days"
+        text: "working days"
     }
-  },
-  fetchContext()
-) }}
+}, fetchContext()) }}
 
 {{ govukButton({
-  text: "Submit",
-  preventDoubleClick: true
+    text: "Submit",
+    preventDoubleClick: true
 }) }}

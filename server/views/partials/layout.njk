@@ -13,7 +13,6 @@
 {% block header %}
     {% include "./header.njk" %}
     {% include "./probationRegionHeader.njk" %}
-    {% include "./phaseBanner.njk" %}
     {% if placeContext|length %}
         {{ placeContextHeader(placeContext) }}
     {% endif %}
@@ -29,6 +28,7 @@
 {% endblock %}
 
 {% block footer %}
+    {% include "./phaseBanner.njk" %}
     {{ govukFooter({
         meta: {
             items: [

@@ -152,7 +152,7 @@ workflows:
           env: "demo"
           context: hmpps-common-vars
           requires:
-            - request-demo-preview-approval
+            - request-demo-approval
           filters:
             branches:
               only:

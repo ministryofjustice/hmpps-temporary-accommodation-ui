@@ -95,6 +95,7 @@ workflows:
             branches:
               only:
                 - main
+                - demo*
 
       - hmpps/deploy_env:
           name: deploy_dev
@@ -136,6 +137,29 @@ workflows:
           requires:
             - request-test-approval
 
+      - request-demo-approval:
+          type: approval
+          requires:
+            - helm_lint
+            - unit_test
+            - integration_test
+            - build_docker
+          filters:
+            branches:
+              only:
+                -demo*
+
+      - hmpps/deploy_env:
+          name: deploy_demo_preview
+          env: "demo"
+          context: hmpps-common-vars
+          requires:
+            - request-demo-preview-approval
+          filters:
+            branches:
+              only:
+                -demo*
+              
       - request-preprod-approval:
           type: approval
           requires:

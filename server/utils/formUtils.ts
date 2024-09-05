@@ -196,3 +196,13 @@ export const parseNaturalNumber = (input: string): number => {
   }
   return Number.parseInt(input, 10)
 }
+
+export const parseIntegerNumber = (input: string): number => {
+  if (!input) {
+    return undefined
+  }
+  if (!/^[-0-9]+$/.test(input)) {
+    return Number.NaN
+  }
+  return Number.parseInt(input, 10)
+}

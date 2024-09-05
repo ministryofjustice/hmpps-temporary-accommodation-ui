@@ -4,7 +4,7 @@ import type { NewTurnaround } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, PremisesService, TurnaroundService } from '../../../services'
 import { generateTurnaroundConflictBespokeError } from '../../../utils/bookingUtils'
-import { parseNaturalNumber } from '../../../utils/formUtils'
+import { parseIntegerNumber } from '../../../utils/formUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -52,7 +52,7 @@ export default class TurnaroundsController {
 
       const newTurnaround: NewTurnaround = {
         ...req.body,
-        workingDays: parseNaturalNumber(req.body.workingDays),
+        workingDays: parseIntegerNumber(req.body.workingDays),
       }
 
       try {

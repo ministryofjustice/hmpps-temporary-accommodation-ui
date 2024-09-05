@@ -12,6 +12,7 @@ import {
   dateFieldValues,
   flattenCheckboxInput,
   isStringOrArrayOfStrings,
+  parseIntegerNumber,
   parseNaturalNumber,
   validPostcodeArea,
 } from './formUtils'
@@ -475,6 +476,28 @@ describe('formUtils', () => {
 
     it('returns a number when given a numeric string', () => {
       expect(parseNaturalNumber('123')).toEqual(123)
+    })
+  })
+
+  describe('parseIntegerNumber', () => {
+    it.each([
+      ['a positive number', '1245', 1_245],
+      ['a negative number', '-125', -125],
+      ['zero', '0', 0],
+    ])('returns %s when given the numeric string %s', (_, input, expected) => {
+      expect(parseIntegerNumber(input)).toEqual(expected)
+    })
+
+    it('returns undefined when given an empty string', () => {
+      expect(parseIntegerNumber('')).toBeUndefined()
+    })
+
+    it.each([
+      ['a non-numeric string', 'fourteen'],
+      ['a scientific exponential', '10e10'],
+      ['a non-integer number', '8.1'],
+    ])('does not attempt to parse %s', (_, input) => {
+      expect(parseIntegerNumber(input)).toBeNaN()
     })
   })
 })

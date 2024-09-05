@@ -1,0 +1,5 @@
+.cas-primary-navigation__regional_header {
+  @include govuk-font(16, $weight: bold);
+  @include govuk-responsive-padding(3,"top");
+  @include govuk-responsive-padding(3,"bottom");
+}

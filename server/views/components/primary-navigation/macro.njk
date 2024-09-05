@@ -1,0 +1,15 @@
+{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
+
+{%- macro primaryNavigation(params) %}
+    {% set regionNameHTML %}
+      <div class="cas-primary-navigation__regional_header">
+        {{ params.regionName | escape }}
+      </div>
+    {% endset %}
+
+    {{ mojPrimaryNavigation({
+        label: 'Primary navigation',
+        items: [],
+        searchHtml: regionNameHTML
+    })}}
+{% endmacro -%}

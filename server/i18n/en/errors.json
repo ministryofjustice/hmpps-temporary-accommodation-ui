@@ -112,14 +112,14 @@
       "empty": "You must choose a status"
     },
     "turnaroundWorkingDayCount": {
-      "isNotAPositiveInteger": "The expected turnaround time is not a valid number of days",
-      "expectedNumber": "The expected turnaround time is not a valid number of days",
-      "empty": "You must enter an expected turnaround time"
+      "isNotAPositiveInteger": "Enter turnaround time of 0 working days or more",
+      "expectedNumber": "Enter turnaround time in working days",
+      "empty": "Enter turnaround time in working days"
     },
     "workingDays": {
-      "empty": "You must enter a turnaround time",
-      "expectedNumber": "You must enter a turnaround time in days",
-      "isNotAPositiveInteger": "You must enter a turnaround time of at least one day",
+      "empty": "Enter turnaround time in working days",
+      "expectedNumber": "Enter turnaround time in working days",
+      "isNotAPositiveInteger": "Enter turnaround time of 0 working days or more",
       "conflict": "This bedspace is not available for this turnaround time"
     },
     "month": {

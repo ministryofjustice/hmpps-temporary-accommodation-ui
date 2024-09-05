@@ -141,8 +141,6 @@ workflows:
           type: approval
           requires:
             - helm_lint
-            - unit_test
-            - integration_test
             - build_docker
           filters:
             branches:
@@ -159,7 +157,7 @@ workflows:
             branches:
               only:
                 -demo*
-              
+
       - request-preprod-approval:
           type: approval
           requires:

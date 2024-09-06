@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas1SpaceBookingResidency = 'upcoming' | 'current';
+export type BedSearchAttributes = 'sharedProperty' | 'singleOccupancy';

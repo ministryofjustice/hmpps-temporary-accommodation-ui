@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { BedSearchAttributes } from './BedSearchAttributes';
 import type { BedSearchParameters } from './BedSearchParameters';
 export type TemporaryAccommodationBedSearchParameters = (BedSearchParameters & {
     /**
@@ -9,12 +10,8 @@ export type TemporaryAccommodationBedSearchParameters = (BedSearchParameters & {
      */
     probationDeliveryUnit: string;
     /**
-     * Is a shared property
+     * Bedspace and property attributes to filter on
      */
-    sharedProperty?: boolean;
-    /**
-     * Is the property for single occupancy
-     */
-    singleOccupancy?: boolean;
+    attributes?: Array<BedSearchAttributes>;
 });
 

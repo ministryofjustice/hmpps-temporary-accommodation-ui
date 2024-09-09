@@ -13,6 +13,8 @@ export default function populateCurrentUser(userService: UserService): RequestHa
         req.session.userDetails = userDetails
         req.session.probationRegion = userDetails.region
 
+        userDetails.primaryNavigationList = userService.getActingUserPrimaryNavigationList(userDetails, req.path)
+
         res.locals.user = { ...userDetails, ...res.locals.user }
 
         if (!userDetails) {

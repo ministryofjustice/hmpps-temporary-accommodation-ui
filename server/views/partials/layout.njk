@@ -13,10 +13,11 @@
 
 {% block header %}
     {% include "./header.njk" %}
-    {{ primaryNavigation({ regionName: actingUserProbationRegion.name }) }}
+    {{ primaryNavigation({ regionName: actingUserProbationRegion.name, items: user.primaryNavigationList }) }}
     {% if placeContext|length %}
         {{ placeContextHeader(placeContext) }}
     {% endif %}
+    {{ user | dump }}
 {% endblock %}
 
 {% block bodyStart %}{% endblock %}

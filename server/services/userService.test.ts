@@ -62,4 +62,10 @@ describe('User service', () => {
       await expect(userService.getActingUser(callConfig)).rejects.toEqual(new Error('some error'))
     })
   })
+
+  describe('getActingUserPrimaryNavigationList', () => {
+    it('returns an empty list by default', () => {
+      expect(userService.getActingUserPrimaryNavigationList()).toEqual([])
+    })
+  })
 })

@@ -31,4 +31,8 @@ export default class UserService {
       displayName: convertToTitleCase(profile.user.name),
     }
   }
+
+  getActingUserPrimaryNavigationList(): Array{
+    return []
+  }
 }

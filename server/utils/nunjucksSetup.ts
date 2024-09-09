@@ -14,7 +14,7 @@ import {
   convertObjectsToRadioItems,
   convertObjectsToSelectOptions,
   dateFieldValues,
-  parseNaturalNumber,
+  parseNumber,
 } from './formUtils'
 import { isFullPerson, personName, statusTag as personStatusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
@@ -105,7 +105,7 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('formatDate', DateFormats.isoDateToUIDate)
   njkEnv.addGlobal('formatDateTime', DateFormats.isoDateTimeToUIDateTime)
   njkEnv.addGlobal('formatDaysFromNow', DateFormats.isoDateToDaysFromNow)
-  njkEnv.addGlobal('parseNaturalNumber', parseNaturalNumber)
+  njkEnv.addGlobal('parseNumber', parseNumber)
   njkEnv.addGlobal('dateInputHint', dateInputHint)
   njkEnv.addGlobal('personName', personName)
   njkEnv.addGlobal('isFullPerson', isFullPerson)

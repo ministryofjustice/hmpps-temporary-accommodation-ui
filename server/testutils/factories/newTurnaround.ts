@@ -5,5 +5,5 @@ import { Factory } from 'fishery'
 import type { NewTurnaround } from '@approved-premises/api'
 
 export default Factory.define<NewTurnaround>(() => ({
-  workingDays: faker.number.int({ min: 1, max: 10 }),
+  workingDays: faker.number.int({ min: 0, max: 10 }),
 }))

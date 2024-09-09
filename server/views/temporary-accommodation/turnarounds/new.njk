@@ -4,7 +4,7 @@
 {% from "../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../components/booking-info/macro.njk" import bookingInfo %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
-{% from "../../components/pop-details-header/macro.njk" import popDetailsHeader%}
+{% from "../../components/pop-details-header/macro.njk" import popDetailsHeader %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -12,49 +12,51 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
-  }) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+    }) }}
 {% endblock %}
 
 {% block content %}
-  {% include "../../_messages.njk" %}
+    {% include "../../_messages.njk" %}
 
-  {{ showErrorSummary(errorSummary, errorTitle) }}
-  
-  <h1 class="govuk-heading-l">Change turnaround time</h1>
+    {{ showErrorSummary(errorSummary, errorTitle) }}
 
-  {{ popDetailsHeader(booking.person) }}
-  {{ locationHeader({ premises: premises, room: room }) }}
+    <h1 class="govuk-heading-l">Change turnaround time</h1>
 
-  {{ bookingInfo(booking) }}
+    {{ popDetailsHeader(booking.person) }}
+    {{ locationHeader({ premises: premises, room: room }) }}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.turnarounds.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+    {{ bookingInfo(booking) }}
 
-        {{ formPageInput({
-            label: {
-              text: "What is the new turnaround time?",
-              classes: "govuk-label--m"
-            },
-            classes: "govuk-input--width-3",
-            fieldName: "workingDays",
-            suffix: {
-              text: "working days"
-            }
-          },
-          fetchContext()
-        ) }}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="{{ paths.bookings.turnarounds.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}"
+                  method="post">
+                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-        {{ govukButton({
-          text: "Submit",
-          preventDoubleClick: true
-        }) }}
-      </form>
+                {{ formPageInput({
+                    label: {
+                        text: "What is the new turnaround time?",
+                        classes: "govuk-label--m"
+                    },
+                    classes: "govuk-input--width-3",
+                    fieldName: "workingDays",
+                    hint: {
+                        text: "Enter 0 for a same-day turnaround"
+                    },
+                    suffix: {
+                        text: "working days"
+                    }
+                }, fetchContext()) }}
+
+                {{ govukButton({
+                    text: "Submit",
+                    preventDoubleClick: true
+                }) }}
+            </form>
+        </div>
     </div>
-  </div>
 
 {% endblock %}

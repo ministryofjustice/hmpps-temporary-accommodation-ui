@@ -5,7 +5,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
-import { parseNaturalNumber } from '../../../utils/formUtils'
+import { parseNumber } from '../../../utils/formUtils'
 import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
@@ -63,7 +63,7 @@ export default class PremisesController {
       const newPremises: NewPremises = {
         characteristicIds: [],
         ...req.body,
-        turnaroundWorkingDayCount: parseNaturalNumber(req.body.turnaroundWorkingDayCount),
+        turnaroundWorkingDayCount: parseNumber(req.body.turnaroundWorkingDayCount, { allowNegatives: true }),
       }
 
       try {
@@ -129,7 +129,7 @@ export default class PremisesController {
         characteristicIds: [],
         ...req.body,
         name: newPremisesName,
-        turnaroundWorkingDayCount: parseNaturalNumber(req.body.turnaroundWorkingDayCount),
+        turnaroundWorkingDayCount: parseNumber(req.body.turnaroundWorkingDayCount, { allowNegatives: true }),
       }
 
       try {

@@ -6,7 +6,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import { DateFormats } from '../../../utils/dateUtils'
-import { parseNaturalNumber } from '../../../utils/formUtils'
+import { parseNumber } from '../../../utils/formUtils'
 import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDate } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
@@ -49,7 +49,7 @@ export default class BedspaceSearchController {
             'startDate',
           ).startDate
 
-          const durationDays = parseNaturalNumber(query.durationDays)
+          const durationDays = parseNumber(query.durationDays)
 
           results = (
             await this.searchService.search(callConfig, {

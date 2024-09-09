@@ -1,6 +1,6 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { TaskListErrors } from '@approved-premises/ui'
-import { parseNaturalNumber } from '../../../../utils/formUtils'
+import { parseNumber } from '../../../../utils/formUtils'
 import TasklistPage from '../../../tasklistPage'
 import { Page } from '../../../utils/decorators'
 
@@ -12,11 +12,11 @@ type SentenceLengthBody = {
 }
 
 const sentenceLengthComponentResponse = (value: string, singularLabel: string, pluralLabel: string): string => {
-  if (!value || !parseNaturalNumber(value)) {
+  if (!value || !parseNumber(value)) {
     return ''
   }
 
-  if (parseNaturalNumber(value) === 1) {
+  if (parseNumber(value) === 1) {
     return `${value} ${singularLabel}`
   }
   return `${value} ${pluralLabel}`
@@ -62,7 +62,7 @@ export default class SentenceLength implements TasklistPage {
     if (!filteredComponents.length) {
       errors.lengthComponents = 'You must specify the sentence length'
     } else {
-      const numericComponents = filteredComponents.map(component => parseNaturalNumber(component))
+      const numericComponents = filteredComponents.map(component => parseNumber(component))
 
       if (numericComponents.every(component => component === 0)) {
         errors.lengthComponents = 'You must specify a valid sentence length'

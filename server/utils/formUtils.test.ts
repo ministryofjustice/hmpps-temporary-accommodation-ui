@@ -12,8 +12,7 @@ import {
   dateFieldValues,
   flattenCheckboxInput,
   isStringOrArrayOfStrings,
-  parseIntegerNumber,
-  parseNaturalNumber,
+  parseNumber,
   validPostcodeArea,
 } from './formUtils'
 
@@ -453,51 +452,57 @@ describe('formUtils', () => {
     })
   })
 
-  describe('parseNaturalNumber', () => {
-    it('returns NaN when given a non-numeric string', () => {
-      expect(parseNaturalNumber('fourteen')).toBeNaN()
-    })
-
-    it('does not attempt to parse exponentials', () => {
-      expect(parseNaturalNumber('10e10')).toBeNaN()
-    })
-
-    it('does not attempt to parse negative numbers', () => {
-      expect(parseNaturalNumber('-5')).toBeNaN()
-    })
-
-    it('does not attempt to parse non-integer numbers', () => {
-      expect(parseNaturalNumber('8.1')).toBeNaN()
-    })
-
+  describe('parseNumber', () => {
     it('returns undefined when given an empty string', () => {
-      expect(parseNaturalNumber('')).toBeUndefined()
+      expect(parseNumber('')).toBeUndefined()
     })
 
-    it('returns a number when given a numeric string', () => {
-      expect(parseNaturalNumber('123')).toEqual(123)
-    })
-  })
-
-  describe('parseIntegerNumber', () => {
-    it.each([
-      ['a positive number', '1245', 1_245],
-      ['a negative number', '-125', -125],
-      ['zero', '0', 0],
-    ])('returns %s when given the numeric string %s', (_, input, expected) => {
-      expect(parseIntegerNumber(input)).toEqual(expected)
+    it('returns undefined when given undefined', () => {
+      expect(parseNumber(undefined)).toBeUndefined()
     })
 
-    it('returns undefined when given an empty string', () => {
-      expect(parseIntegerNumber('')).toBeUndefined()
+    it('trims the input', () => {
+      expect(parseNumber('   ')).toBeUndefined()
     })
 
-    it.each([
-      ['a non-numeric string', 'fourteen'],
-      ['a scientific exponential', '10e10'],
-      ['a non-integer number', '8.1'],
-    ])('does not attempt to parse %s', (_, input) => {
-      expect(parseIntegerNumber(input)).toBeNaN()
+    describe('with default options', () => {
+      it.each([
+        ['a non-numeric string', 'fourteen'],
+        ['a number with spaces', '34 56'],
+        ['an exponential', '10e10'],
+        ['a negative', '-5'],
+        ['a decimal', '8.1'],
+        ['a negative decimal', '-6.55'],
+      ])('does not attempt to parse %s', (_, input) => {
+        expect(parseNumber(input)).toBeNaN()
+      })
+
+      it.each([
+        ['a positive number string', '123', 123],
+        ['a positive number with whitespace around', '  345 ', 345],
+        ['a positive number with leading zero', '067', 67],
+        ['a number type', 321, 321],
+      ])('returns a number when given %s', (_, input, expected) => {
+        expect(parseNumber(input)).toEqual(expected)
+      })
+    })
+
+    describe('when allowing negative numbers', () => {
+      it('returns a number when given a negative', () => {
+        expect(parseNumber('-5', { allowNegatives: true })).toEqual(-5)
+      })
+    })
+
+    describe('when allowing decimals', () => {
+      it('returns a number when given a decimal', () => {
+        expect(parseNumber('7.89', { allowDecimals: true })).toEqual(7.89)
+      })
+    })
+
+    describe('when allowing negative numbers and decimals', () => {
+      it('returns a number when given a negative decimal', () => {
+        expect(parseNumber('-124.5', { allowNegatives: true, allowDecimals: true })).toEqual(-124.5)
+      })
     })
   })
 })

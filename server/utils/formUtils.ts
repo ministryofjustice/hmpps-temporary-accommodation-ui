@@ -187,22 +187,32 @@ export function isStringOrArrayOfStrings(input: unknown) {
   )
 }
 
-export const parseNaturalNumber = (input: string): number => {
-  if (!input) {
-    return undefined
-  }
-  if (!/^[0-9]+$/.test(input)) {
-    return Number.NaN
-  }
-  return Number.parseInt(input, 10)
-}
+export const parseNumber = (
+  input: string | number,
+  options: {
+    allowNegatives?: boolean
+    allowDecimals?: boolean
+  } = {},
+): number => {
+  const trimmedInput = (input || '').toString().trim()
 
-export const parseIntegerNumber = (input: string): number => {
-  if (!input) {
+  if (!trimmedInput) {
     return undefined
   }
-  if (!/^[-0-9]+$/.test(input)) {
+
+  if (!/^[-\d.]+$/.test(trimmedInput)) {
     return Number.NaN
   }
-  return Number.parseInt(input, 10)
+
+  const value = Number.parseFloat(trimmedInput)
+
+  if (!options.allowNegatives && Math.abs(value) !== value) {
+    return Number.NaN
+  }
+
+  if (!options.allowDecimals && Number.parseInt(trimmedInput, 10) !== value) {
+    return Number.NaN
+  }
+
+  return value
 }

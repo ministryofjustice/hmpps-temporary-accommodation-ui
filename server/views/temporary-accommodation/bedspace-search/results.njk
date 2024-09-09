@@ -48,7 +48,7 @@
             {% if results.length === 0 %}
                 <h2 class="govuk-heading-m">
                     There are no available bedspaces for
-                    {{ parseNaturalNumber(durationDays) }} {{ 'day' if parseNaturalNumber(durationDays) === 1 else 'days' }}
+                    {{ parseNumber(durationDays) }} {{ 'day' if parseNumber(durationDays) === 1 else 'days' }}
                     from {{ formatDate(startDate) }}.
                 </h2>
                 <p class="govuk-body">Try changing one or more of your search criteria to get more results.</p>

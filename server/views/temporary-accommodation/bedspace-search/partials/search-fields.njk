@@ -1,4 +1,5 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "../../../components/formFields/form-page-checkboxes/macro.njk" import formPageCheckboxes %}
 {% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
@@ -49,3 +50,28 @@
     items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnit'),
     fieldName: "probationDeliveryUnit"
 }, fetchContext()) }}
+
+{% call govukFieldset({
+    legend: {
+        text: "Bedspace attributes",
+        classes: "govuk-fieldset__legend--m"
+    },
+    classes: "govuk-!-margin-bottom-4"
+}) %}
+    {{ formPageCheckboxes({
+        fieldName: "attributes",
+        fieldset: {
+            legend: {
+                text: "Occupancy (optional)",
+                classes: "govuk-fieldset__legend--s"
+            }
+        },
+        hint: {
+            text: "Select all that apply"
+        },
+        items: [
+            { text: "Single", value: "singleOccupancy" },
+            { text: "Shared", value: "sharedProperty" }
+        ]
+    }, fetchContext()) }}
+{% endcall %}

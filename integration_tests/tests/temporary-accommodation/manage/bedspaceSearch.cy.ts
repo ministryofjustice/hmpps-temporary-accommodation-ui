@@ -59,7 +59,7 @@ context('Bedspace Search', () => {
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
-    // Then a search should have been recieved by the API
+    // Then a search should have been received by the API
     cy.task('verifyBedSearch').then(requests => {
       expect(requests).to.have.length(1)
       const requestBody = JSON.parse(requests[0].body)
@@ -67,6 +67,7 @@ context('Bedspace Search', () => {
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
       expect(requestBody.probationDeliveryUnit).equal(searchParameters.probationDeliveryUnit)
+      expect(requestBody.attributes).to.have.members(searchParameters.attributes)
     })
 
     // And I should see the search results
@@ -106,6 +107,7 @@ context('Bedspace Search', () => {
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
       expect(requestBody.probationDeliveryUnit).equal(searchParameters.probationDeliveryUnit)
+      expect(requestBody.attributes).to.have.members(searchParameters.attributes)
     })
 
     // And I should see empty search results

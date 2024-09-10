@@ -334,3 +334,9 @@ export type AssessmentSearchParameters = {
 export type AssessmentUpdatableDateField = 'releaseDate' | 'accommodationRequiredFromDate'
 
 export type BedspaceStatus = 'online' | 'archived'
+
+export type PrimaryNavigationItem = {
+  href: string
+  text: string
+  active?: boolean
+}

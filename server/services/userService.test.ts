@@ -1,8 +1,10 @@
+import { PrimaryNavigationItem } from '@approved-premises/ui'
 import { CallConfig } from '../data/restClient'
 import UserClient from '../data/userClient'
 import { userFactory, userProfileFactory } from '../testutils/factories'
 import UserService, { DeliusAccountMissingStaffDetailsError } from './userService'
 import { convertToTitleCase } from '../utils/utils'
+import paths from '../paths/temporary-accommodation/manage'
 
 jest.mock('../data/userClient')
 
@@ -64,8 +66,40 @@ describe('User service', () => {
   })
 
   describe('getActingUserPrimaryNavigationList', () => {
+    const communityAccommodationUser = userFactory.build()
+
     it('returns an empty list by default', () => {
-      expect(userService.getActingUserPrimaryNavigationList()).toEqual([])
+      expect(userService.getActingUserPrimaryNavigationList(communityAccommodationUser, '')).toEqual([])
+    })
+
+    describe('when user is an assessor', () => {
+      const assessorUser = userFactory.build({ roles: ['assessor'] })
+      const navigationList: Array<PrimaryNavigationItem> = [
+        { text: 'Bookings', href: paths.bookings.index({}), active: false },
+        { text: 'Manage properties', href: paths.premises.index({}), active: false },
+        { text: 'Referrals', href: paths.assessments.index({}), active: false },
+        { text: 'Search bedspaces', href: paths.bedspaces.search({}), active: false },
+        { text: 'Reports', href: paths.reports.index({}), active: false },
+      ]
+
+      it('returns a list of navigation items for the user', () => {
+        const result = userService.getActingUserPrimaryNavigationList(assessorUser, '')
+        expect(result).toEqual(navigationList)
+      })
+
+      describe('when a user is viewing a nav list item page', () => {
+        it.each(navigationList)(`returns active when a user is viewing %p page with %p link`, ({ text, href }) => {
+          const result = userService.getActingUserPrimaryNavigationList(assessorUser, href)
+
+          result.forEach(item => {
+            if (item.text === text) {
+              expect(item).toHaveProperty('active', true)
+            } else {
+              expect(item).toHaveProperty('active', false)
+            }
+          })
+        })
+      })
     })
   })
 })

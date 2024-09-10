@@ -163,7 +163,7 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "path-to-regexp": "^6.2.2",
+    "path-to-regexp": "^8.0.0",
     "prom-client": "^15.1.2",
     "qs": "^6.12.1",
     "redis": "^4.6.14",

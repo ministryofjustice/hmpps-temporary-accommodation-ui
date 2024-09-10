@@ -38,7 +38,7 @@ export default class UserService {
   getActingUserPrimaryNavigationList(actingUser: User, currentPage: string): Array<PrimaryNavigationItem> {
     if (actingUser.roles?.includes('assessor')) {
       const navList: Array<PrimaryNavigationItem> = [
-        { href: paths.bookings.search.provisional.index({}), text: 'Bookings' },
+        { href: paths.bookings.index({}), text: 'Bookings' },
         { href: paths.premises.index({}), text: 'Manage properties' },
         { href: paths.assessments.index({}), text: 'Referrals' },
         { href: paths.bedspaces.search({}), text: 'Search bedspaces' },

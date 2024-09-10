@@ -48,6 +48,7 @@ const paths: Record<string, any> = {
     },
   },
   bookings: {
+    index: allBookingsPath,
     new: bookingsPath.path('new'),
     selectAssessment: bookingsPath.path('select-assessment'),
     confirm: bookingsPath.path('confirm'),

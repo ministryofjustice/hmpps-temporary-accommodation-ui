@@ -302,6 +302,8 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
+  get(paths.bookings.index(), bookingsController.index(), { auditEvent: 'VIEW_BOOKINGS_INDEX' })
+
   get(paths.bookings.search.provisional.index.pattern, bookingSearchController.index('provisional'), {
     auditEvent: 'VIEW_SEARCH_PROVISIONAL_BOOKINGS',
   })

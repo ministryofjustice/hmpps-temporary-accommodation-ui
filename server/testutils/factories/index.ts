@@ -67,7 +67,7 @@ import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
 import updateRoomFactory from './updateRoom'
-import userFactory from './user'
+import userFactory, { userProfileFactory } from './user'
 
 export {
   acctAlertFactory,
@@ -142,4 +142,5 @@ export {
   updatePremisesFactory,
   updateRoomFactory,
   userFactory,
+  userProfileFactory,
 }

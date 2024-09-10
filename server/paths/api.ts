@@ -152,8 +152,7 @@ export default {
   },
   users: {
     actingUser: {
-      show: path('/users/:id'),
-      profile: path('/profile'),
+      profile: path('/profile/v2'),
     },
   },
 }

@@ -2,7 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import { userFactory } from '../testutils/factories'
+import { userProfileFactory } from '../testutils/factories'
 import { CallConfig } from './restClient'
 import UserClient from './userClient'
 
@@ -27,34 +27,18 @@ describe('UserClient', () => {
     nock.cleanAll()
   })
 
-  describe('getActingUser', () => {
-    it('should return the acting user', async () => {
-      const user = userFactory.build()
+  describe('getUserProfile', () => {
+    it('should return the profile for the current user', async () => {
+      const userProfile = userProfileFactory.build()
 
       fakeApprovedPremisesApi
         .get(paths.users.actingUser.profile({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, user)
+        .reply(200, userProfile)
 
-      const result = await userClient.getActingUser()
+      const result = await userClient.getUserProfile()
 
-      expect(result).toEqual(user)
-      expect(nock.isDone()).toBeTruthy()
-    })
-  })
-
-  describe('getUserById', () => {
-    it('should return the acting user', async () => {
-      const user = userFactory.build()
-
-      fakeApprovedPremisesApi
-        .get(paths.users.actingUser.show({ id: user.id }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(200, user)
-
-      const result = await userClient.getUserById(user.id)
-
-      expect(result).toEqual(user)
+      expect(result).toEqual(userProfile)
       expect(nock.isDone()).toBeTruthy()
     })
   })

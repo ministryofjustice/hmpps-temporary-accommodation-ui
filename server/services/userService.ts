@@ -1,4 +1,4 @@
-import { TemporaryAccommodationUser as User } from '../@types/shared'
+import { ProfileResponse, TemporaryAccommodationUser, TemporaryAccommodationUser as User } from '../@types/shared'
 import { RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import UserClient from '../data/userClient'
@@ -8,26 +8,27 @@ export type UserDetails = User & {
   displayName: string
 }
 
+type TemporaryAccommodationProfileResponse = ProfileResponse & { user: TemporaryAccommodationUser }
+
+export class DeliusAccountMissingStaffDetailsError extends Error {}
+
 export default class UserService {
   constructor(private readonly userClientFactory: RestClientBuilder<UserClient>) {}
 
   async getActingUser(callConfig: CallConfig): Promise<UserDetails> {
     const client = this.userClientFactory(callConfig)
 
-    const { id } = await client.getActingUser()
-    const communityAccommodationUser = await client.getUserById(id)
+    const profile = (await client.getUserProfile()) as TemporaryAccommodationProfileResponse
+
+    if (profile.loadError === 'staff_record_not_found') {
+      throw new DeliusAccountMissingStaffDetailsError('Delius account missing staff details')
+    }
+
+    const { isActive, ...user } = profile.user
 
     return {
-      name: communityAccommodationUser.name,
-      displayName: convertToTitleCase(communityAccommodationUser.name),
-      email: communityAccommodationUser.email,
-      telephoneNumber: communityAccommodationUser.telephoneNumber,
-      id: communityAccommodationUser.id,
-      roles: communityAccommodationUser.roles,
-      service: communityAccommodationUser.service,
-      region: communityAccommodationUser.region,
-      probationDeliveryUnit: communityAccommodationUser.probationDeliveryUnit,
-      deliusUsername: communityAccommodationUser.deliusUsername,
+      ...user,
+      displayName: convertToTitleCase(profile.user.name),
     }
   }
 }

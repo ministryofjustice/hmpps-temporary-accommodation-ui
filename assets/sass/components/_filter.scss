@@ -8,6 +8,10 @@
   background: govuk-colour("light-grey");
 }
 
+.moj-filter__options > * {
+  margin-bottom: govuk-spacing(6);
+}
+
 .moj-filter .govuk-select {
   min-width: 0;
 }

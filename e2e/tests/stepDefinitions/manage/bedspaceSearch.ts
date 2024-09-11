@@ -7,6 +7,7 @@ import {
   bedSearchResultFactory,
   bedSearchResultsFactory,
 } from '../../../../server/testutils/factories'
+import { characteristicsToSearchAttributes } from '../../../../cypress_shared/utils/bedspaceSearch'
 
 Given("I'm searching for a bedspace", () => {
   const dashboardPage = Page.verifyOnPage(DashboardPage)
@@ -21,6 +22,7 @@ Given('I search for a bedspace', () => {
 
     const searchParameters = bedSearchParametersFactory.build({
       probationDeliveryUnit: this.premises.probationDeliveryUnit.name,
+      attributes: characteristicsToSearchAttributes(this.premises),
     })
 
     page.completeForm(searchParameters)

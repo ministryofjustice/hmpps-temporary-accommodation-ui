@@ -10,7 +10,6 @@
 
 {% block beforeContent %}
     {{ breadCrumb('Search for available bedspaces', []) }}
-
 {% endblock %}
 
 {% block content %}
@@ -21,9 +20,11 @@
     <h1 class="govuk-heading-l">Search for available bedspaces</h1>
 
     <form action="{{ paths.bedspaces.search({}) }}" method="get">
-        {% include './partials/search-fields.njk' %}
+        <div class="bedspace-search-form">
+            {% include './partials/search-fields.njk' %}
+        </div>
 
-        <div class="govuk-button-group">
+        <div class="govuk-button-group govuk-!-margin-top-6">
             {{ govukButton({
                 text: "Apply filters YO" if results else "Search",
                 preventDoubleClick: true

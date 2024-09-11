@@ -58,6 +58,12 @@ export default class BedspaceSearchPage extends Page {
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     this.completeSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
+
+    this.getLegend('Bedspace attributes')
+    this.getLegend('Occupancy (optional)')
+    searchParameters.attributes.forEach(attribute => {
+      this.checkCheckboxByNameAndValue('attributes[]', attribute)
+    })
   }
 
   clickBedspaceLink(room: Room) {

@@ -63,7 +63,14 @@ Then('I should see a list of the problems encountered searching for a bedspace',
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceSearchPage)
     page.shouldShowErrorMessagesForFields(
-      ['startDate', 'durationDays', 'probationDeliveryUnit'],
+      // FIXME: Until the work to search for multiple PDUs is complete in both API and UI, the API is unable to
+      //  natively validate that all fields are required at the same time, and instead validates startDate and
+      //  durationDays first, and only validates probationDeliveryUnit if those are valid. Because of this, for now we
+      //  remove the test that checks for the probationDeliveryUnit error. We will reinstate this when the
+      //  probationDeliveryUnits property is available and can be validated natively and at the same time as the other
+      //  fields.
+      // ['startDate', 'durationDays', 'probationDeliveryUnit'],
+      ['startDate', 'durationDays'],
       'empty',
       'bedspaceSearch',
     )

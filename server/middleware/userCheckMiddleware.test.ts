@@ -86,9 +86,9 @@ describe('createUserCheckMiddleware', () => {
     })
 
     describe('when the user has reporter role', () => {
-      it('returns middleware that calls the handler when the the path is reports#new', async () => {
+      it('returns middleware that calls the handler when the the path is reports#index', async () => {
         const handler = jest.fn()
-        const request = createMock<Request>({ path: paths.reports.new({}) })
+        const request = createMock<Request>({ path: paths.reports.index({}) })
         const response = createMock<Response>({
           locals: {
             user: userFactory.build({ roles: ['reporter'] }),

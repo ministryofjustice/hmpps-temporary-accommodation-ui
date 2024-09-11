@@ -28,7 +28,7 @@ export default class LandingController {
       }
 
       if (userHasReporterRole(user)) {
-        return res.redirect(managePaths.reports.new({}))
+        return res.redirect(managePaths.reports.index({}))
       }
 
       throw new UnauthorizedError()

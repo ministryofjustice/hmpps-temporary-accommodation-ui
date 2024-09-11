@@ -12,7 +12,7 @@ import { allReportProbationRegions } from '../../../utils/reportUtils'
 export default class ReportsController {
   constructor(private readonly reportService: ReportService) {}
 
-  new(): RequestHandler {
+  index(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
 
@@ -20,7 +20,7 @@ export default class ReportsController {
 
       const { probationRegions: allProbationRegions } = await this.reportService.getReferenceData(callConfig)
 
-      return res.render('temporary-accommodation/reports/new', {
+      return res.render('temporary-accommodation/reports/index', {
         allProbationRegions: userHasReporterRole(res.locals.user)
           ? allReportProbationRegions(allProbationRegions)
           : filterProbationRegions(allProbationRegions, req),
@@ -31,6 +31,12 @@ export default class ReportsController {
         maxEndDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(new Date())),
         ...userInput,
       })
+    }
+  }
+
+  new(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      return res.redirect(301, paths.reports.index({}))
     }
   }
 
@@ -75,7 +81,7 @@ export default class ReportsController {
         }
 
         if (error) {
-          return catchValidationErrorOrPropogate(req, res, error, paths.reports.new({}))
+          return catchValidationErrorOrPropogate(req, res, error, paths.reports.index({}))
         }
 
         await this.reportService.pipeReportForProbationRegion(
@@ -87,7 +93,7 @@ export default class ReportsController {
           reportType,
         )
       } catch (err) {
-        return catchValidationErrorOrPropogate(req, res, err, paths.reports.new({}))
+        return catchValidationErrorOrPropogate(req, res, err, paths.reports.index({}))
       }
     }
   }

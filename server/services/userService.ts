@@ -42,7 +42,7 @@ export default class UserService {
         { href: paths.premises.index({}), text: 'Manage properties' },
         { href: paths.assessments.index({}), text: 'Referrals' },
         { href: paths.bedspaces.search({}), text: 'Search bedspaces' },
-        { href: paths.reports.new({}), text: 'Reports' },
+        { href: paths.reports.index({}), text: 'Reports' },
       ]
 
       return navList.map(item => ({

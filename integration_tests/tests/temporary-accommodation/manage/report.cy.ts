@@ -2,7 +2,7 @@ import path from 'path'
 import { Cas3ReportType } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
+import ReportIndexPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportIndex'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import { premisesSummaryFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
@@ -29,7 +29,7 @@ context('Report', () => {
     page.clickReportsLink()
 
     // Then I navigate to the report page
-    Page.verifyOnPage(ReportNewPage)
+    Page.verifyOnPage(ReportIndexPage)
   })
 
   it('does not download a file when the API returns an error', () => {
@@ -38,7 +38,7 @@ context('Report', () => {
 
     // When I visit the report page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     // And I fill out the form
     const type: Cas3ReportType = 'booking'
@@ -71,7 +71,7 @@ context('Report', () => {
 
     // When I visit the report page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     cy.then(function _() {
       // Given I need a report for my region
@@ -126,7 +126,7 @@ context('Report', () => {
 
     // When I visit the report page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     cy.then(function _() {
       // Given I need a report for my region
@@ -181,7 +181,7 @@ context('Report', () => {
 
     // When I visit the report page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     cy.then(function _() {
       // Given I need a report for my region
@@ -236,7 +236,7 @@ context('Report', () => {
 
     // When I visit the report page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     cy.then(function _() {
       // Given I need a report for my region
@@ -291,7 +291,7 @@ context('Report', () => {
 
     // When I visit the report page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     cy.then(function _() {
       // And I clear all the fields
@@ -336,7 +336,7 @@ context('Report', () => {
 
     // When I visit the show premises page
     cy.task('stubReportReferenceData')
-    const page = ReportNewPage.visit()
+    const page = ReportIndexPage.visit()
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()

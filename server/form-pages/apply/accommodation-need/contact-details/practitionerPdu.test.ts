@@ -111,7 +111,11 @@ describe('PractitionerPdu', () => {
 
   describe('getRegionPdus', () => {
     it('returns the PDUs formatted for use in a select element', () => {
-      const pdus = referenceDataFactory.pdu().buildList(3)
+      const pdus = [
+        referenceDataFactory.pdu().build({ id: 'pdu-1' }),
+        referenceDataFactory.pdu().build({ id: 'pdu-2' }),
+        referenceDataFactory.pdu().build({ id: 'pdu-3' }),
+      ]
 
       const page = new PractitionerPdu({ id: pdus[1].id, name: pdus[1].name }, application, mockSessionUser, pdus)
 

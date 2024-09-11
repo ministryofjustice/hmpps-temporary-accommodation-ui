@@ -3,7 +3,7 @@ import AuthSignInPage from '../../cypress_shared/pages/authSignIn'
 import Page from '../../cypress_shared/pages/page'
 import DashboardPage from '../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import { setupTestUser } from '../../cypress_shared/utils/setupTestUser'
-import { referenceDataFactory, userFactory } from '../../server/testutils/factories'
+import { referenceDataFactory, userFactory, userProfileFactory } from '../../server/testutils/factories'
 
 context('SignIn', () => {
   beforeEach(() => {
@@ -79,9 +79,9 @@ context('SignIn', () => {
       region: probationRegion,
       roles: ['assessor', 'referrer'],
     })
+    const userProfile = userProfileFactory.build({ user: actingUser })
 
-    cy.task('stubActingUser', actingUser)
-    cy.task('stubGetUserById', actingUser)
+    cy.task('stubUserProfile', userProfile)
     cy.signIn()
 
     indexPage.headerUserName().contains('B. Brown')

@@ -1,8 +1,8 @@
-import { User } from '../../server/@types/shared'
+import { ProfileResponse } from '@approved-premises/api'
 import { stubFor } from '../../wiremock'
 import path from '../../server/paths/api'
 
-const stubGetActingUser = (user: User) =>
+const stubGetUserProfile = (userProfile: ProfileResponse) =>
   stubFor({
     request: {
       method: 'GET',
@@ -13,26 +13,10 @@ const stubGetActingUser = (user: User) =>
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
-      jsonBody: user,
-    },
-  })
-
-const stubGetUserById = (user: User) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPath: path.users.actingUser.show({ id: user.id }),
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: user,
+      jsonBody: userProfile,
     },
   })
 
 export default {
-  stubActingUser: (user: User) => stubGetActingUser(user),
-  stubGetUserById: (user: User) => stubGetUserById(user),
+  stubUserProfile: (userProfile: ProfileResponse) => stubGetUserProfile(userProfile),
 }

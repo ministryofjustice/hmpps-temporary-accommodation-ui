@@ -23,6 +23,7 @@ import BookingConfirmPage from '../pages/temporary-accommodation/manage/bookingC
 import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
+import { characteristicsToSearchAttributes } from '../utils/bedspaceSearch'
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
@@ -105,6 +106,7 @@ export default class PlaceHelper {
     const searchParameters = bedSearchParametersFactory.build({
       startDate: this.placeContext.arrivalDate,
       probationDeliveryUnit: this.premises.probationDeliveryUnit.name,
+      attributes: characteristicsToSearchAttributes(this.premises),
     })
     bedspaceSearchPage.completeForm(searchParameters)
     bedspaceSearchPage.clickSubmit()

@@ -34,12 +34,6 @@ export default class ReportsController {
     }
   }
 
-  new(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      return res.redirect(301, paths.reports.index({}))
-    }
-  }
-
   create(): RequestHandler {
     // eslint-disable-next-line consistent-return
     return async (req: Request, res: Response) => {

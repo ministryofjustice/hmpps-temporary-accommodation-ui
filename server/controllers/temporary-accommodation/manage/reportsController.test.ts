@@ -136,15 +136,6 @@ describe('ReportsController', () => {
     })
   })
 
-  describe('new', () => {
-    it('redirects to report index', async () => {
-      const requestHandler = reportsController.new()
-      await requestHandler(request, response, next)
-
-      expect(response.redirect).toHaveBeenCalledWith(301, paths.reports.index({}))
-    })
-  })
-
   describe('create', () => {
     beforeEach(() => {
       jest.useFakeTimers()

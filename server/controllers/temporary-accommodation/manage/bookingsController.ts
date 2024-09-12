@@ -34,12 +34,6 @@ export default class BookingsController {
     private readonly assessmentService: AssessmentsService,
   ) {}
 
-  index(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      return res.redirect(301, paths.bookings.search.provisional.index({}))
-    }
-  }
-
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle } = fetchErrorsAndUserInput(req)

@@ -78,15 +78,6 @@ describe('BookingsController', () => {
     ;(isApplyEnabledForUser as jest.MockedFn<typeof isApplyEnabledForUser>).mockReturnValue(true)
   })
 
-  describe('index', () => {
-    it('redirects to provisional bookings', async () => {
-      const requestHandler = bookingsController.index()
-      await requestHandler(request, response, next)
-
-      expect(response.redirect).toHaveBeenCalledWith(301, paths.bookings.search.provisional.index({}))
-    })
-  })
-
   describe('new', () => {
     it('renders the form', async () => {
       request.params = {

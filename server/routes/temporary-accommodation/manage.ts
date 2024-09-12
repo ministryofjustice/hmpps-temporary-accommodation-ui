@@ -31,6 +31,8 @@ export default function routes(controllers: Controllers, services: Services, rou
     assessmentsController,
   } = controllers.manage
 
+  const { redirectsController } = controllers
+
   get(paths.dashboard.index.pattern, dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
 
   get(paths.premises.index.pattern, premisesController.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
@@ -252,7 +254,11 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
+  get(paths.reports.new(), redirectsController.redirect(paths.reports.index(), 301), {
+    auditEvent: 'REDIRECT_REPORT_NEW',
+  })
   get(paths.reports.index(), reportsController.index(), { auditEvent: 'VIEW_REPORT_INDEX' })
+
   post(paths.reports.create.pattern, reportsController.create(), {
     auditEvent: 'REPORT_CREATED_SUCCESS',
     auditBodyParams: ['probationRegionId'],
@@ -302,7 +308,9 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
-  get(paths.bookings.index(), bookingsController.index(), { auditEvent: 'VIEW_BOOKINGS_INDEX' })
+  get(paths.bookings.index(), redirectsController.redirect(paths.bookings.search.provisional.index(), 301), {
+    auditEvent: 'REDIRECT_BOOKINGS',
+  })
 
   get(paths.bookings.search.provisional.index.pattern, bookingSearchController.index('provisional'), {
     auditEvent: 'VIEW_SEARCH_PROVISIONAL_BOOKINGS',
@@ -319,7 +327,10 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   get(paths.bedspaces.search.pattern, bedspaceSearchController.index(), { auditEvent: 'VIEW_SEARCH_BEDSPACES' })
 
-  get(paths.assessments.index.pattern, assessmentsController.index(), { auditEvent: 'REDIRECT_ASSESSMENTS_LIST' })
+  get(paths.assessments.index.pattern, redirectsController.redirect(paths.assessments.unallocated.pattern, 301), {
+    auditEvent: 'REDIRECT_ASSESSMENTS_LIST',
+  })
+
   get(paths.assessments.unallocated.pattern, assessmentsController.list('unallocated'), {
     auditEvent: 'VIEW_UNALLOCATED_ASSESSMENTS_LIST',
   })

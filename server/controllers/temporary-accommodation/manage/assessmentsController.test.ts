@@ -92,15 +92,6 @@ describe('AssessmentsController', () => {
     jest.restoreAllMocks()
   })
 
-  describe('index', () => {
-    it('redirects to unallocated referrals', async () => {
-      const requestHandler = assessmentsController.index()
-      await requestHandler(request, response, next)
-
-      expect(response.redirect).toHaveBeenCalledWith(301, paths.assessments.unallocated.pattern)
-    })
-  })
-
   describe('list', () => {
     describe.each(['unallocated', 'in_review', 'ready_to_place', 'archived'])(
       'when viewing assessments with status %s',

@@ -55,12 +55,6 @@ export const referralRejectionReasonOtherMatch = 'Another reason (please add)'
 export default class AssessmentsController {
   constructor(private readonly assessmentsService: AssessmentsService) {}
 
-  index(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      return res.redirect(301, paths.assessments.unallocated.pattern)
-    }
-  }
-
   list(status: AssessmentSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
       const callConfig = extractCallConfig(req)

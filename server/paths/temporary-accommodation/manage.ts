@@ -48,6 +48,7 @@ const paths: Record<string, any> = {
     },
   },
   bookings: {
+    index: allBookingsPath,
     new: bookingsPath.path('new'),
     selectAssessment: bookingsPath.path('select-assessment'),
     confirm: bookingsPath.path('confirm'),
@@ -108,6 +109,7 @@ const paths: Record<string, any> = {
     cancellations: { new: singleLostBedPath.path('cancel'), create: singleLostBedPath.path('cancellations') },
   },
   reports: {
+    index: reportsPath,
     new: reportsPath.path('bookings'),
     create: reportsPath.path('bookings'),
   },

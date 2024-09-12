@@ -104,7 +104,7 @@ describe('LandingController', () => {
       const requestHandler = landingController.index()
       requestHandler(request, response, next)
 
-      expect(response.redirect).toHaveBeenCalledWith(managePaths.reports.new({}))
+      expect(response.redirect).toHaveBeenCalledWith(managePaths.reports.index({}))
     })
   })
 })

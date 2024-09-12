@@ -1,11 +1,14 @@
+import { PrimaryNavigationItem } from '@approved-premises/ui'
 import { ProfileResponse, TemporaryAccommodationUser, TemporaryAccommodationUser as User } from '../@types/shared'
 import { RestClientBuilder } from '../data'
 import { CallConfig } from '../data/restClient'
 import UserClient from '../data/userClient'
 import { convertToTitleCase } from '../utils/utils'
+import paths from '../paths/temporary-accommodation/manage'
 
 export type UserDetails = User & {
   displayName: string
+  primaryNavigationList?: Array<PrimaryNavigationItem>
 }
 
 type TemporaryAccommodationProfileResponse = ProfileResponse & { user: TemporaryAccommodationUser }
@@ -30,5 +33,25 @@ export default class UserService {
       ...user,
       displayName: convertToTitleCase(profile.user.name),
     }
+  }
+
+  getActingUserPrimaryNavigationList(actingUser: User, currentPage: string): Array<PrimaryNavigationItem> {
+    if (actingUser.roles?.includes('assessor')) {
+      const navList: Array<PrimaryNavigationItem> = [
+        { href: paths.bookings.index({}), text: 'Bookings' },
+        { href: paths.premises.index({}), text: 'Manage properties' },
+        { href: paths.assessments.index({}), text: 'Referrals' },
+        { href: paths.bedspaces.search({}), text: 'Search bedspaces' },
+        { href: paths.reports.index({}), text: 'Reports' },
+      ]
+
+      return navList.map(item => ({
+        ...item,
+        active: currentPage.includes(item.href),
+      }))
+    }
+
+    // If the user is not am assessor, return an empty list.
+    return []
   }
 }

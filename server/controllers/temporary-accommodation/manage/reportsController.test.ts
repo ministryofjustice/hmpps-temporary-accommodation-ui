@@ -42,7 +42,7 @@ describe('ReportsController', () => {
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
-  describe('new', () => {
+  describe('index', () => {
     beforeEach(() => {
       jest.useFakeTimers().setSystemTime(new Date('2024-04-22'))
     })
@@ -65,7 +65,7 @@ describe('ReportsController', () => {
       })
       ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
 
-      const requestHandler = reportsController.new()
+      const requestHandler = reportsController.index()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       response = createMock<Response>({
@@ -77,7 +77,7 @@ describe('ReportsController', () => {
       expect(reportService.getReferenceData).toHaveBeenCalledWith(callConfig)
       expect(filterProbationRegions).toHaveBeenCalledWith(unfilteredRegions, request)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/new', {
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/index', {
         allProbationRegions: filteredRegions,
         errors: {},
         errorSummary: [],
@@ -105,7 +105,7 @@ describe('ReportsController', () => {
           probationRegions: regionsReferenceData,
         })
 
-        const requestHandler = reportsController.new()
+        const requestHandler = reportsController.index()
         ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
         response = createMock<Response>({
@@ -117,7 +117,7 @@ describe('ReportsController', () => {
         expect(reportService.getReferenceData).toHaveBeenCalledWith(callConfig)
         expect(filterProbationRegions).not.toHaveBeenCalled()
 
-        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/new', {
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/reports/index', {
           allProbationRegions: [
             {
               id: 'all',
@@ -180,7 +180,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.new({}),
+        paths.reports.index({}),
       )
     })
 
@@ -200,7 +200,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.new({}),
+        paths.reports.index({}),
       )
     })
 
@@ -220,7 +220,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.new({}),
+        paths.reports.index({}),
       )
     })
 
@@ -245,7 +245,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.new({}),
+        paths.reports.index({}),
       )
     })
 
@@ -268,7 +268,7 @@ describe('ReportsController', () => {
         request,
         response,
         (insertGenericError as jest.MockedFunction<typeof insertGenericError>).mock.lastCall[0],
-        paths.reports.new({}),
+        paths.reports.index({}),
       )
     })
   })

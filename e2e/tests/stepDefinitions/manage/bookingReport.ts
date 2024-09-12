@@ -3,7 +3,7 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 import { Cas3ReportType } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
-import ReportNewPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportNew'
+import ReportIndexPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportIndex'
 import { probationRegionFactory } from '../../../../server/testutils/factories'
 import { reportForProbationRegionFilename } from '../../../../server/utils/reportUtils'
 import { getUrlEncodedCypressEnv, throwMissingCypressEnvError } from '../utils'
@@ -22,7 +22,7 @@ Given("I'm downloading a report", () => {
 })
 
 Given('I download a booking report for the preselected probation region', () => {
-  const reportPage = Page.verifyOnPage(ReportNewPage)
+  const reportPage = Page.verifyOnPage(ReportIndexPage)
 
   const probationRegion = probationRegionFactory.build({
     id: actingUserProbationRegionId,
@@ -48,7 +48,7 @@ Given('I download a booking report for the preselected probation region', () => 
 })
 
 Given('I download a bedspace usage report for the preselected probation region', () => {
-  const reportPage = Page.verifyOnPage(ReportNewPage)
+  const reportPage = Page.verifyOnPage(ReportIndexPage)
 
   const probationRegion = probationRegionFactory.build({
     id: actingUserProbationRegionId,
@@ -74,7 +74,7 @@ Given('I download a bedspace usage report for the preselected probation region',
 })
 
 Given('I download an occupancy report for the preselected probation region', () => {
-  const reportPage = Page.verifyOnPage(ReportNewPage)
+  const reportPage = Page.verifyOnPage(ReportIndexPage)
 
   const probationRegion = probationRegionFactory.build({
     id: actingUserProbationRegionId,
@@ -100,7 +100,7 @@ Given('I download an occupancy report for the preselected probation region', () 
 })
 
 Given('I clear the form and attempt to download a booking report', () => {
-  const reportPage = Page.verifyOnPage(ReportNewPage)
+  const reportPage = Page.verifyOnPage(ReportIndexPage)
 
   reportPage.clearForm()
   reportPage.clickDownload('booking')
@@ -118,7 +118,7 @@ Then('I should download a report', () => {
 
 Then('I should see a list of the problems encountered downloading the report', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(ReportNewPage)
+    const page = Page.verifyOnPage(ReportIndexPage)
     page.shouldShowErrorMessagesForFields(this.missing)
   })
 })

@@ -18,7 +18,7 @@ const wrapHandler =
     }
   }
 
-const isReportPath = (path: string): boolean => path === paths.reports.new({}) || path === paths.reports.create({})
+const isReportPath = (path: string): boolean => path === paths.reports.index({}) || path === paths.reports.create({})
 
 const userHasReporterRoleAndPathIsReports = (user: User, path: string): boolean =>
   userHasReporterRole(user) && isReportPath(path)

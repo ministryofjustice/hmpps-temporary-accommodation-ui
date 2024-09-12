@@ -99,6 +99,27 @@ describe('User service', () => {
             }
           })
         })
+
+        const otherURLs = [
+          ['/bookings/foo/bar', 'Bookings'],
+          ['/foo/bookings/bar', 'Bookings'],
+          ['/foo/bookings-bar', 'Bookings'],
+          ['/review-and-assess/foo/bar', 'Referrals'],
+        ]
+        it.each(otherURLs)(
+          `returns active when a user is viewing %p page with %p link`,
+          (visitingURL, expectedActiveNavigationLinkText) => {
+            const result = userService.getActingUserPrimaryNavigationList(assessorUser, visitingURL)
+
+            result.forEach(item => {
+              if (item.text === expectedActiveNavigationLinkText) {
+                expect(item).toHaveProperty('active', true)
+              } else {
+                expect(item).toHaveProperty('active', false)
+              }
+            })
+          },
+        )
       })
     })
   })

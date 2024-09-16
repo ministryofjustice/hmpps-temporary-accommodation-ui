@@ -209,10 +209,22 @@ const isSystemNoteWithDetails = (note: UserNote | SystemNote): note is ReferralH
 }
 
 export const renderSystemNote = (note: ReferralHistorySystemNote): TimelineItem['html'] => {
-  const reason = note.messageDetails.rejectionReasonDetails || note.messageDetails.rejectionReason
-  const isWithdrawn = note.messageDetails.isWithdrawn ? 'Yes' : 'No'
+  let lines: string[]
 
-  const lines = [`Rejection reason: ${reason}`, `Withdrawal requested by the probation practitioner: ${isWithdrawn}`]
+  if (note.category === 'rejected') {
+    const reason = note.messageDetails.rejectionReasonDetails || note.messageDetails.rejectionReason
+    const isWithdrawn = note.messageDetails.isWithdrawn ? 'Yes' : 'No'
+
+    lines = [`Rejection reason: ${reason}`, `Withdrawal requested by the probation practitioner: ${isWithdrawn}`]
+  } else if (note.category === 'updated') {
+    const { dateField, old, new: newDate } = note.messageDetails
+
+    const dateLabel = dateField === 'releaseDate' ? 'Release date' : 'Accommodation required from date'
+    const oldDateUI = DateFormats.isoDateToUIDate(old)
+    const newDateUI = DateFormats.isoDateToUIDate(newDate)
+
+    lines = [`${dateLabel} was changed from ${oldDateUI} to ${newDateUI}`]
+  }
 
   return formatLines(lines.join('\n\n'))
 }
@@ -243,6 +255,10 @@ const systemNoteLabelText = (note: SystemNote): TimelineItem['label']['text'] =>
       return 'Referral marked as rejected'
     case 'completed':
       return 'Referral marked as closed'
+    case 'updated':
+      return note.messageDetails.dateField === 'releaseDate'
+        ? 'Release date updated'
+        : 'Accommodation required from date updated'
     default:
       return assertUnreachable(note.category)
   }

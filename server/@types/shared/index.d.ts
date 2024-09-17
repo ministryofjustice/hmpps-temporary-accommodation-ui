@@ -218,6 +218,7 @@ export type { Problem } from './models/Problem';
 export type { ProfileResponse } from './models/ProfileResponse';
 export type { PropertyStatus } from './models/PropertyStatus';
 export type { Reallocation } from './models/Reallocation';
+export type { ReferralHistoryDomainEventNote } from './models/ReferralHistoryDomainEventNote';
 export type { ReferralHistoryNote } from './models/ReferralHistoryNote';
 export type { ReferralHistoryNoteMessageDetails } from './models/ReferralHistoryNoteMessageDetails';
 export type { ReferralHistorySystemNote } from './models/ReferralHistorySystemNote';

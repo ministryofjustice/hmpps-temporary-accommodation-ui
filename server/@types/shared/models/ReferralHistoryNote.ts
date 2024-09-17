@@ -6,7 +6,7 @@ import type { ReferralHistoryNoteMessageDetails } from './ReferralHistoryNoteMes
 export type ReferralHistoryNote = {
     id: string;
     createdAt: string;
-    message: string;
+    message?: string;
     messageDetails?: ReferralHistoryNoteMessageDetails;
     createdByUserName: string;
     type: string;

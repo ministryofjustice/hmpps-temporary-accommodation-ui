@@ -10,40 +10,18 @@
 
 
 {% macro searchByCrnOrNameForm(params) %}
-    {% set searchLabel %}
-        {% if params.type === 'referrals' %}
-            {{ 'Search ' + params.uiStatus + ' ' +  params.type + ' with the person’s name or CRN' }}
-        {% else %}
-            {# TODO remove once bookings can be searched using crn or name #}
-            {{ 'Search ' + params.uiStatus + ' ' +  params.type + ' by CRN (case reference number)' }}
-        {% endif%}
-    {% endset %}
-
-    {% set searchHint %}
-        {% if params.type === 'referrals' %}
-            For example, James or XD7364CD
-        {% else %}
-            {# TODO remove once bookings can be searched using crn or name #}
-            For example, XD7364CD
-        {% endif%}
-    {% endset %}
-    
-
     <form action="{{ params.basePath }}" method="get">
-        {# TODO remove once bookings can be searched using crn or name #}
-        {% set fieldName = 'crnOrName' if params.type === 'referrals' else 'crn' %}
-
         {{ govukInput(
             {
                 label: {
                 classes: 'govuk-label--m',
-                text: searchLabel
+                text: 'Search ' + params.uiStatus + ' ' +  params.type + ' with the person’s name or CRN' 
             },
                 hint: {
-                text: searchHint
+                text: 'For example, James or XD7364CD'
             },
-                name: fieldName,
-                id: fieldName,
+                name: 'crnOrName',
+                id: 'crnOrName',
                 value: params.crnOrName
             }
         ) }}

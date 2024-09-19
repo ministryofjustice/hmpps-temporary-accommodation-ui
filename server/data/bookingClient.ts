@@ -118,7 +118,7 @@ export default class BookingClient {
   ): Promise<PaginatedResponse<BookingSearchResult>> {
     const path = appendQueryString(paths.bookings.search({ status }), {
       status,
-      crn: params.crn,
+      crnOrName: params.crnOrName,
       page: !params.page ? 1 : params.page, // also handles NaN & <1
       sortField: params.sortBy || 'endDate',
       sortOrder: params.sortDirection === 'asc' ? 'ascending' : 'descending',

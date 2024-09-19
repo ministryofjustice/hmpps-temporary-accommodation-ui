@@ -295,21 +295,21 @@ describe('BookingClient', () => {
       expect(nock.isDone()).toBeTruthy()
     })
 
-    it('should return confirmed bookings for a given CRN', async () => {
+    it('should return confirmed bookings for a given CRN or Name', async () => {
       const booking = bookingSearchResultFactory.build({ person: { crn: 'C555333' } })
       const { data: bookings } = bookingSearchResultsFactory.build({ data: [booking] })
       const body = { results: bookings, resultsCount: bookings.length }
 
       fakeApprovedPremisesApi
         .get(
-          `${paths.bookings.search({})}?status=confirmed&crn=${
+          `${paths.bookings.search({})}?status=confirmed&crnOrName=${
             booking.person.crn
           }&page=1&sortField=endDate&sortOrder=descending`,
         )
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, body)
 
-      const result = await bookingClient.search('confirmed', { crn: 'C555333', page: 1, sortDirection: 'desc' })
+      const result = await bookingClient.search('confirmed', { crnOrName: 'C555333', page: 1, sortDirection: 'desc' })
 
       expect(result.data).toEqual(bookings)
       expect(nock.isDone()).toBeTruthy()

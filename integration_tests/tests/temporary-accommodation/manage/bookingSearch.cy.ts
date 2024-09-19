@@ -103,33 +103,37 @@ context('Booking search', () => {
     page.checkColumnOrder('Start date', 'descending')
   })
 
-  it('shows the result of a crn search and clears the search', () => {
+  it('shows the result of a crn or name search and clears the search', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there are bookings in the database
     const { data: bookings } = bookingSearchResultsFactory.build()
     const searchedForBooking = bookings[2]
-    const searchCRN = searchedForBooking.person.crn
+    const searchCrnOrName = searchedForBooking.person.crn
 
     cy.task('stubFindBookings', { bookings, status: 'provisional' })
-    cy.task('stubFindBookings', { bookings: [searchedForBooking], status: 'provisional', params: { crn: searchCRN } })
+    cy.task('stubFindBookings', {
+      bookings: [searchedForBooking],
+      status: 'provisional',
+      params: { crnOrName: searchCrnOrName },
+    })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('provisional')
 
     // Then the search by CRN form is empty
-    page.checkCRNSearchValue('', 'provisional')
+    page.checkCrnOrNameSearchValue('', 'provisional')
 
     // And I see all the results
     page.checkResults(bookings)
 
-    // When I submit a search by CRN
-    page.searchByCRN(searchCRN, 'provisional')
+    // When I submit a search by CRN or Name
+    page.searchByCrnOrName(searchCrnOrName, 'provisional')
     Page.verifyOnPage(BookingSearchPage, 'provisional')
 
-    // Then the search by CRN form is populated
-    page.checkCRNSearchValue(searchCRN, 'provisional')
+    // Then the search by CRN or Name form is populated
+    page.checkCrnOrNameSearchValue(searchCrnOrName, 'provisional')
 
     // Then I see the search result for that CRN
     page.checkResults([searchedForBooking])
@@ -139,39 +143,39 @@ context('Booking search', () => {
 
     Page.verifyOnPage(BookingSearchPage, 'provisional')
 
-    // Then the search by CRN form is populated
-    page.checkCRNSearchValue('', 'provisional')
+    // Then the search by CRN or Name form is populated
+    page.checkCrnOrNameSearchValue('', 'provisional')
 
-    // Then I see the search result for that CRN
+    // Then I see the search result for that CRN or Name
     page.checkResults(bookings)
   })
 
-  it('shows a message if there are no CRN search results', () => {
+  it('shows a message if there are no CRN or Name search results', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there are no bookings matching a CRN search in the database
+    // And there are no bookings matching a CRN or Name search in the database
     const { data: bookings } = bookingSearchResultsFactory.build()
     const noBookings: BookingSearchResult[] = []
 
     cy.task('stubFindBookings', { bookings, status: 'confirmed' })
-    cy.task('stubFindBookings', { bookings: noBookings, status: 'confirmed', params: { crn: 'N0M4TCH' } })
+    cy.task('stubFindBookings', { bookings: noBookings, status: 'confirmed', params: { crnOrName: 'N0M4TCH' } })
 
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('confirmed')
 
     // Then the search by CRN form is empty
-    page.checkCRNSearchValue('', 'confirmed')
+    page.checkCrnOrNameSearchValue('', 'confirmed')
 
     // And I see all the results
     page.checkResults(bookings)
 
     // When I submit a search by CRN
-    page.searchByCRN('N0M4TCH', 'confirmed')
+    page.searchByCrnOrName('N0M4TCH', 'confirmed')
     Page.verifyOnPage(BookingSearchPage, 'confirmed')
 
     // Then the search by CRN form is populated
-    page.checkCRNSearchValue('N0M4TCH', 'confirmed')
+    page.checkCrnOrNameSearchValue('N0M4TCH', 'confirmed')
 
     // Then I see no search results for that CRN
     page.checkResults(noBookings)
@@ -195,21 +199,21 @@ context('Booking search', () => {
 
     ;['confirmed', 'arrived', 'departed'].forEach(status => {
       cy.task('stubFindBookings', { bookings, status })
-      cy.task('stubFindBookings', { bookings, status, params: { crn: 'X321654' } })
+      cy.task('stubFindBookings', { bookings, status, params: { crnOrName: 'X321654' } })
     })
 
     cy.task('stubFindBookings', { bookings, status: 'provisional', pagination })
-    cy.task('stubFindBookings', { bookings, status: 'provisional', params: { crn: 'X321654' }, pagination })
+    cy.task('stubFindBookings', { bookings, status: 'provisional', params: { crnOrName: 'X321654' }, pagination })
     cy.task('stubFindBookings', {
       bookings,
       status: 'provisional',
-      params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc' },
+      params: { crnOrName: 'X321654', sortBy: 'endDate', sortDirection: 'asc' },
       pagination,
     })
     cy.task('stubFindBookings', {
       bookings,
       status: 'provisional',
-      params: { crn: 'X321654', sortBy: 'endDate', sortDirection: 'asc', page: 2 },
+      params: { crnOrName: 'X321654', sortBy: 'endDate', sortDirection: 'asc', page: 2 },
       pagination: {
         ...pagination,
         pageNumber: 2,
@@ -219,18 +223,18 @@ context('Booking search', () => {
     // When I visit the Find a provisional booking page
     const page = BookingSearchPage.visit('provisional')
 
-    // And I submit a search by CRN
-    page.searchByCRN('X321654', 'provisional')
+    // And I submit a search by CRN or Name
+    page.searchByCrnOrName('X321654', 'provisional')
 
-    // Then I see the provisional bookings for the given CRN
+    // Then I see the provisional bookings for the given CRN or Name
     Page.verifyOnPage(BookingSearchPage, 'provisional')
-    page.checkCRNSearchValue('X321654', 'provisional')
+    page.checkCrnOrNameSearchValue('X321654', 'provisional')
 
     // When I order by end date
     page.sortColumn('End date')
 
-    // Then I see the provisional bookings for the given CRN
-    page.checkCRNSearchValue('X321654', 'provisional')
+    // Then I see the provisional bookings for the given CRN or Name
+    page.checkCrnOrNameSearchValue('X321654', 'provisional')
 
     // And I see the results are ordered by end date ascending
     page.shouldHaveURLSearchParam('sortBy=endDate&sortDirection=asc')
@@ -239,9 +243,9 @@ context('Booking search', () => {
     // When I navigate to the second page of results
     page.clickPaginationLink(2)
 
-    // Then I see the second page of provisional bookings for the given CRN
+    // Then I see the second page of provisional bookings for the given CRN or Name
     page.shouldHaveURLSearchParam('page=2')
-    page.checkCRNSearchValue('X321654', 'provisional')
+    page.checkCrnOrNameSearchValue('X321654', 'provisional')
 
     // And I see the results are ordered by end date ascending
     page.shouldHaveURLSearchParam('sortBy=endDate&sortDirection=asc')
@@ -250,30 +254,30 @@ context('Booking search', () => {
     // When I navigate to the confirmed bookings search
     page.clickOtherBookingStatusLink('confirmed')
 
-    // Then I see the confirmed bookings for the given CRN
+    // Then I see the confirmed bookings for the given CRN or Name
     Page.verifyOnPage(BookingSearchPage, 'confirmed')
-    page.checkCRNSearchValue('X321654', 'confirmed')
+    page.checkCrnOrNameSearchValue('X321654', 'confirmed')
 
     // When I navigate to the active bookings search
     page.clickOtherBookingStatusLink('arrived')
 
-    // Then I see the active bookings for the given CRN
+    // Then I see the active bookings for the given CRN or Name
     Page.verifyOnPage(BookingSearchPage, 'arrived')
-    page.checkCRNSearchValue('X321654', 'active')
+    page.checkCrnOrNameSearchValue('X321654', 'active')
 
     // When I navigate to the departed bookings search
     page.clickOtherBookingStatusLink('departed')
 
-    // Then I see the departed bookings for the given CRN
+    // Then I see the departed bookings for the given CRN or Name
     Page.verifyOnPage(BookingSearchPage, 'departed')
-    page.checkCRNSearchValue('X321654', 'departed')
+    page.checkCrnOrNameSearchValue('X321654', 'departed')
 
     // When I navigate to the provisional bookings search
     page.clickOtherBookingStatusLink('provisional')
 
-    // Then I see the provisional bookings for the given CRN
+    // Then I see the provisional bookings for the given CRN or Name
     Page.verifyOnPage(BookingSearchPage, 'provisional')
-    page.checkCRNSearchValue('X321654', 'provisional')
+    page.checkCrnOrNameSearchValue('X321654', 'provisional')
   })
 
   it('navigates back to the dashboard from the view bookings page', () => {

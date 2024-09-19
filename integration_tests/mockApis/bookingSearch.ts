@@ -19,7 +19,7 @@ export default {
   }): SuperAgentRequest => {
     const url = appendQueryString(paths.bookings.search({}), {
       status: args.status,
-      crn: args.params?.crn,
+      crnOrName: args.params?.crnOrName,
       page: args.params?.page || 1,
       sortField: args.params?.sortBy || 'endDate',
       sortOrder: args.params?.sortDirection === 'asc' ? 'ascending' : 'descending',

@@ -137,7 +137,7 @@ describe('AssessmentClient', () => {
       const assessments = assessmentSummaryFactory.buildList(5)
 
       fakeApprovedPremisesApi
-        .get(`${paths.assessments.index({})}?crn=${crn}&statuses=${status}`)
+        .get(`${paths.assessments.index({})}?crnOrName=${crn}&statuses=${status}`)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, assessments)
 

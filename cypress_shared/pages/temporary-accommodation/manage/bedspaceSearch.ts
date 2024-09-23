@@ -47,7 +47,9 @@ export default class BedspaceSearchPage extends Page {
   shouldShowPrefilledSearchParameters(searchParameters: BedSearchParameters) {
     this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
     this.shouldShowTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
-    this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
+    searchParameters.probationDeliveryUnits.forEach(pduId => {
+      this.shouldShowCheckedInputByValue(pduId)
+    })
   }
 
   shouldShowPrefilledSearchParametersFromPlaceContext(placeContext: NonNullable<PlaceContext>) {
@@ -55,9 +57,13 @@ export default class BedspaceSearchPage extends Page {
   }
 
   completeForm(searchParameters: BedSearchParameters) {
+    cy.debug()
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
-    this.completeSelectInputByLabel('Probation Delivery Unit (PDU)', searchParameters.probationDeliveryUnit)
+    cy.debug()
+    searchParameters.probationDeliveryUnits.forEach(pdu => {
+      this.checkCheckboxByNameAndValue('probationDeliveryUnits[]', pdu)
+    })
 
     this.getLegend('Bedspace attributes')
     this.getLegend('Occupancy (optional)')
@@ -85,6 +91,5 @@ export default class BedspaceSearchPage extends Page {
       this.shouldShowEmptyDateInputs('startDate')
     }
     this.shouldShowTextInputByLabel('Number of days required', '84')
-    this.shouldShowSelectInputByLabel('Probation Delivery Unit (PDU)', 'Select a PDU')
   }
 }

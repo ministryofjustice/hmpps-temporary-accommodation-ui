@@ -57,6 +57,7 @@
                     <article class="result-card" data-cy-bedspace>
                         <header class="result-card__header">
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
+                                <span class="govuk-caption-m">PDU: {{ result.premises.probationDeliveryUnitName }}</span>
                                 <a class="govuk-link"
                                    href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id})) }}">
                                     Bedspace reference: {{ result.room.name }}

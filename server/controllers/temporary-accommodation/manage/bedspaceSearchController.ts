@@ -13,7 +13,10 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput 
 
 export const DEFAULT_DURATION_DAYS = 84
 
-type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & { probationDeliveryUnit: string; durationDays: string }
+type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {
+  probationDeliveryUnits: Array<string>
+  durationDays: string
+}
 
 export default class BedspaceSearchController {
   constructor(

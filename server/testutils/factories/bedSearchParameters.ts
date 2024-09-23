@@ -13,7 +13,7 @@ const bedSearchAttributes: Array<BedSearchAttributes> = ['singleOccupancy', 'sha
 export default Factory.define<BedSearchAPIParameters>(() => ({
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),
   durationDays: faker.number.int({ min: 1, max: 10 }),
-  probationDeliveryUnit: referenceData.pdu().build().name,
+  probationDeliveryUnits: [referenceData.pdu().build().id, referenceData.pdu().build().id],
   serviceName: 'temporary-accommodation',
   attributes: faker.helpers.arrayElements(bedSearchAttributes),
 }))

@@ -58,11 +58,7 @@ describe('BedspaceSearchService', () => {
 
       const result = await service.getReferenceData(callConfig)
       expect(result).toEqual({
-        pdus: [
-          { ...pdu1, id: pdu1.name },
-          { ...pdu2, id: pdu2.name },
-          { ...pdu3, id: pdu3.name },
-        ],
+        pdus: [pdu1, pdu2, pdu3],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {

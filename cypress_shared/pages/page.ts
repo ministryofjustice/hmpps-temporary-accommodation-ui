@@ -116,6 +116,10 @@ export default abstract class Page extends Component {
     cy.get('label').contains(label).siblings('select').children('option').contains(exact(value)).should('be.selected')
   }
 
+  shouldShowCheckedInputByValue(value: string): void {
+    cy.get(`input[type="checkbox"][value="${value}"]`).should('be.checked')
+  }
+
   completeDateInputsByLegend(legend: string, date: string): void {
     const parsedDate = DateFormats.isoToDateObj(date)
 

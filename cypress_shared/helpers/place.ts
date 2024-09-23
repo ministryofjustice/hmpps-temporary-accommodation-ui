@@ -105,9 +105,10 @@ export default class PlaceHelper {
     // When I fill out the form
     const searchParameters = bedSearchParametersFactory.build({
       startDate: this.placeContext.arrivalDate,
-      probationDeliveryUnit: this.premises.probationDeliveryUnit.name,
+      probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
       attributes: characteristicsToSearchAttributes(this.premises),
     })
+
     bedspaceSearchPage.completeForm(searchParameters)
     bedspaceSearchPage.clickSubmit()
 

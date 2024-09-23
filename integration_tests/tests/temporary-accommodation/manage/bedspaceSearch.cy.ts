@@ -66,7 +66,7 @@ context('Bedspace Search', () => {
 
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
-      expect(requestBody.probationDeliveryUnit).equal(searchParameters.probationDeliveryUnit)
+      expect(requestBody.probationDeliveryUnits).to.have.members(searchParameters.probationDeliveryUnits)
       expect(requestBody.attributes).to.have.members(searchParameters.attributes)
     })
 
@@ -210,13 +210,13 @@ context('Bedspace Search', () => {
     const page = BedspaceSearchPage.visit()
 
     // And I miss required fields
-    cy.task('stubBedSearchErrors', ['startDate', 'durationDays', 'probationDeliveryUnit'])
+    cy.task('stubBedSearchErrors', ['startDate', 'durationDays', 'probationDeliveryUnits'])
     page.clearTextInputByLabel('Number of days required')
     page.clickSubmit()
 
     // Then I should see error messages relating to those fields
     page.shouldShowErrorMessagesForFields(
-      ['startDate', 'durationDays', 'probationDeliveryUnit'],
+      ['startDate', 'durationDays', 'probationDeliveryUnits'],
       'empty',
       'bedspaceSearch',
     )

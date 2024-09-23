@@ -3,6 +3,7 @@
 {% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
+{% from "../../../components/ta-checkboxes/macro.njk" import taCheckboxes %}
 {% from "../../../components/place-context-value/macro.njk" import placeContextValue %}
 
 {{ placeContextValue(placeContext) }}
@@ -41,13 +42,19 @@
 
 {% endcall %}
 
-{{ formPageSelect({
-    label: {
-        text: "Probation Delivery Unit (PDU)",
-        classes: "govuk-label--m"
+{{ taCheckboxes({
+    classes: "govuk-checkboxes--small",
+    fieldset: {
+        legend: {
+            text: "Probation Delivery Unit (PDU)",
+            classes: "govuk-fieldset__legend--m"
+        }
     },
-    items: convertObjectsToSelectOptions(allPdus, 'Select a PDU', 'name', 'id', 'probationDeliveryUnit'),
-    fieldName: "probationDeliveryUnit"
+    hint: {
+        text: "Select up to 5 PDUs"
+    },
+    items: convertObjectsToCheckboxItems(allPdus, 'name', 'id', 'probationDeliveryUnits'),
+    fieldName: "probationDeliveryUnits"
 }, fetchContext()) }}
 
 {% call govukFieldset({
@@ -57,6 +64,7 @@
     }
 }) %}
     {{ formPageCheckboxes({
+        classes: "govuk-checkboxes--small",
         fieldName: "attributes",
         fieldset: {
             legend: {

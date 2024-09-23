@@ -160,6 +160,10 @@
     }
   },
   "bedspaceSearch": {
+    "probationDeliveryUnits": {
+      "empty": "You must choose at least one PDU",
+      "maxNumberProbationDeliveryUnits": "Select 1 to 5 PDUs"
+    },
     "probationDeliveryUnit": {
       "empty": "You must choose a PDU"
     },

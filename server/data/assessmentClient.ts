@@ -47,11 +47,11 @@ export default class AssessmentClient {
     }
   }
 
-  async readyToPlaceForCrn(crn: string) {
+  async readyToPlaceForCrn(crnOrName: string) {
     const status: AssessmentSummary['status'] = 'ready_to_place'
 
     return this.restClient.get<Array<AssessmentSummary>>({
-      path: appendQueryString(paths.assessments.index.pattern, { crn: crn.trim(), statuses: status }),
+      path: appendQueryString(paths.assessments.index.pattern, { crnOrName: crnOrName.trim(), statuses: status }),
     })
   }
 

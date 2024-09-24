@@ -21,7 +21,7 @@ Given('I search for a bedspace', () => {
     const page = Page.verifyOnPage(BedspaceSearchPage)
 
     const searchParameters = bedSearchParametersFactory.build({
-      probationDeliveryUnit: this.premises.probationDeliveryUnit.name,
+      probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
       attributes: characteristicsToSearchAttributes(this.premises),
     })
 

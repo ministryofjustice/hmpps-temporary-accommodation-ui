@@ -57,10 +57,9 @@ export default class BedspaceSearchPage extends Page {
   }
 
   completeForm(searchParameters: BedSearchParameters) {
-    cy.debug()
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
-    cy.debug()
+
     searchParameters.probationDeliveryUnits.forEach(pdu => {
       this.checkCheckboxByNameAndValue('probationDeliveryUnits[]', pdu)
     })

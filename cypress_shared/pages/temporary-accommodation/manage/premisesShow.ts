@@ -165,7 +165,7 @@ export default class PremisesShowPage extends Page {
 
     const pduName = pduElement.text().trim()
     const pdu = pduFactory.build({
-      id: pduName,
+      id,
       name: pduName,
     })
 

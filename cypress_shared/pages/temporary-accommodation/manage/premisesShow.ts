@@ -40,16 +40,20 @@ export default class PremisesShowPage extends Page {
                           .contains('Expected turnaround time')
                           .siblings('.govuk-summary-list__value')
                           .then(turnaroundTimeElement => {
-                            const premises = this.parsePremises(
-                              id,
-                              nameElement,
-                              addressElement,
-                              statusElement,
-                              pduElement,
-                              attributeElement,
-                              turnaroundTimeElement,
-                            )
-                            cy.wrap(premises).as(alias)
+                            cy.get('[data-cy-premises]').then(pduIdElement => {
+                              const premises = this.parsePremises(
+                                id,
+                                nameElement,
+                                addressElement,
+                                statusElement,
+                                pduElement,
+                                pduIdElement,
+                                attributeElement,
+                                turnaroundTimeElement,
+                              )
+
+                              cy.wrap(premises).as(alias)
+                            })
                           })
                       })
                   })
@@ -151,6 +155,7 @@ export default class PremisesShowPage extends Page {
     addressElement: JQuery<HTMLElement>,
     statusElement: JQuery<HTMLElement>,
     pduElement: JQuery<HTMLElement>,
+    pduIdElement: JQuery<HTMLElement>,
     attributeElement: JQuery<HTMLElement>,
     turnaroundTimeElement: JQuery<HTMLElement>,
   ): Premises {
@@ -165,7 +170,7 @@ export default class PremisesShowPage extends Page {
 
     const pduName = pduElement.text().trim()
     const pdu = pduFactory.build({
-      id,
+      id: pduIdElement.data('cy-pdu-id'),
       name: pduName,
     })
 

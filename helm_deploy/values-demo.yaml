@@ -29,6 +29,14 @@ generic-service:
     sqs-hmpps-audit-secret:
       AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
+    hmpps-temporary-accommodation-ui:
+      APPINSIGHTS_INSTRUMENTATIONKEY: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+      API_CLIENT_ID: 'API_CLIENT_ID'
+      API_CLIENT_SECRET: 'API_CLIENT_SECRET'
+      SYSTEM_CLIENT_ID: 'SYSTEM_CLIENT_ID'
+      SYSTEM_CLIENT_SECRET: 'SYSTEM_CLIENT_SECRET'
+      SESSION_SECRET: 'SESSION_SECRET'
+      SENTRY_DSN: 'SENTRY_DSN'
 
   allowlist: null
 

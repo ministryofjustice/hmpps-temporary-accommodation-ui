@@ -10,9 +10,21 @@ import type { SentenceTypeOption } from './SentenceTypeOption';
 import type { SituationOption } from './SituationOption';
 import type { SubmitApplication } from './SubmitApplication';
 export type SubmitApprovedPremisesApplication = (SubmitApplication & {
+    /**
+     * Use apType
+     * @deprecated
+     */
     isPipeApplication?: boolean;
     isWomensApplication?: boolean;
+    /**
+     * noticeType should be used to indicate if this an emergency application
+     * @deprecated
+     */
     isEmergencyApplication?: boolean;
+    /**
+     * Use apType
+     * @deprecated
+     */
     isEsapApplication?: boolean;
     apType?: ApType;
     targetLocation: string;
@@ -20,6 +32,9 @@ export type SubmitApprovedPremisesApplication = (SubmitApplication & {
     sentenceType: SentenceTypeOption;
     situation?: SituationOption;
     arrivalDate?: string;
+    /**
+     * If the user's ap area id is incorrect, they can optionally override it for the application
+     */
     apAreaId?: string;
     applicantUserDetails?: Cas1ApplicationUserDetails;
     caseManagerIsNotApplicant?: boolean;

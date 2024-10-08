@@ -78,7 +78,7 @@
                                     },
                                     {
                                         key: { text: 'Bedspaces' },
-                                        value: { text: result.premises.bedCount + ' total' }
+                                        value: { text: result.premises.bedCount + ' total: ' + result.premises.bookedBedCount + ' booked, ' +  (result.premises.bedCount - result.premises.bookedBedCount) + ' available' }
                                     }
                                 ]
                             }) }}

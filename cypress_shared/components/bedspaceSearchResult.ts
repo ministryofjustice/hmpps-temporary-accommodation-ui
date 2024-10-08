@@ -22,7 +22,10 @@ export default class BedspaceSearchResult extends Component {
         this.shouldShowKeyAndValue('Address', fullAddress)
 
         if (checkCount) {
-          this.shouldShowKeyAndValue('Bedspaces', `${this.result.premises.bedCount} total`)
+          this.shouldShowKeyAndValue(
+            'Bedspaces',
+            `${this.result.premises.bedCount} total: ${this.result.premises.bookedBedCount} booked, ${this.result.premises.bedCount - this.result.premises.bookedBedCount} available`,
+          )
         }
 
         this.result.premises.characteristics.forEach(characteristic => {

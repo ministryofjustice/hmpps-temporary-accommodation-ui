@@ -7,7 +7,7 @@ import type { ApprovedPremisesApplicationStatus } from './ApprovedPremisesApplic
 import type { PersonRisks } from './PersonRisks';
 import type { ReleaseTypeOption } from './ReleaseTypeOption';
 export type ApprovedPremisesApplicationSummary = (ApplicationSummary & {
-    isWomensApplication?: boolean;
+    isWomensApplication: boolean;
     isPipeApplication?: boolean;
     isEmergencyApplication?: boolean;
     isEsapApplication?: boolean;

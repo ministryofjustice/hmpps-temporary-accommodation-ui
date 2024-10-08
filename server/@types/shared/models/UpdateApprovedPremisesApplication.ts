@@ -8,7 +8,7 @@ import type { ReleaseTypeOption } from './ReleaseTypeOption';
 import type { UpdateApplication } from './UpdateApplication';
 export type UpdateApprovedPremisesApplication = (UpdateApplication & {
     isInapplicable?: boolean;
-    isWomensApplication?: boolean;
+    isWomensApplication: boolean;
     /**
      * Use apType
      * @deprecated

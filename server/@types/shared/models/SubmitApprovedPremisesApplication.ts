@@ -15,7 +15,7 @@ export type SubmitApprovedPremisesApplication = (SubmitApplication & {
      * @deprecated
      */
     isPipeApplication?: boolean;
-    isWomensApplication?: boolean;
+    isWomensApplication: boolean;
     /**
      * noticeType should be used to indicate if this an emergency application
      * @deprecated

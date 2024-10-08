@@ -14,7 +14,7 @@ import type { GenderForAp } from './GenderForAp';
 import type { PersonRisks } from './PersonRisks';
 import type { PersonStatus } from './PersonStatus';
 export type ApprovedPremisesApplication = (Application & {
-    isWomensApplication?: boolean;
+    isWomensApplication: boolean;
     /**
      * Use apType
      * @deprecated

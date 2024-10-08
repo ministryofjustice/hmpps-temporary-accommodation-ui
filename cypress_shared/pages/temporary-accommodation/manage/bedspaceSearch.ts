@@ -15,7 +15,7 @@ export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSearchResults: Map<string, BedspaceSearchResult>
 
   constructor(results?: BedSearchResults) {
-    super(results ? 'Bedspace search results' : 'Search for available bedspaces')
+    super('Search for available bedspaces')
 
     this.bedspaceSearchResults = new Map<string, BedspaceSearchResult>()
 
@@ -34,7 +34,7 @@ export default class BedspaceSearchPage extends Page {
 
   shouldShowSearchResults(checkCount = true) {
     if (checkCount) {
-      cy.get('h1').should('contain', `(${this.bedspaceSearchResults.size})`)
+      cy.get('h2').should('contain', `${this.bedspaceSearchResults.size} results for your bedspace search`)
     }
 
     this.bedspaceSearchResults.forEach(result => result.shouldShowResult(checkCount))

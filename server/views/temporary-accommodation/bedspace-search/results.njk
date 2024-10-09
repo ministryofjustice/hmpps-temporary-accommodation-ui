@@ -3,7 +3,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% from "moj/components/filter/macro.njk" import mojFilter %}
-{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -13,7 +13,11 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ breadCrumb('Search for available bedspaces', []) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: '/',
+    classes: 'govuk-!-display-none-print'
+  }) }}
 {% endblock %}
 
 {% block content %}

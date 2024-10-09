@@ -3,21 +3,29 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% from "moj/components/filter/macro.njk" import mojFilter %}
-{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "Bedspace search results (" + results.length + ") - " + applicationName %}
+{% set numberOfResults =  results.length + (' result' if results.length === 1 else ' results' ) %}
+
+{% set pageTitle = "Search for available bedspaces - " + numberOfResults + " - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ breadCrumb('Search for available bedspaces', []) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: '/',
+    classes: 'govuk-!-display-none-print'
+  }) }}
 {% endblock %}
 
 {% block content %}
     {% include "../../_messages.njk" %}
 
-    <h1 class="govuk-heading-l">Bedspace search results ({{ results.length }})</h1>
+    <h1 class="govuk-heading-l">Search for available bedspaces</h1>
+
+    <h2 class="govuk-heading-m">{{ numberOfResults }} for your bedspace search</h2>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-third govuk-!-margin-bottom-8">
@@ -74,7 +82,7 @@
                                     },
                                     {
                                         key: { text: 'Bedspaces' },
-                                        value: { text: result.premises.bedCount + ' total' }
+                                        value: { text: result.premises.bedCount + ' total: ' + result.premises.bookedBedCount + ' booked, ' +  (result.premises.bedCount - result.premises.bookedBedCount) + ' available' }
                                     }
                                 ]
                             }) }}

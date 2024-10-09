@@ -299,7 +299,7 @@ context('Bedspace Search', () => {
     const page = BedspaceSearchPage.visit()
 
     // And I click the previous bread crumb
-    page.clickBreadCrumbUp()
+    page.clickBack()
 
     // Then I navigate to the dashboard page
     Page.verifyOnPage(DashboardPage)

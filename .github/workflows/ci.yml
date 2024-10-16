@@ -49,6 +49,9 @@ jobs:
      
       - name: Running Lint checks 🔎
         run: npm run lint
+
+      - name: Running shellcheck checks 🔎
+        run: npm run shellcheck
   
   unit_test:
     name: "Unit testing 🧪"

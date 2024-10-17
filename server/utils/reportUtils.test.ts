@@ -64,7 +64,8 @@ describe('reportUtils', () => {
 
       const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
 
-      expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
+      // expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
+      expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.xlsx')
     })
   })
 

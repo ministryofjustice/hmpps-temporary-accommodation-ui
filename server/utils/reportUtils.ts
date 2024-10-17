@@ -23,7 +23,8 @@ const reportNames: Record<Cas3ReportType, string> = {
 
 const reportFileType = (reportType: Cas3ReportType): string => {
   if (reportType === 'futureBookings') {
-    return 'csv'
+    // return 'csv'
+    return 'xlsx'
   }
   return 'xlsx'
 }

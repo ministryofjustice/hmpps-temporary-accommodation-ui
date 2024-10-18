@@ -15,9 +15,18 @@ export const reportFilename = () => {
 const reverseISODate = (isoDate: string) => isoDate.split('-').reverse().join('-')
 const reportNames: Record<Cas3ReportType, string> = {
   referral: 'referrals',
+  futureBookings: 'future bookings',
   booking: 'bookings',
   bedUsage: 'bedspace usage',
   bedOccupancy: 'occupancy',
+}
+
+const reportFileType = (reportType: Cas3ReportType): string => {
+  if (reportType === 'futureBookings') {
+    // return 'csv'
+    return 'xlsx'
+  }
+  return 'xlsx'
 }
 
 export const reportForProbationRegionFilename = (
@@ -30,7 +39,7 @@ export const reportForProbationRegionFilename = (
     endDate,
   )}`
 
-  return `${filterFilename(concatenatedName)}.xlsx`
+  return `${filterFilename(concatenatedName)}.${reportFileType(type)}`
 }
 
 const filterFilename = (filename: string): string => {
@@ -51,6 +60,9 @@ export const getApiReportPath = (reportType: Cas3ReportType): string => {
   }
   if (reportType === 'bedUsage') {
     return paths.reports.bedspaceUsage({})
+  }
+  if (reportType === 'futureBookings') {
+    return paths.reports.futureBookings({})
   }
 
   return paths.reports.bedspaceUtilisation({})

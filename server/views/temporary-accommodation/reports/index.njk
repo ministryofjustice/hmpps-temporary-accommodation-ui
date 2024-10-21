@@ -1,9 +1,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
 {% from "../../components/datePicker/macro.njk" import hmppsDatepicker %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = "Reports - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -14,7 +14,11 @@
 {% endblock %}
 
 {% block beforeContent %}
-    {{ breadCrumb('Reports', []) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: "/",
+        classes: 'govuk-!-display-none-print'
+    }) }}
 {% endblock %}
 
 {% block content %}

@@ -3,9 +3,9 @@
 {% from "../../components/search-by-crn-or-name-results/macro.njk" import searchByCrnOrNameResults%}
 {%- from "moj/components/sub-navigation/macro.njk" import mojSubNavigation -%}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% extends "../../partials/layout.njk" %}
-{% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% set pageTitle = "View bookings - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
@@ -23,7 +23,11 @@
 {% endset %}
 
 {% block beforeContent %}
-    {{ breadCrumb('View bookings', []) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: "/",
+        classes: 'govuk-!-display-none-print'
+    }) }}
 {% endblock %}
 
 {% block content %}

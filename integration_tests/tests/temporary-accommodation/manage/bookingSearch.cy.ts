@@ -293,7 +293,7 @@ context('Booking search', () => {
     const page = BookingSearchPage.visit('provisional')
 
     // And I click the previous bread crumb
-    page.clickBreadCrumbUp()
+    page.clickBack()
 
     // Then I navigate to the Dashboard page
     Page.verifyOnPage(DashboardPage)

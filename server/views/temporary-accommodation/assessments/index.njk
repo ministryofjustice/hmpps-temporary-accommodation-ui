@@ -4,7 +4,8 @@
 {% from "../../components/search-by-crn-or-name-results/macro.njk" import searchByCrnOrNameResults%}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
-{% from "../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
 {% extends "../../partials/layout.njk" %}
 
 {% set uiStatus = status | replace('_', ' ') %}
@@ -31,7 +32,11 @@
 
 
 {% block beforeContent %}
-    {{ breadCrumb('Referrals', []) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: "/",
+        classes: 'govuk-!-display-none-print'
+    }) }}
 {% endblock %}
 
 {% block content %}

@@ -79,7 +79,7 @@ context('Premises', () => {
     const page = PremisesListPage.visit()
 
     // And I click the previous bread crumb
-    page.clickBreadCrumbUp()
+    page.clickBack()
 
     // Then I navigate to the dashboard page
     Page.verifyOnPage(DashboardPage)

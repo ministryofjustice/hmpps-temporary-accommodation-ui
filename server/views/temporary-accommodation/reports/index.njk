@@ -110,6 +110,16 @@
                 <br />
 
                 {{ govukButton({
+                    text: "Download future bookings report",
+                    name: "reportType",
+                    value: 'futureBookings',
+                    classes: 'govuk-!-width-one-half',
+                    preventDoubleClick: true
+                }) }}
+
+                <br />
+
+                {{ govukButton({
                     text: "Download occupancy report",
                     name: "reportType",
                     value: 'bedOccupancy',

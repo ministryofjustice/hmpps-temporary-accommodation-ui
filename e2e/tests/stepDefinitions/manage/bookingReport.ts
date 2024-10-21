@@ -73,6 +73,32 @@ Given('I download a bedspace usage report for the preselected probation region',
   ).as('filename')
 })
 
+Given('I download a future bookings report for the preselected probation region', () => {
+  const reportPage = Page.verifyOnPage(ReportIndexPage)
+
+  const probationRegion = probationRegionFactory.build({
+    id: actingUserProbationRegionId,
+    name: actingUserProbationRegionName,
+  })
+  const startDate = '01/03/2024'
+  const endDate = '01/04/2024'
+  const type: Cas3ReportType = 'futureBookings'
+
+  reportPage.shouldPreselectProbationRegion(probationRegion)
+  reportPage.completeForm(startDate, endDate)
+  reportPage.expectDownload(10000)
+  reportPage.clickDownload(type)
+
+  cy.wrap(
+    reportForProbationRegionFilename(
+      probationRegion.name,
+      DateFormats.datepickerInputToIsoString(startDate),
+      DateFormats.datepickerInputToIsoString(endDate),
+      type,
+    ),
+  ).as('filename')
+})
+
 Given('I download an occupancy report for the preselected probation region', () => {
   const reportPage = Page.verifyOnPage(ReportIndexPage)
 

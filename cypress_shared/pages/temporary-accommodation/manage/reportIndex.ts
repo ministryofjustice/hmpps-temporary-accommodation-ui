@@ -46,6 +46,8 @@ export default class ReportIndexPage extends Page {
       cy.get('button').contains('Download bedspace usage').click()
     } else if (type === 'booking') {
       cy.get('button').contains('Download booking data').click()
+    } else if (type === 'futureBookings') {
+      cy.get('button').contains('Download future bookings report').click()
     } else if (type === 'bedOccupancy') {
       cy.get('button').contains('Download occupancy report').click()
     } else if (type === 'referral') {

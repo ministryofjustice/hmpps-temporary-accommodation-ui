@@ -22,7 +22,7 @@ jobs:
     parallelism: 5
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
-      - image: node:20.18.0-alpine3.19
+      - image: cypress/browsers:node-20.18.0-chrome-129.0.6668.89-1-ff-131.0.2-edge-129.0.2792.65-1
     parameters:
       environment:
         type: string

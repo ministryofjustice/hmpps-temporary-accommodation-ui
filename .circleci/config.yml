@@ -108,12 +108,12 @@ workflows:
       - e2e_environment_test:
           environment: 'dev'
           context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
+          # filters:
+          #   branches:
+          #     only:
+          #       - main
+          # requires:
+          #   - deploy_dev
 
       - request-test-approval:
           type: approval

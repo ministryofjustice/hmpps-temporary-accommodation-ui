@@ -29,9 +29,6 @@ jobs:
         default: dev
     steps:
       - checkout
-      - run:
-          name: Update npm
-          command: 'npm install -g npm@10.8.2'
       - node/install-packages
       - run:
           name: E2E Check - << parameters.environment >>

@@ -54,7 +54,7 @@ describe('User service', () => {
       userClient.getUserProfile.mockResolvedValue(userProfile)
 
       await expect(userService.getActingUser(callConfig)).rejects.toEqual(
-        new DeliusAccountMissingStaffDetailsError('Delius account missing staff details'),
+        new DeliusAccountMissingStaffDetailsError('NDelius account missing staff details'),
       )
     })
 

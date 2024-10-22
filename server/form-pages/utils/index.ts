@@ -305,11 +305,11 @@ export const personRisksFlagsResponse = (risks: PersonRisks): PageResponse => {
     const { value } = risks.flags
 
     return {
-      'Delius risk flags (registers)': value?.length === 0 ? 'No flags' : value?.join('\n') || 'Not known',
+      'NDelius risk flags (registers)': value?.length === 0 ? 'No flags' : value?.join('\n') || 'Not known',
     }
   }
   return {
-    'Delius risk flags (registers)':
+    'NDelius risk flags (registers)':
       'Something went wrong. We are unable to include risk flags. This risk data must be checked manually outside of this service.',
   }
 }

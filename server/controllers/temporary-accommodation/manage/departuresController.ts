@@ -59,8 +59,8 @@ export default class DeparturesController {
         req.flash('success', {
           title: 'Booking marked as departed',
           text: config.flags.domainEventsEmit.includes('personDeparted')
-            ? 'You no longer need to update nDelius with this change.'
-            : 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+            ? 'You no longer need to update NDelius with this change.'
+            : 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
         res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
       } catch (err) {

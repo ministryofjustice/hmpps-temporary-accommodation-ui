@@ -614,7 +614,7 @@ describe('personRisksFlagsResponse', () => {
     })
 
     expect(utils.personRisksFlagsResponse(risks)).toEqual({
-      'Delius risk flags (registers)': 'Flag 1\nFlag 2\nFlag 3',
+      'NDelius risk flags (registers)': 'Flag 1\nFlag 2\nFlag 3',
     })
   })
 
@@ -627,7 +627,7 @@ describe('personRisksFlagsResponse', () => {
     })
 
     expect(utils.personRisksFlagsResponse(risks)).toEqual({
-      'Delius risk flags (registers)': 'No flags',
+      'NDelius risk flags (registers)': 'No flags',
     })
   })
 
@@ -640,7 +640,7 @@ describe('personRisksFlagsResponse', () => {
     })
 
     expect(utils.personRisksFlagsResponse(risks)).toEqual({
-      'Delius risk flags (registers)': 'Not known',
+      'NDelius risk flags (registers)': 'Not known',
     })
   })
 
@@ -653,7 +653,7 @@ describe('personRisksFlagsResponse', () => {
     })
 
     expect(utils.personRisksFlagsResponse(risks)).toEqual({
-      'Delius risk flags (registers)':
+      'NDelius risk flags (registers)':
         'Something went wrong. We are unable to include risk flags. This risk data must be checked manually outside of this service.',
     })
   })

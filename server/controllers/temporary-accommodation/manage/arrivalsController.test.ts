@@ -121,7 +121,7 @@ describe('ArrivalsController', () => {
 
         expect(request.flash).toHaveBeenCalledWith('success', {
           title: 'Booking marked as active',
-          text: 'At the moment the CAS3 digital service does not automatically update nDelius. Please continue to record accommodation and address changes directly in nDelius.',
+          text: 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
         expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
       })
@@ -439,7 +439,7 @@ describe('ArrivalsController', () => {
       jest.restoreAllMocks()
     })
 
-    it('does not show the nDelius update message when creating', async () => {
+    it('does not show the NDelius update message when creating', async () => {
       const premises = premisesFactory.build()
       const room = roomFactory.build()
       const booking = bookingFactory.arrived().build()
@@ -493,7 +493,7 @@ describe('ArrivalsController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('success', {
         title: 'Booking marked as active',
-        text: 'You no longer need to update nDelius with this change.',
+        text: 'You no longer need to update NDelius with this change.',
       })
     })
   })

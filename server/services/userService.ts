@@ -24,7 +24,7 @@ export default class UserService {
     const profile = (await client.getUserProfile()) as TemporaryAccommodationProfileResponse
 
     if (profile.loadError === 'staff_record_not_found') {
-      throw new DeliusAccountMissingStaffDetailsError('Delius account missing staff details')
+      throw new DeliusAccountMissingStaffDetailsError('NDelius account missing staff details')
     }
 
     const { isActive, ...user } = profile.user

@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@9
   slack: circleci/slack@4.10.1
-  node: circleci/node@6.2.0
+  cypress: cypress-io/cypress@3.4.0
 
 parameters:
   alerts-slack-channel:
@@ -30,13 +30,12 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install
-          command: apt-get install xz-utils
-      - run:
-          name: Update npm
-          command: 'npm install -g npm@10.8.2'
-      - node/install-packages
-      - run:
+        name: Install Dependencies
+        command: |
+          npm install -g npm@10.8.2
+          npm install  # Ensure other dependencies are installed
+      - cypress/install
+      - cypress/run:
           name: E2E Check - << parameters.environment >>
           command: |
             TESTS=$(circleci tests glob "e2e/tests/*.feature" | circleci tests split --split-by=timings | paste -sd ',')

@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@9
   slack: circleci/slack@4.10.1
-  node: circleci/node@4.5.2
+  node: circleci/node@6.2.0
 
 parameters:
   alerts-slack-channel:
@@ -15,14 +15,14 @@ parameters:
 
   node-version:
     type: string
-    default: 18.16-browsers
+    default: 20.18-browsers
 
 jobs:
   e2e_environment_test:
     parallelism: 5
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
-      - image: cypress/browsers:node16.14.2-slim-chrome100-ff99-edge
+      - image: cypress/browsers:node-20.18.0-chrome-129.0.6668.89-1-ff-131.0.2-edge-129.0.2792.65-1
     parameters:
       environment:
         type: string
@@ -34,7 +34,7 @@ jobs:
           command: apt-get install xz-utils
       - run:
           name: Update npm
-          command: 'npm install -g npm@9.8.1'
+          command: 'npm install -g npm@10.8.2'
       - node/install-packages
       - run:
           name: E2E Check - << parameters.environment >>

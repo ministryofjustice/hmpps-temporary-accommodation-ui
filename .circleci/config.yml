@@ -30,9 +30,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install
-          command: apt-get install xz-utils
-      - run:
           name: Update npm
           command: 'npm install -g npm@10.8.2'
       - node/install-packages

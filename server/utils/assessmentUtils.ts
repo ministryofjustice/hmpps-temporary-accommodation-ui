@@ -3,7 +3,6 @@ import {
   AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
-  ReferralHistorySystemNote,
   SortDirection,
   ReferralHistorySystemNote as SystemNote,
   ReferralHistoryUserNote as UserNote,
@@ -136,6 +135,17 @@ export const assessmentActions = (assessment: Assessment) => {
   return items
 }
 
+const timeLineLabelText = (note: UserNote | SystemNote): string => {
+  switch (note.type) {
+    case 'user':
+      return 'Note'
+    case 'system':
+      return systemNoteLabelText(note)
+    default:
+      throw new Error(`Unknown type of timeline item - ${note.type}`)
+  }
+}
+
 export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
   const notes = [...assessment.referralHistoryNotes].sort((noteA, noteB) => {
     if (noteA.createdAt === noteB.createdAt) {
@@ -148,7 +158,7 @@ export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
   return notes.map(note => {
     return {
       label: {
-        text: isUserNote(note) ? 'Note' : systemNoteLabelText(note),
+        text: timeLineLabelText(note),
       },
       html: renderNote(note),
       datetime: {
@@ -201,14 +211,18 @@ export const statusChangeMessage = (assessmentId: string, status: AssessmentStat
 }
 
 const isUserNote = (note: UserNote | SystemNote): note is UserNote => {
-  return note.type === 'user'
+  return Boolean(note.type === 'user')
 }
 
-const isSystemNoteWithDetails = (note: UserNote | SystemNote): note is ReferralHistorySystemNote => {
-  return Boolean(note.type === 'system' && note.messageDetails)
+const isSystemNote = (note: UserNote | SystemNote): note is SystemNote => {
+  return Boolean(note.type === 'system')
 }
 
-export const renderSystemNote = (note: ReferralHistorySystemNote): TimelineItem['html'] => {
+const isSystemNoteWithDetails = (note: UserNote | SystemNote): note is SystemNote => {
+  return Boolean(isSystemNote(note) && note.messageDetails)
+}
+
+export const renderSystemNote = (note: SystemNote): TimelineItem['html'] => {
   const reason = note.messageDetails.rejectionReasonDetails || note.messageDetails.rejectionReason
   const isWithdrawn = note.messageDetails.isWithdrawn ? 'Yes' : 'No'
 

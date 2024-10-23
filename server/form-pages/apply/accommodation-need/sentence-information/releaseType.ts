@@ -137,8 +137,8 @@ export default class ReleaseType implements TasklistPage {
     return errors as TaskListErrors<this>
   }
 
-  getReleaseTypeOptions() {
-    return Object.entries(releaseTypes).reduce(
+  currentReleaseTypeOptions() {
+    const releaseTypeOptions = Object.entries(releaseTypes).reduce(
       (options, [key, releaseType]) => [
         ...options,
         {
@@ -147,6 +147,13 @@ export default class ReleaseType implements TasklistPage {
         },
       ],
       [],
+    )
+    const optionsToExclude = ['ecsl']
+
+    return releaseTypeOptions.filter(
+      item =>
+        !optionsToExclude.includes(item.value) ||
+        this._body.releaseTypes?.filter(type => optionsToExclude.includes(type)).length > 0,
     )
   }
 }

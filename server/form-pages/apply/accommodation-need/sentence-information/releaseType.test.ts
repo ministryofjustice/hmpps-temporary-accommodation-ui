@@ -18,7 +18,7 @@ const body = {
   'paroleEndDate-day': '18',
 } as unknown as ReleaseTypeBody
 
-describe('SentenceExpiry', () => {
+describe('ReleaseType', () => {
   const application = applicationFactory.build()
 
   describe('body', () => {
@@ -191,11 +191,53 @@ describe('SentenceExpiry', () => {
     })
   })
 
-  describe('getReleaseTypeOptions', () => {
-    it('renders the options as an object for the template', () => {
+  describe('currentReleaseTypeOptions', () => {
+    it('renders the current options of release types for the view', () => {
       const page = new ReleaseType(body, application)
 
-      expect(page.getReleaseTypeOptions()).toEqual([
+      expect(page.currentReleaseTypeOptions()).toEqual([
+        {
+          name: 'Conditional release date (CRD) licence',
+          value: 'crdLicence',
+        },
+        {
+          name: 'Licence, following fixed-term recall',
+          value: 'fixedTermRecall',
+        },
+        {
+          name: 'Licence, following standard recall',
+          value: 'standardRecall',
+        },
+        {
+          name: 'Parole',
+          value: 'parole',
+        },
+        {
+          name: 'Post sentence supervision (PSS)',
+          value: 'pss',
+        },
+      ])
+    })
+
+    it('renders the current options include previous selected option for the view', () => {
+      const bodyWithPreviousReleaseType = {
+        releaseTypes: ['ecsl', 'parole'],
+        'ecslStartDate-year': '2024',
+        'ecslStartDate-month': '1',
+        'ecslStartDate-day': '19',
+        'ecsllEndDate-year': '2024',
+        'ecslEndDate-month': '7',
+        'ecslEndDate-day': '9',
+        'paroleStartDate-year': '2122',
+        'paroleStartDate-month': '4',
+        'paroleStartDate-day': '1',
+        'paroleEndDate-year': '2122',
+        'paroleEndDate-month': '7',
+        'paroleEndDate-day': '18',
+      } as unknown as ReleaseTypeBody
+      const page = new ReleaseType(bodyWithPreviousReleaseType, application)
+
+      expect(page.currentReleaseTypeOptions()).toEqual([
         {
           name: 'Conditional release date (CRD) licence',
           value: 'crdLicence',

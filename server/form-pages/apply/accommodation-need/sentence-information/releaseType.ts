@@ -149,4 +149,15 @@ export default class ReleaseType implements TasklistPage {
       [],
     )
   }
+
+  currentReleaseTypeOptions() {
+    const releaseTypeOptions = this.getReleaseTypeOptions()
+    const optionsToExclude = ['ecsl']
+
+    return releaseTypeOptions.filter(
+      item =>
+        !optionsToExclude.includes(item.value) ||
+        this._body.releaseTypes?.filter(type => optionsToExclude.includes(type)).length > 0,
+    )
+  }
 }

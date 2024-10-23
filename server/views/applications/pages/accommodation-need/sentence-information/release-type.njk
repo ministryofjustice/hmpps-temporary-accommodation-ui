@@ -38,7 +38,7 @@
     {% endset %}
 
     {% set releaseTypeOptions = [] %}
-    {% for option in convertObjectsToCheckboxItems(page.getReleaseTypeOptions(), 'name', 'value', 'releaseTypes') %}
+    {% for option in convertObjectsToCheckboxItems(page.currentReleaseTypeOptions(), 'name', 'value', 'releaseTypes') %}
         {% set releaseTypeOptions = releaseTypeOptions.concat(mergeObjects(
             option,
             { conditional: { html: startAndEndDatesFields(option.value) } }

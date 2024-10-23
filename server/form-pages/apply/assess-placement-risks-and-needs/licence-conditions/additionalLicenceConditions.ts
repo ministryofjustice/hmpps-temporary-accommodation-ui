@@ -36,7 +36,7 @@ const conditions: Record<string, AdditionalLicenceConditionField> = {
   exclusionZone: {
     text: 'Exclusion zone',
     detailLabel: 'Provide details about the exclusion zone',
-    detailHint: 'You must ensure that the exclusion zone map is on nDelius.',
+    detailHint: 'You must ensure that the exclusion zone map is on NDelius.',
     error: 'You must provide details about the exclusion zone',
   },
   initmateRelationships: {

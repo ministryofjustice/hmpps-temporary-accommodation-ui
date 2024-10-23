@@ -302,7 +302,7 @@ export default abstract class Page extends Component {
   shouldShowDeliusRiskFlags = (flags: PersonRisksUI['flags']): void => {
     const flagsValue = flags.value
 
-    cy.get('h2').contains(`Delius risk flags (registers)`)
+    cy.get('h2').contains(`NDelius risk flags (registers)`)
     cy.get('.risk-flag-widget > ul').within($item => {
       flagsValue.forEach(flag => {
         cy.wrap($item).get('li').should('contain', flag)

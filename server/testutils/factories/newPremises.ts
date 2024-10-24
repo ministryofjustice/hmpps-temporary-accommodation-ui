@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 import { NewPremises, TemporaryAccommodationPremises as Premises } from '../../@types/shared'
 import { unique } from '../../utils/utils'

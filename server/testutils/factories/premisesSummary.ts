@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 import type { TemporaryAccommodationPremisesSummary as PremisesSummary } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'

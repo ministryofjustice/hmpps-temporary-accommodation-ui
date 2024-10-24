@@ -1,5 +1,5 @@
 import { Factory } from 'fishery'
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import type { Room, UpdateRoom } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
 import { unique } from '../../utils/utils'

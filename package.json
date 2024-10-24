@@ -230,7 +230,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-jinja-template": "^1.4.0",
     "sass": "^1.77.6",
-    "shellcheck": "^2.0.0",
+    "shellcheck": "^3.0.0",
     "start-server-and-test": "^2.0.4",
     "supertest": "^6.3.0",
     "ts-jest": "^29.1.5",

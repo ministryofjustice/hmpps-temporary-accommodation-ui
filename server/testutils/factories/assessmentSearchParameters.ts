@@ -1,6 +1,6 @@
 import { Factory } from 'fishery'
 import { AssessmentSearchParameters } from '@approved-premises/ui'
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 
 export default Factory.define<AssessmentSearchParameters>(() => ({
   crnOrName: faker.helpers.arrayElement([

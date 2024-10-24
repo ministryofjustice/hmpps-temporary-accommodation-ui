@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 
 export const fakeObject = () => {
   const properties = ['foo', 'bar', 'bike', 'a', 'b', 'name', 'prop']

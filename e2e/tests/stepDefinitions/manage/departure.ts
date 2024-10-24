@@ -1,5 +1,5 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import Page from '../../../../cypress_shared/pages/page'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
 import BookingDepartureEditPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingDepartureEdit'
@@ -16,7 +16,7 @@ Given('I mark the booking as departed', () => {
 
     const departure = departureFactory.build({
       dateTime: DateFormats.dateObjToIsoDate(
-        faker.date.future({ years: 1, refDate: DateFormats.isoToDateObj(this.booking.arrivalDate) }),
+        fakerGB.date.future({ years: 1, refDate: DateFormats.isoToDateObj(this.booking.arrivalDate) }),
       ),
     })
     const newDeparture = newDepartureFactory.build({

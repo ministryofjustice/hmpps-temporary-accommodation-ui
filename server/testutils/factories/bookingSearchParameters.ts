@@ -1,5 +1,5 @@
 import { Factory } from 'fishery'
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { BookingSearchParameters } from '@approved-premises/ui'
 
 export default Factory.define<BookingSearchParameters>(() => ({

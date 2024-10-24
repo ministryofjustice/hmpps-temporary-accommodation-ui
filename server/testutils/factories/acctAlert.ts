@@ -1,5 +1,5 @@
 import { Factory } from 'fishery'
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import type { PersonAcctAlert } from '@approved-premises/api'
 
 import { DateFormats } from '../../utils/dateUtils'

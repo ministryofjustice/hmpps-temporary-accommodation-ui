@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker/locale/en_GB'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
 import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'

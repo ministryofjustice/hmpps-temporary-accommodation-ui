@@ -149,7 +149,6 @@ export type { NewBedMove } from './models/NewBedMove';
 export type { NewBooking } from './models/NewBooking';
 export type { NewBookingNotMade } from './models/NewBookingNotMade';
 export type { NewCancellation } from './models/NewCancellation';
-export type { NewCas1Arrival } from './models/NewCas1Arrival';
 export type { NewCas1OutOfServiceBed } from './models/NewCas1OutOfServiceBed';
 export type { NewCas1OutOfServiceBedCancellation } from './models/NewCas1OutOfServiceBedCancellation';
 export type { NewCas2ApplicationNote } from './models/NewCas2ApplicationNote';

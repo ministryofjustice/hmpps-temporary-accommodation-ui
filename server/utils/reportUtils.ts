@@ -16,15 +16,15 @@ const reverseISODate = (isoDate: string) => isoDate.split('-').reverse().join('-
 const reportNames: Record<Cas3ReportType, string> = {
   referral: 'referrals',
   futureBookings: 'future bookings',
+  futureBookingsCsv: 'future bookings csv',
   booking: 'bookings',
   bedUsage: 'bedspace usage',
   bedOccupancy: 'occupancy',
 }
 
 const reportFileType = (reportType: Cas3ReportType): string => {
-  if (reportType === 'futureBookings') {
-    // return 'csv'
-    return 'xlsx'
+  if (reportType === 'futureBookingsCsv') {
+    return 'csv'
   }
   return 'xlsx'
 }

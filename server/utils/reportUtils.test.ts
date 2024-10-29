@@ -67,6 +67,19 @@ describe('reportUtils', () => {
       // expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
       expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.xlsx')
     })
+
+    it('returns the correct filename for a future bookings CSV report', () => {
+      const probationRegion = probationRegionFactory.build({
+        name: 'Kent, Surrey & Sussex',
+      })
+      const startDate = '2023-08-11'
+      const endDate = '2023-11-23'
+      const type = 'futureBookingsCsv'
+
+      const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
+
+      expect(result).toEqual('future-bookings-csv-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
+    })
   })
 
   describe('allReportProbationRegions', () => {

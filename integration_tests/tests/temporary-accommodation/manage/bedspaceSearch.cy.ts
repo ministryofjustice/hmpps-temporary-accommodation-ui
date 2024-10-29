@@ -106,7 +106,7 @@ context('Bedspace Search', () => {
 
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
-      expect(requestBody.probationDeliveryUnit).equal(searchParameters.probationDeliveryUnit)
+      expect(requestBody.probationDeliveryUnits).to.include.members(searchParameters.probationDeliveryUnits)
       expect(requestBody.attributes).to.have.members(searchParameters.attributes)
     })
 

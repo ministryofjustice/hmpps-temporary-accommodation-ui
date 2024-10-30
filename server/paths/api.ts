@@ -149,6 +149,7 @@ export default {
     bedspaceUsage: reportsCas3Path.path('bedUsage'),
     bedspaceUtilisation: reportsCas3Path.path('bedOccupancy'),
     futureBookings: reportsCas3Path.path('futureBookings'),
+    futureBookingsCsv: reportsCas3Path.path('futureBookingsCsv'),
     referrals: reportsCas3Path.path('referral'),
   },
   users: {

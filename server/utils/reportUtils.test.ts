@@ -1,5 +1,11 @@
 import { probationRegionFactory } from '../testutils/factories'
-import { allReportProbationRegions, reportFilename, reportForProbationRegionFilename } from './reportUtils'
+import {
+  allReportProbationRegions,
+  getApiReportPath,
+  reportFilename,
+  reportForProbationRegionFilename,
+} from './reportUtils'
+import paths from '../paths/api'
 
 jest.mock('./validation')
 
@@ -104,6 +110,27 @@ describe('reportUtils', () => {
         regionsReferenceData[0],
         regionsReferenceData[1],
       ])
+    })
+  })
+
+  describe('getApiReportPath', () => {
+    it('returns booking path for booking report', () => {
+      expect(getApiReportPath('booking')).toEqual(paths.reports.bookings({}))
+    })
+
+    it('returns referrals path for referrals report', () => {
+      expect(getApiReportPath('referral')).toEqual(paths.reports.referrals({}))
+    })
+
+    it('returns bedspace usage path for bedspace usage report', () => {
+      expect(getApiReportPath('bedUsage')).toEqual(paths.reports.bedspaceUsage({}))
+    })
+    it('returns future bookings path for future bookings report', () => {
+      expect(getApiReportPath('futureBookings')).toEqual(paths.reports.futureBookings({}))
+    })
+
+    it('returns future bookings csv path for future bookings csv report', () => {
+      expect(getApiReportPath('futureBookingsCsv')).toEqual(paths.reports.futureBookingsCsv({}))
     })
   })
 })

@@ -65,6 +65,10 @@ export const getApiReportPath = (reportType: Cas3ReportType): string => {
     return paths.reports.futureBookings({})
   }
 
+  if (reportType === 'futureBookingsCsv') {
+    return paths.reports.futureBookingsCsv({})
+  }
+
   return paths.reports.bedspaceUtilisation({})
 }
 

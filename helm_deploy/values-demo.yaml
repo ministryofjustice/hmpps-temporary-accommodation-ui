@@ -9,12 +9,12 @@ generic-service:
       - temporary-accommodation-demo.hmpps.service.justice.gov.uk
       - transitional-accommodation-demo.hmpps.service.justice.gov.uk
     contextColour: green
-    tlsSecretName: hmpps-temporary-accommodation-dev-cert
+    tlsSecretName: hmpps-temporary-accommodation-demo-cert
 
   env:
     ENVIRONMENT: demo
     APPROVED_PREMISES_API_URL: 'https://approved-premises-api-demo.hmpps.service.justice.gov.uk'
-    FIRST_INGRESS_URL: 'https://temporary-accommodation-demp.hmpps.service.justice.gov.uk'
+    FIRST_INGRESS_URL: 'https://temporary-accommodation-demo.hmpps.service.justice.gov.uk'
     SECOND_INGRESS_URL: 'https://transitional-accommodation-demo.hmpps.service.justice.gov.uk'
     HMPPS_AUTH_URL: 'https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
     TOKEN_VERIFICATION_API_URL: 'https://token-verification-api-dev.prison.service.justice.gov.uk'
@@ -23,22 +23,13 @@ generic-service:
     COMMUNITY_ACCOMMODATION_API_TIMEOUT_DEADLINE: 30000
     PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE: 100
     DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
-    REDIS_ENABLED: 'false'
 
   namespace_secrets:
     sqs-hmpps-audit-secret:
       AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
-    hmpps-temporary-accommodation-ui:
-      APPINSIGHTS_INSTRUMENTATIONKEY: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-      API_CLIENT_ID: 'API_CLIENT_ID'
-      API_CLIENT_SECRET: 'API_CLIENT_SECRET'
-      SYSTEM_CLIENT_ID: 'SYSTEM_CLIENT_ID'
-      SYSTEM_CLIENT_SECRET: 'SYSTEM_CLIENT_SECRET'
-      SESSION_SECRET: 'SESSION_SECRET'
-      SENTRY_DSN: 'SENTRY_DSN'
 
   allowlist: null
 
 generic-prometheus-alerts:
-  alertSeverity: digital-prison-service-dev
+  alertSeverity: digital-prison-service-demo

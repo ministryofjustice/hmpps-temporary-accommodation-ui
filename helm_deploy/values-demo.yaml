@@ -24,11 +24,6 @@ generic-service:
     PAGINATION_ASSESSMENTS_DEFAULT_PAGE_SIZE: 100
     DOMAIN_EVENTS_EMIT_ENABLED: 'personArrived,personDeparted'
 
-  namespace_secrets:
-    sqs-hmpps-audit-secret:
-      AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
-      AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
-
   allowlist: null
 
 generic-prometheus-alerts:

@@ -1,5 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 
+import { addDays } from 'date-fns'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import ReportService from '../../../services/reportService'
@@ -26,7 +27,8 @@ export default class ReportsController {
         errors,
         errorSummary: requestErrorSummary,
         probationRegionId: req.session.probationRegion.id,
-        maxReportDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(new Date())),
+        maxStartDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(addDays(new Date(), -1))),
+        maxEndDate: DateFormats.isoDateToDatepickerInput(DateFormats.dateObjToIsoDate(new Date())),
         ...userInput,
       })
     }

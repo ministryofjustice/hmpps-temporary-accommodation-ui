@@ -82,7 +82,8 @@ describe('ReportsController', () => {
         errors: {},
         errorSummary: [],
         probationRegionId: request.session.probationRegion.id,
-        maxReportDate: '22/04/2024',
+        maxStartDate: '21/04/2024',
+        maxEndDate: '22/04/2024',
       })
     })
 
@@ -128,7 +129,8 @@ describe('ReportsController', () => {
           errors: {},
           errorSummary: [],
           probationRegionId: request.session.probationRegion.id,
-          maxReportDate: '22/04/2024',
+          maxStartDate: '21/04/2024',
+          maxEndDate: '22/04/2024',
         })
       })
     })

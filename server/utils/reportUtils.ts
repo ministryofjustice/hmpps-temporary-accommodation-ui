@@ -18,6 +18,7 @@ const reportNames: Record<Cas3ReportType, string> = {
   futureBookings: 'future bookings',
   futureBookingsCsv: 'future bookings csv',
   booking: 'bookings',
+  bookingGap: 'booking gap',
   bedUsage: 'bedspace usage',
   bedOccupancy: 'occupancy',
 }

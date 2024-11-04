@@ -24,7 +24,7 @@ const reportNames: Record<Cas3ReportType, string> = {
 }
 
 const reportFileType = (reportType: Cas3ReportType): string => {
-  if (reportType === 'futureBookingsCsv') {
+  if (reportType === 'futureBookingsCsv' || reportType === 'bookingGap') {
     return 'csv'
   }
   return 'xlsx'
@@ -68,6 +68,10 @@ export const getApiReportPath = (reportType: Cas3ReportType): string => {
 
   if (reportType === 'futureBookingsCsv') {
     return paths.reports.futureBookingsCsv({})
+  }
+
+  if (reportType === 'bookingGap') {
+    return paths.reports.bookingGap({})
   }
 
   return paths.reports.bedspaceUtilisation({})

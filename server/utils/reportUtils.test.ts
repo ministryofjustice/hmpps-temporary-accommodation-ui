@@ -70,7 +70,6 @@ describe('reportUtils', () => {
 
       const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
 
-      // expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
       expect(result).toEqual('future-bookings-kent-surrey-sussex-11-08-2023-to-23-11-2023.xlsx')
     })
 
@@ -85,6 +84,19 @@ describe('reportUtils', () => {
       const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
 
       expect(result).toEqual('future-bookings-csv-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
+    })
+
+    it('returns the correct filename for a booking Gap CSV report', () => {
+      const probationRegion = probationRegionFactory.build({
+        name: 'Kent, Surrey & Sussex',
+      })
+      const startDate = '2023-08-11'
+      const endDate = '2023-11-23'
+      const type = 'bookingGap'
+
+      const result = reportForProbationRegionFilename(probationRegion.name, startDate, endDate, type)
+
+      expect(result).toEqual('booking-gap-kent-surrey-sussex-11-08-2023-to-23-11-2023.csv')
     })
   })
 
@@ -131,6 +143,10 @@ describe('reportUtils', () => {
 
     it('returns future bookings csv path for future bookings csv report', () => {
       expect(getApiReportPath('futureBookingsCsv')).toEqual(paths.reports.futureBookingsCsv({}))
+    })
+
+    it('returns booking Gap path for booking gap csv report', () => {
+      expect(getApiReportPath('bookingGap')).toEqual(paths.reports.bookingGap({}))
     })
   })
 })

@@ -112,6 +112,7 @@
 
                             {% set bedspaceKeyCharacteristics = BedspaceSearchResultUtils.bedspaceKeyCharacteristics(result) %}
                             {% set premisesKeyCharacteristics = BedspaceSearchResultUtils.premisesKeyCharacteristics(result) %}
+
                             {% set attributesHtml %}
                                 <div class="govuk-grid-row">
                                     <div class="govuk-grid-column-one-half">
@@ -135,10 +136,16 @@
                                     </div>
                                 </div>
 
+                                <div class="govuk-grid-row" data-cy-premises-notes>
+                                    <div class="govuk-grid-column-full">
+                                        <h3 class="govuk-heading-s">Property notes</h3>
+                                        {{ formatNotes(result.premises.notes) }}
+                                    </div>
+                                </div>
                             {% endset %}
 
                             {{ govukDetails({
-                                summaryText: "Bedspace and property attributes",
+                                summaryText: "Bedspace and property information",
                                 html: attributesHtml
                             }) }}
                         </div>

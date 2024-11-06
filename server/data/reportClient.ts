@@ -32,6 +32,7 @@ export default class ReportClient {
       path: getApiReportPath(type),
       query: { probationRegionId, startDate, endDate },
       filename,
+      // passThroughHeaders: ['content-disposition'],
     })
   }
 }

@@ -1,10 +1,13 @@
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
 import nock from 'nock'
+import { Readable } from 'stream'
 import type { ApiConfig } from '../config'
 import { probationRegionFactory } from '../testutils/factories'
 import RestClient, { CallConfig } from './restClient'
-import * as sanitiseError from '../sanitisedError'
+import logger from '../../logger'
+
+jest.mock('../../logger')
 
 describe('restClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
@@ -147,63 +150,53 @@ describe('restClient', () => {
   })
 
   describe('pipe', () => {
-    it('should make a GET request and pipe the response, using the specified filename', async () => {
-      const data = 'some-data'
+    const response = createMock<Response>({})
+    const mockReadStream = jest.fn().mockImplementation(() => {
+      const readable = new Readable()
+      readable.push('hello')
+      readable.push('world')
+      readable.push(null)
 
-      fakeApprovedPremisesApi.get(`/some/path`).reply(200, data, { 'content-type': 'some-content-type' })
-
-      const response = createMock<Response>()
-
-      await restClient.pipe(response, { path: '/some/path', filename: 'some-filename' })
-
-      expect(response.set).toHaveBeenCalledWith({
-        'Content-Type': 'some-content-type',
-        'Content-Disposition': 'attachment; filename="some-filename"',
-      })
-
-      expect(response.send).toHaveBeenCalledWith(Buffer.from(data))
-      expect(nock.isDone()).toBeTruthy()
+      return readable
     })
 
-    it('should make a GET request and pipe the response, using the filename from the API when none is specified', async () => {
-      const data = 'some-data'
-      fakeApprovedPremisesApi.get(`/some/path`).reply(200, data, {
-        'content-type': 'some-content-type',
-        'content-disposition': 'attachment; filename="some-filename"',
-      })
+    it('should pipe a streaming response to a response', async () => {
+      fakeApprovedPremisesApi.get('/some/path').reply(200, () => mockReadStream())
 
-      const response = createMock<Response>()
+      const writeSpy = jest.spyOn(response, 'write')
 
       await restClient.pipe(response, { path: '/some/path' })
 
-      expect(response.set).toHaveBeenCalledWith({
-        'Content-Type': 'some-content-type',
-        'Content-Disposition': 'attachment; filename="some-filename"',
-      })
+      expect(writeSpy).toHaveBeenCalledWith(Buffer.from('hello', 'utf-8'))
+      expect(writeSpy).toHaveBeenCalledWith(Buffer.from('world', 'utf-8'))
 
-      expect(response.send).toHaveBeenCalledWith(Buffer.from(data))
       expect(nock.isDone()).toBeTruthy()
     })
 
-    it('should throw with a sanitised error when the API returns an error', async () => {
-      jest.spyOn(sanitiseError, 'default')
-      fakeApprovedPremisesApi.get(`/some/path`).reply(400, { some: 'data' })
+    it('should send the content-disposition header to the response', async () => {
+      fakeApprovedPremisesApi
+        .get('/some/path')
+        .reply(200, () => mockReadStream(), { 'content-disposition': 'attachment; filename=foo.txt' })
 
-      const response = createMock<Response>()
-      let error: Error
+      const setSpy = jest.spyOn(response, 'set')
 
-      try {
-        await restClient.pipe(response, { path: '/some/path' })
-      } catch (e) {
-        error = e
-      }
+      await restClient.pipe(response, { path: '/some/path', passThroughHeaders: ['content-disposition'] })
 
-      expect(sanitiseError.default).toHaveBeenCalledWith(new Error(error.message))
+      expect(setSpy).toHaveBeenCalledWith('content-disposition', 'attachment; filename=foo.txt')
+    })
 
-      expect(response.set).not.toHaveBeenCalled()
-      expect(response.send).not.toHaveBeenCalled()
+    it('should throw error if the response is unsuccessful', async () => {
+      fakeApprovedPremisesApi.get('/some/path').reply(404)
 
-      expect(nock.isDone()).toBeTruthy()
+      const loggerSpy = jest.spyOn(logger, 'warn')
+
+      await expect(restClient.pipe(response, { path: '/some/path' })).rejects.toThrowError(
+        'cannot GET /some/path (404)',
+      )
+
+      expect(loggerSpy).toHaveBeenCalledWith(new Error('cannot GET /some/path (404)'), 'Error calling premisesClient')
+
+      nock.cleanAll()
     })
   })
 })

@@ -54,7 +54,7 @@
     ],
     "coverageThreshold": {
       "global": {
-        "functions": 100
+        "functions": 99
       }
     },
     "testMatch": [

@@ -24,7 +24,6 @@ import cancellationStubs from './cancellationStubs'
 import departureStubs from './departuresStubs'
 import extensionStubs from './extensionStubs'
 import lostBedStubs from './lostBedStubs'
-import nonArrivalStubs from './nonArrivalStubs'
 import personStubs from './personStubs'
 import roomStubs from './roomStub'
 import turnaroundStubs from './turnaroundStubs'
@@ -265,7 +264,6 @@ stubs.push({
 stubs.push(
   ...bookingStubs,
   ...arrivalStubs,
-  ...nonArrivalStubs,
   ...departureStubs,
   ...cancellationStubs,
   ...confirmationStubs,

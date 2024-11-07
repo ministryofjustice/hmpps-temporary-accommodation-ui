@@ -11,9 +11,7 @@ import type {
   NewConfirmation,
   NewDeparture,
   NewExtension,
-  NewNonarrival,
   NewTurnaround,
-  Nonarrival,
   Turnaround,
 } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters } from '@approved-premises/ui'
@@ -95,13 +93,6 @@ export default class BookingClient {
   async findDeparture(premisesId: string, bookingId: string, departureId: string) {
     return this.restClient.get<Departure>({
       path: `${this.bookingPath(premisesId, bookingId)}/departures/${departureId}`,
-    })
-  }
-
-  async markNonArrival(premisesId: string, bookingId: string, nonArrival: NewNonarrival) {
-    return this.restClient.post<Nonarrival>({
-      path: `${this.bookingPath(premisesId, bookingId)}/non-arrivals`,
-      data: nonArrival,
     })
   }
 

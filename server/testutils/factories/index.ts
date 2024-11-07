@@ -44,7 +44,6 @@ import newPremisesFactory from './newPremises'
 import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
 import newRoomFactory from './newRoom'
 import newTurnaroundFactory from './newTurnaround'
-import nonArrivalFactory from './nonArrival'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import oasysSelectionFactory from './oasysSelection'
 import overlapFactory from './overlap'
@@ -116,7 +115,6 @@ export {
   newReferralHistoryUserNoteFactory,
   newRoomFactory,
   newTurnaroundFactory,
-  nonArrivalFactory,
   oasysSectionsFactory,
   oasysSelectionFactory,
   overlapFactory,

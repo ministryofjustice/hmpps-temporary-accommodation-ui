@@ -161,7 +161,6 @@ export type { NewDeparture } from './models/NewDeparture';
 export type { NewExtension } from './models/NewExtension';
 export type { NewLostBed } from './models/NewLostBed';
 export type { NewLostBedCancellation } from './models/NewLostBedCancellation';
-export type { NewNonarrival } from './models/NewNonarrival';
 export type { NewPlacementApplication } from './models/NewPlacementApplication';
 export type { NewPlacementRequestBooking } from './models/NewPlacementRequestBooking';
 export type { NewPlacementRequestBookingConfirmation } from './models/NewPlacementRequestBookingConfirmation';

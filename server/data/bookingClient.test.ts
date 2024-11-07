@@ -17,7 +17,6 @@ import {
   newConfirmationFactory,
   newDepartureFactory,
   newTurnaroundFactory,
-  nonArrivalFactory,
   turnaroundFactory,
 } from '../testutils/factories'
 
@@ -226,27 +225,6 @@ describe('BookingClient', () => {
       const result = await bookingClient.findDeparture('premisesId', 'bookingId', departure.id)
 
       expect(result).toEqual(departure)
-      expect(nock.isDone()).toBeTruthy()
-    })
-  })
-
-  describe('markNonArrival', () => {
-    it('should create an non-arrival', async () => {
-      const nonArrival = nonArrivalFactory.build()
-      const payload = {
-        date: nonArrival.date.toString(),
-        notes: nonArrival.notes,
-        reason: nonArrival.reason.id,
-      }
-
-      fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/non-arrivals`, payload)
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(201, nonArrival)
-
-      const result = await bookingClient.markNonArrival('premisesId', 'bookingId', payload)
-
-      expect(result).toEqual(nonArrival)
       expect(nock.isDone()).toBeTruthy()
     })
   })

@@ -1,6 +1,7 @@
 import { TemporaryAccommodationBedSearchResult as BedSearchResult } from '../../server/@types/shared'
 import paths from '../../server/paths/temporary-accommodation/manage'
 import Component from './component'
+import { formatNotes } from '../../server/utils/viewUtils'
 
 export default class BedspaceSearchResult extends Component {
   constructor(private readonly result: BedSearchResult) {
@@ -34,6 +35,11 @@ export default class BedspaceSearchResult extends Component {
 
         this.result.room.characteristics.forEach(characteristic => {
           cy.get('ul[data-cy-bedspace-key-characteristics] > li').should('contain', characteristic.name)
+        })
+
+        cy.get('div[data-cy-premises-notes]').within(() => {
+          cy.get('h3').contains('Property notes')
+          cy.root().contains(formatNotes(this.result.premises.notes))
         })
 
         this.result.overlaps.forEach((overlap, i) => {

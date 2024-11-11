@@ -34,3 +34,7 @@ function normalizeText(text: string): string {
 
   return output
 }
+
+export function formatNotes(note: string): string {
+  return formatLines(note)
+}

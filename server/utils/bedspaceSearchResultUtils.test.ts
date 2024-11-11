@@ -1,5 +1,6 @@
 import { bedSearchResultFactory, characteristicFactory, premisesFactory, roomFactory } from '../testutils/factories'
 import { bedspaceKeyCharacteristics, premisesKeyCharacteristics } from './bedspaceSearchResultUtils'
+import { formatNotes } from './viewUtils'
 
 describe('BedspaceSearchResultUtils', () => {
   describe('bedspaceKeyCharacteristics', () => {
@@ -48,6 +49,22 @@ describe('BedspaceSearchResultUtils', () => {
         'Shared kitchen',
         'Wheelchair accessible',
       ])
+    })
+  })
+
+  describe('premisesNotes', () => {
+    it('returns escaped premises notes', () => {
+      const notes = 'Lorem ipsum<br/><br/><br/>Loremipsum'
+
+      expect(formatNotes(notes)).toEqual('Lorem ipsum&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;Loremipsum')
+    })
+  })
+
+  describe('premisesNotes', () => {
+    it('returns notes with correctly formatted html tags for line breaks', () => {
+      const notes = 'Lorem ipsum\n\nLoremipsum\nipsum'
+
+      expect(formatNotes(notes)).toEqual('<p>Lorem ipsum</p><p>Loremipsum<br />ipsum</p>')
     })
   })
 })

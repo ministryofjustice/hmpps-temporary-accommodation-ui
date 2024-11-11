@@ -18,6 +18,7 @@ import {
 } from './formUtils'
 import { isFullPerson, personName, statusTag as personStatusTag } from './personUtils'
 import { initialiseName, mapApiPersonRisksForUi, removeBlankSummaryListItems, sentenceCase } from './utils'
+import { formatNotes } from './viewUtils'
 
 import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
 import * as AssessmentUtils from './assessmentUtils'
@@ -193,4 +194,5 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('AssessmentUtils', AssessmentUtils)
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
   njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)
+  njkEnv.addGlobal('formatNotes', formatNotes)
 }

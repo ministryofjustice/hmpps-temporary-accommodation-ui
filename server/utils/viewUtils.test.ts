@@ -1,4 +1,5 @@
 import * as viewUtilsModule from './viewUtils'
+import { formatNotes } from './viewUtils'
 
 const { escape } = viewUtilsModule
 const { formatLines } = viewUtilsModule
@@ -53,5 +54,19 @@ describe('formatLines', () => {
 
   it('returns the empty string when given null', () => {
     expect(formatLines(null)).toEqual('')
+  })
+})
+
+describe('formatNotes', () => {
+  it('returns escaped premises notes', () => {
+    const notes = 'Lorem ipsum<br/><br/><br/>Loremipsum'
+
+    expect(formatNotes(notes)).toEqual('<p>Lorem ipsum&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;Loremipsum</p>')
+  })
+
+  it('returns notes with correctly formatted html tags for line breaks', () => {
+    const notes = 'Lorem ipsum\n\nLoremipsum\nipsum'
+
+    expect(formatNotes(notes)).toEqual('<p>Lorem ipsum</p><p>Loremipsum<br />ipsum</p>')
   })
 })

@@ -38,8 +38,19 @@ export default class BedspaceSearchResult extends Component {
         })
 
         cy.get('div[data-cy-premises-notes]').within(() => {
+          const expectedNotesHTML = formatNotes(this.result.premises.notes)
+            .replace(/<br \/>/g, '<br>')
+            .replace(/<p>/g, '')
+            .replace(/<\/p>/g, '')
+
           cy.get('h3').contains('Property notes')
-          cy.root().contains(formatNotes(this.result.premises.notes))
+
+          cy.get('p').then(element => {
+            const renderedHTML = element.html()
+            expect(renderedHTML).to.eq(expectedNotesHTML)
+          })
+
+          // invoke('html').contains(notes)
         })
 
         this.result.overlaps.forEach((overlap, i) => {

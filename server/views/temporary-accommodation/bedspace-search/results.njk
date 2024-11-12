@@ -92,13 +92,23 @@
                                     <ul class="govuk-list govuk-list--spaced" data-cy-overlaps>
                                         {% for overlap in result.overlaps %}
                                             <li>
+                                                <strong>{{ overlap.name }}</strong><br>
                                                 CRN: {{ overlap.crn }}<br>
                                                 {{ overlap.days }} {{ 'day' if overlap.days == '1' else 'days' }}
                                                 overlap<br>
                                                 <a class="govuk-link"
                                                    href="{{ addPlaceContext(paths.bookings.show({premisesId: result.premises.id, roomId: overlap.roomId, bookingId: overlap.bookingId})) }}">
                                                     View booking
-                                                </a>
+                                                </a><br>
+                                                {% if overlap.assessmentId %}
+                                                    <a class="govuk-link" 
+                                                        href="{{ addPlaceContext(paths.assessments.full({ id: overlap.assessmentId })) }}"
+                                                        rel="noreferrer noopener" target="_blank"
+                                                        >View {{ overlap.name }}' referral
+                                                    </a>
+                                                {% else %}
+                                                    No referral found
+                                                {% endif %}
                                             </li>
                                         {% endfor %}
                                     </ul>

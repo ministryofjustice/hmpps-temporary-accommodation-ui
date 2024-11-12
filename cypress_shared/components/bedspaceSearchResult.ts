@@ -47,6 +47,7 @@ export default class BedspaceSearchResult extends Component {
             .eq(i)
             .within(() => {
               cy.root().contains(`CRN: ${overlap.crn}`)
+              cy.root().contains(overlap.name)
               cy.root().contains(overlap.days === 1 ? '1 day overlap' : `${overlap.days} days overlap`)
               cy.get('a')
                 .contains('View booking')
@@ -59,6 +60,20 @@ export default class BedspaceSearchResult extends Component {
                     bookingId: overlap.bookingId,
                   }),
                 )
+              if (overlap.assessmentId) {
+                cy.get('a')
+                  .contains(`View ${overlap.name}' referral`)
+                  .should(
+                    'have.attr',
+                    'href',
+                    paths.assessments.full({
+                      id: overlap.assessmentId,
+                    }),
+                  )
+                  .and('have.attr', 'target', '_blank')
+              } else {
+                cy.contains('No referral found')
+              }
             })
         })
       })

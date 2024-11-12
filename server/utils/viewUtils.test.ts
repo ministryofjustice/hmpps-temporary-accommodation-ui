@@ -38,7 +38,7 @@ describe('formatLines', () => {
     expect(escapeSpy).toBeCalledTimes(3)
   })
 
-  it('ignores trailing whiespace', () => {
+  it('ignores trailing whitespace', () => {
     expect(formatLines('\n\nParagraph 1, Line 1\nParagraph 1, Line 2\n\nParagraph 2  ')).toEqual(
       '<p>Paragraph 1, Line 1<br />Paragraph 1, Line 2</p><p>Paragraph 2</p>',
     )

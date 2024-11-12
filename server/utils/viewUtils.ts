@@ -36,5 +36,13 @@ function normalizeText(text: string): string {
 }
 
 export function formatNotes(note: string): string {
-  return formatLines(note)
+  const output = formatLines(note)
+
+  const wrappedParagraph = /^<p>.*<\/p>$/
+
+  if (!wrappedParagraph.test(output)) {
+    return `<p>${output}</p>`
+  }
+
+  return output
 }

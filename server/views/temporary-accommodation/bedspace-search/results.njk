@@ -139,7 +139,7 @@
                                 <div class="govuk-grid-row" data-cy-premises-notes>
                                     <div class="govuk-grid-column-full">
                                         <h3 class="govuk-heading-s">Property notes</h3>
-                                        {{ formatNotes(result.premises.notes) }}
+                                        {{ formatNotes(result.premises.notes) | safe }}
                                     </div>
                                 </div>
                             {% endset %}

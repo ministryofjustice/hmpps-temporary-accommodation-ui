@@ -23,80 +23,73 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../_messages.njk" %}
- 
-    {{ showErrorSummary(errorSummary, errorTitle) }}
-    
-    <div class="moj-identity-bar">
-        <div class="moj-identity-bar__container">
-            <div class="moj-identity-bar__details">
+  {% include "../../_messages.njk" %}
+
+  {{ showErrorSummary(errorSummary, errorTitle) }}
+
+  <div class="moj-identity-bar">
+    <div class="moj-identity-bar__container">
+      <div class="moj-identity-bar__details">
         <span class="moj-identity-bar__title">
-            <h1 class="govuk-heading-xl">
-                <span class="govuk-caption-xl">Referral summary</span>
-                {{ name }}
-                {{ assessmentStatusTag(assessment.status) | safe }}
-            </h1>
+          <h1 class="govuk-heading-l">
+            <span class="govuk-caption-l">Referral summary</span>
+            {{ name }}
+            {{ assessmentStatusTag(assessment.status) | safe }}
+          </h1>
         </span>
-            </div>
+      </div>
 
-            <div class="moj-identity-bar__actions">
-                <div class="moj-identity-bar__menu">
-                    <div class="moj-button-menu">
-                        <div class="moj-button-menu__wrapper">
-                            {% for action in actions %}
-                                <a href="{{ action.href }}" role="menuitem" draggable="false"
-                                   class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button"
-                                   data-secondary="true">
-                                    {{ action.text }}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+      <div class="moj-identity-bar__actions">
+        <div class="moj-identity-bar__menu">
+          <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+              {% for action in actions %}
+                <a href="{{ action.href }}" role="menuitem" draggable="false"
+                 class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button"
+                 data-secondary="true">
+                  {{ action.text }}
+                </a>
+              {% endfor %}
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
-    {{ personDetails(assessment.application.person) }}
+  <div class="govuk-grid-row govuk-!-margin-top-4">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
       {{ personDetails({person: assessment.application.person, headingLevel: 2 }) }}
 
-    {{ govukButton({
-        text: "View full referral",
-        type: "button",
-        href: addPlaceContext(paths.assessments.full({ id: assessment.id })),
-        classes: "govuk-button--secondary"
-    }) }}
+		  {{ govukButton({
+	      text: "View full referral",
+	      type: "button",
+	      href: addPlaceContext(paths.assessments.full({ id: assessment.id })),
+	      classes: "govuk-button--secondary"
+		  }) }}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.assessments.notes.create({ id: assessment.id }) }}" method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                {{ formPageTextarea(
-                    {
-                        fieldName: "message",
-                        label: {
-                        text: "Add a note",
-                        classes: "govuk-label--m referral-note"
-                    }
-                    },
-                    fetchContext()
-                ) }}
+			<form action="{{ paths.assessments.notes.create({ id: assessment.id }) }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+			  {{ formPageTextarea({
+			    fieldName: "message",
+          label: {
+	          text: "Add a note",
+	          classes: "govuk-label--m referral-note"
+		      }
+		      },fetchContext())
+		    }}
 
-                {{ govukButton({
-                    text: "Save note",
-                    classes: "govuk-button--secondary",
-                    preventDoubleClick: true
-                }) }}
-            </form>
-        </div>
-    </div>
+			  {{ govukButton({
+		      text: "Save note",
+		      classes: "govuk-button--secondary",
+		      preventDoubleClick: true
+			  }) }}
+			</form>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-l" id="notes">Referral history</h2>
-            {{ mojTimeline({ items: AssessmentUtils.timelineItems(assessment) }) }}
-        </div>
-    </div>
+      <h2 class="govuk-heading-l" id="notes">Referral history</h2>
+      {{ mojTimeline({ items: AssessmentUtils.timelineItems(assessment) }) }}
+	  </div>
+	</div>
 
 {% endblock %}
 

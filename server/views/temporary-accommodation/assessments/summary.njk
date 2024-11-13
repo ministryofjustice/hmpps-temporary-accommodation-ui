@@ -58,6 +58,7 @@
     </div>
 
     {{ personDetails(assessment.application.person) }}
+      {{ personDetails({person: assessment.application.person, headingLevel: 2 }) }}
 
     {{ govukButton({
         text: "View full referral",

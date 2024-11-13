@@ -5,7 +5,7 @@ import { ReportClient } from '../data'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
 import { probationRegionFactory } from '../testutils/factories'
-import { reportFilename, reportForProbationRegionFilename } from '../utils/reportUtils'
+import { reportForProbationRegionFilename } from '../utils/reportUtils'
 import ReportService from './reportService'
 
 jest.mock('../data/reportClient.ts')
@@ -27,21 +27,6 @@ describe('ReportService', () => {
     jest.resetAllMocks()
     ReportClientFactory.mockReturnValue(reportClient)
     ReferenceDataClientFactory.mockReturnValue(referenceDataClient)
-  })
-
-  describe('pipeBookings', () => {
-    it('pipes all bookings to an express response, for download as a file', async () => {
-      const response = createMock<Response>()
-      ;(reportFilename as jest.MockedFunction<typeof reportFilename>).mockReturnValue('some-filename')
-      const month = '1'
-      const year = '2023'
-
-      await service.pipeBookings(callConfig, response, month, year)
-
-      expect(ReportClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(reportFilename).toHaveBeenCalled()
-      expect(reportClient.bookings).toHaveBeenCalledWith(response, 'some-filename', month, year)
-    })
   })
 
   describe('pipeReportForProbationRegion', () => {

@@ -254,9 +254,6 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
 
-  get(paths.reports.new(), redirectsController.redirect(paths.reports.index(), 301), {
-    auditEvent: 'REDIRECT_REPORT_NEW',
-  })
   get(paths.reports.index(), reportsController.index(), { auditEvent: 'VIEW_REPORT_INDEX' })
 
   post(paths.reports.create.pattern, reportsController.create(), {

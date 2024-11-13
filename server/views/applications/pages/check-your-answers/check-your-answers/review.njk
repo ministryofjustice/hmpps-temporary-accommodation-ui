@@ -34,6 +34,7 @@
                     {{ personDetails(page.application.person) }}
                 </div>
             </div>
+          {{ personDetails({person: page.application.person, headingLevel: 2 }) }}
 
             {% for section in checkYourAnswersSections(page.application) %}
                 <h2 class="govuk-heading-l">{{ section.title }}</h2>

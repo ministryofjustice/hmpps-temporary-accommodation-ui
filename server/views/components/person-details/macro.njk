@@ -1,13 +1,17 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 
-{% macro personDetails(person) %}
+{# params - Type of Object - Description #}
+{# person - Object - Contains key/value pairs of values describing the person details are for. Data is from API. #}
+{# headingLevel - Number - Used to define which heading level is appropriate in context of where this component is used. 1-6    #}
+
+{% macro personDetails(params) %}
   {% set rows = ([
     {
       key: {
         text: "Name"
       },
       value: {
-        text: person.name
+        text: params.person.name
       }
     },
     {
@@ -15,7 +19,7 @@
         text: "CRN"
       },
       value: {
-        text: person.crn
+        text: params.person.crn
       }
     },
     {
@@ -23,7 +27,7 @@
         text: "Date of birth"
       },
       value: {
-        text: formatDate(person.dateOfBirth, {format: 'short'}) if isFullPerson(person) else undefined
+        text: formatDate(params.person.dateOfBirth, {format: 'short'}) if isFullPerson(params.person) else undefined
       }
     },
     {
@@ -31,7 +35,7 @@
         text: "NOMS number"
       },
       value: {
-        text: person.nomsNumber
+        text: params.person.nomsNumber
       }
     },
     {
@@ -39,7 +43,7 @@
         text: "Nationality"
       },
       value: {
-        text: person.nationality
+        text: params.person.nationality
       }
     },
     {
@@ -47,7 +51,7 @@
         text: "Religion or belief"
       },
       value: {
-        text: person.religionOrBelief
+        text: params.person.religionOrBelief
       }
     },
     {
@@ -55,7 +59,7 @@
         text: "Sex"
       },
       value: {
-        text: person.sex
+        text: params.person.sex
       }
     },
     {
@@ -63,7 +67,7 @@
         text: "Ethnicity"
       },
       value: {
-        text: person.ethnicity
+        text: params.person.ethnicity
       }
     },
     {
@@ -71,7 +75,7 @@
         text: "Gender identity"
       },
       value: {
-        text: person.genderIdentity
+        text: params.person.genderIdentity
       }
     },
     {
@@ -79,7 +83,7 @@
         text: "Status"
       },
       value: {
-        html: personStatusTag(person.status) if isFullPerson(person) else undefined
+        html: personStatusTag(params.person.status) if isFullPerson(params.person) else undefined
       }
     },
     {
@@ -87,12 +91,18 @@
         text: "Prison"
       },
       value: {
-        text: person.prisonName
+        text: params.person.prisonName
       }
     }
   ] | removeBlankSummaryListItems) %}
 
   {{ govukSummaryList({
+		card: {
+      title: {
+        text: "Person details",
+        headingLevel: params.headingLevel
+      }
+    },
     attributes: {
       'data-cy-person-info': true
     },

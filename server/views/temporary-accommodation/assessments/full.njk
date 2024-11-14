@@ -6,10 +6,12 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ govukBackLink({
+  {{
+    govukBackLink({
         text: "Back",
         href: addPlaceContext(paths.assessments.summary({ id: assessment.id }))
-    }) }}
+    })
+  }}
 {% endblock %}
 {% set name = personName(assessment.application.person, 'Limited access offender') %}
 {% block content %}
@@ -17,25 +19,27 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
       <h1 class="govuk-heading-l">
-          <span class="govuk-caption-l">Review referral</span>
-          {{ name }}
-          {{ assessmentStatusTag(assessment.status) | safe }}
+        <span class="govuk-caption-l">Review referral</span>
+        {{ name }}
+        {{ assessmentStatusTag(assessment.status) | safe }}
       </h1>
 
       {% for section in assessment.application.document.sections %}
         <h2 class="govuk-heading-m govuk-!-margin-top-3">{{ section.title }}</h2>
         {% for task in section.tasks %}
-          {{ govukSummaryList({
-            card: {
-              title: {
-                text: task.title,
-                headingLevel: 3
-              }
-            },
-            rows: taskResponsesToSummaryListRowItems(task.content, updatedResponses, rowActions)
-          }) }}
+          {{
+            govukSummaryList({
+              card: {
+                title: {
+                  text: task.title,
+                  headingLevel: 3
+                }
+              },
+              rows: taskResponsesToSummaryListRowItems(task.content, updatedResponses, rowActions)
+            })
+          }}
         {% endfor %}
       {% endfor %}
-      </div>
     </div>
+  </div>
 {% endblock %}

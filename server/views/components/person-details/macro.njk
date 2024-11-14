@@ -5,108 +5,111 @@
 {# headingLevel - Number - Used to define which heading level is appropriate in context of where this component is used. 1-6    #}
 
 {% macro personDetails(params) %}
-  {% set rows = ([
-    {
-      key: {
-        text: "Name"
+  {%
+    set rows = ([
+      {
+        key: {
+          text: "Name"
+        },
+        value: {
+          text: params.person.name
+        }
       },
-      value: {
-        text: params.person.name
-      }
-    },
-    {
-      key: {
-        text: "CRN"
+      {
+        key: {
+          text: "CRN"
+        },
+        value: {
+          text: params.person.crn
+        }
       },
-      value: {
-        text: params.person.crn
-      }
-    },
-    {
-      key: {
-        text: "Date of birth"
+      {
+        key: {
+          text: "Date of birth"
+        },
+        value: {
+          text: formatDate(params.person.dateOfBirth, {format: 'short'}) if isFullPerson(params.person) else undefined
+        }
       },
-      value: {
-        text: formatDate(params.person.dateOfBirth, {format: 'short'}) if isFullPerson(params.person) else undefined
-      }
-    },
-    {
-      key: {
-        text: "NOMS number"
+      {
+        key: {
+          text: "NOMS number"
+        },
+        value: {
+          text: params.person.nomsNumber
+        }
       },
-      value: {
-        text: params.person.nomsNumber
-      }
-    },
-    {
-      key: {
-        text: "Nationality"
+      {
+        key: {
+          text: "Nationality"
+        },
+        value: {
+          text: params.person.nationality
+        }
       },
-      value: {
-        text: params.person.nationality
-      }
-    },
-    {
-      key: {
-        text: "Religion or belief"
+      {
+        key: {
+          text: "Religion or belief"
+        },
+        value: {
+          text: params.person.religionOrBelief
+        }
       },
-      value: {
-        text: params.person.religionOrBelief
-      }
-    },
-    {
-      key: {
-        text: "Sex"
+      {
+        key: {
+          text: "Sex"
+        },
+        value: {
+          text: params.person.sex
+        }
       },
-      value: {
-        text: params.person.sex
-      }
-    },
-    {
-      key: {
-        text: "Ethnicity"
+      {
+        key: {
+          text: "Ethnicity"
+        },
+        value: {
+          text: params.person.ethnicity
+        }
       },
-      value: {
-        text: params.person.ethnicity
-      }
-    },
-    {
-      key: {
-        text: "Gender identity"
+      {
+        key: {
+          text: "Gender identity"
+        },
+        value: {
+          text: params.person.genderIdentity
+        }
       },
-      value: {
-        text: params.person.genderIdentity
-      }
-    },
-    {
-      key: {
-        text: "Status"
+      {
+        key: {
+          text: "Status"
+        },
+        value: {
+          html: personStatusTag(params.person.status) if isFullPerson(params.person) else undefined
+        }
       },
-      value: {
-        html: personStatusTag(params.person.status) if isFullPerson(params.person) else undefined
+      {
+        key: {
+          text: "Prison"
+        },
+        value: {
+          text: params.person.prisonName
+        }
       }
-    },
-    {
-      key: {
-        text: "Prison"
-      },
-      value: {
-        text: params.person.prisonName
-      }
-    }
-  ] | removeBlankSummaryListItems) %}
+    ] | removeBlankSummaryListItems)
+  %}
 
-  {{ govukSummaryList({
-		card: {
-      title: {
-        text: "Person details",
-        headingLevel: params.headingLevel
-      }
-    },
-    attributes: {
-      'data-cy-person-info': true
-    },
-    rows: rows
-  }) }}
-
+  {{
+    govukSummaryList({
+    card: {
+        title: {
+          text: "Person details",
+          headingLevel: params.headingLevel
+        }
+      },
+      attributes: {
+        'data-cy-person-info': true
+      },
+      rows: rows
+    })
+  }}
 {% endmacro %}

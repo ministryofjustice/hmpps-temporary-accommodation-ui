@@ -2,54 +2,53 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {% from "../components/printButton/macro.njk" import printButtonScript, printButton %}
-
 {% extends "../partials/layout.njk" %}
-
 {% set pageTitle = "The person's referral - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 {% set backLinkUrl = paths.applications.index({}) + "#applications-submitted" %}
 
 {% block beforeContent %}
-  {{ govukBackLink({
-    text: "Back",
-    href: backLinkUrl,
-    classes: 'govuk-!-display-none-print'
-  }) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: backLinkUrl,
+      classes: 'govuk-!-display-none-print'
+    })
+  }}
 {% endblock %}
-
 {% set name = personName(application.person, 'Limited access offender') %}
 {% block content %}
   {% include "../_messages.njk" %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
-		  <h1 class="govuk-heading-l">
-		    <span class="govuk-caption-l">Transitional Accommodation (CAS3) referral</span>
-		    {{ name }}
-		  </h1>
-			{{ printButton() }}
-		</div>
-	</div>
-<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">Transitional Accommodation (CAS3) referral</span>
+        {{ name }}
+      </h1>
+      {{ printButton() }}
+    </div>
+  </div>
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds-from-desktop">
       {% for section in application.document.sections %}
-		    <h2 class="govuk-heading-m govuk-!-margin-top-3" >{{ section.title }}</h2>
+        <h2 class="govuk-heading-m govuk-!-margin-top-3">{{ section.title }}</h2>
 
-		    {% for task in section.tasks %}
-		      {{
-		        govukSummaryList({
-		          card: {
-		            title: {
-		              text: task.title,
-		              headingLevel: 3
-		            }
-	            },
-	            rows: taskResponsesToSummaryListRowItems(task.content)
-		        })
-		      }}
-		    {% endfor %}
-	    {% endfor %}
+        {% for task in section.tasks %}
+          {{
+            govukSummaryList({
+              card: {
+                title: {
+                  text: task.title,
+                  headingLevel: 3
+                }
+               },
+               rows: taskResponsesToSummaryListRowItems(task.content)
+            })
+          }}
+        {% endfor %}
+      {% endfor %}
     </div>
   </div>
 {% endblock %}

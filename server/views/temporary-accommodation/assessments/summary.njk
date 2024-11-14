@@ -7,19 +7,18 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../components/formFields/form-page-textarea/macro.njk" import formPageTextarea %}
-
 {% extends "../../partials/layout.njk" %}
-
 {% set pageTitle = "The person's referral summary - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
-
 {% set name = personName(assessment.application.person, 'Limited access offender') %}
 {% set breadCrumbTitle = name + " - Summary" %}
 
 {% block beforeContent %}
-    {{ breadCrumb(breadCrumbTitle, [
-        {title: 'Referrals', href: paths.assessments.index()}
-    ]) }}
+  {{
+    breadCrumb(breadCrumbTitle, [
+      {title: 'Referrals', href: paths.assessments.index()}
+    ])
+  }}
 {% endblock %}
 
 {% block content %}
@@ -44,9 +43,14 @@
           <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
               {% for action in actions %}
-                <a href="{{ action.href }}" role="menuitem" draggable="false"
-                 class="moj-button-menu__item {{ action.classes }}" data-module="govuk-button"
-                 data-secondary="true">
+                <a
+                  href="{{ action.href }}"
+                  role="menuitem"
+                  draggable="false"
+                  class="moj-button-menu__item {{ action.classes }}"
+                  data-module="govuk-button"
+                  data-secondary="true"
+                >
                   {{ action.text }}
                 </a>
               {% endfor %}
@@ -61,45 +65,49 @@
     <div class="govuk-grid-column-two-thirds-from-desktop">
       {{ personDetails({person: assessment.application.person, headingLevel: 2 }) }}
 
-		  {{ govukButton({
-	      text: "View full referral",
-	      type: "button",
-	      href: addPlaceContext(paths.assessments.full({ id: assessment.id })),
-	      classes: "govuk-button--secondary"
-		  }) }}
+      {{
+        govukButton({
+           text: "View full referral",
+           type: "button",
+           href: addPlaceContext(paths.assessments.full({ id: assessment.id })),
+           classes: "govuk-button--secondary"
+        })
+      }}
 
-			<form action="{{ paths.assessments.notes.create({ id: assessment.id }) }}" method="post">
+      <form action="{{ paths.assessments.notes.create({ id: assessment.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-			  {{ formPageTextarea({
-			    fieldName: "message",
-          label: {
-	          text: "Add a note",
-	          classes: "govuk-label--m referral-note"
-		      }
-		      },fetchContext())
-		    }}
+        {{
+          formPageTextarea({
+          fieldName: "message",
+             label: {
+              text: "Add a note",
+              classes: "govuk-label--m referral-note"
+           }
+           },fetchContext())
+        }}
 
-			  {{ govukButton({
-		      text: "Save note",
-		      classes: "govuk-button--secondary",
-		      preventDoubleClick: true
-			  }) }}
-			</form>
+        {{
+          govukButton({
+             text: "Save note",
+             classes: "govuk-button--secondary",
+             preventDoubleClick: true
+          })
+        }}
+      </form>
 
       <h2 class="govuk-heading-l" id="notes">Referral history</h2>
       {{ mojTimeline({ items: AssessmentUtils.timelineItems(assessment) }) }}
-	  </div>
-	</div>
-
+    </div>
+  </div>
 {% endblock %}
 
 {% block extraScripts %}
-    <script type="text/javascript" nonce="{{ cspNonce }}">
-      new MOJFrontend.ButtonMenu({
-        container: $('.moj-button-menu'),
-        mq: '(min-width: 200em)',
-        buttonText: 'Update referral status',
-        menuClasses: 'moj-button-menu__wrapper--right',
-      })
-    </script>
+  <script type="text/javascript" nonce="{{ cspNonce }}">
+    new MOJFrontend.ButtonMenu({
+      container: $('.moj-button-menu'),
+      mq: '(min-width: 200em)',
+      buttonText: 'Update referral status',
+      menuClasses: 'moj-button-menu__wrapper--right',
+    })
+  </script>
 {% endblock %}

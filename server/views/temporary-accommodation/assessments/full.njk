@@ -6,42 +6,40 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ govukBackLink({
+  {{
+    govukBackLink({
         text: "Back",
         href: addPlaceContext(paths.assessments.summary({ id: assessment.id }))
-    }) }}
+    })
+  }}
 {% endblock %}
 {% set name = personName(assessment.application.person, 'Limited access offender') %}
 {% block content %}
-    {% include "../../_messages.njk" %}
+  {% include "../../_messages.njk" %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+      <h1 class="govuk-heading-l">
+        <span class="govuk-caption-l">Review referral</span>
+        {{ name }}
+        {{ assessmentStatusTag(assessment.status) | safe }}
+      </h1>
 
-    <div class="moj-identity-bar">
-        <div class="moj-identity-bar__container">
-            <div class="moj-identity-bar__details">
-                <span class="moj-identity-bar__title">
-                    <h1 class="govuk-heading-xl">
-                        <span class="govuk-caption-xl">Review referral</span>
-                        {{ name }}
-                        {{ assessmentStatusTag(assessment.status) | safe }}
-                    </h1>
-                </span>
-            </div>
-        </div>
-    </div>
-
-    <div class="govuk-!-margin-4">
-        {% for section in assessment.application.document.sections %}
-            <h2 class="govuk-heading-l govuk-!-margin-top-3">{{ section.title }}</h2>
-            {% for task in section.tasks %}
-                {{ govukSummaryList({
-                    card: {
-                        title: {
-                            text: task.title
-                        }
-                    },
-                    rows: taskResponsesToSummaryListRowItems(task.content, updatedResponses, rowActions)
-                }) }}
-            {% endfor %}
+      {% for section in assessment.application.document.sections %}
+        <h2 class="govuk-heading-m govuk-!-margin-top-3">{{ section.title }}</h2>
+        {% for task in section.tasks %}
+          {{
+            govukSummaryList({
+              card: {
+                title: {
+                  text: task.title,
+                  headingLevel: 3
+                }
+              },
+              rows: taskResponsesToSummaryListRowItems(task.content, updatedResponses, rowActions)
+            })
+          }}
         {% endfor %}
+      {% endfor %}
     </div>
+  </div>
 {% endblock %}

@@ -1,102 +1,115 @@
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
 
-{% macro personDetails(person) %}
-  {% set rows = ([
-    {
-      key: {
-        text: "Name"
-      },
-      value: {
-        text: person.name
-      }
-    },
-    {
-      key: {
-        text: "CRN"
-      },
-      value: {
-        text: person.crn
-      }
-    },
-    {
-      key: {
-        text: "Date of birth"
-      },
-      value: {
-        text: formatDate(person.dateOfBirth, {format: 'short'}) if isFullPerson(person) else undefined
-      }
-    },
-    {
-      key: {
-        text: "NOMS number"
-      },
-      value: {
-        text: person.nomsNumber
-      }
-    },
-    {
-      key: {
-        text: "Nationality"
-      },
-      value: {
-        text: person.nationality
-      }
-    },
-    {
-      key: {
-        text: "Religion or belief"
-      },
-      value: {
-        text: person.religionOrBelief
-      }
-    },
-    {
-      key: {
-        text: "Sex"
-      },
-      value: {
-        text: person.sex
-      }
-    },
-    {
-      key: {
-        text: "Ethnicity"
-      },
-      value: {
-        text: person.ethnicity
-      }
-    },
-    {
-      key: {
-        text: "Gender identity"
-      },
-      value: {
-        text: person.genderIdentity
-      }
-    },
-    {
-      key: {
-        text: "Status"
-      },
-      value: {
-        html: personStatusTag(person.status) if isFullPerson(person) else undefined
-      }
-    },
-    {
-      key: {
-        text: "Prison"
-      },
-      value: {
-        text: person.prisonName
-      }
-    }
-  ] | removeBlankSummaryListItems) %}
+{# params - Type of Object - Description #}
+{# person - Object - Contains key/value pairs of values describing the person details are for. Data is from API. #}
+{# headingLevel - Number - Used to define which heading level is appropriate in context of where this component is used. 1-6    #}
 
-  {{ govukSummaryList({
-    attributes: {
-      'data-cy-person-info': true
-    },
-    rows: rows
-  }) }}
+{% macro personDetails(params) %}
+  {%
+    set rows = ([
+      {
+        key: {
+          text: "Name"
+        },
+        value: {
+          text: params.person.name
+        }
+      },
+      {
+        key: {
+          text: "CRN"
+        },
+        value: {
+          text: params.person.crn
+        }
+      },
+      {
+        key: {
+          text: "Date of birth"
+        },
+        value: {
+          text: formatDate(params.person.dateOfBirth, {format: 'short'}) if isFullPerson(params.person) else undefined
+        }
+      },
+      {
+        key: {
+          text: "NOMS number"
+        },
+        value: {
+          text: params.person.nomsNumber
+        }
+      },
+      {
+        key: {
+          text: "Nationality"
+        },
+        value: {
+          text: params.person.nationality
+        }
+      },
+      {
+        key: {
+          text: "Religion or belief"
+        },
+        value: {
+          text: params.person.religionOrBelief
+        }
+      },
+      {
+        key: {
+          text: "Sex"
+        },
+        value: {
+          text: params.person.sex
+        }
+      },
+      {
+        key: {
+          text: "Ethnicity"
+        },
+        value: {
+          text: params.person.ethnicity
+        }
+      },
+      {
+        key: {
+          text: "Gender identity"
+        },
+        value: {
+          text: params.person.genderIdentity
+        }
+      },
+      {
+        key: {
+          text: "Status"
+        },
+        value: {
+          html: personStatusTag(params.person.status) if isFullPerson(params.person) else undefined
+        }
+      },
+      {
+        key: {
+          text: "Prison"
+        },
+        value: {
+          text: params.person.prisonName
+        }
+      }
+    ] | removeBlankSummaryListItems)
+  %}
 
+  {{
+    govukSummaryList({
+    card: {
+        title: {
+          text: "Person details",
+          headingLevel: params.headingLevel
+        }
+      },
+      attributes: {
+        'data-cy-person-info': true
+      },
+      rows: rows
+    })
+  }}
 {% endmacro %}

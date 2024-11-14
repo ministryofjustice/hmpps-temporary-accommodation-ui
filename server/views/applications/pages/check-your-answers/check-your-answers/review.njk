@@ -3,73 +3,74 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "../../../../components/person-details/macro.njk" import personDetails %}
 {% from "../../../../components/printButton/macro.njk" import printButtonScript, printButton %}
-
 {% extends "../../../../partials/layout.njk" %}
-
 {% set pageTitle = page.title + " - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ govukBackLink({
+  {{
+    govukBackLink({
         text: "Back",
         href: paths.applications.show({ id: page.application.id }),
         classes: 'govuk-!-display-none-print'
-    }) }}
+    })
+  }}
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-width-container">
-            <h1 class="govuk-heading-xl">
-                {{ page.title }}
-            </h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop">
+          <h1 class="govuk-heading-l">{{ page.title }}</h1>
 
-            {{ printButton() }}
-
-            <div class="main-box">
-                <h2 class="box-title govuk-heading-m">
-                    Person Details
-                </h2>
-                <div class="box-content" data-cy-check-your-answers-section="person-details">
-                    {{ personDetails(page.application.person) }}
-                </div>
-            </div>
-
-            {% for section in checkYourAnswersSections(page.application) %}
-                <h2 class="govuk-heading-l">{{ section.title }}</h2>
-                {% for task in section.tasks %}
-                    <div class="main-box" data-cy-check-your-answers-section="{{ task.id }}">
-                        <h3 class="box-title govuk-heading-m">
-                            {{ task.title }}
-                        </h3>
-                        <div class="box-content">
-                            {{ govukSummaryList({
-                                rows: task.rows
-                            }) }}
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-
-            <form action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT"
-                  method="post">
-                <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-                <input type="hidden" name="reviewed" value="1" />
-
-                {{ govukButton({
-                    text: "Continue",
-                    preventDoubleClick: true,
-                    classes: 'govuk-!-display-none-print'
-                }) }}
-            </form>
-
+          {{ printButton() }}
         </div>
+      </div>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop" data-cy-check-your-answers-section="person-details">
+          {{ personDetails({person: page.application.person, headingLevel: 2 }) }}
+
+          {% for section in checkYourAnswersSections(page.application) %}
+            <h2 class="govuk-heading-m">{{ section.title }}</h2>
+            {% for task in section.tasks %}
+              <div data-cy-check-your-answers-section="{{ task.id }}">
+                {{
+                  govukSummaryList({
+                    card: {
+                      title: {
+                      text: task.title,
+                        headingLevel: 3
+                      }
+                    },
+                    rows: task.rows
+                  })
+                }}
+              </div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      <form
+        action="{{ paths.applications.pages.update({ id: applicationId, task: task.id, page: page.name }) }}?_method=PUT"
+        method="post"
+      >
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="reviewed" value="1" />
+        {{
+          govukButton({
+            text: "Continue",
+            preventDoubleClick: true,
+            classes: 'govuk-!-display-none-print'
+          })
+        }}
+      </form>
     </div>
-
-
+  </div>
 {% endblock %}
 
 {% block extraScripts %}
-    {{ printButtonScript(cspNonce) }}
+  {{ printButtonScript(cspNonce) }}
 {% endblock %}

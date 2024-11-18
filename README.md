@@ -129,6 +129,31 @@ Spin up a real browser that gives you an interface to run individual E2E feature
 npm run test:e2e:ui
 ```
 
+#### End-to-End tests (via Cypress) using dev-upstream AP Tools
+This enables us to locally simulate the e2e test run in the Circle-CI pipeline
+
+First start the ap-tools using
+```
+ap-tools server stop --clear-databases
+ap-tools server start --local-ui --local-api-dev-upstream
+```
+
+* The end-to-end tests run against our local API which then integrates with the dev upstream services and the dev database due to this param `-local-api-dev-upstream`
+* Once AP is running successfully, we can run one of the two npm scripts below which both use the `e2e.dev-upstream.env` config file (instead of `e2e.local.env` config file)
+* This ensures that when we run the e2e tests we pass the same env vars that the pipeline uses. For example, this ensures we the e2e tests login as the same dev users
+
+Run E2E tests via a headless Chrome browser, with reporting matching that seen on CI:
+
+```bash
+npm run test:e2e-dev-upstream
+```
+
+Spin up a real browser that gives you an interface to run individual E2E features:
+
+```bash
+npm run test:e2e-dev-upstream:ui
+```
+
 ## Release process
 
 Our release process aligns with the other CAS teams and as such [lives in

@@ -55,6 +55,7 @@ import premisesSummaryFactory from './premisesSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
+import referralHistoryDomainEventNoteFactory from './referralHistoryDomainEventNote'
 import referralHistorySystemNoteFactory from './referralHistorySystemNote'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import risksFactory from './risks'
@@ -126,6 +127,7 @@ export {
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,
+  referralHistoryDomainEventNoteFactory,
   referralHistorySystemNoteFactory,
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,

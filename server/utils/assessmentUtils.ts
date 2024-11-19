@@ -3,6 +3,7 @@ import {
   AssessmentSortField,
   TemporaryAccommodationAssessmentStatus as AssessmentStatus,
   TemporaryAccommodationAssessmentSummary as AssessmentSummary,
+  ReferralHistoryDomainEventNote as DomainEventNote,
   SortDirection,
   ReferralHistorySystemNote as SystemNote,
   ReferralHistoryUserNote as UserNote,
@@ -135,12 +136,14 @@ export const assessmentActions = (assessment: Assessment) => {
   return items
 }
 
-const timeLineLabelText = (note: UserNote | SystemNote): string => {
+const timeLineLabelText = (note: UserNote | SystemNote | DomainEventNote): string => {
   switch (note.type) {
+    case 'domainEvent':
+      return domainEventLabelText(note.messageDetails as DomainEventNote['messageDetails'])
     case 'user':
       return 'Note'
     case 'system':
-      return systemNoteLabelText(note)
+      return systemNoteLabelText(note as SystemNote)
     default:
       throw new Error(`Unknown type of timeline item - ${note.type}`)
   }
@@ -210,6 +213,10 @@ export const statusChangeMessage = (assessmentId: string, status: AssessmentStat
   }
 }
 
+const isDomainEventNote = (note: UserNote | SystemNote | DomainEventNote) => {
+  return Boolean(note.type === 'domainEvent')
+}
+
 const isUserNote = (note: UserNote | SystemNote): note is UserNote => {
   return Boolean(note.type === 'user')
 }
@@ -222,6 +229,18 @@ const isSystemNoteWithDetails = (note: UserNote | SystemNote): note is SystemNot
   return Boolean(isSystemNote(note) && note.messageDetails)
 }
 
+export const renderDomainEventNote = (note: DomainEventNote['messageDetails']): TimelineItem['html'] | never => {
+  const updatedField = note.domainEvent.updatedFields[0]
+  switch (updatedField.fieldName) {
+    case 'accommodationRequiredFromDate':
+      return `<p>Accommodation required from date was changed from ${DateFormats.isoDateToUIDate(updatedField.updatedFrom)} to ${DateFormats.isoDateToUIDate(updatedField.updatedTo)}</p>`
+    case 'releaseDate':
+      return `<p>Release date was changed from ${DateFormats.isoDateToUIDate(updatedField.updatedFrom)} to ${DateFormats.isoDateToUIDate(updatedField.updatedTo)}</p>`
+    default:
+      return assertUnreachable(updatedField.fieldName as never)
+  }
+}
+
 export const renderSystemNote = (note: SystemNote): TimelineItem['html'] => {
   const reason = note.messageDetails.rejectionReasonDetails || note.messageDetails.rejectionReason
   const isWithdrawn = note.messageDetails.isWithdrawn ? 'Yes' : 'No'
@@ -231,13 +250,17 @@ export const renderSystemNote = (note: SystemNote): TimelineItem['html'] => {
   return formatLines(lines.join('\n\n'))
 }
 
-export const renderNote = (note: UserNote | SystemNote): TimelineItem['html'] => {
+export const renderNote = (note: UserNote | SystemNote | DomainEventNote): TimelineItem['html'] => {
   if (isSystemNoteWithDetails(note)) {
     return renderSystemNote(note)
   }
 
   if (isUserNote(note)) {
     return formatLines(note.message)
+  }
+
+  if (isDomainEventNote(note)) {
+    return renderDomainEventNote((note as DomainEventNote).messageDetails)
   }
 
   return undefined
@@ -261,6 +284,18 @@ const systemNoteLabelText = (note: SystemNote): TimelineItem['label']['text'] =>
       return assertUnreachable(note.category)
   }
 }
+
+const domainEventLabelText = (note: DomainEventNote['messageDetails']): TimelineItem['label']['text'] => {
+  switch (note.domainEvent.updatedFields[0].fieldName) {
+    case 'accommodationRequiredFromDate':
+      return 'Accommodation required from date updated'
+    case 'releaseDate':
+      return 'Release date updated'
+    default:
+      return assertUnreachable(note.domainEvent.updatedFields[0].fieldName as never)
+  }
+}
+
 export const createTableHeadings = (
   currentSortBy: AssessmentSortField,
   sortIsAscending: boolean,

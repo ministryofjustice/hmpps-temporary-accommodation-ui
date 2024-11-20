@@ -55,7 +55,7 @@ export default class AssessmentSummaryPage extends Page {
     cy.get('.moj-timeline')
       .parent()
       .within(() => {
-        cy.get('.govuk-heading-l').should('contain', 'Referral history')
+        cy.get('.govuk-heading-m').should('contain', 'Referral history')
 
         this.assessment
           .referralHistoryNotes!.sort((noteA, noteB) => {

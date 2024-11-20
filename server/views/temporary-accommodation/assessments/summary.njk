@@ -88,14 +88,15 @@
 
         {{
           govukButton({
-             text: "Save note",
-             classes: "govuk-button--secondary",
-             preventDoubleClick: true
+            text: "Save note",
+            classes: "govuk-button--secondary",
+            preventDoubleClick: true
           })
         }}
       </form>
-
-      <h2 class="govuk-heading-l" id="notes">Referral history</h2>
+    </div>
+    <div class="govuk-grid-column-one-third-from-desktop">
+      <h2 class="govuk-heading-m" id="notes">Referral history</h2>
       {{ mojTimeline({ items: AssessmentUtils.timelineItems(assessment) }) }}
     </div>
   </div>

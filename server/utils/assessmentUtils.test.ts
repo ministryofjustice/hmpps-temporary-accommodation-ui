@@ -1,5 +1,9 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
-import type { ReferralHistoryNoteMessageDetails } from '@approved-premises/api'
+import {
+  ReferralHistoryDomainEventNote as DomainEventNote,
+  ReferralHistoryNoteMessageDetails,
+} from '@approved-premises/api'
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import paths from '../paths/temporary-accommodation/manage'
 import {
   applicationFactory,
@@ -8,6 +12,7 @@ import {
   personFactory,
   placeContextFactory,
   referenceDataFactory,
+  referralHistoryDomainEventNoteFactory,
   referralHistorySystemNoteFactory,
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
@@ -22,6 +27,7 @@ import {
   insertUpdateDateError,
   pathFromStatus,
   referralRejectionReasonIsOther,
+  renderDomainEventNote,
   renderNote,
   renderSystemNote,
   statusChangeMessage,
@@ -30,6 +36,7 @@ import {
 import * as assessmentUtils from './assessmentUtils'
 import * as viewUtils from './viewUtils'
 import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
+import { DateFormats } from './dateUtils'
 
 jest.mock('./userUtils')
 jest.mock('./placeUtils')
@@ -295,6 +302,25 @@ describe('assessmentUtils', () => {
       expect(assessmentUtils.renderSystemNote).toHaveBeenCalledWith(note)
     })
 
+    it('renders the contents of a domain event note with details', () => {
+      jest.spyOn(assessmentUtils, 'renderDomainEventNote').mockReturnValue('formatted message')
+      const note: DomainEventNote = {
+        id: faker.string.uuid(),
+        createdByUserName: faker.person.fullName(),
+        createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
+        type: 'domainEvent',
+        message: '',
+        messageDetails: {
+          domainEvent: { foo: 'bar' },
+        } as ReferralHistoryNoteMessageDetails,
+      }
+
+      const result = renderNote(note)
+
+      expect(result).toEqual('formatted message')
+      expect(assessmentUtils.renderDomainEventNote).toHaveBeenCalledWith(note.messageDetails)
+    })
+
     it('returns undefined for a system note with no message details', () => {
       const note = referralHistorySystemNoteFactory.build({
         message: '',
@@ -344,6 +370,52 @@ describe('assessmentUtils', () => {
     })
   })
 
+  describe('renderDomainEventDetails', () => {
+    describe('when "Accommodation required from date" has been updated', () => {
+      it('returns HTML for a standard rejection reason', () => {
+        const messageDetails: DomainEventNote['messageDetails'] = {
+          domainEvent: {
+            eventType: 'accommodation.cas3.assessment.updated',
+            updatedFields: [
+              {
+                fieldName: 'accommodationRequiredFromDate',
+                updatedTo: '2125-11-01',
+                updatedFrom: '2125-01-31',
+              },
+            ],
+          },
+        }
+
+        const result = renderDomainEventNote(messageDetails)
+
+        expect(result).toEqual(
+          '<p>Accommodation required from date was changed from 31 January 2125 to 1 November 2125</p>',
+        )
+      })
+    })
+
+    describe('when "Release date" has been updated', () => {
+      it('returns HTML for a standard rejection reason', () => {
+        const messageDetails: DomainEventNote['messageDetails'] = {
+          domainEvent: {
+            eventType: 'accommodation.cas3.assessment.updated',
+            updatedFields: [
+              {
+                fieldName: 'releaseDate',
+                updatedTo: '2125-11-01',
+                updatedFrom: '2125-01-31',
+              },
+            ],
+          },
+        }
+
+        const result = renderDomainEventNote(messageDetails)
+
+        expect(result).toEqual('<p>Release date was changed from 31 January 2125 to 1 November 2125</p>')
+      })
+    })
+  })
+
   describe('timelineItems', () => {
     it('returns a notes in a format compatible with the MoJ timeline component', () => {
       const userNote1 = referralHistoryUserNoteFactory.build({
@@ -365,7 +437,43 @@ describe('assessmentUtils', () => {
         category: 'ready_to_place',
       })
 
-      const notes = [systemNote1, systemNote2, userNote2, userNote1]
+      const domainEventNote1 = referralHistoryDomainEventNoteFactory.build({
+        createdByUserName: 'SOME USER',
+        createdAt: '2024-06-02',
+        messageDetails: {
+          domainEvent: {
+            eventType: 'accommodation.cas3.assessment.updated',
+            timestamp: DateFormats.dateObjToIsoDate(faker.date.past()),
+            updatedFields: [
+              {
+                fieldName: 'accommodationRequiredFromDate',
+                updatedTo: '2025-09-02',
+                updatedFrom: '2123-09-02',
+              },
+            ],
+          },
+        },
+      })
+
+      const domainEventNote2 = referralHistoryDomainEventNoteFactory.build({
+        createdByUserName: 'SOME USER',
+        createdAt: '2024-06-01',
+        messageDetails: {
+          domainEvent: {
+            eventType: 'accommodation.cas3.assessment.updated',
+            timestamp: DateFormats.dateObjToIsoDate(faker.date.past()),
+            updatedFields: [
+              {
+                fieldName: 'releaseDate',
+                updatedTo: '2025-09-02',
+                updatedFrom: '2123-09-02',
+              },
+            ],
+          },
+        },
+      })
+
+      const notes = [systemNote1, systemNote2, userNote2, userNote1, domainEventNote1, domainEventNote2]
       const assessment = assessmentFactory.build({ referralHistoryNotes: notes })
       const userNoteHtml = 'some formatted html'
 
@@ -373,6 +481,32 @@ describe('assessmentUtils', () => {
       const result = timelineItems(assessment)
 
       expect(result).toEqual([
+        {
+          label: {
+            text: 'Accommodation required from date updated',
+          },
+          html: '<p>Accommodation required from date was changed from 2 September 2123 to 2 September 2025</p>',
+          datetime: {
+            timestamp: domainEventNote1.createdAt,
+            type: 'datetime',
+          },
+          byline: {
+            text: 'Some User',
+          },
+        },
+        {
+          label: {
+            text: 'Release date updated',
+          },
+          html: '<p>Release date was changed from 2 September 2123 to 2 September 2025</p>',
+          datetime: {
+            timestamp: domainEventNote2.createdAt,
+            type: 'datetime',
+          },
+          byline: {
+            text: 'Some User',
+          },
+        },
         {
           label: {
             text: 'Referral marked as ready to place',

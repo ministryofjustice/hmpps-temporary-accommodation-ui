@@ -1,5 +1,17 @@
-import { bedSearchResultFactory, characteristicFactory, premisesFactory, roomFactory } from '../testutils/factories'
-import { bedspaceKeyCharacteristics, premisesKeyCharacteristics } from './bedspaceSearchResultUtils'
+import { TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
+import {
+  bedSearchResultFactory,
+  bookingFactory,
+  characteristicFactory,
+  personFactory,
+  premisesFactory,
+  roomFactory,
+} from '../testutils/factories'
+import {
+  bedspaceKeyCharacteristics,
+  bedspaceOverlapResult,
+  premisesKeyCharacteristics,
+} from './bedspaceSearchResultUtils'
 
 describe('BedspaceSearchResultUtils', () => {
   describe('bedspaceKeyCharacteristics', () => {
@@ -48,6 +60,45 @@ describe('BedspaceSearchResultUtils', () => {
         'Shared kitchen',
         'Wheelchair accessible',
       ])
+    })
+  })
+
+  describe('bedspaceOverlapResult', () => {
+    let overLapDays: TemporaryAccommodationBedSearchResultOverlap['days']
+    let overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'name' | 'sex' | 'assesmentId'>
+
+    const createOverLapResult = () => {
+      return {
+        crn: personFactory.build().crn,
+        days: overLapDays,
+        roomId: roomFactory.build().id,
+        bookingId: bookingFactory.build().id,
+      }
+    }
+
+    beforeEach(() => {
+      overLapDays = 8
+      overlapResult = createOverLapResult()
+    })
+
+    it('returns object of key/value pairs', () => {
+      expect(bedspaceOverlapResult(overlapResult)).toEqual({
+        crn: overlapResult.crn,
+        overlapDays: '8 days overlap',
+        roomId: overlapResult.roomId,
+        bookingId: overlapResult.bookingId,
+      })
+    })
+
+    describe('when overlap by 1 day', () => {
+      beforeEach(() => {
+        overLapDays = 1
+        overlapResult = createOverLapResult()
+      })
+
+      it('returns the correct overlap message for single day', () => {
+        expect(bedspaceOverlapResult(overlapResult).overlapDays).toEqual('1 day overlap')
+      })
     })
   })
 })

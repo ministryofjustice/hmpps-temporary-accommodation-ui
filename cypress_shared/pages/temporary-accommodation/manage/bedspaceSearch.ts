@@ -66,9 +66,19 @@ export default class BedspaceSearchPage extends Page {
 
     this.getLegend('Property attributes')
     this.getLegend('Occupancy (optional)')
-    searchParameters.attributes.forEach(attribute => {
-      this.checkCheckboxByNameAndValue('attributes[]', attribute)
-    })
+    searchParameters.attributes
+      .filter(attribute => attribute === 'wheelchairAccessible')
+      .forEach(attribute => {
+        this.checkCheckboxByNameAndValue('attributes[]', attribute)
+      })
+
+    this.getLegend('Bedspace attributes')
+    this.getLegend('Accessibility (optional)')
+    searchParameters.attributes
+      .filter(attribute => attribute !== 'wheelchairAccessible')
+      .forEach(attribute => {
+        this.checkCheckboxByNameAndValue('attributes[]', attribute)
+      })
   }
 
   clickBedspaceLink(room: Room) {

@@ -57,27 +57,53 @@
     fieldName: "probationDeliveryUnits"
 }, fetchContext()) }}
 
-{% call govukFieldset({
-    legend: {
-        text: "Property attributes",
-        classes: "govuk-fieldset__legend--m"
-    }
-}) %}
-    {{ formPageCheckboxes({
-        classes: "govuk-checkboxes--small",
-        fieldName: "attributes",
-        fieldset: {
-            legend: {
-                text: "Occupancy (optional)",
-                classes: "govuk-fieldset__legend--s"
-            }
-        },
-        hint: {
-            text: "Select all that apply"
-        },
-        items: [
-            { text: "Single", value: "singleOccupancy" },
-            { text: "Shared", value: "sharedProperty" }
-        ]
-    }, fetchContext()) }}
-{% endcall %}
+<section>
+	<div class="govuk-form-group">
+		{% call govukFieldset({
+		    legend: {
+		        text: "Property attributes",
+		        classes: "govuk-fieldset__legend--m"
+		    }
+		}) %}
+		    {{ formPageCheckboxes({
+		        classes: "govuk-checkboxes--small",
+		        fieldName: "attributes",
+		        fieldset: {
+		            legend: {
+		                text: "Occupancy (optional)",
+		                classes: "govuk-fieldset__legend--s"
+		            }
+		        },
+		        hint: {
+		            text: "Select all that apply"
+		        },
+		        items: [
+		            { text: "Single", value: "singleOccupancy" },
+		            { text: "Shared", value: "sharedProperty" }
+		        ]
+		    }, fetchContext()) }}
+		{% endcall %}
+	</div>
+	<div class="govuk-form-group">
+		{% call govukFieldset({
+		    legend: {
+		        text: "Bedspace attributes",
+		        classes: "govuk-fieldset__legend--m"
+		    }
+		}) %}
+		    {{ formPageCheckboxes({
+		            classes: "govuk-checkboxes--small",
+		            fieldName: "attributes",
+		            fieldset: {
+		                legend: {
+		                    text: "Accessibility (optional)",
+		                    classes: "govuk-fieldset__legend--s"
+		                }
+		            },
+		            items: [
+		                { text: "Wheelchair accessible", value: "wheelchairAccessible" }
+		            ]
+		        }, fetchContext()) }}
+		{% endcall %}
+	</div>
+</section>

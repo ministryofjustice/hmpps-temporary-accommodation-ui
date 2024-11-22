@@ -77,6 +77,6 @@ export default class BedspaceSearchResult extends Component {
 
   clickOverlapLink(crn: string) {
     cy.get('summary').contains('Other people staying').click()
-    cy.get('ul[data-cy-overlaps] > li').contains(crn).find('a').click()
+    cy.get('ul[data-cy-overlaps] > li').find('dd.overlap-details__value').contains(crn).parents('li').find('a').click()
   }
 }

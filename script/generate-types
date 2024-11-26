@@ -8,7 +8,9 @@ cd "$(dirname "$0")/.."
 
 echo "==> Generating types..."
 
-npx openapi-typescript-codegen -i http://localhost:8080/v3/api-docs/CAS3Shared -o ./server/@types/shared -c axios --exportServices false --exportCore false --useUnionTypes false
+npx openapi-typescript-codegen -i http://localhost:8080/v3/api-docs/shared -o ./server/@types/shared -c axios --exportServices false --exportCore false --useUnionTypes false
+npx openapi-typescript-codegen -i http://localhost:8080/v3/api-docs/CAS3 -o ./server/@types/shared -c axios --exportServices false --exportCore false --useUnionTypes false
+
 
 echo "==> Renaming the declaration file..."
 

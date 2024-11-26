@@ -2,10 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BookingStatus } from './BookingStatus';
 export type BookingSearchResultBookingSummary = {
     id: string;
-    status: BookingStatus;
+    status: 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled' | 'provisional' | 'confirmed' | 'closed';
     startDate: string;
     endDate: string;
     createdAt: string;

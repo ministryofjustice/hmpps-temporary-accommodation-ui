@@ -2,9 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PersonSummaryDiscriminator } from './PersonSummaryDiscriminator';
 export type PersonSummary = {
     crn: string;
-    personType: PersonSummaryDiscriminator;
+    personType: 'FullPersonSummary' | 'RestrictedPersonSummary' | 'UnknownPersonSummary';
 };
 

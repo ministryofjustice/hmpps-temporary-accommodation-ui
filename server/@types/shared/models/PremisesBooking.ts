@@ -3,14 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Bed } from './Bed';
-import type { BookingStatus } from './BookingStatus';
-import type { Person } from './Person';
+import type { FullPerson } from './FullPerson';
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { UnknownPerson } from './UnknownPerson';
 export type PremisesBooking = {
     id?: string;
     arrivalDate?: string;
     departureDate?: string;
-    person?: Person;
+    person?: (FullPerson | RestrictedPerson | UnknownPerson);
     bed?: Bed;
-    status?: BookingStatus;
+    status?: 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled' | 'provisional' | 'confirmed' | 'closed';
 };
 

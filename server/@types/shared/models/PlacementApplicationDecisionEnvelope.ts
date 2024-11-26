@@ -2,9 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PlacementApplicationDecision } from './PlacementApplicationDecision';
+/**
+ * Information needed to submit a placement application
+ */
 export type PlacementApplicationDecisionEnvelope = {
-    decision: PlacementApplicationDecision;
+    decision: 'accepted' | 'rejected' | 'withdraw' | 'withdrawn_by_pp';
     summaryOfChanges: string;
     decisionSummary: string;
 };

@@ -2,9 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WithdrawalReason } from './WithdrawalReason';
+/**
+ * details of the withdrawal
+ */
 export type NewWithdrawal = {
-    reason: WithdrawalReason;
+    reason: 'change_in_circumstances_new_application_to_be_submitted' | 'error_in_application' | 'duplicate_application' | 'death' | 'other_accommodation_identified' | 'other';
     otherReason?: string;
 };
 

@@ -2,9 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BedSummary } from './BedSummary';
 import type { CharacteristicPair } from './CharacteristicPair';
-export type BedDetail = (BedSummary & {
+export type BedDetail = {
+    id: string;
+    name: string;
+    roomName: string;
+    status: 'occupied' | 'available' | 'out_of_service';
     characteristics: Array<CharacteristicPair>;
-});
+};
 

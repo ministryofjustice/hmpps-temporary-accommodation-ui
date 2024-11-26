@@ -4,6 +4,8 @@
 /* eslint-disable */
 import type { BedOccupancyEntry } from './BedOccupancyEntry';
 export type BedOccupancyLostBedEntry = (BedOccupancyEntry & {
+    lostBedId?: string;
+} & {
     lostBedId: string;
 });
 

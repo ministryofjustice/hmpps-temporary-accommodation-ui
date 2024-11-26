@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { LostBedCancellation } from './LostBedCancellation';
 import type { LostBedReason } from './LostBedReason';
-import type { LostBedStatus } from './LostBedStatus';
 export type LostBed = {
     id: string;
     startDate: string;
@@ -13,9 +12,9 @@ export type LostBed = {
     bedName: string;
     roomName: string;
     reason: LostBedReason;
+    status: 'active' | 'cancelled';
     referenceNumber?: string;
     notes?: string;
-    status: LostBedStatus;
-    cancellation?: LostBedCancellation | null;
+    cancellation?: LostBedCancellation;
 };
 

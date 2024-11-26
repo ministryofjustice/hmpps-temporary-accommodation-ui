@@ -3,9 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Mappa } from './Mappa';
-import type { RiskEnvelopeStatus } from './RiskEnvelopeStatus';
 export type MappaEnvelope = {
-    status: RiskEnvelopeStatus;
+    status: 'retrieved' | 'not_found' | 'error';
     value?: Mappa;
 };
 

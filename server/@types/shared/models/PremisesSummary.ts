@@ -2,15 +2,14 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PropertyStatus } from './PropertyStatus';
 export type PremisesSummary = {
-    service: string;
-    id: string;
     name: string;
-    addressLine1: string;
-    addressLine2?: string;
+    id: string;
+    service: string;
     postcode: string;
     bedCount: number;
-    status: PropertyStatus;
+    status: 'pending' | 'active' | 'archived';
+    addressLine1: string;
+    addressLine2?: string;
 };
 

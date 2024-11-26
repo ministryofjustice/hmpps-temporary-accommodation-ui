@@ -2,44 +2,48 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AnyValue } from './AnyValue';
 import type { ApArea } from './ApArea';
-import type { Application } from './Application';
-import type { ApprovedPremisesApplicationStatus } from './ApprovedPremisesApplicationStatus';
-import type { ApType } from './ApType';
-import type { AssessmentDecision } from './AssessmentDecision';
 import type { Cas1ApplicationUserDetails } from './Cas1ApplicationUserDetails';
 import type { Cas1CruManagementArea } from './Cas1CruManagementArea';
-import type { GenderForAp } from './GenderForAp';
+import type { FullPerson } from './FullPerson';
 import type { PersonRisks } from './PersonRisks';
-import type { PersonStatus } from './PersonStatus';
-export type ApprovedPremisesApplication = (Application & {
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { UnknownPerson } from './UnknownPerson';
+export type ApprovedPremisesApplication = {
+    createdByUserId: string;
+    schemaVersion: string;
+    outdatedSchema: boolean;
+    status: 'started' | 'submitted' | 'rejected' | 'awaitingAssesment' | 'unallocatedAssesment' | 'assesmentInProgress' | 'awaitingPlacement' | 'placementAllocated' | 'inapplicable' | 'withdrawn' | 'requestedFurtherInformation' | 'pendingPlacementRequest' | 'expired';
+    type: string;
+    id: string;
+    person: (FullPerson | RestrictedPerson | UnknownPerson);
+    createdAt: string;
     isWomensApplication?: boolean;
     /**
      * Use apType
-     * @deprecated
      */
     isPipeApplication?: boolean;
     isEmergencyApplication?: boolean;
     /**
      * Use apType
-     * @deprecated
      */
     isEsapApplication?: boolean;
-    apType?: ApType;
+    apType?: 'normal' | 'pipe' | 'esap' | 'rfap' | 'mhapStJosephs' | 'mhapElliottHouse';
     arrivalDate?: string;
     risks?: PersonRisks;
-    createdByUserId: string;
-    schemaVersion: string;
-    outdatedSchema: boolean;
-    data?: AnyValue;
-    document?: AnyValue;
-    status: ApprovedPremisesApplicationStatus;
+    /**
+     * Any object that conforms to the current JSON schema for an application
+     */
+    data?: Record<string, any>;
+    /**
+     * Any object that conforms to the current JSON schema for an application
+     */
+    document?: Record<string, any>;
     assessmentId?: string;
-    assessmentDecision?: AssessmentDecision;
+    assessmentDecision?: 'accepted' | 'rejected';
     assessmentDecisionDate?: string;
     submittedAt?: string;
-    personStatusOnSubmission?: PersonStatus;
+    personStatusOnSubmission?: 'InCustody' | 'InCommunity' | 'Unknown';
     apArea?: ApArea;
     cruManagementArea?: Cas1CruManagementArea;
     applicantUserDetails?: Cas1ApplicationUserDetails;
@@ -48,6 +52,6 @@ export type ApprovedPremisesApplication = (Application & {
      */
     caseManagerIsNotApplicant?: boolean;
     caseManagerUserDetails?: Cas1ApplicationUserDetails;
-    genderForAp?: GenderForAp;
-});
+    genderForAp?: 'male' | 'female';
+};
 

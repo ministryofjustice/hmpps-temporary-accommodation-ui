@@ -2,9 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PersonType } from './PersonType';
 export type Person = {
+    type: 'FullPerson' | 'RestrictedPerson' | 'UnknownPerson';
     crn: string;
-    type: PersonType;
 };
 

@@ -3,41 +3,46 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Arrival } from './Arrival';
-import type { BookingBody } from './BookingBody';
+import type { Bed } from './Bed';
 import type { BookingPremisesSummary } from './BookingPremisesSummary';
-import type { BookingStatus } from './BookingStatus';
 import type { Cancellation } from './Cancellation';
 import type { Confirmation } from './Confirmation';
 import type { Departure } from './Departure';
 import type { Extension } from './Extension';
+import type { FullPerson } from './FullPerson';
 import type { Nonarrival } from './Nonarrival';
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { StaffMember } from './StaffMember';
 import type { Turnaround } from './Turnaround';
-export type Booking = (BookingBody & {
-    status: BookingStatus;
+import type { UnknownPerson } from './UnknownPerson';
+export type Booking = {
+    id: string;
+    person: (FullPerson | RestrictedPerson | UnknownPerson);
+    arrivalDate: string;
+    originalArrivalDate: string;
+    departureDate: string;
+    originalDepartureDate: string;
+    createdAt: string;
+    serviceName: 'approved-premises' | 'cas2' | 'temporary-accommodation';
+    status: 'arrived' | 'awaiting-arrival' | 'not-arrived' | 'departed' | 'cancelled' | 'provisional' | 'confirmed' | 'closed';
     extensions: Array<Extension>;
-    arrival?: Arrival | null;
-    /**
-     * The latest version of the departure, if it exists
-     */
-    departure?: Departure | null;
     /**
      * The full history of the departure
      */
     departures: Array<Departure>;
-    nonArrival?: Nonarrival | null;
-    /**
-     * The latest version of the cancellation, if it exists
-     */
-    cancellation?: Cancellation | null;
     /**
      * The full history of the cancellation
      */
     cancellations: Array<Cancellation>;
-    confirmation?: Confirmation | null;
-    /**
-     * The latest version of the turnaround, if it exists
-     */
-    turnaround?: Turnaround | null;
+    premises: BookingPremisesSummary;
+    keyWorker?: StaffMember;
+    bed?: Bed;
+    arrival?: Arrival;
+    departure?: Departure;
+    nonArrival?: Nonarrival;
+    cancellation?: Cancellation;
+    confirmation?: Confirmation;
+    turnaround?: Turnaround;
     /**
      * The full history of turnarounds
      */
@@ -46,6 +51,5 @@ export type Booking = (BookingBody & {
     effectiveEndDate?: string;
     applicationId?: string;
     assessmentId?: string;
-    premises: BookingPremisesSummary;
-});
+};
 

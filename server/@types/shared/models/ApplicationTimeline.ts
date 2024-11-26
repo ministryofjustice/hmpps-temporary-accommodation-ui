@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApprovedPremisesApplicationStatus } from './ApprovedPremisesApplicationStatus';
+import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
+import type { TemporaryAccommodationUser } from './TemporaryAccommodationUser';
 import type { TimelineEvent } from './TimelineEvent';
-import type { User } from './User';
 export type ApplicationTimeline = {
     id: string;
     createdAt: string;
     isOfflineApplication: boolean;
-    status?: ApprovedPremisesApplicationStatus;
-    createdBy?: User;
     timelineEvents: Array<TimelineEvent>;
+    status?: 'started' | 'submitted' | 'rejected' | 'awaitingAssesment' | 'unallocatedAssesment' | 'assesmentInProgress' | 'awaitingPlacement' | 'placementAllocated' | 'inapplicable' | 'withdrawn' | 'requestedFurtherInformation' | 'pendingPlacementRequest' | 'expired';
+    createdBy?: (ApprovedPremisesUser | TemporaryAccommodationUser);
 };
 

@@ -2,9 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { RiskEnvelopeStatus } from './RiskEnvelopeStatus';
 export type FlagsEnvelope = {
-    status: RiskEnvelopeStatus;
+    status: 'retrieved' | 'not_found' | 'error';
     value?: Array<string>;
 };
 

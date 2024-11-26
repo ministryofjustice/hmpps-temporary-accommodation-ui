@@ -2,8 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { WithdrawPlacementRequestReason } from './WithdrawPlacementRequestReason';
+/**
+ * Withdrawal details
+ */
 export type WithdrawPlacementRequest = {
-    reason: WithdrawPlacementRequestReason;
+    reason: 'DuplicatePlacementRequest' | 'AlternativeProvisionIdentified' | 'ChangeInCircumstances' | 'ChangeInReleaseDecision' | 'NoCapacityDueToLostBed' | 'NoCapacityDueToPlacementPrioritisation' | 'NoCapacity' | 'ErrorInPlacementRequest' | 'WithdrawnByPP' | 'RelatedApplicationWithdrawn' | 'RelatedPlacementRequestWithdrawn' | 'RelatedPlacementApplicationWithdrawn';
 };
 

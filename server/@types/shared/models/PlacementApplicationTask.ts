@@ -2,17 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PlacementApplicationDecision } from './PlacementApplicationDecision';
 import type { PlacementDates } from './PlacementDates';
-import type { PlacementType } from './PlacementType';
-import type { ReleaseTypeOption } from './ReleaseTypeOption';
 import type { RiskTierEnvelope } from './RiskTierEnvelope';
 import type { Task } from './Task';
 export type PlacementApplicationTask = (Task & {
-    tier: RiskTierEnvelope;
-    releaseType: ReleaseTypeOption;
-    placementType: PlacementType;
+    tier?: RiskTierEnvelope;
+    releaseType?: 'licence' | 'rotl' | 'hdc' | 'pss' | 'in_community' | 'not_applicable' | 'extendedDeterminateLicence' | 'paroleDirectedLicence' | 'reReleasedPostRecall';
+    placementType?: 'rotl' | 'release_following_decision' | 'additional_placement';
     placementDates?: Array<PlacementDates>;
-    outcome?: PlacementApplicationDecision;
+    outcome?: 'accepted' | 'rejected' | 'withdraw' | 'withdrawn_by_pp';
+} & {
+    tier: RiskTierEnvelope;
+    releaseType: 'licence' | 'rotl' | 'hdc' | 'pss' | 'in_community' | 'not_applicable' | 'extendedDeterminateLicence' | 'paroleDirectedLicence' | 'reReleasedPostRecall';
+    placementType: 'rotl' | 'release_following_decision' | 'additional_placement';
 });
 

@@ -4,6 +4,8 @@
 /* eslint-disable */
 import type { ReferralHistoryNote } from './ReferralHistoryNote';
 export type ReferralHistorySystemNote = (ReferralHistoryNote & {
+    category?: 'submitted' | 'unallocated' | 'in_review' | 'ready_to_place' | 'rejected' | 'completed';
+} & {
     category: 'submitted' | 'unallocated' | 'in_review' | 'ready_to_place' | 'rejected' | 'completed';
 });
 

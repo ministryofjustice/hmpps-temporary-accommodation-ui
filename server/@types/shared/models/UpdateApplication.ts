@@ -2,10 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AnyValue } from './AnyValue';
-import type { UpdateApplicationType } from './UpdateApplicationType';
 export type UpdateApplication = {
-    type: UpdateApplicationType;
-    data: Record<string, AnyValue>;
+    type: 'CAS1' | 'CAS2' | 'CAS3';
+    data: Record<string, Record<string, any>>;
 };
 

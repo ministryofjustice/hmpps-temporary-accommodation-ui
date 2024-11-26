@@ -3,19 +3,23 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Person } from './Person';
-import type { PersonStatus } from './PersonStatus';
 export type FullPerson = (Person & {
-    name: string;
-    dateOfBirth: string;
+    name?: string;
+    dateOfBirth?: string;
+    sex?: string;
+    status?: 'InCustody' | 'InCommunity' | 'Unknown';
     nomsNumber?: string;
     pncNumber?: string;
     ethnicity?: string;
     nationality?: string;
     religionOrBelief?: string;
-    sex: string;
     genderIdentity?: string;
-    status: PersonStatus;
     prisonName?: string;
     isRestricted?: boolean;
+} & {
+    name: string;
+    dateOfBirth: string;
+    sex: string;
+    status: 'InCustody' | 'InCommunity' | 'Unknown';
 });
 

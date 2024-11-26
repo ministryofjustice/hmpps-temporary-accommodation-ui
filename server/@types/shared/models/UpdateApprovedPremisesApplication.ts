@@ -2,32 +2,26 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApType } from './ApType';
-import type { Cas1ApplicationTimelinessCategory } from './Cas1ApplicationTimelinessCategory';
-import type { ReleaseTypeOption } from './ReleaseTypeOption';
 import type { UpdateApplication } from './UpdateApplication';
 export type UpdateApprovedPremisesApplication = (UpdateApplication & {
     isInapplicable?: boolean;
     isWomensApplication?: boolean;
     /**
      * Use apType
-     * @deprecated
      */
     isPipeApplication?: boolean;
     /**
      * noticeType should be used to indicate if an emergency application
-     * @deprecated
      */
     isEmergencyApplication?: boolean;
     /**
      * Use apType
-     * @deprecated
      */
     isEsapApplication?: boolean;
-    apType?: ApType;
+    apType?: 'normal' | 'pipe' | 'esap' | 'rfap' | 'mhapStJosephs' | 'mhapElliottHouse';
     targetLocation?: string;
-    releaseType?: ReleaseTypeOption;
+    releaseType?: 'licence' | 'rotl' | 'hdc' | 'pss' | 'in_community' | 'not_applicable' | 'extendedDeterminateLicence' | 'paroleDirectedLicence' | 'reReleasedPostRecall';
     arrivalDate?: string;
-    noticeType?: Cas1ApplicationTimelinessCategory;
+    noticeType?: 'standard' | 'emergency' | 'shortNotice';
 });
 

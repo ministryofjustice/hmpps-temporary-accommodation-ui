@@ -2,14 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ArrayOfOASysRiskOfSeriousHarmSummaryQuestions } from './ArrayOfOASysRiskOfSeriousHarmSummaryQuestions';
-import type { OASysAssessmentId } from './OASysAssessmentId';
-import type { OASysAssessmentState } from './OASysAssessmentState';
+import type { OASysQuestion } from './OASysQuestion';
 export type OASysRiskOfSeriousHarm = {
-    assessmentId: OASysAssessmentId;
-    assessmentState: OASysAssessmentState;
+    /**
+     * The ID of assessment being used. This should always be the latest Layer 3 assessment, regardless of state.
+     */
+    assessmentId: number;
+    assessmentState: 'Completed' | 'Incomplete';
     dateStarted: string;
+    rosh: Array<OASysQuestion>;
     dateCompleted?: string;
-    rosh: ArrayOfOASysRiskOfSeriousHarmSummaryQuestions;
 };
 

@@ -4,31 +4,29 @@
 /* eslint-disable */
 import type { ApArea } from './ApArea';
 import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
-import type { PersonSummary } from './PersonSummary';
+import type { FullPersonSummary } from './FullPersonSummary';
 import type { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
-import type { TaskStatus } from './TaskStatus';
-import type { TaskType } from './TaskType';
+import type { RestrictedPersonSummary } from './RestrictedPersonSummary';
+import type { UnknownPersonSummary } from './UnknownPersonSummary';
 export type Task = {
-    taskType: TaskType;
     id: string;
-    applicationId: string;
-    personSummary: PersonSummary;
+    crn: string;
+    apArea?: ApArea;
+    dueAt: string;
     /**
      * Superseded by personSummary which provides 'name' as well as 'personType' and 'crn'.
-     * @deprecated
      */
     personName: string;
-    crn: string;
+    status: 'not_started' | 'in_progress' | 'complete' | 'info_requested';
+    taskType: 'Assessment' | 'PlacementRequest' | 'PlacementApplication' | 'BookingAppeal';
     /**
      * The Due date of the task - this is deprecated in favour of the `dueAt` field
-     * @deprecated
      */
     dueDate: string;
-    dueAt: string;
-    allocatedToStaffMember?: ApprovedPremisesUser;
-    status: TaskStatus;
-    apArea?: ApArea;
-    probationDeliveryUnit?: ProbationDeliveryUnit;
+    applicationId: string;
     outcomeRecordedAt?: string;
+    personSummary: (FullPersonSummary | RestrictedPersonSummary | UnknownPersonSummary);
+    probationDeliveryUnit?: ProbationDeliveryUnit;
+    allocatedToStaffMember?: ApprovedPremisesUser;
 };
 

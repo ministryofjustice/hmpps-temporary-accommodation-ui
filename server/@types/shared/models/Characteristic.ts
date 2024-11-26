@@ -5,8 +5,8 @@
 export type Characteristic = {
     id: string;
     name: string;
-    propertyName?: string;
     serviceScope: 'approved-premises' | 'temporary-accommodation' | '*';
     modelScope: 'premises' | 'room' | '*';
+    propertyName?: string;
 };
 

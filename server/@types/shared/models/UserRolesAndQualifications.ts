@@ -2,10 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApprovedPremisesUserRole } from './ApprovedPremisesUserRole';
-import type { UserQualification } from './UserQualification';
 export type UserRolesAndQualifications = {
-    roles: Array<ApprovedPremisesUserRole>;
-    qualifications: Array<UserQualification>;
+    roles: Array<'assessor' | 'matcher' | 'manager' | 'legacy_manager' | 'future_manager' | 'workflow_manager' | 'cru_member' | 'cru_member_find_and_book_beta' | 'applicant' | 'role_admin' | 'report_viewer' | 'excluded_from_assess_allocation' | 'excluded_from_match_allocation' | 'excluded_from_placement_application_allocation' | 'appeals_manager' | 'janitor' | 'user_manager'>;
+    qualifications: Array<'pipe' | 'lao' | 'emergency' | 'esap' | 'recovery_focused' | 'mental_health_specialist'>;
 };
 

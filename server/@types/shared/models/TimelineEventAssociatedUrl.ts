@@ -2,9 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { TimelineEventUrlType } from './TimelineEventUrlType';
 export type TimelineEventAssociatedUrl = {
-    type: TimelineEventUrlType;
+    type: 'application' | 'booking' | 'assessment' | 'assessmentAppeal' | 'cas1SpaceBooking';
     url: string;
 };
 

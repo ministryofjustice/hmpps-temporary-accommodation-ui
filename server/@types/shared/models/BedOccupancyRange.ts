@@ -2,10 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BedOccupancyEntry } from './BedOccupancyEntry';
+import type { BedOccupancyBookingEntry } from './BedOccupancyBookingEntry';
+import type { BedOccupancyLostBedEntry } from './BedOccupancyLostBedEntry';
+import type { BedOccupancyOpenEntry } from './BedOccupancyOpenEntry';
 export type BedOccupancyRange = {
     bedId: string;
     bedName: string;
-    schedule: Array<BedOccupancyEntry>;
+    schedule: Array<(BedOccupancyBookingEntry | BedOccupancyLostBedEntry | BedOccupancyOpenEntry)>;
 };
 

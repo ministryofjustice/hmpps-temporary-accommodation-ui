@@ -2,13 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ServiceName } from './ServiceName';
 export type NewBooking = {
     crn: string;
     arrivalDate: string;
     departureDate: string;
+    serviceName: 'approved-premises' | 'cas2' | 'temporary-accommodation';
     bedId?: string;
-    serviceName: ServiceName;
     enableTurnarounds?: boolean;
     assessmentId?: string;
     eventNumber?: string;

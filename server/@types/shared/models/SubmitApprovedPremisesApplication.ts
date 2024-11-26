@@ -2,35 +2,27 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { ApType } from './ApType';
-import type { Cas1ApplicationTimelinessCategory } from './Cas1ApplicationTimelinessCategory';
 import type { Cas1ApplicationUserDetails } from './Cas1ApplicationUserDetails';
-import type { ReleaseTypeOption } from './ReleaseTypeOption';
-import type { SentenceTypeOption } from './SentenceTypeOption';
-import type { SituationOption } from './SituationOption';
 import type { SubmitApplication } from './SubmitApplication';
 export type SubmitApprovedPremisesApplication = (SubmitApplication & {
+    targetLocation?: string;
+    releaseType?: 'licence' | 'rotl' | 'hdc' | 'pss' | 'in_community' | 'not_applicable' | 'extendedDeterminateLicence' | 'paroleDirectedLicence' | 'reReleasedPostRecall';
+    sentenceType?: 'standardDeterminate' | 'life' | 'ipp' | 'extendedDeterminate' | 'communityOrder' | 'bailPlacement' | 'nonStatutory';
     /**
      * Use apType
-     * @deprecated
      */
     isPipeApplication?: boolean;
     isWomensApplication?: boolean;
     /**
      * noticeType should be used to indicate if this an emergency application
-     * @deprecated
      */
     isEmergencyApplication?: boolean;
     /**
      * Use apType
-     * @deprecated
      */
     isEsapApplication?: boolean;
-    apType?: ApType;
-    targetLocation: string;
-    releaseType: ReleaseTypeOption;
-    sentenceType: SentenceTypeOption;
-    situation?: SituationOption;
+    apType?: 'normal' | 'pipe' | 'esap' | 'rfap' | 'mhapStJosephs' | 'mhapElliottHouse';
+    situation?: 'riskManagement' | 'residencyManagement' | 'bailAssessment' | 'bailSentence' | 'awaitingSentence';
     arrivalDate?: string;
     /**
      * If the user's ap area id is incorrect, they can optionally override it for the application
@@ -39,8 +31,12 @@ export type SubmitApprovedPremisesApplication = (SubmitApplication & {
     applicantUserDetails?: Cas1ApplicationUserDetails;
     caseManagerIsNotApplicant?: boolean;
     caseManagerUserDetails?: Cas1ApplicationUserDetails;
-    noticeType?: Cas1ApplicationTimelinessCategory;
+    noticeType?: 'standard' | 'emergency' | 'shortNotice';
     reasonForShortNotice?: string;
     reasonForShortNoticeOther?: string;
+} & {
+    targetLocation: string;
+    releaseType: 'licence' | 'rotl' | 'hdc' | 'pss' | 'in_community' | 'not_applicable' | 'extendedDeterminateLicence' | 'paroleDirectedLicence' | 'reReleasedPostRecall';
+    sentenceType: 'standardDeterminate' | 'life' | 'ipp' | 'extendedDeterminate' | 'communityOrder' | 'bailPlacement' | 'nonStatutory';
 });
 

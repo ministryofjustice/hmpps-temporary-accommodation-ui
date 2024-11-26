@@ -2,10 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AssessmentDecision } from './AssessmentDecision';
 import type { Task } from './Task';
 export type AssessmentTask = (Task & {
+    createdFromAppeal?: boolean;
+    outcome?: 'accepted' | 'rejected';
+} & {
     createdFromAppeal: boolean;
-    outcome?: AssessmentDecision;
 });
 

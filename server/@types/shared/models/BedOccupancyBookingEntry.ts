@@ -4,6 +4,9 @@
 /* eslint-disable */
 import type { BedOccupancyEntry } from './BedOccupancyEntry';
 export type BedOccupancyBookingEntry = (BedOccupancyEntry & {
+    bookingId?: string;
+    personName?: string;
+} & {
     bookingId: string;
     personName: string;
 });

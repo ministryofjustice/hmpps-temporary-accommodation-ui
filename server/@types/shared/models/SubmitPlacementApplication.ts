@@ -2,12 +2,16 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { AnyValue } from './AnyValue';
 import type { PlacementDates } from './PlacementDates';
-import type { PlacementType } from './PlacementType';
+/**
+ * Information needed to submit a placement application
+ */
 export type SubmitPlacementApplication = {
-    translatedDocument: AnyValue;
-    placementType: PlacementType;
+    /**
+     * Any object that conforms to the current JSON schema for an application
+     */
+    translatedDocument: Record<string, any>;
+    placementType: 'rotl' | 'release_following_decision' | 'additional_placement';
     placementDates: Array<PlacementDates>;
 };
 

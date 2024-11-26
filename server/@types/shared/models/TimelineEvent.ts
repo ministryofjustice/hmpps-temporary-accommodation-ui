@@ -2,17 +2,16 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ApprovedPremisesUser } from './ApprovedPremisesUser';
+import type { TemporaryAccommodationUser } from './TemporaryAccommodationUser';
 import type { TimelineEventAssociatedUrl } from './TimelineEventAssociatedUrl';
-import type { TimelineEventType } from './TimelineEventType';
-import type { TriggerSourceType } from './TriggerSourceType';
-import type { User } from './User';
 export type TimelineEvent = {
-    type?: TimelineEventType;
+    type?: 'approved_premises_application_submitted' | 'approved_premises_application_assessed' | 'approved_premises_booking_made' | 'approved_premises_person_arrived' | 'approved_premises_person_not_arrived' | 'approved_premises_person_departed' | 'approved_premises_booking_not_made' | 'approved_premises_booking_cancelled' | 'approved_premises_booking_changed' | 'approved_premises_booking_keyworker_assigned' | 'approved_premises_application_withdrawn' | 'approved_premises_application_expired' | 'approved_premises_information_request' | 'approved_premises_assessment_appealed' | 'approved_premises_assessment_allocated' | 'approved_premises_placement_application_withdrawn' | 'approved_premises_placement_application_allocated' | 'approved_premises_match_request_withdrawn' | 'approved_premises_request_for_placement_created' | 'approved_premises_request_for_placement_assessed' | 'cas3_person_arrived' | 'cas3_person_departed' | 'application_timeline_note' | 'cas2_application_submitted' | 'cas2_note' | 'cas2_status_update';
     id?: string;
     occurredAt?: string;
     content?: string;
-    createdBy?: User;
+    createdBy?: (ApprovedPremisesUser | TemporaryAccommodationUser);
     associatedUrls?: Array<TimelineEventAssociatedUrl>;
-    triggerSource?: TriggerSourceType;
+    triggerSource?: 'user' | 'system';
 };
 

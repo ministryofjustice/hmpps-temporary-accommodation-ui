@@ -11,6 +11,7 @@ import bedFactory from './bed'
 import bedSearchParametersFactory from './bedSearchParameters'
 import bedSearchResultFactory from './bedSearchResult'
 import bedSearchResultsFactory from './bedSearchResults'
+import bedspaceSearchFormParametersFactory from './bedspaceSearchFormParameters'
 import bookingFactory from './booking'
 import bookingSearchParametersFactory from './bookingSearchParameters'
 import bookingSearchResultFactory from './bookingSearchResult'
@@ -83,6 +84,7 @@ export {
   bedSearchParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
+  bedspaceSearchFormParametersFactory,
   bookingFactory,
   bookingSearchParametersFactory,
   bookingSearchResultBedSummaryFactory,

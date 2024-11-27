@@ -21,6 +21,7 @@ import {
   SortDirection,
   TemporaryAccommodationApplication,
   TemporaryAccommodationAssessmentStatus,
+  TemporaryAccommodationBedSearchParameters,
   User,
 } from '@approved-premises/api'
 import { CallConfig } from '../../data/restClient'
@@ -340,3 +341,9 @@ export type PrimaryNavigationItem = {
   text: string
   active?: boolean
 }
+
+export type BedspaceSearchFormParameters = Omit<TemporaryAccommodationBedSearchParameters, 'serviceName'> & {
+  occupancyAttribute: OccupancyAttribute
+}
+
+export type OccupancyAttribute = 'all' | 'sharedProperty' | 'singleOccupancy'

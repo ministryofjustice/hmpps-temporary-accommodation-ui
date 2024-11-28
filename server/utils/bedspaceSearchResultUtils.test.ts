@@ -71,6 +71,7 @@ describe('BedspaceSearchResultUtils', () => {
       return {
         crn: personFactory.build().crn,
         days: overLapDays,
+        personType: personFactory.build().type,
         roomId: roomFactory.build().id,
         bookingId: bookingFactory.build().id,
       }

@@ -37,7 +37,6 @@ interface PipeRequest {
   headers?: Record<string, string>
   query?: string | Record<string, string>
   filename?: string
-  passThroughHeaders?: Array<string>
 }
 
 interface StreamRequest {
@@ -163,51 +162,37 @@ export default class RestClient {
     })
   }
 
-  async pipe(
+  async pipe<T = unknown>(
     response: Response,
-    { path = null, headers = {}, query = '', filename = null, passThroughHeaders = [] }: PipeRequest,
-  ): Promise<void> {
+    { path = null, headers = {}, query = '', filename = null }: PipeRequest,
+  ): Promise<T> {
     logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
-    return new Promise((resolve, reject) => {
-      const stream = superagent
+    try {
+      const result = await superagent
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
         .auth(this.token, { type: 'bearer' })
         .use(restClientMetricsMiddleware)
-        .retry(2, (err, res) => {
-          if (res && res.statusCode === 503) {
-            logger.info('Received 503, Not retrying')
-            return false
-          }
-          if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
-          return undefined // retry handler only for logging retries, not to influence retry logic
-        })
         .query(query)
         .timeout(this.timeoutConfig())
         .set({ ...this.defaultHeaders, ...headers })
 
-      stream.on('end', () => {
-        resolve()
-      })
-
-      stream.on('response', res => {
-        if (res.status !== 200) {
-          logger.warn(res.error, `Error calling ${this.name}`)
-          stream.abort()
-          reject(res.error)
-        }
-
+      if (result.statusCode === 200) {
         response.set({
-          'Content-Type': res.headers['content-type'],
-          'Content-Disposition': filename ? `attachment; filename="${filename}"` : res.headers['content-disposition'],
+          'Content-Type': result.headers['content-type'],
+          'Content-Disposition': filename
+            ? `attachment; filename="${filename}"`
+            : result.headers['content-disposition'],
         })
-        passThroughHeaders.forEach(header => {
-          response.set(header, res.headers[header])
-        })
-      })
+        response.send(result.body)
+      }
 
-      stream.pipe(response)
-    })
+      return result.body
+    } catch (error) {
+      const sanitisedError = sanitiseError(error)
+      logger.warn({ ...sanitisedError }, `Error calling ${this.name}, path: '${path}'`)
+      throw sanitisedError
+    }
   }
 
   private async postPutOrDelete<T = unknown>(

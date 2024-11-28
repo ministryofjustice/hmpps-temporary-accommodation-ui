@@ -110,7 +110,8 @@ const paths: Record<string, any> = {
   },
   reports: {
     index: reportsPath,
-    create: reportsPath,
+    new: reportsPath.path('bookings'),
+    create: reportsPath.path('bookings'),
   },
   bedspaces: {
     search: temporaryAccommodationPath.path('/find-a-bedspace'),

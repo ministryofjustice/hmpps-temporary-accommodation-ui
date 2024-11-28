@@ -1,4 +1,5 @@
 import path from 'path'
+import { Cas3ReportType } from '@approved-premises/api'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import ReportIndexPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/reportIndex'
@@ -29,6 +30,39 @@ context('Report', () => {
 
     // Then I navigate to the report page
     Page.verifyOnPage(ReportIndexPage)
+  })
+
+  it('does not download a file when the API returns an error', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // When I visit the report page
+    cy.task('stubReportReferenceData')
+    const page = ReportIndexPage.visit()
+
+    // And I fill out the form
+    const type: Cas3ReportType = 'booking'
+    cy.then(function _() {
+      const probationRegion = this.actingUserProbationRegion
+      const startDate = '12/01/2024'
+      const endDate = '12/03/2024'
+
+      page.completeForm(startDate, endDate)
+
+      cy.task('stubReportError', {
+        data: 'some-data',
+        probationRegionId: probationRegion.id,
+        startDate: DateFormats.datepickerInputToIsoString(startDate),
+        endDate: DateFormats.datepickerInputToIsoString(endDate),
+        type,
+      })
+    })
+
+    page.expectDownload()
+    page.clickDownload(type)
+
+    // Then I should see an error message
+    cy.get('h1').contains('Internal Server Error')
   })
 
   it("allows me to download a booking report for the acting user's region", () => {

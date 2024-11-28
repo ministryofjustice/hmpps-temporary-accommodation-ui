@@ -1,57 +1,23 @@
 import nock from 'nock'
+
 import { createMock } from '@golevelup/ts-jest'
 import { Response } from 'express'
-import { Readable } from 'stream'
-import { Cas3ReportType } from '@approved-premises/api'
 import config from '../config'
+import paths from '../paths/api'
+import { probationRegionFactory } from '../testutils/factories'
 import ReportClient from './reportClient'
 import { CallConfig } from './restClient'
 
-jest.mock('superagent', () => ({
-  get: jest.fn().mockReturnThis(), // Mock the .get method of superagent
-  pipe: jest.fn(), // Mock the .pipe method
-}))
-
 describe('ReportClient', () => {
+  let fakeApprovedPremisesApi: nock.Scope
   let reportClient: ReportClient
-  let mockStream: Readable
-  let filename: string
-  let probationRegionId: string
-  let startDate: string
-  let endDate: string
-  let type: Cas3ReportType
-  let mockResponse: Response
-  let restClientMock: { pipe: jest.Mock }
 
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    // Mock the restClient instance and its pipe method
-    restClientMock = {
-      pipe: jest.fn(),
-    }
-
-    // Mock the ReportClient's restClient property
     config.apis.approvedPremises.url = 'http://localhost:8080'
+    fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     reportClient = new ReportClient(callConfig)
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    reportClient.restClient = restClientMock as any
-
-    filename = 'report.csv'
-    probationRegionId = '12345'
-    startDate = '2024-01-01'
-    endDate = '2024-01-31'
-    type = 'referral'
-
-    // Create a mock stream that has an `on` method (simulating a Readable stream)
-    mockStream = new Readable({
-      read() {
-        // We don't need to do anything for this simple mock
-      },
-    })
-
-    mockResponse = createMock<Response>()
-    restClientMock.pipe.mockReturnValue(mockStream)
   })
 
   afterEach(() => {
@@ -63,53 +29,87 @@ describe('ReportClient', () => {
     nock.cleanAll()
   })
 
-  describe('reportForProbationRegion', () => {
-    it('should call restClient.pipe with correct arguments', async () => {
-      await reportClient.reportForProbationRegion(mockResponse, filename, probationRegionId, startDate, endDate, type)
+  describe('bookings', () => {
+    it('pipes all bookings to an express response', async () => {
+      const data = 'some-data'
 
-      expect(restClientMock.pipe).toHaveBeenCalledWith(
-        mockResponse,
-        expect.objectContaining({
-          path: expect.any(String),
-          query: {
-            probationRegionId,
-            startDate,
-            endDate,
-          },
-          filename,
-        }),
-      )
+      const year = '2023'
+      const month = '3'
+
+      fakeApprovedPremisesApi
+        .get(paths.reports.bookings({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ year, month })
+        .reply(200, data, { 'content-type': 'some-content-type' })
+
+      const response = createMock<Response>()
+
+      await reportClient.bookings(response, 'some-filename', month, year)
+
+      expect(response.set).toHaveBeenCalledWith({
+        'Content-Type': 'some-content-type',
+        'Content-Disposition': `attachment; filename="some-filename"`,
+      })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
+  })
 
-    it('should handle the stream properly when restClient.pipe returns a stream', async () => {
-      const result = await reportClient.reportForProbationRegion(
-        mockResponse,
-        filename,
-        probationRegionId,
+  describe('bookings', () => {
+    it('pipes all bookings to an express response', async () => {
+      const data = 'some-data'
+
+      const year = '2024'
+      const month = '0'
+
+      fakeApprovedPremisesApi
+        .get(paths.reports.bookings({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ year, month })
+        .reply(200, data, { 'content-type': 'some-content-type' })
+
+      const response = createMock<Response>()
+
+      await reportClient.bookings(response, 'some-filename', month, year)
+
+      expect(response.set).toHaveBeenCalledWith({
+        'Content-Type': 'some-content-type',
+        'Content-Disposition': `attachment; filename="some-filename"`,
+      })
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
+    })
+  })
+
+  describe('reportForProbationRegion', () => {
+    it('pipes data for a probation region to an express response', async () => {
+      const probationRegion = probationRegionFactory.build()
+
+      const data = 'some-data'
+      const startDate = '2024-01-01'
+      const endDate = '2024-04-01'
+      const type = 'bedOccupancy'
+
+      fakeApprovedPremisesApi
+        .get(paths.reports.bedspaceUtilisation({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ probationRegionId: probationRegion.id, startDate, endDate })
+        .reply(200, data, { 'content-type': 'some-content-type' })
+
+      const response = createMock<Response>()
+
+      await reportClient.reportForProbationRegion(
+        response,
+        'some-filename',
+        probationRegion.id,
         startDate,
         endDate,
         type,
       )
 
-      expect(result).toBeUndefined()
-      expect(restClientMock.pipe).toHaveReturnedWith(mockStream)
-
-      expect(mockStream.on).toBeDefined()
-
-      const eventCallback = jest.fn()
-      mockStream.on('data', eventCallback)
-      expect(eventCallback).not.toHaveBeenCalled()
-    })
-
-    it('should throw an error if restClient.pipe fails', async () => {
-      const error = new Error('Failed to pipe')
-      restClientMock.pipe.mockImplementationOnce(() => {
-        throw error
+      expect(response.set).toHaveBeenCalledWith({
+        'Content-Type': 'some-content-type',
+        'Content-Disposition': `attachment; filename="some-filename"`,
       })
-
-      await expect(
-        reportClient.reportForProbationRegion(mockResponse, filename, probationRegionId, startDate, endDate, type),
-      ).rejects.toThrow('Failed to pipe')
+      expect(response.send).toHaveBeenCalledWith(Buffer.alloc(data.length, data))
     })
   })
 })

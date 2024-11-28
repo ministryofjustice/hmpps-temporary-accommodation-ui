@@ -13,7 +13,7 @@ export function bedspaceKeyCharacteristics(result: BedSearchResult): Array<strin
 }
 
 export function bedspaceOverlapResult(
-  overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'name' | 'sex' | 'assesmentId'>,
+  overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'name' | 'sex' | 'assesmentId' | 'personType'>,
 ) {
   const { crn, days, roomId, bookingId } = overlapResult
   const overlapDays = `${days} ${days === 1 ? 'day' : 'days'} overlap`

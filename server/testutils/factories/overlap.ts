@@ -7,6 +7,7 @@ export default Factory.define<Overlap>(() => ({
   crn: fullPersonFactory.build().crn,
   name: fullPersonFactory.build().name,
   roomId: faker.string.uuid(),
+  personType: fullPersonFactory.build().type,
   bookingId: faker.string.uuid(),
   days: faker.number.int({ min: 1, max: 100 }),
 }))

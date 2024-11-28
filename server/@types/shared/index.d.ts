@@ -93,7 +93,6 @@ export type { Cas1OutOfServiceBedRevision } from './models/Cas1OutOfServiceBedRe
 export type { Cas1OutOfServiceBedRevisionType } from './models/Cas1OutOfServiceBedRevisionType';
 export type { Cas1OutOfServiceBedSortField } from './models/Cas1OutOfServiceBedSortField';
 export type { Cas1OutOfServiceBedStatus } from './models/Cas1OutOfServiceBedStatus';
-export type { Cas1ReportName } from './models/Cas1ReportName';
 export type { Cas2Application } from './models/Cas2Application';
 export type { Cas2ApplicationNote } from './models/Cas2ApplicationNote';
 export type { Cas2ApplicationStatus } from './models/Cas2ApplicationStatus';

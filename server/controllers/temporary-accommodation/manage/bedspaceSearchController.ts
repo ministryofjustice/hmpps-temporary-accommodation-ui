@@ -17,7 +17,9 @@ type APISearchQuery = Omit<BedspaceSearchFormParameters, 'occupancyAttribute'> &
   /**
    * The number of days the Bed will need to be free from the start_date until
    */
-  durationDays: string
+  startDate: string
+  durationDays: number
+  probationDeliveryUnits: string[]
 }
 
 export default class BedspaceSearchController {
@@ -59,8 +61,13 @@ export default class BedspaceSearchController {
 
       try {
         if (apiQueryParams) {
+
+          const startDateParam: ObjectWithDateParts<"startDate"> = {
+            startDate: apiQueryParams.startDate
+          }
+
           startDate = DateFormats.dateAndTimeInputsToIsoString(
-            apiQueryParams as ObjectWithDateParts<'startDate'>,
+            startDateParam,
             'startDate',
           ).startDate
 

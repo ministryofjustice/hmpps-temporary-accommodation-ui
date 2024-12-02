@@ -191,7 +191,7 @@ context('Bedspace Search', () => {
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
 
     // And when I fill out the form
-    const searchParameters = BedspaceSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -239,7 +239,7 @@ context('Bedspace Search', () => {
     const results = bedSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = BedspaceSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 

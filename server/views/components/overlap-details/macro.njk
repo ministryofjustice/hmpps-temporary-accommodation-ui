@@ -1,6 +1,12 @@
 {% macro overlapDetails(params) %}
     <dl class="overlap-details">
         <div class="overlap-details__row">
+            <div class="overlap-details__row overlap-details__row--inline">
+                <dt class="overlap-details__key govuk-visually-hidden">
+                    Name: 
+                </dt>
+                <dd class="overlap-details__value">{{ params.overlap.personName }}</dd>
+            </div>
             <dt class="overlap-details__key">
                 CRN: 
             </dt>    
@@ -13,8 +19,13 @@
             <dd class="overlap-details__value">{{ params.overlap.overlapDays }}</dd>
         </div>
     </dl>
-    <a class="govuk-link"
-        href="{{ addPlaceContext(paths.bookings.show({premisesId: params.premisesId, roomId: params.overlap.roomId, bookingId: params.overlap.bookingId})) }}">
-        View booking
-    </a>
+    {% if params.overlap.assessmentId %}
+        <a class="govuk-link" 
+            href="{{ addPlaceContext(paths.assessments.summary({ id: params.overlap.assessmentId })) }}"
+            rel="noreferrer noopener" target="_blank"
+            >View the referral<span class="govuk-visually-hidden"> for {{ overlap.name }}</span>
+        </a>
+    {% else %}
+        No referral found
+    {% endif %}
 {% endmacro %}

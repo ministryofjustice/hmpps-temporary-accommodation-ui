@@ -1,10 +1,10 @@
-import { TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
+import { FullPerson, RestrictedPerson, TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
 import {
   bedSearchResultFactory,
   bookingFactory,
   characteristicFactory,
-  personFactory,
   premisesFactory,
+  restrictedPersonFactory,
   roomFactory,
 } from '../testutils/factories'
 import {
@@ -12,6 +12,7 @@ import {
   bedspaceOverlapResult,
   premisesKeyCharacteristics,
 } from './bedspaceSearchResultUtils'
+import { fullPersonFactory } from '../testutils/factories/person'
 
 describe('BedspaceSearchResultUtils', () => {
   describe('bedspaceKeyCharacteristics', () => {
@@ -65,20 +66,23 @@ describe('BedspaceSearchResultUtils', () => {
 
   describe('bedspaceOverlapResult', () => {
     let overLapDays: TemporaryAccommodationBedSearchResultOverlap['days']
-    let overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'name' | 'sex' | 'assesmentId'>
+    let overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'sex' | 'assesmentId'>
+    let person: FullPerson | RestrictedPerson
 
     const createOverLapResult = () => {
       return {
-        crn: personFactory.build().crn,
+        crn: person.crn,
         days: overLapDays,
-        personType: personFactory.build().type,
+        personType: person.type,
         roomId: roomFactory.build().id,
         bookingId: bookingFactory.build().id,
+        name: person.type === 'FullPerson' ? (person as FullPerson).name : 'Limited access offender',
       }
     }
 
     beforeEach(() => {
       overLapDays = 8
+      person = fullPersonFactory.build()
       overlapResult = createOverLapResult()
     })
 
@@ -86,8 +90,10 @@ describe('BedspaceSearchResultUtils', () => {
       expect(bedspaceOverlapResult(overlapResult)).toEqual({
         crn: overlapResult.crn,
         overlapDays: '8 days overlap',
+        personType: 'FullPerson',
         roomId: overlapResult.roomId,
         bookingId: overlapResult.bookingId,
+        displayName: overlapResult.name,
       })
     })
 
@@ -99,6 +105,25 @@ describe('BedspaceSearchResultUtils', () => {
 
       it('returns the correct overlap message for single day', () => {
         expect(bedspaceOverlapResult(overlapResult).overlapDays).toEqual('1 day overlap')
+      })
+    })
+
+    describe('when offender is "Limited access offender', () => {
+      beforeEach(() => {
+        overLapDays = 8
+        person = restrictedPersonFactory.build()
+        overlapResult = createOverLapResult()
+      })
+
+      it('returns object of key/value pairs', () => {
+        expect(bedspaceOverlapResult(overlapResult)).toEqual({
+          crn: overlapResult.crn,
+          overlapDays: '8 days overlap',
+          personType: 'RestrictedPerson',
+          roomId: overlapResult.roomId,
+          bookingId: overlapResult.bookingId,
+          displayName: 'Limited access offender',
+        })
       })
     })
   })

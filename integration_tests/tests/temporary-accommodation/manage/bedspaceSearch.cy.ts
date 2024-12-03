@@ -172,7 +172,9 @@ context('Bedspace Search', () => {
         bedSearchResultFactory.forBedspace(premises, room).build({
           overlaps: [
             overlapFactory.build({
+              name: person.name,
               crn: person.crn,
+              personType: person.type,
               roomId: room.id,
               bookingId: booking.id,
               days: 5,

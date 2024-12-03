@@ -1,9 +1,15 @@
 {% macro overlapDetails(params) %}
     <dl class="overlap-details">
         <div class="overlap-details__row">
+                    <dt class="overlap-details__key govuk-visually-hidden">
+                        Name:
+                    </dt>
+                    <dd class="overlap-details__value overlap-details__value--bold">{{ params.overlap.displayName }}</dd>
+                </div>
+        <div class="overlap-details__row">
             <dt class="overlap-details__key">
-                CRN: 
-            </dt>    
+                CRN:
+            </dt>
             <dd class="overlap-details__value">{{ params.overlap.crn }}</dd>
         </div>
         <div class="overlap-details__row overlap-details__row--inline">

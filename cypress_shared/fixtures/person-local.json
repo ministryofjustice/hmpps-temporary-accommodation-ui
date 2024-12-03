@@ -9,5 +9,6 @@
   "nationality": "",
   "ethnicity": "",
   "sex": "Male",
+  "type": "FullPerson",
   "genderIdentity": "Prefer not to say"
 }

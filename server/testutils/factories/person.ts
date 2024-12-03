@@ -8,7 +8,7 @@ export const fullPersonFactory = Factory.define<FullPerson>(() => ({
   crn: `C${faker.number.int({ min: 100000, max: 999999 })}`,
   name: faker.person.fullName(),
   dateOfBirth: DateFormats.dateObjToIsoDate(faker.date.past()),
-  sex: faker.helpers.arrayElement(['Male', 'Female', 'Other', 'Prefer not to say']),
+  sex: faker.helpers.arrayElement(['Male', 'Female']),
   status: faker.helpers.arrayElement(['InCustody', 'InCommunity']),
   nomsNumber: `NOMS${faker.number.int({ min: 100, max: 999 })}`,
   nationality: faker.location.country(),

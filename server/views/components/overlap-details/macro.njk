@@ -1,11 +1,11 @@
 {% macro overlapDetails(params) %}
     <dl class="overlap-details">
         <div class="overlap-details__row">
-                    <dt class="overlap-details__key govuk-visually-hidden">
-                        Name:
-                    </dt>
-                    <dd class="overlap-details__value overlap-details__value--bold">{{ params.overlap.displayName }}</dd>
-                </div>
+            <dt class="overlap-details__key govuk-visually-hidden">
+                Name:
+            </dt>
+            <dd class="overlap-details__value overlap-details__value--bold">{{ params.overlap.displayName }}</dd>
+        </div>
         <div class="overlap-details__row">
             <dt class="overlap-details__key">
                 CRN:
@@ -13,6 +13,12 @@
             <dd class="overlap-details__value">{{ params.overlap.crn }}</dd>
         </div>
         <div class="overlap-details__row overlap-details__row--inline">
+						{% if params.overlap.sex %}
+	            <dt class="overlap-details__key govuk-visually-hidden">
+	                Sex:
+	            </dt>
+	            <dd class="overlap-details__value">{{ params.overlap.sex }}, </dd>
+						{% endif %}
             <dt class="overlap-details__key govuk-visually-hidden">
                 Overlap: 
             </dt>

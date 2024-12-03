@@ -66,7 +66,7 @@ describe('BedspaceSearchResultUtils', () => {
 
   describe('bedspaceOverlapResult', () => {
     let overLapDays: TemporaryAccommodationBedSearchResultOverlap['days']
-    let overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'sex' | 'assesmentId'>
+    let overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'assesmentId'>
     let person: FullPerson | RestrictedPerson
 
     const createOverLapResult = () => {
@@ -77,6 +77,7 @@ describe('BedspaceSearchResultUtils', () => {
         roomId: roomFactory.build().id,
         bookingId: bookingFactory.build().id,
         name: person.type === 'FullPerson' ? (person as FullPerson).name : 'Limited access offender',
+        sex: person.type === 'FullPerson' ? (person as FullPerson).sex : undefined,
       }
     }
 
@@ -94,6 +95,8 @@ describe('BedspaceSearchResultUtils', () => {
         roomId: overlapResult.roomId,
         bookingId: overlapResult.bookingId,
         displayName: overlapResult.name,
+        sex: 'Male',
+        sex: overlapResult.sex,
       })
     })
 

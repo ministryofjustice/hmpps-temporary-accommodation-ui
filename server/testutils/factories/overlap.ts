@@ -6,6 +6,7 @@ import { fullPersonFactory } from './person'
 export default Factory.define<Overlap>(() => ({
   crn: fullPersonFactory.build().crn,
   name: fullPersonFactory.build().name,
+  sex: fullPersonFactory.build().sex,
   roomId: faker.string.uuid(),
   personType: fullPersonFactory.build().type,
   bookingId: faker.string.uuid(),

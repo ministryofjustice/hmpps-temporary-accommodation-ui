@@ -178,6 +178,7 @@ context('Bedspace Search', () => {
               roomId: room.id,
               bookingId: booking.id,
               days: 5,
+              sex: person.sex,
             }),
           ],
         }),

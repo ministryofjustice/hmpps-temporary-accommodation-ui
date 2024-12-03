@@ -58,6 +58,7 @@ export default class BedspaceSearchResult extends Component {
             .eq(i)
             .within(() => {
               cy.root().contains(`Name: ${overlap.name}`)
+              cy.root().contains(`Sex: ${overlap.sex},`)
               cy.root().contains(`CRN: ${overlap.crn}`)
               cy.root().contains(overlap.days === 1 ? '1 day overlap' : `${overlap.days} days overlap`)
               cy.get('a')

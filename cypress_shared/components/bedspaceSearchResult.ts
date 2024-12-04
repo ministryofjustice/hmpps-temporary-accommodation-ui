@@ -62,16 +62,8 @@ export default class BedspaceSearchResult extends Component {
               cy.root().contains(`CRN: ${overlap.crn}`)
               cy.root().contains(overlap.days === 1 ? '1 day overlap' : `${overlap.days} days overlap`)
               cy.get('a')
-                .contains('View booking')
-                .should(
-                  'have.attr',
-                  'href',
-                  paths.bookings.show({
-                    premisesId: this.result.premises.id,
-                    roomId: overlap.roomId,
-                    bookingId: overlap.bookingId,
-                  }),
-                )
+                .contains(`View referral for ${overlap.name}`)
+                .should('have.attr', 'href', paths.assessments.summary({ id: overlap.assessmentId }))
             })
         })
       })
@@ -79,6 +71,6 @@ export default class BedspaceSearchResult extends Component {
 
   clickOverlapLink(crn: string) {
     cy.get('summary').contains('Other people staying').click()
-    cy.get('ul[data-cy-overlaps] > li').find('dd.overlap-details__value').contains(crn).parents('li').find('a').click()
+    cy.get('ul[data-cy-overlaps]').find('dd.overlap-details__value').contains(crn).parents('li').find('a').click()
   }
 }

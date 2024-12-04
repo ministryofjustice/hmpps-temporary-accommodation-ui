@@ -12,22 +12,22 @@ export function bedspaceKeyCharacteristics(result: BedSearchResult): Array<strin
     .map(characteristic => characteristic.name)
 }
 
-export function bedspaceOverlapResult(
-  overlapResult: Omit<TemporaryAccommodationBedSearchResultOverlap, 'assesmentId'>,
-) {
-  const { crn, days, roomId, bookingId, personType } = overlapResult
+export function bedspaceOverlapResult(overlapResult: TemporaryAccommodationBedSearchResultOverlap) {
+  const { crn, days, roomId, personType, assessmentId } = overlapResult
   const overlapDays = `${days} ${days === 1 ? 'day' : 'days'} overlap`
 
   const displayName = personType === 'FullPerson' ? overlapResult.name : 'Limited access offender'
+  const referralNameOrCrn = personType === 'FullPerson' ? overlapResult.name : overlapResult.crn
   const sex = personType === 'FullPerson' ? overlapResult.sex : undefined
 
   return {
     crn,
     overlapDays,
     roomId,
-    bookingId,
     personType,
     displayName,
+    referralNameOrCrn,
     sex,
+    assessmentId,
   }
 }

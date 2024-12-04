@@ -49,5 +49,6 @@ export type ApprovedPremisesApplication = (Application & {
     caseManagerIsNotApplicant?: boolean;
     caseManagerUserDetails?: Cas1ApplicationUserDetails;
     genderForAp?: GenderForAp;
+    licenceExpiryDate?: string;
 });
 

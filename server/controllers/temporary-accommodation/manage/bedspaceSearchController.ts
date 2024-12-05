@@ -43,13 +43,15 @@ export default class BedspaceSearchController {
           ? (req.query as unknown as BedspaceSearchFormParameters)
           : undefined
 
-      const apiQueryParams: APISearchQuery =  (query !== undefined)?
-        {
-        startDate: query?.startDate,
-        durationDays: query?.durationDays,
-        probationDeliveryUnits: query?.probationDeliveryUnits,
-        ...Object.fromEntries(Object.entries(query).filter(([key]) => key !== 'occupancyAttribute')),
-      } : undefined
+      const apiQueryParams: APISearchQuery =
+        query !== undefined
+          ? {
+              startDate: query?.startDate,
+              durationDays: query?.durationDays,
+              probationDeliveryUnits: query?.probationDeliveryUnits,
+              ...Object.fromEntries(Object.entries(query).filter(([key]) => key !== 'occupancyAttribute')),
+            }
+          : undefined
 
       const placeContextArrivalDate = placeContext?.assessment.accommodationRequiredFromDate
       const startDatePrefill = placeContextArrivalDate
@@ -61,15 +63,11 @@ export default class BedspaceSearchController {
 
       try {
         if (apiQueryParams) {
-
-          const startDateParam: ObjectWithDateParts<"startDate"> = {
-            startDate: apiQueryParams.startDate
+          const startDateParam: ObjectWithDateParts<'startDate'> = {
+            startDate: apiQueryParams.startDate,
           }
 
-          startDate = DateFormats.dateAndTimeInputsToIsoString(
-            startDateParam,
-            'startDate',
-          ).startDate
+          startDate = DateFormats.dateAndTimeInputsToIsoString(startDateParam, 'startDate').startDate
 
           if (query.occupancyAttribute !== 'all') {
             apiQueryParams.attributes = [query.occupancyAttribute, ...(apiQueryParams?.attributes || [])]

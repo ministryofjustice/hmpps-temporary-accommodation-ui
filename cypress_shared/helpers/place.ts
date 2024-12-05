@@ -24,7 +24,6 @@ import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
 import { characteristicsToSearchAttributes } from '../utils/bedspaceSearch'
-import { OccupancyAttribute } from '../../server/@types/ui/index';
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
@@ -110,7 +109,7 @@ export default class PlaceHelper {
       attributes: characteristicsToSearchAttributes(this.premises),
     })
 
-    bedspaceSearchPage.completeForm(searchParameters);
+    bedspaceSearchPage.completeForm(searchParameters)
     bedspaceSearchPage.clickSubmit()
 
     // I am taken to the search results page

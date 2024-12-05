@@ -5,7 +5,6 @@ import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
 import Page from '../../page'
 import { addPlaceContext } from '../../../../server/utils/placeUtils'
-import { bedspaceSearchFormParametersFactory } from '../../../../server/testutils/factories'
 
 export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSearchResults: Map<string, BedspaceSearchResult>

@@ -1,20 +1,28 @@
 {% macro overlapDetails(params) %}
-    <dl class="overlap-details">
-        <div class="overlap-details__row">
-            <dt class="overlap-details__key">
-                CRN: 
-            </dt>    
-            <dd class="overlap-details__value">{{ params.overlap.crn }}</dd>
-        </div>
-        <div class="overlap-details__row overlap-details__row--inline">
-            <dt class="overlap-details__key govuk-visually-hidden">
-                Overlap: 
-            </dt>
-            <dd class="overlap-details__value">{{ params.overlap.overlapDays }}</dd>
-        </div>
-    </dl>
-    <a class="govuk-link"
-        href="{{ addPlaceContext(paths.bookings.show({premisesId: params.premisesId, roomId: params.overlap.roomId, bookingId: params.overlap.bookingId})) }}">
-        View booking
+  <dl class="overlap-details">
+    <div class="overlap-details__row">
+      <dt class="overlap-details__key govuk-visually-hidden">Name:</dt>
+      <dd class="overlap-details__value overlap-details__value--bold">{{ params.overlap.displayName }}</dd>
+    </div>
+    <div class="overlap-details__row">
+      <dt class="overlap-details__key">CRN:</dt>
+      <dd class="overlap-details__value">{{ params.overlap.crn }}</dd>
+    </div>
+    <div class="overlap-details__row overlap-details__row--inline">
+      {% if params.overlap.sex %}
+        <dt class="overlap-details__key govuk-visually-hidden">Sex:</dt>
+        <dd class="overlap-details__value">{{ params.overlap.sex }},</dd>
+      {% endif %}
+      <dt class="overlap-details__key govuk-visually-hidden">Overlap:</dt>
+      <dd class="overlap-details__value">{{ params.overlap.overlapDays }}</dd>
+    </div>
+  </dl>
+
+  {% if params.overlap.assessmentId %}
+    <a class="govuk-link" href="{{ addPlaceContext(paths.assessments.summary({ id: params.overlap.assessmentId })) }}">
+      View referral<span class="govuk-visually-hidden"> for {{ params.overlap.referralNameOrCrn }}</span>
     </a>
+  {% else %}
+    <p class="govuk-body">No referral found.</p>
+  {% endif %}
 {% endmacro %}

@@ -1,14 +1,14 @@
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
+import AssessmentSummaryPage from '../../../../cypress_shared/pages/assess/summary'
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
 import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceShow'
-import BookingShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bookingShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
+  assessmentFactory,
   bedSearchParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
-  bookingFactory,
   overlapFactory,
   personFactory,
   placeContextFactory,
@@ -148,7 +148,7 @@ context('Bedspace Search', () => {
     Page.verifyOnPage(BedspaceShowPage, premises, room)
   })
 
-  it('allows me to view an overlapping booking', () => {
+  it("allows me to view an overlapping offender's referral", () => {
     // Given I am signed in
     cy.signIn()
 
@@ -163,19 +163,20 @@ context('Bedspace Search', () => {
     const premises = premisesFactory.build()
     const room = roomFactory.build()
 
-    const booking = bookingFactory.build({
-      person,
-    })
+    const assessment = assessmentFactory.build({ status: 'closed' })
 
     const results = bedSearchResultsFactory.build({
       results: [
         bedSearchResultFactory.forBedspace(premises, room).build({
           overlaps: [
             overlapFactory.build({
+              name: person.name,
               crn: person.crn,
+              personType: person.type,
               roomId: room.id,
-              bookingId: booking.id,
+              assessmentId: assessment.id,
               days: 5,
+              sex: person.sex,
             }),
           ],
         }),
@@ -185,7 +186,7 @@ context('Bedspace Search', () => {
     cy.task('stubBedSearch', results)
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
-    cy.task('stubBooking', { premisesId: premises.id, booking })
+    cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
 
     // And when I fill out the form
     const searchParameters = bedSearchParametersFactory.build()
@@ -196,7 +197,7 @@ context('Bedspace Search', () => {
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
     postSearchPage.clickOverlapLink(room, person.crn)
 
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(AssessmentSummaryPage, assessment)
   })
 
   it('shows errors when the API returns an error', () => {

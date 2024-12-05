@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 import { BedSearchResults } from '../../../@types/shared'
-import { ObjectWithDateParts } from '../../../@types/ui'
+import { BedspaceSearchFormParameters, ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
@@ -13,9 +13,13 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput 
 
 export const DEFAULT_DURATION_DAYS = 84
 
-type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {
-  probationDeliveryUnits: Array<string>
-  durationDays: string
+type APISearchQuery = Omit<BedspaceSearchFormParameters, 'occupancyAttribute'> & {
+  /**
+   * The number of days the Bed will need to be free from the start_date until
+   */
+  startDate: string
+  durationDays: number
+  probationDeliveryUnits: string[]
 }
 
 export default class BedspaceSearchController {
@@ -35,7 +39,19 @@ export default class BedspaceSearchController {
       const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
 
       const query =
-        (req.query as BedspaceSearchQuery).durationDays !== undefined ? (req.query as BedspaceSearchQuery) : undefined
+        (req.query as unknown as BedspaceSearchFormParameters).durationDays !== undefined
+          ? (req.query as unknown as BedspaceSearchFormParameters)
+          : undefined
+
+      const apiQueryParams: APISearchQuery =
+        query !== undefined
+          ? {
+              startDate: query?.startDate,
+              durationDays: query?.durationDays,
+              probationDeliveryUnits: query?.probationDeliveryUnits,
+              ...Object.fromEntries(Object.entries(query).filter(([key]) => key !== 'occupancyAttribute')),
+            }
+          : undefined
 
       const placeContextArrivalDate = placeContext?.assessment.accommodationRequiredFromDate
       const startDatePrefill = placeContextArrivalDate
@@ -46,17 +62,22 @@ export default class BedspaceSearchController {
       let startDate: string
 
       try {
-        if (query) {
-          startDate = DateFormats.dateAndTimeInputsToIsoString(
-            query as ObjectWithDateParts<'startDate'>,
-            'startDate',
-          ).startDate
+        if (apiQueryParams) {
+          const startDateParam: ObjectWithDateParts<'startDate'> = {
+            startDate: apiQueryParams.startDate,
+          }
 
-          const durationDays = parseNumber(query.durationDays)
+          startDate = DateFormats.dateAndTimeInputsToIsoString(startDateParam, 'startDate').startDate
+
+          if (query.occupancyAttribute !== 'all') {
+            apiQueryParams.attributes = [query.occupancyAttribute, ...(apiQueryParams?.attributes || [])]
+          }
+
+          const durationDays = parseNumber(apiQueryParams.durationDays as APISearchQuery['durationDays'])
 
           results = (
             await this.searchService.search(callConfig, {
-              ...query,
+              ...apiQueryParams,
               startDate,
               durationDays,
             })
@@ -76,6 +97,7 @@ export default class BedspaceSearchController {
           errors,
           errorSummary,
           durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
+          occupancyAttribute: req.query.occupancyAttribute || 'all',
           ...startDatePrefill,
           ...query,
           ...userInput,

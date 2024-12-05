@@ -1,10 +1,5 @@
-import {
-  TemporaryAccommodationBedSearchParameters as BedSearchParameters,
-  BedSearchResults,
-  Room,
-  TemporaryAccommodationBedSearchResult,
-} from '../../../../server/@types/shared'
-import { PlaceContext } from '../../../../server/@types/ui'
+import { BedSearchResults, Room, TemporaryAccommodationBedSearchResult } from '../../../../server/@types/shared'
+import { BedspaceSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
@@ -44,7 +39,7 @@ export default class BedspaceSearchPage extends Page {
     cy.get('h2').should('contain', 'There are no available bedspaces')
   }
 
-  shouldShowPrefilledSearchParameters(searchParameters: BedSearchParameters) {
+  shouldShowPrefilledSearchParameters(searchParameters: BedspaceSearchFormParameters) {
     this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
     this.shouldShowTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     searchParameters.probationDeliveryUnits.forEach(pduId => {
@@ -56,7 +51,7 @@ export default class BedspaceSearchPage extends Page {
     this.shouldShowDateInputsByLegend('Available from', placeContext.assessment.accommodationRequiredFromDate)
   }
 
-  completeForm(searchParameters: BedSearchParameters) {
+  completeForm(searchParameters: BedspaceSearchFormParameters) {
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
 
@@ -65,7 +60,7 @@ export default class BedspaceSearchPage extends Page {
     })
 
     this.getLegend('Property attributes')
-    this.getLegend('Occupancy (optional)')
+    this.getLegend('Occupancy')
     searchParameters.attributes
       .filter(attribute => attribute === 'wheelchairAccessible')
       .forEach(attribute => {

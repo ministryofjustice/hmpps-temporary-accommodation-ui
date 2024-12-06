@@ -1,8 +1,4 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
-import {
-  ReferralHistoryDomainEventNote as DomainEventNote,
-  ReferralHistoryNoteMessageDetails,
-} from '@approved-premises/api'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import paths from '../paths/temporary-accommodation/manage'
 import {
@@ -27,13 +23,9 @@ import {
   insertUpdateDateError,
   pathFromStatus,
   referralRejectionReasonIsOther,
-  renderDomainEventNote,
-  renderNote,
-  renderSystemNote,
   statusChangeMessage,
   timelineItems,
 } from './assessmentUtils'
-import * as assessmentUtils from './assessmentUtils'
 import * as viewUtils from './viewUtils'
 import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
 import { DateFormats } from './dateUtils'
@@ -271,148 +263,6 @@ describe('assessmentUtils', () => {
           href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
         },
       ])
-    })
-  })
-
-  describe('renderNote', () => {
-    it('renders the contents of a user note with paragraphs and line breaks', () => {
-      jest.spyOn(viewUtils, 'formatLines').mockReturnValue('formatted lines')
-      const note = referralHistoryUserNoteFactory.build({
-        message: 'message contents',
-      })
-
-      const result = renderNote(note)
-
-      expect(result).toEqual('formatted lines')
-      expect(viewUtils.formatLines).toHaveBeenCalledWith('message contents')
-    })
-
-    it('renders the contents of a system note with message details', () => {
-      jest.spyOn(assessmentUtils, 'renderSystemNote').mockReturnValue('formatted message')
-      const note = referralHistorySystemNoteFactory.build({
-        message: '',
-        messageDetails: {
-          foo: 'bar',
-        } as ReferralHistoryNoteMessageDetails,
-      })
-
-      const result = renderNote(note)
-
-      expect(result).toEqual('formatted message')
-      expect(assessmentUtils.renderSystemNote).toHaveBeenCalledWith(note)
-    })
-
-    it('renders the contents of a domain event note with details', () => {
-      jest.spyOn(assessmentUtils, 'renderDomainEventNote').mockReturnValue('formatted message')
-      const note: DomainEventNote = {
-        id: faker.string.uuid(),
-        createdByUserName: faker.person.fullName(),
-        createdAt: DateFormats.dateObjToIsoDate(faker.date.past()),
-        type: 'domainEvent',
-        message: '',
-        messageDetails: {
-          domainEvent: { foo: 'bar' },
-        } as ReferralHistoryNoteMessageDetails,
-      }
-
-      const result = renderNote(note)
-
-      expect(result).toEqual('formatted message')
-      expect(assessmentUtils.renderDomainEventNote).toHaveBeenCalledWith(note.messageDetails)
-    })
-
-    it('returns undefined for a system note with no message details', () => {
-      const note = referralHistorySystemNoteFactory.build({
-        message: '',
-        messageDetails: undefined,
-      })
-
-      expect(renderNote(note)).toBeUndefined()
-    })
-  })
-
-  describe('renderSystemNote', () => {
-    describe('for a rejection note', () => {
-      it('returns HTML for a standard rejection reason', () => {
-        const note = referralHistorySystemNoteFactory.build({
-          category: 'rejected',
-          message: '',
-          messageDetails: {
-            rejectionReason: 'A standard reason',
-            isWithdrawn: true,
-          },
-        })
-
-        const result = renderSystemNote(note)
-
-        expect(result).toEqual(
-          '<p>Rejection reason: A standard reason</p><p>Withdrawal requested by the probation practitioner: Yes</p>',
-        )
-      })
-
-      it('returns HTML with user provided details for a another rejection reason', () => {
-        const note = referralHistorySystemNoteFactory.build({
-          category: 'rejected',
-          message: '',
-          messageDetails: {
-            rejectionReason: 'Another reason (please add)',
-            rejectionReasonDetails: 'Some details',
-            isWithdrawn: false,
-          },
-        })
-
-        const result = renderSystemNote(note)
-
-        expect(result).toEqual(
-          '<p>Rejection reason: Some details</p><p>Withdrawal requested by the probation practitioner: No</p>',
-        )
-      })
-    })
-  })
-
-  describe('renderDomainEventDetails', () => {
-    describe('when "Accommodation required from date" has been updated', () => {
-      it('returns HTML for a standard rejection reason', () => {
-        const messageDetails: DomainEventNote['messageDetails'] = {
-          domainEvent: {
-            eventType: 'accommodation.cas3.assessment.updated',
-            updatedFields: [
-              {
-                fieldName: 'accommodationRequiredFromDate',
-                updatedTo: '2125-11-01',
-                updatedFrom: '2125-01-31',
-              },
-            ],
-          },
-        }
-
-        const result = renderDomainEventNote(messageDetails)
-
-        expect(result).toEqual(
-          '<p>Accommodation required from date was changed from 31 January 2125 to 1 November 2125</p>',
-        )
-      })
-    })
-
-    describe('when "Release date" has been updated', () => {
-      it('returns HTML for a standard rejection reason', () => {
-        const messageDetails: DomainEventNote['messageDetails'] = {
-          domainEvent: {
-            eventType: 'accommodation.cas3.assessment.updated',
-            updatedFields: [
-              {
-                fieldName: 'releaseDate',
-                updatedTo: '2125-11-01',
-                updatedFrom: '2125-01-31',
-              },
-            ],
-          },
-        }
-
-        const result = renderDomainEventNote(messageDetails)
-
-        expect(result).toEqual('<p>Release date was changed from 31 January 2125 to 1 November 2125</p>')
-      })
     })
   })
 

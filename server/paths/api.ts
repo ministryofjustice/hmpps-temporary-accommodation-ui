@@ -67,6 +67,8 @@ const oasysPath = personPath.path('oasys')
 
 const cas3Path = path('/cas3')
 const reportsCas3Path = cas3Path.path('reports')
+const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
+
 const applyPaths = {
   applications: {
     show: singleApplicationPath,
@@ -128,6 +130,7 @@ export default {
       create: clarificationNotePaths.notes,
       update: clarificationNotePaths.notes.path(':clarificationNoteId'),
     },
+    timeline: timelineCas3Path,
   },
   people: {
     risks: {

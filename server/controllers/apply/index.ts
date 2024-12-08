@@ -9,8 +9,8 @@ import PeopleController from './peopleController'
 import type { Services } from '../../services'
 
 export const controllers = (services: Services) => {
-  const { applicationService, personService, referenceDataService } = services
-  const applicationsController = new ApplicationsController(applicationService, personService)
+  const { applicationService, timelineService, personService, referenceDataService } = services
+  const applicationsController = new ApplicationsController(applicationService, timelineService, personService)
   const pagesController = new PagesController(applicationService, {
     personService,
     applicationService,

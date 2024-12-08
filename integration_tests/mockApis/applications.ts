@@ -64,6 +64,21 @@ export default {
         jsonBody: args.application,
       },
     }),
+  stubApplicationReferralHistoryGet: (args: {
+    application: TemporaryAccommodationApplication
+    referralNotes
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/cas3/timeline/${args.application.assessmentId}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.referralNotes,
+      },
+    }),
   stubApplicationDocuments: (args: {
     application: TemporaryAccommodationApplication
     documents: Array<Document>

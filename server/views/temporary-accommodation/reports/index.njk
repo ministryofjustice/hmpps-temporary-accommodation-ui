@@ -2,14 +2,13 @@
 {% extends "../../partials/layout.njk" %}
 {% from "../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
-{% from "../../components/datePicker/macro.njk" import hmppsDatepicker %}
+{%- from "moj/components/date-picker/macro.njk" import mojDatePicker -%}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = "Reports - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block extraScripts %}
-    <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/datepicker.js"></script>
     <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/reset-errors.js"></script>
 {% endblock %}
 
@@ -54,7 +53,7 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-one-half">
 
-                        {{ hmppsDatepicker({
+                        {{ mojDatePicker({
                             id: "startDate",
                             name: "startDate",
                             label: {
@@ -65,7 +64,6 @@
                                 text: 'For example, 27/3/2024'
                             },
                             errorMessage: context.errors.startDate,
-                            classes: 'hmpps-datepicker--fixed-width',
                             value: context.startDate,
                             maxDate: maxStartDate
                         }) }}
@@ -73,7 +71,7 @@
                     </div>
                     <div class="govuk-grid-column-one-half">
 
-                        {{ hmppsDatepicker({
+                        {{ mojDatePicker({
                             id: "endDate",
                             name: "endDate",
                             label: {
@@ -84,7 +82,6 @@
                                 text: 'For example, 27/3/2024'
                             },
                             errorMessage: context.errors.endDate,
-                            classes: 'hmpps-datepicker--fixed-width',
                             value: context.endDate,
                             maxDate: maxEndDate
                         }) }}

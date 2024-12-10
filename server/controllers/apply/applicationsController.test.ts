@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express'
 
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 import type { ErrorsAndUserInput, GroupedApplications } from '@approved-premises/ui'
-import { ApplicationService, PersonService } from '../../services'
+import { ApplicationService, PersonService, TimelineService } from '../../services'
 import TasklistService from '../../services/tasklistService'
 import { activeOffenceFactory, applicationFactory, personFactory } from '../../testutils/factories'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../utils/validation'
@@ -29,12 +29,13 @@ describe('applicationsController', () => {
   const next: DeepMocked<NextFunction> = jest.fn()
 
   const applicationService = createMock<ApplicationService>({})
+  const timelineService = createMock<TimelineService>({})
   const personService = createMock<PersonService>({})
 
   let applicationsController: ApplicationsController
 
   beforeEach(() => {
-    applicationsController = new ApplicationsController(applicationService, personService)
+    applicationsController = new ApplicationsController(applicationService, timelineService, personService)
     request = createMock<Request>()
     response = createMock<Response>({})
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)

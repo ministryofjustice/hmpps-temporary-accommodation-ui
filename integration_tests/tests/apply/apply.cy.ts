@@ -1,4 +1,3 @@
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import {
   ApplicationFullPage,
   EnterCRNPage,
@@ -20,7 +19,6 @@ import {
   activeOffenceFactory,
   applicationFactory,
   personFactory,
-  referralHistorySystemNoteFactory,
   risksFactory,
   tierEnvelopeFactory,
 } from '../../../server/testutils/factories'
@@ -305,12 +303,10 @@ context('Apply', () => {
 
   it('shows the full submitted application', function test() {
     // Given there is a complete and submitted application
-    const application = { ...this.application, status: 'submitted', assessmentId: faker.string.uuid() }
-    const referralNotes = [referralHistorySystemNoteFactory.build({ category: 'submitted' })]
+    const application = { ...this.application, status: 'submitted' }
 
     cy.task('stubApplications', [application])
     cy.task('stubApplicationGet', { application })
-    cy.task('stubApplicationReferralHistoryGet', { application, referralNotes })
 
     // When I visit the application listing page
     const listPage = ListPage.visit([], [application])
@@ -325,7 +321,6 @@ context('Apply', () => {
     const applicationFullPage = Page.verifyOnPage(ApplicationFullPage, application)
 
     applicationFullPage.shouldShowPrintButton()
-    applicationFullPage.shouldHaveATimeline()
     applicationFullPage.shouldPrint('integration')
 
     // Then I should see the full application

@@ -20,7 +20,6 @@ import PersonService from './personService'
 import PremisesService from './premisesService'
 import ReportService from './reportService'
 import TurnaroundService from './turnaroundService'
-import TimelineService from './assessments/timelineService'
 import UserService from './userService'
 import ReferenceDataService from './referenceDataService'
 
@@ -37,7 +36,6 @@ export const services = () => {
     userClientBuilder,
     bedClientBuilder,
     assessmentClientBuilder,
-    timelineClientBuilder,
   } = dataAccess()
 
   const userService = new UserService(userClientBuilder)
@@ -59,7 +57,6 @@ export const services = () => {
   const turnaroundService = new TurnaroundService(bookingClientBuilder)
   const assessmentsService = new AssessmentsService(assessmentClientBuilder, referenceDataClientBuilder)
   const referenceDataService = new ReferenceDataService(referenceDataClientBuilder)
-  const timelineService = new TimelineService(timelineClientBuilder)
 
   return {
     userService,
@@ -81,7 +78,6 @@ export const services = () => {
     turnaroundService,
     assessmentsService,
     referenceDataService,
-    timelineService,
   }
 }
 
@@ -103,5 +99,4 @@ export {
   TurnaroundService,
   UserService,
   ReferenceDataService,
-  TimelineService,
 }

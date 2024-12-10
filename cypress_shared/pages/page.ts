@@ -235,12 +235,6 @@ export default abstract class Page extends Component {
     cy.get('button').contains('Print this page')
   }
 
-  shouldHaveATimeline(): void {
-    cy.get('h2').contains('Referral history')
-
-    cy.get('.moj-timeline').contains('Referral submitted')
-  }
-
   shouldPrint(environment: 'integration'): void {
     if (environment === 'integration') {
       cy.window().then(win => {

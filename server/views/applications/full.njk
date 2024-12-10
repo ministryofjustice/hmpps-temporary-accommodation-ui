@@ -1,7 +1,6 @@
 {%- from "moj/components/identity-bar/macro.njk" import mojIdentityBar -%}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {%- from "govuk/components/summary-list/macro.njk" import govukSummaryList -%}
-{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
 {% from "../components/printButton/macro.njk" import printButtonScript, printButton %}
 {% extends "../partials/layout.njk" %}
 {% set pageTitle = "The person's referral - " + applicationName %}
@@ -50,11 +49,6 @@
           }}
         {% endfor %}
       {% endfor %}
-    </div>
-
-    <div class="govuk-grid-column-one-third-from-desktop">
-      <h2 class="govuk-heading-m" id="notes">Referral history</h2>
-      {{ mojTimeline({ items: timelineData }) }}
     </div>
   </div>
 {% endblock %}

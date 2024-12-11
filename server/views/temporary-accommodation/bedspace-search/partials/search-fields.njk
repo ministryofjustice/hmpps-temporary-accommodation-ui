@@ -78,8 +78,8 @@
 		            text: "Select all that apply"
 		        },
 		        items: [
-		            { text: "Single", value: "singleOccupancy" },
-		            { text: "Shared", value: "sharedProperty" }
+		            { text: "Single", value: "isSingleOccupancy" },
+		            { text: "Shared", value: "isSharedProperty" }
 		        ]
 		    }, fetchContext()) }}
 		{% endcall %}
@@ -101,7 +101,7 @@
 		                }
 		            },
 		            items: [
-		                { text: "Wheelchair accessible", value: "wheelchairAccessible" }
+		                { text: "Wheelchair accessible", value: "isWheelchairAccessible" }
 		            ]
 		        }, fetchContext()) }}
 		{% endcall %}

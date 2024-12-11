@@ -8,7 +8,11 @@ import {
 import { DateFormats } from '../../utils/dateUtils'
 import referenceData from './referenceData'
 
-const bedSearchAttributes: Array<BedSearchAttributes> = ['singleOccupancy', 'sharedProperty', 'wheelchairAccessible']
+const bedSearchAttributes: Array<BedSearchAttributes> = [
+  'isSingleOccupancy',
+  'isSharedProperty',
+  'isWheelchairAccessible',
+]
 
 export default Factory.define<BedSearchAPIParameters>(() => ({
   startDate: DateFormats.dateObjToIsoDate(faker.date.soon()),

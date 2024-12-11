@@ -4,8 +4,8 @@ export const characteristicsToSearchAttributes = (
   premises: TemporaryAccommodationPremises,
 ): Array<BedSearchAttributes> => {
   const characteristicsToSearchAttributesMap: Record<string, BedSearchAttributes> = {
-    'Shared property': 'sharedProperty',
-    'Single occupancy': 'singleOccupancy',
+    'Shared property': 'isSharedProperty',
+    'Single occupancy': 'isSingleOccupancy',
   }
 
   return premises.characteristics

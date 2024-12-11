@@ -67,7 +67,7 @@ export default class BedspaceSearchPage extends Page {
     this.getLegend('Property attributes')
     this.getLegend('Occupancy (optional)')
     searchParameters.attributes
-      .filter(attribute => attribute === 'wheelchairAccessible')
+      .filter(attribute => attribute !== 'isWheelchairAccessible')
       .forEach(attribute => {
         this.checkCheckboxByNameAndValue('attributes[]', attribute)
       })
@@ -75,7 +75,7 @@ export default class BedspaceSearchPage extends Page {
     this.getLegend('Bedspace attributes')
     this.getLegend('Accessibility (optional)')
     searchParameters.attributes
-      .filter(attribute => attribute !== 'wheelchairAccessible')
+      .filter(attribute => attribute === 'isWheelchairAccessible')
       .forEach(attribute => {
         this.checkCheckboxByNameAndValue('attributes[]', attribute)
       })

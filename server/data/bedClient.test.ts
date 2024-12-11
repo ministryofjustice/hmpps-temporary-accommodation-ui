@@ -2,7 +2,7 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import { bedSearchParametersFactory, bedSearchResultsFactory } from '../testutils/factories'
+import { bedSearchApiParametersFactory, bedSearchResultsFactory } from '../testutils/factories'
 import BedClient from './bedClient'
 import { CallConfig } from './restClient'
 
@@ -30,7 +30,7 @@ describe('BedClient', () => {
   describe('search', () => {
     it('returns search results', async () => {
       const results = bedSearchResultsFactory.build()
-      const payload = bedSearchParametersFactory.build()
+      const payload = bedSearchApiParametersFactory.build()
 
       fakeApprovedPremisesApi
         .post(paths.beds.search({}))

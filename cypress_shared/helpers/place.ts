@@ -9,7 +9,7 @@ import {
 import { PlaceContext } from '../../server/@types/ui'
 import {
   assessmentSummaryFactory,
-  bedSearchParametersFactory,
+  bedSearchApiParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
   bookingFactory,
@@ -113,7 +113,7 @@ export default class PlaceHelper {
     const bedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage)
 
     // When I fill out the form
-    const searchParameters = bedSearchParametersFactory.build({
+    const searchParameters = bedSearchApiParametersFactory.build({
       startDate: this.placeContext.arrivalDate,
       probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
       attributes: characteristicsToSearchAttributes(this.premises),

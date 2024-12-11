@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
 import { type BedSearchAttributes, BedSearchResults } from '../../../@types/shared'
-import { ObjectWithDateParts } from '../../../@types/ui'
+import { BedspaceAccessiblityAttributes, BedspaceOccupancyAttributes, ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
@@ -55,8 +55,8 @@ export default class BedspaceSearchController {
           const durationDays = parseNumber(query.durationDays)
 
           const selectedAttributes: BedSearchAttributes[] = [
-            ...((req.query.occupancyAttributes as BedSearchAttributes[]) ?? []),
-            ...((req.query.attributes as BedSearchAttributes[]) ?? []),
+            ...((req.query.occupancyAttributes as BedspaceOccupancyAttributes[]) ?? []),
+            ...((req.query.attributes as BedspaceAccessiblityAttributes[]) ?? []),
           ]
 
           results = (

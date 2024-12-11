@@ -332,3 +332,7 @@ export type PrimaryNavigationItem = {
   text: string
   active?: boolean
 }
+
+export type BedspaceOccupancyAttributes = 'isSharedProperty' | 'isSingleOccupancy'
+
+export type BedspaceAccessiblityAttributes = 'isWheelchairAccessible'

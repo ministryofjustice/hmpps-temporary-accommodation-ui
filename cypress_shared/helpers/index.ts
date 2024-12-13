@@ -1,32 +1,26 @@
-import {
-  ArrayOfOASysOffenceDetailsQuestions,
-  ArrayOfOASysRiskManagementPlanQuestions,
-  ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
-  ArrayOfOASysRiskToSelfQuestions,
-  ArrayOfOASysSupportingInformationQuestions,
-} from '@approved-premises/api'
+import { OASysQuestion, OASysSupportingInformationQuestion } from '@approved-premises/api'
 import { TableRow } from '@approved-premises/ui'
 import oasysDataJson from '../fixtures/oasysData.json'
 
-const roshSummariesFromJson = (): ArrayOfOASysRiskOfSeriousHarmSummaryQuestions => {
-  return oasysDataJson['rosh-summary'].roshSummaries as ArrayOfOASysRiskOfSeriousHarmSummaryQuestions
+const roshSummariesFromJson = (): Array<OASysQuestion> => {
+  return oasysDataJson['rosh-summary'].roshSummaries as Array<OASysQuestion>
 }
 
-const offenceDetailSummariesFromJson = (): ArrayOfOASysOffenceDetailsQuestions => {
-  return oasysDataJson['offence-details'].offenceDetailsSummaries as ArrayOfOASysOffenceDetailsQuestions
+const offenceDetailSummariesFromJson = (): Array<OASysQuestion> => {
+  return oasysDataJson['offence-details'].offenceDetailsSummaries as Array<OASysQuestion>
 }
 
-const supportInformationFromJson = (): ArrayOfOASysSupportingInformationQuestions => {
+const supportInformationFromJson = (): Array<OASysSupportingInformationQuestion> => {
   return oasysDataJson['supporting-information']
-    .supportingInformationSummaries as ArrayOfOASysSupportingInformationQuestions
+    .supportingInformationSummaries as Array<OASysSupportingInformationQuestion>
 }
 
-const riskManagementPlanFromJson = (): ArrayOfOASysRiskManagementPlanQuestions => {
-  return oasysDataJson['risk-management-plan'].riskManagementSummaries as ArrayOfOASysRiskManagementPlanQuestions
+const riskManagementPlanFromJson = (): Array<OASysQuestion> => {
+  return oasysDataJson['risk-management-plan'].riskManagementSummaries as Array<OASysQuestion>
 }
 
-const riskToSelfSummariesFromJson = (): ArrayOfOASysRiskToSelfQuestions => {
-  return oasysDataJson['risk-to-self'].riskToSelfSummaries as ArrayOfOASysRiskToSelfQuestions
+const riskToSelfSummariesFromJson = (): Array<OASysQuestion> => {
+  return oasysDataJson['risk-to-self'].riskToSelfSummaries as Array<OASysQuestion>
 }
 
 const tableRowsToArrays = (tableRows: Array<TableRow>): Array<Array<string>> => {

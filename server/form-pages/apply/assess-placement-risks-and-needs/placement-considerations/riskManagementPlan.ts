@@ -1,7 +1,4 @@
-import {
-  TemporaryAccommodationApplication as Application,
-  ArrayOfOASysRiskManagementPlanQuestions,
-} from '@approved-premises/api'
+import { TemporaryAccommodationApplication as Application, OASysQuestion } from '@approved-premises/api'
 import type { DataServices, OasysPage, PersonRisksUI } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
@@ -11,7 +8,7 @@ import { getOasysSections, oasysImportReponse, validateOasysEntries } from '../.
 export type RiskManagementPlanBody = {
   version: string
   riskManagementAnswers: Record<string, string>
-  riskManagementSummaries: ArrayOfOASysRiskManagementPlanQuestions
+  riskManagementSummaries: Array<OASysQuestion>
   oasysImported: string
   oasysCompleted: string
 }

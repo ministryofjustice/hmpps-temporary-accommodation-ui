@@ -1,19 +1,16 @@
 import {
   Adjudication,
   TemporaryAccommodationApplicationSummary as ApplicationSummary,
-  ArrayOfOASysOffenceDetailsQuestions,
-  ArrayOfOASysRiskManagementPlanQuestions,
-  ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
-  ArrayOfOASysRiskToSelfQuestions,
-  ArrayOfOASysSupportingInformationQuestions,
   TemporaryAccommodationAssessment as Assessment,
   AssessmentSortField,
   AssessmentStatus,
   BookingSearchSortField,
   Document,
   LocalAuthorityArea,
+  OASysQuestion,
   OASysSection,
   OASysSections,
+  OASysSupportingInformationQuestion,
   PersonAcctAlert,
   PersonRisks,
   PrisonCaseNote,
@@ -261,12 +258,7 @@ export interface GroupedApplications {
   submitted: Array<ApplicationSummary>
 }
 
-export type OasysImportArrays =
-  | ArrayOfOASysOffenceDetailsQuestions
-  | ArrayOfOASysRiskOfSeriousHarmSummaryQuestions
-  | ArrayOfOASysSupportingInformationQuestions
-  | ArrayOfOASysRiskToSelfQuestions
-  | ArrayOfOASysRiskManagementPlanQuestions
+export type OasysImportArrays = Array<OASysQuestion> | Array<OASysSupportingInformationQuestion>
 
 export type JourneyType = 'applications' | 'assessments'
 

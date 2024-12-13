@@ -1,5 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import { AnyValue, Assessment, AssessmentSummary } from '../../server/@types/shared'
+import { Assessment, AssessmentSummary, Unit } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
@@ -167,10 +167,7 @@ export default {
         jsonBody: {},
       },
     }),
-  stubUpdateAssessmentError: (args: {
-    assessment: Assessment
-    errorBody: Record<string, AnyValue>
-  }): SuperAgentRequest =>
+  stubUpdateAssessmentError: (args: { assessment: Assessment; errorBody: Record<string, Unit> }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',

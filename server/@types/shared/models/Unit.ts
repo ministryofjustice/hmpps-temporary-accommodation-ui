@@ -2,4 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type BedSearchAttributes = 'isSharedProperty' | 'isSingleOccupancy' | 'isWheelchairAccessible';
+/**
+ * Any object
+ */
+export type Unit = Record<string, any>;

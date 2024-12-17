@@ -69,7 +69,7 @@ export default class BedspaceSearchPage extends Page {
     searchParameters.attributes
       .filter(attribute => attribute !== 'isWheelchairAccessible')
       .forEach(attribute => {
-        this.checkCheckboxByNameAndValue('attributes[]', attribute)
+        this.checkCheckboxByNameAndValue('occupancyAttributes[]', attribute)
       })
 
     this.getLegend('Bedspace attributes')

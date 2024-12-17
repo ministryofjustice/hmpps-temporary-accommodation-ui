@@ -1,13 +1,10 @@
 import {
   ActiveOffence,
   Adjudication,
-  ArrayOfOASysOffenceDetailsQuestions,
-  ArrayOfOASysRiskManagementPlanQuestions,
-  ArrayOfOASysRiskOfSeriousHarmSummaryQuestions,
-  ArrayOfOASysRiskToSelfQuestions,
-  ArrayOfOASysSupportingInformationQuestions,
   Document,
+  OASysQuestion,
   OASysSection,
+  OASysSupportingInformationQuestion,
   Person,
   PersonAcctAlert,
   TemporaryAccommodationApplication,
@@ -112,15 +109,15 @@ export default class ApplyHelper {
 
   otherOasysSections: Array<OASysSection> = []
 
-  roshSummaries: ArrayOfOASysRiskOfSeriousHarmSummaryQuestions = []
+  roshSummaries: Array<OASysQuestion> = []
 
-  offenceDetailSummaries: ArrayOfOASysOffenceDetailsQuestions = []
+  offenceDetailSummaries: Array<OASysQuestion> = []
 
-  supportingInformationSummaries: ArrayOfOASysSupportingInformationQuestions = []
+  supportingInformationSummaries: Array<OASysSupportingInformationQuestion> = []
 
-  riskManagementPlanSummaries: ArrayOfOASysRiskManagementPlanQuestions = []
+  riskManagementPlanSummaries: Array<OASysQuestion> = []
 
-  riskToSelfSummaries: ArrayOfOASysRiskToSelfQuestions = []
+  riskToSelfSummaries: Array<OASysQuestion> = []
 
   adjudications: Array<Adjudication> = []
 

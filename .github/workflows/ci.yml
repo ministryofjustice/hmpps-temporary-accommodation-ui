@@ -11,7 +11,7 @@ env:
 jobs:
   type_checking:
     name: "Type check 🔎"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps: 
       - name: Check out code
         uses: actions/checkout@v4.2.2
@@ -33,7 +33,7 @@ jobs:
 
   linting: 
     name: "Linting 🔎"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps: 
       - name: Check out code
         uses: actions/checkout@v4.2.2
@@ -55,7 +55,7 @@ jobs:
   
   unit_test:
     name: "Unit testing 🧪"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4.2.2
@@ -74,7 +74,7 @@ jobs:
 
   integration_test:
     name: "Integration testing 🧪"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4.2.2

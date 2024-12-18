@@ -3,6 +3,7 @@ import Assess from '../../form-pages/assess'
 import { applicationFactory, assessmentFactory } from '../../testutils/factories'
 import getSections from './getSections'
 import isAssessment from './isAssessment'
+import { Task } from '@approved-premises/ui'
 
 jest.mock('../../form-pages/apply', () => {
   return {
@@ -21,7 +22,7 @@ jest.mock('../../form-pages/apply', () => {
       {
         title: 'Check your answers',
         name: 'CheckYourAnswers',
-        tasks: [],
+        tasks: [] as Array<Task>,
       },
     ],
   }

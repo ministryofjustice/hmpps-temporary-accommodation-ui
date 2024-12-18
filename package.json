@@ -149,7 +149,7 @@
     "connect-redis": "^7.1.1",
     "csurf": "^1.11.0",
     "date-fns": "^4.1.0",
-    "express": "^4.20.0",
+    "express": "^4.21.2",
     "express-prom-bundle": "^6.5.0",
     "express-session": "^1.18.0",
     "fishery": "^2.2.2",

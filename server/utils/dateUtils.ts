@@ -1,9 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, isExists } from 'date-fns'
-
-import format from 'date-fns/format'
-import formatISO from 'date-fns/formatISO'
+import { differenceInDays, format, formatISO, isExists } from 'date-fns'
 
 export class DateFormats {
   /**

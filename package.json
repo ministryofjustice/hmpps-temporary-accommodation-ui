@@ -195,7 +195,7 @@
     "@types/jsonpath": "^0.2.4",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash.escaperegexp": "^4.1.7",
-    "@types/method-override": "^0.0.35",
+    "@types/method-override": "^3.0.0",
     "@types/node": "^20.14.5",
     "@types/nunjucks": "^3.2.1",
     "@types/passport": "^1.0.16",

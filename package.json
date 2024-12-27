@@ -174,8 +174,7 @@
     "static-path": "^0.0.4",
     "superagent": "^8.0.2",
     "typescript-json-schema": "^0.64.0",
-    "url-value-parser": "^2.2.0",
-    "uuid": "^9.0.0"
+    "url-value-parser": "^2.2.0"
   },
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^19.0.0",
@@ -201,7 +200,6 @@
     "@types/passport-oauth2": "^1.4.17",
     "@types/superagent": "^4.1.15",
     "@types/supertest": "^2.0.12",
-    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^8.3.0",
     "@typescript-eslint/parser": "^8.3.0",
     "audit-ci": "^6.3.0",

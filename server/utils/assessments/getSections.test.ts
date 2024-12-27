@@ -1,9 +1,9 @@
+import { Task } from '@approved-premises/ui'
 import Apply from '../../form-pages/apply'
 import Assess from '../../form-pages/assess'
 import { applicationFactory, assessmentFactory } from '../../testutils/factories'
 import getSections from './getSections'
 import isAssessment from './isAssessment'
-import { Task } from '@approved-premises/ui'
 
 jest.mock('../../form-pages/apply', () => {
   return {

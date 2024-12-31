@@ -1,4 +1,4 @@
-import RedisStore from 'connect-redis'
+import { RedisStore } from 'connect-redis'
 import express, { Router } from 'express'
 import session from 'express-session'
 import logger from '../../logger'

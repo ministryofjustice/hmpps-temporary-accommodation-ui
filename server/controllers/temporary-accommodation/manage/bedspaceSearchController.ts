@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { BedSearchResults } from '../../../@types/shared'
+import { type BedSearchAttributes, BedSearchResults } from '../../../@types/shared'
 import { ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -54,9 +54,15 @@ export default class BedspaceSearchController {
 
           const durationDays = parseNumber(query.durationDays)
 
+          const selectedAttributes: BedSearchAttributes[] = [
+            ...((req.query.occupancyAttributes as BedSearchAttributes[]) ?? []),
+            ...((req.query.attributes as BedSearchAttributes[]) ?? []),
+          ]
+
           results = (
             await this.searchService.search(callConfig, {
               ...query,
+              attributes: selectedAttributes,
               startDate,
               durationDays,
             })

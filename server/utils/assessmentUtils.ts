@@ -14,7 +14,6 @@ import {
   MessageContents,
   ReferenceData,
   TableRow,
-  TimelineItem,
 } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { DateFormats } from './dateUtils'
@@ -25,7 +24,6 @@ import { statusName, statusTag } from './assessmentStatusUtils'
 import { sortHeader } from './sortHeader'
 import { SanitisedError } from '../sanitisedError'
 import { insertBespokeError, insertGenericError } from './validation'
-import { timelineData } from './assessments/timelineUtils'
 
 export const assessmentTableRows = (assessmentSummary: AssessmentSummary, showStatus: boolean = false): TableRow => {
   const row = [
@@ -131,10 +129,6 @@ export const assessmentActions = (assessment: Assessment) => {
   }
 
   return items
-}
-
-export const timelineItems = (assessment: Assessment): Array<TimelineItem> => {
-  return timelineData(assessment.referralHistoryNotes)
 }
 
 export const referralRejectionReasonIsOther = (

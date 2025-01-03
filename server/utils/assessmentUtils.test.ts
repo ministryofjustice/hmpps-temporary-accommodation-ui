@@ -1,5 +1,4 @@
 import { AssessmentSearchApiStatus } from '@approved-premises/ui'
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import paths from '../paths/temporary-accommodation/manage'
 import {
   applicationFactory,
@@ -8,9 +7,6 @@ import {
   personFactory,
   placeContextFactory,
   referenceDataFactory,
-  referralHistoryDomainEventNoteFactory,
-  referralHistorySystemNoteFactory,
-  referralHistoryUserNoteFactory,
   restrictedPersonFactory,
 } from '../testutils/factories'
 import * as validation from './validation'
@@ -24,11 +20,8 @@ import {
   pathFromStatus,
   referralRejectionReasonIsOther,
   statusChangeMessage,
-  timelineItems,
 } from './assessmentUtils'
-import * as viewUtils from './viewUtils'
 import { addPlaceContext, addPlaceContextFromAssessmentId, createPlaceContext } from './placeUtils'
-import { DateFormats } from './dateUtils'
 
 jest.mock('./userUtils')
 jest.mock('./placeUtils')
@@ -261,151 +254,6 @@ describe('assessmentUtils', () => {
           text: 'Unallocated',
           classes: 'govuk-button--secondary',
           href: paths.assessments.confirm({ id: assessment.id, status: 'unallocated' }),
-        },
-      ])
-    })
-  })
-
-  describe('timelineItems', () => {
-    it('returns a notes in a format compatible with the MoJ timeline component', () => {
-      const userNote1 = referralHistoryUserNoteFactory.build({
-        createdByUserName: 'SOME USER',
-        createdAt: '2024-04-01',
-      })
-      const userNote2 = referralHistoryUserNoteFactory.build({
-        createdByUserName: 'ANOTHER USER',
-        createdAt: '2024-05-01',
-      })
-      const systemNote1 = referralHistorySystemNoteFactory.build({
-        createdByUserName: 'SOME USER',
-        createdAt: '2024-04-02',
-        category: 'in_review',
-      })
-      const systemNote2 = referralHistorySystemNoteFactory.build({
-        createdByUserName: 'SOME USER',
-        createdAt: '2024-05-02',
-        category: 'ready_to_place',
-      })
-
-      const domainEventNote1 = referralHistoryDomainEventNoteFactory.build({
-        createdByUserName: 'SOME USER',
-        createdAt: '2024-06-02',
-        messageDetails: {
-          domainEvent: {
-            eventType: 'accommodation.cas3.assessment.updated',
-            timestamp: DateFormats.dateObjToIsoDate(faker.date.past()),
-            updatedFields: [
-              {
-                fieldName: 'accommodationRequiredFromDate',
-                updatedTo: '2025-09-02',
-                updatedFrom: '2123-09-02',
-              },
-            ],
-          },
-        },
-      })
-
-      const domainEventNote2 = referralHistoryDomainEventNoteFactory.build({
-        createdByUserName: 'SOME USER',
-        createdAt: '2024-06-01',
-        messageDetails: {
-          domainEvent: {
-            eventType: 'accommodation.cas3.assessment.updated',
-            timestamp: DateFormats.dateObjToIsoDate(faker.date.past()),
-            updatedFields: [
-              {
-                fieldName: 'releaseDate',
-                updatedTo: '2025-09-02',
-                updatedFrom: '2123-09-02',
-              },
-            ],
-          },
-        },
-      })
-
-      const notes = [systemNote1, systemNote2, userNote2, userNote1, domainEventNote1, domainEventNote2]
-      const assessment = assessmentFactory.build({ referralHistoryNotes: notes })
-      const userNoteHtml = 'some formatted html'
-
-      jest.spyOn(viewUtils, 'formatLines').mockReturnValue(userNoteHtml)
-      const result = timelineItems(assessment)
-
-      expect(result).toEqual([
-        {
-          label: {
-            text: 'Accommodation required from date updated',
-          },
-          html: '<p>Accommodation required from date was changed from 2 September 2123 to 2 September 2025</p>',
-          datetime: {
-            timestamp: domainEventNote1.createdAt,
-            type: 'datetime',
-          },
-          byline: {
-            text: 'Some User',
-          },
-        },
-        {
-          label: {
-            text: 'Release date updated',
-          },
-          html: '<p>Release date was changed from 2 September 2123 to 2 September 2025</p>',
-          datetime: {
-            timestamp: domainEventNote2.createdAt,
-            type: 'datetime',
-          },
-          byline: {
-            text: 'Some User',
-          },
-        },
-        {
-          label: {
-            text: 'Referral marked as ready to place',
-          },
-          datetime: {
-            timestamp: systemNote2.createdAt,
-            type: 'datetime',
-          },
-          byline: {
-            text: 'Some User',
-          },
-        },
-        {
-          label: {
-            text: 'Note',
-          },
-          html: userNoteHtml,
-          datetime: {
-            timestamp: userNote2.createdAt,
-            type: 'datetime',
-          },
-          byline: {
-            text: 'Another User',
-          },
-        },
-        {
-          label: {
-            text: 'Referral marked as in review',
-          },
-          datetime: {
-            timestamp: systemNote1.createdAt,
-            type: 'datetime',
-          },
-          byline: {
-            text: 'Some User',
-          },
-        },
-        {
-          label: {
-            text: 'Note',
-          },
-          html: userNoteHtml,
-          datetime: {
-            timestamp: userNote1.createdAt,
-            type: 'datetime',
-          },
-          byline: {
-            text: 'Some User',
-          },
         },
       ])
     })

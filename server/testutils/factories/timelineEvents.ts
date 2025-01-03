@@ -8,7 +8,7 @@ import referralHistorySystemNoteFactory from './referralHistorySystemNote'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import * as timelineUtils from '../../utils/assessments/timelineUtils'
 
-export default Factory.define<Array<TimelineItem>>(notes => {
+export const timelineEventsFactory = Factory.define<Array<TimelineItem>>(notes => {
   const userNote1 = referralHistoryUserNoteFactory.build({
     createdByUserName: 'SOME USER',
     createdAt: '2024-04-01',

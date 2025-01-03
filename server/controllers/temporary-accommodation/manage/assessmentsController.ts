@@ -27,6 +27,7 @@ import { appendQueryString } from '../../../utils/utils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import { pagination } from '../../../utils/pagination'
 import { DateFormats, dateExists } from '../../../utils/dateUtils'
+import { TimelineService } from '../../../services'
 
 export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: string; text: string }> = {
   in_review: {
@@ -53,7 +54,10 @@ export const confirmationPageContent: Record<AssessmentUpdateStatus, { title: st
 export const referralRejectionReasonOtherMatch = 'Another reason (please add)'
 
 export default class AssessmentsController {
-  constructor(private readonly assessmentsService: AssessmentsService) {}
+  constructor(
+    private readonly assessmentsService: AssessmentsService,
+    private readonly timelineService: TimelineService,
+  ) {}
 
   list(status: AssessmentSearchApiStatus): RequestHandler {
     return async (req: Request, res: Response) => {
@@ -97,9 +101,11 @@ export default class AssessmentsController {
       await preservePlaceContext(req, res, this.assessmentsService)
 
       const assessment = await this.assessmentsService.findAssessment(callConfig, req.params.id)
+      const timelineEvents = await this.timelineService.getTimelineForAssessment(callConfig, req.params.id)
 
       return res.render('temporary-accommodation/assessments/summary', {
         assessment,
+        timelineEvents,
         actions: assessmentActions(assessment),
         errors,
         errorSummary,

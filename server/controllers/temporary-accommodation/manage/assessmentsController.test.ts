@@ -1,11 +1,17 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { AssessmentSearchApiStatus, AssessmentUpdatableDateField, AssessmentUpdateStatus } from '@approved-premises/ui'
+import {
+  AssessmentSearchApiStatus,
+  AssessmentUpdatableDateField,
+  AssessmentUpdateStatus,
+  TimelineItem,
+} from '@approved-premises/ui'
 import { ParsedQs } from 'qs'
+import { ReferralHistorySystemNote } from '@approved-premises/api'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { AssessmentsService } from '../../../services'
+import { AssessmentsService, TimelineService } from '../../../services'
 import {
   assessmentFactory,
   assessmentSearchParametersFactory,
@@ -13,6 +19,7 @@ import {
   newReferralHistoryUserNoteFactory,
   probationRegionFactory,
   referenceDataFactory,
+  referralHistorySystemNoteFactory,
 } from '../../../testutils/factories'
 import * as assessmentUtils from '../../../utils/assessmentUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
@@ -40,7 +47,8 @@ describe('AssessmentsController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const assessmentsService = createMock<AssessmentsService>({})
-  const assessmentsController = new AssessmentsController(assessmentsService)
+  const timelineService = createMock<TimelineService>({})
+  const assessmentsController = new AssessmentsController(assessmentsService, timelineService)
 
   const actions = [
     {
@@ -230,7 +238,20 @@ describe('AssessmentsController', () => {
     it('shows a summary view of the assessment', async () => {
       const assessmentId = 'some-assessment-id'
       const assessment = assessmentFactory.build({ id: assessmentId })
+      const submittedTimelineEvent: ReferralHistorySystemNote = referralHistorySystemNoteFactory.build({
+        category: 'submitted',
+      })
+      const timelineEvents: Array<TimelineItem> = [
+        {
+          byline: { text: submittedTimelineEvent.createdByUserName },
+          datetime: { timestamp: submittedTimelineEvent.createdAt, type: 'datetime' },
+          html: undefined,
+          label: { text: 'Referral submitted' },
+        },
+      ]
+
       assessmentsService.findAssessment.mockResolvedValue(assessment)
+      timelineService.getTimelineForAssessment.mockResolvedValue(timelineEvents)
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
       jest.spyOn(assessmentUtils, 'assessmentActions').mockReturnValue(actions)
       request.params = { id: assessmentId }
@@ -240,6 +261,7 @@ describe('AssessmentsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/assessments/summary', {
         assessment,
+        timelineEvents,
         actions,
         errors: {},
         errorSummary: [],

@@ -63,6 +63,7 @@ import roomFactory from './room'
 import roshRisksFactory from './roshRisks'
 import staffMemberFactory from './staffMember'
 import tierEnvelopeFactory from './tierEnvelopeFactory'
+import timelineEventsFactory from './timelineEvents'
 import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
@@ -137,6 +138,7 @@ export {
   roshSummaryFactory,
   staffMemberFactory,
   tierEnvelopeFactory,
+  timelineEventsFactory,
   turnaroundFactory,
   updateLostBedFactory,
   updatePremisesFactory,

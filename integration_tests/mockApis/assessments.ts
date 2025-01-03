@@ -1,5 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, AssessmentSummary, Unit } from '../../server/@types/shared'
+import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment, Unit } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
@@ -36,6 +36,21 @@ export default {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
         jsonBody: assessment,
+      },
+    }),
+  stubAssessmentReferralHistoryGet: (args: {
+    assessment: TemporaryAccommodationAssessment
+    referralNotes
+  }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        url: `/cas3/timeline/${args.assessment.id}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: args.referralNotes,
       },
     }),
   stubUnallocateAssessment: (assessment: Assessment): SuperAgentRequest =>

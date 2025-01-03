@@ -90,7 +90,7 @@ export const controllers = (services: Services) => {
   )
   const bookingSearchController = new BookingSearchController(services.bookingSearchService)
 
-  const assessmentsController = new AssessmentsController(services.assessmentsService)
+  const assessmentsController = new AssessmentsController(services.assessmentsService, services.timelineService)
 
   return {
     dashboardController,

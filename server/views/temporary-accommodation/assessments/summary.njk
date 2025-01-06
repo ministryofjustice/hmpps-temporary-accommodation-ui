@@ -43,8 +43,9 @@
         <div class="moj-identity-bar__menu">
 	        {{ mojButtonMenu({
             "button": {
-              "text": "Menu title"
+              "text": "Update referral status"
             },
+            "alignMenu": "right",
             "items": actions
 	        }) }}
         </div>
@@ -93,13 +94,3 @@
   </div>
 {% endblock %}
 
-{% block extraScripts %}
-  <script type="text/javascript" nonce="{{ cspNonce }}">
-    new MOJFrontend.ButtonMenu({
-      container: $('.moj-button-menu'),
-      mq: '(min-width: 200em)',
-      buttonText: 'Update referral status',
-      menuClasses: 'moj-button-menu__wrapper--right',
-    })
-  </script>
-{% endblock %}

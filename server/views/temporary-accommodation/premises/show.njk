@@ -1,6 +1,6 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{% from "../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 
@@ -34,13 +34,13 @@
 
     <h1 class="govuk-heading-l">View a property</h1>
 
-    {{ mojPageHeaderActions({
+     {{ mojCasPageHeaderActions({
         heading: {
             text: premises.addressLine1 + ', ' + premises.postcode,
             classes: 'govuk-heading-m',
             level: 2
         },
-        items: actions
+        actions: actions
     }) }}
 
     <div data-cy-premises="true" data-cy-pdu-id="{{premises.probationDeliveryUnit.id}}">
@@ -85,15 +85,3 @@
 
 {% endblock %}
 
-{% block extraScripts %}
-    {% if actions %}
-        <script type="text/javascript" nonce="{{ cspNonce }}">
-          new MOJFrontend.ButtonMenu({
-            container: $('.moj-button-menu'),
-            mq: '(min-width: 200em)',
-            buttonText: 'Actions',
-            menuClasses: 'moj-button-menu__wrapper--right',
-          })
-        </script>
-    {% endif %}
-{% endblock %}

@@ -13,14 +13,14 @@ export function bedspaceActions(premises: Premises, room: Room, placeContext: Pl
   const items = [
     {
       text: 'Book bedspace',
-      classes: 'govuk-button--secondary',
+      classes: 'govuk-button--secondary moj-button-menu__item',
       href: addPlaceContext(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), placeContext),
     },
   ]
 
   items.push({
     text: 'Void bedspace',
-    classes: 'govuk-button--secondary',
+    classes: 'govuk-button--secondary moj-button-menu__item',
     href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
   })
 

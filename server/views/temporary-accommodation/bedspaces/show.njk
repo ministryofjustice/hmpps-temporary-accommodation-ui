@@ -1,11 +1,11 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
 {% from "../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../components/location-header/macro.njk" import locationHeader %}
 {% from "../../components/booking-listing/macro.njk" import bookingListing %}
 {% from "../../components/lost-bed-listing/macro.njk" import lostBedListing %}
+{% from "../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -36,12 +36,11 @@
         {% endif %}
     {% endif %}
 
-    {{ mojPageHeaderActions({
+    {{ mojCasPageHeaderActions({
         heading: {
-            text: 'View a bedspace',
-            classes: 'govuk-heading-l'
+            text: "View a bedspace"
         },
-        items: actions
+        actions: actions
     }) }}
 
     <div class="govuk-grid-row">
@@ -90,15 +89,3 @@
 
 {% endblock %}
 
-{% block extraScripts %}
-    {% if actions %}
-        <script type="text/javascript" nonce="{{ cspNonce }}">
-          new MOJFrontend.ButtonMenu({
-            container: $('.moj-button-menu'),
-            mq: '(min-width: 200em)',
-            buttonText: 'Actions',
-            menuClasses: 'moj-button-menu__wrapper--right',
-          })
-        </script>
-    {% endif %}
-{% endblock %}

@@ -22,12 +22,12 @@ describe('bedspaceUtils', () => {
       expect(bedspaceActions(premises, room, placeContext)).toEqual([
         {
           text: 'Book bedspace',
-          classes: 'govuk-button--secondary',
+          classes: 'govuk-button--secondary moj-button-menu__item',
           href: '/path/with/place/context',
         },
         {
           text: 'Void bedspace',
-          classes: 'govuk-button--secondary',
+          classes: 'govuk-button--secondary moj-button-menu__item',
           href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
         },
       ])

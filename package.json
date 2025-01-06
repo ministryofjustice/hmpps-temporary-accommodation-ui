@@ -133,7 +133,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.600.0",
-    "@ministryofjustice/frontend": "^2.2.4",
+    "@ministryofjustice/frontend": "^3.2.0",
     "@sentry/node": "^7.14.1",
     "@types/path-to-regexp": "^1.7.0",
     "accessible-autocomplete": "^3.0.0",

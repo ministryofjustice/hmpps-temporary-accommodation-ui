@@ -22,8 +22,6 @@ export type { ApprovedPremisesApplicationSummary } from './models/ApprovedPremis
 export type { ApprovedPremisesAssessment } from './models/ApprovedPremisesAssessment';
 export type { ApprovedPremisesAssessmentStatus } from './models/ApprovedPremisesAssessmentStatus';
 export type { ApprovedPremisesAssessmentSummary } from './models/ApprovedPremisesAssessmentSummary';
-export type { ApprovedPremisesBedSearchParameters } from './models/ApprovedPremisesBedSearchParameters';
-export type { ApprovedPremisesBedSearchResult } from './models/ApprovedPremisesBedSearchResult';
 export type { ApprovedPremisesSummary } from './models/ApprovedPremisesSummary';
 export type { ApprovedPremisesUser } from './models/ApprovedPremisesUser';
 export type { ApprovedPremisesUserPermission } from './models/ApprovedPremisesUserPermission';

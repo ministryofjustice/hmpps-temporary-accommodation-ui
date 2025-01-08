@@ -237,7 +237,7 @@ describe('timelineUtils', () => {
         )
       })
 
-      it('returns HTML with user provided details for a another rejection reason', () => {
+      it('returns HTML with user provided details for another rejection reason', () => {
         const note = referralHistorySystemNoteFactory.build({
           category: 'rejected',
           message: '',
@@ -253,6 +253,25 @@ describe('timelineUtils', () => {
         expect(result).toEqual(
           '<p>Rejection reason: Some details</p><p>Withdrawal requested by the probation practitioner: No</p>',
         )
+      })
+
+      describe('when referrer user is viewing another rejection reason', () => {
+        it('returns HTML with user provided details for a another rejection reason', () => {
+          const note = referralHistorySystemNoteFactory.build({
+            category: 'rejected',
+            message: '',
+            messageDetails: {
+              rejectionReason: 'Another reason (please add)',
+              isWithdrawn: false,
+            },
+          })
+
+          const result = timelineUtils.renderSystemNote(note)
+
+          expect(result).toEqual(
+            '<p>Rejection reason: Another reason</p><p>Withdrawal requested by the probation practitioner: No</p>',
+          )
+        })
       })
     })
   })

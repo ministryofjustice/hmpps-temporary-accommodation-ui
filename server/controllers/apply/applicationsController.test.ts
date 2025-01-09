@@ -1,11 +1,16 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import type { TemporaryAccommodationApplication } from '@approved-premises/api'
-import type { ErrorsAndUserInput, GroupedApplications } from '@approved-premises/ui'
-import { ApplicationService, PersonService } from '../../services'
+import type { ReferralHistorySystemNote, TemporaryAccommodationApplication } from '@approved-premises/api'
+import { ErrorsAndUserInput, GroupedApplications, TimelineItem } from '@approved-premises/ui'
+import { ApplicationService, PersonService, TimelineService } from '../../services'
 import TasklistService from '../../services/tasklistService'
-import { activeOffenceFactory, applicationFactory, personFactory } from '../../testutils/factories'
+import {
+  activeOffenceFactory,
+  applicationFactory,
+  personFactory,
+  referralHistorySystemNoteFactory,
+} from '../../testutils/factories'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../utils/validation'
 import ApplicationsController from './applicationsController'
 
@@ -29,12 +34,13 @@ describe('applicationsController', () => {
   const next: DeepMocked<NextFunction> = jest.fn()
 
   const applicationService = createMock<ApplicationService>({})
+  const timelineService = createMock<TimelineService>({})
   const personService = createMock<PersonService>({})
 
   let applicationsController: ApplicationsController
 
   beforeEach(() => {
-    applicationsController = new ApplicationsController(applicationService, personService)
+    applicationsController = new ApplicationsController(applicationService, timelineService, personService)
     request = createMock<Request>()
     response = createMock<Response>({})
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
@@ -352,15 +358,28 @@ describe('applicationsController', () => {
   describe('full', () => {
     it('renders the full application page for submitted referrals', async () => {
       const application = createMock<TemporaryAccommodationApplication>()
+      const submittedTimelineEvent: ReferralHistorySystemNote = referralHistorySystemNoteFactory.build({
+        category: 'submitted',
+      })
+      const timelineEvents: Array<TimelineItem> = [
+        {
+          byline: { text: submittedTimelineEvent.createdByUserName },
+          datetime: { timestamp: submittedTimelineEvent.createdAt, type: 'datetime' },
+          html: undefined,
+          label: { text: 'Referral submitted' },
+        },
+      ]
 
       request = createMock<Request>({
         params: { id: application.id },
       })
 
+      timelineService.getTimelineForAssessment.mockResolvedValue(timelineEvents)
+
       const requestHandler = applicationsController.full()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('applications/full', application)
+      expect(response.render).toHaveBeenCalledWith('applications/full', { application, timelineEvents })
     })
   })
 })

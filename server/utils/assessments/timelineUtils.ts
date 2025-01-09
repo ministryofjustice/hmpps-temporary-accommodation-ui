@@ -106,10 +106,19 @@ export const renderDomainEventNote = (note: DomainEventNote['messageDetails']): 
 }
 
 export const renderSystemNote = (note: SystemNote): TimelineItem['html'] => {
-  const reason = note.messageDetails.rejectionReasonDetails || note.messageDetails.rejectionReason
-  const isWithdrawn = note.messageDetails.isWithdrawn ? 'Yes' : 'No'
+  const { rejectionReasonDetails, rejectionReason, isWithdrawn } = note.messageDetails
 
-  const lines = [`Rejection reason: ${reason}`, `Withdrawal requested by the probation practitioner: ${isWithdrawn}`]
+  let reason = rejectionReasonDetails || rejectionReason
+  const withdrawalStatus = isWithdrawn ? 'Yes' : 'No'
+
+  if (reason === 'Another reason (please add)') {
+    reason = 'Another reason'
+  }
+
+  const lines = [
+    `Rejection reason: ${reason}`,
+    `Withdrawal requested by the probation practitioner: ${withdrawalStatus}`,
+  ]
 
   return formatLines(lines.join('\n\n'))
 }

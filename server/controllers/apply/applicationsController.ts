@@ -8,10 +8,12 @@ import { firstPageOfApplicationJourney, getResponses } from '../../utils/applica
 import { DateFormats } from '../../utils/dateUtils'
 import extractCallConfig from '../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../utils/validation'
+import TimelineService from '../../services/assessments/timelineService'
 
 export default class ApplicationsController {
   constructor(
     private readonly applicationService: ApplicationService,
+    private readonly timelineService: TimelineService,
     private readonly personService: PersonService,
   ) {}
 
@@ -143,8 +145,11 @@ export default class ApplicationsController {
       const { id } = req.params
       const application = await this.applicationService.findApplication(callConfig, id)
 
+      const timelineEvents = await this.timelineService.getTimelineForAssessment(callConfig, application.assessmentId)
+
       return res.render('applications/full', {
         application,
+        timelineEvents,
       })
     }
   }

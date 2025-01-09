@@ -64,10 +64,10 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowAsActive(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').should('contain', 'Book bedspace')
-      cy.get('a').should('contain', 'Void bedspace')
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').should('contain.text', 'Actions').click()
+      cy.get('a').should('contain.text', 'Book bedspace')
+      cy.get('a').should('contain.text', 'Void bedspace')
     })
 
     cy.root().should('not.contain', 'This bedspace is in an archived property.')
@@ -76,7 +76,7 @@ export default class BedspaceShowPage extends Page {
   }
 
   shouldShowAsArchived(premiseIsArchived = true): void {
-    cy.get('.moj-page-header-actions').within(() => {
+    cy.get('.moj-cas-page-header-actions').within(() => {
       cy.root().should('not.contain', 'Actions')
     })
 
@@ -100,15 +100,15 @@ export default class BedspaceShowPage extends Page {
   }
 
   clickBookBedspaceLink(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').should('contain.text', 'Actions').click()
       cy.get('a').contains('Book bedspace').click()
     })
   }
 
   clickVoidBedspaceLink(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').contains('Actions').click()
       cy.get('a').contains('Void bedspace').click()
     })
   }

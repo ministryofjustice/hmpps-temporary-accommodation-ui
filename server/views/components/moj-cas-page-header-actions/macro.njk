@@ -1,0 +1,26 @@
+{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
+
+{# params - Type of Object - Description #}
+{# actions - Array - Objects containing the options for the moj Button Menu #}
+{# heading - Object - Contains values that display the  page header title #}
+
+{% macro mojCasPageHeaderActions(params) %}
+    <div class="moj-cas-page-header-actions">
+        <div class="moj-cas-page-header-actions__title">
+            <h{{ params.heading.level | default(1) }} class="{{ params.heading.classes | default("govuk-heading-xl") }} govuk-!-margin-bottom-0">
+            {{- params.heading.html | safe if params.heading.html else params.heading.text -}}
+            </h{{ params.heading.level | default(1) }}>
+        </div>
+  
+        <div class="moj-cas-page-header-actions__actions">
+            {{ mojButtonMenu({
+                "button": {
+                    "text": "Actions",
+                    "classes": "govuk-!-margin-bottom-0"
+                },
+                "alignMenu": "right",
+                "items": params.actions
+            }) }}
+        </div>
+    </div>
+{% endmacro %}

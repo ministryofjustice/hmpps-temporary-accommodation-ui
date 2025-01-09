@@ -94,8 +94,7 @@ export default class PremisesShowPage extends Page {
   }
 
   shouldShowAsActive(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
       cy.get('a').should('contain', 'Add a bedspace')
     })
 
@@ -103,7 +102,7 @@ export default class PremisesShowPage extends Page {
   }
 
   shouldShowAsArchived(): void {
-    cy.get('.moj-page-header-actions').within(() => {
+    cy.get('.moj-cas-page-header-actions').within(() => {
       cy.root().should('not.contain', 'Actions')
     })
 
@@ -128,9 +127,15 @@ export default class PremisesShowPage extends Page {
   }
 
   clickAddBedspaceLink(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains('Add a bedspace').click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').then($button => {
+        if ($button.find('.moj-button-menu__item').length > 0) {
+          cy.wrap($button).click()
+          cy.get('.moj-button-menu__item').should('contain.text', 'Add a bedspace').click()
+        } else {
+          cy.wrap($button).find('a').contains('Add a bedspace').click()
+        }
+      })
     })
   }
 

@@ -18,7 +18,7 @@ export default class AssessmentSummaryPage extends Page {
   }
 
   clickAction(option: string) {
-    cy.get('.moj-button-menu__toggle-button').contains('Update referral status').click()
+    cy.get('.moj-button-menu__toggle-button').should('contain.text', 'Update referral status').click()
     cy.get('.moj-button-menu__wrapper').contains(option).invoke('removeAttr', 'target').click()
   }
 

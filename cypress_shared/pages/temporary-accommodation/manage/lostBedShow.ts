@@ -32,15 +32,15 @@ export default class LostBedShowPage extends Page {
   }
 
   clickEditVoidLink(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').contains('Actions').click()
       cy.get('a').contains('Edit this void').click()
     })
   }
 
   clickCancelVoidLink(): void {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').contains('Actions').click()
       cy.get('a').contains('Cancel this void').click()
     })
   }

@@ -81,9 +81,15 @@ export default class BookingShowPage extends Page {
   }
 
   private clickAction(action: string) {
-    cy.get('.moj-page-header-actions').within(() => {
-      cy.get('button').contains('Actions').click()
-      cy.get('a').contains(action).click()
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.get('.moj-button-menu').then($button => {
+        if ($button.find('.moj-button-menu__item').length > 0) {
+          cy.wrap($button).click()
+          cy.get('.moj-button-menu__item').contains(action).click()
+        } else {
+          cy.wrap($button).find('a').contains(action).click()
+        }
+      })
     })
   }
 }

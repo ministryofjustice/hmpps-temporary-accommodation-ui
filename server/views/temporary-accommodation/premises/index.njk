@@ -1,6 +1,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "moj/components/page-header-actions/macro.njk" import mojPageHeaderActions %}
+{% from "../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% extends "../../partials/layout.njk" %}
@@ -19,12 +19,12 @@
 {% block content %}
     {% include "../../_messages.njk" %}
 
-    {{ mojPageHeaderActions({
+    {{ mojCasPageHeaderActions({
         heading: {
             text: 'List of properties',
             classes: 'govuk-heading-l'
         },
-        items: [{
+        actions: [{
             text: "Add a property",
             href: paths.premises.new()
         }]
@@ -59,10 +59,6 @@
 
 {% endblock %}
 
- {% block extraScripts %}
-     <script type="text/javascript" nonce="{{ cspNonce }}">
-       $(function() {
-         window.MOJFrontend.initAll()
-       })
-     </script>
- {% endblock %}
+{% block extraScripts %}
+    <script src="/assets/js/jquery.min.js"></script>
+{% endblock %}

@@ -14,6 +14,7 @@ import {
   bedSearchResultsFactory,
   bookingFactory,
   newBookingFactory,
+  timelineEventsFactory,
 } from '../../server/testutils/factories'
 import AssessmentSummaryPage from '../pages/assess/summary'
 import Page from '../pages/page'
@@ -57,6 +58,11 @@ export default class PlaceHelper {
 
   setupStubs() {
     cy.task('stubFindAssessment', this.placeContext.assessment)
+    cy.task('log', this.placeContext.assessment)
+    cy.task('stubAssessmentReferralHistoryGet', {
+      assessment: this.placeContext.assessment,
+      referralNotes: timelineEventsFactory.build(),
+    })
     cy.task('stubBedspaceSearchReferenceData')
     cy.task('stubBedSearch', this.bedSearchResults)
     cy.task('stubSinglePremises', this.premises)

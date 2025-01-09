@@ -13,7 +13,8 @@ import {
   assessmentFactory,
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
-  referralHistoryUserNoteFactory,
+  referralHistorySystemNoteFactory,
+  timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
 import AssessmentRejectionConfirmPage from '../../../../cypress_shared/pages/assess/confirmRejection'
@@ -246,6 +247,10 @@ context('Apply', () => {
 
           cy.task('stubAssessments', { data: assessmentSummary })
           cy.task('stubFindAssessment', assessment)
+          cy.task('stubAssessmentReferralHistoryGet', {
+            assessment,
+            referralNotes: [referralHistorySystemNoteFactory.build({ category: 'submitted' })],
+          })
 
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
@@ -335,6 +340,11 @@ context('Apply', () => {
           assessment.application.document = applicationTranslatedDocument
 
           cy.task('stubFindAssessment', assessment)
+          cy.task('stubAssessmentReferralHistoryGet', {
+            assessment,
+            referralNotes: timelineEventsFactory.build(),
+          })
+
           cy.task('stubReferralRejectionReasons')
 
           // Given I visit the assessment page
@@ -365,6 +375,11 @@ context('Apply', () => {
           assessment.application.document = applicationTranslatedDocument
 
           cy.task('stubFindAssessment', assessment)
+          cy.task('stubAssessmentReferralHistoryGet', {
+            assessment,
+            referralNotes: timelineEventsFactory.build,
+          })
+
           cy.task('stubReferralRejectionReasons')
 
           // Given I visit the assessment page
@@ -412,6 +427,10 @@ context('Apply', () => {
 
           cy.task('stubAssessments', { data: assessmentSummary })
           cy.task('stubFindAssessment', assessment)
+          cy.task('stubAssessmentReferralHistoryGet', {
+            assessment,
+            referralNotes: [referralHistorySystemNoteFactory.build({ category: 'submitted' })],
+          })
 
           // Given I visit the referral list page
           const dashboardPage = DashboardPage.visit()
@@ -444,6 +463,11 @@ context('Apply', () => {
         const assessment = assessmentFactory.build()
         cy.task('stubFindAssessment', assessment)
 
+        cy.task('stubAssessmentReferralHistoryGet', {
+          assessment,
+          referralNotes: assessment.referralHistoryNotes,
+        })
+
         const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
 
         // I can see notes for the assessment
@@ -454,6 +478,11 @@ context('Apply', () => {
         // Given I am on the assessment summary page
         const assessment = assessmentFactory.build()
         cy.task('stubFindAssessment', assessment)
+
+        cy.task('stubAssessmentReferralHistoryGet', {
+          assessment,
+          referralNotes: assessment.referralHistoryNotes,
+        })
 
         const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
 
@@ -479,11 +508,15 @@ context('Apply', () => {
       it('shows an error when I attempt to create an empty note', () => {
         // Given I am on the assessment page
         const assessment = assessmentFactory.build({
-          referralHistoryNotes: referralHistoryUserNoteFactory.buildList(5),
           status: 'unallocated',
         })
 
         cy.task('stubFindAssessment', assessment)
+
+        cy.task('stubAssessmentReferralHistoryGet', {
+          assessment,
+          referralNotes: assessment.referralHistoryNotes,
+        })
 
         const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
 
@@ -504,6 +537,11 @@ context('Apply', () => {
 
           cy.task('stubFindAssessment', assessment)
           cy.task('stubUpdateAssessment', assessment)
+
+          cy.task('stubAssessmentReferralHistoryGet', {
+            assessment,
+            referralNotes: assessment.referralHistoryNotes,
+          })
 
           const existingDate = assessment.releaseDate
           const updatedDate = DateFormats.dateObjToIsoDate(addDays(DateFormats.isoToDateObj(existingDate), -2))
@@ -534,6 +572,11 @@ context('Apply', () => {
 
           cy.task('stubFindAssessment', assessment)
           cy.task('stubUpdateAssessment', assessment)
+
+          cy.task('stubAssessmentReferralHistoryGet', {
+            assessment,
+            referralNotes: assessment.referralHistoryNotes,
+          })
 
           const existingDate = assessment.accommodationRequiredFromDate
           const updatedDate = DateFormats.dateObjToIsoDate(addDays(DateFormats.isoToDateObj(existingDate), 3))
@@ -575,6 +618,11 @@ context('Apply', () => {
 
               cy.task('stubFindAssessment', assessment)
 
+              cy.task('stubAssessmentReferralHistoryGet', {
+                assessment,
+                referralNotes: assessment.referralHistoryNotes,
+              })
+
               // Given I am changing the release date for a referral
               const changeDatePage = ChangeDatePage.visit(dateField, assessment)
 
@@ -590,6 +638,11 @@ context('Apply', () => {
               const assessment = assessmentFactory.build()
 
               cy.task('stubFindAssessment', assessment)
+
+              cy.task('stubAssessmentReferralHistoryGet', {
+                assessment,
+                referralNotes: assessment.referralHistoryNotes,
+              })
 
               // Given I am changing the release date for a referral
               const changeDatePage = ChangeDatePage.visit(dateField, assessment)
@@ -609,6 +662,11 @@ context('Apply', () => {
             cy.task('stubUpdateAssessmentError', {
               assessment,
               errorBody: { detail: 'Release date cannot be after accommodation required from date: 2024-06-19' },
+            })
+
+            cy.task('stubAssessmentReferralHistoryGet', {
+              assessment,
+              referralNotes: assessment.referralHistoryNotes,
             })
 
             // Given I am changing the release date for a referral
@@ -632,6 +690,11 @@ context('Apply', () => {
             cy.task('stubUpdateAssessmentError', {
               assessment,
               errorBody: { detail: 'Accommodation required from date cannot be before release date: 2024-06-19' },
+            })
+
+            cy.task('stubAssessmentReferralHistoryGet', {
+              assessment,
+              referralNotes: assessment.referralHistoryNotes,
             })
 
             // Given I am changing the release date for a referral

@@ -14,6 +14,7 @@ import {
   placeContextFactory,
   premisesFactory,
   roomFactory,
+  timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 
 context('Bedspace Search', () => {
@@ -187,6 +188,10 @@ context('Bedspace Search', () => {
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
+    cy.task('stubAssessmentReferralHistoryGet', {
+      assessment,
+      referralNotes: timelineEventsFactory.build(),
+    })
 
     // And when I fill out the form
     const searchParameters = bedSearchParametersFactory.build()

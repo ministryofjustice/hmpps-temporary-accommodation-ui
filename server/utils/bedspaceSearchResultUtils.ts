@@ -1,4 +1,7 @@
-import { TemporaryAccommodationBedSearchResult, TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
+import {
+  TemporaryAccommodationBedSearchResult,
+  TemporaryAccommodationBedSearchResultOverlap,
+} from '@approved-premises/api'
 
 export function premisesKeyCharacteristics(result: TemporaryAccommodationBedSearchResult): Array<string> {
   return result.premises.characteristics

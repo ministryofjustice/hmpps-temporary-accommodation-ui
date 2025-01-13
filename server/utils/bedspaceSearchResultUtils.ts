@@ -1,12 +1,15 @@
-import { BedSearchResult, TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
+import {
+  TemporaryAccommodationBedSearchResult,
+  TemporaryAccommodationBedSearchResultOverlap,
+} from '@approved-premises/api'
 
-export function premisesKeyCharacteristics(result: BedSearchResult): Array<string> {
+export function premisesKeyCharacteristics(result: TemporaryAccommodationBedSearchResult): Array<string> {
   return result.premises.characteristics
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(characteristic => characteristic.name)
 }
 
-export function bedspaceKeyCharacteristics(result: BedSearchResult): Array<string> {
+export function bedspaceKeyCharacteristics(result: TemporaryAccommodationBedSearchResult): Array<string> {
   return result.room.characteristics
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(characteristic => characteristic.name)

@@ -32,6 +32,12 @@ export default class ApplicationClient {
     })
   }
 
+  async delete(applicationId: string) {
+    return this.restClient.delete<Application>({
+      path: paths.applications.delete({ id: applicationId }),
+    })
+  }
+
   async update(applicationId: string, updateData: UpdateApplication) {
     return this.restClient.put<UpdateApplication>({
       path: paths.applications.update({ id: applicationId }),

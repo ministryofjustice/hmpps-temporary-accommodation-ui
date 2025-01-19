@@ -3,12 +3,12 @@ import { setupTestUser } from '../../../cypress_shared/utils/setupTestUser'
 import { applicationFactory } from '../../../server/testutils/factories'
 
 context('Delete application', () => {
-    beforeEach(() => {
-        cy.task('reset')
-        setupTestUser('referrer')
-    })
+  beforeEach(() => {
+    cy.task('reset')
+    setupTestUser('referrer')
+  })
 
-it('User has the option to delete an in progress application', () => {
+  it('Referrer User has the option to delete an in-progress application', () => {
     // Given there are applications in the database
     const inProgressApplications = applicationFactory.buildList(3, { status: 'inProgress' })
     const firstApplication = inProgressApplications[0]

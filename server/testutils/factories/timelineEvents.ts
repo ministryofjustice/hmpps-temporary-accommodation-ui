@@ -8,7 +8,12 @@ import referralHistorySystemNoteFactory from './referralHistorySystemNote'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import * as timelineUtils from '../../utils/assessments/timelineUtils'
 
-export const timelineEventsFactory = Factory.define<Array<TimelineItem>>(notes => {
+type TimeLineFactory = {
+  events: Array<ReferralHistoryNote>
+  timelineData: Array<TimelineItem>
+}
+
+export const timelineEventsFactory = Factory.define<TimeLineFactory>(() => {
   const userNote1 = referralHistoryUserNoteFactory.build({
     createdByUserName: 'SOME USER',
     createdAt: '2024-04-01',
@@ -64,11 +69,11 @@ export const timelineEventsFactory = Factory.define<Array<TimelineItem>>(notes =
     },
   })
 
-  const defaultNotes = [systemNote1, systemNote2, userNote2, userNote1, domainEventNote1, domainEventNote2]
-
-  // Combine passed notes (if any) with the default notes
-  const finalNotes = notes || defaultNotes
+  const finalNotes = [systemNote1, systemNote2, userNote2, userNote1, domainEventNote1, domainEventNote2]
 
   // Return the final timeline data
-  return timelineUtils.timelineData(finalNotes as Array<ReferralHistoryNote>) as Array<TimelineItem>
+  return {
+    events: finalNotes,
+    timelineData: timelineUtils.timelineData(finalNotes as Array<ReferralHistoryNote>) as Array<TimelineItem>,
+  }
 })

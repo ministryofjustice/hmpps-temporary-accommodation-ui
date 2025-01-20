@@ -61,7 +61,7 @@ export default class PlaceHelper {
     cy.task('log', this.placeContext.assessment)
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment: this.placeContext.assessment,
-      referralNotes: timelineEventsFactory.build(),
+      referralNotes: timelineEventsFactory.build().events,
     })
     cy.task('stubBedspaceSearchReferenceData')
     cy.task('stubBedSearch', this.bedSearchResults)

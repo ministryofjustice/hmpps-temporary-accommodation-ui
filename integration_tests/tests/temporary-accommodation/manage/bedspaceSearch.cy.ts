@@ -190,7 +190,7 @@ context('Bedspace Search', () => {
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment,
-      referralNotes: timelineEventsFactory.build(),
+      referralNotes: timelineEventsFactory.build().events,
     })
 
     // And when I fill out the form

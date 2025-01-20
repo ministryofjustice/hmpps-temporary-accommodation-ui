@@ -342,7 +342,7 @@ context('Apply', () => {
           cy.task('stubFindAssessment', assessment)
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: timelineEventsFactory.build(),
+            referralNotes: timelineEventsFactory.build().events,
           })
 
           cy.task('stubReferralRejectionReasons')

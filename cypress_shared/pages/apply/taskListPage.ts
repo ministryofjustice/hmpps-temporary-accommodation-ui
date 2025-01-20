@@ -23,7 +23,7 @@ export default class TaskListPage extends Page {
   }
 
   shouldShowDeleteOption(): void {
-    cy.get('a').contains('Delete referral');
+    cy.get('a').contains('Delete referral')
   }
 
   clickTask(task: string): void {

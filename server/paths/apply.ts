@@ -16,6 +16,7 @@ const paths = {
       selectOffence: personPath.path('select-offence'),
       documents: personPath.path('documents/:documentId'),
     },
+    delete: applicationPath.path('delete'),
     create: applicationsPath,
     index: applicationsPath,
     show: applicationPath,

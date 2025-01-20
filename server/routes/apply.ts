@@ -15,7 +15,8 @@ export default function routes(controllers: Controllers, services: Services, rou
     actions(router, services.auditService),
     createUserCheckMiddleware(userHasReferrerRoleAndIsApplyEnabled),
   )
-  const { applicationsController, pagesController, peopleController, offencesController } = controllers.apply
+  const { applicationsController, pagesController, peopleController, deleteController, offencesController } =
+    controllers.apply
 
   get(paths.applications.start.pattern, applicationsController.start(), { auditEvent: 'VIEW_APPLICATION_START' })
   get(paths.applications.index.pattern, applicationsController.index(), { auditEvent: 'VIEW_APPLICATIONS_LIST' })
@@ -40,6 +41,14 @@ export default function routes(controllers: Controllers, services: Services, rou
         auditEvent: 'SUBMIT_APPLICATION_SUCCESS',
       },
     ],
+  })
+
+  get(paths.applications.delete.pattern, deleteController.new(), {
+    auditEvent: 'VIEW_CANCEL_APPLICATION_PAGE',
+  })
+
+  post(paths.applications.delete.pattern, deleteController.delete(), {
+    auditEvent: 'CANCEL_APPLICATION_AS_REFERRER',
   })
 
   post(paths.applications.people.find.pattern, peopleController.find(), {

@@ -126,4 +126,16 @@ export default {
         url: `/applications/${applicationId}/submission`,
       })
     ).body.requests,
+  stubApplicationDelete: (args: { application: TemporaryAccommodationApplication }): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'DELETE',
+        url: `/cas3/applications/${args.application.id}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: { ...args.application, data: {} },
+      },
+    }),
 }

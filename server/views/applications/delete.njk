@@ -8,7 +8,7 @@
 {% extends "../partials/layout.njk" %}
 
 {% set mainClasses = "app-container govuk-body" %}
-{% set name = personName(application.person, 'Limited access offender') %}
+{% set name = personName(application.person) %}
 {% set pageTitle = "Confirm delete for " + name + " - " + applicationName %}
 
 {% block beforeContent %}

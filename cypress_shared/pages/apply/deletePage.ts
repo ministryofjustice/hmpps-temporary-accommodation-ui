@@ -7,7 +7,7 @@ export default class DeletePage extends Page {
   private readonly name: string
 
   constructor(private readonly application: Application) {
-    const name = personName(application.person, 'Limited access offender')
+    const name = personName(application.person)
     super(name)
     this.name = name
   }

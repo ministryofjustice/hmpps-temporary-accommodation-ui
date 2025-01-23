@@ -16,6 +16,7 @@ import {
   newBookingFactory,
   timelineEventsFactory,
 } from '../../server/testutils/factories'
+import type { TimeLineFactory } from '../../server/testutils/factories/timelineEvents'
 import AssessmentSummaryPage from '../pages/assess/summary'
 import Page from '../pages/page'
 import BedspaceSearchPage from '../pages/temporary-accommodation/manage/bedspaceSearch'
@@ -34,6 +35,8 @@ export default class PlaceHelper {
   private readonly booking: Booking
 
   private readonly assessmentSummaries: Array<AssessmentSummary>
+
+  private readonly timeline: TimeLineFactory
 
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
@@ -54,6 +57,7 @@ export default class PlaceHelper {
       }),
       ...assessmentSummaryFactory.buildList(5),
     ]
+    this.timeline = timelineEventsFactory.build()
   }
 
   setupStubs() {
@@ -61,7 +65,7 @@ export default class PlaceHelper {
     cy.task('log', this.placeContext.assessment)
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment: this.placeContext.assessment,
-      referralNotes: timelineEventsFactory.build(),
+      referralNotes: this.timeline.events,
     })
     cy.task('stubBedspaceSearchReferenceData')
     cy.task('stubBedSearch', this.bedSearchResults)
@@ -74,7 +78,7 @@ export default class PlaceHelper {
   }
 
   startPlace() {
-    AssessmentSummaryPage.visit(this.placeContext.assessment)
+    AssessmentSummaryPage.visit(this.placeContext.assessment, this.timeline)
   }
 
   completePlace() {
@@ -89,7 +93,7 @@ export default class PlaceHelper {
 
   private assessmentToBedspaceSearch() {
     // Given I am viewing a ready to place assessment
-    const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, this.placeContext.assessment)
+    const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, this.placeContext.assessment, this.timeline)
 
     // When I click "Place referral"
     assessmentSummaryPage.clickAction('Place referral')

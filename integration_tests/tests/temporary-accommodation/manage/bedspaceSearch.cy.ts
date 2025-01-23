@@ -165,6 +165,7 @@ context('Bedspace Search', () => {
     const room = roomFactory.build()
 
     const assessment = assessmentFactory.build({ status: 'closed' })
+    const timeline = timelineEventsFactory.build()
 
     const results = bedSearchResultsFactory.build({
       results: [
@@ -190,7 +191,7 @@ context('Bedspace Search', () => {
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment,
-      referralNotes: timelineEventsFactory.build(),
+      referralNotes: timelineEventsFactory.build().events,
     })
 
     // And when I fill out the form
@@ -202,7 +203,7 @@ context('Bedspace Search', () => {
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
     postSearchPage.clickOverlapLink(room, person.crn)
 
-    Page.verifyOnPage(AssessmentSummaryPage, assessment)
+    Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
   })
 
   it('shows errors when the API returns an error', () => {

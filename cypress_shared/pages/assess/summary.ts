@@ -4,17 +4,21 @@ import { statusName } from '../../../server/utils/assessmentStatusUtils'
 import { personName } from '../../../server/utils/personUtils'
 import PersonDetailsComponent from '../../components/personDetails'
 import Page from '../page'
+import type { TimeLineFactory } from '../../../server/testutils/factories/timelineEvents'
 
 export default class AssessmentSummaryPage extends Page {
-  constructor(private readonly assessment: Assessment) {
+  constructor(
+    private readonly assessment: Assessment,
+    private readonly timeline: TimeLineFactory,
+  ) {
     super(personName(assessment.application.person, 'Limited access offender'))
     cy.get('.govuk-tag').contains(statusName(assessment.status))
   }
 
-  static visit(assessment: Assessment): AssessmentSummaryPage {
+  static visit(assessment: Assessment, timeline: TimeLineFactory): AssessmentSummaryPage {
     cy.visit(paths.assessments.summary({ id: assessment.id }))
 
-    return new AssessmentSummaryPage(assessment)
+    return new AssessmentSummaryPage(assessment, timeline)
   }
 
   clickAction(option: string) {
@@ -49,28 +53,6 @@ export default class AssessmentSummaryPage extends Page {
 
     cy.get('h1').contains(personName(person, 'Limited access offender'))
     personDetailsComponent.shouldShowPersonDetails()
-  }
-
-  shouldShowNotesTimeline() {
-    cy.get('.moj-timeline')
-      .parent()
-      .within(() => {
-        cy.get('.govuk-heading-m').should('contain', 'Referral history')
-
-        this.assessment
-          .referralHistoryNotes!.sort((noteA, noteB) => {
-            if (noteA.createdAt === noteB.createdAt) {
-              return 0
-            }
-
-            return noteA.createdAt < noteB.createdAt ? 1 : -1
-          })
-          .forEach((note, index) => {
-            note.message.split('\n').forEach(line => {
-              cy.get('.moj-timeline__description').eq(index).contains(line)
-            })
-          })
-      })
   }
 
   shouldShowNote(title: string, content: string[]) {

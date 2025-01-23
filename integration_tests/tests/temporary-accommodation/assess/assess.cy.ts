@@ -13,7 +13,6 @@ import {
   assessmentFactory,
   assessmentSummaryFactory,
   newReferralHistoryUserNoteFactory,
-  referralHistorySystemNoteFactory,
   timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 import { MockPagination } from '../../../mockApis/bookingSearch'
@@ -245,11 +244,13 @@ context('Apply', () => {
             id: assessment.id,
           })
 
+          const timeline = timelineEventsFactory.build()
+
           cy.task('stubAssessments', { data: assessmentSummary })
           cy.task('stubFindAssessment', assessment)
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: [referralHistorySystemNoteFactory.build({ category: 'submitted' })],
+            referralNotes: timeline.events,
           })
 
           // Given I visit the referral list page
@@ -261,7 +262,7 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral summary page
-          const assessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+          const assessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
           // And I can view an assessment summary
           assessmentPage.shouldShowAssessmentSummary(assessment)
 
@@ -282,7 +283,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'in_review' })
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'in_review' }, timeline)
           assessmentPage.shouldShowBanner('This referral is in review')
 
           // And the assessment is updated in the database
@@ -303,7 +304,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'ready_to_place' })
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'ready_to_place' }, timeline)
           assessmentPage.shouldShowBanner('This referral is ready to place')
 
           // And the assessment is updated in the database
@@ -324,7 +325,7 @@ context('Apply', () => {
           confirmationPage.clickSubmit()
 
           // I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'closed' })
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'closed' }, timeline)
           assessmentPage.shouldShowBanner('This referral has been archived')
 
           // And the assessment is updated in the database
@@ -337,18 +338,20 @@ context('Apply', () => {
       it('allows rejecting an assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })
+          const timeline = timelineEventsFactory.build()
+
           assessment.application.document = applicationTranslatedDocument
 
           cy.task('stubFindAssessment', assessment)
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: timelineEventsFactory.build().events,
+            referralNotes: timeline.events,
           })
 
           cy.task('stubReferralRejectionReasons')
 
           // Given I visit the assessment page
-          const assessmentPage = AssessmentSummaryPage.visit(assessment)
+          const assessmentPage = AssessmentSummaryPage.visit(assessment, timeline)
 
           // When I click on the Update status to 'Reject' button
           assessmentPage.clickAction('Reject')
@@ -364,7 +367,7 @@ context('Apply', () => {
           rejectionConfirmationPage.clickSubmit()
 
           // Then I am taken to the summary page and a banner is shown
-          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' })
+          Page.verifyOnPage(AssessmentSummaryPage, { ...assessment, status: 'rejected' }, timeline)
           assessmentPage.shouldShowBanner('This referral has been rejected')
         })
       })
@@ -372,18 +375,20 @@ context('Apply', () => {
       it('shows errors when rejecting an assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })
+          const timeline = timelineEventsFactory.build()
+
           assessment.application.document = applicationTranslatedDocument
 
           cy.task('stubFindAssessment', assessment)
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: timelineEventsFactory.build,
+            referralNotes: timeline.events,
           })
 
           cy.task('stubReferralRejectionReasons')
 
           // Given I visit the assessment page
-          const assessmentPage = AssessmentSummaryPage.visit(assessment)
+          const assessmentPage = AssessmentSummaryPage.visit(assessment, timeline)
 
           // When I click on the Update status to 'Reject' button
           assessmentPage.clickAction('Reject')
@@ -418,6 +423,8 @@ context('Apply', () => {
       it('shows the full assessment', () => {
         cy.fixture('applicationTranslatedDocument.json').then(applicationTranslatedDocument => {
           const assessment = assessmentFactory.build({ status: 'unallocated' })
+          const timeline = timelineEventsFactory.build()
+
           assessment.application.document = applicationTranslatedDocument
           const assessmentSummary = assessmentSummaryFactory.buildList(1, {
             status: 'unallocated',
@@ -429,7 +436,7 @@ context('Apply', () => {
           cy.task('stubFindAssessment', assessment)
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: [referralHistorySystemNoteFactory.build({ category: 'submitted' })],
+            referralNotes: timeline.events,
           })
 
           // Given I visit the referral list page
@@ -441,7 +448,7 @@ context('Apply', () => {
           listPage.clickAssessment(assessment)
 
           // Then I should be taken to the referral summary page
-          const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+          const assessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
 
           // And I can view an assessment summary
           assessmentSummaryPage.shouldShowAssessmentSummary(assessment)
@@ -458,33 +465,19 @@ context('Apply', () => {
         })
       })
 
-      it('shows existing notes', () => {
-        // Given I am on the assessment summary page
-        const assessment = assessmentFactory.build()
-        cy.task('stubFindAssessment', assessment)
-
-        cy.task('stubAssessmentReferralHistoryGet', {
-          assessment,
-          referralNotes: assessment.referralHistoryNotes,
-        })
-
-        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
-
-        // I can see notes for the assessment
-        assessmentSummaryPage.shouldShowNotesTimeline()
-      })
-
       it('allows me to create a new note', () => {
         // Given I am on the assessment summary page
         const assessment = assessmentFactory.build()
+        const timeline = timelineEventsFactory.build()
+
         cy.task('stubFindAssessment', assessment)
 
         cy.task('stubAssessmentReferralHistoryGet', {
           assessment,
-          referralNotes: assessment.referralHistoryNotes,
+          referralNotes: timeline.events,
         })
 
-        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment, timeline)
 
         // When I create a new notes
         const newNote = newReferralHistoryUserNoteFactory.build()
@@ -500,7 +493,7 @@ context('Apply', () => {
         })
 
         // And I am redirected back to assessment summary page
-        const postSumbmitAssessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+        const postSumbmitAssessmentSummaryPage = Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
 
         postSumbmitAssessmentSummaryPage.shouldShowBanner('Note saved')
       })
@@ -510,22 +503,23 @@ context('Apply', () => {
         const assessment = assessmentFactory.build({
           status: 'unallocated',
         })
+        const timeline = timelineEventsFactory.build()
 
         cy.task('stubFindAssessment', assessment)
 
         cy.task('stubAssessmentReferralHistoryGet', {
           assessment,
-          referralNotes: assessment.referralHistoryNotes,
+          referralNotes: timeline.events,
         })
 
-        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment)
+        const assessmentSummaryPage = AssessmentSummaryPage.visit(assessment, timeline)
 
         // When I attempt to create a new notes without a message
         cy.task('stubCreateAssessmentNoteErrors', { assessmentId: assessment.id, params: ['message'] })
         assessmentSummaryPage.clickSaveNote()
 
         // Then I am redirected back to assessment page
-        const postSumbmitSummaryAssessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment)
+        const postSumbmitSummaryAssessmentPage = Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
 
         // And I should see an error messags
         postSumbmitSummaryAssessmentPage.shouldShowErrorMessagesForFields(['message'])
@@ -534,13 +528,14 @@ context('Apply', () => {
       describe('editing dates', () => {
         it("allows me to edit the person's release date", () => {
           const assessment = assessmentFactory.build()
+          const timeline = timelineEventsFactory.build()
 
           cy.task('stubFindAssessment', assessment)
           cy.task('stubUpdateAssessment', assessment)
 
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: assessment.referralHistoryNotes,
+            referralNotes: timeline.events,
           })
 
           const existingDate = assessment.releaseDate
@@ -569,13 +564,14 @@ context('Apply', () => {
 
         it('allows me to edit the date the accommodation is required', () => {
           const assessment = assessmentFactory.build()
+          const timeline = timelineEventsFactory.build()
 
           cy.task('stubFindAssessment', assessment)
           cy.task('stubUpdateAssessment', assessment)
 
           cy.task('stubAssessmentReferralHistoryGet', {
             assessment,
-            referralNotes: assessment.referralHistoryNotes,
+            referralNotes: timeline.events,
           })
 
           const existingDate = assessment.accommodationRequiredFromDate
@@ -615,12 +611,13 @@ context('Apply', () => {
           dateFields.forEach(dateField => {
             it(`shows when the ${dateField} field is empty`, () => {
               const assessment = assessmentFactory.build()
+              const timeline = timelineEventsFactory.build()
 
               cy.task('stubFindAssessment', assessment)
 
               cy.task('stubAssessmentReferralHistoryGet', {
                 assessment,
-                referralNotes: assessment.referralHistoryNotes,
+                referralNotes: timeline.events,
               })
 
               // Given I am changing the release date for a referral
@@ -636,12 +633,13 @@ context('Apply', () => {
 
             it(`shows when the ${dateField} field is invalid`, () => {
               const assessment = assessmentFactory.build()
+              const timeline = timelineEventsFactory.build()
 
               cy.task('stubFindAssessment', assessment)
 
               cy.task('stubAssessmentReferralHistoryGet', {
                 assessment,
-                referralNotes: assessment.referralHistoryNotes,
+                referralNotes: timeline.events,
               })
 
               // Given I am changing the release date for a referral
@@ -657,6 +655,7 @@ context('Apply', () => {
 
           it(`shows when the release date submitted is after the accommodation required from date`, () => {
             const assessment = assessmentFactory.build()
+            const timeline = timelineEventsFactory.build()
 
             cy.task('stubFindAssessment', assessment)
             cy.task('stubUpdateAssessmentError', {
@@ -666,7 +665,7 @@ context('Apply', () => {
 
             cy.task('stubAssessmentReferralHistoryGet', {
               assessment,
-              referralNotes: assessment.referralHistoryNotes,
+              referralNotes: timeline.events,
             })
 
             // Given I am changing the release date for a referral
@@ -685,6 +684,7 @@ context('Apply', () => {
 
           it(`shows when the accommodation required from date submitted is before the release date`, () => {
             const assessment = assessmentFactory.build()
+            const timeline = timelineEventsFactory.build()
 
             cy.task('stubFindAssessment', assessment)
             cy.task('stubUpdateAssessmentError', {
@@ -694,7 +694,7 @@ context('Apply', () => {
 
             cy.task('stubAssessmentReferralHistoryGet', {
               assessment,
-              referralNotes: assessment.referralHistoryNotes,
+              referralNotes: timeline.events,
             })
 
             // Given I am changing the release date for a referral

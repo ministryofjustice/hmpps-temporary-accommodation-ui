@@ -8,7 +8,7 @@ import referralHistorySystemNoteFactory from './referralHistorySystemNote'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import * as timelineUtils from '../../utils/assessments/timelineUtils'
 
-type TimeLineFactory = {
+export type TimeLineFactory = {
   events: Array<ReferralHistoryNote>
   timelineData: Array<TimelineItem>
 }

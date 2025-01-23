@@ -165,6 +165,7 @@ context('Bedspace Search', () => {
     const room = roomFactory.build()
 
     const assessment = assessmentFactory.build({ status: 'closed' })
+    const timeline = timelineEventsFactory.build()
 
     const results = bedSearchResultsFactory.build({
       results: [
@@ -202,7 +203,7 @@ context('Bedspace Search', () => {
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
     postSearchPage.clickOverlapLink(room, person.crn)
 
-    Page.verifyOnPage(AssessmentSummaryPage, assessment)
+    Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
   })
 
   it('shows errors when the API returns an error', () => {

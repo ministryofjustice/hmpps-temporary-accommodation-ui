@@ -9,6 +9,4 @@ export default Factory.define<PersonAcctAlert>(() => ({
   dateCreated: DateFormats.dateObjToIsoDate(faker.date.past()),
   dateExpires: DateFormats.dateObjToIsoDate(faker.date.future()),
   comment: faker.lorem.sentence(),
-  expired: faker.datatype.boolean(),
-  active: faker.datatype.boolean(),
 }))

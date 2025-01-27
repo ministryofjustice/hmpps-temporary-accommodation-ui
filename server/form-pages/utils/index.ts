@@ -36,8 +36,6 @@ export type PageBodyPersonAcctAlert = {
   comment?: string
   dateCreated: string
   dateExpires: string
-  expired: boolean
-  active: boolean
 }
 
 export type BodyWithYesOrNo<K extends string> = { [T in K]?: YesOrNo }
@@ -259,8 +257,6 @@ export const mapAcctAlertsForPageBody = (acctAlerts: Array<PersonAcctAlert>): Ar
     comment: acctAlert.comment || '',
     dateCreated: acctAlert.dateCreated,
     dateExpires: acctAlert.dateExpires || '',
-    expired: acctAlert.expired,
-    active: acctAlert.active,
   }))
 }
 

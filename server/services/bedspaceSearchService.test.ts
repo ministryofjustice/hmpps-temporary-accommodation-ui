@@ -2,7 +2,7 @@ import { ReferenceDataClient } from '../data'
 import BedClient from '../data/bedClient'
 import { CallConfig } from '../data/restClient'
 import {
-  bedSearchParametersFactory,
+  bedSearchApiParametersFactory,
   bedSearchResultsFactory,
   pduFactory,
   probationRegionFactory,
@@ -32,7 +32,7 @@ describe('BedspaceSearchService', () => {
   describe('search', () => {
     it('returns search results for the provided search paramters', async () => {
       const searchResults = bedSearchResultsFactory.build()
-      const searchParameters = bedSearchParametersFactory.build()
+      const searchParameters = bedSearchApiParametersFactory.build()
 
       bedClient.search.mockResolvedValue(searchResults)
 

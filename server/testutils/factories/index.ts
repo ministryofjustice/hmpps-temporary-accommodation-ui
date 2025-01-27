@@ -8,7 +8,7 @@ import assessmentFactory from './assessment'
 import assessmentSearchParametersFactory from './assessmentSearchParameters'
 import assessmentSummaryFactory from './assessmentSummary'
 import bedFactory from './bed'
-import bedSearchParametersFactory from './bedSearchParameters'
+import bedSearchApiParametersFactory from './bedSearchApiParameters'
 import bedSearchResultFactory from './bedSearchResult'
 import bedSearchResultsFactory from './bedSearchResults'
 import bookingFactory from './booking'
@@ -81,7 +81,7 @@ export {
   assessmentSearchParametersFactory,
   assessmentSummaryFactory,
   bedFactory,
-  bedSearchParametersFactory,
+  bedSearchApiParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
   bookingFactory,

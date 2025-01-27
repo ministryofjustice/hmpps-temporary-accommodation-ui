@@ -169,17 +169,13 @@
           "alertId": 47419,
           "dateCreated": "2022-12-05",
           "dateExpires": "2023-05-29",
-          "comment": "Soluta harum harum hic maxime reprehenderit quis harum necessitatibus.",
-          "expired": false,
-          "active": true
+          "comment": "Soluta harum harum hic maxime reprehenderit quis harum necessitatibus."
         },
         {
           "alertId": 429,
           "dateCreated": "2022-05-21",
           "dateExpires": "2023-12-16",
-          "comment": "Quia ex nisi deserunt voluptatibus sit ipsa.",
-          "expired": false,
-          "active": true
+          "comment": "Quia ex nisi deserunt voluptatibus sit ipsa."
         }
       ]
     }

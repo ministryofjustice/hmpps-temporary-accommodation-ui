@@ -22,6 +22,10 @@ export default class TaskListPage extends Page {
     cy.get('button').should('not.exist')
   }
 
+  shouldShowDeleteOption(): void {
+    cy.get('a').contains('Delete referral')
+  }
+
   clickTask(task: string): void {
     cy.get(`[data-cy-task-name="${task}"]`).click()
   }

@@ -67,11 +67,19 @@
                 {% endif %}
             </form>
 
-            {{ govukButton({
-                text: "Save and come back later",
-                classes: "govuk-button--secondary",
-                href: paths.applications.index({})
-            }) }}
+            <div class="govuk-button-group">
+                {{ govukButton({
+                    text: "Save and come back later",
+                    classes: "govuk-button--primary",
+                    href: paths.applications.index({})
+                }) }}
+
+                {{ govukButton({
+                    text: "Delete referral",
+                    classes: "govuk-button--secondary",
+                    href: paths.applications.delete({ id: application.id })
+                }) }}
+            </div>
         </div>
 
         {% if not oasysDisabled %}

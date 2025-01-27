@@ -30,6 +30,14 @@ export default class ApplicationService {
     return application
   }
 
+  async deleteApplication(callConfig: CallConfig, id: string): Promise<Application> {
+    const applicationClient = this.applicationClientFactory(callConfig)
+
+    const deleteResponse = await applicationClient.delete(id)
+
+    return deleteResponse
+  }
+
   async getAllForLoggedInUser(callConfig: CallConfig): Promise<GroupedApplications> {
     const applicationClient = this.applicationClientFactory(callConfig)
     const allApplications = await applicationClient.all()

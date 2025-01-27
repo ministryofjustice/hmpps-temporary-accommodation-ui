@@ -68,12 +68,14 @@ const oasysPath = personPath.path('oasys')
 const cas3Path = path('/cas3')
 const reportsCas3Path = cas3Path.path('reports')
 const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
+const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
 
 const applyPaths = {
   applications: {
     show: singleApplicationPath,
     create: applicationsPath,
     index: applicationsPath,
+    delete: singleApplicationPath.path('delete'),
     update: singleApplicationPath,
     submission: singleApplicationPath.path('submission'),
   },
@@ -113,6 +115,7 @@ export default {
     show: applyPaths.applications.show,
     index: applyPaths.applications.index,
     update: applyPaths.applications.update,
+    delete: deleteApplicationCas3Path,
     new: applyPaths.applications.create,
     submission: applyPaths.applications.submission,
     documents: applyPaths.applications.show.path('documents'),

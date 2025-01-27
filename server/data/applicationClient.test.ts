@@ -164,4 +164,20 @@ describe('ApplicationClient', () => {
       expect(nock.isDone()).toBeTruthy()
     })
   })
+
+  describe('delete', () => {
+    it('should delete an application when a DELETE request is made', async () => {
+      const application = applicationFactory.build()
+
+      fakeApprovedPremisesApi
+        .delete(paths.applications.delete({ id: application.id }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200)
+
+      const result = await applicationClient.delete(application.id)
+
+      expect(result).toEqual({})
+      expect(nock.isDone()).toBeTruthy()
+    })
+  })
 })

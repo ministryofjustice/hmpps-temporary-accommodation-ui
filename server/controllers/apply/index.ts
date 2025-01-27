@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 import ApplicationsController from './applicationsController'
+import DeleteController from './applications/deleteController'
 import PagesController from './applications/pagesController'
 import OffencesController from './people/offencesController'
 import DocumentsController from './people/documentsController'
@@ -19,9 +20,11 @@ export const controllers = (services: Services) => {
   const offencesController = new OffencesController(personService)
   const documentsController = new DocumentsController(personService)
   const peopleController = new PeopleController(personService)
+  const deleteController = new DeleteController(applicationService)
 
   return {
     applicationsController,
+    deleteController,
     pagesController,
     offencesController,
     documentsController,

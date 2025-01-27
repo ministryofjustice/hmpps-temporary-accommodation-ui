@@ -423,6 +423,18 @@ describe('ApplicationService', () => {
     })
   })
 
+  describe('deletApplication', () => {
+    const application = applicationFactory.build({ data: { 'some-task': { 'other-page': { question: 'answer' } } } })
+    const callConfig = { token: 'some-token' } as CallConfig
+
+    it('calls the delete method', async () => {
+      await service.deleteApplication(callConfig, application.id)
+
+      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(applicationClient.delete).toHaveBeenCalledWith(application.id)
+    })
+  })
+
   describe('submit', () => {
     const callConfig = { token: 'some-token' } as CallConfig
     const application = applicationFactory.build()

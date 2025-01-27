@@ -1,0 +1,61 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "../components/formFields/form-page-radios/macro.njk" import formPageRadios %}
+{% from "../partials/showErrorSummary.njk" import showErrorSummary %}
+
+{% extends "../partials/layout.njk" %}
+
+{% set mainClasses = "app-container govuk-body" %}
+{% set name = personName(application.person) %}
+{% set pageTitle = "Confirm delete for " + name + " - " + applicationName %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.applications.show({ id: application.id })
+    }) }}
+{% endblock %}
+
+{% block content %}
+
+{{ showErrorSummary(errorSummary) }}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop">
+        <form action="{{ paths.applications.delete({ id: application.id }) }}" method="post">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+            {{ formPageRadios({
+                fieldName: "confirmDelete",
+                fieldset: {
+                    legend: {
+                        text: "Are you sure you want to delete referral for " + name + "?",
+                        isPageHeading: true,
+                        classes: "govuk-fieldset__legend--l"
+                    }
+                },
+                hint: {
+                    text: "If you select Yes, the referral will be deleted permanently"
+                },
+                items: [
+                {
+                    value: "yes",
+                    text: "Yes"
+                },
+                {
+                    value: "no",
+                    text: "No"
+                }
+                ]
+            }, fetchContext()) }}
+
+            {{ govukButton({
+                text: "Save and continue",
+                preventDoubleClick: true
+            }) }}
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,7 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
-  bedSearchApiParametersFactory,
+  bedSearchFormParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
   overlapFactory,
@@ -56,7 +56,7 @@ context('Bedspace Search', () => {
     const results = bedSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchApiParametersFactory.build()
+    const searchParameters = bedSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -68,7 +68,7 @@ context('Bedspace Search', () => {
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
       expect(requestBody.probationDeliveryUnits).to.have.members(searchParameters.probationDeliveryUnits)
-      expect(requestBody.attributes).to.have.members(searchParameters.attributes)
+      expect(requestBody.attributes).to.include.members(searchParameters.attributes)
     })
 
     // And I should see the search results
@@ -96,7 +96,7 @@ context('Bedspace Search', () => {
     })
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchApiParametersFactory.build()
+    const searchParameters = bedSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -108,7 +108,7 @@ context('Bedspace Search', () => {
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
       expect(requestBody.probationDeliveryUnits).to.include.members(searchParameters.probationDeliveryUnits)
-      expect(requestBody.attributes).to.have.members(searchParameters.attributes)
+      expect(requestBody.attributes).to.include.members(searchParameters.attributes)
     })
 
     // And I should see empty search results
@@ -138,7 +138,7 @@ context('Bedspace Search', () => {
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
-    const searchParameters = bedSearchApiParametersFactory.build()
+    const searchParameters = bedSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -195,7 +195,7 @@ context('Bedspace Search', () => {
     })
 
     // And when I fill out the form
-    const searchParameters = bedSearchApiParametersFactory.build()
+    const searchParameters = bedSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -243,7 +243,7 @@ context('Bedspace Search', () => {
     const results = bedSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchApiParametersFactory.build()
+    const searchParameters = bedSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -276,7 +276,7 @@ context('Bedspace Search', () => {
     const results = bedSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchApiParametersFactory.build()
+    const searchParameters = bedSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 

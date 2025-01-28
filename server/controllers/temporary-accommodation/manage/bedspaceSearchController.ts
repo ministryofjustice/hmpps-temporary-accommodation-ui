@@ -54,15 +54,21 @@ export default class BedspaceSearchController {
 
           const durationDays = parseNumber(query.durationDays)
 
-          const selectedAttributes: BedSearchAttributes[] = [
-            ...((req.query.occupancyAttributes as BedspaceOccupancyAttributes[]) ?? []),
+          const selectedAttributes = [
+            ...(
+              [
+                req.query.occupancyAttribute && req.query.occupancyAttribute !== 'all'
+                  ? req.query.occupancyAttribute
+                  : null,
+              ] as BedspaceOccupancyAttributes[]
+            ).filter(Boolean),
             ...((req.query.attributes as BedspaceAccessiblityAttributes[]) ?? []),
           ]
 
           results = (
             await this.searchService.search(callConfig, {
               ...query,
-              attributes: selectedAttributes,
+              attributes: selectedAttributes as BedSearchAttributes[],
               startDate,
               durationDays,
             })
@@ -82,6 +88,7 @@ export default class BedspaceSearchController {
           errors,
           errorSummary,
           durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
+          occupancyAttribute: req.query.occupancyAttribute || 'all',
           ...startDatePrefill,
           ...query,
           ...userInput,

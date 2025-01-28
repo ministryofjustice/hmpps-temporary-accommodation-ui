@@ -336,3 +336,11 @@ export type PrimaryNavigationItem = {
 export type BedspaceOccupancyAttributes = 'isSharedProperty' | 'isSingleOccupancy'
 
 export type BedspaceAccessiblityAttributes = 'isWheelchairAccessible'
+
+export type BedSearchFormParameters = {
+  startDate: string
+  durationDays: number
+  probationDeliveryUnits: Array<string>
+  occupancyAttribute: 'all' | BedspaceOccupancyAttributes
+  attributes?: Array<BedspaceAccessiblityAttributes>
+}

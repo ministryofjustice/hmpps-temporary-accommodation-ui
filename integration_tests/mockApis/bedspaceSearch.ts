@@ -1,9 +1,9 @@
-import type { SuperAgentRequest } from 'superagent'
+import type { Response, SuperAgentRequest } from 'superagent'
 import { BedSearchResults } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
-import { pdus } from '../../wiremock/referenceDataStubs'
+import { characteristics, pdus } from '../../wiremock/referenceDataStubs'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
@@ -28,5 +28,6 @@ export default {
         url: api.beds.search({}),
       })
     ).body.requests,
-  stubBedspaceSearchReferenceData: () => stubFor(pdus),
+  stubBedspaceSearchReferenceData: (): Promise<[Response, Response]> =>
+    Promise.all([stubFor(pdus), stubFor(characteristics)]),
 }

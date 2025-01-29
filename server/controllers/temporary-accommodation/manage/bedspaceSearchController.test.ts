@@ -26,6 +26,7 @@ describe('BedspaceSearchController', () => {
 
   const referenceData = {
     pdus: referenceDataFactory.pdu().buildList(5),
+    wheelchairAccessibility: referenceDataFactory.characteristic('room').buildList(2),
   }
 
   let request: Request

@@ -4,6 +4,7 @@ import { CallConfig } from '../data/restClient'
 import {
   bedSearchApiParametersFactory,
   bedSearchResultsFactory,
+  characteristicFactory,
   pduFactory,
   probationRegionFactory,
 } from '../testutils/factories'
@@ -49,21 +50,38 @@ describe('BedspaceSearchService', () => {
   })
 
   describe('getReferenceData', () => {
-    it('returns sorted PDUs', async () => {
+    it('returns sorted PDUs and wheelchair accessibility characteristic', async () => {
       const pdu1 = pduFactory.build({ name: 'HIJ' })
       const pdu2 = pduFactory.build({ name: 'LMN' })
       const pdu3 = pduFactory.build({ name: 'PQR' })
 
-      referenceDataClient.getReferenceData.mockResolvedValue([pdu2, pdu3, pdu1])
+      const roomCharacteristic = characteristicFactory.build({
+        name: 'ABC',
+        modelScope: 'room',
+        propertyName: 'isWheelchairAccessible',
+      })
+
+      referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
+        if (objectType === 'probation-delivery-units') {
+          return [pdu2, pdu3, pdu1]
+        }
+        if (objectType === 'characteristics') {
+          return [roomCharacteristic]
+        }
+        return []
+      })
 
       const result = await service.getReferenceData(callConfig)
+
       expect(result).toEqual({
         pdus: [pdu1, pdu2, pdu3],
+        wheelchairAccessibility: [roomCharacteristic],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
         probationRegionId: callConfig.probationRegion.id,
       })
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
     })
   })
 })

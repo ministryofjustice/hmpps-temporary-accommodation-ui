@@ -1,11 +1,16 @@
-import type { TemporaryAccommodationBedSearchParameters as BedSearchParameters } from '@approved-premises/api'
+import type {
+  TemporaryAccommodationBedSearchParameters as BedSearchParameters,
+  Characteristic,
+} from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import BedClient from '../data/bedClient'
 import { CallConfig } from '../data/restClient'
+import { filterCharacteristics } from '../utils/characteristicUtils'
 
 export type BedspaceSearchReferenceData = {
   pdus: Array<ReferenceData>
+  wheelchairAccessibility: Array<Characteristic>
 }
 
 export default class BedspaceSearchService {
@@ -32,6 +37,17 @@ export default class BedspaceSearchService {
       })
     ).sort((a, b) => a.name.localeCompare(b.name))
 
-    return { pdus }
+    const bedspaceAttributes = filterCharacteristics(
+      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+      'room',
+    ).sort((a, b) => a.name.localeCompare(b.name))
+
+    const wheelchairAccessibility = this.filterByPropertyName(bedspaceAttributes, 'isWheelchairAccessible')
+
+    return { pdus, wheelchairAccessibility }
+  }
+
+  private filterByPropertyName(characteristics: Characteristic[], propertyName: string): Characteristic[] {
+    return characteristics.filter(item => item.propertyName === propertyName)
   }
 }

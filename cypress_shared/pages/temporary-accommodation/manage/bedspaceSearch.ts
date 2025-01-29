@@ -61,13 +61,17 @@ export default class BedspaceSearchPage extends Page {
 
     this.getLegend('Property attributes')
     this.getLegend('Occupancy')
-    this.checkRadioByNameAndValue('occupancyAttribute', searchParameters.occupancyAttribute)
+    if (typeof searchParameters.occupancyAttribute !== 'undefined') {
+      this.checkRadioByNameAndValue('occupancyAttribute', searchParameters.occupancyAttribute)
+    }
 
     this.getLegend('Bedspace attributes')
     this.getLegend('Accessibility (optional)')
-    searchParameters.attributes.forEach(attribute => {
-      this.checkCheckboxByNameAndValue('attributes[]', attribute)
-    })
+    if (typeof searchParameters.attributes[0] !== 'undefined') {
+      searchParameters.attributes.forEach(attribute => {
+        this.checkCheckboxByNameAndValue('attributes[]', attribute)
+      })
+    }
   }
 
   clickBedspaceLink(room: Room) {

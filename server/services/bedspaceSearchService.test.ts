@@ -50,13 +50,25 @@ describe('BedspaceSearchService', () => {
   })
 
   describe('getReferenceData', () => {
-    it('returns sorted PDUs and wheelchair accessibility characteristic', async () => {
+    it('returns sorted PDUs, wheelchair accessibility and occupancy characteristics', async () => {
       const pdu1 = pduFactory.build({ name: 'HIJ' })
       const pdu2 = pduFactory.build({ name: 'LMN' })
       const pdu3 = pduFactory.build({ name: 'PQR' })
 
-      const roomCharacteristic = characteristicFactory.build({
+      const premisesCharacteristic1 = characteristicFactory.build({
         name: 'ABC',
+        modelScope: 'premises',
+        propertyName: 'isSharedProperty',
+      })
+
+      const premisesCharacteristic2 = characteristicFactory.build({
+        name: 'DEF',
+        modelScope: 'premises',
+        propertyName: 'isSingleOccupancy',
+      })
+
+      const roomCharacteristic = characteristicFactory.build({
+        name: 'GHI',
         modelScope: 'room',
         propertyName: 'isWheelchairAccessible',
       })
@@ -66,7 +78,7 @@ describe('BedspaceSearchService', () => {
           return [pdu2, pdu3, pdu1]
         }
         if (objectType === 'characteristics') {
-          return [roomCharacteristic]
+          return [roomCharacteristic, premisesCharacteristic1, premisesCharacteristic2]
         }
         return []
       })
@@ -76,6 +88,7 @@ describe('BedspaceSearchService', () => {
       expect(result).toEqual({
         pdus: [pdu1, pdu2, pdu3],
         wheelchairAccessibility: [roomCharacteristic],
+        occupancy: [premisesCharacteristic1, premisesCharacteristic2],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {

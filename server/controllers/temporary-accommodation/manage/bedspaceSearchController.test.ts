@@ -24,9 +24,19 @@ jest.mock('../../../utils/placeUtils')
 describe('BedspaceSearchController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
+  const occupancy = [{ propertyName: 'isSingleOccupancy' }, { propertyName: 'isSharedProperty' }].map(params =>
+    referenceDataFactory.characteristic('premises').build(params),
+  )
+
+  const wheelchairAccessibility = referenceDataFactory
+    .characteristic('room')
+    .params({ propertyName: 'isWheelchairAccessible' })
+    .buildList(1)
+
   const referenceData = {
     pdus: referenceDataFactory.pdu().buildList(5),
-    wheelchairAccessibility: referenceDataFactory.characteristic('room').buildList(2),
+    wheelchairAccessibility,
+    occupancy,
   }
 
   let request: Request

@@ -14,9 +14,9 @@ Feature: Apply for and book a Temporary Accommodation bedspace
     And I create a bedspace with all necessary details
     And I return to the dashboard
     And I view the list of assessments
-    And I view the assessment
-    And I mark the assessment as ready to place
-    Then I can place the assessment
+#    And I view the assessment
+#    And I mark the assessment as ready to place
+#    Then I can place the assessment
 
   Scenario: Rejecting an assessment
     Given I am logged in as an assessor

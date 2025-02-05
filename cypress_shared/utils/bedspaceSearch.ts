@@ -1,23 +1,14 @@
-import { Characteristic, Room, TemporaryAccommodationPremises } from '../../server/@types/shared'
-import { BedSearchFormParameters } from '../../server/@types/ui'
+import { BedSearchAttributes, Characteristic, TemporaryAccommodationPremises } from '../../server/@types/shared'
 
-export const characteristicsToSearchAttributes = (premises: TemporaryAccommodationPremises, room: Room) => {
-  const occupancyAttributesMap: Record<string, BedSearchFormParameters['occupancyAttribute']> = {
-    All: 'all',
+export const characteristicsToSearchAttributes = (
+  premises: TemporaryAccommodationPremises,
+): Array<BedSearchAttributes> => {
+  const characteristicsToSearchAttributesMap: Record<string, BedSearchAttributes> = {
     'Shared property': 'isSharedProperty',
     'Single occupancy': 'isSingleOccupancy',
   }
-  const wheelchairAccessibilityMap: Record<string, string> = {
-    'Wheelchair accessible': 'isWheelchairAccessible',
-  }
 
-  const premisesOccupancyAttribute = premises.characteristics
-    .map((characteristic: Characteristic) => occupancyAttributesMap[characteristic.name])
-    .find(attribute => attribute !== undefined)
-
-  const wheelchairAccessibility = room.characteristics
-    .map((characteristic: Characteristic) => wheelchairAccessibilityMap[characteristic.name])
-    .find(attribute => attribute !== undefined)
-
-  return { premisesOccupancyAttribute, wheelchairAccessibility }
+  return premises.characteristics
+    .map((characteristic: Characteristic) => characteristicsToSearchAttributesMap[characteristic.name])
+    .filter(Boolean)
 }

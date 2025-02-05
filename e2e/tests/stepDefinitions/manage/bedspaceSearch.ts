@@ -1,10 +1,9 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
-import { BedSearchFormParameters } from '@approved-premises/ui'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import BedspaceSearchPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/bedspaceSearch'
 import {
-  bedSearchFormParametersFactory,
+  bedSearchApiParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
 } from '../../../../server/testutils/factories'
@@ -21,12 +20,9 @@ Given('I search for a bedspace', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceSearchPage)
 
-    const searchParameters = bedSearchFormParametersFactory.build({
+    const searchParameters = bedSearchApiParametersFactory.build({
       probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
-      occupancyAttribute: characteristicsToSearchAttributes(this.premises, this.room).premisesOccupancyAttribute,
-      attributes: [
-        characteristicsToSearchAttributes(this.premises, this.room).wheelchairAccessibility,
-      ] as BedSearchFormParameters['attributes'],
+      attributes: characteristicsToSearchAttributes(this.premises),
     })
 
     page.completeForm(searchParameters)

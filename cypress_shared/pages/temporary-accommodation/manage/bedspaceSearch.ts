@@ -1,5 +1,10 @@
-import { BedSearchResults, Room, TemporaryAccommodationBedSearchResult } from '../../../../server/@types/shared'
-import { BedSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
+import {
+  TemporaryAccommodationBedSearchParameters as BedSearchParameters,
+  BedSearchResults,
+  Room,
+  TemporaryAccommodationBedSearchResult,
+} from '../../../../server/@types/shared'
+import { PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
@@ -39,7 +44,7 @@ export default class BedspaceSearchPage extends Page {
     cy.get('h2').should('contain', 'There are no available bedspaces')
   }
 
-  shouldShowPrefilledSearchParameters(searchParameters: BedSearchFormParameters) {
+  shouldShowPrefilledSearchParameters(searchParameters: BedSearchParameters) {
     this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
     this.shouldShowTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     searchParameters.probationDeliveryUnits.forEach(pduId => {
@@ -51,7 +56,7 @@ export default class BedspaceSearchPage extends Page {
     this.shouldShowDateInputsByLegend('Available from', placeContext.assessment.accommodationRequiredFromDate)
   }
 
-  completeForm(searchParameters: BedSearchFormParameters) {
+  completeForm(searchParameters: BedSearchParameters) {
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
 
@@ -60,14 +65,20 @@ export default class BedspaceSearchPage extends Page {
     })
 
     this.getLegend('Property attributes')
-    this.getLegend('Occupancy')
-    this.checkRadioByNameAndValue('occupancyAttribute', searchParameters.occupancyAttribute)
+    this.getLegend('Occupancy (optional)')
+    searchParameters.attributes
+      .filter(attribute => attribute !== 'isWheelchairAccessible')
+      .forEach(attribute => {
+        this.checkCheckboxByNameAndValue('occupancyAttributes[]', attribute)
+      })
 
     this.getLegend('Bedspace attributes')
     this.getLegend('Accessibility (optional)')
-    searchParameters.attributes.forEach(attribute => {
-      this.checkCheckboxByNameAndValue('attributes[]', attribute)
-    })
+    searchParameters.attributes
+      .filter(attribute => attribute === 'isWheelchairAccessible')
+      .forEach(attribute => {
+        this.checkCheckboxByNameAndValue('attributes[]', attribute)
+      })
   }
 
   clickBedspaceLink(room: Room) {

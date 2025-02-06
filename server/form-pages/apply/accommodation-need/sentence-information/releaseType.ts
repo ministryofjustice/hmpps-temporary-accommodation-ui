@@ -16,12 +16,24 @@ export const releaseTypes: Record<string, { text: string; abbr: string }> = {
     abbr: 'ECSL',
   },
   fixedTermRecall: {
-    text: 'Licence, following fixed-term recall',
+    text: 'Licence following fixed-term recall',
     abbr: 'Fixed-term recall',
   },
   standardRecall: {
-    text: 'Licence, following standard recall',
+    text: 'Licence following standard recall',
     abbr: 'Standard recall',
+  },
+  nonPresumptiveRarr: {
+    text: 'Licence following Non-Presumptive Risk Assessed Recall Review (NP-RARR)',
+    abbr: 'Non-Presumptive RARR',
+  },
+  presumptiveRarr: {
+    text: 'Licence following Presumptive RARR',
+    abbr: 'Presumptive RARR',
+  },
+  indeterminatePublicProtectionRarr: {
+    text: 'Licence following Indeterminate Public Protection RARR',
+    abbr: 'Indeterminate Public Protection RARR',
   },
   parole: {
     text: 'Parole',

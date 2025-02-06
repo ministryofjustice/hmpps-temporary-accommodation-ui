@@ -201,12 +201,24 @@ describe('ReleaseType', () => {
           value: 'crdLicence',
         },
         {
-          name: 'Licence, following fixed-term recall',
+          name: 'Licence following fixed-term recall',
           value: 'fixedTermRecall',
         },
         {
-          name: 'Licence, following standard recall',
+          name: 'Licence following standard recall',
           value: 'standardRecall',
+        },
+        {
+          name: 'Licence following Non-Presumptive Risk Assessed Recall Review (NP-RARR)',
+          value: 'nonPresumptiveRarr',
+        },
+        {
+          name: 'Licence following Presumptive RARR',
+          value: 'presumptiveRarr',
+        },
+        {
+          name: 'Licence following Indeterminate Public Protection RARR',
+          value: 'indeterminatePublicProtectionRarr',
         },
         {
           name: 'Parole',
@@ -247,12 +259,24 @@ describe('ReleaseType', () => {
           value: 'ecsl',
         },
         {
-          name: 'Licence, following fixed-term recall',
+          name: 'Licence following fixed-term recall',
           value: 'fixedTermRecall',
         },
         {
-          name: 'Licence, following standard recall',
+          name: 'Licence following standard recall',
           value: 'standardRecall',
+        },
+        {
+          name: 'Licence following Non-Presumptive Risk Assessed Recall Review (NP-RARR) – also known as standard RARR',
+          value: 'nonPresumptiveRarr',
+        },
+        {
+          name: 'Licence following Presumptive RARR',
+          value: 'presumptiveRarr',
+        },
+        {
+          name: 'Licence following Indeterminate Public Protection RARR',
+          value: 'indeterminatePublicProtectionRarr',
         },
         {
           name: 'Parole',

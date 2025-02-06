@@ -345,7 +345,17 @@ describe('reportDataFromApplication', () => {
         data: {
           'sentence-information': {
             'release-type': {
-              releaseTypes: ['crdLicence', 'ecsl', 'fixedTermRecall', 'standardRecall', 'parole', 'pss'],
+              releaseTypes: [
+                'crdLicence',
+                'ecsl',
+                'fixedTermRecall',
+                'standardRecall',
+                'nonPresumptiveRarr',
+                'presumptiveRarr',
+                'indeterminatePublicProtectionRarr',
+                'parole',
+                'pss',
+              ],
             },
           },
         },
@@ -356,6 +366,9 @@ describe('reportDataFromApplication', () => {
         'ECSL',
         'Fixed-term recall',
         'Standard recall',
+        'Non-Presumptive RARR',
+        'Presumptive RARR',
+        'Indeterminate Public Protection RARR',
         'Parole',
         'PSS',
       ])

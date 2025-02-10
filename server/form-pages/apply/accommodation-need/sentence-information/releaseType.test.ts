@@ -134,13 +134,29 @@ describe('ReleaseType', () => {
       })
     })
 
-    it('returns an error if both licence checkboxes are selected', () => {
+    it('returns an error if more than one recall licence checkboxes are selected', () => {
       const page = new ReleaseType(
-        { releaseTypes: ['fixedTermRecall', 'standardRecall'] } as ReleaseTypeBody,
+        {
+          releaseTypes: [
+            'fixedTermRecall',
+            'standardRecall',
+            'nonPresumptiveRarr',
+            'presumptiveRarr',
+            'indeterminatePublicProtectionRarr',
+          ],
+        } as ReleaseTypeBody,
         application,
       )
 
       expect(page.errors()).toEqual({
+        releaseTypes: 'Select one type of recall or RARR licence',
+      })
+    })
+
+    it('returns does not return error if one recall licence checkboxes are selected and other release types', () => {
+      const page = new ReleaseType({ releaseTypes: ['fixedTermRecall', 'parole'] } as ReleaseTypeBody, application)
+
+      expect(page.errors()).not.toEqual({
         releaseTypes: 'Select one type of recall licence',
       })
     })

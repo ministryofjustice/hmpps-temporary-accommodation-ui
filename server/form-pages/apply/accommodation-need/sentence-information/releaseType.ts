@@ -120,11 +120,8 @@ export default class ReleaseType implements TasklistPage {
 
     if (!this.body.releaseTypes?.length) {
       errors.releaseTypes = 'You must specify the release types'
-    } else if (
-      this.body.releaseTypes.includes('fixedTermRecall') &&
-      this.body.releaseTypes.includes('standardRecall')
-    ) {
-      errors.releaseTypes = 'Select one type of recall licence'
+    } else if (this.checkOnlyOneLicenseTypeIsSelected()) {
+      errors.releaseTypes = 'Select one type of recall or RARR licence'
     } else if (
       this.body.releaseTypes.includes('parole') &&
       (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
@@ -167,5 +164,20 @@ export default class ReleaseType implements TasklistPage {
         !optionsToExclude.includes(item.value) ||
         this._body.releaseTypes?.filter(type => optionsToExclude.includes(type)).length > 0,
     )
+  }
+
+  checkOnlyOneLicenseTypeIsSelected() {
+    const licenseTypes = [
+      'fixedTermRecall',
+      'standardRecall',
+      'nonPresumptiveRarr',
+      'presumptiveRarr',
+      'indeterminatePublicProtectionRarr',
+    ]
+
+    const licenseMatches = this.body.releaseTypes.filter(release => licenseTypes.includes(release))
+
+    // Check if there is more than one match from licenseTypes
+    return licenseMatches.length > 1
   }
 }

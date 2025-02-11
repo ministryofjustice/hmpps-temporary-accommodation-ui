@@ -11,10 +11,6 @@ export const releaseTypes: Record<string, { text: string; abbr: string }> = {
     text: 'Conditional release date (CRD) licence',
     abbr: 'CRD licence',
   },
-  ecsl: {
-    text: 'End of custody supervised licence (ECSL)',
-    abbr: 'ECSL',
-  },
   fixedTermRecall: {
     text: 'Licence following fixed-term recall',
     abbr: 'Fixed-term recall',

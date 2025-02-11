@@ -347,7 +347,6 @@ describe('reportDataFromApplication', () => {
             'release-type': {
               releaseTypes: [
                 'crdLicence',
-                'ecsl',
                 'fixedTermRecall',
                 'standardRecall',
                 'nonPresumptiveRarr',
@@ -363,7 +362,6 @@ describe('reportDataFromApplication', () => {
 
       expect(releaseTypesFromApplication(application)).toEqual([
         'CRD licence',
-        'ECSL',
         'Fixed-term recall',
         'Standard recall',
         'Non-Presumptive RARR',

@@ -8,7 +8,7 @@ context('Place', () => {
     setupTestUser('assessor')
   })
 
-  it('allows the user progress along the "place" joureny', () => {
+  it('allows the user progress along the "place" journey', () => {
     // Given I am signed in
     cy.signIn()
 

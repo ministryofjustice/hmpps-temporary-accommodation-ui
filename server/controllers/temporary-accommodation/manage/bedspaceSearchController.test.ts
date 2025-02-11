@@ -6,7 +6,7 @@ import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import {
   assessmentFactory,
-  bedSearchApiParametersFactory,
+  bedSearchFormParametersFactory,
   bedSearchResultsFactory,
   placeContextFactory,
   referenceDataFactory,
@@ -60,6 +60,7 @@ describe('BedspaceSearchController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
           allPdus: referenceData.pdus,
+          occupancyAttribute: 'all',
           errors: {},
           errorSummary: [],
           durationDays: DEFAULT_DURATION_DAYS,
@@ -86,7 +87,7 @@ describe('BedspaceSearchController', () => {
       })
 
       it('renders with errors if the API returns an error', async () => {
-        const searchParameters = bedSearchApiParametersFactory.build()
+        const searchParameters = bedSearchFormParametersFactory.build()
         const placeContext = placeContextFactory.build()
 
         request.query = {
@@ -123,7 +124,7 @@ describe('BedspaceSearchController', () => {
 
     describe('when showing results', () => {
       it('renders the search results page with search results when given a search query', async () => {
-        const searchParameters = bedSearchApiParametersFactory.build()
+        const searchParameters = bedSearchFormParametersFactory.build()
 
         request.query = {
           ...searchParameters,
@@ -141,6 +142,7 @@ describe('BedspaceSearchController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/results', {
           allPdus: referenceData.pdus,
+          occupancyAttribute: 'all',
           results: searchResults.results,
           errors: {},
           errorSummary: [],
@@ -149,7 +151,7 @@ describe('BedspaceSearchController', () => {
       })
 
       it('updates the place context when given a search query', async () => {
-        const searchParameters = bedSearchApiParametersFactory.build()
+        const searchParameters = bedSearchFormParametersFactory.build()
         const placeContext = placeContextFactory.build()
 
         request.query = {

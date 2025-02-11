@@ -1,5 +1,6 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "../../../components/formFields/form-page-checkboxes/macro.njk" import formPageCheckboxes %}
+{% from "../../../components/formFields/form-page-radios/macro.njk" import formPageRadios %}
 {% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
 {% from "../../../components/formFields/form-page-input/macro.njk" import formPageInput %}
 {% from "../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
@@ -65,23 +66,21 @@
 		        classes: "govuk-fieldset__legend--m"
 		    }
 		}) %}
-		    {{ formPageCheckboxes({
-		        classes: "govuk-checkboxes--small",
-		        fieldName: "occupancyAttributes",
-		        fieldset: {
-		            legend: {
-		                text: "Occupancy (optional)",
-		                classes: "govuk-fieldset__legend--s"
-		            }
-		        },
-		        hint: {
-		            text: "Select all that apply"
-		        },
-		        items: [
-		            { text: "Single", value: "isSingleOccupancy" },
-		            { text: "Shared", value: "isSharedProperty" }
-		        ]
-		    }, fetchContext()) }}
+      {{ formPageRadios({
+        classes: "govuk-radios--small",
+        fieldName: "occupancyAttribute",
+        fieldset: {
+          legend: {
+            text: "Occupancy",
+            classes: "govuk-fieldset__legend--s"
+          }
+        },
+        items: [
+          { text: "All", value: "all" },
+          { text: "Single", value: "isSingleOccupancy" },
+          { text: "Shared", value: "isSharedProperty" }
+        ]
+      }, fetchContext()) }}
 		{% endcall %}
 	</div>
 	<div class="govuk-form-group">

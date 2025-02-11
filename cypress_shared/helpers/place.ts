@@ -9,7 +9,7 @@ import {
 import { PlaceContext } from '../../server/@types/ui'
 import {
   assessmentSummaryFactory,
-  bedSearchApiParametersFactory,
+  bedSearchFormParametersFactory,
   bedSearchResultFactory,
   bedSearchResultsFactory,
   bookingFactory,
@@ -25,7 +25,6 @@ import BookingConfirmPage from '../pages/temporary-accommodation/manage/bookingC
 import BookingNewPage from '../pages/temporary-accommodation/manage/bookingNew'
 import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage/bookingSelectAssessment'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
-import { characteristicsToSearchAttributes } from '../utils/bedspaceSearch'
 
 export default class PlaceHelper {
   private readonly bedSearchResults: BedSearchResults
@@ -111,12 +110,11 @@ export default class PlaceHelper {
   private bedspaceSearchToSearchResults() {
     // Given I am viewing the bedspace search page
     const bedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage)
-
     // When I fill out the form
-    const searchParameters = bedSearchApiParametersFactory.build({
+
+    const searchParameters = bedSearchFormParametersFactory.build({
       startDate: this.placeContext.arrivalDate,
       probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
-      attributes: characteristicsToSearchAttributes(this.premises),
     })
 
     bedspaceSearchPage.completeForm(searchParameters)

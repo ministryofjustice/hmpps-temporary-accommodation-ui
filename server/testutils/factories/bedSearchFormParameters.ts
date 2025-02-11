@@ -9,5 +9,5 @@ export default Factory.define<BedSearchFormParameters>(() => ({
   durationDays: faker.number.int({ min: 1, max: 10 }),
   probationDeliveryUnits: [referenceData.pdu().build().id, referenceData.pdu().build().id],
   occupancyAttribute: 'all',
-  attributes: ['isWheelchairAccessible'],
+  attributes: [],
 }))

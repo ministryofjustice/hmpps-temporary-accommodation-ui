@@ -11,6 +11,7 @@ import { filterCharacteristics } from '../utils/characteristicUtils'
 export type BedspaceSearchReferenceData = {
   pdus: Array<ReferenceData>
   wheelchairAccessibility: Array<Characteristic>
+  occupancy: Array<Characteristic>
 }
 
 export default class BedspaceSearchService {
@@ -42,12 +43,20 @@ export default class BedspaceSearchService {
       'room',
     ).sort((a, b) => a.name.localeCompare(b.name))
 
-    const wheelchairAccessibility = this.filterByPropertyName(bedspaceAttributes, 'isWheelchairAccessible')
+    const premisesAttributes = filterCharacteristics(
+      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+      'premises',
+    ).sort((a, b) => a.name.localeCompare(b.name))
 
-    return { pdus, wheelchairAccessibility }
+    const wheelchairAccessibility = this.filterByPropertyNames(bedspaceAttributes, 'isWheelchairAccessible')
+    const occupancy = this.filterByPropertyNames(premisesAttributes, ['isSharedProperty', 'isSingleOccupancy'])
+
+    return { pdus, wheelchairAccessibility, occupancy }
   }
 
-  private filterByPropertyName(characteristics: Characteristic[], propertyName: string): Characteristic[] {
-    return characteristics.filter(item => item.propertyName === propertyName)
+  private filterByPropertyNames(characteristics: Characteristic[], propertyNames: string | string[]): Characteristic[] {
+    const propertyNamesArray = Array.isArray(propertyNames) ? propertyNames : [propertyNames]
+
+    return characteristics.filter(item => propertyNamesArray.includes(item.propertyName))
   }
 }

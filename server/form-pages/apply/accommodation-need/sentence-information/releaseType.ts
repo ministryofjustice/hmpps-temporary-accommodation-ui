@@ -2,6 +2,7 @@ import { TemporaryAccommodationApplication as Application } from '@approved-prem
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 import errorLookupData from '../../../../i18n/en/errors.json'
+import labelLookupData from '../../../../i18n/en/application/releaseType.json'
 
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
@@ -169,7 +170,7 @@ export default class ReleaseType implements TasklistPage {
       (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
     ) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
-    } else if (this.checkCRDNotSelectedWithRecallLicenseTypes()){
+    } else if (this.checkCRDNotSelectedWithRecallLicenseTypes()) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDAndRecallSelection
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
@@ -188,6 +189,10 @@ export default class ReleaseType implements TasklistPage {
     }
 
     return errors as TaskListErrors<this>
+  }
+
+  dateLabels(releaseType: ReleaseType) {
+    return labelLookupData.labels[`${releaseType}StartDate` as never]
   }
 
   currentReleaseTypeOptions() {

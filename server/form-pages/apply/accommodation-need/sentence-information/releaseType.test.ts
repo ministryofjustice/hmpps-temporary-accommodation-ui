@@ -1,6 +1,7 @@
 import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ReleaseType, { type ReleaseTypeBody, type ReleaseTypeKey, errorLookups, releaseTypes } from './releaseType'
+import dateLabelLookup from '../../../../i18n/en/application/releaseType.json'
 
 const body = {
   releaseTypes: ['fixedTermRecall', 'parole'],
@@ -264,5 +265,18 @@ describe('ReleaseType', () => {
         },
       ])
     })
+  })
+
+  describe('dateLabels', () => {
+    it.each(Object.keys(releaseTypes))(
+      'returns custom label for start date for %s release type ',
+      (key: ReleaseTypeKey) => {
+        const page = new ReleaseType({}, application)
+
+        expect(page.dateLabels(key as unknown as ReleaseType)).toEqual(
+          dateLabelLookup.labels[`${key}StartDate` as never],
+        )
+      },
+    )
   })
 })

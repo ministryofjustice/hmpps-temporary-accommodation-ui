@@ -1,6 +1,8 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
+import errorLookupData from '../../../../i18n/en/errors.json'
+import labelLookupData from '../../../../i18n/en/application/releaseType.json'
 
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
@@ -11,17 +13,25 @@ export const releaseTypes: Record<string, { text: string; abbr: string }> = {
     text: 'Conditional release date (CRD) licence',
     abbr: 'CRD licence',
   },
-  ecsl: {
-    text: 'End of custody supervised licence (ECSL)',
-    abbr: 'ECSL',
-  },
   fixedTermRecall: {
-    text: 'Licence, following fixed-term recall',
+    text: 'Licence following fixed-term recall',
     abbr: 'Fixed-term recall',
   },
   standardRecall: {
-    text: 'Licence, following standard recall',
+    text: 'Licence following standard recall',
     abbr: 'Standard recall',
+  },
+  nonPresumptiveRarr: {
+    text: 'Licence following Non-Presumptive Risk Assessed Recall Review (NP-RARR)',
+    abbr: 'Non-Presumptive RARR',
+  },
+  presumptiveRarr: {
+    text: 'Licence following Presumptive RARR',
+    abbr: 'Presumptive RARR',
+  },
+  indeterminatePublicProtectionRarr: {
+    text: 'Licence following Indeterminate Public Protection RARR',
+    abbr: 'Indeterminate Public Protection RARR',
   },
   parole: {
     text: 'Parole',
@@ -39,6 +49,43 @@ export type ReleaseTypeBody = {
   releaseTypes: Array<ReleaseTypeKey>
 } & ObjectWithDateParts<`${ReleaseTypeKey}StartDate`> &
   ObjectWithDateParts<`${ReleaseTypeKey}EndDate`>
+
+export type ErrorLookups = {
+  generic: {
+    application: {
+      releaseType: {
+        empty: string
+        oneRecallOrRARR: string
+        invalidParoleSelection: string
+        invalidCRDAndRecallSelection: string
+      }
+    }
+  }
+  application: {
+    releaseType: Record<
+      ReleaseTypeKey,
+      {
+        dates: {
+          emptyStartDate: string
+          emptyEndDate: string
+          invalidStartDate: string
+          invalidEndDate: string
+        }
+      }
+    >
+  }
+}
+
+export const errorLookups: ErrorLookups = {
+  application: {
+    releaseType: errorLookupData.application.releaseType,
+  },
+  generic: {
+    application: {
+      releaseType: errorLookupData.generic.application.releaseTypes,
+    },
+  },
+}
 
 @Page({
   name: 'release-type',
@@ -58,6 +105,14 @@ export default class ReleaseType implements TasklistPage {
   title = 'What is the release type?'
 
   htmlDocumentTitle = this.title
+
+  recallLicenseTypes = [
+    'fixedTermRecall',
+    'standardRecall',
+    'nonPresumptiveRarr',
+    'presumptiveRarr',
+    'indeterminatePublicProtectionRarr',
+  ]
 
   constructor(
     private _body: Partial<ReleaseTypeBody>,
@@ -107,34 +162,37 @@ export default class ReleaseType implements TasklistPage {
     const errors: Record<string, unknown> = {}
 
     if (!this.body.releaseTypes?.length) {
-      errors.releaseTypes = 'You must specify the release types'
-    } else if (
-      this.body.releaseTypes.includes('fixedTermRecall') &&
-      this.body.releaseTypes.includes('standardRecall')
-    ) {
-      errors.releaseTypes = 'Select one type of recall licence'
+      errors.releaseTypes = errorLookups.generic.application.releaseType.empty
+    } else if (this.checkOnlyOneLicenseTypeIsSelected()) {
+      errors.releaseTypes = errorLookups.generic.application.releaseType.oneRecallOrRARR
     } else if (
       this.body.releaseTypes.includes('parole') &&
       (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
     ) {
-      errors.releaseTypes = 'Parole cannot be selected alongside the CRD licence or PSS'
+      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
+    } else if (this.checkCRDNotSelectedWithRecallLicenseTypes()) {
+      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDAndRecallSelection
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
         if (dateIsBlank(this.body, `${key}StartDate`)) {
-          errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
+          errors[`${key}StartDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.emptyStartDate
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {
-          errors[`${key}StartDate`] = `You must specify a valid ${releaseTypes[key].abbr} start date`
+          errors[`${key}StartDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.invalidStartDate
         }
 
         if (dateIsBlank(this.body, `${key}EndDate`)) {
-          errors[`${key}EndDate`] = `You must specify the ${releaseTypes[key].abbr} end date`
+          errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.emptyEndDate
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}EndDate`)) {
-          errors[`${key}EndDate`] = `You must specify a valid ${releaseTypes[key].abbr} end date`
+          errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.invalidEndDate
         }
       })
     }
 
     return errors as TaskListErrors<this>
+  }
+
+  dateLabels(releaseType: ReleaseType) {
+    return labelLookupData.labels[`${releaseType}StartDate` as never]
   }
 
   currentReleaseTypeOptions() {
@@ -155,5 +213,21 @@ export default class ReleaseType implements TasklistPage {
         !optionsToExclude.includes(item.value) ||
         this._body.releaseTypes?.filter(type => optionsToExclude.includes(type)).length > 0,
     )
+  }
+
+  checkOnlyOneLicenseTypeIsSelected() {
+    const licenseMatches = this.body.releaseTypes.filter(release => this.recallLicenseTypes.includes(release))
+
+    // Check if there is more than one match from licenseTypes
+    return licenseMatches.length > 1
+  }
+
+  checkCRDNotSelectedWithRecallLicenseTypes() {
+    const licenseMatches = this.body.releaseTypes.filter(release =>
+      ['crdLicence', ...this.recallLicenseTypes].includes(release),
+    )
+
+    // Check if there is more than one match from licenseTypes
+    return licenseMatches.length > 1
   }
 }

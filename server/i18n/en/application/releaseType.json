@@ -1,0 +1,12 @@
+{
+  "labels": {
+    "crdLicenceStartDate": "Start date",
+    "fixedTermRecallStartDate": "Start date – enter the provisional release date if you’re not sure" ,
+    "standardRecallStartDate": "Start date – enter the provisional release date if you’re not sure",
+    "nonPresumptiveRarrStartDate": "Start date – enter the provisional release date if you’re not sure",
+    "presumptiveRarrStartDate": "Start date – enter the provisional release date if you’re not sure",
+    "indeterminatePublicProtectionRarrStartDate": "Start date – enter the provisional release date if you’re not sure",
+    "paroleStartDate": "Start date",
+    "pssStartDate": "Start date"
+  }
+}

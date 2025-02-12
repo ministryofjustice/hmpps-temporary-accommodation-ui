@@ -345,7 +345,16 @@ describe('reportDataFromApplication', () => {
         data: {
           'sentence-information': {
             'release-type': {
-              releaseTypes: ['crdLicence', 'ecsl', 'fixedTermRecall', 'standardRecall', 'parole', 'pss'],
+              releaseTypes: [
+                'crdLicence',
+                'fixedTermRecall',
+                'standardRecall',
+                'nonPresumptiveRarr',
+                'presumptiveRarr',
+                'indeterminatePublicProtectionRarr',
+                'parole',
+                'pss',
+              ],
             },
           },
         },
@@ -353,9 +362,11 @@ describe('reportDataFromApplication', () => {
 
       expect(releaseTypesFromApplication(application)).toEqual([
         'CRD licence',
-        'ECSL',
         'Fixed-term recall',
         'Standard recall',
+        'Non-Presumptive RARR',
+        'Presumptive RARR',
+        'Indeterminate Public Protection RARR',
         'Parole',
         'PSS',
       ])

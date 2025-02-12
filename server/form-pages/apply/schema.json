@@ -165,7 +165,6 @@
               "items": {
                 "enum": [
                   "crdLicence",
-                  "ecsl",
                   "fixedTermRecall",
                   "parole",
                   "pss",
@@ -183,9 +182,6 @@
             "crdLicenceStartDate-year": {
               "type": "string"
             },
-            "ecslStartDate-year": {
-              "type": "string"
-            },
             "fixedTermRecallStartDate-year": {
               "type": "string"
             },
@@ -199,9 +195,6 @@
               "type": "string"
             },
             "crdLicenceStartDate-month": {
-              "type": "string"
-            },
-            "ecslStartDate-month": {
               "type": "string"
             },
             "fixedTermRecallStartDate-month": {
@@ -219,9 +212,6 @@
             "crdLicenceStartDate-day": {
               "type": "string"
             },
-            "ecslStartDate-day": {
-              "type": "string"
-            },
             "fixedTermRecallStartDate-day": {
               "type": "string"
             },
@@ -235,9 +225,6 @@
               "type": "string"
             },
             "crdLicenceStartDate-time": {
-              "type": "string"
-            },
-            "ecslStartDate-time": {
               "type": "string"
             },
             "fixedTermRecallStartDate-time": {
@@ -255,9 +242,6 @@
             "crdLicenceStartDate": {
               "type": "string"
             },
-            "ecslStartDate": {
-              "type": "string"
-            },
             "fixedTermRecallStartDate": {
               "type": "string"
             },
@@ -271,9 +255,6 @@
               "type": "string"
             },
             "crdLicenceEndDate-year": {
-              "type": "string"
-            },
-            "ecslEndDate-year": {
               "type": "string"
             },
             "fixedTermRecallEndDate-year": {
@@ -291,9 +272,6 @@
             "crdLicenceEndDate-month": {
               "type": "string"
             },
-            "ecslEndDate-month": {
-              "type": "string"
-            },
             "fixedTermRecallEndDate-month": {
               "type": "string"
             },
@@ -307,9 +285,6 @@
               "type": "string"
             },
             "crdLicenceEndDate-day": {
-              "type": "string"
-            },
-            "ecslEndDate-day": {
               "type": "string"
             },
             "fixedTermRecallEndDate-day": {
@@ -327,9 +302,6 @@
             "crdLicenceEndDate-time": {
               "type": "string"
             },
-            "ecslEndDate-time": {
-              "type": "string"
-            },
             "fixedTermRecallEndDate-time": {
               "type": "string"
             },
@@ -343,9 +315,6 @@
               "type": "string"
             },
             "crdLicenceEndDate": {
-              "type": "string"
-            },
-            "ecslEndDate": {
               "type": "string"
             },
             "fixedTermRecallEndDate": {

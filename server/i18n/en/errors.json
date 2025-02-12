@@ -147,6 +147,14 @@
     },
     "ppRequestedWithdrawal": {
       "empty": "Select yes if the probation practitioner asked for the referral to be withdrawn"
+    },
+    "application": {
+      "releaseTypes": {
+        "empty": "You must specify the release types",
+        "oneRecallOrRARR": "Select one type of recall or RARR licence",
+        "invalidParoleSelection": "Parole cannot be selected alongside the CRD licence or PSS",
+        "invalidCRDAndRecallSelection": "You cannot select CRD licence alongside a recall or RARR licence"
+      }
     }
   },
   "bookingCancellation": {
@@ -179,6 +187,72 @@
     }
   },
   "application": {
+    "releaseType": {
+      "crdLicence": {
+        "dates": {
+          "emptyStartDate": "You must specify the CRD licence start date",
+          "emptyEndDate": "You must specify the CRD licence end date",
+          "invalidStartDate": "You must specify a valid CRD licence start date",
+          "invalidEndDate": "You must specify a valid CRD licence end date"
+        }
+      },
+      "fixedTermRecall": {
+        "dates": {
+          "emptyStartDate": "You must specify the license following Fixed-term recall start date",
+          "emptyEndDate": "You must specify the license following Fixed-term recall end date",
+          "invalidStartDate": "You must specify a valid Fixed-term recall start date",
+          "invalidEndDate": "You must specify a valid Fixed-term recall end date"
+        }
+      },
+      "standardRecall": {
+        "dates": {
+          "emptyStartDate": "You must specify the license following standard recall start date",
+          "emptyEndDate": "You must specify the license following standard recall end date",
+          "invalidStartDate": "You must specify a valid standard recall start date",
+          "invalidEndDate": "You must specify a valid standard recall end date"
+        }
+      },
+      "nonPresumptiveRarr": {
+        "dates": {
+          "emptyStartDate": "You must specify the license following NP-RARR start date",
+          "emptyEndDate": "You must specify the license following NP-RARR end date",
+          "invalidStartDate": "You must specify a valid license following NP-RARR start date",
+          "invalidEndDate": "You must specify a valid license following NP-RARR end date"
+        }
+      },
+      "presumptiveRarr": {
+        "dates": {
+          "emptyStartDate": "You must specify the license following Presumptive RARR start date",
+          "emptyEndDate": "You must specify the license following Presumptive RARR end date",
+          "invalidStartDate": "You must specify a valid license following Presumptive RARR start date",
+          "invalidEndDate": "You must specify a valid license following Presumptive RARR end date"
+        }
+      },
+      "indeterminatePublicProtectionRarr": {
+        "dates": {
+          "emptyStartDate": "You must specify the license following Indeterminate Public Protection RARR start date",
+          "emptyEndDate": "You must specify the license following Indeterminate Public Protection RARR end date",
+          "invalidStartDate": "You must specify a valid license following Indeterminate Public Protection RARR start date",
+          "invalidEndDate": "You must specify a valid license following Indeterminate Public Protection RARR end date"
+        }
+      },
+      "parole": {
+        "dates": {
+          "emptyStartDate": "You must specify the Parole start date",
+          "emptyEndDate": "You must specify the Parole end date",
+          "invalidStartDate": "You must specify a valid Parole start date",
+          "invalidEndDate": "You must specify a valid Parole end date"
+        }
+      },
+      "pss": {
+        "dates": {
+          "emptyStartDate": "You must specify the PSS start date",
+          "emptyEndDate": "You must specify the PSS end date",
+          "invalidStartDate": "You must specify a valid PSS start date",
+          "invalidEndDate": "You must specify a valid PSS end date"
+        }
+      }
+    },
     "confirmation": {
       "invalid": "You must confirm the information provided is complete, accurate and up to date"
     }

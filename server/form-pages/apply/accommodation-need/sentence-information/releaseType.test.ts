@@ -1,6 +1,6 @@
 import { applicationFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import ReleaseType, { type ReleaseTypeBody, type ReleaseTypeKey, releaseTypes } from './releaseType'
+import ReleaseType, { type ReleaseTypeBody, type ReleaseTypeKey, errorLookups, releaseTypes } from './releaseType'
 
 const body = {
   releaseTypes: ['fixedTermRecall', 'parole'],
@@ -90,8 +90,8 @@ describe('ReleaseType', () => {
         const page = new ReleaseType(bodyMissingDates, application)
 
         expect(page.errors()).toEqual({
-          [`${key}StartDate`]: `You must specify the ${releaseTypes[key].abbr} start date`,
-          [`${key}EndDate`]: `You must specify the ${releaseTypes[key].abbr} end date`,
+          [`${key}StartDate`]: errorLookups.application.releaseType[key].dates.emptyStartDate,
+          [`${key}EndDate`]: errorLookups.application.releaseType[key].dates.emptyEndDate,
         })
       },
     )
@@ -112,8 +112,8 @@ describe('ReleaseType', () => {
         const page = new ReleaseType(bodyInvalidDates, application)
 
         expect(page.errors()).toEqual({
-          [`${key}StartDate`]: `You must specify a valid ${releaseTypes[key].abbr} start date`,
-          [`${key}EndDate`]: `You must specify a valid ${releaseTypes[key].abbr} end date`,
+          [`${key}StartDate`]: errorLookups.application.releaseType[key].dates.invalidStartDate,
+          [`${key}EndDate`]: errorLookups.application.releaseType[key].dates.invalidEndDate,
         })
       },
     )

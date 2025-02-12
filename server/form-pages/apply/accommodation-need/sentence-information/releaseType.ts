@@ -1,6 +1,7 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
+import errorLookupData from '../../../../i18n/en/errors.json'
 
 import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
@@ -47,6 +48,42 @@ export type ReleaseTypeBody = {
   releaseTypes: Array<ReleaseTypeKey>
 } & ObjectWithDateParts<`${ReleaseTypeKey}StartDate`> &
   ObjectWithDateParts<`${ReleaseTypeKey}EndDate`>
+
+export type ErrorLookups = {
+  generic: {
+    application: {
+      releaseType: {
+        empty: string
+        oneRecallOrRARR: string
+        invalidParoleSelection: string
+      }
+    }
+  }
+  application: {
+    releaseType: Record<
+      ReleaseTypeKey,
+      {
+        dates: {
+          emptyStartDate: string
+          emptyEndDate: string
+          invalidStartDate: string
+          invalidEndDate: string
+        }
+      }
+    >
+  }
+}
+
+export const errorLookups: ErrorLookups = {
+  application: {
+    releaseType: errorLookupData.application.releaseType,
+  },
+  generic: {
+    application: {
+      releaseType: errorLookupData.generic.application.releaseTypes,
+    },
+  },
+}
 
 @Page({
   name: 'release-type',
@@ -115,26 +152,26 @@ export default class ReleaseType implements TasklistPage {
     const errors: Record<string, unknown> = {}
 
     if (!this.body.releaseTypes?.length) {
-      errors.releaseTypes = 'You must specify the release types'
+      errors.releaseTypes = errorLookups.generic.application.releaseType.empty
     } else if (this.checkOnlyOneLicenseTypeIsSelected()) {
-      errors.releaseTypes = 'Select one type of recall or RARR licence'
+      errors.releaseTypes = errorLookups.generic.application.releaseType.oneRecallOrRARR
     } else if (
       this.body.releaseTypes.includes('parole') &&
       (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
     ) {
-      errors.releaseTypes = 'Parole cannot be selected alongside the CRD licence or PSS'
+      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
         if (dateIsBlank(this.body, `${key}StartDate`)) {
-          errors[`${key}StartDate`] = `You must specify the ${releaseTypes[key].abbr} start date`
+          errors[`${key}StartDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.emptyStartDate
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {
-          errors[`${key}StartDate`] = `You must specify a valid ${releaseTypes[key].abbr} start date`
+          errors[`${key}StartDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.invalidStartDate
         }
 
         if (dateIsBlank(this.body, `${key}EndDate`)) {
-          errors[`${key}EndDate`] = `You must specify the ${releaseTypes[key].abbr} end date`
+          errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.emptyEndDate
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}EndDate`)) {
-          errors[`${key}EndDate`] = `You must specify a valid ${releaseTypes[key].abbr} end date`
+          errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.invalidEndDate
         }
       })
     }

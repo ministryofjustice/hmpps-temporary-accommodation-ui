@@ -56,6 +56,7 @@ export type ErrorLookups = {
         empty: string
         oneRecallOrRARR: string
         invalidParoleSelection: string
+        invalidCRDAndRecallSelection: string
       }
     }
   }
@@ -103,6 +104,14 @@ export default class ReleaseType implements TasklistPage {
   title = 'What is the release type?'
 
   htmlDocumentTitle = this.title
+
+  recallLicenseTypes = [
+    'fixedTermRecall',
+    'standardRecall',
+    'nonPresumptiveRarr',
+    'presumptiveRarr',
+    'indeterminatePublicProtectionRarr',
+  ]
 
   constructor(
     private _body: Partial<ReleaseTypeBody>,
@@ -160,6 +169,8 @@ export default class ReleaseType implements TasklistPage {
       (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
     ) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
+    } else if (this.checkCRDNotSelectedWithRecallLicenseTypes()){
+      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDAndRecallSelection
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
         if (dateIsBlank(this.body, `${key}StartDate`)) {
@@ -200,15 +211,16 @@ export default class ReleaseType implements TasklistPage {
   }
 
   checkOnlyOneLicenseTypeIsSelected() {
-    const licenseTypes = [
-      'fixedTermRecall',
-      'standardRecall',
-      'nonPresumptiveRarr',
-      'presumptiveRarr',
-      'indeterminatePublicProtectionRarr',
-    ]
+    const licenseMatches = this.body.releaseTypes.filter(release => this.recallLicenseTypes.includes(release))
 
-    const licenseMatches = this.body.releaseTypes.filter(release => licenseTypes.includes(release))
+    // Check if there is more than one match from licenseTypes
+    return licenseMatches.length > 1
+  }
+
+  checkCRDNotSelectedWithRecallLicenseTypes() {
+    const licenseMatches = this.body.releaseTypes.filter(release =>
+      ['crdLicence', ...this.recallLicenseTypes].includes(release),
+    )
 
     // Check if there is more than one match from licenseTypes
     return licenseMatches.length > 1

@@ -152,7 +152,8 @@
       "releaseTypes": {
         "empty": "You must specify the release types",
         "oneRecallOrRARR": "Select one type of recall or RARR licence",
-        "invalidParoleSelection": "Parole cannot be selected alongside the CRD licence or PSS"
+        "invalidParoleSelection": "Parole cannot be selected alongside the CRD licence or PSS",
+        "invalidCRDAndRecallSelection": "You cannot select CRD licence alongside a recall or RARR licence"
       }
     }
   },

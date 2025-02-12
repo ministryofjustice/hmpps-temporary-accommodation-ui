@@ -161,15 +161,33 @@ describe('ReleaseType', () => {
       })
     })
 
-    it.each([
-      ['Parole and CRD licence', ['parole', 'crdLicence']],
-      ['Parole and PSS', ['parole', 'pss']],
-      ['Parole, CRD licence and PSS', ['parole', 'crdLicence', 'pss']],
-    ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
-      const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
+    describe('when Parole selected along with either CRD or PSS', () => {
+      it.each([
+        ['Parole and CRD licence', ['parole', 'crdLicence']],
+        ['Parole and PSS', ['parole', 'pss']],
+        ['Parole, CRD licence and PSS', ['parole', 'crdLicence', 'pss']],
+      ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
+        const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
 
-      expect(page.errors()).toEqual({
-        releaseTypes: 'Parole cannot be selected alongside the CRD licence or PSS',
+        expect(page.errors()).toEqual({
+          releaseTypes: 'Parole cannot be selected alongside the CRD licence or PSS',
+        })
+      })
+    })
+
+    describe('when CRD License and one recall type selected', () => {
+      it.each([
+        ['CRD licence and Fixed-term recall', ['crdLicence', 'fixedTermRecall']],
+        ['CRD licence and standard recall', ['crdLicence', 'standardRecall']],
+        ['CRD licence and Non-Presumptive RARR', ['crdLicence', 'nonPresumptiveRarr']],
+        ['CRD licence and  Presumptive RARR', ['crdLicence', 'presumptiveRarr']],
+        ['CRD licence and Indeterminate Public Protection RARR', ['crdLicence', 'indeterminatePublicProtectionRarr']],
+      ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
+        const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
+
+        expect(page.errors()).toEqual({
+          releaseTypes: 'You cannot select CRD licence alongside a recall or RARR licence',
+        })
       })
     })
 

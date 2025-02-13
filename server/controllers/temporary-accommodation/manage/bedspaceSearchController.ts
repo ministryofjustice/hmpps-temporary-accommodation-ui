@@ -4,17 +4,13 @@ import { BedspaceAccessiblityAttributes, BedspaceOccupancyAttributes, ObjectWith
 
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
+import { validateSearchQuery } from '../../../utils/bedspaceSearchUtils'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../utils/dateUtils'
+import { DateFormats } from '../../../utils/dateUtils'
 import { parseNumber } from '../../../utils/formUtils'
 import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDate } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import {
-  catchValidationErrorOrPropogate,
-  fetchErrorsAndUserInput,
-  insertGenericError,
-  setUserInput,
-} from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
 
 export const DEFAULT_DURATION_DAYS = 84
 
@@ -50,7 +46,7 @@ export default class BedspaceSearchController {
 
       try {
         if (query) {
-          const validationError = this.validateSearchQuery(query)
+          const validationError = validateSearchQuery(query)
 
           if (validationError) {
             setUserInput(req, 'get')
@@ -120,28 +116,5 @@ export default class BedspaceSearchController {
         )
       }
     }
-  }
-
-  private validateSearchQuery(query: BedspaceSearchQuery): Error | null {
-    const error = new Error() as Error & {
-      data?: { 'invalid-params'?: Array<{ propertyName: string; errorType: string }> }
-    }
-    error.data = { 'invalid-params': [] }
-
-    if (dateIsBlank(query, 'startDate')) {
-      insertGenericError(error, 'startDate', 'empty')
-    } else if (!dateAndTimeInputsAreValidDates(query, 'startDate')) {
-      insertGenericError(error, 'startDate', 'invalid')
-    }
-
-    if (!query.probationDeliveryUnits || query.probationDeliveryUnits.length === 0) {
-      insertGenericError(error, 'probationDeliveryUnits', 'empty')
-    }
-
-    if (!query.durationDays || Number.isNaN(parseNumber(query.durationDays)) || parseNumber(query.durationDays) < 1) {
-      insertGenericError(error, 'durationDays', 'mustBeAtLeast1')
-    }
-
-    return error.data?.['invalid-params']?.length ? error : null
   }
 }

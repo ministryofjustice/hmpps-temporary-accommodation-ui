@@ -198,42 +198,42 @@
       },
       "fixedTermRecall": {
         "dates": {
-          "emptyStartDate": "You must specify the license following Fixed-term recall start date",
-          "emptyEndDate": "You must specify the license following Fixed-term recall end date",
+          "emptyStartDate": "You must specify the licence following Fixed-term recall start date",
+          "emptyEndDate": "You must specify the licence following Fixed-term recall end date",
           "invalidStartDate": "You must specify a valid Fixed-term recall start date",
           "invalidEndDate": "You must specify a valid Fixed-term recall end date"
         }
       },
       "standardRecall": {
         "dates": {
-          "emptyStartDate": "You must specify the license following standard recall start date",
-          "emptyEndDate": "You must specify the license following standard recall end date",
+          "emptyStartDate": "You must specify the licence following standard recall start date",
+          "emptyEndDate": "You must specify the licence following standard recall end date",
           "invalidStartDate": "You must specify a valid standard recall start date",
           "invalidEndDate": "You must specify a valid standard recall end date"
         }
       },
       "nonPresumptiveRarr": {
         "dates": {
-          "emptyStartDate": "You must specify the license following NP-RARR start date",
-          "emptyEndDate": "You must specify the license following NP-RARR end date",
-          "invalidStartDate": "You must specify a valid license following NP-RARR start date",
-          "invalidEndDate": "You must specify a valid license following NP-RARR end date"
+          "emptyStartDate": "You must specify the licence following NP-RARR start date",
+          "emptyEndDate": "You must specify the licence following NP-RARR end date",
+          "invalidStartDate": "You must specify a valid licence following NP-RARR start date",
+          "invalidEndDate": "You must specify a valid licence following NP-RARR end date"
         }
       },
       "presumptiveRarr": {
         "dates": {
-          "emptyStartDate": "You must specify the license following Presumptive RARR start date",
-          "emptyEndDate": "You must specify the license following Presumptive RARR end date",
-          "invalidStartDate": "You must specify a valid license following Presumptive RARR start date",
-          "invalidEndDate": "You must specify a valid license following Presumptive RARR end date"
+          "emptyStartDate": "You must specify the licence following Presumptive RARR start date",
+          "emptyEndDate": "You must specify the licence following Presumptive RARR end date",
+          "invalidStartDate": "You must specify a valid licence following Presumptive RARR start date",
+          "invalidEndDate": "You must specify a valid licence following Presumptive RARR end date"
         }
       },
       "indeterminatePublicProtectionRarr": {
         "dates": {
-          "emptyStartDate": "You must specify the license following Indeterminate Public Protection RARR start date",
-          "emptyEndDate": "You must specify the license following Indeterminate Public Protection RARR end date",
-          "invalidStartDate": "You must specify a valid license following Indeterminate Public Protection RARR start date",
-          "invalidEndDate": "You must specify a valid license following Indeterminate Public Protection RARR end date"
+          "emptyStartDate": "You must specify the licence following Indeterminate Public Protection RARR start date",
+          "emptyEndDate": "You must specify the licence following Indeterminate Public Protection RARR end date",
+          "invalidStartDate": "You must specify a valid licence following Indeterminate Public Protection RARR start date",
+          "invalidEndDate": "You must specify a valid licence following Indeterminate Public Protection RARR end date"
         }
       },
       "parole": {

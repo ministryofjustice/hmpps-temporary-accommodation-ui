@@ -106,7 +106,7 @@ export default class ReleaseType implements TasklistPage {
 
   htmlDocumentTitle = this.title
 
-  recallLicenseTypes = [
+  recallLicenceTypes = [
     'fixedTermRecall',
     'standardRecall',
     'nonPresumptiveRarr',
@@ -143,7 +143,7 @@ export default class ReleaseType implements TasklistPage {
     }
 
     this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
-      const releaseTypeDateLabel = this.recallLicenseTypes.includes(key) ? 'License' : releaseTypes[key].abbr
+      const releaseTypeDateLabel = this.recallLicenceTypes.includes(key) ? 'Licence' : releaseTypes[key].abbr
 
       response[`${releaseTypeDateLabel} start date`] = DateFormats.isoDateToUIDate(this.body[`${key}StartDate`])
       response[`${releaseTypeDateLabel} end date`] = DateFormats.isoDateToUIDate(this.body[`${key}EndDate`])
@@ -165,14 +165,14 @@ export default class ReleaseType implements TasklistPage {
 
     if (!this.body.releaseTypes?.length) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.empty
-    } else if (this.checkOnlyOneLicenseTypeIsSelected()) {
+    } else if (this.checkOnlyOneLicenceTypeIsSelected()) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.oneRecallOrRARR
     } else if (
       this.body.releaseTypes.includes('parole') &&
       (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
     ) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
-    } else if (this.checkCRDNotSelectedWithRecallLicenseTypes()) {
+    } else if (this.checkCRDNotSelectedWithRecallLicenceTypes()) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDAndRecallSelection
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
@@ -217,19 +217,19 @@ export default class ReleaseType implements TasklistPage {
     )
   }
 
-  checkOnlyOneLicenseTypeIsSelected() {
-    const licenseMatches = this.body.releaseTypes.filter(release => this.recallLicenseTypes.includes(release))
+  checkOnlyOneLicenceTypeIsSelected() {
+    const licenceMatches = this.body.releaseTypes.filter(release => this.recallLicenceTypes.includes(release))
 
-    // Check if there is more than one match from licenseTypes
-    return licenseMatches.length > 1
+    // Check if there is more than one match from licenceTypes
+    return licenceMatches.length > 1
   }
 
-  checkCRDNotSelectedWithRecallLicenseTypes() {
-    const licenseMatches = this.body.releaseTypes.filter(release =>
-      ['crdLicence', ...this.recallLicenseTypes].includes(release),
+  checkCRDNotSelectedWithRecallLicenceTypes() {
+    const licenceMatches = this.body.releaseTypes.filter(release =>
+      ['crdLicence', ...this.recallLicenceTypes].includes(release),
     )
 
-    // Check if there is more than one match from licenseTypes
-    return licenseMatches.length > 1
+    // Check if there is more than one match from licenceTypes
+    return licenceMatches.length > 1
   }
 }

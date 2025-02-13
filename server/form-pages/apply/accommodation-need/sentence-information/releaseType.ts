@@ -139,12 +139,14 @@ export default class ReleaseType implements TasklistPage {
 
   response() {
     const response = {
-      [this.title]: this.body.releaseTypes?.map(key => releaseTypes[key].abbr).join('\n'),
+      [this.title]: this.body.releaseTypes?.map(key => releaseTypes[key].text).join('\n'),
     }
 
     this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
-      response[`${releaseTypes[key].abbr} start date`] = DateFormats.isoDateToUIDate(this.body[`${key}StartDate`])
-      response[`${releaseTypes[key].abbr} end date`] = DateFormats.isoDateToUIDate(this.body[`${key}EndDate`])
+      const releaseTypeDateLabel = this.recallLicenseTypes.includes(key) ? 'License' : releaseTypes[key].abbr
+
+      response[`${releaseTypeDateLabel} start date`] = DateFormats.isoDateToUIDate(this.body[`${key}StartDate`])
+      response[`${releaseTypeDateLabel} end date`] = DateFormats.isoDateToUIDate(this.body[`${key}EndDate`])
     })
 
     return response

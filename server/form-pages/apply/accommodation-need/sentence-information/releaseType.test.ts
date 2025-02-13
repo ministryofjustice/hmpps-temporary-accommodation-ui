@@ -206,9 +206,9 @@ describe('ReleaseType', () => {
       const page = new ReleaseType(body, application)
 
       expect(page.response()).toEqual({
-        'What is the release type?': 'Fixed-term recall\nParole',
-        'Fixed-term recall start date': '19 January 2024',
-        'Fixed-term recall end date': '9 July 2024',
+        'What is the release type?': 'Licence following fixed-term recall\nParole',
+        'License start date': '19 January 2024',
+        'License end date': '9 July 2024',
         'Parole start date': '1 April 2122',
         'Parole end date': '18 July 2122',
       })

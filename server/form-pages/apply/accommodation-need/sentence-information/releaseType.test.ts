@@ -176,7 +176,7 @@ describe('ReleaseType', () => {
       })
     })
 
-    describe('when CRD License and one recall type selected', () => {
+    describe('when CRD Licence and one recall type selected', () => {
       it.each([
         ['CRD licence and Fixed-term recall', ['crdLicence', 'fixedTermRecall']],
         ['CRD licence and standard recall', ['crdLicence', 'standardRecall']],
@@ -207,8 +207,8 @@ describe('ReleaseType', () => {
 
       expect(page.response()).toEqual({
         'What is the release type?': 'Licence following fixed-term recall\nParole',
-        'License start date': '19 January 2024',
-        'License end date': '9 July 2024',
+        'Licence start date': '19 January 2024',
+        'Licence end date': '9 July 2024',
         'Parole start date': '1 April 2122',
         'Parole end date': '18 July 2122',
       })

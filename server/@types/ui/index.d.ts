@@ -344,3 +344,7 @@ export type BedspaceSearchFormParameters = {
   occupancyAttribute: 'all' | BedspaceOccupancyAttributes
   attributes?: Array<BedspaceAccessiblityAttributes>
 }
+
+export type UIPersonAcctAlert = PersonAcctAlert & {
+  alertId: string | number
+}

@@ -1,19 +1,20 @@
 import type { TemporaryAccommodationApplication as Application, PersonAcctAlert } from '@approved-premises/api'
-import type { DataServices, PageResponse } from '@approved-premises/ui'
+import type { DataServices, PageResponse, UIPersonAcctAlert } from '@approved-premises/ui'
 import { CallConfig } from '../../../../data/restClient'
 import { DateFormats } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
-import { PageBodyPersonAcctAlert, mapAcctAlertsForPageBody } from '../../../utils'
+import { mapAcctAlertsForPageBody } from '../../../utils'
 import { Page } from '../../../utils/decorators'
 
 type AcctAlertsBody = {
-  acctAlerts: Array<PageBodyPersonAcctAlert>
+  acctAlerts: Array<UIPersonAcctAlert>
 }
 
-export const acctAlertResponse = (acctAlert: PersonAcctAlert) => {
+export const acctAlertResponse = (acctAlert: UIPersonAcctAlert) => {
+  // TODO: remove alertId and Comments once api has been rolled out
   return {
-    'Alert type': acctAlert.alertId,
-    'ACCT description': acctAlert.comment,
+    'Alert type': acctAlert.alertTypeDescription || acctAlert.alertId,
+    'ACCT description': acctAlert.description || acctAlert.comment,
     'Date created': DateFormats.isoDateToUIDate(acctAlert.dateCreated),
     'Expiry date': acctAlert.dateExpires ? DateFormats.isoDateToUIDate(acctAlert.dateExpires) : '',
   }

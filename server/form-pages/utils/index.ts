@@ -1,5 +1,5 @@
 import type { Request } from 'express'
-import type {
+import {
   FormPages,
   FormSection,
   FormSections,
@@ -7,6 +7,7 @@ import type {
   PageResponse,
   Task,
   TaskPages,
+  UIPersonAcctAlert,
   YesNoOrIDK,
   YesOrNo,
   YesOrNoWithDetail,
@@ -15,7 +16,6 @@ import {
   Adjudication,
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationAssessment as Assessment,
-  PersonAcctAlert,
   PersonRisks,
 } from '../../@types/shared'
 import { SessionDataError } from '../../utils/errors'
@@ -32,7 +32,7 @@ export type PageBodyAdjudication = {
 }
 
 export type PageBodyPersonAcctAlert = {
-  alertId: number
+  alertId: string | number
   comment?: string
   dateCreated: string
   dateExpires: string
@@ -251,13 +251,13 @@ export const mapAdjudicationsForPageBody = (adjudications: Array<Adjudication>):
   }))
 }
 
-export const mapAcctAlertsForPageBody = (acctAlerts: Array<PersonAcctAlert>): Array<PageBodyPersonAcctAlert> => {
+export const mapAcctAlertsForPageBody = (acctAlerts: Array<UIPersonAcctAlert>): Array<UIPersonAcctAlert> => {
   return acctAlerts.map(acctAlert => ({
-    alertId: acctAlert.alertId,
-    comment: acctAlert.comment || '',
+    alertId: acctAlert.alertTypeDescription || acctAlert.alertId,
+    comment: acctAlert.description || acctAlert.comment || '',
     dateCreated: acctAlert.dateCreated,
     dateExpires: acctAlert.dateExpires || '',
-  }))
+  })) as unknown as Array<UIPersonAcctAlert>
 }
 
 export const personRisksRoshResponse = (risks: PersonRisks): PageResponse => {

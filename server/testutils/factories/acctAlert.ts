@@ -6,7 +6,9 @@ import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<PersonAcctAlert>(() => ({
   alertId: faker.number.int(),
+  alertTypeDescription: faker.word.words(),
   dateCreated: DateFormats.dateObjToIsoDate(faker.date.past()),
   dateExpires: DateFormats.dateObjToIsoDate(faker.date.future()),
   comment: faker.lorem.sentence(),
+  description: faker.lorem.sentence(),
 }))

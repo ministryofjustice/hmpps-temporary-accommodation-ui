@@ -4,6 +4,7 @@ import { BedspaceAccessiblityAttributes, BedspaceOccupancyAttributes, ObjectWith
 
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
+import { validateSearchQuery } from '../../../utils/bedspaceSearchUtils'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import { DateFormats } from '../../../utils/dateUtils'
 import { parseNumber } from '../../../utils/formUtils'
@@ -29,9 +30,7 @@ export default class BedspaceSearchController {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
-
       const callConfig = extractCallConfig(req)
-
       const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
 
       const query =
@@ -47,6 +46,19 @@ export default class BedspaceSearchController {
 
       try {
         if (query) {
+          const validationError = validateSearchQuery(query)
+
+          if (validationError) {
+            setUserInput(req, 'get')
+            return catchValidationErrorOrPropogate(
+              req,
+              res,
+              validationError,
+              addPlaceContext(paths.bedspaces.search({}), placeContext),
+              'bedspaceSearch',
+            )
+          }
+
           startDate = DateFormats.dateAndTimeInputsToIsoString(
             query as ObjectWithDateParts<'startDate'>,
             'startDate',
@@ -81,7 +93,7 @@ export default class BedspaceSearchController {
           ? 'temporary-accommodation/bedspace-search/results'
           : 'temporary-accommodation/bedspace-search/index'
 
-        res.render(template, {
+        return res.render(template, {
           allPdus,
           results,
           startDate,
@@ -95,7 +107,7 @@ export default class BedspaceSearchController {
         })
       } catch (err) {
         setUserInput(req, 'get')
-        catchValidationErrorOrPropogate(
+        return catchValidationErrorOrPropogate(
           req,
           res,
           err,

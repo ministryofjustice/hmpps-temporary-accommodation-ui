@@ -206,7 +206,7 @@ context('Bedspace Search', () => {
     Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
   })
 
-  it('shows errors when the API returns an error', () => {
+  it('shows validation errors when required fields are missing or incorrect', () => {
     // Given I am signed in
     cy.signIn()
 

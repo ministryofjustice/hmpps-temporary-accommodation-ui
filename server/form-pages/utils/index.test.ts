@@ -7,7 +7,7 @@ import { TemporaryAccommodationApplication } from '../../@types/shared'
 import TasklistPage, { TasklistPageInterface } from '../tasklistPage'
 import * as utils from './index'
 
-import type { FormSection, FormSections, PageResponse, Task as TaskType } from '../../@types/ui'
+import { FormSection, FormSections, PageResponse, Task as TaskType, UIPersonAcctAlert } from '../../@types/ui'
 import {
   acctAlertFactory,
   adjudicationFactory,
@@ -467,33 +467,76 @@ describe('utils', () => {
 
   describe('mapAcctAlertsForPageBody', () => {
     it('returns ACCT alerts with any extra data removed', () => {
-      const acctAlert1 = acctAlertFactory.build()
-      const acctAlert2 = acctAlertFactory.build()
-      const acctAlert3 = acctAlertFactory.build()
+      const acctAlertData1 = acctAlertFactory.build()
+      const acctAlertData2 = acctAlertFactory.build()
+      const acctAlertData3 = acctAlertFactory.build()
+
+      const acctAlert1 = {
+        alertId: acctAlertData1.alertTypeDescription,
+        comment: acctAlertData1.description,
+        dateCreated: acctAlertData1.dateCreated,
+        dateExpires: acctAlertData1.dateExpires,
+      }
+      const acctAlert2 = {
+        alertId: acctAlertData2.alertTypeDescription,
+        comment: acctAlertData2.description,
+        dateCreated: acctAlertData2.dateCreated,
+        dateExpires: acctAlertData2.dateExpires,
+      }
+      const acctAlert3 = {
+        alertId: acctAlertData3.alertTypeDescription,
+        comment: acctAlertData3.description,
+        dateCreated: acctAlertData3.dateCreated,
+        dateExpires: acctAlertData3.dateExpires,
+      }
 
       const acctAlertWithExtraInfo = { ...acctAlert2, 'some-extra-field': 'some extra data' }
 
-      expect(utils.mapAcctAlertsForPageBody([acctAlert1, acctAlertWithExtraInfo, acctAlert3])).toEqual([
-        acctAlert1,
-        acctAlert2,
-        acctAlert3,
-      ])
+      expect(
+        utils.mapAcctAlertsForPageBody([
+          acctAlert1 as unknown as UIPersonAcctAlert,
+          acctAlertWithExtraInfo as unknown as UIPersonAcctAlert,
+          acctAlert3 as unknown as UIPersonAcctAlert,
+        ]),
+      ).toEqual([acctAlert1, acctAlert2, acctAlert3])
     })
 
     it('returns ACCT alerts with missing comments and expiry dates replaced with an empty string', () => {
-      const acctAlert1 = acctAlertFactory.build()
-      const acctAlert2 = acctAlertFactory.build({
+      const acctAlertData1 = acctAlertFactory.build()
+      const acctAlertData2 = acctAlertFactory.build({
         comment: null,
+        description: null,
       })
-      const acctAlert3 = acctAlertFactory.build({
+      const acctAlertData3 = acctAlertFactory.build({
         dateExpires: null,
       })
 
-      expect(utils.mapAcctAlertsForPageBody([acctAlert1, acctAlert2, acctAlert3])).toEqual([
-        acctAlert1,
-        { ...acctAlert2, comment: '' },
-        { ...acctAlert3, dateExpires: '' },
-      ])
+      const acctAlert1 = {
+        alertId: acctAlertData1.alertTypeDescription,
+        comment: acctAlertData1.description,
+        dateCreated: acctAlertData1.dateCreated,
+        dateExpires: acctAlertData1.dateExpires,
+      }
+      const acctAlert2 = {
+        alertId: acctAlertData2.alertTypeDescription,
+        comment: acctAlertData2.description,
+        dateCreated: acctAlertData2.dateCreated,
+        dateExpires: acctAlertData2.dateExpires,
+      }
+      const acctAlert3 = {
+        alertId: acctAlertData3.alertTypeDescription,
+        comment: acctAlertData3.description,
+        dateCreated: acctAlertData3.dateCreated,
+        dateExpires: acctAlertData3.dateExpires,
+      }
+
+      expect(
+        utils.mapAcctAlertsForPageBody([
+          acctAlert1 as unknown as UIPersonAcctAlert,
+          acctAlert2 as unknown as UIPersonAcctAlert,
+          acctAlert3 as unknown as UIPersonAcctAlert,
+        ]),
+      ).toEqual([acctAlert1, { ...acctAlert2, comment: '' }, { ...acctAlert3, dateExpires: '' }])
     })
   })
 })

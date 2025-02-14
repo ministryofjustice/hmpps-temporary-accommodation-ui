@@ -104,6 +104,7 @@ export type { ExternalUser } from './models/ExternalUser';
 export type { FlagsEnvelope } from './models/FlagsEnvelope';
 export type { FullPerson } from './models/FullPerson';
 export type { FullPersonSummary } from './models/FullPersonSummary';
+export type { FutureBooking } from './models/FutureBooking';
 export type { Gender } from './models/Gender';
 export type { InvalidParam } from './models/InvalidParam';
 export type { LatestCas2StatusUpdate } from './models/LatestCas2StatusUpdate';

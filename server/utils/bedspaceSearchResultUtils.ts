@@ -16,12 +16,13 @@ export function bedspaceKeyCharacteristics(result: TemporaryAccommodationBedSear
 }
 
 export function bedspaceOverlapResult(overlapResult: TemporaryAccommodationBedSearchResultOverlap) {
-  const { crn, days, roomId, personType, assessmentId } = overlapResult
+  const { crn, days, roomId, personType, assessmentId, isSexualRisk } = overlapResult
   const overlapDays = `${days} ${days === 1 ? 'day' : 'days'} overlap`
 
   const displayName = personType === 'FullPerson' ? overlapResult.name : 'Limited access offender'
   const referralNameOrCrn = personType === 'FullPerson' ? overlapResult.name : overlapResult.crn
   const sex = personType === 'FullPerson' ? overlapResult.sex : undefined
+  const sexualRiskFlag = isSexualRisk ? 'Sexual Risk' : undefined
 
   return {
     crn,
@@ -32,5 +33,6 @@ export function bedspaceOverlapResult(overlapResult: TemporaryAccommodationBedSe
     referralNameOrCrn,
     sex,
     assessmentId,
+    sexualRiskFlag,
   }
 }

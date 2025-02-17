@@ -1,8 +1,20 @@
+{%- from "moj/components/badge/macro.njk" import mojBadge -%}
+
 {% macro overlapDetails(params) %}
   <dl class="overlap-details">
-    <div class="overlap-details__row">
+    <div class="overlap-details__row overlap-details__row--inline">
       <dt class="overlap-details__key govuk-visually-hidden">Name:</dt>
       <dd class="overlap-details__value overlap-details__value--bold">{{ params.overlap.displayName }}</dd>
+
+      {% if params.overlap.sexualRiskFlag %}
+        <dt class="overlap-details__key govuk-visually-hidden">Flagged for sexual risk:</dt>
+        <dd class="overlap-details__value govuk-!-margin-left-3">
+          {{ mojBadge({
+            text: params.overlap.sexualRiskFlag,
+            classes: 'moj-badge--red'
+          }) }}
+        </dd>
+      {% endif %}
     </div>
     <div class="overlap-details__row">
       <dt class="overlap-details__key">CRN:</dt>

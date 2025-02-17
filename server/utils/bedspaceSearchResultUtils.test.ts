@@ -137,6 +137,30 @@ describe('BedspaceSearchResultUtils', () => {
       })
     })
 
+    describe('when offender is a sexual risk', () => {
+      beforeEach(() => {
+        overLapDays = 8
+        person = fullPersonFactory.build()
+        overLapAssessmentId = assessmentFactory.build().id
+        overlapResult = createOverLapResult()
+        overlapResult.isSexualRisk = true
+      })
+
+      it('returns object of key/value pairs with sexual risk flag', () => {
+        expect(bedspaceOverlapResult(overlapResult)).toEqual({
+          crn: overlapResult.crn,
+          overlapDays: '8 days overlap',
+          personType: 'FullPerson',
+          roomId: overlapResult.roomId,
+          referralNameOrCrn: overlapResult.name,
+          assessmentId: overlapResult.assessmentId,
+          displayName: overlapResult.name,
+          sex: overlapResult.sex,
+          sexualRiskFlag: 'Sexual Risk',
+        })
+      })
+    })
+
     describe('when no assessment is assigned', () => {
       beforeEach(() => {
         overLapDays = 1

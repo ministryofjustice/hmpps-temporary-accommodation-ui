@@ -80,6 +80,7 @@ describe('BedspaceSearchResultUtils', () => {
         assessmentId: overLapAssessmentId,
         name: person.type === 'FullPerson' ? (person as FullPerson).name : 'Limited access offender',
         sex: person.type === 'FullPerson' ? (person as FullPerson).sex : undefined,
+        isSexualRisk: false,
       }
     }
 

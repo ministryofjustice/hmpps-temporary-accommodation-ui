@@ -13,4 +13,5 @@ export default Factory.define<Overlap>(() => ({
   bookingId: faker.string.uuid(),
   assessmentId: assessmentFactory.build().id,
   days: faker.number.int({ min: 1, max: 100 }),
+  isSexualRisk: false,
 }))

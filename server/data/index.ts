@@ -6,10 +6,13 @@
 /* istanbul ignore file */
 
 import { buildAppInsightsClient, initialiseAppInsights } from '../utils/azureAppInsights'
+import applicationInfoSupplier from '../applicationInfo'
 import BookingClient from './bookingClient'
 
+const applicationInfo = applicationInfoSupplier()
+
 initialiseAppInsights()
-buildAppInsightsClient()
+buildAppInsightsClient(applicationInfo)
 
 import HmppsAuthClient from './hmppsAuthClient'
 import PersonClient from './personClient'

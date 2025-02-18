@@ -1,19 +1,12 @@
-/* istanbul ignore file */
-
-import { DistributedTracingModes, TelemetryClient, defaultClient, setup } from 'applicationinsights'
-import applicationVersion from '../applicationVersion'
-
-function defaultName(): string {
-  const {
-    packageData: { name },
-  } = applicationVersion
-  return name
-}
-
-function version(): string {
-  const { buildNumber } = applicationVersion
-  return buildNumber
-}
+import {
+  DistributedTracingModes,
+  type TelemetryClient,
+  defaultClient,
+  getCorrelationContext,
+  setup,
+} from 'applicationinsights'
+import { RequestHandler } from 'express'
+import type { ApplicationInfo } from '../applicationInfo'
 
 export function initialiseAppInsights(): void {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
@@ -24,11 +17,35 @@ export function initialiseAppInsights(): void {
   }
 }
 
-export function buildAppInsightsClient(name = defaultName()): TelemetryClient {
+export function buildAppInsightsClient(
+  { applicationName, buildNumber }: ApplicationInfo,
+  overrideName?: string,
+): TelemetryClient {
   if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
-    defaultClient.context.tags['ai.cloud.role'] = name
-    defaultClient.context.tags['ai.application.ver'] = version()
+    defaultClient.context.tags['ai.cloud.role'] = overrideName || applicationName
+    defaultClient.context.tags['ai.application.ver'] = buildNumber
+
+    defaultClient.addTelemetryProcessor(({ tags, data }, contextObjects) => {
+      const operationNameOverride = contextObjects.correlationContext?.customProperties?.getProperty('operationName')
+      if (operationNameOverride) {
+        tags['ai.operation.name'] = data.baseData.name = operationNameOverride // eslint-disable-line no-param-reassign,no-multi-assign
+      }
+      return true
+    })
+
     return defaultClient
   }
   return null
+}
+
+export function appInsightsMiddleware(): RequestHandler {
+  return (req, res, next) => {
+    res.prependOnceListener('finish', () => {
+      const context = getCorrelationContext()
+      if (context && req.route) {
+        context.customProperties.setProperty('operationName', `${req.method} ${req.route?.path}`)
+      }
+    })
+    next()
+  }
 }

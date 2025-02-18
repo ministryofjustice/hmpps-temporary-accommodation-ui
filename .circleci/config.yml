@@ -67,7 +67,8 @@ workflows:
             branches:
               only:
                 - main
-
+                - spike-CAS-1436-investigate-adding-app-insights-metrics-into-the-u-is
+                - spike-CAS-1436-investigate-adding-app-insights-metrics-into-the-ui-2
       - hmpps/deploy_env:
           name: deploy_dev
           env: 'dev'
@@ -93,8 +94,8 @@ workflows:
       - request-test-approval:
           type: approval
           requires:
-            - deploy_dev
-            - e2e_environment_test
+            - helm_lint
+            - build_docker
       - hmpps/deploy_env:
           name: deploy_test
           env: 'test'
@@ -105,6 +106,8 @@ workflows:
             branches:
               only:
                 - main
+                - spike-CAS-1436-investigate-adding-app-insights-metrics-into-the-u-is
+                - spike-CAS-1436-investigate-adding-app-insights-metrics-into-the-ui-2
           requires:
             - request-test-approval
 

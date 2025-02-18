@@ -1,9 +1,9 @@
 import {
-  defaultClient,
   DistributedTracingModes,
+  type TelemetryClient,
+  defaultClient,
   getCorrelationContext,
   setup,
-  type TelemetryClient,
 } from 'applicationinsights'
 import { RequestHandler } from 'express'
 import type { ApplicationInfo } from '../applicationInfo'

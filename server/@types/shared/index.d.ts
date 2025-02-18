@@ -227,9 +227,6 @@ export type { SubmitApprovedPremisesApplication } from './models/SubmitApprovedP
 export type { SubmitCas2Application } from './models/SubmitCas2Application';
 export type { SubmitPlacementApplication } from './models/SubmitPlacementApplication';
 export type { SubmitTemporaryAccommodationApplication } from './models/SubmitTemporaryAccommodationApplication';
-export type { SupervisingOfficer } from './models/SupervisingOfficer';
-export type { SupervisingProvider } from './models/SupervisingProvider';
-export type { SupervisingTeam } from './models/SupervisingTeam';
 export type { Task } from './models/Task';
 export type { TaskSortField } from './models/TaskSortField';
 export type { TaskStatus } from './models/TaskStatus';

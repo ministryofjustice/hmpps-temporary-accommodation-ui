@@ -1,3 +1,4 @@
+import { Unit } from '@approved-premises/api'
 import Apply from '../../form-pages/apply'
 import Assess from '../../form-pages/assess'
 import { applicationFactory, assessmentFactory } from '../../testutils/factories'
@@ -21,7 +22,7 @@ jest.mock('../../form-pages/apply', () => {
       {
         title: 'Check your answers',
         name: 'CheckYourAnswers',
-        tasks: [],
+        tasks: [] as Array<Unit>,
       },
     ],
   }

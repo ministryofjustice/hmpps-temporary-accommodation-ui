@@ -44,6 +44,10 @@ export interface AuditConfig {
 const environment = process.env.ENVIRONMENT || 'local'
 
 export default {
+  buildNumber: get('BUILD_NUMBER', '1_0_0', requiredInProduction),
+  productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
+  gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   https: production,
   staticResourceCacheDuration: 20,
   flags: {

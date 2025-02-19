@@ -150,6 +150,7 @@
     "cross-spawn": "^7.0.6",
     "csrf-sync": "^4.0.3",
     "date-fns": "^4.1.0",
+    "esbuild": "^0.25.0",
     "express": "^4.21.2",
     "express-prom-bundle": "^6.5.0",
     "express-session": "^1.18.1",
@@ -176,6 +177,7 @@
     "reflect-metadata": "^0.2.2",
     "static-path": "^0.0.4",
     "superagent": "^8.0.2",
+    "tsx": "^4.19.3",
     "typescript-json-schema": "^0.64.0",
     "url-value-parser": "^2.2.0"
   },

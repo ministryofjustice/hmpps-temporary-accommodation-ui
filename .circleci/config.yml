@@ -77,6 +77,7 @@ workflows:
             branches:
               only:
                 - main
+                - spike-CAS-1436-investigate-adding-app-insights-metrics-into-the-ui-2
           requires:
             - helm_lint
             - build_docker

@@ -16,14 +16,14 @@ parameters:
 
   node-version:
     type: string
-    default: 20.18-browsers
+    default: 22.14-browsers
 
 jobs:
   e2e_environment_test:
     parallelism: 5
     circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
     docker:
-      - image: cypress/browsers:node-20.18.0-chrome-129.0.6668.89-1-ff-131.0.2-edge-129.0.2792.65-1
+      - image: cypress/browsers:node-22.14.0-chrome-133.0.6943.53-1-ff-135.0-edge-133.0.3065.59-1
     parameters:
       environment:
         type: string

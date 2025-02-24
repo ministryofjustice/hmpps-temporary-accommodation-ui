@@ -43,7 +43,7 @@
     "generate:schema:apply": "npx ts-node --transpile-only ./server/form-pages/apply/generateSchema.ts"
   },
   "engines": {
-    "node": "^20.0.0",
+    "node": "^22.0.0",
     "npm": "^10.0.0"
   },
   "jest": {

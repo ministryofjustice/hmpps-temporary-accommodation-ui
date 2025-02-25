@@ -156,6 +156,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "esbuild": "^0.25.0",
+    "exceljs": "^4.4.0",
     "express": "^4.21.2",
     "express-prom-bundle": "^6.5.0",
     "express-session": "^1.18.1",

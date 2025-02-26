@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test'
+import { ProbationRegion } from '@temporary-accommodation-ui/e2e'
 import { BasePage } from '../basePage'
 
 export class ReportsPage extends BasePage {
@@ -7,8 +8,8 @@ export class ReportsPage extends BasePage {
     return new ReportsPage(page)
   }
 
-  async enterFormDetails(probationRegionName: string, startDate: string, endDate: string) {
-    await this.selectProbationRegion(probationRegionName)
+  async enterFormDetails(probationRegion: ProbationRegion, startDate: string, endDate: string) {
+    await this.selectProbationRegion(decodeURI(probationRegion.name))
     await this.enterStartDate(startDate)
     await this.enterEndDate(endDate)
   }

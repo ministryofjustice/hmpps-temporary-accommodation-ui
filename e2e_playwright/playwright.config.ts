@@ -17,17 +17,44 @@ export default defineConfig<TestOptions>({
   },
   projects: [
     {
+      name: 'setup-dev',
+      testMatch: /.*\.setup\.ts/,
+      use: { baseURL: process.env.DEV_PLAYWRIGHT_BASE_URL },
+    },
+    {
+      name: 'dev',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: process.env.DEV_PLAYWRIGHT_BASE_URL,
+      },
+      dependencies: ['setup-dev'],
+    },
+    {
+      name: 'setup-local-dev-upstream',
+      testMatch: /.*\.setup\.ts/,
+      use: { baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL },
+    },
+    {
+      name: 'local-dev-upstream',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL,
+      },
+      dependencies: ['setup-local-dev-upstream'],
+    },
+    {
       name: 'setup-local',
       testMatch: /.*\.setup\.ts/,
-      use: { baseURL: process.env.PLAYWRIGHT_BASE_URL },
+      use: { baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL },
     },
     {
       name: 'local',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: process.env.PLAYWRIGHT_BASE_URL,
+        baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL,
       },
       dependencies: ['setup-local'],
     },
   ],
+  testIgnore: process.env.APPLICATION_TYPE ? [] : ['/utils/*.ts'],
 })

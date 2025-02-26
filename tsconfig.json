@@ -20,7 +20,8 @@
     "baseUrl": ".",
     "paths": {
       "@approved-premises/api": ["server/@types/shared/index.d.ts"],
-      "@approved-premises/ui": ["server/@types/ui/index.d.ts"]
+      "@approved-premises/ui": ["server/@types/ui/index.d.ts"],
+      "@temporary-accommodation-ui/e2e": ["e2e_playwright/types/index.d.ts"]
     }
   },
   "exclude": [
@@ -32,7 +33,9 @@
     "dist",
     "cypress.config.ts",
     "cypress.config.e2e.ts",
-    "coverage/**"
+    "coverage/**",
+    "playwright-report",
+    "test-results"
   ],
   "include": ["**/*.js", "**/*.ts"]
 }

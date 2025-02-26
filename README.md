@@ -154,6 +154,23 @@ Spin up a real browser that gives you an interface to run individual E2E feature
 npm run test:e2e-dev-upstream:ui
 ```
 
+#### End-to-End tests (via Playwright)
+
+The end-to-end tests run against an actual API and database. To run them locally, you must ensure a local full stack is
+running (for instance, using AP Tools).
+
+Install playwright by running the install script:
+
+```bash
+npm run install-playwright
+```
+
+Run E2E tests and spin up a real browser that gives you an interface to run individual E2E features:
+
+```bash
+npm run test:e2e:local:ui
+```
+
 ## Release process
 
 Our release process aligns with the other CAS teams and as such [lives in

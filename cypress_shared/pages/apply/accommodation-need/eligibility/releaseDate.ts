@@ -6,7 +6,7 @@ import { personName } from '../../../../../server/utils/personUtils'
 export default class ReleaseDatePage extends ApplyPage {
   constructor(application: TemporaryAccommodationApplication) {
     super(
-      `${personName(application.person)}'s release date?`,
+      `${personName(application.person)}'s release date`,
       application,
       'eligibility',
       'release-date',

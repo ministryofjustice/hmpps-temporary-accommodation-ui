@@ -55,6 +55,50 @@ jobs:
           channel: << pipeline.parameters.alerts-slack-channel >>
           template: basic_fail_1
 
+  e2e_playwright_test:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    parallelism: 4
+    circleci_ip_ranges: true # opt-in to jobs running on a restricted set of IPs
+    parameters:
+      environment:
+        type: string
+        default: dev
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/app
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci --no-audit
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+            - ~/.cache
+      - run:
+          name: Install Playwright
+          command: npx playwright install
+      - run:
+          name: E2E Check
+          command: |
+            SHARD="$((${CIRCLE_NODE_INDEX}+1))"
+            npm run test:playwright:e2e:ci -- --shard=${SHARD}/${CIRCLE_NODE_TOTAL} \
+              --env "DEV_PLAYWRIGHT_BASE_URL=https://transitional-accommodation-<< parameters.environment >>.hmpps.service.justice.gov.uk,ASSESSOR_USERNAME=${CYPRESS_ASSESSOR_USERNAME_<< parameters.environment >>},ASSESSOR_PASSWORD=${CYPRESS_ASSESSOR_PASSWORD_<< parameters.environment >>},REFERRED_USERNAME=${CYPRESS_REFERRER_USERNAME_<< parameters.environment >>},REFERRED_PASSWORD=${CYPRESS_REFERRER_PASSWORD_<< parameters.environment >>},ACTING_USER_PROBATION_REGION_ID=${CYPRESS_ACTING_USER_PROBATION_REGION_ID_<< parameters.environment >>},ACTING_USER_PROBATION_REGION_NAME=${CYPRESS_ACTING_USER_PROBATION_REGION_NAME_<< parameters.environment >>},environment=${CYPRESS_ENVIRONMENT_<< parameters.environment >>}"\
+      - store_artifacts:
+          path: playwright-report
+          destination: playwright-report
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+      - slack/notify:
+          event: fail
+          channel: << pipeline.parameters.alerts-slack-channel >>
+          template: basic_fail_1
+
 workflows:
   version: 2
   build-test-and-deploy:
@@ -90,11 +134,22 @@ workflows:
           requires:
             - deploy_dev
 
+      - e2e_playwright_test:
+          environment: 'dev'
+          context: hmpps-common-vars
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - deploy_dev
+
       - request-test-approval:
           type: approval
           requires:
             - deploy_dev
             - e2e_environment_test
+            - e2e_playwright_test
       - hmpps/deploy_env:
           name: deploy_test
           env: 'test'
@@ -113,6 +168,7 @@ workflows:
           requires:
             - deploy_dev
             - e2e_environment_test
+            - e2e_playwright_test
       - hmpps/deploy_env:
           name: deploy_preprod
           env: 'preprod'

@@ -141,22 +141,11 @@ workflows:
           requires:
             - deploy_dev
 
-      - e2e_playwright_test:
-          environment: 'dev'
-          context: hmpps-common-vars
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - deploy_dev
-
       - request-test-approval:
           type: approval
           requires:
             - deploy_dev
             - e2e_environment_test
-            - e2e_playwright_test
       - hmpps/deploy_env:
           name: deploy_test
           env: 'test'
@@ -175,7 +164,6 @@ workflows:
           requires:
             - deploy_dev
             - e2e_environment_test
-            - e2e_playwright_test
       - hmpps/deploy_env:
           name: deploy_preprod
           env: 'preprod'

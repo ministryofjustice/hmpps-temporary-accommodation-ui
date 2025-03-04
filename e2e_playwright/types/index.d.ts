@@ -5,11 +5,16 @@ declare module '@temporary-accommodation-ui/e2e' {
   }
 
   type UserFullDetails = UserLoginDetails & {
+    probationRegion: ProbationRegion
+  }
+
+  type ProbationRegion = {
+    id: string
     name: string
-    email: string
   }
 
   export type TestOptions = {
-    user: UserFullDetails
+    assessor: UserFullDetails
+    referrer: UserLoginDetails
   }
 }

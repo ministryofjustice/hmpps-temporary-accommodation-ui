@@ -2,12 +2,21 @@ import { test as base } from '@playwright/test'
 import { TestOptions } from '@temporary-accommodation-ui/e2e'
 
 export const test = base.extend<TestOptions>({
-  user: [
+  assessor: [
     {
-      name: process.env.HMPPS_AUTH_NAME as string,
-      username: process.env.HMPPS_AUTH_USERNAME as string,
-      password: process.env.HMPPS_AUTH_PASSWORD as string,
-      email: process.env.HMPPS_AUTH_EMAIL as string,
+      username: process.env.ASSESSOR_USERNAME as string,
+      password: process.env.ASSESSOR_PASSWORD as string,
+      probationRegion: {
+        id: process.env.ACTING_USER_PROBATION_REGION_ID as string,
+        name: process.env.ACTING_USER_PROBATION_REGION_NAME as string,
+      },
+    },
+    { option: true },
+  ],
+  referrer: [
+    {
+      username: process.env.REFERRED_USERNAME as string,
+      password: process.env.REFERRED_PASSWORD as string,
     },
     { option: true },
   ],

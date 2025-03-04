@@ -1,5 +1,6 @@
 import { Page, expect } from '@playwright/test'
 import Excel, { CellValue } from 'exceljs'
+import { ProbationRegion } from '@temporary-accommodation-ui/e2e'
 import { visitDashboard } from './signIn'
 import { ReportsPage } from '../pages/reports/reportsPage'
 
@@ -173,7 +174,7 @@ type ReportType = keyof typeof reportTypeMetaData
 export const visitReportsPageAndDownloadReport = async (
   page: Page,
   reportType: ReportType,
-  probationRegionName: string,
+  probationRegion: ProbationRegion,
   startDate: string,
   endDate: string,
 ) => {
@@ -181,7 +182,7 @@ export const visitReportsPageAndDownloadReport = async (
   await dashboard.clickDownloadDataLink()
 
   const reportPage = await ReportsPage.initialize(page)
-  await reportPage.enterFormDetails(probationRegionName, startDate, endDate)
+  await reportPage.enterFormDetails(probationRegion, startDate, endDate)
 
   const path = await downloadReport(reportType, page)
   await confirmColumnNames(reportType, path)

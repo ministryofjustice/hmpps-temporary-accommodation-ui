@@ -86,8 +86,15 @@ jobs:
           name: E2E Check
           command: |
             SHARD="$((${CIRCLE_NODE_INDEX}+1))"
-            npm run test:playwright:e2e:ci -- --shard=${SHARD}/${CIRCLE_NODE_TOTAL} \
-              --env "DEV_PLAYWRIGHT_BASE_URL=https://transitional-accommodation-<< parameters.environment >>.hmpps.service.justice.gov.uk,ASSESSOR_USERNAME=${CYPRESS_ASSESSOR_USERNAME_<< parameters.environment >>},ASSESSOR_PASSWORD=${CYPRESS_ASSESSOR_PASSWORD_<< parameters.environment >>},REFERRED_USERNAME=${CYPRESS_REFERRER_USERNAME_<< parameters.environment >>},REFERRED_PASSWORD=${CYPRESS_REFERRER_PASSWORD_<< parameters.environment >>},ACTING_USER_PROBATION_REGION_ID=${CYPRESS_ACTING_USER_PROBATION_REGION_ID_<< parameters.environment >>},ACTING_USER_PROBATION_REGION_NAME=${CYPRESS_ACTING_USER_PROBATION_REGION_NAME_<< parameters.environment >>},environment=${CYPRESS_ENVIRONMENT_<< parameters.environment >>}"\
+            DEV_PLAYWRIGHT_BASE_URL="https://transitional-accommodation-<< parameters.environment >>.hmpps.service.justice.gov.uk"
+            ASSESSOR_USERNAME="${CYPRESS_ASSESSOR_USERNAME_<< parameters.environment >>}"
+            ASSESSOR_PASSWORD="${CYPRESS_ASSESSOR_PASSWORD_<< parameters.environment >>}"
+            REFERRED_USERNAME="${CYPRESS_REFERRER_USERNAME_<< parameters.environment >>}"
+            REFERRED_PASSWORD="${CYPRESS_REFERRER_PASSWORD_<< parameters.environment >>}"
+            ACTING_USER_PROBATION_REGION_ID="${CYPRESS_ACTING_USER_PROBATION_REGION_ID_<< parameters.environment >>}"
+            ACTING_USER_PROBATION_REGION_NAME="${CYPRESS_ACTING_USER_PROBATION_REGION_NAME_<< parameters.environment >>}"
+            environment="${CYPRESS_ENVIRONMENT_<< parameters.environment >>}"
+            npm run test:playwright:e2e:ci -- --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
       - store_artifacts:
           path: playwright-report
           destination: playwright-report

@@ -15,8 +15,8 @@ export const test = base.extend<TestOptions>({
   ],
   referrer: [
     {
-      username: process.env.REFERRED_USERNAME as string,
-      password: process.env.REFERRED_PASSWORD as string,
+      username: process.env.REFERRER_USERNAME as string,
+      password: process.env.REFERRER_PASSWORD as string,
     },
     { option: true },
   ],

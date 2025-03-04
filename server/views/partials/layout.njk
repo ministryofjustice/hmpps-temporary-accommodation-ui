@@ -4,6 +4,8 @@
 {% from "govuk/components/footer/macro.njk" import govukFooter %}
 
 {% block head %}
+    {% include "./applicationInsightsScript.njk" %}
+
     <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet" />
 {% endblock %}
 

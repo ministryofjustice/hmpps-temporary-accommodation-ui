@@ -8,4 +8,8 @@ export class DashboardPage extends BasePage {
   async clickReviewAndAssessReferral() {
     await this.page.getByRole('link', { name: 'Review and assess referrals' }).click()
   }
+
+  async clickDownloadDataLink() {
+    await this.page.getByRole('link', { name: 'Download data' }).click()
+  }
 }

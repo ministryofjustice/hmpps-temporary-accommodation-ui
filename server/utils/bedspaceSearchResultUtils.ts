@@ -1,7 +1,4 @@
-import {
-  TemporaryAccommodationBedSearchResult,
-  TemporaryAccommodationBedSearchResultOverlap,
-} from '@approved-premises/api'
+import { Cas3BedspaceSearchResultOverlap, TemporaryAccommodationBedSearchResult } from '@approved-premises/api'
 
 export function premisesKeyCharacteristics(result: TemporaryAccommodationBedSearchResult): Array<string> {
   return result.premises.characteristics
@@ -15,7 +12,7 @@ export function bedspaceKeyCharacteristics(result: TemporaryAccommodationBedSear
     .map(characteristic => characteristic.name)
 }
 
-export function bedspaceOverlapResult(overlapResult: TemporaryAccommodationBedSearchResultOverlap) {
+export function bedspaceOverlapResult(overlapResult: Cas3BedspaceSearchResultOverlap) {
   const { crn, days, roomId, personType, assessmentId, isSexualRisk } = overlapResult
   const overlapDays = `${days} ${days === 1 ? 'day' : 'days'} overlap`
 

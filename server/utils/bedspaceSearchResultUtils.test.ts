@@ -1,4 +1,4 @@
-import { FullPerson, RestrictedPerson, TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
+import { Cas3BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@approved-premises/api'
 import {
   assessmentFactory,
   bedSearchResultFactory,
@@ -65,9 +65,9 @@ describe('BedspaceSearchResultUtils', () => {
   })
 
   describe('bedspaceOverlapResult', () => {
-    let overLapDays: TemporaryAccommodationBedSearchResultOverlap['days']
-    let overlapResult: TemporaryAccommodationBedSearchResultOverlap
-    let overLapAssessmentId: TemporaryAccommodationBedSearchResultOverlap['assessmentId']
+    let overLapDays: Cas3BedspaceSearchResultOverlap['days']
+    let overlapResult: Cas3BedspaceSearchResultOverlap
+    let overLapAssessmentId: Cas3BedspaceSearchResultOverlap['assessmentId']
     let person: FullPerson | RestrictedPerson
 
     const createOverLapResult = () => {

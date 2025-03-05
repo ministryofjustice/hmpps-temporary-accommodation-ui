@@ -244,13 +244,13 @@ premises.forEach(item => {
 const bedSerchRequiredFields = [...getCombinations(['startDate', 'durationDays', 'probationDeliveryUnit'])]
 
 bedSerchRequiredFields.forEach((fields: Array<string>) => {
-  stubs.push(errorStub(fields, path.beds.search({}), 'POST'))
+  stubs.push(errorStub(fields, path.bedspaces.search({}), 'POST'))
 })
 
 stubs.push({
   request: {
     method: 'POST',
-    url: path.beds.search({}),
+    url: path.bedspaces.search({}),
   },
   response: {
     status: 200,

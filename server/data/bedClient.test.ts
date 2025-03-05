@@ -33,7 +33,7 @@ describe('BedClient', () => {
       const payload = bedSearchApiParametersFactory.build()
 
       fakeApprovedPremisesApi
-        .post(paths.beds.search({}))
+        .post(paths.bedspaces.search({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, results)
 

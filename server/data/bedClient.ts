@@ -15,7 +15,7 @@ export default class BedClient {
 
   async search(searchParameters: BedSearchParameters) {
     return this.restClient.post<BedSearchResults>({
-      path: paths.beds.search({}),
+      path: paths.bedspaces.search({}),
       data: searchParameters,
     })
   }

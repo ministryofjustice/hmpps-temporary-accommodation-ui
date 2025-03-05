@@ -11,7 +11,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: api.beds.search({}),
+        url: api.bedspaces.search({}),
       },
       response: {
         status: 201,
@@ -20,12 +20,12 @@ export default {
       },
     }),
   stubBedSearchErrors: (params: Array<string>): SuperAgentRequest =>
-    stubFor(errorStub(params, api.beds.search({}), 'POST')),
+    stubFor(errorStub(params, api.bedspaces.search({}), 'POST')),
   verifyBedSearch: async () =>
     (
       await getMatchingRequests({
         method: 'POST',
-        url: api.beds.search({}),
+        url: api.bedspaces.search({}),
       })
     ).body.requests,
   stubBedspaceSearchReferenceData: (): Promise<[Response, Response]> =>

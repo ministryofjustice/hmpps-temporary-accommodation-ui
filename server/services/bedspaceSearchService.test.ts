@@ -2,8 +2,8 @@ import { ReferenceDataClient } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import {
-  bedSearchApiParametersFactory,
-  bedSearchResultsFactory,
+  bedspaceSearchApiParametersFactory,
+  bedspaceSearchResultsFactory,
   characteristicFactory,
   pduFactory,
   probationRegionFactory,
@@ -32,8 +32,8 @@ describe('BedspaceSearchService', () => {
 
   describe('search', () => {
     it('returns search results for the provided search paramters', async () => {
-      const searchResults = bedSearchResultsFactory.build()
-      const searchParameters = bedSearchApiParametersFactory.build()
+      const searchResults = bedspaceSearchResultsFactory.build()
+      const searchParameters = bedspaceSearchApiParametersFactory.build()
 
       bedspaceClient.search.mockResolvedValue(searchResults)
 
@@ -42,10 +42,7 @@ describe('BedspaceSearchService', () => {
       expect(result).toEqual(searchResults)
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bedspaceClient.search).toHaveBeenCalledWith({
-        serviceName: 'temporary-accommodation',
-        ...searchParameters,
-      })
+      expect(bedspaceClient.search).toHaveBeenCalledWith({ ...searchParameters })
     })
   })
 

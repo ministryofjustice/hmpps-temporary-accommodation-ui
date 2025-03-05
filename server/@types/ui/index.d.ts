@@ -337,7 +337,7 @@ export type BedspaceOccupancyAttributes = 'isSharedProperty' | 'isSingleOccupanc
 
 export type BedspaceAccessiblityAttributes = 'isWheelchairAccessible'
 
-export type BedSearchFormParameters = {
+export type BedspaceSearchFormParameters = {
   startDate: string
   durationDays: number
   probationDeliveryUnits: Array<string>

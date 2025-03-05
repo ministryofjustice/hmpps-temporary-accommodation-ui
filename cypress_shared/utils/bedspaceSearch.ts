@@ -1,8 +1,8 @@
 import { Characteristic, Room, TemporaryAccommodationPremises } from '../../server/@types/shared'
-import { BedSearchFormParameters } from '../../server/@types/ui'
+import { BedspaceSearchFormParameters } from '../../server/@types/ui'
 
 export const characteristicsToSearchAttributes = (premises: TemporaryAccommodationPremises, room: Room) => {
-  const occupancyAttributesMap: Record<string, BedSearchFormParameters['occupancyAttribute']> = {
+  const occupancyAttributesMap: Record<string, BedspaceSearchFormParameters['occupancyAttribute']> = {
     All: 'all',
     'Shared property': 'isSharedProperty',
     'Single occupancy': 'isSingleOccupancy',

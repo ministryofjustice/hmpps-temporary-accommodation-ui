@@ -1,7 +1,7 @@
 import { Cas3BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@approved-premises/api'
 import {
   assessmentFactory,
-  bedSearchResultFactory,
+  bedspaceSearchResultFactory,
   characteristicFactory,
   premisesFactory,
   restrictedPersonFactory,
@@ -31,7 +31,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedSearchResultFactory.forPremises(premises).build()
+      const searchResult = bedspaceSearchResultFactory.forPremises(premises).build()
 
       expect(premisesKeyCharacteristics(searchResult)).toEqual(['Shared entrance', 'Shared property', 'Women only'])
     })
@@ -54,7 +54,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedSearchResultFactory.forBedspace(premises, room).build()
+      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, room).build()
 
       expect(bedspaceKeyCharacteristics(searchResult)).toEqual([
         'Shared bathroom',

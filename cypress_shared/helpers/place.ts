@@ -9,9 +9,9 @@ import {
 import { PlaceContext } from '../../server/@types/ui'
 import {
   assessmentSummaryFactory,
-  bedSearchFormParametersFactory,
-  bedSearchResultFactory,
-  bedSearchResultsFactory,
+  bedspaceSearchFormParametersFactory,
+  bedspaceSearchResultFactory,
+  bedspaceSearchResultsFactory,
   bookingFactory,
   newBookingFactory,
   timelineEventsFactory,
@@ -42,8 +42,8 @@ export default class PlaceHelper {
     private readonly premises: Premises,
     private readonly room: Room,
   ) {
-    this.bedSearchResults = bedSearchResultsFactory.build({
-      results: [bedSearchResultFactory.forBedspace(this.premises, this.room).build()],
+    this.bedSearchResults = bedspaceSearchResultsFactory.build({
+      results: [bedspaceSearchResultFactory.forBedspace(this.premises, this.room).build()],
     })
     this.person = this.placeContext.assessment.application.person
     this.booking = bookingFactory.build({
@@ -112,7 +112,7 @@ export default class PlaceHelper {
     const bedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage)
     // When I fill out the form
 
-    const searchParameters = bedSearchFormParametersFactory.build({
+    const searchParameters = bedspaceSearchFormParametersFactory.build({
       startDate: this.placeContext.arrivalDate,
       probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
     })

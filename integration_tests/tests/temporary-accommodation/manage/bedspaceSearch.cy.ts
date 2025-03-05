@@ -6,9 +6,9 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
-  bedSearchFormParametersFactory,
-  bedSearchResultFactory,
-  bedSearchResultsFactory,
+  bedspaceSearchFormParametersFactory,
+  bedspaceSearchResultFactory,
+  bedspaceSearchResultsFactory,
   overlapFactory,
   personFactory,
   placeContextFactory,
@@ -53,10 +53,10 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit()
 
     // And when I fill out the form
-    const results = bedSearchResultsFactory.build()
+    const results = bedspaceSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -88,7 +88,7 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit()
 
     // And when I fill out the form
-    const results = bedSearchResultsFactory.build({
+    const results = bedspaceSearchResultsFactory.build({
       results: [],
       resultsPremisesCount: 0,
       resultsRoomCount: 0,
@@ -96,7 +96,7 @@ context('Bedspace Search', () => {
     })
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -130,15 +130,15 @@ context('Bedspace Search', () => {
     // And when I fill out the form
     const premises = premisesFactory.build()
     const room = roomFactory.build()
-    const results = bedSearchResultsFactory.build({
-      results: [bedSearchResultFactory.forBedspace(premises, room).build()],
+    const results = bedspaceSearchResultsFactory.build({
+      results: [bedspaceSearchResultFactory.forBedspace(premises, room).build()],
     })
 
     cy.task('stubBedSearch', results)
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
-    const searchParameters = bedSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -167,9 +167,9 @@ context('Bedspace Search', () => {
     const assessment = assessmentFactory.build({ status: 'closed' })
     const timeline = timelineEventsFactory.build()
 
-    const results = bedSearchResultsFactory.build({
+    const results = bedspaceSearchResultsFactory.build({
       results: [
-        bedSearchResultFactory.forBedspace(premises, room).build({
+        bedspaceSearchResultFactory.forBedspace(premises, room).build({
           overlaps: [
             overlapFactory.build({
               name: person.name,
@@ -195,7 +195,7 @@ context('Bedspace Search', () => {
     })
 
     // And when I fill out the form
-    const searchParameters = bedSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -240,10 +240,10 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit()
 
     // And when I fill out the form
-    const results = bedSearchResultsFactory.build()
+    const results = bedspaceSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 
@@ -273,10 +273,10 @@ context('Bedspace Search', () => {
     const preSearchPage = BedspaceSearchPage.visit(placeContext)
 
     // And when I fill out the form
-    const results = bedSearchResultsFactory.build()
+    const results = bedspaceSearchResultsFactory.build()
     cy.task('stubBedSearch', results)
 
-    const searchParameters = bedSearchFormParametersFactory.build()
+    const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
     preSearchPage.clickSubmit()
 

@@ -4,7 +4,7 @@ import type {
 } from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
-import BedClient from '../data/bedClient'
+import BedspaceClient from '../data/bedspaceClient'
 import { CallConfig } from '../data/restClient'
 import { filterCharacteristics } from '../utils/characteristicUtils'
 
@@ -16,14 +16,14 @@ export type BedspaceSearchReferenceData = {
 
 export default class BedspaceSearchService {
   constructor(
-    private readonly bedClientFactory: RestClientBuilder<BedClient>,
+    private readonly bedClientFactory: RestClientBuilder<BedspaceClient>,
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
   async search(callConfig: CallConfig, searchParameters: Omit<BedSearchParameters, 'serviceName'>) {
-    const bedClient = this.bedClientFactory(callConfig)
+    const bedspaceClient = this.bedClientFactory(callConfig)
 
-    return bedClient.search({
+    return bedspaceClient.search({
       serviceName: 'temporary-accommodation',
       ...searchParameters,
     })

@@ -1,7 +1,4 @@
-import type {
-  TemporaryAccommodationBedSearchParameters as BedSearchParameters,
-  Characteristic,
-} from '@approved-premises/api'
+import type { Cas3BedspaceSearchParameters, Characteristic } from '@approved-premises/api'
 import { ReferenceData } from '../@types/ui'
 import { ReferenceDataClient, RestClientBuilder } from '../data'
 import BedspaceClient from '../data/bedspaceClient'
@@ -20,13 +17,10 @@ export default class BedspaceSearchService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async search(callConfig: CallConfig, searchParameters: Omit<BedSearchParameters, 'serviceName'>) {
+  async search(callConfig: CallConfig, searchParameters: Cas3BedspaceSearchParameters) {
     const bedspaceClient = this.bedClientFactory(callConfig)
 
-    return bedspaceClient.search({
-      serviceName: 'temporary-accommodation',
-      ...searchParameters,
-    })
+    return bedspaceClient.search({ ...searchParameters })
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceSearchReferenceData> {

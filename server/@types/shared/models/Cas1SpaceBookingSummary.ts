@@ -13,10 +13,12 @@ export type Cas1SpaceBookingSummary = {
     premises: NamedId;
     /**
      * actual arrival date or, if not known, the expected arrival date
+     * @deprecated
      */
     canonicalArrivalDate: string;
     /**
      * actual departure date or, if not known, the expected departure date
+     * @deprecated
      */
     canonicalDepartureDate: string;
     /**
@@ -46,5 +48,6 @@ export type Cas1SpaceBookingSummary = {
      * Room and premise characteristics
      */
     characteristics: Array<Cas1SpaceCharacteristic>;
+    deliusEventNumber?: string;
 };
 

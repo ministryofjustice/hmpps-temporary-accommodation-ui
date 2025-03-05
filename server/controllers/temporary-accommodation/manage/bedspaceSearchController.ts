@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { type BedSearchAttributes, BedSearchResults } from '../../../@types/shared'
+import { BedSearchResults, type BedspaceSearchAttributes } from '../../../@types/shared'
 import { BedspaceAccessiblityAttributes, BedspaceOccupancyAttributes, ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -80,7 +80,7 @@ export default class BedspaceSearchController {
           results = (
             await this.searchService.search(callConfig, {
               ...query,
-              attributes: selectedAttributes as BedSearchAttributes[],
+              attributes: selectedAttributes as BedspaceSearchAttributes[],
               startDate,
               durationDays,
             })

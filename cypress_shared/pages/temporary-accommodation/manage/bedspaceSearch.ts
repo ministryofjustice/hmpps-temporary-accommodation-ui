@@ -1,8 +1,4 @@
-import {
-  Cas3BedspaceSearchResults,
-  Room,
-  TemporaryAccommodationBedSearchResult,
-} from '../../../../server/@types/shared'
+import { Cas3BedspaceSearchResult, Cas3BedspaceSearchResults, Room } from '../../../../server/@types/shared'
 import { BedspaceSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -19,10 +15,7 @@ export default class BedspaceSearchPage extends Page {
     this.bedspaceSearchResults = new Map<string, BedspaceSearchResult>()
 
     results?.results.forEach(result => {
-      this.bedspaceSearchResults.set(
-        `${result.room.id}`,
-        new BedspaceSearchResult(result as TemporaryAccommodationBedSearchResult),
-      )
+      this.bedspaceSearchResults.set(`${result.room.id}`, new BedspaceSearchResult(result as Cas3BedspaceSearchResult))
     })
   }
 

@@ -6,7 +6,7 @@ import { bulkStub } from './index'
 
 import {
   bedFactory,
-  bedSearchResultsFactory,
+  bedspaceSearchResultsFactory,
   bookingFactory,
   dateCapacityFactory,
   lostBedFactory,
@@ -241,23 +241,23 @@ premises.forEach(item => {
   })
 })
 
-const bedSerchRequiredFields = [...getCombinations(['startDate', 'durationDays', 'probationDeliveryUnit'])]
+const bedspaceSearchRequiredFields = [...getCombinations(['startDate', 'durationDays', 'probationDeliveryUnit'])]
 
-bedSerchRequiredFields.forEach((fields: Array<string>) => {
-  stubs.push(errorStub(fields, path.beds.search({}), 'POST'))
+bedspaceSearchRequiredFields.forEach((fields: Array<string>) => {
+  stubs.push(errorStub(fields, path.bedspaces.search({}), 'POST'))
 })
 
 stubs.push({
   request: {
     method: 'POST',
-    url: path.beds.search({}),
+    url: path.bedspaces.search({}),
   },
   response: {
     status: 200,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
     },
-    jsonBody: bedSearchResultsFactory.forPremises(premises).build(),
+    jsonBody: bedspaceSearchResultsFactory.forPremises(premises).build(),
   },
 })
 

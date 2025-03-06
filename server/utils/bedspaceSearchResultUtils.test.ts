@@ -1,7 +1,7 @@
-import { FullPerson, RestrictedPerson, TemporaryAccommodationBedSearchResultOverlap } from '@approved-premises/api'
+import { Cas3BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@approved-premises/api'
 import {
   assessmentFactory,
-  bedSearchResultFactory,
+  bedspaceSearchResultFactory,
   characteristicFactory,
   premisesFactory,
   restrictedPersonFactory,
@@ -31,7 +31,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedSearchResultFactory.forPremises(premises).build()
+      const searchResult = bedspaceSearchResultFactory.forPremises(premises).build()
 
       expect(premisesKeyCharacteristics(searchResult)).toEqual(['Shared entrance', 'Shared property', 'Women only'])
     })
@@ -54,7 +54,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedSearchResultFactory.forBedspace(premises, room).build()
+      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, room).build()
 
       expect(bedspaceKeyCharacteristics(searchResult)).toEqual([
         'Shared bathroom',
@@ -65,9 +65,9 @@ describe('BedspaceSearchResultUtils', () => {
   })
 
   describe('bedspaceOverlapResult', () => {
-    let overLapDays: TemporaryAccommodationBedSearchResultOverlap['days']
-    let overlapResult: TemporaryAccommodationBedSearchResultOverlap
-    let overLapAssessmentId: TemporaryAccommodationBedSearchResultOverlap['assessmentId']
+    let overLapDays: Cas3BedspaceSearchResultOverlap['days']
+    let overlapResult: Cas3BedspaceSearchResultOverlap
+    let overLapAssessmentId: Cas3BedspaceSearchResultOverlap['assessmentId']
     let person: FullPerson | RestrictedPerson
 
     const createOverLapResult = () => {

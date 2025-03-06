@@ -2,9 +2,9 @@ import { Factory } from 'fishery'
 
 import { faker } from '@faker-js/faker'
 import type {
-  TemporaryAccommodationBedSearchResult as BedSearchResult,
   BedSearchResultPremisesSummary,
   BedSearchResultRoomSummary,
+  Cas3BedspaceSearchResult,
   Premises,
   Room,
 } from '@approved-premises/api'
@@ -13,7 +13,7 @@ import overlapFactory from './overlap'
 import premisesFactory from './premises'
 import roomFactory from './room'
 
-class BedSearchResultFactory extends Factory<BedSearchResult> {
+class BedSearchResultFactory extends Factory<Cas3BedspaceSearchResult> {
   /* istanbul ignore next */
   forPremises(premises: Premises) {
     return this.params({

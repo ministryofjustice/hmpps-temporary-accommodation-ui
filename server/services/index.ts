@@ -35,7 +35,7 @@ export const services = () => {
     roomClientBuilder,
     reportClientBuilder,
     userClientBuilder,
-    bedClientBuilder,
+    bedspaceClientBuilder,
     assessmentClientBuilder,
     timelineClientBuilder,
   } = dataAccess()
@@ -54,7 +54,7 @@ export const services = () => {
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
   const reportService = new ReportService(reportClientBuilder, referenceDataClientBuilder)
-  const bedspaceSearchService = new BedspaceSearchService(bedClientBuilder, referenceDataClientBuilder)
+  const bedspaceSearchService = new BedspaceSearchService(bedspaceClientBuilder, referenceDataClientBuilder)
   const bookingSearchService = new BookingSearchService(bookingClientBuilder)
   const turnaroundService = new TurnaroundService(bookingClientBuilder)
   const assessmentsService = new AssessmentsService(assessmentClientBuilder, referenceDataClientBuilder)

@@ -1,5 +1,6 @@
 import { path } from 'static-path'
 
+const cas3Path = path('/cas3')
 const premisesPath = path('/premises')
 const premisesSummaryPath = path('/premises/summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
@@ -10,8 +11,8 @@ const cancelLostBedPath = singleLostBedPath.path('cancellations')
 const roomsPath = singlePremisesPath.path('rooms')
 const singleRoomPath = singlePremisesPath.path('rooms').path(':roomId')
 
-const bedsPath = path('/beds')
-const searchBedsPath = bedsPath.path('search')
+const bedspacesPath = cas3Path.path('/bedspaces')
+const searchBedspacesPath = bedspacesPath.path('search')
 
 const bookingsPath = path('/bookings')
 const searchBookingsPath = bookingsPath.path('search')
@@ -50,8 +51,8 @@ const managePaths = {
       update: singleLostBedPath,
     },
   },
-  beds: {
-    search: searchBedsPath,
+  bedspaces: {
+    search: searchBedspacesPath,
   },
   bookings: {
     search: searchBookingsPath,
@@ -65,7 +66,6 @@ const peoplePath = path('/people')
 const personPath = peoplePath.path(':crn')
 const oasysPath = personPath.path('oasys')
 
-const cas3Path = path('/cas3')
 const reportsCas3Path = cas3Path.path('reports')
 const timelineCas3Path = cas3Path.path('timeline').path(':assessmentId')
 const deleteApplicationCas3Path = cas3Path.path('/applications/:id')
@@ -105,8 +105,8 @@ export default {
       index: managePaths.premises.show.path('staff'),
     },
   },
-  beds: {
-    search: managePaths.beds.search,
+  bedspaces: {
+    search: managePaths.bedspaces.search,
   },
   bookings: {
     search: managePaths.bookings.search,

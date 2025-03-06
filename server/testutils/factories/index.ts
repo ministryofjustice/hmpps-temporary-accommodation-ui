@@ -8,10 +8,10 @@ import assessmentFactory from './assessment'
 import assessmentSearchParametersFactory from './assessmentSearchParameters'
 import assessmentSummaryFactory from './assessmentSummary'
 import bedFactory from './bed'
-import bedSearchApiParametersFactory from './bedSearchApiParameters'
-import bedSearchFormParametersFactory from './bedSearchFormParameters'
-import bedSearchResultFactory from './bedSearchResult'
-import bedSearchResultsFactory from './bedSearchResults'
+import bedspaceSearchApiParametersFactory from './bedspaceSearchApiParameters'
+import bedspaceSearchFormParametersFactory from './bedspaceSearchFormParameters'
+import bedspaceSearchResultFactory from './bedspaceSearchResult'
+import bedspaceSearchResultsFactory from './bedspaceSearchResults'
 import bookingFactory from './booking'
 import bookingSearchParametersFactory from './bookingSearchParameters'
 import bookingSearchResultFactory from './bookingSearchResult'
@@ -82,10 +82,10 @@ export {
   assessmentSearchParametersFactory,
   assessmentSummaryFactory,
   bedFactory,
-  bedSearchApiParametersFactory,
-  bedSearchFormParametersFactory,
-  bedSearchResultFactory,
-  bedSearchResultsFactory,
+  bedspaceSearchApiParametersFactory,
+  bedspaceSearchFormParametersFactory,
+  bedspaceSearchResultFactory,
+  bedspaceSearchResultsFactory,
   bookingFactory,
   bookingSearchParametersFactory,
   bookingSearchResultBedSummaryFactory,

@@ -1,5 +1,5 @@
-import { BedSearchResults, Room, TemporaryAccommodationBedSearchResult } from '../../../../server/@types/shared'
-import { BedSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
+import { Cas3BedspaceSearchResult, Cas3BedspaceSearchResults, Room } from '../../../../server/@types/shared'
+import { BedspaceSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceSearchResult from '../../../components/bedspaceSearchResult'
@@ -9,16 +9,13 @@ import { addPlaceContext } from '../../../../server/utils/placeUtils'
 export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSearchResults: Map<string, BedspaceSearchResult>
 
-  constructor(results?: BedSearchResults) {
+  constructor(results?: Cas3BedspaceSearchResults) {
     super('Search for available bedspaces')
 
     this.bedspaceSearchResults = new Map<string, BedspaceSearchResult>()
 
     results?.results.forEach(result => {
-      this.bedspaceSearchResults.set(
-        `${result.room.id}`,
-        new BedspaceSearchResult(result as TemporaryAccommodationBedSearchResult),
-      )
+      this.bedspaceSearchResults.set(`${result.room.id}`, new BedspaceSearchResult(result as Cas3BedspaceSearchResult))
     })
   }
 
@@ -39,7 +36,7 @@ export default class BedspaceSearchPage extends Page {
     cy.get('h2').should('contain', 'There are no available bedspaces')
   }
 
-  shouldShowPrefilledSearchParameters(searchParameters: BedSearchFormParameters) {
+  shouldShowPrefilledSearchParameters(searchParameters: BedspaceSearchFormParameters) {
     this.shouldShowDateInputsByLegend('Available from', searchParameters.startDate)
     this.shouldShowTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
     searchParameters.probationDeliveryUnits.forEach(pduId => {
@@ -51,7 +48,7 @@ export default class BedspaceSearchPage extends Page {
     this.shouldShowDateInputsByLegend('Available from', placeContext.assessment.accommodationRequiredFromDate)
   }
 
-  completeForm(searchParameters: BedSearchFormParameters) {
+  completeForm(searchParameters: BedspaceSearchFormParameters) {
     this.completeDateInputsByLegend('Available from', searchParameters.startDate)
     this.completeTextInputByLabel('Number of days required', `${searchParameters.durationDays}`)
 

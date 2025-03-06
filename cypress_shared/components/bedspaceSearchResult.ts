@@ -1,10 +1,10 @@
-import { TemporaryAccommodationBedSearchResult as BedSearchResult } from '../../server/@types/shared'
+import { Cas3BedspaceSearchResult } from '../../server/@types/shared'
 import paths from '../../server/paths/temporary-accommodation/manage'
 import Component from './component'
 import { formatNotes } from '../../server/utils/viewUtils'
 
 export default class BedspaceSearchResult extends Component {
-  constructor(private readonly result: BedSearchResult) {
+  constructor(private readonly result: Cas3BedspaceSearchResult) {
     super()
   }
 

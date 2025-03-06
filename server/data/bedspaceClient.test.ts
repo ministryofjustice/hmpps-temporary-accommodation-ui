@@ -2,20 +2,20 @@ import nock from 'nock'
 
 import config from '../config'
 import paths from '../paths/api'
-import { bedSearchApiParametersFactory, bedSearchResultsFactory } from '../testutils/factories'
-import BedClient from './bedClient'
+import { bedspaceSearchApiParametersFactory, bedspaceSearchResultsFactory } from '../testutils/factories'
+import BedspaceClient from './bedspaceClient'
 import { CallConfig } from './restClient'
 
 describe('BedClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
-  let bedClient: BedClient
+  let bedspaceClient: BedspaceClient
 
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
-    bedClient = new BedClient(callConfig)
+    bedspaceClient = new BedspaceClient(callConfig)
   })
 
   afterEach(() => {
@@ -29,15 +29,15 @@ describe('BedClient', () => {
 
   describe('search', () => {
     it('returns search results', async () => {
-      const results = bedSearchResultsFactory.build()
-      const payload = bedSearchApiParametersFactory.build()
+      const results = bedspaceSearchResultsFactory.build()
+      const payload = bedspaceSearchApiParametersFactory.build()
 
       fakeApprovedPremisesApi
-        .post(paths.beds.search({}))
+        .post(paths.bedspaces.search({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, results)
 
-      const result = await bedClient.search(payload)
+      const result = await bedspaceClient.search(payload)
 
       expect(result).toEqual(results)
       expect(nock.isDone()).toBeTruthy()

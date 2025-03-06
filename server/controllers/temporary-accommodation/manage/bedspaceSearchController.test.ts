@@ -6,8 +6,8 @@ import { AssessmentsService } from '../../../services'
 import BedspaceSearchService from '../../../services/bedspaceSearchService'
 import {
   assessmentFactory,
-  bedSearchFormParametersFactory,
-  bedSearchResultsFactory,
+  bedspaceSearchFormParametersFactory,
+  bedspaceSearchResultsFactory,
   placeContextFactory,
   referenceDataFactory,
 } from '../../../testutils/factories'
@@ -97,7 +97,7 @@ describe('BedspaceSearchController', () => {
       })
 
       it('renders with errors if the API returns an error', async () => {
-        const searchParameters = bedSearchFormParametersFactory.build()
+        const searchParameters = bedspaceSearchFormParametersFactory.build()
         const placeContext = placeContextFactory.build()
 
         request.query = {
@@ -134,7 +134,7 @@ describe('BedspaceSearchController', () => {
 
     describe('when showing results', () => {
       it('renders the search results page with search results when given a search query', async () => {
-        const searchParameters = bedSearchFormParametersFactory.build()
+        const searchParameters = bedspaceSearchFormParametersFactory.build()
 
         request.query = {
           ...searchParameters,
@@ -142,7 +142,7 @@ describe('BedspaceSearchController', () => {
           ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
         }
 
-        const searchResults = bedSearchResultsFactory.build()
+        const searchResults = bedspaceSearchResultsFactory.build()
 
         bedspaceSearchService.search.mockResolvedValue(searchResults)
 
@@ -161,7 +161,7 @@ describe('BedspaceSearchController', () => {
       })
 
       it('updates the place context when given a search query', async () => {
-        const searchParameters = bedSearchFormParametersFactory.build()
+        const searchParameters = bedspaceSearchFormParametersFactory.build()
         const placeContext = placeContextFactory.build()
 
         request.query = {
@@ -170,7 +170,7 @@ describe('BedspaceSearchController', () => {
           ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
         }
 
-        const searchResults = bedSearchResultsFactory.build()
+        const searchResults = bedspaceSearchResultsFactory.build()
 
         bedspaceSearchService.search.mockResolvedValue(searchResults)
         ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)

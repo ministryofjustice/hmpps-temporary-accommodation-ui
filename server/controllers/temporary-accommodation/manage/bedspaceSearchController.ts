@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { type BedSearchAttributes, BedSearchResults } from '../../../@types/shared'
+import { type BedspaceSearchAttributes, Cas3BedspaceSearchResults } from '../../../@types/shared'
 import { BedspaceAccessiblityAttributes, BedspaceOccupancyAttributes, ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -41,7 +41,7 @@ export default class BedspaceSearchController {
         ? DateFormats.isoToDateAndTimeInputs(placeContextArrivalDate, 'startDate')
         : {}
 
-      let results: BedSearchResults['results']
+      let results: Cas3BedspaceSearchResults['results']
       let startDate: string
 
       try {
@@ -80,7 +80,7 @@ export default class BedspaceSearchController {
           results = (
             await this.searchService.search(callConfig, {
               ...query,
-              attributes: selectedAttributes as BedSearchAttributes[],
+              attributes: selectedAttributes as BedspaceSearchAttributes[],
               startDate,
               durationDays,
             })

@@ -54,7 +54,7 @@ context('Bedspace Search', () => {
 
     // And when I fill out the form
     const results = bedspaceSearchResultsFactory.build()
-    cy.task('stubBedSearch', results)
+    cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
@@ -94,7 +94,7 @@ context('Bedspace Search', () => {
       resultsRoomCount: 0,
       resultsBedCount: 0,
     })
-    cy.task('stubBedSearch', results)
+    cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
@@ -134,7 +134,7 @@ context('Bedspace Search', () => {
       results: [bedspaceSearchResultFactory.forBedspace(premises, room).build()],
     })
 
-    cy.task('stubBedSearch', results)
+    cy.task('stubBedspaceSearch', results)
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
 
@@ -185,7 +185,7 @@ context('Bedspace Search', () => {
       ],
     })
 
-    cy.task('stubBedSearch', results)
+    cy.task('stubBedspaceSearch', results)
     cy.task('stubSinglePremises', premises)
     cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
@@ -217,7 +217,7 @@ context('Bedspace Search', () => {
     const page = BedspaceSearchPage.visit()
 
     // And I miss required fields
-    cy.task('stubBedSearchErrors', ['startDate', 'durationDays', 'probationDeliveryUnits'])
+    cy.task('stubBedspaceSearchErrors', ['startDate', 'durationDays', 'probationDeliveryUnits'])
     page.clearTextInputByLabel('Number of days required')
     page.clickSubmit()
 
@@ -241,7 +241,7 @@ context('Bedspace Search', () => {
 
     // And when I fill out the form
     const results = bedspaceSearchResultsFactory.build()
-    cy.task('stubBedSearch', results)
+    cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
@@ -274,7 +274,7 @@ context('Bedspace Search', () => {
 
     // And when I fill out the form
     const results = bedspaceSearchResultsFactory.build()
-    cy.task('stubBedSearch', results)
+    cy.task('stubBedspaceSearch', results)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)

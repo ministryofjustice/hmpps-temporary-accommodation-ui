@@ -67,7 +67,7 @@ export default class PlaceHelper {
       referralNotes: this.timeline.events,
     })
     cy.task('stubBedspaceSearchReferenceData')
-    cy.task('stubBedSearch', this.bedspaceSearchResults)
+    cy.task('stubBedspaceSearch', this.bedspaceSearchResults)
     cy.task('stubSinglePremises', this.premises)
     cy.task('stubSingleRoom', { premisesId: this.premises.id, room: this.room })
     cy.task('stubFindPerson', { person: this.person })

@@ -7,7 +7,7 @@ import { characteristics, pdus } from '../../wiremock/referenceDataStubs'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
-  stubBedSearch: (searchResults: Cas3BedspaceSearchResults): SuperAgentRequest =>
+  stubBedspaceSearch: (searchResults: Cas3BedspaceSearchResults): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',
@@ -19,7 +19,7 @@ export default {
         jsonBody: searchResults,
       },
     }),
-  stubBedSearchErrors: (params: Array<string>): SuperAgentRequest =>
+  stubBedspaceSearchErrors: (params: Array<string>): SuperAgentRequest =>
     stubFor(errorStub(params, api.bedspaces.search({}), 'POST')),
   verifyBedSearch: async () =>
     (

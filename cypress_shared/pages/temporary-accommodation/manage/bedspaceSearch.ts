@@ -1,4 +1,8 @@
-import { BedSearchResults, Room, TemporaryAccommodationBedSearchResult } from '../../../../server/@types/shared'
+import {
+  Cas3BedspaceSearchResults,
+  Room,
+  TemporaryAccommodationBedSearchResult,
+} from '../../../../server/@types/shared'
 import { BedspaceSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -9,7 +13,7 @@ import { addPlaceContext } from '../../../../server/utils/placeUtils'
 export default class BedspaceSearchPage extends Page {
   private readonly bedspaceSearchResults: Map<string, BedspaceSearchResult>
 
-  constructor(results?: BedSearchResults) {
+  constructor(results?: Cas3BedspaceSearchResults) {
     super('Search for available bedspaces')
 
     this.bedspaceSearchResults = new Map<string, BedspaceSearchResult>()

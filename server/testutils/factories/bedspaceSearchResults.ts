@@ -1,10 +1,10 @@
 import { Factory } from 'fishery'
 
 import { faker } from '@faker-js/faker'
-import type { BedSearchResults, Premises } from '@approved-premises/api'
+import type { Cas3BedspaceSearchResults, Premises } from '@approved-premises/api'
 import bedspaceSearchResult from './bedspaceSearchResult'
 
-class BedspaceSearchResultsFactory extends Factory<BedSearchResults> {
+class BedspaceSearchResultsFactory extends Factory<Cas3BedspaceSearchResults> {
   /* istanbul ignore next */
   forPremises(premises: Premises[]) {
     const resultPremises = faker.helpers.arrayElements(premises)

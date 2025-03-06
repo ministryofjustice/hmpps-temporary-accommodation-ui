@@ -1,4 +1,4 @@
-import type { BedSearchResults, Cas3BedspaceSearchParameters } from '@approved-premises/api'
+import type { Cas3BedspaceSearchParameters, Cas3BedspaceSearchResults } from '@approved-premises/api'
 import config, { ApiConfig } from '../config'
 import paths from '../paths/api'
 import RestClient, { CallConfig } from './restClient'
@@ -11,7 +11,7 @@ export default class BedspaceClient {
   }
 
   async search(searchParameters: Cas3BedspaceSearchParameters) {
-    return this.restClient.post<BedSearchResults>({
+    return this.restClient.post<Cas3BedspaceSearchResults>({
       path: paths.bedspaces.search({}),
       data: searchParameters,
     })

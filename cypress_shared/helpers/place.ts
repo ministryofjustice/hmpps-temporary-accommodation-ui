@@ -1,7 +1,7 @@
 import {
   AssessmentSummary,
-  BedSearchResults,
   Booking,
+  Cas3BedspaceSearchResults,
   Person,
   TemporaryAccommodationPremises as Premises,
   Room,
@@ -27,7 +27,7 @@ import BookingSelectAssessmentPage from '../pages/temporary-accommodation/manage
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
 
 export default class PlaceHelper {
-  private readonly bedSearchResults: BedSearchResults
+  private readonly bedspaceSearchResults: Cas3BedspaceSearchResults
 
   private readonly person: Person
 
@@ -42,7 +42,7 @@ export default class PlaceHelper {
     private readonly premises: Premises,
     private readonly room: Room,
   ) {
-    this.bedSearchResults = bedspaceSearchResultsFactory.build({
+    this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
       results: [bedspaceSearchResultFactory.forBedspace(this.premises, this.room).build()],
     })
     this.person = this.placeContext.assessment.application.person
@@ -67,7 +67,7 @@ export default class PlaceHelper {
       referralNotes: this.timeline.events,
     })
     cy.task('stubBedspaceSearchReferenceData')
-    cy.task('stubBedSearch', this.bedSearchResults)
+    cy.task('stubBedSearch', this.bedspaceSearchResults)
     cy.task('stubSinglePremises', this.premises)
     cy.task('stubSingleRoom', { premisesId: this.premises.id, room: this.room })
     cy.task('stubFindPerson', { person: this.person })
@@ -121,7 +121,7 @@ export default class PlaceHelper {
     bedspaceSearchPage.clickSubmit()
 
     // I am taken to the search results page
-    const resultsBedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage, this.bedSearchResults)
+    const resultsBedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage, this.bedspaceSearchResults)
 
     // And the place context header is visible
     resultsBedspaceSearchPage.shouldShowPlaceContextHeader(this.placeContext)
@@ -129,7 +129,7 @@ export default class PlaceHelper {
 
   private searchResultsToBedspace() {
     // Given I am viewing bedspace search results
-    const resultsBedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage, this.bedSearchResults)
+    const resultsBedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage, this.bedspaceSearchResults)
 
     // When I click a bedspace
     resultsBedspaceSearchPage.clickBedspaceLink(this.room)

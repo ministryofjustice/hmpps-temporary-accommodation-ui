@@ -1,5 +1,5 @@
 import type { Response, SuperAgentRequest } from 'superagent'
-import { BedSearchResults } from '../../server/@types/shared'
+import { Cas3BedspaceSearchResults } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '../../wiremock'
@@ -7,7 +7,7 @@ import { characteristics, pdus } from '../../wiremock/referenceDataStubs'
 import { errorStub } from '../../wiremock/utils'
 
 export default {
-  stubBedSearch: (searchResults: BedSearchResults): SuperAgentRequest =>
+  stubBedSearch: (searchResults: Cas3BedspaceSearchResults): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'POST',

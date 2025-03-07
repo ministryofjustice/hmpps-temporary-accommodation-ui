@@ -8,11 +8,11 @@ set -e
 cd "$(dirname "$0")/.."
 
 if [ ! -f .env ]; then
-  cp .env.example .env
+  cp .env.local .env
 fi
 
 if [ ! -f .env.test ]; then
-  cp .env.example .env
+  cp .env.local .env
 fi
 
 script/bootstrap

@@ -20,4 +20,14 @@ export const test = base.extend<TestOptions>({
     },
     { option: true },
   ],
+  premises: {
+    name: 'Test Premise 1',
+    addressLine1: 'Test Road',
+    addressLine2: 'Test Lane',
+    town: 'Gloucester',
+    postcode: 'GL22 XXX',
+    localAuthorityArea: 'Gloucester',
+    probationRegionName: 'South West',
+    pdu: 'Gloucestershire',
+  },
 })

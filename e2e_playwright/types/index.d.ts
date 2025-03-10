@@ -13,8 +13,20 @@ declare module '@temporary-accommodation-ui/e2e' {
     name: string
   }
 
+  export type Premises = {
+    name: string
+    addressLine1: string
+    addressLine2: string
+    town: string
+    postcode: string
+    localAuthorityArea: string
+    probationRegionName: string
+    pdu: string
+  }
+
   export type TestOptions = {
     assessor: UserFullDetails
     referrer: UserLoginDetails
+    premises: Premises
   }
 }

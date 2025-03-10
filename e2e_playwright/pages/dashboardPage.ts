@@ -12,4 +12,8 @@ export class DashboardPage extends BasePage {
   async clickDownloadDataLink() {
     await this.page.getByRole('link', { name: 'Download data' }).click()
   }
+
+  async clickManagePropertiesLink() {
+    await this.page.getByRole('link', { name: 'Manage properties, bedspaces, and bookings' }).click()
+  }
 }

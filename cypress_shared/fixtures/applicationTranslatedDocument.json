@@ -144,13 +144,13 @@
             {
               "ACCT Alerts": [
                 {
-                  "Alert type": 47419,
+                  "Alert type": "Theft",
                   "ACCT description": "Soluta harum harum hic maxime reprehenderit quis harum necessitatibus.",
                   "Date created": "5 December 2022",
                   "Expiry date": "29 May 2023"
                 },
                 {
-                  "Alert type": 429,
+                  "Alert type": "Fraud",
                   "ACCT description": "Quia ex nisi deserunt voluptatibus sit ipsa.",
                   "Date created": "21 May 2022",
                   "Expiry date": "16 December 2023"

@@ -160,6 +160,9 @@ context('Apply', () => {
       this.applicationData['placement-considerations']['risk-management-plan'].oasysCompleted =
         requestBody.data['placement-considerations']['risk-management-plan'].oasysCompleted
 
+      cy.task('log', requestBody.data)
+      cy.task('log', this.applicationData)
+
       expect(requestBody.data).to.deep.equal(this.applicationData)
 
       cy.task('validateBodyAgainstApplySchema', requestBody.data).then(result => {

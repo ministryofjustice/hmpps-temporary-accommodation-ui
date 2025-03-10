@@ -175,14 +175,12 @@ export const visitReportsPageAndDownloadReport = async (
   page: Page,
   reportType: ReportType,
   probationRegion: ProbationRegion,
-  startDate: string,
-  endDate: string,
 ) => {
   const dashboard = await visitDashboard(page)
   await dashboard.clickDownloadDataLink()
 
   const reportPage = await ReportsPage.initialize(page)
-  await reportPage.enterFormDetails(probationRegion, startDate, endDate)
+  await reportPage.enterFormDetails(probationRegion)
 
   const path = await downloadReport(reportType, page)
   await confirmColumnNames(reportType, path)

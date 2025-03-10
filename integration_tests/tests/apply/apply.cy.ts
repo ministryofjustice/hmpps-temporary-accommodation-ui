@@ -162,7 +162,6 @@ context('Apply', () => {
 
       cy.task('log', requestBody.data)
       cy.task('log', this.applicationData)
-      cy.pause()
 
       expect(requestBody.data).to.deep.equal(this.applicationData)
 

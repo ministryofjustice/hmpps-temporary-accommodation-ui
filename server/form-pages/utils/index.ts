@@ -253,8 +253,8 @@ export const mapAdjudicationsForPageBody = (adjudications: Array<Adjudication>):
 
 export const mapAcctAlertsForPageBody = (acctAlerts: Array<UIPersonAcctAlert>): Array<UIPersonAcctAlert> => {
   return acctAlerts.map(acctAlert => ({
-    alertId: acctAlert.alertTypeDescription || acctAlert.alertId,
-    comment: acctAlert.description || acctAlert.comment || '',
+    alertTypeDescription: acctAlert.alertTypeDescription || acctAlert.alertId,
+    description: acctAlert.description || acctAlert.comment || '',
     dateCreated: acctAlert.dateCreated,
     dateExpires: acctAlert.dateExpires || '',
   })) as unknown as Array<UIPersonAcctAlert>

@@ -472,20 +472,20 @@ describe('utils', () => {
       const acctAlertData3 = acctAlertFactory.build()
 
       const acctAlert1 = {
-        alertId: acctAlertData1.alertTypeDescription,
-        comment: acctAlertData1.description,
+        alertTypeDescription: acctAlertData1.alertTypeDescription,
+        description: acctAlertData1.description,
         dateCreated: acctAlertData1.dateCreated,
         dateExpires: acctAlertData1.dateExpires,
       }
       const acctAlert2 = {
-        alertId: acctAlertData2.alertTypeDescription,
-        comment: acctAlertData2.description,
+        alertTypeDescription: acctAlertData2.alertTypeDescription,
+        description: acctAlertData2.description,
         dateCreated: acctAlertData2.dateCreated,
         dateExpires: acctAlertData2.dateExpires,
       }
       const acctAlert3 = {
-        alertId: acctAlertData3.alertTypeDescription,
-        comment: acctAlertData3.description,
+        alertTypeDescription: acctAlertData3.alertTypeDescription,
+        description: acctAlertData3.description,
         dateCreated: acctAlertData3.dateCreated,
         dateExpires: acctAlertData3.dateExpires,
       }
@@ -505,27 +505,27 @@ describe('utils', () => {
       const acctAlertData1 = acctAlertFactory.build()
       const acctAlertData2 = acctAlertFactory.build({
         comment: null,
-        description: null,
+        description: '',
       })
       const acctAlertData3 = acctAlertFactory.build({
         dateExpires: null,
       })
 
       const acctAlert1 = {
-        alertId: acctAlertData1.alertTypeDescription,
-        comment: acctAlertData1.description,
+        alertTypeDescription: acctAlertData1.alertTypeDescription,
+        description: acctAlertData1.description,
         dateCreated: acctAlertData1.dateCreated,
         dateExpires: acctAlertData1.dateExpires,
       }
       const acctAlert2 = {
-        alertId: acctAlertData2.alertTypeDescription,
-        comment: acctAlertData2.description,
+        alertTypeDescription: acctAlertData2.alertTypeDescription,
+        description: acctAlertData2.description,
         dateCreated: acctAlertData2.dateCreated,
         dateExpires: acctAlertData2.dateExpires,
       }
       const acctAlert3 = {
-        alertId: acctAlertData3.alertTypeDescription,
-        comment: acctAlertData3.description,
+        alertTypeDescription: acctAlertData3.alertTypeDescription,
+        description: acctAlertData3.description,
         dateCreated: acctAlertData3.dateCreated,
         dateExpires: acctAlertData3.dateExpires,
       }
@@ -536,7 +536,7 @@ describe('utils', () => {
           acctAlert2 as unknown as UIPersonAcctAlert,
           acctAlert3 as unknown as UIPersonAcctAlert,
         ]),
-      ).toEqual([acctAlert1, { ...acctAlert2, comment: '' }, { ...acctAlert3, dateExpires: '' }])
+      ).toEqual([acctAlert1, { ...acctAlert2, description: '' }, { ...acctAlert3, dateExpires: '' }])
     })
   })
 })

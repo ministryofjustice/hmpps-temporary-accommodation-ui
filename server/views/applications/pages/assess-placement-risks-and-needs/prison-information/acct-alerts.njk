@@ -21,8 +21,8 @@
       <tbody class="govuk-table__body">
         {% for alert in acctAlerts %}
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell">{{ alert.alertId }}</td>
-            <td class="govuk-table__cell">{{ alert.comment }}</td>
+            <td class="govuk-table__cell">{{ alert.alertTypeDescription }}</td>
+            <td class="govuk-table__cell">{{ alert.description }}</td>
             <td class="govuk-table__cell">{{ formatDate(alert.dateCreated) }}</td>
             <td class="govuk-table__cell">{{ formatDate(alert.dateExpires) if alert.dateExpires else '' }}</td>
           </tr>

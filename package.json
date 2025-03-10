@@ -140,6 +140,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.600.0",
+    "@faker-js/faker": "^9.0.3",
     "@microsoft/applicationinsights-web": "^3.3.5",
     "@ministryofjustice/frontend": "^3.3.0",
     "@playwright/test": "^1.50.1",
@@ -196,7 +197,6 @@
     "@badeball/cypress-cucumber-preprocessor": "^22.0.1",
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "@faker-js/faker": "^9.0.3",
     "@golevelup/ts-jest": "^0.5.0",
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-format": "^0.2.9",

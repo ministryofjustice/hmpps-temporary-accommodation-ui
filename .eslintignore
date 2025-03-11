@@ -4,4 +4,5 @@ assets
 cypress.json
 reporter-config.json
 dist/
-playwright-report
+e2e_playwright/playwright-report
+e2e_playwright/test-results

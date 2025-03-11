@@ -4,12 +4,13 @@ import { TestOptions } from '@temporary-accommodation-ui/e2e'
 
 export default defineConfig<TestOptions>({
   testDir: './',
+  outputDir: './test-results',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   maxFailures: process.env.CI ? 3 : 1,
   workers: 2,
-  reporter: 'html',
+  reporter: [['html', { outputFolder: './playwright-report/index.html' }]],
   timeout: process.env.CI ? 5 * 60 * 1000 : 2 * 60 * 1000,
   use: {
     trace: 'retain-on-failure',

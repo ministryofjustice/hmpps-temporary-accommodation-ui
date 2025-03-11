@@ -85,15 +85,14 @@ jobs:
       - run:
           name: Run E2E tests
           command: |
-            SHARD="$((${CIRCLE_NODE_INDEX}+1))"
             export ASSESSOR_USERNAME=${CYPRESS_ASSESSOR_USERNAME_<< parameters.environment >>} ASSESSOR_PASSWORD=${CYPRESS_ASSESSOR_PASSWORD_<< parameters.environment >>} REFERRER_USERNAME=${CYPRESS_REFERRER_USERNAME_<< parameters.environment >>} REFERRER_PASSWORD=${CYPRESS_REFERRER_PASSWORD_<< parameters.environment >>} ACTING_USER_PROBATION_REGION_ID=${CYPRESS_ACTING_USER_PROBATION_REGION_ID_<< parameters.environment >>} ACTING_USER_PROBATION_REGION_NAME=${ACTING_USER_PROBATION_REGION_NAME_<< parameters.environment >>} ENVIRONMENT=${CYPRESS_ENVIRONMENT_<< parameters.environment >>} DEV_PLAYWRIGHT_BASE_URL=https://transitional-accommodation-<< parameters.environment >>.hmpps.service.justice.gov.uk
-            npm run test:playwright:e2e:ci -- --shard=${SHARD}/${CIRCLE_NODE_TOTAL}
+            npm run test:playwright:e2e:ci
       - store_artifacts:
-          path: playwright-report
-          destination: playwright-report
+          path: e2e_playwright/playwright-report
+          destination: e2e_playwright/playwright-report
       - store_artifacts:
-          path: test-results
-          destination: test-results
+          path: e2e_playwright/test-results
+          destination: e2e_playwright/test-results
       - slack/notify:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>

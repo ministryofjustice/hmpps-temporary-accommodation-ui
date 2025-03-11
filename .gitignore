@@ -133,5 +133,5 @@ integration_tests/screenshots/
 cypress/downloads/
 
 # Playwright
-/test-results/
-/playwright-report/
+/e2e_playwright/test-results
+/e2e_playwright/playwright-report

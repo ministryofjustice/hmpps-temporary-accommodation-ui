@@ -1,9 +1,10 @@
 import { createMock } from '@golevelup/ts-jest'
+import { UIPersonAcctAlert } from '@approved-premises/ui'
 import { CallConfig } from '../../../../data/restClient'
 import { PersonService } from '../../../../services'
 import { acctAlertFactory, applicationFactory, personFactory } from '../../../../testutils/factories'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
-import { PageBodyPersonAcctAlert, mapAcctAlertsForPageBody } from '../../../utils'
+import { mapAcctAlertsForPageBody } from '../../../utils'
 import AcctAlerts, { acctAlertResponse } from './acctAlerts'
 import { SanitisedError } from '../../../../sanitisedError'
 
@@ -11,35 +12,81 @@ jest.mock('../../../../services/personService')
 jest.mock('../../../utils')
 
 describe('acctAlertResponse', () => {
-  it('returns a response for an ACCT Alert', () => {
-    const acctAlert = acctAlertFactory.build({
-      alertId: 123,
-      comment: 'Some description',
-      dateCreated: '2022-01-01T10:00:00Z',
-      dateExpires: '2022-01-09T10:00:00Z',
+  describe('using the old ACCT API endpoint', () => {
+    it('returns a response for an ACCT Alert', () => {
+      const acctAlert = acctAlertFactory.build({
+        alertId: 123,
+        alertTypeDescription: '',
+        comment: 'Some description',
+        description: '',
+        dateCreated: '2022-01-01T10:00:00Z',
+        dateExpires: '2022-01-09T10:00:00Z',
+      })
+
+      expect(acctAlertResponse(acctAlert)).toEqual({
+        'Alert type': 123,
+        'ACCT description': 'Some description',
+        'Date created': '1 January 2022',
+        'Expiry date': '9 January 2022',
+      })
     })
 
-    expect(acctAlertResponse(acctAlert)).toEqual({
-      'Alert type': 123,
-      'ACCT description': 'Some description',
-      'Date created': '1 January 2022',
-      'Expiry date': '9 January 2022',
+    it('returns a response for an ACCT Alert when the alert expiry date is not provided', () => {
+      const acctAlert = acctAlertFactory.build({
+        alertId: 123,
+        alertTypeDescription: '',
+        comment: 'Some description',
+        description: '',
+        dateCreated: '2022-01-01T10:00:00Z',
+        dateExpires: undefined,
+      })
+
+      expect(acctAlertResponse(acctAlert)).toEqual({
+        'Alert type': 123,
+        'ACCT description': 'Some description',
+        'Date created': '1 January 2022',
+        'Expiry date': '',
+      })
     })
   })
 
-  it('returns a response for an ACCT Alert when the alert expiry date is not provided', () => {
-    const acctAlert = acctAlertFactory.build({
-      alertId: 123,
-      comment: 'Some description',
-      dateCreated: '2022-01-01T10:00:00Z',
-      dateExpires: undefined,
-    })
+  describe('using the new ACCT API endpoint', () => {
+    describe('acctAlertResponse', () => {
+      it('returns a response for an ACCT Alert', () => {
+        const acctAlert = acctAlertFactory.build({
+          alertId: null,
+          alertTypeDescription: 'Theft',
+          comment: 'Some description',
+          description: 'Some description from new API',
+          dateCreated: '2022-01-01T10:00:00Z',
+          dateExpires: '2022-01-09T10:00:00Z',
+        })
 
-    expect(acctAlertResponse(acctAlert)).toEqual({
-      'Alert type': 123,
-      'ACCT description': 'Some description',
-      'Date created': '1 January 2022',
-      'Expiry date': '',
+        expect(acctAlertResponse(acctAlert)).toEqual({
+          'Alert type': 'Theft',
+          'ACCT description': 'Some description from new API',
+          'Date created': '1 January 2022',
+          'Expiry date': '9 January 2022',
+        })
+      })
+
+      it('returns a response for an ACCT Alert when the alert expiry date is not provided', () => {
+        const acctAlert = acctAlertFactory.build({
+          alertId: 123,
+          alertTypeDescription: '',
+          comment: 'Some description',
+          description: '',
+          dateCreated: '2022-01-01T10:00:00Z',
+          dateExpires: undefined,
+        })
+
+        expect(acctAlertResponse(acctAlert)).toEqual({
+          'Alert type': 123,
+          'ACCT description': 'Some description',
+          'Date created': '1 January 2022',
+          'Expiry date': '',
+        })
+      })
     })
   })
 })
@@ -49,7 +96,7 @@ describe('AcctAlerts', () => {
   const person = personFactory.build({ name: 'John Wayne' })
   const application = applicationFactory.build({ person })
 
-  const acctAlerts = acctAlertFactory.buildList(5) as Array<PageBodyPersonAcctAlert>
+  const acctAlerts = acctAlertFactory.buildList(5) as Array<UIPersonAcctAlert>
 
   const body = { acctAlerts }
 

@@ -160,8 +160,12 @@ export const dateAndTimeInputsAreValidDates = <K extends string>(
   key: K,
 ): boolean => {
   const inputYear = dateInputObj?.[`${key}-year`] as string
+  const inputMonth = dateInputObj?.[`${key}-month`] as string
+  const inputDay = dateInputObj?.[`${key}-day`] as string
 
   if (inputYear && inputYear.length !== 4) return false
+  if (inputMonth && (Number(inputMonth) < 1 || Number(inputMonth) > 12)) return false
+  if (inputDay && (Number(inputDay) < 1 || Number(inputDay) > 31)) return false
 
   try {
     const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)

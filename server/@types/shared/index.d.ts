@@ -42,7 +42,6 @@ export type { BedSearchAttributes } from './models/BedSearchAttributes';
 export type { BedSearchResultBedSummary } from './models/BedSearchResultBedSummary';
 export type { BedSearchResultPremisesSummary } from './models/BedSearchResultPremisesSummary';
 export type { BedSearchResultRoomSummary } from './models/BedSearchResultRoomSummary';
-export type { BedSearchResults } from './models/BedSearchResults';
 export type { BedspaceFilters } from './models/BedspaceFilters';
 export type { BedspaceSearchAttributes } from './models/BedspaceSearchAttributes';
 export type { BedStatus } from './models/BedStatus';
@@ -80,6 +79,8 @@ export type { Cas3BedspaceSearchParameters } from './models/Cas3BedspaceSearchPa
 export type { Cas3BedspaceSearchResult } from './models/Cas3BedspaceSearchResult';
 export type { Cas3BedspaceSearchResultOverlap } from './models/Cas3BedspaceSearchResultOverlap';
 export type { Cas3BedspaceSearchResults } from './models/Cas3BedspaceSearchResults';
+export type { Cas3Departure } from './models/Cas3Departure';
+export type { Cas3NewDeparture } from './models/Cas3NewDeparture';
 export type { Cas3PremisesSummary } from './models/Cas3PremisesSummary';
 export type { Cas3ReportType } from './models/Cas3ReportType';
 export type { Characteristic } from './models/Characteristic';
@@ -230,9 +231,6 @@ export type { TemporaryAccommodationApplicationSummary } from './models/Temporar
 export type { TemporaryAccommodationAssessment } from './models/TemporaryAccommodationAssessment';
 export type { TemporaryAccommodationAssessmentStatus } from './models/TemporaryAccommodationAssessmentStatus';
 export type { TemporaryAccommodationAssessmentSummary } from './models/TemporaryAccommodationAssessmentSummary';
-export type { TemporaryAccommodationBedSearchParameters } from './models/TemporaryAccommodationBedSearchParameters';
-export type { TemporaryAccommodationBedSearchResult } from './models/TemporaryAccommodationBedSearchResult';
-export type { TemporaryAccommodationBedSearchResultOverlap } from './models/TemporaryAccommodationBedSearchResultOverlap';
 export type { TemporaryAccommodationPremises } from './models/TemporaryAccommodationPremises';
 export type { TemporaryAccommodationPremisesSummary } from './models/TemporaryAccommodationPremisesSummary';
 export type { TemporaryAccommodationUser } from './models/TemporaryAccommodationUser';

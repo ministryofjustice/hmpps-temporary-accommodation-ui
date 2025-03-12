@@ -109,6 +109,7 @@
       "empty": "You must choose a PDU"
     },
     "status": {
+      "existingBookings": "You cannot archive this property because it has an existing booking",
       "empty": "You must choose a status"
     },
     "turnaroundWorkingDayCount": {

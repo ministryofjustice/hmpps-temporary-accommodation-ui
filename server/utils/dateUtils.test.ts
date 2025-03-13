@@ -282,16 +282,17 @@ describe('dateAndTimeInputsAreValidDates', () => {
     expect(result).toEqual(true)
   })
 
-  it('returns false when the date is invalid', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '99',
-      'date-month': '99',
-      'date-day': '99',
-    }
-
-    const result = dateAndTimeInputsAreValidDates(obj, 'date')
-
-    expect(result).toEqual(false)
+  describe.each([
+    [{ 'date-year': '2022', 'date-month': '13', 'date-day': '11' }, 'invalid month'],
+    [{ 'date-year': '2022', 'date-month': '111', 'date-day': '11' }, 'invalid month over 2 digits'],
+    [{ 'date-year': '2022', 'date-month': '12', 'date-day': '32' }, 'invalid day'],
+    [{ 'date-year': '2022', 'date-month': '12', 'date-day': '111' }, 'invalid day over 2 digits'],
+    [{ 'date-year': '99', 'date-month': '99', 'date-day': '99' }, 'invalid date'],
+  ])('returns false when the date has %s', (obj, description) => {
+    it(`returns false for ${description}`, () => {
+      const result = dateAndTimeInputsAreValidDates(obj, 'date')
+      expect(result).toEqual(false)
+    })
   })
 
   it('returns false when the year is not 4 digits', () => {

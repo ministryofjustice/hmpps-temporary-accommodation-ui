@@ -68,7 +68,16 @@ context('Bedspace Search', () => {
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
       expect(requestBody.probationDeliveryUnits).to.have.members(searchParameters.probationDeliveryUnits)
-      expect(requestBody.attributes).to.include.members(searchParameters.attributes)
+
+      if (searchParameters.accessibilityAttributes?.length) {
+        expect(requestBody.bedspaceFilters?.includedCharacteristicIds).to.have.members(
+          searchParameters.accessibilityAttributes,
+        )
+      }
+
+      if (searchParameters.occupancyAttribute && searchParameters.occupancyAttribute !== 'all') {
+        expect(requestBody.premisesFilters?.includedCharacteristicIds).to.include(searchParameters.occupancyAttribute)
+      }
     })
 
     // And I should see the search results
@@ -108,7 +117,16 @@ context('Bedspace Search', () => {
       expect(requestBody.startDate).equal(searchParameters.startDate)
       expect(requestBody.durationDays).equal(searchParameters.durationDays)
       expect(requestBody.probationDeliveryUnits).to.include.members(searchParameters.probationDeliveryUnits)
-      expect(requestBody.attributes).to.include.members(searchParameters.attributes)
+
+      if (searchParameters.accessibilityAttributes?.length) {
+        expect(requestBody.bedspaceFilters?.includedCharacteristicIds).to.have.members(
+          searchParameters.accessibilityAttributes,
+        )
+      }
+
+      if (searchParameters.occupancyAttribute && searchParameters.occupancyAttribute !== 'all') {
+        expect(requestBody.premisesFilters?.includedCharacteristicIds).to.include(searchParameters.occupancyAttribute)
+      }
     })
 
     // And I should see empty search results

@@ -64,9 +64,9 @@ export default class BedspaceSearchPage extends Page {
 
     this.getLegend('Bedspace attributes')
     this.getLegend('Accessibility (optional)')
-    if (typeof searchParameters.attributes[0] !== 'undefined') {
-      searchParameters.attributes.forEach(attribute => {
-        this.checkCheckboxByNameAndValue('attributes[]', attribute)
+    if (typeof searchParameters.accessibilityAttributes !== 'undefined') {
+      searchParameters.accessibilityAttributes.forEach(attribute => {
+        this.checkCheckboxByNameAndValue('accessibilityAttributes[]', attribute)
       })
     }
   }

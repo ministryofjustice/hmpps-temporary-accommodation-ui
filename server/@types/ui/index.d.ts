@@ -343,6 +343,7 @@ export type BedspaceSearchFormParameters = {
   probationDeliveryUnits: Array<string>
   occupancyAttribute: 'all' | BedspaceOccupancyAttributes
   attributes?: Array<BedspaceAccessiblityAttributes>
+  accessibilityAttributes: []
 }
 
 export type UIPersonAcctAlert = PersonAcctAlert & {

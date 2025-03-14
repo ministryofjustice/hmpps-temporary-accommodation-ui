@@ -136,6 +136,15 @@ export class DateFormats {
     return `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
   }
 
+  static datepickerInputToDateAndTimeInputs<K extends string>(dateString: string, key: K): ObjectWithDateParts<K> {
+    const [day, month, year] = dateString.split('/')
+    return {
+      [`${key}-day`]: `${day}`,
+      [`${key}-month`]: `${month}`,
+      [`${key}-year`]: `${year}`,
+    } as ObjectWithDateParts<K>
+  }
+
   static isoDateToDatepickerInput(dateString: string) {
     return dateString.split('-').reverse().join('/')
   }
@@ -173,6 +182,14 @@ export const dateAndTimeInputsAreValidDates = <K extends string>(
   } catch (e) {
     return false
   }
+}
+
+export const datepickerInputsAreValidDates = <K extends string>(
+  dateString: string,
+  key: K,
+): boolean => {
+  const dateObj = DateFormats.datepickerInputToDateAndTimeInputs(dateString, key)
+  return dateAndTimeInputsAreValidDates(dateObj, key)
 }
 
 export const dateExists = (dateString: string) => {

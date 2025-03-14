@@ -3,12 +3,12 @@ import {
   DateFormats,
   InvalidDateStringError,
   dateAndTimeInputsAreValidDates,
-  datepickerInputsAreValidDates,
   dateExists,
   dateInputHint,
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
+  datepickerInputsAreValidDates,
 } from './dateUtils'
 
 describe('DateFormats', () => {

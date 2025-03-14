@@ -54,8 +54,8 @@ export default class ReportsController {
         } else if (!datepickerInputsAreValidDates(startDate, 'startDate')) {
           error = error || new Error()
           insertGenericError(error, 'startDate', 'invalid')
-        } 
-        
+        }
+
         if (!endDate) {
           error = error || new Error()
           insertGenericError(error, 'endDate', 'empty')

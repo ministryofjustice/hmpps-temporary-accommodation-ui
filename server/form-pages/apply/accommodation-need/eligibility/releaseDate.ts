@@ -23,7 +23,7 @@ export default class ReleaseDate implements TasklistPage {
   ) {
     const name = personName(application.person)
 
-    this.title = `${name}'s release date?`
+    this.title = `${name}'s release date`
   }
 
   public set body(value: Partial<ReleaseDateBody>) {

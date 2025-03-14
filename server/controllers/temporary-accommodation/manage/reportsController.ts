@@ -6,7 +6,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGeneric
 import ReportService from '../../../services/reportService'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions, userHasReporterRole } from '../../../utils/userUtils'
-import { DateFormats, dateExists } from '../../../utils/dateUtils'
+import { DateFormats, datepickerInputsAreValidDates } from '../../../utils/dateUtils'
 import { allReportProbationRegions } from '../../../utils/reportUtils'
 
 export default class ReportsController {
@@ -42,8 +42,6 @@ export default class ReportsController {
         const callConfig = extractCallConfig(req)
 
         let error: Error
-        let startDateIso: string
-        let endDateIso: string
 
         if (!probationRegionId) {
           error = new Error()
@@ -53,30 +51,24 @@ export default class ReportsController {
         if (!startDate) {
           error = error || new Error()
           insertGenericError(error, 'startDate', 'empty')
-        } else {
-          startDateIso = DateFormats.datepickerInputToIsoString(startDate)
-
-          if (!dateExists(startDateIso)) {
-            error = error || new Error()
-            insertGenericError(error, 'startDate', 'invalid')
-          }
+        } else if (!datepickerInputsAreValidDates(startDate, 'startDate')) {
+          error = error || new Error()
+          insertGenericError(error, 'startDate', 'invalid')
         }
 
         if (!endDate) {
           error = error || new Error()
           insertGenericError(error, 'endDate', 'empty')
-        } else {
-          endDateIso = DateFormats.datepickerInputToIsoString(endDate)
-
-          if (!dateExists(endDateIso)) {
-            error = error || new Error()
-            insertGenericError(error, 'endDate', 'invalid')
-          }
+        } else if (!datepickerInputsAreValidDates(endDate, 'endDate')) {
+          error = error || new Error()
+          insertGenericError(error, 'endDate', 'invalid')
         }
 
         if (error) {
           return catchValidationErrorOrPropogate(req, res, error, paths.reports.index({}))
         }
+        const startDateIso = DateFormats.datepickerInputToIsoString(startDate)
+        const endDateIso = DateFormats.datepickerInputToIsoString(endDate)
 
         await this.reportService.pipeReportForProbationRegion(
           callConfig,

@@ -1,6 +1,6 @@
 import type { Request, RequestHandler, Response } from 'express'
-import { type BedspaceSearchAttributes, Cas3BedspaceSearchResults } from '../../../@types/shared'
-import { BedspaceAccessiblityAttributes, BedspaceOccupancyAttributes, ObjectWithDateParts } from '../../../@types/ui'
+import { type Cas3BedspaceSearchParameters, Cas3BedspaceSearchResults } from '../../../@types/shared'
+import { ObjectWithDateParts } from '../../../@types/ui'
 
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
@@ -17,6 +17,8 @@ export const DEFAULT_DURATION_DAYS = 84
 type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {
   probationDeliveryUnits: Array<string>
   durationDays: string
+  occupancyAttribute?: string
+  accessibilityAttributes?: string[]
 }
 
 export default class BedspaceSearchController {
@@ -31,7 +33,25 @@ export default class BedspaceSearchController {
 
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
       const callConfig = extractCallConfig(req)
-      const { pdus: allPdus } = await this.searchService.getReferenceData(callConfig)
+
+      const {
+        pdus: allPdus,
+        wheelchairAccessibility,
+        occupancy,
+      } = await this.searchService.getReferenceData(callConfig)
+
+      const wheelchairAccessibilityItems = wheelchairAccessibility.map(attr => ({
+        text: attr.name,
+        value: attr.id,
+      }))
+
+      const occupancyItems = [
+        { text: 'All', value: 'all' },
+        ...occupancy.map(attr => ({
+          text: attr.name,
+          value: attr.id,
+        })),
+      ]
 
       const query =
         (req.query as BedspaceSearchQuery).durationDays !== undefined ? (req.query as BedspaceSearchQuery) : undefined
@@ -66,25 +86,36 @@ export default class BedspaceSearchController {
 
           const durationDays = parseNumber(query.durationDays)
 
-          const selectedAttributes = [
-            ...(
-              [
-                req.query.occupancyAttribute && req.query.occupancyAttribute !== 'all'
-                  ? req.query.occupancyAttribute
-                  : null,
-              ] as BedspaceOccupancyAttributes[]
-            ).filter(Boolean),
-            ...((req.query.attributes as BedspaceAccessiblityAttributes[]) ?? []),
-          ]
+          const selectedAccessibilityIds =
+            (req.query.accessibilityAttributes as string[])?.filter(attr =>
+              wheelchairAccessibility.some(item => item.id === attr),
+            ) ?? []
 
-          results = (
-            await this.searchService.search(callConfig, {
-              ...query,
-              attributes: selectedAttributes as BedspaceSearchAttributes[],
-              startDate,
-              durationDays,
-            })
-          )?.results
+          let selectedOccupancyAttribute: string[] = []
+
+          if (req.query.occupancyAttribute && req.query.occupancyAttribute !== 'all') {
+            selectedOccupancyAttribute = Array.isArray(req.query.occupancyAttribute)
+              ? (req.query.occupancyAttribute.filter(attr => typeof attr === 'string') as string[])
+              : [req.query.occupancyAttribute as string]
+          }
+
+          const bedspaceFilters =
+            selectedAccessibilityIds.length > 0 ? { includedCharacteristicIds: selectedAccessibilityIds } : undefined
+
+          const premisesFilters =
+            selectedOccupancyAttribute.length > 0
+              ? { includedCharacteristicIds: selectedOccupancyAttribute.filter(attr => typeof attr === 'string') }
+              : undefined
+
+          const searchParameters: Cas3BedspaceSearchParameters = {
+            ...query,
+            startDate,
+            durationDays,
+            bedspaceFilters,
+            premisesFilters,
+          }
+
+          results = (await this.searchService.search(callConfig, searchParameters))?.results
 
           updatePlaceContextWithArrivalDate(res, placeContext, startDate)
         }
@@ -95,12 +126,15 @@ export default class BedspaceSearchController {
 
         return res.render(template, {
           allPdus,
+          wheelchairAccessibilityItems,
+          occupancyItems,
           results,
           startDate,
           errors,
           errorSummary,
           durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
           occupancyAttribute: req.query.occupancyAttribute || 'all',
+          accessibilityAttributes: req.query.accessibilityAttributes || [],
           ...startDatePrefill,
           ...query,
           ...userInput,

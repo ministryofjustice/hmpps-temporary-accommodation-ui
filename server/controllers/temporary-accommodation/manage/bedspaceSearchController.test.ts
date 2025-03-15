@@ -24,14 +24,24 @@ jest.mock('../../../utils/placeUtils')
 describe('BedspaceSearchController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
-  const occupancy = [{ propertyName: 'isSingleOccupancy' }, { propertyName: 'isSharedProperty' }].map(params =>
-    referenceDataFactory.characteristic('premises').build(params),
-  )
+  const occupancy = [
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-1',
+      name: 'Single Occupancy',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-2',
+      name: 'Shared Property',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+  ]
 
-  const wheelchairAccessibility = referenceDataFactory
-    .characteristic('room')
-    .params({ propertyName: 'isWheelchairAccessible' })
-    .buildList(1)
+  const wheelchairAccessibility = [
+    referenceDataFactory.characteristic('room').build({ id: 'accessibility-1', name: 'Wheelchair Accessible' }),
+  ]
 
   const referenceData = {
     pdus: referenceDataFactory.pdu().buildList(5),
@@ -70,7 +80,16 @@ describe('BedspaceSearchController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
           allPdus: referenceData.pdus,
+          wheelchairAccessibilityItems: wheelchairAccessibility.map(attr => ({
+            text: attr.name,
+            value: attr.id,
+          })),
+          occupancyItems: [
+            { text: 'All', value: 'all' },
+            ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
+          ],
           occupancyAttribute: 'all',
+          accessibilityAttributes: [],
           errors: {},
           errorSummary: [],
           durationDays: DEFAULT_DURATION_DAYS,
@@ -152,7 +171,16 @@ describe('BedspaceSearchController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/results', {
           allPdus: referenceData.pdus,
+          wheelchairAccessibilityItems: wheelchairAccessibility.map(attr => ({
+            text: attr.name,
+            value: attr.id,
+          })),
+          occupancyItems: [
+            { text: 'All', value: 'all' },
+            ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
+          ],
           occupancyAttribute: 'all',
+          accessibilityAttributes: [],
           results: searchResults.results,
           errors: {},
           errorSummary: [],

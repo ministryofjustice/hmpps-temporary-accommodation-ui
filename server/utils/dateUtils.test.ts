@@ -8,6 +8,7 @@ import {
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
+  datepickerInputsAreValidDates,
 } from './dateUtils'
 
 describe('DateFormats', () => {
@@ -239,6 +240,18 @@ describe('DateFormats', () => {
       expect(DateFormats.isoDateToDaysFromNow('2024-04-09')).toEqual('in 1 day')
     })
   })
+
+  describe('datepickerInputToDateAndTimeInputs', () => {
+    it('converts a date string to ObjectWithDateParts', () => {
+      const dateString = '13/03/2025'
+      const result = DateFormats.datepickerInputToDateAndTimeInputs(dateString, 'startDate')
+      expect(result).toEqual({
+        'startDate-day': '13',
+        'startDate-month': '03',
+        'startDate-year': '2025',
+      })
+    })
+  })
 })
 
 describe('isoToDateAndTimeInputs', () => {
@@ -282,51 +295,46 @@ describe('dateAndTimeInputsAreValidDates', () => {
     expect(result).toEqual(true)
   })
 
-  it('returns false when the date is invalid', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '99',
-      'date-month': '99',
-      'date-day': '99',
-    }
-
-    const result = dateAndTimeInputsAreValidDates(obj, 'date')
-
-    expect(result).toEqual(false)
-  })
-
-  it('returns false when the year is not 4 digits', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': '202',
-      'date-month': '01',
-      'date-day': '01',
-    }
-
-    const result = dateAndTimeInputsAreValidDates(obj, 'date')
-
-    expect(result).toEqual(false)
-  })
-
-  it('returns false when the date is well formatted but does not exist', () => {
+  it('returns true for a valid leap year date', () => {
     const obj: ObjectWithDateParts<'date'> = {
       'date-year': '2024',
-      'date-month': '11',
-      'date-day': '31',
+      'date-month': '02',
+      'date-day': '29',
     }
 
     const result = dateAndTimeInputsAreValidDates(obj, 'date')
 
-    expect(result).toEqual(false)
+    expect(result).toEqual(true)
   })
 
-  it('returns false when the date is gibberish', () => {
-    const obj: ObjectWithDateParts<'date'> = {
-      'date-year': 'not',
-      'date-month': 'a',
-      'date-day': 'date',
-    }
+  describe.each([
+    [{ 'date-year': '2022', 'date-month': '13', 'date-day': '11' }, 'invalid month'],
+    [{ 'date-year': '2022', 'date-month': '111', 'date-day': '11' }, 'invalid month over 2 digits'],
+    [{ 'date-year': '2022', 'date-month': '12', 'date-day': '32' }, 'invalid day'],
+    [{ 'date-year': '2022', 'date-month': '12', 'date-day': '111' }, 'invalid day over 2 digits'],
+    [{ 'date-year': '99', 'date-month': '99', 'date-day': '99' }, 'invalid date'],
+    [{ 'date-year': '202', 'date-month': '01', 'date-day': '01' }, 'year not 4 digits'],
+    [{ 'date-year': '2024', 'date-month': '11', 'date-day': '31' }, 'well formatted but non-existent date'],
+    [{ 'date-year': 'not', 'date-month': 'a', 'date-day': 'date' }, 'gibberish date'],
+    [{ 'date-year': '2021', 'date-month': '02', 'date-day': '29' }, 'invalid leap year date'],
+  ])('returns false when the date has %s', (obj, description) => {
+    it(`returns false for ${description}`, () => {
+      const result = dateAndTimeInputsAreValidDates(obj, 'date')
+      expect(result).toEqual(false)
+    })
+  })
+})
 
-    const result = dateAndTimeInputsAreValidDates(obj, 'date')
+describe('datepickerInputsAreValidDates', () => {
+  it('returns true for a valid date string', () => {
+    const dateString = '13/03/2025'
+    const result = datepickerInputsAreValidDates(dateString, 'startDate')
+    expect(result).toEqual(true)
+  })
 
+  it('returns false for an invalid date string', () => {
+    const dateString = '31/02/2025'
+    const result = datepickerInputsAreValidDates(dateString, 'startDate')
     expect(result).toEqual(false)
   })
 })

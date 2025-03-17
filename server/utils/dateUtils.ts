@@ -136,6 +136,15 @@ export class DateFormats {
     return `${year}-${`0${month}`.slice(-2)}-${`0${day}`.slice(-2)}`
   }
 
+  static datepickerInputToDateAndTimeInputs<K extends string>(dateString: string, key: K): ObjectWithDateParts<K> {
+    const [day, month, year] = dateString.split('/')
+    return {
+      [`${key}-day`]: `${day}`,
+      [`${key}-month`]: `${month}`,
+      [`${key}-year`]: `${year}`,
+    } as ObjectWithDateParts<K>
+  }
+
   static isoDateToDatepickerInput(dateString: string) {
     return dateString.split('-').reverse().join('/')
   }
@@ -160,8 +169,12 @@ export const dateAndTimeInputsAreValidDates = <K extends string>(
   key: K,
 ): boolean => {
   const inputYear = dateInputObj?.[`${key}-year`] as string
+  const inputMonth = dateInputObj?.[`${key}-month`] as string
+  const inputDay = dateInputObj?.[`${key}-day`] as string
 
   if (inputYear && inputYear.length !== 4) return false
+  if (inputMonth && (Number(inputMonth) < 1 || Number(inputMonth) > 12)) return false
+  if (inputDay && (Number(inputDay) < 1 || Number(inputDay) > 31)) return false
 
   try {
     const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)
@@ -169,6 +182,14 @@ export const dateAndTimeInputsAreValidDates = <K extends string>(
   } catch (e) {
     return false
   }
+}
+
+export const datepickerInputsAreValidDates = <K extends string>(
+  dateString: string,
+  key: K,
+): boolean => {
+  const dateObj = DateFormats.datepickerInputToDateAndTimeInputs(dateString, key)
+  return dateAndTimeInputsAreValidDates(dateObj, key)
 }
 
 export const dateExists = (dateString: string) => {

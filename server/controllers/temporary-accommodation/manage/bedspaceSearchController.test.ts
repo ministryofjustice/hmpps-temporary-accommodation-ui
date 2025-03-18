@@ -156,13 +156,13 @@ describe('BedspaceSearchController', () => {
       it('handles validation errors from validateSearchQuery', async () => {
         const validationError = new Error('validation error')
         ;(validateSearchQuery as jest.Mock).mockReturnValue(validationError)
-  
+
         request.query = { durationDays: '84' }
-  
+
         const requestHandler = bedspaceSearchController.index()
-  
+
         await requestHandler(request, response, next)
-  
+
         expect(setUserInput).toHaveBeenCalledWith(request, 'get')
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
@@ -241,7 +241,7 @@ describe('BedspaceSearchController', () => {
     it('applies filters correctly when given a search query', async () => {
       const searchParameters = bedspaceSearchFormParametersFactory.build()
       const placeContext = placeContextFactory.build()
-    
+
       request.query = {
         ...searchParameters,
         durationDays: searchParameters.durationDays.toString(),
@@ -249,16 +249,16 @@ describe('BedspaceSearchController', () => {
         accessibilityAttributes: ['accessibility-1', 'invalid-accessibility'],
         occupancyAttribute: ['uuid-1', null, 'uuid-2'],
       }
-    
+
       const searchResults = bedspaceSearchResultsFactory.build()
-    
+
       bedspaceSearchService.search.mockResolvedValue(searchResults)
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
-    
+
       const requestHandler = bedspaceSearchController.index()
-    
+
       await requestHandler(request, response, next)
-    
+
       expect(bedspaceSearchService.search).toHaveBeenCalledWith(
         callConfig,
         expect.objectContaining({

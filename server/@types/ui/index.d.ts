@@ -333,17 +333,12 @@ export type PrimaryNavigationItem = {
   active?: boolean
 }
 
-export type BedspaceOccupancyAttributes = 'isSharedProperty' | 'isSingleOccupancy'
-
-export type BedspaceAccessiblityAttributes = 'isWheelchairAccessible'
-
 export type BedspaceSearchFormParameters = {
   startDate: string
   durationDays: number
   probationDeliveryUnits: Array<string>
-  occupancyAttribute: 'all' | BedspaceOccupancyAttributes
-  attributes?: Array<BedspaceAccessiblityAttributes>
-  accessibilityAttributes: []
+  occupancyAttribute: string
+  accessibilityAttributes: Array<string>
 }
 
 export type UIPersonAcctAlert = PersonAcctAlert & {

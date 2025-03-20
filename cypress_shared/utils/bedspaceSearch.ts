@@ -4,11 +4,11 @@ import { BedspaceSearchFormParameters } from '../../server/@types/ui'
 export const characteristicsToSearchAttributes = (premises: TemporaryAccommodationPremises, room: Room) => {
   const occupancyAttributesMap: Record<string, BedspaceSearchFormParameters['occupancyAttribute']> = {
     All: 'all',
-    'Shared property': 'isSharedProperty',
-    'Single occupancy': 'isSingleOccupancy',
+    'Shared property': '62a38d3a-4797-4b0f-8681-7befea1035a4',
+    'Single occupancy': '454a5ff4-d87a-43f9-8989-135bcc47a635',
   }
   const wheelchairAccessibilityMap: Record<string, string> = {
-    'Wheelchair accessible': 'isWheelchairAccessible',
+    'Wheelchair accessible': 'd2f7796a-88e5-4e53-ab6d-dabb145b6a60',
   }
 
   const premisesOccupancyAttribute = premises.characteristics

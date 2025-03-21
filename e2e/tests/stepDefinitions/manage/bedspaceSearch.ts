@@ -21,13 +21,21 @@ Given('I search for a bedspace', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceSearchPage)
 
+    const occupancyAttribute = characteristicsToSearchAttributes(this.premises, this.room).premisesOccupancyAttribute
+    const { wheelchairAccessibility } = characteristicsToSearchAttributes(this.premises, this.room)
+
     const searchParameters = bedspaceSearchFormParametersFactory.build({
       probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
-      occupancyAttribute: characteristicsToSearchAttributes(this.premises, this.room).premisesOccupancyAttribute,
-      attributes: [
-        characteristicsToSearchAttributes(this.premises, this.room).wheelchairAccessibility,
-      ] as BedspaceSearchFormParameters['attributes'],
     })
+
+    if (occupancyAttribute) {
+      searchParameters.occupancyAttribute = occupancyAttribute as BedspaceSearchFormParameters['occupancyAttribute']
+    }
+    if (wheelchairAccessibility) {
+      searchParameters.accessibilityAttributes = [
+        wheelchairAccessibility,
+      ] as BedspaceSearchFormParameters['accessibilityAttributes']
+    }
 
     page.completeForm(searchParameters)
     page.clickSubmit()

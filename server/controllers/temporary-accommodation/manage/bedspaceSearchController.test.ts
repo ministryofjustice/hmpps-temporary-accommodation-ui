@@ -15,23 +15,35 @@ import { DateFormats } from '../../../utils/dateUtils'
 import { addPlaceContext, preservePlaceContext, updatePlaceContextWithArrivalDate } from '../../../utils/placeUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, setUserInput } from '../../../utils/validation'
+import { validateSearchQuery } from '../../../utils/bedspaceSearchUtils'
 import BedspaceSearchController, { DEFAULT_DURATION_DAYS } from './bedspaceSearchController'
 
 jest.mock('../../../utils/restUtils')
 jest.mock('../../../utils/validation')
+jest.mock('../../../utils/bedspaceSearchUtils')
 jest.mock('../../../utils/placeUtils')
 
 describe('BedspaceSearchController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
 
-  const occupancy = [{ propertyName: 'isSingleOccupancy' }, { propertyName: 'isSharedProperty' }].map(params =>
-    referenceDataFactory.characteristic('premises').build(params),
-  )
+  const occupancy = [
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-1',
+      name: 'Single Occupancy',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-2',
+      name: 'Shared Property',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+  ]
 
-  const wheelchairAccessibility = referenceDataFactory
-    .characteristic('room')
-    .params({ propertyName: 'isWheelchairAccessible' })
-    .buildList(1)
+  const wheelchairAccessibility = [
+    referenceDataFactory.characteristic('room').build({ id: 'accessibility-1', name: 'Wheelchair Accessible' }),
+  ]
 
   const referenceData = {
     pdus: referenceDataFactory.pdu().buildList(5),
@@ -55,6 +67,7 @@ describe('BedspaceSearchController', () => {
     ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
     ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(undefined)
     bedspaceSearchService.getReferenceData.mockResolvedValue(referenceData)
+    ;(validateSearchQuery as jest.Mock).mockReturnValue(null)
   })
 
   describe('index', () => {
@@ -70,7 +83,16 @@ describe('BedspaceSearchController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/index', {
           allPdus: referenceData.pdus,
+          wheelchairAccessibilityItems: wheelchairAccessibility.map(attr => ({
+            text: attr.name,
+            value: attr.id,
+          })),
+          occupancyItems: [
+            { text: 'All', value: 'all' },
+            ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
+          ],
           occupancyAttribute: 'all',
+          accessibilityAttributes: [],
           errors: {},
           errorSummary: [],
           durationDays: DEFAULT_DURATION_DAYS,
@@ -130,6 +152,26 @@ describe('BedspaceSearchController', () => {
           'bedspaceSearch',
         )
       })
+
+      it('handles validation errors from validateSearchQuery', async () => {
+        const validationError = new Error('validation error')
+        ;(validateSearchQuery as jest.Mock).mockReturnValue(validationError)
+
+        request.query = { durationDays: '84' }
+
+        const requestHandler = bedspaceSearchController.index()
+
+        await requestHandler(request, response, next)
+
+        expect(setUserInput).toHaveBeenCalledWith(request, 'get')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          validationError,
+          addPlaceContext(paths.bedspaces.search({}), undefined),
+          'bedspaceSearch',
+        )
+      })
     })
 
     describe('when showing results', () => {
@@ -151,12 +193,21 @@ describe('BedspaceSearchController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bedspace-search/results', {
+          ...request.query,
           allPdus: referenceData.pdus,
+          wheelchairAccessibilityItems: wheelchairAccessibility.map(attr => ({
+            text: attr.name,
+            value: attr.id,
+          })),
+          occupancyItems: [
+            { text: 'All', value: 'all' },
+            ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
+          ],
           occupancyAttribute: 'all',
+          accessibilityAttributes: [],
           results: searchResults.results,
           errors: {},
           errorSummary: [],
-          ...request.query,
         })
       })
 
@@ -185,6 +236,36 @@ describe('BedspaceSearchController', () => {
           searchParameters.startDate,
         )
       })
+    })
+
+    it('applies filters correctly when given a search query', async () => {
+      const searchParameters = bedspaceSearchFormParametersFactory.build()
+      const placeContext = placeContextFactory.build()
+
+      request.query = {
+        ...searchParameters,
+        durationDays: searchParameters.durationDays.toString(),
+        ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
+        accessibilityAttributes: ['accessibility-1', 'invalid-accessibility'],
+        occupancyAttribute: ['uuid-1', null, 'uuid-2'],
+      }
+
+      const searchResults = bedspaceSearchResultsFactory.build()
+
+      bedspaceSearchService.search.mockResolvedValue(searchResults)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bedspaceSearchController.index()
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceSearchService.search).toHaveBeenCalledWith(
+        callConfig,
+        expect.objectContaining({
+          bedspaceFilters: { includedCharacteristicIds: ['accessibility-1'] },
+          premisesFilters: { includedCharacteristicIds: ['uuid-1', 'uuid-2'] },
+        }),
+      )
     })
   })
 })

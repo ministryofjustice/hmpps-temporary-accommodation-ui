@@ -75,11 +75,7 @@
             classes: "govuk-fieldset__legend--s"
           }
         },
-        items: [
-          { text: "All", value: "all" },
-          { text: "Single", value: "isSingleOccupancy" },
-          { text: "Shared", value: "isSharedProperty" }
-        ]
+        items: occupancyItems
       }, fetchContext()) }}
 		{% endcall %}
 	</div>
@@ -92,16 +88,14 @@
 		}) %}
 		    {{ formPageCheckboxes({
 		            classes: "govuk-checkboxes--small",
-		            fieldName: "attributes",
+		            fieldName: "accessibilityAttributes",
 		            fieldset: {
 		                legend: {
 		                    text: "Accessibility (optional)",
 		                    classes: "govuk-fieldset__legend--s"
 		                }
 		            },
-		            items: [
-		                { text: "Wheelchair accessible", value: "isWheelchairAccessible" }
-		            ]
+		            items: wheelchairAccessibilityItems
 		        }, fetchContext()) }}
 		{% endcall %}
 	</div>

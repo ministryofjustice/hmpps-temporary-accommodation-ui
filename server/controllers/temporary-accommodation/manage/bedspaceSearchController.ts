@@ -19,6 +19,7 @@ type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {
   durationDays: string
   occupancyAttribute?: string
   accessibilityAttributes?: string[]
+  sexualRiskAttributes?: string[]
 }
 
 export default class BedspaceSearchController {
@@ -154,6 +155,7 @@ export default class BedspaceSearchController {
           durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
           occupancyAttribute: req.query.occupancyAttribute || 'all',
           accessibilityAttributes: req.query.accessibilityAttributes || [],
+          sexualRiskAttributes: req.query.sexualRiskAttributes || [],
           ...startDatePrefill,
           ...query,
           ...userInput,

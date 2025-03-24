@@ -38,12 +38,19 @@ export default class BedspaceSearchController {
         pdus: allPdus,
         wheelchairAccessibility,
         occupancy,
+        sexualRisk,
       } = await this.searchService.getReferenceData(callConfig)
 
       const wheelchairAccessibilityItems = wheelchairAccessibility.map(attr => ({
         text: attr.name,
         value: attr.id,
       }))
+
+      const sexualRiskItems = sexualRisk.map(attr => ({
+        text: attr.name,
+        value: attr.id,
+      }))
+
 
       const occupancyItems = [
         { text: 'All', value: 'all' },
@@ -101,11 +108,22 @@ export default class BedspaceSearchController {
 
           const bedspaceFilters =
             selectedAccessibilityIds.length > 0 ? { includedCharacteristicIds: selectedAccessibilityIds } : undefined
+          
+          let includedCharacteristicIds: string[] = []
+          let excludedCharacteristicIds: string[] = []
 
-          const premisesFilters =
-            selectedOccupancyAttribute.length > 0
-              ? { includedCharacteristicIds: selectedOccupancyAttribute.filter(attr => typeof attr === 'string') }
-              : undefined
+          if(selectedOccupancyAttribute.length > 0){
+            includedCharacteristicIds = selectedOccupancyAttribute.filter(attr => typeof attr === 'string')
+          }
+
+          if(req.query.sexualRiskAttributes){
+            excludedCharacteristicIds = (req.query.sexualRiskAttributes as string[])?.filter(attr => typeof attr === 'string')
+          }
+
+          const premisesFilters = {
+            includedCharacteristicIds: includedCharacteristicIds,
+            excludedCharacteristicIds: excludedCharacteristicIds
+          }
 
           const searchParameters: Cas3BedspaceSearchParameters = {
             ...query,
@@ -128,6 +146,7 @@ export default class BedspaceSearchController {
           allPdus,
           wheelchairAccessibilityItems,
           occupancyItems,
+          sexualRiskItems,
           results,
           startDate,
           errors,

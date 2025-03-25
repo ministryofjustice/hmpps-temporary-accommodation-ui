@@ -22,7 +22,7 @@ Given('I search for a bedspace', () => {
     const page = Page.verifyOnPage(BedspaceSearchPage)
 
     const occupancyAttribute = characteristicsToSearchAttributes(this.premises, this.room).premisesOccupancyAttribute
-    const { wheelchairAccessibility } = characteristicsToSearchAttributes(this.premises, this.room)
+    const { wheelchairAccessibility, sexualRiskAttributes } = characteristicsToSearchAttributes(this.premises, this.room)
 
     const searchParameters = bedspaceSearchFormParametersFactory.build({
       probationDeliveryUnits: [this.premises.probationDeliveryUnit.id],
@@ -30,6 +30,9 @@ Given('I search for a bedspace', () => {
 
     if (occupancyAttribute) {
       searchParameters.occupancyAttribute = occupancyAttribute as BedspaceSearchFormParameters['occupancyAttribute']
+    }
+    if(sexualRiskAttributes){
+      searchParameters.sexualRiskAttributes = sexualRiskAttributes
     }
     if (wheelchairAccessibility) {
       searchParameters.accessibilityAttributes = [

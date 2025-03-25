@@ -47,7 +47,7 @@ describe('BedspaceSearchService', () => {
   })
 
   describe('getReferenceData', () => {
-    it('returns sorted PDUs, wheelchair accessibility and occupancy characteristics', async () => {
+    it('returns sorted PDUs, wheelchair accessibility, occupancy, and sexual risk characteristics', async () => {
       const pdu1 = pduFactory.build({ name: 'HIJ' })
       const pdu2 = pduFactory.build({ name: 'LMN' })
       const pdu3 = pduFactory.build({ name: 'PQR' })
@@ -70,12 +70,24 @@ describe('BedspaceSearchService', () => {
         propertyName: 'isWheelchairAccessible',
       })
 
+      const premisesCharacteristic3 = characteristicFactory.build({
+        name: 'Risk to adults',
+        modelScope: 'premises',
+        propertyName: 'notSuitableForSexualRiskToAdults',
+      })
+
+      const premisesCharacteristic4 = characteristicFactory.build({
+        name: 'Risk to children',
+        modelScope: 'premises',
+        propertyName: 'notSuitableForSexualRiskToChildren',
+      })
+
       referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
         if (objectType === 'probation-delivery-units') {
           return [pdu2, pdu3, pdu1]
         }
         if (objectType === 'characteristics') {
-          return [roomCharacteristic, premisesCharacteristic1, premisesCharacteristic2]
+          return [roomCharacteristic, premisesCharacteristic1, premisesCharacteristic2, premisesCharacteristic3, premisesCharacteristic4]
         }
         return []
       })
@@ -86,6 +98,7 @@ describe('BedspaceSearchService', () => {
         pdus: [pdu1, pdu2, pdu3],
         wheelchairAccessibility: [roomCharacteristic],
         occupancy: [premisesCharacteristic1, premisesCharacteristic2],
+        sexualRisk: [premisesCharacteristic3, premisesCharacteristic4],
       })
 
       expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {

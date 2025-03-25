@@ -45,8 +45,11 @@ export default class BedspaceSearchService {
 
     const wheelchairAccessibility = this.filterByPropertyNames(bedspaceAttributes, 'isWheelchairAccessible')
     const occupancy = this.filterByPropertyNames(premisesAttributes, ['isSharedProperty', 'isSingleOccupancy'])
-    const sexualRisk = this.filterByPropertyNamesAndReplace(premisesAttributes, {'notSuitableForSexualRiskToAdults': 'Risk to adults', 'notSuitableForSexualRiskToChildren': 'Risk to children'})
-    
+    const sexualRisk = this.filterByPropertyNamesAndReplace(premisesAttributes, {
+      notSuitableForSexualRiskToAdults: 'Risk to adults',
+      notSuitableForSexualRiskToChildren: 'Risk to children',
+    })
+
     return { pdus, wheelchairAccessibility, occupancy, sexualRisk }
   }
 
@@ -56,7 +59,10 @@ export default class BedspaceSearchService {
     return characteristics.filter(item => propertyNamesArray.includes(item.propertyName))
   }
 
-  private filterByPropertyNamesAndReplace(characteristics: Characteristic[], propertyNamesMap: Record<string, string>): Characteristic[] {
+  private filterByPropertyNamesAndReplace(
+    characteristics: Characteristic[],
+    propertyNamesMap: Record<string, string>,
+  ): Characteristic[] {
     return characteristics
       .filter(item => Object.keys(propertyNamesMap).includes(item.propertyName))
       .map(item => ({

@@ -87,7 +87,13 @@ describe('BedspaceSearchService', () => {
           return [pdu2, pdu3, pdu1]
         }
         if (objectType === 'characteristics') {
-          return [roomCharacteristic, premisesCharacteristic1, premisesCharacteristic2, premisesCharacteristic3, premisesCharacteristic4]
+          return [
+            roomCharacteristic,
+            premisesCharacteristic1,
+            premisesCharacteristic2,
+            premisesCharacteristic3,
+            premisesCharacteristic4,
+          ]
         }
         return []
       })

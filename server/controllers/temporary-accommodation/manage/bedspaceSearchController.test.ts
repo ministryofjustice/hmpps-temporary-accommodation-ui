@@ -283,9 +283,9 @@ describe('BedspaceSearchController', () => {
         callConfig,
         expect.objectContaining({
           bedspaceFilters: { includedCharacteristicIds: ['accessibility-1'] },
-          premisesFilters: { 
+          premisesFilters: {
             includedCharacteristicIds: ['uuid-1', 'uuid-2'],
-            excludedCharacteristicIds: ['uuid-3', 'uuid-4']
+            excludedCharacteristicIds: ['uuid-3', 'uuid-4'],
           },
         }),
       )

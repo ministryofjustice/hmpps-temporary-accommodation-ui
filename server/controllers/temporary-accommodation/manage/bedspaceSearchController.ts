@@ -52,7 +52,6 @@ export default class BedspaceSearchController {
         value: attr.id,
       }))
 
-
       const occupancyItems = [
         { text: 'All', value: 'all' },
         ...occupancy.map(attr => ({
@@ -109,21 +108,23 @@ export default class BedspaceSearchController {
 
           const bedspaceFilters =
             selectedAccessibilityIds.length > 0 ? { includedCharacteristicIds: selectedAccessibilityIds } : undefined
-          
+
           let includedCharacteristicIds: string[] = []
           let excludedCharacteristicIds: string[] = []
 
-          if(selectedOccupancyAttribute.length > 0){
+          if (selectedOccupancyAttribute.length > 0) {
             includedCharacteristicIds = selectedOccupancyAttribute.filter(attr => typeof attr === 'string')
           }
 
-          if(req.query.sexualRiskAttributes){
-            excludedCharacteristicIds = (req.query.sexualRiskAttributes as string[])?.filter(attr => typeof attr === 'string')
+          if (req.query.sexualRiskAttributes) {
+            excludedCharacteristicIds = (req.query.sexualRiskAttributes as string[])?.filter(
+              attr => typeof attr === 'string',
+            )
           }
 
           const premisesFilters = {
-            includedCharacteristicIds: includedCharacteristicIds,
-            excludedCharacteristicIds: excludedCharacteristicIds
+            includedCharacteristicIds,
+            excludedCharacteristicIds,
           }
 
           const searchParameters: Cas3BedspaceSearchParameters = {

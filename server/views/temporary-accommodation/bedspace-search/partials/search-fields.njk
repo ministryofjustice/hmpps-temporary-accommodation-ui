@@ -61,33 +61,33 @@
 <section>
 	<div class="govuk-form-group">
 		{% call govukFieldset({
-		    legend: {
-		        text: "Property attributes",
-		        classes: "govuk-fieldset__legend--m"
-		    }
+			legend: {
+				text: "Property attributes",
+				classes: "govuk-fieldset__legend--m"
+			}
 		}) %}
-            {{ formPageRadios({
-                classes: "govuk-radios--small",
-                fieldName: "occupancyAttribute",
-                fieldset: {
-                legend: {
-                    text: "Occupancy",
-                    classes: "govuk-fieldset__legend--s"
-                }
-                },
-                items: occupancyItems
-            }, fetchContext()) }}
-            {{ formPageCheckboxes({
-                classes: "govuk-checkboxes--small",
-                fieldName: "sexualRiskAttributes",
-                fieldset: {
-                    legend: {
-                        text: "Suitable for a person with sexual risk (optional)",
-                        classes: "govuk-fieldset__legend--s"
-                    }
-                },
-                items: sexualRiskItems
-            }, fetchContext()) }}
+			{{ formPageRadios({
+				classes: "govuk-radios--small",
+				fieldName: "occupancyAttribute",
+				fieldset: {
+					legend: {
+						text: "Occupancy",
+						classes: "govuk-fieldset__legend--s"
+					}
+				},
+				items: occupancyItems
+			}, fetchContext()) }}
+			{{ formPageCheckboxes({
+				classes: "govuk-checkboxes--small",
+				fieldName: "sexualRiskAttributes",
+				fieldset: {
+					legend: {
+						text: "Suitable for a person with sexual risk (optional)",
+						classes: "govuk-fieldset__legend--s"
+					}
+				},
+				items: sexualRiskItems
+			}, fetchContext()) }}
 		{% endcall %}
 	</div>
 	<div class="govuk-form-group">

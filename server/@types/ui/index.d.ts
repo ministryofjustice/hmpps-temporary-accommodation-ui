@@ -339,6 +339,7 @@ export type BedspaceSearchFormParameters = {
   probationDeliveryUnits: Array<string>
   occupancyAttribute: string
   accessibilityAttributes: Array<string>
+  sexualRiskAttributes: Array<string>
 }
 
 export type UIPersonAcctAlert = PersonAcctAlert & {

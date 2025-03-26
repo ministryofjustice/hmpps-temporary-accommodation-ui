@@ -19,6 +19,7 @@ type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {
   durationDays: string
   occupancyAttribute?: string
   accessibilityAttributes?: string[]
+  sexualRiskAttributes?: string[]
 }
 
 export default class BedspaceSearchController {
@@ -38,9 +39,15 @@ export default class BedspaceSearchController {
         pdus: allPdus,
         wheelchairAccessibility,
         occupancy,
+        sexualRisk,
       } = await this.searchService.getReferenceData(callConfig)
 
       const wheelchairAccessibilityItems = wheelchairAccessibility.map(attr => ({
+        text: attr.name,
+        value: attr.id,
+      }))
+
+      const sexualRiskItems = sexualRisk.map(attr => ({
         text: attr.name,
         value: attr.id,
       }))
@@ -102,10 +109,23 @@ export default class BedspaceSearchController {
           const bedspaceFilters =
             selectedAccessibilityIds.length > 0 ? { includedCharacteristicIds: selectedAccessibilityIds } : undefined
 
-          const premisesFilters =
-            selectedOccupancyAttribute.length > 0
-              ? { includedCharacteristicIds: selectedOccupancyAttribute.filter(attr => typeof attr === 'string') }
-              : undefined
+          let includedCharacteristicIds: string[] = []
+          let excludedCharacteristicIds: string[] = []
+
+          if (selectedOccupancyAttribute.length > 0) {
+            includedCharacteristicIds = selectedOccupancyAttribute.filter(attr => typeof attr === 'string')
+          }
+
+          if (req.query.sexualRiskAttributes) {
+            excludedCharacteristicIds = (req.query.sexualRiskAttributes as string[])?.filter(
+              attr => typeof attr === 'string',
+            )
+          }
+
+          const premisesFilters = {
+            includedCharacteristicIds,
+            excludedCharacteristicIds,
+          }
 
           const searchParameters: Cas3BedspaceSearchParameters = {
             ...query,
@@ -128,6 +148,7 @@ export default class BedspaceSearchController {
           allPdus,
           wheelchairAccessibilityItems,
           occupancyItems,
+          sexualRiskItems,
           results,
           startDate,
           errors,
@@ -135,6 +156,7 @@ export default class BedspaceSearchController {
           durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
           occupancyAttribute: req.query.occupancyAttribute || 'all',
           accessibilityAttributes: req.query.accessibilityAttributes || [],
+          sexualRiskAttributes: req.query.sexualRiskAttributes || [],
           ...startDatePrefill,
           ...query,
           ...userInput,

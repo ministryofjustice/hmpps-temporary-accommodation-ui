@@ -75,6 +75,12 @@ context('Bedspace Search', () => {
         )
       }
 
+      if (searchParameters.sexualRiskAttributes?.length) {
+        expect(requestBody.premisesFilters?.excludedCharacteristicIds).to.have.members(
+          searchParameters.sexualRiskAttributes,
+        )
+      }
+
       if (searchParameters.occupancyAttribute && searchParameters.occupancyAttribute !== 'all') {
         expect(requestBody.premisesFilters?.includedCharacteristicIds).to.include(searchParameters.occupancyAttribute)
       }
@@ -121,6 +127,12 @@ context('Bedspace Search', () => {
       if (searchParameters.accessibilityAttributes?.length) {
         expect(requestBody.bedspaceFilters?.includedCharacteristicIds).to.have.members(
           searchParameters.accessibilityAttributes,
+        )
+      }
+
+      if (searchParameters.sexualRiskAttributes?.length) {
+        expect(requestBody.premisesFilters?.excludedCharacteristicIds).to.have.members(
+          searchParameters.sexualRiskAttributes,
         )
       }
 

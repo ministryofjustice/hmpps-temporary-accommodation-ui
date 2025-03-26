@@ -10,4 +10,5 @@ export default Factory.define<BedspaceSearchFormParameters>(() => ({
   probationDeliveryUnits: [referenceData.pdu().build().id, referenceData.pdu().build().id],
   occupancyAttribute: 'all',
   accessibilityAttributes: [],
+  sexualRiskAttributes: [],
 }))

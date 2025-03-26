@@ -62,6 +62,13 @@ export default class BedspaceSearchPage extends Page {
       this.checkRadioByNameAndValue('occupancyAttribute', searchParameters.occupancyAttribute)
     }
 
+    this.getLegend('Suitable for a person with sexual risk (optional)')
+    if (typeof searchParameters.sexualRiskAttributes !== 'undefined') {
+      searchParameters.sexualRiskAttributes.forEach(attribute => {
+        this.checkCheckboxByNameAndValue('sexualRiskAttributes[]', attribute)
+      })
+    }
+
     this.getLegend('Bedspace attributes')
     this.getLegend('Accessibility (optional)')
     if (typeof searchParameters.accessibilityAttributes !== 'undefined') {

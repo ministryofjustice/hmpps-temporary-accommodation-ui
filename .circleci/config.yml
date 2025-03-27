@@ -102,6 +102,15 @@ workflows:
   version: 2
   build-test-and-deploy:
     jobs:
+      - request-demo-build-approval:
+          type: approval
+          requires:
+            - helm_lint
+          filters:
+            branches:
+              only:
+                - /demo-.*/
+
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -110,6 +119,7 @@ workflows:
             branches:
               only:
                 - main
+
 
       - hmpps/deploy_env:
           name: deploy_dev
@@ -161,6 +171,37 @@ workflows:
                 - main
           requires:
             - request-test-approval
+
+      - request-demo-build-and-deploy-approval:
+          type: approval
+          requires:
+            - helm_lint
+          filters:
+            branches:
+              only:
+                - /demo-.*/
+
+      - hmpps/build_docker:
+          name: build_docker_for_demo
+          filters:
+            branches:
+              only:
+                - /demo-.*/
+          requires:
+            - request-demo-build-and-deploy-approval
+
+      - hmpps/deploy_env:
+          name: deploy_demo_preview
+          env: "demo"
+          context:
+            - hmpps-common-vars
+            - hmpps-temporary-accommodation-ui-demo
+          requires:
+            - build_docker_for_demo
+          filters:
+            branches:
+              only:
+                - /demo-.*/
 
       - request-preprod-approval:
           type: approval

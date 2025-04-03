@@ -1,9 +1,11 @@
 version: 2.1
+
 orbs:
   hmpps: ministryofjustice/hmpps@9
   slack: circleci/slack@4.12.6
   node: circleci/node@6.2.0
   cypress: cypress-io/cypress@3
+
 parameters:
   alerts-slack-channel:
     type: string
@@ -11,9 +13,11 @@ parameters:
   releases-slack-channel:
     type: string
     default: cas-events
+
   node-version:
     type: string
     default: 22.14-browsers
+
 jobs:
   e2e_environment_test:
     parallelism: 5
@@ -50,6 +54,7 @@ jobs:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>
           template: basic_fail_1
+
   e2e_playwright_test:
     executor:
       name: hmpps/node
@@ -92,6 +97,7 @@ jobs:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>
           template: basic_fail_1
+
 workflows:
   version: 2
   build-test-and-deploy:
@@ -104,6 +110,7 @@ workflows:
             branches:
               only:
                 - main
+
       - hmpps/deploy_env:
           name: deploy_dev
           env: 'dev'
@@ -115,6 +122,7 @@ workflows:
           requires:
             - helm_lint
             - build_docker
+
       - e2e_environment_test:
           environment: 'dev'
           context: hmpps-common-vars
@@ -124,6 +132,7 @@ workflows:
                 - main
           requires:
             - deploy_dev
+
       - e2e_playwright_test:
           environment: 'dev'
           context: hmpps-common-vars
@@ -133,6 +142,7 @@ workflows:
                 - main
           requires:
             - deploy_dev
+
       - request-test-approval:
           type: approval
           requires:
@@ -151,6 +161,7 @@ workflows:
                 - main
           requires:
             - request-test-approval
+
       - request-preprod-approval:
           type: approval
           requires:
@@ -165,6 +176,7 @@ workflows:
             - hmpps-temporary-accommodation-ui-preprod
           requires:
             - request-preprod-approval
+
       - request-prod-approval:
           type: approval
           requires:
@@ -179,3 +191,40 @@ workflows:
             - hmpps-temporary-accommodation-ui-prod
           requires:
             - request-prod-approval
+
+  security:
+    triggers:
+      - schedule:
+          cron: '1 7 * * 1-5'
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - hmpps/npm_security_audit:
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - hmpps-common-vars
+      - hmpps/trivy_latest_scan:
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - hmpps-common-vars
+      - hmpps/veracode_pipeline_scan:
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - veracode-credentials
+            - hmpps-common-vars
+  security-weekly:
+    triggers:
+      - schedule:
+          cron: '20 7 * * 1'
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - hmpps/veracode_policy_scan:
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
+          context:
+            - veracode-credentials
+            - hmpps-common-vars

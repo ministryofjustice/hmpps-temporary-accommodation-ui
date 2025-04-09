@@ -2,7 +2,7 @@ import { guidRegex } from './index'
 
 import applicationDataJson from '../cypress_shared/fixtures/applicationData.json'
 import paths from '../server/paths/api'
-import { applicationFactory, documentFactory } from '../server/testutils/factories'
+import { applicationFactory } from '../server/testutils/factories'
 
 const completeApplications = applicationFactory.params({ data: applicationDataJson }).buildList(20)
 
@@ -85,17 +85,6 @@ const genericApplicationSubs = [
       status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       jsonBody: {},
-    },
-  },
-  {
-    request: {
-      method: 'GET',
-      urlPathPattern: paths.applications.documents({ id: guidRegex }),
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: documentFactory.buildList(5),
     },
   },
 ]

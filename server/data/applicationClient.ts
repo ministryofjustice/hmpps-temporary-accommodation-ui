@@ -2,7 +2,6 @@ import type {
   ActiveOffence,
   TemporaryAccommodationApplication as Application,
   TemporaryAccommodationApplicationSummary as ApplicationSummary,
-  Document,
   SubmitApplication,
   UpdateTemporaryAccommodationApplication as UpdateApplication,
 } from '@approved-premises/api'
@@ -53,12 +52,6 @@ export default class ApplicationClient {
     return this.restClient.post<void>({
       path: paths.applications.submission({ id: applicationId }),
       data: submissionData,
-    })
-  }
-
-  async documents(application: Application) {
-    return this.restClient.get<Array<Document>>({
-      path: paths.applications.documents({ id: application.id }),
     })
   }
 }

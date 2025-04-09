@@ -16,12 +16,7 @@ import { CallConfig } from '../data/restClient'
 import Apply from '../form-pages/apply'
 import Review from '../form-pages/apply/check-your-answers/review'
 import { TasklistPageInterface } from '../form-pages/tasklistPage'
-import {
-  activeOffenceFactory,
-  applicationFactory,
-  applicationSummaryFactory,
-  documentFactory,
-} from '../testutils/factories'
+import { activeOffenceFactory, applicationFactory, applicationSummaryFactory } from '../testutils/factories'
 import { getApplicationSubmissionData, getApplicationUpdateData } from '../utils/applications/getApplicationData'
 
 const FirstPage = jest.fn()
@@ -109,24 +104,6 @@ describe('ApplicationService', () => {
 
       expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
       expect(applicationClient.find).toHaveBeenCalledWith(application.id)
-    })
-  })
-
-  describe('getDocuments', () => {
-    it('calls the documents method and returns a list of documents', async () => {
-      const application = applicationFactory.build()
-      const documents = documentFactory.buildList(5)
-
-      const callConfig = { token: 'some-token' } as CallConfig
-
-      applicationClient.documents.mockResolvedValue(documents)
-
-      const result = await service.getDocuments(callConfig, application)
-
-      expect(result).toEqual(documents)
-
-      expect(applicationClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(applicationClient.documents).toHaveBeenCalledWith(application)
     })
   })
 

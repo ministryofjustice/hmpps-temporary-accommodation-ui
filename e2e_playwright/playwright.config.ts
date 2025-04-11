@@ -1,6 +1,11 @@
-import 'dotenv/config'
+import { config } from 'dotenv'
 import { defineConfig, devices } from '@playwright/test'
 import { TestOptions } from '@temporary-accommodation-ui/e2e'
+
+config({
+  path: `e2e_playwright.env`,
+  override: true,
+})
 
 export default defineConfig<TestOptions>({
   testDir: './',

@@ -31,19 +31,6 @@ export default defineConfig<TestOptions>({
       dependencies: ['setup-dev'],
     },
     {
-      name: 'setup-local-dev-upstream',
-      testMatch: /.*\.setup\.ts/,
-      use: { baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL },
-    },
-    {
-      name: 'local-dev-upstream',
-      use: {
-        ...devices['Desktop Chrome'],
-        baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL,
-      },
-      dependencies: ['setup-local-dev-upstream'],
-    },
-    {
       name: 'setup-local',
       testMatch: /.*\.setup\.ts/,
       use: { baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL },

@@ -26,7 +26,6 @@ import characteristicFactory from './characteristic'
 import confirmationFactory from './confirmation'
 import dateCapacityFactory from './dateCapacity'
 import departureFactory from './departure'
-import documentFactory from './document'
 import extensionFactory from './extension'
 import flagsFactory from './flags'
 import localAuthorityFactory from './localAuthority'
@@ -100,7 +99,6 @@ export {
   confirmationFactory,
   dateCapacityFactory,
   departureFactory,
-  documentFactory,
   extensionFactory,
   flagsFactory,
   localAuthorityFactory,

@@ -5,7 +5,6 @@ import {
   AssessmentSortField,
   AssessmentStatus,
   BookingSearchSortField,
-  Document,
   LocalAuthorityArea,
   OASysQuestion,
   OASysSection,
@@ -16,7 +15,6 @@ import {
   PrisonCaseNote,
   ProbationDeliveryUnit,
   SortDirection,
-  TemporaryAccommodationApplication,
   TemporaryAccommodationAssessmentStatus,
   User,
 } from '@approved-premises/api'
@@ -240,9 +238,6 @@ export type DataServices = Partial<{
     getOasysSelections: (callConfig: CallConfig, crn: string) => Promise<Array<OASysSection>>
     getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
     getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>
-  }
-  applicationService: {
-    getDocuments: (callConfig: CallConfig, application: TemporaryAccommodationApplication) => Promise<Array<Document>>
   }
   userService: {
     getUserById: (callConfig: CallConfig, id: string) => Promise<User>

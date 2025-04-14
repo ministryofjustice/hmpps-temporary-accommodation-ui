@@ -1,5 +1,5 @@
 import type { Request } from 'express'
-import type { ActiveOffence, TemporaryAccommodationApplication as Application, Document } from '@approved-premises/api'
+import type { ActiveOffence, TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { DataServices, GroupedApplications } from '@approved-premises/ui'
 
 import type { ApplicationClient, RestClientBuilder } from '../data'
@@ -62,14 +62,6 @@ export default class ApplicationService {
     )
 
     return result
-  }
-
-  async getDocuments(callConfig: CallConfig, application: Application): Promise<Array<Document>> {
-    const applicationClient = this.applicationClientFactory(callConfig)
-
-    const documents = await applicationClient.documents(application)
-
-    return documents
   }
 
   async initializePage(

@@ -170,7 +170,6 @@
     "govuk-frontend": "^5.7.1",
     "helmet": "^7.0.0",
     "http-errors": "^2.0.0",
-    "jquery": "^3.6.1",
     "jsonpath": "^1.1.1",
     "jsonschema": "^1.4.1",
     "jwt-decode": "^4.0.0",

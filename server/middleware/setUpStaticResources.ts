@@ -22,7 +22,6 @@ export default function setUpStaticResources(): Router {
     '/node_modules/@microsoft',
     '/node_modules/@ministryofjustice/frontend/moj/assets',
     '/node_modules/@ministryofjustice/frontend',
-    '/node_modules/jquery/dist',
   ).forEach(dir => {
     router.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })
@@ -35,7 +34,6 @@ export default function setUpStaticResources(): Router {
   })
 
   Array.of(
-    '/node_modules/jquery/dist/jquery.min.js',
     '/node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.js',
     '/node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.js.map',
   ).forEach(file => {

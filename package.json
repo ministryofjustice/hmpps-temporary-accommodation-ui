@@ -33,7 +33,7 @@
     "test:e2e:local": "npx playwright test --config ./e2e_playwright/playwright.config.ts --project=local",
     "test:e2e:local:ui": "npm run test:e2e:local -- --ui",
     "install-playwright": "npx playwright install",
-    "shellcheck": "npx shellcheck ./script/**/*[^utils] ./script/utils/**",
+    "shellcheck": "npx shellcheck ./script/[!utils]* ./script/utils/*",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run --config video=false",
     "int-test-ui": "cypress open --e2e --browser electron",

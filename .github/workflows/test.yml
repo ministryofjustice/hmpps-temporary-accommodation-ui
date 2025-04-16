@@ -163,3 +163,9 @@ jobs:
             integration_tests/screenshots
           retention-days: 30
           if-no-files-found: ignore
+
+  # TODO: Remove once E2E have been run successfully with Github Actions
+  e2e_test:
+    name: "E2E Tests 🧪"
+    uses: ./.github/workflows/e2e_tests.yml
+    secrets: inherit

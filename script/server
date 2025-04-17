@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# script/server: Launch the application and any extra required processes
+#                locally.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+cleanup() {
+  echo "==> Tearing down any old containers..."
+  docker compose down
+}
+trap cleanup EXIT
+
+script/utils/launch-docker.sh
+
+script/utils/start-backing-services.sh
+
+echo "==> Starting the server..."
+
+npm run start:dev

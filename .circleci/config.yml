@@ -104,6 +104,7 @@ workflows:
             branches:
               only:
                 - main
+                - chore/regression-check
       - hmpps/deploy_env:
           name: deploy_dev
           env: 'dev'
@@ -112,6 +113,7 @@ workflows:
             branches:
               only:
                 - main
+                - chore/regression-check
           requires:
             - helm_lint
             - build_docker
@@ -122,6 +124,7 @@ workflows:
             branches:
               only:
                 - main
+                - chore/regression-check
           requires:
             - deploy_dev
       - e2e_playwright_test:
@@ -131,6 +134,7 @@ workflows:
             branches:
               only:
                 - main
+                - chore/regression-check
           requires:
             - deploy_dev
       - request-test-approval:

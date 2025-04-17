@@ -60,6 +60,22 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
 
+  e2e_test_playwright_failure:
+    name: "Playwright E2E failure notification"
+    needs: e2e_test_playwright
+    if: ${{ always() && needs.e2e_test_playwright.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
+        with:
+          title: "CAS3 E2E Tests (Playwright)"
+          job: "e2e_test_playwright"
+          # TODO: Revert to security alerts channel ID when tests are passing
+          channel_id: "C08NHM3MA9K"
+          #          channel_id: ${{ vars.SECURITY_ALERTS_SLACK_CHANNEL_ID }}
+          slack_bot_token: ${{ secrets.HMPPS_SLACK_BOT_TOKEN }}
+
   e2e_test_cypress:
     name: "CAS3 E2E Tests 🧪 (Cypress)"
     runs-on: ubuntu-latest
@@ -130,3 +146,19 @@ jobs:
             e2e/videos
           retention-days: 30
           if-no-files-found: ignore
+
+  e2e_test_cypress_failure:
+    name: "Cypress E2E failure notification"
+    needs: e2e_test_cypress
+    if: ${{ always() && needs.e2e_test_cypress.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
+        with:
+          title: "CAS3 E2E Tests (Cypress)"
+          job: "e2e_test_cypress"
+          # TODO: Revert to security alerts channel ID when tests are passing
+          channel_id: "C08NHM3MA9K"
+          #          channel_id: ${{ vars.SECURITY_ALERTS_SLACK_CHANNEL_ID }}
+          slack_bot_token: ${{ secrets.HMPPS_SLACK_BOT_TOKEN }}

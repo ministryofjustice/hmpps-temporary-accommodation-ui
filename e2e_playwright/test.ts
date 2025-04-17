@@ -8,8 +8,9 @@ export const test = base.extend<TestOptions>({
       username: process.env.ASSESSOR_USERNAME as string,
       password: process.env.ASSESSOR_PASSWORD as string,
       probationRegion: {
-        id: process.env.ACTING_USER_PROBATION_REGION_ID as string,
-        name: process.env.ACTING_USER_PROBATION_REGION_NAME as string,
+        // Probation region for user temporary-accommodation-training-1
+        id: 'ca979718-b15d-4318-9944-69aaff281cad',
+        name: 'East of England',
       },
     },
     { option: true },

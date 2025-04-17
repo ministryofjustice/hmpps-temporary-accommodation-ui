@@ -70,7 +70,8 @@ web_modules/
 
 # dotenv environment variables file
 .env
-.env.test
+e2e.env
+e2e_playwright.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -129,7 +130,6 @@ integration_tests/screenshots/
 **/Chart.lock
 /e2e/screenshots
 /e2e/videos
-/e2e.env
 cypress/downloads/
 
 # Playwright

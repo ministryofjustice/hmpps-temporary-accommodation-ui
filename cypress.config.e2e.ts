@@ -46,6 +46,11 @@ export default defineConfig({
     setupNodeEvents,
     supportFile: false,
   },
+  env: {
+    // Probation region for user temporary-accommodation-training-1
+    acting_user_probation_region_id: 'ca979718-b15d-4318-9944-69aaff281cad',
+    acting_user_probation_region_name: 'East of England',
+  },
   numTestsKeptInMemory: 0,
   retries: 1,
 })

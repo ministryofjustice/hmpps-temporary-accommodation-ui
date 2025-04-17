@@ -9,165 +9,97 @@ Apply for and manage temporary accommodation
 
 ## Setup
 
-When running the application for the first time, run the following command:
-
-```bash
-script/setup
+When running the application for the first time, run the [generate-dotenv-files.sh](script/generate-dotenv-files.sh) script by executing this command from root in a Terminal:
+```
+./script/generate-dotenv-files.sh
 ```
 
-This will tear down and setup the application, create .env files and bootstrap
-the application.
-
-If you're coming back to the application after a certain amount of time, you can
-run:
-
-```bash
-script/bootstrap
-```
+Running the above script will generate two `.env` files required by the application:
+* [.env](.env) - this is blank initially but is required for the application to deploy as we use `dotenv` as an `npm` lib in this repo. This blank file will also enable you to override properties set in the `.env.cas3-ui` file in `AP tools` where we deploy the application (see the `Running the application` section below for more details on this)
+* [e2e.env](e2e.env) - this is used to load properties for the `Playwright` e2e suite (see the `E2E tests` section below for more details on this)
 
 ## Running the application
 
-To run the application there are two options.
+### Using AP Tools
 
-### 1. Using AP Tools
+In order to spin up a full local stack with the API (integrating with dependent services) use [AP Tools](https://github.com/ministryofjustice/hmpps-approved-premises-tools).
 
-In order to spin up a full stack of a working API and other [dependant
-services](./docker-compose.yml) we recommend using the [AP
-Tools](https://github.com/ministryofjustice/hmpps-approved-premises-tools).
+NB. This project is the focus of our development tooling across all CAS services and is likely to receive future updates.
 
-NB. The approach AP Tools takes solves a critical limitation for working in
-development. Due to how the frontend and API authenticate requests they both
-require access to _the same_ instance of hmpps-auth. This project is the focus
-of our development tooling across all CAS services and is most likely to receive
-future updates.
+After following the setup the common commands are:
 
-After following the set up the common commands are:
-
-```bash
-ap-tools server start --local-ui --local-api
+* When running the API as a docker container and deploying everything (inc. this UI):
+```
+ ap-tools server start --cas3 --local-ui
 ```
 
-```bash
-ap-tools server stop
+* When running the API locally and deploying everything (inc. this UI):
+```
+ ap-tools server start --cas3 --local-ui --local-api
 ```
 
 The service should then be available at <http://localhost:3000>
 
-[Log in credentials are documented within AP
-tools](https://github.com/ministryofjustice/hmpps-approved-premises-tools#start-server).
+The same credentials used to login to the dev instance of the CAS3 UI should be used. For more information, see the [Dev & Test Users documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/5624791477/Dev+Test+Users)
 
-### 2. Manually
+For a quick glance at the user logins see the [e2e.env](e2e.env) file (see the `E2E tests` section below for more details on this file)
 
-This option has the benefit of a quicker initial startup and enables us to
-develop features that aren't yet supported by the API through the use of
-Wiremock.
-
-To run the server against a fake API go to the root directory and run:
-
-```bash
-script/server
+* To stop the deployment:
 ```
-
-This starts the backing services using Docker, and runs the server on
-<http://localhost:3000>.
-
-### Authentication in development
-
-* username: `AP_TEST_PROBATION_1`
-* password: `password123456`
-
-See development seeding in
-[HMPPS-Auth](https://github.com/ministryofjustice/hmpps-auth/commit/ae4ea22c4da72725dd6814abc70187dd534d24c8).
-
-## Running the tests
-
-### Unit and Integration Tests
-
-There is a complete suite of unit and integration tests that run as part of CI.
-
-The integration tests are run using [Cypress](https://www.cypress.io/), and API
-calls are mocked using [Wiremock](https://wiremock.org/).
-
-### Run each type of test
-
-#### Units (via Jest)
-
-```bash
-npm run test
-```
-
-#### Integration (Via Cypress)
-
-These tests will start and run a local frontend app and mock out any request to
-the API or other integration.
-
-```bash
-npm run test:integration
-```
-
-Spin up a real browser that gives you an interface to run individual tests and
-view screenshots of what the user sees during each step.
-
-```bash
-npm run test:integration:ui
+ap-tools server stop
 ```
 
 #### End-to-End tests (via Cypress)
+The [generate-dotenv-files.sh](script/generate-dotenv-files.sh) script run in the `Setup` section earlier generated a [e2e.env](e2e.env) by:
+* copying from the [e2e.env.template](e2e.env.template) file
+* swapping out the parameterized values in the template for real `Kubenetes` secrets for you. For more information, see the [Dev & Test Users documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/5624791477/Dev+Test+Users)
+* this [e2e.env](e2e.env) loads all of the property values required by the `Cypress` e2e suite
 
-The end-to-end tests run against an actual API and database. To run them locally, you must ensure a local full stack is
-running (for instance, using AP Tools).
-
-Run E2E tests via a headless Chrome browser, with reporting matching that seen on CI:
-
-```bash
-npm run test:e2e
-```
-
-Spin up a real browser that gives you an interface to run individual E2E features:
-
-```bash
-npm run test:e2e:ui
-```
-
-#### End-to-End tests (via Cypress) using dev-upstream AP Tools
-This enables us to locally simulate the e2e test run in the Circle-CI pipeline
+### Running against UI/API hosted in your local dev environment (ap-tools)
 
 First start the ap-tools using
+
 ```
 ap-tools server stop --clear-databases
-ap-tools server start --local-ui --local-api-dev-upstream
-```
-
-* The end-to-end tests run against our local API which then integrates with the dev upstream services and the dev database due to this param `-local-api-dev-upstream`
-* Once AP is running successfully, we can run one of the two npm scripts below which both use the `e2e.dev-upstream.env` config file (instead of `e2e.local.env` config file)
-* This ensures that when we run the e2e tests we pass the same env vars that the pipeline uses. For example, this ensures we the e2e tests login as the same dev users
-
-Run E2E tests via a headless Chrome browser, with reporting matching that seen on CI:
-
-```bash
-npm run test:e2e-dev-upstream
-```
-
-Spin up a real browser that gives you an interface to run individual E2E features:
-
-```bash
-npm run test:e2e-dev-upstream:ui
+ap-tools server start --cas3 --local-ui --local-api
 ```
 
 #### End-to-End tests (via Playwright)
+The [generate-dotenv-files.sh](script/generate-dotenv-files.sh) script run in the `Setup` section earlier generated a [e2e.env](e2e.env) by:
+* copying from the [e2e_playwright.env.template](e2e_playwright.env.template) file
+* swapping out the parameterized values in the template for real `Kubenetes` secrets for you. For more information, see the [Dev & Test Users documentation](https://dsdmoj.atlassian.net/wiki/spaces/AP/pages/5624791477/Dev+Test+Users)
+* this [e2e.env](e2e.env) loads all of the property values required by the `Playwright` e2e suite
 
-The end-to-end tests run against an actual API and database. To run them locally, you must ensure a local full stack is
-running (for instance, using AP Tools).
+### Installation steps
+* Install Playwright:
 
-Install playwright by running the install script:
-
-```bash
-npm run install-playwright
+```
+npm install
+npx playwright install
 ```
 
-Run E2E tests and spin up a real browser that gives you an interface to run individual E2E features:
+Then start the tests using one of the following:
 
-```bash
+```
+npm run test:e2e
+npm run test:e2e:ui
+```
+
+### Running against UI/API hosted in your local dev environment (ap-tools)
+
+First start the ap-tools using
+
+```
+ap-tools server stop --clear-databases
+ap-tools server start --cas3 --local-ui --local-api
+```
+
+If you also want to test emails, review the 'Testing Emails' section below
+
+Then start the tests using one of the following:
+
+```
+npm run test:e2e:local
 npm run test:e2e:local:ui
 ```
 

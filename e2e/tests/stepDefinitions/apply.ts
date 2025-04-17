@@ -7,15 +7,12 @@ import SelectOffencePage from '../../../cypress_shared/pages/apply/selectOffence
 import SubmissionConfirmation from '../../../cypress_shared/pages/apply/submissionConfirmation'
 import Page from '../../../cypress_shared/pages/page'
 import { activeOffenceFactory, applicationFactory } from '../../../server/testutils/factories'
-import { environment, person } from './utils'
+import { person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
 import devOffencesData from '../../../cypress_shared/fixtures/offences-dev.json'
-import localOffencesData from '../../../cypress_shared/fixtures/offences-local.json'
 
-const offences = (environment === 'local' ? localOffencesData : devOffencesData).map(offenceData =>
-  activeOffenceFactory.build(offenceData),
-)
+const offences = devOffencesData.map(offenceData => activeOffenceFactory.build(offenceData))
 
 Given('I start a new application', () => {
   const application = applicationFactory.build({
@@ -25,14 +22,12 @@ Given('I start a new application', () => {
   })
 
   // Align PDU to one available to the dev e2e user
-  if (environment === 'dev') {
-    const pdu = {
-      id: '81ec3d88-eecd-49d7-ad90-5dff98080dfb',
-      name: 'East Sussex (includes Brighton and Hove)',
-    }
-    application.data['contact-details']['practitioner-pdu'] = pdu
-    application.data['contact-details']['probation-practitioner'].pdu = pdu
+  const pdu = {
+    id: '3fa6a349-5f48-4c42-8d96-938bda727c35',
+    name: 'Suffolk',
   }
+  application.data['contact-details']['practitioner-pdu'] = pdu
+  application.data['contact-details']['probation-practitioner'].pdu = pdu
 
   const apply = new ApplyHelper(application, person, [], 'e2e')
   apply.startApplication()

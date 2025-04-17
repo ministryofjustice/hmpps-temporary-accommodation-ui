@@ -6,7 +6,7 @@ generic-service:
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-temporary-accommodation-ui
+    repository: ghcr.io/ministryofjustice/hmpps-temporary-accommodation-ui
     tag: app_version # override at deployment time
     port: 3000
 

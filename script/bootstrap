@@ -5,7 +5,7 @@
 
 # INFO: node-build doesn't always have the latest version so we have to build it
 # Here we follow the process laid out in the node-build-update-defs readme.
-function update_node_build {
+update_node_build() {
   if ! brew list node-build-update-defs >/dev/null 2>&1; then
     brew install nodenv/nodenv/node-build-update-defs
   fi

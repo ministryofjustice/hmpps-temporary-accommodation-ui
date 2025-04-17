@@ -1,11 +1,6 @@
-import { config } from 'dotenv'
+import 'dotenv/config'
 import { defineConfig, devices } from '@playwright/test'
 import { TestOptions } from '@temporary-accommodation-ui/e2e'
-
-config({
-  path: `e2e_playwright.env`,
-  override: true,
-})
 
 export default defineConfig<TestOptions>({
   testDir: './',
@@ -34,6 +29,19 @@ export default defineConfig<TestOptions>({
         baseURL: process.env.DEV_PLAYWRIGHT_BASE_URL,
       },
       dependencies: ['setup-dev'],
+    },
+    {
+      name: 'setup-local-dev-upstream',
+      testMatch: /.*\.setup\.ts/,
+      use: { baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL },
+    },
+    {
+      name: 'local-dev-upstream',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: process.env.LOCAL_PLAYWRIGHT_BASE_URL,
+      },
+      dependencies: ['setup-local-dev-upstream'],
     },
     {
       name: 'setup-local',

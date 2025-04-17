@@ -1,0 +1,56 @@
+name: 'Slack failure notification'
+description: 'Sends a Slack message to notify of a Github Action failure'
+
+inputs:
+  title:
+    description: "Name of the job that failed"
+    required: true
+  channel_id:
+    description: "Slack channel id to send the notification to"
+    required: true
+  slack_bot_token:
+    description: "Slack bot token"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - uses: slackapi/slack-github-action@37ebaef184d7626c5f204ab8d3baff4262dd30f0 # v1.27.0
+      with:
+        channel-id: ${{ inputs.channel_id }}
+        payload: |
+          { 
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": ":red_circle: Failed: ${{ inputs.title }}",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Workflow:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }}>"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Job:*\n${{ github.job }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Project:*\n<${{ github.server_url }}/${{ github.repository }}|${{ github.event.repository_name }}>"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Triggered by:*\n${{ github.actor }}"
+                  }
+                ]
+              }
+            ]
+          }
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slack_bot_token }}

@@ -43,7 +43,8 @@
     "start-test-wiremock": "docker compose -f docker-compose-test.yml up -d",
     "generate-types": "script/generate-types",
     "form-page:generate": "npx ts-node --transpile-only ./server/form-pages/utils/generator.ts",
-    "generate:schema:apply": "npx ts-node --transpile-only ./server/form-pages/apply/generateSchema.ts"
+    "generate:schema:apply": "npx ts-node --transpile-only ./server/form-pages/apply/generateSchema.ts",
+    "create:booking:provisional": "npm run test:e2e -- --spec e2e/tests/bookingSearch.feature"
   },
   "engines": {
     "node": "^22.0.0",

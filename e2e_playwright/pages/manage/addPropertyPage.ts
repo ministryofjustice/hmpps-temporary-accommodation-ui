@@ -22,7 +22,7 @@ export class AddPropertyPage extends BasePage {
       'Select a probation region',
     )
     property.pdu = await this.selectOptionAtRandom('What is the PDU?', 'Select a PDU')
-    property.propertyAttributesValues = await this.check3CharacteristicsAtRandom()
+    property.propertyAttributesValues = [await this.checkCheckboxAtRandom()]
     property.status = await this.clickRandomStatusRadioButton()
 
     await this.page.getByLabel('Please provide any further property details').fill(property.notes)
@@ -31,10 +31,6 @@ export class AddPropertyPage extends BasePage {
         'Enter the number of working days required to turnaround the property. The standard turnaround time should be 2 days',
       )
       .fill(String(property.turnaroundWorkingDayCount))
-  }
-
-  private async check3CharacteristicsAtRandom(): Promise<Array<string>> {
-    return [await this.checkCheckboxAtRandom(), await this.checkCheckboxAtRandom(), await this.checkCheckboxAtRandom()]
   }
 
   private async clickRandomStatusRadioButton(): Promise<string> {

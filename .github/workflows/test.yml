@@ -157,7 +157,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: integration-test-artefacts-${{ matrix.shard }}-of-4
+          name: integration-test-artefacts
           path: |
             integration_tests/videos
             integration_tests/screenshots

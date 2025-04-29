@@ -53,7 +53,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: E2E-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          name: E2E-playwright-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: e2e_playwright/test-results
           retention-days: 30
           if-no-files-found: ignore
@@ -119,8 +119,8 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: E2E-playwright-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
-          path: e2e_playwright/playwright-report
+          name: E2E-cypress-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          path: test_results/cypress
           retention-days: 30
           if-no-files-found: ignore
 
@@ -128,7 +128,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: E2E-artefacts-cypress-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          name: E2E-cypress-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
           path: |
             e2e/screenshots
             e2e/videos

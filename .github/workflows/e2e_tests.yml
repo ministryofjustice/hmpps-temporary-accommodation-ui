@@ -1,0 +1,150 @@
+name: CAS3 UI E2E tests
+
+on:
+  workflow_call:
+
+jobs:
+  e2e_test_playwright:
+    name: "CAS3 E2E Tests 🧪 (Playwright)"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [ 1, 2, 3, 4 ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          # Repository is specified to run the workflow from the API repository
+          repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Install Playwright
+        run: npx playwright install chromium
+
+      - name: Run E2E Tests
+        env:
+          ASSESSOR_USERNAME: ${{ secrets.E2E_USER_CAS3_ASSESSOR_USERNAME }}
+          ASSESSOR_PASSWORD: ${{ secrets.E2E_USER_CAS3_ASSESSOR_PASSWORD }}
+          REFERRER_USERNAME: ${{ secrets.E2E_USER_CAS3_REFERRER_USERNAME }}
+          REFERRER_PASSWORD: ${{ secrets.E2E_USER_CAS3_REFERRER_PASSWORD }}
+          ENVIRONMENT: 'dev'
+          DEV_PLAYWRIGHT_BASE_URL: https://transitional-accommodation-dev.hmpps.service.justice.gov.uk
+        run: npm run test:playwright:e2e:ci -- --shard=${{ matrix.shard }}/${{ strategy.job-total }}
+
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E2E-playwright-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          path: e2e_playwright/playwright-report
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Upload E2E artefacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E2E-artefacts-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          path: e2e_playwright/test-results
+          retention-days: 30
+          if-no-files-found: ignore
+
+  e2e_test_playwright_failure:
+    name: "Playwright E2E failure notification"
+    needs: e2e_test_playwright
+    if: ${{ always() && needs.e2e_test_playwright.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
+        with:
+          title: "CAS3 E2E Tests (Playwright)"
+          job: "e2e_test_playwright"
+          channel_id: ${{ vars.SECURITY_ALERTS_SLACK_CHANNEL_ID }}
+          slack_bot_token: ${{ secrets.HMPPS_SLACK_BOT_TOKEN }}
+
+  e2e_test_cypress:
+    name: "CAS3 E2E Tests 🧪 (Cypress)"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [ 1, 2, 3, 4 ]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          # Repository is specified to run the workflow from the API repository
+          repository: 'ministryofjustice/hmpps-temporary-accommodation-ui'
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Determine tests splitting
+        uses: chaosaffe/split-tests@v1
+        id: split-tests
+        with:
+          glob: e2e/tests/*.feature
+          split-index: ${{ strategy.job-index }}
+          split-total: ${{ strategy.job-total }}
+
+      - name: Run E2E Tests
+        env:
+          CYPRESS_assessor_username: ${{ secrets.E2E_USER_CAS3_ASSESSOR_USERNAME }}
+          CYPRESS_assessor_password: ${{ secrets.E2E_USER_CAS3_ASSESSOR_PASSWORD }}
+          CYPRESS_referrer_username: ${{ secrets.E2E_USER_CAS3_REFERRER_USERNAME }}
+          CYPRESS_referrer_password: ${{ secrets.E2E_USER_CAS3_REFERRER_PASSWORD }}
+          CYPRESS_environment: 'dev'
+        run: |
+          npm run test:e2e:ci -- \
+          --config baseUrl=https://transitional-accommodation-dev.hmpps.service.justice.gov.uk \
+          --spec $(echo ${{ steps.split-tests.outputs.test-suite }} | sed -E 's/ /,/g')
+
+      - name: Upload Cypress report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: E2E-playwright-report-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          path: e2e_playwright/playwright-report
+          retention-days: 30
+          if-no-files-found: ignore
+
+      - name: Upload E2E artefacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: E2E-artefacts-cypress-${{ matrix.shard }}-of-${{ strategy.job-total }}
+          path: |
+            e2e/screenshots
+            e2e/videos
+          retention-days: 30
+          if-no-files-found: ignore
+
+  e2e_test_cypress_failure:
+    name: "Cypress E2E failure notification"
+    needs: e2e_test_cypress
+    if: ${{ always() && needs.e2e_test_cypress.result == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: ministryofjustice/hmpps-temporary-accommodation-ui/.github/actions/slack_failure_notification@main
+        with:
+          title: "CAS3 E2E Tests (Cypress)"
+          job: "e2e_test_cypress"
+          channel_id: ${{ vars.SECURITY_ALERTS_SLACK_CHANNEL_ID }}
+          slack_bot_token: ${{ secrets.HMPPS_SLACK_BOT_TOKEN }}

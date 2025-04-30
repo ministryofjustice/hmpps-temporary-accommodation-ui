@@ -3,6 +3,7 @@ import nock from 'nock'
 import config from '../config'
 import paths from '../paths/api'
 import {
+  cas3PremisesSummaryFactory,
   dateCapacityFactory,
   newPremisesFactory,
   premisesFactory,
@@ -44,6 +45,26 @@ describe('PremisesClient', () => {
         .reply(200, premisesSummaries)
 
       const output = await premisesClient.all()
+      expect(output).toEqual(premisesSummaries)
+    })
+  })
+
+  describe('search', () => {
+    const premisesSummaries = [
+      cas3PremisesSummaryFactory.build({ postcode: 'NE1 1AB' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE1 2BC' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE1 3CD' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE1 4DE' }),
+    ]
+
+    it('should get all premises matching the postcode search query', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.index({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ postcodeOrAddress: 'NE1' })
+        .reply(200, premisesSummaries)
+
+      const output = await premisesClient.search('NE1')
       expect(output).toEqual(premisesSummaries)
     })
   })

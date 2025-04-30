@@ -61,3 +61,13 @@ export const checkViewPropertyPageHasExpectedPropertyDetails = async (page: Page
   await viewPropertyPage.containsPropertyNameHeader(property.name)
   await viewPropertyPage.containsProbationRegion(property.probationRegion)
 }
+
+export const searchPropertiesByPostcodeOrAddress = async (page: Page, postcodeOrAddress: string) => {
+  const listPropertiesPage = await ListPropertiesPage.initialize(page)
+  await listPropertiesPage.searchForPostcodeOrAddress(postcodeOrAddress)
+}
+
+export const checkAllEntriesMatchPostcodeOrAddress = async (page: Page, postcodeOrAddress: string) => {
+  const listPropertiesPage = await ListPropertiesPage.initialize(page)
+  await listPropertiesPage.checkAllEntriesMatchPostcodeOrAddress(postcodeOrAddress)
+}

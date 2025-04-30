@@ -16,11 +16,16 @@ import { errorStub } from '../../wiremock/utils'
 import bookingStubs from './booking'
 import roomStubs from './room'
 
+type SearchArguments = {
+  premisesSummaries: Array<PremisesSummary>
+  postcode: string
+}
+
 const stubPremises = (premisesSummaries: Array<PremisesSummary>) =>
   stubFor({
     request: {
       method: 'GET',
-      urlPath: '/premises/summary',
+      urlPath: '/cas3/premises/summary',
     },
     response: {
       status: 200,
@@ -28,6 +33,26 @@ const stubPremises = (premisesSummaries: Array<PremisesSummary>) =>
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: premisesSummaries,
+    },
+  })
+
+const stubPremisesSearch = (args: SearchArguments) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: '/cas3/premises/summary',
+      queryParameters: {
+        postcodeOrAddress: {
+          equalTo: args.postcode,
+        },
+      },
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: args.premisesSummaries,
     },
   })
 
@@ -63,6 +88,7 @@ const stubPremisesCapacity = (args: { premisesId: string; dateCapacities: DateCa
 
 export default {
   stubPremises,
+  stubPremisesSearch,
   stubSinglePremises: (premises: Premises): Promise<[Response, Response, Response]> =>
     Promise.all([
       stubSinglePremises(premises),

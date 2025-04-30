@@ -19,4 +19,20 @@ export class ListPropertiesPage extends BasePage {
   async clickManageLink(rowNumber: number) {
     await this.page.getByRole('link', { name: 'Manage' }).nth(rowNumber).click()
   }
+
+  async searchForPostcodeOrAddress(postcodeOrAddress: string) {
+    await this.page.getByLabel('Find a property').fill(postcodeOrAddress)
+    await this.page.getByRole('button', { name: 'Search' }).click()
+  }
+
+  async checkAllEntriesMatchPostcodeOrAddress(postcodeOrAddress: string) {
+    const tableRows = await this.page.locator('main table tbody tr').all()
+
+    const promises = tableRows.map(async row => {
+      const textContent = await row.textContent()
+      expect(textContent).toContain(postcodeOrAddress)
+    })
+
+    await Promise.all(promises)
+  }
 }

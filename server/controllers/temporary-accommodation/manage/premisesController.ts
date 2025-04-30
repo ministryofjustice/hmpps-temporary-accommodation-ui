@@ -1,6 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewPremises, UpdatePremises } from '@approved-premises/api'
+import { PremisesSearchParameters } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
@@ -25,8 +26,10 @@ export default class PremisesController {
 
       const placeContext = await preservePlaceContext(req, res, this.assessmentService)
 
-      const tableRows = await this.premisesService.tableRows(callConfig, placeContext)
-      return res.render('temporary-accommodation/premises/index', { tableRows })
+      const params = req.query as PremisesSearchParameters
+
+      const tableRows = await this.premisesService.tableRows(callConfig, placeContext, params)
+      return res.render('temporary-accommodation/premises/index', { tableRows, params })
     }
   }
 

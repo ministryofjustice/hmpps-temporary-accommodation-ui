@@ -2,6 +2,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% extends "../../partials/layout.njk" %}
 
@@ -30,31 +31,67 @@
         }]
     }) }}
 
-    {{ govukTable({
-        attributes: {
-            'data-module': 'moj-sortable-table'
-        },
-        captionClasses: "govuk-table__caption--m",
-        head: [
-            {
-                text: "Address"
+    <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
+        <form action="{{ paths.premises.index() }}" method="get">
+            {{ govukInput({
+                label: {
+                    classes: 'govuk-label--m',
+                    text: 'Find a property'
+                },
+                hint: {
+                    text: 'Search by road or full address'
+                },
+                name: 'postcodeOrAddress',
+                id: 'postcodeOrAddress',
+                value: params.postcodeOrAddress
+            }) }}
+
+            <div class="govuk-button-group">
+                {{ govukButton({
+                    text: 'Search',
+                    attributes: { id: 'search-button' },
+                    preventDoubleClick: true
+                }) }}
+
+                <a class="govuk-link" href="{{ paths.premises.index() }}">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    {% if (tableRows | length > 0) %}
+        {{ govukTable({
+            attributes: {
+                'data-module': 'moj-sortable-table'
             },
-            {
-                text: "Bedspaces"
-            },
-            {
-                text: "PDU",
-                attributes: { "aria-sort": "ascending" }
-            },
-            {
-                text: "Status",
-                attributes: { "aria-sort": "none" }
-            },
-            {
-                html: '<span class="govuk-visually-hidden">Actions</span>'
-            }
-        ],
-        rows: tableRows
-    }) }}
+            captionClasses: "govuk-table__caption--m",
+            head: [
+                {
+                    text: "Address"
+                },
+                {
+                    text: "Bedspaces"
+                },
+                {
+                    text: "PDU",
+                    attributes: { "aria-sort": "ascending" }
+                },
+                {
+                    text: "Status",
+                    attributes: { "aria-sort": "none" }
+                },
+                {
+                    html: '<span class="govuk-visually-hidden">Actions</span>'
+                }
+            ],
+            rows: tableRows
+        }) }}
+    {% else %}
+        {% if params.postcodeOrAddress %}
+            <h2>{{ 'There are no results for ‘' + params.postcodeOrAddress + '’ in the list of properties.' }}</h2>
+            <p>Check your spelling or try entering a different address.</p>
+        {% else %}
+            <h2>There are no results in the list of properties.</h2>
+        {% endif %}
+    {% endif %}
 
 {% endblock %}

@@ -22,7 +22,6 @@ import { formatNotes } from './viewUtils'
 
 import { dashboardTableRows, taskResponsesToSummaryListRowItems } from './applicationUtils'
 import * as AssessmentUtils from './assessmentUtils'
-import * as AttachDocumentsUtils from './attachDocumentsUtils'
 import * as BedspaceSearchResultUtils from './bedspaceSearchResultUtils'
 import * as OasysImportUtils from './oasysImportUtils'
 import * as OffenceUtils from './offenceUtils'
@@ -193,7 +192,6 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('PremisesUtils', PremisesUtils)
   njkEnv.addGlobal('OasysImportUtils', OasysImportUtils)
   njkEnv.addGlobal('AssessmentUtils', AssessmentUtils)
-  njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
   njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)
   njkEnv.addGlobal('formatNotes', formatNotes)
 }

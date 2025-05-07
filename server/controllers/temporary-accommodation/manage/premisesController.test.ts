@@ -1,7 +1,7 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import type { ErrorsAndUserInput, SummaryListItem } from '@approved-premises/ui'
+import type { ErrorsAndUserInput, PremisesSearchParameters, SummaryListItem } from '@approved-premises/ui'
 import { PropertyStatus } from '../../../@types/shared'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
@@ -83,6 +83,7 @@ describe('PremisesController', () => {
       session: {
         probationRegion: probationRegionFactory.build(),
       },
+      query: {},
     })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
@@ -90,6 +91,7 @@ describe('PremisesController', () => {
   describe('index', () => {
     it('returns the table rows to the template', async () => {
       const placeContext = placeContextFactory.build()
+      const params: PremisesSearchParameters = { postcodeOrAddress: undefined }
 
       premisesService.tableRows.mockResolvedValue([])
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
@@ -97,9 +99,35 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { tableRows: [] })
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
+        params: {},
+        tableRows: [],
+      })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext)
+      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext, params)
+      expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
+    })
+
+    it('returns the filtered table rows to the template when the user has searched for a postcode or address', async () => {
+      const placeContext = placeContextFactory.build()
+      const params = { postcodeOrAddress: 'NE1' }
+
+      premisesService.tableRows.mockResolvedValue([])
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+      })
+
+      const requestHandler = premisesController.index()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { params, tableRows: [] })
+
+      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext, params)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })

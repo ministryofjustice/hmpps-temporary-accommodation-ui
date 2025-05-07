@@ -2,7 +2,7 @@ import { path } from 'static-path'
 
 const cas3Path = path('/cas3')
 const premisesPath = path('/premises')
-const premisesSummaryPath = path('/premises/summary')
+const premisesSummaryPath = cas3Path.path('/premises/summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')

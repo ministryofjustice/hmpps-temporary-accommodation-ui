@@ -53,6 +53,7 @@ import { fullPersonFactory as personFactory, restrictedPersonFactory } from './p
 import placeContextFactory from './placeContext'
 import premisesFactory from './premises'
 import premisesSummaryFactory from './premisesSummary'
+import cas3PremisesSummaryFactory from './cas3PremisesSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
 import referenceDataFactory from './referenceData'
@@ -127,6 +128,7 @@ export {
   placeContextFactory,
   premisesFactory,
   premisesSummaryFactory,
+  cas3PremisesSummaryFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,
   referenceDataFactory,

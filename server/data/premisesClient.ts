@@ -2,7 +2,7 @@ import type {
   DateCapacity,
   NewPremises,
   TemporaryAccommodationPremises as Premises,
-  TemporaryAccommodationPremisesSummary as PremisesSummary,
+  Cas3PremisesSummary as PremisesSummary,
   StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
@@ -19,6 +19,13 @@ export default class PremisesClient {
 
   async all() {
     return this.restClient.get<Array<PremisesSummary>>({ path: paths.premises.index({}) })
+  }
+
+  async search(postcodeOrAddress: string) {
+    return this.restClient.get<Array<PremisesSummary>>({
+      path: paths.premises.index({}),
+      query: { postcodeOrAddress },
+    })
   }
 
   async find(id: string) {

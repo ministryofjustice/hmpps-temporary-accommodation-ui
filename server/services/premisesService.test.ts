@@ -1,15 +1,16 @@
+import { PremisesSearchParameters } from '@approved-premises/ui'
 import PremisesClient from '../data/premisesClient'
 import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import {
+  cas3PremisesSummaryFactory,
   characteristicFactory,
   localAuthorityFactory,
   newPremisesFactory,
   pduFactory,
   placeContextFactory,
   premisesFactory,
-  premisesSummaryFactory,
   probationRegionFactory,
   staffMemberFactory,
   updatePremisesFactory,
@@ -118,119 +119,55 @@ describe('PremisesService', () => {
   })
 
   describe('tableRows', () => {
-    it('returns a sorted table view of the premises for Temporary Accommodation', async () => {
-      const premisesSummary1 = premisesSummaryFactory.build({ addressLine1: 'ABC', postcode: '123' })
-      const premisesSummary2 = premisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '123' })
-      const premisesSummary3 = premisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '456' })
-      const premisesSummary4 = premisesSummaryFactory.build({ addressLine1: 'XYZ', postcode: '123' })
+    const premisesSummary1 = cas3PremisesSummaryFactory.build({ addressLine1: 'ABC', postcode: '123' })
+    const premisesSummary2 = cas3PremisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '123' })
+    const premisesSummary3 = cas3PremisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '456' })
+    const premisesSummary4 = cas3PremisesSummaryFactory.build({ addressLine1: 'XYZ', postcode: '123' })
 
-      const placeContext = placeContextFactory.build()
+    it.each([
+      [
+        [premisesSummary4, premisesSummary1, premisesSummary3, premisesSummary2],
+        undefined,
+        [premisesSummary1, premisesSummary2, premisesSummary3, premisesSummary4],
+      ],
+      [[premisesSummary3, premisesSummary2], 'GHI', [premisesSummary2, premisesSummary3]],
+      [[], 'ABC', []],
+    ])(
+      'returns a sorted table view of the premises for Temporary Accommodation with an option search for an address',
+      async (premises, postcodeOrAddress, expectedPremises) => {
+        const placeContext = placeContextFactory.build()
+        const params: PremisesSearchParameters = { postcodeOrAddress }
 
-      const premises = [premisesSummary4, premisesSummary1, premisesSummary3, premisesSummary2]
-      premisesClient.all.mockResolvedValue(premises)
-      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
-      ;(addPlaceContext as jest.MockedFunction<typeof addPlaceContext>).mockReturnValue('/path/with/place/context')
+        const clientFunction = postcodeOrAddress ? premisesClient.search : premisesClient.all
 
-      const rows = await service.tableRows(callConfig, placeContext)
+        clientFunction.mockResolvedValue(premises)
+        ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
+        ;(addPlaceContext as jest.MockedFunction<typeof addPlaceContext>).mockReturnValue('/path/with/place/context')
 
-      expect(rows).toEqual([
-        [
-          {
-            text: 'ABC, 123',
-          },
-          {
-            text: premisesSummary1.bedCount.toString(),
-          },
-          {
-            text: premisesSummary1.pdu,
-          },
-          {
-            html: `<strong>${premisesSummary1.status}</strong>`,
-          },
-          {
-            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> ABC, 123</span></a>`,
-          },
-        ],
-        [
-          {
-            text: 'GHI, 123',
-          },
-          {
-            text: premisesSummary2.bedCount.toString(),
-          },
-          {
-            text: premisesSummary2.pdu,
-          },
-          {
-            html: `<strong>${premisesSummary2.status}</strong>`,
-          },
-          {
-            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> GHI, 123</span></a>`,
-          },
-        ],
-        [
-          {
-            text: 'GHI, 456',
-          },
-          {
-            text: premisesSummary3.bedCount.toString(),
-          },
-          {
-            text: premisesSummary3.pdu,
-          },
-          {
-            html: `<strong>${premisesSummary3.status}</strong>`,
-          },
-          {
-            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> GHI, 456</span></a>`,
-          },
-        ],
-        [
-          {
-            text: 'XYZ, 123',
-          },
-          {
-            text: premisesSummary4.bedCount.toString(),
-          },
-          {
-            text: premisesSummary4.pdu,
-          },
-          {
-            html: `<strong>${premisesSummary4.status}</strong>`,
-          },
-          {
-            html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> XYZ, 123</span></a>`,
-          },
-        ],
-      ])
+        const rows = await service.tableRows(callConfig, placeContext, params)
 
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.all).toHaveBeenCalled()
-      expect(addPlaceContext).toHaveBeenCalledWith(
-        paths.premises.show({
-          premisesId: premisesSummary1.id,
-        }),
-        placeContext,
-      )
-      expect(addPlaceContext).toHaveBeenCalledWith(
-        paths.premises.show({
-          premisesId: premisesSummary2.id,
-        }),
-        placeContext,
-      )
-      expect(addPlaceContext).toHaveBeenCalledWith(
-        paths.premises.show({
-          premisesId: premisesSummary3.id,
-        }),
-        placeContext,
-      )
-      expect(addPlaceContext).toHaveBeenCalledWith(
-        paths.premises.show({
-          premisesId: premisesSummary4.id,
-        }),
-        placeContext,
-      )
-    })
+        const expectedRows = expectedPremises.map(prem => {
+          const shortAddress = `${prem.addressLine1}, ${prem.postcode}`
+          return [
+            { text: shortAddress },
+            { text: prem.bedspaceCount.toString() },
+            { text: prem.pdu },
+            { html: `<strong>${prem.status}</strong>` },
+            {
+              html: `<a href="/path/with/place/context">Manage<span class="govuk-visually-hidden"> ${shortAddress}</span></a>`,
+            },
+          ]
+        })
+
+        expect(rows).toEqual(expectedRows)
+
+        expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+        expect(clientFunction).toHaveBeenCalled()
+        expectedPremises.forEach(prem => {
+          expect(addPlaceContext).toHaveBeenCalledWith(paths.premises.show({ premisesId: prem.id }), placeContext)
+        })
+      },
+    )
   })
 
   describe('getPremisesSelectList', () => {

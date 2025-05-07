@@ -6,7 +6,7 @@ import type {
   StaffMember,
   UpdatePremises,
 } from '@approved-premises/api'
-import type { PlaceContext, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
+import { PlaceContext, PremisesSearchParameters, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
 import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import paths from '../paths/temporary-accommodation/manage'
 
@@ -62,9 +62,16 @@ export default class PremisesService {
     return { localAuthorities, characteristics, probationRegions, pdus }
   }
 
-  async tableRows(callConfig: CallConfig, placeContext: PlaceContext): Promise<Array<TableRow>> {
+  async tableRows(
+    callConfig: CallConfig,
+    placeContext: PlaceContext,
+    params: PremisesSearchParameters,
+  ): Promise<Array<TableRow>> {
     const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.all()
+
+    const premises = params.postcodeOrAddress
+      ? await premisesClient.search(params.postcodeOrAddress)
+      : await premisesClient.all()
 
     return premises
       .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
@@ -72,7 +79,7 @@ export default class PremisesService {
       .map(entry => {
         return [
           this.textValue(entry.shortAddress),
-          this.textValue(`${entry.bedCount}`),
+          this.textValue(`${entry.bedspaceCount}`),
           this.textValue(entry.pdu),
           this.htmlValue(statusTag(entry.status)),
           this.htmlValue(

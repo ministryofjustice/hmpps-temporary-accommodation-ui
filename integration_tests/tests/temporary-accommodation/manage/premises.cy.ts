@@ -6,6 +6,7 @@ import PremisesNewPage from '../../../../cypress_shared/pages/temporary-accommod
 import PremisesShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/premisesShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
+  cas3PremisesSummaryFactory,
   newPremisesFactory,
   premisesFactory,
   premisesSummaryFactory,
@@ -42,7 +43,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const premisesSummaries = cas3PremisesSummaryFactory.buildList(5)
     cy.task('stubPremises', premisesSummaries)
 
     // When I visit the premises page
@@ -67,12 +68,87 @@ context('Premises', () => {
     page.checkColumnOrder('Status', 'ascending')
   })
 
+  it('should search premises by postcode and list them', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const postcode = 'NE1 1AB'
+    const matchingPremisesSummaries = [
+      cas3PremisesSummaryFactory.build({ postcode }),
+      cas3PremisesSummaryFactory.build({ postcode }),
+    ]
+    const premisesSummaries = [
+      ...matchingPremisesSummaries,
+      cas3PremisesSummaryFactory.build({ postcode: 'NE2 2BC' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE3 3CD' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE4 4DE' }),
+    ]
+    cy.task('stubPremises', premisesSummaries)
+    cy.task('stubPremisesSearch', { premisesSummaries: matchingPremisesSummaries, postcode })
+
+    // When I visit the premises page
+    const page = PremisesListPage.visit()
+
+    // Then I should see all the premises listed
+    page.shouldShowPremises(premisesSummaries)
+
+    // When I search for the first postcode
+    page.search(postcode)
+
+    // Then only premises matching that postcode should be listed
+    page.shouldShowOnlyPremises(matchingPremisesSummaries)
+
+    // When I clear the search field and search again
+    page.clearSearch()
+
+    // Then all the premises should be listed again
+    page.shouldShowPremises(premisesSummaries)
+  })
+
+  it('should show no results when searching for a postcode with no results', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const premisesSummaries = [
+      cas3PremisesSummaryFactory.build({ postcode: 'NE1 1AB' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE2 2BC' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE3 3CD' }),
+      cas3PremisesSummaryFactory.build({ postcode: 'NE4 4DE' }),
+    ]
+    cy.task('stubPremises', premisesSummaries)
+    cy.task('stubPremisesSearch', { premisesSummaries: [], postcode: 'SR6' })
+
+    // When I visit the premises page
+    const page = PremisesListPage.visit()
+
+    // Then I should see all the premises listed
+    page.shouldShowPremises(premisesSummaries)
+
+    // When I search for a postcode with no results
+    page.search('SR6')
+
+    // Then a 'no results' message should be shown
+    page.shouldShowOnlyPremises([])
+    page.shouldShowMessages([
+      'There are no results for ‘SR6’ in the list of properties.',
+      'Check your spelling or try entering a different address.',
+    ])
+
+    // When I clear the search field and search again
+    page.clearSearch()
+
+    // Then all the premises should be listed again
+    page.shouldShowPremises(premisesSummaries)
+  })
+
   it('should navigate back from the premises list page to the dashboard', () => {
     // Given I am signed in
     cy.signIn()
 
     // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const premisesSummaries = cas3PremisesSummaryFactory.buildList(5)
     cy.task('stubPremises', premisesSummaries)
 
     // When I visit the premises list page
@@ -90,7 +166,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const premisesSummaries = cas3PremisesSummaryFactory.buildList(5)
     cy.task('stubPremises', premisesSummaries)
 
     // And there is reference data in the database
@@ -111,7 +187,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const premisesSummaries = cas3PremisesSummaryFactory.buildList(5)
     const singlePremises = premisesFactory.build({ ...premisesSummaries[0] })
 
     cy.task('stubPremises', premisesSummaries)
@@ -237,7 +313,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const premisesSummaries = cas3PremisesSummaryFactory.buildList(5)
     cy.task('stubPremises', premisesSummaries)
 
     // And there is reference data in the database
@@ -406,7 +482,7 @@ context('Premises', () => {
     cy.signIn()
 
     // And there are premises in the database
-    const premisesSummaries = premisesSummaryFactory.buildList(5)
+    const premisesSummaries = cas3PremisesSummaryFactory.buildList(5)
     const singlePremises = premisesFactory.build({ ...premisesSummaries[0] })
     cy.task('stubPremises', premisesSummaries)
     cy.task('stubSinglePremises', singlePremises)

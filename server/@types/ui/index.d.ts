@@ -345,3 +345,7 @@ export type BedspaceSearchFormParameters = {
 export type UIPersonAcctAlert = PersonAcctAlert & {
   alertId: string | number
 }
+
+export type PremisesSearchParameters = {
+  postcodeOrAddress?: string
+}

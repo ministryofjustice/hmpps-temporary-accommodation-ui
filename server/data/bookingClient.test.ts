@@ -9,13 +9,13 @@ import {
   bookingFactory,
   bookingSearchResultFactory,
   cancellationFactory,
+  cas3NewDepartureFactory,
   confirmationFactory,
   departureFactory,
   newArrivalFactory,
   newBookingFactory,
   newCancellationFactory,
   newConfirmationFactory,
-  newDepartureFactory,
   newTurnaroundFactory,
   turnaroundFactory,
 } from '../testutils/factories'
@@ -199,10 +199,10 @@ describe('BookingClient', () => {
 
   describe('markDeparture', () => {
     it('should create a departure', async () => {
-      const departure = newDepartureFactory.build()
+      const departure = cas3NewDepartureFactory.build()
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/departures`, departure)
+        .post(`/cas3/premises/premisesId/bookings/bookingId/departures`, departure)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, departure)
 

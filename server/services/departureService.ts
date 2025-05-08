@@ -1,5 +1,5 @@
 import type { ReferenceData } from '@approved-premises/ui'
-import type { Departure, NewDeparture } from '@approved-premises/api'
+import type { Cas3Departure, Cas3NewDeparture, Departure } from '@approved-premises/api'
 import type { BookingClient, ReferenceDataClient, RestClientBuilder } from '../data'
 import { DateFormats } from '../utils/dateUtils'
 import { CallConfig } from '../data/restClient'
@@ -19,13 +19,11 @@ export default class DepartureService {
     callConfig: CallConfig,
     premisesId: string,
     bookingId: string,
-    departure: NewDeparture,
-  ): Promise<Departure> {
+    departure: Cas3NewDeparture,
+  ): Promise<Cas3Departure> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
-    const confirmedDeparture = await bookingClient.markDeparture(premisesId, bookingId, departure)
-
-    return confirmedDeparture
+    return bookingClient.markDeparture(premisesId, bookingId, departure)
   }
 
   async getDeparture(

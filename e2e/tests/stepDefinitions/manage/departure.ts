@@ -68,6 +68,7 @@ Given('I edit the departed booking', () => {
       ...departure,
       reasonId: departure.reason.id,
       moveOnCategoryId: departure.moveOnCategory.id,
+      dateTime: DateFormats.dateObjToIsoDate(faker.date.between({ from: this.booking.arrivalDate, to: Date.now() })),
     })
 
     const bookingDeparturePage = Page.verifyOnPage(BookingDepartureEditPage, this.premises, this.room, this.booking)

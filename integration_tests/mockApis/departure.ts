@@ -23,7 +23,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`,
+        url: `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/departures`,
       },
       response: {
         status: 201,
@@ -32,14 +32,14 @@ export default {
       },
     }),
   stubDepartureCreateErrors: (args: { premisesId: string; bookingId: string; params: Array<string> }) =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`, 'POST')),
+    stubFor(errorStub(args.params, `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/departures`, 'POST')),
   stubDepartureReferenceData: (): Promise<[Response, Response]> =>
     Promise.all([stubFor(departureReasons), stubFor(moveOnCategories)]),
   verifyDepartureCreate: async (args: { premisesId: string; bookingId: string }) =>
     (
       await getMatchingRequests({
         method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/departures`,
+        url: `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/departures`,
       })
     ).body.requests,
 }

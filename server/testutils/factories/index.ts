@@ -37,6 +37,7 @@ import newArrivalFactory from './newArrival'
 import newBookingFactory from './newBooking'
 import newCancellationFactory from './newCancellation'
 import newConfirmationFactory from './newConfirmation'
+import cas3NewDepartureFactory from './cas3NewDeparture'
 import newDepartureFactory from './newDeparture'
 import newExtensionFactory from './newExtension'
 import newLostBedFactory from './newLostBed'
@@ -113,6 +114,7 @@ export {
   newCancellationFactory,
   newConfirmationFactory,
   newDepartureFactory,
+  cas3NewDepartureFactory,
   newExtensionFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,

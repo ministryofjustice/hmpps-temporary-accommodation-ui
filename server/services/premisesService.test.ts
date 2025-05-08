@@ -119,10 +119,26 @@ describe('PremisesService', () => {
   })
 
   describe('tableRows', () => {
-    const premisesSummary1 = cas3PremisesSummaryFactory.build({ addressLine1: 'ABC', postcode: '123', pdu: 'Hampshire South and Isle of Wight' })
-    const premisesSummary2 = cas3PremisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '123', pdu: 'Hampshire South and Isle of Wight' })
-    const premisesSummary3 = cas3PremisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '456', pdu: 'Bedfordshire' })
-    const premisesSummary4 = cas3PremisesSummaryFactory.build({ addressLine1: 'XYZ', postcode: '123', pdu: 'Bedfordshire' })
+    const premisesSummary1 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'ABC',
+      postcode: '123',
+      pdu: 'Hampshire South and Isle of Wight',
+    })
+    const premisesSummary2 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'GHI',
+      postcode: '123',
+      pdu: 'Hampshire South and Isle of Wight',
+    })
+    const premisesSummary3 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'GHI',
+      postcode: '456',
+      pdu: 'Bedfordshire',
+    })
+    const premisesSummary4 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'XYZ',
+      postcode: '123',
+      pdu: 'Bedfordshire',
+    })
 
     it.each([
       [

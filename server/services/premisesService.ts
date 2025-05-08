@@ -75,7 +75,13 @@ export default class PremisesService {
 
     return premises
       .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
-      .sort((a, b) => a.shortAddress.localeCompare(b.shortAddress))
+      .sort((a, b) => {
+        const pduSort = a.pdu.localeCompare(b.pdu)
+        if (pduSort !== 0) {
+          return pduSort
+        }
+        return a.shortAddress.localeCompare(b.shortAddress)
+      })
       .map(entry => {
         return [
           this.textValue(entry.shortAddress),

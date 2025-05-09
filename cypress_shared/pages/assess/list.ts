@@ -56,21 +56,11 @@ export default class ListPage extends Page {
             .parent()
             .contains(assessmentSummary.person.crn)
           cy.get('td').eq(0).contains(assessmentSummary.probationDeliveryUnitName)
-          cy.get('td')
-            .eq(1)
-            .contains(
-              DateFormats.isoDateToUIDate(assessmentSummary.createdAt, {
-                format: 'short',
-              }),
-            )
+          cy.get('td').eq(1).contains(DateFormats.isoDateToUIDate(assessmentSummary.createdAt))
           cy.get('td')
             .eq(2)
             .contains(
-              assessmentSummary?.arrivalDate
-                ? DateFormats.isoDateToUIDate(assessmentSummary?.arrivalDate, {
-                    format: 'short',
-                  })
-                : 'N/A',
+              assessmentSummary?.arrivalDate ? DateFormats.isoDateToUIDate(assessmentSummary?.arrivalDate) : 'N/A',
             )
           if (checkStatus) {
             cy.get('td').eq(3).contains(statusName(assessmentSummary.status))

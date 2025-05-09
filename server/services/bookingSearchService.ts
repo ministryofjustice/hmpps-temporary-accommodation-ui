@@ -30,14 +30,8 @@ export default class BookingSearchService {
           this.textValue(summary.person.name || 'Limited access offender'),
           this.textValue(summary.person.crn),
           this.textValue(summary.premises.addressLine1),
-          this.dateSortValue(
-            DateFormats.isoDateToUIDate(summary.booking.startDate, { format: 'short' }),
-            summary.booking.startDate,
-          ),
-          this.dateSortValue(
-            DateFormats.isoDateToUIDate(summary.booking.endDate, { format: 'short' }),
-            summary.booking.endDate,
-          ),
+          this.dateSortValue(DateFormats.isoDateToUIDate(summary.booking.startDate), summary.booking.startDate),
+          this.dateSortValue(DateFormats.isoDateToUIDate(summary.booking.endDate), summary.booking.endDate),
           this.htmlValue(
             `<a href="${paths.bookings.show({
               premisesId: summary.premises.id,

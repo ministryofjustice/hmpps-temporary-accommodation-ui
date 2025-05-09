@@ -21,10 +21,7 @@ export default class PlaceContextHeaderComponent extends Component {
       cy.root().should('contain', 'View referral summary (opens in new tab)')
 
       if (isFullPerson(person)) {
-        cy.root()
-          .contains('Date of birth:')
-          .next()
-          .should('contain', DateFormats.isoDateToUIDate(person.dateOfBirth, { format: 'short' }))
+        cy.root().contains('Date of birth:').next().should('contain', DateFormats.isoDateToUIDate(person.dateOfBirth))
 
         cy.root().contains('Sex:').next().should('contain', person.sex)
 
@@ -38,7 +35,7 @@ export default class PlaceContextHeaderComponent extends Component {
       cy.root()
         .contains('Accommodation required')
         .next()
-        .should('contain', DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate, { format: 'short' }))
+        .should('contain', DateFormats.isoDateToUIDate(assessment.accommodationRequiredFromDate))
       cy.root().contains('Suitable to share:').next().should('contain', 'Yes')
     })
   }

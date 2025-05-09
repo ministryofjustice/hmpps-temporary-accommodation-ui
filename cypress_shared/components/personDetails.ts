@@ -15,10 +15,7 @@ export default class PersonDetailsComponent extends Component {
       }
       this.assertDefinition('CRN', this.person.crn)
       if (isFullPerson(this.person)) {
-        this.assertDefinition(
-          'Date of birth',
-          DateFormats.isoDateToUIDate(this.person.dateOfBirth, { format: 'short' }),
-        )
+        this.assertDefinition('Date of birth', DateFormats.isoDateToUIDate(this.person.dateOfBirth))
 
         if (this.person.nomsNumber) {
           this.assertDefinition('NOMS number', this.person.nomsNumber)

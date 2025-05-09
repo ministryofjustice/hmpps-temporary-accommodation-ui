@@ -49,13 +49,13 @@ describe('BookingService', () => {
           { text: booking1.person.crn },
           { text: booking1.premises.addressLine1 },
           {
-            text: DateFormats.isoDateToUIDate(booking1.booking.startDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking1.booking.startDate),
             attributes: {
               'data-sort-value': booking1.booking.startDate,
             },
           },
           {
-            text: DateFormats.isoDateToUIDate(booking1.booking.endDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking1.booking.endDate),
             attributes: {
               'data-sort-value': booking1.booking.endDate,
             },
@@ -75,13 +75,13 @@ describe('BookingService', () => {
           { text: booking2.person.crn },
           { text: booking2.premises.addressLine1 },
           {
-            text: DateFormats.isoDateToUIDate(booking2.booking.startDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking2.booking.startDate),
             attributes: {
               'data-sort-value': booking2.booking.startDate,
             },
           },
           {
-            text: DateFormats.isoDateToUIDate(booking2.booking.endDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking2.booking.endDate),
             attributes: {
               'data-sort-value': booking2.booking.endDate,
             },
@@ -101,13 +101,13 @@ describe('BookingService', () => {
           { text: booking3.person.crn },
           { text: booking3.premises.addressLine1 },
           {
-            text: DateFormats.isoDateToUIDate(booking3.booking.startDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking3.booking.startDate),
             attributes: {
               'data-sort-value': booking3.booking.startDate,
             },
           },
           {
-            text: DateFormats.isoDateToUIDate(booking3.booking.endDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(booking3.booking.endDate),
             attributes: {
               'data-sort-value': booking3.booking.endDate,
             },

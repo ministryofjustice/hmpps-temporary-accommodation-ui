@@ -61,7 +61,7 @@ const htmlValue = (value: string, sortValue: string) => {
 
 const dateValue = (date: string) => {
   return {
-    text: DateFormats.isoDateToUIDate(date, { format: 'short' }),
+    text: DateFormats.isoDateToUIDate(date),
     attributes: {
       'data-sort-value': date,
     },

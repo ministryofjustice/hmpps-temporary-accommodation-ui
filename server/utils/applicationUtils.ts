@@ -28,9 +28,7 @@ const dashboardTableRows = (applications: Array<Application>): Array<TableRow> =
       return [
         createNameAnchorElement(personName(application.person, 'Limited access offender'), application),
         textValue(application.person.crn),
-        textValue(
-          application.submittedAt ? DateFormats.isoDateToUIDate(application.submittedAt, { format: 'short' }) : 'N/A',
-        ),
+        textValue(application.submittedAt ? DateFormats.isoDateToUIDate(application.submittedAt) : 'N/A'),
         htmlValue(getStatus(application)),
       ]
     }

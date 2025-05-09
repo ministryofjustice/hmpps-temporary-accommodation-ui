@@ -28,7 +28,7 @@
           text: "Date of birth"
         },
         value: {
-          text: formatDate(params.person.dateOfBirth, {format: 'short'}) if isFullPerson(params.person) else undefined
+          text: formatDate(params.person.dateOfBirth) if isFullPerson(params.person) else undefined
         }
       },
       {

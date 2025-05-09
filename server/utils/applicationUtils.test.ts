@@ -345,7 +345,7 @@ describe('applicationUtils', () => {
             text: applicationB.person.crn,
           },
           {
-            text: DateFormats.isoDateToUIDate(submittedAtDate, { format: 'short' }),
+            text: DateFormats.isoDateToUIDate(submittedAtDate),
           },
           {
             html: getStatus(applicationB),

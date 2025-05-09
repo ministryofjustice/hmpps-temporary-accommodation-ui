@@ -36,7 +36,7 @@ export default class BookingSelectAssessmentPage extends Page {
       cy.get(`input[name="assessmentId"][value="${assessmentSummary.id}"]`)
         .siblings('label')
         .eq(0)
-        .contains(DateFormats.isoDateToUIDate(assessmentSummary.createdAt, { format: 'short' }))
+        .contains(DateFormats.isoDateToUIDate(assessmentSummary.createdAt))
     })
   }
 
@@ -59,13 +59,8 @@ export default class BookingSelectAssessmentPage extends Page {
     if (isFullPerson(person)) {
       return `${person.name}, CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
         assessment.createdAt,
-        {
-          format: 'short',
-        },
       )}`
     }
-    return `CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(assessment.createdAt, {
-      format: 'short',
-    })}`
+    return `CRN ${person.crn}, referral submitted ${DateFormats.isoDateToUIDate(assessment.createdAt)}`
   }
 }

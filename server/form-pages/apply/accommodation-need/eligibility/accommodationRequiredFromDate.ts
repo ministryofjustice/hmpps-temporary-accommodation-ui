@@ -1,6 +1,6 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
+import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast, dateIsWithinThreeMonths } from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
@@ -55,6 +55,8 @@ export default class AccommodationRequiredFromDate implements TasklistPage {
       errors.accommodationRequiredFromDate = 'You must specify a valid date accommodation is required from'
     } else if (dateIsInThePast(this.body.accommodationRequiredFromDate)) {
       errors.accommodationRequiredFromDate = 'The date accommodation is required from must not be in the past'
+    } else if (!dateIsWithinThreeMonths(this.body.accommodationRequiredFromDate)) {
+      errors.accommodationRequiredFromDate = 'Date accommodation is required from must be within 3 months'
     }
 
     return errors as TaskListErrors<this>

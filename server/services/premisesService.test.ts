@@ -119,18 +119,34 @@ describe('PremisesService', () => {
   })
 
   describe('tableRows', () => {
-    const premisesSummary1 = cas3PremisesSummaryFactory.build({ addressLine1: 'ABC', postcode: '123' })
-    const premisesSummary2 = cas3PremisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '123' })
-    const premisesSummary3 = cas3PremisesSummaryFactory.build({ addressLine1: 'GHI', postcode: '456' })
-    const premisesSummary4 = cas3PremisesSummaryFactory.build({ addressLine1: 'XYZ', postcode: '123' })
+    const premisesSummary1 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'ABC',
+      postcode: '123',
+      pdu: 'Hampshire South and Isle of Wight',
+    })
+    const premisesSummary2 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'GHI',
+      postcode: '123',
+      pdu: 'Hampshire South and Isle of Wight',
+    })
+    const premisesSummary3 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'GHI',
+      postcode: '456',
+      pdu: 'Bedfordshire',
+    })
+    const premisesSummary4 = cas3PremisesSummaryFactory.build({
+      addressLine1: 'XYZ',
+      postcode: '123',
+      pdu: 'Bedfordshire',
+    })
 
     it.each([
       [
         [premisesSummary4, premisesSummary1, premisesSummary3, premisesSummary2],
         undefined,
-        [premisesSummary1, premisesSummary2, premisesSummary3, premisesSummary4],
+        [premisesSummary3, premisesSummary4, premisesSummary1, premisesSummary2],
       ],
-      [[premisesSummary3, premisesSummary2], 'GHI', [premisesSummary2, premisesSummary3]],
+      [[premisesSummary2, premisesSummary3], 'GHI', [premisesSummary3, premisesSummary2]],
       [[], 'ABC', []],
     ])(
       'returns a sorted table view of the premises for Temporary Accommodation with an option search for an address',

@@ -101,10 +101,10 @@ export default class BookingsController {
           insertGenericError(error, 'crn', 'empty')
         }
 
-        const { error: arrivalDateError, parsedDate: parsedArrivalDate } = this.validateArrivalDate(arrivalDate)
+        const { error: arrivalDateError, parsedDate: parsedArrivalDate } = this.validateArrivalDate(arrivalDate, error)
         error = arrivalDateError || error
 
-        const departureDateError = this.validateDepartureDate(departureDate, parsedArrivalDate)
+        const departureDateError = this.validateDepartureDate(departureDate, parsedArrivalDate, error)
         error = departureDateError || error
 
         if (error) {
@@ -291,9 +291,12 @@ export default class BookingsController {
     }
   }
 
-  private validateArrivalDate(arrivalDate: string): { error: Error | null; parsedDate: Date | null } {
+  private validateArrivalDate(arrivalDate: string, error: Error): { error: Error | null; parsedDate: Date | null } {
+    if (!error) {
+      error = new Error()
+    }
+
     if (!arrivalDate) {
-      const error = new Error()
       insertGenericError(error, 'arrivalDate', 'empty')
       return { error, parsedDate: null }
     }
@@ -302,15 +305,17 @@ export default class BookingsController {
       const parsedDate = DateFormats.isoToDateObj(arrivalDate)
       return { error: null, parsedDate }
     } catch {
-      const error = new Error()
       insertGenericError(error, 'arrivalDate', 'invalid')
       return { error, parsedDate: null }
     }
   }
 
-  private validateDepartureDate(departureDate: string, parsedArrivalDate: Date | null): Error | null {
+  private validateDepartureDate(departureDate: string, parsedArrivalDate: Date | null, error: Error): Error | null {
+    if (!error) {
+      error = new Error()
+    }
+
     if (!departureDate) {
-      const error = new Error()
       insertGenericError(error, 'departureDate', 'empty')
       return error
     }
@@ -319,7 +324,6 @@ export default class BookingsController {
       const parsedDepartureDate = DateFormats.isoToDateObj(departureDate)
 
       if (departureDate < DateFormats.dateObjToIsoDate(new Date())) {
-        const error = new Error()
         insertGenericError(error, 'departureDate', 'inPast')
         return error
       }
@@ -328,13 +332,11 @@ export default class BookingsController {
         const maxAllowedDate = new Date(parsedArrivalDate)
         maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
         if (parsedDepartureDate > maxAllowedDate) {
-          const error = new Error()
           insertGenericError(error, 'departureDate', 'exceedsMaxNights')
           return error
         }
       }
     } catch {
-      const error = new Error()
       insertGenericError(error, 'departureDate', 'invalid')
       return error
     }

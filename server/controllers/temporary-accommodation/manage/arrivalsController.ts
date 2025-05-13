@@ -65,6 +65,27 @@ export default class ArrivalsController {
           insertGenericError(error, 'arrivalDate', 'todayOrInThePast')
           throw error
         }
+
+        if (newArrival.arrivalDate) {
+          const sevenDays = new Date()
+          sevenDays.setDate(sevenDays.getDate() - 7)
+
+          if (newArrival.arrivalDate < DateFormats.dateObjToIsoDate(sevenDays)) {
+            const error = new Error()
+            insertGenericError(error, 'arrivalDate', 'withinLastSevenDays')
+            throw error
+          }
+
+          const parsedDepartureDate = DateFormats.isoToDateObj(newArrival.expectedDepartureDate)
+          const maxAllowedDate = new Date(newArrival.arrivalDate)
+          maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
+          if (parsedDepartureDate > maxAllowedDate) {
+            const error = new Error()
+            insertGenericError(error, 'expectedDepartureDate', 'exceedsMaxNights')
+            throw error
+          }
+        }
+
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, newArrival)
 
         req.flash('success', {

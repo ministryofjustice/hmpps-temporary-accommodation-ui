@@ -297,7 +297,7 @@ export default class BookingsController {
       insertGenericError(error, 'arrivalDate', 'empty')
       return { error, parsedDate: null }
     }
-  
+
     try {
       const parsedDate = DateFormats.isoToDateObj(arrivalDate)
       return { error: null, parsedDate }
@@ -314,16 +314,16 @@ export default class BookingsController {
       insertGenericError(error, 'departureDate', 'empty')
       return error
     }
-  
+
     try {
       const parsedDepartureDate = DateFormats.isoToDateObj(departureDate)
-  
+
       if (departureDate < DateFormats.dateObjToIsoDate(new Date())) {
         const error = new Error()
         insertGenericError(error, 'departureDate', 'inPast')
         return error
       }
-  
+
       if (parsedArrivalDate) {
         const maxAllowedDate = new Date(parsedArrivalDate)
         maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
@@ -338,7 +338,7 @@ export default class BookingsController {
       insertGenericError(error, 'departureDate', 'invalid')
       return error
     }
-  
+
     return null
   }
 }

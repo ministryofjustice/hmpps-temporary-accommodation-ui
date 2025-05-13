@@ -1,4 +1,3 @@
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import { test as base } from '@playwright/test'
 import { TestOptions } from '@temporary-accommodation-ui/e2e'
 
@@ -22,18 +21,4 @@ export const test = base.extend<TestOptions>({
     },
     { option: true },
   ],
-  property: {
-    name: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
-    addressLine1: faker.location.streetAddress(),
-    addressLine2: faker.location.secondaryAddress(),
-    town: faker.location.city(),
-    postcode: faker.location.zipCode(),
-    notes: faker.lorem.lines(5),
-    turnaroundWorkingDayCount: faker.number.int({ min: 1, max: 5 }),
-    localAuthority: undefined,
-    probationRegion: undefined,
-    pdu: undefined,
-    propertyAttributesValues: [],
-    status: undefined,
-  },
 })

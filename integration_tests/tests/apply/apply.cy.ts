@@ -24,6 +24,7 @@ import {
   risksFactory,
   tierEnvelopeFactory,
 } from '../../../server/testutils/factories'
+import { DateFormats } from '../../../server/utils/dateUtils'
 
 context('Apply', () => {
   beforeEach(() => {
@@ -39,6 +40,9 @@ context('Apply', () => {
     cy.signIn()
 
     cy.fixture('applicationData.json').then(applicationData => {
+      const releaseDate = faker.date.soon({ days: 90 })
+      const accommodationRequiredFromDate = faker.date.soon({ days: 90 })
+
       const person = personFactory.build()
       const application = applicationFactory.build({ person })
       const risks = risksFactory.retrived().build({
@@ -47,6 +51,21 @@ context('Apply', () => {
       })
       const offences = activeOffenceFactory.buildList(1)
       application.data = applicationData
+      application.data.eligibility = {
+        ...application.data.eligibility,
+        'release-date': {
+          releaseDate: DateFormats.dateObjToIsoDate(releaseDate),
+          'releaseDate-year': releaseDate.getFullYear().toString(),
+          'releaseDate-month': (releaseDate.getMonth() + 1).toString(),
+          'releaseDate-day': releaseDate.getDate().toString(),
+        },
+        'accommodation-required-from-date': {
+          accommodationRequiredFromDate: DateFormats.dateObjToIsoDate(accommodationRequiredFromDate),
+          'accommodationRequiredFromDate-year': accommodationRequiredFromDate.getFullYear().toString(),
+          'accommodationRequiredFromDate-month': (accommodationRequiredFromDate.getMonth() + 1).toString(),
+          'accommodationRequiredFromDate-day': accommodationRequiredFromDate.getDate().toString(),
+        },
+      }
       application.risks = risks
 
       cy.wrap(person).as('person')

@@ -119,6 +119,27 @@ describe('ReleaseType', () => {
       },
     )
 
+    it.each(Object.keys(releaseTypes))(
+      'returns an error if the %s release type is specified and the end date is before the start date',
+      (key: ReleaseTypeKey) => {
+        const bodyDates = {
+          releaseTypes: [key],
+          [`${key}StartDate-year`]: '2025',
+          [`${key}StartDate-month`]: '4',
+          [`${key}StartDate-day`]: '3',
+          [`${key}EndDate-year`]: '2024',
+          [`${key}EndDate-month`]: '4',
+          [`${key}EndDate-day`]: '3',
+        } as unknown as ReleaseTypeBody
+
+        const page = new ReleaseType(bodyDates, application)
+
+        expect(page.errors()).toEqual({
+          [`${key}EndDate`]: errorLookups.application.releaseType[key].dates.beforeStartDate,
+        })
+      },
+    )
+
     it('returns an error if release types are not specified', () => {
       const page = new ReleaseType({}, application)
 

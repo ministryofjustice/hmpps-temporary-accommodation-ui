@@ -70,6 +70,7 @@ export type ErrorLookups = {
           emptyEndDate: string
           invalidStartDate: string
           invalidEndDate: string
+          beforeStartDate: string
         }
       }
     >
@@ -186,6 +187,14 @@ export default class ReleaseType implements TasklistPage {
           errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.emptyEndDate
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}EndDate`)) {
           errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.invalidEndDate
+        }
+
+        if (
+          !errors[`${key}StartDate`] &&
+          !errors[`${key}EndDate`] &&
+          DateFormats.isoToDateObj(this.body[`${key}EndDate`]) <= DateFormats.isoToDateObj(this.body[`${key}StartDate`])
+        ) {
+          errors[`${key}EndDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.beforeStartDate
         }
       })
     }

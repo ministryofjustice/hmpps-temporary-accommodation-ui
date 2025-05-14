@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type BedspaceSearchAttributes = 'isSharedProperty' | 'isSingleOccupancy' | 'isWheelchairAccessible';
+export type Cas3PropertyStatus = 'online' | 'archived';

@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { BedspaceFilters } from './BedspaceFilters';
-import type { BedspaceSearchAttributes } from './BedspaceSearchAttributes';
 import type { PremisesFilters } from './PremisesFilters';
 export type Cas3BedspaceSearchParameters = {
     startDate: string;
@@ -17,9 +16,5 @@ export type Cas3BedspaceSearchParameters = {
     probationDeliveryUnits: Array<string>;
     premisesFilters?: PremisesFilters;
     bedspaceFilters?: BedspaceFilters;
-    /**
-     * Bedspace and property attributes to filter on
-     */
-    attributes?: Array<BedspaceSearchAttributes>;
 };
 

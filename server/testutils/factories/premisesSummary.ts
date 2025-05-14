@@ -2,7 +2,7 @@
 
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
-import type { TemporaryAccommodationPremisesSummary as PremisesSummary } from '@approved-premises/api'
+import type { Cas3PremisesSummary as PremisesSummary } from '@approved-premises/api'
 import referenceDataFactory from './referenceData'
 
 export default Factory.define<PremisesSummary>(() => ({
@@ -12,7 +12,7 @@ export default Factory.define<PremisesSummary>(() => ({
   addressLine2: faker.location.secondaryAddress(),
   town: faker.location.city(),
   postcode: faker.location.zipCode(),
-  bedCount: 50,
+  bedspaceCount: 50,
   status: faker.helpers.arrayElement(['active', 'archived'] as const),
   pdu: referenceDataFactory.pdu().build().name,
   service: 'CAS3',

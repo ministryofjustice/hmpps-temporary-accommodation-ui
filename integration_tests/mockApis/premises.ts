@@ -4,7 +4,7 @@ import type {
   Booking,
   DateCapacity,
   Premises,
-  TemporaryAccommodationPremisesSummary as PremisesSummary,
+  Cas3PremisesSummary as PremisesSummary,
   Room,
   StaffMember,
 } from '@approved-premises/api'

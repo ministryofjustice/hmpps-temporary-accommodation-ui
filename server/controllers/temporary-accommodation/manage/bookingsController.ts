@@ -291,10 +291,11 @@ export default class BookingsController {
     }
   }
 
-  private validateArrivalDate(arrivalDate: string, error: Error): { error: Error | null; parsedDate: Date | null } {
-    if (!error) {
-      error = new Error()
-    }
+  private validateArrivalDate(
+    arrivalDate: string,
+    initialError: Error,
+  ): { error: Error | null; parsedDate: Date | null } {
+    const error = initialError || new Error()
 
     if (!arrivalDate) {
       insertGenericError(error, 'arrivalDate', 'empty')
@@ -310,10 +311,12 @@ export default class BookingsController {
     }
   }
 
-  private validateDepartureDate(departureDate: string, parsedArrivalDate: Date | null, error: Error): Error | null {
-    if (!error) {
-      error = new Error()
-    }
+  private validateDepartureDate(
+    departureDate: string,
+    parsedArrivalDate: Date | null,
+    initialError: Error,
+  ): Error | null {
+    const error = initialError || new Error()
 
     if (!departureDate) {
       insertGenericError(error, 'departureDate', 'empty')

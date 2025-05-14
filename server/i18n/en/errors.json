@@ -19,7 +19,8 @@
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
       "conflict": "This bedspace is not available for these dates",
-      "todayOrInThePast": "The arrival date must be today or in the past"
+      "todayOrInThePast": "The arrival date must be today or in the past",
+      "withinLastSevenDays": "The arrival date must be within the last 7 days"
     },
     "date": {
       "empty": "You must enter a valid departure date",

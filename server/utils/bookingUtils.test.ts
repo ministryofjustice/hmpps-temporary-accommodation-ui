@@ -577,15 +577,15 @@ describe('bookingUtils', () => {
 
       expect(assessmentRadioItems([assessmentSummary2, assessmentSummary1, assessmentSummary3])).toEqual([
         {
-          text: 'John Smith, CRN ABC123, referral submitted 1 May 23',
+          text: 'John Smith, CRN ABC123, referral submitted 1 May 2023',
           value: assessmentSummary1.id,
         },
         {
-          text: 'John Smith, CRN ABC123, referral submitted 1 Apr 23',
+          text: 'John Smith, CRN ABC123, referral submitted 1 April 2023',
           value: assessmentSummary2.id,
         },
         {
-          text: 'John Smith, CRN ABC123, referral submitted 1 Mar 23',
+          text: 'John Smith, CRN ABC123, referral submitted 1 March 2023',
           value: assessmentSummary3.id,
         },
         { divider: 'or' },
@@ -618,15 +618,15 @@ describe('bookingUtils', () => {
 
       expect(assessmentRadioItems([assessmentSummary2, assessmentSummary1, assessmentSummary3])).toEqual([
         {
-          text: 'CRN ABC123, referral submitted 1 May 23',
+          text: 'CRN ABC123, referral submitted 1 May 2023',
           value: assessmentSummary1.id,
         },
         {
-          text: 'CRN ABC123, referral submitted 1 Apr 23',
+          text: 'CRN ABC123, referral submitted 1 April 2023',
           value: assessmentSummary2.id,
         },
         {
-          text: 'CRN ABC123, referral submitted 1 Mar 23',
+          text: 'CRN ABC123, referral submitted 1 March 2023',
           value: assessmentSummary3.id,
         },
         { divider: 'or' },

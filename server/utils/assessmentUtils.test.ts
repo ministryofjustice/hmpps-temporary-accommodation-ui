@@ -52,8 +52,8 @@ describe('assessmentUtils', () => {
           attributes: { 'data-sort-value': 'John Smith' },
         },
         { text: assessmentSummary.probationDeliveryUnitName },
-        { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
-        { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
+        { text: '27 February 2023', attributes: { 'data-sort-value': '2023-02-27' } },
+        { text: '13 April 2023', attributes: { 'data-sort-value': '2023-04-13' } },
       ])
     })
 
@@ -95,8 +95,8 @@ describe('assessmentUtils', () => {
           attributes: { 'data-sort-value': 'John Smith' },
         },
         { text: assessmentSummary.probationDeliveryUnitName },
-        { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
-        { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
+        { text: '27 February 2023', attributes: { 'data-sort-value': '2023-02-27' } },
+        { text: '13 April 2023', attributes: { 'data-sort-value': '2023-04-13' } },
         {
           attributes: {
             'data-sort-value': 'Unallocated',
@@ -127,8 +127,8 @@ describe('assessmentUtils', () => {
           attributes: { 'data-sort-value': 'John Smith' },
         },
         { text: undefined },
-        { text: '27 Feb 23', attributes: { 'data-sort-value': '2023-02-27' } },
-        { text: '13 Apr 23', attributes: { 'data-sort-value': '2023-04-13' } },
+        { text: '27 February 2023', attributes: { 'data-sort-value': '2023-02-27' } },
+        { text: '13 April 2023', attributes: { 'data-sort-value': '2023-04-13' } },
         {
           attributes: {
             'data-sort-value': 'Unallocated',

@@ -396,10 +396,9 @@ const assessmentRadioItemText = (assessmentSummary: AssessmentSummary) => {
   if (isFullPerson(assessmentSummary.person)) {
     return `${assessmentSummary.person.name}, CRN ${
       assessmentSummary.person.crn
-    }, referral submitted ${DateFormats.isoDateToUIDate(assessmentSummary.createdAt, { format: 'short' })}`
+    }, referral submitted ${DateFormats.isoDateToUIDate(assessmentSummary.createdAt)}`
   }
   return `CRN ${assessmentSummary.person.crn}, referral submitted ${DateFormats.isoDateToUIDate(
     assessmentSummary.createdAt,
-    { format: 'short' },
   )}`
 }

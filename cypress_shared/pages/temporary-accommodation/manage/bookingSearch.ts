@@ -43,9 +43,7 @@ export default class BookingSearchPage extends Page {
       .filter(
         `:contains(${personName(booking.person, 'Limited access offender')}):contains(${booking.person.crn}):contains(${
           premises.addressLine1
-        }):contains(${DateFormats.isoDateToUIDate(booking.arrivalDate, {
-          format: 'short',
-        })}):contains(${DateFormats.isoDateToUIDate(booking.departureDate, { format: 'short' })})`,
+        }):contains(${DateFormats.isoDateToUIDate(booking.arrivalDate)}):contains(${DateFormats.isoDateToUIDate(booking.departureDate)})`,
       )
       .should('have.length.gte', 0)
       .then($row => {

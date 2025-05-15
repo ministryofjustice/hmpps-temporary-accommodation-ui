@@ -974,7 +974,7 @@ describe('BookingsController', () => {
         history: [
           {
             booking,
-            updatedAt: '1 Feb 22',
+            updatedAt: '1 February 2022',
           },
         ],
       })

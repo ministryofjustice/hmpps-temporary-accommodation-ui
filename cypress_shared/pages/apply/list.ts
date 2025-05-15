@@ -68,9 +68,7 @@ export default class ListPage extends Page {
           cy.get('td').eq(2).contains('Submitted')
 
           if (checkSubmittedAtDate) {
-            cy.get('td')
-              .eq(1)
-              .contains(DateFormats.isoDateToUIDate(application.submittedAt, { format: 'short' }))
+            cy.get('td').eq(1).contains(DateFormats.isoDateToUIDate(application.submittedAt))
           }
         })
     })

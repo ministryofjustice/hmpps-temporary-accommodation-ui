@@ -302,7 +302,7 @@ export default class BookingsController {
         booking,
         history: deriveBookingHistory(booking).map(({ booking: historicBooking, updatedAt }) => ({
           booking: historicBooking,
-          updatedAt: DateFormats.isoDateToUIDate(updatedAt, { format: 'short' }),
+          updatedAt: DateFormats.isoDateToUIDate(updatedAt),
         })),
       })
     }

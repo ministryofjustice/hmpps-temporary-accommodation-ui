@@ -52,7 +52,8 @@
     "dateTime": {
       "empty": "You must enter a departure date and time",
       "invalid": "The departure date and time is an invalid date and time",
-      "beforeBookingArrivalDate": "The departure date and time must be after the booking's arrival date"
+      "beforeBookingArrivalDate": "The departure date and time must be after the booking's arrival date",
+      "departureDateInFuture": "The departure date must be today or in the past"
     },
     "destinationProviderId": {
       "doesNotExist": "The destination provider does not exist"

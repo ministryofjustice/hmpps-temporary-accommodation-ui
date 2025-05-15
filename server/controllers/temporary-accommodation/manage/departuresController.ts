@@ -56,10 +56,10 @@ export default class DeparturesController {
       try {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
-        if(DateFormats.isoToDateObj(newDeparture.dateTime) > new Date()) {
+        if (DateFormats.isoToDateObj(newDeparture.dateTime) > new Date()) {
           const error = new Error()
-          insertGenericError(error, 'dateTime', "departureDateInFuture")
-          throw error 
+          insertGenericError(error, 'dateTime', 'departureDateInFuture')
+          throw error
         }
 
         req.flash('success', {

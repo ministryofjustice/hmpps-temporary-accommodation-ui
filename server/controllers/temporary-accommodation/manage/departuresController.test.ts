@@ -161,13 +161,13 @@ describe('DeparturesController', () => {
 
     it('renders with errors if the departure date is in the future', async () => {
       const requestHandler = departuresController.create()
-    
+
       const departure = departureFactory.build()
       const newDeparture = newDepartureFactory.build({
         ...departure,
         dateTime: DateFormats.dateObjToIsoDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
       })
-    
+
       request.params = {
         premisesId,
         roomId,
@@ -177,9 +177,9 @@ describe('DeparturesController', () => {
         ...newDeparture,
         ...DateFormats.isoToDateAndTimeInputs(newDeparture.dateTime, 'dateTime'),
       }
-    
+
       await requestHandler(request, response, next)
-    
+
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,

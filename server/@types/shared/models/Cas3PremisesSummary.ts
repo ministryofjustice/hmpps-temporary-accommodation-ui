@@ -11,7 +11,7 @@ export type Cas3PremisesSummary = {
     postcode: string;
     pdu: string;
     localAuthorityAreaName?: string;
-    bedspaceCount?: number;
+    bedspaceCount: number;
     status: PropertyStatus;
 };
 

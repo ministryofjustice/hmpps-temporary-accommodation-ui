@@ -188,9 +188,9 @@ describe('PremisesService', () => {
 
   describe('getPremisesSelectList', () => {
     it('returns the list mapped into the format required by the nunjucks macro and sorted alphabetically', async () => {
-      const premisesA = premisesFactory.build({ name: 'a' })
-      const premisesB = premisesFactory.build({ name: 'b' })
-      const premisesC = premisesFactory.build({ name: 'c' })
+      const premisesA = cas3PremisesSummaryFactory.build({ name: 'a' })
+      const premisesB = cas3PremisesSummaryFactory.build({ name: 'b' })
+      const premisesC = cas3PremisesSummaryFactory.build({ name: 'c' })
       premisesClient.all.mockResolvedValue([premisesC, premisesB, premisesA])
 
       const result = await service.getPremisesSelectList(callConfig)

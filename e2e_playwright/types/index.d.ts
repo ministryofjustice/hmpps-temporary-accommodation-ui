@@ -31,6 +31,5 @@ declare module '@temporary-accommodation-ui/e2e' {
   export type TestOptions = {
     assessor: UserFullDetails
     referrer: UserLoginDetails
-    property: Property
   }
 }

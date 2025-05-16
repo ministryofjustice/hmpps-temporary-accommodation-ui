@@ -7,7 +7,7 @@ import referenceDataFactory from './referenceData'
 
 export default Factory.define<Departure>(() => ({
   id: faker.string.uuid(),
-  dateTime: DateFormats.dateObjToIsoDateTime(faker.date.soon()),
+  dateTime: DateFormats.dateObjToIsoDateTime(faker.date.past()),
   bookingId: faker.string.uuid(),
   reason: referenceDataFactory.departureReasons().build(),
   notes: faker.lorem.sentence(),

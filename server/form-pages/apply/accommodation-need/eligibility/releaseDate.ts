@@ -1,6 +1,12 @@
 import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { ObjectWithDateParts, TaskListErrors } from '@approved-premises/ui'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
+import {
+  DateFormats,
+  dateAndTimeInputsAreValidDates,
+  dateIsBlank,
+  dateIsInThePast,
+  dateIsWithinThreeMonths,
+} from '../../../../utils/dateUtils'
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 import { Page } from '../../../utils/decorators'
@@ -60,6 +66,8 @@ export default class ReleaseDate implements TasklistPage {
       errors.releaseDate = 'You must specify a valid release date'
     } else if (dateIsInThePast(this.body.releaseDate)) {
       errors.releaseDate = 'The release date must not be in the past'
+    } else if (!dateIsWithinThreeMonths(this.body.releaseDate)) {
+      errors.releaseDate = 'Release date must be within 3 months'
     }
 
     return errors as TaskListErrors<this>

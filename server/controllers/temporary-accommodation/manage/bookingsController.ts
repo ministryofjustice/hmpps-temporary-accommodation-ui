@@ -101,28 +101,11 @@ export default class BookingsController {
           insertGenericError(error, 'crn', 'empty')
         }
 
-        if (!arrivalDate) {
-          error = error || new Error()
-          insertGenericError(error, 'arrivalDate', 'empty')
-        } else {
-          try {
-            DateFormats.isoToDateObj(arrivalDate)
-          } catch (err) {
-            error = error || new Error()
-            insertGenericError(error, 'arrivalDate', 'invalid')
-          }
-        }
-        if (!departureDate) {
-          error = error || new Error()
-          insertGenericError(error, 'departureDate', 'empty')
-        } else {
-          try {
-            DateFormats.isoToDateObj(departureDate)
-          } catch (err) {
-            error = error || new Error()
-            insertGenericError(error, 'departureDate', 'invalid')
-          }
-        }
+        const { error: arrivalDateError, parsedDate: parsedArrivalDate } = this.validateArrivalDate(arrivalDate, error)
+        error = arrivalDateError || error
+
+        const departureDateError = this.validateDepartureDate(departureDate, parsedArrivalDate, error)
+        error = departureDateError || error
 
         if (error) {
           throw error
@@ -306,5 +289,61 @@ export default class BookingsController {
         })),
       })
     }
+  }
+
+  private validateArrivalDate(
+    arrivalDate: string,
+    initialError: Error,
+  ): { error: Error | null; parsedDate: Date | null } {
+    const error = initialError || new Error()
+
+    if (!arrivalDate) {
+      insertGenericError(error, 'arrivalDate', 'empty')
+      return { error, parsedDate: null }
+    }
+
+    try {
+      const parsedDate = DateFormats.isoToDateObj(arrivalDate)
+      return { error: null, parsedDate }
+    } catch {
+      insertGenericError(error, 'arrivalDate', 'invalid')
+      return { error, parsedDate: null }
+    }
+  }
+
+  private validateDepartureDate(
+    departureDate: string,
+    parsedArrivalDate: Date | null,
+    initialError: Error,
+  ): Error | null {
+    const error = initialError || new Error()
+
+    if (!departureDate) {
+      insertGenericError(error, 'departureDate', 'empty')
+      return error
+    }
+
+    try {
+      const parsedDepartureDate = DateFormats.isoToDateObj(departureDate)
+
+      if (departureDate < DateFormats.dateObjToIsoDate(new Date())) {
+        insertGenericError(error, 'departureDate', 'inPast')
+        return error
+      }
+
+      if (parsedArrivalDate) {
+        const maxAllowedDate = new Date(parsedArrivalDate)
+        maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
+        if (parsedDepartureDate > maxAllowedDate) {
+          insertGenericError(error, 'departureDate', 'exceedsMaxNights')
+          return error
+        }
+      }
+    } catch {
+      insertGenericError(error, 'departureDate', 'invalid')
+      return error
+    }
+
+    return null
   }
 }

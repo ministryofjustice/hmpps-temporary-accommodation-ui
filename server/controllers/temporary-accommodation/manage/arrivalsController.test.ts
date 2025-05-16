@@ -176,6 +176,7 @@ describe('ArrivalsController', () => {
         request.body = {
           ...newArrival,
           ...DateFormats.isoToDateAndTimeInputs(newArrival.arrivalDate, 'arrivalDate'),
+          ...DateFormats.isoToDateAndTimeInputs(newArrival.expectedDepartureDate, 'expectedDepartureDate'),
         }
 
         const err = { status: 409 }

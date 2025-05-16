@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, format, formatISO, isExists } from 'date-fns'
+import { differenceInDays, format, formatISO, isExists, subMonths, isAfter } from 'date-fns'
 
 export class DateFormats {
   /**
@@ -219,4 +219,9 @@ export const dateInputHint = (direction: 'past' | 'future') => {
   const year = new Date().getFullYear() + (direction === 'past' ? -1 : 1)
 
   return `For example, 27 3 ${year}`
+}
+
+export const dateIsWithinThreeMonths = (dateString: string): boolean => {
+  const threeMonths = subMonths(dateString, 3)
+  return isAfter(new Date(), threeMonths)
 }

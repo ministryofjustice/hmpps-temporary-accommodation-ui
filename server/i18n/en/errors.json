@@ -19,7 +19,8 @@
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
       "conflict": "This bedspace is not available for these dates",
-      "todayOrInThePast": "The arrival date must be today or in the past"
+      "todayOrInThePast": "The arrival date must be today or in the past",
+      "withinLastSevenDays": "The arrival date must be within the last 7 days"
     },
     "date": {
       "empty": "You must enter a valid departure date",
@@ -33,13 +34,17 @@
       "empty": "You must enter an end date",
       "invalid": "The end date is an invalid date",
       "beforeBookingArrivalDate": "The end date cannot be before the start date",
-      "conflict": "This bedspace is not available for these dates"
+      "conflict": "This bedspace is not available for these dates",
+      "inPast": "The end date cannot be in the past",
+      "exceedsMaxNights": "The end date must be within 84 nights of the start date"
     },
     "expectedDepartureDate": {
       "empty": "You must enter an expected departure date",
       "invalid": "The expected departure date is an invalid date",
       "beforeBookingArrivalDate": "The departure date cannot be before the arrival date",
-      "conflict": "This bedspace is not available for these dates"
+      "conflict": "This bedspace is not available for these dates",
+      "inPast": "The end date cannot be in the past",
+      "exceedsMaxNights": "The end date must be within 84 nights of the start date"
     },
     "keyWorkerStaffId": {
       "empty": "You must choose a keyworker"
@@ -47,7 +52,8 @@
     "dateTime": {
       "empty": "You must enter a departure date and time",
       "invalid": "The departure date and time is an invalid date and time",
-      "beforeBookingArrivalDate": "The departure date and time must be after the booking's arrival date"
+      "beforeBookingArrivalDate": "The departure date and time must be after the booking's arrival date",
+      "departureDateInFuture": "The departure date must be today or in the past"
     },
     "destinationProviderId": {
       "doesNotExist": "The destination provider does not exist"
@@ -194,7 +200,8 @@
           "emptyStartDate": "You must specify the CRD licence start date",
           "emptyEndDate": "You must specify the CRD licence end date",
           "invalidStartDate": "You must specify a valid CRD licence start date",
-          "invalidEndDate": "You must specify a valid CRD licence end date"
+          "invalidEndDate": "You must specify a valid CRD licence end date",
+          "beforeStartDate": "The CRD licence end date must be later than start date"
         }
       },
       "fixedTermRecall": {
@@ -202,7 +209,8 @@
           "emptyStartDate": "You must specify the licence following Fixed-term recall start date",
           "emptyEndDate": "You must specify the licence following Fixed-term recall end date",
           "invalidStartDate": "You must specify a valid Fixed-term recall start date",
-          "invalidEndDate": "You must specify a valid Fixed-term recall end date"
+          "invalidEndDate": "You must specify a valid Fixed-term recall end date",
+          "beforeStartDate": "The Fixed-term recall end date must be later than start date"
         }
       },
       "standardRecall": {
@@ -210,7 +218,8 @@
           "emptyStartDate": "You must specify the licence following standard recall start date",
           "emptyEndDate": "You must specify the licence following standard recall end date",
           "invalidStartDate": "You must specify a valid standard recall start date",
-          "invalidEndDate": "You must specify a valid standard recall end date"
+          "invalidEndDate": "You must specify a valid standard recall end date",
+          "beforeStartDate": "The standard recall end date must be later than start date"
         }
       },
       "nonPresumptiveRarr": {
@@ -218,7 +227,8 @@
           "emptyStartDate": "You must specify the licence following NP-RARR start date",
           "emptyEndDate": "You must specify the licence following NP-RARR end date",
           "invalidStartDate": "You must specify a valid licence following NP-RARR start date",
-          "invalidEndDate": "You must specify a valid licence following NP-RARR end date"
+          "invalidEndDate": "You must specify a valid licence following NP-RARR end date",
+          "beforeStartDate": "The NP-RARR end date must be later than start date"
         }
       },
       "presumptiveRarr": {
@@ -226,7 +236,8 @@
           "emptyStartDate": "You must specify the licence following Presumptive RARR start date",
           "emptyEndDate": "You must specify the licence following Presumptive RARR end date",
           "invalidStartDate": "You must specify a valid licence following Presumptive RARR start date",
-          "invalidEndDate": "You must specify a valid licence following Presumptive RARR end date"
+          "invalidEndDate": "You must specify a valid licence following Presumptive RARR end date",
+          "beforeStartDate": "The Presumptive RARR end date must be later than start date"
         }
       },
       "indeterminatePublicProtectionRarr": {
@@ -234,7 +245,8 @@
           "emptyStartDate": "You must specify the licence following Indeterminate Public Protection RARR start date",
           "emptyEndDate": "You must specify the licence following Indeterminate Public Protection RARR end date",
           "invalidStartDate": "You must specify a valid licence following Indeterminate Public Protection RARR start date",
-          "invalidEndDate": "You must specify a valid licence following Indeterminate Public Protection RARR end date"
+          "invalidEndDate": "You must specify a valid licence following Indeterminate Public Protection RARR end date",
+          "beforeStartDate": "The Indeterminate Public Protection RARR end date must be later than start date"
         }
       },
       "parole": {
@@ -242,7 +254,8 @@
           "emptyStartDate": "You must specify the Parole start date",
           "emptyEndDate": "You must specify the Parole end date",
           "invalidStartDate": "You must specify a valid Parole start date",
-          "invalidEndDate": "You must specify a valid Parole end date"
+          "invalidEndDate": "You must specify a valid Parole end date",
+          "beforeStartDate": "The Parole end date must be later than start date"
         }
       },
       "pss": {
@@ -250,7 +263,8 @@
           "emptyStartDate": "You must specify the PSS start date",
           "emptyEndDate": "You must specify the PSS end date",
           "invalidStartDate": "You must specify a valid PSS start date",
-          "invalidEndDate": "You must specify a valid PSS end date"
+          "invalidEndDate": "You must specify a valid PSS end date",
+          "beforeStartDate": "The PSS end date must be later than start date"
         }
       }
     },

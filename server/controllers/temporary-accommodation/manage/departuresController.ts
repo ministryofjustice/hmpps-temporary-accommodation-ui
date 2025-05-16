@@ -4,7 +4,7 @@ import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
 import config from '../../../config'
 
 export default class DeparturesController {
@@ -55,6 +55,12 @@ export default class DeparturesController {
 
       try {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
+
+        if (DateFormats.isoToDateObj(newDeparture.dateTime) > new Date()) {
+          const error = new Error()
+          insertGenericError(error, 'dateTime', 'departureDateInFuture')
+          throw error
+        }
 
         req.flash('success', {
           title: 'Booking marked as departed',

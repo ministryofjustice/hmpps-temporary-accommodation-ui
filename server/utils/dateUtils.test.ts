@@ -308,6 +308,19 @@ describe('dateAndTimeInputsAreValidDates', () => {
   })
 
   describe.each([
+    [{ 'date-year': 2022, 'date-month': '12', 'date-day': '11' }, 'invalid data type for year'],
+    [{ 'date-year': '2022', 'date-month': 12, 'date-day': '11' }, 'invalid data type for month'],
+    [{ 'date-year': '2022', 'date-month': '12', 'date-day': 11 }, 'invalid data type for day'],
+  ])('returns false when the date has invalid data type %s', (obj, description) => {
+    it(`returns false for ${description}`, () => {
+      // @ts-expect-error: passing the date input object in this format is required here to test type confusion
+      //  this was introduce based on a crtical  secure alert was generated and this tests the fix
+      const result = dateAndTimeInputsAreValidDates(obj, 'date')
+      expect(result).toEqual(false)
+    })
+  })
+
+  describe.each([
     [{ 'date-year': '2022', 'date-month': '13', 'date-day': '11' }, 'invalid month'],
     [{ 'date-year': '2022', 'date-month': '111', 'date-day': '11' }, 'invalid month over 2 digits'],
     [{ 'date-year': '2022', 'date-month': '12', 'date-day': '32' }, 'invalid day'],

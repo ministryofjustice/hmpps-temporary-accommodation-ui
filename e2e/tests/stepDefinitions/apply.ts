@@ -1,5 +1,6 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
+import { fakerEN_GB as faker } from '@faker-js/faker'
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import ListPage from '../../../cypress_shared/pages/apply/list'
 import ApplicationFullPage from '../../../cypress_shared/pages/apply/full'
@@ -11,6 +12,7 @@ import { person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
 import devOffencesData from '../../../cypress_shared/fixtures/offences-dev.json'
+import { DateFormats } from '../../../server/utils/dateUtils'
 
 const offences = devOffencesData.map(offenceData => activeOffenceFactory.build(offenceData))
 
@@ -45,9 +47,25 @@ Given('I start a new application', () => {
 
 Given('I fill in and complete an application', () => {
   cy.url().then(function _(url) {
+    const releaseDate = faker.date.soon({ days: 90 })
+    const accommodationRequiredFromDate = faker.date.soon({ days: 90 })
     const id = url.match(/referrals\/(.+)/)[1]
     const application = applicationFactory.build({ ...this.application, id, offenceId: offences[0].offenceId })
-
+    application.data.eligibility = {
+      ...application.data.eligibility,
+      'release-date': {
+        releaseDate: DateFormats.dateObjToIsoDate(releaseDate),
+        'releaseDate-year': releaseDate.getFullYear().toString(),
+        'releaseDate-month': (releaseDate.getMonth() + 1).toString(),
+        'releaseDate-day': releaseDate.getDate().toString(),
+      },
+      'accommodation-required-from-date': {
+        accommodationRequiredFromDate: DateFormats.dateObjToIsoDate(accommodationRequiredFromDate),
+        'accommodationRequiredFromDate-year': accommodationRequiredFromDate.getFullYear().toString(),
+        'accommodationRequiredFromDate-month': (accommodationRequiredFromDate.getMonth() + 1).toString(),
+        'accommodationRequiredFromDate-day': accommodationRequiredFromDate.getDate().toString(),
+      },
+    }
     const apply = new ApplyHelper(application, person, [], 'e2e')
 
     apply.completeApplication()

@@ -15,9 +15,7 @@ Given('I mark the booking as departed', () => {
     bookingShowPage.clickMarkDepartedBookingButton()
 
     const departure = departureFactory.build({
-      dateTime: DateFormats.dateObjToIsoDate(
-        faker.date.future({ years: 1, refDate: DateFormats.isoToDateObj(this.booking.arrivalDate) }),
-      ),
+      dateTime: DateFormats.dateObjToIsoDate(faker.date.recent({ days: 7 })),
     })
     const newDeparture = newDepartureFactory.build({
       ...departure,
@@ -65,6 +63,7 @@ Given('I edit the departed booking', () => {
       ...departure,
       reasonId: departure.reason.id,
       moveOnCategoryId: departure.moveOnCategory.id,
+      dateTime: DateFormats.dateObjToIsoDate(faker.date.between({ from: this.booking.arrivalDate, to: Date.now() })),
     })
 
     const bookingDeparturePage = Page.verifyOnPage(BookingDepartureEditPage, this.premises, this.room, this.booking)

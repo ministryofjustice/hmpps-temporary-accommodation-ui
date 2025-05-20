@@ -1,8 +1,8 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { DateFormats } from '../../server/utils/dateUtils'
 
-const releaseDate = faker.date.soon({ days: 90 })
-const accommodationRequiredFromDate = faker.date.soon({ days: 90, refDate: releaseDate })
+const releaseDate = faker.date.soon({ days: 60 })
+const accommodationRequiredFromDate = faker.date.soon({ days: 5, refDate: releaseDate })
 
 export const eligibilityDates = {
   releaseDate: {

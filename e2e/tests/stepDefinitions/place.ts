@@ -13,19 +13,34 @@ import { DateFormats } from '../../../server/utils/dateUtils'
 import { person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
+import { eligibilityDates } from '../../../cypress_shared/utils/eligibilityDates'
 
 const getAssessment = (status: AssessmentStatus) => {
   const application = applicationFactory.build({
     person,
     data: applicationData,
   })
+  application.data.eligibility = {
+    ...application.data.eligibility,
+    'release-date': {
+      releaseDate: eligibilityDates.releaseDate.iso,
+      'releaseDate-year': eligibilityDates.releaseDate.year,
+      'releaseDate-month': eligibilityDates.releaseDate.month,
+      'releaseDate-day': eligibilityDates.releaseDate.day,
+    },
+    'accommodation-required-from-date': {
+      accommodationRequiredFromDate: eligibilityDates.accommodationRequiredFromDate.iso,
+      'accommodationRequiredFromDate-year': eligibilityDates.accommodationRequiredFromDate.year,
+      'accommodationRequiredFromDate-month': eligibilityDates.accommodationRequiredFromDate.month,
+      'accommodationRequiredFromDate-day': eligibilityDates.accommodationRequiredFromDate.day,
+    },
+  }
 
   const assessment = assessmentFactory.build({
     application,
     status,
     createdAt: DateFormats.dateObjToIsoDate(new Date()),
-    accommodationRequiredFromDate:
-      applicationData.eligibility['accommodation-required-from-date'].accommodationRequiredFromDate,
+    accommodationRequiredFromDate: eligibilityDates.accommodationRequiredFromDate.iso,
   })
 
   cy.wrap(assessment).as('assessment')

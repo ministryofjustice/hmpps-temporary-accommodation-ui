@@ -12,7 +12,7 @@ import { person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
 import devOffencesData from '../../../cypress_shared/fixtures/offences-dev.json'
-import { DateFormats } from '../../../server/utils/dateUtils'
+import { eligibilityDates } from '../../../cypress_shared/utils/eligibilityDates'
 
 const offences = devOffencesData.map(offenceData => activeOffenceFactory.build(offenceData))
 
@@ -47,23 +47,21 @@ Given('I start a new application', () => {
 
 Given('I fill in and complete an application', () => {
   cy.url().then(function _(url) {
-    const releaseDate = faker.date.soon({ days: 90 })
-    const accommodationRequiredFromDate = faker.date.soon({ days: 90 })
     const id = url.match(/referrals\/(.+)/)[1]
     const application = applicationFactory.build({ ...this.application, id, offenceId: offences[0].offenceId })
     application.data.eligibility = {
       ...application.data.eligibility,
       'release-date': {
-        releaseDate: DateFormats.dateObjToIsoDate(releaseDate),
-        'releaseDate-year': releaseDate.getFullYear().toString(),
-        'releaseDate-month': (releaseDate.getMonth() + 1).toString(),
-        'releaseDate-day': releaseDate.getDate().toString(),
+        releaseDate: eligibilityDates.releaseDate.iso,
+        'releaseDate-year': eligibilityDates.releaseDate.year,
+        'releaseDate-month': eligibilityDates.releaseDate.month,
+        'releaseDate-day': eligibilityDates.releaseDate.day,
       },
       'accommodation-required-from-date': {
-        accommodationRequiredFromDate: DateFormats.dateObjToIsoDate(accommodationRequiredFromDate),
-        'accommodationRequiredFromDate-year': accommodationRequiredFromDate.getFullYear().toString(),
-        'accommodationRequiredFromDate-month': (accommodationRequiredFromDate.getMonth() + 1).toString(),
-        'accommodationRequiredFromDate-day': accommodationRequiredFromDate.getDate().toString(),
+        accommodationRequiredFromDate: eligibilityDates.accommodationRequiredFromDate.iso,
+        'accommodationRequiredFromDate-year': eligibilityDates.accommodationRequiredFromDate.year,
+        'accommodationRequiredFromDate-month': eligibilityDates.accommodationRequiredFromDate.month,
+        'accommodationRequiredFromDate-day': eligibilityDates.accommodationRequiredFromDate.day,
       },
     }
     const apply = new ApplyHelper(application, person, [], 'e2e')

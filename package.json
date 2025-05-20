@@ -184,7 +184,7 @@
     "redis": "^4.7.0",
     "reflect-metadata": "^0.2.2",
     "static-path": "^0.0.4",
-    "superagent": "^8.0.2",
+    "superagent": "^9.0.0",
     "tsx": "^4.19.3",
     "typescript-json-schema": "^0.64.0",
     "url-value-parser": "^2.2.0"
@@ -242,7 +242,7 @@
     "sass": "^1.77.6",
     "shellcheck": "^3.0.0",
     "start-server-and-test": "^2.0.4",
-    "supertest": "^6.3.0",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.3.1",
     "typescript": "^5.5.4"
   },

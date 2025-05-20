@@ -1,6 +1,5 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor'
 
-import { fakerEN_GB as faker } from '@faker-js/faker'
 import ApplyHelper from '../../../cypress_shared/helpers/apply'
 import ListPage from '../../../cypress_shared/pages/apply/list'
 import ApplicationFullPage from '../../../cypress_shared/pages/apply/full'

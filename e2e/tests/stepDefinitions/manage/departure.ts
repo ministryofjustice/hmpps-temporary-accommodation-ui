@@ -16,7 +16,10 @@ Given('I mark the booking as departed', () => {
 
     const departure = departureFactory.build({
       dateTime: DateFormats.dateObjToIsoDate(
-        faker.date.future({ years: 1, refDate: DateFormats.isoToDateObj(this.booking.arrivalDate) }),
+        faker.date.between({
+          from: DateFormats.isoToDateObj(this.booking.arrivalDate),
+          to: new Date(),
+        }),
       ),
     })
     const newDeparture = newDepartureFactory.build({

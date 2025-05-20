@@ -11,6 +11,7 @@ import { person } from './utils'
 
 import applicationData from '../../../cypress_shared/fixtures/applicationData.json'
 import devOffencesData from '../../../cypress_shared/fixtures/offences-dev.json'
+import { eligibilityDates } from '../../../cypress_shared/utils/eligibilityDates'
 
 const offences = devOffencesData.map(offenceData => activeOffenceFactory.build(offenceData))
 
@@ -47,7 +48,21 @@ Given('I fill in and complete an application', () => {
   cy.url().then(function _(url) {
     const id = url.match(/referrals\/(.+)/)[1]
     const application = applicationFactory.build({ ...this.application, id, offenceId: offences[0].offenceId })
-
+    application.data.eligibility = {
+      ...application.data.eligibility,
+      'release-date': {
+        releaseDate: eligibilityDates.releaseDate.iso,
+        'releaseDate-year': eligibilityDates.releaseDate.year,
+        'releaseDate-month': eligibilityDates.releaseDate.month,
+        'releaseDate-day': eligibilityDates.releaseDate.day,
+      },
+      'accommodation-required-from-date': {
+        accommodationRequiredFromDate: eligibilityDates.accommodationRequiredFromDate.iso,
+        'accommodationRequiredFromDate-year': eligibilityDates.accommodationRequiredFromDate.year,
+        'accommodationRequiredFromDate-month': eligibilityDates.accommodationRequiredFromDate.month,
+        'accommodationRequiredFromDate-day': eligibilityDates.accommodationRequiredFromDate.day,
+      },
+    }
     const apply = new ApplyHelper(application, person, [], 'e2e')
 
     apply.completeApplication()

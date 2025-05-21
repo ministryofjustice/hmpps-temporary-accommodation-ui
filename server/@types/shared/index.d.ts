@@ -78,6 +78,7 @@ export type { Cas3BedspaceSearchParameters } from './models/Cas3BedspaceSearchPa
 export type { Cas3BedspaceSearchResult } from './models/Cas3BedspaceSearchResult';
 export type { Cas3BedspaceSearchResultOverlap } from './models/Cas3BedspaceSearchResultOverlap';
 export type { Cas3BedspaceSearchResults } from './models/Cas3BedspaceSearchResults';
+export type { Cas3BedspaceSummary } from './models/Cas3BedspaceSummary';
 export type { Cas3Departure } from './models/Cas3Departure';
 export type { Cas3NewApplication } from './models/Cas3NewApplication';
 export type { Cas3NewDeparture } from './models/Cas3NewDeparture';

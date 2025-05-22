@@ -427,6 +427,42 @@ describe('ArrivalsController', () => {
           paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
         )
       })
+
+      it('renders with errors if arrival date is more than 7 days in the past', async () => {
+        const requestHandler = arrivalsController.update()
+
+        const currentDate = new Date()
+        const pastDate = addDays(currentDate, -8)
+
+        const arrival = arrivalFactory.build({arrivalDate: DateFormats.dateObjToIsoDate(pastDate),})
+        const newArrival = newArrivalFactory.build({
+          ...arrival,
+        })
+
+        request.params = {
+          premisesId,
+          roomId,
+          bookingId,
+        }
+        request.body = {
+          ...newArrival,
+          ...DateFormats.isoToDateAndTimeInputs(DateFormats.dateObjToIsoDate(pastDate), 'arrivalDate'),
+        }
+
+        arrivalService.createArrival.mockResolvedValue(arrival)
+
+        const err = new Error()
+
+        await requestHandler(request, response, next)
+
+        expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'withinLastSevenDays')
+        expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+          request,
+          response,
+          err,
+          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+        )
+      })
     })
   })
 

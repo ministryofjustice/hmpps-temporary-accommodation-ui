@@ -153,6 +153,17 @@ export default class ArrivalsController {
           throw error
         }
 
+        if (updateArrival.arrivalDate) {
+          const sevenDays = new Date()
+          sevenDays.setDate(sevenDays.getDate() - 7)
+
+          if (updateArrival.arrivalDate < DateFormats.dateObjToIsoDate(sevenDays)) {
+            const error = new Error()
+            insertGenericError(error, 'arrivalDate', 'withinLastSevenDays')
+            throw error
+          }
+        }
+
         // INFO: this may confuse, the API is overloading the POST with a writeback of existing and new data
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, updateArrival)
         req.flash('success', 'Arrival updated')

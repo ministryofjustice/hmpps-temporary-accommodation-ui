@@ -67,7 +67,7 @@ describe('ReleaseDate', () => {
       ;(dateIsInThePast as jest.Mock).mockReturnValue(true)
 
       const page = new ReleaseDate(body, application)
-      expect(page.errors()).toEqual({ releaseDate: 'Release date cannot be in the past’' })
+      expect(page.errors()).toEqual({ releaseDate: 'Release date cannot be in the past' })
     })
   })
 

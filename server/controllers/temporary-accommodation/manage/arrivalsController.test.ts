@@ -434,7 +434,7 @@ describe('ArrivalsController', () => {
         const currentDate = new Date()
         const pastDate = addDays(currentDate, -8)
 
-        const arrival = arrivalFactory.build({arrivalDate: DateFormats.dateObjToIsoDate(pastDate),})
+        const arrival = arrivalFactory.build({ arrivalDate: DateFormats.dateObjToIsoDate(pastDate) })
         const newArrival = newArrivalFactory.build({
           ...arrival,
         })

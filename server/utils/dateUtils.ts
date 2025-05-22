@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, format, formatISO, isExists, subMonths, isAfter } from 'date-fns'
+import { differenceInDays, format, formatISO, isExists, subMonths, subDays, isAfter } from 'date-fns'
 
 export class DateFormats {
   /**
@@ -224,4 +224,11 @@ export const dateInputHint = (direction: 'past' | 'future') => {
 export const dateIsWithinThreeMonths = (dateString: string): boolean => {
   const threeMonths = subMonths(dateString, 3)
   return isAfter(new Date(), threeMonths)
+}
+
+export function dateIsWithinLastSevenDays(dateString: string): boolean {
+  const date = new Date(dateString)
+  const sevenDays = subDays(new Date(), 7)
+
+  return isAfter(date, sevenDays)
 }

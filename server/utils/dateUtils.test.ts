@@ -1,3 +1,4 @@
+import { addDays, addMonths, subDays, subMonths } from 'date-fns'
 import type { ObjectWithDateParts } from '@approved-premises/ui'
 import {
   DateFormats,
@@ -8,6 +9,8 @@ import {
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
+  dateIsWithinLastSevenDays,
+  dateIsWithinThreeMonths,
   datepickerInputsAreValidDates,
 } from './dateUtils'
 
@@ -449,5 +452,57 @@ describe('dateExists', () => {
     ['not even a date', false],
   ])('for %s returns %s', (input, expected) => {
     expect(dateExists(input)).toEqual(expected)
+  })
+
+  describe('dateIsWithinThreeMonths', () => {
+    it('returns true if the date is within the next 3 months', () => {
+      const validDate = DateFormats.dateObjToIsoDate(addMonths(new Date(), 2))
+      expect(dateIsWithinThreeMonths(validDate)).toBe(true)
+    })
+
+    it('returns false if the date is more than 3 months in the future', () => {
+      const invalidDate = DateFormats.dateObjToIsoDate(addMonths(new Date(), 4))
+      expect(dateIsWithinThreeMonths(invalidDate)).toBe(false)
+    })
+
+    it('returns false if the date is in the past', () => {
+      const pastDate = DateFormats.dateObjToIsoDate(subMonths(new Date(), 1))
+      expect(dateIsWithinThreeMonths(pastDate)).toBe(false)
+    })
+
+    it('returns false if the input is an invalid date string', () => {
+      const invalidDateString = 'invalid'
+      expect(dateIsWithinThreeMonths(invalidDateString)).toBe(false)
+    })
+
+    it('returns false if the input is an empty string', () => {
+      expect(dateIsWithinThreeMonths('')).toBe(false)
+    })
+  })
+
+  describe('dateIsWithinLastSevenDays', () => {
+    it('returns true if the date is within the last 7 days', () => {
+      const validDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 5))
+      expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
+    })
+
+    it('returns false if the date is more than 7 days in the past', () => {
+      const invalidDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 8))
+      expect(dateIsWithinLastSevenDays(invalidDate)).toBe(false)
+    })
+
+    it('returns false if the date is in the future', () => {
+      const futureDate = DateFormats.dateObjToIsoDate(addDays(new Date(), 1))
+      expect(dateIsWithinLastSevenDays(futureDate)).toBe(false)
+    })
+
+    it('returns false if the input is an invalid date string', () => {
+      const invalidDateString = 'invalid'
+      expect(dateIsWithinLastSevenDays(invalidDateString)).toBe(false)
+    })
+
+    it('returns false if the input is an empty string', () => {
+      expect(dateIsWithinLastSevenDays('')).toBe(false)
+    })
   })
 })

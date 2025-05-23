@@ -1,5 +1,10 @@
 import { applicationFactory } from '../../../../testutils/factories'
-import { dateAndTimeInputsAreValidDates, dateIsBlank, dateIsInThePast } from '../../../../utils/dateUtils'
+import {
+  dateAndTimeInputsAreValidDates,
+  dateIsBlank,
+  dateIsInThePast,
+  dateIsWithinThreeMonths,
+} from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import ReleaseDate from './releaseDate'
 
@@ -11,6 +16,7 @@ jest.mock('../../../../utils/dateUtils', () => {
     dateIsBlank: jest.fn(),
     dateAndTimeInputsAreValidDates: jest.fn(),
     dateIsInThePast: jest.fn(),
+    dateIsWithinThreeMonths: jest.fn(),
   }
 })
 
@@ -38,6 +44,7 @@ describe('ReleaseDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
+      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new ReleaseDate(body, application)
       expect(page.errors()).toEqual({})
@@ -47,6 +54,7 @@ describe('ReleaseDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(true)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
+      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new ReleaseDate(body, application)
       expect(page.errors()).toEqual({ releaseDate: 'You must specify the release date' })
@@ -56,6 +64,7 @@ describe('ReleaseDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(false)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
+      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new ReleaseDate(body, application)
       expect(page.errors()).toEqual({ releaseDate: 'You must specify a valid release date' })
@@ -65,9 +74,22 @@ describe('ReleaseDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(true)
+      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new ReleaseDate(body, application)
       expect(page.errors()).toEqual({ releaseDate: 'Release date cannot be in the past' })
+    })
+
+    it('should return an error if the date is not within the next 3 months', () => {
+      ;(dateIsBlank as jest.Mock).mockReturnValue(false)
+      ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
+      ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
+      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(false)
+
+      const page = new ReleaseDate(body, application)
+      expect(page.errors()).toEqual({
+        releaseDate: 'Release date must be within 3 months',
+      })
     })
   })
 

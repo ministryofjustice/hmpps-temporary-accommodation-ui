@@ -10,7 +10,7 @@ import {
   dateIsInFuture,
   dateIsInThePast,
   dateIsWithinLastSevenDays,
-  dateIsWithinThreeMonths,
+  dateIsWithinNextThreeMonths,
   datepickerInputsAreValidDates,
 } from './dateUtils'
 
@@ -454,29 +454,29 @@ describe('dateExists', () => {
     expect(dateExists(input)).toEqual(expected)
   })
 
-  describe('dateIsWithinThreeMonths', () => {
+  describe('dateIsWithinNextThreeMonths', () => {
     it('returns true if the date is within the next 3 months', () => {
       const validDate = DateFormats.dateObjToIsoDate(addMonths(new Date(), 2))
-      expect(dateIsWithinThreeMonths(validDate)).toBe(true)
+      expect(dateIsWithinNextThreeMonths(validDate)).toBe(true)
     })
 
     it('returns false if the date is more than 3 months in the future', () => {
       const invalidDate = DateFormats.dateObjToIsoDate(addMonths(new Date(), 4))
-      expect(dateIsWithinThreeMonths(invalidDate)).toBe(false)
+      expect(dateIsWithinNextThreeMonths(invalidDate)).toBe(false)
     })
 
     it('returns false if the date is in the past', () => {
       const pastDate = DateFormats.dateObjToIsoDate(subMonths(new Date(), 1))
-      expect(dateIsWithinThreeMonths(pastDate)).toBe(false)
+      expect(dateIsWithinNextThreeMonths(pastDate)).toBe(false)
     })
 
     it('returns false if the input is an invalid date string', () => {
       const invalidDateString = 'invalid'
-      expect(dateIsWithinThreeMonths(invalidDateString)).toBe(false)
+      expect(dateIsWithinNextThreeMonths(invalidDateString)).toBe(false)
     })
 
     it('returns false if the input is an empty string', () => {
-      expect(dateIsWithinThreeMonths('')).toBe(false)
+      expect(dateIsWithinNextThreeMonths('')).toBe(false)
     })
   })
 

@@ -3,7 +3,7 @@ import {
   dateAndTimeInputsAreValidDates,
   dateIsBlank,
   dateIsInThePast,
-  dateIsWithinThreeMonths,
+  dateIsWithinNextThreeMonths,
 } from '../../../../utils/dateUtils'
 import { itShouldHaveNextValue, itShouldHavePreviousValue } from '../../../shared-examples'
 import AccommodationRequiredFromDate from './accommodationRequiredFromDate'
@@ -16,7 +16,7 @@ jest.mock('../../../../utils/dateUtils', () => {
     dateIsBlank: jest.fn(),
     dateAndTimeInputsAreValidDates: jest.fn(),
     dateIsInThePast: jest.fn(),
-    dateIsWithinThreeMonths: jest.fn(),
+    dateIsWithinNextThreeMonths: jest.fn(),
   }
 })
 
@@ -48,7 +48,7 @@ describe('AccommodationRequiredFromDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
-      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
+      ;(dateIsWithinNextThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new AccommodationRequiredFromDate(body, application)
       expect(page.errors()).toEqual({})
@@ -58,7 +58,7 @@ describe('AccommodationRequiredFromDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(true)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
-      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
+      ;(dateIsWithinNextThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new AccommodationRequiredFromDate(body, application)
       expect(page.errors()).toEqual({
@@ -70,7 +70,7 @@ describe('AccommodationRequiredFromDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(false)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
-      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
+      ;(dateIsWithinNextThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new AccommodationRequiredFromDate(body, application)
       expect(page.errors()).toEqual({
@@ -82,7 +82,7 @@ describe('AccommodationRequiredFromDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(true)
-      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(true)
+      ;(dateIsWithinNextThreeMonths as jest.Mock).mockReturnValue(true)
 
       const page = new AccommodationRequiredFromDate(body, application)
       expect(page.errors()).toEqual({
@@ -94,7 +94,7 @@ describe('AccommodationRequiredFromDate', () => {
       ;(dateIsBlank as jest.Mock).mockReturnValue(false)
       ;(dateAndTimeInputsAreValidDates as jest.Mock).mockReturnValue(true)
       ;(dateIsInThePast as jest.Mock).mockReturnValue(false)
-      ;(dateIsWithinThreeMonths as jest.Mock).mockReturnValue(false)
+      ;(dateIsWithinNextThreeMonths as jest.Mock).mockReturnValue(false)
 
       const page = new AccommodationRequiredFromDate(body, application)
       expect(page.errors()).toEqual({

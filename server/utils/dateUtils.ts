@@ -221,7 +221,7 @@ export const dateInputHint = (direction: 'past' | 'future') => {
   return `For example, 27 3 ${year}`
 }
 
-export const dateIsWithinThreeMonths = (dateString: string): boolean => {
+export const dateIsWithinNextThreeMonths = (dateString: string): boolean => {
   const threeMonths = subMonths(dateString, 3)
 
   return isAfter(new Date(), threeMonths) && dateIsInFuture(dateString)

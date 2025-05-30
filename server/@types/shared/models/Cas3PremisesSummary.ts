@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Cas3BedspaceSummary } from './Cas3BedspaceSummary';
 import type { PropertyStatus } from './PropertyStatus';
 export type Cas3PremisesSummary = {
     id: string;
@@ -11,6 +12,7 @@ export type Cas3PremisesSummary = {
     postcode: string;
     pdu: string;
     localAuthorityAreaName?: string;
+    bedspaces?: Array<Cas3BedspaceSummary>;
     bedspaceCount: number;
     status: PropertyStatus;
 };

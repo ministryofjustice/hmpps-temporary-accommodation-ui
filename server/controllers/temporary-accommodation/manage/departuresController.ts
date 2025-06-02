@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from 'express'
-import type { NewDeparture } from '@approved-premises/api'
+import type { Cas3NewDeparture } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -48,7 +48,7 @@ export default class DeparturesController {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const newDeparture: NewDeparture = {
+      const newDeparture: Cas3NewDeparture = {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
       }
@@ -111,7 +111,7 @@ export default class DeparturesController {
       const { premisesId, roomId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
-      const newDeparture: NewDeparture = {
+      const newDeparture: Cas3NewDeparture = {
         ...req.body,
         ...DateFormats.dateAndTimeInputsToIsoString({ ...req.body }, 'dateTime', { representation: 'complete' }),
       }

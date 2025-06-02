@@ -2,6 +2,8 @@ import type {
   Arrival,
   Booking,
   Cancellation,
+  Cas3Departure,
+  Cas3NewDeparture,
   Confirmation,
   Departure,
   Extension,
@@ -9,7 +11,6 @@ import type {
   NewBooking,
   NewCancellation,
   NewConfirmation,
-  NewDeparture,
   NewExtension,
   NewTurnaround,
   Turnaround,
@@ -83,9 +84,9 @@ export default class BookingClient {
     })
   }
 
-  async markDeparture(premisesId: string, bookingId: string, departure: NewDeparture) {
-    return this.restClient.post<Departure>({
-      path: `${this.bookingPath(premisesId, bookingId)}/departures`,
+  async markDeparture(premisesId: string, bookingId: string, departure: Cas3NewDeparture) {
+    return this.restClient.post<Cas3Departure>({
+      path: this.departuresPath(premisesId, bookingId),
       data: departure,
     })
   }
@@ -136,5 +137,9 @@ export default class BookingClient {
 
   private bookingPath(premisesId: string, bookingId: string): string {
     return [this.bookingsPath(premisesId), bookingId].join('/')
+  }
+
+  private departuresPath(premisesId: string, bookingId: string): string {
+    return `/cas3/premises/${premisesId}/bookings/${bookingId}/departures`
   }
 }

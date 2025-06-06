@@ -3,7 +3,10 @@ import { temporaryAccommodationPath } from '../service'
 const dashboardPath = temporaryAccommodationPath.path('dashboard')
 
 const premisesPath = temporaryAccommodationPath.path('properties')
+const premisesV2Path = temporaryAccommodationPath.path('v2/properties')
+// const premisesPath = config.flags.managePropertiesV2Enabled ? premisesV2Path : premisesV1Path
 const singlePremisesPath = premisesPath.path(':premisesId')
+const singlePremisesV2Path = premisesV2Path.path(':premisesId')
 
 const bedspacesPath = singlePremisesPath.path('bedspaces')
 const singleBedspacePath = bedspacesPath.path(':roomId')
@@ -45,6 +48,14 @@ const paths: Record<string, any> = {
       edit: singleBedspacePath.path('edit'),
       update: singleBedspacePath,
       show: singleBedspacePath,
+    },
+    v2: {
+      index: premisesV2Path,
+      new: premisesV2Path.path('new'),
+      create: premisesV2Path,
+      edit: singlePremisesV2Path.path('edit'),
+      update: singlePremisesV2Path,
+      show: singlePremisesV2Path,
     },
   },
   bookings: {

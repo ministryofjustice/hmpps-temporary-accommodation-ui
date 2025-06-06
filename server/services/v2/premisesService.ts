@@ -1,4 +1,6 @@
 import type {
+  Cas3BedspaceSummary,
+  Cas3PremisesSummary,
   Characteristic,
   LocalAuthorityArea,
   NewPremises,
@@ -7,14 +9,14 @@ import type {
   UpdatePremises,
 } from '@approved-premises/api'
 import { PlaceContext, PremisesSearchParameters, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
-import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../data'
-import paths from '../paths/temporary-accommodation/manage'
+import type { PremisesClient, ReferenceDataClient, RestClientBuilder } from '../../data'
+import paths from '../../paths/temporary-accommodation/manage'
 
-import { CallConfig } from '../data/restClient'
-import { filterCharacteristics, formatCharacteristics } from '../utils/characteristicUtils'
-import { addPlaceContext } from '../utils/placeUtils'
-import { statusTag } from '../utils/premisesUtils'
-import { escape, formatLines } from '../utils/viewUtils'
+import { CallConfig } from '../../data/restClient'
+import { filterCharacteristics, formatCharacteristics } from '../../utils/characteristicUtils'
+import { addPlaceContext } from '../../utils/placeUtils'
+import { statusTag } from '../../utils/premisesUtils'
+import { escape, formatLines } from '../../utils/viewUtils'
 
 export type PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
@@ -74,28 +76,17 @@ export default class PremisesService {
       : await premisesClient.all()
 
     return premises
-      .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
+      .map(entry => ({ ...entry, fullAddress: this.fullAddress(entry) }))
       .sort((a, b) => {
         const pduSort = a.pdu.localeCompare(b.pdu)
-        if (pduSort !== 0) {
-          return pduSort
-        }
-        return a.shortAddress.localeCompare(b.shortAddress)
+        return pduSort !== 0 ? pduSort : this.compareAddresses(a.fullAddress, b.fullAddress)
       })
       .map(entry => {
         return [
-          this.textValue(entry.shortAddress),
-          this.textValue(`${entry.bedspaceCount}`),
+          this.htmlValue(entry.fullAddress.join('<br />')),
+          this.htmlValue(this.formatBedspaces(entry)),
           this.textValue(entry.pdu),
-          this.htmlValue(statusTag(entry.status)),
-          this.htmlValue(
-            `<a href="${addPlaceContext(
-              paths.premises.show({
-                premisesId: entry.id,
-              }),
-              placeContext,
-            )}">Manage<span class="govuk-visually-hidden"> ${entry.shortAddress}</span></a>`,
-          ),
+          this.htmlValue(this.formatManageLink(entry.id, placeContext)),
         ]
       })
   }
@@ -211,11 +202,47 @@ export default class PremisesService {
     return { rows }
   }
 
-  protected textValue(value: string) {
+  private textValue(value: string) {
     return { text: value }
   }
 
-  protected htmlValue(value: string) {
+  private htmlValue(value: string) {
     return { html: value }
+  }
+
+  private fullAddress(premises: Cas3PremisesSummary): Array<string> {
+    return [premises.addressLine1, premises.addressLine2, /* premises.town, */ premises.postcode].filter(
+      line => line !== undefined && line !== '',
+    )
+  }
+
+  private compareAddresses(a: Array<string>, b: Array<string>): number {
+    const first = a.join(',')
+    const second = b.join(',')
+    return first.localeCompare(second)
+  }
+
+  private formatBedspace(bedspace: Cas3BedspaceSummary): string {
+    const archived =
+      bedspace.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
+
+    return `<a href="#">${bedspace.reference}</a>${archived}`
+  }
+
+  private formatBedspaces(premises: Cas3PremisesSummary): string {
+    if (premises.bedspaces === undefined || premises.bedspaces.length === 0) {
+      return `No bedspaces<br /><a href="#">Add a bedspace</a>`
+    }
+
+    return premises.bedspaces.map(this.formatBedspace).join('<br />')
+  }
+
+  private formatManageLink(entryId: string, placeContext: PlaceContext): string {
+    return `<a href="${addPlaceContext(
+      paths.premises.v2.show({
+        premisesId: entryId,
+      }),
+      placeContext,
+    )}">Manage</a>`
   }
 }

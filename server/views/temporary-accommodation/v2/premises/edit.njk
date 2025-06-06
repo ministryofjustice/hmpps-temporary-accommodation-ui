@@ -1,0 +1,37 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../../../components/location-header/macro.njk" import locationHeader %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "Add a property - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+  {{ breadCrumb('Edit a property', [
+    {title: 'List of properties', href: paths.premises.v2.index()},
+    {title: 'View a property', href: paths.premises.v2.show({ premisesId: id })}
+  ]) }}
+{% endblock %}
+
+{% block content %}
+  {% include "../../../_messages.njk" %}
+  
+  {{ showErrorSummary(errorSummary) }}
+  
+  <h1 class="govuk-heading-l">Edit a property</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.premises.v2.update({ premisesId: id }) }}?_method=PUT" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ locationHeader({ premises: fetchContext() }, true) }}
+      
+        {% include "./_editable.njk" %}  
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

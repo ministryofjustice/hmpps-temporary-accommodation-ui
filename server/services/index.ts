@@ -18,6 +18,7 @@ import ExtensionService from './extensionService'
 import LostBedService from './lostBedService'
 import PersonService from './personService'
 import PremisesService from './premisesService'
+import PremisesServiceV2 from './v2/premisesService'
 import ReportService from './reportService'
 import TurnaroundService from './turnaroundService'
 import TimelineService from './assessments/timelineService'
@@ -43,6 +44,7 @@ export const services = () => {
   const userService = new UserService(userClientBuilder)
   const auditService = new AuditService(config.apis.audit)
   const premisesService = new PremisesService(premisesClientBuilder, referenceDataClientBuilder)
+  const premisesServiceV2 = new PremisesServiceV2(premisesClientBuilder, referenceDataClientBuilder)
   const personService = new PersonService(personClientBuilder)
   const bookingService = new BookingService(bookingClientBuilder, lostBedClientBuilder)
   const arrivalService = new ArrivalService(bookingClientBuilder)
@@ -82,6 +84,9 @@ export const services = () => {
     assessmentsService,
     referenceDataService,
     timelineService,
+    v2: {
+      premisesService: premisesServiceV2,
+    },
   }
 }
 
@@ -100,6 +105,7 @@ export {
   LostBedService,
   PersonService,
   PremisesService,
+  PremisesServiceV2,
   TurnaroundService,
   UserService,
   ReferenceDataService,

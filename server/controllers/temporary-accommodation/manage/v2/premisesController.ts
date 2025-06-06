@@ -2,16 +2,16 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewPremises, UpdatePremises } from '@approved-premises/api'
 import { PremisesSearchParameters } from '@approved-premises/ui'
-import paths from '../../../paths/temporary-accommodation/manage'
-import { AssessmentsService } from '../../../services'
-import BedspaceService from '../../../services/bedspaceService'
-import PremisesService from '../../../services/premisesService'
-import { parseNumber } from '../../../utils/formUtils'
-import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
-import extractCallConfig from '../../../utils/restUtils'
-import { filterProbationRegions } from '../../../utils/userUtils'
-import { preservePlaceContext } from '../../../utils/placeUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import paths from '../../../../paths/temporary-accommodation/manage'
+import { AssessmentsService } from '../../../../services'
+import BedspaceService from '../../../../services/bedspaceService'
+import PremisesService from '../../../../services/v2/premisesService'
+import { parseNumber } from '../../../../utils/formUtils'
+import { allStatuses, getActiveStatuses, premisesActions } from '../../../../utils/premisesUtils'
+import extractCallConfig from '../../../../utils/restUtils'
+import { filterProbationRegions } from '../../../../utils/userUtils'
+import { preservePlaceContext } from '../../../../utils/placeUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 
 export default class PremisesController {
   constructor(
@@ -29,7 +29,7 @@ export default class PremisesController {
       const params = req.query as PremisesSearchParameters
 
       const tableRows = await this.premisesService.tableRows(callConfig, placeContext, params)
-      return res.render('temporary-accommodation/premises/index', { tableRows, params })
+      return res.render('temporary-accommodation/v2/premises/index', { tableRows, params })
     }
   }
 
@@ -46,7 +46,7 @@ export default class PremisesController {
         pdus: allPdus,
       } = await this.premisesService.getReferenceData(callConfig)
 
-      return res.render('temporary-accommodation/premises/new', {
+      return res.render('temporary-accommodation/v2/premises/new', {
         allLocalAuthorities,
         allCharacteristics,
         allProbationRegions: filterProbationRegions(allProbationRegions, req),
@@ -79,9 +79,9 @@ export default class PremisesController {
         } else {
           req.flash('success', 'Property created')
         }
-        res.redirect(paths.premises.show({ premisesId }))
+        res.redirect(paths.premises.v2.show({ premisesId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.new({}))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.new({}))
       }
     }
   }
@@ -102,7 +102,7 @@ export default class PremisesController {
 
       const updatePremises = await this.premisesService.getUpdatePremises(callConfig, premisesId)
 
-      return res.render('temporary-accommodation/premises/edit', {
+      return res.render('temporary-accommodation/v2/premises/edit', {
         allLocalAuthorities,
         allCharacteristics,
         allProbationRegions: filterProbationRegions(allProbationRegions, req),
@@ -144,9 +144,9 @@ export default class PremisesController {
           req.flash('success', 'Property updated')
         }
 
-        res.redirect(paths.premises.show({ premisesId }))
+        res.redirect(paths.premises.v2.show({ premisesId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.edit({ premisesId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.edit({ premisesId }))
       }
     }
   }
@@ -162,7 +162,7 @@ export default class PremisesController {
 
       const bedspaceDetails = await this.bedspaceService.getBedspaceDetails(callConfig, premisesId)
 
-      return res.render('temporary-accommodation/premises/show', {
+      return res.render('temporary-accommodation/v2/premises/show', {
         ...details,
         bedspaces: bedspaceDetails,
         actions: premisesActions(details.premises),

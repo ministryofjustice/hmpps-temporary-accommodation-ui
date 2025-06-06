@@ -6,6 +6,7 @@ import { createUserCheckMiddleware, userIsAuthorisedForManage } from '../../midd
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
 import { actions, compose } from '../utils'
+import config from '../../config'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { get, post, put, patch } = compose(
@@ -29,7 +30,10 @@ export default function routes(controllers: Controllers, services: Services, rou
     bedspaceSearchController,
     bookingSearchController,
     assessmentsController,
+    v2,
   } = controllers.manage
+
+  const premisesControllerV2 = v2.premisesController
 
   const { redirectsController } = controllers
 
@@ -63,6 +67,11 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
   get(paths.premises.show.pattern, premisesController.show(), { auditEvent: 'VIEW_PREMISES' })
+
+  // premises v2
+  if (config.flags.managePropertiesV2Enabled) {
+    get(paths.premises.v2.index.pattern, premisesControllerV2.index(), { auditEvent: 'VIEW_PREMISES_LIST_V2' })
+  }
 
   get(paths.premises.bedspaces.new.pattern, bedspacesController.new(), { auditEvent: 'VIEW_BEDSPACE_CREATE' })
   post(paths.premises.bedspaces.create.pattern, bedspacesController.create(), {

@@ -1,0 +1,109 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "Online properties - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBreadcrumbs({
+        items: [{
+            text: "Home",
+            href: "/"
+        }]
+    }) }}
+{% endblock %}
+
+{% block content %}
+    <div>
+        {% include "../../../_messages.njk" %}
+
+        {{ mojCasPageHeaderActions({
+            heading: {
+                text: 'Online properties'
+            },
+            actions: [{
+                text: "Add a property",
+                href: "#"
+            }]
+        }) }}
+
+        {{ mojSubNavigation({
+            label: "Sub navigation",
+            items: [{
+                text: "Online properties",
+                href: "#",
+                active: true
+            }]
+        }) }}
+    </div>
+
+    <div>
+        <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
+            <form action="{{ paths.premises.v2.index() }}" method="get">
+                {{ govukInput({
+                    label: {
+                        classes: 'govuk-!-font-weight-bold',
+                        text: 'Find a property'
+                    },
+                    hint: {
+                        text: 'Search by road or postcode'
+                    },
+                    name: 'postcodeOrAddress',
+                    id: 'postcodeOrAddress',
+                    value: params.postcodeOrAddress,
+                    classes: 'moj-search__input'
+                }) }}
+
+                {{ govukButton({
+                    text: 'Search',
+                    attributes: { id: 'search-button' },
+                    preventDoubleClick: true,
+                    classes: 'moj-search__button'
+                }) }}
+            </form>
+        </div>
+    </div>
+
+    <div>
+
+        {% if (tableRows | length > 0) %}
+            {{ govukTable({
+                attributes: {
+                    'data-module': 'moj-sortable-table'
+                },
+                captionClasses: "govuk-table__caption--m",
+                head: [
+                    {
+                        text: "Address",
+                        classes: "govuk-!-width-one-quarter"
+                    },
+                    {
+                        text: "Bedspaces",
+                        classes: "govuk-!-width-one-quarter"
+                    },
+                    {
+                        text: "PDU",
+                        attributes: { "aria-sort": "ascending" }
+                    },
+                    {
+                        html: '<span class="govuk-visually-hidden">Actions</span>'
+                    }
+                ],
+                rows: tableRows
+            }) }}
+        {% else %}
+            {% if params.postcodeOrAddress %}
+                <h2>{{ '0 online properties matching ‘' + params.postcodeOrAddress + '’' }}</h2>
+            {% else %}
+                <h2>0 online properties</h2>
+            {% endif %}
+        {% endif %}
+    </div>
+
+{% endblock %}

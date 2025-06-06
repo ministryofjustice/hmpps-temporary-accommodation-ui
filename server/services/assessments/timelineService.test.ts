@@ -27,6 +27,9 @@ describe('TimelineService', () => {
       timelineClient.fetch.mockResolvedValue([systemNote])
 
       const timelineData = await service.getTimelineForAssessment(callConfig, assessmentId)
+      // todo
+      // test sometimes fails when there's an uppercase letter in the middle of a name
+      // e.g. expected: Amy VonRueden, received: Amy Vonrueden
       expect(timelineData).toEqual([
         {
           byline: { text: systemNote.createdByUserName },

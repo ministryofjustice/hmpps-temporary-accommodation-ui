@@ -3,6 +3,7 @@ import { temporaryAccommodationPath } from '../service'
 const dashboardPath = temporaryAccommodationPath.path('dashboard')
 
 const premisesPath = temporaryAccommodationPath.path('properties')
+const premisesV2Path = temporaryAccommodationPath.path('v2/properties')
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const bedspacesPath = singlePremisesPath.path('bedspaces')
@@ -45,6 +46,9 @@ const paths: Record<string, any> = {
       edit: singleBedspacePath.path('edit'),
       update: singleBedspacePath,
       show: singleBedspacePath,
+    },
+    v2: {
+      index: premisesV2Path,
     },
   },
   bookings: {

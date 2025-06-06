@@ -2,8 +2,9 @@ import { path } from 'static-path'
 
 const cas3Path = path('/cas3')
 const premisesPath = path('/premises')
-const premisesSummaryPath = cas3Path.path('/premises/summary')
+const premisesSummaryPath = cas3Path.path('premises/summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
+const premisesSearchPath = cas3Path.path('premises/search')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
 const singleLostBedPath = lostBedsPath.path(':lostBedId')
@@ -59,6 +60,12 @@ const managePaths = {
   },
 }
 
+const managePathsV2 = {
+  premises: {
+    search: premisesSearchPath,
+  },
+}
+
 const applicationsPath = path('/applications')
 const singleApplicationPath = applicationsPath.path(':id')
 
@@ -82,6 +89,11 @@ const applyPaths = {
 }
 
 export default {
+  v2: {
+    premises: {
+      index: managePathsV2.premises.search,
+    },
+  },
   premises: {
     show: managePaths.premises.show,
     create: managePaths.premises.create,

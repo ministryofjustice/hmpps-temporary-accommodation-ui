@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, format, formatISO, isExists, subMonths, subDays, isAfter, isBefore } from 'date-fns'
+import { differenceInDays, format, formatISO, isExists, subMonths, subDays, isAfter } from 'date-fns'
 
 export class DateFormats {
   /**
@@ -227,9 +227,16 @@ export const dateIsWithinNextThreeMonths = (dateString: string): boolean => {
   return isAfter(new Date(), threeMonths) && dateIsInFuture(dateString)
 }
 
-export function dateIsWithinLastSevenDays(dateString: string): boolean {
-  const date = new Date(dateString)
-  const sevenDays = subDays(new Date(), 7)
+export function dateIsBetweenInclusive(dateString: string, start: Date, end: Date): boolean {
+  const startString = DateFormats.dateObjToIsoDate(start)
+  const endString = DateFormats.dateObjToIsoDate(end)
 
-  return isAfter(date, sevenDays) && dateIsInThePast(dateString)
+  return dateString >= startString && dateString <= endString
+}
+
+export function dateIsWithinLastSevenDays(dateString: string): boolean {
+  const today = new Date()
+  const sevenDays = subDays(today, 7)
+
+  return dateIsBetweenInclusive(dateString, sevenDays, today)
 }

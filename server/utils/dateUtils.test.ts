@@ -486,6 +486,16 @@ describe('dateExists', () => {
       expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
     })
 
+    it('returns true if the date is today', () => {
+      const validDate = DateFormats.dateObjToIsoDate(new Date())
+      expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
+    })
+
+    it('returns true if the date is 7 days ago', () => {
+      const validDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 7))
+      expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
+    })
+
     it('returns false if the date is more than 7 days in the past', () => {
       const invalidDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 8))
       expect(dateIsWithinLastSevenDays(invalidDate)).toBe(false)

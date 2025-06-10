@@ -310,5 +310,98 @@ describe('BedspaceSearchController', () => {
         }),
       )
     })
+
+    it('applies gender filters correctly when given a search query', async () => {
+      const searchParameters = bedspaceSearchFormParametersFactory.build()
+      const placeContext = placeContextFactory.build()
+
+      request.query = {
+        ...searchParameters,
+        durationDays: searchParameters.durationDays.toString(),
+        ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
+        genderAttribute: 'uuid-5',
+      }
+
+      const searchResults = bedspaceSearchResultsFactory.build()
+
+      bedspaceSearchService.search.mockResolvedValue(searchResults)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bedspaceSearchController.index()
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceSearchService.search).toHaveBeenCalledWith(
+        callConfig,
+        expect.objectContaining({
+          premisesFilters: {
+            includedCharacteristicIds: ['uuid-5'],
+            excludedCharacteristicIds: [],
+          },
+        }),
+      )
+    })
+
+    it('applies gender filters correctly when given an array of gender attributes', async () => {
+      const searchParameters = bedspaceSearchFormParametersFactory.build()
+      const placeContext = placeContextFactory.build()
+
+      request.query = {
+        ...searchParameters,
+        durationDays: searchParameters.durationDays.toString(),
+        ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
+        genderAttribute: ['uuid-5', 'uuid-6'],
+      }
+
+      const searchResults = bedspaceSearchResultsFactory.build()
+
+      bedspaceSearchService.search.mockResolvedValue(searchResults)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bedspaceSearchController.index()
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceSearchService.search).toHaveBeenCalledWith(
+        callConfig,
+        expect.objectContaining({
+          premisesFilters: {
+            includedCharacteristicIds: ['uuid-5', 'uuid-6'],
+            excludedCharacteristicIds: [],
+          },
+        }),
+      )
+    })
+
+    it('does not apply gender filters when genderAttribute is "none"', async () => {
+      const searchParameters = bedspaceSearchFormParametersFactory.build()
+      const placeContext = placeContextFactory.build()
+
+      request.query = {
+        ...searchParameters,
+        durationDays: searchParameters.durationDays.toString(),
+        ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
+        genderAttribute: 'none',
+      }
+
+      const searchResults = bedspaceSearchResultsFactory.build()
+
+      bedspaceSearchService.search.mockResolvedValue(searchResults)
+      ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
+
+      const requestHandler = bedspaceSearchController.index()
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceSearchService.search).toHaveBeenCalledWith(
+        callConfig,
+        expect.objectContaining({
+          premisesFilters: {
+            includedCharacteristicIds: [],
+            excludedCharacteristicIds: [],
+          },
+        }),
+      )
+    })
   })
 })

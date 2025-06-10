@@ -338,6 +338,7 @@ export type BedspaceSearchFormParameters = {
   durationDays: number
   probationDeliveryUnits: Array<string>
   occupancyAttribute: string
+  genderAttribute: string
   accessibilityAttributes: Array<string>
   sexualRiskAttributes: Array<string>
 }

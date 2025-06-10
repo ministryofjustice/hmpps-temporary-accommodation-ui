@@ -18,6 +18,7 @@ type BedspaceSearchQuery = ObjectWithDateParts<'startDate'> & {
   probationDeliveryUnits: Array<string>
   durationDays: string
   occupancyAttribute?: string
+  genderAttribute?: string
   accessibilityAttributes?: string[]
   sexualRiskAttributes?: string[]
 }
@@ -39,6 +40,7 @@ export default class BedspaceSearchController {
         pdus: allPdus,
         wheelchairAccessibility,
         occupancy,
+        gender,
         sexualRisk,
       } = await this.searchService.getReferenceData(callConfig)
 
@@ -55,6 +57,14 @@ export default class BedspaceSearchController {
       const occupancyItems = [
         { text: 'All', value: 'all' },
         ...occupancy.map(attr => ({
+          text: attr.name,
+          value: attr.id,
+        })),
+      ]
+
+      const genderItems = [
+        { text: 'None', value: 'none' },
+        ...gender.map(attr => ({
           text: attr.name,
           value: attr.id,
         })),
@@ -106,14 +116,26 @@ export default class BedspaceSearchController {
               : [req.query.occupancyAttribute as string]
           }
 
+          let selectedGenderAttribute: string[] = []
+
+          if (req.query.genderAttribute && req.query.genderAttribute !== 'none') {
+            selectedGenderAttribute = Array.isArray(req.query.genderAttribute)
+              ? (req.query.genderAttribute.filter(attr => typeof attr === 'string') as string[])
+              : [req.query.genderAttribute as string]
+          }
+
           const bedspaceFilters =
             selectedAccessibilityIds.length > 0 ? { includedCharacteristicIds: selectedAccessibilityIds } : undefined
 
           let includedCharacteristicIds: string[] = []
           let excludedCharacteristicIds: string[] = []
 
-          if (selectedOccupancyAttribute.length > 0) {
+          if (selectedOccupancyAttribute.length > 0 || selectedGenderAttribute.length > 0) {
             includedCharacteristicIds = selectedOccupancyAttribute.filter(attr => typeof attr === 'string')
+          }
+
+          if (selectedGenderAttribute.length > 0) {
+            includedCharacteristicIds = selectedGenderAttribute.filter(attr => typeof attr === 'string')
           }
 
           if (req.query.sexualRiskAttributes) {
@@ -148,6 +170,7 @@ export default class BedspaceSearchController {
           allPdus,
           wheelchairAccessibilityItems,
           occupancyItems,
+          genderItems,
           sexualRiskItems,
           results,
           startDate,
@@ -155,6 +178,7 @@ export default class BedspaceSearchController {
           errorSummary,
           durationDays: req.query.durationDays || DEFAULT_DURATION_DAYS,
           occupancyAttribute: req.query.occupancyAttribute || 'all',
+          genderAttribute: req.query.genderAttribute || 'none',
           accessibilityAttributes: req.query.accessibilityAttributes || [],
           sexualRiskAttributes: req.query.sexualRiskAttributes || [],
           ...startDatePrefill,

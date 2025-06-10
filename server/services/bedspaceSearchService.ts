@@ -9,6 +9,7 @@ export type BedspaceSearchReferenceData = {
   pdus: Array<ReferenceData>
   wheelchairAccessibility: Array<Characteristic>
   occupancy: Array<Characteristic>
+  gender: Array<Characteristic>
   sexualRisk: Array<Characteristic>
 }
 
@@ -45,12 +46,13 @@ export default class BedspaceSearchService {
 
     const wheelchairAccessibility = this.filterByPropertyNames(bedspaceAttributes, 'isWheelchairAccessible')
     const occupancy = this.filterByPropertyNames(premisesAttributes, ['isSharedProperty', 'isSingleOccupancy'])
+    const gender = this.filterByPropertyNames(premisesAttributes, ['isWomenOnly', 'isMenOnly'])
     const sexualRisk = this.filterByPropertyNamesAndReplace(premisesAttributes, {
       notSuitableForSexualRiskToAdults: 'Risk to adults',
       notSuitableForSexualRiskToChildren: 'Risk to children',
     })
 
-    return { pdus, wheelchairAccessibility, occupancy, sexualRisk }
+    return { pdus, wheelchairAccessibility, occupancy, gender, sexualRisk }
   }
 
   private filterByPropertyNames(characteristics: Characteristic[], propertyNames: string | string[]): Characteristic[] {

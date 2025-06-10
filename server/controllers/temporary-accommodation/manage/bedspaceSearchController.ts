@@ -130,12 +130,15 @@ export default class BedspaceSearchController {
           let includedCharacteristicIds: string[] = []
           let excludedCharacteristicIds: string[] = []
 
-          if (selectedOccupancyAttribute.length > 0 || selectedGenderAttribute.length > 0) {
+          if (selectedOccupancyAttribute.length > 0) {
             includedCharacteristicIds = selectedOccupancyAttribute.filter(attr => typeof attr === 'string')
           }
 
           if (selectedGenderAttribute.length > 0) {
-            includedCharacteristicIds = selectedGenderAttribute.filter(attr => typeof attr === 'string')
+            includedCharacteristicIds = [
+              ...includedCharacteristicIds,
+              ...selectedGenderAttribute.filter(attr => typeof attr === 'string'),
+            ]
           }
 
           if (req.query.sexualRiskAttributes) {

@@ -47,7 +47,7 @@ describe('BedspaceSearchService', () => {
   })
 
   describe('getReferenceData', () => {
-    it('returns sorted PDUs, wheelchair accessibility, occupancy, and sexual risk characteristics', async () => {
+    it('returns sorted PDUs, wheelchair accessibility, occupancy, gender and sexual risk characteristics', async () => {
       const pdu1 = pduFactory.build({ name: 'HIJ' })
       const pdu2 = pduFactory.build({ name: 'LMN' })
       const pdu3 = pduFactory.build({ name: 'PQR' })

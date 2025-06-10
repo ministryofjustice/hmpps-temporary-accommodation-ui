@@ -59,10 +59,26 @@ describe('BedspaceSearchController', () => {
     }),
   ]
 
+  const gender = [
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-5',
+      name: 'Men only',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-6',
+      name: 'Women only',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+  ]
+
   const referenceData = {
     pdus: referenceDataFactory.pdu().buildList(5),
     wheelchairAccessibility,
     occupancy,
+    gender,
     sexualRisk,
   }
 

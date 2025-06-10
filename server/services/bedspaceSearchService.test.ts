@@ -82,6 +82,18 @@ describe('BedspaceSearchService', () => {
         propertyName: 'notSuitableForSexualRiskToChildren',
       })
 
+      const genderCharacteristic1 = characteristicFactory.build({
+        name: 'Men only',
+        modelScope: 'premises',
+        propertyName: 'isMenOnly',
+      })
+
+      const genderCharacteristic2 = characteristicFactory.build({
+        name: 'Women only',
+        modelScope: 'premises',
+        propertyName: 'isWomenOnly',
+      })
+
       referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
         if (objectType === 'probation-delivery-units') {
           return [pdu2, pdu3, pdu1]
@@ -93,6 +105,8 @@ describe('BedspaceSearchService', () => {
             premisesCharacteristic2,
             premisesCharacteristic3,
             premisesCharacteristic4,
+            genderCharacteristic1,
+            genderCharacteristic2,
           ]
         }
         return []
@@ -104,6 +118,7 @@ describe('BedspaceSearchService', () => {
         pdus: [pdu1, pdu2, pdu3],
         wheelchairAccessibility: [roomCharacteristic],
         occupancy: [premisesCharacteristic1, premisesCharacteristic2],
+        gender: [genderCharacteristic1, genderCharacteristic2],
         sexualRisk: [premisesCharacteristic3, premisesCharacteristic4],
       })
 

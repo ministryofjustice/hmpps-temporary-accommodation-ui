@@ -59,10 +59,26 @@ describe('BedspaceSearchController', () => {
     }),
   ]
 
+  const gender = [
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-5',
+      name: 'Men only',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+    referenceDataFactory.characteristic('premises').build({
+      id: 'uuid-6',
+      name: 'Women only',
+      serviceScope: 'temporary-accommodation',
+      modelScope: 'premises',
+    }),
+  ]
+
   const referenceData = {
     pdus: referenceDataFactory.pdu().buildList(5),
     wheelchairAccessibility,
     occupancy,
+    gender,
     sexualRisk,
   }
 
@@ -106,8 +122,10 @@ describe('BedspaceSearchController', () => {
             { text: 'All', value: 'all' },
             ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
           ],
+          genderItems: [{ text: 'None', value: 'none' }, ...gender.map(attr => ({ text: attr.name, value: attr.id }))],
           sexualRiskItems: sexualRisk.map(attr => ({ text: attr.name, value: attr.id })),
           occupancyAttribute: 'all',
+          genderAttribute: 'none',
           accessibilityAttributes: [],
           sexualRiskAttributes: [],
           errors: {},
@@ -220,8 +238,10 @@ describe('BedspaceSearchController', () => {
             { text: 'All', value: 'all' },
             ...occupancy.map(attr => ({ text: attr.name, value: attr.id })),
           ],
+          genderItems: [{ text: 'None', value: 'none' }, ...gender.map(attr => ({ text: attr.name, value: attr.id }))],
           sexualRiskItems: sexualRisk.map(attr => ({ text: attr.name, value: attr.id })),
           occupancyAttribute: 'all',
+          genderAttribute: 'none',
           accessibilityAttributes: [],
           sexualRiskAttributes: [],
           results: searchResults.results,
@@ -267,6 +287,7 @@ describe('BedspaceSearchController', () => {
         ...DateFormats.isoToDateAndTimeInputs(searchParameters.startDate, 'startDate'),
         accessibilityAttributes: ['accessibility-1', 'invalid-accessibility'],
         occupancyAttribute: ['uuid-1', null, 'uuid-2'],
+        genderAttribute: 'uuid-5',
         sexualRiskAttributes: ['uuid-3', null, 'uuid-4'],
       }
 
@@ -284,7 +305,7 @@ describe('BedspaceSearchController', () => {
         expect.objectContaining({
           bedspaceFilters: { includedCharacteristicIds: ['accessibility-1'] },
           premisesFilters: {
-            includedCharacteristicIds: ['uuid-1', 'uuid-2'],
+            includedCharacteristicIds: ['uuid-1', 'uuid-2', 'uuid-5'],
             excludedCharacteristicIds: ['uuid-3', 'uuid-4'],
           },
         }),

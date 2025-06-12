@@ -1,6 +1,6 @@
 /* eslint-disable */
 import type { ObjectWithDateParts } from '@approved-premises/ui'
-import { differenceInDays, format, formatISO, isExists, subMonths, subDays, isAfter } from 'date-fns'
+import { differenceInDays, format, formatISO, isExists, addMonths, subDays } from 'date-fns'
 
 export class DateFormats {
   /**
@@ -222,9 +222,10 @@ export const dateInputHint = (direction: 'past' | 'future') => {
 }
 
 export const dateIsWithinNextThreeMonths = (dateString: string): boolean => {
-  const threeMonths = subMonths(dateString, 3)
+  const today = new Date()
+  const threeMonths = addMonths(today, 3)
 
-  return isAfter(new Date(), threeMonths) && dateIsInFuture(dateString)
+  return dateIsBetweenInclusive(dateString, today, threeMonths)
 }
 
 export function dateIsBetweenInclusive(dateString: string, start: Date, end: Date): boolean {

@@ -460,6 +460,16 @@ describe('dateExists', () => {
       expect(dateIsWithinNextThreeMonths(validDate)).toBe(true)
     })
 
+    it('returns true if the date is today', () => {
+      const validDate = DateFormats.dateObjToIsoDate(new Date())
+      expect(dateIsWithinNextThreeMonths(validDate)).toBe(true)
+    })
+
+    it('returns true if the date is 3 months away', () => {
+      const validDate = DateFormats.dateObjToIsoDate(addMonths(new Date(), 3))
+      expect(dateIsWithinNextThreeMonths(validDate)).toBe(true)
+    })
+
     it('returns false if the date is more than 3 months in the future', () => {
       const invalidDate = DateFormats.dateObjToIsoDate(addMonths(new Date(), 4))
       expect(dateIsWithinNextThreeMonths(invalidDate)).toBe(false)

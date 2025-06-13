@@ -10,9 +10,14 @@ import type {
 } from '@approved-premises/api'
 
 import paths from '../../server/paths/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { characteristics, localAuthorities, pdus, probationRegions } from '../../wiremock/referenceDataStubs'
-import { errorStub } from '../../wiremock/utils'
+import { getMatchingRequests, stubFor } from '.'
+import {
+  characteristics,
+  localAuthorities,
+  pdus,
+  probationRegions,
+} from '../../server/testutils/stubs/referenceDataStubs'
+import { errorStub } from './utils'
 import bookingStubs from './booking'
 import roomStubs from './room'
 

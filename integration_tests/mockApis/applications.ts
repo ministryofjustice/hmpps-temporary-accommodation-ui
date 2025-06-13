@@ -2,7 +2,7 @@ import { SuperAgentRequest } from 'superagent'
 
 import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 
-import { getMatchingRequests, stubFor } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '.'
 
 export default {
   stubApplications: (applications: TemporaryAccommodationApplication): SuperAgentRequest =>

@@ -2,8 +2,8 @@ import { SuperAgentRequest } from 'superagent'
 
 import type { Extension } from '@approved-premises/api'
 
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { bedspaceConflictResponseBody, errorStub } from '../../wiremock/utils'
+import { getMatchingRequests, stubFor } from '.'
+import { bedspaceConflictResponseBody, errorStub } from './utils'
 
 export default {
   stubExtensionCreate: (args: { premisesId: string; bookingId: string; extension: Extension }): SuperAgentRequest =>

@@ -1,5 +1,5 @@
 import { LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
-import { stubFor } from '../../wiremock'
+import { stubFor } from '.'
 
 const stubLocalAuthorities = (localAuthorities: Array<LocalAuthorityArea>) =>
   stubFor({

@@ -80,10 +80,14 @@ export type { Cas3BedspaceSearchParameters } from './models/Cas3BedspaceSearchPa
 export type { Cas3BedspaceSearchResult } from './models/Cas3BedspaceSearchResult';
 export type { Cas3BedspaceSearchResultOverlap } from './models/Cas3BedspaceSearchResultOverlap';
 export type { Cas3BedspaceSearchResults } from './models/Cas3BedspaceSearchResults';
+export type { Cas3BedspaceStatus } from './models/Cas3BedspaceStatus';
 export type { Cas3BedspaceSummary } from './models/Cas3BedspaceSummary';
 export type { Cas3Departure } from './models/Cas3Departure';
 export type { Cas3NewApplication } from './models/Cas3NewApplication';
+export type { Cas3NewBedspace } from './models/Cas3NewBedspace';
 export type { Cas3NewDeparture } from './models/Cas3NewDeparture';
+export type { Cas3OASysAssessmentMetadata } from './models/Cas3OASysAssessmentMetadata';
+export type { Cas3OASysGroup } from './models/Cas3OASysGroup';
 export type { Cas3PremisesSummary } from './models/Cas3PremisesSummary';
 export type { Cas3PropertyStatus } from './models/Cas3PropertyStatus';
 export type { Cas3ReportType } from './models/Cas3ReportType';

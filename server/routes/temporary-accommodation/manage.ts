@@ -29,7 +29,10 @@ export default function routes(controllers: Controllers, services: Services, rou
     bedspaceSearchController,
     bookingSearchController,
     assessmentsController,
+    v2,
   } = controllers.manage
+
+  const premisesControllerV2 = v2.premisesController
 
   const { redirectsController } = controllers
 
@@ -63,6 +66,38 @@ export default function routes(controllers: Controllers, services: Services, rou
     ],
   })
   get(paths.premises.show.pattern, premisesController.show(), { auditEvent: 'VIEW_PREMISES' })
+  // premises v2
+  // having difficulty enabling for integration tests
+  // if (config.flags.managePropertiesV2Enabled) {
+  get(paths.premises.v2.edit.pattern, premisesControllerV2.edit(), { auditEvent: 'VIEW_PREMISES_EDIT' })
+  get(paths.premises.v2.index.pattern, premisesControllerV2.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
+  get(paths.premises.v2.new.pattern, premisesControllerV2.new(), { auditEvent: 'VIEW_PREMISES_CREATE' })
+  post(paths.premises.v2.create.pattern, premisesControllerV2.create(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.v2.new.pattern,
+        auditEvent: 'CREATE_PREMISES_FAILURE',
+      },
+      {
+        path: paths.premises.v2.show.pattern,
+        auditEvent: 'CREATE_PREMISES_SUCCESS',
+      },
+    ],
+  })
+  put(paths.premises.v2.update.pattern, premisesControllerV2.update(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.v2.edit.pattern,
+        auditEvent: 'EDIT_BEDSPACE_FAILURE',
+      },
+      {
+        path: paths.premises.v2.show.pattern,
+        auditEvent: 'EDIT_BEDSPACE_SUCCESS',
+      },
+    ],
+  })
+  get(paths.premises.v2.show.pattern, premisesControllerV2.show(), { auditEvent: 'VIEW_PREMISES' })
+  // }
 
   get(paths.premises.bedspaces.new.pattern, bedspacesController.new(), { auditEvent: 'VIEW_BEDSPACE_CREATE' })
   post(paths.premises.bedspaces.create.pattern, bedspacesController.create(), {

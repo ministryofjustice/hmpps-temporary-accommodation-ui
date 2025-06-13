@@ -5,7 +5,7 @@ describe('utils', () => {
     it('returns all the possible combinations of an array', () => {
       const arr = ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId']
 
-      expect(getCombinations(arr)).toEqual([
+      expect(getCombinations(arr)).equal([
         ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],
         ['crn', 'name', 'expectedArrivalDate', 'expectedDepartureDate'],
         ['name', 'expectedArrivalDate', 'expectedDepartureDate', 'keyWorkerId'],

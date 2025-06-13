@@ -11,7 +11,12 @@ import type {
 
 import paths from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
-import { characteristics, localAuthorities, pdus, probationRegions } from '../../server/testutils/stubs/referenceDataStubs'
+import {
+  characteristics,
+  localAuthorities,
+  pdus,
+  probationRegions,
+} from '../../server/testutils/stubs/referenceDataStubs'
 import { errorStub } from './utils'
 import bookingStubs from './booking'
 import roomStubs from './room'

@@ -2,9 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Cas3BedspaceStatus } from './Cas3BedspaceStatus';
 export type Cas3BedspaceSummary = {
     id: string;
     reference: string;
-    status: 'online' | 'archived';
+    status: Cas3BedspaceStatus;
 };
 

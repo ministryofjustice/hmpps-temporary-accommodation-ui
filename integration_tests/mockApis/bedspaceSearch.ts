@@ -2,9 +2,9 @@ import type { Response, SuperAgentRequest } from 'superagent'
 import { Cas3BedspaceSearchResults } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { characteristics, pdus } from '../../wiremock/referenceDataStubs'
-import { errorStub } from '../../wiremock/utils'
+import { getMatchingRequests, stubFor } from '.'
+import { characteristics, pdus } from '../../server/testutils/stubs/referenceDataStubs'
+import { errorStub } from './utils'
 
 export default {
   stubBedspaceSearch: (searchResults: Cas3BedspaceSearchResults): SuperAgentRequest =>

@@ -22,7 +22,7 @@ import user from './integration_tests/mockApis/user'
 import referenceData from './integration_tests/mockApis/referenceData'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import accessibilityViolations from './integration_tests/tasks/accessibilityViolations'
-import { resetStubs } from './wiremock'
+import { resetStubs } from './integration_tests/mockApis'
 
 export default defineConfig({
   chromeWebSecurity: false,

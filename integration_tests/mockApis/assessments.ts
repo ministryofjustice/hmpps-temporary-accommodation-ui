@@ -2,10 +2,10 @@ import type { SuperAgentRequest } from 'superagent'
 import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment, Unit } from '../../server/@types/shared'
 
 import api from '../../server/paths/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { errorStub } from '../../wiremock/utils'
+import { getMatchingRequests, stubFor } from '.'
+import { errorStub } from './utils'
 import { MockPagination } from './bookingSearch'
-import { referralRejectionReasons } from '../../wiremock/referenceDataStubs'
+import { referralRejectionReasons } from '../../server/testutils/stubs/referenceDataStubs'
 
 export default {
   stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>

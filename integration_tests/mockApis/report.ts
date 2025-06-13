@@ -1,6 +1,6 @@
 import { Cas3ReportType } from '@approved-premises/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { probationRegions } from '../../wiremock/referenceDataStubs'
+import { getMatchingRequests, stubFor } from '.'
+import { probationRegions } from '../../server/testutils/stubs/referenceDataStubs'
 import { getApiReportPath } from '../../server/utils/reportUtils'
 
 export default {

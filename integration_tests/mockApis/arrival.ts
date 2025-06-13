@@ -2,8 +2,8 @@ import { SuperAgentRequest } from 'superagent'
 
 import type { Arrival } from '@approved-premises/api'
 
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { bedspaceConflictResponseBody, errorStub } from '../../wiremock/utils'
+import { getMatchingRequests, stubFor } from '.'
+import { bedspaceConflictResponseBody, errorStub } from './utils'
 
 export default {
   stubArrivalCreate: (args: { premisesId: string; bookingId: string; arrival: Arrival }): SuperAgentRequest =>

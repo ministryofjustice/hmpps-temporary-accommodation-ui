@@ -1,4 +1,4 @@
-import { LostBed } from '../server/@types/shared'
+import { LostBed } from '../../server/@types/shared'
 
 const getCombinations = (arr: Array<string>) => {
   const result: Array<Array<string>> = []

@@ -2,7 +2,7 @@ import { SuperAgentRequest } from 'superagent'
 import type { BookingSearchResult } from '@approved-premises/api'
 import type { BookingSearchApiStatus, BookingSearchParameters, PaginatedResponse } from '@approved-premises/ui'
 import paths from '../../server/paths/api'
-import { stubFor } from '../../wiremock'
+import { stubFor } from '.'
 import { appendQueryString } from '../../server/utils/utils'
 
 export type MockPagination = Pick<

@@ -1,5 +1,5 @@
 import { ProfileResponse } from '@approved-premises/api'
-import { stubFor } from '../../wiremock'
+import { stubFor } from '.'
 import path from '../../server/paths/api'
 
 const stubGetUserProfile = (userProfile: ProfileResponse) =>

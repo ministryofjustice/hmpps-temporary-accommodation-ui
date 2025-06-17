@@ -2,4 +2,4 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3PropertyStatus = 'online' | 'archived';
+export type Cas3PremisesStatus = 'online' | 'archived';

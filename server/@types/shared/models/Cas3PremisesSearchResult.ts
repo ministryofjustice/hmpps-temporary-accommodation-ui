@@ -2,16 +2,17 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PropertyStatus } from './PropertyStatus';
-export type Cas3PremisesSummary = {
+import type { Cas3BedspacePremisesSearchResult } from './Cas3BedspacePremisesSearchResult';
+export type Cas3PremisesSearchResult = {
     id: string;
-    name: string;
+    reference: string;
     addressLine1: string;
     addressLine2?: string;
+    town?: string;
     postcode: string;
     pdu: string;
     localAuthorityAreaName?: string;
-    bedspaceCount: number;
-    status: PropertyStatus;
+    bedspaces?: Array<Cas3BedspacePremisesSearchResult>;
+    totalArchivedBedspaces?: number;
 };
 

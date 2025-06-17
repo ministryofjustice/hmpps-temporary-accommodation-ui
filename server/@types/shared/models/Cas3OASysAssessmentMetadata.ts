@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3BedspaceSummary = {
-    id: string;
-    reference: string;
-    status: 'online' | 'archived';
+export type Cas3OASysAssessmentMetadata = {
+    hasApplicableAssessment: boolean;
+    dateStarted?: string;
+    dateCompleted?: string;
 };
 

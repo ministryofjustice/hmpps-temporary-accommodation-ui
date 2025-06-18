@@ -822,6 +822,24 @@
     "placement-location": {
       "type": "object",
       "properties": {
+        "alternative-region": {
+          "type": "object",
+          "properties": {
+            "alternativeRegion": {
+              "enum": [
+                "no",
+                "yes"
+              ],
+              "type": "string"
+            },
+            "regionId": {
+              "type": "string"
+            },
+            "pduName": {
+              "type": "string"
+            }
+          }
+        },
         "alternative-pdu": {
           "type": "object",
           "properties": {

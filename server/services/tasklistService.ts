@@ -33,8 +33,12 @@ export default class TasklistService {
           // change to the questions.
           if (taskStatus === 'not_started') {
             const previousTaskKey = Object.keys(this.taskStatuses).at(-2)
-
-            if (previousTaskKey && this.taskStatuses[previousTaskKey] !== 'complete') {
+            console.log(
+              `Previous task key: ${previousTaskKey}, status: ${this.taskStatuses[previousTaskKey]}`
+            )
+            if (previousTaskKey === 'placement-location' && this.taskStatuses[previousTaskKey] === 'in_progress') {
+              this.taskStatuses[task.id] = 'not_started'
+            } else if (previousTaskKey && this.taskStatuses[previousTaskKey] !== 'complete') {
               this.taskStatuses[task.id] = 'cannot_start'
             }
           }

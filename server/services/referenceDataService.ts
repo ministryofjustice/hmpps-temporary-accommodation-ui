@@ -23,4 +23,12 @@ export default class ReferenceDataService {
       })
     ).sort((a, b) => a.name.localeCompare(b.name))
   }
+
+  async getProbationRegions(callConfig: CallConfig) {
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
+
+    return (await referenceDataClient.getReferenceData<{ id: string; name: string }>('probation-regions')).sort(
+      (a, b) => a.name.localeCompare(b.name),
+    )
+  }
 }

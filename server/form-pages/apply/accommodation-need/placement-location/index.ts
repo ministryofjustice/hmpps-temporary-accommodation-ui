@@ -7,6 +7,7 @@ import AlternativeRegion from './alternativeRegion'
 import DifferentRegion from './differentRegion'
 import PlacementPdu from './placementPdu'
 import ApprovedPdu from './approvedPdu'
+
 @Task({
   name: 'Placement location',
   actionText: 'Confirm placement location',

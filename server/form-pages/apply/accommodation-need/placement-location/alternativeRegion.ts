@@ -1,11 +1,11 @@
-import { TemporaryAccommodationApplication as Application, ProbationDeliveryUnit } from '@approved-premises/api'
+import { TemporaryAccommodationApplication as Application } from '@approved-premises/api'
 import type { DataServices, PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
+import { ProbationRegion } from '@temporary-accommodation-ui/e2e'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
 import { sentenceCase } from '../../../../utils/utils'
 import { CallConfig } from '../../../../data/restClient'
-import { ProbationRegion } from '@temporary-accommodation-ui/e2e'
 
 export type AlternativePduBody = {
   alternativePdu: YesOrNo
@@ -18,14 +18,16 @@ export default class AlternativeRegion implements TasklistPage {
   title = 'Is placement for the East of England?'
 
   htmlDocumentTitle = this.title
+
   regionName: string
+
   constructor(
     private _body: Partial<AlternativePduBody>,
     readonly application: Application,
 
     regionName: string,
   ) {
-    console.debug("AlternativeRegion constructor", regionName)
+    console.debug('AlternativeRegion constructor', regionName)
     this.regionName = regionName
   }
 
@@ -35,7 +37,7 @@ export default class AlternativeRegion implements TasklistPage {
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {
-    console.debug("callconfig", callConfig.probationRegion)
+    console.debug('callconfig', callConfig.probationRegion)
 
     // return new AlternativeRegion(body, application, pdus)
     const regionName = callConfig.probationRegion.name
@@ -46,7 +48,7 @@ export default class AlternativeRegion implements TasklistPage {
   }
 
   set body(value) {
-    console.debug("AlternativeRegion set body", value,  value.regionName ?? this.regionName)
+    console.debug('AlternativeRegion set body', value, value.regionName ?? this.regionName)
     this._body = {
       alternativeRegion: value.alternativeRegion,
       regionName: value.regionName ?? this.regionName,
@@ -58,7 +60,7 @@ export default class AlternativeRegion implements TasklistPage {
   }
 
   response() {
-    console.debug("AlternativeRegion response", this.regionName, this.body.regionName)
+    console.debug('AlternativeRegion response', this.regionName, this.body.regionName)
     const translatedResponse: PageResponse = {
       [`Is placement for the ${this.body.regionName} region?`]: sentenceCase(this.body.alternativeRegion),
     }
@@ -71,7 +73,7 @@ export default class AlternativeRegion implements TasklistPage {
   }
 
   next() {
-    console.log("HERE 1: ", this.body)
+    console.log('HERE 1: ', this.body)
     return this.body.alternativeRegion === 'yes' ? 'alternative-pdu' : 'different-region'
   }
 

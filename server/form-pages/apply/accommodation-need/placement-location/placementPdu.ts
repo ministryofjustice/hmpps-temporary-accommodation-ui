@@ -1,4 +1,8 @@
-import { TemporaryAccommodationApplication as Application, ProbationDeliveryUnit, ProbationRegion } from '@approved-premises/api'
+import {
+  TemporaryAccommodationApplication as Application,
+  ProbationDeliveryUnit,
+  ProbationRegion,
+} from '@approved-premises/api'
 import type { DataServices, PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
@@ -32,19 +36,22 @@ export default class PlacementPdu implements TasklistPage {
     dataServices: DataServices,
   ) {
     console.debug('PlacementPdu.initialize called with body:', body.regionId)
-    console.debug('PlacementPdu.initialize called with application:', application.data?.["placement-location"]['different-region'])
+    console.debug(
+      'PlacementPdu.initialize called with application:',
+      application.data?.['placement-location']['different-region'],
+    )
     const pdus = await dataServices.referenceDataService.getPdus(callConfig)
     return new PlacementPdu(body, application, pdus)
   }
 
   set body(value) {
-      console.debug('PlacementPdu.set body called with value:', value)
-      const submittedPdu =
-        value.pduId !== undefined && value.pduName === undefined && this.pdus?.find(pdu => pdu.id === value.pduId)
+    console.debug('PlacementPdu.set body called with value:', value)
+    const submittedPdu =
+      value.pduId !== undefined && value.pduName === undefined && this.pdus?.find(pdu => pdu.id === value.pduId)
 
-      this._body.pduId = submittedPdu?.id || value.pduId
-      this._body.pduName = submittedPdu?.name || value.pduName
-      this._body.regionId = value.regionId
+    this._body.pduId = submittedPdu?.id || value.pduId
+    this._body.pduName = submittedPdu?.name || value.pduName
+    this._body.regionId = value.regionId
   }
 
   get body() {

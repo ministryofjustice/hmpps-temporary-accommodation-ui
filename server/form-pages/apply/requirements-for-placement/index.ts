@@ -6,11 +6,6 @@ import SafeguardingAndSupport from './safeguarding-and-support'
 
 @Section({
   title: 'Requirements for placement',
-  tasks: [
-    DisabilityCulturalAndSpecificNeeds,
-    SafeguardingAndSupport,
-    FoodAllergiesTask,
-    MoveOnPlanTask,
-  ],
+  tasks: [DisabilityCulturalAndSpecificNeeds, SafeguardingAndSupport, FoodAllergiesTask, MoveOnPlanTask],
 })
 export default class RequirementsForPlacement {}

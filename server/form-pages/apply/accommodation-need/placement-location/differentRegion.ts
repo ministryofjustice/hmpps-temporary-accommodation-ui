@@ -1,5 +1,5 @@
 import { TemporaryAccommodationApplication as Application, ProbationRegion } from '@approved-premises/api'
-import type { DataServices, PageResponse, TaskListErrors, YesOrNo } from '@approved-premises/ui'
+import type { DataServices, PageResponse, TaskListErrors } from '@approved-premises/ui'
 import { Page } from '../../../utils/decorators'
 
 import TasklistPage from '../../../tasklistPage'
@@ -19,7 +19,7 @@ export default class DifferentRegion implements TasklistPage {
 
   constructor(
     private _body: Partial<AlternativePduBody>,
-    private application: Application,
+    private readonly application: Application,
     readonly regions?: Array<ProbationRegion>,
   ) {}
 
@@ -34,14 +34,13 @@ export default class DifferentRegion implements TasklistPage {
   }
 
   set body(value) {
-    console.log("BODY", this.body)
+    console.log('BODY', this.body)
     this._body = {
       regionId: value.regionId,
       regionName: value.regionName || this.regions?.find(region => region.id === value.regionId)?.name || '',
     }
     const previousRegionId = this.application.data?.['placement-location']['different-region']?.regionId
-    console.log("PREVIOUS REGION ID", previousRegionId)
-    console.log("CURRENT REGION ID", value.regionId)
+
     if (previousRegionId && previousRegionId !== value.regionId) {
       this.application.data['placement-location']['placement-pdu'] = {}
     }

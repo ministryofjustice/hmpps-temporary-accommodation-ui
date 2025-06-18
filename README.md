@@ -81,8 +81,8 @@ npx playwright install
 Then start the tests using one of the following:
 
 ```
-npm run test:e2e
-npm run test:e2e:ui
+npm run test:playwright:e2e
+npm run test:playwright:e2e:ui
 ```
 
 ### Running against UI/API hosted in your local dev environment (ap-tools)
@@ -99,8 +99,8 @@ If you also want to test emails, review the 'Testing Emails' section below
 Then start the tests using one of the following:
 
 ```
-npm run test:e2e:local
-npm run test:e2e:local:ui
+npm run test:playwright:e2e:local
+npm run test:playwright:e2e:local:ui
 ```
 
 ## Release process

@@ -1,8 +1,8 @@
 import { SuperAgentRequest } from 'superagent'
 import { Room } from '@approved-premises/api'
 import paths from '../../server/paths/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { characteristics } from '../../wiremock/referenceDataStubs'
+import { getMatchingRequests, stubFor } from '.'
+import { characteristics } from '../../server/testutils/stubs/referenceDataStubs'
 import booking from './booking'
 import lostBed from './lostBed'
 

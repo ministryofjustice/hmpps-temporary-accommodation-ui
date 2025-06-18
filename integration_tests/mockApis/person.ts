@@ -16,7 +16,7 @@ import type {
 } from '@approved-premises/api'
 
 import paths from '../../server/paths/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
+import { getMatchingRequests, stubFor } from '.'
 
 export default {
   stubFindPerson: (args: { person: Person }): SuperAgentRequest =>

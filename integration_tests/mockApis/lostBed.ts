@@ -3,9 +3,9 @@ import { SuperAgentRequest } from 'superagent'
 import type { LostBed, LostBedCancellation } from '@approved-premises/api'
 
 import paths from '../../server/paths/api'
-import { getMatchingRequests, stubFor } from '../../wiremock'
-import { lostBedReasons } from '../../wiremock/referenceDataStubs'
-import { bedspaceConflictResponseBody, errorStub } from '../../wiremock/utils'
+import { getMatchingRequests, stubFor } from '.'
+import { lostBedReasons } from '../../server/testutils/stubs/referenceDataStubs'
+import { bedspaceConflictResponseBody, errorStub } from './utils'
 
 export default {
   stubLostBedCreate: (args: { premisesId: string; lostBed: LostBed }): SuperAgentRequest =>

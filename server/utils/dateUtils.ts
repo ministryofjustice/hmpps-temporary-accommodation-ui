@@ -168,13 +168,15 @@ export const dateAndTimeInputsAreValidDates = <K extends string>(
   dateInputObj: Partial<ObjectWithDateParts<K>>,
   key: K,
 ): boolean => {
-  const inputYear = dateInputObj?.[`${key}-year`]
-  const inputMonth = dateInputObj?.[`${key}-month`]
-  const inputDay = dateInputObj?.[`${key}-day`]
+  const inputYear = dateInputObj?.[`${key}-year`] as string
+  const inputMonth = dateInputObj?.[`${key}-month`] as string
+  const inputDay = dateInputObj?.[`${key}-day`] as string
 
-  if (typeof inputYear !== 'string' || (inputYear && inputYear.length !== 4)) return false
-  if (typeof inputMonth !== 'string' || (inputMonth && (Number(inputMonth) < 1 || Number(inputMonth) > 12))) return false
-  if (typeof inputDay !== 'string' || (inputDay && (Number(inputDay) < 1 || Number(inputDay) > 31))) return false
+  const isNumeric = (val?: string) => typeof val === 'string' && /^\d+$/.test(val)
+
+  if (!isNumeric(inputYear) || (inputYear && inputYear.length !== 4)) return false
+  if (!isNumeric(inputMonth) || (inputMonth && (Number(inputMonth) < 1 || Number(inputMonth) > 12))) return false
+  if (!isNumeric(inputDay) || (inputDay && (Number(inputDay) < 1 || Number(inputDay) > 31))) return false
 
   try {
     const dateString = DateFormats.dateAndTimeInputsToIsoString(dateInputObj, key)

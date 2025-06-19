@@ -16,6 +16,7 @@ import LostBedsController from './lostBedsController'
 import PremisesController from './premisesController'
 import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
+import PremisesControllerV2 from './v2/premisesController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()
@@ -24,6 +25,7 @@ export const controllers = (services: Services) => {
     services.bedspaceService,
     services.assessmentsService,
   )
+  const premisesControllerV2 = new PremisesControllerV2(services.v2.premisesService)
   const bedspacesController = new BedspacesController(
     services.premisesService,
     services.bedspaceService,
@@ -108,6 +110,9 @@ export const controllers = (services: Services) => {
     bedspaceSearchController,
     bookingSearchController,
     assessmentsController,
+    v2: {
+      premisesController: premisesControllerV2,
+    },
   }
 }
 

@@ -333,6 +333,9 @@ describe('dateAndTimeInputsAreValidDates', () => {
     [{ 'date-year': '2024', 'date-month': '11', 'date-day': '31' }, 'well formatted but non-existent date'],
     [{ 'date-year': 'not', 'date-month': 'a', 'date-day': 'date' }, 'gibberish date'],
     [{ 'date-year': '2021', 'date-month': '02', 'date-day': '29' }, 'invalid leap year date'],
+    [{ 'date-year': '2022', 'date-month': '12', 'date-day': '11.' }, 'special characters in day'],
+    [{ 'date-year': '2022', 'date-month': '12!', 'date-day': '11' }, 'special characters in month'],
+    [{ 'date-year': '2022$', 'date-month': '12', 'date-day': '11' }, 'special characters in year'],
   ])('returns false when the date has %s', (obj, description) => {
     it(`returns false for ${description}`, () => {
       const result = dateAndTimeInputsAreValidDates(obj, 'date')

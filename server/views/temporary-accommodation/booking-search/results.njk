@@ -11,50 +11,65 @@
 
 {# TODO Move this HTML to the searchByCrnOrNameResult once HTML can be standardised between referrals and bookings #}
 {% set resultsHtml %}
-    {% if (response.data|length > 0) or (not crnOrName) %}
-        {{ govukTable({
-            captionClasses: "govuk-table__caption--m",
-            head: tableHeadings,
-            rows: response.data
-        }) }}
+	{% if (response.data|length > 0) %}
+		{{ govukTable({
+			captionClasses: "govuk-table__caption--m",
+			head: tableHeadings,
+			rows: response.data
+		}) }}
 
-        {{ mojPagination(pagination) }}
-    {% endif %}
+		{{ mojPagination(pagination) }}
+	{% endif %}
 {% endset %}
 
 {% block beforeContent %}
-    {{ govukBackLink({
-        text: "Back",
-        href: "/",
-        classes: 'govuk-!-display-none-print'
-    }) }}
+	{{ govukBackLink({
+		text: "Back",
+		href: "/",
+		classes: 'govuk-!-display-none-print'
+	}) }}
 {% endblock %}
 
 {% block content %}
-    {% set context = fetchContext() %}
+	{% set context = fetchContext() %}
 
-    <h1 class="govuk-heading-l">{{ uiStatus | capitalize }} bookings</h1>
+	<h1 class="govuk-heading-xl">{{ uiStatus | capitalize }} bookings</h1>
 
-    {{ mojSubNavigation({
-        label: 'Secondary navigation',
-        items: subNavArr
-    }) }}
+	{{ mojSubNavigation({
+		label: 'Secondary navigation',
+		items: subNavArr
+	}) }}
 
-    <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
-        {{ searchByCrnOrNameForm({ 
-            type: 'bookings',
-            basePath: paths.bookings.search[uiStatus].index(), 
-            uiStatus: uiStatus, 
-            crnOrName: crnOrName
-        })}}
-    </div>
+{% if (response.data|length > 0) or crnOrName %}
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-two-thirds">
+			<div class="govuk-template govuk-!-padding-6 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
+				{{ searchByCrnOrNameForm({
+					type: 'bookings',
+					basePath: paths.bookings.search[uiStatus].index(),
+					uiStatus: uiStatus,
+					crnOrName: crnOrName
+				})}}
+			</div>
+		</div>
+	</div>
+	{% endif %}
 
-    {{ searchByCrnOrNameResults({
-        type: 'bookings',
-        errors: context.errors,
-        resultsHtml: resultsHtml,
-        uiStatus: uiStatus,
-        crnOrName: crnOrName
-    })}}
+	{% if response.totalResults is defined %}
+
+			{% if response.totalResults == 0 and crnOrName %}
+				<h2 class="govuk-heading-l">0 {{ uiStatus }} bookings matching '{{ crnOrName }}'</h2>
+
+			{% else %}
+				<h2 class="govuk-heading-l">{{ response.totalResults }} {{ uiStatus }} booking{{ 's' if response.totalResults != 1 else '' }} </h2>
+			{% endif %}
+	{% endif %}
+	{{ searchByCrnOrNameResults({
+						type: 'bookings',
+						errors: context.errors,
+						resultsHtml: resultsHtml,
+						uiStatus: uiStatus,
+						crnOrName: crnOrName
+					})}}
 
 {% endblock %}

@@ -1,4 +1,5 @@
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+{%- from "../results-no-data-at-all/macro.njk" import resultsNoDataAtAll -%}
 
 
 {# params - Type of Object - Description #}
@@ -13,19 +14,6 @@
         {{ params.resultsHtml | safe | trim | indent(8)}}
 
     {% else %}
-        <h2>There are no results for ‘{{ params.crnOrName }}’ in {{ params.uiStatus }} {{ params.type }}.</h2>
-
-        <p>Check the other lists.</p>
-
-        {% if params.type === 'bookings' %}
-            {% set type_name = 'booking' %}
-        {% elif params.type ==='referrals' %}
-            {% set type_name = 'referral' %}
-        {% endif %}
-
-        <p>
-            If the {{ type_name }} is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
-            support</a> for help.
-        </p>
+        {{ resultsNoDataAtAll({ type: params.type }) }}
     {% endif %}
 {% endmacro %}

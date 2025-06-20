@@ -88,6 +88,7 @@ export type { Cas3NewBedspace } from './models/Cas3NewBedspace';
 export type { Cas3NewDeparture } from './models/Cas3NewDeparture';
 export type { Cas3OASysAssessmentMetadata } from './models/Cas3OASysAssessmentMetadata';
 export type { Cas3OASysGroup } from './models/Cas3OASysGroup';
+export type { Cas3Premises } from './models/Cas3Premises';
 export type { Cas3PremisesSearchResult } from './models/Cas3PremisesSearchResult';
 export type { Cas3PremisesSearchResults } from './models/Cas3PremisesSearchResults';
 export type { Cas3PremisesStatus } from './models/Cas3PremisesStatus';

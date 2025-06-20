@@ -5,13 +5,13 @@ import AccommodationNeed from './accommodation-need'
 import AssessPlacementRisksAndNeeds from './assess-placement-risks-and-needs'
 import CheckYourAnswers from './check-your-answers'
 import RequiredReferrals from './required-referrals'
-import RequirementsForPlacement from './requirements-for-placement'
+import HealthDisabilityCultureAndSafeguarding  from './requirements-for-placement'
 
 @Form({
   sections: [
     AccommodationNeed,
     AssessPlacementRisksAndNeeds,
-    RequirementsForPlacement,
+    HealthDisabilityCultureAndSafeguarding,
     RequiredReferrals,
     CheckYourAnswers,
   ],

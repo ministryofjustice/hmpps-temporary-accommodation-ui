@@ -16,10 +16,15 @@ export default class ReferenceDataService {
 
   async getPdus(callConfig: CallConfig, options: GetPdusOptions = {}) {
     const referenceDataClient = this.referenceDataClientFactory(callConfig)
+    const regionId = options.regional && callConfig.probationRegion?.id
+      ? callConfig.probationRegion.id
+      : options.regionId
+        ? options.regionId
+        : undefined
 
     return (
       await referenceDataClient.getReferenceData<ProbationDeliveryUnit>('probation-delivery-units', {
-        probationRegionId: options.regional ? callConfig.probationRegion.id : undefined,
+        probationRegionId: regionId,
       })
     ).sort((a, b) => a.name.localeCompare(b.name))
   }

@@ -40,7 +40,8 @@ export default class PlacementPdu implements TasklistPage {
       'PlacementPdu.initialize called with application:',
       application.data?.['placement-location']['different-region'],
     )
-    const pdus = await dataServices.referenceDataService.getPdus(callConfig)
+    const regionId = application.data?.['placement-location']['different-region'].regionId || ''
+    const pdus = await dataServices.referenceDataService.getPdus(callConfig, { regionId })
     return new PlacementPdu(body, application, pdus)
   }
 

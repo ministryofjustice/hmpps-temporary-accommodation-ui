@@ -30,7 +30,7 @@ export default class AlternativePdu implements TasklistPage {
     callConfig: CallConfig,
     dataServices: DataServices,
   ) {
-    const pdus = await dataServices.referenceDataService.getPdus(callConfig)
+    const pdus = await dataServices.referenceDataService.getPdus(callConfig, {regional: true})
     return new AlternativePdu(body, application, pdus)
   }
 

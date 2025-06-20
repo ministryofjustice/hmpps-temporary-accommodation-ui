@@ -231,7 +231,7 @@ export interface ReferenceData {
 
 export type PersonRisksUI = PersonRisks
 
-export type GetPdusOptions = { regional?: boolean }
+export type GetPdusOptions = { regional?: boolean, regionId?: string }
 export type DataServices = Partial<{
   personService: {
     getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>

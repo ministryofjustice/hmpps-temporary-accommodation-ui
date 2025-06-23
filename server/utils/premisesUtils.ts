@@ -1,6 +1,7 @@
 import type { Premises, PropertyStatus } from '@approved-premises/api'
-import { PageHeadingBarItem } from '../@types/ui'
+import { PageHeadingBarItem, SubNavObj } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
+import { appendQueryString } from './utils'
 
 type StatusInfo = { name: string; id: PropertyStatus; colour: string; isActive: boolean }
 
@@ -55,6 +56,36 @@ export const statusTag = (status: PropertyStatus) => {
 
 export const statusInfo = (status: PropertyStatus): StatusInfo => {
   return allStatuses.find(({ id }) => id === status)
+}
+
+export const createPremisesSubNavArr = (
+  currentStatus?: 'active' | 'archived',
+  postcodeOrAddress?: string,
+): Array<SubNavObj> => {
+  return [
+    {
+      text: 'Online properties',
+      href: appendQueryString(paths.premises.index({}), { status: 'active', postcodeOrAddress }),
+      active: currentStatus === 'active',
+    },
+    {
+      text: 'Archived properties',
+      href: appendQueryString(paths.premises.index({}), { status: 'archived', postcodeOrAddress }),
+      active: currentStatus === 'archived',
+    },
+  ]
+}
+
+export const getStatusDisplayName = (status?: 'active' | 'archived'): string => {
+  if (status === 'active') return 'Online'
+  if (status === 'archived') return 'Archived'
+  return 'List of'
+}
+
+export const getSearchLabel = (status?: 'active' | 'archived'): string => {
+  if (status === 'active') return 'Find an online property'
+  if (status === 'archived') return 'Find an archived property'
+  return 'Find a property'
 }
 
 export const shortAddress = (premises: Premises): string => {

@@ -1,0 +1,17 @@
+{# params - Type of Object - Description #}
+{# type - String - Either "bookings" or "referrals".  #}
+
+{% macro resultsNoDataAtAll(params) %}
+		<p>Check the other lists.</p>
+
+		{% if params.type === 'bookings' %}
+			{% set type_name = 'booking' %}
+		{% elif params.type ==='referrals' %}
+			{% set type_name = 'referral' %}
+		{% endif %}
+
+		<p>
+			If the {{ type_name }} is missing from every list, <a href="mailto:{{ PhaseBannerUtils.supportEmail }}">contact
+			support</a> for help.
+		</p>
+{% endmacro %}

@@ -72,7 +72,9 @@ describe('PremisesController', () => {
   const response: DeepMocked<Response> = createMock<Response>({})
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
-  const premisesService = createMock<PremisesService>({})
+  const premisesService = createMock<PremisesService>({
+    getPremisesCounts: jest.fn(),
+  })
   const bedspaceService = createMock<BedspaceService>({})
   const assessmentService = createMock<AssessmentsService>({})
 
@@ -92,8 +94,10 @@ describe('PremisesController', () => {
     it('returns the table rows to the template', async () => {
       const placeContext = placeContextFactory.build()
       const params: PremisesSearchParameters = { postcodeOrAddress: undefined }
+      const premisesCounts = { totalProperties: 0 }
 
       premisesService.tableRows.mockResolvedValue([])
+      premisesService.getPremisesCounts.mockResolvedValue(premisesCounts)
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
 
       const requestHandler = premisesController.index()
@@ -102,17 +106,35 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
         params: {},
         tableRows: [],
+        subNavArr: [
+          {
+            text: 'Online properties',
+            href: '/properties?status=active',
+            active: false,
+          },
+          {
+            text: 'Archived properties',
+            href: '/properties?status=archived',
+            active: false,
+          },
+        ],
+        statusDisplayName: 'List of',
+        searchLabel: 'Find a property',
+        premisesCounts,
       })
 
       expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext, params)
+      expect(premisesService.getPremisesCounts).toHaveBeenCalledWith(callConfig, params)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
 
     it('returns the filtered table rows to the template when the user has searched for a postcode or address', async () => {
       const placeContext = placeContextFactory.build()
       const params = { postcodeOrAddress: 'NE1' }
+      const premisesCounts = { totalProperties: 0 }
 
       premisesService.tableRows.mockResolvedValue([])
+      premisesService.getPremisesCounts.mockResolvedValue(premisesCounts)
       ;(preservePlaceContext as jest.MockedFunction<typeof preservePlaceContext>).mockResolvedValue(placeContext)
 
       request = createMock<Request>({
@@ -125,9 +147,28 @@ describe('PremisesController', () => {
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', { params, tableRows: [] })
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/premises/index', {
+        params,
+        tableRows: [],
+        subNavArr: [
+          {
+            text: 'Online properties',
+            href: '/properties?status=active&postcodeOrAddress=NE1',
+            active: false,
+          },
+          {
+            text: 'Archived properties',
+            href: '/properties?status=archived&postcodeOrAddress=NE1',
+            active: false,
+          },
+        ],
+        statusDisplayName: 'List of',
+        searchLabel: 'Find a property',
+        premisesCounts,
+      })
 
       expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, placeContext, params)
+      expect(premisesService.getPremisesCounts).toHaveBeenCalledWith(callConfig, params)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
     })
   })

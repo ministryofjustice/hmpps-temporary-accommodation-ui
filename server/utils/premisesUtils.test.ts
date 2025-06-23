@@ -1,6 +1,15 @@
 import paths from '../paths/temporary-accommodation/manage'
 import { premisesFactory } from '../testutils/factories'
-import { getActiveStatuses, premisesActions, shortAddress, statusInfo, statusTag } from './premisesUtils'
+import {
+  createPremisesSubNavArr,
+  getActiveStatuses,
+  getSearchLabel,
+  getStatusDisplayName,
+  premisesActions,
+  shortAddress,
+  statusInfo,
+  statusTag,
+} from './premisesUtils'
 
 describe('premisesUtils', () => {
   describe('premisesActions', () => {
@@ -84,6 +93,87 @@ describe('premisesUtils', () => {
       })
 
       expect(shortAddress(premises)).toEqual('123 Road Lane, Townville, ABC 123')
+    })
+  })
+
+  describe('createPremisesSubNavArr', () => {
+    it('returns sub navigation array with active status highlighted', () => {
+      const result = createPremisesSubNavArr('active')
+
+      expect(result).toEqual([
+        {
+          text: 'Online properties',
+          href: '/properties?status=active',
+          active: true,
+        },
+        {
+          text: 'Archived properties',
+          href: '/properties?status=archived',
+          active: false,
+        },
+      ])
+    })
+
+    it('returns sub navigation array with archived status highlighted', () => {
+      const result = createPremisesSubNavArr('archived')
+
+      expect(result).toEqual([
+        {
+          text: 'Online properties',
+          href: '/properties?status=active',
+          active: false,
+        },
+        {
+          text: 'Archived properties',
+          href: '/properties?status=archived',
+          active: true,
+        },
+      ])
+    })
+
+    it('includes postcode or address in URLs when provided', () => {
+      const result = createPremisesSubNavArr('active', 'NE1')
+
+      expect(result).toEqual([
+        {
+          text: 'Online properties',
+          href: '/properties?status=active&postcodeOrAddress=NE1',
+          active: true,
+        },
+        {
+          text: 'Archived properties',
+          href: '/properties?status=archived&postcodeOrAddress=NE1',
+          active: false,
+        },
+      ])
+    })
+  })
+
+  describe('getStatusDisplayName', () => {
+    it('returns "Online" for active status', () => {
+      expect(getStatusDisplayName('active')).toEqual('Online')
+    })
+
+    it('returns "Archived" for archived status', () => {
+      expect(getStatusDisplayName('archived')).toEqual('Archived')
+    })
+
+    it('returns "List of" for undefined status', () => {
+      expect(getStatusDisplayName(undefined)).toEqual('List of')
+    })
+  })
+
+  describe('getSearchLabel', () => {
+    it('returns "Find an online property" for active status', () => {
+      expect(getSearchLabel('active')).toEqual('Find an online property')
+    })
+
+    it('returns "Find an archived property" for archived status', () => {
+      expect(getSearchLabel('archived')).toEqual('Find an archived property')
+    })
+
+    it('returns "Find a property" for undefined status', () => {
+      expect(getSearchLabel(undefined)).toEqual('Find a property')
     })
   })
 })

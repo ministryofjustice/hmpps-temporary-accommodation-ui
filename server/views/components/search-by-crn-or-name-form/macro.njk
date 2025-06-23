@@ -10,26 +10,42 @@
 
 
 {% macro searchByCrnOrNameForm(params) %}
-    <form action="{{ params.basePath }}" method="get">
-        {{ govukInput(
-            {
-                label: {
-                classes: 'govuk-label--m',
-                text: 'Search ' + params.uiStatus + ' ' +  params.type + ' with the person’s name or CRN' 
-            },
-                hint: {
-                text: 'For example, James or XD7364CD'
-            },
-                name: 'crnOrName',
-                id: 'crnOrName',
-                value: params.crnOrName
-            }
-        ) }}
-
-        <div class="govuk-button-group">
-            {{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
-
-            <a class="govuk-link" href="{{ params.basePath }}">Clear</a>
-        </div>
-    </form>
+	<form action="{{ params.basePath }}" method="get">
+		<div class="govuk-grid-row">
+			<div class="govuk-form-group">
+				<div class="govuk-grid-column-three-quarters">
+					{{ govukInput(
+						{
+							label: {
+							classes: 'govuk-label moj-search__label govuk-!-font-weight-bold',
+							text: 'Search ' + params.uiStatus + ' ' +  params.type + ' with the person’s name or CRN'
+						},
+							hint: {
+							text: 'For example, James or XD7364CD'
+						},
+							name: 'crnOrName',
+							id: 'crnOrName',
+							value: params.crnOrName
+						}
+					) }}
+				</div>
+				<div class="govuk-grid-column-one-quarter">
+					<div class="govuk-button-group govuk-!-margin-top-6">
+						{{ govukButton({ text: "Search", attributes: { id: 'search-button' }, preventDoubleClick: true}) }}
+					</div>
+				</div>
+				<div class="govuk-grid-column-full">
+					<a class="govuk-link" href="{{ params.basePath }}">Clear Search</a>
+				</div>
+			</div>
+		</div>
+	</form>
 {% endmacro %}
+
+
+
+
+
+
+
+

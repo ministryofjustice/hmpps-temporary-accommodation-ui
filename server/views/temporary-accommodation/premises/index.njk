@@ -3,10 +3,11 @@
 {% from "../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = "List of properties - " + applicationName %}
+{% set pageTitle = statusDisplayName + " properties - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -20,23 +21,30 @@
 {% block content %}
     {% include "../../_messages.njk" %}
 
-    {{ mojCasPageHeaderActions({
-        heading: {
-            text: 'List of properties',
-            classes: 'govuk-heading-l'
-        },
-        actions: [{
-            text: "Add a property",
-            href: paths.premises.new()
-        }]
+    <h1 class="govuk-heading-l">Manage properties</h1>
+
+    {{ mojSubNavigation({
+        label: 'Property status navigation',
+        items: subNavArr
     }) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">{{ statusDisplayName }} properties</h2>
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <div class="govuk-button-group" style="text-align: right;">
+                <a href="{{ paths.premises.new() }}" class="govuk-button govuk-button--secondary">Add a property</a>
+            </div>
+        </div>
+    </div>
 
     <div class="govuk-template govuk-!-padding-8 govuk-!-padding-bottom-static-3 govuk-!-margin-bottom-8">
         <form action="{{ paths.premises.index() }}" method="get">
             {{ govukInput({
                 label: {
                     classes: 'govuk-label--m',
-                    text: 'Find a property'
+                    text: searchLabel
                 },
                 hint: {
                     text: 'Search by road or postcode'
@@ -45,6 +53,10 @@
                 id: 'postcodeOrAddress',
                 value: params.postcodeOrAddress
             }) }}
+
+            {% if params.status %}
+                <input type="hidden" name="status" value="{{ params.status }}">
+            {% endif %}
 
             <div class="govuk-button-group">
                 {{ govukButton({
@@ -59,6 +71,19 @@
     </div>
 
     {% if (tableRows | length > 0) %}
+        <h3 class="govuk-heading-s">{{ premisesCounts.totalProperties }} {{ statusDisplayName.toLowerCase() }} properties</h3>
+
+        {% if params.status === 'active' and premisesCounts.totalOnlineBedspaces is defined %}
+            <div class="govuk-grid-row govuk-!-margin-bottom-4">
+                <div class="govuk-grid-column-one-half">
+                    <p class="govuk-body"><strong>Online bedspaces:</strong> {{ premisesCounts.totalOnlineBedspaces }}</p>
+                </div>
+                <div class="govuk-grid-column-one-half">
+                    <p class="govuk-body"><strong>Upcoming bedspaces:</strong> {{ premisesCounts.totalUpcomingBedspaces }}</p>
+                </div>
+            </div>
+        {% endif %}
+
         {{ govukTable({
             attributes: {
                 'data-module': 'moj-sortable-table'
@@ -87,10 +112,10 @@
         }) }}
     {% else %}
         {% if params.postcodeOrAddress %}
-            <h2>{{ 'There are no results for ‘' + params.postcodeOrAddress + '’ in the list of properties.' }}</h2>
+            <h2>{{ 'There are no results for ‘' + params.postcodeOrAddress + '’ in the list of ' + statusDisplayName.toLowerCase() + ' properties.' }}</h2>
             <p>Check your spelling or try entering a different address.</p>
         {% else %}
-            <h2>There are no results in the list of properties.</h2>
+            <h2>There are no {{ statusDisplayName.toLowerCase() }} properties.</h2>
         {% endif %}
     {% endif %}
 

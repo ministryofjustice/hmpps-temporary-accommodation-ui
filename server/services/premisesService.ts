@@ -73,7 +73,9 @@ export default class PremisesService {
       ? await premisesClient.search(params.postcodeOrAddress)
       : await premisesClient.all()
 
-    return premises
+    const filteredPremises = params.status ? premises.filter(entry => entry.status === params.status) : premises
+
+    return filteredPremises
       .map(entry => ({ ...entry, shortAddress: `${entry.addressLine1}, ${entry.postcode}` }))
       .sort((a, b) => {
         const pduSort = a.pdu.localeCompare(b.pdu)
@@ -98,6 +100,32 @@ export default class PremisesService {
           ),
         ]
       })
+  }
+
+  async getPremisesCounts(
+    callConfig: CallConfig,
+    params: PremisesSearchParameters,
+  ): Promise<{ totalProperties: number; totalOnlineBedspaces?: number; totalUpcomingBedspaces?: number }> {
+    const premisesClient = this.premisesClientFactory(callConfig)
+
+    const premises = params.postcodeOrAddress
+      ? await premisesClient.search(params.postcodeOrAddress)
+      : await premisesClient.all()
+
+    const filteredPremises = params.status ? premises.filter(entry => entry.status === params.status) : premises
+
+    const totalProperties = filteredPremises.length
+
+    // Placeholder for upcoming response
+    if (params.status === 'active') {
+      const totalOnlineBedspaces = filteredPremises.reduce((sum, entry) => sum + entry.bedspaceCount, 0)
+      // Placeholder for upcoming response to 0 for test purposes
+      const totalUpcomingBedspaces = 0
+
+      return { totalProperties, totalOnlineBedspaces, totalUpcomingBedspaces }
+    }
+
+    return { totalProperties }
   }
 
   async getPremises(callConfig: CallConfig, id: string): Promise<Premises> {

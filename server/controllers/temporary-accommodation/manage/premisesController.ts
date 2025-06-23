@@ -7,7 +7,14 @@ import { AssessmentsService } from '../../../services'
 import BedspaceService from '../../../services/bedspaceService'
 import PremisesService from '../../../services/premisesService'
 import { parseNumber } from '../../../utils/formUtils'
-import { allStatuses, getActiveStatuses, premisesActions } from '../../../utils/premisesUtils'
+import {
+  allStatuses,
+  createPremisesSubNavArr,
+  getActiveStatuses,
+  getSearchLabel,
+  getStatusDisplayName,
+  premisesActions,
+} from '../../../utils/premisesUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { filterProbationRegions } from '../../../utils/userUtils'
 import { preservePlaceContext } from '../../../utils/placeUtils'
@@ -29,7 +36,20 @@ export default class PremisesController {
       const params = req.query as PremisesSearchParameters
 
       const tableRows = await this.premisesService.tableRows(callConfig, placeContext, params)
-      return res.render('temporary-accommodation/premises/index', { tableRows, params })
+      const premisesCounts = await this.premisesService.getPremisesCounts(callConfig, params)
+
+      const subNavArr = createPremisesSubNavArr(params.status, params.postcodeOrAddress)
+      const statusDisplayName = getStatusDisplayName(params.status)
+      const searchLabel = getSearchLabel(params.status)
+
+      return res.render('temporary-accommodation/premises/index', {
+        tableRows,
+        params,
+        subNavArr,
+        statusDisplayName,
+        searchLabel,
+        premisesCounts,
+      })
     }
   }
 

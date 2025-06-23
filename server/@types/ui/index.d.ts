@@ -349,4 +349,5 @@ export type UIPersonAcctAlert = PersonAcctAlert & {
 
 export type PremisesSearchParameters = {
   postcodeOrAddress?: string
+  status?: 'active' | 'archived'
 }

@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import type { Router, Request, Response, NextFunction } from 'express'
+import type { NextFunction, Request, Response, Router } from 'express'
 import type { Controllers } from '../../controllers'
 import { createUserCheckMiddleware, userIsAuthorisedForManage } from '../../middleware/userCheckMiddleware'
 import paths from '../../paths/temporary-accommodation/manage'
@@ -35,13 +35,17 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   get(paths.dashboard.index.pattern, dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
 
-  get(paths.premises.index.pattern, (req: Request, res: Response, next: NextFunction) => {
-    // If no status is specified, redirect to online properties by default
-    if (!req.query.status) {
-      return res.redirect(`${paths.premises.index({})}?status=active`)
-    }
-    return premisesController.index()(req, res, next)
-  }, { auditEvent: 'VIEW_PREMISES_LIST' })
+  get(
+    paths.premises.index.pattern,
+    (req: Request, res: Response, next: NextFunction) => {
+      // If no status is specified, redirect to online properties by default
+      if (!req.query.status) {
+        return res.redirect(`${paths.premises.index({})}?status=active`)
+      }
+      return premisesController.index()(req, res, next)
+    },
+    { auditEvent: 'VIEW_PREMISES_LIST' },
+  )
   get(paths.premises.new.pattern, premisesController.new(), { auditEvent: 'VIEW_PREMISES_CREATE' })
   post(paths.premises.create.pattern, premisesController.create(), {
     redirectAuditEventSpecs: [

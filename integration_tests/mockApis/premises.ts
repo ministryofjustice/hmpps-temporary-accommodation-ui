@@ -2,6 +2,7 @@ import type { Response, SuperAgentRequest } from 'superagent'
 
 import type {
   Booking,
+  Cas3PremisesSearchResults,
   DateCapacity,
   Premises,
   Cas3PremisesSummary as PremisesSummary,
@@ -24,6 +25,12 @@ import roomStubs from './room'
 type SearchArguments = {
   premisesSummaries: Array<PremisesSummary>
   postcode: string
+}
+
+type PremisesSearchArguments = {
+  searchResults: Cas3PremisesSearchResults
+  postcodeOrAddress?: string
+  premisesStatus?: string
 }
 
 const stubPremises = (premisesSummaries: Array<PremisesSummary>) =>
@@ -60,6 +67,33 @@ const stubPremisesSearch = (args: SearchArguments) =>
       jsonBody: args.premisesSummaries,
     },
   })
+
+const stubPremisesSearchWithCounts = (args: PremisesSearchArguments) => {
+  const queryParameters: Record<string, any> = {}
+
+  if (args.postcodeOrAddress) {
+    queryParameters.postcodeOrAddress = { equalTo: args.postcodeOrAddress }
+  }
+
+  if (args.premisesStatus) {
+    queryParameters.premisesStatus = { equalTo: args.premisesStatus }
+  }
+
+  return stubFor({
+    request: {
+      method: 'GET',
+      urlPath: '/cas3/premises/search',
+      ...(Object.keys(queryParameters).length > 0 && { queryParameters }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: args.searchResults,
+    },
+  })
+}
 
 const stubSinglePremises = (premises: Premises) =>
   stubFor({
@@ -167,4 +201,5 @@ export default {
     ).body.requests,
   stubPremisesReferenceData: (): Promise<[Response, Response, Response, Response]> =>
     Promise.all([stubFor(localAuthorities), stubFor(characteristics), stubFor(probationRegions), stubFor(pdus)]),
+  stubPremisesSearchWithCounts,
 }

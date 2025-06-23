@@ -1,4 +1,5 @@
 import type {
+  Cas3PremisesSearchResults,
   DateCapacity,
   NewPremises,
   TemporaryAccommodationPremises as Premises,
@@ -25,6 +26,21 @@ export default class PremisesClient {
     return this.restClient.get<Array<PremisesSummary>>({
       path: paths.premises.index({}),
       query: { postcodeOrAddress },
+    })
+  }
+
+  async searchWithCounts(params: { postcodeOrAddress?: string; status?: 'active' | 'archived' }) {
+    const query: Record<string, string> = {}
+    if (params.postcodeOrAddress) {
+      query.postcodeOrAddress = params.postcodeOrAddress
+    }
+    if (params.status) {
+      query.premisesStatus = params.status === 'active' ? 'online' : 'archived'
+    }
+
+    return this.restClient.get<Cas3PremisesSearchResults>({
+      path: paths.premises.search({}),
+      query,
     })
   }
 

@@ -2,8 +2,8 @@ import type {
   Characteristic,
   LocalAuthorityArea,
   NewPremises,
-  TemporaryAccommodationPremises as Premises,
   StaffMember,
+  TemporaryAccommodationPremises as Premises,
   UpdatePremises,
 } from '@approved-premises/api'
 import { PlaceContext, PremisesSearchParameters, ReferenceData, SummaryList, TableRow } from '@approved-premises/ui'
@@ -108,31 +108,21 @@ export default class PremisesService {
   ): Promise<{ totalProperties: number; totalOnlineBedspaces?: number; totalUpcomingBedspaces?: number }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
-    const premises = params.postcodeOrAddress
-      ? await premisesClient.search(params.postcodeOrAddress)
-      : await premisesClient.all()
+    const searchResults = await premisesClient.searchWithCounts({
+      postcodeOrAddress: params.postcodeOrAddress,
+      status: params.status,
+    })
 
-    const filteredPremises = params.status ? premises.filter(entry => entry.status === params.status) : premises
-
-    const totalProperties = filteredPremises.length
-
-    // Placeholder for upcoming response
-    if (params.status === 'active') {
-      const totalOnlineBedspaces = filteredPremises.reduce((sum, entry) => sum + entry.bedspaceCount, 0)
-      // Placeholder for upcoming response to 0 for test purposes
-      const totalUpcomingBedspaces = 0
-
-      return { totalProperties, totalOnlineBedspaces, totalUpcomingBedspaces }
+    return {
+      totalProperties: searchResults.totalPremises,
+      totalOnlineBedspaces: searchResults.totalOnlineBedspaces,
+      totalUpcomingBedspaces: searchResults.totalUpcomingBedspaces,
     }
-
-    return { totalProperties }
   }
 
   async getPremises(callConfig: CallConfig, id: string): Promise<Premises> {
     const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.find(id)
-
-    return premises
+    return premisesClient.find(id)
   }
 
   async getPremisesDetails(
@@ -181,16 +171,12 @@ export default class PremisesService {
 
   async create(callConfig: CallConfig, newPremises: NewPremises): Promise<Premises> {
     const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.create(newPremises)
-
-    return premises
+    return premisesClient.create(newPremises)
   }
 
   async update(callConfig: CallConfig, id: string, updatePremises: UpdatePremises): Promise<Premises> {
     const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.update(id, updatePremises)
-
-    return premises
+    return premisesClient.update(id, updatePremises)
   }
 
   private async summaryListForPremises(premises: Premises): Promise<SummaryList> {

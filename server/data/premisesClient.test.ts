@@ -3,6 +3,7 @@ import nock from 'nock'
 import config from '../config'
 import paths from '../paths/api'
 import {
+  cas3PremisesSearchResultsFactory,
   cas3PremisesSummaryFactory,
   dateCapacityFactory,
   newPremisesFactory,
@@ -66,6 +67,68 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.search('NE1')
       expect(output).toEqual(premisesSummaries)
+    })
+  })
+
+  describe('searchWithCounts', () => {
+    const searchResults = cas3PremisesSearchResultsFactory.build({
+      totalPremises: 5,
+      totalOnlineBedspaces: 25,
+      totalUpcomingBedspaces: 10,
+    })
+
+    it('should get premises search results with counts for postcode search', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ postcodeOrAddress: 'NE1' })
+        .reply(200, searchResults)
+
+      const output = await premisesClient.searchWithCounts({ postcodeOrAddress: 'NE1' })
+      expect(output).toEqual(searchResults)
+    })
+
+    it('should get premises search results with counts for status filter', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ premisesStatus: 'online' })
+        .reply(200, searchResults)
+
+      const output = await premisesClient.searchWithCounts({ status: 'active' })
+      expect(output).toEqual(searchResults)
+    })
+
+    it('should get premises search results with counts for both postcode and status', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ postcodeOrAddress: 'NE1', premisesStatus: 'online' })
+        .reply(200, searchResults)
+
+      const output = await premisesClient.searchWithCounts({ postcodeOrAddress: 'NE1', status: 'active' })
+      expect(output).toEqual(searchResults)
+    })
+
+    it('should get premises search results with counts for archived status', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .query({ premisesStatus: 'archived' })
+        .reply(200, searchResults)
+
+      const output = await premisesClient.searchWithCounts({ status: 'archived' })
+      expect(output).toEqual(searchResults)
+    })
+
+    it('should get premises search results with counts for no filters', async () => {
+      fakeApprovedPremisesApi
+        .get(paths.premises.search({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, searchResults)
+
+      const output = await premisesClient.searchWithCounts({})
+      expect(output).toEqual(searchResults)
     })
   })
 

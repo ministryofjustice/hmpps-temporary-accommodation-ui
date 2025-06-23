@@ -4,6 +4,7 @@ import ReferenceDataClient from '../data/referenceDataClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
 import {
+  cas3PremisesSearchResultsFactory,
   cas3PremisesSummaryFactory,
   characteristicFactory,
   localAuthorityFactory,
@@ -352,6 +353,76 @@ describe('PremisesService', () => {
         }),
       ])
       expect(statusTag).toHaveBeenCalledWith('active')
+    })
+  })
+
+  describe('getPremisesCounts', () => {
+    it('returns premises counts using the search endpoint', async () => {
+      const searchResults = cas3PremisesSearchResultsFactory.build({
+        totalPremises: 10,
+        totalOnlineBedspaces: 50,
+        totalUpcomingBedspaces: 15,
+      })
+
+      premisesClient.searchWithCounts.mockResolvedValue(searchResults)
+
+      const params: PremisesSearchParameters = { postcodeOrAddress: 'NE1', status: 'active' }
+      const result = await service.getPremisesCounts(callConfig, params)
+
+      expect(result).toEqual({
+        totalProperties: 10,
+        totalOnlineBedspaces: 50,
+        totalUpcomingBedspaces: 15,
+      })
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.searchWithCounts).toHaveBeenCalledWith({
+        postcodeOrAddress: 'NE1',
+        status: 'active',
+      })
+    })
+
+    it('returns premises counts with no filters', async () => {
+      const searchResults = cas3PremisesSearchResultsFactory.build({
+        totalPremises: 25,
+        totalOnlineBedspaces: 100,
+        totalUpcomingBedspaces: 30,
+      })
+
+      premisesClient.searchWithCounts.mockResolvedValue(searchResults)
+
+      const params: PremisesSearchParameters = {}
+      const result = await service.getPremisesCounts(callConfig, params)
+
+      expect(result).toEqual({
+        totalProperties: 25,
+        totalOnlineBedspaces: 100,
+        totalUpcomingBedspaces: 30,
+      })
+
+      expect(premisesClient.searchWithCounts).toHaveBeenCalledWith({
+        postcodeOrAddress: undefined,
+        status: undefined,
+      })
+    })
+
+    it('handles undefined bedspace counts from API', async () => {
+      const searchResults = cas3PremisesSearchResultsFactory.build({
+        totalPremises: 5,
+        totalOnlineBedspaces: undefined,
+        totalUpcomingBedspaces: undefined,
+      })
+
+      premisesClient.searchWithCounts.mockResolvedValue(searchResults)
+
+      const params: PremisesSearchParameters = { status: 'archived' }
+      const result = await service.getPremisesCounts(callConfig, params)
+
+      expect(result).toEqual({
+        totalProperties: 5,
+        totalOnlineBedspaces: undefined,
+        totalUpcomingBedspaces: undefined,
+      })
     })
   })
 

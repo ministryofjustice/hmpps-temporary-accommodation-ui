@@ -34,6 +34,7 @@ export default function routes(controllers: Controllers, services: Services, rou
   } = controllers.manage
 
   const premisesControllerV2 = v2.premisesController
+  const bedspacesControllerV2 = v2.bedspacesController
 
   const { redirectsController } = controllers
 
@@ -71,6 +72,8 @@ export default function routes(controllers: Controllers, services: Services, rou
   // premises v2
   if (config.flags.managePropertiesV2Enabled) {
     get(paths.premises.v2.index.pattern, premisesControllerV2.index(), { auditEvent: 'VIEW_PREMISES_LIST_V2' })
+
+    get(paths.premises.v2.bedspaces.show.pattern, bedspacesControllerV2.show(), { auditEvent: 'VIEW_BEDSPACE_V2' })
   }
 
   get(paths.premises.bedspaces.new.pattern, bedspacesController.new(), { auditEvent: 'VIEW_BEDSPACE_CREATE' })

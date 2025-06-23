@@ -20,6 +20,7 @@ import ReferenceDataClient from './referenceDataClient'
 import ApplicationClient from './applicationClient'
 import AssessmentClient from './assessmentClient'
 import BedspaceClient from './bedspaceClient'
+import BedspaceClientV2 from './v2/bedspaceClient'
 import LostBedClient from './lostBedClient'
 import { createRedisClient } from './redisClient'
 import ReportClient from './reportClient'
@@ -49,6 +50,8 @@ export const dataAccess = () => ({
   userClientBuilder: ((callConfig: CallConfig) => new UserClient(callConfig)) as RestClientBuilder<UserClient>,
   bedspaceClientBuilder: ((callConfig: CallConfig) =>
     new BedspaceClient(callConfig)) as RestClientBuilder<BedspaceClient>,
+  bedspaceClientV2Builder: ((callConfig: CallConfig) =>
+    new BedspaceClientV2(callConfig)) as RestClientBuilder<BedspaceClientV2>,
   assessmentClientBuilder: ((callConfig: CallConfig) =>
     new AssessmentClient(callConfig)) as RestClientBuilder<AssessmentClient>,
   timelineClientBuilder: ((callConfig: CallConfig) =>
@@ -61,6 +64,7 @@ export {
   ApplicationClient,
   AssessmentClient,
   BedspaceClient,
+  BedspaceClientV2,
   BookingClient,
   HmppsAuthClient,
   LostBedClient,

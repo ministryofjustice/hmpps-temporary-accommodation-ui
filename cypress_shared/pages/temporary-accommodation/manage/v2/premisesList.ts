@@ -72,4 +72,8 @@ export default class PremisesListPage extends Page {
       cy.contains(message).should('exist')
     })
   }
+
+  clickBedspaceReference(reference: string): void {
+    cy.get('main table tbody a').contains(reference).click()
+  }
 }

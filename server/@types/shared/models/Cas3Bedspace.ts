@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { Cas3BedspaceStatus } from './Cas3BedspaceStatus';
 import type { Characteristic } from './Characteristic';
 export type Cas3Bedspace = {
     id: string;
@@ -14,6 +15,7 @@ export type Cas3Bedspace = {
      * End date of the bedspace availability
      */
     endDate?: string;
+    status: Cas3BedspaceStatus;
     notes?: string;
     characteristics: Array<Characteristic>;
 };

@@ -21,7 +21,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4.2.2
       - name: Generate Types
-        run: ./script/generate-types
+        run: ./script/generate-types "https://approved-premises-api-dev.hmpps.service.justice.gov.uk/v3/api-docs/CAS3Shared"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:

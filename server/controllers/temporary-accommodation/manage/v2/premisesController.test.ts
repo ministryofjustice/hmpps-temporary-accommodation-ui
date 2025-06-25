@@ -65,21 +65,41 @@ describe('PremisesController', () => {
       { html: 'Manage' },
     ]
 
-    it('redirects to include status=online when no status parameter is provided', async () => {
+    it('defaults to status=online when no status parameter is provided', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 5,
+        totalUpcomingBedspaces: 2,
+        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+      }
+
       request = createMock<Request>({
         session: {
           probationRegion: probationRegionFactory.build(),
         },
-        query: {},
+        query: params,
         path: '/v2/properties',
       })
+
+      premisesService.searchData.mockResolvedValue(searchData)
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
-      expect(response.redirect).toHaveBeenCalledWith('/v2/properties?status=online')
-      expect(response.render).not.toHaveBeenCalled()
-      expect(premisesService.searchData).not.toHaveBeenCalled()
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined, status: 'online' },
+        status: 'online',
+        isOnlineTab: true,
+        isArchivedTab: false,
+        ...searchData,
+      })
+
+      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(response.redirect).not.toHaveBeenCalled()
     })
 
     it('returns the search data to the template when status=online is provided', async () => {

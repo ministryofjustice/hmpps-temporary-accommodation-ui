@@ -21,27 +21,23 @@ export default class PremisesService {
 
     const premises = await premisesClient.search(params.postcodeOrAddress ?? '', status)
 
-    const tableRows =
-      premises.results === undefined
-        ? []
-        : premises.results.map(entry => {
-            return [
-              this.htmlValue(this.formatAddress(entry)),
-              this.htmlValue(this.formatBedspaces(entry)),
-              this.textValue(entry.pdu),
-              this.htmlValue(`<a href="#">Manage</a>`),
-            ]
-          })
-
     return {
       ...premises,
-      tableRows,
+      tableRows: this.tableRows(premises),
     }
   }
 
-  async tableRows(callConfig: CallConfig, params: PremisesSearchParameters): Promise<Array<TableRow>> {
-    const searchData = await this.searchData(callConfig, params)
-    return searchData.tableRows
+  tableRows(premises: Cas3PremisesSearchResults): Array<TableRow> {
+    return premises.results === undefined
+      ? []
+      : premises.results.map(entry => {
+          return [
+            this.htmlValue(this.formatAddress(entry)),
+            this.htmlValue(this.formatBedspaces(entry)),
+            this.textValue(entry.pdu),
+            this.htmlValue(`<a href="#">Manage</a>`),
+          ]
+        })
   }
 
   private textValue(value: string) {

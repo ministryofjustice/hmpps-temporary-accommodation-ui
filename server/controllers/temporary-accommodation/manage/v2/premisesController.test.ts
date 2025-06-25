@@ -2,6 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import type { PremisesSearchParameters } from '@approved-premises/ui'
+import type { Cas3PremisesSearchResult, Cas3PremisesStatus } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
 import { probationRegionFactory } from '../../../../testutils/factories'
@@ -64,43 +65,92 @@ describe('PremisesController', () => {
       { html: 'Manage' },
     ]
 
-    it('returns the table rows to the template', async () => {
-      const params: PremisesSearchParameters = { postcodeOrAddress: undefined }
-
-      premisesService.tableRows.mockResolvedValue([premisesRow2, premisesRow1, premisesRow3])
+    it('redirects to include status=online when no status parameter is provided', async () => {
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: {},
+        path: '/v2/properties',
+      })
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: {},
-        tableRows: [premisesRow2, premisesRow1, premisesRow3],
-      })
-
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, params)
+      expect(response.redirect).toHaveBeenCalledWith('/v2/properties?status=online')
+      expect(response.render).not.toHaveBeenCalled()
+      expect(premisesService.searchData).not.toHaveBeenCalled()
     })
 
-    it('returns the filtered table rows to the template when the user has searched for a postcode or address', async () => {
-      const params = { postcodeOrAddress: 'NE1' }
-
-      premisesService.tableRows.mockResolvedValue([premisesRow2, premisesRow1, premisesRow3])
+    it('returns the search data to the template when status=online is provided', async () => {
+      const params: PremisesSearchParameters & { status: Cas3PremisesStatus } = {
+        postcodeOrAddress: undefined,
+        status: 'online',
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 5,
+        totalUpcomingBedspaces: 2,
+        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+      }
 
       request = createMock<Request>({
         session: {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
+        path: '/v2/properties',
+      })
+
+      premisesService.searchData.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined, status: 'online' },
+        status: 'online',
+        isOnlineTab: true,
+        isArchivedTab: false,
+        ...searchData,
+      })
+
+      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
+    })
+
+    it('returns the filtered search data to the template when the user has searched for a postcode or address', async () => {
+      const params = { postcodeOrAddress: 'NE1', status: 'online' as Cas3PremisesStatus }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 5,
+        totalUpcomingBedspaces: 2,
+        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+      }
+
+      premisesService.searchData.mockResolvedValue(searchData)
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties',
       })
 
       const requestHandler = premisesController.index()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params,
-        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+        params: { postcodeOrAddress: 'NE1', status: 'online' },
+        status: 'online',
+        isOnlineTab: true,
+        isArchivedTab: false,
+        ...searchData,
       })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, params)
+      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
     })
   })
 })

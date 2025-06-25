@@ -2,6 +2,7 @@ import type {
   Cas3BedspacePremisesSearchResult,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
+  Cas3PremisesStatus,
 } from '@approved-premises/api'
 import { PremisesSearchParameters, TableRow } from '@approved-premises/ui'
 import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
@@ -14,10 +15,11 @@ export default class PremisesService {
   async searchData(
     callConfig: CallConfig,
     params: PremisesSearchParameters,
+    status: Cas3PremisesStatus = 'online',
   ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
-    const premises = await premisesClient.search(params.postcodeOrAddress ?? '', 'online')
+    const premises = await premisesClient.search(params.postcodeOrAddress ?? '', status)
 
     const tableRows =
       premises.results === undefined

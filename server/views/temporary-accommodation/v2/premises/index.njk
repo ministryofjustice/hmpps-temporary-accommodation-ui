@@ -7,7 +7,7 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = (isOnlineTab and "Online properties") + " - " + applicationName %}
+{% set pageTitle = (isOnlineTab and "Online properties" or "Archived properties") + " - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -37,7 +37,7 @@
             label: "Sub navigation",
             items: [{
                 text: "Online properties",
-                href: "#",
+                href: paths.premises.v2.index({}) + "?status=online",
                 active: true
             }]
         }) }}

@@ -7,9 +7,6 @@ import { errorStub } from './utils'
 import { MockPagination } from './bookingSearch'
 import { referralRejectionReasons } from '../../server/testutils/stubs/referenceDataStubs'
 
-export type Unit = {
-};
-
 export default {
   stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
     stubFor({
@@ -185,7 +182,10 @@ export default {
         jsonBody: {},
       },
     }),
-  stubUpdateAssessmentError: (args: { assessment: Assessment; errorBody: Record<string, Unit> }): SuperAgentRequest =>
+  stubUpdateAssessmentError: (args: {
+    assessment: Assessment
+    errorBody: Record<string, unknown>
+  }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',

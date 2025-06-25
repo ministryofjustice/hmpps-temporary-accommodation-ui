@@ -1,0 +1,13 @@
+/* generated using openapi-typescript-codegen -- do not edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+export type Cas3Extension = {
+    id: string;
+    bookingId: string;
+    previousDepartureDate: string;
+    newDepartureDate: string;
+    notes?: string;
+    createdAt: string;
+};
+

@@ -1,6 +1,7 @@
 name: Generate Types
 
 on:
+  workflow_dispatch:
   workflow_call:
 
 env:

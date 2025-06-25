@@ -1,11 +1,13 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment, Cas3Unit } from '../../server/@types/shared'
+import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
 import { errorStub } from './utils'
 import { MockPagination } from './bookingSearch'
 import { referralRejectionReasons } from '../../server/testutils/stubs/referenceDataStubs'
+export type Unit = {
+};
 
 export default {
   stubAssessments: (args: { data: Array<AssessmentSummary>; pagination?: MockPagination }): SuperAgentRequest =>
@@ -182,7 +184,7 @@ export default {
         jsonBody: {},
       },
     }),
-  stubUpdateAssessmentError: (args: { assessment: Assessment; errorBody: Record<string, Cas3Unit> }): SuperAgentRequest =>
+  stubUpdateAssessmentError: (args: { assessment: Assessment; errorBody: Record<string, Unit> }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',

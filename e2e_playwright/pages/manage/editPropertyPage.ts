@@ -15,10 +15,10 @@ export class EditPropertyPage extends BasePage {
     await expect(this.page.getByLabel('Town or city (optional)')).toHaveValue(property.town)
     await expect(this.page.getByLabel('Postcode')).toHaveValue(property.postcode)
 
-    const selectedOptions = await this.page.locator('select > option[selected]').all()
-    await expect(selectedOptions[0]).toHaveText(property.localAuthority)
-    await expect(selectedOptions[1]).toHaveText(property.probationRegion)
-    await expect(selectedOptions[2]).toHaveText(property.pdu)
+    const selectedOptions = this.page.locator('select > option[selected]')
+    await expect(selectedOptions.nth(0)).toHaveText(property.localAuthority)
+    await expect(selectedOptions.nth(1)).toHaveText(property.probationRegion)
+    await expect(selectedOptions.nth(2)).toHaveText(property.pdu)
 
     await this.isCorrectPropertyAttributesChecked(property)
 

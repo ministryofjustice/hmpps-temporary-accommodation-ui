@@ -13,8 +13,9 @@ export default class PremisesController {
 
       const params = req.query as PremisesSearchParameters
 
-      const tableRows = await this.premisesService.tableRows(callConfig, params)
-      return res.render('temporary-accommodation/v2/premises/index', { tableRows, params })
+      const searchData = await this.premisesService.searchData(callConfig, params)
+
+      return res.render('temporary-accommodation/v2/premises/index', { ...searchData, params })
     }
   }
 }

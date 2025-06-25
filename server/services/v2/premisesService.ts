@@ -4,24 +4,44 @@ import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../.
 
 import { CallConfig } from '../../data/restClient'
 
+export interface PremisesSearchData {
+  tableRows: Array<TableRow>
+  totalPremises: number
+  totalOnlineBedspaces?: number
+  totalUpcomingBedspaces?: number
+}
+
 export default class PremisesService {
   constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
 
-  async tableRows(callConfig: CallConfig, params: PremisesSearchParameters): Promise<Array<TableRow>> {
+  async searchData(callConfig: CallConfig, params: PremisesSearchParameters): Promise<PremisesSearchData> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
     const premises = await premisesClient.search(params.postcodeOrAddress ?? '', 'online')
 
-    return premises.results === undefined
-      ? []
-      : premises.results.map(entry => {
-          return [
-            this.htmlValue(this.formatAddress(entry)),
-            this.htmlValue(this.formatBedspaces(entry)),
-            this.textValue(entry.pdu),
-            this.htmlValue(`<a href="#">Manage</a>`),
-          ]
-        })
+    const tableRows =
+      premises.results === undefined
+        ? []
+        : premises.results.map(entry => {
+            return [
+              this.htmlValue(this.formatAddress(entry)),
+              this.htmlValue(this.formatBedspaces(entry)),
+              this.textValue(entry.pdu),
+              this.htmlValue(`<a href="#">Manage</a>`),
+            ]
+          })
+
+    return {
+      tableRows,
+      totalPremises: premises.totalPremises,
+      totalOnlineBedspaces: premises.totalOnlineBedspaces,
+      totalUpcomingBedspaces: premises.totalUpcomingBedspaces,
+    }
+  }
+
+  async tableRows(callConfig: CallConfig, params: PremisesSearchParameters): Promise<Array<TableRow>> {
+    const searchData = await this.searchData(callConfig, params)
+    return searchData.tableRows
   }
 
   private textValue(value: string) {

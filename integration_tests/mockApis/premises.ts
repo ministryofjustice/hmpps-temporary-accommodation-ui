@@ -94,7 +94,6 @@ export default {
       stubSinglePremises(args.premises),
       roomStubs.stubRoomsForPremisesId({ premisesId: args.premises.id, rooms: args.rooms }),
     ]),
-  stubPremisesCapacity,
   stubPremisesStaff: (args: { premisesId: string; staff: Array<StaffMember> }): SuperAgentRequest =>
     stubFor({
       request: {

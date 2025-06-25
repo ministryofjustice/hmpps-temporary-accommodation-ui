@@ -1,9 +1,11 @@
-import { Unit } from '@approved-premises/api'
 import Apply from '../../form-pages/apply'
 import Assess from '../../form-pages/assess'
 import { applicationFactory, assessmentFactory } from '../../testutils/factories'
 import getSections from './getSections'
 import isAssessment from './isAssessment'
+
+export type Unit = {
+};
 
 jest.mock('../../form-pages/apply', () => {
   return {

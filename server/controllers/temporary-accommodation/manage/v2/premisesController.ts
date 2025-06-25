@@ -4,6 +4,7 @@ import { PremisesSearchParameters } from '@approved-premises/ui'
 import type { Cas3PremisesStatus } from '@approved-premises/api'
 import PremisesService from '../../../../services/v2/premisesService'
 import extractCallConfig from '../../../../utils/restUtils'
+import paths from '../../../../paths/temporary-accommodation/manage'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService) {}
@@ -17,7 +18,7 @@ export default class PremisesController {
       // If no status parameter, redirect to include status=online
       if (!params.status) {
         const queryString = new URLSearchParams({ ...params, status: 'online' }).toString()
-        return res.redirect(`${req.path}?${queryString}`)
+        return res.redirect(`${paths.premises.v2.index({})}?${queryString}`)
       }
 
       const { status } = params

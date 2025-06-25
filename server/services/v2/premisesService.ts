@@ -1,20 +1,20 @@
-import type { Cas3BedspacePremisesSearchResult, Cas3PremisesSearchResult } from '@approved-premises/api'
+import type {
+  Cas3BedspacePremisesSearchResult,
+  Cas3PremisesSearchResult,
+  Cas3PremisesSearchResults,
+} from '@approved-premises/api'
 import { PremisesSearchParameters, TableRow } from '@approved-premises/ui'
 import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
 
-export interface PremisesSearchData {
-  tableRows: Array<TableRow>
-  totalPremises: number
-  totalOnlineBedspaces?: number
-  totalUpcomingBedspaces?: number
-}
-
 export default class PremisesService {
   constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
 
-  async searchData(callConfig: CallConfig, params: PremisesSearchParameters): Promise<PremisesSearchData> {
+  async searchData(
+    callConfig: CallConfig,
+    params: PremisesSearchParameters,
+  ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
     const premises = await premisesClient.search(params.postcodeOrAddress ?? '', 'online')
@@ -32,10 +32,8 @@ export default class PremisesService {
           })
 
     return {
+      ...premises,
       tableRows,
-      totalPremises: premises.totalPremises,
-      totalOnlineBedspaces: premises.totalOnlineBedspaces,
-      totalUpcomingBedspaces: premises.totalUpcomingBedspaces,
     }
   }
 

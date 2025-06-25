@@ -44,6 +44,7 @@
     </div>
 
     <div class="govuk-grid-row">
+        {% if totalPremises is defined and totalPremises > 0 %}
         <div class="govuk-grid-column-full">
             <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
                 <form action="{{ paths.premises.v2.index() }}" method="get">
@@ -70,16 +71,19 @@
                 </form>
             </div>
         </div>
+        {% endif %}
         {% if totalPremises is defined %}
         <div class="govuk-grid-column-full">
             <div class="govuk-!-margin-bottom-6">
                 <div class="govuk-!-padding-bottom-4">
                     <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} online properties</h2>
-                    {% if totalOnlineBedspaces is defined %}
-                    <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ totalOnlineBedspaces }}</p>
-                    {% endif %}
-                    {% if totalUpcomingBedspaces is defined and totalUpcomingBedspaces != 0 %}
-                    <p class="govuk-body govuk-!-margin-bottom-0">Upcoming bedspaces: {{ totalUpcomingBedspaces }}</p>
+                    {% if totalPremises is defined and totalPremises > 0 %}
+                        {% if totalOnlineBedspaces is defined %}
+                        <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ totalOnlineBedspaces }}</p>
+                        {% endif %}
+                        {% if totalUpcomingBedspaces is defined and totalUpcomingBedspaces != 0 %}
+                        <p class="govuk-body govuk-!-margin-bottom-0">Upcoming bedspaces: {{ totalUpcomingBedspaces }}</p>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

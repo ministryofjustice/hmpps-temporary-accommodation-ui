@@ -4,9 +4,6 @@ import { applicationFactory, assessmentFactory } from '../../testutils/factories
 import getSections from './getSections'
 import isAssessment from './isAssessment'
 
-export type Unit = {
-};
-
 jest.mock('../../form-pages/apply', () => {
   return {
     pages: { 'apply-page-1': {} },
@@ -24,7 +21,7 @@ jest.mock('../../form-pages/apply', () => {
       {
         title: 'Check your answers',
         name: 'CheckYourAnswers',
-        tasks: [] as Array<Unit>,
+        tasks: Array<unknown>,
       },
     ],
   }

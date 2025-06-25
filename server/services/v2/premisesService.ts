@@ -1,5 +1,10 @@
-import type { Cas3BedspacePremisesSearchResult, Cas3PremisesSearchResult } from '@approved-premises/api'
-import { PremisesSearchParameters, TableRow } from '@approved-premises/ui'
+import type {
+  Cas3BedspacePremisesSearchResult,
+  Cas3PremisesSearchResult,
+  Cas3PremisesSearchResults,
+  Cas3PremisesStatus,
+} from '@approved-premises/api'
+import { TableRow } from '@approved-premises/ui'
 import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
@@ -7,11 +12,22 @@ import { CallConfig } from '../../data/restClient'
 export default class PremisesService {
   constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
 
-  async tableRows(callConfig: CallConfig, params: PremisesSearchParameters): Promise<Array<TableRow>> {
+  async searchDataAndGenerateTableRows(
+    callConfig: CallConfig,
+    postcodeOrAddress: string | undefined,
+    status: Cas3PremisesStatus = 'online',
+  ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
-    const premises = await premisesClient.search(params.postcodeOrAddress ?? '', 'online')
+    const premises = await premisesClient.search(postcodeOrAddress ?? '', status)
 
+    return {
+      ...premises,
+      tableRows: this.tableRows(premises),
+    }
+  }
+
+  tableRows(premises: Cas3PremisesSearchResults): Array<TableRow> {
     return premises.results === undefined
       ? []
       : premises.results.map(entry => {

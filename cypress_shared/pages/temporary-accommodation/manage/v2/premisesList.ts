@@ -4,13 +4,23 @@ import paths from '../../../../../server/paths/temporary-accommodation/manage'
 import Page from '../../../page'
 
 export default class PremisesListPage extends Page {
-  constructor() {
-    super('Online properties')
+  constructor(pageTitle = 'Online properties') {
+    super(pageTitle)
   }
 
   static visit(): PremisesListPage {
     cy.visit(paths.premises.v2.index({}))
     return new PremisesListPage()
+  }
+
+  static visitOnline(): PremisesListPage {
+    cy.visit(paths.premises.v2.online({}))
+    return new PremisesListPage()
+  }
+
+  static visitArchived(): PremisesListPage {
+    cy.visit(paths.premises.v2.archived({}))
+    return new PremisesListPage('Archived properties')
   }
 
   shouldShowPremises(premises: Array<Cas3PremisesSearchResult>): void {

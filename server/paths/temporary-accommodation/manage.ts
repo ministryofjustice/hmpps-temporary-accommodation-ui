@@ -4,6 +4,9 @@ const dashboardPath = temporaryAccommodationPath.path('dashboard')
 
 const premisesPath = temporaryAccommodationPath.path('properties')
 const premisesV2Path = temporaryAccommodationPath.path('v2/properties')
+const premisesV2OnlinePath = premisesV2Path.path('online')
+const premisesV2ArchivedPath = premisesV2Path.path('archived')
+
 const singlePremisesPath = premisesPath.path(':premisesId')
 
 const bedspacesPath = singlePremisesPath.path('bedspaces')
@@ -49,6 +52,8 @@ const paths: Record<string, any> = {
     },
     v2: {
       index: premisesV2Path,
+      online: premisesV2OnlinePath,
+      archived: premisesV2ArchivedPath,
     },
   },
   bookings: {

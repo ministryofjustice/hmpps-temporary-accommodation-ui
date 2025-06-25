@@ -19,9 +19,13 @@ export const characteristicsToSearchAttributes = (premises: TemporaryAccommodati
     .map((characteristic: Characteristic) => occupancyAttributesMap[characteristic.name])
     .find(attribute => attribute !== undefined)
 
-  const sexualRiskAttributes = premises.characteristics
+  const matchedSexualRiskAttributes = premises.characteristics
     .map((characteristic: Characteristic) => sexualRiskMap[characteristic.name])
-    .filter(attribute => attribute !== undefined) as BedspaceSearchFormParameters['sexualRiskAttributes']
+    .filter(attribute => attribute !== undefined)
+
+  const sexualRiskAttributes = Object.values(sexualRiskMap).filter(
+    attr => !matchedSexualRiskAttributes.includes(attr),
+  ) as BedspaceSearchFormParameters['sexualRiskAttributes']
 
   const wheelchairAccessibility = room.characteristics
     .map((characteristic: Characteristic) => wheelchairAccessibilityMap[characteristic.name])

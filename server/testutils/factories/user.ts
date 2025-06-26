@@ -1,9 +1,12 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
-import type { ProfileResponse, TemporaryAccommodationUser as User } from '@approved-premises/api'
+import type {
+  ProfileResponse,
+  TemporaryAccommodationUser,
+} from '@approved-premises/api'
 import referenceData from './referenceData'
 
-const userFactory = Factory.define<User>(({ params }) => {
+const userFactory = Factory.define<TemporaryAccommodationUser>(({ params }) => {
   const name = params?.name || faker.person.fullName({})
   const deliusUsername = name.replace(/\s+/g, '.').toLowerCase()
   const pdu = referenceData.pdu().build()
@@ -24,7 +27,7 @@ const userFactory = Factory.define<User>(({ params }) => {
 })
 
 export const userProfileFactory = Factory.define<ProfileResponse>(({ params }) => {
-  const user = userFactory.build(params?.user)
+  const user = userFactory.build(params?.user as TemporaryAccommodationUser)
   const { deliusUsername } = user
   return {
     deliusUsername,

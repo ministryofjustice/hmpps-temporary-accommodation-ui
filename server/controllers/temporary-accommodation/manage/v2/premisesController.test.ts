@@ -2,7 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import type { PremisesSearchParameters } from '@approved-premises/ui'
-import type { Cas3PremisesSearchResult, Cas3PremisesStatus } from '@approved-premises/api'
+import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
 import { probationRegionFactory } from '../../../../testutils/factories'
@@ -65,7 +65,7 @@ describe('PremisesController', () => {
       { html: 'Manage' },
     ]
 
-    it('defaults to status=online when no status parameter is provided', async () => {
+    it('searches online premises data and returns as table rows when no status parameter is provided', async () => {
       const params: PremisesSearchParameters = {
         postcodeOrAddress: undefined,
       }
@@ -82,30 +82,32 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties',
+        path: '/v2/properties/online',
       })
 
-      premisesService.searchData.mockResolvedValue(searchData)
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
 
-      const requestHandler = premisesController.index()
+      const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined, status: 'online' },
+        params: { postcodeOrAddress: undefined },
         status: 'online',
         isOnlineTab: true,
         isArchivedTab: false,
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
         ...searchData,
       })
 
-      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
-      expect(response.redirect).not.toHaveBeenCalled()
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
-    it('returns the search data to the template when status=online is provided', async () => {
-      const params: PremisesSearchParameters & { status: Cas3PremisesStatus } = {
+    it('searches online premises data and returns as table rows when status=online parameter is provided', async () => {
+      const params: PremisesSearchParameters = {
         postcodeOrAddress: undefined,
-        status: 'online',
       }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -120,27 +122,31 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties',
+        path: '/v2/properties/online',
       })
 
-      premisesService.searchData.mockResolvedValue(searchData)
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
 
-      const requestHandler = premisesController.index()
+      const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined, status: 'online' },
+        params: { postcodeOrAddress: undefined },
         status: 'online',
         isOnlineTab: true,
         isArchivedTab: false,
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
         ...searchData,
       })
 
-      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
-    it('returns the filtered search data to the template when the user has searched for a postcode or address', async () => {
-      const params = { postcodeOrAddress: 'NE1', status: 'online' as Cas3PremisesStatus }
+    it('searches online premises data by postcode or address and returns as table rows when searched for a postcode or address', async () => {
+      const params = { postcodeOrAddress: 'NE1' }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
         totalPremises: 3,
@@ -149,28 +155,32 @@ describe('PremisesController', () => {
         tableRows: [premisesRow2, premisesRow1, premisesRow3],
       }
 
-      premisesService.searchData.mockResolvedValue(searchData)
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
 
       request = createMock<Request>({
         session: {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties',
+        path: '/v2/properties/online',
       })
 
-      const requestHandler = premisesController.index()
+      const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: 'NE1', status: 'online' },
+        params: { postcodeOrAddress: 'NE1' },
         status: 'online',
         isOnlineTab: true,
         isArchivedTab: false,
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
+        ],
         ...searchData,
       })
 
-      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
     it('returns empty search data when there are no properties in the database', async () => {
@@ -190,23 +200,27 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties',
+        path: '/v2/properties/online',
       })
 
-      premisesService.searchData.mockResolvedValue(searchData)
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
 
-      const requestHandler = premisesController.index()
+      const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined, status: 'online' },
+        params: { postcodeOrAddress: undefined },
         status: 'online',
         isOnlineTab: true,
         isArchivedTab: false,
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
         ...searchData,
       })
 
-      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
   })
 })

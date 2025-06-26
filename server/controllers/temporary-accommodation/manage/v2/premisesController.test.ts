@@ -172,5 +172,41 @@ describe('PremisesController', () => {
 
       expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
     })
+
+    it('returns empty search data when there are no properties in the database', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [] as Array<never>,
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties',
+      })
+
+      premisesService.searchData.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined, status: 'online' },
+        status: 'online',
+        isOnlineTab: true,
+        isArchivedTab: false,
+        ...searchData,
+      })
+
+      expect(premisesService.searchData).toHaveBeenCalledWith(callConfig, params, 'online')
+    })
   })
 })

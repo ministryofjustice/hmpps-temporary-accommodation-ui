@@ -147,5 +147,29 @@ describe('PremisesService', () => {
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.search).toHaveBeenCalledWith('London', 'archived')
     })
+
+    it('returns empty search results when there are no properties in the database', async () => {
+      const params: PremisesSearchParameters = { postcodeOrAddress: '' }
+      const searchResults = cas3PremisesSearchResultsFactory.build({
+        results: [],
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+
+      premisesClient.search.mockResolvedValue(searchResults)
+
+      const result = await service.searchData(callConfig, params)
+
+      expect(result).toEqual({
+        ...searchResults,
+        tableRows: [],
+      })
+      expect(result.tableRows).toHaveLength(0)
+      expect(result.totalPremises).toBe(0)
+      expect(result.totalOnlineBedspaces).toBe(0)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.search).toHaveBeenCalledWith('', 'online')
+    })
   })
 })

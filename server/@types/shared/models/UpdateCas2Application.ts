@@ -2,4 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Gender = 'male' | 'female';
+import type { UpdateApplication } from './UpdateApplication';
+export type UpdateCas2Application = UpdateApplication;
+

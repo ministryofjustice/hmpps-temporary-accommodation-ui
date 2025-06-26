@@ -3,15 +3,17 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApplicationStatus } from './ApplicationStatus';
-import type { Person } from './Person';
+import type { FullPerson } from './FullPerson';
 import type { PersonRisks } from './PersonRisks';
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { UnknownPerson } from './UnknownPerson';
 export type Cas3ApplicationSummary = {
-    id: string;
-    person: Person;
     createdAt: string;
-    submittedAt?: string;
     createdByUserId: string;
-    status: ApplicationStatus;
+    id: string;
+    person: (FullPerson | RestrictedPerson | UnknownPerson);
     risks?: PersonRisks;
+    status: ApplicationStatus;
+    submittedAt?: string;
 };
 

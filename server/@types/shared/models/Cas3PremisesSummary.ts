@@ -4,14 +4,14 @@
 /* eslint-disable */
 import type { PropertyStatus } from './PropertyStatus';
 export type Cas3PremisesSummary = {
-    id: string;
-    name: string;
     addressLine1: string;
     addressLine2?: string;
-    postcode: string;
-    pdu: string;
-    localAuthorityAreaName?: string;
     bedspaceCount: number;
+    id: string;
+    localAuthorityAreaName?: string;
+    name: string;
+    pdu: string;
+    postcode: string;
     status: PropertyStatus;
 };
 

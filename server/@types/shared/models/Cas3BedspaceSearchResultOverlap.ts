@@ -4,14 +4,14 @@
 /* eslint-disable */
 import type { PersonType } from './PersonType';
 export type Cas3BedspaceSearchResultOverlap = {
-    name: string;
-    crn: string;
-    sex?: string;
-    personType: PersonType;
-    days: number;
-    bookingId: string;
-    roomId: string;
     assessmentId?: string;
+    bookingId: string;
+    crn: string;
+    days: number;
     isSexualRisk: boolean;
+    name: string;
+    personType: PersonType;
+    roomId: string;
+    sex?: string;
 };
 

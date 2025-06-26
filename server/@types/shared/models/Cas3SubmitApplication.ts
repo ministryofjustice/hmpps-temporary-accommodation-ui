@@ -2,25 +2,33 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Unit } from './Unit';
+/**
+ * Information needed to submit an application
+ */
 export type Cas3SubmitApplication = {
     arrivalDate: string;
+    dutyToReferLocalAuthorityAreaName?: string;
+    dutyToReferOutcome?: string;
+    dutyToReferSubmissionDate?: string;
+    eligibilityReason?: string;
+    hasHistoryOfArson?: boolean;
+    isApplicationEligible?: boolean;
+    isConcerningArsonBehaviour?: boolean;
+    isConcerningSexualBehaviour?: boolean;
+    isDutyToReferSubmitted?: boolean;
+    isHistoryOfSexualOffence?: boolean;
     isRegisteredSexOffender?: boolean;
     needsAccessibleProperty?: boolean;
-    hasHistoryOfArson?: boolean;
-    isDutyToReferSubmitted?: boolean;
-    dutyToReferSubmissionDate?: string;
-    dutyToReferOutcome?: string;
-    isApplicationEligible?: boolean;
-    eligibilityReason?: string;
-    dutyToReferLocalAuthorityAreaName?: string;
     personReleaseDate?: string;
-    probationDeliveryUnitId: string;
-    isHistoryOfSexualOffence?: boolean;
-    isConcerningSexualBehaviour?: boolean;
-    isConcerningArsonBehaviour?: boolean;
     prisonReleaseTypes?: Array<string>;
-    summaryData: Unit;
-    translatedDocument?: Unit;
+    probationDeliveryUnitId: string;
+    /**
+     * Any object
+     */
+    summaryData: any;
+    /**
+     * Any object
+     */
+    translatedDocument?: any;
 };
 

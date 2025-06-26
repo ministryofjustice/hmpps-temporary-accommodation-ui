@@ -2,8 +2,10 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Unit } from './Unit';
+/**
+ * Information to update the application with
+ */
 export type Cas3UpdateApplication = {
-    data: Record<string, Unit>;
+    data: Record<string, any>;
 };
 

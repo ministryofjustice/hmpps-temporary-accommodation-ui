@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type PremisesFilters = {
-    includedCharacteristicIds?: Array<string>;
     excludedCharacteristicIds?: Array<string>;
+    includedCharacteristicIds?: Array<string>;
 };
 

@@ -7,9 +7,9 @@ import type { BedSearchResultPremisesSummary } from './BedSearchResultPremisesSu
 import type { BedSearchResultRoomSummary } from './BedSearchResultRoomSummary';
 import type { Cas3BedspaceSearchResultOverlap } from './Cas3BedspaceSearchResultOverlap';
 export type Cas3BedspaceSearchResult = {
-    premises: BedSearchResultPremisesSummary;
-    room: BedSearchResultRoomSummary;
     bed: BedSearchResultBedSummary;
     overlaps: Array<Cas3BedspaceSearchResultOverlap>;
+    premises: BedSearchResultPremisesSummary;
+    room: BedSearchResultRoomSummary;
 };
 

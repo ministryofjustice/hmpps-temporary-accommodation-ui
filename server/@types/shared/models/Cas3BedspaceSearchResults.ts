@@ -4,18 +4,18 @@
 /* eslint-disable */
 import type { Cas3BedspaceSearchResult } from './Cas3BedspaceSearchResult';
 export type Cas3BedspaceSearchResults = {
+    results: Array<Cas3BedspaceSearchResult>;
     /**
-     * How many distinct Rooms the Beds in the results belong to
+     * How many Beds are in the results
      */
-    resultsRoomCount: number;
+    resultsBedCount: number;
     /**
      * How many distinct Premises the Beds in the results belong to
      */
     resultsPremisesCount: number;
     /**
-     * How many Beds are in the results
+     * How many distinct Rooms the Beds in the results belong to
      */
-    resultsBedCount: number;
-    results: Array<Cas3BedspaceSearchResult>;
+    resultsRoomCount: number;
 };
 

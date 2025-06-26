@@ -5,8 +5,8 @@
 import type { Cas3Bedspace } from './Cas3Bedspace';
 export type Cas3Bedspaces = {
     bedspaces: Array<Cas3Bedspace>;
+    totalArchivedBedspaces: number;
     totalOnlineBedspaces: number;
     totalUpcomingBedspaces: number;
-    totalArchivedBedspaces: number;
 };
 

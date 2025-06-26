@@ -1,5 +1,5 @@
 import type { SuperAgentRequest } from 'superagent'
-import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment, Unit } from '../../server/@types/shared'
+import { Assessment, AssessmentSummary, TemporaryAccommodationAssessment } from '@approved-premises/api'
 
 import api from '../../server/paths/api'
 import { getMatchingRequests, stubFor } from '.'
@@ -182,7 +182,10 @@ export default {
         jsonBody: {},
       },
     }),
-  stubUpdateAssessmentError: (args: { assessment: Assessment; errorBody: Record<string, Unit> }): SuperAgentRequest =>
+  stubUpdateAssessmentError: (args: {
+    assessment: Assessment
+    errorBody: Record<string, unknown>
+  }): SuperAgentRequest =>
     stubFor({
       request: {
         method: 'PUT',

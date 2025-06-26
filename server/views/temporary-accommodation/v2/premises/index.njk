@@ -25,7 +25,7 @@
 
         {{ mojCasPageHeaderActions({
             heading: {
-                text: 'Online properties'
+                text: (isOnlineTab and "Online properties" or "Archived properties")
             },
             actions: [{
                 text: "Add a property",
@@ -35,11 +35,7 @@
 
         {{ mojSubNavigation({
             label: "Sub navigation",
-            items: [{
-                text: "Online properties",
-                href: paths.premises.v2.index({}) + "?status=online",
-                active: true
-            }]
+            items: subNavArr
         }) }}
     </div>
 
@@ -47,26 +43,26 @@
         {% if (totalPremises is defined and totalPremises > 0) or params.postcodeOrAddress %}
         <div class="govuk-grid-column-full">
             <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
-                <form action="{{ paths.premises.v2.index() }}" method="get">
+                <form action="{{ paths.premises.v2[status]({}) }}" method="get">
                     {{ govukInput({
-                    label: {
-                    classes: 'govuk-!-font-weight-bold',
-                    text: 'Find an online property'
-                    },
-                    hint: {
-                    text: 'Search by road or postcode'
-                    },
-                    name: 'postcodeOrAddress',
-                    id: 'postcodeOrAddress',
-                    value: params.postcodeOrAddress,
-                    classes: 'moj-search__input'
+                        label: {
+                            classes: 'govuk-!-font-weight-bold',
+                            text: (isOnlineTab and 'Find an online property' or 'Find an archived property')
+                        },
+                        hint: {
+                            text: 'Search by road or postcode'
+                        },
+                        name: 'postcodeOrAddress',
+                        id: 'postcodeOrAddress',
+                        value: params.postcodeOrAddress,
+                        classes: 'moj-search__input'
                     }) }}
 
                     {{ govukButton({
-                    text: 'Search',
-                    attributes: { id: 'search-button' },
-                    preventDoubleClick: true,
-                    classes: 'moj-search__button'
+                        text: 'Search',
+                        attributes: { id: 'search-button' },
+                        preventDoubleClick: true,
+                        classes: 'moj-search__button'
                     }) }}
                 </form>
             </div>
@@ -76,9 +72,13 @@
         <div class="govuk-grid-column-full">
             <div class="govuk-!-margin-bottom-6">
                 <div class="govuk-!-padding-bottom-4">
-                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} online properties{% if params.postcodeOrAddress %} matching '{{ params.postcodeOrAddress }}'{% endif %}</h2>
+                    {% if params.postcodeOrAddress %}
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ (isOnlineTab and "online" or "archived") }} properties matching '{{ params.postcodeOrAddress }}'</h2>
+                    {% else %}
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ (isOnlineTab and "online" or "archived") }} properties</h2>
+                    {% endif %}
                     {% if totalPremises is defined and totalPremises > 0 %}
-                        {% if totalOnlineBedspaces is defined %}
+                        {% if isOnlineTab and totalOnlineBedspaces is defined %}
                         <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ totalOnlineBedspaces }}</p>
                         {% endif %}
                         {% if totalUpcomingBedspaces is defined and totalUpcomingBedspaces != 0 %}
@@ -121,7 +121,7 @@
                 {% if params.postcodeOrAddress %}
                     <h2>{{ '0 online properties matching ‘' + params.postcodeOrAddress + '’' }}</h2>
                 {% else %}
-                    <h2>0 online properties</h2>
+                    <h2>0 {{ (isOnlineTab and "online" or "archived") }} properties</h2>
                 {% endif %}
             {% endif %}
         {% endif %}

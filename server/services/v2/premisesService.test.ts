@@ -89,7 +89,7 @@ describe('PremisesService', () => {
     })
   })
 
-  describe('searchData', () => {
+  describe('searchDataAndGenerateTableRows', () => {
     const searchResult1 = cas3PremisesSearchResultFactory.build({
       addressLine1: '32 Windsor Gardens',
       town: 'London',
@@ -115,7 +115,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchData(callConfig, params)
+      const result = await service.searchDataAndGenerateTableRows(callConfig, params)
 
       expect(result).toEqual({
         ...searchResults,
@@ -137,7 +137,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchData(callConfig, params, 'archived')
+      const result = await service.searchDataAndGenerateTableRows(callConfig, params, 'archived')
 
       expect(result).toEqual({
         ...searchResults,
@@ -159,7 +159,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchData(callConfig, params)
+      const result = await service.searchDataAndGenerateTableRows(callConfig, params)
 
       expect(result).toEqual({
         ...searchResults,

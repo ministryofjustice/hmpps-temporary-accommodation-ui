@@ -13,6 +13,16 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage()
   }
 
+  static visitOnline(): PremisesListPage {
+    cy.visit(paths.premises.v2.online({}))
+    return new PremisesListPage()
+  }
+
+  static visitArchived(): PremisesListPage {
+    cy.visit(paths.premises.v2.archived({}))
+    return new PremisesListPage()
+  }
+
   shouldShowPremises(premises: Array<Cas3PremisesSearchResult>): void {
     premises.forEach((item: Cas3PremisesSearchResult) => {
       cy.contains(item.addressLine1)

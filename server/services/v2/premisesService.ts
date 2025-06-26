@@ -12,7 +12,7 @@ import { CallConfig } from '../../data/restClient'
 export default class PremisesService {
   constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
 
-  async searchData(
+  async searchDataAndGenerateTableRows(
     callConfig: CallConfig,
     params: PremisesSearchParameters,
     status: Cas3PremisesStatus = 'online',

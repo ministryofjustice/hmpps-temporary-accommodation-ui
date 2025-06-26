@@ -24,7 +24,7 @@ context('Premises', () => {
     cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
     // When I visit the premises page
-    const page = PremisesListPage.visit()
+    const page = PremisesListPage.visitOnline()
 
     // Then I should see all the premises listed
     page.shouldShowPremises(searchResults.results)
@@ -67,7 +67,7 @@ context('Premises', () => {
     })
 
     // When I visit the premises page
-    const page = PremisesListPage.visit()
+    const page = PremisesListPage.visitOnline()
 
     // Then I should see all the premises listed
     page.shouldShowPremises(searchResults.results)
@@ -109,7 +109,7 @@ context('Premises', () => {
     })
 
     // When I visit the premises page
-    const page = PremisesListPage.visit()
+    const page = PremisesListPage.visitOnline()
 
     // Then I should see all the premises listed
     page.shouldShowPremises(searchResults.results)
@@ -139,12 +139,93 @@ context('Premises', () => {
     cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
     // When I visit the premises list page
-    const page = PremisesListPage.visit()
+    const page = PremisesListPage.visitOnline()
 
     // And I click the previous bread crumb
     page.clickHome()
 
     // Then I navigate to the dashboard page
     Page.verifyOnPage(DashboardPage)
+  })
+
+  it('should display property and bedspace counts', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database with specific counts
+    const searchResults = cas3PremisesSearchResultsFactory.build({
+      results: cas3PremisesSearchResultFactory.buildList(3),
+      totalPremises: 3,
+      totalOnlineBedspaces: 8,
+      totalUpcomingBedspaces: 2,
+    })
+    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+
+    // When I visit the premises page
+    PremisesListPage.visitOnline()
+
+    // Then I should see the correct property count
+    cy.contains('3 online properties').should('exist')
+
+    // And I should see the correct bedspace counts
+    cy.contains('Online bedspaces: 8').should('exist')
+    cy.contains('Upcoming bedspaces: 2').should('exist')
+  })
+
+  it('should display property count with search term when searching', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are premises in the database
+    const allResults = cas3PremisesSearchResultsFactory.build({
+      results: cas3PremisesSearchResultFactory.buildList(5),
+      totalPremises: 5,
+      totalOnlineBedspaces: 12,
+      totalUpcomingBedspaces: 0,
+    })
+    const searchResults = cas3PremisesSearchResultsFactory.build({
+      results: cas3PremisesSearchResultFactory.buildList(2),
+      totalPremises: 2,
+      totalOnlineBedspaces: 4,
+      totalUpcomingBedspaces: 0,
+    })
+    cy.task('stubPremisesSearchV2', { searchResults: allResults, postcodeOrAddress: '', premisesStatus: 'online' })
+    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: 'NE1', premisesStatus: 'online' })
+
+    // When I visit the premises page
+    const page = PremisesListPage.visitOnline()
+
+    // Then I should see the total count without search term
+    cy.contains('5 online properties').should('exist')
+
+    // When I search for a postcode
+    page.search('NE1')
+
+    // Then I should see the count with search term
+    cy.contains("2 online properties matching 'NE1'").should('exist')
+    cy.contains('Online bedspaces: 4').should('exist')
+  })
+
+  it('should display zero properties message when database is empty', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there are no premises in the database
+    const searchResults = cas3PremisesSearchResultsFactory.build({
+      results: [],
+      totalPremises: 0,
+      totalOnlineBedspaces: 0,
+      totalUpcomingBedspaces: 0,
+    })
+    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+
+    // When I visit the premises page
+    PremisesListPage.visitOnline()
+
+    // Then I should see the zero properties message
+    cy.contains('There are no online properties.').should('exist')
+
+    // And the search form should not be visible
+    cy.get('main form').should('not.exist')
   })
 })

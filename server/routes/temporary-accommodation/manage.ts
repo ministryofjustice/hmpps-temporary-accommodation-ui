@@ -70,6 +70,9 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   // premises v2
   if (config.flags.managePropertiesV2Enabled) {
+    get(paths.premises.v2.index(), redirectsController.redirect(paths.premises.v2.online(), 301), {
+      auditEvent: 'REDIRECT_PREMISES_V2',
+    })
     get(paths.premises.v2.online.pattern, premisesControllerV2.index('online'), {
       auditEvent: 'VIEW_PREMISES_LIST_V2_ONLINE',
     })

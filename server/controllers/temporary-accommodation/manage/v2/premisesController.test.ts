@@ -223,7 +223,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
-    it('shows zero online properties without bedspace counts when no properties exist in database', async () => {
+    it('returns zero online properties data when no properties exist in database', async () => {
       const params: PremisesSearchParameters = {
         postcodeOrAddress: undefined,
       }
@@ -267,7 +267,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
-    it('shows online properties count with search term and bedspace counts when search has results', async () => {
+    it('returns online properties data with search term and bedspace counts when search has results', async () => {
       const params = { postcodeOrAddress: 'NE1' }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -309,7 +309,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
-    it('shows zero online properties with search term when search returns no results', async () => {
+    it('returns zero online properties data with search term when search returns no results', async () => {
       const params = { postcodeOrAddress: 'NONEXISTENT' }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -351,7 +351,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
     })
 
-    it('shows zero archived properties when no archived properties exist in database', async () => {
+    it('returns zero archived properties data when no archived properties exist in database', async () => {
       const params: PremisesSearchParameters = {
         postcodeOrAddress: undefined,
       }
@@ -395,7 +395,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'archived')
     })
 
-    it('shows archived properties count with search term when search has results', async () => {
+    it('returns archived properties data with search term when search has results', async () => {
       const params = { postcodeOrAddress: 'SW1' }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -437,7 +437,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'archived')
     })
 
-    it('shows zero archived properties with search term when search returns no results', async () => {
+    it('returns zero archived properties data with search term when search returns no results', async () => {
       const params = { postcodeOrAddress: 'NOTFOUND' }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,

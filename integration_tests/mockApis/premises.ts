@@ -2,7 +2,6 @@ import type { Response, SuperAgentRequest } from 'superagent'
 
 import type {
   Booking,
-  DateCapacity,
   Premises,
   Cas3PremisesSummary as PremisesSummary,
   Room,
@@ -76,21 +75,6 @@ const stubSinglePremises = (premises: Premises) =>
     },
   })
 
-const stubPremisesCapacity = (args: { premisesId: string; dateCapacities: DateCapacity }) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/premises/${args.premisesId}/capacity`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: args.dateCapacities,
-    },
-  })
-
 export default {
   stubPremises,
   stubPremisesSearch,
@@ -110,7 +94,6 @@ export default {
       stubSinglePremises(args.premises),
       roomStubs.stubRoomsForPremisesId({ premisesId: args.premises.id, rooms: args.rooms }),
     ]),
-  stubPremisesCapacity,
   stubPremisesStaff: (args: { premisesId: string; staff: Array<StaffMember> }): SuperAgentRequest =>
     stubFor({
       request: {

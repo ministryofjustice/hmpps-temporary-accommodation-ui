@@ -1,9 +1,6 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
-import type {
-  ProfileResponse,
-  TemporaryAccommodationUser,
-} from '@approved-premises/api'
+import type { ProfileResponse, TemporaryAccommodationUser } from '@approved-premises/api'
 import referenceData from './referenceData'
 
 const userFactory = Factory.define<TemporaryAccommodationUser>(({ params }) => {

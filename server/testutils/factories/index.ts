@@ -24,7 +24,6 @@ import bookingSearchResultsFactory from './bookingSearchResults'
 import cancellationFactory from './cancellation'
 import characteristicFactory from './characteristic'
 import confirmationFactory from './confirmation'
-import dateCapacityFactory from './dateCapacity'
 import departureFactory from './departure'
 import documentFactory from './document'
 import extensionFactory from './extension'
@@ -102,7 +101,6 @@ export {
   cancellationFactory,
   characteristicFactory,
   confirmationFactory,
-  dateCapacityFactory,
   departureFactory,
   documentFactory,
   extensionFactory,

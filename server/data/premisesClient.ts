@@ -1,5 +1,4 @@
 import type {
-  DateCapacity,
   NewPremises,
   TemporaryAccommodationPremises as Premises,
   Cas3PremisesSummary as PremisesSummary,
@@ -32,10 +31,6 @@ export default class PremisesClient {
     return this.restClient.get<Premises>({
       path: paths.premises.show({ premisesId: id }),
     })
-  }
-
-  async capacity(id: string) {
-    return this.restClient.get<DateCapacity[]>({ path: paths.premises.capacity({ premisesId: id }) })
   }
 
   async getStaffMembers(premisesId: string) {

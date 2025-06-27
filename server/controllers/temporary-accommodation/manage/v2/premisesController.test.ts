@@ -2,6 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import type { PremisesSearchParameters } from '@approved-premises/ui'
+import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
 import { probationRegionFactory } from '../../../../testutils/factories'
@@ -64,43 +65,438 @@ describe('PremisesController', () => {
       { html: 'Manage' },
     ]
 
-    it('returns the table rows to the template', async () => {
-      const params: PremisesSearchParameters = { postcodeOrAddress: undefined }
-
-      premisesService.tableRows.mockResolvedValue([premisesRow2, premisesRow1, premisesRow3])
-
-      const requestHandler = premisesController.index()
-      await requestHandler(request, response, next)
-
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: {},
+    it('searches online premises data and returns as table rows when no status parameter is provided', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 5,
+        totalUpcomingBedspaces: 2,
         tableRows: [premisesRow2, premisesRow1, premisesRow3],
-      })
-
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, params)
-    })
-
-    it('returns the filtered table rows to the template when the user has searched for a postcode or address', async () => {
-      const params = { postcodeOrAddress: 'NE1' }
-
-      premisesService.tableRows.mockResolvedValue([premisesRow2, premisesRow1, premisesRow3])
+      }
 
       request = createMock<Request>({
         session: {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
+        path: '/v2/properties/online',
       })
 
-      const requestHandler = premisesController.index()
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('online')
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params,
-        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+        params: { postcodeOrAddress: undefined },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
+        ...searchData,
       })
 
-      expect(premisesService.tableRows).toHaveBeenCalledWith(callConfig, params)
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('searches online premises data and returns as table rows when status=online parameter is provided', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 5,
+        totalUpcomingBedspaces: 2,
+        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/online',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('online')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
+        ...searchData,
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('searches online premises data by postcode or address and returns as table rows when searched for a postcode or address', async () => {
+      const params = { postcodeOrAddress: 'NE1' }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 5,
+        totalUpcomingBedspaces: 2,
+        tableRows: [premisesRow2, premisesRow1, premisesRow3],
+      }
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/online',
+      })
+
+      const requestHandler = premisesController.index('online')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: 'NE1' },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
+        ],
+        ...searchData,
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('returns empty search data when there are no properties in the database', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [] as Array<never>,
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/online',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('online')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
+        ...searchData,
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('returns zero online properties data when no properties exist in database', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [] as Array<never>,
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/online',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('online')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        ],
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        results: [],
+        tableRows: [],
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('returns online properties data with search term and bedspace counts when search has results', async () => {
+      const params = { postcodeOrAddress: 'NE1' }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 2,
+        totalOnlineBedspaces: 8,
+        totalUpcomingBedspaces: 3,
+        tableRows: [premisesRow1, premisesRow2],
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/online',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('online')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: 'NE1' },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
+        ],
+        totalPremises: 2,
+        totalOnlineBedspaces: 8,
+        totalUpcomingBedspaces: 3,
+        results: [],
+        tableRows: [premisesRow1, premisesRow2],
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('returns zero online properties data with search term when search returns no results', async () => {
+      const params = { postcodeOrAddress: 'NONEXISTENT' }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [] as Array<never>,
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/online',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('online')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: 'NONEXISTENT' },
+        status: 'online',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NONEXISTENT', active: true },
+          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NONEXISTENT', active: false },
+        ],
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        results: [],
+        tableRows: [],
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
+    })
+
+    it('returns zero archived properties data when no archived properties exist in database', async () => {
+      const params: PremisesSearchParameters = {
+        postcodeOrAddress: undefined,
+      }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [] as Array<never>,
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/archived',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('archived')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: undefined },
+        status: 'archived',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online', active: false },
+          { text: 'Archived properties', href: '/v2/properties/archived', active: true },
+        ],
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        results: [],
+        tableRows: [],
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'archived',
+      )
+    })
+
+    it('returns archived properties data with search term when search has results', async () => {
+      const params = { postcodeOrAddress: 'SW1' }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 3,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [premisesRow1, premisesRow2, premisesRow3],
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/archived',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('archived')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: 'SW1' },
+        status: 'archived',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=SW1', active: false },
+          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=SW1', active: true },
+        ],
+        totalPremises: 3,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        results: [],
+        tableRows: [premisesRow1, premisesRow2, premisesRow3],
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'archived',
+      )
+    })
+
+    it('returns zero archived properties data with search term when search returns no results', async () => {
+      const params = { postcodeOrAddress: 'NOTFOUND' }
+      const searchData = {
+        results: [] as Array<Cas3PremisesSearchResult>,
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        tableRows: [] as Array<never>,
+      }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        query: params,
+        path: '/v2/properties/archived',
+      })
+
+      premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+      const requestHandler = premisesController.index('archived')
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+        params: { postcodeOrAddress: 'NOTFOUND' },
+        status: 'archived',
+        subNavArr: [
+          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NOTFOUND', active: false },
+          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NOTFOUND', active: true },
+        ],
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        results: [],
+        tableRows: [],
+      })
+
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'archived',
+      )
     })
   })
 })

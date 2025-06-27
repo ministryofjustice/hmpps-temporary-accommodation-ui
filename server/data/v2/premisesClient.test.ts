@@ -33,7 +33,7 @@ describe('PremisesCLeint', () => {
       [cas3PremisesSearchResultsFactory.build({ results: cas3PremisesSearchResultFactory.buildList(0) })],
     ])('should get premises search results', async searchResults => {
       fakeApprovedPremisesApi
-        .get(paths.v2.premises.index({}))
+        .get(paths.v2.premises.search({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({
           postcodeOrAddress: 'NE1 1AB',

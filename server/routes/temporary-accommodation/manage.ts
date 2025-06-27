@@ -70,7 +70,15 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   // premises v2
   if (config.flags.managePropertiesV2Enabled) {
-    get(paths.premises.v2.index.pattern, premisesControllerV2.index(), { auditEvent: 'VIEW_PREMISES_LIST_V2' })
+    get(paths.premises.v2.index(), redirectsController.redirect(paths.premises.v2.online(), 301), {
+      auditEvent: 'REDIRECT_PREMISES_V2',
+    })
+    get(paths.premises.v2.online.pattern, premisesControllerV2.index('online'), {
+      auditEvent: 'VIEW_PREMISES_LIST_V2_ONLINE',
+    })
+    get(paths.premises.v2.archived.pattern, premisesControllerV2.index('archived'), {
+      auditEvent: 'VIEW_PREMISES_LIST_V2_ARCHIVED',
+    })
   }
 
   get(paths.premises.bedspaces.new.pattern, bedspacesController.new(), { auditEvent: 'VIEW_BEDSPACE_CREATE' })

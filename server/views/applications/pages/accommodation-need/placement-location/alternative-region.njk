@@ -1,0 +1,56 @@
+{% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% extends "../../layout.njk" %}
+
+{% block head %}
+    {{ super() }}
+    <link href="/assets/css/accessible-autocomplete.min.css?{{ version }}" rel="stylesheet" />
+{% endblock %}
+
+{% block questions %}
+    {% set pageTitleHTML %}
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    {% endset %}
+
+    {{ formPageRadios({
+        fieldName: "alternativeRegion",
+        fieldset: {
+            legend: {
+                html: pageTitleHTML,
+                isPageHeading: true,
+                classes: "govuk-fieldset__legend--l"
+            }
+        },
+        hint: {
+            text: "If placement is required in a PDU that's different to the person's current PDU, select 'yes'"
+        },
+        items: [
+            {
+                value: "yes",
+                text: "Yes"
+            },
+            {
+                value: "no",
+                text: "No"
+            }
+        ]
+    },fetchContext()) }}
+{% endblock %}
+
+{% block extraScripts %}
+
+    <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      accessibleAutocomplete.enhanceSelectElement({
+        selectElement: document.querySelector('select#pduId'),
+        defaultValue: '',
+      })
+
+      const hint = document.createElement('p')
+      hint.className = 'govuk-hint'
+      hint.textContent = 'Start typing and then select an option'
+      document.querySelector('label[for="pduId"]').insertAdjacentElement('afterend', hint)
+    </script>
+
+{% endblock %}

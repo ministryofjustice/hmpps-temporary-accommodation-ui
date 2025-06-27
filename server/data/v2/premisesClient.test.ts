@@ -6,14 +6,14 @@ import config from '../../config'
 import { cas3PremisesSearchResultFactory, cas3PremisesSearchResultsFactory } from '../../testutils/factories'
 import paths from '../../paths/api'
 
-describe('PremisesCLeint', () => {
+describe('PremisesClient', () => {
   let fakeApprovedPremisesApi: nock.Scope
   let premisesClient: PremisesClient
 
   const callConfig = { token: 'some-token' } as CallConfig
 
   beforeEach(() => {
-    config.apis.approvedPremises.url = 'http:/localhost:8080'
+    config.apis.approvedPremises.url = 'http://localhost:8080'
     fakeApprovedPremisesApi = nock(config.apis.approvedPremises.url)
     premisesClient = new PremisesClient(callConfig)
   })

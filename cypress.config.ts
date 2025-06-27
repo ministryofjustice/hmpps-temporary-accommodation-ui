@@ -23,6 +23,7 @@ import user from './integration_tests/mockApis/user'
 import referenceData from './integration_tests/mockApis/referenceData'
 import schemaValidator from './integration_tests/tasks/schemaValidator'
 import accessibilityViolations from './integration_tests/tasks/accessibilityViolations'
+import bedspaceV2 from './integration_tests/mockApis/v2/bedspace'
 import { resetStubs } from './integration_tests/mockApis'
 
 export default defineConfig({
@@ -70,6 +71,7 @@ export default defineConfig({
         ...bedspaceSearch,
         ...accessibilityViolations,
         ...referenceData,
+        ...bedspaceV2,
       })
     },
     baseUrl: 'http://localhost:3007',

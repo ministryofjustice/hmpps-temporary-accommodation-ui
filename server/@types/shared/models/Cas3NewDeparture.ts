@@ -2,10 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+/**
+ * details of the departure
+ */
 export type Cas3NewDeparture = {
     dateTime: string;
-    reasonId: string;
-    notes?: string;
     moveOnCategoryId: string;
+    notes?: string;
+    reasonId: string;
 };
 

@@ -5,8 +5,8 @@
 import type { Cas3PremisesSearchResult } from './Cas3PremisesSearchResult';
 export type Cas3PremisesSearchResults = {
     results?: Array<Cas3PremisesSearchResult>;
-    totalPremises: number;
     totalOnlineBedspaces?: number;
+    totalPremises: number;
     totalUpcomingBedspaces?: number;
 };
 

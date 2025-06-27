@@ -3,11 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3Arrival = {
-    expectedDepartureDate: string;
     arrivalDate: string;
     arrivalTime: string;
-    notes?: string;
     bookingId: string;
     createdAt: string;
+    expectedDepartureDate: string;
+    notes?: string;
 };
 

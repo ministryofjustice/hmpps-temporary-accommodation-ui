@@ -4,8 +4,8 @@
 /* eslint-disable */
 import type { CharacteristicPair } from './CharacteristicPair';
 export type BedSearchResultRoomSummary = {
+    characteristics: Array<CharacteristicPair>;
     id: string;
     name: string;
-    characteristics: Array<CharacteristicPair>;
 };
 

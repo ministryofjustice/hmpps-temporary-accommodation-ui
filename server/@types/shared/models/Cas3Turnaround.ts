@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3Turnaround = {
-    id: string;
     bookingId: string;
-    workingDays: number;
     createdAt: string;
+    id: string;
+    workingDays: number;
 };
 

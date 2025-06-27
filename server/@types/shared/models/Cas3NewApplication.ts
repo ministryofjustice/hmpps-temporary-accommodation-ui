@@ -2,9 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+/**
+ * Information to create a blank application with
+ */
 export type Cas3NewApplication = {
-    crn: string;
     convictionId?: number;
+    crn: string;
     deliusEventNumber?: string;
     offenceId?: string;
 };

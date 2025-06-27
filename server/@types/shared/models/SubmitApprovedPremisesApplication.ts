@@ -11,37 +11,38 @@ import type { SituationOption } from './SituationOption';
 import type { SubmitApplication } from './SubmitApplication';
 export type SubmitApprovedPremisesApplication = (SubmitApplication & {
     /**
-     * Use apType
-     * @deprecated
+     * If the user's ap area id is incorrect, they can optionally override it for the application
      */
-    isPipeApplication?: boolean;
-    isWomensApplication?: boolean;
+    apAreaId?: string;
+    apType?: ApType;
+    applicantUserDetails?: Cas1ApplicationUserDetails;
+    arrivalDate?: string;
+    caseManagerIsNotApplicant?: boolean;
+    caseManagerUserDetails?: Cas1ApplicationUserDetails;
     /**
      * noticeType should be used to indicate if this an emergency application
-     * @deprecated
      */
     isEmergencyApplication?: boolean;
     /**
      * Use apType
-     * @deprecated
      */
     isEsapApplication?: boolean;
-    apType?: ApType;
-    targetLocation: string;
-    releaseType: ReleaseTypeOption;
-    sentenceType: SentenceTypeOption;
-    situation?: SituationOption;
-    arrivalDate?: string;
     /**
-     * If the user's ap area id is incorrect, they can optionally override it for the application
+     * Use apType
      */
-    apAreaId?: string;
-    applicantUserDetails?: Cas1ApplicationUserDetails;
-    caseManagerIsNotApplicant?: boolean;
-    caseManagerUserDetails?: Cas1ApplicationUserDetails;
+    isPipeApplication?: boolean;
+    isWomensApplication?: boolean;
+    licenseExpiryDate?: string;
     noticeType?: Cas1ApplicationTimelinessCategory;
     reasonForShortNotice?: string;
     reasonForShortNoticeOther?: string;
-    licenseExpiryDate?: string;
+    releaseType?: ReleaseTypeOption;
+    sentenceType?: SentenceTypeOption;
+    situation?: SituationOption;
+    targetLocation?: string;
+} & {
+    releaseType: ReleaseTypeOption;
+    sentenceType: SentenceTypeOption;
+    targetLocation: string;
 });
 

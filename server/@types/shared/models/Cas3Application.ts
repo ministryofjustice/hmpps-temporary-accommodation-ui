@@ -3,23 +3,30 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApplicationStatus } from './ApplicationStatus';
-import type { Person } from './Person';
+import type { FullPerson } from './FullPerson';
 import type { PersonRisks } from './PersonRisks';
-import type { Unit } from './Unit';
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { UnknownPerson } from './UnknownPerson';
 export type Cas3Application = {
-    id: string;
-    person: Person;
+    arrivalDate?: string;
+    assessmentId?: string;
     createdAt: string;
     createdByUserId: string;
-    schemaVersion: string;
-    outdatedSchema: boolean;
-    data?: Unit;
-    document?: Unit;
-    status: ApplicationStatus;
-    risks?: PersonRisks;
-    submittedAt?: string;
-    arrivalDate?: string;
+    /**
+     * Any object
+     */
+    data?: any;
+    /**
+     * Any object
+     */
+    document?: any;
+    id: string;
     offenceId: string;
-    assessmentId?: string;
+    outdatedSchema: boolean;
+    person: (FullPerson | RestrictedPerson | UnknownPerson);
+    risks?: PersonRisks;
+    schemaVersion: string;
+    status: ApplicationStatus;
+    submittedAt?: string;
 };
 

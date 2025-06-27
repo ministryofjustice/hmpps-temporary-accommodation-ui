@@ -2,9 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { Unit } from './Unit';
 export type SubmitApplication = {
+    /**
+     * Any object
+     */
+    translatedDocument?: any;
     type: string;
-    translatedDocument?: Unit;
 };
 

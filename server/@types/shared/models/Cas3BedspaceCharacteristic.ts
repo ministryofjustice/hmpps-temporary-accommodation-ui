@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3BedspaceCharacteristic = {
-    id: string;
     description: string;
+    id: string;
     name?: string;
 };
 

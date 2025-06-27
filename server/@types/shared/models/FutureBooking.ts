@@ -3,12 +3,14 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Bed } from './Bed';
-import type { Person } from './Person';
+import type { FullPerson } from './FullPerson';
+import type { RestrictedPerson } from './RestrictedPerson';
+import type { UnknownPerson } from './UnknownPerson';
 export type FutureBooking = {
-    id: string;
-    person: Person;
     arrivalDate: string;
-    departureDate: string;
     bed?: Bed;
+    departureDate: string;
+    id: string;
+    person: (FullPerson | RestrictedPerson | UnknownPerson);
 };
 

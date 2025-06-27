@@ -4,15 +4,15 @@
 /* eslint-disable */
 import type { Cas3BedspacePremisesSearchResult } from './Cas3BedspacePremisesSearchResult';
 export type Cas3PremisesSearchResult = {
-    id: string;
-    reference: string;
     addressLine1: string;
     addressLine2?: string;
-    town?: string;
-    postcode: string;
-    pdu: string;
-    localAuthorityAreaName?: string;
     bedspaces?: Array<Cas3BedspacePremisesSearchResult>;
+    id: string;
+    localAuthorityAreaName?: string;
+    pdu: string;
+    postcode: string;
+    reference: string;
     totalArchivedBedspaces?: number;
+    town?: string;
 };
 

@@ -5,12 +5,12 @@
 import type { DepartureReason } from './DepartureReason';
 import type { MoveOnCategory } from './MoveOnCategory';
 export type Cas3Departure = {
-    id: string;
     bookingId: string;
-    dateTime: string;
-    reason: DepartureReason;
-    notes?: string;
-    moveOnCategory: MoveOnCategory;
     createdAt: string;
+    dateTime: string;
+    id: string;
+    moveOnCategory: MoveOnCategory;
+    notes?: string;
+    reason: DepartureReason;
 };
 

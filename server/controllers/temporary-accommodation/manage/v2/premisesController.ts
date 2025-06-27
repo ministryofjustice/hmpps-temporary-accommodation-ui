@@ -14,14 +14,16 @@ export default class PremisesController {
       const callConfig = extractCallConfig(req)
       const params = req.query as PremisesSearchParameters
 
-      const searchData = await this.premisesService.searchDataAndGenerateTableRows(callConfig, params, status)
+      const searchData = await this.premisesService.searchDataAndGenerateTableRows(
+        callConfig,
+        params.postcodeOrAddress,
+        status,
+      )
 
       return res.render('temporary-accommodation/v2/premises/index', {
         ...searchData,
         params,
         status,
-        isOnlineTab: status === 'online',
-        isArchivedTab: status === 'archived',
         subNavArr: createSubNavArr(status, params.postcodeOrAddress),
       })
     }

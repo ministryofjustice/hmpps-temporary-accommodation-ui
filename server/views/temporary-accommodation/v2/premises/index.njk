@@ -7,7 +7,7 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = (isOnlineTab and "Online properties" or "Archived properties") + " - " + applicationName %}
+{% set pageTitle = (status | title) + " properties - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -25,7 +25,7 @@
 
         {{ mojCasPageHeaderActions({
             heading: {
-                text: (isOnlineTab and "Online properties" or "Archived properties")
+                text: (status | title) + " properties"
             },
             actions: [{
                 text: "Add a property",
@@ -47,7 +47,7 @@
                     {{ govukInput({
                         label: {
                             classes: 'govuk-!-font-weight-bold',
-                            text: (isOnlineTab and 'Find an online property' or 'Find an archived property')
+                            text: 'Find an ' + status + ' property'
                         },
                         hint: {
                             text: 'Search by road or postcode'
@@ -73,12 +73,12 @@
             <div class="govuk-!-margin-bottom-6">
                 <div class="govuk-!-padding-bottom-4">
                     {% if params.postcodeOrAddress %}
-                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ (isOnlineTab and "online" or "archived") }} properties matching '{{ params.postcodeOrAddress }}'</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties matching '{{ params.postcodeOrAddress }}'</h2>
                     {% else %}
-                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ (isOnlineTab and "online" or "archived") }} properties</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties</h2>
                     {% endif %}
                     {% if totalPremises is defined and totalPremises > 0 %}
-                        {% if isOnlineTab and totalOnlineBedspaces is defined %}
+                        {% if status === 'online' and totalOnlineBedspaces is defined %}
                         <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ totalOnlineBedspaces }}</p>
                         {% endif %}
                         {% if totalUpcomingBedspaces is defined and totalUpcomingBedspaces != 0 %}

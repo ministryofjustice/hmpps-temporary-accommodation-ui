@@ -93,8 +93,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -102,7 +100,11 @@ describe('PremisesController', () => {
         ...searchData,
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('searches online premises data and returns as table rows when status=online parameter is provided', async () => {
@@ -133,8 +135,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -142,7 +142,11 @@ describe('PremisesController', () => {
         ...searchData,
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('searches online premises data by postcode or address and returns as table rows when searched for a postcode or address', async () => {
@@ -171,8 +175,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NE1' },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
@@ -180,7 +182,11 @@ describe('PremisesController', () => {
         ...searchData,
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('returns empty search data when there are no properties in the database', async () => {
@@ -211,8 +217,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -220,7 +224,11 @@ describe('PremisesController', () => {
         ...searchData,
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('returns zero online properties data when no properties exist in database', async () => {
@@ -251,8 +259,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -264,7 +270,11 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('returns online properties data with search term and bedspace counts when search has results', async () => {
@@ -293,8 +303,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NE1' },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
@@ -306,7 +314,11 @@ describe('PremisesController', () => {
         tableRows: [premisesRow1, premisesRow2],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('returns zero online properties data with search term when search returns no results', async () => {
@@ -335,8 +347,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NONEXISTENT' },
         status: 'online',
-        isOnlineTab: true,
-        isArchivedTab: false,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NONEXISTENT', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NONEXISTENT', active: false },
@@ -348,7 +358,11 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'online')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'online',
+      )
     })
 
     it('returns zero archived properties data when no archived properties exist in database', async () => {
@@ -379,8 +393,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'archived',
-        isOnlineTab: false,
-        isArchivedTab: true,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: false },
           { text: 'Archived properties', href: '/v2/properties/archived', active: true },
@@ -392,7 +404,11 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'archived')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'archived',
+      )
     })
 
     it('returns archived properties data with search term when search has results', async () => {
@@ -421,8 +437,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'SW1' },
         status: 'archived',
-        isOnlineTab: false,
-        isArchivedTab: true,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=SW1', active: false },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=SW1', active: true },
@@ -434,7 +448,11 @@ describe('PremisesController', () => {
         tableRows: [premisesRow1, premisesRow2, premisesRow3],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'archived')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'archived',
+      )
     })
 
     it('returns zero archived properties data with search term when search returns no results', async () => {
@@ -463,8 +481,6 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NOTFOUND' },
         status: 'archived',
-        isOnlineTab: false,
-        isArchivedTab: true,
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NOTFOUND', active: false },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NOTFOUND', active: true },
@@ -476,7 +492,11 @@ describe('PremisesController', () => {
         tableRows: [],
       })
 
-      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(callConfig, params, 'archived')
+      expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+        callConfig,
+        params.postcodeOrAddress,
+        'archived',
+      )
     })
   })
 })

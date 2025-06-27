@@ -4,7 +4,7 @@ import type {
   Cas3PremisesSearchResults,
   Cas3PremisesStatus,
 } from '@approved-premises/api'
-import { PremisesSearchParameters, TableRow } from '@approved-premises/ui'
+import { TableRow } from '@approved-premises/ui'
 import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
@@ -14,12 +14,12 @@ export default class PremisesService {
 
   async searchDataAndGenerateTableRows(
     callConfig: CallConfig,
-    params: PremisesSearchParameters,
+    postcodeOrAddress: string | undefined,
     status: Cas3PremisesStatus = 'online',
   ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
-    const premises = await premisesClient.search(params.postcodeOrAddress ?? '', status)
+    const premises = await premisesClient.search(postcodeOrAddress ?? '', status)
 
     return {
       ...premises,

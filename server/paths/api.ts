@@ -91,9 +91,7 @@ const applyPaths = {
 export default {
   v2: {
     premises: {
-      index: managePathsV2.premises.search,
-      online: managePathsV2.premises.search,
-      archived: managePathsV2.premises.search,
+      search: managePathsV2.premises.search,
     },
   },
   premises: {

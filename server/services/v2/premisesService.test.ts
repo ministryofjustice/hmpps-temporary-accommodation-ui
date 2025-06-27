@@ -1,4 +1,3 @@
-import { PremisesSearchParameters } from '@approved-premises/ui'
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
@@ -105,7 +104,7 @@ describe('PremisesService', () => {
     })
 
     it('returns search results with table rows for online status by default', async () => {
-      const params: PremisesSearchParameters = { postcodeOrAddress: 'London' }
+      const postcodeOrAddress = 'London'
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: [searchResult1, searchResult2],
         totalPremises: 2,
@@ -115,7 +114,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, params)
+      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress)
 
       expect(result).toEqual({
         ...searchResults,
@@ -127,7 +126,7 @@ describe('PremisesService', () => {
     })
 
     it('returns search results with table rows for specified status', async () => {
-      const params: PremisesSearchParameters = { postcodeOrAddress: 'London' }
+      const postcodeOrAddress = 'London'
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: [searchResult1],
         totalPremises: 1,
@@ -137,7 +136,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, params, 'archived')
+      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress, 'archived')
 
       expect(result).toEqual({
         ...searchResults,
@@ -149,7 +148,7 @@ describe('PremisesService', () => {
     })
 
     it('returns empty search results when there are no properties in the database', async () => {
-      const params: PremisesSearchParameters = { postcodeOrAddress: '' }
+      const postcodeOrAddress = ''
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: [],
         totalPremises: 0,
@@ -159,7 +158,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, params)
+      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress)
 
       expect(result).toEqual({
         ...searchResults,

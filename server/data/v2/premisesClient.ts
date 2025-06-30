@@ -12,7 +12,7 @@ export default class PremisesClient {
 
   async search(postcodeOrAddress: string, premisesStatus: Cas3PremisesStatus) {
     return this.restClient.get<Cas3PremisesSearchResults>({
-      path: paths.v2.premises.index({}),
+      path: paths.v2.premises.search({}),
       query: { postcodeOrAddress, premisesStatus },
     })
   }

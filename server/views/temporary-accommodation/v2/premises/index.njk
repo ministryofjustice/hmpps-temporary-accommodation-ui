@@ -7,7 +7,7 @@
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set pageTitle = "Online properties - " + applicationName %}
+{% set pageTitle = (status | title) + " properties - " + applicationName %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
@@ -25,7 +25,7 @@
 
         {{ mojCasPageHeaderActions({
             heading: {
-                text: 'Online properties'
+                text: (status | title) + " properties"
             },
             actions: [{
                 text: "Add a property",
@@ -35,43 +35,62 @@
 
         {{ mojSubNavigation({
             label: "Sub navigation",
-            items: [{
-                text: "Online properties",
-                href: "#",
-                active: true
-            }]
+            items: subNavArr
         }) }}
     </div>
 
-    <div>
-        <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.v2.index() }}" method="get">
-                {{ govukInput({
-                    label: {
-                        classes: 'govuk-!-font-weight-bold',
-                        text: 'Find a property'
-                    },
-                    hint: {
-                        text: 'Search by road or postcode'
-                    },
-                    name: 'postcodeOrAddress',
-                    id: 'postcodeOrAddress',
-                    value: params.postcodeOrAddress,
-                    classes: 'moj-search__input'
-                }) }}
+    <div class="govuk-grid-row">
+        {% if (totalPremises is defined and totalPremises > 0) or params.postcodeOrAddress %}
+        <div class="govuk-grid-column-full">
+            <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
+                <form action="{{ paths.premises.v2[status]({}) }}" method="get">
+                    {{ govukInput({
+                        label: {
+                            classes: 'govuk-!-font-weight-bold',
+                            text: 'Find an ' + status + ' property'
+                        },
+                        hint: {
+                            text: 'Search by road or postcode'
+                        },
+                        name: 'postcodeOrAddress',
+                        id: 'postcodeOrAddress',
+                        value: params.postcodeOrAddress,
+                        classes: 'moj-search__input'
+                    }) }}
 
-                {{ govukButton({
-                    text: 'Search',
-                    attributes: { id: 'search-button' },
-                    preventDoubleClick: true,
-                    classes: 'moj-search__button'
-                }) }}
-            </form>
+                    {{ govukButton({
+                        text: 'Search',
+                        attributes: { id: 'search-button' },
+                        preventDoubleClick: true,
+                        classes: 'moj-search__button'
+                    }) }}
+                </form>
+            </div>
         </div>
+        {% endif %}
+        {% if totalPremises is defined %}
+        <div class="govuk-grid-column-full">
+            <div class="govuk-!-margin-bottom-6">
+                <div class="govuk-!-padding-bottom-4">
+                    {% if params.postcodeOrAddress %}
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties matching '{{ params.postcodeOrAddress }}'</h2>
+                    {% else %}
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties</h2>
+                    {% endif %}
+                    {% if totalPremises is defined and totalPremises > 0 %}
+                        {% if status === 'online' and totalOnlineBedspaces is defined %}
+                        <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ totalOnlineBedspaces }}</p>
+                        {% endif %}
+                        {% if totalUpcomingBedspaces is defined and totalUpcomingBedspaces != 0 %}
+                        <p class="govuk-body govuk-!-margin-bottom-0">Upcoming bedspaces: {{ totalUpcomingBedspaces }}</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-
     <div>
-
         {% if (tableRows | length > 0) %}
             {{ govukTable({
                 attributes: {
@@ -98,10 +117,12 @@
                 rows: tableRows
             }) }}
         {% else %}
-            {% if params.postcodeOrAddress %}
-                <h2>{{ '0 online properties matching ‘' + params.postcodeOrAddress + '’' }}</h2>
-            {% else %}
-                <h2>0 online properties</h2>
+            {% if totalPremises is defined and totalPremises > 0 %}
+                {% if params.postcodeOrAddress %}
+                    <h2>{{ '0 online properties matching ‘' + params.postcodeOrAddress + '’' }}</h2>
+                {% else %}
+                    <h2>0 {{ (isOnlineTab and "online" or "archived") }} properties</h2>
+                {% endif %}
             {% endif %}
         {% endif %}
     </div>

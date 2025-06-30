@@ -111,6 +111,7 @@ export type { Cas3ReportType } from './models/Cas3ReportType';
 export type { Cas3SubmitApplication } from './models/Cas3SubmitApplication';
 export type { Cas3Turnaround } from './models/Cas3Turnaround';
 export type { Cas3UpdateApplication } from './models/Cas3UpdateApplication';
+export type { Cas3UpdateBedspace } from './models/Cas3UpdateBedspace';
 export type { Category } from './models/Category';
 export type { Characteristic } from './models/Characteristic';
 export type { CharacteristicPair } from './models/CharacteristicPair';

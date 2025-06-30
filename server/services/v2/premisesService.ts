@@ -8,6 +8,7 @@ import { TableRow } from '@approved-premises/ui'
 import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
+import paths from '../../paths/temporary-accommodation/manage'
 
 export default class PremisesService {
   constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
@@ -56,11 +57,15 @@ export default class PremisesService {
       .join('<br />')
   }
 
-  private formatBedspace(bedspace: Cas3BedspacePremisesSearchResult): string {
+  private bedspaceUrl(premisesId: string, bedspaceId: string): string {
+    return paths.premises.v2.bedspaces.show({ premisesId, bedspaceId })
+  }
+
+  private formatBedspace(premisesId: string, bedspace: Cas3BedspacePremisesSearchResult): string {
     const archived =
       bedspace.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
 
-    return `<a href="#">${bedspace.reference}</a>${archived}`
+    return `<a href="${this.bedspaceUrl(premisesId, bedspace.id)}">${bedspace.reference}</a>${archived}`
   }
 
   private formatBedspaces(premises: Cas3PremisesSearchResult): string {
@@ -68,6 +73,6 @@ export default class PremisesService {
       return `No bedspaces<br /><a href="#">Add a bedspace</a>`
     }
 
-    return premises.bedspaces.map(this.formatBedspace).join('<br />')
+    return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace)).join('<br />')
   }
 }

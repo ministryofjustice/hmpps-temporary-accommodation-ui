@@ -17,6 +17,7 @@ import PremisesController from './premisesController'
 import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
 import PremisesControllerV2 from './v2/premisesController'
+import BedspacesControllerV2 from './v2/bedspacesController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()
@@ -32,6 +33,7 @@ export const controllers = (services: Services) => {
     services.bookingService,
     services.assessmentsService,
   )
+  const bedspacesControllerV2 = new BedspacesControllerV2(services.v2.bedspaceService)
   const bookingsController = new BookingsController(
     services.premisesService,
     services.bedspaceService,
@@ -112,6 +114,7 @@ export const controllers = (services: Services) => {
     assessmentsController,
     v2: {
       premisesController: premisesControllerV2,
+      bedspacesController: bedspacesControllerV2,
     },
   }
 }

@@ -4,6 +4,7 @@ const cas3Path = path('/cas3')
 const premisesPath = path('/premises')
 const premisesSummaryPath = cas3Path.path('premises/summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
+const singlePremisesCas3Path = cas3Path.path('premises/:premisesId')
 const premisesSearchPath = cas3Path.path('premises/search')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
@@ -11,6 +12,9 @@ const singleLostBedPath = lostBedsPath.path(':lostBedId')
 const cancelLostBedPath = singleLostBedPath.path('cancellations')
 const roomsPath = singlePremisesPath.path('rooms')
 const singleRoomPath = singlePremisesPath.path('rooms').path(':roomId')
+
+const bedspacesCas3Path = singlePremisesCas3Path.path('bedspaces')
+const singleBedspacePath = bedspacesCas3Path.path(':bedspaceId')
 
 const bedspacesPath = cas3Path.path('/bedspaces')
 const searchBedspacesPath = bedspacesPath.path('search')
@@ -63,6 +67,10 @@ const managePaths = {
 const managePathsV2 = {
   premises: {
     search: premisesSearchPath,
+    show: singlePremisesCas3Path,
+    bedspaces: {
+      show: singleBedspacePath,
+    },
   },
 }
 
@@ -92,6 +100,10 @@ export default {
   v2: {
     premises: {
       search: managePathsV2.premises.search,
+      show: managePathsV2.premises.show,
+      bedspaces: {
+        show: managePathsV2.premises.bedspaces.show,
+      },
     },
   },
   premises: {

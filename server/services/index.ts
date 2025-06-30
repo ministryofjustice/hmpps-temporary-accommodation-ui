@@ -9,6 +9,7 @@ import AssessmentsService from './assessmentsService'
 import AuditService from './auditService'
 import BedspaceSearchService from './bedspaceSearchService'
 import BedspaceService from './bedspaceService'
+import BedspaceServiceV2 from './v2/bedspaceService'
 import BookingSearchService from './bookingSearchService'
 import BookingService from './bookingService'
 import CancellationService from './cancellationService'
@@ -38,6 +39,7 @@ export const services = () => {
     reportClientBuilder,
     userClientBuilder,
     bedspaceClientBuilder,
+    bedspaceClientV2Builder,
     assessmentClientBuilder,
     timelineClientBuilder,
   } = dataAccess()
@@ -54,6 +56,7 @@ export const services = () => {
   const lostBedService = new LostBedService(lostBedClientBuilder, referenceDataClientBuilder)
   const applicationService = new ApplicationService(applicationClientBuilder)
   const bedspaceService = new BedspaceService(roomClientBuilder, referenceDataClientBuilder)
+  const bedspaceServiceV2 = new BedspaceServiceV2(bedspaceClientV2Builder)
   const confirmationService = new ConfirmationService(bookingClientBuilder)
   const extensionService = new ExtensionService(bookingClientBuilder)
   const reportService = new ReportService(reportClientBuilder, referenceDataClientBuilder)
@@ -87,6 +90,7 @@ export const services = () => {
     timelineService,
     v2: {
       premisesService: premisesServiceV2,
+      bedspaceService: bedspaceServiceV2,
     },
   }
 }

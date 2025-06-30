@@ -8,9 +8,12 @@ const premisesV2OnlinePath = premisesV2Path.path('online')
 const premisesV2ArchivedPath = premisesV2Path.path('archived')
 
 const singlePremisesPath = premisesPath.path(':premisesId')
+const singlePremisesV2Path = premisesV2Path.path(':premisesId')
 
 const bedspacesPath = singlePremisesPath.path('bedspaces')
+const bedspacesV2Path = singlePremisesV2Path.path('bedspaces')
 const singleBedspacePath = bedspacesPath.path(':roomId')
+const singleBedspaceV2Path = bedspacesV2Path.path(':bedspaceId')
 
 const bookingsPath = singleBedspacePath.path('bookings')
 const singleBookingPath = bookingsPath.path(':bookingId')
@@ -54,6 +57,9 @@ const paths: Record<string, any> = {
       index: premisesV2Path,
       online: premisesV2OnlinePath,
       archived: premisesV2ArchivedPath,
+      bedspaces: {
+        show: singleBedspaceV2Path,
+      },
     },
   },
   bookings: {

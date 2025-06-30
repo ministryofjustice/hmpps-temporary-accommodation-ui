@@ -1,0 +1,41 @@
+{% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "View a bedspace - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set bodyClasses = "temporary-accommodation-bedspaces-show" %}
+
+{% block beforeContent %}
+    {{ breadCrumb('View a bedspace', [
+        {title: 'List of properties', href: addPlaceContext(paths.premises.v2.index())},
+        {title: 'TODO: View a property', href: '#'}
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    {% include "../../../_messages.njk" %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ mojCasPageHeaderActions({
+                heading: {
+                    text: "Bedspace reference: " + bedspace.reference,
+                    classes: "govuk-heading-l"
+                },
+                actions: actions
+            }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukSummaryList({
+                rows: bedspace.summary.rows
+            }) }}
+        </div>
+    </div>
+
+{% endblock %}

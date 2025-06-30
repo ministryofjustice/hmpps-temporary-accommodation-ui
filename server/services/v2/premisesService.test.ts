@@ -69,7 +69,6 @@ describe('PremisesService', () => {
           .filter(s => s !== undefined && s !== '')
           .join('<br />')
 
-        // hrefs will need updated for relevant tickets
         const bedspaces =
           prem.bedspaces.length === 0
             ? `No bedspaces<br /><a href="#">Add a bedspace</a>`
@@ -77,7 +76,7 @@ describe('PremisesService', () => {
                 .map(bed => {
                   const archivedTag =
                     bed.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
-                  return `<a href="#">${bed.reference}</a>${archivedTag}`
+                  return `<a href="/v2/properties/${prem.id}/bedspaces/${bed.id}">${bed.reference}</a>${archivedTag}`
                 })
                 .join('<br />')
 

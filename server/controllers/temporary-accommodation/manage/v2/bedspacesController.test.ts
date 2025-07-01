@@ -10,14 +10,23 @@ import {
   cas3PremisesFactory,
   characteristicFactory,
   probationRegionFactory,
+  referenceDataFactory,
 } from '../../../../testutils/factories'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 import extractCallConfig from '../../../../utils/restUtils'
 import PremisesService from '../../../../services/v2/premisesService'
+import { DateFormats } from '../../../../utils/dateUtils'
+import paths from '../../../../paths/temporary-accommodation/manage'
 
+jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
 
 describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
+  const premisesId = 'some-premises-id'
+  const referenceData = {
+    characteristics: referenceDataFactory.characteristic('room').buildList(5),
+  }
 
   let request: Request
 
@@ -27,7 +36,7 @@ describe('BedspacesController', () => {
   const bedspaceService = createMock<BedspaceService>({})
   const premisesService = createMock<PremisesService>({})
 
-  const bedspaceController = new BedspacesController(bedspaceService, premisesService)
+  const bedspacesController = new BedspacesController(premisesService, bedspaceService)
 
   beforeEach(() => {
     request = createMock<Request>({
@@ -38,8 +47,98 @@ describe('BedspacesController', () => {
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
   })
 
+  describe('new', () => {
+    it('renders the form', async () => {
+      const premises = cas3PremisesFactory.build()
+
+      bedspaceService.getReferenceData.mockResolvedValue(referenceData)
+      premisesService.getPremises.mockResolvedValue(premises)
+
+      const requestHandler = bedspacesController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params = { premisesId: premises.id }
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/new', {
+        allCharacteristics: referenceData.characteristics,
+        characteristicIds: [],
+        premises,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+  })
+
+  describe('create', () => {
+    it('creates a bedspace and redirects to the show bedspace page', async () => {
+      const requestHandler = bedspacesController.create()
+
+      const bedspace = cas3BedspaceFactory.build()
+
+      request.params = {
+        premisesId,
+      }
+      request.body = {
+        reference: bedspace.reference,
+        notes: bedspace.notes,
+        ...DateFormats.isoToDateAndTimeInputs(bedspace.startDate, 'startDate'),
+      }
+
+      bedspaceService.createBedspace.mockResolvedValue(bedspace)
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.createBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        expect.objectContaining({
+          reference: bedspace.reference,
+          characteristicIds: [],
+          notes: bedspace.notes,
+          startDate: bedspace.startDate,
+        }),
+      )
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace created')
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }),
+      )
+    })
+
+    it('renders with errors if the API returns an error', async () => {
+      const requestHandler = bedspacesController.create()
+
+      const err = new Error()
+
+      bedspaceService.createBedspace.mockImplementation(() => {
+        throw err
+      })
+
+      const bedspace = cas3BedspaceFactory.build()
+
+      request.params = {
+        premisesId,
+      }
+      request.body = {
+        reference: bedspace.reference,
+        notes: bedspace.notes,
+      }
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.v2.bedspaces.new({ premisesId }),
+      )
+    })
+  })
+
   describe('show', () => {
-    const premisesId = 'some-premises-id'
     const bedspaceId = 'some-bedspace-id'
 
     const characteristic1 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
@@ -80,7 +179,7 @@ describe('BedspacesController', () => {
             },
           },
           {
-            key: { text: 'Addition bedspace details' },
+            key: { text: 'Additional bedspace details' },
             value: { text: onlineBedspace.notes },
           },
         ],
@@ -109,7 +208,7 @@ describe('BedspacesController', () => {
             value: { html: `<span class="hmpps-tag-filters">Characteristic 1</span>` },
           },
           {
-            key: { text: 'Addition bedspace details' },
+            key: { text: 'Additional bedspace details' },
             value: { text: archivedBedspace.notes },
           },
         ],
@@ -138,7 +237,7 @@ describe('BedspacesController', () => {
             value: { html: `<span class="hmpps-tag-filters">Characteristic 2</span>` },
           },
           {
-            key: { text: 'Addition bedspace details' },
+            key: { text: 'Additional bedspace details' },
             value: { text: upcomingBedspace.notes },
           },
         ],
@@ -160,7 +259,7 @@ describe('BedspacesController', () => {
           params,
         })
 
-        const requestHandler = bedspaceController.show()
+        const requestHandler = bedspacesController.show()
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {

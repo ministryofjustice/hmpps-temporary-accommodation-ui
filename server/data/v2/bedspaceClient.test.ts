@@ -2,7 +2,7 @@ import nock from 'nock'
 import BedspaceClient from './bedspaceClient'
 import { CallConfig } from '../restClient'
 import config from '../../config'
-import { cas3BedspaceFactory } from '../../testutils/factories'
+import { cas3BedspaceFactory, cas3NewBedspaceFactory } from '../../testutils/factories'
 import paths from '../../paths/api'
 
 describe('BedspaceClient', () => {
@@ -10,6 +10,7 @@ describe('BedspaceClient', () => {
   let bedspaceClient: BedspaceClient
 
   const callConfig = { token: 'some-token' } as CallConfig
+  const premisesId = 'some-premises-id'
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
@@ -28,7 +29,6 @@ describe('BedspaceClient', () => {
 
   describe('find', () => {
     it('should return bedspace', async () => {
-      const premisesId = 'some-premises-id'
       const bedspaceId = 'some-bedspace-id'
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
@@ -38,6 +38,25 @@ describe('BedspaceClient', () => {
         .reply(200, bedspace)
 
       const output = await bedspaceClient.find(premisesId, bedspaceId)
+      expect(output).toEqual(bedspace)
+    })
+  })
+
+  describe('create', () => {
+    it('should return the bedspace that has been created', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+
+      const payload = cas3NewBedspaceFactory.build({
+        reference: bedspace.reference,
+        notes: bedspace.notes,
+      })
+
+      fakeApprovedPremisesApi
+        .post(paths.cas3.premises.bedspaces.create({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bedspace)
+
+      const output = await bedspaceClient.create(premisesId, payload)
       expect(output).toEqual(bedspace)
     })
   })

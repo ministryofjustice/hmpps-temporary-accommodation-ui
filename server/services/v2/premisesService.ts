@@ -98,4 +98,11 @@ export default class PremisesService {
 
     return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace)).join('<br />')
   }
+
+  async getPremises(callConfig: CallConfig, id: string): Promise<Cas3Premises> {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    const premises = await premisesClient.find(id)
+
+    return premises
+  }
 }

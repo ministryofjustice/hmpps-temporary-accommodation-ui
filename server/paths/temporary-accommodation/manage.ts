@@ -58,7 +58,9 @@ const paths: Record<string, any> = {
       online: premisesV2OnlinePath,
       archived: premisesV2ArchivedPath,
       bedspaces: {
+        new: bedspacesV2Path.path('new'),
         show: singleBedspaceV2Path,
+        create: bedspacesV2Path,
       },
     },
   },

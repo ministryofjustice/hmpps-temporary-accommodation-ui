@@ -1,13 +1,22 @@
-import { Cas3Bedspace, type Cas3BedspaceStatus, Characteristic } from '@approved-premises/api'
+import { Cas3Bedspace, type Cas3BedspaceStatus, Cas3NewBedspace, Characteristic } from '@approved-premises/api'
 import { SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../../data/restClient'
 import { RestClientBuilder } from '../../data'
 import BedspaceClient from '../../data/v2/bedspaceClient'
+import ReferenceDataClient from '../../data/referenceDataClient'
 import { DateFormats } from '../../utils/dateUtils'
 import { convertToTitleCase } from '../../utils/utils'
+import { filterCharacteristics } from '../../utils/characteristicUtils'
+
+export type BedspaceReferenceData = {
+  characteristics: Array<Characteristic>
+}
 
 export default class BedspaceService {
-  constructor(private readonly bedspaceClientFactory: RestClientBuilder<BedspaceClient>) {}
+  constructor(
+    private readonly bedspaceClientFactory: RestClientBuilder<BedspaceClient>,
+    private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
+  ) {}
 
   async getSingleBedspaceDetails(
     callConfig: CallConfig,
@@ -56,7 +65,7 @@ export default class BedspaceService {
       case 'upcoming':
         return 'govuk-tag--blue'
       default:
-        return ''
+        return 'govuk-tag--grey'
     }
   }
 
@@ -77,5 +86,25 @@ export default class BedspaceService {
     return characteristics
       .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
       .join(' ')
+  }
+
+  async getReferenceData(callConfig: CallConfig): Promise<BedspaceReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
+
+    const characteristics = filterCharacteristics(
+      await referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+      'room',
+    ).sort((a, b) => a.name.localeCompare(b.name))
+
+    return { characteristics }
+  }
+
+  async createBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    newBedspace: Cas3NewBedspace,
+  ): Promise<Cas3Bedspace> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.create(premisesId, newBedspace)
   }
 }

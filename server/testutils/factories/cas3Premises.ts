@@ -2,6 +2,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
 import type { Cas3Premises } from '@approved-premises/api'
+import characteristicFactory from './characteristic'
 import referenceDataFactory from './referenceData'
 
 export default Factory.define<Cas3Premises>(() => ({
@@ -17,4 +18,5 @@ export default Factory.define<Cas3Premises>(() => ({
   totalOnlineBedspaces: faker.number.int({ min: 1, max: 10 }),
   totalArchivedBedspaces: faker.number.int({ min: 1, max: 5 }),
   totalUpcomingBedspaces: faker.number.int({ min: 1, max: 5 }),
+  characteristics: characteristicFactory.buildList(5),
 }))

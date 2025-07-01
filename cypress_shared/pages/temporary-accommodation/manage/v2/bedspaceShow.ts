@@ -35,6 +35,33 @@ export default class BedspaceShowPage extends Page {
     cy.get('main dl').get('dd').eq(3).contains(this.bedspace.notes)
   }
 
+  shouldShowPropertyAddress(): void {
+    cy.get('main div h2').contains('Property address').parent('div').children('p').as('propertyAddress')
+
+    cy.get('@propertyAddress')
+      .contains(this.premises.addressLine1)
+      .contains(this.premises.addressLine2)
+      .contains(this.premises.town)
+      .contains(this.premises.postcode)
+  }
+
+  shouldShowPropertyDetails(): void {
+    cy.get('main div h2')
+      .contains('Property details')
+      .parent('div')
+      .children('p')
+      .children('span')
+      .as('propertyDetails')
+
+    this.premises.characteristics.forEach(characteristic => {
+      cy.get('@propertyDetails').contains(characteristic.name)
+    })
+  }
+
+  shouldShowNoPropertyDetails(): void {
+    cy.get('main div h2').contains('Property details').parent('div').children('p').contains('None')
+  }
+
   shouldShowNoBookings(): void {
     cy.get('main').contains('No bookings.')
   }

@@ -3,7 +3,11 @@ import nock from 'nock'
 import PremisesClient from './premisesClient'
 import { CallConfig } from '../restClient'
 import config from '../../config'
-import { cas3PremisesSearchResultFactory, cas3PremisesSearchResultsFactory } from '../../testutils/factories'
+import {
+  cas3PremisesFactory,
+  cas3PremisesSearchResultFactory,
+  cas3PremisesSearchResultsFactory,
+} from '../../testutils/factories'
 import paths from '../../paths/api'
 
 describe('PremisesClient', () => {
@@ -33,7 +37,7 @@ describe('PremisesClient', () => {
       [cas3PremisesSearchResultsFactory.build({ results: cas3PremisesSearchResultFactory.buildList(0) })],
     ])('should get premises search results', async searchResults => {
       fakeApprovedPremisesApi
-        .get(paths.v2.premises.search({}))
+        .get(paths.cas3.premises.search({}))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .query({
           postcodeOrAddress: 'NE1 1AB',
@@ -43,6 +47,21 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.search('NE1 1AB', 'online')
       expect(output).toEqual(searchResults)
+    })
+  })
+
+  describe('find', () => {
+    it('should get a single premises by id', async () => {
+      const premisesId = 'premises-id'
+      const premises = cas3PremisesFactory.build({ id: premisesId })
+
+      fakeApprovedPremisesApi
+        .get(paths.cas3.premises.show({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const output = await premisesClient.find(premisesId)
+      expect(output).toEqual(premises)
     })
   })
 })

@@ -1,6 +1,7 @@
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
+  cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   probationRegionFactory,
@@ -168,6 +169,45 @@ describe('PremisesService', () => {
       expect(result.totalOnlineBedspaces).toBe(0)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.search).toHaveBeenCalledWith('', 'online')
+    })
+  })
+
+  describe('getSinglePremises', () => {
+    const premisesId = 'premises-id'
+
+    it('should return the premises', async () => {
+      const premises = cas3PremisesFactory.build({ id: premisesId })
+      premisesClient.find.mockResolvedValue(premises)
+
+      const result = await service.getSinglePremises(callConfig, premisesId)
+
+      expect(result).toBe(premises)
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.find).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
+  describe('getSinglePremisesDetails', () => {
+    const premisesId = 'premises-id'
+
+    it('should return the premises with full address', async () => {
+      const premises = cas3PremisesFactory.build({
+        id: premisesId,
+        addressLine1: '32 Windsor Gardens',
+        addressLine2: undefined,
+        town: 'London',
+        postcode: 'W9 3RQ',
+      })
+      premisesClient.find.mockResolvedValue(premises)
+
+      const result = await service.getSinglePremisesDetails(callConfig, premisesId)
+
+      expect(result).toEqual({
+        ...premises,
+        fullAddress: '32 Windsor Gardens<br />London<br />W9 3RQ',
+      })
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.find).toHaveBeenCalledWith(premisesId)
     })
   })
 })

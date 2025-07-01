@@ -1,4 +1,4 @@
-import type { Cas3PremisesSearchResults, Cas3PremisesStatus } from '@approved-premises/api'
+import type { Cas3Premises, Cas3PremisesSearchResults, Cas3PremisesStatus } from '@approved-premises/api'
 import { stubFor } from '..'
 
 type SearchArguments = {
@@ -26,6 +26,22 @@ const stubPremisesSearchV2 = (args: SearchArguments) =>
     },
   })
 
+const stubPremisesShowV2 = (premises: Cas3Premises) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: `/cas3/premises/${premises.id}`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: premises,
+    },
+  })
+
 export default {
   stubPremisesSearchV2,
+  stubPremisesShowV2,
 }

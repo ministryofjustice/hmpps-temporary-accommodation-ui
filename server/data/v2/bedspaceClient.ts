@@ -12,7 +12,7 @@ export default class BedspaceClient {
 
   async find(premisesId: string, bedspaceId: string) {
     return this.restClient.get<Cas3Bedspace>({
-      path: paths.v2.premises.bedspaces.show({ premisesId, bedspaceId }),
+      path: paths.cas3.premises.bedspaces.show({ premisesId, bedspaceId }),
     })
   }
 }

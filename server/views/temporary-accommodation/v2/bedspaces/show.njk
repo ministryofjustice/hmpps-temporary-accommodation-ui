@@ -31,6 +31,28 @@
     </div>
 
     <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-third">
+            <h2 class="govuk-heading-s">Property address</h2>
+
+            <p class="govuk-body">
+                {{ premises.fullAddress | safe }}
+            </p>
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            <h2 class="govuk-heading-s">Property details</h2>
+
+            <p class="govuk-body">
+                {% for characteristic in premises.characteristics %}
+                    <span class="hmpps-tag-filters">{{ characteristic.name }}</span>
+                {% else %}
+                    None
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {{ govukSummaryList({
                 rows: bedspace.summary.rows

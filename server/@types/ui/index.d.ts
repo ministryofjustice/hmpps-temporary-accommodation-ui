@@ -8,7 +8,6 @@ import {
   Document,
   LocalAuthorityArea,
   OASysQuestion,
-  OASysSection,
   OASysSections,
   OASysSupportingInformationQuestion,
   PersonAcctAlert,
@@ -237,7 +236,6 @@ export type DataServices = Partial<{
     getPrisonCaseNotes: (callConfig: CallConfig, crn: string) => Promise<Array<PrisonCaseNote>>
     getAdjudications: (callConfig: CallConfig, crn: string) => Promise<Array<Adjudication>>
     getAcctAlerts: (callConfig: CallConfig, crn: string) => Promise<Array<PersonAcctAlert>>
-    getOasysSelections: (callConfig: CallConfig, crn: string) => Promise<Array<OASysSection>>
     getOasysSections: (callConfig: CallConfig, crn: string, selectedSections?: Array<number>) => Promise<OASysSections>
     getPersonRisks: (callConfig: CallConfig, crn: string) => Promise<PersonRisksUI>
   }

@@ -3,7 +3,6 @@ import type { Response } from 'express'
 import type {
   ActiveOffence,
   Adjudication,
-  OASysSection,
   OASysSections,
   Person,
   PersonAcctAlert,
@@ -51,10 +50,6 @@ export default class PersonClient {
 
   async offences(crn: string) {
     return this.restClient.get<Array<ActiveOffence>>({ path: paths.people.offences({ crn: crn.trim() }) })
-  }
-
-  async oasysSelections(crn: string) {
-    return this.restClient.get<Array<OASysSection>>({ path: paths.people.oasys.selection({ crn: crn.trim() }) })
   }
 
   async oasysSections(crn: string, selectedSections?: Array<number>) {

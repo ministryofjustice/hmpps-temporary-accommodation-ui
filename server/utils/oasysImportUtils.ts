@@ -1,15 +1,9 @@
-import {
-  TemporaryAccommodationApplication as Application,
-  OASysQuestion,
-  OASysSection,
-  OASysSections,
-} from '../@types/shared'
+import { TemporaryAccommodationApplication as Application, OASysQuestion, OASysSections } from '../@types/shared'
 import { DataServices, OasysImportArrays, OasysPage } from '../@types/ui'
 import { CallConfig } from '../data/restClient'
 import oasysStubs from '../data/stubs/oasysStubs.json'
 import { DateFormats } from './dateUtils'
-import { SessionDataError } from './errors'
-import { mapApiPersonRisksForUi, sentenceCase } from './utils'
+import { mapApiPersonRisksForUi } from './utils'
 import { escape } from './viewUtils'
 
 type OASysQuestionsSections = Omit<OASysSections, 'assessmentId' | 'assessmentState' | 'dateStarted' | 'dateCompleted'>
@@ -130,37 +124,8 @@ const findSummary = (questionNumber: string, summaries: Array<OASysQuestion>) =>
   return summaries.find(i => i.questionNumber === questionNumber)
 }
 
-export const fetchOptionalOasysSections = (application: Application): Array<number> => {
-  try {
-    const oasysImport = application.data['oasys-import']
-
-    if (!oasysImport) throw new SessionDataError('No OASys import section')
-
-    const optionalOasysSections = oasysImport['optional-oasys-sections']
-
-    if (!optionalOasysSections) throw new SessionDataError('No optional OASys imports')
-
-    return [...optionalOasysSections.needsLinkedToReoffending, ...optionalOasysSections.otherNeeds].map(
-      (oasysSection: OASysSection) => oasysSection.section,
-    )
-  } catch (e) {
-    throw new SessionDataError(`Oasys supporting information error: ${e}`)
-  }
-}
-
 export const sortOasysImportSummaries = (summaries: Array<OASysQuestion>): Array<OASysQuestion> => {
   return summaries.sort((a, b) => Number(a.questionNumber) - Number(b.questionNumber))
-}
-
-export const sectionCheckBoxes = (fullList: Array<OASysSection>, selectedList: Array<OASysSection>) => {
-  return fullList.map(need => {
-    const sectionAndName = `${need.section}. ${sentenceCase(need.name)}`
-    return {
-      value: need.section.toString(),
-      text: sectionAndName,
-      checked: selectedList.map(n => n.section).includes(need.section),
-    }
-  })
 }
 
 const filterOasysSections = (oasysSections: OASysSections): OASysSections => {

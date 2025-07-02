@@ -13,15 +13,7 @@ export type UpdateApprovedPremisesApplication = (UpdateApplication & {
      * noticeType should be used to indicate if an emergency application
      */
     isEmergencyApplication?: boolean;
-    /**
-     * Use apType
-     */
-    isEsapApplication?: boolean;
     isInapplicable?: boolean;
-    /**
-     * Use apType
-     */
-    isPipeApplication?: boolean;
     isWomensApplication?: boolean;
     noticeType?: Cas1ApplicationTimelinessCategory;
     releaseType?: ReleaseTypeOption;

@@ -9,7 +9,6 @@ import {
   activeOffenceFactory,
   adjudicationFactory,
   oasysSectionsFactory,
-  oasysSelectionFactory,
   personFactory,
   prisonCaseNotesFactory,
   risksFactory,
@@ -118,55 +117,6 @@ describe('PersonService', () => {
 
       expect(personClientFactory).toHaveBeenCalledWith(callConfig)
       expect(personClient.acctAlerts).toHaveBeenCalledWith('crn')
-    })
-  })
-
-  describe('getOasysSelections', () => {
-    it("on success returns the person's OASys selections given their CRN", async () => {
-      const oasysSelections = oasysSelectionFactory.buildList(3)
-
-      personClient.oasysSelections.mockResolvedValue(oasysSelections)
-
-      const serviceOasysSelections = await service.getOasysSelections(callConfig, 'crn')
-
-      expect(serviceOasysSelections).toEqual(oasysSelections)
-
-      expect(personClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(personClient.oasysSelections).toHaveBeenCalledWith('crn')
-    })
-
-    it('on 404 it throws an OasysNotFoundError', async () => {
-      const err = createMock<SanitisedError>({ data: { status: 404 } })
-      personClient.oasysSelections.mockImplementation(() => {
-        throw err
-      })
-
-      const t = () => service.getOasysSelections(callConfig, 'crn')
-
-      await expect(t).rejects.toThrowError(OasysNotFoundError)
-      await expect(t).rejects.toThrowError(`Oasys record not found for CRN: crn`)
-    })
-
-    it('on 500 it throws the error upstream', async () => {
-      const err = createMock<SanitisedError>({ data: { status: 500 } })
-      personClient.oasysSelections.mockImplementation(() => {
-        throw err
-      })
-
-      try {
-        await service.getOasysSelections(callConfig, 'crn')
-      } catch (e) {
-        expect(e).toEqual(err)
-      }
-    })
-
-    it('on generic error it throws the error upstream', async () => {
-      const genericError = new Error()
-      personClient.oasysSelections.mockImplementation(() => {
-        throw genericError
-      })
-
-      await expect(() => service.getOasysSelections(callConfig, 'crn')).rejects.toThrowError(Error)
     })
   })
 

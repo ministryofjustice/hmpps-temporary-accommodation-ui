@@ -3,7 +3,6 @@ import type { PersonRisksUI } from '@approved-premises/ui'
 import type {
   ActiveOffence,
   Adjudication,
-  OASysSection,
   OASysSections,
   Person,
   PersonAcctAlert,
@@ -63,21 +62,6 @@ export default class PersonService {
     const acctAlerts = await personClient.acctAlerts(crn)
 
     return acctAlerts
-  }
-
-  async getOasysSelections(callConfig: CallConfig, crn: string): Promise<Array<OASysSection>> {
-    const personClient = this.personClientFactory(callConfig)
-
-    try {
-      const oasysSections = await personClient.oasysSelections(crn)
-
-      return oasysSections
-    } catch (e) {
-      if (e?.data?.status === 404) {
-        throw new OasysNotFoundError(`Oasys record not found for CRN: ${crn}`)
-      }
-      throw e
-    }
   }
 
   async getOasysSections(

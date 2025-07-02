@@ -27,6 +27,6 @@ export type Cas3Premises = {
     totalOnlineBedspaces: number;
     totalUpcomingBedspaces: number;
     town?: string;
-    turnaroundWorkingDayCount?: number;
+    turnaroundWorkingDays?: number;
 };
 

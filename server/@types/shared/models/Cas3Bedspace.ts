@@ -18,7 +18,7 @@ export type Cas3Bedspace = {
     /**
      * Start date of the bedspace availability
      */
-    startDate?: string;
+    startDate: string;
     status: Cas3BedspaceStatus;
 };
 

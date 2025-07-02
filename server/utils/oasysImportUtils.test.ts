@@ -1,11 +1,5 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
-import {
-  applicationFactory,
-  oasysSectionsFactory,
-  oasysSelectionFactory,
-  risksFactory,
-  roshSummaryFactory,
-} from '../testutils/factories'
+import { applicationFactory, oasysSectionsFactory, risksFactory, roshSummaryFactory } from '../testutils/factories'
 import { OasysPage } from '../@types/ui'
 import { CallConfig } from '../data/restClient'
 import oasysStubs from '../data/stubs/oasysStubs.json'
@@ -14,17 +8,15 @@ import { OasysNotFoundError } from '../services/personService'
 import { offenceDetailsFactory } from '../testutils/factories/oasysSections'
 import {
   Constructor,
-  fetchOptionalOasysSections,
   getOasysSections,
   oasysImportReponse,
   questionKeyFromNumber,
   questionNumberFromKey,
-  sectionCheckBoxes,
   sortOasysImportSummaries,
   textareas,
   validateOasysEntries,
 } from './oasysImportUtils'
-import { mapApiPersonRisksForUi, sentenceCase } from './utils'
+import { mapApiPersonRisksForUi } from './utils'
 
 describe('OASysImportUtils', () => {
   describe('getOasysSections', () => {
@@ -315,39 +307,6 @@ describe('OASysImportUtils', () => {
     })
   })
 
-  describe('fetchOptionalOasysSections', () => {
-    it('returns an error if the application doesnt have an OASys section', () => {
-      const application = applicationFactory.build()
-      expect(() => fetchOptionalOasysSections(application)).toThrow(
-        'Oasys supporting information error: Error: No OASys import section',
-      )
-    })
-    it('returns an error if the application doesnt have any optional OASys imports', () => {
-      const application = applicationFactory.build({
-        data: {
-          'oasys-import': {
-            'optional-oasys-sections': null,
-          },
-        },
-      })
-
-      expect(() => fetchOptionalOasysSections(application)).toThrow(
-        'Oasys supporting information error: Error: No optional OASys imports',
-      )
-    })
-
-    it('returns the optional OASys sections to import if they exist', () => {
-      const application = applicationFactory
-        .withOptionalOasysSectionsSelected(
-          oasysSelectionFactory.needsLinkedToReoffending().buildList(1, { section: 1 }),
-          oasysSelectionFactory.needsNotLinkedToReoffending().buildList(1, { section: 2 }),
-        )
-        .build()
-
-      expect(fetchOptionalOasysSections(application)).toEqual([1, 2])
-    })
-  })
-
   describe('sortOasysImportSummaries', () => {
     it('sorts the imports into order of questions', () => {
       const oasysSummary1 = roshSummaryFactory.build({ questionNumber: '1' })
@@ -356,39 +315,6 @@ describe('OASysImportUtils', () => {
 
       const result = sortOasysImportSummaries([oasysSummary3, oasysSummary2, oasysSummary1])
       expect(result).toEqual([oasysSummary1, oasysSummary2, oasysSummary3])
-    })
-  })
-
-  describe('sectionCheckBoxes', () => {
-    it('it returns needs as checkbox items', () => {
-      const needLinkedToReoffendingA = oasysSelectionFactory
-        .needsLinkedToReoffending()
-        .build({ section: 1, name: 'emotional' })
-      const needLinkedToReoffendingB = oasysSelectionFactory.needsLinkedToReoffending().build({ section: 2 })
-      const needLinkedToReoffendingC = oasysSelectionFactory.needsLinkedToReoffending().build({ section: 3 })
-
-      const items = sectionCheckBoxes(
-        [needLinkedToReoffendingA, needLinkedToReoffendingB, needLinkedToReoffendingC],
-        [needLinkedToReoffendingA],
-      )
-
-      expect(items).toEqual([
-        {
-          checked: true,
-          text: `1. ${sentenceCase(needLinkedToReoffendingA.name)}`,
-          value: '1',
-        },
-        {
-          checked: false,
-          text: `2. ${sentenceCase(needLinkedToReoffendingB.name)}`,
-          value: '2',
-        },
-        {
-          checked: false,
-          text: `3. ${sentenceCase(needLinkedToReoffendingC.name)}`,
-          value: '3',
-        },
-      ])
     })
   })
 })

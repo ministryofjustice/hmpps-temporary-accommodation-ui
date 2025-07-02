@@ -1,7 +1,7 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
-import type { OASysSection, TemporaryAccommodationApplication } from '@approved-premises/api'
+import type { TemporaryAccommodationApplication } from '@approved-premises/api'
 
 import applicationTranslatedDocument from '../../../cypress_shared/fixtures/applicationTranslatedDocument.json'
 import { DateFormats } from '../../utils/dateUtils'
@@ -10,20 +10,6 @@ import { fullPersonFactory } from './person'
 import risksFactory from './risks'
 
 class ApplicationFactory extends Factory<TemporaryAccommodationApplication> {
-  withOptionalOasysSectionsSelected(needsLinkedToReoffending: Array<OASysSection>, otherNeeds: Array<OASysSection>) {
-    return this.params({
-      data: {
-        ...fakeObject(),
-        'oasys-import': {
-          'optional-oasys-sections': {
-            needsLinkedToReoffending,
-            otherNeeds,
-          },
-        },
-      },
-    })
-  }
-
   withData() {
     return this.params({
       data: fakeObject(),

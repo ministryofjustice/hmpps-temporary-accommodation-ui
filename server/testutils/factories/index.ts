@@ -46,7 +46,6 @@ import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
 import newRoomFactory from './newRoom'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
-import oasysSelectionFactory from './oasysSelection'
 import overlapFactory from './overlap'
 import pduFactory from './pdu'
 import { fullPersonFactory as personFactory, restrictedPersonFactory } from './person'
@@ -126,7 +125,6 @@ export {
   newRoomFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,
-  oasysSelectionFactory,
   overlapFactory,
   pduFactory,
   personFactory,

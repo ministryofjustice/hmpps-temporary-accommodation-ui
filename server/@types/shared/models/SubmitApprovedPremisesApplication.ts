@@ -23,14 +23,6 @@ export type SubmitApprovedPremisesApplication = (SubmitApplication & {
      * noticeType should be used to indicate if this an emergency application
      */
     isEmergencyApplication?: boolean;
-    /**
-     * Use apType
-     */
-    isEsapApplication?: boolean;
-    /**
-     * Use apType
-     */
-    isPipeApplication?: boolean;
     isWomensApplication?: boolean;
     licenseExpiryDate?: string;
     noticeType?: Cas1ApplicationTimelinessCategory;
@@ -41,6 +33,7 @@ export type SubmitApprovedPremisesApplication = (SubmitApplication & {
     situation?: SituationOption;
     targetLocation?: string;
 } & {
+    apType: ApType;
     releaseType: ReleaseTypeOption;
     sentenceType: SentenceTypeOption;
     targetLocation: string;

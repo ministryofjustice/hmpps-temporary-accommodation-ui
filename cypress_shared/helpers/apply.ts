@@ -3,7 +3,6 @@ import {
   Adjudication,
   Document,
   OASysQuestion,
-  OASysSection,
   OASysSupportingInformationQuestion,
   Person,
   PersonAcctAlert,
@@ -25,7 +24,6 @@ import {
   documentFactory,
   localAuthorityFactory,
   oasysSectionsFactory,
-  oasysSelectionFactory,
   referenceDataFactory,
 } from '../../server/testutils/factories'
 import { documentsFromApplication } from '../../server/utils/assessments/documentUtils'
@@ -105,10 +103,6 @@ export default class ApplyHelper {
 
   uiRisks?: PersonRisksUI
 
-  oasysSectionsLinkedToReoffending: Array<OASysSection> = []
-
-  otherOasysSections: Array<OASysSection> = []
-
   roshSummaries: Array<OASysQuestion> = []
 
   offenceDetailSummaries: Array<OASysQuestion> = []
@@ -134,11 +128,6 @@ export default class ApplyHelper {
     private readonly environment: 'e2e' | 'integration',
     private readonly actingUser?: TemporaryAccommodationUser,
   ) {}
-
-  initializeE2e(oasysSectionsLinkedToReoffending: Array<OASysSection>, otherOasysSections: Array<OASysSection>) {
-    this.oasysSectionsLinkedToReoffending = oasysSectionsLinkedToReoffending
-    this.otherOasysSections = otherOasysSections
-  }
 
   setupApplicationStubs(uiRisks?: PersonRisksUI) {
     this.uiRisks = uiRisks
@@ -246,36 +235,6 @@ export default class ApplyHelper {
 
   private stubOasysEndpoints() {
     // And there are OASys sections in the db
-    const oasysSelectionA = oasysSelectionFactory.needsLinkedToReoffending().build({
-      section: 1,
-      name: 'accommodation',
-    })
-    const oasysSelectionB = oasysSelectionFactory.needsLinkedToReoffending().build({
-      section: 2,
-      name: 'relationships',
-      linkedToHarm: false,
-      linkedToReOffending: true,
-    })
-    const oasysSelectionC = oasysSelectionFactory.needsNotLinkedToReoffending().build({
-      section: 3,
-      name: 'emotional',
-      linkedToHarm: false,
-      linkedToReOffending: false,
-    })
-    const oasysSelectionD = oasysSelectionFactory.needsNotLinkedToReoffending().build({
-      section: 4,
-      name: 'thinking',
-      linkedToHarm: false,
-      linkedToReOffending: false,
-    })
-
-    this.oasysSectionsLinkedToReoffending = [oasysSelectionA, oasysSelectionB]
-    this.otherOasysSections = [oasysSelectionC, oasysSelectionD]
-
-    const oasysSelection = [...this.oasysSectionsLinkedToReoffending, ...this.otherOasysSections]
-
-    cy.task('stubOasysSelection', { person: this.person, oasysSelection })
-
     const oasysSections = oasysSectionsFactory.build()
 
     this.roshSummaries = roshSummariesFromJson()

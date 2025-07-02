@@ -3,7 +3,6 @@ import { Factory } from 'fishery'
 
 import { OASysQuestion, OASysSections, OASysSupportingInformationQuestion } from '@approved-premises/api'
 import { DateFormats } from '../../utils/dateUtils'
-import oasysSelectionFactory from './oasysSelection'
 
 export default Factory.define<OASysSections>(() => ({
   assessmentId: faker.number.int(),
@@ -43,13 +42,13 @@ export const offenceDetailsFactory = Factory.define<OASysQuestion>(options => ({
 }))
 
 export const supportingInformationFactory = Factory.define<OASysSupportingInformationQuestion>(options => {
-  const oasysSelection = oasysSelectionFactory.build()
-
   return {
-    ...oasysSelection,
     questionNumber: options.sequence.toString(),
-    label: oasysSelection.name,
+    label: faker.lorem.sentence(),
     answer: faker.lorem.paragraph(),
+    sectionNumber: faker.number.int({ min: 1, max: 20 }),
+    linkedToHarm: faker.datatype.boolean(),
+    linkedToReOffending: faker.datatype.boolean(),
   }
 })
 
@@ -69,10 +68,7 @@ const riskManagementPlanFactory = Factory.define<OASysQuestion>(() => ({
 }))
 
 export const riskToSelfFactory = Factory.define<OASysSupportingInformationQuestion>(options => {
-  const oasysSelection = oasysSelectionFactory.build()
-
   return {
-    ...oasysSelection,
     questionNumber: options.sequence.toString(),
     label: faker.helpers.arrayElement([
       'Current concerns of self harm and suicide',

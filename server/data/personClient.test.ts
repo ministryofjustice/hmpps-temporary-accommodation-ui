@@ -9,7 +9,6 @@ import {
   activeOffenceFactory,
   adjudicationFactory,
   oasysSectionsFactory,
-  oasysSelectionFactory,
   personFactory,
   prisonCaseNotesFactory,
   risksFactory,
@@ -125,24 +124,7 @@ describe('PersonClient', () => {
     })
   })
 
-  describe('oasysSelection', () => {
-    it('should return the importable sections of OASys', async () => {
-      const crn = 'crn'
-      const oasysSections = oasysSelectionFactory.buildList(5)
-
-      fakeApprovedPremisesApi
-        .get(paths.people.oasys.selection({ crn }))
-        .matchHeader('authorization', `Bearer ${callConfig.token}`)
-        .reply(201, oasysSections)
-
-      const result = await personClient.oasysSelections(crn)
-
-      expect(result).toEqual(oasysSections)
-      expect(nock.isDone()).toBeTruthy()
-    })
-  })
-
-  describe('oasysSection', () => {
+  describe('oasysSections', () => {
     it('should return the sections of OASys when there is optional selected sections', async () => {
       const crn = 'crn'
       const optionalSections = [1, 2, 3]

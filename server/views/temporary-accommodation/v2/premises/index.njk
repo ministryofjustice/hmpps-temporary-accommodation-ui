@@ -73,7 +73,7 @@
             <div class="govuk-!-margin-bottom-6">
                 <div class="govuk-!-padding-bottom-4">
                     {% if params.postcodeOrAddress %}
-                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties matching '{{ params.postcodeOrAddress }}'</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties matching ‘{{ params.postcodeOrAddress }}’</h2>
                     {% else %}
                     <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties</h2>
                     {% endif %}
@@ -119,7 +119,7 @@
         {% else %}
             {% if totalPremises is defined and totalPremises > 0 %}
                 {% if params.postcodeOrAddress %}
-                    <h2>{{ '0 online properties matching ‘' + params.postcodeOrAddress + '’' }}</h2>
+                    <h2>0 online properties matching ‘{{ params.postcodeOrAddress }}’</h2>
                 {% else %}
                     <h2>0 {{ (isOnlineTab and "online" or "archived") }} properties</h2>
                 {% endif %}

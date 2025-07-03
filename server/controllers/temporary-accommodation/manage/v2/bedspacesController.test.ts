@@ -5,8 +5,14 @@ import { SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../../../../data/restClient'
 import BedspaceService from '../../../../services/v2/bedspaceService'
 import BedspacesController from './bedspacesController'
-import { cas3BedspaceFactory, characteristicFactory, probationRegionFactory } from '../../../../testutils/factories'
+import {
+  cas3BedspaceFactory,
+  cas3PremisesFactory,
+  characteristicFactory,
+  probationRegionFactory,
+} from '../../../../testutils/factories'
 import extractCallConfig from '../../../../utils/restUtils'
+import PremisesService from '../../../../services/v2/premisesService'
 
 jest.mock('../../../../utils/restUtils')
 
@@ -19,8 +25,9 @@ describe('BedspacesController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const bedspaceService = createMock<BedspaceService>({})
+  const premisesService = createMock<PremisesService>({})
 
-  const bedspaceController = new BedspacesController(bedspaceService)
+  const bedspaceController = new BedspacesController(bedspaceService, premisesService)
 
   beforeEach(() => {
     request = createMock<Request>({
@@ -37,6 +44,17 @@ describe('BedspacesController', () => {
 
     const characteristic1 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
     const characteristic2 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
+
+    const premises = cas3PremisesFactory.build({
+      addressLine1: '62 West Wallaby Street',
+      addressLine2: undefined,
+      town: 'Wigan',
+      postcode: 'WG7 7FU',
+    })
+    const premisesWithFullAddress = {
+      ...premises,
+      fullAddress: '62 West Wallaby Street<br />Wigan<br />WG7 7FU',
+    }
 
     const onlineBedspace = cas3BedspaceFactory.build({
       status: 'online',
@@ -128,10 +146,11 @@ describe('BedspacesController', () => {
     }
 
     it.each([[onlineBedspaceWithSummary], [archivedBedspaceWithSummary], [upcomingBedspaceWithSummary]])(
-      'should return a bedspace with no bookings',
+      'should return a bedspace',
       async bedspace => {
         const params = { premisesId, bedspaceId }
 
+        premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
         bedspaceService.getSingleBedspaceDetails.mockResolvedValue(bedspace)
 
         request = createMock<Request>({
@@ -145,7 +164,7 @@ describe('BedspacesController', () => {
         await requestHandler(request, response, next)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
-          premisesId,
+          premises: premisesWithFullAddress,
           bedspace,
           actions: [],
         })
@@ -153,29 +172,5 @@ describe('BedspacesController', () => {
         expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       },
     )
-
-    it('should return a bedspace with bookings', async () => {
-      const params = { premisesId, bedspaceId }
-
-      bedspaceService.getSingleBedspaceDetails.mockResolvedValue(onlineBedspaceWithSummary)
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-      })
-
-      const requestHandler = bedspaceController.show()
-      await requestHandler(request, response, next)
-
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
-        premisesId,
-        bedspace: onlineBedspaceWithSummary,
-        actions: [],
-      })
-
-      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-    })
   })
 })

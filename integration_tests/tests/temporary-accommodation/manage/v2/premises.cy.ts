@@ -50,6 +50,7 @@ context('Premises', () => {
         cas3PremisesSearchResultFactory.build({ postcode }),
         cas3PremisesSearchResultFactory.build({ postcode }),
       ],
+      totalPremises: 2,
     })
     const searchResults = cas3PremisesSearchResultsFactory.build({
       results: [
@@ -58,6 +59,7 @@ context('Premises', () => {
         cas3PremisesSearchResultFactory.build({ postcode: 'NE3 3CD' }),
         cas3PremisesSearchResultFactory.build({ postcode: 'NE4 4DE', bedspaces: [] }),
       ],
+      totalPremises: 5,
     })
     cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
     cy.task('stubPremisesSearchV2', {
@@ -97,9 +99,11 @@ context('Premises', () => {
         cas3PremisesSearchResultFactory.build({ postcode: 'NE3 3CD' }),
         cas3PremisesSearchResultFactory.build({ postcode: 'NE4 4DE' }),
       ],
+      totalPremises: 4,
     })
     const matchingSearchResults = cas3PremisesSearchResultsFactory.build({
       results: [],
+      totalPremises: 0,
     })
     cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
     cy.task('stubPremisesSearchV2', {
@@ -135,6 +139,7 @@ context('Premises', () => {
     // And there are premises in the database
     const searchResults = cas3PremisesSearchResultsFactory.build({
       results: cas3PremisesSearchResultFactory.buildList(5),
+      totalPremises: 5,
     })
     cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
@@ -202,7 +207,7 @@ context('Premises', () => {
     page.search('NE1')
 
     // Then I should see the count with search term
-    cy.contains("2 online properties matching 'NE1'").should('exist')
+    cy.contains('2 online properties matching ‘NE1’').should('exist')
     cy.contains('Online bedspaces: 4').should('exist')
   })
 
@@ -356,7 +361,7 @@ context('Premises', () => {
     page.shouldShowOnlyPremises(matchingSearchResults.results)
 
     // And I should see the count with search term
-    cy.contains(`2 archived properties matching '${postcode}'`).should('exist')
+    cy.contains(`2 archived properties matching ‘${postcode}’`).should('exist')
 
     // When I clear the search field and search again
     page.clearSearch()
@@ -403,7 +408,7 @@ context('Premises', () => {
 
     // Then a 'no results' message should be shown
     page.shouldShowOnlyPremises([])
-    page.shouldShowMessages(["0 archived properties matching 'NOTFOUND'"])
+    page.shouldShowMessages(['0 archived properties matching ‘NOTFOUND’'])
 
     // When I clear the search field and search again
     page.clearSearch()
@@ -560,7 +565,7 @@ context('Premises', () => {
     page.search(searchTerm)
 
     // Then I should see the search results
-    cy.contains(`2 online properties matching '${searchTerm}'`).should('exist')
+    cy.contains(`2 online properties matching ‘${searchTerm}’`).should('exist')
 
     // When I switch to the archived tab
     cy.get('.moj-sub-navigation a').contains('Archived properties').click()
@@ -569,7 +574,7 @@ context('Premises', () => {
     cy.url().should('include', `/v2/properties/archived?postcodeOrAddress=${searchTerm}`)
 
     // And I should see the archived search results
-    cy.contains(`1 archived properties matching '${searchTerm}'`).should('exist')
+    cy.contains(`1 archived properties matching ‘${searchTerm}’`).should('exist')
 
     // And the search input should still contain the search term
     cy.get('main form input').should('have.value', searchTerm)
@@ -579,7 +584,7 @@ context('Premises', () => {
 
     // Then the search term should still be preserved
     cy.url().should('include', `/v2/properties/online?postcodeOrAddress=${searchTerm}`)
-    cy.contains(`2 online properties matching '${searchTerm}'`).should('exist')
+    cy.contains(`2 online properties matching ‘${searchTerm}’`).should('exist')
     cy.get('main form input').should('have.value', searchTerm)
   })
 

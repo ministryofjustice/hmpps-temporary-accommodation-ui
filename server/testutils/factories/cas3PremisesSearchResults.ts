@@ -4,7 +4,7 @@ import { fakerEN_GB as faker } from '@faker-js/faker'
 import cas3PremisesSearchResultFactory from './cas3PremisesSearchResult'
 
 export default Factory.define<Cas3PremisesSearchResults>(() => {
-  const results = faker.helpers.multiple(() => cas3PremisesSearchResultFactory.build(), { count: { min: 0, max: 10 } })
+  const results = faker.helpers.multiple(() => cas3PremisesSearchResultFactory.build(), { count: { min: 1, max: 10 } })
   return {
     results,
     totalPremises: results.length,

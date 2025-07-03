@@ -5,6 +5,8 @@ import referenceDataFactory from './referenceData'
 import bedspaceSummaryFactory from './cas3BedspaceSummary'
 
 export default Factory.define<Cas3PremisesSearchResult>(() => {
+  const bedspaces = faker.helpers.multiple(() => bedspaceSummaryFactory.build(), { count: { min: 0, max: 10 } })
+
   return {
     id: faker.string.uuid(),
     reference: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
@@ -12,10 +14,9 @@ export default Factory.define<Cas3PremisesSearchResult>(() => {
     addressLine2: faker.location.secondaryAddress(),
     town: faker.location.city(),
     postcode: faker.location.zipCode(),
-    bedspaces: faker.helpers.multiple(() => bedspaceSummaryFactory.build(), { count: { min: 0, max: 10 } }),
-    status: faker.helpers.arrayElement(['active', 'archived'] as const),
+    bedspaces,
     pdu: referenceDataFactory.pdu().build().name,
     localAuthorityAreaName: faker.location.county(),
-    totalArchivedBedspaces: faker.number.int({ min: 0, max: 5 }),
+    totalArchivedBedspaces: bedspaces.filter(bed => bed.status === 'archived').length,
   }
 })

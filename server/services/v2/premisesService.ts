@@ -1,5 +1,6 @@
-import type {
+import {
   Cas3BedspacePremisesSearchResult,
+  Cas3Premises,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
   Cas3PremisesStatus,
@@ -28,6 +29,23 @@ export default class PremisesService {
     }
   }
 
+  async getSinglePremises(callConfig: CallConfig, premisesId: string): Promise<Cas3Premises> {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.find(premisesId)
+  }
+
+  async getSinglePremisesDetails(
+    callConfig: CallConfig,
+    premisesId: string,
+  ): Promise<Cas3Premises & { fullAddress: string }> {
+    const premises = await this.getSinglePremises(callConfig, premisesId)
+
+    return {
+      ...premises,
+      fullAddress: this.formatAddress(premises),
+    }
+  }
+
   tableRows(premises: Cas3PremisesSearchResults): Array<TableRow> {
     return premises.results === undefined
       ? []
@@ -49,7 +67,12 @@ export default class PremisesService {
     return { html: value }
   }
 
-  private formatAddress(premises: Cas3PremisesSearchResult): string {
+  private formatAddress(premises: {
+    addressLine1: string
+    addressLine2?: string
+    town?: string
+    postcode: string
+  }): string {
     return [premises.addressLine1, premises.addressLine2, premises.town, premises.postcode]
       .filter(line => line !== undefined && line !== null)
       .map(line => line.trim())

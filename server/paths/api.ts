@@ -64,7 +64,7 @@ const managePaths = {
   },
 }
 
-const managePathsV2 = {
+const managePathsCas3 = {
   premises: {
     search: premisesSearchPath,
     show: singlePremisesCas3Path,
@@ -97,12 +97,12 @@ const applyPaths = {
 }
 
 export default {
-  v2: {
+  cas3: {
     premises: {
-      search: managePathsV2.premises.search,
-      show: managePathsV2.premises.show,
+      search: managePathsCas3.premises.search,
+      show: managePathsCas3.premises.show,
       bedspaces: {
-        show: managePathsV2.premises.bedspaces.show,
+        show: managePathsCas3.premises.bedspaces.show,
       },
     },
   },

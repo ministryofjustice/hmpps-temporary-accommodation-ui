@@ -33,7 +33,7 @@ describe('BedspaceClient', () => {
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
       fakeApprovedPremisesApi
-        .get(paths.v2.premises.bedspaces.show({ premisesId, bedspaceId }))
+        .get(paths.cas3.premises.bedspaces.show({ premisesId, bedspaceId }))
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200, bedspace)
 

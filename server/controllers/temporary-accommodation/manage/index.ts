@@ -33,7 +33,7 @@ export const controllers = (services: Services) => {
     services.bookingService,
     services.assessmentsService,
   )
-  const bedspacesControllerV2 = new BedspacesControllerV2(services.v2.bedspaceService, services.v2.premisesService)
+  const bedspacesControllerV2 = new BedspacesControllerV2(services.v2.premisesService, services.v2.bedspaceService)
   const bookingsController = new BookingsController(
     services.premisesService,
     services.bedspaceService,

@@ -1,4 +1,4 @@
-import { Cas3Bedspace } from '@approved-premises/api'
+import { Cas3Bedspace, Cas3NewBedspace } from '@approved-premises/api'
 import RestClient, { CallConfig } from '../restClient'
 import config, { ApiConfig } from '../../config'
 import paths from '../../paths/api'
@@ -14,5 +14,9 @@ export default class BedspaceClient {
     return this.restClient.get<Cas3Bedspace>({
       path: paths.cas3.premises.bedspaces.show({ premisesId, bedspaceId }),
     })
+  }
+
+  async create(premisesId: string, data: Cas3NewBedspace) {
+    return this.restClient.post<Cas3Bedspace>({ path: paths.cas3.premises.bedspaces.create({ premisesId }), data })
   }
 }

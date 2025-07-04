@@ -57,6 +57,7 @@ import cas3PremisesSummaryFactory from './cas3PremisesSummary'
 import cas3PremisesSearchResultFactory from './cas3PremisesSearchResult'
 import cas3PremisesSearchResultsFactory from './cas3PremisesSearchResults'
 import cas3BedspaceFactory from './cas3Bedspace'
+import cas3NewBedspaceFactory from './cas3NewBedspace'
 import cas3BedspaceSummaryFactory from './cas3BedspaceSummary'
 import prisonCaseNotesFactory from './prisonCaseNotes'
 import probationRegionFactory from './probationRegion'
@@ -136,6 +137,7 @@ export {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3BedspaceFactory,
+  cas3NewBedspaceFactory,
   cas3BedspaceSummaryFactory,
   prisonCaseNotesFactory,
   probationRegionFactory,

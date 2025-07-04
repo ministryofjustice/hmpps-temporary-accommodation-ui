@@ -15,6 +15,10 @@
       "empty": "You must enter a reference",
       "notUnique": "The reference must be unique to this property"
     },
+    "reference": {
+      "empty": "You must enter a reference",
+      "notUnique": "The reference must be unique to this property"
+    },
     "arrivalDate": {
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
@@ -80,7 +84,9 @@
       "empty": "You must enter a start date",
       "invalid": "The start date is an invalid date",
       "conflict": "This bedspace is not available for these dates",
-      "afterEndDate": "The start date must be before the end date"
+      "afterEndDate": "The start date must be before the end date",
+      "invalidStartDateInTheFuture": "Date must be within the past 7 days or the next 7 days",
+      "invalidStartDateInThePast": "Date must be within the past 7 days or the next 7 days"
     },
     "endDate": {
       "empty": "You must enter an end date",

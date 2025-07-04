@@ -2,9 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * details of the departure
- */
 export type Cas3NewDeparture = {
     dateTime: string;
     moveOnCategoryId: string;

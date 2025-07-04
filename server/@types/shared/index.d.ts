@@ -248,6 +248,7 @@ export type { SituationOption } from './models/SituationOption';
 export type { SortDirection } from './models/SortDirection';
 export type { SortOrder } from './models/SortOrder';
 export type { StaffMember } from './models/StaffMember';
+export type { StreamingResponseBody } from './models/StreamingResponseBody';
 export type { SubmitApplication } from './models/SubmitApplication';
 export type { SubmitApprovedPremisesApplication } from './models/SubmitApprovedPremisesApplication';
 export type { SubmitPlacementApplication } from './models/SubmitPlacementApplication';

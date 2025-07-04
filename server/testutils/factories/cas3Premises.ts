@@ -3,6 +3,7 @@ import { Factory } from 'fishery'
 
 import type { Cas3Premises } from '@approved-premises/api'
 import characteristicFactory from './characteristic'
+import localAuthorityFactory from './localAuthority'
 import referenceDataFactory from './referenceData'
 
 export default Factory.define<Cas3Premises>(() => ({
@@ -19,4 +20,7 @@ export default Factory.define<Cas3Premises>(() => ({
   totalArchivedBedspaces: faker.number.int({ min: 1, max: 5 }),
   totalUpcomingBedspaces: faker.number.int({ min: 1, max: 5 }),
   characteristics: characteristicFactory.buildList(5),
+  localAuthorityArea: localAuthorityFactory.build(),
+  turnaroundWorkingDays: faker.number.int({ min: 1, max: 7 }),
+  notes: faker.lorem.sentences(5),
 }))

@@ -1,5 +1,5 @@
 import type { Premises, PropertyStatus } from '@approved-premises/api'
-import { PageHeadingBarItem } from '../@types/ui'
+import { PageHeadingBarItem, type SubNavObj } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
 
 type StatusInfo = { name: string; id: PropertyStatus; colour: string; isActive: boolean }
@@ -61,4 +61,19 @@ export const shortAddress = (premises: Premises): string => {
   const elements = [premises.addressLine1, premises.town, premises.postcode].filter(element => !!element)
 
   return elements.join(', ')
+}
+
+export const showPropertySubNavArray = (premisesId: string, activeTab: 'premises' | 'bedspaces'): Array<SubNavObj> => {
+  return [
+    {
+      text: 'Property overview',
+      href: paths.premises.v2.show({ premisesId }),
+      active: activeTab === 'premises',
+    },
+    {
+      text: 'Bedspaces overview',
+      href: '#',
+      active: activeTab === 'bedspaces',
+    },
+  ]
 }

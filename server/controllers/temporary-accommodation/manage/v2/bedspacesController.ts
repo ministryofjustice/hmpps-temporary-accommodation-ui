@@ -24,7 +24,7 @@ export default class BedspacesController {
       const { premisesId } = req.params
 
       const { characteristics: allCharacteristics } = await this.bedspaceService.getReferenceData(callConfig)
-      const premises = await this.premisesService.getPremises(callConfig, premisesId)
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
 
       return res.render('temporary-accommodation/v2/bedspaces/new', {
         allCharacteristics,

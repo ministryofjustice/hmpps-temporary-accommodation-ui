@@ -1,6 +1,13 @@
 import paths from '../paths/temporary-accommodation/manage'
 import { premisesFactory } from '../testutils/factories'
-import { getActiveStatuses, premisesActions, shortAddress, statusInfo, statusTag } from './premisesUtils'
+import {
+  getActiveStatuses,
+  premisesActions,
+  shortAddress,
+  showPropertySubNavArray,
+  statusInfo,
+  statusTag,
+} from './premisesUtils'
 
 describe('premisesUtils', () => {
   describe('premisesActions', () => {
@@ -84,6 +91,46 @@ describe('premisesUtils', () => {
       })
 
       expect(shortAddress(premises)).toEqual('123 Road Lane, Townville, ABC 123')
+    })
+  })
+
+  describe('showPropertySubNavArray', () => {
+    it('returns the sub nav array for the premises tab', () => {
+      const expectedResult = [
+        {
+          text: 'Property overview',
+          href: `/v2/properties/83b4062f-963e-450d-b912-589eab7ca91c`,
+          active: true,
+        },
+        {
+          text: 'Bedspaces overview',
+          href: '#',
+          active: false,
+        },
+      ]
+
+      const result = showPropertySubNavArray('83b4062f-963e-450d-b912-589eab7ca91c', 'premises')
+
+      expect(result).toEqual(expectedResult)
+    })
+
+    it('returns the sub nav array for the bedspaces tab', () => {
+      const expectedResult = [
+        {
+          text: 'Property overview',
+          href: `/v2/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47`,
+          active: false,
+        },
+        {
+          text: 'Bedspaces overview',
+          href: '#',
+          active: true,
+        },
+      ]
+
+      const result = showPropertySubNavArray('6a2fc984-8cdd-4eef-8736-cc74f845ee47', 'bedspaces')
+
+      expect(result).toEqual(expectedResult)
     })
   })
 })

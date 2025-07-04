@@ -1,4 +1,4 @@
-import type { Cas3PremisesSearchResult } from '@approved-premises/api'
+import type { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
 
 import paths from '../../../../../server/paths/temporary-accommodation/manage'
 import Page from '../../../page'
@@ -47,7 +47,7 @@ export default class PremisesListPage extends Page {
           }
 
           cy.get('td').eq(2).contains(item.pdu)
-          cy.get('td').eq(3).contains('Manage').should('have.attr', 'href', '#')
+          cy.get('td').eq(3).contains('Manage').should('have.attr', 'href', `/v2/properties/${item.id}`)
         })
     })
   }
@@ -75,5 +75,9 @@ export default class PremisesListPage extends Page {
 
   clickBedspaceReference(reference: string): void {
     cy.get('main table tbody a').contains(reference).click()
+  }
+
+  clickPremisesManageLink(premises: Cas3Premises): void {
+    cy.get('main table tbody td').contains(premises.addressLine1).contains('Manage').click()
   }
 }

@@ -1,0 +1,68 @@
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
+{% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+    {{ govukBreadcrumbs({
+        items: [
+            { text: "Home", href: "/" },
+            { text: "List of properties", href: addPlaceContext(paths.premises.v2.index()) }
+        ]
+    }) }}
+{% endblock %}
+
+{% block content %}
+    {% include "../../../_messages.njk" %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ mojCasPageHeaderActions({
+                heading: {
+                    text: premises.addressLine1 + ", " + premises.postcode,
+                    classes: "govuk-heading-l"
+                },
+                actions: actions
+            }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ mojSubNavigation({
+                label: "Sub navigation",
+                items: subNavArr
+            }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-m">Property overview</h2>
+            {% if premises.totalUpcomingBedspaces > 0 %}
+                <p class="govuk-body govuk-!-margin-bottom-1">Upcoming bedspaces: {{ premises.totalUpcomingBedspaces }}</p>
+            {% endif %}
+            <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ premises.totalOnlineBedspaces }}</p>
+            <p class="govuk-body">Archived bedspaces: {{ premises.totalArchivedBedspaces }}</p>
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {{ govukSummaryList({
+                card: {
+                    title: {
+                        text: "Property reference: " + premises.reference
+                    }
+                },
+                rows: summary.rows
+            }) }}
+        </div>
+    </div>
+
+{% endblock %}

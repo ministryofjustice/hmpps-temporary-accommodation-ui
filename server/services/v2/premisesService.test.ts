@@ -81,7 +81,14 @@ describe('PremisesService', () => {
                 })
                 .join('<br />')
 
-        return [{ html: address }, { html: bedspaces }, { text: prem.pdu }, { html: `<a href="#">Manage</a>` }]
+        return [
+          { html: address },
+          { html: bedspaces },
+          { text: prem.pdu },
+          {
+            html: `<a href="/v2/properties/${prem.id}">Manage<span class="govuk-visually-hidden"> property at ${prem.addressLine1}, ${prem.postcode}</span></a>`,
+          },
+        ]
       })
 
       expect(rows).toEqual(expectedRows)
@@ -208,6 +215,117 @@ describe('PremisesService', () => {
       })
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.find).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
+  describe('summaryList', () => {
+    const onlinePremises = cas3PremisesFactory.build({ status: 'online', startDate: '2025-02-01' })
+    const archivedPremises = cas3PremisesFactory.build({ status: 'archived', startDate: '2025-03-02' })
+
+    it('should return a summary list for an online premises', async () => {
+      const summaryList = service.summaryList(onlinePremises)
+
+      const expectedSummaryList = {
+        rows: [
+          {
+            key: { text: 'Property status' },
+            value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '1 February 2025' },
+          },
+          {
+            key: { text: 'Address' },
+            value: {
+              html: `${onlinePremises.addressLine1}<br />${onlinePremises.addressLine2}<br />${onlinePremises.town}<br />${onlinePremises.postcode}`,
+            },
+          },
+          {
+            key: { text: 'Local authority' },
+            value: { text: onlinePremises.localAuthorityArea.name },
+          },
+          {
+            key: { text: 'Probation region' },
+            value: { text: onlinePremises.probationRegion.name },
+          },
+          {
+            key: { text: 'Probation delivery unit' },
+            value: { text: onlinePremises.probationDeliveryUnit.name },
+          },
+          {
+            key: { text: 'Expected turn around time' },
+            value: { text: `${onlinePremises.turnaroundWorkingDays} working days` },
+          },
+          {
+            key: { text: 'Property details' },
+            value: {
+              html: onlinePremises.characteristics
+                .map(char => `<span class="hmpps-tag-filters">${char.name}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional property details' },
+            value: { text: onlinePremises.notes },
+          },
+        ],
+      }
+
+      expect(summaryList).toEqual(expectedSummaryList)
+    })
+
+    it('should return a summary list for an archived premises', async () => {
+      const summaryList = service.summaryList(archivedPremises)
+
+      const expectedSummaryList = {
+        rows: [
+          {
+            key: { text: 'Property status' },
+            value: { html: `<strong class="govuk-tag govuk-tag--grey">Archived</strong>` },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '2 March 2025' },
+          },
+          {
+            key: { text: 'Address' },
+            value: {
+              html: `${archivedPremises.addressLine1}<br />${archivedPremises.addressLine2}<br />${archivedPremises.town}<br />${archivedPremises.postcode}`,
+            },
+          },
+          {
+            key: { text: 'Local authority' },
+            value: { text: archivedPremises.localAuthorityArea.name },
+          },
+          {
+            key: { text: 'Probation region' },
+            value: { text: archivedPremises.probationRegion.name },
+          },
+          {
+            key: { text: 'Probation delivery unit' },
+            value: { text: archivedPremises.probationDeliveryUnit.name },
+          },
+          {
+            key: { text: 'Expected turn around time' },
+            value: { text: `${archivedPremises.turnaroundWorkingDays} working days` },
+          },
+          {
+            key: { text: 'Property details' },
+            value: {
+              html: archivedPremises.characteristics
+                .map(char => `<span class="hmpps-tag-filters">${char.name}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional property details' },
+            value: { text: archivedPremises.notes },
+          },
+        ],
+      }
+
+      expect(summaryList).toEqual(expectedSummaryList)
     })
   })
 })

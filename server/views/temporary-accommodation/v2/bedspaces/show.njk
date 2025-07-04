@@ -1,6 +1,6 @@
 {% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
 {% extends "../../../partials/layout.njk" %}
 
@@ -9,10 +9,16 @@
 {% set bodyClasses = "temporary-accommodation-bedspaces-show" %}
 
 {% block beforeContent %}
-    {{ breadCrumb('View a bedspace', [
-        {title: 'List of properties', href: addPlaceContext(paths.premises.v2.index())},
-        {title: 'TODO: View a property', href: '#'}
-    ]) }}
+    {{ govukBreadcrumbs({
+        items: [
+            { text: "Home", href: "/" },
+            { text: "List of properties", href: addPlaceContext(paths.premises.v2.index()) },
+            {
+                text: premises.addressLine1 + ", " + premises.postcode,
+                href: addPlaceContext(paths.premises.v2.show({ premisesId: premises.id }))
+            }
+        ]
+    }) }}
 {% endblock %}
 
 {% block content %}

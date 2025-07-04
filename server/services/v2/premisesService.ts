@@ -4,12 +4,15 @@ import {
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
   Cas3PremisesStatus,
+  Characteristic,
 } from '@approved-premises/api'
-import { TableRow } from '@approved-premises/ui'
+import { SummaryList, TableRow } from '@approved-premises/ui'
 import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/temporary-accommodation/manage'
+import { DateFormats } from '../../utils/dateUtils'
+import { convertToTitleCase } from '../../utils/utils'
 
 export default class PremisesService {
   constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
@@ -54,9 +57,52 @@ export default class PremisesService {
             this.htmlValue(this.formatAddress(entry)),
             this.htmlValue(this.formatBedspaces(entry)),
             this.textValue(entry.pdu),
-            this.htmlValue(`<a href="#">Manage</a>`),
+            this.htmlValue(this.formatPremisesManageLink(entry)),
           ]
         })
+  }
+
+  summaryList(premises: Cas3Premises): SummaryList {
+    return {
+      rows: [
+        {
+          key: { text: 'Property status' },
+          value: this.htmlValue(this.formatPremisesStatus(premises.status)),
+        },
+        {
+          key: { text: 'Start date' },
+          value: this.textValue(this.formatDate(premises.startDate)),
+        },
+        {
+          key: { text: 'Address' },
+          value: this.htmlValue(this.formatAddress(premises)),
+        },
+        {
+          key: { text: 'Local authority' },
+          value: this.textValue(premises.localAuthorityArea?.name ?? ''),
+        },
+        {
+          key: { text: 'Probation region' },
+          value: this.textValue(premises.probationRegion.name),
+        },
+        {
+          key: { text: 'Probation delivery unit' },
+          value: this.textValue(premises.probationDeliveryUnit.name),
+        },
+        {
+          key: { text: 'Expected turn around time' },
+          value: this.textValue(this.formatTurnaround(premises.turnaroundWorkingDays)),
+        },
+        {
+          key: { text: 'Property details' },
+          value: this.htmlValue(this.formatDetails(premises.characteristics)),
+        },
+        {
+          key: { text: 'Additional property details' },
+          value: this.textValue(premises.notes),
+        },
+      ],
+    }
   }
 
   private textValue(value: string) {
@@ -84,6 +130,15 @@ export default class PremisesService {
     return paths.premises.v2.bedspaces.show({ premisesId, bedspaceId })
   }
 
+  private premisesUrl(premisesId: string): string {
+    return paths.premises.v2.show({ premisesId })
+  }
+
+  private formatPremisesManageLink(premises: Cas3PremisesSearchResult): string {
+    const hidden = `<span class="govuk-visually-hidden"> property at ${premises.addressLine1}, ${premises.postcode}</span>`
+    return `<a href="${this.premisesUrl(premises.id)}">Manage${hidden}</a>`
+  }
+
   private formatBedspace(premisesId: string, bedspace: Cas3BedspacePremisesSearchResult): string {
     const archived =
       bedspace.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
@@ -99,10 +154,34 @@ export default class PremisesService {
     return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace)).join('<br />')
   }
 
-  async getPremises(callConfig: CallConfig, id: string): Promise<Cas3Premises> {
-    const premisesClient = this.premisesClientFactory(callConfig)
-    const premises = await premisesClient.find(id)
+  private formatDate(dateString: string | undefined | null): string {
+    const isEmpty = dateString === undefined || dateString === null || dateString === ''
+    return isEmpty ? '' : DateFormats.isoDateToUIDate(dateString)
+  }
 
-    return premises
+  private formatTurnaround(numberOfDays: number | undefined): string {
+    return `${numberOfDays} working days`
+  }
+
+  private formatDetails(characteristics: Array<Characteristic>): string {
+    return (characteristics ?? [])
+      .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+      .join(' ')
+  }
+
+  private getPremisesStatusTagColour(status: Cas3PremisesStatus): string {
+    switch (status) {
+      case 'online':
+        return 'govuk-tag--green'
+      case 'archived':
+        return 'govuk-tag--grey'
+      default:
+        return ''
+    }
+  }
+
+  private formatPremisesStatus(status: Cas3PremisesStatus): string {
+    const tagClass = this.getPremisesStatusTagColour(status)
+    return `<strong class="govuk-tag ${tagClass}">${convertToTitleCase(status)}</strong>`
   }
 }

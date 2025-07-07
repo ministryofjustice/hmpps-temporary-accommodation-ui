@@ -24,7 +24,8 @@
       "invalid": "The start date is an invalid date",
       "conflict": "This bedspace is not available for these dates",
       "todayOrInThePast": "The arrival date must be today or in the past",
-      "withinLastSevenDays": "The arrival date must be within the last 7 days"
+      "withinLastSevenDays": "The arrival date must be within the last 7 days",
+      "bookingArrivalDateBeforeBedspaceStartDate": "Booking start date must be on or later than bedspace start date"
     },
     "date": {
       "empty": "You must enter a valid departure date",
@@ -86,7 +87,8 @@
       "conflict": "This bedspace is not available for these dates",
       "afterEndDate": "The start date must be before the end date",
       "invalidStartDateInTheFuture": "Date must be within the past 7 days or the next 7 days",
-      "invalidStartDateInThePast": "Date must be within the past 7 days or the next 7 days"
+      "invalidStartDateInThePast": "Date must be within the past 7 days or the next 7 days",
+      "voidStartDateAfterBedspaceEndDate": "Void start date must be on or earlier than bedspace end date"
     },
     "endDate": {
       "empty": "You must enter an end date",

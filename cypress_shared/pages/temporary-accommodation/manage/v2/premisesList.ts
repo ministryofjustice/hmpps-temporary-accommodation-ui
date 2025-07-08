@@ -1,4 +1,4 @@
-import type { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
+import type { Cas3Premises, Cas3PremisesSearchResult, Cas3PremisesSortBy } from '@approved-premises/api'
 
 import paths from '../../../../../server/paths/temporary-accommodation/manage'
 import Page from '../../../page'
@@ -23,7 +23,7 @@ export default class PremisesListPage extends Page {
     return new PremisesListPage('Archived properties')
   }
 
-  shouldShowPremises(premises: Array<Cas3PremisesSearchResult>): void {
+  shouldShowPremises(premises: Array<Cas3PremisesSearchResult>, sortBy: Cas3PremisesSortBy = 'pdu'): void {
     premises.forEach((item: Cas3PremisesSearchResult) => {
       cy.contains(item.addressLine1)
         .contains(item.addressLine2)
@@ -46,7 +46,9 @@ export default class PremisesListPage extends Page {
             item.bedspaces.forEach(bedspace => cy.get('td').eq(1).contains(bedspace.reference))
           }
 
-          cy.get('td').eq(2).contains(item.pdu)
+          cy.get('td')
+            .eq(2)
+            .contains(sortBy === 'pdu' ? item.pdu : item.localAuthorityAreaName)
           cy.get('td').eq(3).contains('Manage').should('have.attr', 'href', `/v2/properties/${item.id}`)
         })
     })
@@ -75,6 +77,14 @@ export default class PremisesListPage extends Page {
 
   clickBedspaceReference(reference: string): void {
     cy.get('main table tbody a').contains(reference).click()
+  }
+
+  toggleSortBy() {
+    cy.get('[data-cy="toggle-sort"]').click()
+  }
+
+  shouldShowSortByHeader(text: string) {
+    cy.get('[data-cy="sort-by-header"]').should('contain', text)
   }
 
   clickPremisesManageLink(premises: Cas3Premises): void {

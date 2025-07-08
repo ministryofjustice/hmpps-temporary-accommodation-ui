@@ -21,6 +21,7 @@ describe('PremisesService', () => {
   const premisesClientFactory = jest.fn()
   const service = new PremisesService(premisesClientFactory)
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
+  const premisesId = 'premises-id'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -93,6 +94,39 @@ describe('PremisesService', () => {
 
       expect(rows).toEqual(expectedRows)
     })
+
+    it('returns table rows with local authority area name when premisesSortBy is "la"', () => {
+      const searchResult = cas3PremisesSearchResultFactory.build({
+        addressLine1: '32 Windsor Gardens',
+        town: 'London',
+        postcode: 'W9 3RQ',
+        pdu: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster',
+        localAuthorityAreaName: 'Westminster',
+        bedspaces: [],
+      })
+
+      const premises = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
+      ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
+
+      const rows = service.tableRows(premises, 'la')
+
+      const address = [searchResult.addressLine1, searchResult.addressLine2, searchResult.town, searchResult.postcode]
+        .filter(s => s !== undefined && s !== '')
+        .join('<br />')
+
+      const bedspaces = `No bedspaces<br /><a href="#">Add a bedspace</a>`
+
+      expect(rows).toEqual([
+        [
+          { html: address },
+          { html: bedspaces },
+          { text: searchResult.localAuthorityAreaName },
+          {
+            html: `<a href="/v2/properties/${searchResult.id}">Manage<span class="govuk-visually-hidden"> property at ${searchResult.addressLine1}, ${searchResult.postcode}</span></a>`,
+          },
+        ],
+      ])
+    })
   })
 
   describe('searchDataAndGenerateTableRows', () => {
@@ -129,7 +163,7 @@ describe('PremisesService', () => {
       })
       expect(result.tableRows).toHaveLength(2)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.search).toHaveBeenCalledWith('London', 'online')
+      expect(premisesClient.search).toHaveBeenCalledWith('London', 'online', 'pdu')
     })
 
     it('returns search results with table rows for specified status', async () => {
@@ -151,7 +185,7 @@ describe('PremisesService', () => {
       })
       expect(result.tableRows).toHaveLength(1)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.search).toHaveBeenCalledWith('London', 'archived')
+      expect(premisesClient.search).toHaveBeenCalledWith('London', 'archived', 'pdu')
     })
 
     it('returns empty search results when there are no properties in the database', async () => {
@@ -175,13 +209,11 @@ describe('PremisesService', () => {
       expect(result.totalPremises).toBe(0)
       expect(result.totalOnlineBedspaces).toBe(0)
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.search).toHaveBeenCalledWith('', 'online')
+      expect(premisesClient.search).toHaveBeenCalledWith('', 'online', 'pdu')
     })
   })
 
   describe('getSinglePremises', () => {
-    const premisesId = 'premises-id'
-
     it('should return the premises', async () => {
       const premises = cas3PremisesFactory.build({ id: premisesId })
       premisesClient.find.mockResolvedValue(premises)
@@ -195,8 +227,6 @@ describe('PremisesService', () => {
   })
 
   describe('getSinglePremisesDetails', () => {
-    const premisesId = 'premises-id'
-
     it('should return the premises with full address', async () => {
       const premises = cas3PremisesFactory.build({
         id: premisesId,

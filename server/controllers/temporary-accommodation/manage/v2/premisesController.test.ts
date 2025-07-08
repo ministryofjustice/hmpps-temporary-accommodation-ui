@@ -94,6 +94,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -105,6 +106,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -136,6 +138,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -147,6 +150,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -176,6 +180,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NE1' },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
@@ -187,6 +192,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -218,6 +224,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -229,6 +236,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -260,6 +268,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived', active: false },
@@ -275,6 +284,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -304,6 +314,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NE1' },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
@@ -319,6 +330,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -348,6 +360,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NONEXISTENT' },
         status: 'online',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NONEXISTENT', active: true },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NONEXISTENT', active: false },
@@ -363,6 +376,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'online',
+        'pdu',
       )
     })
 
@@ -394,6 +408,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: undefined },
         status: 'archived',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online', active: false },
           { text: 'Archived properties', href: '/v2/properties/archived', active: true },
@@ -409,6 +424,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'archived',
+        'pdu',
       )
     })
 
@@ -438,6 +454,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'SW1' },
         status: 'archived',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=SW1', active: false },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=SW1', active: true },
@@ -453,6 +470,7 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'archived',
+        'pdu',
       )
     })
 
@@ -482,6 +500,7 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
         params: { postcodeOrAddress: 'NOTFOUND' },
         status: 'archived',
+        premisesSortBy: 'pdu',
         subNavArr: [
           { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NOTFOUND', active: false },
           { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NOTFOUND', active: true },
@@ -497,7 +516,98 @@ describe('PremisesController', () => {
         callConfig,
         params.postcodeOrAddress,
         'archived',
+        'pdu',
       )
+    })
+  })
+
+  it('searches premises data and returns as table rows when premisesSortBy is "la"', async () => {
+    const params: PremisesSearchParameters = { postcodeOrAddress: undefined }
+    const searchData = {
+      results: [] as Array<Cas3PremisesSearchResult>,
+      totalPremises: 1,
+      totalOnlineBedspaces: 2,
+      totalUpcomingBedspaces: 0,
+      tableRows: [] as Array<never>,
+    }
+
+    request = createMock<Request>({
+      session: {
+        probationRegion: probationRegionFactory.build(),
+        premisesSortBy: 'la',
+      },
+      query: params,
+      path: '/v2/properties/online',
+    })
+
+    premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
+
+    const requestHandler = premisesController.index('online')
+    await requestHandler(request, response, next)
+
+    expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
+      params: { postcodeOrAddress: undefined },
+      status: 'online',
+      premisesSortBy: 'la',
+      subNavArr: [
+        { text: 'Online properties', href: '/v2/properties/online', active: true },
+        { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+      ],
+      ...searchData,
+    })
+
+    expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
+      callConfig,
+      params.postcodeOrAddress,
+      'online',
+      'la',
+    )
+  })
+
+  describe('toggleSort', () => {
+    it('toggles from pdu to la and redirects with query params', async () => {
+      const req = createMock<Request>({
+        session: { premisesSortBy: 'pdu' },
+        query: { postcodeOrAddress: 'SW1A' },
+      })
+      const res = createMock<Response>({})
+      res.redirect = jest.fn()
+
+      const requestHandler = premisesController.toggleSort()
+      await requestHandler(req, res, next)
+
+      expect(req.session.premisesSortBy).toBe('la')
+      expect(res.redirect).toHaveBeenCalledWith('/v2/properties/online?postcodeOrAddress=SW1A')
+    })
+
+    it('toggles from la to pdu and redirects without query params', async () => {
+      const req = createMock<Request>({
+        session: { premisesSortBy: 'la' },
+        query: {},
+      })
+      const res = createMock<Response>({})
+      res.redirect = jest.fn()
+
+      const requestHandler = premisesController.toggleSort()
+      await requestHandler(req, res, next)
+
+      expect(req.session.premisesSortBy).toBe('pdu')
+      expect(res.redirect).toHaveBeenCalledWith('/v2/properties/online')
+    })
+
+    it('defaults to pdu if session value is missing, then toggles to la', async () => {
+      const req = createMock<Request>({
+        session: {},
+        query: {},
+      })
+      const res = createMock<Response>({})
+      res.redirect = jest.fn()
+
+      const requestHandler = premisesController.toggleSort()
+      await requestHandler(req, res, next)
+
+      expect(req.session.premisesSortBy).toBe('la')
+      expect(res.redirect).toHaveBeenCalledWith('/v2/properties/online')
     })
   })
 

@@ -3,6 +3,7 @@ import {
   Cas3Premises,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
+  Cas3PremisesSortBy,
   Cas3PremisesStatus,
   Characteristic,
 } from '@approved-premises/api'
@@ -21,14 +22,15 @@ export default class PremisesService {
     callConfig: CallConfig,
     postcodeOrAddress: string | undefined,
     status: Cas3PremisesStatus = 'online',
+    premisesSortBy: Cas3PremisesSortBy = 'pdu',
   ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
     const premisesClient = this.premisesClientFactory(callConfig)
 
-    const premises = await premisesClient.search(postcodeOrAddress ?? '', status)
+    const premises = await premisesClient.search(postcodeOrAddress ?? '', status, premisesSortBy)
 
     return {
       ...premises,
-      tableRows: this.tableRows(premises),
+      tableRows: this.tableRows(premises, premisesSortBy),
     }
   }
 
@@ -49,14 +51,14 @@ export default class PremisesService {
     }
   }
 
-  tableRows(premises: Cas3PremisesSearchResults): Array<TableRow> {
+  tableRows(premises: Cas3PremisesSearchResults, premisesSortBy: Cas3PremisesSortBy = 'pdu'): Array<TableRow> {
     return premises.results === undefined
       ? []
       : premises.results.map(entry => {
           return [
             this.htmlValue(this.formatAddress(entry)),
             this.htmlValue(this.formatBedspaces(entry)),
-            this.textValue(entry.pdu),
+            this.textValue(premisesSortBy === 'pdu' ? entry.pdu : entry.localAuthorityAreaName),
             this.htmlValue(this.formatPremisesManageLink(entry)),
           ]
         })

@@ -196,4 +196,11 @@ export default function nunjucksSetup(app: express.Express, path: pathModule.Pla
   njkEnv.addGlobal('AttachDocumentsUtils', AttachDocumentsUtils)
   njkEnv.addGlobal('PhaseBannerUtils', PhaseBannerUtils)
   njkEnv.addGlobal('formatNotes', formatNotes)
+  njkEnv.addGlobal('toQueryString', function toQueryString(params: Record<string, unknown>): string {
+    if (!params) return ''
+    return Object.entries(params)
+      .filter(([_, v]) => v !== undefined && v !== '')
+      .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+      .join('&')
+  })
 }

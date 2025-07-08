@@ -1,4 +1,9 @@
-import type { Cas3Premises, Cas3PremisesSearchResults, Cas3PremisesStatus } from '@approved-premises/api'
+import type {
+  Cas3Premises,
+  Cas3PremisesSearchResults,
+  Cas3PremisesSortBy,
+  Cas3PremisesStatus,
+} from '@approved-premises/api'
 import type { Response } from 'superagent'
 import { stubFor } from '..'
 import paths from '../../../server/paths/api'
@@ -13,6 +18,7 @@ type SearchArguments = {
   searchResults: Cas3PremisesSearchResults
   postcodeOrAddress: string
   premisesStatus: Cas3PremisesStatus
+  sortBy?: Cas3PremisesSortBy
 }
 
 const stubPremisesSearchV2 = (args: SearchArguments) =>
@@ -23,6 +29,7 @@ const stubPremisesSearchV2 = (args: SearchArguments) =>
       queryParameters: {
         postcodeOrAddress: { equalTo: args.postcodeOrAddress },
         premisesStatus: { equalTo: args.premisesStatus },
+        sortBy: { equalTo: args.sortBy ?? 'pdu' },
       },
     },
     response: {

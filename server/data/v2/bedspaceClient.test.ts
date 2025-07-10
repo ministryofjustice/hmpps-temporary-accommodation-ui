@@ -2,7 +2,7 @@ import nock from 'nock'
 import BedspaceClient from './bedspaceClient'
 import { CallConfig } from '../restClient'
 import config from '../../config'
-import { cas3BedspaceFactory, cas3NewBedspaceFactory } from '../../testutils/factories'
+import { cas3BedspaceFactory, cas3BedspacesFactory, cas3NewBedspaceFactory } from '../../testutils/factories'
 import paths from '../../paths/api'
 
 describe('BedspaceClient', () => {
@@ -58,6 +58,20 @@ describe('BedspaceClient', () => {
 
       const output = await bedspaceClient.create(premisesId, payload)
       expect(output).toEqual(bedspace)
+    })
+  })
+
+  describe('get', () => {
+    it('should return the bedspaces for a premises', async () => {
+      const bedspaces = cas3BedspacesFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.cas3.premises.bedspaces.get({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bedspaces)
+
+      const output = await bedspaceClient.get(premisesId)
+      expect(output).toEqual(bedspaces)
     })
   })
 })

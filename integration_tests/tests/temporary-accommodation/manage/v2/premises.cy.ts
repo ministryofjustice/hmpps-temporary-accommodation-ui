@@ -4,6 +4,8 @@ import PremisesListPage from '../../../../../cypress_shared/pages/temporary-acco
 import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
 import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser'
 import {
+  cas3BedspaceFactory,
+  cas3BedspacesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
@@ -662,11 +664,17 @@ context('Premises', () => {
       // Given I am signed in
       cy.signIn()
 
-      // And there is an online premises in the database
+      // And there is an online premises with an online premises in the database
       const premises = cas3PremisesFactory.build({
         status: 'online',
         startDate: '2025-02-01',
         totalUpcomingBedspaces: 0,
+      })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [cas3BedspaceFactory.build({ status: 'online' })],
+        totalOnlineBedspaces: 1,
+        totalUpcomingBedspaces: 0,
+        totalArchivedBedspaces: 0,
       })
       const searchResult = cas3PremisesSearchResultFactory.build({ ...premises })
       const searchResults = cas3PremisesSearchResultsFactory.build({
@@ -676,6 +684,7 @@ context('Premises', () => {
       })
       cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
       cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -694,26 +703,46 @@ context('Premises', () => {
 
       // And I shouldn't see the archived bedspaces count
       showPage.shouldNotShowUpcomingBedspaces(premises)
+
+      // When I click on the "Bedspaces overview" link
+      showPage.clickBedspacesOverviewTab()
+
+      // Then I should see the bedspace summaries
+      showPage.shouldShowBedspaceSummaries(bedspaces)
     })
 
     it('should show an online property with upcoming bedspaces', () => {
       // Given I am signed in
       cy.signIn()
 
-      // And there is an online premises in the database
+      // And there is an online premises with bedspaces in the database
       const premises = cas3PremisesFactory.build({
         status: 'online',
         startDate: '2025-02-01',
-        totalUpcomingBedspaces: 5,
+        totalUpcomingBedspaces: 3,
+        totalOnlineBedspaces: 1,
+      })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ status: 'upcoming' }),
+          cas3BedspaceFactory.build({ status: 'upcoming' }),
+          cas3BedspaceFactory.build({ status: 'upcoming' }),
+          cas3BedspaceFactory.build({ status: 'online' }),
+        ],
+        totalOnlineBedspaces: 1,
+        totalUpcomingBedspaces: 3,
+        totalArchivedBedspaces: 0,
       })
       const searchResult = cas3PremisesSearchResultFactory.build({ ...premises })
       const searchResults = cas3PremisesSearchResultsFactory.build({
         results: [searchResult],
         totalPremises: 1,
         totalOnlineBedspaces: 1,
+        totalUpcomingBedspaces: 3,
       })
       cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
       cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -732,18 +761,34 @@ context('Premises', () => {
 
       // And I shouldn't see the archived bedspaces count
       showPage.shouldShowUpcomingBedspaces(premises)
+
+      // When I click on the "Bedspaces overview" link
+      showPage.clickBedspacesOverviewTab()
+
+      // Then I should see the bedspace summaries
+      showPage.shouldShowBedspaceSummaries(bedspaces)
     })
 
     it('should show an archived property', () => {
       // Given I am signed in
       cy.signIn()
 
-      // And there is an online premises in the database
+      // And there is an archived premises in the database
       const premises = cas3PremisesFactory.build({
         status: 'archived',
         startDate: '2025-02-01',
         totalOnlineBedspaces: 0,
         totalUpcomingBedspaces: 0,
+      })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ status: 'archived' }),
+          cas3BedspaceFactory.build({ status: 'archived' }),
+          cas3BedspaceFactory.build({ status: 'archived' }),
+        ],
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        totalArchivedBedspaces: 3,
       })
       const searchResult = cas3PremisesSearchResultFactory.build({ ...premises })
       const searchResults = cas3PremisesSearchResultsFactory.build({
@@ -754,6 +799,7 @@ context('Premises', () => {
       })
       cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
       cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
 
       // When I visit the premises page
       const page = PremisesListPage.visitOnline()
@@ -769,6 +815,12 @@ context('Premises', () => {
 
       // Then I should see the premises overview
       showPage.shouldShowPremisesOverview(premises, 'Archived', '1 February 2025')
+
+      // When I click on the "Bedspaces overview" link
+      showPage.clickBedspacesOverviewTab()
+
+      // Then I should see the bedspace summaries
+      showPage.shouldShowBedspaceSummaries(bedspaces)
     })
   })
 

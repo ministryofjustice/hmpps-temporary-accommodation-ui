@@ -1,6 +1,7 @@
 import { Cas3Premises } from '@approved-premises/api'
 import {
   cas3BedspaceFactory,
+  cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
@@ -13,6 +14,7 @@ import BedspaceShowPage from '../../../../../cypress_shared/pages/temporary-acco
 import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser'
 import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
 import Page from '../../../../../cypress_shared/pages/page'
+import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -59,6 +61,51 @@ context('Bedspace', () => {
     // Then I should see the bedspace details
     bedspacePage.shouldShowStatus('Online')
     bedspacePage.shouldShowStartDate('18 October 2023')
+    bedspacePage.shouldShowDetails()
+    bedspacePage.shouldShowAdditionalDetails()
+  })
+
+  it('should navigate to the bedspace via its property', () => {
+    // And there is an active premises with an online bedspace in the database
+    const premises = cas3PremisesFactory.build({
+      status: 'online',
+      startDate: '2025-02-01',
+      totalOnlineBedspaces: 1,
+      totalUpcomingBedspaces: 0,
+      totalArchivedBedspaces: 0,
+    })
+    const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2025-03-02' })
+    const bedspaces = cas3BedspacesFactory.build({
+      bedspaces: [bedspace],
+      totalOnlineBedspaces: 1,
+      totalUpcomingBedspaces: 0,
+      totalArchivedBedspaces: 0,
+    })
+    cy.task('stubSinglePremisesV2', premises)
+    cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+    // When I visit the premises show page
+    const premisesPage = PremisesShowPage.visit(premises)
+
+    // Then I should see the premises overview
+    premisesPage.shouldShowPremisesOverview(premises, 'Online', '1 February 2025')
+
+    // When I click on the "Bedspaces overview" tab
+    premisesPage.clickBedspacesOverviewTab()
+
+    // Then I should see the bedspace summaries
+    premisesPage.shouldShowBedspaceSummaries(bedspaces)
+
+    // When I click on the "View bedspace" link
+    premisesPage.clickViewBedspaceLink(bedspace)
+
+    // Then I navigate to the show bedspace page
+    const bedspacePage = Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
+
+    // And I should see the bedspace details
+    bedspacePage.shouldShowStatus('Online')
+    bedspacePage.shouldShowStartDate('2 March 2025')
     bedspacePage.shouldShowDetails()
     bedspacePage.shouldShowAdditionalDetails()
   })

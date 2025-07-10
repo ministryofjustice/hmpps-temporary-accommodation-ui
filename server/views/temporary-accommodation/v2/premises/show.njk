@@ -52,17 +52,45 @@
         </div>
     </div>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            {{ govukSummaryList({
-                card: {
-                    title: {
-                        text: "Property reference: " + premises.reference
-                    }
-                },
-                rows: summary.rows
-            }) }}
+    {% if showPremises %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {{ govukSummaryList({
+                    card: {
+                        title: {
+                            text: "Property reference: " + premises.reference
+                        }
+                    },
+                    rows: summary.rows
+                }) }}
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {% for bedspace in bedspaceSummaries %}
+                    {{ govukSummaryList({
+                        card: {
+                            title: {
+                                text: "Bedspace reference: " + bedspace.reference
+                            },
+                            actions: {
+                                items: [
+                                    {
+                                        text: "View bedspace",
+                                        href: addPlaceContext(paths.premises.v2.bedspaces.show({
+                                            premisesId: premises.id,
+                                            bedspaceId: bedspace.id
+                                        }))
+                                    }
+                                ]
+                            }
+                        },
+                        rows: bedspace.summary.rows
+                    }) }}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 
 {% endblock %}

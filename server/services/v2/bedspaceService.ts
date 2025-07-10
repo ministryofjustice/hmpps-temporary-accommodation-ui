@@ -1,4 +1,10 @@
-import { Cas3Bedspace, type Cas3BedspaceStatus, Cas3NewBedspace, Characteristic } from '@approved-premises/api'
+import {
+  Cas3Bedspace,
+  type Cas3BedspaceStatus,
+  Cas3Bedspaces,
+  Cas3NewBedspace,
+  Characteristic,
+} from '@approved-premises/api'
 import { SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../../data/restClient'
 import { RestClientBuilder } from '../../data'
@@ -33,7 +39,13 @@ export default class BedspaceService {
     }
   }
 
-  private summaryList(bedspace: Cas3Bedspace): SummaryList {
+  async getBedspacesForPremises(callConfig: CallConfig, premisesId: string): Promise<Cas3Bedspaces> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+
+    return bedspaceClient.get(premisesId)
+  }
+
+  summaryList(bedspace: Cas3Bedspace): SummaryList {
     return {
       rows: [
         {

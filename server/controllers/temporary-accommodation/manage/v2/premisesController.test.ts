@@ -1,14 +1,20 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import type { PremisesSearchParameters, SummaryList } from '@approved-premises/ui'
+import { PremisesSearchParameters, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
 import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
-import { cas3PremisesFactory, probationRegionFactory } from '../../../../testutils/factories'
+import {
+  cas3BedspaceFactory,
+  cas3BedspacesFactory,
+  cas3PremisesFactory,
+  probationRegionFactory,
+} from '../../../../testutils/factories'
 import extractCallConfig from '../../../../utils/restUtils'
 import PremisesController from './premisesController'
 import paths from '../../../../paths/temporary-accommodation/manage'
+import BedspaceService from '../../../../services/v2/bedspaceService'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -33,8 +39,9 @@ describe('PremisesController', () => {
   const next: DeepMocked<NextFunction> = createMock<NextFunction>({})
 
   const premisesService = createMock<PremisesService>({})
+  const bedspaceService = createMock<BedspaceService>({})
 
-  const premisesController = new PremisesController(premisesService)
+  const premisesController = new PremisesController(premisesService, bedspaceService)
 
   beforeEach(() => {
     request = createMock<Request>({
@@ -613,6 +620,16 @@ describe('PremisesController', () => {
 
   describe('show', () => {
     const property = cas3PremisesFactory.build({ status: 'online', startDate: '2025-02-01' })
+    const bedspaces = cas3BedspacesFactory.build({
+      bedspaces: [
+        cas3BedspaceFactory.build({ status: 'online', startDate: '2025-02-01' }),
+        cas3BedspaceFactory.build({ status: 'online', startDate: '2025-02-01' }),
+        cas3BedspaceFactory.build({ status: 'online', startDate: '2025-02-01' }),
+      ],
+      totalOnlineBedspaces: 3,
+      totalUpcomingBedspaces: 0,
+      totalArchivedBedspaces: 0,
+    })
 
     const summaryList: SummaryList = {
       rows: [
@@ -659,16 +676,46 @@ describe('PremisesController', () => {
       ],
     }
 
-    const navArr = [
+    const bedspaceSummaryLists: Array<{ id: string; reference: string; summary: SummaryList }> =
+      bedspaces.bedspaces.map(bedspace => ({
+        id: bedspace.id,
+        reference: bedspace.reference,
+        summary: {
+          rows: [
+            {
+              key: { text: 'Bedspace status' },
+              value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
+            },
+            {
+              key: { text: 'Start date' },
+              value: { text: '1 February 2025' },
+            },
+            {
+              key: { text: 'Bedspace details' },
+              value: {
+                html: bedspace.characteristics
+                  .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+                  .join(' '),
+              },
+            },
+            {
+              key: { text: 'Additional bedspace details' },
+              value: { text: bedspace.notes },
+            },
+          ],
+        },
+      }))
+
+    const navArr = (activeTab: PremisesShowTabs) => [
       {
         text: 'Property overview',
         href: paths.premises.v2.show({ premisesId: property.id }),
-        active: true,
+        active: activeTab === 'premises',
       },
       {
         text: 'Bedspaces overview',
-        href: '#',
-        active: false,
+        href: paths.premises.v2.bedspaces.list({ premisesId: property.id }),
+        active: activeTab === 'bedspaces',
       },
     ]
 
@@ -682,18 +729,50 @@ describe('PremisesController', () => {
       premisesService.getSinglePremises.mockResolvedValue(property)
       premisesService.summaryList.mockReturnValue(summaryList)
 
-      const requestHandler = premisesController.show()
+      const requestHandler = premisesController.showPremisesTab()
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
         premises: property,
         summary: summaryList,
         actions: [],
-        subNavArr: navArr,
+        showPremises: true,
+        subNavArr: navArr('premises'),
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, property.id)
       expect(premisesService.summaryList).toHaveBeenCalledWith(property)
+    })
+
+    it('shows the bedspace summary tab for an online premises', async () => {
+      request = createMock<Request>({
+        session: { probationRegion: probationRegionFactory.build() },
+        url: `/v2/properties/${property.id}/bedspaces`,
+        params: { premisesId: property.id },
+      })
+
+      premisesService.getSinglePremises.mockResolvedValue(property)
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspaces)
+      bedspaceService.summaryList.mockReturnValueOnce(bedspaceSummaryLists[0].summary)
+      bedspaceService.summaryList.mockReturnValueOnce(bedspaceSummaryLists[1].summary)
+      bedspaceService.summaryList.mockReturnValueOnce(bedspaceSummaryLists[2].summary)
+
+      const requestHandler = premisesController.showBedspacesTab()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
+        premises: property,
+        bedspaceSummaries: bedspaceSummaryLists,
+        actions: [],
+        showPremises: false,
+        subNavArr: navArr('bedspaces'),
+      })
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, property.id)
+      expect(bedspaceService.summaryList).toHaveBeenCalledTimes(3)
+      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[0])
+      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[1])
+      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[2])
     })
   })
 })

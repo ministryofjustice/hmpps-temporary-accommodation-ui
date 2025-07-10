@@ -1,4 +1,4 @@
-import { Cas3Bedspace } from '@approved-premises/api'
+import { Cas3Bedspace, Cas3Bedspaces } from '@approved-premises/api'
 import { SuperAgentRequest } from 'superagent'
 import { getMatchingRequests, stubFor } from '../index'
 import paths from '../../../server/paths/api'
@@ -20,6 +20,21 @@ const stubBedspaceV2 = (args: BedspaceArguments) =>
         'Content-Type': 'application/json;charset=UTF-8',
       },
       jsonBody: args.bedspace,
+    },
+  })
+
+const stubPremisesBedspacesV2 = (args: { premisesId: string; bedspaces: Cas3Bedspaces }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.cas3.premises.bedspaces.get({ premisesId: args.premisesId }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: args.bedspaces,
     },
   })
 
@@ -70,6 +85,7 @@ const stubBedspaceCreateErrors = (args: {
 
 export default {
   stubBedspaceV2,
+  stubPremisesBedspacesV2,
   stubBedspaceCreate,
   verifyBedspaceCreate,
   stubBedspaceCreateErrors,

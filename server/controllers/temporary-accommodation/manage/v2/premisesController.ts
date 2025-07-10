@@ -5,6 +5,7 @@ import type { Cas3PremisesStatus } from '@approved-premises/api'
 import PremisesService from '../../../../services/v2/premisesService'
 import extractCallConfig from '../../../../utils/restUtils'
 import { createSubNavArr } from '../../../../utils/premisesSearchUtils'
+import { showPropertySubNavArray } from '../../../../utils/premisesUtils'
 
 export default class PremisesController {
   constructor(private readonly premisesService: PremisesService) {}
@@ -25,6 +26,23 @@ export default class PremisesController {
         params,
         status,
         subNavArr: createSubNavArr(status, params.postcodeOrAddress),
+      })
+    }
+  }
+
+  show(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+      const summary = this.premisesService.summaryList(premises)
+
+      return res.render('temporary-accommodation/v2/premises/show', {
+        premises,
+        summary,
+        actions: [],
+        subNavArr: showPropertySubNavArray(premisesId, 'premises'),
       })
     }
   }

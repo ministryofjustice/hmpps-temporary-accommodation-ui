@@ -52,7 +52,7 @@ describe('BedspacesController', () => {
       const premises = cas3PremisesFactory.build()
 
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
-      premisesService.getPremises.mockResolvedValue(premises)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
 
       const requestHandler = bedspacesController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -61,7 +61,7 @@ describe('BedspacesController', () => {
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getReferenceData).toHaveBeenCalledWith(callConfig)
-      expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/new', {
         allCharacteristics: referenceData.characteristics,
         characteristicIds: [],

@@ -1,13 +1,14 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import type { PremisesSearchParameters } from '@approved-premises/ui'
+import type { PremisesSearchParameters, SummaryList } from '@approved-premises/ui'
 import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
-import { probationRegionFactory } from '../../../../testutils/factories'
+import { cas3PremisesFactory, probationRegionFactory } from '../../../../testutils/factories'
 import extractCallConfig from '../../../../utils/restUtils'
 import PremisesController from './premisesController'
+import paths from '../../../../paths/temporary-accommodation/manage'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -497,6 +498,92 @@ describe('PremisesController', () => {
         params.postcodeOrAddress,
         'archived',
       )
+    })
+  })
+
+  describe('show', () => {
+    const property = cas3PremisesFactory.build({ status: 'online', startDate: '2025-02-01' })
+
+    const summaryList: SummaryList = {
+      rows: [
+        {
+          key: { text: 'Property status' },
+          value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
+        },
+        {
+          key: { text: 'Start date' },
+          value: { text: '1 February 2025' },
+        },
+        {
+          key: { text: 'Address' },
+          value: {
+            html: `${property.addressLine1}<br />${property.addressLine2}<br />${property.town}<br />${property.postcode}`,
+          },
+        },
+        {
+          key: { text: 'Local authority' },
+          value: { text: property.localAuthorityArea.name },
+        },
+        {
+          key: { text: 'Probation region' },
+          value: { text: property.probationRegion.name },
+        },
+        {
+          key: { text: 'Probation delivery unit' },
+          value: { text: property.probationDeliveryUnit.name },
+        },
+        {
+          key: { text: 'Expected turn around time' },
+          value: { text: `${property.turnaroundWorkingDays} working days` },
+        },
+        {
+          key: { text: 'Property details' },
+          value: {
+            html: property.characteristics.map(char => `<span class="hmpps-tag-filters">${char.name}</span>`).join(' '),
+          },
+        },
+        {
+          key: { text: 'Additional property details' },
+          value: { text: property.notes },
+        },
+      ],
+    }
+
+    const navArr = [
+      {
+        text: 'Property overview',
+        href: paths.premises.v2.show({ premisesId: property.id }),
+        active: true,
+      },
+      {
+        text: 'Bedspaces overview',
+        href: '#',
+        active: false,
+      },
+    ]
+
+    it('shows an online premises', async () => {
+      request = createMock<Request>({
+        session: { probationRegion: probationRegionFactory.build() },
+        url: `/v2/properties/${property.id}`,
+        params: { premisesId: property.id },
+      })
+
+      premisesService.getSinglePremises.mockResolvedValue(property)
+      premisesService.summaryList.mockReturnValue(summaryList)
+
+      const requestHandler = premisesController.show()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
+        premises: property,
+        summary: summaryList,
+        actions: [],
+        subNavArr: navArr,
+      })
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, property.id)
+      expect(premisesService.summaryList).toHaveBeenCalledWith(property)
     })
   })
 })

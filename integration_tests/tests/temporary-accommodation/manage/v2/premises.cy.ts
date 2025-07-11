@@ -1,3 +1,4 @@
+import { Characteristic, LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
 import Page from '../../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
@@ -6,10 +7,12 @@ import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser
 import {
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
 } from '../../../../../server/testutils/factories'
+import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
 
 context('Premises', () => {
   beforeEach(() => {
@@ -907,5 +910,170 @@ context('Premises', () => {
     // Should still have the search term in the URL and input
     cy.url().should('include', `postcodeOrAddress=${postcode.replace(' ', '+')}`)
     cy.get('main form input').should('have.value', postcode)
+  })
+
+  describe('create a new property', () => {
+    it('should navigate to the new property page from the property search', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there are no premises in the database
+      const searchResults = cas3PremisesSearchResultsFactory.build({
+        results: [],
+        totalPremises: 0,
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+      cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+
+      // And there is reference data in the database
+      cy.task('stubPremisesReferenceData')
+
+      // When I visit the premises page
+      const page = PremisesListPage.visit()
+
+      // And click the 'Add a property' button
+      page.clickAddPropertyButton()
+
+      // Then I should see the new property page
+      Page.verifyOnPage(PremisesNewPage, 'Add a property')
+    })
+
+    it('should redirect to the new property when the property is created successfully', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is reference data in the database
+      cy.task('stubPremisesReferenceDataV2')
+
+      // When I visit the new premises page
+      const page = PremisesNewPage.visit()
+
+      // When I complete the form
+      const localAuthority: LocalAuthorityArea = {
+        name: 'Northumberland',
+        id: 'a0eaa96e-f652-4b11-be05-b72a8229b1bb',
+        identifier: 'E06000057',
+      }
+      const pdu: ProbationDeliveryUnit = {
+        name: 'North Tyneside and Northumberland',
+        id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
+      }
+      const characteristics: Array<Characteristic> = [
+        {
+          name: 'Pub nearby',
+          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+        {
+          name: 'Floor level access',
+          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+      ]
+      const newPremises = cas3NewPremisesFactory.build({
+        localAuthorityAreaId: localAuthority.id,
+        probationDeliveryUnitId: pdu.id,
+        characteristicIds: characteristics.map(char => char.id),
+      })
+      page.enterReference(newPremises.reference)
+      page.enterAddress(newPremises.addressLine1, newPremises.addressLine2, newPremises.town, newPremises.postcode)
+      page.enterLocalAuthority(localAuthority.name)
+      page.enterProbationRegion()
+      page.enterPdu(pdu.name)
+      page.enterCharacteristics(characteristics.map(char => char.name))
+      page.enterAdditionalDetails(newPremises.notes)
+      page.enterWorkingDays(newPremises.turnaroundWorkingDays)
+
+      // And the backend responds with 201 created
+      const premises = cas3PremisesFactory.build({
+        ...newPremises,
+        characteristics,
+        probationDeliveryUnit: pdu,
+        localAuthorityArea: localAuthority,
+        startDate: '2025-02-01',
+        status: 'online',
+      })
+      cy.task('stubPremisesCreateV2', premises)
+      cy.task('stubSinglePremisesV2', premises)
+
+      // When I submit the form
+      page.clickSubmit()
+
+      // Then a premises should have been created in the API
+      cy.task('verifyPremisesCreateV2').then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+
+        expect(requestBody.reference).equal(newPremises.reference)
+        expect(requestBody.addressLine1).equal(newPremises.addressLine1)
+        expect(requestBody.addressLine2).equal(newPremises.addressLine2)
+        expect(requestBody.town).equal(newPremises.town)
+        expect(requestBody.postcode).equal(newPremises.postcode)
+        expect(requestBody.localAuthorityAreaId).equal(newPremises.localAuthorityAreaId)
+        expect(requestBody.probationDeliveryUnitId).equal(newPremises.probationDeliveryUnitId)
+        expect(requestBody.characteristicIds).members(newPremises.characteristicIds)
+        expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(newPremises.notes)
+        expect(requestBody.turnaroundWorkingDays).equal(newPremises.turnaroundWorkingDays)
+      })
+
+      // And I should be taken to the new property
+      const showPage = Page.verifyOnPage(PremisesShowPage, `${premises.addressLine1}, ${premises.postcode}`)
+
+      // And I should see the 'Property added' banner
+      showPage.shouldShowPropertyAddedBanner()
+
+      // And I should see the premises overview
+      showPage.shouldShowPremisesOverview(premises, 'Online', '1 February 2025')
+    })
+
+    it('should show errors when creating a property fails', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is reference data in the database
+      cy.task('stubPremisesReferenceDataV2')
+
+      // When I visit the new premises page
+      const page = PremisesNewPage.visit()
+
+      // When I don't enter the required fields
+      page.enterAddress('', 'Some address line 2', 'Some town', '')
+      page.enterLocalAuthority('Northumberland')
+      page.enterCharacteristics(['Pub nearby', 'Wheelchair accessible'])
+      page.enterAdditionalDetails('Lorem ipsum dolor sit amet.')
+      page.enterWorkingDays(5)
+
+      // And the backend responds with 400 bad request
+      cy.task('stubPremisesCreateErrorsV2', [
+        'reference',
+        'addressLine1',
+        'postcode',
+        'probationDeliveryUnitId',
+        'probationRegionId',
+      ])
+
+      // When I submit the form
+      page.clickSubmit()
+
+      // Then I should be returned to the create page
+      Page.verifyOnPage(PremisesNewPage, 'Add a property')
+
+      // And I should see error messages
+      page.shouldShowErrorMessagesForFields(
+        ['reference', 'addressLine1', 'postcode', 'probationDeliveryUnitId', 'probationRegionId'],
+        'empty',
+      )
+
+      // And I should see the optional data I'd previously entered
+      page.validateEnteredAddressLine2('Some address line 2')
+      page.validateEnteredTown('Some town')
+      page.validateEnteredLocalAuthority('Northumberland')
+      page.validateEnteredCharacteristics(['Pub nearby', 'Wheelchair accessible'])
+      page.validateEnteredAdditionalDetails('Lorem ipsum dolor sit amet.')
+      page.validateEnteredWorkingDays(5)
+    })
   })
 })

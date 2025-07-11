@@ -4,6 +4,7 @@ import PremisesClient from './premisesClient'
 import { CallConfig } from '../restClient'
 import config from '../../config'
 import {
+  cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
@@ -63,6 +64,21 @@ describe('PremisesClient', () => {
 
       const output = await premisesClient.find(premisesId)
       expect(output).toEqual(premises)
+    })
+  })
+
+  describe('create', () => {
+    it('should return the premises that has been created', async () => {
+      const premises = cas3PremisesFactory.build()
+      const payload = cas3NewPremisesFactory.build({ ...premises })
+
+      fakeApprovedPremisesApi
+        .post(paths.cas3.premises.create({}))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const result = await premisesClient.create(payload)
+      expect(result).toEqual(premises)
     })
   })
 })

@@ -10,8 +10,8 @@
 
 {% block beforeContent %}
   {{ breadCrumb('Add a bedspace', [
-    {title: 'List of properties', href: paths.premises.index()},
-    {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })}
+    {title: 'List of properties', href: paths.premises.v2.index()},
+    {title: 'View a property', href: paths.premises.v2.show({ premisesId: premises.id })}
   ]) }}
 {% endblock %}
 

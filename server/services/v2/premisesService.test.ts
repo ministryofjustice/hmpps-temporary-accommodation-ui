@@ -1,13 +1,19 @@
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
+  cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  characteristicFactory,
+  localAuthorityFactory,
+  pduFactory,
   probationRegionFactory,
 } from '../../testutils/factories'
 import { statusTag } from '../../utils/premisesUtils'
 import PremisesService from './premisesService'
+import { ReferenceDataClient } from '../../data'
+import { filterCharacteristics } from '../../utils/characteristicUtils'
 
 jest.mock('../../data/v2/premisesClient')
 jest.mock('../../data/referenceDataClient')
@@ -18,14 +24,31 @@ jest.mock('../../utils/placeUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
+  const referenceDataClient = new ReferenceDataClient(null) as jest.Mocked<ReferenceDataClient>
   const premisesClientFactory = jest.fn()
-  const service = new PremisesService(premisesClientFactory)
+  const referenceDataClientFactory = jest.fn()
+  const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
   const premisesId = 'premises-id'
 
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
+    referenceDataClientFactory.mockReturnValue(referenceDataClient)
+  })
+
+  describe('createPremises', () => {
+    it('on success returns the premises that has been created', async () => {
+      const premises = cas3PremisesFactory.build()
+      const newPremises = cas3NewPremisesFactory.build({ ...premises })
+      premisesClient.create.mockResolvedValue(premises)
+
+      const createdPremises = await service.createPremises(callConfig, newPremises)
+      expect(createdPremises).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
+    })
   })
 
   describe('tableRows', () => {
@@ -73,7 +96,7 @@ describe('PremisesService', () => {
 
         const bedspaces =
           prem.bedspaces.length === 0
-            ? `No bedspaces<br /><a href="#">Add a bedspace</a>`
+            ? `No bedspaces<br /><a href="/v2/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
             : prem.bedspaces
                 .map(bed => {
                   const archivedTag =
@@ -114,7 +137,7 @@ describe('PremisesService', () => {
         .filter(s => s !== undefined && s !== '')
         .join('<br />')
 
-      const bedspaces = `No bedspaces<br /><a href="#">Add a bedspace</a>`
+      const bedspaces = `No bedspaces<br /><a href="/v2/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
 
       expect(rows).toEqual([
         [
@@ -356,6 +379,84 @@ describe('PremisesService', () => {
       }
 
       expect(summaryList).toEqual(expectedSummaryList)
+    })
+  })
+
+  describe('getReferenceData', () => {
+    const localAuthority1 = localAuthorityFactory.build({ name: 'Newcastle' })
+    const localAuthority2 = localAuthorityFactory.build({ name: 'Gateshead' })
+    const localAuthority3 = localAuthorityFactory.build({ name: 'Sunderland' })
+    const unsortedLocalAuthorities = [localAuthority1, localAuthority2, localAuthority3]
+
+    const characteristic1 = characteristicFactory.build({ name: 'Rural property', modelScope: 'premises' })
+    const characteristic2 = characteristicFactory.build({ name: 'Ground floor accessible', modelScope: 'premises' })
+    const characteristic3 = characteristicFactory.build({ name: 'Pub nearby', modelScope: 'premises' })
+    const characteristic4 = characteristicFactory.build({ name: 'Sea view', modelScope: 'room' })
+    const unsortedCharacteristics = [characteristic1, characteristic2, characteristic3, characteristic4]
+
+    const unsortedProbationRegions = [callConfig.probationRegion]
+
+    const pdu1 = pduFactory.build({ name: 'Newcastle upon Tyne' })
+    const pdu2 = pduFactory.build({ name: 'North Tyneside and Northumberland' })
+    const pdu3 = pduFactory.build({ name: 'Gateshead and South Tyneside' })
+    const unsortedPdus = [pdu1, pdu2, pdu3]
+
+    it('returns sorted reference data', async () => {
+      referenceDataClient.getReferenceData.mockImplementation(async (objectType: string) => {
+        if (objectType === 'local-authority-areas') {
+          return unsortedLocalAuthorities
+        }
+        if (objectType === 'characteristics') {
+          return unsortedCharacteristics
+        }
+        if (objectType === 'probation-regions') {
+          return unsortedProbationRegions
+        }
+        return unsortedPdus
+      })
+      ;(filterCharacteristics as jest.MockedFunction<typeof filterCharacteristics>).mockReturnValue([
+        characteristic2,
+        characteristic3,
+        characteristic1,
+      ])
+
+      const result = await service.getReferenceData(callConfig)
+
+      expect(result).toEqual({
+        localAuthorities: [localAuthority2, localAuthority1, localAuthority3],
+        characteristics: [characteristic2, characteristic3, characteristic1],
+        probationRegions: [callConfig.probationRegion],
+        pdus: [pdu3, pdu1, pdu2],
+      })
+
+      expect(referenceDataClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('local-authority-areas')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('characteristics')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-regions')
+      expect(referenceDataClient.getReferenceData).toHaveBeenCalledWith('probation-delivery-units', {
+        probationRegionId: callConfig.probationRegion.id,
+      })
+
+      expect(filterCharacteristics).toHaveBeenCalledWith(
+        [characteristic1, characteristic2, characteristic3, characteristic4],
+        'premises',
+      )
+    })
+  })
+
+  describe('createPremises', () => {
+    it('on success returns the premises that has been created', async () => {
+      const premises = cas3PremisesFactory.build()
+      const newPremises = cas3NewPremisesFactory.build({
+        reference: premises.reference,
+      })
+      premisesClient.create.mockResolvedValue(premises)
+
+      const createdPremises = await service.createPremises(callConfig, newPremises)
+      expect(createdPremises).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
     })
   })
 })

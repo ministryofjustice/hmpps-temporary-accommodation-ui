@@ -1,22 +1,37 @@
 import {
   Cas3BedspacePremisesSearchResult,
+  Cas3NewPremises,
   Cas3Premises,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
   Characteristic,
+  LocalAuthorityArea,
+  ProbationDeliveryUnit,
+  ProbationRegion,
 } from '@approved-premises/api'
 import { SummaryList, TableRow } from '@approved-premises/ui'
-import type { PremisesClientV2 as PremisesClient, RestClientBuilder } from '../../data'
+import { PremisesClientV2 as PremisesClient, ReferenceDataClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
 import paths from '../../paths/temporary-accommodation/manage'
 import { DateFormats } from '../../utils/dateUtils'
 import { convertToTitleCase } from '../../utils/utils'
+import { filterCharacteristics } from '../../utils/characteristicUtils'
+
+export type Cas3PremisesReferenceData = {
+  localAuthorities: Array<LocalAuthorityArea>
+  characteristics: Array<Characteristic>
+  probationRegions: Array<ProbationRegion>
+  pdus: Array<ProbationDeliveryUnit>
+}
 
 export default class PremisesService {
-  constructor(protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>) {}
+  constructor(
+    protected readonly premisesClientFactory: RestClientBuilder<PremisesClient>,
+    protected readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
+  ) {}
 
   async searchDataAndGenerateTableRows(
     callConfig: CallConfig,
@@ -49,6 +64,37 @@ export default class PremisesService {
       ...premises,
       fullAddress: this.formatAddress(premises),
     }
+  }
+
+  async getReferenceData(callConfig: CallConfig): Promise<Cas3PremisesReferenceData> {
+    const referenceDataClient = this.referenceDataClientFactory(callConfig)
+
+    const [unsortedLocalAuthorities, unsortedCharacteristics, unsortedProbationRegions, unsortedPdus] =
+      await Promise.all([
+        referenceDataClient.getReferenceData<LocalAuthorityArea>('local-authority-areas'),
+        referenceDataClient.getReferenceData<Characteristic>('characteristics'),
+        referenceDataClient.getReferenceData<ProbationRegion>('probation-regions'),
+        referenceDataClient.getReferenceData<ProbationDeliveryUnit>('probation-delivery-units', {
+          probationRegionId: callConfig.probationRegion.id,
+        }),
+      ])
+
+    const localAuthorities = unsortedLocalAuthorities.sort((a, b) => a.name.localeCompare(b.name))
+
+    const characteristics = filterCharacteristics(unsortedCharacteristics, 'premises').sort((a, b) =>
+      a.name.localeCompare(b.name),
+    )
+
+    const probationRegions = unsortedProbationRegions.sort((a, b) => a.name.localeCompare(b.name))
+
+    const pdus = unsortedPdus.sort((a, b) => a.name.localeCompare(b.name))
+
+    return { localAuthorities, characteristics, probationRegions, pdus }
+  }
+
+  async createPremises(callConfig: CallConfig, newPremises: Cas3NewPremises): Promise<Cas3Premises> {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.create(newPremises)
   }
 
   tableRows(premises: Cas3PremisesSearchResults, premisesSortBy: Cas3PremisesSortBy = 'pdu'): Array<TableRow> {
@@ -150,7 +196,7 @@ export default class PremisesService {
 
   private formatBedspaces(premises: Cas3PremisesSearchResult): string {
     if (premises.bedspaces === undefined || premises.bedspaces.length === 0) {
-      return `No bedspaces<br /><a href="#">Add a bedspace</a>`
+      return `No bedspaces<br /><a href="${paths.premises.v2.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
     }
 
     return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace)).join('<br />')

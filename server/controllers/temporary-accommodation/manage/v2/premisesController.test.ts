@@ -1,19 +1,23 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { PremisesSearchParameters, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
+import { ErrorsAndUserInput, PremisesSearchParameters, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
 import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
 import {
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3NewPremisesFactory,
   cas3PremisesFactory,
   probationRegionFactory,
+  referenceDataFactory,
 } from '../../../../testutils/factories'
 import extractCallConfig from '../../../../utils/restUtils'
 import PremisesController from './premisesController'
 import paths from '../../../../paths/temporary-accommodation/manage'
+import { filterProbationRegions } from '../../../../utils/userUtils'
+import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 import BedspaceService from '../../../../services/v2/bedspaceService'
 
 jest.mock('../../../../utils/validation')
@@ -32,6 +36,19 @@ jest.mock('../../../../utils/placeUtils')
 
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
+
+  const referenceData = {
+    localAuthorities: referenceDataFactory.localAuthority().buildList(5),
+    characteristics: referenceDataFactory.characteristic('premises').buildList(5),
+    probationRegions: referenceDataFactory.probationRegion().buildList(5),
+    pdus: referenceDataFactory.pdu().buildList(5),
+  }
+
+  const filteredRegions = [
+    probationRegionFactory.build({
+      name: 'filtered-region',
+    }),
+  ]
 
   let request: Request
 
@@ -773,6 +790,101 @@ describe('PremisesController', () => {
       expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[0])
       expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[1])
       expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspaces.bedspaces[2])
+    })
+  })
+
+  describe('new', () => {
+    it('should render the form', async () => {
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
+
+      const requestHandler = premisesController.new()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/new', {
+        localAuthorities: referenceData.localAuthorities,
+        characteristics: referenceData.characteristics,
+        pdus: referenceData.pdus,
+        probationRegions: filteredRegions,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('should render the form with errors and user input when the backend returns an error', async () => {
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
+
+      const requestHandler = premisesController.new()
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/new', {
+        localAuthorities: referenceData.localAuthorities,
+        characteristics: referenceData.characteristics,
+        pdus: referenceData.pdus,
+        probationRegions: filteredRegions,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+      })
+    })
+  })
+
+  describe('create', () => {
+    it('creates a premises and redirects to the show premises page', async () => {
+      const requestHandler = premisesController.create()
+
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      const newPremises = cas3NewPremisesFactory.build({ reference: premises.reference })
+
+      request.body = {
+        ...newPremises,
+      }
+
+      premisesService.createPremises.mockResolvedValue(premises)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.createPremises).toHaveBeenCalledWith(callConfig, {
+        ...newPremises,
+      })
+
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property added')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+    })
+
+    it('should fail to create a premises when the service returns an error', async () => {
+      const requestHandler = premisesController.create()
+
+      const newPremises = cas3NewPremisesFactory.build({ addressLine1: '' })
+
+      request.body = {
+        ...newPremises,
+      }
+
+      const err = {
+        data: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': [{ propertyName: '$.addressLine1', errorType: 'empty' }],
+        },
+      }
+
+      premisesService.createPremises.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.v2.new({}))
     })
   })
 })

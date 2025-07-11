@@ -2,10 +2,11 @@ import { path } from 'static-path'
 
 const cas3Path = path('/cas3')
 const premisesPath = path('/premises')
-const premisesSummaryPath = cas3Path.path('premises/summary')
+const cas3PremisesPath = cas3Path.path('premises')
+const premisesSummaryPath = cas3PremisesPath.path('summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
-const singlePremisesCas3Path = cas3Path.path('premises/:premisesId')
-const premisesSearchPath = cas3Path.path('premises/search')
+const singlePremisesCas3Path = cas3PremisesPath.path(':premisesId')
+const premisesSearchPath = cas3PremisesPath.path('search')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
 const singleLostBedPath = lostBedsPath.path(':lostBedId')
@@ -68,6 +69,7 @@ const managePathsCas3 = {
   premises: {
     search: premisesSearchPath,
     show: singlePremisesCas3Path,
+    create: cas3PremisesPath,
     bedspaces: {
       show: singleBedspacePath,
       create: bedspacesCas3Path,
@@ -103,6 +105,7 @@ export default {
     premises: {
       search: managePathsCas3.premises.search,
       show: managePathsCas3.premises.show,
+      create: managePathsCas3.premises.create,
       bedspaces: {
         show: managePathsCas3.premises.bedspaces.show,
         create: managePathsCas3.premises.bedspaces.create,

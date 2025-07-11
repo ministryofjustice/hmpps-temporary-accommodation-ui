@@ -348,3 +348,5 @@ export type UIPersonAcctAlert = PersonAcctAlert & {
 export type PremisesSearchParameters = {
   postcodeOrAddress?: string
 }
+
+export type PremisesShowTabs = 'premises' | 'bedspaces'

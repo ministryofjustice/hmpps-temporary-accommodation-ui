@@ -3,6 +3,7 @@ import ReferenceDataClient from '../../data/referenceDataClient'
 import BedspaceService from './bedspaceService'
 import {
   cas3BedspaceFactory,
+  cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   characteristicFactory,
   probationRegionFactory,
@@ -144,6 +145,121 @@ describe('BedspaceService', () => {
         [genericCharacteristic, bedspaceCharacteristic2, bedspaceCharacteristic1, premisesCharacteristic],
         'room',
       )
+    })
+  })
+
+  describe('get bedspaces for premises', () => {
+    it('returns bedspaces for a premises', async () => {
+      const bedspaces = cas3BedspacesFactory.build()
+
+      bedspaceClient.get.mockResolvedValue(bedspaces)
+
+      const result = await service.getBedspacesForPremises(callConfig, premisesId)
+
+      expect(bedspaces).toEqual(result)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.get).toHaveBeenCalledWith(premisesId)
+    })
+  })
+
+  describe('get summaryList from bedspace', () => {
+    it('returns a summaryList for an online bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2025-05-17' })
+
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '17 May 2025' },
+          },
+          {
+            key: { text: 'Bedspace details' },
+            value: {
+              html: bedspace.characteristics
+                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional bedspace details' },
+            value: { text: bedspace.notes },
+          },
+        ],
+      }
+
+      const summary = service.summaryList(bedspace)
+
+      expect(summary).toEqual(expectedSummary)
+    })
+
+    it('returns a summaryList for an archived bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2025-06-18' })
+
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--grey">Archived</strong>' },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '18 June 2025' },
+          },
+          {
+            key: { text: 'Bedspace details' },
+            value: {
+              html: bedspace.characteristics
+                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional bedspace details' },
+            value: { text: bedspace.notes },
+          },
+        ],
+      }
+
+      const summary = service.summaryList(bedspace)
+
+      expect(summary).toEqual(expectedSummary)
+    })
+
+    it('returns a summaryList for an upcoming bedspace', () => {
+      const bedspace = cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2125-07-19' })
+
+      const expectedSummary = {
+        rows: [
+          {
+            key: { text: 'Bedspace status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--blue">Upcoming</strong>' },
+          },
+          {
+            key: { text: 'Start date' },
+            value: { text: '19 July 2125' },
+          },
+          {
+            key: { text: 'Bedspace details' },
+            value: {
+              html: bedspace.characteristics
+                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+                .join(' '),
+            },
+          },
+          {
+            key: { text: 'Additional bedspace details' },
+            value: { text: bedspace.notes },
+          },
+        ],
+      }
+
+      const summary = service.summaryList(bedspace)
+
+      expect(summary).toEqual(expectedSummary)
     })
   })
 })

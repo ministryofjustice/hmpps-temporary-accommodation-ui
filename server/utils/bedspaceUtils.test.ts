@@ -69,7 +69,13 @@ describe('bedspaceUtils', () => {
 
   describe('bedspaceStatus', () => {
     it('returns online if the bedspace has no end date', () => {
-      const room = roomFactory.build()
+      const room = roomFactory.build({
+        beds: [
+          bedFactory.build({
+            bedEndDate: undefined,
+          }),
+        ],
+      })
       const status = bedspaceStatus(room)
 
       expect(status).toEqual('online')

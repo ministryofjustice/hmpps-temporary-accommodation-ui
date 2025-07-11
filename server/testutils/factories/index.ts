@@ -53,6 +53,7 @@ import placeContextFactory from './placeContext'
 import premisesFactory from './premises'
 import premisesSummaryFactory from './premisesSummary'
 import cas3PremisesFactory from './cas3Premises'
+import cas3BedspacesFactory from './cas3Bedspaces'
 import cas3PremisesSummaryFactory from './cas3PremisesSummary'
 import cas3PremisesSearchResultFactory from './cas3PremisesSearchResult'
 import cas3PremisesSearchResultsFactory from './cas3PremisesSearchResults'
@@ -137,6 +138,7 @@ export {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3BedspaceFactory,
+  cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3BedspaceSummaryFactory,
   prisonCaseNotesFactory,

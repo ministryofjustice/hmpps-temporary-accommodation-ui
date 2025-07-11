@@ -58,6 +58,8 @@ const paths: Record<string, any> = {
       online: premisesV2OnlinePath,
       archived: premisesV2ArchivedPath,
       show: singlePremisesV2Path,
+      new: premisesV2Path.path('new'),
+      create: premisesV2Path,
       bedspaces: {
         new: bedspacesV2Path.path('new'),
         show: singleBedspaceV2Path,

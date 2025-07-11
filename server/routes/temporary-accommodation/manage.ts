@@ -80,7 +80,20 @@ export default function routes(controllers: Controllers, services: Services, rou
     get(paths.premises.v2.archived.pattern, premisesControllerV2.index('archived'), {
       auditEvent: 'VIEW_PREMISES_LIST_V2_ARCHIVED',
     })
+    get(paths.premises.v2.new.pattern, premisesControllerV2.new(), { auditEvent: 'CREATE_PREMISES_V2' })
     get(paths.premises.v2.show.pattern, premisesControllerV2.show(), { auditEvent: 'SHOW_PREMISES_V2' })
+    post(paths.premises.v2.create.pattern, premisesControllerV2.create(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.premises.v2.new.pattern,
+          auditEvent: 'CREATE_PREMISES_V2_FAILURE',
+        },
+        {
+          path: paths.premises.v2.show.pattern,
+          auditEvent: 'CREATE_PREMISES_V2_SUCCESS',
+        },
+      ],
+    })
 
     get(paths.premises.v2.bedspaces.new.pattern, bedspacesControllerV2.new(), { auditEvent: 'VIEW_BEDSPACE_V2_CREATE' })
     get(paths.premises.v2.bedspaces.show.pattern, bedspacesControllerV2.show(), { auditEvent: 'VIEW_BEDSPACE_V2' })

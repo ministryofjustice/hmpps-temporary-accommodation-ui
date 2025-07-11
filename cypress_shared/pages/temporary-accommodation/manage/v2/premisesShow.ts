@@ -73,4 +73,8 @@ export default class PremisesShowPage extends Page {
         cy.get('p').contains(`Archived bedspaces: ${premises.totalArchivedBedspaces}`)
       })
   }
+
+  shouldShowPropertyAddedBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Property added')
+  }
 }

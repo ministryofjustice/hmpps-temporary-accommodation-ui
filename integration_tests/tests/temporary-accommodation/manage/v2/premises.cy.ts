@@ -771,4 +771,89 @@ context('Premises', () => {
       showPage.shouldShowPremisesOverview(premises, 'Archived', '1 February 2025')
     })
   })
+
+  it('should toggle the sort between PDU and LA', () => {
+    cy.signIn()
+
+    // Stub for PDU sort
+    const pduResults = cas3PremisesSearchResultsFactory.build({
+      results: [
+        cas3PremisesSearchResultFactory.build({ pdu: 'PDU A', localAuthorityAreaName: 'LA X' }),
+        cas3PremisesSearchResultFactory.build({ pdu: 'PDU B', localAuthorityAreaName: 'LA Y' }),
+      ],
+    })
+    cy.task('stubPremisesSearchV2', {
+      searchResults: pduResults,
+      postcodeOrAddress: '',
+      premisesStatus: 'online',
+      sortBy: 'pdu',
+    })
+
+    // Stub for LA sort
+    const laResults = cas3PremisesSearchResultsFactory.build({
+      results: [
+        cas3PremisesSearchResultFactory.build({ pdu: 'PDU C', localAuthorityAreaName: 'LA Z' }),
+        cas3PremisesSearchResultFactory.build({ pdu: 'PDU D', localAuthorityAreaName: 'LA W' }),
+      ],
+    })
+    cy.task('stubPremisesSearchV2', {
+      searchResults: laResults,
+      postcodeOrAddress: '',
+      premisesStatus: 'online',
+      sortBy: 'la',
+    })
+
+    // When I visit the premises page
+    const page = PremisesListPage.visitOnline()
+
+    // Then the default sort by header should be PDU
+    page.shouldShowSortByHeader('probation delivery unit')
+    cy.get('table thead th').should('contain', 'PDU')
+    page.shouldShowPremises(pduResults.results)
+
+    // When I click the sort toggle button or link
+    page.toggleSortBy()
+
+    // Then the sort by header should now be LA
+    page.shouldShowSortByHeader('local authority')
+    cy.get('table thead th').should('contain', 'LA')
+    page.shouldShowPremises(laResults.results, 'la')
+
+    // When I toggle again
+    page.toggleSortBy()
+
+    // Then the sort by header should be PDU again
+    page.shouldShowSortByHeader('probation delivery unit')
+    cy.get('table thead th').should('contain', 'PDU')
+    page.shouldShowPremises(pduResults.results)
+  })
+
+  it('should preserve search term when toggling sort', () => {
+    cy.signIn()
+
+    const postcode = 'NE1 1AB'
+    const searchResults = cas3PremisesSearchResultsFactory.build({
+      results: cas3PremisesSearchResultFactory.buildList(5),
+    })
+    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
+    cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: postcode, premisesStatus: 'online' })
+    cy.task('stubPremisesSearchV2', {
+      searchResults,
+      postcodeOrAddress: postcode,
+      premisesStatus: 'online',
+      sortBy: 'la',
+    })
+
+    // Visit and search
+    const page = PremisesListPage.visitOnline()
+    page.search(postcode)
+    cy.url().should('include', `postcodeOrAddress=${postcode.replace(' ', '+')}`)
+
+    // Toggle sort
+    page.toggleSortBy()
+
+    // Should still have the search term in the URL and input
+    cy.url().should('include', `postcodeOrAddress=${postcode.replace(' ', '+')}`)
+    cy.get('main form input').should('have.value', postcode)
+  })
 })

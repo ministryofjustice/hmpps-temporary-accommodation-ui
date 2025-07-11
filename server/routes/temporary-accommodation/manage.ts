@@ -80,6 +80,9 @@ export default function routes(controllers: Controllers, services: Services, rou
     get(paths.premises.v2.archived.pattern, premisesControllerV2.index('archived'), {
       auditEvent: 'VIEW_PREMISES_LIST_V2_ARCHIVED',
     })
+    get(paths.premises.v2.toggleSort.pattern, premisesControllerV2.toggleSort(), {
+      auditEvent: 'TOGGLE_PREMISES_SORT_V2',
+    })
     get(paths.premises.v2.show.pattern, premisesControllerV2.show(), { auditEvent: 'SHOW_PREMISES_V2' })
 
     get(paths.premises.v2.bedspaces.new.pattern, bedspacesControllerV2.new(), { auditEvent: 'VIEW_BEDSPACE_V2_CREATE' })

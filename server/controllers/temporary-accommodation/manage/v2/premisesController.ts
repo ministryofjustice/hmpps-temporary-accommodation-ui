@@ -1,7 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
-
 import { PremisesSearchParameters } from '@approved-premises/ui'
 import type { Cas3PremisesStatus } from '@approved-premises/api'
+import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
 import extractCallConfig from '../../../../utils/restUtils'
 import { createSubNavArr } from '../../../../utils/premisesSearchUtils'
@@ -15,10 +15,13 @@ export default class PremisesController {
       const callConfig = extractCallConfig(req)
       const params = req.query as PremisesSearchParameters
 
+      const premisesSortBy = req.session.premisesSortBy || 'pdu'
+
       const searchData = await this.premisesService.searchDataAndGenerateTableRows(
         callConfig,
         params.postcodeOrAddress,
         status,
+        premisesSortBy,
       )
 
       return res.render('temporary-accommodation/v2/premises/index', {
@@ -26,6 +29,7 @@ export default class PremisesController {
         params,
         status,
         subNavArr: createSubNavArr(status, params.postcodeOrAddress),
+        premisesSortBy,
       })
     }
   }
@@ -44,6 +48,20 @@ export default class PremisesController {
         actions: [],
         subNavArr: showPropertySubNavArray(premisesId, 'premises'),
       })
+    }
+  }
+
+  toggleSort(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const currentSort = req.session.premisesSortBy || 'pdu'
+      const newSort = currentSort === 'pdu' ? 'la' : 'pdu'
+
+      req.session.premisesSortBy = newSort
+
+      const query = new URLSearchParams(req.query as Record<string, string>).toString()
+      const redirectUrl = paths.premises.v2.online() + (query ? `?${query}` : '')
+
+      res.redirect(redirectUrl)
     }
   }
 }

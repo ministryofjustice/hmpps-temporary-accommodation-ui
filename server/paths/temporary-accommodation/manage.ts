@@ -57,6 +57,7 @@ const paths: Record<string, any> = {
       index: premisesV2Path,
       online: premisesV2OnlinePath,
       archived: premisesV2ArchivedPath,
+      toggleSort: premisesV2Path.path('toggle-sort'),
       show: singlePremisesV2Path,
       bedspaces: {
         new: bedspacesV2Path.path('new'),

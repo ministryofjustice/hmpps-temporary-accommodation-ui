@@ -1,4 +1,8 @@
-import type { TemporaryAccommodationApplication as Application, ProbationRegion } from '@approved-premises/api'
+import type {
+  TemporaryAccommodationApplication as Application,
+  Cas3PremisesSortBy,
+  ProbationRegion,
+} from '@approved-premises/api'
 import type { ErrorMessages, PlaceContext } from '@approved-premises/ui'
 import { UserDetails } from '../../services/userService'
 
@@ -13,6 +17,7 @@ declare module 'express-session' {
     previousPage: string
     probationRegion: ProbationRegion
     userDetails: UserDetails
+    premisesSortBy: Cas3PremisesSortBy
   }
 }
 

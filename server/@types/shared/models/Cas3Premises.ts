@@ -21,7 +21,7 @@ export type Cas3Premises = {
     /**
      * Start date of the property.
      */
-    startDate?: string;
+    startDate: string;
     status: Cas3PremisesStatus;
     totalArchivedBedspaces: number;
     totalOnlineBedspaces: number;

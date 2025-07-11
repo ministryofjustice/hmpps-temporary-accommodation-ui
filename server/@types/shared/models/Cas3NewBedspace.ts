@@ -2,9 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * details of the new bedspace
- */
 export type Cas3NewBedspace = {
     characteristicIds: Array<string>;
     notes?: string;

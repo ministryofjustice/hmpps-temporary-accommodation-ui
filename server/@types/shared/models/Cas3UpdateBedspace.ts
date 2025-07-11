@@ -2,9 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * Information to update the bedspace with
- */
 export type Cas3UpdateBedspace = {
     characteristicIds: Array<string>;
     notes?: string;

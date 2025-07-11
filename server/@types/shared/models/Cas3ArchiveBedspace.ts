@@ -2,4 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ApplicationSortField = 'tier' | 'createdAt' | 'arrivalDate' | 'releaseType';
+export type Cas3ArchiveBedspace = {
+    endDate: string;
+};
+

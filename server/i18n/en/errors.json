@@ -17,7 +17,10 @@
     },
     "reference": {
       "empty": "You must enter a reference",
-      "notUnique": "The reference must be unique to this property"
+      "notUnique": "The reference must be unique to this property",
+      "bedspaceReferenceExists": "Bedspace reference already used in this property – enter a unique reference",
+      "bedspaceReferenceNotMeetMinimumLength": "Bedspace reference must be 3 characters or more",
+      "bedspaceReferenceMustIncludeLetterOrNumber": "Bedspace reference must include at least one letter or number"
     },
     "arrivalDate": {
       "empty": "You must enter a start date",

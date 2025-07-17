@@ -63,6 +63,7 @@ const paths: Record<string, any> = {
         new: bedspacesV2Path.path('new'),
         show: singleBedspaceV2Path,
         create: bedspacesV2Path,
+        list: bedspacesV2Path,
       },
     },
   },

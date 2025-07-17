@@ -5,6 +5,7 @@ import type { Cas3Premises } from '@approved-premises/api'
 import characteristicFactory from './characteristic'
 import localAuthorityFactory from './localAuthority'
 import referenceDataFactory from './referenceData'
+import { DateFormats } from '../../utils/dateUtils'
 
 export default Factory.define<Cas3Premises>(() => ({
   id: faker.string.uuid(),
@@ -23,4 +24,5 @@ export default Factory.define<Cas3Premises>(() => ({
   localAuthorityArea: localAuthorityFactory.build(),
   turnaroundWorkingDays: faker.number.int({ min: 1, max: 7 }),
   notes: faker.lorem.sentences(5),
+  startDate: DateFormats.dateObjToIsoDate(faker.date.past()),
 }))

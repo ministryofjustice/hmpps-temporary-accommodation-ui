@@ -18,7 +18,11 @@
 
 {% extends "../../partials/layout.njk" %}
 
-{% set pageTitle = page.htmlDocumentTitle + " - " + applicationName %}
+{% if errorSummary | length %}
+  {% set pageTitle = "Error: " + page.htmlDocumentTitle + " - " + applicationName %}
+{% else %}
+  {% set pageTitle = page.htmlDocumentTitle + " - " + applicationName %}
+{% endif %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}

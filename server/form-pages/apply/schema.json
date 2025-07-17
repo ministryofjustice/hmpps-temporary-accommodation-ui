@@ -165,7 +165,8 @@
               "items": {
                 "enum": [
                   "crdLicence",
-                  "fixedTermRecall",
+                  "fourteenDayFixedTermRecall",
+                  "twentyEightDayFixedTermRecall",
                   "parole",
                   "pss",
                   "standardRecall"
@@ -182,7 +183,10 @@
             "crdLicenceStartDate-year": {
               "type": "string"
             },
-            "fixedTermRecallStartDate-year": {
+            "fourteenDayFixedTermRecallStartDate-year": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallStartDate-year": {
               "type": "string"
             },
             "standardRecallStartDate-year": {
@@ -197,7 +201,10 @@
             "crdLicenceStartDate-month": {
               "type": "string"
             },
-            "fixedTermRecallStartDate-month": {
+            "fourteenDayFixedTermRecallStartDate-month": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallStartDate-month": {
               "type": "string"
             },
             "standardRecallStartDate-month": {
@@ -212,7 +219,10 @@
             "crdLicenceStartDate-day": {
               "type": "string"
             },
-            "fixedTermRecallStartDate-day": {
+            "fourteenDayFixedTermRecallStartDate-day": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallStartDate-day": {
               "type": "string"
             },
             "standardRecallStartDate-day": {
@@ -227,7 +237,10 @@
             "crdLicenceStartDate-time": {
               "type": "string"
             },
-            "fixedTermRecallStartDate-time": {
+            "fourteenDayFixedTermRecallStartDate-time": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallStartDate-time": {
               "type": "string"
             },
             "standardRecallStartDate-time": {
@@ -242,7 +255,10 @@
             "crdLicenceStartDate": {
               "type": "string"
             },
-            "fixedTermRecallStartDate": {
+            "fourteenDayFixedTermRecallStartDate": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallStartDate": {
               "type": "string"
             },
             "standardRecallStartDate": {
@@ -257,7 +273,10 @@
             "crdLicenceEndDate-year": {
               "type": "string"
             },
-            "fixedTermRecallEndDate-year": {
+            "fourteenDayFixedTermRecallEndDate-year": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallEndDate-year": {
               "type": "string"
             },
             "standardRecallEndDate-year": {
@@ -272,7 +291,10 @@
             "crdLicenceEndDate-month": {
               "type": "string"
             },
-            "fixedTermRecallEndDate-month": {
+            "fourteenDayFixedTermRecallEndDate-month": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallEndDate-month": {
               "type": "string"
             },
             "standardRecallEndDate-month": {
@@ -287,7 +309,10 @@
             "crdLicenceEndDate-day": {
               "type": "string"
             },
-            "fixedTermRecallEndDate-day": {
+            "fourteenDayFixedTermRecallEndDate-day": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallEndDate-day": {
               "type": "string"
             },
             "standardRecallEndDate-day": {
@@ -302,7 +327,10 @@
             "crdLicenceEndDate-time": {
               "type": "string"
             },
-            "fixedTermRecallEndDate-time": {
+            "fourteenDayFixedTermRecallEndDate-time": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallEndDate-time": {
               "type": "string"
             },
             "standardRecallEndDate-time": {
@@ -317,7 +345,10 @@
             "crdLicenceEndDate": {
               "type": "string"
             },
-            "fixedTermRecallEndDate": {
+            "fourteenDayFixedTermRecallEndDate": {
+              "type": "string"
+            },
+            "twentyEightDayFixedTermRecallEndDate": {
               "type": "string"
             },
             "standardRecallEndDate": {

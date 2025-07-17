@@ -1,9 +1,11 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import {
   ApplicationFullPage,
+  CheckYourAnswersPage,
   EnterCRNPage,
   ListPage,
   MoveOnPlanPage,
+  ReleaseTypePage,
   SelectOffencePage,
   StartPage,
   TaskListPage,
@@ -352,5 +354,91 @@ context('Apply', () => {
 
     // Then I should see the full application
     applicationFullPage.shouldShowApplication(application.document)
+  })
+
+  it('handles old release type data, shows as in progress, allows completion and submission', function test() {
+    const application = {
+      ...this.application,
+      data: {
+        ...this.application.data,
+        'sentence-information': {
+          ...this.application.data['sentence-information'],
+          'release-type': {
+            releaseTypes: ['fixedTermRecall', 'parole'],
+            'fixedTermRecallStartDate-year': '2024',
+            'fixedTermRecallStartDate-month': '1',
+            'fixedTermRecallStartDate-day': '19',
+            'fixedTermRecallEndDate-year': '2024',
+            'fixedTermRecallEndDate-month': '7',
+            'fixedTermRecallEndDate-day': '9',
+            'paroleStartDate-year': '2122',
+            'paroleStartDate-month': '4',
+            'paroleStartDate-day': '1',
+            'paroleEndDate-year': '2122',
+            'paroleEndDate-month': '7',
+            'paroleEndDate-day': '18',
+          },
+        },
+      },
+    }
+
+    // Given there is a complete but not submitted application in the database
+    cy.task('stubApplications', [application])
+
+    const apply = new ApplyHelper(application, this.person, this.offences, 'integration', this.actingUser)
+    apply.setupApplicationStubs()
+
+    // When I visit the application listing page
+    const listPage = ListPage.visit([application], [])
+
+    // And I click on the application
+    listPage.clickApplication(application)
+
+    // Then the release type task should be shown as "In progress"
+    const taskListPage = Page.verifyOnPage(TaskListPage, application)
+    taskListPage.shouldShowTaskStatus('sentence-information', 'In progress')
+
+    // When I click on the sentence information task
+    taskListPage.clickTask('sentence-information')
+
+    // And I click through the pages to release type
+    cy.get('button[type="submit"]').click()
+    cy.get('button[type="submit"]').click()
+    cy.get('button[type="submit"]').click()
+    cy.get('button[type="submit"]').click()
+
+    // And I complete the release type question with a valid value using the helper
+    const releaseTypePage = new ReleaseTypePage({
+      ...application,
+      data: {
+        ...this.application.data,
+        'sentence-information': {
+          ...this.application.data['sentence-information'],
+          'release-type': {
+            releaseTypes: ['fourteenDayFixedTermRecall'],
+            'fourteenDayFixedTermRecallStartDate-year': '2024',
+            'fourteenDayFixedTermRecallStartDate-month': '1',
+            'fourteenDayFixedTermRecallStartDate-day': '19',
+            'fourteenDayFixedTermRecallEndDate-year': '2024',
+            'fourteenDayFixedTermRecallEndDate-month': '7',
+            'fourteenDayFixedTermRecallEndDate-day': '9',
+          },
+        },
+      },
+    })
+
+    releaseTypePage.completeForm()
+    releaseTypePage.clickSubmit()
+
+    // Then the release type task should be shown as "Completed"
+    taskListPage.shouldShowTaskStatus('sentence-information', 'Completed')
+
+    // Then the check your answers task should be shown as "Not started"
+    taskListPage.shouldShowTaskStatus('check-your-answers', 'Not started')
+    taskListPage.clickTask('check-your-answers')
+
+    // And check your answers should show the sentence information answers
+    const checkYourAnswersPage = Page.verifyOnPage(CheckYourAnswersPage, application)
+    checkYourAnswersPage.shouldShowSentenceInformationAnswers([releaseTypePage])
   })
 })

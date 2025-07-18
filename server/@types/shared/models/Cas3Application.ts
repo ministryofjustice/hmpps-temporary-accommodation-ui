@@ -22,10 +22,8 @@ export type Cas3Application = {
     document?: any;
     id: string;
     offenceId: string;
-    outdatedSchema: boolean;
     person: (FullPerson | RestrictedPerson | UnknownPerson);
     risks?: PersonRisks;
-    schemaVersion: string;
     status: ApplicationStatus;
     submittedAt?: string;
 };

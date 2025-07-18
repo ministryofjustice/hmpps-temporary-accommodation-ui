@@ -8,7 +8,6 @@ import type { ApType } from './ApType';
 import type { AssessmentDecision } from './AssessmentDecision';
 import type { Cancellation } from './Cancellation';
 import type { Cas1SpaceBookingSummary } from './Cas1SpaceBookingSummary';
-import type { Cas2Application } from './Cas2Application';
 import type { Cas2v2Application } from './Cas2v2Application';
 import type { FullPerson } from './FullPerson';
 import type { OfflineApplication } from './OfflineApplication';
@@ -23,7 +22,7 @@ import type { TemporaryAccommodationApplication } from './TemporaryAccommodation
 import type { UnknownPerson } from './UnknownPerson';
 import type { WithdrawPlacementRequestReason } from './WithdrawPlacementRequestReason';
 export type PlacementRequestDetail = {
-    application: (ApprovedPremisesApplication | Cas2Application | Cas2v2Application | OfflineApplication | TemporaryAccommodationApplication);
+    application: (ApprovedPremisesApplication | Cas2v2Application | OfflineApplication | TemporaryAccommodationApplication);
     applicationDate: string;
     applicationId: string;
     assessmentDate: string;

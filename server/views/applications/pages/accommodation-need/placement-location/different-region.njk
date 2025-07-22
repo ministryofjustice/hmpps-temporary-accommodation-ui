@@ -1,0 +1,53 @@
+{% from "../../../../components/formFields/form-page-select/macro.njk" import formPageSelect %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "../../../../components/ta-radios/macro.njk" import taRadios %}
+{% extends "../../layout.njk" %}
+
+{% block head %}
+    {{ super() }}
+    <link href="/assets/css/accessible-autocomplete.min.css?{{ version }}" rel="stylesheet" />
+{% endblock %}
+
+{% block questions %}
+    {{ govukNotificationBanner({
+        type: 'information',
+        html: notificationBannerHTML,
+        iconFallbackText: 'information'
+    }) }}
+
+    {% set pageTitleHTML %}
+        <span class="govuk-caption-l">{{ section.title }}</span>
+        {{ page.title }}
+    {% endset %}
+
+    {{ taRadios({
+        fieldset: {
+            legend: {
+                text: "What is the status of this property?",
+                classes: "govuk-fieldset__legend--m"
+            }
+        },
+        hint: {
+            html: statusHint
+        },
+        items: page.getAllRegions(),
+        fieldName: "regionId"
+    }, fetchContext()) }}
+{% endblock %}
+
+{% block extraScripts %}
+
+    <script type="text/javascript" nonce="{{ cspNonce }}" src="/assets/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" nonce="{{ cspNonce }}">
+      accessibleAutocomplete.enhanceSelectElement({
+        selectElement: document.querySelector('select#regionId'),
+        defaultValue: '',
+      })
+
+      const hint = document.createElement('p')
+      hint.className = 'govuk-hint'
+      hint.textContent = 'Start typing and then select an option'
+      document.querySelector('label[for="regionId"]').insertAdjacentElement('afterend', hint)
+    </script>
+
+{% endblock %}

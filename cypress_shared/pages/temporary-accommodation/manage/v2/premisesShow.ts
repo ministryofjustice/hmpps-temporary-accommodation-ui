@@ -110,4 +110,8 @@ export default class PremisesShowPage extends Page {
       .contains('View bedspace')
       .click()
   }
+
+  shouldShowPropertyAddedBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Property added')
+  }
 }

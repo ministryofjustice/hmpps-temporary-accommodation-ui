@@ -4,10 +4,11 @@ import { itShouldHavePreviousValue } from '../../../shared-examples'
 import AlternativePdu, { AlternativePduBody } from './alternativePdu'
 import { ReferenceDataService } from '../../../../services'
 import { CallConfig } from '../../../../data/restClient'
+import { buildUniqueList } from '../../../../testutils/utils'
 
 describe('AlternativePdu', () => {
   const application = applicationFactory.build()
-  const pdus = referenceDataFactory.pdu().buildList(3)
+  const pdus = buildUniqueList(referenceDataFactory.pdu(), pdu => pdu.id, 3)
   const body: AlternativePduBody = { alternativePdu: 'yes', pduId: pdus[1].id, pduName: pdus[1].name }
 
   describe('initialize', () => {

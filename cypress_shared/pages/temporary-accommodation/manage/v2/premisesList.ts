@@ -90,4 +90,8 @@ export default class PremisesListPage extends Page {
   clickPremisesManageLink(premises: Cas3Premises): void {
     cy.get('main table tbody td').contains(premises.addressLine1).contains('Manage').click()
   }
+
+  clickAddPropertyButton(): void {
+    cy.get('main .moj-cas-page-header-actions a').contains('Add a property').click()
+  }
 }

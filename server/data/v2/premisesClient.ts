@@ -1,4 +1,10 @@
-import { Cas3Premises, Cas3PremisesSearchResults, Cas3PremisesSortBy, Cas3PremisesStatus } from '@approved-premises/api'
+import {
+  Cas3NewPremises,
+  Cas3Premises,
+  Cas3PremisesSearchResults,
+  Cas3PremisesSortBy,
+  Cas3PremisesStatus,
+} from '@approved-premises/api'
 import RestClient, { CallConfig } from '../restClient'
 import config, { ApiConfig } from '../../config'
 import paths from '../../paths/api'
@@ -21,5 +27,9 @@ export default class PremisesClient {
     return this.restClient.get<Cas3Premises>({
       path: paths.cas3.premises.show({ premisesId }),
     })
+  }
+
+  async create(data: Cas3NewPremises) {
+    return this.restClient.post<Cas3Premises>({ path: paths.cas3.premises.create({}), data })
   }
 }

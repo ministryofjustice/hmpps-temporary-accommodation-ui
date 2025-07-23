@@ -66,6 +66,7 @@ const paths: Record<string, any> = {
         show: singleBedspaceV2Path,
         create: bedspacesV2Path,
         list: bedspacesV2Path,
+        archive: singleBedspaceV2Path.path('archive'),
       },
     },
   },

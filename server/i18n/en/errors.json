@@ -207,6 +207,15 @@
       "mustBeAtLeast1": "You must enter a duration of at least 1 day"
     }
   },
+  "bedspaceArchive": {
+    "endDate": {
+      "invalidEndDateInThePast": "The date is not within the next 3 months",
+      "invalidEndDateInTheFuture": "The date is not within the next 3 months",
+      "existingBookings": "This bedspace cannot be archived due to existing bookings after this date.",
+      "existingVoid": "This bedspace cannot be archived due to a void period after this date.",
+      "existingTurnaround": "This bedspace cannot be archived due to a turnaround scheduled after this date."
+    }
+  },
   "application": {
     "releaseType": {
       "crdLicence": {

@@ -4,7 +4,6 @@
 /* eslint-disable */
 import type { Cas1ChangeRequestType } from './Cas1ChangeRequestType';
 import type { Cas1KeyWorkerAllocation } from './Cas1KeyWorkerAllocation';
-import type { Cas1SpaceBookingSummaryStatus } from './Cas1SpaceBookingSummaryStatus';
 import type { Cas1SpaceCharacteristic } from './Cas1SpaceCharacteristic';
 import type { FullPersonSummary } from './FullPersonSummary';
 import type { NamedId } from './NamedId';
@@ -57,10 +56,6 @@ export type Cas1SpaceBookingSummary = {
      */
     plannedTransferRequested?: boolean;
     premises: NamedId;
-    /**
-     * @deprecated
-     */
-    status?: Cas1SpaceBookingSummaryStatus;
     /**
      * Risk rating tier level of corresponding application
      */

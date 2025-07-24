@@ -26,7 +26,9 @@ const getTaskStatus = (task: Task, applicationOrAssessment: Application | Assess
       pageId = pageStatus === 'complete' ? page.next() : null
     } else {
       // Check subsequent pages for any data
-      pageStatus = pageIds.some(progessTestPageId => !!getPageData(applicationOrAssessment, task.id, progessTestPageId))
+      pageStatus = pageIds.some(
+        progressTestPageId => !!getPageData(applicationOrAssessment, task.id, progressTestPageId),
+      )
         ? 'in_progress'
         : 'not_started'
 

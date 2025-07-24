@@ -1,11 +1,11 @@
 {% extends "../../layout.njk" %}
 
-{% macro startAndEndDatesFields(prefix) %}
+{% macro startAndEndDatesFields(prefix, name) %}
     {{ formPageDateInput( {
         fieldName: prefix + "StartDate",
         fieldset: {
             legend: {
-                text: page.dateLabels(prefix, 'start'),
+                html: legendWithHint(prefix, name),
                 classes: "govuk-fieldset__legend--s"
             }
         },
@@ -19,7 +19,7 @@
         fieldName: prefix + "EndDate",
         fieldset: {
             legend: {
-                text: "End date",
+                html: "End date" + ' <span class="govuk-visually-hidden">for ' + name + '</span>',
                 classes: "govuk-fieldset__legend--s"
             }
         },
@@ -28,6 +28,20 @@
         },
         items: dateFieldValues(prefix + "EndDate", errors)
     }, fetchContext()) }}
+{% endmacro %}
+
+{% macro legendWithHint(prefix, name) %}
+    {% set showProvisionalHint = [
+        "nonPresumptiveRarrStartDate",
+        "presumptiveRarrStartDate",
+        "indeterminatePublicProtectionRarrStartDate"
+    ] %}
+    {% set provisionalHintHTML = '<p class="govuk-body govuk-!-margin-bottom-1 govuk-!-margin-top-2">Enter the provisional release date if you’re not sure.</p>' %}
+    {% set legendHtml = page.dateLabels(prefix, 'start') + ' <span class="govuk-visually-hidden">for ' + name + '</span>' %}
+    {% if showProvisionalHint.includes(prefix + "StartDate") %}
+        {% set legendHtml = legendHtml + provisionalHintHTML %}
+    {% endif %}
+    {{ legendHtml | safe }}
 {% endmacro %}
 
 {% block questions %}
@@ -41,7 +55,7 @@
     {% for option in convertObjectsToCheckboxItems(page.currentReleaseTypeOptions(), 'name', 'value', 'releaseTypes') %}
         {% set releaseTypeOptions = releaseTypeOptions.concat(mergeObjects(
             option,
-            { conditional: { html: startAndEndDatesFields(option.value) } }
+            { conditional: { html: startAndEndDatesFields(option.value, option.text) } }
         )) %}
     {% endfor %}
 
@@ -55,7 +69,7 @@
             }
         },
         hint: {
-            text: "Select all that apply"
+            text: "Select up to 2 release types. Some combinations are not allowed."
         },
         items: releaseTypeOptions
     }, fetchContext()) }}

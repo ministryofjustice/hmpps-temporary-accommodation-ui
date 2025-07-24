@@ -8,30 +8,36 @@ import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../
 import TasklistPage from '../../../tasklistPage'
 import { dateBodyProperties } from '../../../utils'
 
+const optionsToExclude = ['ecsl']
+
 export const releaseTypes: Record<string, { text: string; abbr: string }> = {
+  fourteenDayFixedTermRecall: {
+    text: '14-day fixed-term recall release licence',
+    abbr: '14-day fixed-term recall',
+  },
+  twentyEightDayFixedTermRecall: {
+    text: '28-day fixed-term recall release licence',
+    abbr: '28-day fixed-term recall',
+  },
+  standardRecall: {
+    text: 'Standard recall release licence',
+    abbr: 'Standard recall',
+  },
   crdLicence: {
     text: 'Conditional release date (CRD) licence',
     abbr: 'CRD licence',
   },
-  fixedTermRecall: {
-    text: 'Licence following fixed-term recall',
-    abbr: 'Fixed-term recall',
-  },
-  standardRecall: {
-    text: 'Licence following standard recall',
-    abbr: 'Standard recall',
+  indeterminatePublicProtectionRarr: {
+    text: 'Indeterminate Public Protection RARR release licence',
+    abbr: 'Indeterminate Public Protection RARR',
   },
   nonPresumptiveRarr: {
-    text: 'Licence following Non-Presumptive Risk Assessed Recall Review (NP-RARR)',
+    text: 'Non-Presumptive Risk Assessed Recall Review (NP-RARR) release licence',
     abbr: 'Non-Presumptive RARR',
   },
   presumptiveRarr: {
-    text: 'Licence following Presumptive RARR',
+    text: 'Presumptive RARR release licence',
     abbr: 'Presumptive RARR',
-  },
-  indeterminatePublicProtectionRarr: {
-    text: 'Licence following Indeterminate Public Protection RARR',
-    abbr: 'Indeterminate Public Protection RARR',
   },
   parole: {
     text: 'Parole',
@@ -55,9 +61,10 @@ export type ErrorLookups = {
     application: {
       releaseType: {
         empty: string
+        maximumSelected: string
         oneRecallOrRARR: string
         invalidParoleSelection: string
-        invalidCRDAndRecallSelection: string
+        invalidCRDSelection: string
       }
     }
   }
@@ -108,7 +115,8 @@ export default class ReleaseType implements TasklistPage {
   htmlDocumentTitle = this.title
 
   recallLicenceTypes = [
-    'fixedTermRecall',
+    'fourteenDayFixedTermRecall',
+    'twentyEightDayFixedTermRecall',
     'standardRecall',
     'nonPresumptiveRarr',
     'presumptiveRarr',
@@ -121,10 +129,9 @@ export default class ReleaseType implements TasklistPage {
   ) {}
 
   public set body(value: Partial<ReleaseTypeBody>) {
-    const selectedTypes = value.releaseTypes?.filter(key => Boolean(releaseTypes[key]))
     this._body = {
-      releaseTypes: selectedTypes,
-      ...selectedTypes?.reduce((properties, key: ReleaseTypeKey) => {
+      releaseTypes: value.releaseTypes,
+      ...value.releaseTypes?.reduce((properties, key: ReleaseTypeKey) => {
         return {
           ...properties,
           ...DateFormats.dateAndTimeInputsToIsoString(value, `${key}StartDate`),
@@ -139,11 +146,14 @@ export default class ReleaseType implements TasklistPage {
   }
 
   response() {
+    const selectedTypes = this.body.releaseTypes?.filter(
+      key => Boolean(releaseTypes[key]) || optionsToExclude.includes(key),
+    )
     const response = {
-      [this.title]: this.body.releaseTypes?.map(key => releaseTypes[key].text).join('\n'),
+      [this.title]: selectedTypes?.map(key => releaseTypes[key].text).join('\n'),
     }
 
-    this.body.releaseTypes?.forEach((key: ReleaseTypeKey) => {
+    selectedTypes?.forEach((key: ReleaseTypeKey) => {
       const releaseTypeDateLabel = this.recallLicenceTypes.includes(key) ? 'Licence' : releaseTypes[key].abbr
 
       response[`${releaseTypeDateLabel} start date`] = DateFormats.isoDateToUIDate(this.body[`${key}StartDate`])
@@ -164,19 +174,20 @@ export default class ReleaseType implements TasklistPage {
   errors() {
     const errors: Record<string, unknown> = {}
 
-    if (!this.body.releaseTypes?.length) {
+    if (!this.body.releaseTypes?.length || this.checkForOldReleaseTypes()) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.empty
+    } else if (this.body.releaseTypes.length > 2) {
+      errors.releaseTypes = errorLookups.generic.application.releaseType.maximumSelected
     } else if (this.checkOnlyOneLicenceTypeIsSelected()) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.oneRecallOrRARR
-    } else if (
-      this.body.releaseTypes.includes('parole') &&
-      (this.body.releaseTypes.includes('crdLicence') || this.body.releaseTypes.includes('pss'))
-    ) {
+    } else if (this.body.releaseTypes.includes('parole') && this.body.releaseTypes.includes('pss')) {
       errors.releaseTypes = errorLookups.generic.application.releaseType.invalidParoleSelection
-    } else if (this.checkCRDNotSelectedWithRecallLicenceTypes()) {
-      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDAndRecallSelection
+    } else if (this.checkCRDSelection()) {
+      errors.releaseTypes = errorLookups.generic.application.releaseType.invalidCRDSelection
     } else {
       this.body.releaseTypes.forEach((key: ReleaseTypeKey) => {
+        if (!errorLookups.application.releaseType[key]) return
+
         if (dateIsBlank(this.body, `${key}StartDate`)) {
           errors[`${key}StartDate`] = errorLookups.application.releaseType[key as ReleaseTypeKey].dates.emptyStartDate
         } else if (!dateAndTimeInputsAreValidDates(this.body, `${key}StartDate`)) {
@@ -217,13 +228,20 @@ export default class ReleaseType implements TasklistPage {
       ],
       [],
     )
-    const optionsToExclude = ['ecsl']
 
     return releaseTypeOptions.filter(
       item =>
         !optionsToExclude.includes(item.value) ||
         this._body.releaseTypes?.filter(type => optionsToExclude.includes(type)).length > 0,
     )
+  }
+
+  checkForOldReleaseTypes() {
+    const validReleaseTypeKeys = [...Object.keys(releaseTypes), ...optionsToExclude]
+    const invalidReleaseTypes = this.body.releaseTypes.filter(
+      releaseType => releaseType !== undefined && !validReleaseTypeKeys.includes(releaseType),
+    )
+    return invalidReleaseTypes.length > 0
   }
 
   checkOnlyOneLicenceTypeIsSelected() {
@@ -233,12 +251,11 @@ export default class ReleaseType implements TasklistPage {
     return licenceMatches.length > 1
   }
 
-  checkCRDNotSelectedWithRecallLicenceTypes() {
-    const licenceMatches = this.body.releaseTypes.filter(release =>
-      ['crdLicence', ...this.recallLicenceTypes].includes(release),
-    )
+  checkCRDSelection() {
+    const selected = this.body.releaseTypes
+    if (!selected?.includes('crdLicence')) return false
 
-    // Check if there is more than one match from licenceTypes
-    return licenceMatches.length > 1
+    // Check if any recallLicenceTypes or parole are also selected
+    return selected.some(type => this.recallLicenceTypes.includes(type) || type === 'parole')
   }
 }

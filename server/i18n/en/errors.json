@@ -170,10 +170,11 @@
     },
     "application": {
       "releaseTypes": {
-        "empty": "You must specify the release types",
-        "oneRecallOrRARR": "Select one type of recall or RARR licence",
-        "invalidParoleSelection": "Parole cannot be selected alongside the CRD licence or PSS",
-        "invalidCRDAndRecallSelection": "You cannot select CRD licence alongside a recall or RARR licence"
+        "empty": "Select the release type",
+        "maximumSelected": "You can select a maximum of 2 release types",
+        "oneRecallOrRARR": "Only one recall or one RARR licence can be selected",
+        "invalidParoleSelection": "Parole cannot be combined with post sentence supervision (PSS)",
+        "invalidCRDSelection": "CRD licence cannot be combined with parole, recall or RARR licences"
       }
     }
   },
@@ -210,74 +211,83 @@
     "releaseType": {
       "crdLicence": {
         "dates": {
-          "emptyStartDate": "You must specify the CRD licence start date",
-          "emptyEndDate": "You must specify the CRD licence end date",
-          "invalidStartDate": "You must specify a valid CRD licence start date",
-          "invalidEndDate": "You must specify a valid CRD licence end date",
-          "beforeStartDate": "The CRD licence end date must be later than start date"
+          "emptyStartDate": "Enter the CRD licence start date",
+          "emptyEndDate": "Enter the CRD licence end date",
+          "invalidStartDate": "CRD licence start date must be a real date",
+          "invalidEndDate": "CRD licence end date must be a real date",
+          "beforeStartDate": "The CRD licence end date must be after the start date"
         }
       },
-      "fixedTermRecall": {
+      "fourteenDayFixedTermRecall": {
         "dates": {
-          "emptyStartDate": "You must specify the licence following Fixed-term recall start date",
-          "emptyEndDate": "You must specify the licence following Fixed-term recall end date",
-          "invalidStartDate": "You must specify a valid Fixed-term recall start date",
-          "invalidEndDate": "You must specify a valid Fixed-term recall end date",
-          "beforeStartDate": "The Fixed-term recall end date must be later than start date"
+          "emptyStartDate": "Enter the 14-day fixed-term recall release licence start date",
+          "emptyEndDate": "Enter the 14-day fixed-term recall release licence end date",
+          "invalidStartDate": "14-day fixed-term recall start date must be a real date",
+          "invalidEndDate": "14-day fixed-term recall end date must be a real date",
+          "beforeStartDate": "The 14-day fixed-term recall end date must be after the start date"
+        }
+      },
+      "twentyEightDayFixedTermRecall": {
+        "dates": {
+          "emptyStartDate": "Enter the 28-day fixed-term recall release licence start date",
+          "emptyEndDate": "Enter the 28-day fixed-term recall release licence end date",
+          "invalidStartDate": "28-day fixed-term recall start date must be a real date",
+          "invalidEndDate": "28-day fixed-term recall end date must be a real date",
+          "beforeStartDate": "The 28-day fixed-term recall end date must be after the start date"
         }
       },
       "standardRecall": {
         "dates": {
-          "emptyStartDate": "You must specify the licence following standard recall start date",
-          "emptyEndDate": "You must specify the licence following standard recall end date",
-          "invalidStartDate": "You must specify a valid standard recall start date",
-          "invalidEndDate": "You must specify a valid standard recall end date",
-          "beforeStartDate": "The standard recall end date must be later than start date"
+          "emptyStartDate": "Enter the licence following standard recall start date",
+          "emptyEndDate": "Enter the licence following standard recall end date",
+          "invalidStartDate": "Licence following standard recall start date must be a real date",
+          "invalidEndDate": "Licence following standard recall end date must be a real date",
+          "beforeStartDate": "The licence following standard recall end date must be after the start date"
         }
       },
       "nonPresumptiveRarr": {
         "dates": {
-          "emptyStartDate": "You must specify the licence following NP-RARR start date",
-          "emptyEndDate": "You must specify the licence following NP-RARR end date",
-          "invalidStartDate": "You must specify a valid licence following NP-RARR start date",
-          "invalidEndDate": "You must specify a valid licence following NP-RARR end date",
-          "beforeStartDate": "The NP-RARR end date must be later than start date"
+          "emptyStartDate": "Enter the licence following NP-RARR start date",
+          "emptyEndDate": "Enter the licence following NP-RARR end date",
+          "invalidStartDate": "Licence following NP-RARR start date must be a real date",
+          "invalidEndDate": "Licence following NP-RARR end date must be a real date",
+          "beforeStartDate": "The NP-RARR end date must be after the start date"
         }
       },
       "presumptiveRarr": {
         "dates": {
-          "emptyStartDate": "You must specify the licence following Presumptive RARR start date",
-          "emptyEndDate": "You must specify the licence following Presumptive RARR end date",
-          "invalidStartDate": "You must specify a valid licence following Presumptive RARR start date",
-          "invalidEndDate": "You must specify a valid licence following Presumptive RARR end date",
-          "beforeStartDate": "The Presumptive RARR end date must be later than start date"
+          "emptyStartDate": "Enter the licence following Presumptive RARR start date",
+          "emptyEndDate": "Enter the licence following Presumptive RARR end date",
+          "invalidStartDate": "Licence following Presumptive RARR start date must be a real date",
+          "invalidEndDate": "Licence following Presumptive RARR end date must be a real date",
+          "beforeStartDate": "The Presumptive RARR end date must be after the start date"
         }
       },
       "indeterminatePublicProtectionRarr": {
         "dates": {
-          "emptyStartDate": "You must specify the licence following Indeterminate Public Protection RARR start date",
-          "emptyEndDate": "You must specify the licence following Indeterminate Public Protection RARR end date",
-          "invalidStartDate": "You must specify a valid licence following Indeterminate Public Protection RARR start date",
-          "invalidEndDate": "You must specify a valid licence following Indeterminate Public Protection RARR end date",
-          "beforeStartDate": "The Indeterminate Public Protection RARR end date must be later than start date"
+          "emptyStartDate": "Enter the licence following Indeterminate Public Protection RARR start date",
+          "emptyEndDate": "Enter the licence following Indeterminate Public Protection RARR end date",
+          "invalidStartDate": "Licence following Indeterminate Public Protection RARR start date must be a real date",
+          "invalidEndDate": "Licence following Indeterminate Public Protection RARR end date must be a real date",
+          "beforeStartDate": "The Indeterminate Public Protection RARR end date must be after the start date"
         }
       },
       "parole": {
         "dates": {
-          "emptyStartDate": "You must specify the Parole start date",
-          "emptyEndDate": "You must specify the Parole end date",
-          "invalidStartDate": "You must specify a valid Parole start date",
-          "invalidEndDate": "You must specify a valid Parole end date",
-          "beforeStartDate": "The Parole end date must be later than start date"
+          "emptyStartDate": "Enter the Parole start date",
+          "emptyEndDate": "Enter the Parole end date",
+          "invalidStartDate": "Parole start date must be a real date",
+          "invalidEndDate": "Parole end date must be a real date",
+          "beforeStartDate": "The Parole end date must be after the start date"
         }
       },
       "pss": {
         "dates": {
-          "emptyStartDate": "You must specify the PSS start date",
-          "emptyEndDate": "You must specify the PSS end date",
-          "invalidStartDate": "You must specify a valid PSS start date",
-          "invalidEndDate": "You must specify a valid PSS end date",
-          "beforeStartDate": "The PSS end date must be later than start date"
+          "emptyStartDate": "Enter the PSS start date",
+          "emptyEndDate": "Enter the PSS end date",
+          "invalidStartDate": "PSS start date must be a real date",
+          "invalidEndDate": "PSS end date must be a real date",
+          "beforeStartDate": "The PSS end date must be after the start date"
         }
       }
     },

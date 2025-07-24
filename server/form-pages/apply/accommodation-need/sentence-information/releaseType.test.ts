@@ -4,13 +4,13 @@ import ReleaseType, { type ReleaseTypeBody, type ReleaseTypeKey, errorLookups, r
 import dateLabelLookup from '../../../../i18n/en/application/releaseType.json'
 
 const body = {
-  releaseTypes: ['fixedTermRecall', 'parole'],
-  'fixedTermRecallStartDate-year': '2024',
-  'fixedTermRecallStartDate-month': '1',
-  'fixedTermRecallStartDate-day': '19',
-  'fixedTermRecallEndDate-year': '2024',
-  'fixedTermRecallEndDate-month': '7',
-  'fixedTermRecallEndDate-day': '9',
+  releaseTypes: ['fourteenDayFixedTermRecall', 'parole'],
+  'fourteenDayFixedTermRecallStartDate-year': '2024',
+  'fourteenDayFixedTermRecallStartDate-month': '1',
+  'fourteenDayFixedTermRecallStartDate-day': '19',
+  'fourteenDayFixedTermRecallEndDate-year': '2024',
+  'fourteenDayFixedTermRecallEndDate-month': '7',
+  'fourteenDayFixedTermRecallEndDate-day': '9',
   'paroleStartDate-year': '2122',
   'paroleStartDate-month': '4',
   'paroleStartDate-day': '1',
@@ -28,27 +28,10 @@ describe('ReleaseType', () => {
 
       expect(page.body).toEqual({
         ...body,
-        fixedTermRecallStartDate: '2024-01-19',
-        fixedTermRecallEndDate: '2024-07-09',
+        fourteenDayFixedTermRecallStartDate: '2024-01-19',
+        fourteenDayFixedTermRecallEndDate: '2024-07-09',
         paroleStartDate: '2122-04-01',
         paroleEndDate: '2122-07-18',
-      })
-    })
-
-    it('excludes invalid or old release types', () => {
-      const oldBody = {
-        releaseTypes: ['licence'],
-        'licenceStartDate-year': '2024',
-        'licenceStartDate-month': '1',
-        'licenceStartDate-day': '19',
-        'licenceEndDate-year': '2024',
-        'licenceEndDate-month': '7',
-        'licenceEndDate-day': '9',
-      } as unknown as ReleaseTypeBody
-      const page = new ReleaseType(oldBody, application)
-
-      expect(page.body).toEqual({
-        releaseTypes: [],
       })
     })
   })
@@ -144,7 +127,7 @@ describe('ReleaseType', () => {
       const page = new ReleaseType({}, application)
 
       expect(page.errors()).toEqual({
-        releaseTypes: 'You must specify the release types',
+        releaseTypes: 'Select the release type',
       })
     })
 
@@ -152,63 +135,83 @@ describe('ReleaseType', () => {
       const page = new ReleaseType({ releaseTypes: [] } as ReleaseTypeBody, application)
 
       expect(page.errors()).toEqual({
-        releaseTypes: 'You must specify the release types',
+        releaseTypes: 'Select the release type',
       })
     })
 
-    it('returns an error if more than one recall licence checkboxes are selected', () => {
+    it('returns an error if more than two release types are selected', () => {
       const page = new ReleaseType(
         {
-          releaseTypes: [
-            'fixedTermRecall',
-            'standardRecall',
-            'nonPresumptiveRarr',
-            'presumptiveRarr',
-            'indeterminatePublicProtectionRarr',
-          ],
+          releaseTypes: ['fourteenDayFixedTermRecall', 'twentyEightDayFixedTermRecall', 'parole'],
         } as ReleaseTypeBody,
         application,
       )
 
       expect(page.errors()).toEqual({
-        releaseTypes: 'Select one type of recall or RARR licence',
+        releaseTypes: 'You can select a maximum of 2 release types',
       })
     })
 
+    it('returns an error if more than one recall or RARR licence checkboxes are selected', () => {
+      const recallTypeKeys = [
+        'fourteenDayFixedTermRecall',
+        'twentyEightDayFixedTermRecall',
+        'standardRecall',
+        'nonPresumptiveRarr',
+        'presumptiveRarr',
+        'indeterminatePublicProtectionRarr',
+      ] as ReleaseTypeKey[]
+
+      for (let i = 0; i < recallTypeKeys.length; i += 1) {
+        for (let j = i + 1; j < recallTypeKeys.length; j += 1) {
+          const page = new ReleaseType(
+            { releaseTypes: [recallTypeKeys[i], recallTypeKeys[j]] } as ReleaseTypeBody,
+            application,
+          )
+          expect(page.errors()).toEqual({
+            releaseTypes: 'Only one recall or one RARR licence can be selected',
+          })
+        }
+      }
+    })
+
     it('returns does not return error if one recall licence checkboxes are selected and other release types', () => {
-      const page = new ReleaseType({ releaseTypes: ['fixedTermRecall', 'parole'] } as ReleaseTypeBody, application)
+      const page = new ReleaseType(
+        { releaseTypes: ['fourteenDayFixedTermRecall', 'parole'] } as ReleaseTypeBody,
+        application,
+      )
 
       expect(page.errors()).not.toEqual({
         releaseTypes: 'Select one type of recall licence',
       })
     })
 
-    describe('when Parole selected along with either CRD or PSS', () => {
-      it.each([
-        ['Parole and CRD licence', ['parole', 'crdLicence']],
-        ['Parole and PSS', ['parole', 'pss']],
-        ['Parole, CRD licence and PSS', ['parole', 'crdLicence', 'pss']],
-      ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
-        const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
+    describe('when Parole selected along with PSS', () => {
+      it.each([['Parole and PSS', ['parole', 'pss']]])(
+        'returns an error if %s are selected',
+        (_, selected: Array<ReleaseTypeKey>) => {
+          const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
 
-        expect(page.errors()).toEqual({
-          releaseTypes: 'Parole cannot be selected alongside the CRD licence or PSS',
-        })
-      })
+          expect(page.errors()).toEqual({
+            releaseTypes: 'Parole cannot be combined with post sentence supervision (PSS)',
+          })
+        },
+      )
     })
 
     describe('when CRD Licence and one recall type selected', () => {
       it.each([
-        ['CRD licence and Fixed-term recall', ['crdLicence', 'fixedTermRecall']],
+        ['CRD licence and 14-day fixed-term recall', ['crdLicence', 'fourteenDayFixedTermRecall']],
+        ['CRD licence and 28-day fixed-term recall', ['crdLicence', 'twentyEightDayFixedTermRecall']],
         ['CRD licence and standard recall', ['crdLicence', 'standardRecall']],
         ['CRD licence and Non-Presumptive RARR', ['crdLicence', 'nonPresumptiveRarr']],
-        ['CRD licence and  Presumptive RARR', ['crdLicence', 'presumptiveRarr']],
+        ['CRD licence and Presumptive RARR', ['crdLicence', 'presumptiveRarr']],
         ['CRD licence and Indeterminate Public Protection RARR', ['crdLicence', 'indeterminatePublicProtectionRarr']],
       ])('returns an error if %s are selected', (_, selected: Array<ReleaseTypeKey>) => {
         const page = new ReleaseType({ releaseTypes: selected } as ReleaseTypeBody, application)
 
         expect(page.errors()).toEqual({
-          releaseTypes: 'You cannot select CRD licence alongside a recall or RARR licence',
+          releaseTypes: 'CRD licence cannot be combined with parole, recall or RARR licences',
         })
       })
     })
@@ -217,8 +220,24 @@ describe('ReleaseType', () => {
       const page = new ReleaseType({ releaseTypes: ['licence'] } as ReleaseTypeBody, application)
 
       expect(page.errors()).toEqual({
-        releaseTypes: 'You must specify the release types',
+        releaseTypes: 'Select the release type',
       })
+    })
+
+    it('returns a single error if an old release type is submitted with current release types', () => {
+      const page = new ReleaseType(
+        { releaseTypes: ['fixedTermRecall', 'parole', 'fourteenDayFixedTermRecall'] } as ReleaseTypeBody,
+        application,
+      )
+
+      expect(page.errors()).toEqual({
+        releaseTypes: 'Select the release type',
+      })
+    })
+
+    it('does not error for releaseTypes in optionsToExclude', () => {
+      const page = new ReleaseType({ releaseTypes: ['ecsl'] } as ReleaseTypeBody, application)
+      expect(page.errors()).toEqual({})
     })
   })
 
@@ -227,7 +246,7 @@ describe('ReleaseType', () => {
       const page = new ReleaseType(body, application)
 
       expect(page.response()).toEqual({
-        'What is the release type?': 'Licence following fixed-term recall\nParole',
+        'What is the release type?': '14-day fixed-term recall release licence\nParole',
         'Licence start date': '19 January 2024',
         'Licence end date': '9 July 2024',
         'Parole start date': '1 April 2122',
@@ -253,28 +272,32 @@ describe('ReleaseType', () => {
 
       expect(page.currentReleaseTypeOptions()).toEqual([
         {
+          name: '14-day fixed-term recall release licence',
+          value: 'fourteenDayFixedTermRecall',
+        },
+        {
+          name: '28-day fixed-term recall release licence',
+          value: 'twentyEightDayFixedTermRecall',
+        },
+        {
+          name: 'Standard recall release licence',
+          value: 'standardRecall',
+        },
+        {
           name: 'Conditional release date (CRD) licence',
           value: 'crdLicence',
         },
         {
-          name: 'Licence following fixed-term recall',
-          value: 'fixedTermRecall',
+          name: 'Indeterminate Public Protection RARR release licence',
+          value: 'indeterminatePublicProtectionRarr',
         },
         {
-          name: 'Licence following standard recall',
-          value: 'standardRecall',
-        },
-        {
-          name: 'Licence following Non-Presumptive Risk Assessed Recall Review (NP-RARR)',
+          name: 'Non-Presumptive Risk Assessed Recall Review (NP-RARR) release licence',
           value: 'nonPresumptiveRarr',
         },
         {
-          name: 'Licence following Presumptive RARR',
+          name: 'Presumptive RARR release licence',
           value: 'presumptiveRarr',
-        },
-        {
-          name: 'Licence following Indeterminate Public Protection RARR',
-          value: 'indeterminatePublicProtectionRarr',
         },
         {
           name: 'Parole',
@@ -285,6 +308,18 @@ describe('ReleaseType', () => {
           value: 'pss',
         },
       ])
+    })
+
+    it('includes an excluded option if it is present in the current body', () => {
+      releaseTypes.ecsl = { text: 'Excluded Option', abbr: 'ECSL' }
+
+      const page = new ReleaseType({ releaseTypes: ['ecsl'] } as ReleaseTypeBody, application)
+
+      expect(page.currentReleaseTypeOptions()).toEqual(
+        expect.arrayContaining([expect.objectContaining({ value: 'ecsl', name: 'Excluded Option' })]),
+      )
+
+      delete releaseTypes.ecsl
     })
   })
 

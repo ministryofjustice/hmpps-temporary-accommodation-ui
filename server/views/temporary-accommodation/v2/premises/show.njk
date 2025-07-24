@@ -2,6 +2,7 @@
 {% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "moj/components/sub-navigation/macro.njk" import mojSubNavigation %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% extends "../../../partials/layout.njk" %}
 
@@ -19,6 +20,23 @@
 
 {% block content %}
     {% include "../../../_messages.njk" %}
+
+    {% if premises.status === 'archived' %}
+        {% if not successMessages.length %}
+            {% set archivedBannerHtml %}
+                <p class="govuk-notification-banner__heading">This is an archived property.</p>
+                <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
+            {% endset %}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    {{ govukNotificationBanner({
+                        html: archivedBannerHtml
+                    }) }}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

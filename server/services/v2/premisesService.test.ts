@@ -1,3 +1,4 @@
+import { TextItem } from '@approved-premises/ui'
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
@@ -379,6 +380,27 @@ describe('PremisesService', () => {
       }
 
       expect(summaryList).toEqual(expectedSummaryList)
+    })
+
+    it('should show "None" for additional property details when there are no notes', () => {
+      const premises = cas3PremisesFactory.build({ notes: '' })
+      const summaryList = service.summaryList(premises)
+
+      const additionalPropertyDetailsRow = summaryList.rows.find(
+        row => (row.key as TextItem)?.text === 'Additional property details',
+      )
+
+      expect(additionalPropertyDetailsRow.value).toEqual({ text: 'None' })
+    })
+
+    it('should show "None" and "Add property details" link for property details when there are none', () => {
+      const premises = cas3PremisesFactory.build({ characteristics: [] })
+      const summaryList = service.summaryList(premises)
+
+      const propertyDetailsRow = summaryList.rows.find(row => (row.key as TextItem)?.text === 'Property details')
+
+      const expectedHtml = `<p>None</p><p><a href="#">Add property details</a></p>`
+      expect(propertyDetailsRow.value).toEqual({ html: expectedHtml })
     })
   })
 

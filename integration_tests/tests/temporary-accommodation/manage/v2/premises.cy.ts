@@ -816,6 +816,9 @@ context('Premises', () => {
       // Then I navigate to the show premises page
       const showPage = Page.verifyOnPage(PremisesShowPage, `${premises.addressLine1}, ${premises.postcode}`)
 
+      // Then I should see a notification that this is an archived property
+      showPage.shouldShowArchivedBanner()
+
       // Then I should see the premises overview
       showPage.shouldShowPremisesOverview(premises, 'Archived', '1 February 2025')
 

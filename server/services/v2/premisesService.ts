@@ -147,7 +147,7 @@ export default class PremisesService {
         },
         {
           key: { text: 'Additional property details' },
-          value: this.textValue(premises.notes),
+          value: this.textValue(premises.notes || 'None'),
         },
       ],
     }
@@ -212,7 +212,11 @@ export default class PremisesService {
   }
 
   private formatDetails(characteristics: Array<Characteristic>): string {
-    return (characteristics ?? [])
+    if (characteristics === undefined || characteristics.length === 0) {
+      return '<p>None</p><p><a href="#">Add property details</a></p>'
+    }
+
+    return characteristics
       .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
       .join(' ')
   }

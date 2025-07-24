@@ -77,14 +77,17 @@ export default class BedspaceShowPage extends Page {
   }
 
   clickArchiveLink(): void {
-    // Click the Archive link
-    cy.get('.moj-cas-page-header-actions .moj-button-menu__toggle-button').then($toggleButtons => {
-      if ($toggleButtons.length > 0) {
-        // Dropdown exists - click it first
-        cy.wrap($toggleButtons.first()).click()
+    cy.document().then((doc: Document) => {
+      const container = doc.querySelector('.moj-cas-page-header-actions')
+      if (!container) return
+
+      const hasToggleButton = container.querySelector('.moj-button-menu__toggle-button')
+      if (hasToggleButton) {
+        cy.get('.moj-cas-page-header-actions .moj-button-menu__toggle-button').click()
       }
+
+      cy.get('.moj-cas-page-header-actions a').contains('Archive').click()
     })
-    cy.get('.moj-cas-page-header-actions a').contains('Archive').click()
   }
 
   shouldShowAsArchived(): void {

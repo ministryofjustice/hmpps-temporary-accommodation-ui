@@ -284,6 +284,146 @@ describe('BedspacesController', () => {
     )
   })
 
+  describe('show - archive button visibility', () => {
+    it('should not show archive button when bedspace is already archived', async () => {
+      const archivedBedspace = cas3BedspaceFactory.build({
+        status: 'archived',
+        startDate: '2023-10-22',
+        characteristics: [characteristicFactory.build({ serviceScope: 'temporary-accommodation' })],
+      })
+      const archivedBedspaceWithSummary: Cas3Bedspace & { summary: SummaryList } = {
+        ...archivedBedspace,
+        summary: {
+          rows: [
+            {
+              key: { text: 'Bedspace status' },
+              value: { html: `<strong class="govuk-tag govuk-tag--grey">Archived</strong>` },
+            },
+            {
+              key: { text: 'Start date' },
+              value: { text: '22 October 2023' },
+            },
+            {
+              key: { text: 'Bedspace details' },
+              value: { html: `<span class="hmpps-tag-filters">Characteristic 1</span>` },
+            },
+            {
+              key: { text: 'Additional bedspace details' },
+              value: { text: archivedBedspace.notes },
+            },
+          ],
+        },
+      }
+
+      const premises = cas3PremisesFactory.build({
+        addressLine1: '62 West Wallaby Street',
+        addressLine2: undefined,
+        town: 'Wigan',
+        postcode: 'WG7 7FU',
+      })
+      const premisesWithFullAddress = {
+        ...premises,
+        fullAddress: '62 West Wallaby Street<br />Wigan<br />WG7 7FU',
+      }
+
+      const params = { premisesId, bedspaceId }
+
+      premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
+      bedspaceService.getSingleBedspaceDetails.mockResolvedValue(archivedBedspaceWithSummary)
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      const requestHandler = bedspacesController.show()
+      await requestHandler(request, response, next)
+
+      // Verify that no archive button is present in the actions array
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
+        premises: premisesWithFullAddress,
+        bedspace: archivedBedspaceWithSummary,
+        actions: [], // Empty actions array - no archive button should be visible
+      })
+
+      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+    })
+
+    it('should show archive button when bedspace is online', async () => {
+      const onlineBedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        startDate: '2024-11-23',
+        characteristics: [characteristicFactory.build({ serviceScope: 'temporary-accommodation' })],
+      })
+      const onlineBedspaceWithSummary: Cas3Bedspace & { summary: SummaryList } = {
+        ...onlineBedspace,
+        summary: {
+          rows: [
+            {
+              key: { text: 'Bedspace status' },
+              value: { html: `<strong class="govuk-tag govuk-tag--green">Online</strong>` },
+            },
+            {
+              key: { text: 'Start date' },
+              value: { text: '23 November 2024' },
+            },
+            {
+              key: { text: 'Bedspace details' },
+              value: { html: `<span class="hmpps-tag-filters">Characteristic 1</span>` },
+            },
+            {
+              key: { text: 'Additional bedspace details' },
+              value: { text: onlineBedspace.notes },
+            },
+          ],
+        },
+      }
+
+      const premises = cas3PremisesFactory.build({
+        addressLine1: '62 West Wallaby Street',
+        addressLine2: undefined,
+        town: 'Wigan',
+        postcode: 'WG7 7FU',
+      })
+      const premisesWithFullAddress = {
+        ...premises,
+        fullAddress: '62 West Wallaby Street<br />Wigan<br />WG7 7FU',
+      }
+
+      const params = { premisesId, bedspaceId }
+
+      premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
+      bedspaceService.getSingleBedspaceDetails.mockResolvedValue(onlineBedspaceWithSummary)
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      const requestHandler = bedspacesController.show()
+      await requestHandler(request, response, next)
+
+      // Verify that archive button is present in the actions array
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
+        premises: premisesWithFullAddress,
+        bedspace: onlineBedspaceWithSummary,
+        actions: [
+          {
+            text: 'Archive',
+            classes: 'govuk-button--secondary moj-button-menu__item',
+            href: paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+          },
+        ],
+      })
+
+      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+    })
+  })
+
   describe('archive', () => {
     it('renders the archive form', async () => {
       const bedspace = cas3BedspaceFactory.build()
@@ -312,6 +452,42 @@ describe('BedspacesController', () => {
         params,
         errors: {},
         errorSummary: [],
+        archiveOption: 'today',
+      })
+    })
+
+    it('renders the archive form with existing user input preserved', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      const bedspaceWithSummary: Cas3Bedspace & { summary: SummaryList } = {
+        ...bedspace,
+        summary: { rows: [] },
+      }
+      const params = { premisesId, bedspaceId }
+
+      bedspaceService.getSingleBedspaceDetails.mockResolvedValue(bedspaceWithSummary)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({
+        errors: {},
+        errorSummary: [],
+        userInput: { archiveOption: 'anotherDate' },
+      })
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      const requestHandler = bedspacesController.archive()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getSingleBedspaceDetails).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/archive', {
+        bedspace: bedspaceWithSummary,
+        params,
+        errors: {},
+        errorSummary: [],
+        archiveOption: 'anotherDate',
       })
     })
   })

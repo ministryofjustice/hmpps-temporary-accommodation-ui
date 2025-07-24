@@ -88,6 +88,7 @@ export default class BedspacesController {
       const { premisesId, bedspaceId } = req.params
 
       const bedspace = await this.bedspaceService.getSingleBedspaceDetails(callConfig, premisesId, bedspaceId)
+      const archiveOption = userInput.archiveOption || 'today'
 
       return res.render('temporary-accommodation/v2/bedspaces/archive', {
         bedspace,
@@ -95,6 +96,7 @@ export default class BedspacesController {
         errors,
         errorSummary,
         ...userInput,
+        archiveOption,
       })
     }
   }

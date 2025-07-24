@@ -74,4 +74,18 @@ describe('BedspaceClient', () => {
       expect(output).toEqual(bedspaces)
     })
   })
+
+  describe('archive', () => {
+    it('should archive a bedspace', async () => {
+      const bedspaceId = 'some-bedspace-id'
+      const archiveData = { endDate: '2024-12-31' }
+
+      fakeApprovedPremisesApi
+        .post(paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200)
+
+      await bedspaceClient.archive(premisesId, bedspaceId, archiveData)
+    })
+  })
 })

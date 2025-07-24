@@ -11,6 +11,29 @@
 {% set mainClasses = "app-container govuk-body" %}
 {% set sortByHeader = premisesSortBy == 'pdu' and 'PDU' or 'LA' %}
 
+{% set tableCaption %}
+    {% if premisesSortBy is defined and premisesSortBy == 'pdu' %}
+        <div class="govuk-!-margin-bottom-1" data-cy="sort-by-header">
+            Properties by probation delivery unit
+        </div>
+        <div class="govuk-!-margin-bottom-4">
+            <a href="{{ paths.premises.v2.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
+                View by local authority
+            </a>
+        </div>
+    {% else %}
+        <div class="govuk-!-margin-bottom-1" data-cy="sort-by-header">
+            Properties by local authority
+        </div>
+        <div class="govuk-!-margin-bottom-4">
+            <a href="{{ paths.premises.v2.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
+                View by probation delivery unit
+            </a>
+        </div>
+    {% endif %}
+    <span class="govuk-visually-hidden">(column headers with buttons are sortable).</span>
+{% endset %}
+
 {% block beforeContent %}
     {{ govukBreadcrumbs({
         items: [{
@@ -90,28 +113,6 @@
             </div>
         </div>
         {% endif %}
-        <div class="govuk-grid-column-full">
-            {% if premisesSortBy is defined and premisesSortBy == 'pdu' %}
-                <span class="govuk-heading-m" data-cy="sort-by-header">
-                    Properties by probation delivery unit
-                </span>
-                <div class="govuk-!-margin-bottom-6">
-                    <a href="{{ paths.premises.v2.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-normal govuk-!-margin-bottom-4">
-                        View by local authority
-                    </a>
-                </div>
-            {% else %}
-                <span class="govuk-heading-m" data-cy="sort-by-header">
-                    Properties by local authority
-                </span>
-                <div class="govuk-!-margin-bottom-6">
-                    <a href="{{ paths.premises.v2.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-!-font-weight-normal govuk-!-margin-bottom-4">
-                        View by probation delivery unit
-                    </a>
-                </div>
-            {% endif %}
-            <span class="govuk-visually-hidden">(column headers with buttons are sortable).</span>
-        </div>
     </div>
     <div>
         {% if (tableRows | length > 0) %}
@@ -119,7 +120,8 @@
                 attributes: {
                     'data-module': 'moj-sortable-table'
                 },
-                captionClasses: "govuk-table__caption--m",
+                caption: tableCaption | safe,
+                captionClasses: "govuk-table__caption govuk-table__caption--m",
                 head: [
                     {
                         text: "Address",

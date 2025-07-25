@@ -119,4 +119,14 @@ export default class BedspaceService {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.create(premisesId, newBedspace)
   }
+
+  async archiveBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    archiveDate: string,
+  ): Promise<void> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.archive(premisesId, bedspaceId, { endDate: archiveDate })
+  }
 }

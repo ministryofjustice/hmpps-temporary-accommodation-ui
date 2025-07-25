@@ -75,4 +75,28 @@ export default class BedspaceShowPage extends Page {
     const lostBedListingComponent = new LostBedListingComponent(lostBed)
     lostBedListingComponent.shouldShowLostBedDetails()
   }
+
+  clickArchiveAction(): void {
+    cy.document().then((doc: Document) => {
+      const container = doc.querySelector('.moj-cas-page-header-actions')
+      if (!container) return
+
+      const hasToggleButton = container.querySelector('.moj-button-menu__toggle-button')
+      if (hasToggleButton) {
+        cy.get('.moj-cas-page-header-actions .moj-button-menu__toggle-button').click()
+      }
+
+      cy.get('.moj-cas-page-header-actions a').contains('Archive').click()
+    })
+  }
+
+  shouldShowAsArchived(): void {
+    cy.get('.govuk-tag').should('contain', 'Archived')
+  }
+
+  shouldNotShowArchiveLink(): void {
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.root().should('not.contain', 'Archive')
+    })
+  }
 }

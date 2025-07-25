@@ -153,7 +153,7 @@ context('Bedspace', () => {
 
       // And I should be redirected to the show bedspace page
       const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
-      bedspaceShowPage.shouldShowBanner('Bedspace created')
+      bedspaceShowPage.shouldShowBanner('Bedspace added')
     })
 
     describe('shows errors', () => {

@@ -1,6 +1,6 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
-{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../../components/location-header/macro.njk" import locationHeader %}
 
 {% extends "../../../partials/layout.njk" %}
@@ -9,10 +9,13 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-  {{ breadCrumb('Add a bedspace', [
-    {title: 'List of properties', href: paths.premises.v2.index()},
-    {title: 'View a property', href: paths.premises.v2.show({ premisesId: premises.id })}
-  ]) }}
+  {{
+    govukBackLink({
+      text: "Back",
+      href: paths.premises.v2.show({ premisesId: premises.id }),
+      classes: 'govuk-!-display-none-print'
+    })
+  }}
 {% endblock %}
 
 {% block content %}
@@ -20,13 +23,13 @@
   
   {{ showErrorSummary(errorSummary) }}
   
-  <h1 class="govuk-heading-l">Add a bedspace</h1>
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <form action="{{ paths.premises.v2.bedspaces.create({ premisesId: premises.id })}}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-        {{ locationHeader({ premises: premises }) }}
+        <h1 class="govuk-heading-l">Add a bedspace</h1>
+        {{ locationHeader({ premises: premises }, false, "govuk-heading-m") }}
         {% include "./_editable.njk" %}  
       </form>
     </div>

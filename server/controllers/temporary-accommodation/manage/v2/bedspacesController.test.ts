@@ -50,6 +50,12 @@ describe('BedspacesController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       const premises = cas3PremisesFactory.build()
+      const today = new Date()
+      const userInput = {
+        'startDate-day': String(today.getDate()),
+        'startDate-month': String(today.getMonth() + 1),
+        'startDate-year': String(today.getFullYear()),
+      }
 
       bedspaceService.getReferenceData.mockResolvedValue(referenceData)
       premisesService.getSinglePremises.mockResolvedValue(premises)
@@ -68,6 +74,7 @@ describe('BedspacesController', () => {
         premises,
         errors: {},
         errorSummary: [],
+        ...userInput,
       })
     })
   })
@@ -102,7 +109,7 @@ describe('BedspacesController', () => {
         }),
       )
 
-      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace created')
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace added')
       expect(response.redirect).toHaveBeenCalledWith(
         paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }),
       )

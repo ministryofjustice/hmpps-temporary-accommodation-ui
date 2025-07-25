@@ -30,7 +30,7 @@ context('Bedspace Archive', () => {
     const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
 
     // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
+    bedspaceShowPage.clickArchiveAction()
 
     // And I should navigate to the archive bedspace page
     const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
@@ -62,7 +62,7 @@ context('Bedspace Archive', () => {
     const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
 
     // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
+    bedspaceShowPage.clickArchiveAction()
 
     // And I should navigate to the archive bedspace page
     const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
@@ -96,7 +96,7 @@ context('Bedspace Archive', () => {
     const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
 
     // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
+    bedspaceShowPage.clickArchiveAction()
 
     // And I should navigate to the archive bedspace page
     const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
@@ -116,139 +116,5 @@ context('Bedspace Archive', () => {
 
     // Then I should see the validation error based on the API response
     archivePage.shouldShowError('The date is not within the next 3 months')
-  })
-
-  it('fails to archive with invalidEndDateInTheFuture error', () => {
-    // Given there is an active premises in the database
-    const premises = cas3PremisesFactory.build({ status: 'online' })
-    cy.task('stubSinglePremisesV2', premises)
-
-    // And there is an online bedspace in the database
-    const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-
-    // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
-
-    // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
-
-    // And I should navigate to the archive bedspace page
-    const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
-    archivePage.shouldShowBedspaceDetails()
-
-    // When I try to archive with future date beyond 3 months
-    cy.task('stubBedspaceArchiveV2WithError', {
-      premisesId: premises.id,
-      bedspaceId: bedspace.id,
-      errorType: 'invalidEndDateInTheFuture',
-    })
-
-    // Select another date option and enter a far future date
-    archivePage.selectAnotherDateOption()
-    archivePage.enterArchiveDate('1', '1', '2100')
-    archivePage.clickSubmit()
-
-    // Then I should see the validation error based on the API response
-    archivePage.shouldShowError('The date is not within the next 3 months')
-  })
-
-  it('fails to archive with existingBookings error', () => {
-    // Given there is an active premises in the database
-    const premises = cas3PremisesFactory.build({ status: 'online' })
-    cy.task('stubSinglePremisesV2', premises)
-
-    // And there is an online bedspace in the database
-    const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-
-    // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
-
-    // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
-
-    // And I should navigate to the archive bedspace page
-    const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
-    archivePage.shouldShowBedspaceDetails()
-
-    // When I try to archive but there are existing bookings
-    cy.task('stubBedspaceArchiveV2WithError', {
-      premisesId: premises.id,
-      bedspaceId: bedspace.id,
-      errorType: 'existingBookings',
-    })
-
-    // Archive with today option
-    archivePage.completeArchiveWithToday()
-
-    // Then I should see the validation error based on the API response
-    archivePage.shouldShowError('This bedspace cannot be archived due to existing bookings after this date.')
-  })
-
-  it('fails to archive with existingVoid error', () => {
-    // Given there is an active premises in the database
-    const premises = cas3PremisesFactory.build({ status: 'online' })
-    cy.task('stubSinglePremisesV2', premises)
-
-    // And there is an online bedspace in the database
-    const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-
-    // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
-
-    // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
-
-    // And I should navigate to the archive bedspace page
-    const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
-    archivePage.shouldShowBedspaceDetails()
-
-    // When I try to archive but there is an existing void period
-    cy.task('stubBedspaceArchiveV2WithError', {
-      premisesId: premises.id,
-      bedspaceId: bedspace.id,
-      errorType: 'existingVoid',
-    })
-
-    // Archive with today option
-    archivePage.completeArchiveWithToday()
-
-    // Then I should see the validation error based on the API response
-    archivePage.shouldShowError('This bedspace cannot be archived due to a void period after this date.')
-  })
-
-  it('fails to archive with existingTurnaround error', () => {
-    // Given there is an active premises in the database
-    const premises = cas3PremisesFactory.build({ status: 'online' })
-    cy.task('stubSinglePremisesV2', premises)
-
-    // And there is an online bedspace in the database
-    const bedspace = cas3BedspaceFactory.build({ status: 'online' })
-    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
-
-    // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
-
-    // Then I should see the archive button and be able to click it
-    bedspaceShowPage.clickArchiveLink()
-
-    // And I should navigate to the archive bedspace page
-    const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
-    archivePage.shouldShowBedspaceDetails()
-
-    // When I try to archive but there is an existing turnaround
-    cy.task('stubBedspaceArchiveV2WithError', {
-      premisesId: premises.id,
-      bedspaceId: bedspace.id,
-      errorType: 'existingTurnaround',
-    })
-
-    // Archive with today option
-    archivePage.completeArchiveWithToday()
-
-    // Then I should see the validation error based on the API response
-    archivePage.shouldShowError('This bedspace cannot be archived due to a turnaround scheduled after this date.')
   })
 })

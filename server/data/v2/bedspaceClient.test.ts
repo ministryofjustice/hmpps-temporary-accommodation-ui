@@ -80,12 +80,15 @@ describe('BedspaceClient', () => {
       const bedspaceId = 'some-bedspace-id'
       const archiveData = { endDate: '2024-12-31' }
 
-      fakeApprovedPremisesApi
-        .post(paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }))
+      const scope = fakeApprovedPremisesApi
+        .post(paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }), archiveData) // Verify request body
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(200)
 
       await bedspaceClient.archive(premisesId, bedspaceId, archiveData)
+
+      expect(scope.isDone()).toBe(true)
+      expect(nock.isDone()).toBeTruthy()
     })
   })
 })

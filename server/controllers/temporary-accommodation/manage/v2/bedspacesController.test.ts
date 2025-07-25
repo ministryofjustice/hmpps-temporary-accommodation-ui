@@ -522,6 +522,52 @@ describe('BedspacesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
     })
 
+    it('handles invalid/empty date error', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          archiveOption: 'anotherDate',
+          'archiveDate-day': '',
+          'archiveDate-month': '',
+          'archiveDate-year': '',
+        },
+      })
+
+      const error = {
+        status: 400,
+        data: {
+          'invalid-params': [
+            {
+              propertyName: '$.endDate',
+              errorType: 'invalid',
+              errorDetail: null as never,
+            },
+          ],
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+        },
+      }
+
+      bedspaceService.archiveBedspace.mockRejectedValue(error)
+
+      const requestHandler = bedspacesController.archiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+        'bedspaceArchive',
+      )
+    })
+
     it('handles invalidEndDateInTheFuture error using standard validation pattern', async () => {
       const params = { premisesId, bedspaceId }
 

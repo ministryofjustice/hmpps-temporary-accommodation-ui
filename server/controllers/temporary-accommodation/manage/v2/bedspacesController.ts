@@ -8,7 +8,7 @@ import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
 
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
+import { DateFormats } from '../../../../utils/dateUtils'
 
 export default class BedspacesController {
   constructor(
@@ -113,14 +113,8 @@ export default class BedspacesController {
       if (archiveOption === 'today') {
         archiveDate = DateFormats.dateObjToIsoDate(new Date())
       } else if (archiveOption === 'anotherDate') {
-        if (dateIsBlank(req.body, 'archiveDate')) {
-          errors.archiveDate = 'You must specify the archive date'
-        } else if (!dateAndTimeInputsAreValidDates(req.body, 'archiveDate')) {
-          errors.archiveDate = 'You must specify a valid archive date'
-        } else {
-          const { archiveDate: archiveDateString } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'archiveDate')
-          archiveDate = archiveDateString
-        }
+        const { archiveDate: archiveDateString } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'archiveDate')
+        archiveDate = archiveDateString || ''
       } else {
         errors.archiveOption = 'You must select when to archive the bedspace'
       }
@@ -128,10 +122,6 @@ export default class BedspacesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
-      }
-
-      if (!archiveDate) {
         return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
       }
 

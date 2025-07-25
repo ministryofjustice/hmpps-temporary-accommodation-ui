@@ -209,6 +209,8 @@
   },
   "bedspaceArchive": {
     "endDate": {
+      "empty": "You must enter a valid archive date",
+      "invalid": "You must enter a valid archive date",
       "invalidEndDateInThePast": "The date is not within the next 3 months",
       "invalidEndDateInTheFuture": "The date is not within the next 3 months",
       "existingBookings": "This bedspace cannot be archived due to existing bookings after this date.",

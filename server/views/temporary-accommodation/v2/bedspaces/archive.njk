@@ -1,5 +1,6 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
 {% from "../../../partials/breadCrumb.njk" import breadCrumb %}
 {% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
@@ -14,6 +15,10 @@
     {title: 'List of properties', href: paths.premises.v2.online()},
     {title: 'View a bedspace', href: paths.premises.v2.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })}
   ]) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: paths.premises.v2.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })
+  }) }}
 {% endblock %}
 
 {% block content %}
@@ -28,7 +33,7 @@
       <form action="{{ paths.premises.v2.bedspaces.archive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         
-        {% set conditionalHtml %}
+        {% set archiveDateHtml %}
           {{ formPageDateInput({
             fieldset: {
               legend: {
@@ -40,8 +45,9 @@
             hint: {
               text: "Use numbers, for example 27 05 2025"
             },
-            items: dateFieldValues('archiveDate', errors)
-          }, fetchContext()) }}
+            items: dateFieldValues('archiveDate', {}),
+            errorMessage: errors
+            }, mergeObjects(fetchContext(), { errors: { archiveDate: errors.endDate } })) }}
         {% endset %}
 
         {{ govukRadios({
@@ -64,7 +70,7 @@
               text: "Another date",
               checked: archiveOption == "anotherDate",
               conditional: {
-                html: conditionalHtml
+                html: archiveDateHtml
               }
             }
           ],

@@ -76,7 +76,7 @@ export default class BedspaceShowPage extends Page {
     lostBedListingComponent.shouldShowLostBedDetails()
   }
 
-  clickArchiveLink(): void {
+  clickArchiveAction(): void {
     cy.document().then((doc: Document) => {
       const container = doc.querySelector('.moj-cas-page-header-actions')
       if (!container) return

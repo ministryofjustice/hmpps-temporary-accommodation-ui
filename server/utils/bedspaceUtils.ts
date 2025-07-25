@@ -72,3 +72,12 @@ export function insertEndDateErrors(err: SanitisedError, premisesId: Premises['i
     insertGenericError(err, 'bedEndDate', errorType)
   }
 }
+
+export function setDefaultStartDate(userInput: Record<string, unknown>) {
+  const today = new Date()
+  if (!userInput['startDate-day'] && !userInput['startDate-month'] && !userInput['startDate-year']) {
+    userInput['startDate-day'] = String(today.getDate())
+    userInput['startDate-month'] = String(today.getMonth() + 1)
+    userInput['startDate-year'] = String(today.getFullYear())
+  }
+}

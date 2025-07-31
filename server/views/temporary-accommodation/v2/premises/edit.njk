@@ -1,4 +1,5 @@
 {% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% extends "../../../partials/layout.njk" %}
@@ -13,7 +14,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: 'Back',
-        href: paths.premises.v2.index({}),
+        href: paths.premises.v2.show({ premisesId: premisesId }),
         classes: 'govuk-!-display-none-print'
     }) }}
 {% endblock %}
@@ -23,11 +24,15 @@
 
     {{ showErrorSummary(errorSummary) }}
 
-    <h1 class="govuk-heading-l">Add a property</h1>
+    <h1 class="govuk-heading-l">Edit property</h1>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.v2.create({}) }}" method="post">
+            {{ govukSummaryList({
+                rows: summary.rows
+            }) }}
+
+            <form action="{{ paths.premises.v2.edit({ premisesId: premisesId }) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% include "./_editable.njk" %}
             </form>

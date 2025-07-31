@@ -61,6 +61,8 @@ const paths: Record<string, any> = {
       show: singlePremisesV2Path,
       new: premisesV2Path.path('new'),
       create: premisesV2Path,
+      edit: singlePremisesV2Path.path('edit'),
+      update: singlePremisesV2Path,
       bedspaces: {
         new: bedspacesV2Path.path('new'),
         show: singleBedspaceV2Path,

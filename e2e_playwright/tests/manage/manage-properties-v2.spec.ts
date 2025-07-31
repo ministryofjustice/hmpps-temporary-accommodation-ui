@@ -2,7 +2,13 @@ import { Property } from '@temporary-accommodation-ui/e2e'
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { test } from '../../test'
 import { signIn } from '../../steps/signIn'
-import { createProperty, searchForProperty, showProperty, visitListPropertiesPage } from '../../steps/v2/manage'
+import {
+  createProperty,
+  editProperty,
+  navigateToProperty,
+  searchForProperty,
+  visitListPropertiesPage,
+} from '../../steps/v2/manage'
 
 test('Create a property', async ({ page, assessor }) => {
   const property = getProperty()
@@ -20,7 +26,18 @@ test('Show a property', async ({ page, assessor }) => {
   await createProperty(page, property)
   await visitListPropertiesPage(page)
   await searchForProperty(page, property.postcode)
-  await showProperty(page, property)
+  await navigateToProperty(page, property)
+})
+
+test('Edit a property', async ({ page, assessor }) => {
+  const property = getProperty()
+  const updatedProperty = getProperty()
+
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await editProperty(page, property, updatedProperty)
+  // await showProperty(page, updatedProperty)
 })
 
 function getProperty(): Property {

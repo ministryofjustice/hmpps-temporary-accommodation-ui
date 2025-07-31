@@ -1,7 +1,7 @@
 import type { Request, RequestHandler, Response } from 'express'
 
 import { PremisesSearchParameters } from '@approved-premises/ui'
-import type { Cas3NewPremises, Cas3PremisesStatus } from '@approved-premises/api'
+import type { Cas3NewPremises, Cas3PremisesStatus, Cas3UpdatePremises } from '@approved-premises/api'
 import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
 import BedspaceService from '../../../../services/v2/bedspaceService'
@@ -11,6 +11,7 @@ import { showPropertySubNavArray } from '../../../../utils/premisesUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 import { filterProbationRegions } from '../../../../utils/userUtils'
 import { parseNumber } from '../../../../utils/formUtils'
+import { premisesActions } from '../../../../utils/premisesV2Utils'
 
 export default class PremisesController {
   constructor(
@@ -53,7 +54,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/v2/premises/show', {
         premises,
         summary,
-        actions: [],
+        actions: premisesActions(premises),
         showPremises: true,
         subNavArr: showPropertySubNavArray(premisesId, 'premises'),
       })
@@ -82,7 +83,7 @@ export default class PremisesController {
       return res.render('temporary-accommodation/v2/premises/show', {
         premises,
         bedspaceSummaries,
-        actions: [],
+        actions: premisesActions(premises),
         showPremises: false,
         subNavArr: showPropertySubNavArray(premisesId, 'bedspaces'),
       })
@@ -148,6 +149,81 @@ export default class PremisesController {
         res.redirect(paths.premises.v2.show({ premisesId: premises.id }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.new())
+      }
+    }
+  }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+
+      const [premises, referenceData] = await Promise.all([
+        this.premisesService.getSinglePremises(callConfig, premisesId),
+        this.premisesService.getReferenceData(callConfig),
+      ])
+
+      const { localAuthorities, characteristics, probationRegions, pdus } = referenceData
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+      const userInput = {
+        reference: premises.reference,
+        addressLine1: premises.addressLine1,
+        addressLine2: premises.addressLine2,
+        town: premises.town,
+        postcode: premises.postcode,
+        localAuthorityAreaId: premises.localAuthorityArea.id,
+        probationRegionId: premises.probationRegion.id,
+        probationDeliveryUnitId: premises.probationDeliveryUnit.id,
+        characteristicIds: premises.characteristics.map(ch => ch.id),
+        notes: premises.notes,
+        turnaroundWorkingDays: premises.turnaroundWorkingDays,
+        ...errorsAndUserInput.userInput,
+      }
+
+      const summary = this.premisesService.shortSummaryList(premises)
+
+      return res.render('temporary-accommodation/v2/premises/edit', {
+        premisesId,
+        errors,
+        errorSummary,
+        localAuthorities,
+        characteristics,
+        probationRegions: filterProbationRegions(probationRegions, req),
+        pdus,
+        summary,
+        ...userInput,
+      })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const updatedPremises: Cas3UpdatePremises = {
+        reference: req.body.reference,
+        addressLine1: req.body.addressLine1,
+        addressLine2: req.body.addressLine2,
+        town: req.body.town,
+        postcode: req.body.postcode,
+        localAuthorityAreaId: req.body.localAuthorityAreaId,
+        probationRegionId: req.body.probationRegionId,
+        probationDeliveryUnitId: req.body.probationDeliveryUnitId,
+        characteristicIds: req.body.characteristicIds ?? [],
+        notes: req.body.notes,
+        turnaroundWorkingDayCount: parseNumber(req.body.turnaroundWorkingDays, { allowNegatives: true }),
+      }
+
+      const { premisesId } = req.params
+
+      try {
+        const callConfig = extractCallConfig(req)
+        const premises = await this.premisesService.updatePremises(callConfig, premisesId, updatedPremises)
+
+        req.flash('success', 'Property edited')
+        res.redirect(paths.premises.v2.show({ premisesId: premises.id }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.edit({ premisesId }))
       }
     }
   }

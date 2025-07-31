@@ -3,6 +3,7 @@ import { Property } from '@temporary-accommodation-ui/e2e'
 import { ListPropertiesPage } from '../../pages/manage/v2/listPropertiesPage'
 import { AddPropertyPage } from '../../pages/manage/v2/addPropertyPage'
 import { ViewPropertyPage } from '../../pages/manage/v2/viewPropertyPage'
+import { EditPropertyPage } from '../../pages/manage/v2/editPropertyPage'
 
 export const visitListPropertiesPage = async (page: Page) => {
   // TODO: navigate to the list properties page from the dashboard once the v2 pages are live in prod
@@ -29,11 +30,32 @@ export const searchForProperty = async (page: Page, address: string) => {
   await listPropertiesPage.checkAllEntriesMatchAddress(address)
 }
 
-export const showProperty = async (page: Page, property: Property) => {
+export const navigateToProperty = async (page: Page, property: Property) => {
   const listPropertiesPage = await ListPropertiesPage.initialise(page)
   await listPropertiesPage.clickManageLink(property)
+  await showProperty(page, property)
+}
 
+export const showProperty = async (page: Page, property: Property) => {
   const shortAddress = `${property.addressLine1}, ${property.postcode}`
   const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
   await showPropertyPage.shouldShowPropertyDetails(property)
+}
+
+export const editProperty = async (page: Page, property: Property, updatedProperty: Property) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  await showPropertyPage.clickEditButton()
+
+  const editPropertyPage = await EditPropertyPage.initialise(page)
+  await editPropertyPage.shouldShowPropertyDetails(property)
+  await editPropertyPage.clearFormDetails()
+  await editPropertyPage.enterFormDetails(updatedProperty)
+  await editPropertyPage.clickSubmit()
+
+  const updatedShortAddress = `${updatedProperty.addressLine1}, ${updatedProperty.postcode}`
+  const showUpdatedPropertyPage = await ViewPropertyPage.initialise(page, updatedShortAddress)
+  const isBannerMessageDisplayed = await showUpdatedPropertyPage.isBannerMessageDisplayed('Property edited')
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showUpdatedPropertyPage.shouldShowPropertyDetails(updatedProperty)
 }

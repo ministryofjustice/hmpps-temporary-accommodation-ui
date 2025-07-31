@@ -117,7 +117,16 @@ export default class PremisesShowPage extends Page {
 
   shouldShowArchivedBanner(): void {
     cy.get('main .govuk-notification-banner h2').contains('Important')
-    cy.get('main .govuk-notification-banner p').contains('This is an archived property.')
+    cy.get('main .govuk-notification-banner p').contains('This is an archived property')
     cy.get('main .govuk-notification-banner p').contains('You cannot create a new bedspace, or make a new booking.')
+  }
+
+  clickEditPropertyDetailsButton(): void {
+    cy.get('button').contains('Actions').parent().click()
+    cy.get('button').contains('Actions').parent().siblings('ul').contains('Edit property details').click()
+  }
+
+  shouldShowPropertyUpdatedBanner() {
+    cy.get('main .govuk-notification-banner--success').contains('Property edited')
   }
 }

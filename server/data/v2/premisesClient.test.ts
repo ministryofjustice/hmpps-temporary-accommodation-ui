@@ -8,6 +8,7 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3UpdatePremisesFactory,
 } from '../../testutils/factories'
 import paths from '../../paths/api'
 
@@ -78,6 +79,22 @@ describe('PremisesClient', () => {
         .reply(200, premises)
 
       const result = await premisesClient.create(payload)
+      expect(result).toEqual(premises)
+    })
+  })
+
+  describe('update', () => {
+    it('should return the premises that has been updated', async () => {
+      const premisesId = 'premises-id'
+      const premises = cas3PremisesFactory.build({ id: premisesId })
+      const payload = cas3UpdatePremisesFactory.build({ ...premises })
+
+      fakeApprovedPremisesApi
+        .put(paths.cas3.premises.update({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const result = await premisesClient.update(premisesId, payload)
       expect(result).toEqual(premises)
     })
   })

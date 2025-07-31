@@ -39,6 +39,11 @@ export class ViewPropertyPage extends BasePage {
     await expect(this.getRowTextByLabel('Additional property details')).toContainText(property.notes)
   }
 
+  async clickEditButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Edit property details').click()
+  }
+
   private getRowTextByLabel(label: string, exact: boolean = false): Locator {
     return this.page.getByText(label, { exact }).locator('..').locator('dd')
   }

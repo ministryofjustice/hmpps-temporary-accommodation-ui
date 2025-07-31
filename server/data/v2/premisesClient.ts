@@ -4,6 +4,7 @@ import {
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
+  Cas3UpdatePremises,
 } from '@approved-premises/api'
 import RestClient, { CallConfig } from '../restClient'
 import config, { ApiConfig } from '../../config'
@@ -31,5 +32,9 @@ export default class PremisesClient {
 
   async create(data: Cas3NewPremises) {
     return this.restClient.post<Cas3Premises>({ path: paths.cas3.premises.create({}), data })
+  }
+
+  async update(premisesId: string, data: Cas3UpdatePremises) {
+    return this.restClient.put<Cas3Premises>({ path: paths.cas3.premises.update({ premisesId }), data })
   }
 }

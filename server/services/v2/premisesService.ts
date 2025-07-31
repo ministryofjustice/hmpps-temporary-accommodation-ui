@@ -6,6 +6,7 @@ import {
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
+  Cas3UpdatePremises,
   Characteristic,
   LocalAuthorityArea,
   ProbationDeliveryUnit,
@@ -97,6 +98,11 @@ export default class PremisesService {
     return premisesClient.create(newPremises)
   }
 
+  async updatePremises(callConfig: CallConfig, premisesId: string, updatedPremises: Cas3UpdatePremises) {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.update(premisesId, updatedPremises)
+  }
+
   tableRows(premises: Cas3PremisesSearchResults, premisesSortBy: Cas3PremisesSortBy = 'pdu'): Array<TableRow> {
     return premises.results === undefined
       ? []
@@ -148,6 +154,21 @@ export default class PremisesService {
         {
           key: { text: 'Additional property details' },
           value: this.textValue(premises.notes || 'None'),
+        },
+      ],
+    }
+  }
+
+  shortSummaryList(premises: Cas3Premises): SummaryList {
+    return {
+      rows: [
+        {
+          key: { text: 'Status' },
+          value: this.htmlValue(this.formatPremisesStatus(premises.status)),
+        },
+        {
+          key: { text: 'Address' },
+          value: this.htmlValue(this.formatAddress(premises)),
         },
       ],
     }

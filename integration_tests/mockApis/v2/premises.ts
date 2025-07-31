@@ -82,6 +82,30 @@ const verifyPremisesCreateV2 = async () =>
     })
   ).body.requests
 
+const stubPremisesUpdateV2 = (premises: Cas3Premises) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.update({ premisesId: premises.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: premises,
+    },
+  })
+
+const stubPremisesUpdateErrorsV2 = (params: { fields: Array<string>; premisesId: string }) =>
+  stubFor(errorStub(params.fields, paths.cas3.premises.update({ premisesId: params.premisesId }), 'PUT'))
+
+const verifyPremisesUpdateV2 = async (premisesId: string) =>
+  (
+    await getMatchingRequests({
+      method: 'PUT',
+      url: paths.cas3.premises.update({ premisesId }),
+    })
+  ).body.requests
+
 export default {
   stubPremisesSearchV2,
   stubSinglePremisesV2,
@@ -89,4 +113,7 @@ export default {
   stubPremisesCreateV2,
   stubPremisesCreateErrorsV2,
   verifyPremisesCreateV2,
+  stubPremisesUpdateV2,
+  stubPremisesUpdateErrorsV2,
+  verifyPremisesUpdateV2,
 }

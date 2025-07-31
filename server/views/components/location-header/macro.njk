@@ -1,6 +1,6 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% macro locationHeader(locationDetails, hideAddress = false) %}
+{% macro locationHeader(locationDetails, hideAddress = false, headingClass = "") %}
 
 <div class="location-header">
   {% set premises = locationDetails.premises %}
@@ -8,10 +8,11 @@
 
   {% if premises %}
     {% if not hideAddress %}
-      <h2>Property address</h2>
+      <h2{% if headingClass %} class="{{ headingClass }}"{% endif %}>Property address</h2>
       <p>
             {% if room.name.length %}{{ room.name }}<br/>{% endif %}
             {{ premises.addressLine1 }}
+            {% if premises.addressLine2.length %}<br/>{{ premises.addressLine2 }}{% endif %}
             {% if premises.town.length %}<br/>{{ premises.town }}{% endif %}
             <br />{{ premises.postcode }}
       </p>

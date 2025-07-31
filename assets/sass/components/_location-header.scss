@@ -1,7 +1,7 @@
 .location-header {
   margin-bottom: 2em;
 
-  h2 {
+  h2:not([class]) {
     @include govuk-font($size: 19, $weight: 'bold');
   }
 }

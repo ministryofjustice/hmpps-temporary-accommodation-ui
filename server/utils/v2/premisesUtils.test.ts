@@ -1,6 +1,6 @@
-import paths from '../paths/temporary-accommodation/manage'
-import { cas3PremisesFactory } from '../testutils/factories'
-import { premisesActions } from './premisesV2Utils'
+import paths from '../../paths/temporary-accommodation/manage'
+import { cas3PremisesFactory } from '../../testutils/factories'
+import { premisesActions } from './premisesUtils'
 
 describe('premisesV2Utils', () => {
   describe('premisesActions', () => {

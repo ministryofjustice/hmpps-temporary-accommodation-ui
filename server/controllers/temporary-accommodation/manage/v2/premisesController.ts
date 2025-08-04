@@ -11,7 +11,7 @@ import { showPropertySubNavArray } from '../../../../utils/premisesUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 import { filterProbationRegions } from '../../../../utils/userUtils'
 import { parseNumber } from '../../../../utils/formUtils'
-import { premisesActions } from '../../../../utils/premisesV2Utils'
+import { premisesActions } from '../../../../utils/v2/premisesUtils'
 
 export default class PremisesController {
   constructor(

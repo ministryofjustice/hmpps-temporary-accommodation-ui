@@ -1,6 +1,6 @@
 import { Cas3Premises } from '@approved-premises/api'
 import { PageHeadingBarItem } from '@approved-premises/ui'
-import paths from '../paths/temporary-accommodation/manage'
+import paths from '../../paths/temporary-accommodation/manage'
 
 export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarItem> => {
   const actions = [

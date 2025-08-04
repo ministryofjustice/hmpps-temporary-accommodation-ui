@@ -7,6 +7,7 @@ import {
   editProperty,
   navigateToProperty,
   searchForProperty,
+  showProperty,
   visitListPropertiesPage,
 } from '../../steps/v2/manage'
 
@@ -37,7 +38,7 @@ test('Edit a property', async ({ page, assessor }) => {
   await visitListPropertiesPage(page)
   await createProperty(page, property)
   await editProperty(page, property, updatedProperty)
-  // await showProperty(page, updatedProperty)
+  await showProperty(page, updatedProperty)
 })
 
 function getProperty(): Property {

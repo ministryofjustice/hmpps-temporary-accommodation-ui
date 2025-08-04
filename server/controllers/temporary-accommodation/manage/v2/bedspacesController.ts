@@ -9,6 +9,7 @@ import PremisesService from '../../../../services/v2/premisesService'
 
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 import { DateFormats } from '../../../../utils/dateUtils'
+import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
 
 export default class BedspacesController {
   constructor(
@@ -19,6 +20,7 @@ export default class BedspacesController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      setDefaultStartDate(userInput)
 
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
@@ -27,7 +29,7 @@ export default class BedspacesController {
       const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
 
       return res.render('temporary-accommodation/v2/bedspaces/new', {
-        allCharacteristics,
+        allCharacteristics: allCharacteristics.filter(c => c.propertyName !== 'other'),
         characteristicIds: [],
         premises,
         errors,
@@ -65,7 +67,7 @@ export default class BedspacesController {
         const callConfig = extractCallConfig(req)
         const bedspace = await this.bedspaceService.createBedspace(callConfig, premisesId, newBedspace)
 
-        req.flash('success', 'Bedspace created')
+        req.flash('success', 'Bedspace added')
         res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.new({ premisesId }))

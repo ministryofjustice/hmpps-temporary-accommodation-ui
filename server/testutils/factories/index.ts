@@ -54,6 +54,7 @@ import premisesFactory from './premises'
 import premisesSummaryFactory from './premisesSummary'
 import cas3PremisesFactory from './cas3Premises'
 import cas3NewPremisesFactory from './cas3NewPremises'
+import cas3UpdatePremisesFactory from './cas3UpdatePremises'
 import cas3BedspacesFactory from './cas3Bedspaces'
 import cas3PremisesSummaryFactory from './cas3PremisesSummary'
 import cas3PremisesSearchResultFactory from './cas3PremisesSearchResult'
@@ -136,6 +137,7 @@ export {
   premisesSummaryFactory,
   cas3PremisesFactory,
   cas3NewPremisesFactory,
+  cas3UpdatePremisesFactory,
   cas3PremisesSummaryFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,

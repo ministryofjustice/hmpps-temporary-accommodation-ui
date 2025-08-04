@@ -6,6 +6,7 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3UpdatePremisesFactory,
   characteristicFactory,
   localAuthorityFactory,
   pduFactory,
@@ -49,6 +50,20 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
+    })
+  })
+
+  describe('updatePremises', () => {
+    it('on success returns the premises that has been updated', async () => {
+      const premises = cas3PremisesFactory.build()
+      const updatedPremises = cas3UpdatePremisesFactory.build({ ...premises })
+      premisesClient.update.mockResolvedValue(premises)
+
+      const result = await service.updatePremises(callConfig, premises.id, updatedPremises)
+      expect(result).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.update).toHaveBeenCalledWith(premises.id, updatedPremises)
     })
   })
 
@@ -404,6 +419,49 @@ describe('PremisesService', () => {
     })
   })
 
+  describe('shortSummaryList', () => {
+    const onlinePremises = cas3PremisesFactory.build({ status: 'online', startDate: '2025-04-05' })
+    const archivedPremises = cas3PremisesFactory.build({ status: 'archived', startDate: '2025-05-06' })
+
+    it('should return a short summary list for an online premises', () => {
+      const summaryList = service.shortSummaryList(onlinePremises)
+
+      expect(summaryList).toEqual({
+        rows: [
+          {
+            key: { text: 'Status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--green">Online</strong>' },
+          },
+          {
+            key: { text: 'Address' },
+            value: {
+              html: `${onlinePremises.addressLine1}<br />${onlinePremises.addressLine2}<br />${onlinePremises.town}<br />${onlinePremises.postcode}`,
+            },
+          },
+        ],
+      })
+    })
+
+    it('should return a short summary list for an archived premises', () => {
+      const summaryList = service.shortSummaryList(archivedPremises)
+
+      expect(summaryList).toEqual({
+        rows: [
+          {
+            key: { text: 'Status' },
+            value: { html: '<strong class="govuk-tag govuk-tag--grey">Archived</strong>' },
+          },
+          {
+            key: { text: 'Address' },
+            value: {
+              html: `${archivedPremises.addressLine1}<br />${archivedPremises.addressLine2}<br />${archivedPremises.town}<br />${archivedPremises.postcode}`,
+            },
+          },
+        ],
+      })
+    })
+  })
+
   describe('getReferenceData', () => {
     const localAuthority1 = localAuthorityFactory.build({ name: 'Newcastle' })
     const localAuthority2 = localAuthorityFactory.build({ name: 'Gateshead' })
@@ -463,22 +521,6 @@ describe('PremisesService', () => {
         [characteristic1, characteristic2, characteristic3, characteristic4],
         'premises',
       )
-    })
-  })
-
-  describe('createPremises', () => {
-    it('on success returns the premises that has been created', async () => {
-      const premises = cas3PremisesFactory.build()
-      const newPremises = cas3NewPremisesFactory.build({
-        reference: premises.reference,
-      })
-      premisesClient.create.mockResolvedValue(premises)
-
-      const createdPremises = await service.createPremises(callConfig, newPremises)
-      expect(createdPremises).toEqual(premises)
-
-      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(premisesClient.create).toHaveBeenCalledWith(newPremises)
     })
   })
 })

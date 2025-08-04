@@ -70,6 +70,7 @@ const managePathsCas3 = {
     search: premisesSearchPath,
     show: singlePremisesCas3Path,
     create: cas3PremisesPath,
+    update: singlePremisesCas3Path,
     bedspaces: {
       show: singleBedspacePath,
       create: bedspacesCas3Path,
@@ -106,6 +107,7 @@ export default {
       search: managePathsCas3.premises.search,
       show: managePathsCas3.premises.show,
       create: managePathsCas3.premises.create,
+      update: managePathsCas3.premises.update,
       bedspaces: {
         show: managePathsCas3.premises.bedspaces.show,
         create: managePathsCas3.premises.bedspaces.create,

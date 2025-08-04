@@ -10,6 +10,7 @@ import {
   cas3BedspacesFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
+  cas3UpdatePremisesFactory,
   probationRegionFactory,
   referenceDataFactory,
 } from '../../../../testutils/factories'
@@ -752,7 +753,18 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
         premises: property,
         summary: summaryList,
-        actions: [],
+        actions: [
+          {
+            text: 'Add a bedspace',
+            classes: 'govuk-button--secondary',
+            href: `/v2/properties/${property.id}/bedspaces/new`,
+          },
+          {
+            text: 'Edit property details',
+            classes: 'govuk-button--secondary',
+            href: `/v2/properties/${property.id}/edit`,
+          },
+        ],
         showPremises: true,
         subNavArr: navArr('premises'),
       })
@@ -780,7 +792,18 @@ describe('PremisesController', () => {
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
         premises: property,
         bedspaceSummaries: bedspaceSummaryLists,
-        actions: [],
+        actions: [
+          {
+            text: 'Add a bedspace',
+            classes: 'govuk-button--secondary',
+            href: `/v2/properties/${property.id}/bedspaces/new`,
+          },
+          {
+            text: 'Edit property details',
+            classes: 'govuk-button--secondary',
+            href: `/v2/properties/${property.id}/edit`,
+          },
+        ],
         showPremises: false,
         subNavArr: navArr('bedspaces'),
       })
@@ -885,6 +908,159 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.v2.new({}))
+    })
+  })
+
+  describe('edit', () => {
+    const premises = cas3PremisesFactory.build()
+    const summaryList: SummaryList = {
+      rows: [
+        {
+          key: { text: 'Property status' },
+          value: { html: `<strong class="govuk-tag govuk-tag--grey">Archived</strong>` },
+        },
+        {
+          key: { text: 'Address' },
+          value: {
+            html: `${premises.addressLine1}<br />${premises.addressLine2}<br />${premises.town}<br />${premises.postcode}`,
+          },
+        },
+      ],
+    }
+
+    it('should render the form', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      premisesService.shortSummaryList.mockReturnValue(summaryList)
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
+
+      const requestHandler = premisesController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/edit', {
+        premisesId: premises.id,
+        errors: {},
+        errorSummary: [],
+        localAuthorities: referenceData.localAuthorities,
+        characteristics: referenceData.characteristics,
+        probationRegions: filteredRegions,
+        pdus: referenceData.pdus,
+        summary: summaryList,
+        reference: premises.reference,
+        addressLine1: premises.addressLine1,
+        addressLine2: premises.addressLine2,
+        town: premises.town,
+        postcode: premises.postcode,
+        localAuthorityAreaId: premises.localAuthorityArea.id,
+        probationRegionId: premises.probationRegion.id,
+        probationDeliveryUnitId: premises.probationDeliveryUnit.id,
+        characteristicIds: premises.characteristics.map(ch => ch.id),
+        notes: premises.notes,
+        turnaroundWorkingDays: premises.turnaroundWorkingDays,
+      })
+    })
+
+    it('should render the form with errors and user input when the backend returns an error', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      premisesService.shortSummaryList.mockReturnValue(summaryList)
+
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
+
+      const requestHandler = premisesController.edit()
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/edit', {
+        localAuthorities: referenceData.localAuthorities,
+        characteristics: referenceData.characteristics,
+        pdus: referenceData.pdus,
+        probationRegions: filteredRegions,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+        summary: summaryList,
+        reference: premises.reference,
+        addressLine1: premises.addressLine1,
+        addressLine2: premises.addressLine2,
+        town: premises.town,
+        postcode: premises.postcode,
+        localAuthorityAreaId: premises.localAuthorityArea.id,
+        probationRegionId: premises.probationRegion.id,
+        probationDeliveryUnitId: premises.probationDeliveryUnit.id,
+        characteristicIds: premises.characteristics.map(ch => ch.id),
+        notes: premises.notes,
+        turnaroundWorkingDays: premises.turnaroundWorkingDays,
+      })
+    })
+  })
+
+  describe('update', () => {
+    it('should successfully update a premises and redirect to the show premises page', async () => {
+      const requestHandler = premisesController.update()
+
+      const premises = cas3PremisesFactory.build()
+      const updatedPremises = cas3UpdatePremisesFactory.build()
+
+      request.params.premisesId = premises.id
+
+      request.body = {
+        ...updatedPremises,
+        turnaroundWorkingDays: `${updatedPremises.turnaroundWorkingDayCount}`,
+      }
+
+      premisesService.updatePremises.mockResolvedValue(premises)
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.updatePremises).toHaveBeenCalledWith(callConfig, premises.id, { ...updatedPremises })
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property edited')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+    })
+
+    it('should fail to update a premises when the service returns an error', async () => {
+      const requestHandler = premisesController.update()
+
+      const premisesId = '789f2246-0b90-43ba-b394-6b2433591c92'
+      const updatedPremises = cas3UpdatePremisesFactory.build()
+
+      request.params.premisesId = premisesId
+
+      request.body = {
+        ...updatedPremises,
+        turnaroundWorkingDays: `${updatedPremises.turnaroundWorkingDayCount}`,
+        addressLine1: '',
+      }
+
+      const err = {
+        data: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': [{ propertyName: '$.addressLine1', errorType: 'empty' }],
+        },
+      }
+
+      premisesService.updatePremises.mockImplementation(() => {
+        throw err
+      })
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        err,
+        paths.premises.v2.edit({ premisesId }),
+      )
     })
   })
 })

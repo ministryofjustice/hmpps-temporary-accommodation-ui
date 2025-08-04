@@ -11,8 +11,10 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3UpdatePremisesFactory,
 } from '../../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
+import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'
 
 context('Premises', () => {
   beforeEach(() => {
@@ -667,7 +669,7 @@ context('Premises', () => {
       // Given I am signed in
       cy.signIn()
 
-      // And there is an online premises with an online premises in the database
+      // And there is an online premises with an online bedspace in the database
       const premises = cas3PremisesFactory.build({
         status: 'online',
         startDate: '2025-02-01',
@@ -939,7 +941,7 @@ context('Premises', () => {
       page.clickAddPropertyButton()
 
       // Then I should see the new property page
-      Page.verifyOnPage(PremisesNewPage, 'Add a property')
+      Page.verifyOnPage(PremisesNewPage)
     })
 
     it('should redirect to the new property when the property is created successfully', () => {
@@ -1062,7 +1064,7 @@ context('Premises', () => {
       page.clickSubmit()
 
       // Then I should be returned to the create page
-      Page.verifyOnPage(PremisesNewPage, 'Add a property')
+      Page.verifyOnPage(PremisesNewPage)
 
       // And I should see error messages
       page.shouldShowErrorMessagesForFields(
@@ -1077,6 +1079,275 @@ context('Premises', () => {
       page.validateEnteredCharacteristics(['Pub nearby', 'Wheelchair accessible'])
       page.validateEnteredAdditionalDetails('Lorem ipsum dolor sit amet.')
       page.validateEnteredWorkingDays(5)
+    })
+  })
+
+  describe('edit an existing property', () => {
+    beforeEach(() => {
+      // And there is reference data in the database
+      cy.task('stubPremisesReferenceDataV2')
+    })
+
+    it('should navigate to the edit property page from the show property page', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is an online premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Edit property details" action
+      showPage.clickEditPropertyDetailsButton()
+
+      // Then I should see the edit premises page
+      Page.verifyOnPage(PremisesEditPage)
+    })
+
+    it('should show the existing premises information on the edit page', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is an online premises in the database
+      const localAuthorityArea: LocalAuthorityArea = {
+        name: 'Northumberland',
+        id: 'a0eaa96e-f652-4b11-be05-b72a8229b1bb',
+        identifier: 'E06000057',
+      }
+      const probationDeliveryUnit: ProbationDeliveryUnit = {
+        name: 'North Tyneside and Northumberland',
+        id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
+      }
+      const characteristics: Array<Characteristic> = [
+        {
+          name: 'Pub nearby',
+          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+        {
+          name: 'Floor level access',
+          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+      ]
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        localAuthorityArea,
+        probationDeliveryUnit,
+        characteristics,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the edit premises page
+      const page = PremisesEditPage.visit(premises)
+
+      // Then I should see the existing premises information
+      page.shouldShowPropertySummary(premises)
+      page.validateEnteredInformation(premises)
+    })
+
+    it('should redirect to the existing property when the property is updated successfully', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is an online premises in the database
+      const localAuthorityArea: LocalAuthorityArea = {
+        name: 'Northumberland',
+        id: 'a0eaa96e-f652-4b11-be05-b72a8229b1bb',
+        identifier: 'E06000057',
+      }
+      const probationDeliveryUnit: ProbationDeliveryUnit = {
+        name: 'North Tyneside and Northumberland',
+        id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
+      }
+      const characteristics: Array<Characteristic> = [
+        {
+          name: 'Pub nearby',
+          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+        {
+          name: 'Floor level access',
+          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+      ]
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        startDate: '2025-06-07',
+        localAuthorityArea,
+        probationDeliveryUnit,
+        characteristics,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the edit property page
+      const page = PremisesEditPage.visit(premises)
+
+      // And update the premises details
+      const updatedLocalAuthorityArea: LocalAuthorityArea = {
+        id: '300e2a6a-019f-4f96-9454-0c071c1bfbf0',
+        name: 'North East',
+        identifier: 'E47000010',
+      }
+      const updatedPdu: ProbationDeliveryUnit = {
+        id: '1b74c3ef-6533-4780-9faf-1dfdfef75cfe',
+        name: 'Newcastle Upon Tyne',
+      }
+      const updatedCharacteristics: Array<Characteristic> = [
+        {
+          id: '62c4d8cf-b612-4110-9e27-5c29982f9fcf',
+          name: 'Not suitable for arson offenders',
+          serviceScope: 'temporary-accommodation',
+          modelScope: '*',
+        },
+        {
+          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
+          name: 'Pub nearby',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+      ]
+      const updatedPremises = cas3UpdatePremisesFactory.build({
+        localAuthorityAreaId: updatedLocalAuthorityArea.id,
+        probationDeliveryUnitId: updatedPdu.id,
+        characteristicIds: updatedCharacteristics.map(ch => ch.id),
+      })
+      page.clearForm()
+      page.enterReference(updatedPremises.reference)
+      page.enterAddress(
+        updatedPremises.addressLine1,
+        updatedPremises.addressLine2,
+        updatedPremises.town,
+        updatedPremises.postcode,
+      )
+      page.enterLocalAuthority(updatedLocalAuthorityArea.name)
+      page.enterPdu(updatedPdu.name)
+      page.enterCharacteristics(updatedCharacteristics.map(char => char.name))
+      page.enterAdditionalDetails(updatedPremises.notes)
+      page.enterWorkingDays(updatedPremises.turnaroundWorkingDayCount)
+
+      // And the backend responds with 200 ok
+      const expectedPremises = cas3PremisesFactory.build({
+        ...updatedPremises,
+        characteristics: updatedCharacteristics,
+        probationDeliveryUnit: updatedPdu,
+        localAuthorityArea: updatedLocalAuthorityArea,
+        startDate: premises.startDate,
+        id: premises.id,
+        status: premises.status,
+      })
+      cy.task('stubPremisesUpdateV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // When I submit the form
+      page.clickSubmit()
+
+      // Then the premises should have been updated in the backend
+      cy.task('verifyPremisesUpdateV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+
+        expect(requestBody.reference).equal(updatedPremises.reference)
+        expect(requestBody.addressLine1).equal(updatedPremises.addressLine1)
+        expect(requestBody.addressLine2).equal(updatedPremises.addressLine2)
+        expect(requestBody.town).equal(updatedPremises.town)
+        expect(requestBody.postcode).equal(updatedPremises.postcode)
+        expect(requestBody.localAuthorityAreaId).equal(updatedPremises.localAuthorityAreaId)
+        expect(requestBody.probationDeliveryUnitId).equal(updatedPremises.probationDeliveryUnitId)
+        expect(requestBody.characteristicIds).members(updatedPremises.characteristicIds)
+        expect(requestBody.notes.replaceAll('\r\n', '\n')).equal(updatedPremises.notes)
+        expect(requestBody.turnaroundWorkingDayCount).equal(updatedPremises.turnaroundWorkingDayCount)
+      })
+
+      // And I should be taken to the existing updated property
+      const showPage = Page.verifyOnPage(
+        PremisesShowPage,
+        `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`,
+      )
+
+      // And I should see the 'Property updated' banner
+      showPage.shouldShowPropertyUpdatedBanner()
+
+      // And I should see the property overview
+      showPage.shouldShowPremisesOverview(expectedPremises, 'Online', '7 June 2025')
+    })
+
+    it('should show errors when updating a property fails', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is an online premises in the database
+      const localAuthorityArea: LocalAuthorityArea = {
+        name: 'Northumberland',
+        id: 'a0eaa96e-f652-4b11-be05-b72a8229b1bb',
+        identifier: 'E06000057',
+      }
+      const probationDeliveryUnit: ProbationDeliveryUnit = {
+        name: 'North Tyneside and Northumberland',
+        id: 'ec5e98a5-bcaf-46a3-a0af-2c5f1decba01',
+      }
+      const characteristics: Array<Characteristic> = [
+        {
+          name: 'Pub nearby',
+          id: '684f919a-4c4a-4e80-9b3a-1dcd35873b3f',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+        {
+          name: 'Floor level access',
+          id: '99bb0f33-ff92-4606-9d1c-43bcf0c42ef4',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'premises',
+        },
+      ]
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        localAuthorityArea,
+        probationDeliveryUnit,
+        characteristics,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the edit premises page
+      const page = PremisesEditPage.visit(premises)
+
+      // And clear some required fields
+      page.enterReference('')
+      page.enterAddress('', premises.addressLine2, premises.town, '')
+
+      // And the backend responds with 400 bad request
+      cy.task('stubPremisesUpdateErrorsV2', {
+        premisesId: premises.id,
+        fields: ['reference', 'addressLine1', 'postcode'],
+      })
+
+      // When I submit the form
+      page.clickSubmit()
+
+      // Then I should be returned to the edit page
+      Page.verifyOnPage(PremisesEditPage)
+
+      // And I should see error messages
+      page.shouldShowErrorMessagesForFields(['reference', 'addressLine1', 'postcode'], 'empty')
+
+      // And I should see the previous property information
+      page.validateEnteredAddressLine2(premises.addressLine2)
+      page.validateEnteredTown(premises.town)
+      page.validateEnteredLocalAuthority(premises.localAuthorityArea.name)
+      page.validateEnteredCharacteristics(premises.characteristics.map(ch => ch.name))
+      page.validateEnteredAdditionalDetails(premises.notes)
+      page.validateEnteredWorkingDays(premises.turnaroundWorkingDays)
     })
   })
 })

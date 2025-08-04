@@ -19,27 +19,23 @@
 {% endblock %}
 
 {% block content %}
-    {% include "../../../_messages.njk" %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% include "../../../_messages.njk" %}
 
-    {% if premises.status === 'archived' %}
-        {% if not successMessages.length %}
-            {% set archivedBannerHtml %}
-                <p class="govuk-notification-banner__heading">This is an archived property.</p>
-                <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
-            {% endset %}
+            {% if premises.status === 'archived' %}
+                {% if not successMessages.length %}
+                    {% set archivedBannerHtml %}
+                        <p class="govuk-notification-banner__heading">This is an archived property</p>
+                        <p class="govuk-body">You cannot create a new bedspace, or make a new booking.</p>
+                    {% endset %}
 
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
                     {{ govukNotificationBanner({
                         html: archivedBannerHtml
                     }) }}
-                </div>
-            </div>
-        {% endif %}
-    {% endif %}
+                {% endif %}
+            {% endif %}
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
             {{ mojCasPageHeaderActions({
                 heading: {
                     text: premises.addressLine1 + ", " + premises.postcode,

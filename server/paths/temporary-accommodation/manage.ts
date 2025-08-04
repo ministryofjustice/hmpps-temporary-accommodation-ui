@@ -68,6 +68,8 @@ const paths: Record<string, any> = {
         show: singleBedspaceV2Path,
         create: bedspacesV2Path,
         list: bedspacesV2Path,
+        edit: singleBedspaceV2Path.path('edit'),
+        update: singleBedspaceV2Path,
       },
     },
   },

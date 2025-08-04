@@ -2,6 +2,7 @@ import { Cas3Bedspace, Cas3Bedspaces } from '@approved-premises/api'
 import { SuperAgentRequest } from 'superagent'
 import { getMatchingRequests, stubFor } from '../index'
 import paths from '../../../server/paths/api'
+import { errorStub } from '../utils'
 
 type BedspaceArguments = {
   premisesId: string
@@ -83,10 +84,43 @@ const stubBedspaceCreateErrors = (args: {
     },
   })
 
+const stubBedspaceUpdate = (params: { premisesId: string; bedspace: Cas3Bedspace }) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.bedspaces.update({ premisesId: params.premisesId, bedspaceId: params.bedspace.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: params.bedspace,
+    },
+  })
+
+const verifyBedspaceUpdate = async (params: { premisesId: string; bedspaceId: string }) =>
+  (
+    await getMatchingRequests({
+      method: 'PUT',
+      url: paths.cas3.premises.bedspaces.update({ premisesId: params.premisesId, bedspaceId: params.bedspaceId }),
+    })
+  ).body.requests
+
+const stubBedspaceUpdateErrors = (params: { fields: Array<string>; premisesId: string; bedspaceId: string }) =>
+  stubFor(
+    errorStub(
+      params.fields,
+      paths.cas3.premises.bedspaces.update({ premisesId: params.premisesId, bedspaceId: params.bedspaceId }),
+      'PUT',
+    ),
+  )
+
 export default {
   stubBedspaceV2,
   stubPremisesBedspacesV2,
   stubBedspaceCreate,
   verifyBedspaceCreate,
   stubBedspaceCreateErrors,
+  stubBedspaceUpdate,
+  verifyBedspaceUpdate,
+  stubBedspaceUpdateErrors,
 }

@@ -1,9 +1,13 @@
 import { Page, expect } from '@playwright/test'
-import { Property } from '@temporary-accommodation-ui/e2e'
+import { Bedspace, Property } from '@temporary-accommodation-ui/e2e'
 import { ListPropertiesPage } from '../../pages/manage/v2/listPropertiesPage'
 import { AddPropertyPage } from '../../pages/manage/v2/addPropertyPage'
 import { ViewPropertyPage } from '../../pages/manage/v2/viewPropertyPage'
 import { EditPropertyPage } from '../../pages/manage/v2/editPropertyPage'
+import { ViewBedspacePage } from '../../pages/manage/v2/viewBedspacePage'
+import { AddBedspacePage } from '../../pages/manage/v2/addBedspacePage'
+import { ViewBedspacesPage } from '../../pages/manage/v2/viewBedspacesPage'
+import { EditBedspacePage } from '../../pages/manage/v2/editBedspacePage'
 
 export const visitListPropertiesPage = async (page: Page) => {
   // TODO: navigate to the list properties page from the dashboard once the v2 pages are live in prod
@@ -58,4 +62,62 @@ export const editProperty = async (page: Page, property: Property, updatedProper
   const isBannerMessageDisplayed = await showUpdatedPropertyPage.isBannerMessageDisplayed('Property edited')
   expect(isBannerMessageDisplayed).toBe(true)
   await showUpdatedPropertyPage.shouldShowPropertyDetails(updatedProperty)
+}
+
+export const createBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  await showPropertyPage.clickAddABedspace()
+
+  const addBedspacePage = await AddBedspacePage.initialise(page)
+  await addBedspacePage.enterFormDetails(bedspace)
+  await addBedspacePage.clickSubmit()
+
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  const isBannerMessageDisplayed = await showBedspacePage.isBannerMessageDisplayed('Bedspace added')
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showBedspacePage.shouldShowPropertySummary(property)
+  await showBedspacePage.shouldShowBedspaceDetails(bedspace)
+}
+
+export const navigateToPropertyFromBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  await showBedspacePage.clickBackToProperty(shortAddress)
+}
+
+export const navigateToBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  await showPropertyPage.clickBedspacesOverview()
+
+  const showBedspacesPage = await ViewBedspacesPage.initialise(page, shortAddress)
+  await showBedspacesPage.shouldShowBedspace(bedspace)
+  await showBedspacesPage.clickManageBedspaceLink(bedspace)
+}
+
+export const showBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  await showBedspacePage.shouldShowPropertySummary(property)
+  await showBedspacePage.shouldShowBedspaceDetails(bedspace)
+}
+
+export const editBedspace = async (page: Page, property: Property, bedspace: Bedspace, updatedBedspace: Bedspace) => {
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  await showBedspacePage.shouldShowPropertySummary(property)
+  await showBedspacePage.shouldShowBedspaceDetails(bedspace)
+  await showBedspacePage.clickEditButton()
+
+  const editBedspacePage = await EditBedspacePage.initialise(page)
+  await editBedspacePage.shouldShowPropertySummary(property)
+  await editBedspacePage.shouldShowBedspaceDetails(bedspace)
+  await editBedspacePage.clearFormDetails()
+  await editBedspacePage.enterFormDetails(updatedBedspace)
+  await editBedspacePage.clickSubmit()
+
+  const showUpdatedBedspacePage = await ViewBedspacePage.initialise(page, updatedBedspace.reference)
+  const isBannerMessageDisplayed = await showUpdatedBedspacePage.isBannerMessageDisplayed('Bedspace edited')
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showBedspacePage.shouldShowPropertySummary(property)
+  await showBedspacePage.shouldShowBedspaceDetails(updatedBedspace)
 }

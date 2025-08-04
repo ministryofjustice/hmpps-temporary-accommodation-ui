@@ -5,6 +5,7 @@ import {
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
+  cas3UpdateBedspaceFactory,
   characteristicFactory,
   probationRegionFactory,
 } from '../../testutils/factories'
@@ -32,7 +33,20 @@ describe('BedspaceService', () => {
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
   })
 
-  describe('getSingleBedspaceDetails', () => {
+  describe('getSingleBedspace', () => {
+    it('should return a bedspace', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      bedspaceClient.find.mockResolvedValue(bedspace)
+
+      const result = await service.getSingleBedspace(callConfig, premisesId, bedspace.id)
+
+      expect(result).toBe(bedspace)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.find).toHaveBeenCalledWith(premisesId, bedspace.id)
+    })
+  })
+
+  describe('summaryList', () => {
     it.each([
       [
         cas3BedspaceFactory.build({ status: 'online', startDate: '2025-01-02T03:04:05.678912Z' }),
@@ -59,11 +73,7 @@ describe('BedspaceService', () => {
         'grey',
         '5 April 2025',
       ],
-    ])('returns the details for a single bedspace', async (bedspace, status, tagColour, formattedDate) => {
-      const bedspaceId = bedspace.id
-
-      bedspaceClient.find.mockResolvedValue(bedspace)
-
+    ])('returns the summaryList for a bedspace', async (bedspace, status, tagColour, formattedDate) => {
       const expectedSummary = {
         rows: [
           {
@@ -89,15 +99,9 @@ describe('BedspaceService', () => {
         ],
       }
 
-      const result = await service.getSingleBedspaceDetails(callConfig, premisesId, bedspaceId)
+      const result = service.summaryList(bedspace)
 
-      expect(result).toEqual({
-        ...bedspace,
-        summary: expectedSummary,
-      })
-
-      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
-      expect(bedspaceClient.find).toHaveBeenCalled()
+      expect(result).toEqual(expectedSummary)
     })
   })
 
@@ -114,6 +118,24 @@ describe('BedspaceService', () => {
 
       expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bedspaceClient.create).toHaveBeenCalledWith(premisesId, newBedspace)
+    })
+  })
+
+  describe('updateBedspace', () => {
+    it('on success returns the bedspace that has been updated', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      const updatedBedspace = cas3UpdateBedspaceFactory.build({
+        reference: bedspace.reference,
+        notes: bedspace.notes,
+        characteristicIds: bedspace.characteristics.map(ch => ch.id),
+      })
+      bedspaceClient.update.mockResolvedValue(bedspace)
+
+      const result = await service.updateBedspace(callConfig, premisesId, bedspace.id, updatedBedspace)
+      expect(result).toEqual(bedspace)
+
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.update).toHaveBeenCalledWith(premisesId, bedspace.id, updatedBedspace)
     })
   })
 

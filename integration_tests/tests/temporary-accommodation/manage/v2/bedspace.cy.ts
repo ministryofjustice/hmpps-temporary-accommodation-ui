@@ -1,4 +1,4 @@
-import { Cas3Premises } from '@approved-premises/api'
+import { Cas3Premises, Characteristic } from '@approved-premises/api'
 import {
   cas3BedspaceFactory,
   cas3BedspacesFactory,
@@ -6,6 +6,7 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3UpdateBedspaceFactory,
   characteristicFactory,
 } from '../../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceNew'
@@ -15,6 +16,7 @@ import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser
 import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
 import Page from '../../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
+import BedspaceEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceEdit'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -276,6 +278,183 @@ context('Bedspace', () => {
       page.shouldShowStartDate('4 March 2024')
       page.shouldShowDetails()
       page.shouldShowAdditionalDetails()
+    })
+  })
+
+  describe('editing a bedspace', () => {
+    it('should navigate to the edit bedspace page from the show bedspace page', () => {
+      // And there is online premises in the database with an online bedspace
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the show bedspace page
+      const showPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // And click on the "Edit bedspace details" action
+      showPage.clickEditPropertyDetailsAction()
+
+      // Then I should see the edit bedspace page
+      Page.verifyOnPage(BedspaceEditPage)
+    })
+
+    it('should show the existing bedspace information on the edit page', () => {
+      // And there is an online premises in the database with an online bedspace
+      const characteristics: Array<Characteristic> = [
+        {
+          id: '12e2e689-b3fb-469d-baec-2fb68e15e85b',
+          name: 'Single bed',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+        {
+          id: '7dd3bac5-3d1c-4acb-b110-b1614b2c95d8',
+          name: 'Shared kitchen',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+      ]
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the edit bedspace page
+      const page = BedspaceEditPage.visit(premises, bedspace)
+
+      // Then I should see the existing bedspace information
+      page.shouldShowPropertySummary(premises)
+      page.validateEnteredInformation(bedspace)
+    })
+
+    it('should redirect to the existing bedspace when the bedspace is updated successfully', () => {
+      // And there is an online premises in the database with an online bedspace
+      const characteristics: Array<Characteristic> = [
+        {
+          id: '12e2e689-b3fb-469d-baec-2fb68e15e85b',
+          name: 'Single bed',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+        {
+          id: '7dd3bac5-3d1c-4acb-b110-b1614b2c95d8',
+          name: 'Shared kitchen',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+      ]
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the edit bedspace page
+      const page = BedspaceEditPage.visit(premises, bedspace)
+
+      // And update the bedspace details
+      const updatedCharacteristics: Array<Characteristic> = [
+        {
+          id: 'e730bdea-6157-4910-b1b0-450b29bf0c9f',
+          name: 'Shared bathroom',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+        {
+          id: '08b756e2-0b82-4f49-a124-35ea4ebb1634',
+          name: 'Double bed',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+      ]
+      const updatedBedspace = cas3UpdateBedspaceFactory.build({
+        characteristicIds: updatedCharacteristics.map(ch => ch.id),
+      })
+      page.clearForm()
+      page.enterReference(updatedBedspace.reference)
+      page.enterCharacteristics(updatedCharacteristics.map(ch => ch.name))
+      page.enterAdditionalDetails(updatedBedspace.notes)
+
+      // And the backend responds with 200 ok
+      const expectedBedspace = cas3BedspaceFactory.build({
+        ...bedspace,
+        ...updatedBedspace,
+        characteristics: updatedCharacteristics,
+      })
+      cy.task('stubBedspaceUpdate', { premisesId: premises.id, bedspace })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: expectedBedspace })
+
+      // When I submit the form
+      page.clickSubmit()
+
+      // Then the bedspace should have been updated in the backend
+      cy.task('verifyBedspaceUpdate', { premisesId: premises.id, bedspaceId: bedspace.id }).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+
+        expect(requestBody.reference).equal(updatedBedspace.reference)
+        expect(requestBody.characteristicIds).members(updatedBedspace.characteristicIds)
+        expect(requestBody.notes).equal(updatedBedspace.notes)
+      })
+
+      // And I should be taken to the existing updated bedspace
+      const showPage = Page.verifyOnPage(BedspaceShowPage, premises, expectedBedspace)
+
+      // And I should see the "Bedspace updated" banner
+      showPage.shouldShowBedspaceUpdatedBanner()
+
+      // And I should see the bedspace details
+      showPage.shouldShowStatus('Online')
+      showPage.shouldShowDetails()
+      showPage.shouldShowAdditionalDetails()
+    })
+
+    it('should show errors when editing a bedspace fails', () => {
+      // And there is an online premises in the database with an online bedspace
+      const characteristics: Array<Characteristic> = [
+        {
+          id: '12e2e689-b3fb-469d-baec-2fb68e15e85b',
+          name: 'Single bed',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+        {
+          id: '7dd3bac5-3d1c-4acb-b110-b1614b2c95d8',
+          name: 'Shared kitchen',
+          serviceScope: 'temporary-accommodation',
+          modelScope: 'room',
+        },
+      ]
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the edit bedspace page
+      const page = BedspaceEditPage.visit(premises, bedspace)
+
+      // And clear the bedspace reference
+      page.getTextInputByIdAndClear('reference')
+
+      // And the backend responds with 400
+      cy.task('stubBedspaceUpdateErrors', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        fields: ['reference'],
+      })
+
+      // When the form is submitted
+      page.clickSubmit()
+
+      // Then I should be returned to the edit bedspace page
+      Page.verifyOnPage(BedspaceEditPage)
+
+      // And I should see an error message for the missing reference
+      page.shouldShowErrorMessagesForFields(['reference'], 'empty')
+
+      // And I should see the previous bedspace information
+      page.validateEnteredCharacteristics(bedspace.characteristics.map(ch => ch.name))
+      page.validateEnteredAdditionalDetails(bedspace.notes)
     })
   })
 })

@@ -3,6 +3,7 @@ import {
   type Cas3BedspaceStatus,
   Cas3Bedspaces,
   Cas3NewBedspace,
+  Cas3UpdateBedspace,
   Characteristic,
 } from '@approved-premises/api'
 import { SummaryList } from '@approved-premises/ui'
@@ -24,19 +25,9 @@ export default class BedspaceService {
     private readonly referenceDataClientFactory: RestClientBuilder<ReferenceDataClient>,
   ) {}
 
-  async getSingleBedspaceDetails(
-    callConfig: CallConfig,
-    premisesId: string,
-    bedspaceId: string,
-  ): Promise<Cas3Bedspace & { summary: SummaryList }> {
+  async getSingleBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-
-    const bedspace = await bedspaceClient.find(premisesId, bedspaceId)
-
-    return {
-      ...bedspace,
-      summary: this.summaryList(bedspace),
-    }
+    return bedspaceClient.find(premisesId, bedspaceId)
   }
 
   async getBedspacesForPremises(callConfig: CallConfig, premisesId: string): Promise<Cas3Bedspaces> {
@@ -118,5 +109,15 @@ export default class BedspaceService {
   ): Promise<Cas3Bedspace> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.create(premisesId, newBedspace)
+  }
+
+  async updateBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    updatedBedspace: Cas3UpdateBedspace,
+  ): Promise<Cas3Bedspace> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.update(premisesId, bedspaceId, updatedBedspace)
   }
 }

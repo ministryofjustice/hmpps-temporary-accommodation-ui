@@ -75,4 +75,16 @@ export default class BedspaceShowPage extends Page {
     const lostBedListingComponent = new LostBedListingComponent(lostBed)
     lostBedListingComponent.shouldShowLostBedDetails()
   }
+
+  clickEditPropertyDetailsAction(): void {
+    // TODO: uncomment when additional actions are added
+    // cy.get('button').contains('Actions').parent().click()
+    // cy.get('button').contains('Actions').parent().siblings('ul').contains('Edit bedspace details').click()
+
+    cy.get('[role="button"]').contains('Edit bedspace details').click()
+  }
+
+  shouldShowBedspaceUpdatedBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Bedspace edited')
+  }
 }

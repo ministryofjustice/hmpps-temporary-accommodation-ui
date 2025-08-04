@@ -53,11 +53,11 @@ export class EditPropertyPage extends EditablePropertyPage {
 
     await expect(this.getSelectedOptionByLabel('What is the PDU?')).toHaveText(property.pdu)
 
-    // eslint-disable-next-line no-restricted-syntax
-    for (const characteristic of property.propertyAttributesValues) {
-      // eslint-disable-next-line no-await-in-loop
-      await expect(this.findCheckboxByLabel(characteristic, true)).toBeChecked()
-    }
+    await Promise.all(
+      property.propertyAttributesValues.map(async attribute =>
+        expect(this.findCheckboxByLabel(attribute, true)).toBeChecked(),
+      ),
+    )
 
     await expect(this.page.getByLabel('Additional property details')).toContainText(property.notes)
 
@@ -68,19 +68,11 @@ export class EditPropertyPage extends EditablePropertyPage {
     ).toHaveValue(`${property.turnaroundWorkingDayCount}`)
   }
 
-  private getRowTextByLabel(label: string, exact: boolean = false): Locator {
-    return this.page.getByText(label, { exact }).locator('..').locator('dd')
-  }
-
   private getInputsByLabel(label: string, exact: boolean = false): Locator {
     return this.page.getByText(label, { exact }).locator('..').locator('input')
   }
 
   private getSelectedOptionByLabel(label: string, exact: boolean = false): Locator {
     return this.page.getByLabel(label, { exact }).locator('option[selected]')
-  }
-
-  private findCheckboxByLabel(label: string, exact: boolean = false) {
-    return this.page.getByLabel(label, { exact }).locator('..').locator('input')
   }
 }

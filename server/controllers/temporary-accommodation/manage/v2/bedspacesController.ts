@@ -48,6 +48,14 @@ export default class BedspacesController {
       const premises = await this.premisesService.getSinglePremisesDetails(callConfig, premisesId)
       const actions: Array<PageHeadingBarItem> = []
 
+      if (bedspace.status !== 'archived') {
+        actions.push({
+          text: 'Archive',
+          classes: 'govuk-button--secondary moj-button-menu__item',
+          href: paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+        })
+      }
+
       return res.render('temporary-accommodation/v2/bedspaces/show', { premises, bedspace, actions })
     }
   }
@@ -71,6 +79,68 @@ export default class BedspacesController {
         res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.new({ premisesId }))
+      }
+    }
+  }
+
+  archive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspaceDetails(callConfig, premisesId, bedspaceId)
+      const archiveOption = userInput.archiveOption || 'today'
+
+      return res.render('temporary-accommodation/v2/bedspaces/archive', {
+        bedspace,
+        params: req.params,
+        errors,
+        errorSummary,
+        ...userInput,
+        archiveOption,
+      })
+    }
+  }
+
+  archiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, bedspaceId } = req.params
+      const { archiveOption } = req.body
+
+      const errors: Record<string, string> = {}
+
+      let archiveDate: string | undefined
+
+      if (archiveOption === 'today') {
+        archiveDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (archiveOption === 'anotherDate') {
+        const { archiveDate: archiveDateString } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'archiveDate')
+        archiveDate = archiveDateString || ''
+      } else {
+        errors.archiveOption = 'You must select when to archive the bedspace'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', errors)
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
+      }
+
+      try {
+        const callConfig = extractCallConfig(req)
+        await this.bedspaceService.archiveBedspace(callConfig, premisesId, bedspaceId, archiveDate)
+
+        req.flash('success', 'Bedspace archived')
+        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+          'bedspaceArchive',
+        )
       }
     }
   }

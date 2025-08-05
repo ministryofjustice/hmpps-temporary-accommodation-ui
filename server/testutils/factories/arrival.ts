@@ -9,9 +9,13 @@ export default Factory.define<Arrival>(() => {
   sevenDays.setDate(sevenDays.getDate() - 7)
   const arrivalDate = faker.date.soon({ days: 7, refDate: sevenDays })
 
-  const maxDepartureDate = new Date(arrivalDate)
-  maxDepartureDate.setDate(maxDepartureDate.getDate() + 84)
-  const expectedDepartureDate = faker.date.soon({ days: 84, refDate: arrivalDate })
+  const dayAfterArrival = new Date(arrivalDate)
+  dayAfterArrival.setDate(dayAfterArrival.getDate() + 1)
+
+  const eightyFourDaysAfterArrival = new Date(arrivalDate)
+  eightyFourDaysAfterArrival.setDate(eightyFourDaysAfterArrival.getDate() + 84)
+
+  const expectedDepartureDate = faker.date.between({ from: dayAfterArrival, to: eightyFourDaysAfterArrival })
 
   return {
     arrivalDate: DateFormats.dateObjToIsoDate(arrivalDate),

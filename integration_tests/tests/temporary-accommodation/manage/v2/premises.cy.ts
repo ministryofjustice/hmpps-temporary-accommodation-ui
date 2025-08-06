@@ -830,6 +830,40 @@ context('Premises', () => {
       // Then I should see the bedspace summaries
       showPage.shouldShowBedspaceSummaries(bedspaces)
     })
+
+    it('should show an online property with no bedspaces', () => {
+      // Given I am signed in
+      cy.signIn()
+
+      // And there is an online premises with no bedspaces in the database
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        startDate: '2025-02-01',
+        totalUpcomingBedspaces: 0,
+        totalOnlineBedspaces: 0,
+        totalArchivedBedspaces: 0,
+      })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [],
+        totalOnlineBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+        totalArchivedBedspaces: 0,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+
+      // When I visit the show premises page
+      const page = PremisesShowPage.visit(premises)
+
+      // When I click on the "Bedspaces overview" link
+      page.clickBedspacesOverviewTab()
+
+      // Then I should see the "No bedspaces" message
+      page.shouldShowNoBedspaces()
+
+      // And I should see the "Add a bedspace" link
+      page.shouldShowAddBedspaceLink()
+    })
   })
 
   it('should toggle the sort between PDU and LA', () => {

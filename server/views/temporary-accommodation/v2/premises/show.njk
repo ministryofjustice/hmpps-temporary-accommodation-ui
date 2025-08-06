@@ -55,18 +55,21 @@
         </div>
     </div>
 
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">Property overview</h2>
-            {% if premises.totalUpcomingBedspaces > 0 %}
-                <p class="govuk-body govuk-!-margin-bottom-1">Upcoming bedspaces: {{ premises.totalUpcomingBedspaces }}</p>
-            {% endif %}
-            <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ premises.totalOnlineBedspaces }}</p>
-            <p class="govuk-body">Archived bedspaces: {{ premises.totalArchivedBedspaces }}</p>
-        </div>
-    </div>
+    {% set bedspaceCounts %}
+        {% if premises.totalUpcomingBedspaces > 0 %}
+            <p class="govuk-body govuk-!-margin-bottom-1">Upcoming bedspaces: {{ premises.totalUpcomingBedspaces }}</p>
+        {% endif %}
+        <p class="govuk-body govuk-!-margin-bottom-1">Online bedspaces: {{ premises.totalOnlineBedspaces }}</p>
+        <p class="govuk-body">Archived bedspaces: {{ premises.totalArchivedBedspaces }}</p>
+    {% endset %}
 
     {% if showPremises %}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <h2 class="govuk-heading-m">Property overview</h2>
+                {{ bedspaceCounts | safe }}
+            </div>
+        </div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 {{ govukSummaryList({
@@ -82,27 +85,37 @@
     {% else %}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-                {% for bedspace in bedspaceSummaries %}
-                    {{ govukSummaryList({
-                        card: {
-                            title: {
-                                text: "Bedspace reference: " + bedspace.reference
+                <h2 class="govuk-heading-m">Bedspaces overview</h2>
+
+                {% if bedspaceSummaries.length > 0 %}
+                    {{ bedspaceCounts | safe }}
+                    {% for bedspace in bedspaceSummaries %}
+                        {{ govukSummaryList({
+                            card: {
+                                title: {
+                                    text: "Bedspace reference: " + bedspace.reference
+                                },
+                                actions: {
+                                    items: [
+                                        {
+                                            text: "View bedspace",
+                                            href: addPlaceContext(paths.premises.v2.bedspaces.show({
+                                                premisesId: premises.id,
+                                                bedspaceId: bedspace.id
+                                            }))
+                                        }
+                                    ]
+                                }
                             },
-                            actions: {
-                                items: [
-                                    {
-                                        text: "View bedspace",
-                                        href: addPlaceContext(paths.premises.v2.bedspaces.show({
-                                            premisesId: premises.id,
-                                            bedspaceId: bedspace.id
-                                        }))
-                                    }
-                                ]
-                            }
-                        },
-                        rows: bedspace.summary.rows
-                    }) }}
-                {% endfor %}
+                            rows: bedspace.summary.rows
+                        }) }}
+                    {% endfor %}
+                {% else %}
+                    <p>No bedspaces.</p>
+                    <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.v2.bedspaces.new({ premisesId: premises.id }) }}">
+                        Add a bedspace
+                    </a>
+                {% endif %}
             </div>
         </div>
     {% endif %}

@@ -102,6 +102,18 @@ export default class PremisesShowPage extends Page {
     })
   }
 
+  shouldShowNoBedspaces(): void {
+    cy.get('h2').contains('Bedspaces overview').siblings('p').contains('No bedspaces.')
+  }
+
+  shouldShowAddBedspaceLink(): void {
+    cy.get('h2').contains('Bedspaces overview').siblings('a').contains('Add a bedspace')
+  }
+
+  clickNewBedspaceLink(): void {
+    cy.get('h2').contains('Bedspaces overview').siblings('a').contains('Add a bedspace').click()
+  }
+
   clickViewBedspaceLink(bedspace: Cas3Bedspace): void {
     cy.get('main .govuk-summary-card')
       .contains(`Bedspace reference: ${bedspace.reference}`)

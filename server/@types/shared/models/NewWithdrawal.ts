@@ -3,9 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { WithdrawalReason } from './WithdrawalReason';
-/**
- * details of the withdrawal
- */
 export type NewWithdrawal = {
     otherReason?: string;
     reason: WithdrawalReason;

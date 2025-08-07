@@ -24,12 +24,6 @@ export const premisesActions = (premises: Premises): Array<PageHeadingBarItem> =
 
 export const allStatuses: Array<StatusInfo> = [
   {
-    name: 'Pending',
-    id: 'pending',
-    colour: 'yellow',
-    isActive: false,
-  },
-  {
     name: 'Online',
     id: 'active',
     colour: 'turquoise',

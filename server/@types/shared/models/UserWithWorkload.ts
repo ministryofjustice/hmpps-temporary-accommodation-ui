@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ApArea } from './ApArea';
-import type { ApprovedPremisesUserRole } from './ApprovedPremisesUserRole';
 import type { NamedId } from './NamedId';
 import type { ProbationDeliveryUnit } from './ProbationDeliveryUnit';
 import type { ProbationRegion } from './ProbationRegion';
@@ -26,7 +25,6 @@ export type UserWithWorkload = {
     probationDeliveryUnit?: ProbationDeliveryUnit;
     qualifications?: Array<UserQualification>;
     region: ProbationRegion;
-    roles?: Array<ApprovedPremisesUserRole>;
     service: string;
     telephoneNumber?: string;
 };

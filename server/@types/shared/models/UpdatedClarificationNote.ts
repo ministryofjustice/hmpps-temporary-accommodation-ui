@@ -2,9 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * Clarification note
- */
 export type UpdatedClarificationNote = {
     response: string;
     responseReceivedOn: string;

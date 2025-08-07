@@ -2,7 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type NewReferralHistoryUserNote = {
-    message: string;
+export type Cas3BookingSearchResultPersonSummary = {
+    crn: string;
+    name?: string;
 };
 

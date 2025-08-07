@@ -11,8 +11,6 @@ export type ApprovedPremisesApplicationSummary = (ApplicationSummary & {
     createdByUserId?: string;
     hasRequestsForPlacement?: boolean;
     isEmergencyApplication?: boolean;
-    isEsapApplication?: boolean;
-    isPipeApplication?: boolean;
     isWithdrawn?: boolean;
     isWomensApplication?: boolean;
     releaseType?: ReleaseTypeOption;

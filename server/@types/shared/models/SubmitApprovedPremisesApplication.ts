@@ -16,9 +16,16 @@ export type SubmitApprovedPremisesApplication = (SubmitApplication & {
     apAreaId?: string;
     apType?: ApType;
     applicantUserDetails?: Cas1ApplicationUserDetails;
+    /**
+     * If the applicant has requested a placement, this is the requested arrival date
+     */
     arrivalDate?: string;
     caseManagerIsNotApplicant?: boolean;
     caseManagerUserDetails?: Cas1ApplicationUserDetails;
+    /**
+     * If the applicant has requested a placement, this is the requested duration in days
+     */
+    duration?: number;
     /**
      * noticeType should be used to indicate if this an emergency application
      */

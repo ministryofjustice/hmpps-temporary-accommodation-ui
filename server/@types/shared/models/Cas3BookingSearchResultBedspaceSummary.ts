@@ -2,11 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { BedStatus } from './BedStatus';
-export type BedSummary = {
+export type Cas3BookingSearchResultBedspaceSummary = {
     id: string;
-    name: string;
-    roomName: string;
-    status: BedStatus;
+    reference: string;
 };
 

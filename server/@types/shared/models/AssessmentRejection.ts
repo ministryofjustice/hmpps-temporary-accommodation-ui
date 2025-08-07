@@ -2,9 +2,6 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-/**
- * Rejection info
- */
 export type AssessmentRejection = {
     agreeWithShortNoticeReason?: boolean;
     agreeWithShortNoticeReasonComments?: string;

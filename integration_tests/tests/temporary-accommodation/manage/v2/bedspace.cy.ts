@@ -114,17 +114,16 @@ context('Bedspace', () => {
 
   describe('creating a bedspace', () => {
     let premises: Cas3Premises
-    let page: BedspaceNewPage
 
     beforeEach(() => {
-      // When I visit the new bedspace page
       premises = cas3PremisesFactory.build({ status: 'online' })
-
       cy.task('stubSinglePremisesV2', premises)
-      page = BedspaceNewPage.visit(premises)
     })
 
     it('allows me to create a bedspace', () => {
+      // When I visit the new bedspace page
+      const page = BedspaceNewPage.visit(premises)
+
       // Then I should see the bedspace details
       page.shouldShowBedspaceDetails()
 
@@ -158,8 +157,41 @@ context('Bedspace', () => {
       bedspaceShowPage.shouldShowBanner('Bedspace added')
     })
 
+    it('should allow me to navigate to the new bedspace page from a premises with no bedspaces', () => {
+      // And there is an online premises with no bedspaces in the database
+      premises = cas3PremisesFactory.build({
+        status: 'online',
+        totalOnlineBedspaces: 0,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [],
+        totalOnlineBedspaces: 0,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+
+      // When I navigate to the show premises page
+      const premisesPage = PremisesShowPage.visit(premises)
+
+      // And click on the bedspaces tab
+      premisesPage.clickBedspacesOverviewTab()
+
+      // And click on the "Add a bedspace" link
+      premisesPage.clickNewBedspaceLink()
+
+      // Then I should be taken to the add bedspace page
+      Page.verifyOnPage(BedspaceNewPage, premises)
+    })
+
     describe('shows errors', () => {
       it('when no bedspace reference is entered', () => {
+        // When I visit the new bedspace page
+        const page = BedspaceNewPage.visit(premises)
+
         // And I miss required fields
         cy.task('stubBedspaceCreateErrors', { premisesId: premises.id, errors: [{ field: 'reference' }] })
         page.clickSubmit()
@@ -169,6 +201,9 @@ context('Bedspace', () => {
       })
 
       it('when an invalid bedspace start date is entered', () => {
+        // When I visit the new bedspace page
+        const page = BedspaceNewPage.visit(premises)
+
         // And I enter an invalid date
         cy.task('stubBedspaceCreateErrors', {
           premisesId: premises.id,

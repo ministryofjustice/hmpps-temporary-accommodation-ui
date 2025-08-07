@@ -4,6 +4,7 @@ import PremisesClient from './premisesClient'
 import { CallConfig } from '../restClient'
 import config from '../../config'
 import {
+  cas3ArchivePremisesFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
@@ -95,6 +96,22 @@ describe('PremisesClient', () => {
         .reply(200, premises)
 
       const result = await premisesClient.update(premisesId, payload)
+      expect(result).toEqual(premises)
+    })
+  })
+
+  describe('archive', () => {
+    it('should return the premises that has been archived', async () => {
+      const premisesId = 'fc321526-7d54-4e1b-94b4-8df4225d0763'
+      const premises = cas3PremisesFactory.build({ id: premisesId })
+      const payload = cas3ArchivePremisesFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(paths.cas3.premises.archive({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const result = await premisesClient.archive(premisesId, payload)
       expect(result).toEqual(premises)
     })
   })

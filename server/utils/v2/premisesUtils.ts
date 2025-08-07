@@ -17,6 +17,12 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
       classes: 'govuk-button--secondary',
       href: paths.premises.v2.bedspaces.new({ premisesId: premises.id }),
     })
+
+    actions.push({
+      text: 'Archive property',
+      classes: 'govuk-button--secondary',
+      href: paths.premises.v2.archive({ premisesId: premises.id }),
+    })
   }
 
   return actions.sort((a, b) => a.text.localeCompare(b.text))

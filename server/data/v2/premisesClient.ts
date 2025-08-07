@@ -37,4 +37,8 @@ export default class PremisesClient {
   async update(premisesId: string, data: Cas3UpdatePremises) {
     return this.restClient.put<Cas3Premises>({ path: paths.cas3.premises.update({ premisesId }), data })
   }
+
+  async archive(premisesId: string, data: { endDate: string }) {
+    return this.restClient.post<Cas3Premises>({ path: paths.cas3.premises.archive({ premisesId }), data })
+  }
 }

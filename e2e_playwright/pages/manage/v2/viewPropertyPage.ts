@@ -15,7 +15,7 @@ export class ViewPropertyPage extends BasePage {
 
   async shouldShowPropertyDetails(property: Property) {
     await expect(this.page.locator('.govuk-summary-card h2').first()).toContainText(property.name)
-    await expect(this.getRowTextByLabel('Property status')).toContainText('Online')
+    await this.shouldShowPropertyStatus('Online')
     await expect(this.getRowTextByLabel('Start date')).toContainText(
       DateFormats.isoDateToUIDate(DateFormats.dateObjToIsoDate(new Date())),
     )
@@ -51,5 +51,14 @@ export class ViewPropertyPage extends BasePage {
 
   async clickBedspacesOverview() {
     await this.page.getByText('Bedspaces overview').click()
+  }
+
+  async clickArchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Archive property').click()
+  }
+
+  async shouldShowPropertyStatus(status: string) {
+    await expect(this.getRowTextByLabel('Property status')).toContainText(status)
   }
 }

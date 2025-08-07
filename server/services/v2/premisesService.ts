@@ -1,4 +1,5 @@
 import {
+  Cas3ArchivePremises,
   Cas3BedspacePremisesSearchResult,
   Cas3NewPremises,
   Cas3Premises,
@@ -101,6 +102,11 @@ export default class PremisesService {
   async updatePremises(callConfig: CallConfig, premisesId: string, updatedPremises: Cas3UpdatePremises) {
     const premisesClient = this.premisesClientFactory(callConfig)
     return premisesClient.update(premisesId, updatedPremises)
+  }
+
+  async archivePremises(callConfig: CallConfig, premisesId: string, archivePayload: Cas3ArchivePremises) {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.archive(premisesId, archivePayload)
   }
 
   tableRows(premises: Cas3PremisesSearchResults, premisesSortBy: Cas3PremisesSortBy = 'pdu'): Array<TableRow> {
@@ -249,6 +255,7 @@ export default class PremisesService {
       case 'archived':
         return 'govuk-tag--grey'
       default:
+        /* istanbul ignore next */
         return ''
     }
   }

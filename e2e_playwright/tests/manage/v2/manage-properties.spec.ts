@@ -1,6 +1,7 @@
 import { test } from '../../../test'
 import { signIn } from '../../../steps/signIn'
 import {
+  archiveProperty,
   createProperty,
   editProperty,
   navigateToProperty,
@@ -38,4 +39,14 @@ test('Edit a property', async ({ page, assessor }) => {
   await createProperty(page, property)
   await editProperty(page, property, updatedProperty)
   await showProperty(page, updatedProperty)
+})
+
+test('Archive a property', async ({ page, assessor }) => {
+  const property = getProperty()
+
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await showProperty(page, property)
+  await archiveProperty(page, property)
 })

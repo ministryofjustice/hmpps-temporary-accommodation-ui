@@ -1,4 +1,4 @@
-import { Locator, Page, expect } from '@playwright/test'
+import { Page, expect } from '@playwright/test'
 import { Property } from '@temporary-accommodation-ui/e2e'
 import { BasePage } from '../../basePage'
 import { DateFormats } from '../../../../server/utils/dateUtils'
@@ -44,7 +44,12 @@ export class ViewPropertyPage extends BasePage {
     await this.page.getByText('Edit property details').click()
   }
 
-  private getRowTextByLabel(label: string, exact: boolean = false): Locator {
-    return this.page.getByText(label, { exact }).locator('..').locator('dd')
+  async clickAddABedspace() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Add a bedspace').click()
+  }
+
+  async clickBedspacesOverview() {
+    await this.page.getByText('Bedspaces overview').click()
   }
 }

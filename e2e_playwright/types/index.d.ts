@@ -28,6 +28,13 @@ declare module '@temporary-accommodation-ui/e2e' {
     turnaroundWorkingDayCount: number
   }
 
+  export type Bedspace = {
+    reference: string
+    startDate: Date
+    details: Array<string>
+    additionalDetails: string
+  }
+
   export type TestOptions = {
     assessor: UserFullDetails
     referrer: UserLoginDetails

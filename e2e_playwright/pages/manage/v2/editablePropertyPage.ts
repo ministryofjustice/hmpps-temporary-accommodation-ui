@@ -20,7 +20,7 @@ export class EditablePropertyPage extends BasePage {
     property.pdu = await this.selectOptionAtRandom('What is the PDU?', 'Select a PDU')
 
     const characteristicsCheckboxes = await this.page.getByRole('checkbox').all()
-    property.propertyAttributesValues = await this.checkRandomBoxes(characteristicsCheckboxes)
+    property.propertyAttributesValues = await this.checkRandomCheckboxes(characteristicsCheckboxes)
 
     await this.page.getByLabel('Additional property details').fill(property.notes)
     await this.page
@@ -39,22 +39,5 @@ export class EditablePropertyPage extends BasePage {
 
     const index = Math.ceil(Math.random() * (options.length - 1))
     return options[index]
-  }
-
-  private async checkRandomBoxes(checkBoxes: Array<Locator>): Promise<Array<string>> {
-    const labels = []
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const checkbox of checkBoxes.filter(_ => Math.random() > 0.5)) {
-      const parent = checkbox.locator('..')
-      const label = parent.locator('label').first()
-      // eslint-disable-next-line no-await-in-loop
-      await label.click()
-      // eslint-disable-next-line no-await-in-loop
-      const labelText = await label.innerText()
-      labels.push(labelText)
-    }
-
-    return labels
   }
 }

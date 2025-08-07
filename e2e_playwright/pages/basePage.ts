@@ -57,6 +57,24 @@ export class BasePage {
     return randomCheckbox.getAttribute('value')
   }
 
+  async checkRandomCheckboxes(checkBoxes: Array<Locator>): Promise<Array<string>> {
+    const labels = []
+
+    // using a for loop with awaits here as playwright was unreliable checking checkboxes with Promise.all and map/forEach
+    // eslint-disable-next-line no-restricted-syntax
+    for (const checkbox of checkBoxes.filter(_ => Math.random() > 0.5)) {
+      const parent = checkbox.locator('..')
+      const label = parent.locator('label').first()
+      // eslint-disable-next-line no-await-in-loop
+      await label.click()
+      // eslint-disable-next-line no-await-in-loop
+      const labelText = await label.innerText()
+      labels.push(labelText)
+    }
+
+    return labels
+  }
+
   async getTableRow(expectedStringInRow: string) {
     const tableRows = await this.page.locator('.govuk-table__row').all()
     const promises: Array<Promise<string>> = []
@@ -74,5 +92,13 @@ export class BasePage {
       tableRowIndex: foundRowIndex,
       tableRow: foundRowIndex !== -1 ? this.page.locator('.govuk-table__row').nth(foundRowIndex) : undefined,
     }
+  }
+
+  getRowTextByLabel(label: string, exact: boolean = false): Locator {
+    return this.page.getByText(label, { exact }).locator('..').locator('dd')
+  }
+
+  findCheckboxByLabel(label: string, exact: boolean = false) {
+    return this.page.getByLabel(label, { exact }).locator('..').locator('input')
   }
 }

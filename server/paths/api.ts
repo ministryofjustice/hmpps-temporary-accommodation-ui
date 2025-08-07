@@ -75,6 +75,7 @@ const managePathsCas3 = {
       show: singleBedspacePath,
       create: bedspacesCas3Path,
       get: bedspacesCas3Path,
+      update: singleBedspacePath,
     },
   },
 }
@@ -112,6 +113,7 @@ export default {
         show: managePathsCas3.premises.bedspaces.show,
         create: managePathsCas3.premises.bedspaces.create,
         get: managePathsCas3.premises.bedspaces.get,
+        update: managePathsCas3.premises.bedspaces.update,
       },
     },
   },

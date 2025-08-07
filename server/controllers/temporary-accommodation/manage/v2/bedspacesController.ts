@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from 'express'
 import { PageHeadingBarItem } from '@approved-premises/ui'
-import type { Cas3NewBedspace } from '@approved-premises/api'
+import type { Cas3NewBedspace, Cas3UpdateBedspace } from '@approved-premises/api'
 import extractCallConfig from '../../../../utils/restUtils'
 import BedspaceService from '../../../../services/v2/bedspaceService'
 
@@ -10,6 +10,7 @@ import PremisesService from '../../../../services/v2/premisesService'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
 import { DateFormats } from '../../../../utils/dateUtils'
 import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
+import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
 
 export default class BedspacesController {
   constructor(
@@ -44,11 +45,15 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
 
-      const bedspace = await this.bedspaceService.getSingleBedspaceDetails(callConfig, premisesId, bedspaceId)
-      const premises = await this.premisesService.getSinglePremisesDetails(callConfig, premisesId)
-      const actions: Array<PageHeadingBarItem> = []
+      const [premises, bedspace] = await Promise.all([
+        this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
+        this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+      ])
 
-      return res.render('temporary-accommodation/v2/bedspaces/show', { premises, bedspace, actions })
+      const summary = this.bedspaceService.summaryList(bedspace)
+      const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace)
+
+      return res.render('temporary-accommodation/v2/bedspaces/show', { premises, bedspace, summary, actions })
     }
   }
 
@@ -71,6 +76,64 @@ export default class BedspacesController {
         res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.new({ premisesId }))
+      }
+    }
+  }
+
+  edit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const [premises, bedspace, referenceData] = await Promise.all([
+        this.premisesService.getSinglePremises(callConfig, premisesId),
+        this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+        this.bedspaceService.getReferenceData(callConfig),
+      ])
+
+      const summary = this.premisesService.shortSummaryList(premises)
+
+      const { characteristics } = referenceData
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+      const userInput = {
+        reference: bedspace.reference,
+        notes: bedspace.notes ?? '',
+        characteristicIds: bedspace.characteristics?.map(ch => ch.id) ?? [],
+        ...errorsAndUserInput.userInput,
+      }
+
+      return res.render('temporary-accommodation/v2/bedspaces/edit', {
+        premisesId,
+        bedspaceId,
+        errors,
+        errorSummary,
+        characteristics: characteristics.filter(ch => ch.propertyName !== 'other'),
+        summary,
+        ...userInput,
+      })
+    }
+  }
+
+  update(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const updatedBedspace: Cas3UpdateBedspace = {
+        reference: req.body.reference,
+        notes: req.body.notes,
+        characteristicIds: req.body.characteristicIds ?? [],
+      }
+
+      try {
+        const bedspace = await this.bedspaceService.updateBedspace(callConfig, premisesId, bedspaceId, updatedBedspace)
+
+        req.flash('success', 'Bedspace edited')
+        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }))
       }
     }
   }

@@ -128,6 +128,19 @@ export default function routes(controllers: Controllers, services: Services, rou
         },
       ],
     })
+    get(paths.premises.v2.bedspaces.edit.pattern, bedspacesControllerV2.edit(), { auditEvent: 'UPDATE_BEDSPACE_V2' })
+    post(paths.premises.v2.bedspaces.update.pattern, bedspacesControllerV2.update(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.premises.v2.bedspaces.edit.pattern,
+          auditEvent: 'UPDATE_BEDSPACE_V2_FAILURE',
+        },
+        {
+          path: paths.premises.v2.bedspaces.show.pattern,
+          auditEvent: 'UPDATE_BEDSPACE_V2_SUCCESS',
+        },
+      ],
+    })
   }
 
   get(paths.premises.bedspaces.new.pattern, bedspacesController.new(), { auditEvent: 'VIEW_BEDSPACE_CREATE' })

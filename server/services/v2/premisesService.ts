@@ -9,6 +9,7 @@ import {
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
+  Cas3UnarchivePremises,
   Cas3UpdatePremises,
   Characteristic,
   LocalAuthorityArea,
@@ -119,6 +120,11 @@ export default class PremisesService {
   async archivePremises(callConfig: CallConfig, premisesId: string, archivePayload: Cas3ArchivePremises) {
     const premisesClient = this.premisesClientFactory(callConfig)
     return premisesClient.archive(premisesId, archivePayload)
+  }
+
+  async unarchivePremises(callConfig: CallConfig, premisesId: string, unarchivePayload: Cas3UnarchivePremises) {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.unarchive(premisesId, unarchivePayload)
   }
 
   tableRows(premises: Cas3PremisesSearchResults, premisesSortBy: Cas3PremisesSortBy = 'pdu'): Array<TableRow> {

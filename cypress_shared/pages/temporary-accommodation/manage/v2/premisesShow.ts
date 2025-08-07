@@ -184,4 +184,13 @@ export default class PremisesShowPage extends Page {
   shouldShowPropertyAndBedspacesUpdatedBanner(): void {
     cy.get('main .govuk-notification-banner--success').contains('Property and bedspaces updated')
   }
+
+  clickMakePropertyOnlineButton(): void {
+    cy.get('button').contains('Actions').parent().click()
+    cy.get('button').contains('Actions').parent().siblings('ul').contains('Make property online').click()
+  }
+
+  shouldShowPropertyAndBedspacesOnlineBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Property and bedspaces online')
+  }
 }

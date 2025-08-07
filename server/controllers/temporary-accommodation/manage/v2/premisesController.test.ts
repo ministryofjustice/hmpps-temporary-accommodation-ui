@@ -1188,4 +1188,103 @@ describe('PremisesController', () => {
       expect(generateMergeParameters).toHaveBeenCalled()
     })
   })
+
+  describe('unarchive', () => {
+    const premises = cas3PremisesFactory.build()
+
+    it('should render the form', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.unarchive()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/unarchive', {
+        premises,
+        errors: {},
+        errorSummary: [],
+        unarchiveOption: 'today',
+      })
+    })
+
+    it('should render the form with errors and user input when the backend returns an error', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.unarchive()
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/unarchive', {
+        premises,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+        unarchiveOption: 'today',
+      })
+    })
+  })
+
+  describe('unarchiveSubmit', () => {
+    const premises = cas3PremisesFactory.build()
+
+    it('should successfully unarchive a premises and redirect to the show premises page', async () => {
+      const today = new Date()
+
+      request.params.premisesId = premises.id
+      request.body = { unarchiveOption: 'today' }
+
+      premisesService.unarchivePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.unarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.unarchivePremises).toHaveBeenCalledWith(callConfig, premises.id, {
+        restartDate: DateFormats.dateObjToIsoDate(today),
+      })
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property and bedspaces online')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+    })
+
+    it('should fail to unarchive when the service returns an error', async () => {
+      request.params.premisesId = premises.id
+      request.body = { unarchiveOption: 'today' }
+
+      const error = {
+        data: {
+          title: 'Bad request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': [
+            {
+              propertyName: '$.restartDate',
+              errorType: 'beforeLastPremisesArchivedDate',
+            },
+          ],
+        },
+      }
+
+      premisesService.unarchivePremises.mockImplementation(() => {
+        throw error
+      })
+
+      const requestHandler = premisesController.unarchiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.v2.unarchive({ premisesId: premises.id }),
+        'premisesUnarchive',
+      )
+    })
+  })
 })

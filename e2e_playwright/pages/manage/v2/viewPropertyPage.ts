@@ -58,6 +58,11 @@ export class ViewPropertyPage extends BasePage {
     await this.page.getByText('Archive property').click()
   }
 
+  async clickUnarchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Make property online').click()
+  }
+
   async shouldShowPropertyStatus(status: string) {
     await expect(this.getRowTextByLabel('Property status')).toContainText(status)
   }

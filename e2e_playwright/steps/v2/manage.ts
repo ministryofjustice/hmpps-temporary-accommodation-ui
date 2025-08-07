@@ -9,6 +9,7 @@ import { AddBedspacePage } from '../../pages/manage/v2/addBedspacePage'
 import { ViewBedspacesPage } from '../../pages/manage/v2/viewBedspacesPage'
 import { EditBedspacePage } from '../../pages/manage/v2/editBedspacePage'
 import { ArchivePropertyPage } from '../../pages/manage/v2/archivePropertyPage'
+import { UnarchivePropertyPage } from '../../pages/manage/v2/unarchivePropertyPage'
 import { ArchiveBedspacePage } from '../../pages/manage/v2/archiveBedspacePage'
 
 export const visitListPropertiesPage = async (page: Page) => {
@@ -80,6 +81,22 @@ export const archiveProperty = async (page: Page, property: Property) => {
   )
   expect(isBannerMessageDisplayed).toBe(true)
   await showArchivedPropertyPage.shouldShowPropertyStatus('Archived')
+}
+
+export const unarchiveProperty = async (page: Page, property: Property) => {
+  const shortAddress = `${property.addressLine1}, ${property.postcode}`
+  const showPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  await showPropertyPage.clickUnarchiveButton()
+
+  const unarchivePropertyPage = await UnarchivePropertyPage.initialise(page, property.addressLine1)
+  await unarchivePropertyPage.clickSubmit()
+
+  const showUnarchivedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
+  const isBannerMessageDisplayed = await showUnarchivedPropertyPage.isBannerMessageDisplayed(
+    'Property and bedspaces online',
+  )
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showUnarchivedPropertyPage.shouldShowPropertyStatus('Online')
 }
 
 export const createBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {

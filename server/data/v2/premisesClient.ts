@@ -43,6 +43,10 @@ export default class PremisesClient {
     return this.restClient.post<Cas3Premises>({ path: paths.cas3.premises.archive({ premisesId }), data })
   }
 
+  async unarchive(premisesId: string, data: { restartDate: string }) {
+    return this.restClient.post<Cas3Premises>({ path: paths.cas3.premises.unarchive({ premisesId }), data })
+  }
+
   async totals(premisesId: string): Promise<Cas3PremisesBedspaceTotals> {
     return this.restClient.get<Cas3PremisesBedspaceTotals>({
       path: paths.cas3.premises.totals({ premisesId }),

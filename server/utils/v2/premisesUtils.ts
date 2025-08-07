@@ -23,6 +23,12 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
       classes: 'govuk-button--secondary',
       href: paths.premises.v2.archive({ premisesId: premises.id }),
     })
+  } else if (premises.status === 'archived') {
+    actions.push({
+      text: 'Make property online',
+      classes: 'govuk-button--secondary',
+      href: paths.premises.v2.unarchive({ premisesId: premises.id }),
+    })
   }
 
   return actions.sort((a, b) => a.text.localeCompare(b.text))

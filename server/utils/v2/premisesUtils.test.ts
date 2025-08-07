@@ -37,6 +37,11 @@ describe('premisesV2Utils', () => {
           classes: 'govuk-button--secondary',
           href: paths.premises.v2.edit({ premisesId: premises.id }),
         },
+        {
+          text: 'Make property online',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.v2.unarchive({ premisesId: premises.id }),
+        },
       ])
     })
   })

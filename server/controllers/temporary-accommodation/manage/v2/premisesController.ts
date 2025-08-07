@@ -314,4 +314,67 @@ export default class PremisesController {
       }
     }
   }
+
+  unarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+      const unarchiveOption = userInput.unarchiveOption || 'today'
+
+      return res.render('temporary-accommodation/v2/premises/unarchive', {
+        premises,
+        errors,
+        errorSummary,
+        ...userInput,
+        unarchiveOption,
+      })
+    }
+  }
+
+  unarchiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+      const { unarchiveOption } = req.body
+
+      const errors: Record<string, string> = {}
+
+      let restartDate: string | undefined
+
+      if (unarchiveOption === 'today') {
+        restartDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (unarchiveOption === 'other') {
+        const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'restartDate')
+        restartDate = parsedDate.restartDate
+      } else {
+        errors.unarchiveOption = 'Select a date for the premises go online'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', errors)
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.v2.unarchive({ premisesId }))
+      }
+
+      try {
+        await this.premisesService.unarchivePremises(callConfig, premisesId, { restartDate })
+
+        const today = DateFormats.dateObjToIsoDate(new Date())
+        req.flash('success', `Property and bedspaces ${restartDate > today ? 'updated' : 'online'}`)
+
+        return res.redirect(paths.premises.v2.show({ premisesId }))
+      } catch (err) {
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.unarchive({ premisesId }),
+          'premisesUnarchive',
+        )
+      }
+    }
+  }
 }

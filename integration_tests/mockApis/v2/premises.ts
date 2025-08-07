@@ -152,6 +152,50 @@ const stubPremisesArchiveErrorsV2 = (params: { premisesId: string; endDate: stri
     },
   })
 
+const stubPremisesUnarchiveV2 = (premises: Cas3Premises) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      url: paths.cas3.premises.unarchive({ premisesId: premises.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: premises,
+    },
+  })
+
+const verifyPremisesUnarchiveV2 = async (premisesId: string) =>
+  (
+    await getMatchingRequests({
+      method: 'POST',
+      url: paths.cas3.premises.unarchive({ premisesId }),
+    })
+  ).body.requests
+
+const stubPremisesUnarchiveErrorsV2 = (premisesId: string) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      url: paths.cas3.premises.unarchive({ premisesId }),
+    },
+    response: {
+      status: 400,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        type: 'https://example.net/validation-error',
+        title: 'Invalid request parameters',
+        code: 400,
+        'invalid-params': [
+          {
+            propertyName: '$.restartDate',
+            errorType: 'invalidRestartDateInTheFuture',
+          },
+        ],
+      },
+    },
+  })
+
 const stubPremisesBedspaceTotalsV2 = ({
   premisesId,
   totals,
@@ -185,4 +229,7 @@ export default {
   stubPremisesArchiveV2,
   verifyPremisesArchiveV2,
   stubPremisesArchiveErrorsV2,
+  stubPremisesUnarchiveV2,
+  verifyPremisesUnarchiveV2,
+  stubPremisesUnarchiveErrorsV2,
 }

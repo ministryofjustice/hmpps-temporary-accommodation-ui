@@ -49,11 +49,11 @@ export default class BedspaceService {
         },
         {
           key: { text: 'Bedspace details' },
-          value: { html: this.formatBedspaceDetails(bedspace.characteristics) },
+          value: { html: this.formatBedspaceDetails(bedspace.characteristics) || 'None' },
         },
         {
           key: { text: 'Additional bedspace details' },
-          value: { text: bedspace.notes ?? '' },
+          value: { text: bedspace.notes ?? 'None' },
         },
       ],
     }

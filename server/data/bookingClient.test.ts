@@ -149,7 +149,7 @@ describe('BookingClient', () => {
       })
 
       fakeApprovedPremisesApi
-        .post(`/premises/premisesId/bookings/bookingId/arrivals`, payload)
+        .post(`/cas3/premises/premisesId/bookings/bookingId/arrivals`, payload)
         .matchHeader('authorization', `Bearer ${callConfig.token}`)
         .reply(201, arrival)
 

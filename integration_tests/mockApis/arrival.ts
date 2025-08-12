@@ -10,7 +10,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
+        url: `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
       },
       response: {
         status: 201,
@@ -23,7 +23,7 @@ export default {
     bookingId: string
     params: Array<string>
   }): SuperAgentRequest =>
-    stubFor(errorStub(args.params, `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`, 'POST')),
+    stubFor(errorStub(args.params, `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`, 'POST')),
   stubArrivalCreateConflictError: (args: {
     premisesId: string
     bookingId: string
@@ -33,7 +33,7 @@ export default {
     stubFor({
       request: {
         method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
+        url: `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
       },
       response: {
         status: 409,
@@ -47,7 +47,7 @@ export default {
     (
       await getMatchingRequests({
         method: 'POST',
-        url: `/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
+        url: `/cas3/premises/${args.premisesId}/bookings/${args.bookingId}/arrivals`,
       })
     ).body.requests,
 }

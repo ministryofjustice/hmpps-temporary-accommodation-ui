@@ -66,7 +66,7 @@ export default class BookingClient {
 
   async markAsArrived(premisesId: string, bookingId: string, arrival: NewArrival) {
     return this.restClient.post<Arrival>({
-      path: `${this.bookingPath(premisesId, bookingId)}/arrivals`,
+      path: paths.cas3.premises.bookings.arrival({ premisesId, bookingId }),
       data: arrival,
     })
   }
@@ -86,7 +86,7 @@ export default class BookingClient {
 
   async markDeparture(premisesId: string, bookingId: string, departure: Cas3NewDeparture) {
     return this.restClient.post<Cas3Departure>({
-      path: this.departuresPath(premisesId, bookingId),
+      path: paths.cas3.premises.bookings.departure({ premisesId, bookingId }),
       data: departure,
     })
   }
@@ -137,9 +137,5 @@ export default class BookingClient {
 
   private bookingPath(premisesId: string, bookingId: string): string {
     return [this.bookingsPath(premisesId), bookingId].join('/')
-  }
-
-  private departuresPath(premisesId: string, bookingId: string): string {
-    return `/cas3/premises/${premisesId}/bookings/${bookingId}/departures`
   }
 }

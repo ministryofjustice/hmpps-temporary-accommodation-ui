@@ -236,10 +236,3 @@ export function dateIsBetweenInclusive(dateString: string, start: Date, end: Dat
 
   return dateString >= startString && dateString <= endString
 }
-
-export function dateIsWithinLastSevenDays(dateString: string): boolean {
-  const today = new Date()
-  const sevenDays = subDays(today, 7)
-
-  return dateIsBetweenInclusive(dateString, sevenDays, today)
-}

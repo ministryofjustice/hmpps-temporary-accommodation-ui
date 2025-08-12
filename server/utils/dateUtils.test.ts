@@ -1,4 +1,4 @@
-import { addDays, addMonths, subDays, subMonths } from 'date-fns'
+import { addMonths, subMonths } from 'date-fns'
 import type { ObjectWithDateParts } from '@approved-premises/ui'
 import {
   DateFormats,
@@ -9,7 +9,6 @@ import {
   dateIsBlank,
   dateIsInFuture,
   dateIsInThePast,
-  dateIsWithinLastSevenDays,
   dateIsWithinNextThreeMonths,
   datepickerInputsAreValidDates,
 } from './dateUtils'
@@ -490,42 +489,6 @@ describe('dateExists', () => {
 
     it('returns false if the input is an empty string', () => {
       expect(dateIsWithinNextThreeMonths('')).toBe(false)
-    })
-  })
-
-  describe('dateIsWithinLastSevenDays', () => {
-    it('returns true if the date is within the last 7 days', () => {
-      const validDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 5))
-      expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
-    })
-
-    it('returns true if the date is today', () => {
-      const validDate = DateFormats.dateObjToIsoDate(new Date())
-      expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
-    })
-
-    it('returns true if the date is 7 days ago', () => {
-      const validDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 7))
-      expect(dateIsWithinLastSevenDays(validDate)).toBe(true)
-    })
-
-    it('returns false if the date is more than 7 days in the past', () => {
-      const invalidDate = DateFormats.dateObjToIsoDate(subDays(new Date(), 8))
-      expect(dateIsWithinLastSevenDays(invalidDate)).toBe(false)
-    })
-
-    it('returns false if the date is in the future', () => {
-      const futureDate = DateFormats.dateObjToIsoDate(addDays(new Date(), 1))
-      expect(dateIsWithinLastSevenDays(futureDate)).toBe(false)
-    })
-
-    it('returns false if the input is an invalid date string', () => {
-      const invalidDateString = 'invalid'
-      expect(dateIsWithinLastSevenDays(invalidDateString)).toBe(false)
-    })
-
-    it('returns false if the input is an empty string', () => {
-      expect(dateIsWithinLastSevenDays('')).toBe(false)
     })
   })
 })

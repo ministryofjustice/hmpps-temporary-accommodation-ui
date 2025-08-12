@@ -4,7 +4,7 @@ import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
-import { DateFormats, dateIsInFuture, dateIsWithinLastSevenDays } from '../../../utils/dateUtils'
+import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import {
   catchValidationErrorOrPropogate,
@@ -67,12 +67,6 @@ export default class ArrivalsController {
         }
 
         if (newArrival.arrivalDate) {
-          if (!dateIsWithinLastSevenDays(newArrival.arrivalDate)) {
-            const error = new Error()
-            insertGenericError(error, 'arrivalDate', 'withinLastSevenDays')
-            throw error
-          }
-
           const parsedDepartureDate = DateFormats.isoToDateObj(newArrival.expectedDepartureDate)
           const maxAllowedDate = new Date(newArrival.arrivalDate)
           maxAllowedDate.setDate(maxAllowedDate.getDate() + 84)
@@ -148,12 +142,6 @@ export default class ArrivalsController {
           if (dateIsInFuture(updateArrival.arrivalDate)) {
             const error = new Error()
             insertGenericError(error, 'arrivalDate', 'todayOrInThePast')
-            throw error
-          }
-
-          if (!dateIsWithinLastSevenDays(updateArrival.arrivalDate)) {
-            const error = new Error()
-            insertGenericError(error, 'arrivalDate', 'withinLastSevenDays')
             throw error
           }
         }

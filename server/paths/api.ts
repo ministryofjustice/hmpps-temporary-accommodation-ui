@@ -6,6 +6,7 @@ const cas3PremisesPath = cas3Path.path('premises')
 const premisesSummaryPath = cas3PremisesPath.path('summary')
 const singlePremisesPath = premisesPath.path(':premisesId')
 const singlePremisesCas3Path = cas3PremisesPath.path(':premisesId')
+const singleBookingCas3Path = singlePremisesCas3Path.path('bookings/:bookingId')
 const premisesSearchPath = cas3PremisesPath.path('search')
 
 const lostBedsPath = singlePremisesPath.path('lost-beds')
@@ -77,6 +78,10 @@ const managePathsCas3 = {
       get: bedspacesCas3Path,
       update: singleBedspacePath,
     },
+    bookings: {
+      arrival: singleBookingCas3Path.path('arrivals'),
+      departure: singleBookingCas3Path.path('departures'),
+    },
   },
 }
 
@@ -114,6 +119,10 @@ export default {
         create: managePathsCas3.premises.bedspaces.create,
         get: managePathsCas3.premises.bedspaces.get,
         update: managePathsCas3.premises.bedspaces.update,
+      },
+      bookings: {
+        arrival: managePathsCas3.premises.bookings.arrival,
+        departure: managePathsCas3.premises.bookings.departure,
       },
     },
   },

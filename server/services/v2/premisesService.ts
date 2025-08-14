@@ -3,6 +3,7 @@ import {
   Cas3BedspacePremisesSearchResult,
   Cas3NewPremises,
   Cas3Premises,
+  Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
@@ -54,6 +55,14 @@ export default class PremisesService {
   async getSinglePremises(callConfig: CallConfig, premisesId: string): Promise<Cas3Premises> {
     const premisesClient = this.premisesClientFactory(callConfig)
     return premisesClient.find(premisesId)
+  }
+
+  async getSinglePremisesBedspaceTotals(
+    callConfig: CallConfig,
+    premisesId: string,
+  ): Promise<Cas3PremisesBedspaceTotals> {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.totals(premisesId)
   }
 
   async getSinglePremisesDetails(

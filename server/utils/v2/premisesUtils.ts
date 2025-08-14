@@ -1,4 +1,4 @@
-import { Cas3Premises } from '@approved-premises/api'
+import { Cas3Premises, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
 import { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
 
@@ -26,4 +26,11 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
   }
 
   return actions.sort((a, b) => a.text.localeCompare(b.text))
+}
+
+export function isPremiseScheduledToBeArchived(totals: Cas3PremisesBedspaceTotals): boolean {
+  if (!totals.premisesEndDate) return false
+  const endDate = new Date(totals.premisesEndDate)
+  const now = new Date()
+  return endDate > now && totals.status !== 'archived'
 }

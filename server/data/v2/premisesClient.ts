@@ -1,6 +1,7 @@
 import {
   Cas3NewPremises,
   Cas3Premises,
+  Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
@@ -40,5 +41,11 @@ export default class PremisesClient {
 
   async archive(premisesId: string, data: { endDate: string }) {
     return this.restClient.post<Cas3Premises>({ path: paths.cas3.premises.archive({ premisesId }), data })
+  }
+
+  async totals(premisesId: string): Promise<Cas3PremisesBedspaceTotals> {
+    return this.restClient.get<Cas3PremisesBedspaceTotals>({
+      path: paths.cas3.premises.totals({ premisesId }),
+    })
   }
 }

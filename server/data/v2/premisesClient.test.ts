@@ -6,6 +6,7 @@ import config from '../../config'
 import {
   cas3ArchivePremisesFactory,
   cas3NewPremisesFactory,
+  cas3PremisesBedspaceTotalsFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
@@ -113,6 +114,21 @@ describe('PremisesClient', () => {
 
       const result = await premisesClient.archive(premisesId, payload)
       expect(result).toEqual(premises)
+    })
+  })
+
+  describe('totals', () => {
+    it('should return the bedspace totals for a premises', async () => {
+      const premisesId = 'premises-id'
+      const totals = cas3PremisesBedspaceTotalsFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.cas3.premises.totals({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, totals)
+
+      const result = await premisesClient.totals(premisesId)
+      expect(result).toEqual(totals)
     })
   })
 })

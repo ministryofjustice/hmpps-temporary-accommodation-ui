@@ -142,6 +142,21 @@ export default function routes(controllers: Controllers, services: Services, rou
       ],
     })
     get(paths.premises.v2.bedspaces.edit.pattern, bedspacesControllerV2.edit(), { auditEvent: 'UPDATE_BEDSPACE_V2' })
+    get(paths.premises.v2.bedspaces.cancelArchive.pattern, bedspacesControllerV2.cancelArchive(), {
+      auditEvent: 'VIEW_BEDSPACE_CANCEL_ARCHIVE_V2',
+    })
+    put(paths.premises.v2.bedspaces.cancelArchive.pattern, bedspacesControllerV2.submitCancelArchive(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.premises.v2.bedspaces.cancelArchive.pattern,
+          auditEvent: 'CANCEL_BEDSPACE_ARCHIVE_V2_FAILURE',
+        },
+        {
+          path: paths.premises.v2.bedspaces.show.pattern,
+          auditEvent: 'CANCEL_BEDSPACE_ARCHIVE_V2_SUCCESS',
+        },
+      ],
+    })
     post(paths.premises.v2.bedspaces.update.pattern, bedspacesControllerV2.update(), {
       redirectAuditEventSpecs: [
         {

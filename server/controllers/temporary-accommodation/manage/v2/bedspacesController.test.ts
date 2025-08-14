@@ -1,6 +1,6 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import { NextFunction, Request, Response } from 'express'
-import { Cas3Bedspace } from '@approved-premises/api'
+import { Cas3Bedspace, Cas3PremisesBedspaceTotals } from '@approved-premises/api'
 import { ErrorsAndUserInput, SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../../../../data/restClient'
 import BedspaceService from '../../../../services/v2/bedspaceService'
@@ -25,6 +25,8 @@ jest.mock('../../../../utils/restUtils')
 describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'some-premises-id'
+  const bedspaceId = 'some-bedspace-id'
+
   const referenceData = {
     characteristics: referenceDataFactory.characteristic('room').buildList(5),
   }
@@ -40,6 +42,7 @@ describe('BedspacesController', () => {
   const bedspacesController = new BedspacesController(premisesService, bedspaceService)
 
   beforeEach(() => {
+    jest.clearAllMocks()
     request = createMock<Request>({
       session: {
         probationRegion: probationRegionFactory.build(),
@@ -147,8 +150,6 @@ describe('BedspacesController', () => {
   })
 
   describe('show', () => {
-    const bedspaceId = 'some-bedspace-id'
-
     const characteristic1 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
     const characteristic2 = characteristicFactory.build({ serviceScope: 'temporary-accommodation' })
 
@@ -400,7 +401,6 @@ describe('BedspacesController', () => {
     it('should fail to update a bedspace when the service returns an error', async () => {
       const requestHandler = bedspacesController.update()
 
-      const bedspaceId = '8d6f6436-bda4-4d58-a2bc-72d3d2e41134'
       const updatedBedspace = cas3UpdateBedspaceFactory.build()
 
       request.params = { premisesId, bedspaceId }
@@ -431,6 +431,102 @@ describe('BedspacesController', () => {
         err,
         paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
       )
+    })
+  })
+
+  describe('submitCancelArchive', () => {
+    let requestHandler: ReturnType<BedspacesController['submitCancelArchive']>
+
+    beforeEach(() => {
+      requestHandler = bedspacesController.submitCancelArchive()
+      request.params = { premisesId, bedspaceId }
+    })
+
+    it('cancels the archive and redirects to bedspace page with a success message when "yes" is selected', async () => {
+      request.body = { bedspaceId: 'yes' }
+      bedspaceService.cancelArchiveBedspace.mockResolvedValue(undefined)
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.cancelArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archive cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('redirects to the bedspace page without cancelling if "no" is selected', async () => {
+      request.body = { bedspaceId: 'no' }
+
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.cancelArchiveBedspace).not.toHaveBeenCalled()
+      expect(request.flash).not.toHaveBeenCalledWith('success', 'Bedspace archive cancelled')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('renders the cancel archive page with errors when the service throws', async () => {
+      const error = new Error('error')
+      request.body = { bedspaceId: 'yes' }
+      bedspaceService.cancelArchiveBedspace.mockRejectedValue(error)
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+      )
+    })
+  })
+
+  describe('cancelArchive', () => {
+    const bedspace = cas3BedspaceFactory.build({ endDate: '2025-12-31' })
+
+    beforeEach(() => {
+      request.params = { premisesId, bedspaceId }
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+      premisesService.getSinglePremisesBedspaceTotals.mockResolvedValue({
+        status: 'online',
+      } as Cas3PremisesBedspaceTotals)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [] })
+    })
+
+    it('renders the cancel archive page with the correct data', async () => {
+      const requestHandler = bedspacesController.cancelArchive()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(premisesService.getSinglePremisesBedspaceTotals).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-archive', {
+        premisesId,
+        bedspaceId,
+        bedspaceEndDate: DateFormats.isoDateToUIDate(bedspace.endDate),
+        scheduledForArchive: false,
+        errors: {},
+        errorSummary: [],
+      })
+    })
+
+    it('renders the cancel archive page with errors and errorSummary when the backend returns errors', async () => {
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>({
+        errors: {
+          bedspaceId: { text: 'This bedspace is not scheduled to be archived' },
+        },
+        errorSummary: [{ text: 'This bedspace is not scheduled to be archived', href: '#bedspaceId' }],
+      })
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      const requestHandler = bedspacesController.cancelArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cancel-archive', {
+        premisesId,
+        bedspaceId,
+        bedspaceEndDate: DateFormats.isoDateToUIDate(bedspace.endDate),
+        scheduledForArchive: false,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+      })
     })
   })
 })

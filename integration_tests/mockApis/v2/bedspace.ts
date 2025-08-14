@@ -114,6 +114,37 @@ const stubBedspaceUpdateErrors = (params: { fields: Array<string>; premisesId: s
     ),
   )
 
+const stubBedspaceCancelArchive = (args: BedspaceArguments) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.bedspaces.cancelArchive({ premisesId: args.premisesId, bedspaceId: args.bedspace.id }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: args.bedspace,
+    },
+  })
+
+const stubBedspaceCancelArchiveError = (args: BedspaceArguments) =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      url: paths.cas3.premises.bedspaces.cancelArchive({ premisesId: args.premisesId, bedspaceId: args.bedspace.id }),
+    },
+    response: {
+      status: 400,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        title: 'Bad Request',
+        status: 400,
+        detail: 'This bedspace is not scheduled to be archived',
+        'invalid-params': [{ propertyName: '$.bedspaceId', errorType: 'bedspaceNotScheduledToArchive' }],
+      },
+    },
+  })
+
 export default {
   stubBedspaceV2,
   stubPremisesBedspacesV2,
@@ -121,6 +152,8 @@ export default {
   verifyBedspaceCreate,
   stubBedspaceCreateErrors,
   stubBedspaceUpdate,
+  stubBedspaceCancelArchive,
+  stubBedspaceCancelArchiveError,
   verifyBedspaceUpdate,
   stubBedspaceUpdateErrors,
 }

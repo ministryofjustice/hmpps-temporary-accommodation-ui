@@ -1,5 +1,6 @@
 import type {
   Cas3Premises,
+  Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
@@ -151,10 +152,30 @@ const stubPremisesArchiveErrorsV2 = (params: { premisesId: string; endDate: stri
     },
   })
 
+const stubPremisesBedspaceTotalsV2 = ({
+  premisesId,
+  totals,
+}: {
+  premisesId: string
+  totals: Cas3PremisesBedspaceTotals
+}) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.cas3.premises.totals({ premisesId }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: totals,
+    },
+  })
+
 export default {
   stubPremisesSearchV2,
   stubSinglePremisesV2,
   stubPremisesReferenceDataV2,
+  stubPremisesBedspaceTotalsV2,
   stubPremisesCreateV2,
   stubPremisesCreateErrorsV2,
   verifyPremisesCreateV2,

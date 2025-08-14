@@ -69,6 +69,7 @@ const paths: Record<string, any> = {
         create: bedspacesV2Path,
         list: bedspacesV2Path,
         edit: singleBedspaceV2Path.path('edit'),
+        cancelArchive: singleBedspaceV2Path.path('cancel-archive'),
         update: singleBedspaceV2Path,
       },
     },

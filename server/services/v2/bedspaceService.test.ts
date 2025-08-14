@@ -139,6 +139,19 @@ describe('BedspaceService', () => {
     })
   })
 
+  describe('cancelArchiveBedspace', () => {
+    it('calls the client to cancel the archive for the bedspace and returns the bedspace', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      bedspaceClient.cancelArchive.mockResolvedValue(bedspace)
+
+      const result = await service.cancelArchiveBedspace(callConfig, premisesId, bedspace.id)
+
+      expect(result).toEqual(bedspace)
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.cancelArchive).toHaveBeenCalledWith(premisesId, bedspace.id)
+    })
+  })
+
   describe('getReferenceData', () => {
     it('returns sorted bedspace characteristics', async () => {
       const bedspaceCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })

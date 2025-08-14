@@ -137,4 +137,48 @@ export default class BedspacesController {
       }
     }
   }
+
+  submitCancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { bedspaceId: cancelArchive } = req.body
+      try {
+        if (cancelArchive === 'yes') {
+          await this.bedspaceService.cancelArchiveBedspace(callConfig, premisesId, bedspaceId)
+          req.flash('success', 'Bedspace archive cancelled')
+        }
+
+        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        )
+      }
+    }
+  }
+
+  cancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+      const endDate = DateFormats.isoDateToUIDate(bedspace.endDate)
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+
+      return res.render('temporary-accommodation/v2/bedspaces/cancel-archive', {
+        premisesId,
+        bedspaceId,
+        endDate,
+        errors,
+        errorSummary,
+      })
+    }
+  }
 }

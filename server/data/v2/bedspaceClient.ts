@@ -32,4 +32,10 @@ export default class BedspaceClient {
       data,
     })
   }
+
+  async cancelArchive(premisesId: string, bedspaceId: string) {
+    return this.restClient.put<Cas3Bedspace>({
+      path: paths.cas3.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+    })
+  }
 }

@@ -120,4 +120,9 @@ export default class BedspaceService {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.update(premisesId, bedspaceId, updatedBedspace)
   }
+
+  async cancelArchiveBedspace(callConfig: CallConfig, premisesId: string, bedspaceId: string): Promise<Cas3Bedspace> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.cancelArchive(premisesId, bedspaceId)
+  }
 }

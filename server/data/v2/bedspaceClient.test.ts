@@ -16,6 +16,7 @@ describe('BedspaceClient', () => {
 
   const callConfig = { token: 'some-token' } as CallConfig
   const premisesId = 'some-premises-id'
+  const bedspaceId = 'some-bedspace-id'
 
   beforeEach(() => {
     config.apis.approvedPremises.url = 'http://localhost:8080'
@@ -34,7 +35,6 @@ describe('BedspaceClient', () => {
 
   describe('find', () => {
     it('should return bedspace', async () => {
-      const bedspaceId = 'some-bedspace-id'
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
 
       fakeApprovedPremisesApi
@@ -96,6 +96,20 @@ describe('BedspaceClient', () => {
         .reply(200, bedspace)
 
       const result = await bedspaceClient.update(premisesId, bedspace.id, payload)
+      expect(result).toEqual(bedspace)
+    })
+  })
+
+  describe('cancelArchive', () => {
+    it('should return the bedspace after cancelling the archive', async () => {
+      const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
+
+      fakeApprovedPremisesApi
+        .put(paths.cas3.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bedspace)
+
+      const result = await bedspaceClient.cancelArchive(premisesId, bedspaceId)
       expect(result).toEqual(bedspace)
     })
   })

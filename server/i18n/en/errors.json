@@ -176,6 +176,10 @@
         "invalidParoleSelection": "Parole cannot be combined with post sentence supervision (PSS)",
         "invalidCRDSelection": "CRD licence cannot be combined with parole, recall or RARR licences"
       }
+    },
+    "bedspaceId": {
+      "bedspaceNotScheduledToArchive": "This bedspace is not scheduled to be archived",
+      "bedspaceAlreadyArchived": "This bedspace has already been archived"
     }
   },
   "bookingCancellation": {

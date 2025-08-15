@@ -5,6 +5,7 @@ import {
   Cas3NewBedspace,
   Cas3UpdateBedspace,
   Characteristic,
+  Cas3BedspaceArchiveAction,
 } from '@approved-premises/api'
 import { SummaryList } from '@approved-premises/ui'
 import { CallConfig } from '../../data/restClient'
@@ -37,25 +38,38 @@ export default class BedspaceService {
   }
 
   summaryList(bedspace: Cas3Bedspace): SummaryList {
+    const rows = [
+      {
+        key: { text: 'Bedspace status' },
+        value: { html: this.formatBedspaceStatus(bedspace.status) },
+      },
+      {
+        key: { text: 'Start date' },
+        value: { text: this.formatBedspaceDate(bedspace.startDate) },
+      },
+    ]
+
+    if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
+      rows.push({
+        key: { text: 'Archive history' },
+        value: {
+          html: this.formatArchiveHistory(bedspace.archiveHistory),
+        },
+      })
+    }
+
+    rows.push(
+      {
+        key: { text: 'Bedspace details' },
+        value: { html: this.formatBedspaceDetails(bedspace.characteristics) || 'None' },
+      },
+      {
+        key: { text: 'Additional bedspace details' },
+        value: { text: bedspace.notes ?? 'None' },
+      },
+    )
     return {
-      rows: [
-        {
-          key: { text: 'Bedspace status' },
-          value: { html: this.formatBedspaceStatus(bedspace.status) },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: this.formatBedspaceDate(bedspace.startDate) },
-        },
-        {
-          key: { text: 'Bedspace details' },
-          value: { html: this.formatBedspaceDetails(bedspace.characteristics) || 'None' },
-        },
-        {
-          key: { text: 'Additional bedspace details' },
-          value: { text: bedspace.notes ?? 'None' },
-        },
-      ],
+      rows: rows,
     }
   }
 
@@ -89,6 +103,12 @@ export default class BedspaceService {
     return characteristics
       .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
       .join(' ')
+  }
+
+  private formatArchiveHistory(archiveHistory: Array<Cas3BedspaceArchiveAction>): string {
+    return archiveHistory
+      .map(action => `<div>${action.status} date ${this.formatBedspaceDate(action.date)}</div>`)
+      .join('')
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceReferenceData> {

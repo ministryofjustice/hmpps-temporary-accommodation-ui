@@ -6,6 +6,7 @@ import {
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
   cas3UpdateBedspaceFactory,
+  cas3BedspaceArchiveActionFactory,
   characteristicFactory,
   probationRegionFactory,
 } from '../../testutils/factories'
@@ -49,7 +50,11 @@ describe('BedspaceService', () => {
   describe('summaryList', () => {
     it.each([
       [
-        cas3BedspaceFactory.build({ status: 'online', startDate: '2025-01-02T03:04:05.678912Z' }),
+        cas3BedspaceFactory.build({
+          status: 'online',
+          startDate: '2025-01-02T03:04:05.678912Z',
+          archiveHistory: [cas3BedspaceArchiveActionFactory.build({ date: '2025-01-02T03:04:05.678912Z' })],
+        }),
         'Online',
         'green',
         '2 January 2025',
@@ -74,29 +79,42 @@ describe('BedspaceService', () => {
         '5 April 2025',
       ],
     ])('returns the summaryList for a bedspace', async (bedspace, status, tagColour, formattedDate) => {
+      let rows = [
+        {
+          key: { text: 'Bedspace status' },
+          value: { html: `<strong class="govuk-tag govuk-tag--${tagColour}">${status}</strong>` },
+        },
+        {
+          key: { text: 'Start date' },
+          value: { text: formattedDate },
+        },
+      ]
+
+      if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
+        rows.push({
+          key: { text: 'Archive history' },
+          value: {
+            html: bedspace.archiveHistory.map(archive => `<div>${archive.status} date ${formattedDate}</div>`).join(''),
+          },
+        })
+      }
+
+      rows.push(
+        {
+          key: { text: 'Bedspace details' },
+          value: {
+            html: bedspace.characteristics
+              .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+              .join(' '),
+          },
+        },
+        {
+          key: { text: 'Additional bedspace details' },
+          value: { text: bedspace.notes },
+        },
+      )
       const expectedSummary = {
-        rows: [
-          {
-            key: { text: 'Bedspace status' },
-            value: { html: `<strong class="govuk-tag govuk-tag--${tagColour}">${status}</strong>` },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: formattedDate },
-          },
-          {
-            key: { text: 'Bedspace details' },
-            value: {
-              html: bedspace.characteristics
-                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional bedspace details' },
-            value: { text: bedspace.notes },
-          },
-        ],
+        rows: rows,
       }
 
       const result = service.summaryList(bedspace)

@@ -3,12 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Cas3PremisesStatus } from './Cas3PremisesStatus';
-export type Cas3PremisesBedspaceTotals = {
-    id: string;
-    premisesEndDate?: string;
+export type Cas3PremisesArchiveAction = {
+    date: string;
     status: Cas3PremisesStatus;
-    totalArchivedBedspaces: number;
-    totalOnlineBedspaces: number;
-    totalUpcomingBedspaces: number;
 };
 

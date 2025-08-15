@@ -1,4 +1,4 @@
-import { Characteristic, LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
+import { Cas3Premises, Characteristic, LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
 import Page from '../../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
@@ -15,6 +15,8 @@ import {
 } from '../../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
 import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'
+import PremisesArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesArchive'
+import { DateFormats } from '../../../../../server/utils/dateUtils'
 
 context('Premises', () => {
   beforeEach(() => {
@@ -1382,6 +1384,148 @@ context('Premises', () => {
       page.validateEnteredCharacteristics(premises.characteristics.map(ch => ch.name))
       page.validateEnteredAdditionalDetails(premises.notes)
       page.validateEnteredWorkingDays(premises.turnaroundWorkingDays)
+    })
+  })
+
+  describe('archive a premises', () => {
+    beforeEach(() => {
+      // Given I am signed in
+      cy.signIn()
+    })
+
+    it('should be able to archive a property today', () => {
+      // And there is an online premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Archive property" action
+      showPage.clickArchivePropertyButton()
+
+      // Then I should see the archive premises page
+      const archivePage = Page.verifyOnPage(PremisesArchivePage, premises)
+
+      // When the backend responds with 200 ok
+      const expectedPremises: Cas3Premises = {
+        ...premises,
+        status: 'archived',
+      }
+      cy.task('stubPremisesArchiveV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // And I submit the form
+      archivePage.clickSubmit()
+
+      // Then the premises should have been archived in the backend
+      const today = DateFormats.dateObjToIsoDate(new Date())
+      cy.task('verifyPremisesArchiveV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+        expect(requestBody.endDate).equal(today)
+      })
+
+      // And I should be taken to the existing archived premises
+      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+
+      // And I should see the 'Property and bedspaces archived' banner
+      showPage.shouldShowPropertyAndBedspacesArchivedBanner()
+
+      // And the property should be archived
+      showPage.shouldShowPropertyStatus('Archived')
+    })
+
+    it('should be able to archive a property tomorrow', () => {
+      // And there is an online premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Archive property" action
+      showPage.clickArchivePropertyButton()
+
+      // Then I should see the archive premises page
+      const archivePage = Page.verifyOnPage(PremisesArchivePage, premises)
+
+      // When I enter tomorrow's date
+      const tomorrowDate = new Date()
+      tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+      const tomorrow = DateFormats.dateObjToIsoDate(tomorrowDate)
+      archivePage.enterDate(tomorrow)
+
+      // When the backend responds with 200 ok
+      const expectedPremises: Cas3Premises = premises
+      cy.task('stubPremisesArchiveV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // And I submit the form
+      archivePage.clickSubmit()
+
+      // Then the premises should have been archived in the backend
+      cy.task('verifyPremisesArchiveV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+        expect(requestBody.endDate).equal(tomorrow)
+      })
+
+      // And I should be taken to the existing archived premises
+      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+
+      // And I should see the 'Property and bedspaces archived' banner
+      showPage.shouldShowPropertyAndBedspacesUpdatedBanner()
+
+      // And the property should be online, with a scheduled archive
+      showPage.shouldShowPropertyStatus('Online')
+      // TODO: uncomment when upcoming statuses have been implemented
+      // showPage.shouldShowUpcomingArchiveStatus()
+    })
+
+    it('should show a dynamic error when archiving a property fails', () => {
+      // And there is an online premises with an upcoming bedspace in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      const bedspaces = cas3BedspacesFactory.build({
+        bedspaces: [cas3BedspaceFactory.build({ status: 'upcoming' })],
+        totalUpcomingBedspaces: 1,
+        totalOnlineBedspaces: 0,
+        totalArchivedBedspaces: 0,
+      })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Archive property" action
+      showPage.clickArchivePropertyButton()
+
+      // Then I should see the archive premises page
+      let archivePage = Page.verifyOnPage(PremisesArchivePage, premises)
+
+      const oneWeek = new Date()
+      oneWeek.setDate(oneWeek.getDate() + 7)
+
+      // When the backend responds with 400 bad request
+      cy.task('stubPremisesArchiveErrorsV2', {
+        premisesId: premises.id,
+        endDate: DateFormats.dateObjToIsoDate(oneWeek),
+      })
+
+      // And I submit the form
+      archivePage.clickSubmit()
+
+      // Then I should be returned to the archive page
+      archivePage = Page.verifyOnPage(PremisesArchivePage, premises)
+
+      // And I should see error messages with dynamic date content
+      archivePage.shouldShowGivenErrorMessagesForField(
+        'endDate',
+        `Earliest archive date is ${DateFormats.dateObjtoUIDate(oneWeek)} because of an upcoming bedspace`,
+      )
     })
   })
 })

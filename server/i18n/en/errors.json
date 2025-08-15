@@ -306,5 +306,18 @@
       "invalid": "You must enter a real date",
       "beforeReleaseDate": "Enter a date which is on or after the release date"
     }
+  },
+  "premisesArchive": {
+    "endDate": {
+      "empty": "You must enter a date",
+      "invalid": "You must enter a real date",
+      "invalidEndDateInTheFuture": "Date must be within the next 3 months",
+      "invalidEndDateInThePast": "Date must be within the past 7 days",
+      "existingUpcomingBedspace": "Earliest archive date is :earliestDate because of an upcoming bedspace",
+      "existingBookings": "Earliest archive date is :earliestDate because of a booking",
+      "existingVoid": "Earliest archive date is :earliestDate because of a void period",
+      "existingTurnaround": "Earliest archive date is :earliestDate because of a turnaround",
+      "endDateOverlapPreviousPremisesArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate"
+    }
   }
 }

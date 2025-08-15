@@ -7,15 +7,18 @@ import errorLookups from '../i18n/en/errors.json'
 import { SanitisedError } from '../sanitisedError'
 import { TasklistAPIError, ValidationError } from './errors'
 import {
+  InvalidParams,
   catchAPIErrorOrPropogate,
   catchValidationErrorOrPropogate,
   clearUserInput,
   fetchErrorsAndUserInput,
+  generateMergeParameters,
   insertBespokeError,
   insertGenericError,
   setUserInput,
   transformErrors,
 } from './validation'
+import { DateFormats } from './dateUtils'
 
 jest.mock('../i18n/en/errors.json', () => {
   return {
@@ -30,6 +33,11 @@ jest.mock('../i18n/en/errors.json', () => {
     bookingCancellation: {
       date: {
         empty: 'You must enter a valid cancellation dae',
+      },
+    },
+    premisesArchive: {
+      endDate: {
+        existingUpcomingBedspace: 'Earliest archive date is :earliestDate because of an upcoming bedspace',
       },
     },
   }
@@ -163,6 +171,43 @@ describe('catchValidationErrorOrPropogate', () => {
     expect(request.flash).toHaveBeenCalledWith('errorSummary', expectedErrorSummary)
     expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
 
+    expect(response.redirect).toHaveBeenCalledWith('some/url')
+  })
+
+  it('successfully gets dynamic errors using merge parameters', () => {
+    const error = createMock<SanitisedError>({
+      data: {
+        title: 'Bad Request',
+        status: 400,
+        'invalid-params': [
+          {
+            propertyName: '$.endDate',
+            errorType: 'existingUpcomingBedspace',
+            entityId: '1094a15b-5ead-4c99-a20b-77aa15eb9ce6',
+            value: '2025-02-01',
+          },
+        ],
+      },
+    })
+
+    const context = 'premisesArchive'
+    const mergeVariables = { existingUpcomingBedspace: { earliestDate: '1 February 2025' } }
+
+    catchValidationErrorOrPropogate(request, response, error, 'some/url', context, mergeVariables)
+
+    expect(request.flash).toHaveBeenCalledWith('errors', {
+      endDate: {
+        text: 'Earliest archive date is 1 February 2025 because of an upcoming bedspace',
+        attributes: { 'data-cy-error-endDate': true },
+      },
+    })
+    expect(request.flash).toHaveBeenCalledWith('errorSummary', [
+      {
+        text: 'Earliest archive date is 1 February 2025 because of an upcoming bedspace',
+        href: '#endDate',
+      },
+    ])
+    expect(request.flash).toHaveBeenCalledWith('userInput', request.body)
     expect(response.redirect).toHaveBeenCalledWith('some/url')
   })
 
@@ -447,5 +492,63 @@ describe('transformErrors', () => {
         ],
       },
     })
+  })
+})
+
+describe('generateMergeParameters', () => {
+  it('should get merge parameters for each transform in an error', () => {
+    const error = createMock<SanitisedError>({
+      data: {
+        title: 'Bad Request',
+        status: 400,
+        'invalid-params': [
+          {
+            propertyName: '$.endDate',
+            errorType: 'existingUpcomingBedspace',
+            entityId: '1094a15b-5ead-4c99-a20b-77aa15eb9ce6',
+            value: '2025-02-01',
+          },
+          {
+            propertyName: '$.startDate',
+            errorType: 'invalidStartDateInThePast',
+            entityId: '23b3596e-f3be-46e6-9f73-55623aafe916',
+            value: '2025-03-02',
+          },
+          {
+            propertyName: '$.invalidProperty',
+            errorType: 'invalidErrorType',
+            entityId: '344171f8-cff6-4c58-8eac-edfd46485858',
+            value: '2025-04-03',
+          },
+        ],
+      },
+    })
+
+    const toUiDateTransform = (params: InvalidParams) => ({
+      earliestDate: DateFormats.isoDateToUIDate(params.value),
+    })
+
+    const toIsoDatetimeTransform = (params: InvalidParams) => ({
+      latestDate: DateFormats.dateObjToIsoDateTime(DateFormats.isoToDateObj(params.value)),
+    })
+
+    const mergeVariables = generateMergeParameters(error, [
+      { errorType: 'existingUpcomingBedspace', transform: toUiDateTransform },
+      { errorType: 'invalidStartDateInThePast', transform: toIsoDatetimeTransform },
+    ])
+
+    expect(mergeVariables).toEqual({
+      existingUpcomingBedspace: { earliestDate: '1 February 2025' },
+      invalidStartDateInThePast: { latestDate: '2025-03-02T00:00:00.000Z' },
+    })
+  })
+
+  it("should return undefined when the error isn't an annotated error", () => {
+    const error: SanitisedError = {
+      stack: 'stack',
+      message: 'message',
+    }
+    const result = generateMergeParameters(error, [])
+    expect(result).toBe(undefined)
   })
 })

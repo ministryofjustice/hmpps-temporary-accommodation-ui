@@ -10,13 +10,17 @@ export default class PremisesShowPage extends Page {
     return new PremisesShowPage(`${premises.addressLine1}, ${premises.postcode}`)
   }
 
+  shouldShowPropertyStatus(status: string): void {
+    cy.get('dl').contains('Property status').siblings().contains(status)
+  }
+
   shouldShowPremisesOverview(premises: Cas3Premises, status: string, startDate: string): void {
     cy.get('main div .govuk-summary-card').within(() => {
       // should show property reference at the top of the summary card
       cy.get('h2').contains(premises.reference)
 
       // should show the property status
-      cy.get('dl').contains('Property status').siblings().contains(status)
+      this.shouldShowPropertyStatus(status)
 
       // should show the property start date
       cy.get('dl').contains('Start date').siblings().contains(startDate)
@@ -138,7 +142,20 @@ export default class PremisesShowPage extends Page {
     cy.get('button').contains('Actions').parent().siblings('ul').contains('Edit property details').click()
   }
 
-  shouldShowPropertyUpdatedBanner() {
+  shouldShowPropertyUpdatedBanner(): void {
     cy.get('main .govuk-notification-banner--success').contains('Property edited')
+  }
+
+  clickArchivePropertyButton(): void {
+    cy.get('button').contains('Actions').parent().click()
+    cy.get('button').contains('Actions').parent().siblings('ul').contains('Archive property').click()
+  }
+
+  shouldShowPropertyAndBedspacesArchivedBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Property and bedspaces archived')
+  }
+
+  shouldShowPropertyAndBedspacesUpdatedBanner(): void {
+    cy.get('main .govuk-notification-banner--success').contains('Property and bedspaces updated')
   }
 }

@@ -15,6 +15,11 @@ describe('premisesV2Utils', () => {
           href: paths.premises.v2.bedspaces.new({ premisesId: premises.id }),
         },
         {
+          text: 'Archive property',
+          classes: 'govuk-button--secondary',
+          href: paths.premises.v2.archive({ premisesId: premises.id }),
+        },
+        {
           text: 'Edit property details',
           classes: 'govuk-button--secondary',
           href: paths.premises.v2.edit({ premisesId: premises.id }),

@@ -8,10 +8,16 @@ import BedspaceService from '../../../../services/v2/bedspaceService'
 import extractCallConfig from '../../../../utils/restUtils'
 import { createSubNavArr } from '../../../../utils/premisesSearchUtils'
 import { showPropertySubNavArray } from '../../../../utils/premisesUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
+import {
+  InvalidParams,
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  generateMergeParameters,
+} from '../../../../utils/validation'
 import { filterProbationRegions } from '../../../../utils/userUtils'
 import { parseNumber } from '../../../../utils/formUtils'
 import { premisesActions } from '../../../../utils/v2/premisesUtils'
+import { DateFormats } from '../../../../utils/dateUtils'
 
 export default class PremisesController {
   constructor(
@@ -224,6 +230,87 @@ export default class PremisesController {
         res.redirect(paths.premises.v2.show({ premisesId: premises.id }))
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.edit({ premisesId }))
+      }
+    }
+  }
+
+  archive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+
+      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+      const archiveOption = userInput.archiveOption || 'today'
+
+      return res.render('temporary-accommodation/v2/premises/archive', {
+        premises,
+        errors,
+        errorSummary,
+        ...userInput,
+        archiveOption,
+      })
+    }
+  }
+
+  archiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId } = req.params
+      const { archiveOption } = req.body
+
+      const errors: Record<string, string> = {}
+
+      let endDate: string | undefined
+
+      if (archiveOption === 'today') {
+        endDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (archiveOption === 'other') {
+        const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate')
+        endDate = parsedDate.endDate
+      } else {
+        errors.archiveOption = 'Select a date to archive the premises'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', errors)
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.v2.premises.archive({ premisesId }))
+      }
+
+      try {
+        await this.premisesService.archivePremises(callConfig, premisesId, { endDate })
+
+        const today = DateFormats.dateObjToIsoDate(new Date())
+        req.flash('success', `Property and bedspaces ${endDate > today ? 'updated' : 'archived'}`)
+
+        return res.redirect(paths.premises.v2.show({ premisesId }))
+      } catch (err) {
+        const earliestDateTransform = (params: InvalidParams) => ({
+          earliestDate: DateFormats.isoDateToUIDate(params.value),
+        })
+
+        const mergeVariables = generateMergeParameters(err, [
+          { errorType: 'existingUpcomingBedspace', transform: earliestDateTransform },
+          { errorType: 'existingBookings', transform: earliestDateTransform },
+          { errorType: 'existingVoid', transform: earliestDateTransform },
+          { errorType: 'existingTurnaround', transform: earliestDateTransform },
+          {
+            errorType: 'endDateOverlapPreviousPremisesArchiveEndDate',
+            transform: (params: InvalidParams) => ({
+              endDate: DateFormats.isoDateToUIDate(params.value),
+            }),
+          },
+        ])
+
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.archive({ premisesId }),
+          'premisesArchive',
+          mergeVariables,
+        )
       }
     }
   }

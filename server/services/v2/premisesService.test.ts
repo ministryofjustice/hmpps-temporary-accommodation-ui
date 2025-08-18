@@ -2,6 +2,7 @@ import { TextItem } from '@approved-premises/ui'
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
+  cas3ArchivePremisesFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
@@ -64,6 +65,20 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.update).toHaveBeenCalledWith(premises.id, updatedPremises)
+    })
+  })
+
+  describe('archivePremises', () => {
+    it('on success returns the premises that has been archived', async () => {
+      const premises = cas3PremisesFactory.build({ status: 'archived' })
+      const archivePayload = cas3ArchivePremisesFactory.build()
+      premisesClient.archive.mockResolvedValue(premises)
+
+      const result = await service.archivePremises(callConfig, premises.id, archivePayload)
+      expect(result).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.archive).toHaveBeenCalledWith(premises.id, archivePayload)
     })
   })
 

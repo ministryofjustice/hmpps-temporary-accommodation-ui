@@ -18,8 +18,13 @@ import extractCallConfig from '../../../../utils/restUtils'
 import PremisesController from './premisesController'
 import paths from '../../../../paths/temporary-accommodation/manage'
 import { filterProbationRegions } from '../../../../utils/userUtils'
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
+import {
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  generateMergeParameters,
+} from '../../../../utils/validation'
 import BedspaceService from '../../../../services/v2/bedspaceService'
+import { DateFormats } from '../../../../utils/dateUtils'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -760,6 +765,11 @@ describe('PremisesController', () => {
             href: `/v2/properties/${property.id}/bedspaces/new`,
           },
           {
+            text: 'Archive property',
+            classes: 'govuk-button--secondary',
+            href: `/v2/properties/${property.id}/archive`,
+          },
+          {
             text: 'Edit property details',
             classes: 'govuk-button--secondary',
             href: `/v2/properties/${property.id}/edit`,
@@ -797,6 +807,11 @@ describe('PremisesController', () => {
             text: 'Add a bedspace',
             classes: 'govuk-button--secondary',
             href: `/v2/properties/${property.id}/bedspaces/new`,
+          },
+          {
+            text: 'Archive property',
+            classes: 'govuk-button--secondary',
+            href: `/v2/properties/${property.id}/archive`,
           },
           {
             text: 'Edit property details',
@@ -1061,6 +1076,116 @@ describe('PremisesController', () => {
         err,
         paths.premises.v2.edit({ premisesId }),
       )
+    })
+  })
+
+  describe('archive', () => {
+    const premises = cas3PremisesFactory.build()
+
+    it('should render the form', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.archive()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/archive', {
+        premises,
+        errors: {},
+        errorSummary: [],
+        archiveOption: 'today',
+      })
+    })
+
+    it('should render the form with errors and user input when the backend returns an error', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.archive()
+      const errorsAndUserInput = createMock<ErrorsAndUserInput>()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue(errorsAndUserInput)
+
+      await requestHandler(request, response, next)
+
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/archive', {
+        premises,
+        errors: errorsAndUserInput.errors,
+        errorSummary: errorsAndUserInput.errorSummary,
+        ...errorsAndUserInput.userInput,
+        archiveOption: 'today',
+      })
+    })
+  })
+
+  describe('archiveSubmit', () => {
+    const premises = cas3PremisesFactory.build()
+
+    it('should successfully archive a premises and redirect to the show premises page', async () => {
+      const today = new Date()
+
+      request.params.premisesId = premises.id
+      request.body = { archiveOption: 'today' }
+
+      premisesService.archivePremises.mockResolvedValue(premises)
+
+      const requestHandler = premisesController.archiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.archivePremises).toHaveBeenCalledWith(callConfig, premises.id, {
+        endDate: DateFormats.dateObjToIsoDate(today),
+      })
+      expect(request.flash).toHaveBeenCalledWith('success', 'Property and bedspaces archived')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+    })
+
+    it('should fail to archive when the service returns an error', async () => {
+      request.params.premisesId = premises.id
+      request.body = { archiveOption: 'today' }
+
+      const earliestDate = new Date()
+      earliestDate.setDate(earliestDate.getDate() + 7)
+
+      const error = {
+        data: {
+          title: 'Bad Request',
+          status: 400,
+          detail: 'There is a problem with your request',
+          'invalid-params': [
+            {
+              propertyName: '$.endDate',
+              errorType: 'existingUpcomingBedspace',
+              entityId: 'a094a15b-5ead-4c99-a20b-77aa15eb9ce6',
+              value: DateFormats.dateObjToIsoDate(earliestDate),
+            },
+          ],
+        },
+      }
+
+      const mergeParameters: Array<Record<string, Record<string, string>>> = []
+
+      premisesService.archivePremises.mockImplementation(() => {
+        throw error
+      })
+      ;(generateMergeParameters as jest.Mock).mockReturnValue(mergeParameters)
+
+      const requestHandler = premisesController.archiveSubmit()
+
+      await requestHandler(request, response, next)
+
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
+        request,
+        response,
+        error,
+        paths.premises.v2.archive({ premisesId: premises.id }),
+        'premisesArchive',
+        mergeParameters,
+      )
+
+      expect(generateMergeParameters).toHaveBeenCalled()
     })
   })
 })

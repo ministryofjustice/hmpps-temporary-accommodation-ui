@@ -11,6 +11,7 @@ import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../
 import { DateFormats } from '../../../../utils/dateUtils'
 import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
 import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
+import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
 
 export default class BedspacesController {
   constructor(
@@ -135,6 +136,56 @@ export default class BedspacesController {
       } catch (err) {
         catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }))
       }
+    }
+  }
+
+  submitCancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { bedspaceId: cancelArchive } = req.body
+      try {
+        if (cancelArchive === 'yes') {
+          await this.bedspaceService.cancelArchiveBedspace(callConfig, premisesId, bedspaceId)
+          req.flash('success', 'Bedspace archive cancelled')
+        }
+
+        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        )
+      }
+    }
+  }
+
+  cancelArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const [bedspace, premiseTotals] = await Promise.all([
+        this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+        this.premisesService.getSinglePremisesBedspaceTotals(callConfig, premisesId),
+      ])
+
+      const bedspaceEndDate = DateFormats.isoDateToUIDate(bedspace.endDate)
+      const scheduledForArchive = isPremiseScheduledToBeArchived(premiseTotals)
+
+      const errorsAndUserInput = fetchErrorsAndUserInput(req)
+      const { errors, errorSummary } = errorsAndUserInput
+
+      return res.render('temporary-accommodation/v2/bedspaces/cancel-archive', {
+        premisesId,
+        bedspaceId,
+        bedspaceEndDate,
+        scheduledForArchive,
+        errors,
+        errorSummary,
+      })
     }
   }
 }

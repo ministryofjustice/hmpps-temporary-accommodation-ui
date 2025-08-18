@@ -74,11 +74,13 @@ const managePathsCas3 = {
     create: cas3PremisesPath,
     update: singlePremisesCas3Path,
     archive: premisesArchivePath,
+    totals: singlePremisesCas3Path.path('bedspace-totals'),
     bedspaces: {
       show: singleBedspacePath,
       create: bedspacesCas3Path,
       get: bedspacesCas3Path,
       update: singleBedspacePath,
+      cancelArchive: singleBedspacePath.path('cancel-archive'),
     },
     bookings: {
       arrival: singleBookingCas3Path.path('arrivals'),
@@ -117,11 +119,13 @@ export default {
       create: managePathsCas3.premises.create,
       update: managePathsCas3.premises.update,
       archive: managePathsCas3.premises.archive,
+      totals: managePathsCas3.premises.totals,
       bedspaces: {
         show: managePathsCas3.premises.bedspaces.show,
         create: managePathsCas3.premises.bedspaces.create,
         get: managePathsCas3.premises.bedspaces.get,
         update: managePathsCas3.premises.bedspaces.update,
+        cancelArchive: managePathsCas3.premises.bedspaces.cancelArchive,
       },
       bookings: {
         arrival: managePathsCas3.premises.bookings.arrival,

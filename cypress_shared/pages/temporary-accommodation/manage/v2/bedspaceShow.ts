@@ -3,6 +3,7 @@ import { Booking, Cas3Bedspace, Cas3Premises, LostBed } from '../../../../../ser
 import paths from '../../../../../server/paths/temporary-accommodation/manage'
 import BookingListingComponent from '../../../../components/bookingListing'
 import LostBedListingComponent from '../../../../components/lostBedListing'
+import { DateFormats } from '../../../../../server/utils/dateUtils'
 
 export default class BedspaceShowPage extends Page {
   constructor(
@@ -76,15 +77,32 @@ export default class BedspaceShowPage extends Page {
     lostBedListingComponent.shouldShowLostBedDetails()
   }
 
-  clickEditPropertyDetailsAction(): void {
-    // TODO: uncomment when additional actions are added
-    // cy.get('button').contains('Actions').parent().click()
-    // cy.get('button').contains('Actions').parent().siblings('ul').contains('Edit bedspace details').click()
-
-    cy.get('[role="button"]').contains('Edit bedspace details').click()
+  clickAction(action: string): void {
+    cy.get('body').then($body => {
+      if ($body.find('button:contains("Actions")').length > 0) {
+        cy.get('button').contains('Actions').parent().click()
+        cy.get('button').contains('Actions').parent().siblings('ul').contains(action).click()
+      } else {
+        cy.get('[role="button"]').contains(action).click()
+      }
+    })
   }
 
   shouldShowBedspaceUpdatedBanner(): void {
     cy.get('main .govuk-notification-banner--success').contains('Bedspace edited')
+  }
+
+  shouldShowCancelArchive(bedspace: Cas3Bedspace): void {
+    const endDate = DateFormats.isoDateToUIDate(bedspace.endDate)
+
+    cy.get('main').contains(`Are you sure you want to cancel the scheduled archive on ${endDate}?`)
+    cy.get('main').contains('Yes, I want to cancel it')
+    cy.get('main').contains('No')
+    cy.get('main').contains('Submit')
+  }
+
+  confirmCancelArchive() {
+    cy.get('main').contains('Yes').click()
+    cy.get('main').contains('Submit').click()
   }
 }

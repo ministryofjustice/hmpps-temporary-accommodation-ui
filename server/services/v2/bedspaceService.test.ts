@@ -2,6 +2,7 @@ import BedspaceClient from '../../data/v2/bedspaceClient'
 import ReferenceDataClient from '../../data/referenceDataClient'
 import BedspaceService from './bedspaceService'
 import {
+  cas3BedspaceArchiveActionFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
@@ -49,7 +50,11 @@ describe('BedspaceService', () => {
   describe('summaryList', () => {
     it.each([
       [
-        cas3BedspaceFactory.build({ status: 'online', startDate: '2025-01-02T03:04:05.678912Z' }),
+        cas3BedspaceFactory.build({
+          status: 'online',
+          startDate: '2025-01-02T03:04:05.678912Z',
+          archiveHistory: [cas3BedspaceArchiveActionFactory.build({ date: '2025-01-02T03:04:05.678912Z' })],
+        }),
         'Online',
         'green',
         '2 January 2025',
@@ -74,29 +79,42 @@ describe('BedspaceService', () => {
         '5 April 2025',
       ],
     ])('returns the summaryList for a bedspace', async (bedspace, status, tagColour, formattedDate) => {
+      const rows = [
+        {
+          key: { text: 'Bedspace status' },
+          value: { html: `<strong class="govuk-tag govuk-tag--${tagColour}">${status}</strong>` },
+        },
+        {
+          key: { text: 'Start date' },
+          value: { text: formattedDate },
+        },
+      ]
+
+      if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
+        rows.push({
+          key: { text: 'Archive history' },
+          value: {
+            html: bedspace.archiveHistory.map(archive => `<div>${archive.status} date ${formattedDate}</div>`).join(''),
+          },
+        })
+      }
+
+      rows.push(
+        {
+          key: { text: 'Bedspace details' },
+          value: {
+            html: bedspace.characteristics
+              .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
+              .join(' '),
+          },
+        },
+        {
+          key: { text: 'Additional bedspace details' },
+          value: { text: bedspace.notes },
+        },
+      )
       const expectedSummary = {
-        rows: [
-          {
-            key: { text: 'Bedspace status' },
-            value: { html: `<strong class="govuk-tag govuk-tag--${tagColour}">${status}</strong>` },
-          },
-          {
-            key: { text: 'Start date' },
-            value: { text: formattedDate },
-          },
-          {
-            key: { text: 'Bedspace details' },
-            value: {
-              html: bedspace.characteristics
-                .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
-                .join(' '),
-            },
-          },
-          {
-            key: { text: 'Additional bedspace details' },
-            value: { text: bedspace.notes },
-          },
-        ],
+        rows,
       }
 
       const result = service.summaryList(bedspace)
@@ -295,6 +313,32 @@ describe('BedspaceService', () => {
       const summary = service.summaryList(bedspace)
 
       expect(summary).toEqual(expectedSummary)
+    })
+
+    it('includes scheduled archive date in the status row for online bedspaces with endDate (scheduled archive)', () => {
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'online',
+        endDate: '2125-08-20',
+      })
+
+      const summary = service.summaryList(bedspace)
+      const statusRowValue = (summary.rows[0].value as { html: string }).html
+
+      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--green">Online</strong>')
+      expect(statusRowValue).toContain('Scheduled archive date 20 August 2125')
+    })
+
+    it('includes scheduled online date in the status row for archived bedspaces with future startDate (scheduled online)', () => {
+      const bedspace = cas3BedspaceFactory.build({
+        status: 'archived',
+        startDate: '2125-08-20',
+      })
+
+      const summary = service.summaryList(bedspace)
+      const statusRowValue = (summary.rows[0].value as { html: string }).html
+
+      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--grey">Archived</strong>')
+      expect(statusRowValue).toContain('Scheduled online date 20 August 2125')
     })
   })
 })

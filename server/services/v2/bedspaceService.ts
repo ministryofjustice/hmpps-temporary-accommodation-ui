@@ -1,5 +1,6 @@
 import {
   Cas3Bedspace,
+  Cas3BedspaceArchiveAction,
   type Cas3BedspaceStatus,
   Cas3Bedspaces,
   Cas3NewBedspace,
@@ -37,25 +38,38 @@ export default class BedspaceService {
   }
 
   summaryList(bedspace: Cas3Bedspace): SummaryList {
+    const rows = [
+      {
+        key: { text: 'Bedspace status' },
+        value: { html: this.formatBedspaceStatus(bedspace) },
+      },
+      {
+        key: { text: 'Start date' },
+        value: { text: this.formatBedspaceDate(bedspace.startDate) },
+      },
+    ]
+
+    if (bedspace.archiveHistory && bedspace.archiveHistory.length > 0) {
+      rows.push({
+        key: { text: 'Archive history' },
+        value: {
+          html: this.formatArchiveHistory(bedspace.archiveHistory),
+        },
+      })
+    }
+
+    rows.push(
+      {
+        key: { text: 'Bedspace details' },
+        value: { html: this.formatBedspaceDetails(bedspace.characteristics) || 'None' },
+      },
+      {
+        key: { text: 'Additional bedspace details' },
+        value: { text: bedspace.notes ?? 'None' },
+      },
+    )
     return {
-      rows: [
-        {
-          key: { text: 'Bedspace status' },
-          value: { html: this.formatBedspaceStatus(bedspace.status) },
-        },
-        {
-          key: { text: 'Start date' },
-          value: { text: this.formatBedspaceDate(bedspace.startDate) },
-        },
-        {
-          key: { text: 'Bedspace details' },
-          value: { html: this.formatBedspaceDetails(bedspace.characteristics) || 'None' },
-        },
-        {
-          key: { text: 'Additional bedspace details' },
-          value: { text: bedspace.notes ?? 'None' },
-        },
-      ],
+      rows,
     }
   }
 
@@ -72,9 +86,17 @@ export default class BedspaceService {
     }
   }
 
-  private formatBedspaceStatus(status: Cas3BedspaceStatus): string {
-    const tagClass = this.getBedspaceStatusTagColour(status)
-    return `<strong class="govuk-tag ${tagClass}">${convertToTitleCase(status)}</strong>`
+  private formatBedspaceStatus(bedspace: Cas3Bedspace): string {
+    const tagClass = this.getBedspaceStatusTagColour(bedspace.status)
+    let html = `<strong class="govuk-tag ${tagClass}">${convertToTitleCase(bedspace.status)}</strong>`
+
+    if (bedspace.status === 'online' && bedspace.endDate) {
+      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled archive date ${this.formatBedspaceDate(bedspace.endDate)}</span>`
+    } else if (bedspace.status === 'archived' && new Date(bedspace.startDate) > new Date()) {
+      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatBedspaceDate(bedspace.startDate)}</span>`
+    }
+
+    return html
   }
 
   private formatBedspaceDate(dateString: string | undefined | null): string {
@@ -89,6 +111,12 @@ export default class BedspaceService {
     return characteristics
       .map(characteristic => `<span class="hmpps-tag-filters">${characteristic.name}</span>`)
       .join(' ')
+  }
+
+  private formatArchiveHistory(archiveHistory: Array<Cas3BedspaceArchiveAction>): string {
+    return archiveHistory
+      .map(action => `<div>${action.status} date ${this.formatBedspaceDate(action.date)}</div>`)
+      .join('')
   }
 
   async getReferenceData(callConfig: CallConfig): Promise<BedspaceReferenceData> {

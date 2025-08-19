@@ -7,11 +7,16 @@ import BedspaceService from '../../../../services/v2/bedspaceService'
 import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
 
-import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../../utils/validation'
-import { DateFormats } from '../../../../utils/dateUtils'
+import {
+  InvalidParams,
+  catchValidationErrorOrPropogate,
+  fetchErrorsAndUserInput,
+  generateMergeParameters,
+} from '../../../../utils/validation'
 import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
 import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
+import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
 
 export default class BedspacesController {
   constructor(
@@ -186,6 +191,96 @@ export default class BedspacesController {
         errors,
         errorSummary,
       })
+    }
+  }
+
+  archive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+      const archiveOption = userInput.archiveOption || 'today'
+
+      return res.render('temporary-accommodation/v2/bedspaces/archive', {
+        bedspace,
+        params: req.params,
+        errors,
+        errorSummary,
+        ...userInput,
+        archiveOption,
+      })
+    }
+  }
+
+  archiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { premisesId, bedspaceId } = req.params
+      const { archiveOption } = req.body
+
+      const errors: Record<string, string> = {}
+
+      let archiveDate: string | undefined
+
+      if (archiveOption === 'today') {
+        archiveDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (archiveOption === 'anotherDate') {
+        if (dateIsBlank(req.body, 'endDate')) {
+          errors.endDate = 'You must specify the archive date'
+        } else if (!dateAndTimeInputsAreValidDates(req.body, 'endDate')) {
+          errors.endDate = 'You must specify a valid archive date'
+        } else {
+          const { endDate: archiveDateString } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate')
+          archiveDate = archiveDateString
+        }
+      } else {
+        errors.archiveOption = 'You must select when to archive the bedspace'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', errors)
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
+      }
+
+      if (!archiveDate) {
+        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
+      }
+
+      try {
+        const callConfig = extractCallConfig(req)
+        await this.bedspaceService.archiveBedspace(callConfig, premisesId, bedspaceId, archiveDate)
+
+        req.flash('success', 'Bedspace archived')
+        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        const earliestDateTransform = (params: InvalidParams) => ({
+          earliestDate: DateFormats.isoDateToUIDate(params.value),
+        })
+
+        const mergeVariables = generateMergeParameters(err, [
+          { errorType: 'existingUpcomingBedspace', transform: earliestDateTransform },
+          { errorType: 'existingBookings', transform: earliestDateTransform },
+          { errorType: 'existingVoid', transform: earliestDateTransform },
+          { errorType: 'existingTurnaround', transform: earliestDateTransform },
+          {
+            errorType: 'endDateOverlapPreviousBedspaceArchiveEndDate',
+            transform: (params: InvalidParams) => ({
+              endDate: DateFormats.isoDateToUIDate(params.value),
+            }),
+          },
+        ])
+
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+          'bedspaceArchive',
+          mergeVariables,
+        )
+      }
     }
   }
 }

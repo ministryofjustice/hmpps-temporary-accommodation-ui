@@ -18,5 +18,14 @@ export function bedspaceActions(premises: Cas3Premises, bedspace: Cas3Bedspace):
       classes: 'govuk-button--secondary',
     })
   }
+
+  if (bedspace.status === 'online') {
+    actions.unshift({
+      text: 'Archive bedspace',
+      href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      classes: 'govuk-button--secondary',
+    })
+  }
+
   return actions
 }

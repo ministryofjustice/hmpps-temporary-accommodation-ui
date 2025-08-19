@@ -38,4 +38,11 @@ export default class BedspaceClient {
       path: paths.cas3.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
     })
   }
+
+  async archive(premisesId: string, bedspaceId: string, data: { endDate: string }) {
+    return this.restClient.post<void>({
+      path: paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }),
+      data,
+    })
+  }
 }

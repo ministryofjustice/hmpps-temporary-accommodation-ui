@@ -105,4 +105,25 @@ export default class BedspaceShowPage extends Page {
     cy.get('main').contains('Yes').click()
     cy.get('main').contains('Submit').click()
   }
+
+  clickArchiveLink(): void {
+    // Click the Archive link
+    cy.get('.moj-cas-page-header-actions .moj-button-menu__toggle-button').then($toggleButtons => {
+      if ($toggleButtons.length > 0) {
+        // Dropdown exists - click it first
+        cy.wrap($toggleButtons.first()).click()
+      }
+    })
+    cy.get('.moj-cas-page-header-actions a').contains('Archive bedspace').click()
+  }
+
+  shouldShowAsArchived(): void {
+    cy.get('.govuk-tag').should('contain', 'Archived')
+  }
+
+  shouldNotShowArchiveLink(): void {
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.root().should('not.contain', 'Archive')
+    })
+  }
 }

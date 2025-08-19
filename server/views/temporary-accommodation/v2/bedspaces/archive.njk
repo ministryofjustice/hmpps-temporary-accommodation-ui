@@ -1,0 +1,81 @@
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../../partials/showErrorSummary.njk" import showErrorSummary %}
+{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
+{% from "../../../components/formFields/form-page-date-input/macro.njk" import formPageDateInput %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% set pageTitle = "Archive a bedspace - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block beforeContent %}
+  {{ breadCrumb('Archive a bedspace', [
+    {title: 'List of properties', href: paths.premises.v2.online()},
+    {title: 'View a bedspace', href: paths.premises.v2.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })}
+  ]) }}
+{% endblock %}
+
+{% block content %}
+  {% include "../../../_messages.njk" %}
+  
+  {{ showErrorSummary(errorSummary) }}
+  
+  <h1 class="govuk-heading-l">When should {{ bedspace.reference }} be archived?</h1>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form action="{{ paths.premises.v2.bedspaces.archive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        
+        {% set conditionalHtml %}
+          {{ formPageDateInput({
+            fieldset: {
+              legend: {
+                text: "Enter the archive date",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            fieldName: "endDate",
+            hint: {
+              text: "Use numbers, for example 27 05 2025"
+            },
+            items: dateFieldValues('endDate', errors) if archiveOption == "anotherDate",
+            errorMessage: errors.endDate if archiveOption == "anotherDate"
+          }, fetchContext()) }}
+        {% endset %}
+
+        {{ govukRadios({
+          name: "archiveOption",
+          fieldset: {
+            legend: {
+              text: "When should " + bedspace.reference + " be archived?",
+              isPageHeading: false,
+              classes: "govuk-visually-hidden"
+            }
+          },
+          items: [
+            {
+              value: "today",
+              text: "Today",
+              checked: archiveOption == "today"
+            },
+            {
+              value: "anotherDate",
+              text: "Another date",
+              checked: archiveOption == "anotherDate",
+              conditional: {
+                html: conditionalHtml
+              }
+            }
+          ],
+          errorMessage: errors.endDate if archiveOption == "today"
+        }) }}
+
+        {{ govukButton({
+          text: "Submit"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

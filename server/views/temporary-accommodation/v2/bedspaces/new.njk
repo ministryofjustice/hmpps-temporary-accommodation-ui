@@ -11,7 +11,7 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: 'Back',
-    href: paths.premises.v2.show({ premisesId: premises.id }),
+    href: paths.premises.show({ premisesId: premises.id }),
     classes: 'govuk-!-display-none-print'
   }) }}
 {% endblock %}
@@ -24,7 +24,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.premises.v2.bedspaces.create({ premisesId: premises.id })}}" method="post">
+      <form action="{{ paths.premises.bedspaces.create({ premisesId: premises.id })}}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         <h1 class="govuk-heading-l">Add a bedspace</h1>
         {{ locationHeader({ premises: premises }, false, "govuk-heading-m") }}

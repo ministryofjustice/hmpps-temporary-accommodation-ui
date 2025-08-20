@@ -14,7 +14,7 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   if (bedspace.startDate && new Date(bedspace.startDate) > new Date()) {
     actions.push({
       text: 'Cancel scheduled bedspace online date',
-      href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   } else {
@@ -27,7 +27,7 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
 
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
     classes: 'govuk-button--secondary',
   })
   return actions
@@ -49,7 +49,7 @@ const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): 
   if (bedspace.endDate) {
     actions.push({
       text: 'Cancel scheduled bedspace archive',
-      href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   } else {
@@ -61,7 +61,7 @@ const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): 
   }
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
     classes: 'govuk-button--secondary',
   })
   return actions

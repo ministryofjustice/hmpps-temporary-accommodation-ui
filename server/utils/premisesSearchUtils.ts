@@ -6,7 +6,7 @@ import { appendQueryString } from './utils'
 export function createSubNavArr(status: Cas3PremisesStatus, postcodeOrAddress?: string): Array<SubNavObj> {
   return ['online', 'archived'].map((premisesStatus: Cas3PremisesStatus) => ({
     text: `${capitaliseStatus(premisesStatus)} properties`,
-    href: appendQueryString(paths.premises.v2[premisesStatus]({}), { postcodeOrAddress }),
+    href: appendQueryString(paths.premises[premisesStatus]({}), { postcodeOrAddress }),
     active: status === premisesStatus,
   }))
 }

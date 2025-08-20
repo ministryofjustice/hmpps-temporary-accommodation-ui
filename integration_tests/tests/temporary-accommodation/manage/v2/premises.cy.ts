@@ -781,7 +781,7 @@ context('Premises', () => {
       cy.signIn()
 
       // And there is an archived premises in the database
-      const premises = cas3PremisesFactory.build({
+      const premises = cas3PremisesFactory.withArchiveHistory(3).build({
         status: 'archived',
         startDate: '2025-02-01',
         totalOnlineBedspaces: 0,
@@ -1412,6 +1412,7 @@ context('Premises', () => {
       const expectedPremises: Cas3Premises = {
         ...premises,
         status: 'archived',
+        archiveHistory: [{ date: DateFormats.dateObjToIsoDate(new Date()), status: 'archived' }],
       }
       cy.task('stubPremisesArchiveV2', expectedPremises)
       cy.task('stubSinglePremisesV2', expectedPremises)
@@ -1435,6 +1436,7 @@ context('Premises', () => {
 
       // And the property should be archived
       showPage.shouldShowPropertyStatus('Archived')
+      showPage.shouldShowPropertyArchiveHistory(expectedPremises.archiveHistory)
     })
 
     it('should be able to archive a property tomorrow', () => {
@@ -1460,6 +1462,7 @@ context('Premises', () => {
 
       // When the backend responds with 200 ok
       const expectedPremises: Cas3Premises = premises
+      expectedPremises.endDate = tomorrow
       cy.task('stubPremisesArchiveV2', expectedPremises)
       cy.task('stubSinglePremisesV2', expectedPremises)
 
@@ -1481,6 +1484,7 @@ context('Premises', () => {
 
       // And the property should be online, with a scheduled archive
       showPage.shouldShowPropertyStatus('Online')
+      showPage.shouldShowScheduledDate(DateFormats.dateObjtoUIDate(tomorrowDate))
       // TODO: uncomment when upcoming statuses have been implemented
       // showPage.shouldShowUpcomingArchiveStatus()
     })

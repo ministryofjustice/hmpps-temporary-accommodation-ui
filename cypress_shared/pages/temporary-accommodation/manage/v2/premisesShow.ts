@@ -1,5 +1,10 @@
 import Page from '../../../page'
-import { Cas3Bedspace, Cas3Bedspaces, Cas3Premises } from '../../../../../server/@types/shared'
+import {
+  Cas3Bedspace,
+  Cas3Bedspaces,
+  Cas3Premises,
+  Cas3PremisesArchiveAction,
+} from '../../../../../server/@types/shared'
 import { convertToTitleCase } from '../../../../../server/utils/utils'
 import { DateFormats } from '../../../../../server/utils/dateUtils'
 import paths from '../../../../../server/paths/temporary-accommodation/manage'
@@ -14,6 +19,22 @@ export default class PremisesShowPage extends Page {
     cy.get('dl').contains('Property status').siblings().contains(status)
   }
 
+  shouldShowScheduledDate(date: string): void {
+    cy.get('dl').contains('Property status').siblings().contains(date)
+  }
+
+  shouldShowPropertyArchiveHistory(archiveHistory: Array<Cas3PremisesArchiveAction>): void {
+    cy.get('dl')
+      .contains('Archive history')
+      .parent()
+      .within(() => {
+        archiveHistory.forEach(action => {
+          cy.contains(convertToTitleCase(action.status))
+          cy.contains(DateFormats.isoDateToUIDate(action.date))
+        })
+      })
+  }
+
   shouldShowPremisesOverview(premises: Cas3Premises, status: string, startDate: string): void {
     cy.get('main div .govuk-summary-card').within(() => {
       // should show property reference at the top of the summary card
@@ -24,6 +45,11 @@ export default class PremisesShowPage extends Page {
 
       // should show the property start date
       cy.get('dl').contains('Start date').siblings().contains(startDate)
+
+      // should show archive history if it exists
+      if (premises.archiveHistory && premises.archiveHistory.length > 0) {
+        this.shouldShowPropertyArchiveHistory(premises.archiveHistory)
+      }
 
       // should show the property address
       cy.get('dl')

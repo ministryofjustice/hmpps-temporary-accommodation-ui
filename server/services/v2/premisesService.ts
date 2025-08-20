@@ -3,6 +3,7 @@ import {
   Cas3BedspacePremisesSearchResult,
   Cas3NewPremises,
   Cas3Premises,
+  Cas3PremisesArchiveAction,
   Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResult,
   Cas3PremisesSearchResults,
@@ -22,6 +23,8 @@ import paths from '../../paths/temporary-accommodation/manage'
 import { DateFormats } from '../../utils/dateUtils'
 import { convertToTitleCase } from '../../utils/utils'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
+
+const ARCHIVE_HISTORY_THRESHOLD = 14
 
 export type Cas3PremisesReferenceData = {
   localAuthorities: Array<LocalAuthorityArea>
@@ -132,45 +135,57 @@ export default class PremisesService {
   }
 
   summaryList(premises: Cas3Premises): SummaryList {
+    const rows = [
+      {
+        key: { text: 'Property status' },
+        value: this.htmlValue(this.formatPremisesStatus(premises)),
+      },
+      {
+        key: { text: 'Start date' },
+        value: this.textValue(this.formatDate(premises.startDate)),
+      },
+    ]
+
+    if (premises.archiveHistory && premises.archiveHistory.length > 0) {
+      rows.push({
+        key: { text: 'Archive history' },
+        value: {
+          html: this.formatArchiveHistory(premises.archiveHistory),
+        },
+      })
+    }
+    rows.push(
+      {
+        key: { text: 'Address' },
+        value: this.htmlValue(this.formatAddress(premises)),
+      },
+      {
+        key: { text: 'Local authority' },
+        value: this.textValue(premises.localAuthorityArea?.name ?? ''),
+      },
+      {
+        key: { text: 'Probation region' },
+        value: this.textValue(premises.probationRegion.name),
+      },
+      {
+        key: { text: 'Probation delivery unit' },
+        value: this.textValue(premises.probationDeliveryUnit.name),
+      },
+      {
+        key: { text: 'Expected turn around time' },
+        value: this.textValue(this.formatTurnaround(premises.turnaroundWorkingDays)),
+      },
+      {
+        key: { text: 'Property details' },
+        value: this.htmlValue(this.formatDetails(premises.characteristics)),
+      },
+      {
+        key: { text: 'Additional property details' },
+        value: this.textValue(premises.notes || 'None'),
+      },
+    )
     return {
-      rows: [
-        {
-          key: { text: 'Property status' },
-          value: this.htmlValue(this.formatPremisesStatus(premises.status)),
-        },
-        {
-          key: { text: 'Start date' },
-          value: this.textValue(this.formatDate(premises.startDate)),
-        },
-        {
-          key: { text: 'Address' },
-          value: this.htmlValue(this.formatAddress(premises)),
-        },
-        {
-          key: { text: 'Local authority' },
-          value: this.textValue(premises.localAuthorityArea?.name ?? ''),
-        },
-        {
-          key: { text: 'Probation region' },
-          value: this.textValue(premises.probationRegion.name),
-        },
-        {
-          key: { text: 'Probation delivery unit' },
-          value: this.textValue(premises.probationDeliveryUnit.name),
-        },
-        {
-          key: { text: 'Expected turn around time' },
-          value: this.textValue(this.formatTurnaround(premises.turnaroundWorkingDays)),
-        },
-        {
-          key: { text: 'Property details' },
-          value: this.htmlValue(this.formatDetails(premises.characteristics)),
-        },
-        {
-          key: { text: 'Additional property details' },
-          value: this.textValue(premises.notes || 'None'),
-        },
-      ],
+      rows,
     }
   }
 
@@ -179,7 +194,7 @@ export default class PremisesService {
       rows: [
         {
           key: { text: 'Status' },
-          value: this.htmlValue(this.formatPremisesStatus(premises.status)),
+          value: this.htmlValue(this.formatPremisesStatus(premises)),
         },
         {
           key: { text: 'Address' },
@@ -269,8 +284,46 @@ export default class PremisesService {
     }
   }
 
-  private formatPremisesStatus(status: Cas3PremisesStatus): string {
-    const tagClass = this.getPremisesStatusTagColour(status)
-    return `<strong class="govuk-tag ${tagClass}">${convertToTitleCase(status)}</strong>`
+  private formatArchiveHistory(archiveHistory: Array<Cas3PremisesArchiveAction>): string {
+    if (archiveHistory.length >= ARCHIVE_HISTORY_THRESHOLD) {
+      const formattedHistory = archiveHistory
+        .map((action, index, arr) => {
+          const classes = [
+            'govuk-details__text',
+            ...(index !== 0 ? ['govuk-!-padding-top-0'] : []),
+            ...(index !== arr.length - 1 ? ['govuk-!-padding-bottom-0'] : []),
+          ].join(' ')
+          return `<div class="${classes}">${convertToTitleCase(action.status)} date ${this.formatDate(action.date)}</div>`
+        })
+        .join('')
+
+      return `<details class="govuk-details">
+                <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">
+                    Full history
+                  </span>
+                </summary>
+                ${formattedHistory}
+              </details>`
+    }
+
+    return archiveHistory
+      .map(action => {
+        return `<div>${convertToTitleCase(action.status)} date ${this.formatDate(action.date)}</div>`
+      })
+      .join('')
+  }
+
+  private formatPremisesStatus(premises: Cas3Premises): string {
+    const tagClass = this.getPremisesStatusTagColour(premises.status)
+    let html = `<strong class="govuk-tag ${tagClass}">${convertToTitleCase(premises.status)}</strong>`
+
+    if (premises.status === 'online' && premises.endDate) {
+      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled archive date ${this.formatDate(premises.endDate)}</span>`
+    } else if (premises.status === 'archived' && new Date(premises.startDate) > new Date()) {
+      html += `<br><span class="govuk-!-display-inline-block govuk-!-margin-top-2">Scheduled online date ${this.formatDate(premises.startDate)}</span>`
+    }
+
+    return html
   }
 }

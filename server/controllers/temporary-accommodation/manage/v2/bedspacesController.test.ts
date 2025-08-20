@@ -193,7 +193,28 @@ describe('BedspacesController', () => {
         },
       ],
     }
-
+    const onlineBedspaceActions = [
+      {
+        text: 'Book bedspace',
+        href: paths.bookings.new({ premisesId, roomId: bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Void bedspace',
+        href: paths.lostBeds.new({ premisesId, roomId: bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Archive bedspace',
+        href: '#',
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+    ]
     const archivedBedspace = cas3BedspaceFactory.build({
       id: bedspaceId,
       status: 'archived',
@@ -220,7 +241,18 @@ describe('BedspacesController', () => {
         },
       ],
     }
-
+    const archivedBedspaceActions = [
+      {
+        text: 'Make bedspace online',
+        href: '#',
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+    ]
     const upcomingBedspace = cas3BedspaceFactory.build({
       id: bedspaceId,
       status: 'upcoming',
@@ -247,12 +279,23 @@ describe('BedspacesController', () => {
         },
       ],
     }
-
+    const upcomingBedspaceActions = [
+      {
+        text: 'Cancel scheduled bedspace online date',
+        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+    ]
     it.each([
-      [onlineBedspace, onlineBedspaceSummary],
-      [archivedBedspace, archivedBedspaceSummary],
-      [upcomingBedspace, upcomingBedspaceSummary],
-    ])('should return a bedspace', async (bedspace: Cas3Bedspace, summary: SummaryList) => {
+      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions],
+      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions],
+      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions],
+    ])('should return a bedspace', async (bedspace: Cas3Bedspace, summary: SummaryList, actions: []) => {
       const params = { premisesId, bedspaceId }
 
       premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
@@ -273,13 +316,7 @@ describe('BedspacesController', () => {
         premises: premisesWithFullAddress,
         summary,
         bedspace,
-        actions: [
-          {
-            text: 'Edit bedspace details',
-            classes: 'govuk-button--secondary',
-            href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
-          },
-        ],
+        actions,
       })
 
       expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)

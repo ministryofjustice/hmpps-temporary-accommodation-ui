@@ -49,7 +49,7 @@ describe('BookingService', () => {
         ],
       })
 
-      const postedBooking = await service.createForBedspace(callConfig, premisesId, room, newBooking)
+      const postedBooking = await service.createForBedspace(callConfig, premisesId, room.id, newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)

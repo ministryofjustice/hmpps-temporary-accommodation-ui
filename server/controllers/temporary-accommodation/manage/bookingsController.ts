@@ -4,7 +4,7 @@ import type { NewBooking } from '@approved-premises/api'
 import { ObjectWithDateParts } from '@approved-premises/ui'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, BookingService, PersonService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/bedspaceService'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import {
   assessmentRadioItems,
   bookingActions,
@@ -37,7 +37,7 @@ export default class BookingsController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId } = req.params
+      const { premisesId, bedspaceId } = req.params
 
       const callConfig = extractCallConfig(req)
 
@@ -48,12 +48,12 @@ export default class BookingsController {
       const crnPrefill = placeContext ? { crn: placeContext.assessment.application.person.crn } : {}
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
-      const bedspaceStatus = this.bedspacesService.summaryListForBedspaceStatus(room)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+      const bedspaceStatus = this.bedspacesService.summaryListForBedspaceStatus(bedspace)
 
       return res.render('temporary-accommodation/bookings/new', {
         premises,
-        room,
+        bedspace,
         bedspaceStatus,
         errors,
         errorSummary,
@@ -158,7 +158,7 @@ export default class BookingsController {
       }
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const room = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, roomId)
 
       const backLink = appendQueryString(
         paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
@@ -209,7 +209,7 @@ export default class BookingsController {
       const { arrivalDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'arrivalDate')
       const { departureDate } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'departureDate')
 
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, roomId)
 
       const newBooking: NewBooking = {
         service: 'temporary-accommodation',
@@ -221,7 +221,7 @@ export default class BookingsController {
       }
 
       try {
-        const booking = await this.bookingsService.createForBedspace(callConfig, premisesId, room, newBooking)
+        const booking = await this.bookingsService.createForBedspace(callConfig, premisesId, bedspace.id, newBooking)
 
         req.flash('success', 'Booking created')
         clearUserInput(req)
@@ -254,7 +254,7 @@ export default class BookingsController {
       await preservePlaceContext(req, res, this.assessmentService)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const room = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, roomId)
 
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
@@ -275,13 +275,13 @@ export default class BookingsController {
       await preservePlaceContext(req, res, this.assessmentService)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, roomId)
 
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/bookings/history', {
         premises,
-        room,
+        room: bedspace,
         booking,
         history: deriveBookingHistory(booking).map(({ booking: historicBooking, updatedAt }) => ({
           booking: historicBooking,

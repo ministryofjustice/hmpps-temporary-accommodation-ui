@@ -31,14 +31,14 @@ export default class BookingService {
   async createForBedspace(
     callConfig: CallConfig,
     premisesId: string,
-    room: Room,
+    bedspaceId: string,
     booking: NewBooking,
   ): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
-      bedId: room.beds[0].id,
+      bedId: bedspaceId,
       enableTurnarounds: true,
       ...booking,
     })

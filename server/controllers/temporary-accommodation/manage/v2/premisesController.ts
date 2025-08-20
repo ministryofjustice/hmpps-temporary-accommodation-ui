@@ -104,7 +104,7 @@ export default class PremisesController {
       req.session.premisesSortBy = newSort
 
       const query = new URLSearchParams(req.query as Record<string, string>).toString()
-      const redirectUrl = paths.premises.v2.online() + (query ? `?${query}` : '')
+      const redirectUrl = paths.premises.online() + (query ? `?${query}` : '')
 
       res.redirect(redirectUrl)
     }
@@ -152,9 +152,9 @@ export default class PremisesController {
         const premises = await this.premisesService.createPremises(callConfig, newPremises)
 
         req.flash('success', 'Property added')
-        res.redirect(paths.premises.v2.show({ premisesId: premises.id }))
+        res.redirect(paths.premises.show({ premisesId: premises.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.new())
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.new())
       }
     }
   }
@@ -227,9 +227,9 @@ export default class PremisesController {
         const premises = await this.premisesService.updatePremises(callConfig, premisesId, updatedPremises)
 
         req.flash('success', 'Property edited')
-        res.redirect(paths.premises.v2.show({ premisesId: premises.id }))
+        res.redirect(paths.premises.show({ premisesId: premises.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.edit({ premisesId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.edit({ premisesId }))
       }
     }
   }
@@ -275,7 +275,7 @@ export default class PremisesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.premises.archive({ premisesId }))
+        return res.redirect(paths.premises.premises.archive({ premisesId }))
       }
 
       try {
@@ -284,7 +284,7 @@ export default class PremisesController {
         const today = DateFormats.dateObjToIsoDate(new Date())
         req.flash('success', `Property and bedspaces ${endDate > today ? 'updated' : 'archived'}`)
 
-        return res.redirect(paths.premises.v2.show({ premisesId }))
+        return res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
         const earliestDateTransform = (params: InvalidParams) => ({
           earliestDate: DateFormats.isoDateToUIDate(params.value),
@@ -307,7 +307,7 @@ export default class PremisesController {
           req,
           res,
           err,
-          paths.premises.v2.archive({ premisesId }),
+          paths.premises.archive({ premisesId }),
           'premisesArchive',
           mergeVariables,
         )

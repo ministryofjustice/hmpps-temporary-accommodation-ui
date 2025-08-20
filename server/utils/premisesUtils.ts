@@ -61,12 +61,12 @@ export const showPropertySubNavArray = (premisesId: string, activeTab: PremisesS
   return [
     {
       text: 'Property overview',
-      href: paths.premises.v2.show({ premisesId }),
+      href: paths.premises.show({ premisesId }),
       active: activeTab === 'premises',
     },
     {
       text: 'Bedspaces overview',
-      href: paths.premises.v2.bedspaces.list({ premisesId }),
+      href: paths.premises.bedspaces.list({ premisesId }),
       active: activeTab === 'bedspaces',
     },
   ]

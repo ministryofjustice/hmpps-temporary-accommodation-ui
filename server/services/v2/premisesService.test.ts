@@ -1,4 +1,5 @@
 import { TextItem } from '@approved-premises/ui'
+import { Cas3PremisesArchiveAction } from '@approved-premises/api'
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
@@ -431,6 +432,79 @@ describe('PremisesService', () => {
 
       const expectedHtml = `<p>None</p><p><a href="#">Add property details</a></p>`
       expect(propertyDetailsRow.value).toEqual({ html: expectedHtml })
+    })
+
+    it('includes scheduled archive date in the status row for online premises with endDate (scheduled archive)', () => {
+      const premises = cas3PremisesFactory.build({
+        status: 'online',
+        endDate: '2125-08-20',
+      })
+
+      const summary = service.summaryList(premises)
+      const statusRowValue = (summary.rows[0].value as { html: string }).html
+
+      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--green">Online</strong>')
+      expect(statusRowValue).toContain('Scheduled archive date 20 August 2125')
+    })
+
+    it('includes scheduled online date in the status row for archived premises with future startDate (scheduled online)', () => {
+      const premises = cas3PremisesFactory.build({
+        status: 'archived',
+        startDate: '2125-08-20',
+      })
+
+      const summary = service.summaryList(premises)
+      const statusRowValue = (summary.rows[0].value as { html: string }).html
+
+      expect(statusRowValue).toContain('<strong class="govuk-tag govuk-tag--grey">Archived</strong>')
+      expect(statusRowValue).toContain('Scheduled online date 20 August 2125')
+    })
+
+    it('should show archive history as a details section when there are 14 or more actions', () => {
+      const archiveHistory = Array.from(
+        { length: 14 },
+        (_, i) =>
+          ({
+            date: `2025-01-01`,
+            status: i % 2 === 0 ? 'online' : 'archived',
+          }) as Cas3PremisesArchiveAction,
+      )
+      const premises = cas3PremisesFactory.build({ archiveHistory })
+
+      const summary = service.summaryList(premises)
+      const archiveRow = summary.rows.find(row => (row.key as { text: string }).text === 'Archive history')
+
+      if ('html' in archiveRow.value) {
+        expect(archiveRow.value.html).toContain('<details class="govuk-details">')
+        expect(archiveRow.value.html).toContain('Full history')
+        expect(archiveRow.value.html).toContain('Online date')
+        expect(archiveRow.value.html).toContain('Archived date')
+      } else {
+        throw new Error('No html property found in archiveRow.value')
+      }
+    })
+
+    it('should show archiveHistory as a list when there are fewer than 14 actions', () => {
+      const archiveHistory = Array.from(
+        { length: 3 },
+        (_, i) =>
+          ({
+            date: `2025-01-01`,
+            status: i % 2 === 0 ? 'online' : 'archived',
+          }) as Cas3PremisesArchiveAction,
+      )
+      const premises = cas3PremisesFactory.build({ archiveHistory })
+
+      const summary = service.summaryList(premises)
+      const archiveRow = summary.rows.find(row => (row.key as { text: string }).text === 'Archive history')
+      if ('html' in archiveRow.value) {
+        expect(archiveRow.value.html).not.toContain('<details class="govuk-details">')
+        expect(archiveRow.value.html).not.toContain('Full history')
+        expect(archiveRow.value.html).toContain('Online date')
+        expect(archiveRow.value.html).toContain('Archived date')
+      } else {
+        throw new Error('No html property found in archiveRow.value')
+      }
     })
   })
 

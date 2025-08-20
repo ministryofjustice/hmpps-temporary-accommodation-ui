@@ -1,13 +1,32 @@
 import { fakerEN_GB as faker } from '@faker-js/faker'
 import { Factory } from 'fishery'
 
-import type { Cas3Premises } from '@approved-premises/api'
+import type { Cas3Premises, Cas3PremisesArchiveAction } from '@approved-premises/api'
 import characteristicFactory from './characteristic'
 import localAuthorityFactory from './localAuthority'
 import referenceDataFactory from './referenceData'
 import { DateFormats } from '../../utils/dateUtils'
 
-export default Factory.define<Cas3Premises>(() => ({
+class Cas3PremisesFactory extends Factory<Cas3Premises> {
+  withEndDate() {
+    return this.params({ endDate: DateFormats.dateObjToIsoDate(faker.date.future()) })
+  }
+
+  withArchiveHistory(length: number = 5) {
+    return this.params({
+      archiveHistory: Array.from(
+        { length },
+        () =>
+          ({
+            date: DateFormats.dateObjToIsoDate(faker.date.past()),
+            status: faker.helpers.arrayElement(['online', 'archived'] as const),
+          }) as Cas3PremisesArchiveAction,
+      ),
+    })
+  }
+}
+
+export default Cas3PremisesFactory.define(() => ({
   id: faker.string.uuid(),
   reference: `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`,
   addressLine1: faker.location.streetAddress(),

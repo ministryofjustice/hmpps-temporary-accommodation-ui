@@ -50,8 +50,7 @@ export class ViewBedspacePage extends BasePage {
   }
 
   async clickEditButton() {
-    // TODO: uncomment when more actions get added to bedspaces
-    // await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByRole('button').getByText('Actions').click()
     await this.page.getByText('Edit bedspace details').click()
   }
 }

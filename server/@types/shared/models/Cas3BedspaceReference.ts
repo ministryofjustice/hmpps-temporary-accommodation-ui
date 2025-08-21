@@ -2,4 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type PlacementRequestRequestType = 'parole' | 'standardRelease';
+export type Cas3BedspaceReference = {
+    id: string;
+    reference: string;
+};
+

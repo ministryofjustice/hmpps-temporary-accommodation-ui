@@ -1,4 +1,10 @@
-import { Cas3Premises, Characteristic, LocalAuthorityArea, ProbationDeliveryUnit } from '@approved-premises/api'
+import {
+  Cas3BedspacesReference,
+  Cas3Premises,
+  Characteristic,
+  LocalAuthorityArea,
+  ProbationDeliveryUnit,
+} from '@approved-premises/api'
 import Page from '../../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import PremisesListPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesList'
@@ -18,6 +24,8 @@ import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-acco
 import PremisesArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesArchive'
 import PremisesUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesUnarchive'
 import { DateFormats } from '../../../../../server/utils/dateUtils'
+import PremisesCannotArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesCannotArchive'
+import BedspaceShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceShow'
 
 context('Premises', () => {
   beforeEach(() => {
@@ -704,7 +712,7 @@ context('Premises', () => {
       page.clickPremisesManageLink(premises)
 
       // Then I navigate to the show premises page
-      const showPage = Page.verifyOnPage(PremisesShowPage, `${premises.addressLine1}, ${premises.postcode}`)
+      const showPage = Page.verifyOnPage(PremisesShowPage, premises)
 
       // Then I should see the premises overview
       showPage.shouldShowPremisesOverview(premises, 'Online', '1 February 2025')
@@ -716,7 +724,7 @@ context('Premises', () => {
       showPage.clickBedspacesOverviewTab()
 
       // Then I should see the bedspace summaries
-      showPage.shouldShowBedspaceSummaries(bedspaces)
+      showPage.shouldShowBedspaceSummaries(bedspaces.bedspaces)
     })
 
     it('should show an online property with upcoming bedspaces', () => {
@@ -762,7 +770,7 @@ context('Premises', () => {
       page.clickPremisesManageLink(premises)
 
       // Then I navigate to the show premises page
-      const showPage = Page.verifyOnPage(PremisesShowPage, `${premises.addressLine1}, ${premises.postcode}`)
+      const showPage = Page.verifyOnPage(PremisesShowPage, premises)
 
       // Then I should see the premises overview
       showPage.shouldShowPremisesOverview(premises, 'Online', '1 February 2025')
@@ -774,7 +782,7 @@ context('Premises', () => {
       showPage.clickBedspacesOverviewTab()
 
       // Then I should see the bedspace summaries
-      showPage.shouldShowBedspaceSummaries(bedspaces)
+      showPage.shouldShowBedspaceSummaries(bedspaces.bedspaces)
     })
 
     it('should show an archived property', () => {
@@ -819,7 +827,7 @@ context('Premises', () => {
       page.clickPremisesManageLink(premises)
 
       // Then I navigate to the show premises page
-      const showPage = Page.verifyOnPage(PremisesShowPage, `${premises.addressLine1}, ${premises.postcode}`)
+      const showPage = Page.verifyOnPage(PremisesShowPage, premises)
 
       // Then I should see a notification that this is an archived property
       showPage.shouldShowArchivedBanner()
@@ -831,7 +839,7 @@ context('Premises', () => {
       showPage.clickBedspacesOverviewTab()
 
       // Then I should see the bedspace summaries
-      showPage.shouldShowBedspaceSummaries(bedspaces)
+      showPage.shouldShowBedspaceSummaries(bedspaces.bedspaces)
     })
 
     it('should show an online property with no bedspaces', () => {
@@ -1062,7 +1070,7 @@ context('Premises', () => {
       })
 
       // And I should be taken to the new property
-      const showPage = Page.verifyOnPage(PremisesShowPage, `${premises.addressLine1}, ${premises.postcode}`)
+      const showPage = Page.verifyOnPage(PremisesShowPage, premises)
 
       // And I should see the 'Property added' banner
       showPage.shouldShowPropertyAddedBanner()
@@ -1307,10 +1315,7 @@ context('Premises', () => {
       })
 
       // And I should be taken to the existing updated property
-      const showPage = Page.verifyOnPage(
-        PremisesShowPage,
-        `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`,
-      )
+      const showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
 
       // And I should see the 'Property updated' banner
       showPage.shouldShowPropertyUpdatedBanner()
@@ -1399,6 +1404,7 @@ context('Premises', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       cy.task('stubSinglePremisesV2', premises)
       cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubPremisesCanArchive', { premisesId: premises.id, undefined })
 
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
@@ -1430,7 +1436,7 @@ context('Premises', () => {
       })
 
       // And I should be taken to the existing archived premises
-      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+      showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
 
       // And I should see the 'Property and bedspaces archived' banner
       showPage.shouldShowPropertyAndBedspacesArchivedBanner()
@@ -1445,6 +1451,7 @@ context('Premises', () => {
       const premises = cas3PremisesFactory.build({ status: 'online' })
       cy.task('stubSinglePremisesV2', premises)
       cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+      cy.task('stubPremisesCanArchive', { premisesId: premises.id, undefined })
 
       // When I visit the show premises page
       let showPage = PremisesShowPage.visit(premises)
@@ -1478,7 +1485,7 @@ context('Premises', () => {
       })
 
       // And I should be taken to the existing archived premises
-      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+      showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
 
       // And I should see the 'Property and bedspaces archived' banner
       showPage.shouldShowPropertyAndBedspacesUpdatedBanner()
@@ -1501,6 +1508,7 @@ context('Premises', () => {
       })
       cy.task('stubSinglePremisesV2', premises)
       cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
+      cy.task('stubPremisesCanArchive', { premisesId: premises.id, undefined })
 
       // When I visit the show premises page
       const showPage = PremisesShowPage.visit(premises)
@@ -1531,6 +1539,110 @@ context('Premises', () => {
         'endDate',
         `Earliest archive date is ${DateFormats.dateObjtoUIDate(oneWeek)} because of an upcoming bedspace`,
       )
+    })
+
+    it('should show a "Cannot archive" page when the property has bedspaces with bookings beyond when the property can be archived', () => {
+      // And there is an online premises in the database with some upcoming bedspace bookings
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      const bedspaces = cas3BedspaceFactory.buildList(4)
+      const bedspacesReference: Cas3BedspacesReference = {
+        affectedBedspaces: [
+          { id: bedspaces[0].id, reference: bedspaces[0].reference },
+          { id: bedspaces[1].id, reference: bedspaces[1].reference },
+        ],
+      }
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', {
+        premisesId: premises.id,
+        bedspaces: cas3BedspacesFactory.build({ bedspaces }),
+      })
+      cy.task('stubPremisesCanArchive', { premisesId: premises.id, bedspacesReference })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Archive property" action
+      showPage.clickArchivePropertyButton()
+
+      // Then I should see the cannot archive premises page
+      const cannotArchivePage = Page.verifyOnPage(PremisesCannotArchivePage, premises)
+
+      // And I should see the affected bedspaces
+      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.affectedBedspaces)
+    })
+
+    it('should navigate to a bedspace from the "Cannot archive" page', () => {
+      // And there is an online premises in the database with some upcoming bedspace bookings
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      const bedspaces = cas3BedspaceFactory.buildList(4)
+      const bedspacesReference: Cas3BedspacesReference = {
+        affectedBedspaces: [
+          { id: bedspaces[0].id, reference: bedspaces[0].reference },
+          { id: bedspaces[1].id, reference: bedspaces[1].reference },
+        ],
+      }
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', {
+        premisesId: premises.id,
+        bedspaces: cas3BedspacesFactory.build({ bedspaces }),
+      })
+      cy.task('stubPremisesCanArchive', { premisesId: premises.id, bedspacesReference })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Archive property" action
+      showPage.clickArchivePropertyButton()
+
+      // Then I should see the cannot archive premises page
+      const cannotArchivePage = Page.verifyOnPage(PremisesCannotArchivePage, premises)
+
+      // And I should see the affected bedspaces
+      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.affectedBedspaces)
+
+      // When I click on one of the affected bedspaces
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: bedspaces[1] })
+      cannotArchivePage.clickAffectedBedspace(bedspaces[1].reference)
+
+      // Then I should see the show bedspace page
+      Page.verifyOnPage(BedspaceShowPage, premises, bedspaces[1])
+    })
+
+    it('should navigate back to the bedspaces overview page from the "Cannot archive" page', () => {
+      // And there is an online premises in the database with some upcoming bedspace bookings
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      const bedspaces = cas3BedspaceFactory.buildList(4)
+      const bedspacesReference: Cas3BedspacesReference = {
+        affectedBedspaces: [
+          { id: bedspaces[0].id, reference: bedspaces[0].reference },
+          { id: bedspaces[1].id, reference: bedspaces[1].reference },
+        ],
+      }
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', {
+        premisesId: premises.id,
+        bedspaces: cas3BedspacesFactory.build({ bedspaces }),
+      })
+      cy.task('stubPremisesCanArchive', { premisesId: premises.id, bedspacesReference })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Archive property" action
+      showPage.clickArchivePropertyButton()
+
+      // Then I should see the cannot archive premises page
+      const cannotArchivePage = Page.verifyOnPage(PremisesCannotArchivePage, premises)
+
+      // And I should see the affected bedspaces
+      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.affectedBedspaces)
+
+      // When I click on the "View bedspaces overview" button
+      cannotArchivePage.clickViewBedspacesOverview()
+
+      // Then I should see the bedspace overview page
+      showPage = Page.verifyOnPage(PremisesShowPage, premises)
+      showPage.shouldShowBedspaceSummaries(bedspaces)
     })
   })
 
@@ -1575,7 +1687,7 @@ context('Premises', () => {
       })
 
       // And I should be taken to the existing unarchived premises
-      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+      showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
 
       // And I should see the 'Property and bedspaces online' banner
       showPage.shouldShowPropertyAndBedspacesOnlineBanner()
@@ -1621,7 +1733,7 @@ context('Premises', () => {
       })
 
       // And I should be taken to the existing unarchived premises
-      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+      showPage = Page.verifyOnPage(PremisesShowPage, expectedPremises)
 
       // And I should see the 'Property and bedspaces updated' banner
       showPage.shouldShowPropertyAndBedspacesUpdatedBanner()

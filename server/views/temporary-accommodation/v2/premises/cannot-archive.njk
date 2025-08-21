@@ -1,0 +1,43 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.premises.v2.show({ premisesId: premises.id }),
+        classes: "govuk-!-display-none-print"
+    }) }}
+{% endblock %}
+
+{% block content %}
+    {% include "../../../_messages.njk" %}
+
+    <h1 class="govuk-heading-l">You cannot archive {{ premises.addressLine1 }}</h1>
+
+    <div class="govuk-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>This property has a booking or void that prevents it from being archived</p>
+
+            <p>The affected bedspaces are:</p>
+
+            <ul class="govuk-list govuk-!-margin-bottom-6">
+                {% for bedspace in bedspaces %}
+                    <li class="govuk-list-item">
+                        <span class="govuk-visually-hidden">View bedspace</span>
+                        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.v2.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }) }}">
+                            {{ bedspace.reference }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            {{ govukButton({
+                text: "View bedspaces overview",
+                href: paths.premises.v2.bedspaces.list({ premisesId: premises.id })
+            }) }}
+        </div>
+    </div>
+
+{%  endblock %}

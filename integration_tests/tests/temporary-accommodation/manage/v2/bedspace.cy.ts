@@ -97,7 +97,7 @@ context('Bedspace', () => {
     premisesPage.clickBedspacesOverviewTab()
 
     // Then I should see the bedspace summaries
-    premisesPage.shouldShowBedspaceSummaries(bedspaces)
+    premisesPage.shouldShowBedspaceSummaries(bedspaces.bedspaces)
 
     // When I click on the "View bedspace" link
     premisesPage.clickViewBedspaceLink(bedspace)

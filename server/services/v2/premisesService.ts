@@ -117,6 +117,11 @@ export default class PremisesService {
     return premisesClient.update(premisesId, updatedPremises)
   }
 
+  async canArchivePremises(callConfig: CallConfig, premisesId: string) {
+    const premisesClient = this.premisesClientFactory(callConfig)
+    return premisesClient.canArchive(premisesId)
+  }
+
   async archivePremises(callConfig: CallConfig, premisesId: string, archivePayload: Cas3ArchivePremises) {
     const premisesClient = this.premisesClientFactory(callConfig)
     return premisesClient.archive(premisesId, archivePayload)

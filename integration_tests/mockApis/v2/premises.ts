@@ -1,4 +1,5 @@
 import type {
+  Cas3BedspacesReference,
   Cas3Premises,
   Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResults,
@@ -106,6 +107,19 @@ const verifyPremisesUpdateV2 = async (premisesId: string) =>
       url: paths.cas3.premises.update({ premisesId }),
     })
   ).body.requests
+
+const stubPremisesCanArchive = (params: { premisesId: string; bedspacesReference: Cas3BedspacesReference }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      url: paths.cas3.premises.canArchive({ premisesId: params.premisesId }),
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: params.bedspacesReference,
+    },
+  })
 
 const stubPremisesArchiveV2 = (premises: Cas3Premises) =>
   stubFor({
@@ -226,6 +240,7 @@ export default {
   stubPremisesUpdateV2,
   stubPremisesUpdateErrorsV2,
   verifyPremisesUpdateV2,
+  stubPremisesCanArchive,
   stubPremisesArchiveV2,
   verifyPremisesArchiveV2,
   stubPremisesArchiveErrorsV2,

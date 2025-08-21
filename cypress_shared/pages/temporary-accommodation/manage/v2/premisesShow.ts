@@ -1,18 +1,17 @@
 import Page from '../../../page'
-import {
-  Cas3Bedspace,
-  Cas3Bedspaces,
-  Cas3Premises,
-  Cas3PremisesArchiveAction,
-} from '../../../../../server/@types/shared'
+import { Cas3Bedspace, Cas3Premises, Cas3PremisesArchiveAction } from '../../../../../server/@types/shared'
 import { convertToTitleCase } from '../../../../../server/utils/utils'
 import { DateFormats } from '../../../../../server/utils/dateUtils'
 import paths from '../../../../../server/paths/temporary-accommodation/manage'
 
 export default class PremisesShowPage extends Page {
+  constructor(premises: Cas3Premises) {
+    super(`${premises.addressLine1}, ${premises.postcode}`)
+  }
+
   static visit(premises: Cas3Premises): PremisesShowPage {
     cy.visit(paths.premises.v2.show({ premisesId: premises.id }))
-    return new PremisesShowPage(`${premises.addressLine1}, ${premises.postcode}`)
+    return new PremisesShowPage(premises)
   }
 
   shouldShowPropertyStatus(status: string): void {
@@ -116,8 +115,8 @@ export default class PremisesShowPage extends Page {
     cy.get('main nav a').contains('Bedspaces overview').click()
   }
 
-  shouldShowBedspaceSummaries(bedspaces: Cas3Bedspaces): void {
-    bedspaces.bedspaces.forEach(bedspace => {
+  shouldShowBedspaceSummaries(bedspaces: Array<Cas3Bedspace>): void {
+    bedspaces.forEach(bedspace => {
       cy.get('main .govuk-summary-card h2')
         .contains(`Bedspace reference: ${bedspace.reference}`)
         .parents('.govuk-summary-card')

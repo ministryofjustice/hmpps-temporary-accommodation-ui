@@ -8,6 +8,7 @@ import PremisesService from '../../../../services/v2/premisesService'
 import {
   cas3BedspaceFactory,
   cas3BedspacesFactory,
+  cas3BedspacesReferenceFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3UpdatePremisesFactory,
@@ -1116,6 +1117,26 @@ describe('PremisesController', () => {
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
         archiveOption: 'today',
+      })
+    })
+
+    it('should tell the user they cannot archive a premises when some of its bedspaces have bookings further in the future than it can be archived', async () => {
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      const bedspaces = cas3BedspacesReferenceFactory.build()
+      premisesService.canArchivePremises.mockResolvedValue(bedspaces)
+
+      const requestHandler = premisesController.archive()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: {}, userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(premisesService.canArchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cannot-archive', {
+        premises,
+        bedspaces: bedspaces.affectedBedspaces,
       })
     })
   })

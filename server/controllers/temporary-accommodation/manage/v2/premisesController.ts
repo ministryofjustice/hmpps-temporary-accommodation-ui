@@ -240,7 +240,18 @@ export default class PremisesController {
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
 
-      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+      const [premises, blockingBedspaceReferences] = await Promise.all([
+        this.premisesService.getSinglePremises(callConfig, premisesId),
+        this.premisesService.canArchivePremises(callConfig, premisesId),
+      ])
+
+      if (blockingBedspaceReferences && blockingBedspaceReferences.affectedBedspaces.length > 0) {
+        return res.render('temporary-accommodation/v2/premises/cannot-archive', {
+          premises,
+          bedspaces: blockingBedspaceReferences.affectedBedspaces,
+        })
+      }
+
       const archiveOption = userInput.archiveOption || 'today'
 
       return res.render('temporary-accommodation/v2/premises/archive', {

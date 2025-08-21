@@ -1,4 +1,5 @@
 import {
+  Cas3BedspacesReference,
   Cas3NewPremises,
   Cas3Premises,
   Cas3PremisesBedspaceTotals,
@@ -37,6 +38,10 @@ export default class PremisesClient {
 
   async update(premisesId: string, data: Cas3UpdatePremises) {
     return this.restClient.put<Cas3Premises>({ path: paths.cas3.premises.update({ premisesId }), data })
+  }
+
+  async canArchive(premisesId: string) {
+    return this.restClient.get<Cas3BedspacesReference>({ path: paths.cas3.premises.canArchive({ premisesId }) })
   }
 
   async archive(premisesId: string, data: { endDate: string }) {

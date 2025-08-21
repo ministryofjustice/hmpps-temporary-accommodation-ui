@@ -23,7 +23,7 @@ describe('bedspaceV2Utils', () => {
       })
       expect(actions).toContainEqual({
         text: 'Archive bedspace',
-        href: '#',
+        href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({

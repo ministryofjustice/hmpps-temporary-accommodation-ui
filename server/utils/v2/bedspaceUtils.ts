@@ -57,7 +57,7 @@ const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): 
   } else {
     actions.push({
       text: 'Archive bedspace',
-      href: '#',
+      href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   }

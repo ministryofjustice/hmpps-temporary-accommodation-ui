@@ -145,6 +145,62 @@ const stubBedspaceCancelArchiveError = (args: BedspaceArguments) =>
     },
   })
 
+const stubBedspaceArchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.cas3.premises.bedspaces.archive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        id: args.bedspaceId,
+        reference: 'A1',
+        startDate: '2024-01-12',
+        status: 'archived',
+        endDate: '2025-09-25',
+        notes: null,
+        characteristics: [],
+        bedspaceCharacteristics: null,
+      },
+    },
+  })
+
+const stubBedspaceArchiveV2WithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.cas3.premises.bedspaces.archive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        'invalid-params': [
+          {
+            propertyName: '$.endDate',
+            errorType: args.errorType,
+            errorDetail: null,
+          },
+        ],
+        title: 'Bad Request',
+        status: 400,
+        detail: 'There is a problem with your request',
+      },
+    },
+  })
+
 export default {
   stubBedspaceV2,
   stubPremisesBedspacesV2,
@@ -156,4 +212,6 @@ export default {
   stubBedspaceCancelArchiveError,
   verifyBedspaceUpdate,
   stubBedspaceUpdateErrors,
+  stubBedspaceArchiveV2,
+  stubBedspaceArchiveV2WithError,
 }

@@ -22,7 +22,6 @@ import extractCallConfig from '../../../../utils/restUtils'
 import PremisesService from '../../../../services/v2/premisesService'
 import { DateFormats } from '../../../../utils/dateUtils'
 import paths from '../../../../paths/temporary-accommodation/manage'
-import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -199,7 +198,28 @@ describe('BedspacesController', () => {
         },
       ],
     }
-
+    const onlineBedspaceActions = [
+      {
+        text: 'Book bedspace',
+        href: paths.bookings.new({ premisesId, roomId: bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Void bedspace',
+        href: paths.lostBeds.new({ premisesId, roomId: bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Archive bedspace',
+        href: '/v2/properties/some-premises-id/bedspaces/some-bedspace-id/archive',
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+    ]
     const archivedBedspace = cas3BedspaceFactory.build({
       id: bedspaceId,
       status: 'archived',
@@ -226,7 +246,18 @@ describe('BedspacesController', () => {
         },
       ],
     }
-
+    const archivedBedspaceActions = [
+      {
+        text: 'Make bedspace online',
+        href: '#',
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+    ]
     const upcomingBedspace = cas3BedspaceFactory.build({
       id: bedspaceId,
       status: 'upcoming',
@@ -253,12 +284,23 @@ describe('BedspacesController', () => {
         },
       ],
     }
-
+    const upcomingBedspaceActions = [
+      {
+        text: 'Cancel scheduled bedspace online date',
+        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+      {
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        classes: 'govuk-button--secondary',
+      },
+    ]
     it.each([
-      [onlineBedspace, onlineBedspaceSummary],
-      [archivedBedspace, archivedBedspaceSummary],
-      [upcomingBedspace, upcomingBedspaceSummary],
-    ])('should return a bedspace', async (bedspace: Cas3Bedspace, summary: SummaryList) => {
+      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions],
+      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions],
+      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions],
+    ])('should return a bedspace', async (bedspace: Cas3Bedspace, summary: SummaryList, actions: []) => {
       const params = { premisesId, bedspaceId }
 
       premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
@@ -279,7 +321,7 @@ describe('BedspacesController', () => {
         premises: premisesWithFullAddress,
         summary,
         bedspace,
-        actions: bedspaceActions(premisesWithFullAddress, bedspace),
+        actions,
       })
 
       expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)

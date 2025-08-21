@@ -4,12 +4,95 @@ import paths from '../../paths/temporary-accommodation/manage'
 
 describe('bedspaceV2Utils', () => {
   describe('bedspaceActions', () => {
-    it('returns "Edit bedspace details" for a bedspace', () => {
+    it('returns correct actions for an online bedspace', () => {
       const premises = cas3PremisesFactory.build()
-      const bedspace = cas3BedspaceFactory.build()
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', endDate: undefined })
 
       const actions = bedspaceActions(premises, bedspace)
 
+      expect(actions).toHaveLength(4)
+      expect(actions).toContainEqual({
+        text: 'Book bedspace',
+        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Void bedspace',
+        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Archive bedspace',
+        href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+    })
+
+    it('returns correct actions for an online bedspace with scheduled archive', () => {
+      const premises = cas3PremisesFactory.build()
+      const bedspace = cas3BedspaceFactory.build({ status: 'online', endDate: '2125-08-20' })
+
+      const actions = bedspaceActions(premises, bedspace)
+
+      expect(actions).toHaveLength(4)
+      expect(actions).toContainEqual({
+        text: 'Book bedspace',
+        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Void bedspace',
+        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Cancel scheduled bedspace archive',
+        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+    })
+
+    it('returns correct actions for an archived bedspace', () => {
+      const premises = cas3PremisesFactory.build()
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
+
+      const actions = bedspaceActions(premises, bedspace)
+
+      expect(actions).toHaveLength(2)
+      expect(actions).toContainEqual({
+        text: 'Make bedspace online',
+        href: '#',
+        classes: 'govuk-button--secondary',
+      })
+      expect(actions).toContainEqual({
+        text: 'Edit bedspace details',
+        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
+    })
+
+    it('returns correct actions for an archived bedspace with scheduled online', () => {
+      const premises = cas3PremisesFactory.build()
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2125-08-20' })
+
+      const actions = bedspaceActions(premises, bedspace)
+
+      expect(actions).toHaveLength(2)
+      expect(actions).toContainEqual({
+        text: 'Cancel scheduled bedspace online date',
+        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        classes: 'govuk-button--secondary',
+      })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
         href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),

@@ -330,23 +330,6 @@ describe('BedspacesController', () => {
     })
   })
 
-  // const expectedActions =
-  //   bedspace.status === 'archived'
-  //     ? []
-  //     : [
-  //       {
-  //         text: 'Archive',
-  //         classes: 'govuk-button--secondary moj-button-menu__item',
-  //         href: paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
-  //       },
-  //     ]
-  //
-  // expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
-  //   premises: premisesWithFullAddress,
-  //   bedspace,
-  //   actions: expectedActions,
-  // })
-
   describe('edit', () => {
     const premises = cas3PremisesFactory.build({ status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online' })

@@ -158,9 +158,9 @@ export default class BedspaceService {
     callConfig: CallConfig,
     premisesId: string,
     bedspaceId: string,
-    archiveDate: string,
+    endDate: string,
   ): Promise<void> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
-    return bedspaceClient.archive(premisesId, bedspaceId, { endDate: archiveDate })
+    return bedspaceClient.archive(premisesId, bedspaceId, { endDate })
   }
 }

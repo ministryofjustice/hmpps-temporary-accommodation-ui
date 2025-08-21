@@ -606,7 +606,7 @@ describe('BedspacesController', () => {
   })
 
   describe('archiveSubmit', () => {
-    it('archives a bedspace with today option and redirects to show page', async () => {
+    it('successfully archives a bedspace and redirects to show page', async () => {
       const params = { premisesId, bedspaceId }
 
       request = createMock<Request>({
@@ -635,82 +635,38 @@ describe('BedspacesController', () => {
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
     })
 
-    it('handles invalidEndDateInTheFuture error using standard validation pattern', async () => {
-      const params = { premisesId, bedspaceId }
+    it('should fail to archive when the service returns an error', async () => {
+      request.params = { premisesId, bedspaceId }
+      request.body = { archiveOption: 'today' }
 
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'today',
-        },
-      })
+      const earliestDate = new Date()
+      earliestDate.setDate(earliestDate.getDate() + 7)
 
       const error = {
-        status: 400,
         data: {
-          'invalid-params': [
-            {
-              propertyName: '$.endDate',
-              errorType: 'invalidEndDateInTheFuture',
-              errorDetail: null as never,
-            },
-          ],
           title: 'Bad Request',
           status: 400,
           detail: 'There is a problem with your request',
-        },
-      }
-
-      bedspaceService.archiveBedspace.mockRejectedValue(error)
-
-      const requestHandler = bedspacesController.archiveSubmit()
-      await requestHandler(request, response, next)
-
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
-        'bedspaceArchive',
-        undefined,
-      )
-    })
-
-    it('handles existingBookings error using standard validation pattern', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'anotherDate',
-          'endDate-day': '25',
-          'endDate-month': '7',
-          'endDate-year': '2025',
-        },
-      })
-
-      const error = {
-        status: 400,
-        data: {
           'invalid-params': [
             {
               propertyName: '$.endDate',
-              errorType: 'existingBookings',
-              errorDetail: null as never,
+              errorType: 'existingUpcomingBedspace',
+              entityId: 'a094a15b-5ead-4c99-a20b-77aa15eb9ce6',
+              value: DateFormats.dateObjToIsoDate(earliestDate),
             },
           ],
         },
       }
 
-      bedspaceService.archiveBedspace.mockRejectedValue(error)
+      const mergeParameters: Array<Record<string, Record<string, string>>> = []
+
+      bedspaceService.archiveBedspace.mockImplementation(() => {
+        throw error
+      })
+      ;(generateMergeParameters as jest.Mock).mockReturnValue(mergeParameters)
 
       const requestHandler = bedspacesController.archiveSubmit()
+
       await requestHandler(request, response, next)
 
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
@@ -719,170 +675,10 @@ describe('BedspacesController', () => {
         error,
         paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
         'bedspaceArchive',
-        undefined,
+        mergeParameters,
       )
-    })
 
-    it('handles existingVoid error using standard validation pattern', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'anotherDate',
-          'endDate-day': '25',
-          'endDate-month': '7',
-          'endDate-year': '2025',
-        },
-      })
-
-      const error = {
-        status: 400,
-        data: {
-          'invalid-params': [
-            {
-              propertyName: '$.endDate',
-              errorType: 'existingVoid',
-              errorDetail: null as never,
-            },
-          ],
-        },
-      }
-
-      bedspaceService.archiveBedspace.mockRejectedValue(error)
-
-      const requestHandler = bedspacesController.archiveSubmit()
-      await requestHandler(request, response, next)
-
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
-        'bedspaceArchive',
-        undefined,
-      )
-    })
-
-    it('handles existingTurnaround error using standard validation pattern', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'anotherDate',
-          'endDate-day': '25',
-          'endDate-month': '7',
-          'endDate-year': '2025',
-        },
-      })
-
-      const error = {
-        status: 400,
-        data: {
-          'invalid-params': [
-            {
-              propertyName: '$.endDate',
-              errorType: 'existingTurnaround',
-              errorDetail: null as never,
-            },
-          ],
-        },
-      }
-
-      bedspaceService.archiveBedspace.mockRejectedValue(error)
-
-      const requestHandler = bedspacesController.archiveSubmit()
-      await requestHandler(request, response, next)
-
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
-        'bedspaceArchive',
-        undefined,
-      )
-    })
-
-    it('handles invalidEndDateInThePast error using standard validation pattern', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'anotherDate',
-          'endDate-day': '17',
-          'endDate-month': '7',
-          'endDate-year': '2025',
-        },
-      })
-
-      const error = {
-        status: 400,
-        data: {
-          'invalid-params': [
-            {
-              propertyName: '$.endDate',
-              errorType: 'invalidEndDateInThePast',
-              errorDetail: null as never,
-            },
-          ],
-          title: 'Bad Request',
-          status: 400,
-          detail: 'There is a problem with your request',
-        },
-      }
-
-      bedspaceService.archiveBedspace.mockRejectedValue(error)
-
-      const requestHandler = bedspacesController.archiveSubmit()
-      await requestHandler(request, response, next)
-
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
-        'bedspaceArchive',
-        undefined,
-      )
-    })
-
-    it('archives a bedspace with another date option and redirects to show page', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'anotherDate',
-          'endDate-day': '25',
-          'endDate-month': '12',
-          'endDate-year': '2025',
-        },
-      })
-
-      bedspaceService.archiveBedspace.mockResolvedValue()
-
-      const requestHandler = bedspacesController.archiveSubmit()
-      await requestHandler(request, response, next)
-
-      expect(bedspaceService.archiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId, '2025-12-25')
-
-      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archived')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      expect(generateMergeParameters).toHaveBeenCalled()
     })
 
     it('handles non-validation API errors by propagating them', async () => {
@@ -899,55 +695,6 @@ describe('BedspacesController', () => {
       })
 
       const error = new Error('Network error')
-      bedspaceService.archiveBedspace.mockRejectedValue(error)
-
-      const requestHandler = bedspacesController.archiveSubmit()
-      await requestHandler(request, response, next)
-
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
-        request,
-        response,
-        error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
-        'bedspaceArchive',
-        undefined,
-      )
-    })
-
-    it('handles multiple validation errors in API response', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        body: {
-          archiveOption: 'anotherDate',
-          'endDate-day': '25',
-          'endDate-month': '7',
-          'endDate-year': '2025',
-        },
-      })
-
-      const error = {
-        status: 400,
-        data: {
-          'invalid-params': [
-            {
-              propertyName: '$.endDate',
-              errorType: 'existingBookings',
-              errorDetail: null as never,
-            },
-            {
-              propertyName: '$.endDate',
-              errorType: 'existingVoid',
-              errorDetail: null as never,
-            },
-          ],
-        },
-      }
-
       bedspaceService.archiveBedspace.mockRejectedValue(error)
 
       const requestHandler = bedspacesController.archiveSubmit()

@@ -213,6 +213,8 @@
   },
   "bedspaceArchive": {
     "endDate": {
+      "empty": "You must enter a date",
+      "invalid": "You must enter a real date",
       "invalidEndDateInThePast": "The date is not within the next 3 months",
       "invalidEndDateInTheFuture": "The date is not within the next 3 months",
       "existingBookings": "Earliest archive date is :earliestDate because of a booking",

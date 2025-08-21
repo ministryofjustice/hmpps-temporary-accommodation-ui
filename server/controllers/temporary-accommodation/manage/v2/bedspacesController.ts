@@ -16,7 +16,7 @@ import {
 import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
 import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
-import { DateFormats, dateAndTimeInputsAreValidDates, dateIsBlank } from '../../../../utils/dateUtils'
+import { DateFormats } from '../../../../utils/dateUtils'
 
 export default class BedspacesController {
   constructor(
@@ -216,26 +216,21 @@ export default class BedspacesController {
 
   archiveSubmit(): RequestHandler {
     return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
       const { archiveOption } = req.body
 
       const errors: Record<string, string> = {}
 
-      let archiveDate: string | undefined
+      let endDate: string | undefined
 
       if (archiveOption === 'today') {
-        archiveDate = DateFormats.dateObjToIsoDate(new Date())
-      } else if (archiveOption === 'anotherDate') {
-        if (dateIsBlank(req.body, 'endDate')) {
-          errors.endDate = 'You must specify the archive date'
-        } else if (!dateAndTimeInputsAreValidDates(req.body, 'endDate')) {
-          errors.endDate = 'You must specify a valid archive date'
-        } else {
-          const { endDate: archiveDateString } = DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate')
-          archiveDate = archiveDateString
-        }
+        endDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (archiveOption === 'other') {
+        const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate')
+        endDate = parsedDate.endDate
       } else {
-        errors.archiveOption = 'You must select when to archive the bedspace'
+        errors.archiveOption = 'Select a date to archive the bedspace'
       }
 
       if (Object.keys(errors).length > 0) {
@@ -244,15 +239,12 @@ export default class BedspacesController {
         return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
       }
 
-      if (!archiveDate) {
-        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
-      }
-
       try {
-        const callConfig = extractCallConfig(req)
-        await this.bedspaceService.archiveBedspace(callConfig, premisesId, bedspaceId, archiveDate)
+        await this.bedspaceService.archiveBedspace(callConfig, premisesId, bedspaceId, endDate)
 
-        req.flash('success', 'Bedspace archived')
+        const today = DateFormats.dateObjToIsoDate(new Date())
+        req.flash('success', `Bedspace ${endDate > today ? 'updated' : 'archived'}`)
+
         return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         const earliestDateTransform = (params: InvalidParams) => ({

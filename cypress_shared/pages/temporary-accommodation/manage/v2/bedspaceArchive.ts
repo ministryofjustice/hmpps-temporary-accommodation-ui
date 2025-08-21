@@ -23,13 +23,13 @@ export default class BedspaceArchivePage extends Page {
   }
 
   selectAnotherDateOption(): void {
-    cy.get('input[value="anotherDate"]').check()
+    cy.get('input[value="other"]').check()
   }
 
   enterArchiveDate(day: string, month: string, year: string): void {
-    cy.get('#endDate-day').clear().type(day)
-    cy.get('#endDate-month').clear().type(month)
-    cy.get('#endDate-year').clear().type(year)
+    cy.get('#otherDateInput-day').clear().type(day)
+    cy.get('#otherDateInput-month').clear().type(month)
+    cy.get('#otherDateInput-year').clear().type(year)
   }
 
   clickSubmit(): void {

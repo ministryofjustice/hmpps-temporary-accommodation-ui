@@ -4,6 +4,7 @@ import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
   cas3ArchivePremisesFactory,
+  cas3BedspacesReferenceFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
@@ -67,6 +68,19 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.update).toHaveBeenCalledWith(premises.id, updatedPremises)
+    })
+  })
+
+  describe('canArchivePremises', () => {
+    it('returns the bedspaces that are preventing a premises from being archived', async () => {
+      const bedspacesReference = cas3BedspacesReferenceFactory.build()
+      premisesClient.canArchive.mockResolvedValue(bedspacesReference)
+
+      const result = await service.canArchivePremises(callConfig, premisesId)
+      expect(result).toEqual(bedspacesReference)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.canArchive).toHaveBeenCalledWith(premisesId)
     })
   })
 

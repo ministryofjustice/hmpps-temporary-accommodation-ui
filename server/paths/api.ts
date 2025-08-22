@@ -8,6 +8,7 @@ const singlePremisesPath = premisesPath.path(':premisesId')
 const singlePremisesCas3Path = cas3PremisesPath.path(':premisesId')
 const singleBookingCas3Path = singlePremisesCas3Path.path('bookings/:bookingId')
 const premisesSearchPath = cas3PremisesPath.path('search')
+const premisesCanArchivePath = singlePremisesCas3Path.path('can-archive')
 const premisesArchivePath = singlePremisesCas3Path.path('archive')
 const premisesUnarchivePath = singlePremisesCas3Path.path('unarchive')
 
@@ -74,6 +75,7 @@ const managePathsCas3 = {
     show: singlePremisesCas3Path,
     create: cas3PremisesPath,
     update: singlePremisesCas3Path,
+    canArchive: premisesCanArchivePath,
     archive: premisesArchivePath,
     unarchive: premisesUnarchivePath,
     totals: singlePremisesCas3Path.path('bedspace-totals'),
@@ -120,6 +122,7 @@ export default {
       show: managePathsCas3.premises.show,
       create: managePathsCas3.premises.create,
       update: managePathsCas3.premises.update,
+      canArchive: managePathsCas3.premises.canArchive,
       archive: managePathsCas3.premises.archive,
       unarchive: managePathsCas3.premises.unarchive,
       totals: managePathsCas3.premises.totals,

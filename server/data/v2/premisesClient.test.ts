@@ -5,6 +5,7 @@ import { CallConfig } from '../restClient'
 import config from '../../config'
 import {
   cas3ArchivePremisesFactory,
+  cas3BedspacesReferenceFactory,
   cas3NewPremisesFactory,
   cas3PremisesBedspaceTotalsFactory,
   cas3PremisesFactory,
@@ -99,6 +100,21 @@ describe('PremisesClient', () => {
 
       const result = await premisesClient.update(premisesId, payload)
       expect(result).toEqual(premises)
+    })
+  })
+
+  describe('canArchive', () => {
+    it('should return the bedspace references that are preventing a premises from being archived', async () => {
+      const premisesId = '6b0ef164-1078-4186-9b31-5fb1de20c9ac'
+      const bedspacesReference = cas3BedspacesReferenceFactory.build()
+
+      fakeApprovedPremisesApi
+        .get(paths.cas3.premises.canArchive({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, bedspacesReference)
+
+      const result = await premisesClient.canArchive(premisesId)
+      expect(result).toEqual(bedspacesReference)
     })
   })
 

@@ -161,7 +161,7 @@ context('Bedspace Search', () => {
     const premises = premisesFactory.build()
     const room = roomFactory.build()
     const results = bedspaceSearchResultsFactory.build({
-      results: [bedspaceSearchResultFactory.forBedspace(premises, room).build()],
+      results: [bedspaceSearchResultFactory.forBedspace(premises, room, null).build()],
     })
 
     cy.task('stubBedspaceSearch', results)
@@ -176,7 +176,7 @@ context('Bedspace Search', () => {
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
     postSearchPage.clickBedspaceLink(room)
 
-    Page.verifyOnPage(BedspaceShowPage, premises, room)
+    Page.verifyOnPage(BedspaceShowPage, premises, room, null, room.name)
   })
 
   it("allows me to view an overlapping offender's referral", () => {
@@ -199,7 +199,7 @@ context('Bedspace Search', () => {
 
     const results = bedspaceSearchResultsFactory.build({
       results: [
-        bedspaceSearchResultFactory.forBedspace(premises, room).build({
+        bedspaceSearchResultFactory.forBedspace(premises, room, null).build({
           overlaps: [
             overlapFactory.build({
               name: person.name,

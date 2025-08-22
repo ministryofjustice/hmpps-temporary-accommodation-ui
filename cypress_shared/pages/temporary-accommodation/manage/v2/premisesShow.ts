@@ -28,8 +28,9 @@ export default class PremisesShowPage extends Page {
       .parent()
       .within(() => {
         archiveHistory.forEach(action => {
-          cy.contains(convertToTitleCase(action.status))
-          cy.contains(DateFormats.isoDateToUIDate(action.date))
+          const verb = action.status === 'online' ? 'Online' : 'Archive'
+          const dateString = DateFormats.isoDateToUIDate(action.date)
+          cy.contains(`${verb} date ${dateString}`)
         })
       })
   }

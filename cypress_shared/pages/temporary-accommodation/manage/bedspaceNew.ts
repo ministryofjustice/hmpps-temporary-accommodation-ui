@@ -9,8 +9,6 @@ export default class BedspaceNewPage extends BedspaceEditablePage {
 
   constructor(private readonly premises: Premises) {
     super('Add a bedspace')
-
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises })
   }
 
   static visit(premises: Premises): BedspaceNewPage {

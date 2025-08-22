@@ -14,7 +14,7 @@ export default class BedspaceShowPage extends Page {
   }
 
   static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceShowPage {
-    cy.visit(paths.premises.v2.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))
+    cy.visit(paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))
     return new BedspaceShowPage(premises, bedspace)
   }
 

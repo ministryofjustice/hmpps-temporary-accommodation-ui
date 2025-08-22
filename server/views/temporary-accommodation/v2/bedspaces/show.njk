@@ -12,10 +12,10 @@
     {{ govukBreadcrumbs({
         items: [
             { text: "Home", href: "/" },
-            { text: "List of properties", href: addPlaceContext(paths.premises.v2.index()) },
+            { text: "List of properties", href: addPlaceContext(paths.premises.index()) },
             {
                 text: premises.addressLine1 + ", " + premises.postcode,
-                href: addPlaceContext(paths.premises.v2.show({ premisesId: premises.id }))
+                href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))
             }
         ]
     }) }}

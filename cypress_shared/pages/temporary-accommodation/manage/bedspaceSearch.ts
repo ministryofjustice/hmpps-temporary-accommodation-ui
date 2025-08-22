@@ -1,4 +1,9 @@
-import { Cas3BedspaceSearchResult, Cas3BedspaceSearchResults, Room } from '../../../../server/@types/shared'
+import {
+  Cas3Bedspace,
+  Cas3BedspaceSearchResult,
+  Cas3BedspaceSearchResults,
+  Room,
+} from '../../../../server/@types/shared'
 import { BedspaceSearchFormParameters, PlaceContext } from '../../../../server/@types/ui'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -80,6 +85,10 @@ export default class BedspaceSearchPage extends Page {
 
   clickBedspaceLink(room: Room) {
     cy.get('a').contains(room.name).click()
+  }
+
+  clickBedspaceLinkV2(bedspace: Cas3Bedspace) {
+    cy.get('a').contains(bedspace.reference).click()
   }
 
   clickOverlapLink(room: Room, crn: string) {

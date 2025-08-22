@@ -2,14 +2,15 @@ import type { Booking, LostBed, NewBooking, Premises, Room } from '@approved-pre
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import Page from '../../page'
+import { Cas3Bedspace } from '../../../../server/@types/shared'
 
 export default abstract class BookingEditablePage extends Page {
   private readonly bedspaceConflictErrorComponent: BedspaceConflictErrorComponent
 
-  constructor(title: string, premises: Premises, room: Room) {
+  constructor(title: string, premises: Premises, room: Room, bedspace: Cas3Bedspace) {
     super(title)
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, bedspace, 'booking')
   }
 
   shouldShowDateConflictErrorMessages(

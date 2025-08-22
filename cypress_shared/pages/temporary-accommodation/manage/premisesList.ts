@@ -10,7 +10,7 @@ import Page from '../../page'
 
 export default class PremisesListPage extends Page {
   constructor() {
-    super('List of properties')
+    super('Online properties')
   }
 
   static visit(): PremisesListPage {
@@ -23,10 +23,7 @@ export default class PremisesListPage extends Page {
       .children('tbody')
       .children('tr')
       .then(items => {
-        return Cypress._.sampleSize(
-          items.toArray().filter($item => $item.children[3].textContent === 'Online'),
-          count,
-        )
+        return Cypress._.sampleSize(items.toArray(), count)
       })
       .each((row, index) =>
         cy.wrap(row).within(_row =>
@@ -38,7 +35,6 @@ export default class PremisesListPage extends Page {
               const premises = premisesFactory.build({
                 id: 'unknown',
                 addressLine1,
-                postcode,
                 status: 'active',
               })
 
@@ -84,10 +80,10 @@ export default class PremisesListPage extends Page {
   }
 
   clickPremisesViewLink(premises: Premises) {
-    cy.contains(`${premises.addressLine1}, ${premises.postcode}`)
+    cy.contains(`${premises.addressLine1}`)
       .parent()
       .within(() => {
-        cy.get('td').eq(4).contains('Manage').click()
+        cy.get('td').eq(3).contains('Manage').click()
       })
   }
 

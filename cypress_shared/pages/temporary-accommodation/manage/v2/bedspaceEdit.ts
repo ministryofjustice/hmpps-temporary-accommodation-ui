@@ -9,7 +9,7 @@ export default class BedspaceEditPage extends Page {
   }
 
   static visit(premises: Cas3Premises, bedspace: Cas3Bedspace) {
-    cy.visit(paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }))
+    cy.visit(paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }))
     return new BedspaceEditPage()
   }
 

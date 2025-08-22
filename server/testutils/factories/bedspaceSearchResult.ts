@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker'
 import type {
   BedSearchResultPremisesSummary,
   BedSearchResultRoomSummary,
+  Cas3Bedspace,
   Cas3BedspaceSearchResult,
   Premises,
   Room,
@@ -22,10 +23,20 @@ class BedSearchResultFactory extends Factory<Cas3BedspaceSearchResult> {
   }
 
   /* istanbul ignore next */
-  forBedspace(premises: Premises, room: Room) {
+  forBedspace(premises: Premises, room: Room, bedspace: Cas3Bedspace) {
+    if (room) {
+      return this.params({
+        premises: premisesToPremisesSummary(premises),
+        room: roomToRoomSummary(room),
+      })
+    }
     return this.params({
       premises: premisesToPremisesSummary(premises),
-      room: roomToRoomSummary(room),
+      room: bedspaceToBedspaceSummary(bedspace),
+      bed: {
+        id: bedspace.id,
+        name: bedspace.reference,
+      },
     })
   }
 }
@@ -66,6 +77,15 @@ const roomToRoomSummary = (room: Room): BedSearchResultRoomSummary => ({
   id: room.id,
   name: room.name,
   characteristics: room.characteristics.map(characteristic => ({
+    name: characteristic.name,
+    propertyName: characteristic.propertyName,
+  })),
+})
+
+const bedspaceToBedspaceSummary = (bedspace: Cas3Bedspace): BedSearchResultRoomSummary => ({
+  id: bedspace.id,
+  name: bedspace.reference,
+  characteristics: bedspace.characteristics.map(characteristic => ({
     name: characteristic.name,
     propertyName: characteristic.propertyName,
   })),

@@ -297,10 +297,10 @@ context('Premises', () => {
       cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the base v2 properties route
-      cy.visit('/v2/properties')
+      cy.visit('/properties')
 
       // Then I should be redirected to the online tab
-      cy.url().should('include', '/v2/properties/online')
+      cy.url().should('include', '/properties/online')
 
       // And I should see the online properties page
       cy.contains('Online properties').should('exist')
@@ -520,7 +520,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Archived properties').click()
 
       // Then I should be on the archived tab
-      cy.url().should('include', '/v2/properties/archived')
+      cy.url().should('include', '/properties/archived')
       cy.get('.moj-sub-navigation a[aria-current="page"]').should('contain', 'Archived properties')
       cy.contains('2 archived properties').should('exist')
 
@@ -528,7 +528,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Online properties').click()
 
       // Then I should be back on the online tab
-      cy.url().should('include', '/v2/properties/online')
+      cy.url().should('include', '/properties/online')
       cy.get('.moj-sub-navigation a[aria-current="page"]').should('contain', 'Online properties')
       cy.contains('3 online properties').should('exist')
     })
@@ -592,7 +592,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Archived properties').click()
 
       // Then the search term should be preserved in the URL
-      cy.url().should('include', `/v2/properties/archived?postcodeOrAddress=${searchTerm}`)
+      cy.url().should('include', `/properties/archived?postcodeOrAddress=${searchTerm}`)
 
       // And I should see the archived search results
       cy.contains(`1 archived properties matching ‘${searchTerm}’`).should('exist')
@@ -604,7 +604,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Online properties').click()
 
       // Then the search term should still be preserved
-      cy.url().should('include', `/v2/properties/online?postcodeOrAddress=${searchTerm}`)
+      cy.url().should('include', `/properties/online?postcodeOrAddress=${searchTerm}`)
       cy.contains(`2 online properties matching ‘${searchTerm}’`).should('exist')
       cy.get('main form input').should('have.value', searchTerm)
     })

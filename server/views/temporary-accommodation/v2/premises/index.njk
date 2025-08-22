@@ -17,7 +17,7 @@
             Properties by probation delivery unit
         </div>
         <div class="govuk-!-margin-bottom-4">
-            <a href="{{ paths.premises.v2.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
+            <a href="{{ paths.premises.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
                 View by local authority
             </a>
         </div>
@@ -26,7 +26,7 @@
             Properties by local authority
         </div>
         <div class="govuk-!-margin-bottom-4">
-            <a href="{{ paths.premises.v2.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
+            <a href="{{ paths.premises.toggleSort() }}{% if params %}?{{ toQueryString(params) }}{% endif %}" data-cy="toggle-sort" class="govuk-link govuk-link--no-visited-state govuk-body govuk-!-font-weight-normal govuk-!-margin-bottom-4">
                 View by probation delivery unit
             </a>
         </div>
@@ -53,7 +53,7 @@
             },
             actions: [{
                 text: "Add a property",
-                href: addPlaceContext(paths.premises.v2.new())
+                href: addPlaceContext(paths.premises.new())
             }]
         }) }}
 
@@ -67,7 +67,7 @@
         {% if (totalPremises is defined and totalPremises > 0) or params.postcodeOrAddress %}
         <div class="govuk-grid-column-full">
             <div class="moj-search cas-search-container govuk-!-margin-bottom-6 govuk-!-padding-6 govuk-!-padding-bottom-7 govuk-grid-column-two-thirds">
-                <form action="{{ paths.premises.v2[status]({}) }}" method="get">
+                <form action="{{ paths.premises[status]({}) }}" method="get">
                     {{ govukInput({
                         label: {
                             classes: 'govuk-!-font-weight-bold',

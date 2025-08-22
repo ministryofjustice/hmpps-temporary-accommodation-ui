@@ -237,11 +237,11 @@ export default class PremisesService {
   }
 
   private bedspaceUrl(premisesId: string, bedspaceId: string): string {
-    return paths.premises.v2.bedspaces.show({ premisesId, bedspaceId })
+    return paths.premises.bedspaces.show({ premisesId, bedspaceId })
   }
 
   private premisesUrl(premisesId: string): string {
-    return paths.premises.v2.show({ premisesId })
+    return paths.premises.show({ premisesId })
   }
 
   private formatPremisesManageLink(premises: Cas3PremisesSearchResult): string {
@@ -258,7 +258,7 @@ export default class PremisesService {
 
   private formatBedspaces(premises: Cas3PremisesSearchResult): string {
     if (premises.bedspaces === undefined || premises.bedspaces.length === 0) {
-      return `No bedspaces<br /><a href="${paths.premises.v2.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
+      return `No bedspaces<br /><a href="${paths.premises.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
     }
 
     return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace)).join('<br />')

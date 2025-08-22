@@ -14,7 +14,7 @@ export default class BedspaceNewPage extends BedspaceEditablePage {
   }
 
   static visit(premises: Premises): BedspaceNewPage {
-    cy.visit(paths.premises.v2.bedspaces.new({ premisesId: premises.id }))
+    cy.visit(paths.premises.bedspaces.new({ premisesId: premises.id }))
     return new BedspaceNewPage(premises)
   }
 

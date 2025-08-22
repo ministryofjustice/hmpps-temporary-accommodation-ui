@@ -13,8 +13,8 @@ export default class PremisesNewPage extends PremisesEditablePage {
     return new PremisesNewPage()
   }
 
-  completeForm(newPremises: NewPremises): void {
-    super.completeEditableForm(newPremises)
+  completeForm(newPremises: NewPremises, localAuthorityName: string): void {
+    super.completeEditableForm(newPremises, localAuthorityName)
   }
 
   shouldPreselectProbationRegion(probationRegion: ProbationRegion): void {

@@ -9,17 +9,17 @@ export default class PremisesListPage extends Page {
   }
 
   static visit(): PremisesListPage {
-    cy.visit(paths.premises.v2.index({}))
+    cy.visit(paths.premises.index({}))
     return new PremisesListPage()
   }
 
   static visitOnline(): PremisesListPage {
-    cy.visit(paths.premises.v2.online({}))
+    cy.visit(paths.premises.online({}))
     return new PremisesListPage()
   }
 
   static visitArchived(): PremisesListPage {
-    cy.visit(paths.premises.v2.archived({}))
+    cy.visit(paths.premises.archived({}))
     return new PremisesListPage('Archived properties')
   }
 
@@ -49,7 +49,7 @@ export default class PremisesListPage extends Page {
           cy.get('td')
             .eq(2)
             .contains(sortBy === 'pdu' ? item.pdu : item.localAuthorityAreaName)
-          cy.get('td').eq(3).contains('Manage').should('have.attr', 'href', `/v2/properties/${item.id}`)
+          cy.get('td').eq(3).contains('Manage').should('have.attr', 'href', `/properties/${item.id}`)
         })
     })
   }

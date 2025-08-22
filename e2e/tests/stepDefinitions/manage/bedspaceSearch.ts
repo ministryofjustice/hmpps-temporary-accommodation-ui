@@ -54,7 +54,7 @@ Then('I should see the bedspace search results', () => {
   cy.then(function _() {
     const results = bedspaceSearchResultsFactory.build({
       results: [
-        bedspaceSearchResultFactory.forBedspace(this.premises, this.room).build({
+        bedspaceSearchResultFactory.forBedspace(this.premises, this.room, null).build({
           overlaps: [],
         }),
       ],

@@ -13,7 +13,7 @@
     {{ govukBreadcrumbs({
         items: [
             { text: "Home", href: "/" },
-            { text: "List of properties", href: addPlaceContext(paths.premises.v2.index()) }
+            { text: "List of properties", href: addPlaceContext(paths.premises.index()) }
         ]
     }) }}
 {% endblock %}
@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-grid-column-two-thirds" data-cy-premises="true" data-cy-pdu-id="{{premises.probationDeliveryUnit.id}}">
                 {{ govukSummaryList({
                     card: {
                         title: {
@@ -99,7 +99,7 @@
                                     items: [
                                         {
                                             text: "View bedspace",
-                                            href: addPlaceContext(paths.premises.v2.bedspaces.show({
+                                            href: addPlaceContext(paths.premises.bedspaces.show({
                                                 premisesId: premises.id,
                                                 bedspaceId: bedspace.id
                                             }))
@@ -112,7 +112,7 @@
                     {% endfor %}
                 {% else %}
                     <p>No bedspaces.</p>
-                    <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.v2.bedspaces.new({ premisesId: premises.id }) }}">
+                    <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.bedspaces.new({ premisesId: premises.id }) }}">
                         Add a bedspace
                     </a>
                 {% endif %}

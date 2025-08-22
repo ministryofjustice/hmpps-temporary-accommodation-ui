@@ -7,7 +7,7 @@ export default class PremisesNewPage extends PremisesEditablePage {
   }
 
   static visit(): PremisesNewPage {
-    cy.visit(paths.premises.v2.new({}))
+    cy.visit(paths.premises.new({}))
     return new PremisesNewPage()
   }
 }

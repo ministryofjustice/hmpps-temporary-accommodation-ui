@@ -9,7 +9,7 @@ export class ListPropertiesPage extends BasePage {
   }
 
   static async goto(page: Page) {
-    await page.goto('/v2/properties')
+    await page.goto('/properties')
   }
 
   async clickAddPropertyButton() {

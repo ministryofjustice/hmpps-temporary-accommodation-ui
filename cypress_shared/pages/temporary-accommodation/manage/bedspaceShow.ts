@@ -20,7 +20,7 @@ export default class BedspaceShowPage extends Page {
     premises: Premises,
     private readonly room: Room,
   ) {
-    super('View a bedspace')
+    super(`Bedspace reference: ${room.name}`)
 
     this.premises = premises
     this.locationHeaderComponent = new LocationHeaderComponent({ premises })

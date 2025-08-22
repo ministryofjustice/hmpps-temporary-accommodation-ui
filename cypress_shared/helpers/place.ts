@@ -135,10 +135,7 @@ export default class PlaceHelper {
     resultsBedspaceSearchPage.clickBedspaceLink(this.room)
 
     // I am taken to the bedspace show page
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
-
-    // And the place context header is visible
-    bedspaceShowPage.shouldShowPlaceContextHeader(this.placeContext)
+    Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
   }
 
   private bedspaceToNewBooking() {

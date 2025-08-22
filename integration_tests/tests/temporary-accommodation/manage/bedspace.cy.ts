@@ -154,7 +154,7 @@ context('Bedspace', () => {
       page.clickBreadCrumbUp()
 
       // Then I navigate to the show premises page
-      Page.verifyOnPage(PremisesShowPage, premises)
+      Page.verifyOnPage(PremisesShowPage, premises.addressLine1)
     })
   })
 
@@ -364,7 +364,7 @@ context('Bedspace', () => {
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show premises page
-    Page.verifyOnPage(PremisesShowPage, premises)
+    Page.verifyOnPage(PremisesShowPage, premises.addressLine1)
   })
 
   describe('viewing a bedspace', () => {

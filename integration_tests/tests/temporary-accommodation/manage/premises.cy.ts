@@ -437,46 +437,6 @@ context('Premises', () => {
     Page.verifyOnPage(PremisesShowPage, premises)
   })
 
-  it('should show a single active premises', () => {
-    // Given I am signed in
-    cy.signIn()
-
-    // And there is an active premises in the database
-    const premises = premisesFactory.active().build()
-    const rooms = roomFactory.buildList(5)
-    cy.task('stubPremisesWithRooms', { premises, rooms })
-
-    // When I visit the show premises page
-    const page = PremisesShowPage.visit(premises)
-
-    // Then I should see the premises details
-    page.shouldShowPremisesDetails()
-    page.shouldShowAsActive()
-
-    // And I should see the room details
-    rooms.forEach(room => page.shouldShowRoomDetails(room))
-  })
-
-  it('should show a single archived premises', () => {
-    // Given I am signed in
-    cy.signIn()
-
-    // And there is an archived premises in the database
-    const premises = premisesFactory.archived().build()
-    const rooms = roomFactory.buildList(5)
-    cy.task('stubPremisesWithRooms', { premises, rooms })
-
-    // When I visit the show premises page
-    const page = PremisesShowPage.visit(premises)
-
-    // Then I should see the premises details
-    page.shouldShowPremisesDetails()
-    page.shouldShowAsArchived()
-
-    // And I should see the room details
-    rooms.forEach(room => page.shouldShowRoomDetails(room))
-  })
-
   it('should navigate back from the show page to the premises list page', () => {
     // Given I am signed in
     cy.signIn()

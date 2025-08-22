@@ -37,12 +37,12 @@ const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): 
   const actions: Array<PageHeadingBarItem> = [
     {
       text: 'Book bedspace',
-      href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.id }),
+      href: paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     },
     {
       text: 'Void bedspace',
-      href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.id }),
+      href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     },
   ]

@@ -68,7 +68,7 @@
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">
                                 <span class="govuk-caption-m">PDU: {{ result.premises.probationDeliveryUnitName }}</span>
                                 <a class="govuk-link"
-                                   href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, roomId: result.room.id})) }}">
+                                   href="{{ addPlaceContext(paths.premises.bedspaces.show({premisesId: result.premises.id, bedspaceId: result.bed.id})) }}">
                                     Bedspace reference: {{ result.room.name }}
                                 </a>
                             </h2>

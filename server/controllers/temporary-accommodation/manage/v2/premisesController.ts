@@ -367,7 +367,7 @@ export default class PremisesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.unarchive({ premisesId }))
+        return res.redirect(paths.premises.unarchive({ premisesId }))
       }
 
       try {
@@ -376,13 +376,13 @@ export default class PremisesController {
         const today = DateFormats.dateObjToIsoDate(new Date())
         req.flash('success', `Property and bedspaces ${restartDate > today ? 'updated' : 'online'}`)
 
-        return res.redirect(paths.premises.v2.show({ premisesId }))
+        return res.redirect(paths.premises.show({ premisesId }))
       } catch (err) {
         return catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.premises.v2.unarchive({ premisesId }),
+          paths.premises.unarchive({ premisesId }),
           'premisesUnarchive',
         )
       }

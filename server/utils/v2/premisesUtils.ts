@@ -27,7 +27,7 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
     actions.push({
       text: 'Make property online',
       classes: 'govuk-button--secondary',
-      href: paths.premises.v2.unarchive({ premisesId: premises.id }),
+      href: paths.premises.unarchive({ premisesId: premises.id }),
     })
   }
 

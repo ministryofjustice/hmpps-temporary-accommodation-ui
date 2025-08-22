@@ -11,7 +11,7 @@ export default class PremisesShowPage extends Page {
 
   static visit(premises: Cas3Premises): PremisesShowPage {
     cy.visit(paths.premises.show({ premisesId: premises.id }))
-    return new PremisesShowPage(`${premises.addressLine1}, ${premises.postcode}`)
+    return new PremisesShowPage(premises)
   }
 
   shouldShowPropertyStatus(status: string): void {

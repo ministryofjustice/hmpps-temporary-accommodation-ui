@@ -236,7 +236,7 @@ export default class BedspacesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
       }
 
       try {
@@ -245,7 +245,7 @@ export default class BedspacesController {
         const today = DateFormats.dateObjToIsoDate(new Date())
         req.flash('success', `Bedspace ${endDate > today ? 'updated' : 'archived'}`)
 
-        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         const earliestDateTransform = (params: InvalidParams) => ({
           earliestDate: DateFormats.isoDateToUIDate(params.value),
@@ -268,7 +268,7 @@ export default class BedspacesController {
           req,
           res,
           err,
-          paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+          paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
           'bedspaceArchive',
           mergeVariables,
         )

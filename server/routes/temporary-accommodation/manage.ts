@@ -6,7 +6,6 @@ import { createUserCheckMiddleware, userIsAuthorisedForManage } from '../../midd
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
 import { actions, compose } from '../utils'
-import config from '../../config'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { get, post, put, patch } = compose(
@@ -174,7 +173,21 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
-
+  get(paths.premises.bedspaces.archive.pattern, bedspacesControllerV2.archive(), {
+    auditEvent: 'VIEW_BEDSPACE_V2_ARCHIVE',
+  })
+  post(paths.premises.bedspaces.archive.pattern, bedspacesControllerV2.archiveSubmit(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.bedspaces.archive.pattern,
+        auditEvent: 'ARCHIVE_BEDSPACE_V2_FAILURE',
+      },
+      {
+        path: paths.premises.bedspaces.show.pattern,
+        auditEvent: 'ARCHIVE_BEDSPACE_V2_SUCCESS',
+      },
+    ],
+  })
   get(paths.bookings.arrivals.new.pattern, arrivalsController.new(), { auditEvent: 'VIEW_BOOKING_CREATE_ARRIVAL' })
   post(paths.bookings.arrivals.create.pattern, arrivalsController.create(), {
     redirectAuditEventSpecs: [

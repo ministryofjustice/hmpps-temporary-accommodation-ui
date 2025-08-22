@@ -54,6 +54,7 @@ const paths: Record<string, any> = {
       edit: singleBedspaceV2Path.path('edit'),
       cancelArchive: singleBedspaceV2Path.path('cancel-archive'),
       update: singleBedspaceV2Path,
+      archive: singleBedspaceV2Path.path('archive'),
     },
   },
   bookings: {

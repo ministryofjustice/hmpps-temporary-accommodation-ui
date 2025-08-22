@@ -53,4 +53,13 @@ export class ViewBedspacePage extends BasePage {
     await this.page.getByRole('button').getByText('Actions').click()
     await this.page.getByText('Edit bedspace details').click()
   }
+
+  async clickArchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Archive bedspace').click()
+  }
+
+  async shouldShowBedspaceStatus(status: string) {
+    await expect(this.getRowTextByLabel('Bedspace status')).toContainText(status)
+  }
 }

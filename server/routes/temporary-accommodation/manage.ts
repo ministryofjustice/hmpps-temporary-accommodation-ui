@@ -129,6 +129,9 @@ export default function routes(controllers: Controllers, services: Services, rou
 
     get(paths.premises.v2.bedspaces.new.pattern, bedspacesControllerV2.new(), { auditEvent: 'VIEW_BEDSPACE_V2_CREATE' })
     get(paths.premises.v2.bedspaces.show.pattern, bedspacesControllerV2.show(), { auditEvent: 'VIEW_BEDSPACE_V2' })
+    get(paths.premises.v2.bedspaces.archive.pattern, bedspacesControllerV2.archive(), {
+      auditEvent: 'VIEW_BEDSPACE_V2_ARCHIVE',
+    })
     post(paths.premises.v2.bedspaces.create.pattern, bedspacesControllerV2.create(), {
       redirectAuditEventSpecs: [
         {
@@ -166,6 +169,18 @@ export default function routes(controllers: Controllers, services: Services, rou
         {
           path: paths.premises.v2.bedspaces.show.pattern,
           auditEvent: 'UPDATE_BEDSPACE_V2_SUCCESS',
+        },
+      ],
+    })
+    post(paths.premises.v2.bedspaces.archive.pattern, bedspacesControllerV2.archiveSubmit(), {
+      redirectAuditEventSpecs: [
+        {
+          path: paths.premises.v2.bedspaces.archive.pattern,
+          auditEvent: 'ARCHIVE_BEDSPACE_V2_FAILURE',
+        },
+        {
+          path: paths.premises.v2.bedspaces.show.pattern,
+          auditEvent: 'ARCHIVE_BEDSPACE_V2_SUCCESS',
         },
       ],
     })

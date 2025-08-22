@@ -3,11 +3,9 @@ import { PageHeadingBarItem } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
 
 export function bedspaceActions(premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> {
-  const actions =
-    bedspace.status === 'online'
-      ? onlineBedspaceActions(premises, bedspace)
-      : archivedBedspaceActions(premises, bedspace)
-  return actions
+  return bedspace.status === 'online'
+    ? onlineBedspaceActions(premises, bedspace)
+    : archivedBedspaceActions(premises, bedspace)
 }
 
 const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
@@ -57,7 +55,7 @@ const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): 
   } else {
     actions.push({
       text: 'Archive bedspace',
-      href: '#',
+      href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   }

@@ -125,6 +125,7 @@ export default {
         create: managePathsCas3.premises.bedspaces.create,
         get: managePathsCas3.premises.bedspaces.get,
         update: managePathsCas3.premises.bedspaces.update,
+        archive: singleBedspacePath.path('archive'),
         cancelArchive: managePathsCas3.premises.bedspaces.cancelArchive,
       },
       bookings: {

@@ -9,6 +9,7 @@ import { AddBedspacePage } from '../../pages/manage/v2/addBedspacePage'
 import { ViewBedspacesPage } from '../../pages/manage/v2/viewBedspacesPage'
 import { EditBedspacePage } from '../../pages/manage/v2/editBedspacePage'
 import { ArchivePropertyPage } from '../../pages/manage/v2/archivePropertyPage'
+import { ArchiveBedspacePage } from '../../pages/manage/v2/archiveBedspacePage'
 
 export const visitListPropertiesPage = async (page: Page) => {
   // TODO: navigate to the list properties page from the dashboard once the v2 pages are live in prod
@@ -137,4 +138,17 @@ export const editBedspace = async (page: Page, property: Property, bedspace: Bed
   expect(isBannerMessageDisplayed).toBe(true)
   await showBedspacePage.shouldShowPropertySummary(property)
   await showBedspacePage.shouldShowBedspaceDetails(updatedBedspace)
+}
+
+export const archiveBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  await showBedspacePage.clickArchiveButton()
+
+  const archiveBedspacePage = await ArchiveBedspacePage.initialise(page, bedspace.reference)
+  await archiveBedspacePage.clickSubmit()
+
+  const showArchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  const isBannerMessageDisplayed = await showArchivedBedspacePage.isBannerMessageDisplayed('Bedspace archived')
+  expect(isBannerMessageDisplayed).toBe(true)
+  await showArchivedBedspacePage.shouldShowBedspaceStatus('Archived')
 }

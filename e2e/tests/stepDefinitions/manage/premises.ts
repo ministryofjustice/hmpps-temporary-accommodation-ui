@@ -54,12 +54,10 @@ Given('I create an active premises with all necessary details', () => {
         id: 'unknown',
       })
 
-    page.shouldPreselectProbationRegion(premises.probationRegion)
-
     const newPremises = newPremisesFactory.fromPremises(premises).build()
 
     cy.wrap(premises).as('premises')
-    page.completeForm(newPremises)
+    page.completeForm(newPremises, premises.localAuthorityArea.name)
   })
 })
 

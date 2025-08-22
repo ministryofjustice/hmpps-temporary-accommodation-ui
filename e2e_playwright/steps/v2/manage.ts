@@ -73,7 +73,7 @@ export const archiveProperty = async (page: Page, property: Property) => {
   await showPropertyPage.clickArchiveButton()
 
   const archivePropertyPage = await ArchivePropertyPage.initialise(page, property.addressLine1)
-  await archivePropertyPage.clickSubmit()
+  const archiveDate = await archivePropertyPage.archiveToday()
 
   const showArchivedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
   const isBannerMessageDisplayed = await showArchivedPropertyPage.isBannerMessageDisplayed(
@@ -81,6 +81,7 @@ export const archiveProperty = async (page: Page, property: Property) => {
   )
   expect(isBannerMessageDisplayed).toBe(true)
   await showArchivedPropertyPage.shouldShowPropertyStatus('Archived')
+  await showArchivedPropertyPage.shouldShowArchiveDates(archiveDate)
 }
 
 export const unarchiveProperty = async (page: Page, property: Property) => {
@@ -89,7 +90,7 @@ export const unarchiveProperty = async (page: Page, property: Property) => {
   await showPropertyPage.clickUnarchiveButton()
 
   const unarchivePropertyPage = await UnarchivePropertyPage.initialise(page, property.addressLine1)
-  await unarchivePropertyPage.clickSubmit()
+  const unarchiveDate = await unarchivePropertyPage.unarchiveToday()
 
   const showUnarchivedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
   const isBannerMessageDisplayed = await showUnarchivedPropertyPage.isBannerMessageDisplayed(
@@ -97,6 +98,7 @@ export const unarchiveProperty = async (page: Page, property: Property) => {
   )
   expect(isBannerMessageDisplayed).toBe(true)
   await showUnarchivedPropertyPage.shouldShowPropertyStatus('Online')
+  await showUnarchivedPropertyPage.shouldShowOnlineDates(unarchiveDate)
 }
 
 export const createBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {

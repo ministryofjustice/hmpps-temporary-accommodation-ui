@@ -530,7 +530,7 @@ describe('PremisesService', () => {
         expect(archiveRow.value.html).not.toContain('<details class="govuk-details">')
         expect(archiveRow.value.html).not.toContain('Full history')
         expect(archiveRow.value.html).toContain('Online date')
-        expect(archiveRow.value.html).toContain('Archived date')
+        expect(archiveRow.value.html).toContain('Archive date')
       } else {
         throw new Error('No html property found in archiveRow.value')
       }

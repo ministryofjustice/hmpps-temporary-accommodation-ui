@@ -61,6 +61,7 @@ import cas3PremisesSummaryFactory from './cas3PremisesSummary'
 import cas3PremisesSearchResultFactory from './cas3PremisesSearchResult'
 import cas3PremisesSearchResultsFactory from './cas3PremisesSearchResults'
 import cas3ArchivePremisesFactory from './cas3ArchivePremises'
+import cas3UnarchivePremisesFactory from './cas3UnarchivePremises'
 import cas3BedspaceFactory from './cas3Bedspace'
 import cas3BedspaceArchiveActionFactory from './cas3BedspaceArchiveAction'
 import cas3NewBedspaceFactory from './cas3NewBedspace'
@@ -147,6 +148,7 @@ export {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3ArchivePremisesFactory,
+  cas3UnarchivePremisesFactory,
   cas3BedspaceFactory,
   cas3BedspaceArchiveActionFactory,
   cas3BedspacesFactory,

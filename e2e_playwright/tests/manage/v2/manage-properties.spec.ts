@@ -7,6 +7,7 @@ import {
   navigateToProperty,
   searchForProperty,
   showProperty,
+  unarchiveProperty,
   visitListPropertiesPage,
 } from '../../../steps/v2/manage'
 import { getProperty } from '../../../utils/manage'
@@ -49,4 +50,15 @@ test('Archive a property', async ({ page, assessor }) => {
   await createProperty(page, property)
   await showProperty(page, property)
   await archiveProperty(page, property)
+})
+
+test('Unarchive a property', async ({ page, assessor }) => {
+  const property = getProperty()
+
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await showProperty(page, property)
+  await archiveProperty(page, property)
+  await unarchiveProperty(page, property)
 })

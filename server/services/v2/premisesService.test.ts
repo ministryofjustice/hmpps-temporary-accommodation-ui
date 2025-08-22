@@ -8,6 +8,7 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3UnarchivePremisesFactory,
   cas3UpdatePremisesFactory,
   characteristicFactory,
   localAuthorityFactory,
@@ -80,6 +81,20 @@ describe('PremisesService', () => {
 
       expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
       expect(premisesClient.archive).toHaveBeenCalledWith(premises.id, archivePayload)
+    })
+  })
+
+  describe('unarchivePremises', () => {
+    it('on success returns the premises that has been unarchived', async () => {
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      const unarchivePayload = cas3UnarchivePremisesFactory.build()
+      premisesClient.unarchive.mockResolvedValue(premises)
+
+      const result = await service.unarchivePremises(callConfig, premises.id, unarchivePayload)
+      expect(result).toEqual(premises)
+
+      expect(premisesClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(premisesClient.unarchive).toHaveBeenCalledWith(premises.id, unarchivePayload)
     })
   })
 

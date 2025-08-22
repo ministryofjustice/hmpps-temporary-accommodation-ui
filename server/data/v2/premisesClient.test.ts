@@ -10,6 +10,7 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
+  cas3UnarchivePremisesFactory,
   cas3UpdatePremisesFactory,
 } from '../../testutils/factories'
 import paths from '../../paths/api'
@@ -113,6 +114,22 @@ describe('PremisesClient', () => {
         .reply(200, premises)
 
       const result = await premisesClient.archive(premisesId, payload)
+      expect(result).toEqual(premises)
+    })
+  })
+
+  describe('unarchive', () => {
+    it('should return the premises that has been unarchived', async () => {
+      const premisesId = 'fc321526-7d54-4e1b-94b4-8df4225d0763'
+      const premises = cas3PremisesFactory.build({ id: premisesId })
+      const payload = cas3UnarchivePremisesFactory.build()
+
+      fakeApprovedPremisesApi
+        .post(paths.cas3.premises.unarchive({ premisesId }))
+        .matchHeader('authorization', `Bearer ${callConfig.token}`)
+        .reply(200, premises)
+
+      const result = await premisesClient.unarchive(premisesId, payload)
       expect(result).toEqual(premises)
     })
   })

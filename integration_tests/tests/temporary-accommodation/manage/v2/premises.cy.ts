@@ -16,6 +16,7 @@ import {
 import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
 import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'
 import PremisesArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesArchive'
+import PremisesUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesUnarchive'
 import { DateFormats } from '../../../../../server/utils/dateUtils'
 
 context('Premises', () => {
@@ -1529,6 +1530,139 @@ context('Premises', () => {
       archivePage.shouldShowGivenErrorMessagesForField(
         'endDate',
         `Earliest archive date is ${DateFormats.dateObjtoUIDate(oneWeek)} because of an upcoming bedspace`,
+      )
+    })
+  })
+
+  describe('unarchive a premises', () => {
+    beforeEach(() => {
+      // Given I am signed in
+      cy.signIn()
+    })
+
+    it('should be able to unarchive a property today', () => {
+      // And there is an archived premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'archived' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Make property online" action
+      showPage.clickMakePropertyOnlineButton()
+
+      // Then I should see the unarchive premises page
+      const unarchivePage = Page.verifyOnPage(PremisesUnarchivePage, premises)
+
+      // When the backend responds with 200 ok
+      const expectedPremises: Cas3Premises = {
+        ...premises,
+        status: 'online',
+      }
+      cy.task('stubPremisesUnarchiveV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // And I submit the form
+      unarchivePage.clickSubmit()
+
+      // Then the premises should have been unarchived in the backend
+      const today = DateFormats.dateObjToIsoDate(new Date())
+      cy.task('verifyPremisesUnarchiveV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+        expect(requestBody.restartDate).equal(today)
+      })
+
+      // And I should be taken to the existing unarchived premises
+      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+
+      // And I should see the 'Property and bedspaces online' banner
+      showPage.shouldShowPropertyAndBedspacesOnlineBanner()
+
+      // And the property should be online
+      showPage.shouldShowPropertyStatus('Online')
+    })
+
+    it('should be able to unarchive a property tomorrow', () => {
+      // And there is an archived premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'archived' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      let showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Make property online" action
+      showPage.clickMakePropertyOnlineButton()
+
+      // Then I should see the unarchive premises page
+      const unarchivePage = Page.verifyOnPage(PremisesUnarchivePage, premises)
+
+      // When I enter tomorrow's date
+      const tomorrowDate = new Date()
+      tomorrowDate.setDate(tomorrowDate.getDate() + 1)
+      const tomorrow = DateFormats.dateObjToIsoDate(tomorrowDate)
+      unarchivePage.enterDate(tomorrow)
+
+      // When the backend responds with 200 ok
+      const expectedPremises: Cas3Premises = premises
+      cy.task('stubPremisesUnarchiveV2', expectedPremises)
+      cy.task('stubSinglePremisesV2', expectedPremises)
+
+      // And I submit the form
+      unarchivePage.clickSubmit()
+
+      // Then the premises should have been scheduled to come online in the backend
+      cy.task('verifyPremisesUnarchiveV2', premises.id).then(requests => {
+        expect(requests).to.have.length(1)
+        const requestBody = JSON.parse(requests[0].body)
+        expect(requestBody.restartDate).equal(tomorrow)
+      })
+
+      // And I should be taken to the existing unarchived premises
+      showPage = Page.verifyOnPage(PremisesShowPage, `${expectedPremises.addressLine1}, ${expectedPremises.postcode}`)
+
+      // And I should see the 'Property and bedspaces updated' banner
+      showPage.shouldShowPropertyAndBedspacesUpdatedBanner()
+
+      // And the property should be archived, with a scheduled unarchive
+      showPage.shouldShowPropertyStatus('Archived')
+      // TODO: uncomment when upcoming statuses have been implemented
+      // showPage.shouldShowUpcomingUnarchiveStatus()
+    })
+
+    it('should show a dynamic error when unarchiving a property fails', () => {
+      // And there is an archived premises
+      const premises = cas3PremisesFactory.build({ status: 'archived' })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: cas3BedspacesFactory.build() })
+
+      // When I visit the show premises page
+      const showPage = PremisesShowPage.visit(premises)
+
+      // And click on the "Make property online" action
+      showPage.clickMakePropertyOnlineButton()
+
+      // Then I should see the unarchive premises page
+      let unarchivePage = Page.verifyOnPage(PremisesUnarchivePage, premises)
+
+      const twoWeeks = new Date()
+      twoWeeks.setDate(twoWeeks.getDate() + 14)
+
+      // When the backend responds with 400 bad request
+      cy.task('stubPremisesUnarchiveErrorsV2', premises.id)
+
+      // And I submit the form
+      unarchivePage.clickSubmit()
+
+      // Then I should be returned to the unarchive page
+      unarchivePage = Page.verifyOnPage(PremisesUnarchivePage, premises)
+
+      // And I should see error messages with dynamic date content
+      unarchivePage.shouldShowGivenErrorMessageForField(
+        'restartDate',
+        'The date cannot be more than 7 days in the future',
       )
     })
   })

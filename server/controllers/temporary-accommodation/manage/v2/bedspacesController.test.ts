@@ -7,10 +7,12 @@ import BedspaceService from '../../../../services/v2/bedspaceService'
 import BedspacesController from './bedspacesController'
 import {
   assessmentFactory,
+  bookingFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
+  lostBedFactory,
   placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
@@ -24,7 +26,8 @@ import extractCallConfig from '../../../../utils/restUtils'
 import PremisesService from '../../../../services/v2/premisesService'
 import { DateFormats } from '../../../../utils/dateUtils'
 import paths from '../../../../paths/temporary-accommodation/manage'
-import { AssessmentsService } from '../../../../services'
+import { AssessmentsService, BookingService } from '../../../../services'
+import { ListingEntry } from '../../../../services/bookingService'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -33,6 +36,8 @@ describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'some-premises-id'
   const bedspaceId = 'some-bedspace-id'
+  const bookingId = 'some-booking-id'
+  const lostBedId = 'some-lost-bed-id'
 
   const referenceData = {
     characteristics: referenceDataFactory.characteristic('room').buildList(5),
@@ -47,9 +52,15 @@ describe('BedspacesController', () => {
 
   const bedspaceService = createMock<BedspaceService>({})
   const premisesService = createMock<PremisesService>({})
+  const bookingService = createMock<BookingService>({})
   const assessmentService = createMock<AssessmentsService>({})
 
-  const bedspacesController = new BedspacesController(premisesService, bedspaceService, assessmentService)
+  const bedspacesController = new BedspacesController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    assessmentService,
+  )
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -307,42 +318,58 @@ describe('BedspacesController', () => {
         classes: 'govuk-button--secondary',
       },
     ]
+    const bookingEntry = {
+      body: bookingFactory.build({ id: bookingId }),
+      type: 'booking',
+      path: paths.bookings.show({ premisesId, bedspaceId, bookingId }),
+    }
+    const lostBedEntry = {
+      body: lostBedFactory.build({ id: lostBedId }),
+      type: 'lost-bed',
+      path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId }),
+    }
     it.each([
-      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions],
-      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions],
-      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions],
-    ])('should return a bedspace', async (bedspace: Cas3Bedspace, summary: SummaryList, actions: []) => {
-      const params = { premisesId, bedspaceId }
+      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions, [bookingEntry, lostBedEntry]],
+      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions, []],
+      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions, []],
+    ])(
+      'should return a bedspace',
+      async (bedspace: Cas3Bedspace, summary: SummaryList, actions: [], bookingsAndLostBeds: Array<ListingEntry>) => {
+        const params = { premisesId, bedspaceId }
 
-      premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
-      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
-      bedspaceService.summaryList.mockReturnValue(summary)
+        premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
+        bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+        bedspaceService.summaryList.mockReturnValue(summary)
+        bookingService.getListingEntriesForBedspace.mockResolvedValue(bookingsAndLostBeds)
 
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-        query: {
-          placeContextAssessmentId: placeContext.assessment.id,
-          placeContextArrivalDate: placeContext.arrivalDate,
-        },
-      })
+        request = createMock<Request>({
+          session: {
+            probationRegion: probationRegionFactory.build(),
+          },
+          params,
+          query: {
+            placeContextAssessmentId: placeContext.assessment.id,
+            placeContextArrivalDate: placeContext.arrivalDate,
+          },
+        })
 
-      const requestHandler = bedspacesController.show()
-      await requestHandler(request, response, next)
+        const requestHandler = bedspacesController.show()
+        await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
-        premises: premisesWithFullAddress,
-        summary,
-        bedspace,
-        actions,
-      })
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
+          premises: premisesWithFullAddress,
+          summary,
+          bedspace,
+          actions,
+          listingEntries: bookingsAndLostBeds,
+        })
 
-      expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)
-      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
-    })
+        expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)
+        expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+        expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
+        expect(bookingService.getListingEntriesForBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      },
+    )
   })
 
   describe('edit', () => {

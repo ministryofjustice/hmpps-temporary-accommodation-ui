@@ -260,7 +260,7 @@ describe('BedspacesController', () => {
     const archivedBedspaceActions = [
       {
         text: 'Make bedspace online',
-        href: paths.premises.v2.bedspaces.unarchive({ premisesId, bedspaceId }),
+        href: paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
@@ -813,7 +813,7 @@ describe('BedspacesController', () => {
         expect.any(String),
       )
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
   })
 })

@@ -12,8 +12,8 @@
 
 {% block beforeContent %}
     {{ breadCrumb('Unarchive a bedspace', [
-        {title: 'List of properties', href: paths.premises.v2.online()},
-        {title: 'View a bedspace', href: paths.premises.v2.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })}
+        {title: 'List of properties', href: paths.premises.online()},
+        {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })}
     ]) }}
 {% endblock %}
 
@@ -44,7 +44,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.v2.bedspaces.unarchive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
+            <form action="{{ paths.premises.bedspaces.unarchive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
                 {{ govukRadios({

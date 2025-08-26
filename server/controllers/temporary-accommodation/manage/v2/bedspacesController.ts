@@ -331,13 +331,13 @@ export default class BedspacesController {
         const today = DateFormats.dateObjToIsoDate(new Date())
         req.flash('success', `Bedspace ${restartDate > today ? 'updated' : 'online'}`)
 
-        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         return catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.premises.v2.bedspaces.unarchive({ premisesId, bedspaceId }),
+          paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
           'bedspaceUnarchive',
         )
       }

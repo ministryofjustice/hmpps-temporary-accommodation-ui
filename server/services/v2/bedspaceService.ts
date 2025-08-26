@@ -163,4 +163,14 @@ export default class BedspaceService {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.archive(premisesId, bedspaceId, { endDate })
   }
+
+  async unarchiveBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    restartDate: string,
+  ): Promise<void> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.unarchive(premisesId, bedspaceId, { restartDate })
+  }
 }

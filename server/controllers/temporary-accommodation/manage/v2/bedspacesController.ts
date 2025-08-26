@@ -279,4 +279,68 @@ export default class BedspacesController {
       }
     }
   }
+
+  unarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+      const unarchiveOption = userInput.unarchiveOption || 'today'
+
+      return res.render('temporary-accommodation/v2/bedspaces/unarchive', {
+        bedspace,
+        params: req.params,
+        errors,
+        errorSummary,
+        ...userInput,
+        unarchiveOption,
+      })
+    }
+  }
+
+  unarchiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { unarchiveOption } = req.body
+
+      const errors: Record<string, string> = {}
+
+      let restartDate: string | undefined
+
+      if (unarchiveOption === 'today') {
+        restartDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (unarchiveOption === 'other') {
+        const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'restartDate')
+        restartDate = parsedDate.restartDate
+      } else {
+        errors.unarchiveOption = 'Select a date for the bedspace to go online'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', errors)
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.v2.bedspaces.unarchive({ premisesId, bedspaceId }))
+      }
+
+      try {
+        await this.bedspaceService.unarchiveBedspace(callConfig, premisesId, bedspaceId, restartDate)
+
+        const today = DateFormats.dateObjToIsoDate(new Date())
+        req.flash('success', `Bedspace ${restartDate > today ? 'updated' : 'online'}`)
+
+        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.v2.bedspaces.unarchive({ premisesId, bedspaceId }),
+          'bedspaceUnarchive',
+        )
+      }
+    }
+  }
 }

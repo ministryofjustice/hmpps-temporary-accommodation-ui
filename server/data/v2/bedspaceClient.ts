@@ -45,4 +45,11 @@ export default class BedspaceClient {
       data,
     })
   }
+
+  async unarchive(premisesId: string, bedspaceId: string, data: { restartDate: string }) {
+    return this.restClient.post<void>({
+      path: paths.cas3.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
+      data,
+    })
+  }
 }

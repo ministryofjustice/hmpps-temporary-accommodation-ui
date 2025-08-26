@@ -59,6 +59,11 @@ export class ViewBedspacePage extends BasePage {
     await this.page.getByText('Archive bedspace').click()
   }
 
+  async clickUnarchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Make bedspace online').click()
+  }
+
   async shouldShowBedspaceStatus(status: string) {
     await expect(this.getRowTextByLabel('Bedspace status')).toContainText(status)
   }

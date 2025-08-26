@@ -201,6 +201,53 @@ const stubBedspaceArchiveV2WithError = (args: { premisesId: string; bedspaceId: 
     },
   })
 
+const stubBedspaceUnarchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.cas3.premises.bedspaces.unarchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+
+const stubBedspaceUnarchiveV2WithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.cas3.premises.bedspaces.unarchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        'invalid-params': [
+          {
+            propertyName: '$.restartDate',
+            errorType: args.errorType === 'invalidEndDateInThePast' ? 'beforeLastBedspaceArchivedDate' : args.errorType,
+            entityId: null,
+            value: null,
+          },
+        ],
+        title: 'Bad Request',
+        status: 400,
+        detail: 'There is a problem with your request',
+      },
+    },
+  })
+
 export default {
   stubBedspaceV2,
   stubPremisesBedspacesV2,
@@ -214,4 +261,6 @@ export default {
   stubBedspaceUpdateErrors,
   stubBedspaceArchiveV2,
   stubBedspaceArchiveV2WithError,
+  stubBedspaceUnarchiveV2,
+  stubBedspaceUnarchiveV2WithError,
 }

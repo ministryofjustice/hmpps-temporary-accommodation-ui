@@ -81,7 +81,7 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(2)
       expect(actions).toContainEqual({
         text: 'Make bedspace online',
-        href: '#',
+        href: paths.premises.v2.bedspaces.unarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({

@@ -260,7 +260,7 @@ describe('BedspacesController', () => {
     const archivedBedspaceActions = [
       {
         text: 'Make bedspace online',
-        href: '#',
+        href: paths.premises.v2.bedspaces.unarchive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
@@ -758,6 +758,62 @@ describe('BedspacesController', () => {
         'bedspaceArchive',
         undefined,
       )
+    })
+  })
+
+  describe('unarchive', () => {
+    it('renders the unarchive page with bedspace details', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+
+      request = createMock<Request>({
+        params: { premisesId, bedspaceId },
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+      })
+
+      const requestHandler = bedspacesController.unarchive()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/unarchive', {
+        bedspace,
+        params: request.params,
+        errors: {},
+        errorSummary: [],
+        unarchiveOption: 'today',
+      })
+    })
+  })
+
+  describe('unarchiveSubmit', () => {
+    it('successfully unarchives a bedspace and redirects to show page', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          unarchiveOption: 'today',
+        },
+      })
+
+      bedspaceService.unarchiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        expect.any(String),
+      )
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
     })
   })
 })

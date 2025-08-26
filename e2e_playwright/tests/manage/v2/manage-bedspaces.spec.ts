@@ -9,6 +9,7 @@ import {
   navigateToBedspace,
   navigateToPropertyFromBedspace,
   showBedspace,
+  unarchiveBedspace,
   visitListPropertiesPage,
 } from '../../../steps/v2/manage'
 
@@ -58,4 +59,16 @@ test('Archive a bedspace', async ({ page, assessor }) => {
   await createBedspace(page, property, bedspace)
   await showBedspace(page, property, bedspace)
   await archiveBedspace(page, property, bedspace)
+})
+
+test('Unarchive a bedspace', async ({ page, assessor }) => {
+  const property = getProperty()
+  const bedspace = getBedspace()
+  await signIn(page, assessor)
+  await visitListPropertiesPage(page)
+  await createProperty(page, property)
+  await createBedspace(page, property, bedspace)
+  await showBedspace(page, property, bedspace)
+  await archiveBedspace(page, property, bedspace)
+  await unarchiveBedspace(page, property, bedspace)
 })

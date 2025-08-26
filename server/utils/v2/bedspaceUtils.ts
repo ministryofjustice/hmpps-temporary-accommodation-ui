@@ -25,7 +25,7 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   } else {
     actions.push({
       text: 'Make bedspace online',
-      href: '#',
+      href: paths.premises.v2.bedspaces.unarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   }

@@ -22,7 +22,7 @@ export default class BookingArrivalEditPage extends Page {
   ) {
     super('Change arrival')
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, null, 'booking')
     this.bookingInfoComponent = new BookingInfoComponent(booking)
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })

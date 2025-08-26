@@ -23,7 +23,7 @@ export default class BookingExtensionNewPage extends Page {
   ) {
     super('Extend or shorten booking')
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, null, 'booking')
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
     this.bookingInfoComponent = new BookingInfoComponent(booking)

@@ -25,7 +25,7 @@ export default class BookingTurnaroundNewPage extends Page {
   ) {
     super('Change turnaround time')
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'turnaround')
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, null, 'turnaround')
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
     this.bookingInfoComponent = new BookingInfoComponent(booking)

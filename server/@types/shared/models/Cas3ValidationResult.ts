@@ -2,8 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3BedspaceReference = {
-    id: string;
-    reference: string;
+export type Cas3ValidationResult = {
+    entityId: string;
+    entityReference: string;
 };
 

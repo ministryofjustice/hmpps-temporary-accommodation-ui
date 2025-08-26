@@ -1,5 +1,4 @@
 import {
-  Cas3BedspacesReference,
   Cas3NewPremises,
   Cas3Premises,
   Cas3PremisesBedspaceTotals,
@@ -7,6 +6,7 @@ import {
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
   Cas3UpdatePremises,
+  Cas3ValidationResults,
 } from '@approved-premises/api'
 import RestClient, { CallConfig } from '../restClient'
 import config, { ApiConfig } from '../../config'
@@ -41,7 +41,7 @@ export default class PremisesClient {
   }
 
   async canArchive(premisesId: string) {
-    return this.restClient.get<Cas3BedspacesReference>({ path: paths.cas3.premises.canArchive({ premisesId }) })
+    return this.restClient.get<Cas3ValidationResults>({ path: paths.cas3.premises.canArchive({ premisesId }) })
   }
 
   async archive(premisesId: string, data: { endDate: string }) {

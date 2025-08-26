@@ -22,20 +22,20 @@ import {
 } from './bookingUtils'
 
 const premisesId = 'premisesId'
-const roomId = 'roomId'
+const bedspaceId = 'bedspaceId'
 const bookingId = 'bookingId'
 const lostBedId = 'lostBedId'
 
 const cancelBookingAction = {
   text: 'Cancel booking',
   classes: 'govuk-button--secondary',
-  href: paths.bookings.cancellations.new({ premisesId, bedspaceId: roomId, bookingId }),
+  href: paths.bookings.cancellations.new({ premisesId, bedspaceId, bookingId }),
 }
 
 const changeTurnaroundAction = {
   text: 'Change turnaround time',
   classes: 'govuk-button--secondary',
-  href: paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId }),
+  href: paths.bookings.turnarounds.new({ premisesId, bedspaceId, bookingId }),
 }
 
 describe('bookingUtils', () => {
@@ -43,11 +43,11 @@ describe('bookingUtils', () => {
     it('returns a mark as confirmed action for a provisional booking', () => {
       const booking = bookingFactory.provisional().build({ id: bookingId })
 
-      expect(bookingActions(premisesId, roomId, booking)).toEqual([
+      expect(bookingActions(premisesId, bedspaceId, booking)).toEqual([
         {
           text: 'Mark as confirmed',
           classes: '',
-          href: paths.bookings.confirmations.new({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.confirmations.new({ premisesId, bedspaceId, bookingId }),
         },
         cancelBookingAction,
         changeTurnaroundAction,
@@ -57,11 +57,11 @@ describe('bookingUtils', () => {
     it('returns a mark as active action for a confirmed booking', () => {
       const booking = bookingFactory.confirmed().build({ id: bookingId })
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+      expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
           text: 'Mark as active',
           classes: '',
-          href: paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
         },
         cancelBookingAction,
         changeTurnaroundAction,
@@ -71,21 +71,21 @@ describe('bookingUtils', () => {
     it('returns mark as departed, change date, and extend actions for an arrived booking', () => {
       const booking = bookingFactory.arrived().build({ id: bookingId })
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+      expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
           text: 'Mark as departed',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.new({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.new({ premisesId, bedspaceId, bookingId: booking.id }),
         },
         {
           text: 'Extend or shorten booking',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+          href: paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId: booking.id }),
         },
         {
           text: 'Change arrival date',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+          href: paths.bookings.arrivals.edit({ premisesId, bedspaceId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])
@@ -94,11 +94,11 @@ describe('bookingUtils', () => {
     it('returns edit departed booking for a departed booking', () => {
       const booking = bookingFactory.departed().build({ id: bookingId })
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+      expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
           text: 'Update departure details',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])
@@ -107,11 +107,11 @@ describe('bookingUtils', () => {
     it('returns edit departed booking for a closed booking', () => {
       const booking = bookingFactory.closed().build({ id: bookingId })
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+      expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
           text: 'Update departure details',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])
@@ -120,11 +120,11 @@ describe('bookingUtils', () => {
     it('returns edit cancelled booking for a cancelled booking', () => {
       const booking = bookingFactory.cancelled().build({ id: bookingId })
 
-      expect(bookingActions('premisesId', 'roomId', booking)).toEqual([
+      expect(bookingActions('premisesId', 'bedspaceId', booking)).toEqual([
         {
           text: 'Update cancelled booking',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.cancellations.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+          href: paths.bookings.cancellations.edit({ premisesId, bedspaceId, bookingId: booking.id }),
         },
       ])
     })
@@ -426,13 +426,13 @@ describe('bookingUtils', () => {
         },
       }
 
-      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'plural')).toEqual({
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, bedspaceId, 'plural')).toEqual({
         errorTitle: 'This bedspace is not available for the dates entered',
         errorSummary: [
           {
             html: `They conflict with an <a href="${paths.bookings.show({
               premisesId,
-              bedspaceId: roomId,
+              bedspaceId,
               bookingId,
             })}">existing booking</a>`,
           },
@@ -447,13 +447,13 @@ describe('bookingUtils', () => {
         },
       }
 
-      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'plural')).toEqual({
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, bedspaceId, 'plural')).toEqual({
         errorTitle: 'This bedspace is not available for the dates entered',
         errorSummary: [
           {
             html: `They conflict with an <a href="${paths.lostBeds.show({
               premisesId,
-              bedspaceId: roomId,
+              bedspaceId,
               lostBedId,
             })}">existing void</a>`,
           },
@@ -468,7 +468,7 @@ describe('bookingUtils', () => {
         },
       }
 
-      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'plural')).toEqual({
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, bedspaceId, 'plural')).toEqual({
         errorTitle: 'This bedspace is not available for the dates entered',
         errorSummary: [
           {
@@ -485,13 +485,13 @@ describe('bookingUtils', () => {
         },
       }
 
-      expect(generateConflictBespokeError(err as SanitisedError, premisesId, roomId, 'singular')).toEqual({
+      expect(generateConflictBespokeError(err as SanitisedError, premisesId, bedspaceId, 'singular')).toEqual({
         errorTitle: 'This bedspace is not available for the date entered',
         errorSummary: [
           {
             html: `It conflicts with an <a href="${paths.bookings.show({
               premisesId,
-              bedspaceId: roomId,
+              bedspaceId,
               bookingId,
             })}">existing booking</a>`,
           },
@@ -508,13 +508,13 @@ describe('bookingUtils', () => {
         },
       }
 
-      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, roomId)).toEqual({
+      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, bedspaceId)).toEqual({
         errorTitle: 'The turnaround time could not be changed',
         errorSummary: [
           {
             html: `The new turnaround time would conflict with an <a href="${paths.bookings.show({
               premisesId,
-              bedspaceId: roomId,
+              bedspaceId,
               bookingId,
             })}">existing booking</a>`,
           },
@@ -529,13 +529,13 @@ describe('bookingUtils', () => {
         },
       }
 
-      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, roomId)).toEqual({
+      expect(generateTurnaroundConflictBespokeError(err as SanitisedError, premisesId, bedspaceId)).toEqual({
         errorTitle: 'The turnaround time could not be changed',
         errorSummary: [
           {
             html: `The new turnaround time would conflict with an <a href="${paths.lostBeds.show({
               premisesId,
-              bedspaceId: roomId,
+              bedspaceId,
               lostBedId,
             })}">existing void</a>`,
           },

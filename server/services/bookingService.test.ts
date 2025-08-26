@@ -64,6 +64,12 @@ describe('BookingService', () => {
     })
   })
 
+  // TODO: finish adding tests
+  // describe('getListingEntriesForBedspace', () => {
+  //   const bedspaceId = '1cdac6c0-473b-481d-a405-52364b8bdd19'
+  //
+  // })
+
   describe('getListingEntries', () => {
     it('returns a sorted list of booking entries and active lost bed entries', async () => {
       const bed = bedFactory.build({ id: bedspaceId })

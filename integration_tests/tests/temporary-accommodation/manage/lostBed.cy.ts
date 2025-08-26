@@ -491,28 +491,38 @@ context('Lost bed', () => {
     Page.verifyOnPage(LostBedCancelPage, premises, null, bedspace, lostBed)
   })
 
-  //   it('navigates back from the cancel void booking page to the view void booking page', () => {
-  //     // Given I am signed in
-  //     cy.signIn()
-  //
-  //     // And there is a premises, a room and an active lost bed the database
-  //     const premises = premisesFactory.build()
-  //     const room = roomFactory.build()
-  //     const lostBed = lostBedFactory.active().build()
-  //
-  //     cy.task('stubSinglePremises', premises)
-  //     cy.task('stubSingleRoom', { premisesId: premises.id, room })
-  //     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
-  //
-  //     // When I visit the cancel void booking page
-  //     const page = LostBedCancelPage.visit(premises, room, lostBed)
-  //
-  //     // And I click the previous bread crumb
-  //     page.clickBreadCrumbUp()
-  //
-  //     // Then I navigate to the view bedspace page
-  //     Page.verifyOnPage(BedspaceShowPage, premises, room)
-  //   })
+  it('navigates back from the cancel void booking page to the view void booking page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room and an active lost bed the database
+    const premises = premisesFactory.build()
+    const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
+    const bedspace = cas3BedspaceFactory.build()
+    const lostBed = lostBedFactory.active().build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = [lostBed]
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSinglePremisesV2', cas3Premises)
+    cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+    // When I visit the cancel void booking page
+    const page = LostBedCancelPage.visit(premises, null, bedspace, lostBed)
+
+    // And I click the previous bread crumb
+    page.clickBreadCrumbUp()
+
+    // Then I navigate to the view bedspace page
+    Page.verifyOnPage(BedspaceShowPage, premises, null, bedspace, bedspace.reference)
+  })
 
   it('allows me to cancel a void booking', () => {
     // Given I am signed in

@@ -60,8 +60,6 @@ context('Bedspace', () => {
     const searchResults = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
     cy.task('stubSinglePremisesV2', premises)
     cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
-
-    // And there is an online bedspace in the database for that premises
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })

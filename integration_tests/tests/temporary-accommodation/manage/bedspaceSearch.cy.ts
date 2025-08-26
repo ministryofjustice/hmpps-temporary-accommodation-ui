@@ -242,7 +242,6 @@ context('Bedspace Search', () => {
 
     cy.task('stubBedspaceSearch', results)
     cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
     cy.task('stubFindAssessment', { ...assessment, status: 'closed' })
     cy.task('stubAssessmentReferralHistoryGet', {
       assessment,

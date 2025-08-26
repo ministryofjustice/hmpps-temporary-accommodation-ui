@@ -15,8 +15,8 @@ import {
   fetchErrorsAndUserInput,
   generateMergeParameters,
 } from '../../../../utils/validation'
-import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
-import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
+// eslint-disable-next-line import/named
+import { bedspaceActions, setDefaultStartDate } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
 import { DateFormats } from '../../../../utils/dateUtils'
 import { BookingService } from '../../../../services'

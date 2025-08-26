@@ -74,7 +74,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
   completeForm(updatePremises: UpdatePremises): void {
     this.clearForm()
 
-    super.completeEditableForm(updatePremises)
+    super.completeEditableForm(updatePremises, null)
   }
 
   clearForm(): void {

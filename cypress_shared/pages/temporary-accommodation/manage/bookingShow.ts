@@ -1,10 +1,11 @@
-import type { Booking, Premises, Room } from '@approved-premises/api'
+import type { Booking, Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
 import PopDetailsHeaderComponent from '../../../components/popDetailsHeader'
 import Page from '../../page'
+import { Cas3Bedspace, Room } from '../../../../server/@types/shared'
 
 export default class BookingShowPage extends Page {
   private readonly popDetailsHeaderComponent: PopDetailsHeaderComponent
@@ -16,18 +17,23 @@ export default class BookingShowPage extends Page {
   constructor(
     premises: Premises,
     room: Room,
+    bedspace: Cas3Bedspace,
     private readonly booking: Booking,
   ) {
     super('View a booking')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, room: Room, booking: Booking): BookingShowPage {
-    cy.visit(paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
-    return new BookingShowPage(premises, room, booking)
+  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking): BookingShowPage {
+    if (room) {
+      cy.visit(paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    } else {
+      cy.visit(paths.bookings.show({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
+    }
+    return new BookingShowPage(premises, room, bedspace, booking)
   }
 
   clickConfirmBookingButton(): void {

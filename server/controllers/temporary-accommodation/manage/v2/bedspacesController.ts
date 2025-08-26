@@ -79,9 +79,9 @@ export default class BedspacesController {
         const bedspace = await this.bedspaceService.createBedspace(callConfig, premisesId, newBedspace)
 
         req.flash('success', 'Bedspace added')
-        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.new({ premisesId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.new({ premisesId }))
       }
     }
   }
@@ -137,9 +137,9 @@ export default class BedspacesController {
         const bedspace = await this.bedspaceService.updateBedspace(callConfig, premisesId, bedspaceId, updatedBedspace)
 
         req.flash('success', 'Bedspace edited')
-        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, bedspaceId }))
       }
     }
   }
@@ -155,13 +155,13 @@ export default class BedspacesController {
           req.flash('success', 'Bedspace archive cancelled')
         }
 
-        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+          paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
         )
       }
     }
@@ -236,7 +236,7 @@ export default class BedspacesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
       }
 
       try {
@@ -245,7 +245,7 @@ export default class BedspacesController {
         const today = DateFormats.dateObjToIsoDate(new Date())
         req.flash('success', `Bedspace ${endDate > today ? 'updated' : 'archived'}`)
 
-        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         const earliestDateTransform = (params: InvalidParams) => ({
           earliestDate: DateFormats.isoDateToUIDate(params.value),
@@ -268,7 +268,7 @@ export default class BedspacesController {
           req,
           res,
           err,
-          paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+          paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
           'bedspaceArchive',
           mergeVariables,
         )

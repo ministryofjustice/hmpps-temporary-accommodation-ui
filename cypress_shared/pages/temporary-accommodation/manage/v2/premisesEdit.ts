@@ -9,7 +9,7 @@ export default class PremisesEditPage extends PremisesEditablePage {
   }
 
   static visit(premises: Cas3Premises) {
-    cy.visit(paths.premises.v2.edit({ premisesId: premises.id }))
+    cy.visit(paths.premises.edit({ premisesId: premises.id }))
     return new PremisesEditPage()
   }
 

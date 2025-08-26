@@ -90,7 +90,7 @@ export default class BookingsController {
         placeContext = undefined
       }
 
-      const backLink = appendQueryString(paths.bookings.new({ premisesId, roomId }), req.query)
+      const backLink = appendQueryString(paths.bookings.new({ premisesId, bedspaceId: roomId }), req.query)
       const applyDisabled = !isApplyEnabledForUser(res.locals.user)
 
       try {
@@ -161,7 +161,7 @@ export default class BookingsController {
       const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
 
       const backLink = appendQueryString(
-        paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.selectAssessment({ premisesId: premises.id, bedspaceId: room.id }),
         req.query,
       )
 
@@ -193,7 +193,7 @@ export default class BookingsController {
           req,
           res,
           err,
-          appendQueryString(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), req.query),
+          appendQueryString(paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }), req.query),
         )
       }
     }
@@ -226,7 +226,7 @@ export default class BookingsController {
         req.flash('success', 'Booking created')
         clearUserInput(req)
 
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId: booking.id }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
@@ -240,7 +240,7 @@ export default class BookingsController {
           req,
           res,
           err,
-          appendQueryString(paths.bookings.new({ premisesId, roomId }), { ...req.body, _csrf: undefined }),
+          appendQueryString(paths.bookings.new({ premisesId, bedspaceId: roomId }), { ...req.body, _csrf: undefined }),
         )
       }
     }

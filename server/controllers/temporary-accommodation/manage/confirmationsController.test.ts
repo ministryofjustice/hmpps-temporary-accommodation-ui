@@ -111,7 +111,7 @@ describe('ConfirmationsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking confirmed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -142,7 +142,7 @@ describe('ConfirmationsController', () => {
         request,
         response,
         err,
-        paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+        paths.bookings.confirmations.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
   })

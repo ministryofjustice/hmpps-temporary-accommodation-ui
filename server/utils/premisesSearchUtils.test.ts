@@ -7,12 +7,12 @@ describe('premisesSearchUtils', () => {
       const subNavArr = [
         {
           text: 'Online properties',
-          href: paths.premises.v2.online({}),
+          href: paths.premises.online({}),
           active: true,
         },
         {
           text: 'Archived properties',
-          href: paths.premises.v2.archived({}),
+          href: paths.premises.archived({}),
           active: false,
         },
       ]
@@ -24,12 +24,12 @@ describe('premisesSearchUtils', () => {
       const subNavArr = [
         {
           text: 'Online properties',
-          href: paths.premises.v2.online({}),
+          href: paths.premises.online({}),
           active: false,
         },
         {
           text: 'Archived properties',
-          href: paths.premises.v2.archived({}),
+          href: paths.premises.archived({}),
           active: true,
         },
       ]
@@ -41,12 +41,12 @@ describe('premisesSearchUtils', () => {
       const subNavArr = [
         {
           text: 'Online properties',
-          href: `${paths.premises.v2.online({})}?postcodeOrAddress=NE1`,
+          href: `${paths.premises.online({})}?postcodeOrAddress=NE1`,
           active: true,
         },
         {
           text: 'Archived properties',
-          href: `${paths.premises.v2.archived({})}?postcodeOrAddress=NE1`,
+          href: `${paths.premises.archived({})}?postcodeOrAddress=NE1`,
           active: false,
         },
       ]

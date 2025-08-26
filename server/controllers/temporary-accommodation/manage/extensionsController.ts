@@ -60,14 +60,19 @@ export default class ExtensionsController {
         await this.extensionService.createExtension(callConfig, premisesId, bookingId, newExtension)
 
         req.flash('success', 'Booking departure date changed')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'singular'))
           insertGenericError(err, 'newDepartureDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.extensions.new({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
+        )
       }
     }
   }

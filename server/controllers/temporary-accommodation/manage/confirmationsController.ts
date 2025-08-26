@@ -50,13 +50,13 @@ export default class ConfirmationsController {
         await this.confirmationService.createConfirmation(callConfig, premisesId, bookingId, newConfirmation)
 
         req.flash('success', 'Booking confirmed')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+          paths.bookings.confirmations.new({ premisesId, bedspaceId: roomId, bookingId }),
         )
       }
     }

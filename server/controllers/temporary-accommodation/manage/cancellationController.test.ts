@@ -118,7 +118,7 @@ describe('CancellationsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -151,7 +151,7 @@ describe('CancellationsController', () => {
         request,
         response,
         err,
-        paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+        paths.bookings.cancellations.new({ premisesId, bedspaceId: roomId, bookingId }),
         'bookingCancellation',
       )
     })
@@ -232,7 +232,7 @@ describe('CancellationsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Cancelled booking updated')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -265,7 +265,7 @@ describe('CancellationsController', () => {
         request,
         response,
         err,
-        paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
+        paths.bookings.cancellations.edit({ premisesId, bedspaceId: roomId, bookingId }),
         'bookingCancellation',
       )
     })

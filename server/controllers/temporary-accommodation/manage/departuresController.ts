@@ -68,9 +68,14 @@ export default class DeparturesController {
             ? 'You no longer need to update NDelius with this change.'
             : 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.departures.new({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.departures.new({ premisesId, bedspaceId: roomId, bookingId }),
+        )
       }
     }
   }
@@ -120,13 +125,13 @@ export default class DeparturesController {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
         req.flash('success', 'Departure details changed')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId }),
         )
       }
     }

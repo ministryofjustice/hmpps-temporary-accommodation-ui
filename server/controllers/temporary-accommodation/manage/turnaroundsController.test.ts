@@ -118,7 +118,7 @@ describe('TurnaroundsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Turnaround time changed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -150,7 +150,7 @@ describe('TurnaroundsController', () => {
         request,
         response,
         err,
-        paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+        paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
 
@@ -193,7 +193,7 @@ describe('TurnaroundsController', () => {
         request,
         response,
         err,
-        paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+        paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
   })

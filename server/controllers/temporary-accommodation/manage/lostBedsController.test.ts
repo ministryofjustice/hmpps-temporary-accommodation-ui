@@ -113,7 +113,7 @@ describe('LostBedsController', () => {
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Void created')
         expect(response.redirect).toHaveBeenCalledWith(
-          paths.lostBeds.show({ premisesId, roomId, lostBedId: lostBed.id }),
+          paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }),
         )
       })
 
@@ -136,7 +136,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.new({ premisesId, roomId }),
+          paths.lostBeds.new({ premisesId, bedspaceId: roomId }),
         )
       })
 
@@ -171,7 +171,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.new({ premisesId, roomId }),
+          paths.lostBeds.new({ premisesId, bedspaceId: roomId }),
         )
       })
     })
@@ -238,7 +238,7 @@ describe('LostBedsController', () => {
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Void booking updated')
         expect(response.redirect).toHaveBeenCalledWith(
-          paths.lostBeds.show({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }),
+          paths.lostBeds.show({ premisesId: premises.id, bedspaceId: room.id, lostBedId: lostBed.id }),
         )
       })
 
@@ -263,7 +263,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.edit({ premisesId, roomId, lostBedId }),
+          paths.lostBeds.edit({ premisesId, bedspaceId: roomId, lostBedId }),
         )
       })
 
@@ -298,7 +298,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.edit({ premisesId, roomId, lostBedId }),
+          paths.lostBeds.edit({ premisesId, bedspaceId: roomId, lostBedId }),
         )
       })
     })
@@ -400,7 +400,9 @@ describe('LostBedsController', () => {
       expect(lostBedService.cancel).toHaveBeenCalledWith(callConfig, premisesId, lostBed.id, newLostBedCancellation)
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Void booking cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.lostBeds.show({ premisesId, roomId, lostBedId: lostBed.id }))
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }),
+      )
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -423,7 +425,7 @@ describe('LostBedsController', () => {
         request,
         response,
         err,
-        paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId }),
+        paths.lostBeds.cancellations.new({ premisesId, bedspaceId: roomId, lostBedId }),
       )
     })
   })

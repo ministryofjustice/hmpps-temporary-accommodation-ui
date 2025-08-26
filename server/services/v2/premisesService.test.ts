@@ -157,12 +157,12 @@ describe('PremisesService', () => {
 
         const bedspaces =
           prem.bedspaces.length === 0
-            ? `No bedspaces<br /><a href="/v2/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
+            ? `No bedspaces<br /><a href="/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
             : prem.bedspaces
                 .map(bed => {
                   const archivedTag =
                     bed.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
-                  return `<a href="/v2/properties/${prem.id}/bedspaces/${bed.id}">${bed.reference}</a>${archivedTag}`
+                  return `<a href="/properties/${prem.id}/bedspaces/${bed.id}">${bed.reference}</a>${archivedTag}`
                 })
                 .join('<br />')
 
@@ -171,7 +171,7 @@ describe('PremisesService', () => {
           { html: bedspaces },
           { text: prem.pdu },
           {
-            html: `<a href="/v2/properties/${prem.id}">Manage<span class="govuk-visually-hidden"> property at ${prem.addressLine1}, ${prem.postcode}</span></a>`,
+            html: `<a href="/properties/${prem.id}">Manage<span class="govuk-visually-hidden"> property at ${prem.addressLine1}, ${prem.postcode}</span></a>`,
           },
         ]
       })
@@ -198,7 +198,7 @@ describe('PremisesService', () => {
         .filter(s => s !== undefined && s !== '')
         .join('<br />')
 
-      const bedspaces = `No bedspaces<br /><a href="/v2/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
+      const bedspaces = `No bedspaces<br /><a href="/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
 
       expect(rows).toEqual([
         [
@@ -206,7 +206,7 @@ describe('PremisesService', () => {
           { html: bedspaces },
           { text: searchResult.localAuthorityAreaName },
           {
-            html: `<a href="/v2/properties/${searchResult.id}">Manage<span class="govuk-visually-hidden"> property at ${searchResult.addressLine1}, ${searchResult.postcode}</span></a>`,
+            html: `<a href="/properties/${searchResult.id}">Manage<span class="govuk-visually-hidden"> property at ${searchResult.addressLine1}, ${searchResult.postcode}</span></a>`,
           },
         ],
       ])

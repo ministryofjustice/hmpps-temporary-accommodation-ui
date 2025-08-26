@@ -13,22 +13,22 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(4)
       expect(actions).toContainEqual({
         text: 'Book bedspace',
-        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.id }),
+        href: paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Void bedspace',
-        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.id }),
+        href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Archive bedspace',
-        href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
     })
@@ -42,22 +42,22 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(4)
       expect(actions).toContainEqual({
         text: 'Book bedspace',
-        href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.id }),
+        href: paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Void bedspace',
-        href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.id }),
+        href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Cancel scheduled bedspace archive',
-        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
     })
@@ -76,7 +76,7 @@ describe('bedspaceV2Utils', () => {
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
     })
@@ -90,12 +90,12 @@ describe('bedspaceV2Utils', () => {
       expect(actions).toHaveLength(2)
       expect(actions).toContainEqual({
         text: 'Cancel scheduled bedspace online date',
-        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
       expect(actions).toContainEqual({
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
         classes: 'govuk-button--secondary',
       })
     })

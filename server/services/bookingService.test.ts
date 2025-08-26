@@ -101,22 +101,22 @@ describe('BookingService', () => {
 
       expect(result).toEqual([
         expect.objectContaining({
-          path: paths.lostBeds.show({ premisesId, roomId: room.id, lostBedId: lostBed2.id }),
+          path: paths.lostBeds.show({ premisesId, bedspaceId: room.id, lostBedId: lostBed2.id }),
           body: lostBed2,
           type: 'lost-bed',
         }),
         expect.objectContaining({
-          path: paths.bookings.show({ premisesId, roomId: room.id, bookingId: booking2.id }),
+          path: paths.bookings.show({ premisesId, bedspaceId: room.id, bookingId: booking2.id }),
           body: booking2,
           type: 'booking',
         }),
         expect.objectContaining({
-          path: paths.lostBeds.show({ premisesId, roomId: room.id, lostBedId: lostBed1.id }),
+          path: paths.lostBeds.show({ premisesId, bedspaceId: room.id, lostBedId: lostBed1.id }),
           body: lostBed1,
           type: 'lost-bed',
         }),
         expect.objectContaining({
-          path: paths.bookings.show({ premisesId, roomId: room.id, bookingId: booking1.id }),
+          path: paths.bookings.show({ premisesId, bedspaceId: room.id, bookingId: booking1.id }),
           body: booking1,
           type: 'booking',
         }),

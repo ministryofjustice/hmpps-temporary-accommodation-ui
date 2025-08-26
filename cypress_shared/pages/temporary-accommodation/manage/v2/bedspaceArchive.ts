@@ -10,7 +10,7 @@ export default class BedspaceArchivePage extends Page {
   }
 
   static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceArchivePage {
-    cy.visit(`/temporary-accommodation/manage/v2/properties/${premises.id}/bedspaces/${bedspace.id}/archive`)
+    cy.visit(`/temporary-accommodation/manage/properties/${premises.id}/bedspaces/${bedspace.id}/archive`)
     return new BedspaceArchivePage(premises, bedspace)
   }
 

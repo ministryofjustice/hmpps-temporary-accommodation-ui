@@ -4,7 +4,6 @@ import { Services } from '../../../services'
 import ArrivalsController from './arrivalsController'
 import AssessmentsController from './assessmentsController'
 import BedspaceSearchController from './bedspaceSearchController'
-import BedspacesController from './bedspacesController'
 import BookingSearchController from './bookingSearchController'
 import BookingsController from './bookingsController'
 import CancellationsController from './cancellationsController'
@@ -13,7 +12,6 @@ import DashboardController from './dashboardController'
 import DeparturesController from './departuresController'
 import ExtensionsController from './extensionsController'
 import LostBedsController from './lostBedsController'
-import PremisesController from './premisesController'
 import ReportsController from './reportsController'
 import TurnaroundsController from './turnaroundsController'
 import PremisesControllerV2 from './v2/premisesController'
@@ -21,18 +19,7 @@ import BedspacesControllerV2 from './v2/bedspacesController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()
-  const premisesController = new PremisesController(
-    services.premisesService,
-    services.bedspaceService,
-    services.assessmentsService,
-  )
   const premisesControllerV2 = new PremisesControllerV2(services.v2.premisesService, services.v2.bedspaceService)
-  const bedspacesController = new BedspacesController(
-    services.premisesService,
-    services.bedspaceService,
-    services.bookingService,
-    services.assessmentsService,
-  )
   const bedspacesControllerV2 = new BedspacesControllerV2(services.v2.premisesService, services.v2.bedspaceService)
   const bookingsController = new BookingsController(
     services.premisesService,
@@ -98,8 +85,6 @@ export const controllers = (services: Services) => {
 
   return {
     dashboardController,
-    premisesController,
-    bedspacesController,
     bookingsController,
     confirmationsController,
     arrivalsController,
@@ -123,7 +108,6 @@ export {
   ArrivalsController,
   AssessmentsController,
   BedspaceSearchController,
-  BedspacesController,
   BookingSearchController,
   BookingsController,
   CancellationsController,
@@ -131,7 +115,6 @@ export {
   DashboardController,
   ExtensionsController,
   LostBedsController,
-  PremisesController,
   ReportsController,
   TurnaroundsController,
 }

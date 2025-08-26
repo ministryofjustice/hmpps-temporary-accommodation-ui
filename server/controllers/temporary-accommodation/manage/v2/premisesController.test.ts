@@ -114,7 +114,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -127,8 +127,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+          { text: 'Online properties', href: '/properties/online', active: true },
+          { text: 'Archived properties', href: '/properties/archived', active: false },
         ],
         ...searchData,
       })
@@ -158,7 +158,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -171,8 +171,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+          { text: 'Online properties', href: '/properties/online', active: true },
+          { text: 'Archived properties', href: '/properties/archived', active: false },
         ],
         ...searchData,
       })
@@ -202,7 +202,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       const requestHandler = premisesController.index('online')
@@ -213,8 +213,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
+          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NE1', active: true },
+          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NE1', active: false },
         ],
         ...searchData,
       })
@@ -244,7 +244,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -257,8 +257,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+          { text: 'Online properties', href: '/properties/online', active: true },
+          { text: 'Archived properties', href: '/properties/archived', active: false },
         ],
         ...searchData,
       })
@@ -288,7 +288,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -301,8 +301,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+          { text: 'Online properties', href: '/properties/online', active: true },
+          { text: 'Archived properties', href: '/properties/archived', active: false },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -334,7 +334,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -347,8 +347,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NE1', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NE1', active: false },
+          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NE1', active: true },
+          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NE1', active: false },
         ],
         totalPremises: 2,
         totalOnlineBedspaces: 8,
@@ -380,7 +380,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/online',
+        path: '/properties/online',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -393,8 +393,8 @@ describe('PremisesController', () => {
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NONEXISTENT', active: true },
-          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NONEXISTENT', active: false },
+          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NONEXISTENT', active: true },
+          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NONEXISTENT', active: false },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -428,7 +428,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/archived',
+        path: '/properties/archived',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -441,8 +441,8 @@ describe('PremisesController', () => {
         status: 'archived',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online', active: false },
-          { text: 'Archived properties', href: '/v2/properties/archived', active: true },
+          { text: 'Online properties', href: '/properties/online', active: false },
+          { text: 'Archived properties', href: '/properties/archived', active: true },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -474,7 +474,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/archived',
+        path: '/properties/archived',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -487,8 +487,8 @@ describe('PremisesController', () => {
         status: 'archived',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=SW1', active: false },
-          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=SW1', active: true },
+          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=SW1', active: false },
+          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=SW1', active: true },
         ],
         totalPremises: 3,
         totalOnlineBedspaces: 0,
@@ -520,7 +520,7 @@ describe('PremisesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         query: params,
-        path: '/v2/properties/archived',
+        path: '/properties/archived',
       })
 
       premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -533,8 +533,8 @@ describe('PremisesController', () => {
         status: 'archived',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/v2/properties/online?postcodeOrAddress=NOTFOUND', active: false },
-          { text: 'Archived properties', href: '/v2/properties/archived?postcodeOrAddress=NOTFOUND', active: true },
+          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NOTFOUND', active: false },
+          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NOTFOUND', active: true },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -568,7 +568,7 @@ describe('PremisesController', () => {
         premisesSortBy: 'la',
       },
       query: params,
-      path: '/v2/properties/online',
+      path: '/properties/online',
     })
 
     premisesService.searchDataAndGenerateTableRows.mockResolvedValue(searchData)
@@ -581,8 +581,8 @@ describe('PremisesController', () => {
       status: 'online',
       premisesSortBy: 'la',
       subNavArr: [
-        { text: 'Online properties', href: '/v2/properties/online', active: true },
-        { text: 'Archived properties', href: '/v2/properties/archived', active: false },
+        { text: 'Online properties', href: '/properties/online', active: true },
+        { text: 'Archived properties', href: '/properties/archived', active: false },
       ],
       ...searchData,
     })
@@ -608,7 +608,7 @@ describe('PremisesController', () => {
       await requestHandler(req, res, next)
 
       expect(req.session.premisesSortBy).toBe('la')
-      expect(res.redirect).toHaveBeenCalledWith('/v2/properties/online?postcodeOrAddress=SW1A')
+      expect(res.redirect).toHaveBeenCalledWith('/properties/online?postcodeOrAddress=SW1A')
     })
 
     it('toggles from la to pdu and redirects without query params', async () => {
@@ -623,7 +623,7 @@ describe('PremisesController', () => {
       await requestHandler(req, res, next)
 
       expect(req.session.premisesSortBy).toBe('pdu')
-      expect(res.redirect).toHaveBeenCalledWith('/v2/properties/online')
+      expect(res.redirect).toHaveBeenCalledWith('/properties/online')
     })
 
     it('defaults to pdu if session value is missing, then toggles to la', async () => {
@@ -638,7 +638,7 @@ describe('PremisesController', () => {
       await requestHandler(req, res, next)
 
       expect(req.session.premisesSortBy).toBe('la')
-      expect(res.redirect).toHaveBeenCalledWith('/v2/properties/online')
+      expect(res.redirect).toHaveBeenCalledWith('/properties/online')
     })
   })
 
@@ -733,12 +733,12 @@ describe('PremisesController', () => {
     const navArr = (activeTab: PremisesShowTabs) => [
       {
         text: 'Property overview',
-        href: paths.premises.v2.show({ premisesId: property.id }),
+        href: paths.premises.show({ premisesId: property.id }),
         active: activeTab === 'premises',
       },
       {
         text: 'Bedspaces overview',
-        href: paths.premises.v2.bedspaces.list({ premisesId: property.id }),
+        href: paths.premises.bedspaces.list({ premisesId: property.id }),
         active: activeTab === 'bedspaces',
       },
     ]
@@ -746,7 +746,7 @@ describe('PremisesController', () => {
     it('shows an online premises', async () => {
       request = createMock<Request>({
         session: { probationRegion: probationRegionFactory.build() },
-        url: `/v2/properties/${property.id}`,
+        url: `/properties/${property.id}`,
         params: { premisesId: property.id },
       })
 
@@ -763,17 +763,17 @@ describe('PremisesController', () => {
           {
             text: 'Add a bedspace',
             classes: 'govuk-button--secondary',
-            href: `/v2/properties/${property.id}/bedspaces/new`,
+            href: `/properties/${property.id}/bedspaces/new`,
           },
           {
             text: 'Archive property',
             classes: 'govuk-button--secondary',
-            href: `/v2/properties/${property.id}/archive`,
+            href: `/properties/${property.id}/archive`,
           },
           {
             text: 'Edit property details',
             classes: 'govuk-button--secondary',
-            href: `/v2/properties/${property.id}/edit`,
+            href: `/properties/${property.id}/edit`,
           },
         ],
         showPremises: true,
@@ -787,7 +787,7 @@ describe('PremisesController', () => {
     it('shows the bedspace summary tab for an online premises', async () => {
       request = createMock<Request>({
         session: { probationRegion: probationRegionFactory.build() },
-        url: `/v2/properties/${property.id}/bedspaces`,
+        url: `/properties/${property.id}/bedspaces`,
         params: { premisesId: property.id },
       })
 
@@ -807,17 +807,17 @@ describe('PremisesController', () => {
           {
             text: 'Add a bedspace',
             classes: 'govuk-button--secondary',
-            href: `/v2/properties/${property.id}/bedspaces/new`,
+            href: `/properties/${property.id}/bedspaces/new`,
           },
           {
             text: 'Archive property',
             classes: 'govuk-button--secondary',
-            href: `/v2/properties/${property.id}/archive`,
+            href: `/properties/${property.id}/archive`,
           },
           {
             text: 'Edit property details',
             classes: 'govuk-button--secondary',
-            href: `/v2/properties/${property.id}/edit`,
+            href: `/properties/${property.id}/edit`,
           },
         ],
         showPremises: false,
@@ -896,7 +896,7 @@ describe('PremisesController', () => {
       })
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Property added')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
     })
 
     it('should fail to create a premises when the service returns an error', async () => {
@@ -923,7 +923,7 @@ describe('PremisesController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.v2.new({}))
+      expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, paths.premises.new({}))
     })
   })
 
@@ -1039,7 +1039,7 @@ describe('PremisesController', () => {
 
       expect(premisesService.updatePremises).toHaveBeenCalledWith(callConfig, premises.id, { ...updatedPremises })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property edited')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
     })
 
     it('should fail to update a premises when the service returns an error', async () => {
@@ -1075,7 +1075,7 @@ describe('PremisesController', () => {
         request,
         response,
         err,
-        paths.premises.v2.edit({ premisesId }),
+        paths.premises.edit({ premisesId }),
       )
     })
   })
@@ -1160,7 +1160,7 @@ describe('PremisesController', () => {
         endDate: DateFormats.dateObjToIsoDate(today),
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property and bedspaces archived')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
     })
 
     it('should fail to archive when the service returns an error', async () => {
@@ -1201,7 +1201,7 @@ describe('PremisesController', () => {
         request,
         response,
         error,
-        paths.premises.v2.archive({ premisesId: premises.id }),
+        paths.premises.archive({ premisesId: premises.id }),
         'premisesArchive',
         mergeParameters,
       )
@@ -1270,7 +1270,7 @@ describe('PremisesController', () => {
         restartDate: DateFormats.dateObjToIsoDate(today),
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Property and bedspaces online')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.show({ premisesId: premises.id }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.show({ premisesId: premises.id }))
     })
 
     it('should fail to unarchive when the service returns an error', async () => {
@@ -1303,7 +1303,7 @@ describe('PremisesController', () => {
         request,
         response,
         error,
-        paths.premises.v2.unarchive({ premisesId: premises.id }),
+        paths.premises.unarchive({ premisesId: premises.id }),
         'premisesUnarchive',
       )
     })

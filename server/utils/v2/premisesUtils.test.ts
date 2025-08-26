@@ -12,17 +12,17 @@ describe('premisesV2Utils', () => {
         {
           text: 'Add a bedspace',
           classes: 'govuk-button--secondary',
-          href: paths.premises.v2.bedspaces.new({ premisesId: premises.id }),
+          href: paths.premises.bedspaces.new({ premisesId: premises.id }),
         },
         {
           text: 'Archive property',
           classes: 'govuk-button--secondary',
-          href: paths.premises.v2.archive({ premisesId: premises.id }),
+          href: paths.premises.archive({ premisesId: premises.id }),
         },
         {
           text: 'Edit property details',
           classes: 'govuk-button--secondary',
-          href: paths.premises.v2.edit({ premisesId: premises.id }),
+          href: paths.premises.edit({ premisesId: premises.id }),
         },
       ])
     })
@@ -35,12 +35,12 @@ describe('premisesV2Utils', () => {
         {
           text: 'Edit property details',
           classes: 'govuk-button--secondary',
-          href: paths.premises.v2.edit({ premisesId: premises.id }),
+          href: paths.premises.edit({ premisesId: premises.id }),
         },
         {
           text: 'Make property online',
           classes: 'govuk-button--secondary',
-          href: paths.premises.v2.unarchive({ premisesId: premises.id }),
+          href: paths.premises.unarchive({ premisesId: premises.id }),
         },
       ])
     })

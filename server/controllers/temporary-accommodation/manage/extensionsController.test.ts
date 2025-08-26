@@ -161,7 +161,7 @@ describe('ExtensionsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking departure date changed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -193,7 +193,7 @@ describe('ExtensionsController', () => {
         request,
         response,
         err,
-        paths.bookings.extensions.new({ premisesId, roomId, bookingId }),
+        paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
 
@@ -236,7 +236,7 @@ describe('ExtensionsController', () => {
         request,
         response,
         err,
-        paths.bookings.extensions.new({ premisesId, roomId, bookingId }),
+        paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
   })

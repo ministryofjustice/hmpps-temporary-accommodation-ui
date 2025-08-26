@@ -85,7 +85,7 @@ export default class ArrivalsController {
             ? 'You no longer need to update NDelius with this change.'
             : 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
@@ -93,7 +93,12 @@ export default class ArrivalsController {
           insertGenericError(err, 'expectedDepartureDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.new({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
+        )
       }
     }
   }
@@ -149,14 +154,19 @@ export default class ArrivalsController {
         // INFO: this may confuse, the API is overloading the POST with a writeback of existing and new data
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, updateArrival)
         req.flash('success', 'Arrival updated')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'singular'))
           insertGenericError(err, 'arrivalDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId }),
+        )
       }
     }
   }

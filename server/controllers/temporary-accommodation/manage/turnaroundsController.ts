@@ -59,7 +59,7 @@ export default class TurnaroundsController {
         await this.turnaroundService.createTurnaround(callConfig, premisesId, bookingId, newTurnaround)
 
         req.flash('success', 'Turnaround time changed')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateTurnaroundConflictBespokeError(err, premisesId, roomId))
@@ -70,7 +70,7 @@ export default class TurnaroundsController {
           req,
           res,
           err,
-          paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+          paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId }),
         )
       }
     }

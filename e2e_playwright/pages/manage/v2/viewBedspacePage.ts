@@ -10,7 +10,7 @@ export class ViewBedspacePage extends BasePage {
   }
 
   static async goto(page: Page, premisesId: string, bedspaceId: string) {
-    await page.goto(`/v2/properties/${premisesId}/bedspaces/${bedspaceId}`)
+    await page.goto(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
   }
 
   async shouldShowPropertySummary(property: Property) {

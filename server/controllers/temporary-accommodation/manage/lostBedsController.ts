@@ -63,7 +63,7 @@ export default class LostBedsController {
         const lostBed = await this.lostBedsService.create(callConfig, premisesId, newLostBed)
 
         req.flash('success', 'Void created')
-        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: lostBed.id }))
+        res.redirect(paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
@@ -71,7 +71,7 @@ export default class LostBedsController {
           insertGenericError(err, 'endDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.new({ premisesId, roomId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.new({ premisesId, bedspaceId: roomId }))
       }
     }
   }
@@ -113,7 +113,7 @@ export default class LostBedsController {
         const updatedLostBed = await this.lostBedsService.update(callConfig, premisesId, lostBedId, lostBedUpdate)
 
         req.flash('success', 'Void booking updated')
-        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: updatedLostBed.id }))
+        res.redirect(paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId: updatedLostBed.id }))
       } catch (err) {
         if (err.status === 409) {
           insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
@@ -121,7 +121,12 @@ export default class LostBedsController {
           insertGenericError(err, 'endDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.edit({ premisesId, roomId, lostBedId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.lostBeds.edit({ premisesId, bedspaceId: roomId, lostBedId }),
+        )
       }
     }
   }
@@ -194,13 +199,13 @@ export default class LostBedsController {
         await this.lostBedsService.cancel(callConfig, premisesId, lostBedId, lostBedCancellation)
 
         req.flash('success', 'Void booking cancelled')
-        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId }))
+        res.redirect(paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId }),
+          paths.lostBeds.cancellations.new({ premisesId, bedspaceId: roomId, lostBedId }),
         )
       }
     }

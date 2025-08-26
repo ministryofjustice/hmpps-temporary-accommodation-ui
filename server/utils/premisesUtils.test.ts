@@ -93,12 +93,12 @@ describe('premisesUtils', () => {
       const expectedResult = [
         {
           text: 'Property overview',
-          href: '/v2/properties/83b4062f-963e-450d-b912-589eab7ca91c',
+          href: '/properties/83b4062f-963e-450d-b912-589eab7ca91c',
           active: true,
         },
         {
           text: 'Bedspaces overview',
-          href: '/v2/properties/83b4062f-963e-450d-b912-589eab7ca91c/bedspaces',
+          href: '/properties/83b4062f-963e-450d-b912-589eab7ca91c/bedspaces',
           active: false,
         },
       ]
@@ -112,12 +112,12 @@ describe('premisesUtils', () => {
       const expectedResult = [
         {
           text: 'Property overview',
-          href: '/v2/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47',
+          href: '/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47',
           active: false,
         },
         {
           text: 'Bedspaces overview',
-          href: '/v2/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47/bedspaces',
+          href: '/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47/bedspaces',
           active: true,
         },
       ]

@@ -54,13 +54,13 @@ export default class CanellationsController {
         await this.cancellationService.createCancellation(callConfig, premisesId, bookingId, newCancellation)
 
         req.flash('success', 'Booking cancelled')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+          paths.bookings.cancellations.new({ premisesId, bedspaceId: roomId, bookingId }),
           'bookingCancellation',
         )
       }
@@ -110,13 +110,13 @@ export default class CanellationsController {
         await this.cancellationService.createCancellation(callConfig, premisesId, bookingId, newCancellation)
 
         req.flash('success', 'Cancelled booking updated')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.cancellations.edit({ premisesId, bedspaceId: roomId, bookingId }),
           'bookingCancellation',
         )
       }

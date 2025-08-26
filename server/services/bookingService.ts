@@ -65,7 +65,7 @@ export default class BookingService {
         body: b,
         path: paths.bookings.show({
           premisesId,
-          roomId: room.id,
+          bedspaceId: room.id,
           bookingId: b.id,
         }),
       }))
@@ -78,7 +78,7 @@ export default class BookingService {
         body: lostBed,
         path: paths.lostBeds.show({
           premisesId,
-          roomId: room.id,
+          bedspaceId: room.id,
           lostBedId: lostBed.id,
         }),
       }))

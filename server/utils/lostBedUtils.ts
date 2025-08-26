@@ -29,12 +29,12 @@ export function lostBedActions(premisesId: string, roomId: string, lostBed: Lost
       {
         text: 'Edit this void',
         classes: 'govuk-button--secondary',
-        href: paths.lostBeds.edit({ premisesId, roomId, lostBedId: lostBed.id }),
+        href: paths.lostBeds.edit({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }),
       },
       {
         text: 'Cancel this void',
         classes: 'govuk-button--secondary',
-        href: paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId: lostBed.id }),
+        href: paths.lostBeds.cancellations.new({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }),
       },
     ]
   }

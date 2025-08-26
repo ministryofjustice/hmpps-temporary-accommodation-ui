@@ -123,7 +123,7 @@ describe('DeparturesController', () => {
         title: 'Booking marked as departed',
         text: 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
       })
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -155,7 +155,7 @@ describe('DeparturesController', () => {
         request,
         response,
         err,
-        paths.bookings.departures.new({ premisesId, roomId, bookingId }),
+        paths.bookings.departures.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
 
@@ -184,7 +184,7 @@ describe('DeparturesController', () => {
         request,
         response,
         expect.any(Error),
-        paths.bookings.departures.new({ premisesId, roomId, bookingId }),
+        paths.bookings.departures.new({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
   })
@@ -265,7 +265,7 @@ describe('DeparturesController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Departure details changed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -297,7 +297,7 @@ describe('DeparturesController', () => {
         request,
         response,
         err,
-        paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
+        paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId }),
       )
     })
   })

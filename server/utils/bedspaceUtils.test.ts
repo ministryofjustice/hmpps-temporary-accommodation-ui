@@ -28,12 +28,12 @@ describe('bedspaceUtils', () => {
         {
           text: 'Void bedspace',
           classes: 'govuk-button--secondary moj-button-menu__item',
-          href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
+          href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: room.id }),
         },
       ])
 
       expect(addPlaceContext).toHaveBeenCalledWith(
-        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }),
         placeContext,
       )
     })
@@ -168,7 +168,7 @@ describe('bedspaceUtils', () => {
           {
             html: `This bedspace end date conflicts with <a href="${paths.bookings.show({
               premisesId: 'premiseId',
-              roomId: 'roomId',
+              bedspaceId: 'roomId',
               bookingId: 'bookingId',
             })}">an existing booking</a>`,
           },

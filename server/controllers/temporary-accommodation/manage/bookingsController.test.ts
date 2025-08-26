@@ -195,7 +195,10 @@ describe('BookingsController', () => {
       expect(personService.findByCrn).toHaveBeenCalledWith(callConfig, newBooking.crn)
       expect(assessmentRadioItems).toHaveBeenCalledWith(assessmentSummaries)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
-      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId, bedspaceId: roomId }),
+        request.query,
+      )
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/bookings/selectAssessment', {
         premisesId,
@@ -404,7 +407,10 @@ describe('BookingsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
+        expect(appendQueryString).toHaveBeenCalledWith(
+          paths.bookings.new({ premisesId, bedspaceId: roomId }),
+          request.query,
+        )
         expect(insertGenericError).toHaveBeenCalledWith(new Error(), errorProperty, errorType)
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, new Error(), backLink)
       },
@@ -434,7 +440,10 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId, bedspaceId: roomId }),
+        request.query,
+      )
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'doesNotExist')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
@@ -463,7 +472,10 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.query)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId, bedspaceId: roomId }),
+        request.query,
+      )
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
@@ -533,7 +545,7 @@ describe('BookingsController', () => {
       expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
       expect(preservePlaceContext).toHaveBeenCalledWith(request, response, assessmentService)
       expect(appendQueryString).toHaveBeenCalledWith(
-        paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.selectAssessment({ premisesId: premises.id, bedspaceId: room.id }),
         request.query,
       )
 
@@ -572,7 +584,7 @@ describe('BookingsController', () => {
       await requestHandler(request, response, next)
 
       expect(appendQueryString).toHaveBeenCalledWith(
-        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }),
         request.query,
       )
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'doesNotExist')
@@ -602,7 +614,7 @@ describe('BookingsController', () => {
       await requestHandler(request, response, next)
 
       expect(appendQueryString).toHaveBeenCalledWith(
-        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }),
         request.query,
       )
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
@@ -635,11 +647,11 @@ describe('BookingsController', () => {
       await requestHandler(request, response, next)
 
       expect(appendQueryString).toHaveBeenCalledWith(
-        paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.selectAssessment({ premisesId: premises.id, bedspaceId: room.id }),
         request.query,
       )
       expect(appendQueryString).not.toHaveBeenCalledWith(
-        paths.bookings.new({ premisesId: premises.id, roomId: room.id }),
+        paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }),
         request.query,
       )
 
@@ -717,7 +729,9 @@ describe('BookingsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking created')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+      )
     })
 
     it('removes empty spaces from the crn before API call', async () => {
@@ -792,7 +806,9 @@ describe('BookingsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking created')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId: booking.id }))
+      expect(response.redirect).toHaveBeenCalledWith(
+        paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+      )
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -824,7 +840,10 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.body)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId, bedspaceId: roomId }),
+        request.body,
+      )
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })
 
@@ -865,7 +884,10 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.body)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId, bedspaceId: roomId }),
+        request.body,
+      )
       expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
       expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
@@ -902,7 +924,10 @@ describe('BookingsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(appendQueryString).toHaveBeenCalledWith(paths.bookings.new({ premisesId, roomId }), request.body)
+      expect(appendQueryString).toHaveBeenCalledWith(
+        paths.bookings.new({ premisesId, bedspaceId: roomId }),
+        request.body,
+      )
       expect(insertGenericError).toHaveBeenCalledWith(err, 'crn', 'userPermission')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(request, response, err, backLink)
     })

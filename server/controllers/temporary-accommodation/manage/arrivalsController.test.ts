@@ -123,7 +123,9 @@ describe('ArrivalsController', () => {
           title: 'Booking marked as active',
           text: 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
-        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+        expect(response.redirect).toHaveBeenCalledWith(
+          paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }),
+        )
       })
 
       it('renders with errors if the API returns an error', async () => {
@@ -156,7 +158,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
         )
       })
 
@@ -201,7 +203,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
         )
       })
 
@@ -238,7 +240,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
         )
       })
     })
@@ -314,7 +316,9 @@ describe('ArrivalsController', () => {
         )
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Arrival updated')
-        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+        expect(response.redirect).toHaveBeenCalledWith(
+          paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }),
+        )
       })
 
       it('renders with errors if the API returns an error', async () => {
@@ -346,7 +350,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId }),
         )
       })
 
@@ -389,7 +393,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId }),
         )
       })
 
@@ -424,7 +428,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId }),
         )
       })
     })

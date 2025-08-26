@@ -11,7 +11,7 @@
   {{ breadCrumb('Book bedspace', [
     {title: 'List of properties', href: paths.premises.online()},
     {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
-    {title: 'View a bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
+    {title: 'View a bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))}
   ]) }}
 {% endblock %}
 
@@ -22,11 +22,11 @@
   
   <h1 class="govuk-heading-l">Book bedspace</h1>
 
-  {{ locationHeader({ premises: premises, room: room }) }}
+  {{ locationHeader({ premises: premises, room: bedspace }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.selectAssessment({ premisesId: premises.id, roomId: room.id }) }}" method="get">
+      <form action="{{ paths.bookings.selectAssessment({ premisesId: premises.id, bedspaceId: bedspace.id }) }}" method="get">
         {% include "./_editable.njk" %}  
       </form>
     </div>

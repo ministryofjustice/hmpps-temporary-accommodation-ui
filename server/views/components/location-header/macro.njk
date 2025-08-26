@@ -10,7 +10,7 @@
     {% if not hideAddress %}
       <h2{% if headingClass %} class="{{ headingClass }}"{% endif %}>Property address</h2>
       <p>
-            {% if room.name.length %}{{ room.name }}<br/>{% endif %}
+            {% if room.reference.length %}{{ room.reference }}<br/>{% endif %}
             {{ premises.addressLine1 }}
             {% if premises.addressLine2.length %}<br/>{{ premises.addressLine2 }}{% endif %}
             {% if premises.town.length %}<br/>{{ premises.town }}{% endif %}

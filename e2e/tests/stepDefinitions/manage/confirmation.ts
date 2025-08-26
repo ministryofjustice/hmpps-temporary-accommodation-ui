@@ -7,7 +7,7 @@ import { bookingFactory, confirmationFactory, newConfirmationFactory } from '../
 
 Given('I confirm the booking', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.clickConfirmBookingButton()
 
     const newConfirmation = newConfirmationFactory.build()
@@ -37,13 +37,13 @@ Given('I confirm the booking', () => {
 
 Then('I should see the booking with the confirmed status', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.shouldShowBanner('Booking confirmed')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })

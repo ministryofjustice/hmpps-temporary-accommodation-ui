@@ -1,7 +1,8 @@
 import { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
-import { PageHeadingBarItem, PlaceContext } from '@approved-premises/ui'
+import { BedspaceStatus, PageHeadingBarItem, PlaceContext } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
 import { addPlaceContext } from '../placeUtils'
+import { dateIsInFuture } from '../dateUtils'
 
 export function bedspaceActions(
   premises: Cas3Premises,
@@ -74,4 +75,14 @@ const onlineBedspaceActions = (
     classes: 'govuk-button--secondary',
   })
   return actions
+}
+
+export function bedspaceStatus(bedspace: Cas3Bedspace): BedspaceStatus {
+  if (bedspace.endDate) {
+    if (!dateIsInFuture(bedspace.endDate)) {
+      return 'archived'
+    }
+  }
+
+  return 'online'
 }

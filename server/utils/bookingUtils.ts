@@ -12,14 +12,14 @@ type ParsedConflictError = {
 
 export const noAssessmentId = 'no-assessment'
 
-export function bookingActions(premisesId: string, roomId: string, booking: Booking): Array<PageHeadingBarItem> {
+export function bookingActions(premisesId: string, bedspaceId: string, booking: Booking): Array<PageHeadingBarItem> {
   const items = []
   const bookingId = booking.id
 
   const cancelAction = {
     text: 'Cancel booking',
     classes: 'govuk-button--secondary',
-    href: paths.bookings.cancellations.new({ premisesId, bedspaceId: roomId, bookingId }),
+    href: paths.bookings.cancellations.new({ premisesId, bedspaceId, bookingId }),
   }
 
   switch (booking.status) {
@@ -28,7 +28,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         {
           text: 'Mark as confirmed',
           classes: '',
-          href: paths.bookings.confirmations.new({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.confirmations.new({ premisesId, bedspaceId, bookingId }),
         },
         cancelAction,
       )
@@ -38,7 +38,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         {
           text: 'Mark as active',
           classes: '',
-          href: paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
         },
         cancelAction,
       )
@@ -48,17 +48,17 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
         {
           text: 'Mark as departed',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.new({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
         },
         {
           text: 'Extend or shorten booking',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId }),
         },
         {
           text: 'Change arrival date',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId }),
+          href: paths.bookings.arrivals.edit({ premisesId, bedspaceId, bookingId }),
         },
       )
       break
@@ -67,14 +67,14 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
       items.push({
         text: 'Update departure details',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId }),
+        href: paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId }),
       })
       break
     case 'cancelled':
       items.push({
         text: 'Update cancelled booking',
         classes: 'govuk-button--secondary',
-        href: paths.bookings.cancellations.edit({ premisesId, bedspaceId: roomId, bookingId }),
+        href: paths.bookings.cancellations.edit({ premisesId, bedspaceId, bookingId }),
       })
       break
     default:
@@ -85,7 +85,7 @@ export function bookingActions(premisesId: string, roomId: string, booking: Book
     items.push({
       text: 'Change turnaround time',
       classes: 'govuk-button--secondary',
-      href: paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
+      href: paths.bookings.turnarounds.new({ premisesId, bedspaceId, bookingId: booking.id }),
     })
   }
 

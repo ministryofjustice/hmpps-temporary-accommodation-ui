@@ -31,7 +31,7 @@ export default class PremisesListPage extends Page {
             .get('td')
             .eq(0)
             .then(element => {
-              const [addressLine1, postcode] = element.text().split(', ')
+              const [addressLine1] = element.text().split(', ')
               const premises = premisesFactory.build({
                 id: 'unknown',
                 addressLine1,

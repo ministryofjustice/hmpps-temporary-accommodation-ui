@@ -1,12 +1,17 @@
 import type { Cas3PremisesStatus } from '@approved-premises/api'
-import type { SubNavObj } from '@approved-premises/ui'
+import { PlaceContext, SubNavObj } from '@approved-premises/ui'
 import paths from '../paths/temporary-accommodation/manage'
 import { appendQueryString } from './utils'
+import { addPlaceContext } from './placeUtils'
 
-export function createSubNavArr(status: Cas3PremisesStatus, postcodeOrAddress?: string): Array<SubNavObj> {
+export function createSubNavArr(
+  status: Cas3PremisesStatus,
+  placeContext: PlaceContext,
+  postcodeOrAddress?: string,
+): Array<SubNavObj> {
   return ['online', 'archived'].map((premisesStatus: Cas3PremisesStatus) => ({
     text: `${capitaliseStatus(premisesStatus)} properties`,
-    href: appendQueryString(paths.premises[premisesStatus]({}), { postcodeOrAddress }),
+    href: addPlaceContext(appendQueryString(paths.premises[premisesStatus]({}), { postcodeOrAddress }), placeContext),
     active: status === premisesStatus,
   }))
 }

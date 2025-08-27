@@ -5,6 +5,7 @@ import type { Cas3NewPremises, Cas3PremisesStatus, Cas3UpdatePremises } from '@a
 import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
 import BedspaceService from '../../../../services/v2/bedspaceService'
+import AssessmentsService from '../../../../services/assessmentsService'
 import extractCallConfig from '../../../../utils/restUtils'
 import { createSubNavArr } from '../../../../utils/premisesSearchUtils'
 import { showPropertySubNavArray } from '../../../../utils/premisesUtils'
@@ -18,11 +19,13 @@ import { filterProbationRegions } from '../../../../utils/userUtils'
 import { parseNumber } from '../../../../utils/formUtils'
 import { premisesActions } from '../../../../utils/v2/premisesUtils'
 import { DateFormats } from '../../../../utils/dateUtils'
+import { preservePlaceContext } from '../../../../utils/placeUtils'
 
 export default class PremisesController {
   constructor(
     private readonly premisesService: PremisesService,
     private readonly bedspaceService: BedspaceService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   index(status: Cas3PremisesStatus): RequestHandler {
@@ -31,10 +34,11 @@ export default class PremisesController {
       const params = req.query as PremisesSearchParameters
 
       const premisesSortBy = req.session.premisesSortBy || 'pdu'
-
+      const placeContext = await preservePlaceContext(req, res, this.assessmentService)
       const searchData = await this.premisesService.searchDataAndGenerateTableRows(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         status,
         premisesSortBy,
       )
@@ -43,7 +47,7 @@ export default class PremisesController {
         ...searchData,
         params,
         status,
-        subNavArr: createSubNavArr(status, params.postcodeOrAddress),
+        subNavArr: createSubNavArr(status, placeContext, params.postcodeOrAddress),
         premisesSortBy,
       })
     }
@@ -54,7 +58,10 @@ export default class PremisesController {
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
 
-      const premises = await this.premisesService.getSinglePremises(callConfig, premisesId)
+      const [premises, placeContext] = await Promise.all([
+        await this.premisesService.getSinglePremises(callConfig, premisesId),
+        await preservePlaceContext(req, res, this.assessmentService),
+      ])
       const summary = this.premisesService.summaryList(premises)
 
       return res.render('temporary-accommodation/v2/premises/show', {
@@ -62,7 +69,7 @@ export default class PremisesController {
         summary,
         actions: premisesActions(premises),
         showPremises: true,
-        subNavArr: showPropertySubNavArray(premisesId, 'premises'),
+        subNavArr: showPropertySubNavArray(premisesId, placeContext, 'premises'),
       })
     }
   }
@@ -72,11 +79,11 @@ export default class PremisesController {
       const callConfig = extractCallConfig(req)
       const { premisesId } = req.params
 
-      const [premises, bedspaces] = await Promise.all([
+      const [premises, bedspaces, placeContext] = await Promise.all([
         this.premisesService.getSinglePremises(callConfig, premisesId),
         this.bedspaceService.getBedspacesForPremises(callConfig, premisesId),
+        await preservePlaceContext(req, res, this.assessmentService),
       ])
-
       const bedspaceSummaries = bedspaces.bedspaces.map(bedspace => {
         const bedspaceSummary = this.bedspaceService.summaryList(bedspace)
         return {
@@ -86,12 +93,13 @@ export default class PremisesController {
         }
       })
 
+      const subNavArr = showPropertySubNavArray(premisesId, placeContext, 'bedspaces')
       return res.render('temporary-accommodation/v2/premises/show', {
         premises,
         bedspaceSummaries,
         actions: premisesActions(premises),
         showPremises: false,
-        subNavArr: showPropertySubNavArray(premisesId, 'bedspaces'),
+        subNavArr,
       })
     }
   }

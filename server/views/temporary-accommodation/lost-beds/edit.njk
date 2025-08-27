@@ -8,7 +8,7 @@
 
 {% block beforeContent %}
   {{ breadCrumb('Record void bedspace', [
-    {title: 'List of properties', href: paths.premises.index()},
+    {title: 'List of properties', href: paths.premises.online()},
     {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
     {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
   ]) }}

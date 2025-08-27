@@ -6,10 +6,12 @@ import { CallConfig } from '../../../../data/restClient'
 import BedspaceService from '../../../../services/v2/bedspaceService'
 import BedspacesController from './bedspacesController'
 import {
+  assessmentFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
+  placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
 } from '../../../../testutils/factories'
@@ -22,6 +24,7 @@ import extractCallConfig from '../../../../utils/restUtils'
 import PremisesService from '../../../../services/v2/premisesService'
 import { DateFormats } from '../../../../utils/dateUtils'
 import paths from '../../../../paths/temporary-accommodation/manage'
+import { AssessmentsService } from '../../../../services'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -34,6 +37,8 @@ describe('BedspacesController', () => {
   const referenceData = {
     characteristics: referenceDataFactory.characteristic('room').buildList(5),
   }
+  const assessment = assessmentFactory.build({ status: 'ready_to_place' })
+  const placeContext = placeContextFactory.build({ assessment })
 
   let request: Request
 
@@ -42,8 +47,9 @@ describe('BedspacesController', () => {
 
   const bedspaceService = createMock<BedspaceService>({})
   const premisesService = createMock<PremisesService>({})
+  const assessmentService = createMock<AssessmentsService>({})
 
-  const bedspacesController = new BedspacesController(premisesService, bedspaceService)
+  const bedspacesController = new BedspacesController(premisesService, bedspaceService, assessmentService)
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -51,9 +57,14 @@ describe('BedspacesController', () => {
       session: {
         probationRegion: probationRegionFactory.build(),
       },
+      query: {
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      },
     })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(generateMergeParameters as jest.Mock).mockReturnValue(undefined)
+    assessmentService.findAssessment.mockResolvedValue(assessment)
   })
 
   describe('new', () => {
@@ -201,7 +212,7 @@ describe('BedspacesController', () => {
     const onlineBedspaceActions = [
       {
         text: 'Book bedspace',
-        href: paths.bookings.new({ premisesId, bedspaceId }),
+        href: `${paths.bookings.new({ premisesId, bedspaceId })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
         classes: 'govuk-button--secondary',
       },
       {
@@ -312,6 +323,10 @@ describe('BedspacesController', () => {
           probationRegion: probationRegionFactory.build(),
         },
         params,
+        query: {
+          placeContextAssessmentId: placeContext.assessment.id,
+          placeContextArrivalDate: placeContext.arrivalDate,
+        },
       })
 
       const requestHandler = bedspacesController.show()

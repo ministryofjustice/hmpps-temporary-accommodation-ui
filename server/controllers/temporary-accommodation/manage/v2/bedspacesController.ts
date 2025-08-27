@@ -1,8 +1,10 @@
 import { Request, RequestHandler, Response } from 'express'
 import { PageHeadingBarItem } from '@approved-premises/ui'
 import type { Cas3NewBedspace, Cas3UpdateBedspace } from '@approved-premises/api'
+import AssessmentsService from '../../../../services/assessmentsService'
 import extractCallConfig from '../../../../utils/restUtils'
 import BedspaceService from '../../../../services/v2/bedspaceService'
+import { preservePlaceContext } from '../../../../utils/placeUtils'
 
 import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
@@ -22,6 +24,7 @@ export default class BedspacesController {
   constructor(
     private readonly premisesService: PremisesService,
     private readonly bedspaceService: BedspaceService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   new(): RequestHandler {
@@ -51,13 +54,14 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
 
-      const [premises, bedspace] = await Promise.all([
+      const [premises, bedspace, placeContext] = await Promise.all([
         this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+        await preservePlaceContext(req, res, this.assessmentService),
       ])
 
       const summary = this.bedspaceService.summaryList(bedspace)
-      const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace)
+      const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace, placeContext)
 
       return res.render('temporary-accommodation/v2/bedspaces/show', { premises, bedspace, summary, actions })
     }

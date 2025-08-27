@@ -1,10 +1,15 @@
 import { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
-import { PageHeadingBarItem } from '@approved-premises/ui'
+import { PageHeadingBarItem, PlaceContext } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
+import { addPlaceContext } from '../placeUtils'
 
-export function bedspaceActions(premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> {
+export function bedspaceActions(
+  premises: Cas3Premises,
+  bedspace: Cas3Bedspace,
+  placeContext: PlaceContext,
+): Array<PageHeadingBarItem> {
   return bedspace.status === 'online'
-    ? onlineBedspaceActions(premises, bedspace)
+    ? onlineBedspaceActions(premises, bedspace, placeContext)
     : archivedBedspaceActions(premises, bedspace)
 }
 
@@ -33,11 +38,15 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   return actions
 }
 
-const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
+const onlineBedspaceActions = (
+  premises: Cas3Premises,
+  bedspace: Cas3Bedspace,
+  placeContext: PlaceContext,
+): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = [
     {
       text: 'Book bedspace',
-      href: paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: addPlaceContext(paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }), placeContext),
       classes: 'govuk-button--secondary',
     },
     {

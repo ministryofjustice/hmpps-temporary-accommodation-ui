@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Cas3ValidationResult = {
+    date?: string;
     entityId: string;
     entityReference: string;
 };

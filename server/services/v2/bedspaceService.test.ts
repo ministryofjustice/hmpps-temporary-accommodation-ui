@@ -170,6 +170,19 @@ describe('BedspaceService', () => {
     })
   })
 
+  describe('unarchiveBedspace', () => {
+    it('calls the client to unarchive the bedspace', async () => {
+      const bedspaceId = 'some-bedspace-id'
+      const restartDate = '2025-01-15'
+      bedspaceClient.unarchive.mockResolvedValue()
+
+      await service.unarchiveBedspace(callConfig, premisesId, bedspaceId, restartDate)
+
+      expect(bedspaceClientFactory).toHaveBeenCalledWith(callConfig)
+      expect(bedspaceClient.unarchive).toHaveBeenCalledWith(premisesId, bedspaceId, { restartDate })
+    })
+  })
+
   describe('getReferenceData', () => {
     it('returns sorted bedspace characteristics', async () => {
       const bedspaceCharacteristic1 = characteristicFactory.build({ name: 'ABC', modelScope: 'room' })

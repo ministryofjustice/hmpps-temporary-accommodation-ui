@@ -17,6 +17,8 @@ import PremisesListPage from '../../../../../cypress_shared/pages/temporary-acco
 import Page from '../../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
 import BedspaceEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceEdit'
+import BedspaceArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceArchive'
+import BedspaceUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceUnarchive'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -595,6 +597,144 @@ context('Bedspace', () => {
       // And I should see the previous bedspace information
       page.validateEnteredCharacteristics(bedspace.characteristics.map(ch => ch.name))
       page.validateEnteredAdditionalDetails(bedspace.notes)
+    })
+  })
+
+  describe('archiving a bedspace', () => {
+    it('navigates to archive page, and archives successfully with success message based on the API response', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the archive button and be able to click it
+      bedspaceShowPage.clickArchiveLink()
+
+      // And I should navigate to the archive bedspace page
+      const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
+      archivePage.shouldShowBedspaceDetails()
+
+      // When I archive with today option
+      cy.task('stubBedspaceArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      const archivedBedspace = { ...bedspace, status: 'archived' }
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: archivedBedspace })
+      archivePage.completeArchiveWithToday()
+
+      // Then I should be redirected to the bedspace show page with success message based on the API response
+      const finalBedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, archivedBedspace)
+      finalBedspaceShowPage.shouldShowBanner('Bedspace archived')
+      finalBedspaceShowPage.shouldShowAsArchived()
+      finalBedspaceShowPage.shouldNotShowArchiveLink()
+    })
+
+    it('navigates to archive page, and fails to archive with error based on the API response', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the archive button and be able to click it
+      bedspaceShowPage.clickArchiveLink()
+
+      // And I should navigate to the archive bedspace page
+      const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
+      archivePage.shouldShowBedspaceDetails()
+
+      // When I try to archive with past date
+      cy.task('stubBedspaceArchiveV2WithError', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        errorType: 'invalidEndDateInThePast',
+      })
+
+      // Select another date option and enter a past date (1/1/1900)
+      archivePage.selectAnotherDateOption()
+      archivePage.enterArchiveDate('1', '1', '1900')
+      archivePage.clickSubmit()
+
+      // Then I should see the validation error based on the API response
+      archivePage.shouldShowError('The date is not within the next 3 months')
+    })
+  })
+
+  describe('unarchiving a bedspace', () => {
+    it('navigates to unarchive page, and unarchives successfully with success message based on the API response', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+
+      // And there is an archived bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the archive button and be able to click it
+      bedspaceShowPage.clickUnarchiveLink()
+
+      // And I should navigate to the unarchive bedspace page
+      const unarchivePage = Page.verifyOnPage(BedspaceUnarchivePage, premises, bedspace)
+      unarchivePage.shouldShowBedspaceDetails()
+
+      // When I unarchive with today option
+      cy.task('stubBedspaceUnarchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+      const unarchivedBedspace = { ...bedspace, status: 'online' }
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: unarchivedBedspace })
+      unarchivePage.completeUnarchiveWithToday()
+
+      // Then I should be redirected to the bedspace show page with success message based on the API response
+      const finalBedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, unarchivedBedspace)
+      finalBedspaceShowPage.shouldShowBanner('Bedspace online')
+      finalBedspaceShowPage.shouldShowAsOnline()
+      finalBedspaceShowPage.shouldShowArchiveLink()
+    })
+
+    it('navigates to unarchive page, and fails to archive with error based on the API response', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+
+      // And there is an archived bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the unarchive button and be able to click it
+      bedspaceShowPage.clickUnarchiveLink()
+
+      // And I should navigate to the unarchive bedspace page
+      const unarchivePage = Page.verifyOnPage(BedspaceUnarchivePage, premises, bedspace)
+      unarchivePage.shouldShowBedspaceDetails()
+
+      // When I try to unarchive with past date
+      cy.task('stubBedspaceUnarchiveV2WithError', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        errorType: 'invalidEndDateInThePast',
+      })
+
+      // Select another date option and enter a past date (1/1/1900)
+      unarchivePage.selectAnotherDateOption()
+      unarchivePage.enterArchiveDate('1', '1', '1900')
+      unarchivePage.clickSubmit()
+
+      // Then I should see the validation error based on the API response
+      unarchivePage.shouldShowError('The restart date must be after the last archive end date')
     })
   })
 })

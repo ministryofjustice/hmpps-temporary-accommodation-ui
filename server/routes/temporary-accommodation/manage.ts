@@ -202,6 +202,22 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+
+  get(paths.premises.bedspaces.unarchive.pattern, bedspacesControllerV2.unarchive(), {
+    auditEvent: 'VIEW_BEDSPACE_V2_UNARCHIVE',
+  })
+  post(paths.premises.bedspaces.unarchive.pattern, bedspacesControllerV2.unarchiveSubmit(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.bedspaces.unarchive.pattern,
+        auditEvent: 'UNARCHIVE_BEDSPACE_V2_FAILURE',
+      },
+      {
+        path: paths.premises.bedspaces.show.pattern,
+        auditEvent: 'UNARCHIVE_BEDSPACE_V2_SUCCESS',
+      },
+    ],
+  })
   get(paths.bookings.arrivals.new.pattern, arrivalsController.new(), { auditEvent: 'VIEW_BOOKING_CREATE_ARRIVAL' })
   post(paths.bookings.arrivals.create.pattern, arrivalsController.create(), {
     redirectAuditEventSpecs: [

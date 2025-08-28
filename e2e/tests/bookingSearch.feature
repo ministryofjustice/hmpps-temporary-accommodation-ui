@@ -14,7 +14,7 @@ Feature: Manage Temporary Accommodation - Booking search
     And I confirm the booking
     And I'm searching bookings
     Then I should see a summary of the booking on the confirmed bookings page
-#    And I mark the booking as arrived
+    And I mark the booking as arrived
 #    And I'm searching bookings
 #    Then I should see a summary of the booking on the active bookings page
 #    And I mark the booking as departed

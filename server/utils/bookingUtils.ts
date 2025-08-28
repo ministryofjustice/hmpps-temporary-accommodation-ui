@@ -181,7 +181,7 @@ export const shortenedOrExtended = (extension: Extension): 'shortened' | 'extend
 export const generateConflictBespokeError = (
   err: SanitisedError,
   premisesId: string,
-  roomId: string,
+  bedspaceId: string,
   datesGrammaticalNumber: 'plural' | 'singular',
 ): BespokeError => {
   const { detail } = err.data as { detail: string }
@@ -199,12 +199,12 @@ export const generateConflictBespokeError = (
       conflictingEntityType === 'lost-bed'
         ? `<a href="${paths.lostBeds.show({
             premisesId,
-            bedspaceId: roomId,
+            bedspaceId,
             lostBedId: conflictingEntityId,
           })}">existing void</a>`
         : `<a href="${paths.bookings.show({
             premisesId,
-            bedspaceId: roomId,
+            bedspaceId,
             bookingId: conflictingEntityId,
           })}">existing booking</a>`
 

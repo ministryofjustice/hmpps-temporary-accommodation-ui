@@ -14,7 +14,7 @@
 
 {% block beforeContent %}
     {{ breadCrumb('View a booking', [
-        {title: 'List of properties', href: addPlaceContext(paths.premises.index())},
+        {title: 'List of properties', href: addPlaceContext(paths.premises.online())},
         {title: 'View a property', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
         {title: 'View a bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
     ]) }}

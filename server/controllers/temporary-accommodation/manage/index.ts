@@ -19,8 +19,16 @@ import BedspacesControllerV2 from './v2/bedspacesController'
 
 export const controllers = (services: Services) => {
   const dashboardController = new DashboardController()
-  const premisesControllerV2 = new PremisesControllerV2(services.v2.premisesService, services.v2.bedspaceService)
-  const bedspacesControllerV2 = new BedspacesControllerV2(services.v2.premisesService, services.v2.bedspaceService)
+  const premisesControllerV2 = new PremisesControllerV2(
+    services.v2.premisesService,
+    services.v2.bedspaceService,
+    services.assessmentsService,
+  )
+  const bedspacesControllerV2 = new BedspacesControllerV2(
+    services.v2.premisesService,
+    services.v2.bedspaceService,
+    services.assessmentsService,
+  )
   const bookingsController = new BookingsController(
     services.premisesService,
     services.bedspaceService,

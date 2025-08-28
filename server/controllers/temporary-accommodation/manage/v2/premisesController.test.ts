@@ -1,17 +1,19 @@
 import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
-import { ErrorsAndUserInput, PremisesSearchParameters, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
+import { ErrorsAndUserInput, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
 import type { Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
 import {
+  assessmentFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3BedspacesReferenceFactory,
   cas3NewPremisesFactory,
   cas3PremisesFactory,
   cas3UpdatePremisesFactory,
+  placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
 } from '../../../../testutils/factories'
@@ -26,20 +28,11 @@ import {
 } from '../../../../utils/validation'
 import BedspaceService from '../../../../services/v2/bedspaceService'
 import { DateFormats } from '../../../../utils/dateUtils'
+import { AssessmentsService } from '../../../../services'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
-jest.mock('../../../../utils/premisesUtils', () => {
-  const originalModule = jest.requireActual('../../../../utils/premisesUtils')
-
-  return {
-    ...originalModule,
-    getActiveStatuses: jest.fn(),
-    premisesActions: jest.fn(),
-  }
-})
 jest.mock('../../../../utils/userUtils')
-jest.mock('../../../../utils/placeUtils')
 
 describe('PremisesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
@@ -56,6 +49,8 @@ describe('PremisesController', () => {
       name: 'filtered-region',
     }),
   ]
+  const assessment = assessmentFactory.build({ status: 'ready_to_place' })
+  const placeContext = placeContextFactory.build({ assessment })
 
   let request: Request
 
@@ -64,8 +59,9 @@ describe('PremisesController', () => {
 
   const premisesService = createMock<PremisesService>({})
   const bedspaceService = createMock<BedspaceService>({})
+  const assessmentService = createMock<AssessmentsService>({})
 
-  const premisesController = new PremisesController(premisesService, bedspaceService)
+  const premisesController = new PremisesController(premisesService, bedspaceService, assessmentService)
 
   beforeEach(() => {
     request = createMock<Request>({
@@ -75,6 +71,7 @@ describe('PremisesController', () => {
       query: {},
     })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
+    assessmentService.findAssessment.mockResolvedValue(assessment)
   })
 
   describe('index', () => {
@@ -98,8 +95,11 @@ describe('PremisesController', () => {
     ]
 
     it('searches online premises data and returns as table rows when no status parameter is provided', async () => {
-      const params: PremisesSearchParameters = {
-        postcodeOrAddress: undefined,
+      const postcodeOrAddress: string | undefined = undefined
+      const params = {
+        postcodeOrAddress,
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
       }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -123,12 +123,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online', active: true },
-          { text: 'Archived properties', href: '/properties/archived', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         ...searchData,
       })
@@ -136,14 +144,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('searches online premises data and returns as table rows when status=online parameter is provided', async () => {
-      const params: PremisesSearchParameters = {
-        postcodeOrAddress: undefined,
+      const postcodeOrAddress: string | undefined = undefined
+      const params = {
+        postcodeOrAddress,
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
       }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -167,12 +179,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online', active: true },
-          { text: 'Archived properties', href: '/properties/archived', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         ...searchData,
       })
@@ -180,13 +200,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('searches online premises data by postcode or address and returns as table rows when searched for a postcode or address', async () => {
-      const params = { postcodeOrAddress: 'NE1' }
+      const params = {
+        postcodeOrAddress: 'NE1',
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
         totalPremises: 3,
@@ -209,12 +234,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: 'NE1' },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NE1', active: true },
-          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NE1', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?postcodeOrAddress=NE1&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?postcodeOrAddress=NE1&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         ...searchData,
       })
@@ -222,14 +255,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('returns empty search data when there are no properties in the database', async () => {
-      const params: PremisesSearchParameters = {
-        postcodeOrAddress: undefined,
+      const postcodeOrAddress: string | undefined = undefined
+      const params = {
+        postcodeOrAddress,
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
       }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -253,12 +290,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online', active: true },
-          { text: 'Archived properties', href: '/properties/archived', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         ...searchData,
       })
@@ -266,14 +311,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('returns zero online properties data when no properties exist in database', async () => {
-      const params: PremisesSearchParameters = {
-        postcodeOrAddress: undefined,
+      const postcodeOrAddress: string | undefined = undefined
+      const params = {
+        postcodeOrAddress,
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
       }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -297,12 +346,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online', active: true },
-          { text: 'Archived properties', href: '/properties/archived', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -314,13 +371,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('returns online properties data with search term and bedspace counts when search has results', async () => {
-      const params = { postcodeOrAddress: 'NE1' }
+      const params = {
+        postcodeOrAddress: 'NE1',
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
         totalPremises: 2,
@@ -343,12 +405,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: 'NE1' },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NE1', active: true },
-          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NE1', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?postcodeOrAddress=NE1&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?postcodeOrAddress=NE1&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         totalPremises: 2,
         totalOnlineBedspaces: 8,
@@ -360,13 +430,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('returns zero online properties data with search term when search returns no results', async () => {
-      const params = { postcodeOrAddress: 'NONEXISTENT' }
+      const params = {
+        postcodeOrAddress: 'NONEXISTENT',
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
         totalPremises: 0,
@@ -389,12 +464,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: 'NONEXISTENT' },
+        params,
         status: 'online',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NONEXISTENT', active: true },
-          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NONEXISTENT', active: false },
+          {
+            text: 'Online properties',
+            href: `/properties/online?postcodeOrAddress=NONEXISTENT&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?postcodeOrAddress=NONEXISTENT&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -406,14 +489,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'online',
         'pdu',
       )
     })
 
     it('returns zero archived properties data when no archived properties exist in database', async () => {
-      const params: PremisesSearchParameters = {
-        postcodeOrAddress: undefined,
+      const postcodeOrAddress: string | undefined = undefined
+      const params = {
+        postcodeOrAddress,
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
       }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
@@ -437,12 +524,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: undefined },
+        params,
         status: 'archived',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online', active: false },
-          { text: 'Archived properties', href: '/properties/archived', active: true },
+          {
+            text: 'Online properties',
+            href: `/properties/online?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -454,13 +549,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'archived',
         'pdu',
       )
     })
 
     it('returns archived properties data with search term when search has results', async () => {
-      const params = { postcodeOrAddress: 'SW1' }
+      const params = {
+        postcodeOrAddress: 'SW1',
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
         totalPremises: 3,
@@ -483,12 +583,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: 'SW1' },
+        params,
         status: 'archived',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=SW1', active: false },
-          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=SW1', active: true },
+          {
+            text: 'Online properties',
+            href: `/properties/online?postcodeOrAddress=SW1&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?postcodeOrAddress=SW1&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
         ],
         totalPremises: 3,
         totalOnlineBedspaces: 0,
@@ -500,13 +608,18 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'archived',
         'pdu',
       )
     })
 
     it('returns zero archived properties data with search term when search returns no results', async () => {
-      const params = { postcodeOrAddress: 'NOTFOUND' }
+      const params = {
+        postcodeOrAddress: 'NOTFOUND',
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      }
       const searchData = {
         results: [] as Array<Cas3PremisesSearchResult>,
         totalPremises: 0,
@@ -529,12 +642,20 @@ describe('PremisesController', () => {
       await requestHandler(request, response, next)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-        params: { postcodeOrAddress: 'NOTFOUND' },
+        params,
         status: 'archived',
         premisesSortBy: 'pdu',
         subNavArr: [
-          { text: 'Online properties', href: '/properties/online?postcodeOrAddress=NOTFOUND', active: false },
-          { text: 'Archived properties', href: '/properties/archived?postcodeOrAddress=NOTFOUND', active: true },
+          {
+            text: 'Online properties',
+            href: `/properties/online?postcodeOrAddress=NOTFOUND&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: false,
+          },
+          {
+            text: 'Archived properties',
+            href: `/properties/archived?postcodeOrAddress=NOTFOUND&placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+            active: true,
+          },
         ],
         totalPremises: 0,
         totalOnlineBedspaces: 0,
@@ -546,6 +667,7 @@ describe('PremisesController', () => {
       expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
         callConfig,
         params.postcodeOrAddress,
+        placeContext,
         'archived',
         'pdu',
       )
@@ -553,7 +675,12 @@ describe('PremisesController', () => {
   })
 
   it('searches premises data and returns as table rows when premisesSortBy is "la"', async () => {
-    const params: PremisesSearchParameters = { postcodeOrAddress: undefined }
+    const postcodeOrAddress: string | undefined = undefined
+    const params = {
+      postcodeOrAddress,
+      placeContextAssessmentId: placeContext.assessment.id,
+      placeContextArrivalDate: placeContext.arrivalDate,
+    }
     const searchData = {
       results: [] as Array<Cas3PremisesSearchResult>,
       totalPremises: 1,
@@ -577,12 +704,20 @@ describe('PremisesController', () => {
     await requestHandler(request, response, next)
 
     expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/index', {
-      params: { postcodeOrAddress: undefined },
+      params,
       status: 'online',
       premisesSortBy: 'la',
       subNavArr: [
-        { text: 'Online properties', href: '/properties/online', active: true },
-        { text: 'Archived properties', href: '/properties/archived', active: false },
+        {
+          text: 'Online properties',
+          href: `/properties/online?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+          active: true,
+        },
+        {
+          text: 'Archived properties',
+          href: `/properties/archived?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
+          active: false,
+        },
       ],
       ...searchData,
     })
@@ -590,6 +725,7 @@ describe('PremisesController', () => {
     expect(premisesService.searchDataAndGenerateTableRows).toHaveBeenCalledWith(
       callConfig,
       params.postcodeOrAddress,
+      placeContext,
       'online',
       'la',
     )
@@ -654,7 +790,6 @@ describe('PremisesController', () => {
       totalUpcomingBedspaces: 0,
       totalArchivedBedspaces: 0,
     })
-
     const summaryList: SummaryList = {
       rows: [
         {
@@ -733,12 +868,12 @@ describe('PremisesController', () => {
     const navArr = (activeTab: PremisesShowTabs) => [
       {
         text: 'Property overview',
-        href: paths.premises.show({ premisesId: property.id }),
+        href: `${paths.premises.show({ premisesId: property.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
         active: activeTab === 'premises',
       },
       {
         text: 'Bedspaces overview',
-        href: paths.premises.bedspaces.list({ premisesId: property.id }),
+        href: `${paths.premises.bedspaces.list({ premisesId: property.id })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
         active: activeTab === 'bedspaces',
       },
     ]
@@ -747,15 +882,23 @@ describe('PremisesController', () => {
       request = createMock<Request>({
         session: { probationRegion: probationRegionFactory.build() },
         url: `/properties/${property.id}`,
-        params: { premisesId: property.id },
+        params: {
+          premisesId: property.id,
+        },
+        query: {
+          placeContextAssessmentId: placeContext.assessment.id,
+          placeContextArrivalDate: placeContext.arrivalDate,
+        },
       })
 
       premisesService.getSinglePremises.mockResolvedValue(property)
       premisesService.summaryList.mockReturnValue(summaryList)
+      assessmentService.findAssessment.mockResolvedValue(assessment)
 
       const requestHandler = premisesController.showPremisesTab()
       await requestHandler(request, response, next)
 
+      const subNavArr = navArr('premises')
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/show', {
         premises: property,
         summary: summaryList,
@@ -777,7 +920,7 @@ describe('PremisesController', () => {
           },
         ],
         showPremises: true,
-        subNavArr: navArr('premises'),
+        subNavArr,
       })
 
       expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, property.id)
@@ -789,6 +932,10 @@ describe('PremisesController', () => {
         session: { probationRegion: probationRegionFactory.build() },
         url: `/properties/${property.id}/bedspaces`,
         params: { premisesId: property.id },
+        query: {
+          placeContextAssessmentId: placeContext.assessment.id,
+          placeContextArrivalDate: placeContext.arrivalDate,
+        },
       })
 
       premisesService.getSinglePremises.mockResolvedValue(property)

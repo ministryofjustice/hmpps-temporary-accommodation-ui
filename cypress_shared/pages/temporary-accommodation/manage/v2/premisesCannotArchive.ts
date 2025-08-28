@@ -1,14 +1,14 @@
 import Page from '../../../page'
-import { Cas3BedspaceReference, Cas3Premises } from '../../../../../server/@types/shared'
+import { Cas3Premises, Cas3ValidationResult } from '../../../../../server/@types/shared'
 
 export default class PremisesCannotArchivePage extends Page {
   constructor(premises: Cas3Premises) {
     super(`You cannot archive ${premises.addressLine1}`)
   }
 
-  shouldShowAffectedBedspaces(bedspaces: Array<Cas3BedspaceReference>): void {
+  shouldShowAffectedBedspaces(bedspaces: Array<Cas3ValidationResult>): void {
     bedspaces.forEach(bedspace => {
-      cy.get('ul li a').contains(bedspace.reference)
+      cy.get('ul li a').contains(bedspace.entityReference)
     })
   }
 

@@ -26,8 +26,8 @@
                 {% for bedspace in bedspaces %}
                     <li class="govuk-list-item">
                         <span class="govuk-visually-hidden">View bedspace</span>
-                        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }) }}">
-                            {{ bedspace.reference }}
+                        <a class="govuk-link govuk-link--no-visited-state" href="{{ paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.entityId }) }}">
+                            {{ bedspace.entityReference }}
                         </a>
                     </li>
                 {% endfor %}

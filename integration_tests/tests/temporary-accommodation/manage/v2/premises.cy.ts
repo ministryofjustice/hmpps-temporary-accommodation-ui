@@ -1,6 +1,6 @@
 import {
-  Cas3BedspacesReference,
   Cas3Premises,
+  Cas3ValidationResults,
   Characteristic,
   LocalAuthorityArea,
   ProbationDeliveryUnit,
@@ -1545,10 +1545,10 @@ context('Premises', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
-      const bedspacesReference: Cas3BedspacesReference = {
-        affectedBedspaces: [
-          { id: bedspaces[0].id, reference: bedspaces[0].reference },
-          { id: bedspaces[1].id, reference: bedspaces[1].reference },
+      const bedspacesReference: Cas3ValidationResults = {
+        items: [
+          { entityId: bedspaces[0].id, entityReference: bedspaces[0].reference },
+          { entityId: bedspaces[1].id, entityReference: bedspaces[1].reference },
         ],
       }
       cy.task('stubSinglePremisesV2', premises)
@@ -1568,17 +1568,17 @@ context('Premises', () => {
       const cannotArchivePage = Page.verifyOnPage(PremisesCannotArchivePage, premises)
 
       // And I should see the affected bedspaces
-      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.affectedBedspaces)
+      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.items)
     })
 
     it('should navigate to a bedspace from the "Cannot archive" page', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
-      const bedspacesReference: Cas3BedspacesReference = {
-        affectedBedspaces: [
-          { id: bedspaces[0].id, reference: bedspaces[0].reference },
-          { id: bedspaces[1].id, reference: bedspaces[1].reference },
+      const bedspacesReference: Cas3ValidationResults = {
+        items: [
+          { entityId: bedspaces[0].id, entityReference: bedspaces[0].reference },
+          { entityId: bedspaces[1].id, entityReference: bedspaces[1].reference },
         ],
       }
       cy.task('stubSinglePremisesV2', premises)
@@ -1598,7 +1598,7 @@ context('Premises', () => {
       const cannotArchivePage = Page.verifyOnPage(PremisesCannotArchivePage, premises)
 
       // And I should see the affected bedspaces
-      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.affectedBedspaces)
+      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.items)
 
       // When I click on one of the affected bedspaces
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: bedspaces[1] })
@@ -1612,10 +1612,10 @@ context('Premises', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
-      const bedspacesReference: Cas3BedspacesReference = {
-        affectedBedspaces: [
-          { id: bedspaces[0].id, reference: bedspaces[0].reference },
-          { id: bedspaces[1].id, reference: bedspaces[1].reference },
+      const bedspacesReference: Cas3ValidationResults = {
+        items: [
+          { entityId: bedspaces[0].id, entityReference: bedspaces[0].reference },
+          { entityId: bedspaces[1].id, entityReference: bedspaces[1].reference },
         ],
       }
       cy.task('stubSinglePremisesV2', premises)
@@ -1635,7 +1635,7 @@ context('Premises', () => {
       const cannotArchivePage = Page.verifyOnPage(PremisesCannotArchivePage, premises)
 
       // And I should see the affected bedspaces
-      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.affectedBedspaces)
+      cannotArchivePage.shouldShowAffectedBedspaces(bedspacesReference.items)
 
       // When I click on the "View bedspaces overview" button
       cannotArchivePage.clickViewBedspacesOverview()

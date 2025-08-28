@@ -253,10 +253,10 @@ export default class PremisesController {
         this.premisesService.canArchivePremises(callConfig, premisesId),
       ])
 
-      if (blockingBedspaceReferences && blockingBedspaceReferences.affectedBedspaces.length > 0) {
+      if (blockingBedspaceReferences && blockingBedspaceReferences.items.length > 0) {
         return res.render('temporary-accommodation/v2/premises/cannot-archive', {
           premises,
-          bedspaces: blockingBedspaceReferences.affectedBedspaces,
+          bedspaces: blockingBedspaceReferences.items,
         })
       }
 

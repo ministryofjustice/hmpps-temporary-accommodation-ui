@@ -1283,7 +1283,7 @@ describe('PremisesController', () => {
       expect(premisesService.canArchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cannot-archive', {
         premises,
-        bedspaces: bedspaces.affectedBedspaces,
+        bedspaces: bedspaces.items,
       })
     })
   })

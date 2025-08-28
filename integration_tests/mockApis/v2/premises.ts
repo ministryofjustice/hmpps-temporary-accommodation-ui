@@ -1,10 +1,10 @@
 import type {
-  Cas3BedspacesReference,
   Cas3Premises,
   Cas3PremisesBedspaceTotals,
   Cas3PremisesSearchResults,
   Cas3PremisesSortBy,
   Cas3PremisesStatus,
+  Cas3ValidationResults,
 } from '@approved-premises/api'
 import type { Response } from 'superagent'
 import { getMatchingRequests, stubFor } from '..'
@@ -108,7 +108,7 @@ const verifyPremisesUpdateV2 = async (premisesId: string) =>
     })
   ).body.requests
 
-const stubPremisesCanArchive = (params: { premisesId: string; bedspacesReference: Cas3BedspacesReference }) =>
+const stubPremisesCanArchive = (params: { premisesId: string; bedspacesReference: Cas3ValidationResults }) =>
   stubFor({
     request: {
       method: 'GET',

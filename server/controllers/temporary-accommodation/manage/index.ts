@@ -39,7 +39,7 @@ export const controllers = (services: Services) => {
 
   const confirmationsController = new ConfirmationsController(
     services.premisesService,
-    services.bedspaceService,
+    services.v2.bedspaceService,
     services.bookingService,
     services.confirmationService,
   )

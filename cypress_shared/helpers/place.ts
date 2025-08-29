@@ -95,10 +95,10 @@ export default class PlaceHelper {
     this.assessmentToBedspaceSearch()
     this.bedspaceSearchToSearchResults()
     this.searchResultsToBedspace()
-    // this.bedspaceToNewBooking()
-    // this.newBookingToSelectAssessment()
-    // this.selectAssessmentToConfirm()
-    // this.confirmToShowBooking()
+    this.bedspaceToNewBooking()
+    this.newBookingToSelectAssessment()
+    this.selectAssessmentToConfirm()
+    this.confirmToShowBooking()
   }
 
   private assessmentToBedspaceSearch() {

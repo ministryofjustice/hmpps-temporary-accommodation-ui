@@ -23,11 +23,11 @@
   <p>Confirm that the CRN is correct. This information cannot be changed once a bedspace has been booked.</p>
 
   {{ popDetailsHeader(person) }}
-  {{ locationHeader({ premises: premises, room: room }) }}
+  {{ locationHeader({ premises: premises, room: bedspace }) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ addPlaceContext(paths.bookings.create({ premisesId: premises.id, roomId: room.id })) }}" method="post">
+      <form action="{{ addPlaceContext(paths.bookings.create({ premisesId: premises.id, bedspaceId: bedspace.id })) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ placeContextValue(placeContext) }}

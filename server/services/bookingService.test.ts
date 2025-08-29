@@ -2,7 +2,14 @@ import BookingClient from '../data/bookingClient'
 import LostBedClient from '../data/lostBedClient'
 import BookingService from './bookingService'
 
-import { bedFactory, bookingFactory, lostBedFactory, newBookingFactory, roomFactory } from '../testutils/factories'
+import {
+  bedFactory,
+  bookingFactory,
+  cas3BedspaceFactory,
+  lostBedFactory,
+  newBookingFactory,
+  roomFactory,
+} from '../testutils/factories'
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
@@ -41,15 +48,11 @@ describe('BookingService', () => {
       const newBooking = newBookingFactory.build()
       bookingClient.create.mockResolvedValue(booking)
 
-      const room = roomFactory.build({
-        beds: [
-          bedFactory.build({
-            id: bedId,
-          }),
-        ],
+      const bedspace = cas3BedspaceFactory.build({
+        id: bedId,
       })
 
-      const postedBooking = await service.createForBedspace(callConfig, premisesId, room, newBooking)
+      const postedBooking = await service.createForBedspace(callConfig, premisesId, bedspace.id, newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)

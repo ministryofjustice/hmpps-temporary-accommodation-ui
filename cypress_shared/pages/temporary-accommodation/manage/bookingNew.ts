@@ -25,7 +25,7 @@ export default class BookingNewPage extends BookingEditablePage {
 
   static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace): BookingNewPage {
     if (room) {
-      cy.visit(paths.bookings.new({ premisesId: premises.id, roomId: room.id }))
+      cy.visit(paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }))
     } else {
       cy.visit(paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }))
     }

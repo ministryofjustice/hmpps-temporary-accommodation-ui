@@ -15,4 +15,5 @@ export default Factory.define<Cas3Bedspace>(() => ({
     .multiple(() => `${faker.word.adjective()} ${faker.word.adverb()} ${faker.word.noun()}`)
     .join(', '),
   archiveHistory: [],
+  endDate: undefined,
 }))

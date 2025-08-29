@@ -63,7 +63,7 @@ describe('BookingService', () => {
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking1.premises.id,
-              bedspaceId: booking1.room.id,
+              bedspaceId: booking1.bed.id,
               bookingId: booking1.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking1.person.crn
@@ -89,7 +89,7 @@ describe('BookingService', () => {
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking2.premises.id,
-              bedspaceId: booking2.room.id,
+              bedspaceId: booking2.bed.id,
               bookingId: booking2.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking2.person.crn
@@ -115,7 +115,7 @@ describe('BookingService', () => {
           {
             html: `<a href="${paths.bookings.show({
               premisesId: booking3.premises.id,
-              bedspaceId: booking3.room.id,
+              bedspaceId: booking3.bed.id,
               bookingId: booking3.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${
               booking3.person.crn

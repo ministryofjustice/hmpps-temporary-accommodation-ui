@@ -12,7 +12,7 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: addPlaceContext(paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    href: addPlaceContext(paths.bookings.show({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
   }) }}
 {% endblock %}
 
@@ -22,7 +22,7 @@
   <h1 class="govuk-heading-l">Booking history</h1>
 
   {{ popDetailsHeader(booking.person) }}
-  {{ locationHeader({ room: room, premises: premises }) }}
+  {{ locationHeader({ room: bedspace, premises: premises }) }}
 
   {% for historicBookingDetail in history | reverse %}
     <div data-cy-history-index="{{ loop.revindex0 }}">

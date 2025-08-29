@@ -19,6 +19,7 @@ import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-acco
 import BedspaceEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceEdit'
 import BedspaceArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceArchive'
 import BedspaceUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceUnarchive'
+import BedspaceCannotArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceCannotArchive'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -601,7 +602,7 @@ context('Bedspace', () => {
   })
 
   describe('archiving a bedspace', () => {
-    it('navigates to archive page, and archives successfully with success message based on the API response', () => {
+    it('navigates to archive page when can-archive allows it, and archives successfully with success message based on the API response', () => {
       // Given there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
       cy.task('stubSinglePremisesV2', premises)
@@ -609,6 +610,9 @@ context('Bedspace', () => {
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // And the bedspace can be archived
+      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       // When I visit the show bedspace page
       const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
@@ -633,6 +637,42 @@ context('Bedspace', () => {
       finalBedspaceShowPage.shouldNotShowArchiveLink()
     })
 
+    it('shows cannot archive page when bedspace has blocking booking/void', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      cy.task('stubSinglePremisesV2', premises)
+
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // And the bedspace cannot be archived due to blocking booking/void
+      cy.task('stubBedspaceCanArchiveV2WithBlocking', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        blockingDate: '2025-08-28',
+        entityId: 'some-entity-id',
+        entityReference: 'some-reference',
+      })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // And I click the archive button
+      bedspaceShowPage.clickArchiveLink()
+
+      // Then I should be redirected to the cannot archive page
+      const cannotArchivePage = Page.verifyOnPage(BedspaceCannotArchivePage, bedspace.reference)
+      cannotArchivePage.shouldShowCannotArchiveMessage()
+      cannotArchivePage.shouldShowReturnButton()
+
+      // When I click the return button
+      cannotArchivePage.clickReturnToBedspaceDetails()
+
+      // Then I should be back on the bedspace show page
+      Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
+    })
+
     it('navigates to archive page, and fails to archive with error based on the API response', () => {
       // Given there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
@@ -641,6 +681,9 @@ context('Bedspace', () => {
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+
+      // And the bedspace can be archived
+      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
 
       // When I visit the show bedspace page
       const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)

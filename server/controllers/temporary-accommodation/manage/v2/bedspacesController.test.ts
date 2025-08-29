@@ -222,7 +222,7 @@ describe('BedspacesController', () => {
       },
       {
         text: 'Archive bedspace',
-        href: '/properties/some-premises-id/bedspaces/some-bedspace-id/archive',
+        href: paths.premises.bedspaces.canArchive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
@@ -758,6 +758,64 @@ describe('BedspacesController', () => {
         'bedspaceArchive',
         undefined,
       )
+    })
+  })
+
+  describe('canArchive', () => {
+    it('redirects to cannot-archive page when blocking date exists', async () => {
+      const params = { premisesId, bedspaceId }
+      const canArchiveResponse = { date: '2025-08-28', entityId: 'some-id', entityReference: 'some-ref' }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
+
+      const requestHandler = bedspacesController.canArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.cannotArchive({ premisesId, bedspaceId }))
+    })
+
+    it('redirects to archive page when no blocking date exists', async () => {
+      const params = { premisesId, bedspaceId }
+      const canArchiveResponse = {}
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
+
+      const requestHandler = bedspacesController.canArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
+    })
+
+    it('redirects to bedspace show page on error', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      bedspaceService.canArchiveBedspace.mockRejectedValue(new Error('API Error'))
+
+      const requestHandler = bedspacesController.canArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
   })
 

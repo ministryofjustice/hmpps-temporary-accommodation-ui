@@ -187,6 +187,12 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+  get(paths.premises.bedspaces.canArchive.pattern, bedspacesControllerV2.canArchive(), {
+    auditEvent: 'CHECK_BEDSPACE_CAN_ARCHIVE_V2',
+  })
+  get(paths.premises.bedspaces.cannotArchive.pattern, bedspacesControllerV2.cannotArchive(), {
+    auditEvent: 'VIEW_BEDSPACE_CANNOT_ARCHIVE_V2',
+  })
   get(paths.premises.bedspaces.archive.pattern, bedspacesControllerV2.archive(), {
     auditEvent: 'VIEW_BEDSPACE_V2_ARCHIVE',
   })

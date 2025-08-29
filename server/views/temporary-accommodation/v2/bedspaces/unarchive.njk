@@ -11,10 +11,11 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ breadCrumb('Unarchive a bedspace', [
-        {title: 'List of properties', href: paths.premises.online()},
-        {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })}
-    ]) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.premises.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id }),
+        classes: "govuk-!-display-none-print"
+    }) }}
 {% endblock %}
 
 {% block content %}

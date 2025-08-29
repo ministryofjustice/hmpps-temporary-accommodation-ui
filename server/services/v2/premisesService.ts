@@ -332,7 +332,8 @@ export default class PremisesService {
 
     return archiveHistory
       .map(action => {
-        return `<div>${convertToTitleCase(action.status)} date ${this.formatDate(action.date)}</div>`
+        const verb = action.status === 'online' ? 'Online' : 'Archive'
+        return `<div>${verb} date ${this.formatDate(action.date)}</div>`
       })
       .join('')
   }

@@ -3,15 +3,16 @@ import type { NextFunction, Request, Response } from 'express'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, ExtensionService, PremisesService } from '../../../services'
+import { BookingService, ExtensionService, PremisesService } from '../../../services'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import {
   bookingFactory,
+  cas3BedspaceFactory,
   departureFactory,
   extensionFactory,
   newDepartureFactory,
   newExtensionFactory,
   premisesFactory,
-  roomFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError, getLatestExtension } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -31,7 +32,7 @@ jest.mock('../../../utils/restUtils')
 describe('ExtensionsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const bookingId = 'bookingId'
 
   let request: Request
@@ -59,17 +60,17 @@ describe('ExtensionsController', () => {
   describe('new', () => {
     it('renders the form prepopulated with the current departure dates', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = extensionsController.new()
@@ -81,7 +82,7 @@ describe('ExtensionsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors: {},
         ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
@@ -91,19 +92,19 @@ describe('ExtensionsController', () => {
 
     it('renders the form prepopulated with the current departure dates and latest extension notes', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build({
         extensions: extensionFactory.buildList(2),
       })
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
       ;(getLatestExtension as jest.MockedFunction<typeof getLatestExtension>).mockImplementation(
         bookings => bookings.extensions?.[0],
@@ -115,12 +116,12 @@ describe('ExtensionsController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/extensions/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors: {},
         ...DateFormats.isoToDateAndTimeInputs(booking.departureDate, 'newDepartureDate'),
@@ -141,7 +142,7 @@ describe('ExtensionsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -161,7 +162,7 @@ describe('ExtensionsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking departure date changed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -174,7 +175,7 @@ describe('ExtensionsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -193,7 +194,7 @@ describe('ExtensionsController', () => {
         request,
         response,
         err,
-        paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
+        paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId }),
       )
     })
 
@@ -207,7 +208,7 @@ describe('ExtensionsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -229,14 +230,14 @@ describe('ExtensionsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'singular')
+      expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, bedspaceId, 'singular')
       expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'newDepartureDate', 'conflict')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
         err,
-        paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
+        paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId }),
       )
     })
   })

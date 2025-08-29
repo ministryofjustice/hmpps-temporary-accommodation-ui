@@ -2,18 +2,19 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, PremisesService } from '../../../services'
+import { BookingService, PremisesService } from '../../../services'
 import ConfirmationService from '../../../services/confirmationService'
 import {
   bookingFactory,
+  cas3BedspaceFactory,
   confirmationFactory,
   newConfirmationFactory,
   premisesFactory,
-  roomFactory,
 } from '../../../testutils/factories'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import ConfirmationsController from './confirmationsController'
+import BedspaceService from '../../../services/v2/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -21,7 +22,7 @@ jest.mock('../../../utils/restUtils')
 describe('ConfirmationsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const bookingId = 'bookingId'
 
   let request: Request
@@ -49,17 +50,17 @@ describe('ConfirmationsController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = confirmationsController.new()
@@ -68,12 +69,12 @@ describe('ConfirmationsController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/confirmations/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors: {},
         errorSummary: [],
@@ -92,7 +93,7 @@ describe('ConfirmationsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -111,7 +112,7 @@ describe('ConfirmationsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking confirmed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -124,7 +125,7 @@ describe('ConfirmationsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -142,7 +143,7 @@ describe('ConfirmationsController', () => {
         request,
         response,
         err,
-        paths.bookings.confirmations.new({ premisesId, bedspaceId: roomId, bookingId }),
+        paths.bookings.confirmations.new({ premisesId, bedspaceId, bookingId }),
       )
     })
   })

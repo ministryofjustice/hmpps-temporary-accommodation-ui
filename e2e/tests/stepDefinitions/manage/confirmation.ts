@@ -19,6 +19,7 @@ Given('I confirm the booking', () => {
       BookingConfirmationNewPage,
       this.premises,
       this.room,
+      null,
       this.booking,
     )
     bookingConfirmationPage.shouldShowBookingDetails()

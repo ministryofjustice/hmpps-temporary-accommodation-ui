@@ -13,7 +13,7 @@
 {% block beforeContent %}
   {{ govukBackLink({
     text: "Back",
-    href: paths.bookings.show({ premisesId: premises.id, roomId: room.id, bookingId: booking.id })
+    href: paths.bookings.show({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id })
   }) }}
 {% endblock %}
 
@@ -23,13 +23,13 @@
   <h1 class="govuk-heading-l">Mark booking as confirmed</h1>
 
   {{ popDetailsHeader(booking.person) }}
-  {{ locationHeader({ premises: premises, room: room }) }}
+  {{ locationHeader({ premises: premises, room: bedspace }) }}
 
   {{ bookingInfo(booking) }}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <form action="{{ paths.bookings.confirmations.create({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }) }}" method="post">
+      <form action="{{ paths.bookings.confirmations.create({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }) }}" method="post">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ formPageTextarea(

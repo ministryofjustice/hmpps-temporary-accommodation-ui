@@ -11,10 +11,10 @@ Feature: Manage Temporary Accommodation - Booking search
   Scenario: Showing bookings of all statuses
     When I'm searching bookings
     Then I should see a summary of the booking on the provisional bookings page
-#    And I confirm the booking
-#    And I'm searching bookings
-#    Then I should see a summary of the booking on the confirmed bookings page
-#    And I mark the booking as arrived
+    And I confirm the booking
+    And I'm searching bookings
+    Then I should see a summary of the booking on the confirmed bookings page
+    And I mark the booking as arrived
 #    And I'm searching bookings
 #    Then I should see a summary of the booking on the active bookings page
 #    And I mark the booking as departed

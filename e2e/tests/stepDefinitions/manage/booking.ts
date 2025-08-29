@@ -123,6 +123,7 @@ Then('I should see previous booking states in the booking history', () => {
       BookingHistoryPage,
       this.premises,
       this.room,
+      null,
       this.booking,
       this.historicBookings,
     )

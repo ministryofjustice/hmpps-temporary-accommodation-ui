@@ -21,12 +21,12 @@ Feature: Manage Temporary Accommodation - Booking Errors
  Scenario: Showing booking cancellation errors
     Given I'm creating a booking
     And I create a booking with all necessary details
-#    And I attempt to cancel the booking with required details missing
-#    Then I should see a list of the problems encountered cancelling the booking
-#    And I cancel the booking
-#    And I attempt to edit the cancelled booking with required details missing
-#    Then I should see a list of the problems encountered editing the cancelling booking
-#
+    And I attempt to cancel the booking with required details missing
+    Then I should see a list of the problems encountered cancelling the booking
+    And I cancel the booking
+    And I attempt to edit the cancelled booking with required details missing
+    Then I should see a list of the problems encountered editing the cancelling booking
+
   Scenario: Showing booking arrival errors
     Given I'm creating a booking
     And I create a booking with all necessary details

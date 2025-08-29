@@ -248,6 +248,52 @@ const stubBedspaceUnarchiveV2WithError = (args: { premisesId: string; bedspaceId
     },
   })
 
+const stubBedspaceCanArchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.cas3.premises.bedspaces.canArchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {},
+    },
+  })
+
+const stubBedspaceCanArchiveV2WithBlocking = (args: {
+  premisesId: string
+  bedspaceId: string
+  blockingDate: string
+  entityId: string
+  entityReference: string
+}) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.cas3.premises.bedspaces.canArchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        date: args.blockingDate,
+        entityId: args.entityId,
+        entityReference: args.entityReference,
+      },
+    },
+  })
+
 export default {
   stubBedspaceV2,
   stubPremisesBedspacesV2,
@@ -263,4 +309,6 @@ export default {
   stubBedspaceArchiveV2WithError,
   stubBedspaceUnarchiveV2,
   stubBedspaceUnarchiveV2WithError,
+  stubBedspaceCanArchiveV2,
+  stubBedspaceCanArchiveV2WithBlocking,
 }

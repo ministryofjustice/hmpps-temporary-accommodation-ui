@@ -65,7 +65,7 @@ const onlineBedspaceActions = (
   } else {
     actions.push({
       text: 'Archive bedspace',
-      href: paths.premises.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: paths.premises.bedspaces.canArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   }

@@ -61,6 +61,10 @@ test('Archive a bedspace', async ({ page, assessor }) => {
   await archiveBedspace(page, property, bedspace)
 })
 
+// TODO: Add a test case when we cannot archive a bedspace with blocking booking/void
+// test('Cannot archive a bedspace with blocking booking/void', async ({ page, assessor }) => {
+// })
+
 test('Unarchive a bedspace', async ({ page, assessor }) => {
   const property = getProperty()
   const bedspace = getBedspace()

@@ -39,6 +39,12 @@ export default class BedspaceClient {
     })
   }
 
+  async canArchive(premisesId: string, bedspaceId: string) {
+    return this.restClient.get<{ date?: string; entityId?: string; entityReference?: string }>({
+      path: paths.cas3.premises.bedspaces.canArchive({ premisesId, bedspaceId }),
+    })
+  }
+
   async archive(premisesId: string, bedspaceId: string, data: { endDate: string }) {
     return this.restClient.post<void>({
       path: paths.cas3.premises.bedspaces.archive({ premisesId, bedspaceId }),

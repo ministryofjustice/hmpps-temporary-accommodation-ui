@@ -57,7 +57,7 @@ export const controllers = (services: Services) => {
   )
   const extensionsController = new ExtensionsController(
     services.premisesService,
-    services.bedspaceService,
+    services.v2.bedspaceService,
     services.bookingService,
     services.extensionService,
   )

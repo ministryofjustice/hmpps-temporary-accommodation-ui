@@ -12,7 +12,7 @@
 {% block beforeContent %}
     {{ breadCrumb('View a void booking', [
         {title: 'List of bedspaces', href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))},
-        {title: 'View bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id }))}
+        {title: 'View bedspace', href: addPlaceContext(paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))}
     ]) }}
 {% endblock %}
 
@@ -26,7 +26,7 @@
         actions: actions
     }) }}
 
-    {{ locationHeader({ premises: premises, room: room }) }}
+    {{ locationHeader({ premises: premises, room: bedspace }) }}
 
     {{ lostBedInfo(lostBed) }}
 

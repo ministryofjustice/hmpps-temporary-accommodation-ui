@@ -6,7 +6,7 @@ import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bookingFactory,
   extensionFactory,
-  //   lostBedFactory,
+  lostBedFactory,
   newExtensionFactory,
 } from '../../../../server/testutils/factories'
 
@@ -93,37 +93,37 @@ context('Booking extension', () => {
     page.shouldShowErrorMessagesForFields(['newDepartureDate'])
   })
 
-  //   it('shows errors when the API returns a 409 conflict error', () => {
-  //     // Given I am signed in
-  //     cy.signIn()
-  //
-  //     // And there is an arrived booking and a conflicting lost bed in the database
-  //     const booking = bookingFactory.arrived().build()
-  //     const conflictingLostBed = lostBedFactory.build()
-  //
-  //     const { premises, room } = setupBookingStateStubs(booking)
-  //     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
-  //
-  //     // When I visit the booking extension page
-  //     const page = BookingExtensionNewPage.visit(premises, room, booking)
-  //
-  //     // And I fill out the form with dates that conflict with an existing booking
-  //     const extension = extensionFactory.build()
-  //     const newExtension = newExtensionFactory.build({
-  //       ...extension,
-  //     })
-  //     cy.task('stubExtensionCreateConflictError', {
-  //       premisesId: premises.id,
-  //       bookingId: booking.id,
-  //       conflictingEntityId: conflictingLostBed.id,
-  //       conflictingEntityType: 'lost-bed',
-  //     })
-  //
-  //     page.completeForm(newExtension)
-  //
-  //     // Then I should see error messages for the conflict
-  //     page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
-  //   })
+  it('shows errors when the API returns a 409 conflict error', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is an arrived booking and a conflicting lost bed in the database
+    const booking = bookingFactory.arrived().build()
+    const conflictingLostBed = lostBedFactory.build()
+
+    const { premises, bedspace } = setupBookingStateStubs(booking)
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
+
+    // When I visit the booking extension page
+    const page = BookingExtensionNewPage.visit(premises, null, bedspace, booking)
+
+    // And I fill out the form with dates that conflict with an existing booking
+    const extension = extensionFactory.build()
+    const newExtension = newExtensionFactory.build({
+      ...extension,
+    })
+    cy.task('stubExtensionCreateConflictError', {
+      premisesId: premises.id,
+      bookingId: booking.id,
+      conflictingEntityId: conflictingLostBed.id,
+      conflictingEntityType: 'lost-bed',
+    })
+
+    page.completeForm(newExtension)
+
+    // Then I should see error messages for the conflict
+    page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
+  })
 
   it('navigates back from the booking extension page to the show booking page', () => {
     // Given I am signed in

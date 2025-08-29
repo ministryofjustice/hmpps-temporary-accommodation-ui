@@ -1,4 +1,4 @@
-import type { LostBed, NewLostBedCancellation, Premises, Room } from '@approved-premises/api'
+import type { Cas3Bedspace, LostBed, NewLostBedCancellation, Premises, Room } from '@approved-premises/api'
 
 import Page from '../../page'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -10,6 +10,7 @@ export default class LostBedCancelPage extends Page {
   constructor(
     private readonly premises: Premises,
     private readonly room: Room,
+    private readonly bedspace: Cas3Bedspace,
     private readonly lostBed: LostBed,
   ) {
     super('Cancel void booking')
@@ -17,9 +18,17 @@ export default class LostBedCancelPage extends Page {
     this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }
 
-  static visit(premises: Premises, room: Room, lostBed: LostBed): LostBedCancelPage {
-    cy.visit(paths.lostBeds.cancellations.new({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }))
-    return new LostBedCancelPage(premises, room, lostBed)
+  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedCancelPage {
+    if (room) {
+      cy.visit(
+        paths.lostBeds.cancellations.new({ premisesId: premises.id, bedspaceId: room.id, lostBedId: lostBed.id }),
+      )
+    } else {
+      cy.visit(
+        paths.lostBeds.cancellations.new({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }),
+      )
+    }
+    return new LostBedCancelPage(premises, room, bedspace, lostBed)
   }
 
   shouldShowBedspaceDetails(): void {

@@ -4,15 +4,15 @@ import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, LostBedService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/bedspaceService'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import {
+  cas3BedspaceFactory,
   lostBedCancellationFactory,
   lostBedFactory,
   newLostBedCancellationFactory,
   newLostBedFactory,
   premisesFactory,
   referenceDataFactory,
-  roomFactory,
   updateLostBedFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
@@ -37,7 +37,7 @@ jest.mock('../../../utils/placeUtils')
 describe('LostBedsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const lostBedId = 'lostBedId'
 
   let request: Request
@@ -62,14 +62,14 @@ describe('LostBedsController', () => {
     it('renders the form', async () => {
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
       }
 
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
 
       const requestHandler = lostBedsController.new()
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
@@ -77,11 +77,11 @@ describe('LostBedsController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premisesId)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premisesId, roomId)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/lost-beds/new', {
         premises,
-        room,
+        bedspace,
         errors: {},
         errorSummary: [],
       })
@@ -98,7 +98,7 @@ describe('LostBedsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
         }
 
         request.body = {
@@ -113,7 +113,7 @@ describe('LostBedsController', () => {
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Void created')
         expect(response.redirect).toHaveBeenCalledWith(
-          paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }),
+          paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed.id }),
         )
       })
 
@@ -127,7 +127,7 @@ describe('LostBedsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
         }
 
         await requestHandler(request, response, next)
@@ -136,7 +136,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.new({ premisesId, bedspaceId: roomId }),
+          paths.lostBeds.new({ premisesId, bedspaceId }),
         )
       })
 
@@ -158,12 +158,12 @@ describe('LostBedsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
         }
 
         await requestHandler(request, response, next)
 
-        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, bedspaceId, 'plural')
         expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
         expect(insertGenericError).toHaveBeenCalledWith(err, 'startDate', 'conflict')
         expect(insertGenericError).toHaveBeenCalledWith(err, 'endDate', 'conflict')
@@ -171,7 +171,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.new({ premisesId, bedspaceId: roomId }),
+          paths.lostBeds.new({ premisesId, bedspaceId }),
         )
       })
     })
@@ -179,18 +179,18 @@ describe('LostBedsController', () => {
     describe('show', () => {
       it('renders the template for viewing a lost bed', async () => {
         const premises = premisesFactory.build()
-        const room = roomFactory.build()
+        const bedspace = cas3BedspaceFactory.build()
         const lostBed = lostBedFactory.build()
         const mockActions = [{ classes: 'mock', href: '', text: 'mock' }]
 
         premisesService.getPremises.mockResolvedValue(premises)
-        bedspaceService.getRoom.mockResolvedValue(room)
+        bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         lostBedService.find.mockResolvedValue(lostBed)
         ;(lostBedActions as jest.MockedFn<typeof lostBedActions>).mockReturnValue(mockActions)
 
         request.params = {
           premisesId: premises.id,
-          roomId: room.id,
+          bedspaceId: bedspace.id,
           lostBedId: lostBed.id,
         }
 
@@ -199,7 +199,7 @@ describe('LostBedsController', () => {
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/lost-beds/show', {
           premises,
-          room,
+          bedspace,
           lostBed,
           actions: mockActions,
           allStatuses,
@@ -211,12 +211,12 @@ describe('LostBedsController', () => {
     describe('update', () => {
       it('updates a lostBed and redirects to the show lostBed page', async () => {
         const premises = premisesFactory.build()
-        const room = roomFactory.build()
+        const bedspace = cas3BedspaceFactory.build()
         const lostBed = lostBedFactory.build()
         const lostBedUpdate = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
 
         request.params.premisesId = premises.id
-        request.params.roomId = room.id
+        request.params.bedspaceId = bedspace.id
         request.params.lostBedId = lostBed.id
         request.body = {
           ...lostBedUpdate,
@@ -238,7 +238,7 @@ describe('LostBedsController', () => {
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Void booking updated')
         expect(response.redirect).toHaveBeenCalledWith(
-          paths.lostBeds.show({ premisesId: premises.id, bedspaceId: room.id, lostBedId: lostBed.id }),
+          paths.lostBeds.show({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }),
         )
       })
 
@@ -247,7 +247,7 @@ describe('LostBedsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           lostBedId,
         }
 
@@ -263,7 +263,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.edit({ premisesId, bedspaceId: roomId, lostBedId }),
+          paths.lostBeds.edit({ premisesId, bedspaceId, lostBedId }),
         )
       })
 
@@ -272,7 +272,7 @@ describe('LostBedsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           lostBedId,
         }
 
@@ -290,7 +290,7 @@ describe('LostBedsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, bedspaceId, 'plural')
         expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
         expect(insertGenericError).toHaveBeenCalledWith(err, 'startDate', 'conflict')
         expect(insertGenericError).toHaveBeenCalledWith(err, 'endDate', 'conflict')
@@ -298,7 +298,7 @@ describe('LostBedsController', () => {
           request,
           response,
           err,
-          paths.lostBeds.edit({ premisesId, bedspaceId: roomId, lostBedId }),
+          paths.lostBeds.edit({ premisesId, bedspaceId, lostBedId }),
         )
       })
     })
@@ -307,19 +307,19 @@ describe('LostBedsController', () => {
   describe('edit', () => {
     it('renders the template for updating a lost bed', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const lostBed = lostBedFactory.build()
       const updateLostBed = updateLostBedFactory.build({ ...lostBed, reason: lostBed.reason.id })
       const lostBedReasons = referenceDataFactory.lostBedReasons().buildList(2)
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       lostBedService.getUpdateLostBed.mockResolvedValue(updateLostBed)
       lostBedService.getReferenceData.mockResolvedValue(lostBedReasons)
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         lostBedId: lostBed.id,
       }
 
@@ -333,7 +333,7 @@ describe('LostBedsController', () => {
         errors: {},
         errorSummary: [],
         premises,
-        room,
+        bedspace,
         lostBedId: lostBed.id,
         ...updateLostBed,
         ...DateFormats.isoToDateAndTimeInputs(lostBed.startDate, 'startDate'),
@@ -345,16 +345,16 @@ describe('LostBedsController', () => {
   describe('newCancellation', () => {
     it('renders the template for cancelling a lost bed', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const lostBed = lostBedFactory.active().build()
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       lostBedService.find.mockResolvedValue(lostBed)
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         lostBedId: lostBed.id,
       }
 
@@ -367,7 +367,7 @@ describe('LostBedsController', () => {
         errors: {},
         errorSummary: [],
         premises,
-        room,
+        bedspace,
         lostBed,
         notes: lostBed.notes,
         allStatuses,
@@ -387,7 +387,7 @@ describe('LostBedsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         lostBedId: lostBed.id,
       }
 
@@ -401,7 +401,7 @@ describe('LostBedsController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Void booking cancelled')
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.lostBeds.show({ premisesId, bedspaceId: roomId, lostBedId: lostBed.id }),
+        paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed.id }),
       )
     })
 
@@ -415,7 +415,7 @@ describe('LostBedsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         lostBedId,
       }
 
@@ -425,7 +425,7 @@ describe('LostBedsController', () => {
         request,
         response,
         err,
-        paths.lostBeds.cancellations.new({ premisesId, bedspaceId: roomId, lostBedId }),
+        paths.lostBeds.cancellations.new({ premisesId, bedspaceId, lostBedId }),
       )
     })
   })

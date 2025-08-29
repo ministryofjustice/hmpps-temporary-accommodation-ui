@@ -79,7 +79,7 @@ export const controllers = (services: Services) => {
   const lostBedsController = new LostBedsController(
     services.lostBedService,
     services.premisesService,
-    services.bedspaceService,
+    services.v2.bedspaceService,
     services.assessmentsService,
   )
 

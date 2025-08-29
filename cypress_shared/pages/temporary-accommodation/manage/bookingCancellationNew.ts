@@ -1,4 +1,4 @@
-import type { Booking, Premises, Room } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -12,17 +12,33 @@ export default class BookingCancellationNewPage extends BookingCancellationEdita
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, booking: Booking) {
+  constructor(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking) {
     super('Cancel booking')
 
     this.bookingInfoComponent = new BookingInfoComponent(booking)
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
   }
 
-  static visit(premises: Premises, room: Room, booking: Booking): BookingCancellationNewPage {
-    cy.visit(paths.bookings.cancellations.new({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
-    return new BookingCancellationNewPage(premises, room, booking)
+  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking): BookingCancellationNewPage {
+    if (room) {
+      cy.visit(
+        paths.bookings.cancellations.new({
+          premisesId: premises.id,
+          bedspaceId: room.id,
+          bookingId: booking.id,
+        }),
+      )
+    } else {
+      cy.visit(
+        paths.bookings.cancellations.new({
+          premisesId: premises.id,
+          bedspaceId: bedspace.id,
+          bookingId: booking.id,
+        }),
+      )
+    }
+    return new BookingCancellationNewPage(premises, room, bedspace, booking)
   }
 
   shouldShowBookingDetails(): void {

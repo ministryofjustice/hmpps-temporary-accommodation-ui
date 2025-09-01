@@ -288,10 +288,20 @@ export default class BedspacesController {
       }
 
       try {
+        const allBedspaces = await this.bedspaceService.getBedspacesForPremises(callConfig, premisesId)
+        const onlineBedspaces = allBedspaces.bedspaces.filter(bedspace => bedspace.status === 'online')
+        const isLastOnlineBedspace = onlineBedspaces.length === 1 && onlineBedspaces[0].id === bedspaceId
+
         await this.bedspaceService.archiveBedspace(callConfig, premisesId, bedspaceId, endDate)
 
         const today = DateFormats.dateObjToIsoDate(new Date())
-        req.flash('success', `Bedspace ${endDate > today ? 'updated' : 'archived'}`)
+        const isArchived = endDate <= today
+        const action = isArchived ? 'archived' : 'updated'
+        const target = isLastOnlineBedspace ? 'Bedspace and property' : 'Bedspace'
+
+        const successMessage = `${target} ${action}`
+
+        req.flash('success', successMessage)
 
         return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {

@@ -924,7 +924,7 @@ describe('BedspacesController', () => {
   })
 
   describe('unarchiveSubmit', () => {
-    it('successfully unarchives a bedspace and redirects to show page', async () => {
+    it('successfully unarchives a bedspace and redirects to show page when not last archived bedspace', async () => {
       const params = { premisesId, bedspaceId }
 
       request = createMock<Request>({
@@ -937,11 +937,18 @@ describe('BedspacesController', () => {
         },
       })
 
+      const otherArchivedBedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      const bedspacesList = cas3BedspacesFactory.build({
+        bedspaces: [cas3BedspaceFactory.build({ id: bedspaceId, status: 'archived' }), otherArchivedBedspace],
+      })
+
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspacesList)
       bedspaceService.unarchiveBedspace.mockResolvedValue()
 
       const requestHandler = bedspacesController.unarchiveSubmit()
       await requestHandler(request, response, next)
 
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(
         callConfig,
         premisesId,
@@ -949,6 +956,79 @@ describe('BedspacesController', () => {
         expect.any(String),
       )
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('successfully unarchives the last archived bedspace and shows property message', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          unarchiveOption: 'today',
+        },
+      })
+
+      const bedspacesList = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'archived' }),
+          cas3BedspaceFactory.build({ status: 'online' }),
+        ],
+      })
+
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspacesList)
+      bedspaceService.unarchiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        expect.any(String),
+      )
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property online')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('successfully unarchives the last archived bedspace with future date and shows property updated message', async () => {
+      const params = { premisesId, bedspaceId }
+      const futureDate = '2025-12-01'
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          unarchiveOption: 'other',
+          'restartDate-day': '1',
+          'restartDate-month': '12',
+          'restartDate-year': '2025',
+        },
+      })
+
+      const bedspacesList = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'archived' }),
+          cas3BedspaceFactory.build({ status: 'online' }),
+        ],
+      })
+
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspacesList)
+      bedspaceService.unarchiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId, futureDate)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property updated')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
   })

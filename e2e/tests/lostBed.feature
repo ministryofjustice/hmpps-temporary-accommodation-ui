@@ -8,7 +8,7 @@ Feature: Manage Temporary Accommodation - Lost beds
     Scenario: Marking a bedspace as void
         Given I'm marking a bedspace as void
         And I create a void booking with all necessary details
-#        Then I should see a confirmation for my new void booking
+        Then I should see a confirmation for my new void booking
 
     Scenario: Showing void booking creation errors
         Given I'm marking a bedspace as void
@@ -27,7 +27,7 @@ Feature: Manage Temporary Accommodation - Lost beds
         Given I'm marking a bedspace as void
         And I create a void booking with all necessary details
         And I edit the void booking
-#        Then I should see confirmation for my updated void booking
+        Then I should see confirmation for my updated void booking
 
     Scenario: Showing void booking editing errors
         Given I'm marking a bedspace as void

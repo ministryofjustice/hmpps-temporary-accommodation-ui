@@ -14,7 +14,13 @@ Given("I edit the booking's turnaround time", () => {
       ...newTurnaround,
     })
 
-    const bookingTurnaroundNewPage = Page.verifyOnPage(BookingTurnaroundNewPage, this.premises, this.room, this.booking)
+    const bookingTurnaroundNewPage = Page.verifyOnPage(
+      BookingTurnaroundNewPage,
+      this.premises,
+      this.room,
+      null,
+      this.booking,
+    )
     bookingTurnaroundNewPage.shouldShowBookingDetails()
     bookingTurnaroundNewPage.completeForm(newTurnaround)
 

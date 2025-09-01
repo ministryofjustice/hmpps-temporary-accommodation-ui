@@ -104,7 +104,7 @@ Then('I should see confirmation for my updated void booking', () => {
 
     lostBedShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.reference)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
     bedspaceShowPage.shouldShowLostBedDetails(this.lostBed)
   })
 })

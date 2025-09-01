@@ -57,16 +57,33 @@ export default class PlaceHelper {
       this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
         results: [bedspaceSearchResultFactory.forBedspace(this.premises, this.room, null).build()],
       })
+      this.person = this.placeContext.assessment.application.person
+      this.booking = bookingFactory.build({
+        person: this.person,
+        bed: bedFactory.build({ id: room.beds[0].id }),
+      })
+      this.lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: room.beds[0].id,
+        })
+        .buildList(5)
     } else {
       this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
         results: [bedspaceSearchResultFactory.forBedspace(this.premises, null, this.cas3Bedspace).build()],
       })
+      this.person = this.placeContext.assessment.application.person
+      this.booking = bookingFactory.build({
+        person: this.person,
+        bed: bedFactory.build({ id: cas3Bedspace.id }),
+      })
+      this.lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: cas3Bedspace.id,
+        })
+        .buildList(5)
     }
-    this.person = this.placeContext.assessment.application.person
-    this.booking = bookingFactory.build({
-      person: this.person,
-      bed: bedFactory.build({ id: cas3Bedspace.id }),
-    })
     this.assessmentSummaries = [
       assessmentSummaryFactory.build({
         ...this.placeContext.assessment,
@@ -76,12 +93,6 @@ export default class PlaceHelper {
     ]
     this.timeline = timelineEventsFactory.build()
     this.bookings = [this.booking]
-    this.lostBeds = lostBedFactory
-      .active()
-      .params({
-        bedId: cas3Bedspace.id,
-      })
-      .buildList(5)
   }
 
   setupStubs() {

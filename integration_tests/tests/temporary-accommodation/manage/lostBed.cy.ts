@@ -6,6 +6,7 @@ import LostBedNewPage from '../../../../cypress_shared/pages/temporary-accommoda
 import LostBedShowPage from '../../../../cypress_shared/pages/temporary-accommodation/manage/lostBedShow'
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
+  bedFactory,
   bookingFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
@@ -30,10 +31,23 @@ context('Lost bed', () => {
     const premises = premisesFactory.active().build()
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the show bedspace page
     const bedspaceShow = BedspaceShowPage.visit(premises, null, bedspace)
@@ -46,34 +60,42 @@ context('Lost bed', () => {
     Page.verifyOnPage(LostBedNewPage, premises, null, bedspace)
   })
 
-  //   it('navigates to the show void bedspace page', () => {
-  //     // Given I am signed in
-  //     cy.signIn()
-  //
-  //     // And there is a premises, a room, and lost beds the database
-  //     const premises = premisesFactory.build()
-  //     const room = roomFactory.build()
-  //     const lostBeds = lostBedFactory
-  //       .active()
-  //       .params({
-  //         bedId: room.beds[0].id,
-  //       })
-  //       .buildList(5)
-  //
-  //     cy.task('stubSinglePremises', premises)
-  //     cy.task('stubSingleRoom', { premisesId: premises.id, room })
-  //     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
-  //     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: lostBeds[0] })
-  //
-  //     // When I visit the show bedspace page
-  //     const bedspaceShowPage = BedspaceShowPage.visit(premises, room)
-  //
-  //     // Add I click the lost bed link
-  //     bedspaceShowPage.clickLostBedLink(lostBeds[0])
-  //
-  //     // Then I navigate to the show lost bed page
-  //     Page.verifyOnPage(LostBedShowPage, premises, room, lostBeds[0])
-  //   })
+  it('navigates to the show void bedspace page', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and lost beds the database
+    const premises = premisesFactory.build()
+    const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
+    const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSinglePremisesV2', cas3Premises)
+    cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: lostBeds[0] })
+
+    // When I visit the show bedspace page
+    const bedspaceShowPage = BedspaceShowPage.visit(premises, null, bedspace)
+
+    // Add I click the lost bed link
+    bedspaceShowPage.clickLostBedLink(lostBeds[0])
+
+    // Then I navigate to the show lost bed page
+    Page.verifyOnPage(LostBedShowPage, premises, null, bedspace, lostBeds[0])
+  })
 
   it('allows me to create a void booking', () => {
     // Given I am signed in
@@ -204,10 +226,23 @@ context('Lost bed', () => {
     const premises = premisesFactory.build()
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the new lost bed page
     cy.task('stubLostBedReferenceData')
@@ -329,11 +364,24 @@ context('Lost bed', () => {
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
     const lostBed = lostBedFactory.active().build()
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace })
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the edit void booking page
     cy.task('stubLostBedReferenceData')

@@ -2,7 +2,8 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewTurnaround } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, PremisesService, TurnaroundService } from '../../../services'
+import { BookingService, PremisesService, TurnaroundService } from '../../../services'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import { generateTurnaroundConflictBespokeError } from '../../../utils/bookingUtils'
 import { parseNumber } from '../../../utils/formUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -24,17 +25,17 @@ export default class TurnaroundsController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspaceService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/turnarounds/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors,
         errorSummary,
@@ -47,7 +48,7 @@ export default class TurnaroundsController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newTurnaround: NewTurnaround = {
@@ -59,10 +60,10 @@ export default class TurnaroundsController {
         await this.turnaroundService.createTurnaround(callConfig, premisesId, bookingId, newTurnaround)
 
         req.flash('success', 'Turnaround time changed')
-        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
-          insertBespokeError(err, generateTurnaroundConflictBespokeError(err, premisesId, roomId))
+          insertBespokeError(err, generateTurnaroundConflictBespokeError(err, premisesId, bedspaceId))
           insertGenericError(err, 'workingDays', 'conflict')
         }
 
@@ -70,7 +71,7 @@ export default class TurnaroundsController {
           req,
           res,
           err,
-          paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId }),
+          paths.bookings.turnarounds.new({ premisesId, bedspaceId, bookingId }),
         )
       }
     }

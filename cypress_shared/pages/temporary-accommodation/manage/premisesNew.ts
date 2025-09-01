@@ -16,14 +16,4 @@ export default class PremisesNewPage extends PremisesEditablePage {
   completeForm(newPremises: NewPremises, localAuthorityName: string): void {
     super.completeEditableForm(newPremises, localAuthorityName)
   }
-
-  shouldPreselectProbationRegion(probationRegion: ProbationRegion): void {
-    cy.get('label')
-      .contains('What is the probation region?')
-      .siblings('select')
-      .children('option')
-      .should('have.length', 2)
-      .contains(exact(probationRegion.name))
-      .should('be.selected')
-  }
 }

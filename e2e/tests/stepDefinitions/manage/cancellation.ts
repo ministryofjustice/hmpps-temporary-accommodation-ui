@@ -111,7 +111,7 @@ Then('I should see the booking with the cancelled status', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.reference)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })
@@ -125,7 +125,7 @@ Then('I should see the booking with the edited cancellation details', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.reference)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })

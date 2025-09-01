@@ -4,6 +4,7 @@ import {
   Cas3Bedspace,
   Cas3BedspaceSearchResults,
   Cas3Premises,
+  LostBed,
   Person,
   TemporaryAccommodationPremises as Premises,
   Room,
@@ -11,10 +12,12 @@ import {
 import { PlaceContext } from '../../server/@types/ui'
 import {
   assessmentSummaryFactory,
+  bedFactory,
   bedspaceSearchFormParametersFactory,
   bedspaceSearchResultFactory,
   bedspaceSearchResultsFactory,
   bookingFactory,
+  lostBedFactory,
   newBookingFactory,
   timelineEventsFactory,
 } from '../../server/testutils/factories'
@@ -39,6 +42,10 @@ export default class PlaceHelper {
 
   private readonly timeline: TimeLineFactory
 
+  private readonly bookings: Array<Booking>
+
+  private readonly lostBeds: Array<LostBed>
+
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
     private readonly premises: Premises,
@@ -58,6 +65,7 @@ export default class PlaceHelper {
     this.person = this.placeContext.assessment.application.person
     this.booking = bookingFactory.build({
       person: this.person,
+      bed: bedFactory.build({ id: cas3Bedspace.id }),
     })
     this.assessmentSummaries = [
       assessmentSummaryFactory.build({
@@ -67,6 +75,13 @@ export default class PlaceHelper {
       ...assessmentSummaryFactory.buildList(5),
     ]
     this.timeline = timelineEventsFactory.build()
+    this.bookings = [this.booking]
+    this.lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
   }
 
   setupStubs() {
@@ -85,6 +100,8 @@ export default class PlaceHelper {
     cy.task('stubAssessments', { data: this.assessmentSummaries })
     cy.task('stubBookingCreate', { premisesId: this.premises.id, booking: this.booking })
     cy.task('stubBooking', { premisesId: this.premises.id, booking: this.booking })
+    cy.task('stubBookingsForPremisesId', { premisesId: this.premises.id, bookings: this.bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: this.premises.id, lostBeds: this.lostBeds })
   }
 
   startPlace() {

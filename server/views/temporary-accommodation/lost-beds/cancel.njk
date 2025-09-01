@@ -14,7 +14,7 @@
 {% block beforeContent %}
   {{ breadCrumb('Cancel a void booking', [
     {title: 'List of bedspaces', href: paths.premises.show({ premisesId: premises.id })},
-    {title: 'View bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
+    {title: 'View bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id })}
   ]) }}
 {% endblock %}
 
@@ -28,10 +28,10 @@
     }
   }) }}
 
-  {{ locationHeader({ premises: premises, room: room }) }}
+  {{ locationHeader({ premises: premises, room: bedspace }) }}
   {{ lostBedInfo(lostBed) }}
 
-  <form action="{{ paths.lostBeds.cancellations.create({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }) }}" method="post">
+  <form action="{{ paths.lostBeds.cancellations.create({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }) }}" method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}"/> 
     
     {{ formPageTextarea({

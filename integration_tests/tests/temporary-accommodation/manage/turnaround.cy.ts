@@ -5,7 +5,7 @@ import { setupBookingStateStubs } from '../../../../cypress_shared/utils/booking
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   bookingFactory,
-  //  lostBedFactory,
+  lostBedFactory,
   newTurnaroundFactory,
   turnaroundFactory,
 } from '../../../../server/testutils/factories'
@@ -92,37 +92,37 @@ context('Booking turnarounds', () => {
     page.shouldShowErrorMessagesForFields(['workingDays'])
   })
 
-  //   it('shows errors when the API returns a 409 conflict error', () => {
-  //     // Given I am signed in
-  //     cy.signIn()
-  //
-  //     // And there is a booking and a conflicting lost bed in the database
-  //     const booking = bookingFactory.departed().build()
-  //     const conflictingLostBed = lostBedFactory.build()
-  //
-  //     const { premises, room } = setupBookingStateStubs(booking)
-  //     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
-  //
-  //     // When I visit the change turnaround page
-  //     const page = BookingTurnaroundNewPage.visit(premises, room, booking)
-  //
-  //     // And I fill out the form with days that conflict with an existing booking
-  //     const turnaround = turnaroundFactory.build()
-  //     const newTurnaround = newTurnaroundFactory.build({
-  //       ...turnaround,
-  //     })
-  //     cy.task('stubTurnaroundCreateConflictError', {
-  //       premisesId: premises.id,
-  //       bookingId: booking.id,
-  //       conflictingEntityId: conflictingLostBed.id,
-  //       conflictingEntityType: 'lost-bed',
-  //     })
-  //
-  //     page.completeForm(newTurnaround)
-  //
-  //     // Then I should see error messages for the conflict
-  //     page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
-  //   })
+  it('shows errors when the API returns a 409 conflict error', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a booking and a conflicting lost bed in the database
+    const booking = bookingFactory.departed().build()
+    const conflictingLostBed = lostBedFactory.build()
+
+    const { premises, bedspace } = setupBookingStateStubs(booking)
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
+
+    // When I visit the change turnaround page
+    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
+
+    // And I fill out the form with days that conflict with an existing booking
+    const turnaround = turnaroundFactory.build()
+    const newTurnaround = newTurnaroundFactory.build({
+      ...turnaround,
+    })
+    cy.task('stubTurnaroundCreateConflictError', {
+      premisesId: premises.id,
+      bookingId: booking.id,
+      conflictingEntityId: conflictingLostBed.id,
+      conflictingEntityType: 'lost-bed',
+    })
+
+    page.completeForm(newTurnaround)
+
+    // Then I should see error messages for the conflict
+    page.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
+  })
 
   it('navigates back from the change turnaround page to the show booking page', () => {
     // Given I am signed in

@@ -304,59 +304,71 @@ context('Booking', () => {
     returnedBookingNewPage.shouldShowErrorMessagesForFields(['crn', 'arrivalDate', 'departureDate'])
   })
 
-  //   it('shows errors when the API returns a 409 Conflict with a void', () => {
-  //     // Given I am signed in
-  //     cy.signIn()
-  //
-  //     // And there is a premises, a room, and a conflicting lost bed in the database
-  //     const premises = premisesFactory.build()
-  //     const room = roomFactory.build()
-  //     const person = personFactory.build()
-  //     const conflictingLostBed = lostBedFactory.build()
-  //
-  //     cy.task('stubSinglePremises', premises)
-  //     cy.task('stubSingleRoom', { premisesId: premises.id, room })
-  //     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
-  //     cy.task('stubFindPerson', { person })
-  //
-  //     // And there are no assessments in the database
-  //     cy.task('stubAssessments', { data: [] })
-  //
-  //     // When I visit the new booking page
-  //     const bookingNewPage = BookingNewPage.visit(premises, room)
-  //
-  //     // And I fill out the form with dates that conflict with an existing booking
-  //     const booking = bookingFactory.build({
-  //       person,
-  //     })
-  //     const newBooking = newBookingFactory.build({
-  //       ...booking,
-  //       crn: booking.person.crn,
-  //     })
-  //
-  //     bookingNewPage.completeForm(newBooking)
-  //
-  //     // And I select no assessment
-  //     const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
-  //     bookingSelectAssessmentPage.clickSubmit()
-  //
-  //     // And I confirm the booking
-  //     const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, room, person)
-  //
-  //     cy.task('stubBookingCreateConflictError', {
-  //       premisesId: premises.id,
-  //       conflictingEntityId: conflictingLostBed.id,
-  //       conflictingEntityType: 'lost-bed',
-  //     })
-  //     bookingConfirmPage.clickSubmit()
-  //
-  //     // Then I should see error messages for the conflict
-  //     const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, room)
-  //
-  //     returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
-  //     returnedBookingNewPage.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
-  //   })
-  //
+  it('shows errors when the API returns a 409 Conflict with a void', () => {
+    // Given I am signed in
+    cy.signIn()
+
+    // And there is a premises, a room, and a conflicting lost bed in the database
+    const premises = premisesFactory.build()
+    const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
+    const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
+    const person = personFactory.build()
+    const conflictingLostBed = lostBedFactory.build()
+
+    cy.task('stubSinglePremises', premises)
+    cy.task('stubSinglePremisesV2', cas3Premises)
+    cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+    cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
+    cy.task('stubFindPerson', { person })
+    cy.task('stubAssessments', { data: [] })
+
+    // When I visit the new booking page
+    const bookingNewPage = BookingNewPage.visit(premises, null, bedspace)
+
+    // And I fill out the form with dates that conflict with an existing booking
+    const booking = bookingFactory.build({
+      person,
+    })
+    const newBooking = newBookingFactory.build({
+      ...booking,
+      crn: booking.person.crn,
+    })
+
+    bookingNewPage.completeForm(newBooking)
+
+    // And I select no assessment
+    const bookingSelectAssessmentPage = Page.verifyOnPage(BookingSelectAssessmentPage, [])
+    bookingSelectAssessmentPage.clickSubmit()
+
+    // And I confirm the booking
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, premises, null, bedspace, person)
+
+    cy.task('stubBookingCreateConflictError', {
+      premisesId: premises.id,
+      conflictingEntityId: conflictingLostBed.id,
+      conflictingEntityType: 'lost-bed',
+    })
+    bookingConfirmPage.clickSubmit()
+
+    // Then I should see error messages for the conflict
+    const returnedBookingNewPage = Page.verifyOnPage(BookingNewPage, premises, null, bedspace)
+
+    returnedBookingNewPage.shouldShowPrefilledBookingDetails(newBooking)
+    returnedBookingNewPage.shouldShowDateConflictErrorMessages(conflictingLostBed, 'lost-bed')
+  })
 
   it('shows errors when the API returns a 409 Conflict with the bedspace end date', () => {
     // Given I am signed in

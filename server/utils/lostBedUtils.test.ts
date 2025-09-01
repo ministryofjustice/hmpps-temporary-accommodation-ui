@@ -14,14 +14,14 @@ describe('lostBedUtils', () => {
     it('returns actions array when lost bed status is active', () => {
       const lostBed = lostBedFactory.active().build()
 
-      const result = lostBedActions('premisesId', 'roomId', lostBed)
+      const result = lostBedActions('premisesId', 'bedspaceId', lostBed)
       expect(result.length).toEqual(2)
     })
 
     it('returns null when lost bed status is cancelled', () => {
       const lostBed = lostBedFactory.build({ status: 'cancelled' })
 
-      const result = lostBedActions('premisesId', 'roomId', lostBed)
+      const result = lostBedActions('premisesId', 'bedspaceId', lostBed)
       expect(result).toEqual(null)
     })
   })

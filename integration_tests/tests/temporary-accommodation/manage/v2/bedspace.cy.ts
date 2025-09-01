@@ -9,7 +9,8 @@ import {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdateBedspaceFactory,
-  characteristicFactory, lostBedFactory,
+  characteristicFactory,
+  lostBedFactory,
 } from '../../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceNew'
 

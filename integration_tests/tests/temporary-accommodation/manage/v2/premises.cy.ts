@@ -19,7 +19,8 @@ import {
   cas3PremisesFactory,
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
-  cas3UpdatePremisesFactory, lostBedFactory,
+  cas3UpdatePremisesFactory,
+  lostBedFactory,
 } from '../../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
 import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'

@@ -2,7 +2,8 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewExtension } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, ExtensionService, PremisesService } from '../../../services'
+import { BookingService, ExtensionService, PremisesService } from '../../../services'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import { generateConflictBespokeError, getLatestExtension } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -24,17 +25,17 @@ export default class ExtensionsController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/extensions/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors,
         errorSummary,
@@ -48,7 +49,7 @@ export default class ExtensionsController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newExtension: NewExtension = {
@@ -60,10 +61,10 @@ export default class ExtensionsController {
         await this.extensionService.createExtension(callConfig, premisesId, bookingId, newExtension)
 
         req.flash('success', 'Booking departure date changed')
-        res.redirect(paths.bookings.show({ premisesId, bedspaceId: roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
-          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'singular'))
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'singular'))
           insertGenericError(err, 'newDepartureDate', 'conflict')
         }
 
@@ -71,7 +72,7 @@ export default class ExtensionsController {
           req,
           res,
           err,
-          paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId }),
+          paths.bookings.extensions.new({ premisesId, bedspaceId, bookingId }),
         )
       }
     }

@@ -19,7 +19,6 @@ import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-acco
 import BedspaceEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceEdit'
 import BedspaceArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceArchive'
 import BedspaceUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceUnarchive'
-import BedspaceCannotArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceCannotArchive'
 
 context('Bedspace', () => {
   beforeEach(() => {

@@ -19,11 +19,13 @@ import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
 import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
 import { DateFormats } from '../../../../utils/dateUtils'
+import { BookingService } from '../../../../services'
 
 export default class BedspacesController {
   constructor(
     private readonly premisesService: PremisesService,
     private readonly bedspaceService: BedspaceService,
+    private readonly bookingService: BookingService,
     private readonly assessmentService: AssessmentsService,
   ) {}
 
@@ -54,16 +56,23 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
 
-      const [premises, bedspace, placeContext] = await Promise.all([
+      const [premises, bedspace, listingEntries, placeContext] = await Promise.all([
         this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
-        await preservePlaceContext(req, res, this.assessmentService),
+        this.bookingService.getListingEntriesForBedspace(callConfig, premisesId, bedspaceId),
+        preservePlaceContext(req, res, this.assessmentService),
       ])
 
       const summary = this.bedspaceService.summaryList(bedspace)
       const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace, placeContext)
 
-      return res.render('temporary-accommodation/v2/bedspaces/show', { premises, bedspace, summary, actions })
+      return res.render('temporary-accommodation/v2/bedspaces/show', {
+        premises,
+        bedspace,
+        summary,
+        actions,
+        listingEntries,
+      })
     }
   }
 

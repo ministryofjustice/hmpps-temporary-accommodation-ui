@@ -11,6 +11,8 @@ import PremisesListPage from '../../../../../cypress_shared/pages/temporary-acco
 import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
 import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser'
 import {
+  bedFactory,
+  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewPremisesFactory,
@@ -18,6 +20,7 @@ import {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
+  lostBedFactory,
 } from '../../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
 import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'
@@ -1575,6 +1578,17 @@ context('Premises', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspaces[0].id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspaces[0].id,
+        })
+        .buildList(5)
       const bedspacesReference: Cas3ValidationResults = {
         items: [
           { entityId: bedspaces[0].id, entityReference: bedspaces[0].reference },
@@ -1586,6 +1600,8 @@ context('Premises', () => {
         premisesId: premises.id,
         bedspaces: cas3BedspacesFactory.build({ bedspaces }),
       })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
       cy.task('stubPremisesCanArchive', { premisesId: premises.id, bedspacesReference })
 
       // When I visit the show premises page

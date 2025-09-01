@@ -219,7 +219,7 @@ export const generateConflictBespokeError = (
 export const generateTurnaroundConflictBespokeError = (
   err: SanitisedError,
   premisesId: string,
-  roomId: string,
+  bedspaceId: string,
 ): BespokeError => {
   const { detail } = err.data as { detail: string }
   const { conflictingEntityId, conflictingEntityType } = parseConflictError(detail)
@@ -230,12 +230,12 @@ export const generateTurnaroundConflictBespokeError = (
     conflictingEntityType === 'lost-bed'
       ? `<a href="${paths.lostBeds.show({
           premisesId,
-          bedspaceId: roomId,
+          bedspaceId,
           lostBedId: conflictingEntityId,
         })}">existing void</a>`
       : `<a href="${paths.bookings.show({
           premisesId,
-          bedspaceId: roomId,
+          bedspaceId,
           bookingId: conflictingEntityId,
         })}">existing booking</a>`
 

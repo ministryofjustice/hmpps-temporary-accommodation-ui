@@ -46,6 +46,40 @@ export default class BookingService {
     return confirmedBooking
   }
 
+  async getListingEntriesForBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+  ): Promise<Array<ListingEntry>> {
+    const bookingClient = this.bookingClientFactory(callConfig)
+    const lostBedClient = this.lostBedClientFactory(callConfig)
+
+    const [premisesBookings, premisesLostBeds] = await Promise.all([
+      bookingClient.allBookingsForPremisesId(premisesId),
+      lostBedClient.allLostBedsForPremisesId(premisesId),
+    ])
+
+    const bookingEntries: Array<BookingListingEntry & { sortingValue: string }> = premisesBookings
+      .filter(booking => booking.bed.id === bedspaceId)
+      .map(booking => ({
+        body: booking,
+        type: 'booking' as const,
+        path: paths.bookings.show({ premisesId, bedspaceId, bookingId: booking.id }),
+        sortingValue: booking.arrivalDate,
+      }))
+
+    const lostBedEntries: Array<LostBedListingEntry & { sortingValue: string }> = premisesLostBeds
+      .filter(lostBed => lostBed.bedId === bedspaceId && lostBed.status === 'active')
+      .map(lostBed => ({
+        body: lostBed,
+        type: 'lost-bed' as const,
+        path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed.id }),
+        sortingValue: lostBed.startDate,
+      }))
+
+    return [...bookingEntries, ...lostBedEntries].sort((a, b) => a.sortingValue.localeCompare(b.sortingValue)).reverse()
+  }
+
   async getListingEntries(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<ListingEntry>> {
     const bookingClient = this.bookingClientFactory(callConfig)
     const bookings = await bookingClient.allBookingsForPremisesId(premisesId)

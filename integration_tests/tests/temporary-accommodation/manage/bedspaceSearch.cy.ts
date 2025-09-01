@@ -7,11 +7,14 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
+  bedFactory,
   bedspaceSearchFormParametersFactory,
   bedspaceSearchResultFactory,
   bedspaceSearchResultsFactory,
+  bookingFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
+  lostBedFactory,
   overlapFactory,
   personFactory,
   placeContextFactory,
@@ -167,6 +170,17 @@ context('Bedspace Search', () => {
     const premises = premisesFactory.build({ id: premisesId, name: 'Test premises' })
     const cas3Premises = cas3PremisesFactory.build({ id: premisesId, status: 'online', reference: 'Test premises' })
     const cas3Bedspace = cas3BedspaceFactory.build({ id: bedspaceId, reference: 'Test bedspace', status: 'online' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: cas3Bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
 
     const results = bedspaceSearchResultsFactory.build({
       results: [bedspaceSearchResultFactory.forBedspace(premises, null, cas3Bedspace).build()],
@@ -176,6 +190,8 @@ context('Bedspace Search', () => {
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: cas3Bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)

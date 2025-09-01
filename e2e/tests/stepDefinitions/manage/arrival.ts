@@ -52,7 +52,7 @@ Then('I should see the booking with the arrived status', () => {
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.reference)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })
@@ -76,7 +76,7 @@ When('I navigate to change the booking arrival', () => {
 
 When('I enter the change arrival data incorrectly', () => {
   cy.then(function _() {
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, null, this.booking)
     bookingArrivalPage.shouldShowBookingDetails()
     bookingArrivalPage.clearForm()
     bookingArrivalPage.clickSubmit()
@@ -85,7 +85,7 @@ When('I enter the change arrival data incorrectly', () => {
 
 Then('I should see a list of the problems encountered whilst changing the booking arrival', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, this.booking)
+    const page = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, null, this.booking)
     page.shouldShowErrorMessagesForFields(['arrivalDate'])
   })
 })
@@ -94,7 +94,7 @@ When('I enter change booking data correctly', () => {
   cy.then(function _() {
     const newArrival = newArrivalFactory.build()
 
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, null, this.booking)
     bookingArrivalPage.shouldShowBookingDetails()
     bookingArrivalPage.completeForm(newArrival)
 

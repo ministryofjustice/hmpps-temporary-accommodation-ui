@@ -11,6 +11,7 @@ import {
   bookingFactory,
   cas3BedspaceFactory,
   cas3PremisesFactory,
+  lostBedFactory,
   newBookingFactory,
   personFactory,
   premisesFactory,
@@ -31,9 +32,22 @@ context('Booking', () => {
 
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const cas3Bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: cas3Bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace: cas3Bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the show bedspace page
     const bedspaceShow = BedspaceShowPage.visit(premises, null, cas3Bedspace)
@@ -58,22 +72,28 @@ context('Booking', () => {
         bed: bedFactory.build({ id: cas3Bedspace.id }),
       })
       .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: cas3Premises.id, bedspace: cas3Bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
     cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
 
     // When I visit the show bedspace page
-    BedspaceShowPage.visit(premises, null, cas3Bedspace)
+    const bedspaceShowPage = BedspaceShowPage.visit(premises, null, cas3Bedspace)
 
-    // todo: add everything below back in once CAS-1924 delivered
     // Add I click the booking link
-    // bedspaceShowPage.clickBookingLink(bookings[0])
+    bedspaceShowPage.clickBookingLink(bookings[0])
 
     // Then I navigate to the booking page
-    // Page.verifyOnPage(BookingShowPage, premises, null, cas3Bedspace, bookings[0])
+    Page.verifyOnPage(BookingShowPage, premises, null, cas3Bedspace, bookings[0])
   })
 
   it('allows me to create a booking', () => {
@@ -469,10 +489,23 @@ context('Booking', () => {
     const premises = premisesFactory.build()
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const cas3Bedspace = cas3BedspaceFactory.build({ status: 'online' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: cas3Bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: cas3Bedspace })
     cy.task('stubSinglePremisesV2', cas3Premises)
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the new booking page
     const page = BookingNewPage.visit(premises, null, cas3Bedspace)
@@ -562,11 +595,18 @@ context('Booking', () => {
         bed: bedFactory.build({ id: cas3Bedspace.id }),
       })
       .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
 
     cy.task('stubSinglePremises', premises)
     cy.task('stubSinglePremisesV2', cas3Premises)
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: cas3Bedspace })
     cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
     cy.task('stubBooking', { premisesId: premises.id, booking: bookings[0] })
 
     // When I visit the show booking page

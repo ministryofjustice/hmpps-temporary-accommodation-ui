@@ -8,6 +8,7 @@ import BedspacesController from './bedspacesController'
 import {
   assessmentFactory,
   cas3BedspaceFactory,
+  cas3BedspacesFactory,
   cas3PremisesFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
@@ -621,7 +622,7 @@ describe('BedspacesController', () => {
   })
 
   describe('archiveSubmit', () => {
-    it('successfully archives a bedspace and redirects to show page', async () => {
+    it('successfully archives a bedspace and redirects to show page when not last bedspace', async () => {
       const params = { premisesId, bedspaceId }
 
       request = createMock<Request>({
@@ -634,11 +635,22 @@ describe('BedspacesController', () => {
         },
       })
 
+      const allBedspaces = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'online' }),
+          cas3BedspaceFactory.build({ id: 'other-bedspace', status: 'online' }),
+        ],
+        totalOnlineBedspaces: 2,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(allBedspaces)
       bedspaceService.archiveBedspace.mockResolvedValue()
 
       const requestHandler = bedspacesController.archiveSubmit()
       await requestHandler(request, response, next)
 
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.archiveBedspace).toHaveBeenCalledWith(
         callConfig,
         premisesId,
@@ -647,6 +659,45 @@ describe('BedspacesController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archived')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('successfully archives the last bedspace and redirects to show page with archived property message', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          archiveOption: 'today',
+        },
+      })
+
+      const allBedspaces = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'online' }),
+          cas3BedspaceFactory.build({ id: 'other-bedspace', status: 'archived' }),
+        ],
+        totalOnlineBedspaces: 1,
+        totalArchivedBedspaces: 1,
+        totalUpcomingBedspaces: 0,
+      })
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(allBedspaces)
+      bedspaceService.archiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.archiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.archiveBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/), // Today's date in ISO format
+      )
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property archived')
       expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
 

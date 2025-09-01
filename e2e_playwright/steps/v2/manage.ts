@@ -168,8 +168,12 @@ export const archiveBedspace = async (page: Page, property: Property, bedspace: 
   await archiveBedspacePage.clickSubmit()
 
   const showArchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
-  const isBannerMessageDisplayed = await showArchivedBedspacePage.isBannerMessageDisplayed('Bedspace archived')
-  expect(isBannerMessageDisplayed).toBe(true)
+  const isArchiveBedspaceOnlyMessageDisplayed =
+    await showArchivedBedspacePage.isBannerMessageDisplayed('Bedspace archived')
+  const isArchivedBedspaceAndPropertyMessageDisplayed = await showArchivedBedspacePage.isBannerMessageDisplayed(
+    'Bedspace and property archived',
+  )
+  expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
   await showArchivedBedspacePage.shouldShowBedspaceStatus('Archived')
 }
 

@@ -183,7 +183,10 @@ export const unarchiveBedspace = async (page: Page, property: Property, bedspace
   const unarchiveBedspacePage = await UnarchiveBedspacePage.initialise(page, bedspace.reference)
   await unarchiveBedspacePage.clickSubmit()
   const showUnarchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
-  const isBannerMessageDisplayed = await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace online')
-  expect(isBannerMessageDisplayed).toBe(true)
+  const isArchiveBedspaceOnlyMessageDisplayed =
+    await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace online')
+  const isArchivedBedspaceAndPropertyMessageDisplayed =
+    await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace and property online')
+  expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
   await showUnarchivedBedspacePage.shouldShowBedspaceStatus('Online')
 }

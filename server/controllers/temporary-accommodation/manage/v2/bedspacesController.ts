@@ -385,14 +385,24 @@ export default class BedspacesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.bedspaces.unarchive({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }))
       }
 
       try {
+        const allBedspaces = await this.bedspaceService.getBedspacesForPremises(callConfig, premisesId)
+        const archivedBedspaces = allBedspaces.bedspaces.filter(bedspace => bedspace.status === 'archived')
+        const isLastArchivedBedspace = archivedBedspaces.length === 1 && archivedBedspaces[0].id === bedspaceId
+
         await this.bedspaceService.unarchiveBedspace(callConfig, premisesId, bedspaceId, restartDate)
 
         const today = DateFormats.dateObjToIsoDate(new Date())
-        req.flash('success', `Bedspace ${restartDate > today ? 'updated' : 'online'}`)
+        const isOnline = restartDate <= today
+        const action = isOnline ? 'online' : 'updated'
+        const target = isLastArchivedBedspace ? 'Bedspace and property' : 'Bedspace'
+
+        const successMessage = `${target} ${action}`
+
+        req.flash('success', successMessage)
 
         return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {

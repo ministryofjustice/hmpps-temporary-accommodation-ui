@@ -10,7 +10,7 @@ export class ViewBedspacePage extends BasePage {
   }
 
   static async goto(page: Page, premisesId: string, bedspaceId: string) {
-    await page.goto(`/v2/properties/${premisesId}/bedspaces/${bedspaceId}`)
+    await page.goto(`/properties/${premisesId}/bedspaces/${bedspaceId}`)
   }
 
   async shouldShowPropertySummary(property: Property) {
@@ -57,6 +57,11 @@ export class ViewBedspacePage extends BasePage {
   async clickArchiveButton() {
     await this.page.getByRole('button').getByText('Actions').click()
     await this.page.getByText('Archive bedspace').click()
+  }
+
+  async clickUnarchiveButton() {
+    await this.page.getByRole('button').getByText('Actions').click()
+    await this.page.getByText('Make bedspace online').click()
   }
 
   async shouldShowBedspaceStatus(status: string) {

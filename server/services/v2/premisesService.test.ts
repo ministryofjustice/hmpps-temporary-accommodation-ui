@@ -1,8 +1,10 @@
 import { TextItem } from '@approved-premises/ui'
 import { Cas3PremisesArchiveAction } from '@approved-premises/api'
+import { createMock } from '@golevelup/ts-jest'
 import PremisesClient from '../../data/v2/premisesClient'
 import { CallConfig } from '../../data/restClient'
 import {
+  assessmentFactory,
   cas3ArchivePremisesFactory,
   cas3BedspacesReferenceFactory,
   cas3NewPremisesFactory,
@@ -14,19 +16,20 @@ import {
   characteristicFactory,
   localAuthorityFactory,
   pduFactory,
+  placeContextFactory,
   probationRegionFactory,
 } from '../../testutils/factories'
 import { statusTag } from '../../utils/premisesUtils'
 import PremisesService from './premisesService'
 import { ReferenceDataClient } from '../../data'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
+import { AssessmentsService } from '../index'
 
 jest.mock('../../data/v2/premisesClient')
 jest.mock('../../data/referenceDataClient')
 jest.mock('../../utils/premisesUtils')
 jest.mock('../../utils/viewUtils')
 jest.mock('../../utils/characteristicUtils')
-jest.mock('../../utils/placeUtils')
 
 describe('PremisesService', () => {
   const premisesClient = new PremisesClient(null) as jest.Mocked<PremisesClient>
@@ -34,13 +37,18 @@ describe('PremisesService', () => {
   const premisesClientFactory = jest.fn()
   const referenceDataClientFactory = jest.fn()
   const service = new PremisesService(premisesClientFactory, referenceDataClientFactory)
+  const assessmentService = createMock<AssessmentsService>({})
+
   const callConfig = { token: 'some-token', probationRegion: probationRegionFactory.build() } as CallConfig
   const premisesId = 'premises-id'
+  const assessment = assessmentFactory.build({ status: 'ready_to_place' })
+  const placeContext = placeContextFactory.build({ assessment })
 
   beforeEach(() => {
     jest.resetAllMocks()
     premisesClientFactory.mockReturnValue(premisesClient)
     referenceDataClientFactory.mockReturnValue(referenceDataClient)
+    assessmentService.findAssessment.mockResolvedValue(assessment)
   })
 
   describe('createPremises', () => {
@@ -147,8 +155,7 @@ describe('PremisesService', () => {
     ])('returns table view of the premises for Temporary Accommodation', (searchResults, expectedResults) => {
       const premises = cas3PremisesSearchResultsFactory.build({ results: searchResults })
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
-
-      const rows = service.tableRows(premises)
+      const rows = service.tableRows(premises, placeContext)
 
       const expectedRows = expectedResults.map(prem => {
         const address = [prem.addressLine1, prem.addressLine2, prem.town, prem.postcode]
@@ -157,12 +164,12 @@ describe('PremisesService', () => {
 
         const bedspaces =
           prem.bedspaces.length === 0
-            ? `No bedspaces<br /><a href="/v2/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
+            ? `No bedspaces<br /><a href="/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
             : prem.bedspaces
                 .map(bed => {
                   const archivedTag =
                     bed.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
-                  return `<a href="/v2/properties/${prem.id}/bedspaces/${bed.id}">${bed.reference}</a>${archivedTag}`
+                  return `<a href="/properties/${prem.id}/bedspaces/${bed.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">${bed.reference}</a>${archivedTag}`
                 })
                 .join('<br />')
 
@@ -171,7 +178,7 @@ describe('PremisesService', () => {
           { html: bedspaces },
           { text: prem.pdu },
           {
-            html: `<a href="/v2/properties/${prem.id}">Manage<span class="govuk-visually-hidden"> property at ${prem.addressLine1}, ${prem.postcode}</span></a>`,
+            html: `<a href="/properties/${prem.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">Manage<span class="govuk-visually-hidden"> property at ${prem.addressLine1}, ${prem.postcode}</span></a>`,
           },
         ]
       })
@@ -192,13 +199,13 @@ describe('PremisesService', () => {
       const premises = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
       ;(statusTag as jest.MockedFunction<typeof statusTag>).mockImplementation(status => `<strong>${status}</strong>`)
 
-      const rows = service.tableRows(premises, 'la')
+      const rows = service.tableRows(premises, placeContext, 'la')
 
       const address = [searchResult.addressLine1, searchResult.addressLine2, searchResult.town, searchResult.postcode]
         .filter(s => s !== undefined && s !== '')
         .join('<br />')
 
-      const bedspaces = `No bedspaces<br /><a href="/v2/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
+      const bedspaces = `No bedspaces<br /><a href="/properties/${searchResult.id}/bedspaces/new">Add a bedspace</a>`
 
       expect(rows).toEqual([
         [
@@ -206,7 +213,7 @@ describe('PremisesService', () => {
           { html: bedspaces },
           { text: searchResult.localAuthorityAreaName },
           {
-            html: `<a href="/v2/properties/${searchResult.id}">Manage<span class="govuk-visually-hidden"> property at ${searchResult.addressLine1}, ${searchResult.postcode}</span></a>`,
+            html: `<a href="/properties/${searchResult.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">Manage<span class="govuk-visually-hidden"> property at ${searchResult.addressLine1}, ${searchResult.postcode}</span></a>`,
           },
         ],
       ])
@@ -239,7 +246,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress)
+      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress, placeContext)
 
       expect(result).toEqual({
         ...searchResults,
@@ -261,7 +268,12 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress, 'archived')
+      const result = await service.searchDataAndGenerateTableRows(
+        callConfig,
+        postcodeOrAddress,
+        placeContext,
+        'archived',
+      )
 
       expect(result).toEqual({
         ...searchResults,
@@ -283,7 +295,7 @@ describe('PremisesService', () => {
 
       premisesClient.search.mockResolvedValue(searchResults)
 
-      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress)
+      const result = await service.searchDataAndGenerateTableRows(callConfig, postcodeOrAddress, placeContext)
 
       expect(result).toEqual({
         ...searchResults,
@@ -530,7 +542,7 @@ describe('PremisesService', () => {
         expect(archiveRow.value.html).not.toContain('<details class="govuk-details">')
         expect(archiveRow.value.html).not.toContain('Full history')
         expect(archiveRow.value.html).toContain('Online date')
-        expect(archiveRow.value.html).toContain('Archived date')
+        expect(archiveRow.value.html).toContain('Archive date')
       } else {
         throw new Error('No html property found in archiveRow.value')
       }

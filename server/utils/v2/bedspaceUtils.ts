@@ -1,10 +1,16 @@
 import { Cas3Bedspace, Cas3Premises } from '@approved-premises/api'
-import { PageHeadingBarItem } from '@approved-premises/ui'
+import { BedspaceStatus, PageHeadingBarItem, PlaceContext } from '@approved-premises/ui'
 import paths from '../../paths/temporary-accommodation/manage'
+import { addPlaceContext } from '../placeUtils'
+import { dateIsInFuture } from '../dateUtils'
 
-export function bedspaceActions(premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> {
+export function bedspaceActions(
+  premises: Cas3Premises,
+  bedspace: Cas3Bedspace,
+  placeContext: PlaceContext,
+): Array<PageHeadingBarItem> {
   return bedspace.status === 'online'
-    ? onlineBedspaceActions(premises, bedspace)
+    ? onlineBedspaceActions(premises, bedspace, placeContext)
     : archivedBedspaceActions(premises, bedspace)
 }
 
@@ -14,55 +20,69 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   if (bedspace.startDate && new Date(bedspace.startDate) > new Date()) {
     actions.push({
       text: 'Cancel scheduled bedspace online date',
-      href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   } else {
     actions.push({
       text: 'Make bedspace online',
-      href: '#',
+      href: paths.premises.bedspaces.unarchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   }
 
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
     classes: 'govuk-button--secondary',
   })
   return actions
 }
 
-const onlineBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace): Array<PageHeadingBarItem> => {
+const onlineBedspaceActions = (
+  premises: Cas3Premises,
+  bedspace: Cas3Bedspace,
+  placeContext: PlaceContext,
+): Array<PageHeadingBarItem> => {
   const actions: Array<PageHeadingBarItem> = [
     {
       text: 'Book bedspace',
-      href: paths.bookings.new({ premisesId: premises.id, roomId: bedspace.id }),
+      href: addPlaceContext(paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }), placeContext),
       classes: 'govuk-button--secondary',
     },
     {
       text: 'Void bedspace',
-      href: paths.lostBeds.new({ premisesId: premises.id, roomId: bedspace.id }),
+      href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     },
   ]
   if (bedspace.endDate) {
     actions.push({
       text: 'Cancel scheduled bedspace archive',
-      href: paths.premises.v2.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   } else {
     actions.push({
       text: 'Archive bedspace',
-      href: paths.premises.v2.bedspaces.archive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+      href: paths.premises.bedspaces.canArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
       classes: 'govuk-button--secondary',
     })
   }
   actions.push({
     text: 'Edit bedspace details',
-    href: paths.premises.v2.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    href: paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }),
     classes: 'govuk-button--secondary',
   })
   return actions
+}
+
+export function bedspaceStatus(bedspace: Cas3Bedspace): BedspaceStatus {
+  if (bedspace.endDate) {
+    if (!dateIsInFuture(bedspace.endDate)) {
+      return 'archived'
+    }
+  }
+
+  return 'online'
 }

@@ -1,8 +1,10 @@
 import { Request, RequestHandler, Response } from 'express'
 import { PageHeadingBarItem } from '@approved-premises/ui'
 import type { Cas3NewBedspace, Cas3UpdateBedspace } from '@approved-premises/api'
+import AssessmentsService from '../../../../services/assessmentsService'
 import extractCallConfig from '../../../../utils/restUtils'
 import BedspaceService from '../../../../services/v2/bedspaceService'
+import { preservePlaceContext } from '../../../../utils/placeUtils'
 
 import paths from '../../../../paths/temporary-accommodation/manage'
 import PremisesService from '../../../../services/v2/premisesService'
@@ -17,11 +19,14 @@ import { setDefaultStartDate } from '../../../../utils/bedspaceUtils'
 import { bedspaceActions } from '../../../../utils/v2/bedspaceUtils'
 import { isPremiseScheduledToBeArchived } from '../../../../utils/v2/premisesUtils'
 import { DateFormats } from '../../../../utils/dateUtils'
+import { BookingService } from '../../../../services'
 
 export default class BedspacesController {
   constructor(
     private readonly premisesService: PremisesService,
     private readonly bedspaceService: BedspaceService,
+    private readonly bookingService: BookingService,
+    private readonly assessmentService: AssessmentsService,
   ) {}
 
   new(): RequestHandler {
@@ -51,15 +56,23 @@ export default class BedspacesController {
       const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
 
-      const [premises, bedspace] = await Promise.all([
+      const [premises, bedspace, listingEntries, placeContext] = await Promise.all([
         this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+        this.bookingService.getListingEntries(callConfig, premisesId, bedspaceId),
+        preservePlaceContext(req, res, this.assessmentService),
       ])
 
       const summary = this.bedspaceService.summaryList(bedspace)
-      const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace)
+      const actions: Array<PageHeadingBarItem> = bedspaceActions(premises, bedspace, placeContext)
 
-      return res.render('temporary-accommodation/v2/bedspaces/show', { premises, bedspace, summary, actions })
+      return res.render('temporary-accommodation/v2/bedspaces/show', {
+        premises,
+        bedspace,
+        summary,
+        actions,
+        listingEntries,
+      })
     }
   }
 
@@ -79,9 +92,9 @@ export default class BedspacesController {
         const bedspace = await this.bedspaceService.createBedspace(callConfig, premisesId, newBedspace)
 
         req.flash('success', 'Bedspace added')
-        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.new({ premisesId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.new({ premisesId }))
       }
     }
   }
@@ -137,9 +150,9 @@ export default class BedspacesController {
         const bedspace = await this.bedspaceService.updateBedspace(callConfig, premisesId, bedspaceId, updatedBedspace)
 
         req.flash('success', 'Bedspace edited')
-        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.premises.bedspaces.edit({ premisesId, bedspaceId }))
       }
     }
   }
@@ -155,13 +168,13 @@ export default class BedspacesController {
           req.flash('success', 'Bedspace archive cancelled')
         }
 
-        res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+        res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+          paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
         )
       }
     }
@@ -190,6 +203,50 @@ export default class BedspacesController {
         scheduledForArchive,
         errors,
         errorSummary,
+      })
+    }
+  }
+
+  canArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      try {
+        const canArchiveResponse = await this.bedspaceService.canArchiveBedspace(callConfig, premisesId, bedspaceId)
+
+        // If response has a blocking date, redirect to cannot-archive page
+        if (canArchiveResponse.date) {
+          return res.redirect(paths.premises.bedspaces.cannotArchive({ premisesId, bedspaceId }))
+        }
+
+        // If no blocking date, proceed to archive page
+        return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
+      } catch (err) {
+        // Handle any errors by redirecting back to bedspace details
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      }
+    }
+  }
+
+  cannotArchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const [bedspace, premises, canArchiveResponse] = await Promise.all([
+        this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
+        this.premisesService.getSinglePremises(callConfig, premisesId),
+        this.bedspaceService.canArchiveBedspace(callConfig, premisesId, bedspaceId).catch((): null => null),
+      ])
+
+      const blockingDate = canArchiveResponse?.date ? DateFormats.isoDateToUIDate(canArchiveResponse.date) : null
+
+      return res.render('temporary-accommodation/v2/bedspaces/cannot-archive', {
+        bedspace,
+        premises,
+        blockingDate,
+        params: req.params,
       })
     }
   }
@@ -236,16 +293,26 @@ export default class BedspacesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }))
+        return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
       }
 
       try {
+        const allBedspaces = await this.bedspaceService.getBedspacesForPremises(callConfig, premisesId)
+        const onlineBedspaces = allBedspaces.bedspaces.filter(bedspace => bedspace.status === 'online')
+        const isLastOnlineBedspace = onlineBedspaces.length === 1 && onlineBedspaces[0].id === bedspaceId
+
         await this.bedspaceService.archiveBedspace(callConfig, premisesId, bedspaceId, endDate)
 
         const today = DateFormats.dateObjToIsoDate(new Date())
-        req.flash('success', `Bedspace ${endDate > today ? 'updated' : 'archived'}`)
+        const isArchived = endDate <= today
+        const action = isArchived ? 'archived' : 'updated'
+        const target = isLastOnlineBedspace ? 'Bedspace and property' : 'Bedspace'
 
-        return res.redirect(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+        const successMessage = `${target} ${action}`
+
+        req.flash('success', successMessage)
+
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
       } catch (err) {
         const earliestDateTransform = (params: InvalidParams) => ({
           earliestDate: DateFormats.isoDateToUIDate(params.value),
@@ -268,9 +335,83 @@ export default class BedspacesController {
           req,
           res,
           err,
-          paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+          paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
           'bedspaceArchive',
           mergeVariables,
+        )
+      }
+    }
+  }
+
+  unarchive(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+
+      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
+      const unarchiveOption = userInput.unarchiveOption || 'today'
+
+      return res.render('temporary-accommodation/v2/bedspaces/unarchive', {
+        bedspace,
+        params: req.params,
+        errors,
+        errorSummary,
+        ...userInput,
+        unarchiveOption,
+      })
+    }
+  }
+
+  unarchiveSubmit(): RequestHandler {
+    return async (req: Request, res: Response) => {
+      const callConfig = extractCallConfig(req)
+      const { premisesId, bedspaceId } = req.params
+      const { unarchiveOption } = req.body
+
+      const errors: Record<string, string> = {}
+
+      let restartDate: string | undefined
+
+      if (unarchiveOption === 'today') {
+        restartDate = DateFormats.dateObjToIsoDate(new Date())
+      } else if (unarchiveOption === 'other') {
+        const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'restartDate')
+        restartDate = parsedDate.restartDate
+      } else {
+        errors.unarchiveOption = 'Select a date for the bedspace to go online'
+      }
+
+      if (Object.keys(errors).length > 0) {
+        req.flash('errors', errors)
+        req.flash('userInput', req.body)
+        return res.redirect(paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }))
+      }
+
+      try {
+        const allBedspaces = await this.bedspaceService.getBedspacesForPremises(callConfig, premisesId)
+        const archivedBedspaces = allBedspaces.bedspaces.filter(bedspace => bedspace.status === 'archived')
+        const isLastArchivedBedspace = archivedBedspaces.length === 1 && archivedBedspaces[0].id === bedspaceId
+
+        await this.bedspaceService.unarchiveBedspace(callConfig, premisesId, bedspaceId, restartDate)
+
+        const today = DateFormats.dateObjToIsoDate(new Date())
+        const isOnline = restartDate <= today
+        const action = isOnline ? 'online' : 'updated'
+        const target = isLastArchivedBedspace ? 'Bedspace and property' : 'Bedspace'
+
+        const successMessage = `${target} ${action}`
+
+        req.flash('success', successMessage)
+
+        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+      } catch (err) {
+        return catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
+          'bedspaceUnarchive',
         )
       }
     }

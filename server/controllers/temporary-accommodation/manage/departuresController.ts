@@ -1,7 +1,8 @@
 import type { Request, RequestHandler, Response } from 'express'
 import type { Cas3NewDeparture } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
+import { BookingService, DepartureService, PremisesService } from '../../../services'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput, insertGenericError } from '../../../utils/validation'
@@ -18,12 +19,12 @@ export default class DeparturesController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       const { departureReasons: allDepartureReasons, moveOnCategories: allMoveOnCategories } =
@@ -31,7 +32,7 @@ export default class DeparturesController {
 
       return res.render('temporary-accommodation/departures/new', {
         premises,
-        room,
+        bedspace,
         booking,
         allDepartureReasons,
         allMoveOnCategories,
@@ -45,7 +46,7 @@ export default class DeparturesController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newDeparture: Cas3NewDeparture = {
@@ -68,9 +69,14 @@ export default class DeparturesController {
             ? 'You no longer need to update NDelius with this change.'
             : 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.departures.new({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
+        )
       }
     }
   }
@@ -78,12 +84,12 @@ export default class DeparturesController {
   edit(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       const { departureReasons: allDepartureReasons, moveOnCategories: allMoveOnCategories } =
@@ -91,7 +97,7 @@ export default class DeparturesController {
 
       return res.render('temporary-accommodation/departures/edit', {
         premises,
-        room,
+        bedspace,
         booking,
         allDepartureReasons,
         allMoveOnCategories,
@@ -108,7 +114,7 @@ export default class DeparturesController {
 
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newDeparture: Cas3NewDeparture = {
@@ -120,13 +126,13 @@ export default class DeparturesController {
         await this.departureService.createDeparture(callConfig, premisesId, bookingId, newDeparture)
 
         req.flash('success', 'Departure details changed')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId }),
         )
       }
     }

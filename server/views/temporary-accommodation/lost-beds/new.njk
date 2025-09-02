@@ -8,9 +8,9 @@
 
 {% block beforeContent %}
   {{ breadCrumb('Record void bedspace', [
-    {title: 'List of properties', href: paths.premises.index()},
+    {title: 'List of properties', href: paths.premises.online()},
     {title: 'View a property', href: paths.premises.show({ premisesId: premises.id })},
-    {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, roomId: room.id })}
+    {title: 'View a bedspace', href: paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id })}
   ]) }}
 {% endblock %}
 
@@ -21,12 +21,12 @@
     
   <h1 class="govuk-heading-l">Void a bedspace</h1>
 
-  {{ locationHeader({ premises: premises, room: room }) }}
+  {{ locationHeader({ premises: premises, room: bedspace }) }}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.lostBeds.create({ premisesId: premises.id, roomId: room.id }) }}" method="post">
+            <form action="{{ paths.lostBeds.create({ premisesId: premises.id, bedspaceId: bedspace.id }) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
-                <input type="hidden" name="bedId" value="{{ room.beds[0].id }}"/> {% include "./_editable.njk" %}
+                <input type="hidden" name="bedId" value="{{ bedspace.id }}"/> {% include "./_editable.njk" %}
             </form>
         </div>
     </div>

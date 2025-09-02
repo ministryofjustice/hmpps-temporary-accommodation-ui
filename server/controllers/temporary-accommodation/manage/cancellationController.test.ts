@@ -3,17 +3,18 @@ import type { NextFunction, Request, Response } from 'express'
 import { CancellationsController } from '.'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
+import { BookingService, CancellationService, PremisesService } from '../../../services'
 import {
   bookingFactory,
   cancellationFactory,
+  cas3BedspaceFactory,
   newCancellationFactory,
   premisesFactory,
-  roomFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
+import BedspaceService from '../../../services/v2/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -21,7 +22,7 @@ jest.mock('../../../utils/restUtils')
 describe('CancellationsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const bookingId = 'bookingId'
 
   let request: Request
@@ -49,17 +50,17 @@ describe('CancellationsController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       cancellationService.getReferenceData.mockResolvedValue({ cancellationReasons: [] })
@@ -70,14 +71,14 @@ describe('CancellationsController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(cancellationService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/cancellations/new', {
         premises,
-        room,
+        bedspace,
         booking,
         allCancellationReasons: [],
         errors: {},
@@ -98,7 +99,7 @@ describe('CancellationsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -118,7 +119,7 @@ describe('CancellationsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Booking cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -132,7 +133,7 @@ describe('CancellationsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -151,7 +152,7 @@ describe('CancellationsController', () => {
         request,
         response,
         err,
-        paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+        paths.bookings.cancellations.new({ premisesId, bedspaceId, bookingId }),
         'bookingCancellation',
       )
     })
@@ -160,17 +161,17 @@ describe('CancellationsController', () => {
   describe('edit', () => {
     it('renders the form', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.cancelled().build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       cancellationService.getReferenceData.mockResolvedValue({ cancellationReasons: [] })
@@ -181,14 +182,14 @@ describe('CancellationsController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(cancellationService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/cancellations/edit', {
         premises,
-        room,
+        bedspace,
         booking,
         allCancellationReasons: [],
         errors: {},
@@ -212,7 +213,7 @@ describe('CancellationsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -232,7 +233,7 @@ describe('CancellationsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Cancelled booking updated')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -246,7 +247,7 @@ describe('CancellationsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -265,7 +266,7 @@ describe('CancellationsController', () => {
         request,
         response,
         err,
-        paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
+        paths.bookings.cancellations.edit({ premisesId, bedspaceId, bookingId }),
         'bookingCancellation',
       )
     })

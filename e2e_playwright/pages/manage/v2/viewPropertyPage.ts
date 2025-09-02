@@ -10,7 +10,7 @@ export class ViewPropertyPage extends BasePage {
   }
 
   static async goto(page: Page, premisesId: string) {
-    await page.goto(`/v2/properties/${premisesId}`)
+    await page.goto(`/properties/${premisesId}`)
   }
 
   async shouldShowPropertyDetails(property: Property) {
@@ -65,5 +65,25 @@ export class ViewPropertyPage extends BasePage {
 
   async shouldShowPropertyStatus(status: string) {
     await expect(this.getRowTextByLabel('Property status')).toContainText(status)
+  }
+
+  async shouldShowArchiveDates(...dates: Array<Date>) {
+    await Promise.all(
+      dates.map(async date => {
+        await expect(this.getRowTextByLabel('Archive history')).toContainText(
+          `Archive date ${DateFormats.dateObjtoUIDate(date)}`,
+        )
+      }),
+    )
+  }
+
+  async shouldShowOnlineDates(...dates: Array<Date>) {
+    await Promise.all(
+      dates.map(async date => {
+        await expect(this.getRowTextByLabel('Archive history')).toContainText(
+          `Online date ${DateFormats.dateObjtoUIDate(date)}`,
+        )
+      }),
+    )
   }
 }

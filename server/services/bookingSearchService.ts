@@ -35,7 +35,7 @@ export default class BookingSearchService {
           this.htmlValue(
             `<a href="${paths.bookings.show({
               premisesId: summary.premises.id,
-              roomId: summary.room.id,
+              bedspaceId: summary.bed.id,
               bookingId: summary.booking.id,
             })}">View<span class="govuk-visually-hidden"> booking for person with CRN ${summary.person.crn}</span></a>`,
           ),

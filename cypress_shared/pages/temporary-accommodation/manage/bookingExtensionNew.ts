@@ -1,4 +1,4 @@
-import type { Booking, LostBed, NewExtension, Premises, Room } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, LostBed, NewExtension, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { getLatestExtension } from '../../../../server/utils/bookingUtils'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
@@ -19,19 +19,26 @@ export default class BookingExtensionNewPage extends Page {
   constructor(
     premises: Premises,
     room: Room,
+    bedspace: Cas3Bedspace,
     private readonly booking: Booking,
   ) {
     super('Extend or shorten booking')
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, 'booking')
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, null, 'booking')
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, room: Room, booking: Booking): BookingExtensionNewPage {
-    cy.visit(paths.bookings.extensions.new({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
-    return new BookingExtensionNewPage(premises, room, booking)
+  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking): BookingExtensionNewPage {
+    if (room) {
+      cy.visit(paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: room.id, bookingId: booking.id }))
+    } else {
+      cy.visit(
+        paths.bookings.extensions.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
+    }
+    return new BookingExtensionNewPage(premises, room, bedspace, booking)
   }
 
   shouldShowBookingDetails(): void {

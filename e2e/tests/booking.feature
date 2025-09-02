@@ -27,7 +27,7 @@ Feature: Manage Temporary Accommodation - Booking
         Then I should see the booking with the edited cancellation details
         And I should see previous booking states in the booking history
 
-    Scenario: Creating a booking, confirming, marking as arrived, extending, and marking as departed
+   Scenario: Creating a booking, confirming, marking as arrived, extending, and marking as departed
         Given I'm creating a booking
         And I create a booking with all necessary details
         Then I should see a confirmation for my new booking

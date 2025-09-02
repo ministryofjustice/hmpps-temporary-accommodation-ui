@@ -7,7 +7,7 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
     {
       text: 'Edit property details',
       classes: 'govuk-button--secondary',
-      href: paths.premises.v2.edit({ premisesId: premises.id }),
+      href: paths.premises.edit({ premisesId: premises.id }),
     },
   ]
 
@@ -15,19 +15,19 @@ export const premisesActions = (premises: Cas3Premises): Array<PageHeadingBarIte
     actions.push({
       text: 'Add a bedspace',
       classes: 'govuk-button--secondary',
-      href: paths.premises.v2.bedspaces.new({ premisesId: premises.id }),
+      href: paths.premises.bedspaces.new({ premisesId: premises.id }),
     })
 
     actions.push({
       text: 'Archive property',
       classes: 'govuk-button--secondary',
-      href: paths.premises.v2.archive({ premisesId: premises.id }),
+      href: paths.premises.archive({ premisesId: premises.id }),
     })
   } else if (premises.status === 'archived') {
     actions.push({
       text: 'Make property online',
       classes: 'govuk-button--secondary',
-      href: paths.premises.v2.unarchive({ premisesId: premises.id }),
+      href: paths.premises.unarchive({ premisesId: premises.id }),
     })
   }
 

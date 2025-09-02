@@ -1,6 +1,7 @@
 import type { Premises, PropertyStatus } from '@approved-premises/api'
-import { PageHeadingBarItem, PremisesShowTabs, type SubNavObj } from '../@types/ui'
+import { PageHeadingBarItem, PlaceContext, PremisesShowTabs, type SubNavObj } from '../@types/ui'
 import paths from '../paths/temporary-accommodation/manage'
+import { addPlaceContext } from './placeUtils'
 
 type StatusInfo = { name: string; id: PropertyStatus; colour: string; isActive: boolean }
 
@@ -57,16 +58,20 @@ export const shortAddress = (premises: Premises): string => {
   return elements.join(', ')
 }
 
-export const showPropertySubNavArray = (premisesId: string, activeTab: PremisesShowTabs): Array<SubNavObj> => {
+export const showPropertySubNavArray = (
+  premisesId: string,
+  placeContext: PlaceContext,
+  activeTab: PremisesShowTabs,
+): Array<SubNavObj> => {
   return [
     {
       text: 'Property overview',
-      href: paths.premises.v2.show({ premisesId }),
+      href: addPlaceContext(paths.premises.show({ premisesId }), placeContext),
       active: activeTab === 'premises',
     },
     {
       text: 'Bedspaces overview',
-      href: paths.premises.v2.bedspaces.list({ premisesId }),
+      href: addPlaceContext(paths.premises.bedspaces.list({ premisesId }), placeContext),
       active: activeTab === 'bedspaces',
     },
   ]

@@ -1,6 +1,5 @@
-import type { NewPremises, ProbationRegion } from '@approved-premises/api'
+import type { NewPremises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import { exact } from '../../../../server/utils/utils'
 import PremisesEditablePage from './premisesEditable'
 
 export default class PremisesNewPage extends PremisesEditablePage {
@@ -13,17 +12,7 @@ export default class PremisesNewPage extends PremisesEditablePage {
     return new PremisesNewPage()
   }
 
-  completeForm(newPremises: NewPremises): void {
-    super.completeEditableForm(newPremises)
-  }
-
-  shouldPreselectProbationRegion(probationRegion: ProbationRegion): void {
-    cy.get('label')
-      .contains('What is the probation region?')
-      .siblings('select')
-      .children('option')
-      .should('have.length', 2)
-      .contains(exact(probationRegion.name))
-      .should('be.selected')
+  completeForm(newPremises: NewPremises, localAuthorityName: string): void {
+    super.completeEditableForm(newPremises, localAuthorityName)
   }
 }

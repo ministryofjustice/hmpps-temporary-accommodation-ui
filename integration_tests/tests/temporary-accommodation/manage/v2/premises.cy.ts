@@ -11,6 +11,8 @@ import PremisesListPage from '../../../../../cypress_shared/pages/temporary-acco
 import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
 import { setupTestUser } from '../../../../../cypress_shared/utils/setupTestUser'
 import {
+  bedFactory,
+  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewPremisesFactory,
@@ -18,6 +20,7 @@ import {
   cas3PremisesSearchResultFactory,
   cas3PremisesSearchResultsFactory,
   cas3UpdatePremisesFactory,
+  lostBedFactory,
 } from '../../../../../server/testutils/factories'
 import PremisesNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesNew'
 import PremisesEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesEdit'
@@ -297,10 +300,10 @@ context('Premises', () => {
       cy.task('stubPremisesSearchV2', { searchResults, postcodeOrAddress: '', premisesStatus: 'online' })
 
       // When I visit the base v2 properties route
-      cy.visit('/v2/properties')
+      cy.visit('/properties')
 
       // Then I should be redirected to the online tab
-      cy.url().should('include', '/v2/properties/online')
+      cy.url().should('include', '/properties/online')
 
       // And I should see the online properties page
       cy.contains('Online properties').should('exist')
@@ -520,7 +523,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Archived properties').click()
 
       // Then I should be on the archived tab
-      cy.url().should('include', '/v2/properties/archived')
+      cy.url().should('include', '/properties/archived')
       cy.get('.moj-sub-navigation a[aria-current="page"]').should('contain', 'Archived properties')
       cy.contains('2 archived properties').should('exist')
 
@@ -528,7 +531,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Online properties').click()
 
       // Then I should be back on the online tab
-      cy.url().should('include', '/v2/properties/online')
+      cy.url().should('include', '/properties/online')
       cy.get('.moj-sub-navigation a[aria-current="page"]').should('contain', 'Online properties')
       cy.contains('3 online properties').should('exist')
     })
@@ -592,7 +595,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Archived properties').click()
 
       // Then the search term should be preserved in the URL
-      cy.url().should('include', `/v2/properties/archived?postcodeOrAddress=${searchTerm}`)
+      cy.url().should('include', `/properties/archived?postcodeOrAddress=${searchTerm}`)
 
       // And I should see the archived search results
       cy.contains(`1 archived properties matching ‘${searchTerm}’`).should('exist')
@@ -604,7 +607,7 @@ context('Premises', () => {
       cy.get('.moj-sub-navigation a').contains('Online properties').click()
 
       // Then the search term should still be preserved
-      cy.url().should('include', `/v2/properties/online?postcodeOrAddress=${searchTerm}`)
+      cy.url().should('include', `/properties/online?postcodeOrAddress=${searchTerm}`)
       cy.contains(`2 online properties matching ‘${searchTerm}’`).should('exist')
       cy.get('main form input').should('have.value', searchTerm)
     })
@@ -1575,6 +1578,17 @@ context('Premises', () => {
       // And there is an online premises in the database with some upcoming bedspace bookings
       const premises = cas3PremisesFactory.build({ status: 'online' })
       const bedspaces = cas3BedspaceFactory.buildList(4)
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspaces[0].id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspaces[0].id,
+        })
+        .buildList(5)
       const bedspacesReference: Cas3ValidationResults = {
         items: [
           { entityId: bedspaces[0].id, entityReference: bedspaces[0].reference },
@@ -1586,6 +1600,8 @@ context('Premises', () => {
         premisesId: premises.id,
         bedspaces: cas3BedspacesFactory.build({ bedspaces }),
       })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
       cy.task('stubPremisesCanArchive', { premisesId: premises.id, bedspacesReference })
 
       // When I visit the show premises page

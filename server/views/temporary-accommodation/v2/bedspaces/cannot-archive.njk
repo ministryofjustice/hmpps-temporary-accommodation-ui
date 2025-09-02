@@ -1,0 +1,30 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% extends "../../../partials/layout.njk" %}
+
+{% block beforeContent %}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.premises.bedspaces.archive({ premisesId: params.premisesId, bedspaceId: bedspace.id }),
+        classes: "govuk-!-display-none-print"
+    }) }}
+{% endblock %}
+
+{% block content %}
+    {% include "../../../_messages.njk" %}
+
+    <h1 class="govuk-heading-l">You cannot archive {{ bedspace.reference }}</h1>
+
+    <div class="govuk-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>This bedspace has a booking or void that prevents it from being archived.</p>
+
+            {{ govukButton({
+                text: "View bedspace details",
+                href: paths.premises.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })
+            }) }}
+        </div>
+    </div>
+
+{%  endblock %}

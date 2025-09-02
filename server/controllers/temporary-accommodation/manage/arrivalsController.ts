@@ -2,7 +2,7 @@ import type { Request, RequestHandler, Response } from 'express'
 
 import type { NewCas3Arrival as NewArrival } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
+import { ArrivalService, BookingService, PremisesService } from '../../../services'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats, dateIsInFuture } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
@@ -13,6 +13,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import config from '../../../config'
+import BedspaceService from '../../../services/v2/bedspaceService'
 
 export default class ArrivalsController {
   constructor(
@@ -25,17 +26,17 @@ export default class ArrivalsController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       return res.render('temporary-accommodation/arrivals/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors,
         errorSummary,
@@ -50,7 +51,7 @@ export default class ArrivalsController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
       try {
         const newArrival: NewArrival = {
@@ -85,15 +86,20 @@ export default class ArrivalsController {
             ? 'You no longer need to update NDelius with this change.'
             : 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
-          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'plural'))
           insertGenericError(err, 'arrivalDate', 'conflict')
           insertGenericError(err, 'expectedDepartureDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.new({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
+        )
       }
     }
   }
@@ -101,19 +107,19 @@ export default class ArrivalsController {
   edit(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
-      const [premises, room, booking] = await Promise.all([
+      const [premises, bedspace, booking] = await Promise.all([
         this.premisesService.getPremises(callConfig, premisesId),
-        this.bedspacesService.getRoom(callConfig, premisesId, roomId),
+        this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId),
         this.bookingsService.getBooking(callConfig, premisesId, bookingId),
       ])
 
       return res.render('temporary-accommodation/arrivals/edit', {
         premises,
-        room,
+        bedspace,
         booking,
         errors,
         errorSummary,
@@ -126,7 +132,7 @@ export default class ArrivalsController {
 
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
       try {
         const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
@@ -149,14 +155,19 @@ export default class ArrivalsController {
         // INFO: this may confuse, the API is overloading the POST with a writeback of existing and new data
         await this.arrivalService.createArrival(callConfig, premisesId, bookingId, updateArrival)
         req.flash('success', 'Arrival updated')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         if (err.status === 409) {
-          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'singular'))
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'singular'))
           insertGenericError(err, 'arrivalDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }))
+        catchValidationErrorOrPropogate(
+          req,
+          res,
+          err,
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId, bookingId }),
+        )
       }
     }
   }

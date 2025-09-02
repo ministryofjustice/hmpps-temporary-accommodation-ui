@@ -23,18 +23,18 @@ export function statusTag(statusId: LostBed['status'], context: 'bookingsAndVoid
   return `<strong class="govuk-tag ${status.tagClass}">${status.name}</strong>`
 }
 
-export function lostBedActions(premisesId: string, roomId: string, lostBed: LostBed): Array<PageHeadingBarItem> {
+export function lostBedActions(premisesId: string, bedspaceId: string, lostBed: LostBed): Array<PageHeadingBarItem> {
   if (lostBed.status === 'active') {
     return [
       {
         text: 'Edit this void',
         classes: 'govuk-button--secondary',
-        href: paths.lostBeds.edit({ premisesId, roomId, lostBedId: lostBed.id }),
+        href: paths.lostBeds.edit({ premisesId, bedspaceId, lostBedId: lostBed.id }),
       },
       {
         text: 'Cancel this void',
         classes: 'govuk-button--secondary',
-        href: paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId: lostBed.id }),
+        href: paths.lostBeds.cancellations.new({ premisesId, bedspaceId, lostBedId: lostBed.id }),
       },
     ]
   }

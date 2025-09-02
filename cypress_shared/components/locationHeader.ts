@@ -1,22 +1,25 @@
-import { Premises, Room } from '../../server/@types/shared'
+import { Cas3Bedspace, Premises, Room } from '../../server/@types/shared'
 import Component from './component'
 
 export default class LocationHeaderComponent extends Component {
   constructor(
-    private readonly details: { premises?: Premises; room?: Room },
+    private readonly details: { premises?: Premises; room?: Room; bedspace?: Cas3Bedspace },
     private readonly hideAddress: boolean = false,
   ) {
     super()
   }
 
   shouldShowLocationDetails(showBedspaceId: boolean = false): void {
-    const { premises } = this.details
-    const { room } = this.details
+    const { premises, room, bedspace } = this.details
 
     cy.get('.location-header').within(() => {
       if (premises && !this.hideAddress) {
         if (showBedspaceId) {
-          cy.get('h2').contains('Property address').siblings('p').should('contain', room.name)
+          if (room) {
+            cy.get('h2').contains('Property address').siblings('p').should('contain', room.name)
+          } else {
+            cy.get('h2').contains('Property address').siblings('p').should('contain', bedspace.reference)
+          }
         }
         cy.get('h2')
           .contains('Property address')

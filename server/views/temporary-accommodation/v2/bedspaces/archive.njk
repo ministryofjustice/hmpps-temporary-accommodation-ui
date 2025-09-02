@@ -11,10 +11,11 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
-    {{ breadCrumb('Archive a bedspace', [
-        {title: 'List of properties', href: paths.premises.v2.online()},
-        {title: 'View a bedspace', href: paths.premises.v2.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id })}
-    ]) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: paths.premises.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id }),
+        classes: "govuk-!-display-none-print"
+    }) }}
 {% endblock %}
 
 {% block content %}
@@ -44,7 +45,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.v2.bedspaces.archive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
+            <form action="{{ paths.premises.bedspaces.archive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
                 {{ govukRadios({

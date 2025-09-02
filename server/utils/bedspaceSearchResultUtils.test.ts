@@ -54,7 +54,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, room).build()
+      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, room, null).build()
 
       expect(bedspaceKeyCharacteristics(searchResult)).toEqual([
         'Shared bathroom',

@@ -22,16 +22,16 @@ context('Booking extension', () => {
 
     // And there is a premises, a room, and an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the extend booking action
     bookingShow.clickExtendBookingButton()
 
     // Then I navigate to the booking extension page
-    Page.verifyOnPage(BookingExtensionNewPage, premises, room, booking)
+    Page.verifyOnPage(BookingExtensionNewPage, premises, null, bedspace, booking)
   })
 
   it('allows me to extend a booking', () => {
@@ -40,10 +40,10 @@ context('Booking extension', () => {
 
     // And there is a premises, a room, and an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises, room, booking)
+    const page = BookingExtensionNewPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -65,7 +65,7 @@ context('Booking extension', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Booking departure date changed')
   })
 
@@ -75,10 +75,10 @@ context('Booking extension', () => {
 
     // And there is an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises, room, booking)
+    const page = BookingExtensionNewPage.visit(premises, null, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubExtensionCreateErrors', {
@@ -101,11 +101,11 @@ context('Booking extension', () => {
     const booking = bookingFactory.arrived().build()
     const conflictingLostBed = lostBedFactory.build()
 
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises, room, booking)
+    const page = BookingExtensionNewPage.visit(premises, null, bedspace, booking)
 
     // And I fill out the form with dates that conflict with an existing booking
     const extension = extensionFactory.build()
@@ -131,15 +131,15 @@ context('Booking extension', () => {
 
     // And there is a premises, a room, and an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking extension page
-    const page = BookingExtensionNewPage.visit(premises, room, booking)
+    const page = BookingExtensionNewPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 })

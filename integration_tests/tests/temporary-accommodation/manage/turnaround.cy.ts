@@ -20,30 +20,30 @@ context('Booking turnarounds', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a booking in the database
+    // And there is a premises, a bedspace, and a booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the extend booking action
     bookingShow.clickChangeTurnaround()
 
     // Then I navigate to the change turnaround page
-    Page.verifyOnPage(BookingTurnaroundNewPage, premises, room, booking)
+    Page.verifyOnPage(BookingTurnaroundNewPage, premises, null, bedspace, booking)
   })
 
   it('allows me to change a turnaround', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a booking in the database
+    // And there is a premises, a bedspace, and a booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, room, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -64,7 +64,7 @@ context('Booking turnarounds', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Turnaround time changed')
   })
 
@@ -74,10 +74,10 @@ context('Booking turnarounds', () => {
 
     // And there is an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, room, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubTurnaroundCreateErrors', {
@@ -100,11 +100,11 @@ context('Booking turnarounds', () => {
     const booking = bookingFactory.departed().build()
     const conflictingLostBed = lostBedFactory.build()
 
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, room, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
 
     // And I fill out the form with days that conflict with an existing booking
     const turnaround = turnaroundFactory.build()
@@ -128,17 +128,17 @@ context('Booking turnarounds', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a booking in the database
+    // And there is a premises, a bedspace, and a booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, room, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 })

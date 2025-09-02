@@ -2,7 +2,13 @@ import BookingClient from '../data/bookingClient'
 import LostBedClient from '../data/lostBedClient'
 import BookingService from './bookingService'
 
-import { bedFactory, bookingFactory, lostBedFactory, newBookingFactory, roomFactory } from '../testutils/factories'
+import {
+  bedFactory,
+  bookingFactory,
+  cas3BedspaceFactory,
+  lostBedFactory,
+  newBookingFactory,
+} from '../testutils/factories'
 
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
@@ -26,8 +32,8 @@ describe('BookingService', () => {
   const service = new BookingService(bookingClientFactory, lostBedClientFactory)
   const callConfig = { token: 'some-token' } as CallConfig
 
-  const premisesId = 'premiseId'
-  const bedId = 'bedId'
+  const premisesId = 'b3dda411-7bd4-4087-b182-b9c0ba1c8b42'
+  const bedspaceId = '5febd719-69cb-4697-975f-868afdf40336'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -41,21 +47,17 @@ describe('BookingService', () => {
       const newBooking = newBookingFactory.build()
       bookingClient.create.mockResolvedValue(booking)
 
-      const room = roomFactory.build({
-        beds: [
-          bedFactory.build({
-            id: bedId,
-          }),
-        ],
+      const bedspace = cas3BedspaceFactory.build({
+        id: bedspaceId,
       })
 
-      const postedBooking = await service.createForBedspace(callConfig, premisesId, room, newBooking)
+      const postedBooking = await service.createForBedspace(callConfig, premisesId, bedspace.id, newBooking)
       expect(postedBooking).toEqual(booking)
 
       expect(bookingClientFactory).toHaveBeenCalledWith(callConfig)
       expect(bookingClient.create).toHaveBeenCalledWith(premisesId, {
         serviceName: 'temporary-accommodation',
-        bedId,
+        bedId: bedspaceId,
         enableTurnarounds: true,
         ...newBooking,
       })
@@ -64,9 +66,7 @@ describe('BookingService', () => {
 
   describe('getListingEntries', () => {
     it('returns a sorted list of booking entries and active lost bed entries', async () => {
-      const bed = bedFactory.build({
-        id: bedId,
-      })
+      const bed = bedFactory.build({ id: bedspaceId })
 
       const booking1 = bookingFactory.build({
         arrivalDate: '2021-02-17',
@@ -80,16 +80,12 @@ describe('BookingService', () => {
 
       const lostBed1 = lostBedFactory.active().build({
         startDate: '2022-05-09',
-        bedId,
+        bedId: bedspaceId,
       })
 
       const lostBed2 = lostBedFactory.active().build({
         startDate: '2024-01-01',
-        bedId,
-      })
-
-      const room = roomFactory.build({
-        beds: [bed],
+        bedId: bedspaceId,
       })
 
       const lostBedInactive = lostBedFactory.cancelled().build()
@@ -97,26 +93,26 @@ describe('BookingService', () => {
       bookingClient.allBookingsForPremisesId.mockResolvedValue([booking2, booking1])
       lostBedClient.allLostBedsForPremisesId.mockResolvedValue([lostBed2, lostBedInactive, lostBed1])
 
-      const result = await service.getListingEntries(callConfig, premisesId, room)
+      const result = await service.getListingEntries(callConfig, premisesId, bedspaceId)
 
       expect(result).toEqual([
         expect.objectContaining({
-          path: paths.lostBeds.show({ premisesId, roomId: room.id, lostBedId: lostBed2.id }),
+          path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed2.id }),
           body: lostBed2,
           type: 'lost-bed',
         }),
         expect.objectContaining({
-          path: paths.bookings.show({ premisesId, roomId: room.id, bookingId: booking2.id }),
+          path: paths.bookings.show({ premisesId, bedspaceId, bookingId: booking2.id }),
           body: booking2,
           type: 'booking',
         }),
         expect.objectContaining({
-          path: paths.lostBeds.show({ premisesId, roomId: room.id, lostBedId: lostBed1.id }),
+          path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed1.id }),
           body: lostBed1,
           type: 'lost-bed',
         }),
         expect.objectContaining({
-          path: paths.bookings.show({ premisesId, roomId: room.id, bookingId: booking1.id }),
+          path: paths.bookings.show({ premisesId, bedspaceId, bookingId: booking1.id }),
           body: booking1,
           type: 'booking',
         }),
@@ -127,12 +123,8 @@ describe('BookingService', () => {
     })
 
     it('ignores bookings and lost beds for other rooms', async () => {
-      const bed = bedFactory.build({
-        id: bedId,
-      })
-
       const otherBed = bedFactory.build({
-        id: 'other-bed-id',
+        id: 'other-bedspace-id',
       })
 
       const booking = bookingFactory.build({
@@ -143,14 +135,10 @@ describe('BookingService', () => {
         bedId: 'other-bed-id',
       })
 
-      const room = roomFactory.build({
-        beds: [bed],
-      })
-
       bookingClient.allBookingsForPremisesId.mockResolvedValue([booking])
       lostBedClient.allLostBedsForPremisesId.mockResolvedValue([lostBed])
 
-      const result = await service.getListingEntries(callConfig, premisesId, room)
+      const result = await service.getListingEntries(callConfig, premisesId, bedspaceId)
 
       expect(result).toEqual([])
 

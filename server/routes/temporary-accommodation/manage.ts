@@ -6,7 +6,6 @@ import { createUserCheckMiddleware, userIsAuthorisedForManage } from '../../midd
 import paths from '../../paths/temporary-accommodation/manage'
 import { Services } from '../../services'
 import { actions, compose } from '../utils'
-import config from '../../config'
 
 export default function routes(controllers: Controllers, services: Services, router: Router): Router {
   const { get, post, put, patch } = compose(
@@ -16,8 +15,6 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   const {
     dashboardController,
-    premisesController,
-    bedspacesController,
     bookingsController,
     confirmationsController,
     arrivalsController,
@@ -40,192 +37,118 @@ export default function routes(controllers: Controllers, services: Services, rou
 
   get(paths.dashboard.index.pattern, dashboardController.index(), { auditEvent: 'VIEW_DASHBOARD' })
 
-  get(paths.premises.index.pattern, premisesController.index(), { auditEvent: 'VIEW_PREMISES_LIST' })
-  get(paths.premises.new.pattern, premisesController.new(), { auditEvent: 'VIEW_PREMISES_CREATE' })
-  post(paths.premises.create.pattern, premisesController.create(), {
+  get(paths.premises.index(), redirectsController.redirect(paths.premises.online(), 301), {
+    auditEvent: 'REDIRECT_PREMISES_V2',
+  })
+  get(paths.premises.online.pattern, premisesControllerV2.index('online'), {
+    auditEvent: 'VIEW_PREMISES_LIST_V2_ONLINE',
+  })
+  get(paths.premises.archived.pattern, premisesControllerV2.index('archived'), {
+    auditEvent: 'VIEW_PREMISES_LIST_V2_ARCHIVED',
+  })
+  get(paths.premises.toggleSort.pattern, premisesControllerV2.toggleSort(), {
+    auditEvent: 'TOGGLE_PREMISES_SORT_V2',
+  })
+  get(paths.premises.new.pattern, premisesControllerV2.new(), { auditEvent: 'CREATE_PREMISES_V2' })
+  get(paths.premises.show.pattern, premisesControllerV2.showPremisesTab(), { auditEvent: 'SHOW_PREMISES_V2' })
+  get(paths.premises.bedspaces.list.pattern, premisesControllerV2.showBedspacesTab(), {
+    auditEvent: 'VIEW_PREMISES_BEDSPACES_V2',
+  })
+  post(paths.premises.create.pattern, premisesControllerV2.create(), {
     redirectAuditEventSpecs: [
       {
         path: paths.premises.new.pattern,
-        auditEvent: 'CREATE_PREMISES_FAILURE',
+        auditEvent: 'CREATE_PREMISES_V2_FAILURE',
       },
       {
         path: paths.premises.show.pattern,
-        auditEvent: 'CREATE_PREMISES_SUCCESS',
+        auditEvent: 'CREATE_PREMISES_V2_SUCCESS',
       },
     ],
   })
-  get(paths.premises.edit.pattern, premisesController.edit(), { auditEvent: 'VIEW_PREMISES_EDIT' })
-  put(paths.premises.update.pattern, premisesController.update(), {
+  get(paths.premises.edit.pattern, premisesControllerV2.edit(), { auditEvent: 'UPDATE_PREMISES_V2' })
+  post(paths.premises.edit.pattern, premisesControllerV2.update(), {
     redirectAuditEventSpecs: [
       {
         path: paths.premises.edit.pattern,
-        auditEvent: 'EDIT_BEDSPACE_FAILURE',
+        auditEvent: 'UPDATE_PREMISES_V2_FAILURE',
       },
       {
         path: paths.premises.show.pattern,
-        auditEvent: 'EDIT_BEDSPACE_SUCCESS',
+        auditEvent: 'UPDATE_PREMISES_V2_SUCCESS',
       },
     ],
   })
-  get(paths.premises.show.pattern, premisesController.show(), { auditEvent: 'VIEW_PREMISES' })
+  get(paths.premises.archive.pattern, premisesControllerV2.archive(), { auditEvent: 'ARCHIVE_PREMISES_V2' })
+  post(paths.premises.archive.pattern, premisesControllerV2.archiveSubmit(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.archive.pattern,
+        auditEvent: 'ARCHIVE_PREMISES_V2_FAILURE',
+      },
+      {
+        path: paths.premises.show.pattern,
+        auditEvent: 'ARCHIVE_PREMISES_V2_SUCCESS',
+      },
+    ],
+  })
 
-  // premises v2
-  if (config.flags.managePropertiesV2Enabled) {
-    get(paths.premises.v2.index(), redirectsController.redirect(paths.premises.v2.online(), 301), {
-      auditEvent: 'REDIRECT_PREMISES_V2',
-    })
-    get(paths.premises.v2.online.pattern, premisesControllerV2.index('online'), {
-      auditEvent: 'VIEW_PREMISES_LIST_V2_ONLINE',
-    })
-    get(paths.premises.v2.archived.pattern, premisesControllerV2.index('archived'), {
-      auditEvent: 'VIEW_PREMISES_LIST_V2_ARCHIVED',
-    })
-    get(paths.premises.v2.toggleSort.pattern, premisesControllerV2.toggleSort(), {
-      auditEvent: 'TOGGLE_PREMISES_SORT_V2',
-    })
-    get(paths.premises.v2.new.pattern, premisesControllerV2.new(), { auditEvent: 'CREATE_PREMISES_V2' })
-    get(paths.premises.v2.show.pattern, premisesControllerV2.showPremisesTab(), { auditEvent: 'SHOW_PREMISES_V2' })
-    get(paths.premises.v2.bedspaces.list.pattern, premisesControllerV2.showBedspacesTab(), {
-      auditEvent: 'VIEW_PREMISES_BEDSPACES_V2',
-    })
-    post(paths.premises.v2.create.pattern, premisesControllerV2.create(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.new.pattern,
-          auditEvent: 'CREATE_PREMISES_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.show.pattern,
-          auditEvent: 'CREATE_PREMISES_V2_SUCCESS',
-        },
-      ],
-    })
-    get(paths.premises.v2.edit.pattern, premisesControllerV2.edit(), { auditEvent: 'UPDATE_PREMISES_V2' })
-    post(paths.premises.v2.edit.pattern, premisesControllerV2.update(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.edit.pattern,
-          auditEvent: 'UPDATE_PREMISES_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.show.pattern,
-          auditEvent: 'UPDATE_PREMISES_V2_SUCCESS',
-        },
-      ],
-    })
-    get(paths.premises.v2.archive.pattern, premisesControllerV2.archive(), { auditEvent: 'ARCHIVE_PREMISES_V2' })
-    post(paths.premises.v2.archive.pattern, premisesControllerV2.archiveSubmit(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.archive.pattern,
-          auditEvent: 'ARCHIVE_PREMISES_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.show.pattern,
-          auditEvent: 'ARCHIVE_PREMISES_V2_SUCCESS',
-        },
-      ],
-    })
-    get(paths.premises.v2.unarchive.pattern, premisesControllerV2.unarchive(), { auditEvent: 'UNARCHIVE_PREMISES_V2' })
-    post(paths.premises.v2.unarchive.pattern, premisesControllerV2.unarchiveSubmit(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.unarchive.pattern,
-          auditEvent: 'UNARCHIVE_PREMISES_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.show.pattern,
-          auditEvent: 'UNARCHIVE_PREMISES_V2_SUCCESS',
-        },
-      ],
-    })
+  get(paths.premises.unarchive.pattern, premisesControllerV2.unarchive(), { auditEvent: 'UNARCHIVE_PREMISES_V2' })
+  post(paths.premises.unarchive.pattern, premisesControllerV2.unarchiveSubmit(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.unarchive.pattern,
+        auditEvent: 'UNARCHIVE_PREMISES_V2_FAILURE',
+      },
+      {
+        path: paths.premises.show.pattern,
+        auditEvent: 'UNARCHIVE_PREMISES_V2_SUCCESS',
+      },
+    ],
+  })
 
-    get(paths.premises.v2.bedspaces.new.pattern, bedspacesControllerV2.new(), { auditEvent: 'VIEW_BEDSPACE_V2_CREATE' })
-    get(paths.premises.v2.bedspaces.show.pattern, bedspacesControllerV2.show(), { auditEvent: 'VIEW_BEDSPACE_V2' })
-    get(paths.premises.v2.bedspaces.archive.pattern, bedspacesControllerV2.archive(), {
-      auditEvent: 'VIEW_BEDSPACE_V2_ARCHIVE',
-    })
-    post(paths.premises.v2.bedspaces.create.pattern, bedspacesControllerV2.create(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.bedspaces.new.pattern,
-          auditEvent: 'CREATE_BEDSPACE_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.bedspaces.show.pattern,
-          auditEvent: 'CREATE_BEDSPACE_V2_SUCCESS',
-        },
-      ],
-    })
-    get(paths.premises.v2.bedspaces.edit.pattern, bedspacesControllerV2.edit(), { auditEvent: 'UPDATE_BEDSPACE_V2' })
-    get(paths.premises.v2.bedspaces.cancelArchive.pattern, bedspacesControllerV2.cancelArchive(), {
-      auditEvent: 'VIEW_BEDSPACE_CANCEL_ARCHIVE_V2',
-    })
-    put(paths.premises.v2.bedspaces.cancelArchive.pattern, bedspacesControllerV2.submitCancelArchive(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.bedspaces.cancelArchive.pattern,
-          auditEvent: 'CANCEL_BEDSPACE_ARCHIVE_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.bedspaces.show.pattern,
-          auditEvent: 'CANCEL_BEDSPACE_ARCHIVE_V2_SUCCESS',
-        },
-      ],
-    })
-    post(paths.premises.v2.bedspaces.update.pattern, bedspacesControllerV2.update(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.bedspaces.edit.pattern,
-          auditEvent: 'UPDATE_BEDSPACE_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.bedspaces.show.pattern,
-          auditEvent: 'UPDATE_BEDSPACE_V2_SUCCESS',
-        },
-      ],
-    })
-    post(paths.premises.v2.bedspaces.archive.pattern, bedspacesControllerV2.archiveSubmit(), {
-      redirectAuditEventSpecs: [
-        {
-          path: paths.premises.v2.bedspaces.archive.pattern,
-          auditEvent: 'ARCHIVE_BEDSPACE_V2_FAILURE',
-        },
-        {
-          path: paths.premises.v2.bedspaces.show.pattern,
-          auditEvent: 'ARCHIVE_BEDSPACE_V2_SUCCESS',
-        },
-      ],
-    })
-  }
-
-  get(paths.premises.bedspaces.new.pattern, bedspacesController.new(), { auditEvent: 'VIEW_BEDSPACE_CREATE' })
-  post(paths.premises.bedspaces.create.pattern, bedspacesController.create(), {
+  get(paths.premises.bedspaces.new.pattern, bedspacesControllerV2.new(), { auditEvent: 'VIEW_BEDSPACE_V2_CREATE' })
+  get(paths.premises.bedspaces.show.pattern, bedspacesControllerV2.show(), { auditEvent: 'VIEW_BEDSPACE_V2' })
+  post(paths.premises.bedspaces.create.pattern, bedspacesControllerV2.create(), {
     redirectAuditEventSpecs: [
       {
         path: paths.premises.bedspaces.new.pattern,
-        auditEvent: 'CREATE_BEDSPACE_FAILURE',
+        auditEvent: 'CREATE_BEDSPACE_V2_FAILURE',
       },
       {
         path: paths.premises.bedspaces.show.pattern,
-        auditEvent: 'CREATE_BEDSPACE_SUCCESS',
+        auditEvent: 'CREATE_BEDSPACE_V2_SUCCESS',
       },
     ],
   })
-  get(paths.premises.bedspaces.edit.pattern, bedspacesController.edit(), { auditEvent: 'VIEW_BEDSPACE_EDIT' })
-  put(paths.premises.bedspaces.update.pattern, bedspacesController.update(), {
+  get(paths.premises.bedspaces.edit.pattern, bedspacesControllerV2.edit(), { auditEvent: 'UPDATE_BEDSPACE_V2' })
+  get(paths.premises.bedspaces.cancelArchive.pattern, bedspacesControllerV2.cancelArchive(), {
+    auditEvent: 'VIEW_BEDSPACE_CANCEL_ARCHIVE_V2',
+  })
+  put(paths.premises.bedspaces.cancelArchive.pattern, bedspacesControllerV2.submitCancelArchive(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.bedspaces.cancelArchive.pattern,
+        auditEvent: 'CANCEL_BEDSPACE_ARCHIVE_V2_FAILURE',
+      },
+      {
+        path: paths.premises.bedspaces.show.pattern,
+        auditEvent: 'CANCEL_BEDSPACE_ARCHIVE_V2_SUCCESS',
+      },
+    ],
+  })
+  post(paths.premises.bedspaces.update.pattern, bedspacesControllerV2.update(), {
     redirectAuditEventSpecs: [
       {
         path: paths.premises.bedspaces.edit.pattern,
-        auditEvent: 'EDIT_BEDSPACE_FAILURE',
+        auditEvent: 'UPDATE_BEDSPACE_V2_FAILURE',
       },
       {
         path: paths.premises.bedspaces.show.pattern,
-        auditEvent: 'EDIT_BEDSPACE_SUCCESS',
+        auditEvent: 'UPDATE_BEDSPACE_V2_SUCCESS',
       },
     ],
   })
-  get(paths.premises.bedspaces.show.pattern, bedspacesController.show(), { auditEvent: 'VIEW_BEDSPACE' })
 
   get(paths.bookings.new.pattern, bookingsController.new(), { auditEvent: 'VIEW_BOOKING_CREATE' })
   get(paths.bookings.confirm.pattern, bookingsController.confirm(), {
@@ -264,7 +187,43 @@ export default function routes(controllers: Controllers, services: Services, rou
       },
     ],
   })
+  get(paths.premises.bedspaces.canArchive.pattern, bedspacesControllerV2.canArchive(), {
+    auditEvent: 'CHECK_BEDSPACE_CAN_ARCHIVE_V2',
+  })
+  get(paths.premises.bedspaces.cannotArchive.pattern, bedspacesControllerV2.cannotArchive(), {
+    auditEvent: 'VIEW_BEDSPACE_CANNOT_ARCHIVE_V2',
+  })
+  get(paths.premises.bedspaces.archive.pattern, bedspacesControllerV2.archive(), {
+    auditEvent: 'VIEW_BEDSPACE_V2_ARCHIVE',
+  })
+  post(paths.premises.bedspaces.archive.pattern, bedspacesControllerV2.archiveSubmit(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.bedspaces.archive.pattern,
+        auditEvent: 'ARCHIVE_BEDSPACE_V2_FAILURE',
+      },
+      {
+        path: paths.premises.bedspaces.show.pattern,
+        auditEvent: 'ARCHIVE_BEDSPACE_V2_SUCCESS',
+      },
+    ],
+  })
 
+  get(paths.premises.bedspaces.unarchive.pattern, bedspacesControllerV2.unarchive(), {
+    auditEvent: 'VIEW_BEDSPACE_V2_UNARCHIVE',
+  })
+  post(paths.premises.bedspaces.unarchive.pattern, bedspacesControllerV2.unarchiveSubmit(), {
+    redirectAuditEventSpecs: [
+      {
+        path: paths.premises.bedspaces.unarchive.pattern,
+        auditEvent: 'UNARCHIVE_BEDSPACE_V2_FAILURE',
+      },
+      {
+        path: paths.premises.bedspaces.show.pattern,
+        auditEvent: 'UNARCHIVE_BEDSPACE_V2_SUCCESS',
+      },
+    ],
+  })
   get(paths.bookings.arrivals.new.pattern, arrivalsController.new(), { auditEvent: 'VIEW_BOOKING_CREATE_ARRIVAL' })
   post(paths.bookings.arrivals.create.pattern, arrivalsController.create(), {
     redirectAuditEventSpecs: [

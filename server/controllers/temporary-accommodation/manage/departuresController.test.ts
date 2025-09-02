@@ -2,19 +2,20 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, DepartureService, PremisesService } from '../../../services'
+import { BookingService, DepartureService, PremisesService } from '../../../services'
 import {
   bookingFactory,
+  cas3BedspaceFactory,
   departureFactory,
   newDepartureFactory,
   premisesFactory,
-  roomFactory,
 } from '../../../testutils/factories'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 import DeparturesController from './departuresController'
 import config from '../../../config'
+import BedspaceService from '../../../services/v2/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -22,7 +23,7 @@ jest.mock('../../../utils/restUtils')
 describe('DeparturesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const bookingId = 'bookingId'
 
   let request: Request
@@ -50,17 +51,17 @@ describe('DeparturesController', () => {
   describe('new', () => {
     it('renders the form', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
@@ -71,14 +72,14 @@ describe('DeparturesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(departureService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/new', {
         premises,
-        room,
+        bedspace,
         booking,
         allDepartureReasons: [],
         allMoveOnCategories: [],
@@ -100,7 +101,7 @@ describe('DeparturesController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -123,7 +124,7 @@ describe('DeparturesController', () => {
         title: 'Booking marked as departed',
         text: 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
       })
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -136,7 +137,7 @@ describe('DeparturesController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -155,7 +156,7 @@ describe('DeparturesController', () => {
         request,
         response,
         err,
-        paths.bookings.departures.new({ premisesId, roomId, bookingId }),
+        paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
       )
     })
 
@@ -170,7 +171,7 @@ describe('DeparturesController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -184,7 +185,7 @@ describe('DeparturesController', () => {
         request,
         response,
         expect.any(Error),
-        paths.bookings.departures.new({ premisesId, roomId, bookingId }),
+        paths.bookings.departures.new({ premisesId, bedspaceId, bookingId }),
       )
     })
   })
@@ -192,17 +193,17 @@ describe('DeparturesController', () => {
   describe('edit', () => {
     it('renders the form', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
@@ -213,14 +214,14 @@ describe('DeparturesController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(departureService.getReferenceData).toHaveBeenCalledWith(callConfig)
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/departures/edit', {
         premises,
-        room,
+        bedspace,
         booking,
         allDepartureReasons: [],
         allMoveOnCategories: [],
@@ -245,7 +246,7 @@ describe('DeparturesController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -265,7 +266,7 @@ describe('DeparturesController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Departure details changed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -278,7 +279,7 @@ describe('DeparturesController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -297,7 +298,7 @@ describe('DeparturesController', () => {
         request,
         response,
         err,
-        paths.bookings.departures.edit({ premisesId, roomId, bookingId }),
+        paths.bookings.departures.edit({ premisesId, bedspaceId, bookingId }),
       )
     })
   })
@@ -314,17 +315,17 @@ describe('DeparturesController', () => {
 
     it('does not show the NDelius update message when creating', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       departureService.getReferenceData.mockResolvedValue({ departureReasons: [], moveOnCategories: [] })
@@ -352,7 +353,7 @@ describe('DeparturesController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {

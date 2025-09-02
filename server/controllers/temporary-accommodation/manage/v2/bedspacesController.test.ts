@@ -6,10 +6,15 @@ import { CallConfig } from '../../../../data/restClient'
 import BedspaceService from '../../../../services/v2/bedspaceService'
 import BedspacesController from './bedspacesController'
 import {
+  assessmentFactory,
+  bookingFactory,
   cas3BedspaceFactory,
+  cas3BedspacesFactory,
   cas3PremisesFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
+  lostBedFactory,
+  placeContextFactory,
   probationRegionFactory,
   referenceDataFactory,
 } from '../../../../testutils/factories'
@@ -22,6 +27,8 @@ import extractCallConfig from '../../../../utils/restUtils'
 import PremisesService from '../../../../services/v2/premisesService'
 import { DateFormats } from '../../../../utils/dateUtils'
 import paths from '../../../../paths/temporary-accommodation/manage'
+import { AssessmentsService, BookingService } from '../../../../services'
+import { ListingEntry } from '../../../../services/bookingService'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -30,10 +37,14 @@ describe('BedspacesController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'some-premises-id'
   const bedspaceId = 'some-bedspace-id'
+  const bookingId = 'some-booking-id'
+  const lostBedId = 'some-lost-bed-id'
 
   const referenceData = {
     characteristics: referenceDataFactory.characteristic('room').buildList(5),
   }
+  const assessment = assessmentFactory.build({ status: 'ready_to_place' })
+  const placeContext = placeContextFactory.build({ assessment })
 
   let request: Request
 
@@ -42,8 +53,15 @@ describe('BedspacesController', () => {
 
   const bedspaceService = createMock<BedspaceService>({})
   const premisesService = createMock<PremisesService>({})
+  const bookingService = createMock<BookingService>({})
+  const assessmentService = createMock<AssessmentsService>({})
 
-  const bedspacesController = new BedspacesController(premisesService, bedspaceService)
+  const bedspacesController = new BedspacesController(
+    premisesService,
+    bedspaceService,
+    bookingService,
+    assessmentService,
+  )
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -51,9 +69,14 @@ describe('BedspacesController', () => {
       session: {
         probationRegion: probationRegionFactory.build(),
       },
+      query: {
+        placeContextAssessmentId: placeContext.assessment.id,
+        placeContextArrivalDate: placeContext.arrivalDate,
+      },
     })
     ;(extractCallConfig as jest.MockedFn<typeof extractCallConfig>).mockReturnValue(callConfig)
     ;(generateMergeParameters as jest.Mock).mockReturnValue(undefined)
+    assessmentService.findAssessment.mockResolvedValue(assessment)
   })
 
   describe('new', () => {
@@ -120,7 +143,7 @@ describe('BedspacesController', () => {
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace added')
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.premises.v2.bedspaces.show({ premisesId, bedspaceId: bedspace.id }),
+        paths.premises.bedspaces.show({ premisesId, bedspaceId: bedspace.id }),
       )
     })
 
@@ -149,7 +172,7 @@ describe('BedspacesController', () => {
         request,
         response,
         err,
-        paths.premises.v2.bedspaces.new({ premisesId }),
+        paths.premises.bedspaces.new({ premisesId }),
       )
     })
   })
@@ -201,22 +224,22 @@ describe('BedspacesController', () => {
     const onlineBedspaceActions = [
       {
         text: 'Book bedspace',
-        href: paths.bookings.new({ premisesId, roomId: bedspaceId }),
+        href: `${paths.bookings.new({ premisesId, bedspaceId })}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Void bedspace',
-        href: paths.lostBeds.new({ premisesId, roomId: bedspaceId }),
+        href: paths.lostBeds.new({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Archive bedspace',
-        href: '/v2/properties/some-premises-id/bedspaces/some-bedspace-id/archive',
+        href: paths.premises.bedspaces.canArchive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
     ]
@@ -249,12 +272,12 @@ describe('BedspacesController', () => {
     const archivedBedspaceActions = [
       {
         text: 'Make bedspace online',
-        href: '#',
+        href: paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
     ]
@@ -287,47 +310,67 @@ describe('BedspacesController', () => {
     const upcomingBedspaceActions = [
       {
         text: 'Cancel scheduled bedspace online date',
-        href: paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        href: paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
         text: 'Edit bedspace details',
-        href: paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
     ]
+    const bookingEntry = {
+      body: bookingFactory.build({ id: bookingId }),
+      type: 'booking',
+      path: paths.bookings.show({ premisesId, bedspaceId, bookingId }),
+    }
+    const lostBedEntry = {
+      body: lostBedFactory.build({ id: lostBedId }),
+      type: 'lost-bed',
+      path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId }),
+    }
     it.each([
-      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions],
-      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions],
-      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions],
-    ])('should return a bedspace', async (bedspace: Cas3Bedspace, summary: SummaryList, actions: []) => {
-      const params = { premisesId, bedspaceId }
+      [onlineBedspace, onlineBedspaceSummary, onlineBedspaceActions, [bookingEntry, lostBedEntry]],
+      [archivedBedspace, archivedBedspaceSummary, archivedBedspaceActions, []],
+      [upcomingBedspace, upcomingBedspaceSummary, upcomingBedspaceActions, []],
+    ])(
+      'should return a bedspace',
+      async (bedspace: Cas3Bedspace, summary: SummaryList, actions: [], bookingsAndLostBeds: Array<ListingEntry>) => {
+        const params = { premisesId, bedspaceId }
 
-      premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
-      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
-      bedspaceService.summaryList.mockReturnValue(summary)
+        premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
+        bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+        bedspaceService.summaryList.mockReturnValue(summary)
+        bookingService.getListingEntries.mockResolvedValue(bookingsAndLostBeds)
 
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-      })
+        request = createMock<Request>({
+          session: {
+            probationRegion: probationRegionFactory.build(),
+          },
+          params,
+          query: {
+            placeContextAssessmentId: placeContext.assessment.id,
+            placeContextArrivalDate: placeContext.arrivalDate,
+          },
+        })
 
-      const requestHandler = bedspacesController.show()
-      await requestHandler(request, response, next)
+        const requestHandler = bedspacesController.show()
+        await requestHandler(request, response, next)
 
-      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
-        premises: premisesWithFullAddress,
-        summary,
-        bedspace,
-        actions,
-      })
+        expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/show', {
+          premises: premisesWithFullAddress,
+          summary,
+          bedspace,
+          actions,
+          listingEntries: bookingsAndLostBeds,
+        })
 
-      expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)
-      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
-      expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
-    })
+        expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)
+        expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+        expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
+        expect(bookingService.getListingEntries).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      },
+    )
   })
 
   describe('edit', () => {
@@ -436,7 +479,7 @@ describe('BedspacesController', () => {
       })
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace edited')
       expect(response.redirect).toHaveBeenCalledWith(
-        paths.premises.v2.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }),
+        paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }),
       )
     })
 
@@ -471,7 +514,7 @@ describe('BedspacesController', () => {
         request,
         response,
         err,
-        paths.premises.v2.bedspaces.edit({ premisesId, bedspaceId }),
+        paths.premises.bedspaces.edit({ premisesId, bedspaceId }),
       )
     })
   })
@@ -492,7 +535,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
 
     it('redirects to the bedspace page without cancelling if "no" is selected', async () => {
@@ -502,7 +545,7 @@ describe('BedspacesController', () => {
 
       expect(bedspaceService.cancelArchiveBedspace).not.toHaveBeenCalled()
       expect(request.flash).not.toHaveBeenCalledWith('success', 'Bedspace archive cancelled')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
 
     it('renders the cancel archive page with errors when the service throws', async () => {
@@ -516,7 +559,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.v2.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+        paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
       )
     })
   })
@@ -606,7 +649,7 @@ describe('BedspacesController', () => {
   })
 
   describe('archiveSubmit', () => {
-    it('successfully archives a bedspace and redirects to show page', async () => {
+    it('successfully archives a bedspace and redirects to show page when not last bedspace', async () => {
       const params = { premisesId, bedspaceId }
 
       request = createMock<Request>({
@@ -619,11 +662,22 @@ describe('BedspacesController', () => {
         },
       })
 
+      const allBedspaces = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'online' }),
+          cas3BedspaceFactory.build({ id: 'other-bedspace', status: 'online' }),
+        ],
+        totalOnlineBedspaces: 2,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      })
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(allBedspaces)
       bedspaceService.archiveBedspace.mockResolvedValue()
 
       const requestHandler = bedspacesController.archiveSubmit()
       await requestHandler(request, response, next)
 
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
       expect(bedspaceService.archiveBedspace).toHaveBeenCalledWith(
         callConfig,
         premisesId,
@@ -632,7 +686,46 @@ describe('BedspacesController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace archived')
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.v2.bedspaces.show({ premisesId, bedspaceId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('successfully archives the last bedspace and redirects to show page with archived property message', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          archiveOption: 'today',
+        },
+      })
+
+      const allBedspaces = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'online' }),
+          cas3BedspaceFactory.build({ id: 'other-bedspace', status: 'archived' }),
+        ],
+        totalOnlineBedspaces: 1,
+        totalArchivedBedspaces: 1,
+        totalUpcomingBedspaces: 0,
+      })
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(allBedspaces)
+      bedspaceService.archiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.archiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.archiveBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/), // Today's date in ISO format
+      )
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property archived')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
 
     it('should fail to archive when the service returns an error', async () => {
@@ -673,7 +766,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+        paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
         'bedspaceArchive',
         mergeParameters,
       )
@@ -704,7 +797,7 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+        paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
         'bedspaceArchive',
         undefined,
       )
@@ -739,10 +832,204 @@ describe('BedspacesController', () => {
         request,
         response,
         error,
-        paths.premises.v2.bedspaces.archive({ premisesId, bedspaceId }),
+        paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
         'bedspaceArchive',
         undefined,
       )
+    })
+  })
+
+  describe('canArchive', () => {
+    it('redirects to cannot-archive page when blocking date exists', async () => {
+      const params = { premisesId, bedspaceId }
+      const canArchiveResponse = { date: '2025-08-28', entityId: 'some-id', entityReference: 'some-ref' }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
+
+      const requestHandler = bedspacesController.canArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.cannotArchive({ premisesId, bedspaceId }))
+    })
+
+    it('redirects to archive page when no blocking date exists', async () => {
+      const params = { premisesId, bedspaceId }
+      const canArchiveResponse = {}
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
+
+      const requestHandler = bedspacesController.canArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
+    })
+
+    it('redirects to bedspace show page on error', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      bedspaceService.canArchiveBedspace.mockRejectedValue(new Error('API Error'))
+
+      const requestHandler = bedspacesController.canArchive()
+      await requestHandler(request, response, next)
+
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+  })
+
+  describe('unarchive', () => {
+    it('renders the unarchive page with bedspace details', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+
+      request = createMock<Request>({
+        params: { premisesId, bedspaceId },
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+      })
+
+      const requestHandler = bedspacesController.unarchive()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/unarchive', {
+        bedspace,
+        params: request.params,
+        errors: {},
+        errorSummary: [],
+        unarchiveOption: 'today',
+      })
+    })
+  })
+
+  describe('unarchiveSubmit', () => {
+    it('successfully unarchives a bedspace and redirects to show page when not last archived bedspace', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          unarchiveOption: 'today',
+        },
+      })
+
+      const otherArchivedBedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      const bedspacesList = cas3BedspacesFactory.build({
+        bedspaces: [cas3BedspaceFactory.build({ id: bedspaceId, status: 'archived' }), otherArchivedBedspace],
+      })
+
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspacesList)
+      bedspaceService.unarchiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        expect.any(String),
+      )
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace online')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('successfully unarchives the last archived bedspace and shows property message', async () => {
+      const params = { premisesId, bedspaceId }
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          unarchiveOption: 'today',
+        },
+      })
+
+      const bedspacesList = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'archived' }),
+          cas3BedspaceFactory.build({ status: 'online' }),
+        ],
+      })
+
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspacesList)
+      bedspaceService.unarchiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(
+        callConfig,
+        premisesId,
+        bedspaceId,
+        expect.any(String),
+      )
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property online')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
+    })
+
+    it('successfully unarchives the last archived bedspace with future date and shows property updated message', async () => {
+      const params = { premisesId, bedspaceId }
+      const futureDate = '2025-12-01'
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+        body: {
+          unarchiveOption: 'other',
+          'restartDate-day': '1',
+          'restartDate-month': '12',
+          'restartDate-year': '2025',
+        },
+      })
+
+      const bedspacesList = cas3BedspacesFactory.build({
+        bedspaces: [
+          cas3BedspaceFactory.build({ id: bedspaceId, status: 'archived' }),
+          cas3BedspaceFactory.build({ status: 'online' }),
+        ],
+      })
+
+      bedspaceService.getBedspacesForPremises.mockResolvedValue(bedspacesList)
+      bedspaceService.unarchiveBedspace.mockResolvedValue()
+
+      const requestHandler = bedspacesController.unarchiveSubmit()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getBedspacesForPremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.unarchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId, futureDate)
+      expect(request.flash).toHaveBeenCalledWith('success', 'Bedspace and property updated')
+      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
   })
 })

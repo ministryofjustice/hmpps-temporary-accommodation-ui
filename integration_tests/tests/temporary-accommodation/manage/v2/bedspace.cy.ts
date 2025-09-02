@@ -1,5 +1,7 @@
 import { Cas3BedspaceStatus, Cas3Premises, Cas3PremisesBedspaceTotals, Characteristic } from '@approved-premises/api'
 import {
+  bedFactory,
+  bookingFactory,
   cas3BedspaceFactory,
   cas3BedspacesFactory,
   cas3NewBedspaceFactory,
@@ -8,6 +10,7 @@ import {
   cas3PremisesSearchResultsFactory,
   cas3UpdateBedspaceFactory,
   characteristicFactory,
+  lostBedFactory,
 } from '../../../../../server/testutils/factories'
 import BedspaceNewPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceNew'
 
@@ -17,6 +20,8 @@ import PremisesListPage from '../../../../../cypress_shared/pages/temporary-acco
 import Page from '../../../../../cypress_shared/pages/page'
 import PremisesShowPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/premisesShow'
 import BedspaceEditPage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceEdit'
+import BedspaceArchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceArchive'
+import BedspaceUnarchivePage from '../../../../../cypress_shared/pages/temporary-accommodation/manage/v2/bedspaceUnarchive'
 
 context('Bedspace', () => {
   beforeEach(() => {
@@ -39,6 +44,18 @@ context('Bedspace', () => {
       reference: bedspace.reference,
     }
     const premises = cas3PremisesFactory.build({ status: 'online' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
+
     const searchResult = cas3PremisesSearchResultFactory.build({ ...premises, bedspaces: [bedspaceSummary] })
     const searchResults = cas3PremisesSearchResultsFactory.build({ results: [searchResult] })
     cy.task('stubSinglePremisesV2', premises)
@@ -46,6 +63,8 @@ context('Bedspace', () => {
 
     // And there is an online bedspace in the database for that premises
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the premises page
     const premisesPage = PremisesListPage.visit()
@@ -83,9 +102,22 @@ context('Bedspace', () => {
       totalUpcomingBedspaces: 0,
       totalArchivedBedspaces: 0,
     })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: bedspace.id,
+      })
+      .buildList(5)
     cy.task('stubSinglePremisesV2', premises)
     cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces })
     cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the premises show page
     const premisesPage = PremisesShowPage.visit(premises)
@@ -136,8 +168,22 @@ context('Bedspace', () => {
         startDate: bedspace.startDate,
       })
 
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
       cy.task('stubBedspaceCreate', { premisesId: premises.id, bedspace })
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       page.completeForm(newBedspace)
 
@@ -224,11 +270,23 @@ context('Bedspace', () => {
         status: 'online',
         characteristics: characteristicFactory.buildList(5),
       })
-      cy.task('stubSinglePremisesV2', premises)
-
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+      cy.task('stubSinglePremisesV2', premises)
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -244,11 +302,23 @@ context('Bedspace', () => {
         status: 'online',
         characteristics: [],
       })
-      cy.task('stubSinglePremisesV2', premises)
-
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+      cy.task('stubSinglePremisesV2', premises)
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -261,11 +331,24 @@ context('Bedspace', () => {
     it('shows an online bedspace', () => {
       // And there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2024-01-02' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -280,11 +363,24 @@ context('Bedspace', () => {
     it('shows an archived bedspace', () => {
       // And there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'archived', startDate: '2024-02-03' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -300,15 +396,27 @@ context('Bedspace', () => {
       it('allows cancelling of an upcoming archive', () => {
         // And there is an active premises in the database
         const premises = cas3PremisesFactory.build({ status: 'online' })
-        cy.task('stubSinglePremisesV2', premises)
-
         // And there is an online bedspace in the database scheduled for archive
         const bedspace = cas3BedspaceFactory.build({
           status: 'online',
           startDate: '2024-02-03',
           endDate: '2026-08-01',
         })
+        const bookings = bookingFactory
+          .params({
+            bed: bedFactory.build({ id: bedspace.id }),
+          })
+          .buildList(5)
+        const lostBeds = lostBedFactory
+          .active()
+          .params({
+            bedId: bedspace.id,
+          })
+          .buildList(5)
         cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+        cy.task('stubSinglePremisesV2', premises)
+        cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+        cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
         // And the premises totals are stubbed
         const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
@@ -340,15 +448,28 @@ context('Bedspace', () => {
       it('shows the premise archive message if the premises is scheduled to be archived', () => {
         // And there is an active premises in the database
         const premises = cas3PremisesFactory.build({ status: 'online' })
-        cy.task('stubSinglePremisesV2', premises)
-
         // And there is an online bedspace in the database scheduled for archive
         const bedspace = cas3BedspaceFactory.build({
           status: 'online',
           startDate: '2024-02-03',
           endDate: '2026-08-01',
         })
+        const bookings = bookingFactory
+          .params({
+            bed: bedFactory.build({ id: bedspace.id }),
+          })
+          .buildList(5)
+        const lostBeds = lostBedFactory
+          .active()
+          .params({
+            bedId: bedspace.id,
+          })
+          .buildList(5)
+
         cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+        cy.task('stubSinglePremisesV2', premises)
+        cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+        cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
         // And the premises totals are stubbed
         const totals = { premisesEndDate: '2126-08-01', status: 'online' } as Cas3PremisesBedspaceTotals
@@ -370,15 +491,28 @@ context('Bedspace', () => {
       it('shows an error if cancelling the archive fails', () => {
         // And there is an active premises in the database
         const premises = cas3PremisesFactory.build({ status: 'online' })
-        cy.task('stubSinglePremisesV2', premises)
-
         // And there is an online bedspace in the database scheduled for archive
         const bedspace = cas3BedspaceFactory.build({
           status: 'online',
           startDate: '2024-02-03',
           endDate: '2126-08-01',
         })
+        const bookings = bookingFactory
+          .params({
+            bed: bedFactory.build({ id: bedspace.id }),
+          })
+          .buildList(5)
+        const lostBeds = lostBedFactory
+          .active()
+          .params({
+            bedId: bedspace.id,
+          })
+          .buildList(5)
+
         cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+        cy.task('stubSinglePremisesV2', premises)
+        cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+        cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
         // And the premises totals are stubbed
         const totals = { premisesEndDate: null, status: 'online' } as Cas3PremisesBedspaceTotals
@@ -404,11 +538,24 @@ context('Bedspace', () => {
     it('shows an upcoming bedspace', () => {
       // And there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })
-      cy.task('stubSinglePremisesV2', premises)
-
       // And there is an online bedspace in the database
       const bedspace = cas3BedspaceFactory.build({ status: 'upcoming', startDate: '2024-03-04' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the show bedspace page
       const page = BedspaceShowPage.visit(premises, bedspace)
@@ -426,8 +573,22 @@ context('Bedspace', () => {
       // And there is online premises in the database with an online bedspace
       const bedspace = cas3BedspaceFactory.build({ status: 'online' })
       const premises = cas3PremisesFactory.build({ status: 'online' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
       cy.task('stubSinglePremisesV2', premises)
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the show bedspace page
       const showPage = BedspaceShowPage.visit(premises, bedspace)
@@ -486,8 +647,22 @@ context('Bedspace', () => {
       ]
       const bedspace = cas3BedspaceFactory.build({ status: 'online', characteristics })
       const premises = cas3PremisesFactory.build({ status: 'online' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
       cy.task('stubSinglePremisesV2', premises)
       cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
       // When I visit the edit bedspace page
       const page = BedspaceEditPage.visit(premises, bedspace)
@@ -595,6 +770,295 @@ context('Bedspace', () => {
       // And I should see the previous bedspace information
       page.validateEnteredCharacteristics(bedspace.characteristics.map(ch => ch.name))
       page.validateEnteredAdditionalDetails(bedspace.notes)
+    })
+  })
+
+  describe('archiving a bedspace', () => {
+    it('navigates to archive page when can-archive allows it, and archives successfully with success message (for premises as well) for last bedspace', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the bedspace can be archived
+      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the archive button and be able to click it
+      bedspaceShowPage.clickArchiveLink()
+
+      // And I should navigate to the archive bedspace page
+      const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
+      archivePage.shouldShowBedspaceDetails()
+
+      // When I archive with today option
+      cy.task('stubBedspaceArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+
+      const bedspacesList = {
+        bedspaces: [bedspace],
+        totalOnlineBedspaces: 1,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      }
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+
+      const archivedBedspace = { ...bedspace, status: 'archived' }
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: archivedBedspace })
+      archivePage.completeArchiveWithToday()
+
+      // Then I should be redirected to the bedspace show page with success message for last bedspace
+      const finalBedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, archivedBedspace)
+      finalBedspaceShowPage.shouldShowBanner('Bedspace and property archived')
+      finalBedspaceShowPage.shouldShowAsArchived()
+      finalBedspaceShowPage.shouldNotShowArchiveLink()
+    })
+
+    it('navigates to archive page and archives successfully with success message when not last bedspace', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the bedspace can be archived
+      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the archive button and be able to click it
+      bedspaceShowPage.clickArchiveLink()
+
+      // And I should navigate to the archive bedspace page
+      const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
+      archivePage.shouldShowBedspaceDetails()
+
+      // When I archive with today option
+      cy.task('stubBedspaceArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+
+      const otherBedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const bedspacesList = {
+        bedspaces: [bedspace, otherBedspace],
+        totalOnlineBedspaces: 2,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      }
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+
+      const archivedBedspace = { ...bedspace, status: 'archived' }
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: archivedBedspace })
+      archivePage.completeArchiveWithToday()
+
+      // Then I should be redirected to the bedspace show page with success message
+      const finalBedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, archivedBedspace)
+      finalBedspaceShowPage.shouldShowBanner('Bedspace archived')
+      finalBedspaceShowPage.shouldShowAsArchived()
+      finalBedspaceShowPage.shouldNotShowArchiveLink()
+    })
+
+    it('navigates to archive page, and fails to archive with error based on the API response', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the bedspace can be archived
+      cy.task('stubBedspaceCanArchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the archive button and be able to click it
+      bedspaceShowPage.clickArchiveLink()
+
+      // And I should navigate to the archive bedspace page
+      const archivePage = Page.verifyOnPage(BedspaceArchivePage, premises, bedspace)
+      archivePage.shouldShowBedspaceDetails()
+
+      // When I try to archive with past date
+      cy.task('stubBedspaceArchiveV2WithError', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        errorType: 'invalidEndDateInThePast',
+      })
+
+      const bedspacesList = {
+        bedspaces: [bedspace],
+        totalOnlineBedspaces: 1,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      }
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+
+      // Select another date option and enter a past date (1/1/1900)
+      archivePage.selectAnotherDateOption()
+      archivePage.enterArchiveDate('1', '1', '1900')
+      archivePage.clickSubmit()
+
+      // Then I should see the validation error based on the API response
+      archivePage.shouldShowError('The date is not within the next 3 months')
+    })
+  })
+
+  describe('unarchiving a bedspace', () => {
+    it('navigates to unarchive page, and unarchives successfully with success message when not last archived bedspace', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an archived bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the unarchive button and be able to click it
+      bedspaceShowPage.clickUnarchiveLink()
+
+      // And I should navigate to the unarchive bedspace page
+      const unarchivePage = Page.verifyOnPage(BedspaceUnarchivePage, premises, bedspace)
+      unarchivePage.shouldShowBedspaceDetails()
+
+      // When I unarchive with today option
+      cy.task('stubBedspaceUnarchiveV2', { premisesId: premises.id, bedspaceId: bedspace.id })
+
+      const otherArchivedBedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      const bedspacesList = {
+        bedspaces: [bedspace, otherArchivedBedspace],
+        totalOnlineBedspaces: 0,
+        totalArchivedBedspaces: 2,
+        totalUpcomingBedspaces: 0,
+      }
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+
+      const unarchivedBedspace = { ...bedspace, status: 'online' }
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: unarchivedBedspace })
+      unarchivePage.completeUnarchiveWithToday()
+
+      // Then I should be redirected to the bedspace show page with success message
+      const finalBedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, premises, unarchivedBedspace)
+      finalBedspaceShowPage.shouldShowBanner('Bedspace online')
+      finalBedspaceShowPage.shouldShowAsOnline()
+      finalBedspaceShowPage.shouldShowArchiveLink()
+    })
+
+    it('navigates to unarchive page, and fails to unarchive with error based on the API response', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an archived bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'archived' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(5)
+      const lostBeds = lostBedFactory
+        .active()
+        .params({
+          bedId: bedspace.id,
+        })
+        .buildList(5)
+
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // Then I should see the unarchive button and be able to click it
+      bedspaceShowPage.clickUnarchiveLink()
+
+      // And I should navigate to the unarchive bedspace page
+      const unarchivePage = Page.verifyOnPage(BedspaceUnarchivePage, premises, bedspace)
+      unarchivePage.shouldShowBedspaceDetails()
+
+      // When I try to unarchive with past date
+      cy.task('stubBedspaceUnarchiveV2WithError', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        errorType: 'invalidEndDateInThePast',
+      })
+
+      const bedspacesList = {
+        bedspaces: [bedspace],
+        totalOnlineBedspaces: 1,
+        totalArchivedBedspaces: 0,
+        totalUpcomingBedspaces: 0,
+      }
+      cy.task('stubPremisesBedspacesV2', { premisesId: premises.id, bedspaces: bedspacesList })
+
+      // Select another date option and enter a past date (1/1/1900)
+      unarchivePage.selectAnotherDateOption()
+      unarchivePage.enterArchiveDate('1', '1', '1900')
+      unarchivePage.clickSubmit()
+
+      // Then I should see the validation error based on the API response
+      unarchivePage.shouldShowError('The restart date must be after the last archive end date')
     })
   })
 })

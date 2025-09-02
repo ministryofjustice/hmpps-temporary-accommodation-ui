@@ -15,6 +15,7 @@ import ReferenceDataClient from '../../data/referenceDataClient'
 import { DateFormats } from '../../utils/dateUtils'
 import { convertToTitleCase } from '../../utils/utils'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
+import { bedspaceStatus } from '../../utils/v2/bedspaceUtils'
 
 export type BedspaceReferenceData = {
   characteristics: Array<Characteristic>
@@ -154,6 +155,15 @@ export default class BedspaceService {
     return bedspaceClient.cancelArchive(premisesId, bedspaceId)
   }
 
+  async canArchiveBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+  ): Promise<{ date?: string; entityId?: string; entityReference?: string }> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.canArchive(premisesId, bedspaceId)
+  }
+
   async archiveBedspace(
     callConfig: CallConfig,
     premisesId: string,
@@ -162,5 +172,52 @@ export default class BedspaceService {
   ): Promise<void> {
     const bedspaceClient = this.bedspaceClientFactory(callConfig)
     return bedspaceClient.archive(premisesId, bedspaceId, { endDate })
+  }
+
+  summaryListForBedspaceStatus(bedspace: Cas3Bedspace): SummaryList {
+    let endDate = 'No end date added'
+
+    if (bedspace.endDate) {
+      endDate = DateFormats.isoDateToUIDate(bedspace.endDate)
+
+      if (bedspaceStatus(bedspace) === 'online') {
+        endDate += ` (${DateFormats.isoDateToDaysFromNow(bedspace.endDate)})`
+      }
+    }
+
+    return {
+      rows: [
+        {
+          key: this.textValue('Bedspace status'),
+          value: this.htmlValue(
+            bedspaceStatus(bedspace) === 'online'
+              ? `<span class="govuk-tag govuk-tag--green">Online</span>`
+              : `<span class="govuk-tag govuk-tag--grey">Archived</span>`,
+          ),
+        },
+        {
+          key: this.textValue('Bedspace end date'),
+          value: this.textValue(endDate),
+        },
+      ],
+    }
+  }
+
+  private textValue(value: string) {
+    return { text: value }
+  }
+
+  private htmlValue(value: string) {
+    return { html: value }
+  }
+
+  async unarchiveBedspace(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+    restartDate: string,
+  ): Promise<void> {
+    const bedspaceClient = this.bedspaceClientFactory(callConfig)
+    return bedspaceClient.unarchive(premisesId, bedspaceId, { restartDate })
   }
 }

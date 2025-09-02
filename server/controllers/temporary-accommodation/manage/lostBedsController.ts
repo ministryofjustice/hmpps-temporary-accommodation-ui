@@ -3,7 +3,7 @@ import type { Request, RequestHandler, Response } from 'express'
 import type { NewLostBed, NewLostBedCancellation, UpdateLostBed } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
 import { AssessmentsService, LostBedService, PremisesService } from '../../../services'
-import BedspaceService from '../../../services/bedspaceService'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
 import { allStatuses, lostBedActions } from '../../../utils/lostBedUtils'
@@ -27,18 +27,18 @@ export default class LostBedsController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId } = req.params
+      const { premisesId, bedspaceId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBedReasons = await this.lostBedsService.getReferenceData(callConfig)
 
       return res.render('temporary-accommodation/lost-beds/new', {
         premises,
-        room,
+        bedspace,
         lostBedReasons,
         errors,
         errorTitle,
@@ -50,7 +50,7 @@ export default class LostBedsController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId } = req.params
+      const { premisesId, bedspaceId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newLostBed: NewLostBed = {
@@ -63,36 +63,36 @@ export default class LostBedsController {
         const lostBed = await this.lostBedsService.create(callConfig, premisesId, newLostBed)
 
         req.flash('success', 'Void created')
-        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: lostBed.id }))
+        res.redirect(paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed.id }))
       } catch (err) {
         if (err.status === 409) {
-          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'plural'))
           insertGenericError(err, 'startDate', 'conflict')
           insertGenericError(err, 'endDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.new({ premisesId, roomId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.new({ premisesId, bedspaceId }))
       }
     }
   }
 
   show(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, lostBedId } = req.params
+      const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
       await preservePlaceContext(req, res, this.assessmentService)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)
 
       return res.render('temporary-accommodation/lost-beds/show', {
         premises,
-        room,
+        bedspace,
         lostBed,
-        actions: lostBedActions(premisesId, roomId, lostBed),
+        actions: lostBedActions(premisesId, bedspaceId, lostBed),
         allStatuses,
       })
     }
@@ -100,7 +100,7 @@ export default class LostBedsController {
 
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, lostBedId } = req.params
+      const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
       const lostBedUpdate: UpdateLostBed = {
@@ -113,15 +113,15 @@ export default class LostBedsController {
         const updatedLostBed = await this.lostBedsService.update(callConfig, premisesId, lostBedId, lostBedUpdate)
 
         req.flash('success', 'Void booking updated')
-        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId: updatedLostBed.id }))
+        res.redirect(paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: updatedLostBed.id }))
       } catch (err) {
         if (err.status === 409) {
-          insertBespokeError(err, generateConflictBespokeError(err, premisesId, roomId, 'plural'))
+          insertBespokeError(err, generateConflictBespokeError(err, premisesId, bedspaceId, 'plural'))
           insertGenericError(err, 'startDate', 'conflict')
           insertGenericError(err, 'endDate', 'conflict')
         }
 
-        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.edit({ premisesId, roomId, lostBedId }))
+        catchValidationErrorOrPropogate(req, res, err, paths.lostBeds.edit({ premisesId, bedspaceId, lostBedId }))
       }
     }
   }
@@ -130,11 +130,11 @@ export default class LostBedsController {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, errorTitle, userInput } = fetchErrorsAndUserInput(req)
 
-      const { premisesId, roomId, lostBedId } = req.params
+      const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBedReasons = await this.lostBedsService.getReferenceData(callConfig)
 
@@ -146,7 +146,7 @@ export default class LostBedsController {
         errorSummary,
         errorTitle,
         premises,
-        room,
+        bedspace,
         lostBedId,
         ...updateLostBed,
         ...DateFormats.isoToDateAndTimeInputs(updateLostBed.startDate, 'startDate'),
@@ -160,11 +160,11 @@ export default class LostBedsController {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
 
-      const { premisesId, roomId, lostBedId } = req.params
+      const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
 
       const lostBed = await this.lostBedsService.find(callConfig, premisesId, lostBedId)
 
@@ -172,7 +172,7 @@ export default class LostBedsController {
         errors,
         errorSummary,
         premises,
-        room,
+        bedspace,
         lostBed,
         allStatuses,
         notes: lostBed.notes,
@@ -183,7 +183,7 @@ export default class LostBedsController {
 
   createCancellation(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, lostBedId } = req.params
+      const { premisesId, bedspaceId, lostBedId } = req.params
       const callConfig = extractCallConfig(req)
 
       const lostBedCancellation: NewLostBedCancellation = {
@@ -194,13 +194,13 @@ export default class LostBedsController {
         await this.lostBedsService.cancel(callConfig, premisesId, lostBedId, lostBedCancellation)
 
         req.flash('success', 'Void booking cancelled')
-        res.redirect(paths.lostBeds.show({ premisesId, roomId, lostBedId }))
+        res.redirect(paths.lostBeds.show({ premisesId, bedspaceId, lostBedId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.lostBeds.cancellations.new({ premisesId, roomId, lostBedId }),
+          paths.lostBeds.cancellations.new({ premisesId, bedspaceId, lostBedId }),
         )
       }
     }

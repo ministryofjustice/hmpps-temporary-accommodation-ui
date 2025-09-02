@@ -1,4 +1,4 @@
-import type { Booking, NewConfirmation, Premises, Room } from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, NewConfirmation, Premises, Room } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BookingInfoComponent from '../../../components/bookingInfo'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -12,17 +12,23 @@ export default class BookingConfirmationNewPage extends Page {
 
   private readonly bookingInfoComponent: BookingInfoComponent
 
-  constructor(premises: Premises, room: Room, booking: Booking) {
+  constructor(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking) {
     super('Mark booking as confirmed')
 
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
     this.bookingInfoComponent = new BookingInfoComponent(booking)
   }
 
-  static visit(premises: Premises, room: Room, booking: Booking): BookingConfirmationNewPage {
-    cy.visit(paths.bookings.confirmations.new({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
-    return new BookingConfirmationNewPage(premises, room, booking)
+  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking): BookingConfirmationNewPage {
+    if (room) {
+      cy.visit(paths.bookings.confirmations.new({ premisesId: premises.id, roomId: room.id, bookingId: booking.id }))
+    } else {
+      cy.visit(
+        paths.bookings.confirmations.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }),
+      )
+    }
+    return new BookingConfirmationNewPage(premises, room, bedspace, booking)
   }
 
   shouldShowBookingDetails(): void {

@@ -4,14 +4,14 @@ import { addDays } from 'date-fns'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { ArrivalService, BedspaceService, BookingService, PremisesService } from '../../../services'
+import { ArrivalService, BookingService, PremisesService } from '../../../services'
 import {
   arrivalFactory,
   bookingFactory,
+  cas3BedspaceFactory,
   confirmationFactory,
   newArrivalFactory,
   premisesFactory,
-  roomFactory,
 } from '../../../testutils/factories'
 import { generateConflictBespokeError } from '../../../utils/bookingUtils'
 import { DateFormats } from '../../../utils/dateUtils'
@@ -24,6 +24,7 @@ import {
 } from '../../../utils/validation'
 import ArrivalsController from './arrivalsController'
 import config from '../../../config'
+import BedspaceService from '../../../services/v2/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/restUtils')
@@ -32,7 +33,7 @@ jest.mock('../../../utils/bookingUtils')
 describe('ArrivalsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const bookingId = 'bookingId'
 
   let request: Request
@@ -56,17 +57,17 @@ describe('ArrivalsController', () => {
     describe('new', () => {
       it('renders the form prepopulated with the current booking dates', async () => {
         const premises = premisesFactory.build()
-        const room = roomFactory.build()
+        const bedspace = cas3BedspaceFactory.build()
         const booking = bookingFactory.arrived().build()
 
         request.params = {
           premisesId: premises.id,
-          roomId: room.id,
+          bedspaceId: bedspace.id,
           bookingId: booking.id,
         }
 
         premisesService.getPremises.mockResolvedValue(premises)
-        bedspaceService.getRoom.mockResolvedValue(room)
+        bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         bookingService.getBooking.mockResolvedValue(booking)
 
         const requestHandler = arrivalsController.new()
@@ -75,12 +76,12 @@ describe('ArrivalsController', () => {
         await requestHandler(request, response, next)
 
         expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-        expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+        expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
         expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/new', {
           premises,
-          room,
+          bedspace,
           booking,
           errors: {},
           errorSummary: [],
@@ -98,7 +99,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -123,7 +124,7 @@ describe('ArrivalsController', () => {
           title: 'Booking marked as active',
           text: 'At the moment the CAS3 digital service does not automatically update NDelius. Please continue to record accommodation and address changes directly in NDelius.',
         })
-        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       })
 
       it('renders with errors if the API returns an error', async () => {
@@ -136,7 +137,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -156,7 +157,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
         )
       })
 
@@ -170,7 +171,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -193,7 +194,7 @@ describe('ArrivalsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'plural')
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, bedspaceId, 'plural')
         expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
         expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
         expect(insertGenericError).toHaveBeenCalledWith(err, 'expectedDepartureDate', 'conflict')
@@ -201,7 +202,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
         )
       })
 
@@ -218,7 +219,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -238,7 +239,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.new({ premisesId, bedspaceId, bookingId }),
         )
       })
     })
@@ -248,17 +249,17 @@ describe('ArrivalsController', () => {
     describe('edit', () => {
       it('renders the form', async () => {
         const premises = premisesFactory.build()
-        const room = roomFactory.build()
+        const bedspace = cas3BedspaceFactory.build()
         const booking = bookingFactory.arrived().build()
 
         request.params = {
           premisesId: premises.id,
-          roomId: room.id,
+          bedspaceId: bedspace.id,
           bookingId: booking.id,
         }
 
         premisesService.getPremises.mockResolvedValue(premises)
-        bedspaceService.getRoom.mockResolvedValue(room)
+        bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         bookingService.getBooking.mockResolvedValue(booking)
 
         const requestHandler = arrivalsController.edit()
@@ -267,12 +268,12 @@ describe('ArrivalsController', () => {
         await requestHandler(request, response, next)
 
         expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-        expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+        expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
         expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
         expect(response.render).toHaveBeenCalledWith('temporary-accommodation/arrivals/edit', {
           premises,
-          room,
+          bedspace,
           booking,
           errors: {},
           errorSummary: [],
@@ -294,7 +295,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -314,7 +315,7 @@ describe('ArrivalsController', () => {
         )
 
         expect(request.flash).toHaveBeenCalledWith('success', 'Arrival updated')
-        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+        expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       })
 
       it('renders with errors if the API returns an error', async () => {
@@ -327,7 +328,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -346,7 +347,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId, bookingId }),
         )
       })
 
@@ -360,7 +361,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -382,14 +383,14 @@ describe('ArrivalsController', () => {
 
         await requestHandler(request, response, next)
 
-        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId, 'singular')
+        expect(generateConflictBespokeError).toHaveBeenCalledWith(err, premisesId, bedspaceId, 'singular')
         expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
         expect(insertGenericError).toHaveBeenCalledWith(err, 'arrivalDate', 'conflict')
         expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
           request,
           response,
           err,
-          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId, bookingId }),
         )
       })
 
@@ -404,7 +405,7 @@ describe('ArrivalsController', () => {
 
         request.params = {
           premisesId,
-          roomId,
+          bedspaceId,
           bookingId,
         }
         request.body = {
@@ -424,7 +425,7 @@ describe('ArrivalsController', () => {
           request,
           response,
           err,
-          paths.bookings.arrivals.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.arrivals.edit({ premisesId, bedspaceId, bookingId }),
         )
       })
     })
@@ -442,17 +443,17 @@ describe('ArrivalsController', () => {
 
     it('does not show the NDelius update message when creating', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = arrivalsController.new()
@@ -461,7 +462,7 @@ describe('ArrivalsController', () => {
       await requestHandler(request, response, next)
 
       expect(premisesService.getPremises).toHaveBeenCalledWith(callConfig, premises.id)
-      expect(bedspaceService.getRoom).toHaveBeenCalledWith(callConfig, premises.id, room.id)
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premises.id, bedspace.id)
       expect(bookingService.getBooking).toHaveBeenCalledWith(callConfig, premises.id, booking.id)
 
       expect(response.render).toHaveBeenCalledWith(
@@ -478,7 +479,7 @@ describe('ArrivalsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {

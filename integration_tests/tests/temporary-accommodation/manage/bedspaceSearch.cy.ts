@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker/locale/en'
 import Page from '../../../../cypress_shared/pages/page'
 import DashboardPage from '../../../../cypress_shared/pages/temporary-accommodation/dashboardPage'
 import AssessmentSummaryPage from '../../../../cypress_shared/pages/assess/summary'
@@ -6,9 +7,14 @@ import BedspaceShowPage from '../../../../cypress_shared/pages/temporary-accommo
 import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   assessmentFactory,
+  bedFactory,
   bedspaceSearchFormParametersFactory,
   bedspaceSearchResultFactory,
   bedspaceSearchResultsFactory,
+  bookingFactory,
+  cas3BedspaceFactory,
+  cas3PremisesFactory,
+  lostBedFactory,
   overlapFactory,
   personFactory,
   placeContextFactory,
@@ -157,16 +163,35 @@ context('Bedspace Search', () => {
     // When I visit the search bedspaces page
     const preSearchPage = BedspaceSearchPage.visit()
 
+    const premisesId = faker.string.uuid()
+    const bedspaceId = faker.string.uuid()
+
     // And when I fill out the form
-    const premises = premisesFactory.build()
-    const room = roomFactory.build()
+    const premises = premisesFactory.build({ id: premisesId, name: 'Test premises' })
+    const cas3Premises = cas3PremisesFactory.build({ id: premisesId, status: 'online', reference: 'Test premises' })
+    const cas3Bedspace = cas3BedspaceFactory.build({ id: bedspaceId, reference: 'Test bedspace', status: 'online' })
+    const bookings = bookingFactory
+      .params({
+        bed: bedFactory.build({ id: cas3Bedspace.id }),
+      })
+      .buildList(5)
+    const lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
+      })
+      .buildList(5)
+
     const results = bedspaceSearchResultsFactory.build({
-      results: [bedspaceSearchResultFactory.forBedspace(premises, room).build()],
+      results: [bedspaceSearchResultFactory.forBedspace(premises, null, cas3Bedspace).build()],
     })
 
     cy.task('stubBedspaceSearch', results)
     cy.task('stubSinglePremises', premises)
-    cy.task('stubSingleRoom', { premisesId: premises.id, room })
+    cy.task('stubSinglePremisesV2', cas3Premises)
+    cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace: cas3Bedspace })
+    cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+    cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     const searchParameters = bedspaceSearchFormParametersFactory.build()
     preSearchPage.completeForm(searchParameters)
@@ -174,9 +199,9 @@ context('Bedspace Search', () => {
 
     // I should be able to navigate to a bedspace
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
-    postSearchPage.clickBedspaceLink(room)
+    postSearchPage.clickBedspaceLinkV2(cas3Bedspace)
 
-    Page.verifyOnPage(BedspaceShowPage, premises, room)
+    Page.verifyOnPage(BedspaceShowPage, premises, null, cas3Bedspace, cas3Bedspace.reference)
   })
 
   it("allows me to view an overlapping offender's referral", () => {
@@ -199,7 +224,7 @@ context('Bedspace Search', () => {
 
     const results = bedspaceSearchResultsFactory.build({
       results: [
-        bedspaceSearchResultFactory.forBedspace(premises, room).build({
+        bedspaceSearchResultFactory.forBedspace(premises, room, null).build({
           overlaps: [
             overlapFactory.build({
               name: person.name,

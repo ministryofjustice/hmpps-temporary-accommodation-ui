@@ -201,6 +201,99 @@ const stubBedspaceArchiveV2WithError = (args: { premisesId: string; bedspaceId: 
     },
   })
 
+const stubBedspaceUnarchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.cas3.premises.bedspaces.unarchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+
+const stubBedspaceUnarchiveV2WithError = (args: { premisesId: string; bedspaceId: string; errorType: string }) =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPathPattern: paths.cas3.premises.bedspaces.unarchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 400,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        'invalid-params': [
+          {
+            propertyName: '$.restartDate',
+            errorType: args.errorType === 'invalidEndDateInThePast' ? 'beforeLastBedspaceArchivedDate' : args.errorType,
+            entityId: null,
+            value: null,
+          },
+        ],
+        title: 'Bad Request',
+        status: 400,
+        detail: 'There is a problem with your request',
+      },
+    },
+  })
+
+const stubBedspaceCanArchiveV2 = (args: { premisesId: string; bedspaceId: string }) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.cas3.premises.bedspaces.canArchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {},
+    },
+  })
+
+const stubBedspaceCanArchiveV2WithBlocking = (args: {
+  premisesId: string
+  bedspaceId: string
+  blockingDate: string
+  entityId: string
+  entityReference: string
+}) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPathPattern: paths.cas3.premises.bedspaces.canArchive({
+        premisesId: args.premisesId,
+        bedspaceId: args.bedspaceId,
+      }),
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        date: args.blockingDate,
+        entityId: args.entityId,
+        entityReference: args.entityReference,
+      },
+    },
+  })
+
 export default {
   stubBedspaceV2,
   stubPremisesBedspacesV2,
@@ -214,4 +307,8 @@ export default {
   stubBedspaceUpdateErrors,
   stubBedspaceArchiveV2,
   stubBedspaceArchiveV2WithError,
+  stubBedspaceUnarchiveV2,
+  stubBedspaceUnarchiveV2WithError,
+  stubBedspaceCanArchiveV2,
+  stubBedspaceCanArchiveV2WithBlocking,
 }

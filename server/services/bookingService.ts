@@ -1,10 +1,9 @@
-import type { Booking, LostBed, NewBooking, Room } from '@approved-premises/api'
+import type { Booking, LostBed, NewBooking } from '@approved-premises/api'
 
 import type { LostBedClient, RestClientBuilder } from '../data'
 import BookingClient from '../data/bookingClient'
 import { CallConfig } from '../data/restClient'
 import paths from '../paths/temporary-accommodation/manage'
-import { DateFormats } from '../utils/dateUtils'
 
 export type BookingListingEntry = {
   path: string
@@ -31,14 +30,14 @@ export default class BookingService {
   async createForBedspace(
     callConfig: CallConfig,
     premisesId: string,
-    room: Room,
+    bedspaceId: string,
     booking: NewBooking,
   ): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
 
     const confirmedBooking = await bookingClient.create(premisesId, {
       serviceName: 'temporary-accommodation',
-      bedId: room.beds[0].id,
+      bedId: bedspaceId,
       enableTurnarounds: true,
       ...booking,
     })
@@ -46,52 +45,42 @@ export default class BookingService {
     return confirmedBooking
   }
 
-  async getListingEntries(callConfig: CallConfig, premisesId: string, room: Room): Promise<Array<ListingEntry>> {
+  async getListingEntries(
+    callConfig: CallConfig,
+    premisesId: string,
+    bedspaceId: string,
+  ): Promise<Array<ListingEntry>> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    const bookings = await bookingClient.allBookingsForPremisesId(premisesId)
-
     const lostBedClient = this.lostBedClientFactory(callConfig)
-    const lostBeds = await (
-      await lostBedClient.allLostBedsForPremisesId(premisesId)
-    ).filter(lostBed => lostBed.status === 'active')
 
-    const bedId = room.beds[0].id
+    const [premisesBookings, premisesLostBeds] = await Promise.all([
+      bookingClient.allBookingsForPremisesId(premisesId),
+      lostBedClient.allLostBedsForPremisesId(premisesId),
+    ])
 
-    const bookingListingEntries = bookings
-      .filter(b => b.bed.id === bedId)
-      .map(b => ({
-        sortingValue: DateFormats.isoToDateObj(b.arrivalDate).getTime(),
+    const bookingEntries: Array<BookingListingEntry & { sortingValue: string }> = premisesBookings
+      .filter(booking => booking.bed.id === bedspaceId)
+      .map(booking => ({
+        body: booking,
         type: 'booking' as const,
-        body: b,
-        path: paths.bookings.show({
-          premisesId,
-          roomId: room.id,
-          bookingId: b.id,
-        }),
+        path: paths.bookings.show({ premisesId, bedspaceId, bookingId: booking.id }),
+        sortingValue: booking.arrivalDate,
       }))
 
-    const lostBedListingEntries = lostBeds
-      .filter(lostBed => lostBed.bedId === bedId)
+    const lostBedEntries: Array<LostBedListingEntry & { sortingValue: string }> = premisesLostBeds
+      .filter(lostBed => lostBed.bedId === bedspaceId && lostBed.status === 'active')
       .map(lostBed => ({
-        sortingValue: DateFormats.isoToDateObj(lostBed.startDate).getTime(),
-        type: 'lost-bed' as const,
         body: lostBed,
-        path: paths.lostBeds.show({
-          premisesId,
-          roomId: room.id,
-          lostBedId: lostBed.id,
-        }),
+        type: 'lost-bed' as const,
+        path: paths.lostBeds.show({ premisesId, bedspaceId, lostBedId: lostBed.id }),
+        sortingValue: lostBed.startDate,
       }))
 
-    return [...bookingListingEntries, ...lostBedListingEntries].sort((a, b) => {
-      return b.sortingValue - a.sortingValue
-    })
+    return [...bookingEntries, ...lostBedEntries].sort((a, b) => a.sortingValue.localeCompare(b.sortingValue)).reverse()
   }
 
   async getBooking(callConfig: CallConfig, premisesId: string, bookingId: string): Promise<Booking> {
     const bookingClient = this.bookingClientFactory(callConfig)
-    const booking = await bookingClient.find(premisesId, bookingId)
-
-    return booking
+    return bookingClient.find(premisesId, bookingId)
   }
 }

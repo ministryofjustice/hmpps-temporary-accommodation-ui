@@ -18,7 +18,7 @@ Feature: Manage Temporary Accommodation - Booking Errors
     And I attempt to create a conflicting booking
     Then I should see errors for the conflicting booking
 
-  Scenario: Showing booking cancellation errors
+ Scenario: Showing booking cancellation errors
     Given I'm creating a booking
     And I create a booking with all necessary details
     And I attempt to cancel the booking with required details missing

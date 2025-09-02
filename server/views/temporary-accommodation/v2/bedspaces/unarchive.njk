@@ -3,15 +3,17 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "../../../partials/breadCrumb.njk" import breadCrumb %}
 
 {% extends "../../../partials/layout.njk" %}
 
-{% set mainClasses = "govuk-body" %}
+{% set pageTitle = "Archive a bedspace - " + applicationName %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
-        href: paths.premises.show({ premisesId: premises.id }),
+        href: paths.premises.bedspaces.show({ premisesId: params.premisesId, bedspaceId: bedspace.id }),
         classes: "govuk-!-display-none-print"
     }) }}
 {% endblock %}
@@ -21,15 +23,15 @@
 
     {{ showErrorSummary(errorSummary) }}
 
-    <h1 class="govuk-heading-l">When should {{ premises.addressLine1 }} go online?</h1>
+    <h1 class="govuk-heading-l">When should {{ bedspace.reference }} go online?</h1>
 
     {% set dateHtml %}
         {{ govukDateInput({
-            id: "restartDate" if unarchiveOption == "other" else "otherDateInput",
+            id: "restartDate" if unarchiveOption == 'other' else "otherDateInput",
             namePrefix: "restartDate",
             fieldset: {
                 legend: {
-                    text: "Enter a date within the last 7 days or the next 7 days",
+                    text: "Enter a date within the last 7 days or the next 3 months",
                     classes: "govuk-fieldset__legend--s"
                 }
             },
@@ -43,14 +45,14 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.unarchive({ premisesId: premises.id }) }}" method="post">
+            <form action="{{ paths.premises.bedspaces.unarchive({ premisesId: params.premisesId, bedspaceId: bedspace.id })}}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
                 {{ govukRadios({
                     name: "unarchiveOption",
                     fieldset: {
                         legend: {
-                            text: "When should " + premises.addressLine1 + " go online?",
+                            text: "When should " + bedspace.reference + " go online?",
                             classes: "govuk-visually-hidden"
                         }
                     },
@@ -66,14 +68,12 @@
                             text: "Another date",
                             checked: unarchiveOption == "other",
                             conditional: {
-                            html: dateHtml
-                        }
+                                html: dateHtml
+                            }
                         }
                     ],
                     errorMessage: errors.restartDate if unarchiveOption == "today"
                 }) }}
-
-                <p>This propertyʼs bedspaces will also go online.</p>
 
                 {{ govukButton({
                     text: "Submit",

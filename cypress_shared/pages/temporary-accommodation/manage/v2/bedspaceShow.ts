@@ -14,7 +14,7 @@ export default class BedspaceShowPage extends Page {
   }
 
   static visit(premises: Cas3Premises, bedspace: Cas3Bedspace): BedspaceShowPage {
-    cy.visit(paths.premises.v2.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))
+    cy.visit(paths.premises.bedspaces.show({ premisesId: premises.id, bedspaceId: bedspace.id }))
     return new BedspaceShowPage(premises, bedspace)
   }
 
@@ -117,8 +117,29 @@ export default class BedspaceShowPage extends Page {
     cy.get('.moj-cas-page-header-actions a').contains('Archive bedspace').click()
   }
 
+  clickUnarchiveLink(): void {
+    // Click the Unarchive link
+    cy.get('.moj-cas-page-header-actions .moj-button-menu__toggle-button').then($toggleButtons => {
+      if ($toggleButtons.length > 0) {
+        // Dropdown exists - click it first
+        cy.wrap($toggleButtons.first()).click()
+      }
+    })
+    cy.get('.moj-cas-page-header-actions a').contains('Make bedspace online').click()
+  }
+
+  shouldShowAsOnline(): void {
+    cy.get('.govuk-tag').should('contain', 'Online')
+  }
+
   shouldShowAsArchived(): void {
     cy.get('.govuk-tag').should('contain', 'Archived')
+  }
+
+  shouldShowArchiveLink(): void {
+    cy.get('.moj-cas-page-header-actions').within(() => {
+      cy.root().should('contain', 'Archive')
+    })
   }
 
   shouldNotShowArchiveLink(): void {

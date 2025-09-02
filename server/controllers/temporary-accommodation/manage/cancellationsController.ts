@@ -1,12 +1,13 @@
 import type { Request, RequestHandler, Response } from 'express'
 import type { NewCancellation } from '@approved-premises/api'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, CancellationService, PremisesService } from '../../../services'
+import { BookingService, CancellationService, PremisesService } from '../../../services'
+import BedspaceService from '../../../services/v2/bedspaceService'
 import { DateFormats } from '../../../utils/dateUtils'
 import extractCallConfig from '../../../utils/restUtils'
 import { catchValidationErrorOrPropogate, fetchErrorsAndUserInput } from '../../../utils/validation'
 
-export default class CanellationsController {
+export default class CancellationsController {
   constructor(
     private readonly premisesService: PremisesService,
     private readonly bedspacesService: BedspaceService,
@@ -17,12 +18,12 @@ export default class CanellationsController {
   new(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       const { cancellationReasons: allCancellationReasons } =
@@ -30,7 +31,7 @@ export default class CanellationsController {
 
       return res.render('temporary-accommodation/cancellations/new', {
         premises,
-        room,
+        bedspace,
         booking,
         allCancellationReasons,
         errors,
@@ -42,7 +43,7 @@ export default class CanellationsController {
 
   create(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newCancellation: NewCancellation = {
@@ -54,13 +55,13 @@ export default class CanellationsController {
         await this.cancellationService.createCancellation(callConfig, premisesId, bookingId, newCancellation)
 
         req.flash('success', 'Booking cancelled')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+          paths.bookings.cancellations.new({ premisesId, bedspaceId, bookingId }),
           'bookingCancellation',
         )
       }
@@ -70,12 +71,12 @@ export default class CanellationsController {
   edit(): RequestHandler {
     return async (req: Request, res: Response) => {
       const { errors, errorSummary: requestErrorSummary, userInput } = fetchErrorsAndUserInput(req)
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
 
       const callConfig = extractCallConfig(req)
 
       const premises = await this.premisesService.getPremises(callConfig, premisesId)
-      const room = await this.bedspacesService.getRoom(callConfig, premisesId, roomId)
+      const bedspace = await this.bedspacesService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const booking = await this.bookingsService.getBooking(callConfig, premisesId, bookingId)
 
       const { cancellationReasons: allCancellationReasons } =
@@ -83,7 +84,7 @@ export default class CanellationsController {
 
       return res.render('temporary-accommodation/cancellations/edit', {
         premises,
-        room,
+        bedspace,
         booking,
         allCancellationReasons,
         errors,
@@ -98,7 +99,7 @@ export default class CanellationsController {
 
   update(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const { premisesId, roomId, bookingId } = req.params
+      const { premisesId, bedspaceId, bookingId } = req.params
       const callConfig = extractCallConfig(req)
 
       const newCancellation: NewCancellation = {
@@ -110,13 +111,13 @@ export default class CanellationsController {
         await this.cancellationService.createCancellation(callConfig, premisesId, bookingId, newCancellation)
 
         req.flash('success', 'Cancelled booking updated')
-        res.redirect(paths.bookings.show({ premisesId, roomId, bookingId }))
+        res.redirect(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
       } catch (err) {
         catchValidationErrorOrPropogate(
           req,
           res,
           err,
-          paths.bookings.cancellations.edit({ premisesId, roomId, bookingId }),
+          paths.bookings.cancellations.edit({ premisesId, bedspaceId, bookingId }),
           'bookingCancellation',
         )
       }

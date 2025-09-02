@@ -6,7 +6,7 @@ import { bookingFactory, newTurnaroundFactory, turnaroundFactory } from '../../.
 
 Given("I edit the booking's turnaround time", () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.clickChangeTurnaround()
 
     const newTurnaround = newTurnaroundFactory.build()
@@ -14,7 +14,13 @@ Given("I edit the booking's turnaround time", () => {
       ...newTurnaround,
     })
 
-    const bookingTurnaroundNewPage = Page.verifyOnPage(BookingTurnaroundNewPage, this.premises, this.room, this.booking)
+    const bookingTurnaroundNewPage = Page.verifyOnPage(
+      BookingTurnaroundNewPage,
+      this.premises,
+      this.room,
+      null,
+      this.booking,
+    )
     bookingTurnaroundNewPage.shouldShowBookingDetails()
     bookingTurnaroundNewPage.completeForm(newTurnaround)
 
@@ -29,7 +35,7 @@ Given("I edit the booking's turnaround time", () => {
 
 Then('I should see the booking with the edited turnaround time', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.shouldShowBanner('Turnaround time changed')
     bookingShowPage.shouldShowBookingDetails()
   })

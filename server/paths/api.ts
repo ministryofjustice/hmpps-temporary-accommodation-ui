@@ -84,6 +84,9 @@ const managePathsCas3 = {
       create: bedspacesCas3Path,
       get: bedspacesCas3Path,
       update: singleBedspacePath,
+      canArchive: singleBedspacePath.path('can-archive'),
+      archive: singleBedspacePath.path('archive'),
+      unarchive: singleBedspacePath.path('unarchive'),
       cancelArchive: singleBedspacePath.path('cancel-archive'),
     },
     bookings: {
@@ -131,7 +134,9 @@ export default {
         create: managePathsCas3.premises.bedspaces.create,
         get: managePathsCas3.premises.bedspaces.get,
         update: managePathsCas3.premises.bedspaces.update,
-        archive: singleBedspacePath.path('archive'),
+        canArchive: managePathsCas3.premises.bedspaces.canArchive,
+        archive: managePathsCas3.premises.bedspaces.archive,
+        unarchive: managePathsCas3.premises.bedspaces.unarchive,
         cancelArchive: managePathsCas3.premises.bedspaces.cancelArchive,
       },
       bookings: {

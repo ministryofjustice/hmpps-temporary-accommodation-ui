@@ -14,14 +14,14 @@ export function bedspaceActions(premises: Premises, room: Room, placeContext: Pl
     {
       text: 'Book bedspace',
       classes: 'govuk-button--secondary moj-button-menu__item',
-      href: addPlaceContext(paths.bookings.new({ premisesId: premises.id, roomId: room.id }), placeContext),
+      href: addPlaceContext(paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }), placeContext),
     },
   ]
 
   items.push({
     text: 'Void bedspace',
     classes: 'govuk-button--secondary moj-button-menu__item',
-    href: paths.lostBeds.new({ premisesId: premises.id, roomId: room.id }),
+    href: paths.lostBeds.new({ premisesId: premises.id, bedspaceId: room.id }),
   })
 
   return items
@@ -57,7 +57,7 @@ export function insertEndDateErrors(err: SanitisedError, premisesId: Premises['i
     errorSummary.push({
       html: `This bedspace end date conflicts with <a href="${paths.bookings.show({
         premisesId,
-        roomId,
+        bedspaceId: roomId,
         bookingId,
       })}">an existing booking</a>`,
     })

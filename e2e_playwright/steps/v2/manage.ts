@@ -11,6 +11,7 @@ import { EditBedspacePage } from '../../pages/manage/v2/editBedspacePage'
 import { ArchivePropertyPage } from '../../pages/manage/v2/archivePropertyPage'
 import { UnarchivePropertyPage } from '../../pages/manage/v2/unarchivePropertyPage'
 import { ArchiveBedspacePage } from '../../pages/manage/v2/archiveBedspacePage'
+import { UnarchiveBedspacePage } from '../../pages/manage/v2/unarchiveBedspacePage'
 
 export const visitListPropertiesPage = async (page: Page) => {
   // TODO: navigate to the list properties page from the dashboard once the v2 pages are live in prod
@@ -73,7 +74,7 @@ export const archiveProperty = async (page: Page, property: Property) => {
   await showPropertyPage.clickArchiveButton()
 
   const archivePropertyPage = await ArchivePropertyPage.initialise(page, property.addressLine1)
-  await archivePropertyPage.clickSubmit()
+  const archiveDate = await archivePropertyPage.archiveToday()
 
   const showArchivedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
   const isBannerMessageDisplayed = await showArchivedPropertyPage.isBannerMessageDisplayed(
@@ -81,6 +82,7 @@ export const archiveProperty = async (page: Page, property: Property) => {
   )
   expect(isBannerMessageDisplayed).toBe(true)
   await showArchivedPropertyPage.shouldShowPropertyStatus('Archived')
+  await showArchivedPropertyPage.shouldShowArchiveDates(archiveDate)
 }
 
 export const unarchiveProperty = async (page: Page, property: Property) => {
@@ -89,7 +91,7 @@ export const unarchiveProperty = async (page: Page, property: Property) => {
   await showPropertyPage.clickUnarchiveButton()
 
   const unarchivePropertyPage = await UnarchivePropertyPage.initialise(page, property.addressLine1)
-  await unarchivePropertyPage.clickSubmit()
+  const unarchiveDate = await unarchivePropertyPage.unarchiveToday()
 
   const showUnarchivedPropertyPage = await ViewPropertyPage.initialise(page, shortAddress)
   const isBannerMessageDisplayed = await showUnarchivedPropertyPage.isBannerMessageDisplayed(
@@ -97,6 +99,7 @@ export const unarchiveProperty = async (page: Page, property: Property) => {
   )
   expect(isBannerMessageDisplayed).toBe(true)
   await showUnarchivedPropertyPage.shouldShowPropertyStatus('Online')
+  await showUnarchivedPropertyPage.shouldShowOnlineDates(unarchiveDate)
 }
 
 export const createBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
@@ -165,7 +168,25 @@ export const archiveBedspace = async (page: Page, property: Property, bedspace: 
   await archiveBedspacePage.clickSubmit()
 
   const showArchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
-  const isBannerMessageDisplayed = await showArchivedBedspacePage.isBannerMessageDisplayed('Bedspace archived')
-  expect(isBannerMessageDisplayed).toBe(true)
+  const isArchiveBedspaceOnlyMessageDisplayed =
+    await showArchivedBedspacePage.isBannerMessageDisplayed('Bedspace archived')
+  const isArchivedBedspaceAndPropertyMessageDisplayed = await showArchivedBedspacePage.isBannerMessageDisplayed(
+    'Bedspace and property archived',
+  )
+  expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
   await showArchivedBedspacePage.shouldShowBedspaceStatus('Archived')
+}
+
+export const unarchiveBedspace = async (page: Page, property: Property, bedspace: Bedspace) => {
+  const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  await showBedspacePage.clickUnarchiveButton()
+  const unarchiveBedspacePage = await UnarchiveBedspacePage.initialise(page, bedspace.reference)
+  await unarchiveBedspacePage.clickSubmit()
+  const showUnarchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
+  const isArchiveBedspaceOnlyMessageDisplayed =
+    await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace online')
+  const isArchivedBedspaceAndPropertyMessageDisplayed =
+    await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace and property online')
+  expect(isArchiveBedspaceOnlyMessageDisplayed || isArchivedBedspaceAndPropertyMessageDisplayed).toBe(true)
+  await showUnarchivedBedspacePage.shouldShowBedspaceStatus('Online')
 }

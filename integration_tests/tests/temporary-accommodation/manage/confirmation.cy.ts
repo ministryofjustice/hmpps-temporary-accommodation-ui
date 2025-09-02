@@ -17,16 +17,16 @@ context('Booking confirmation', () => {
 
     // And there is a premises, a room, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the confim booking action
     bookingShow.clickConfirmBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingConfirmationNewPage, premises, room, booking)
+    Page.verifyOnPage(BookingConfirmationNewPage, premises, null, bedspace, booking)
   })
 
   it('allows me to confirm a booking', () => {
@@ -35,10 +35,10 @@ context('Booking confirmation', () => {
 
     // And there is a premises, a room, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page
-    const page = BookingConfirmationNewPage.visit(premises, room, booking)
+    const page = BookingConfirmationNewPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -60,7 +60,7 @@ context('Booking confirmation', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Booking confirmed')
   })
 
@@ -70,15 +70,15 @@ context('Booking confirmation', () => {
 
     // And there is a premises, a room, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page
-    const page = BookingConfirmationNewPage.visit(premises, room, booking)
+    const page = BookingConfirmationNewPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 })

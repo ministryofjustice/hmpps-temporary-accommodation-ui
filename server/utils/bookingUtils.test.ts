@@ -29,13 +29,13 @@ const lostBedId = 'lostBedId'
 const cancelBookingAction = {
   text: 'Cancel booking',
   classes: 'govuk-button--secondary',
-  href: paths.bookings.cancellations.new({ premisesId, roomId, bookingId }),
+  href: paths.bookings.cancellations.new({ premisesId, bedspaceId: roomId, bookingId }),
 }
 
 const changeTurnaroundAction = {
   text: 'Change turnaround time',
   classes: 'govuk-button--secondary',
-  href: paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+  href: paths.bookings.turnarounds.new({ premisesId, bedspaceId: roomId, bookingId }),
 }
 
 describe('bookingUtils', () => {
@@ -47,7 +47,7 @@ describe('bookingUtils', () => {
         {
           text: 'Mark as confirmed',
           classes: '',
-          href: paths.bookings.confirmations.new({ premisesId, roomId, bookingId }),
+          href: paths.bookings.confirmations.new({ premisesId, bedspaceId: roomId, bookingId }),
         },
         cancelBookingAction,
         changeTurnaroundAction,
@@ -61,7 +61,7 @@ describe('bookingUtils', () => {
         {
           text: 'Mark as active',
           classes: '',
-          href: paths.bookings.arrivals.new({ premisesId, roomId, bookingId }),
+          href: paths.bookings.arrivals.new({ premisesId, bedspaceId: roomId, bookingId }),
         },
         cancelBookingAction,
         changeTurnaroundAction,
@@ -75,17 +75,17 @@ describe('bookingUtils', () => {
         {
           text: 'Mark as departed',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.new({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.new({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
         },
         {
           text: 'Extend or shorten booking',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.extensions.new({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.extensions.new({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
         },
         {
           text: 'Change arrival date',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.arrivals.edit({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.arrivals.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])
@@ -98,7 +98,7 @@ describe('bookingUtils', () => {
         {
           text: 'Update departure details',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])
@@ -111,7 +111,7 @@ describe('bookingUtils', () => {
         {
           text: 'Update departure details',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.departures.edit({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.departures.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
         },
         changeTurnaroundAction,
       ])
@@ -124,7 +124,7 @@ describe('bookingUtils', () => {
         {
           text: 'Update cancelled booking',
           classes: 'govuk-button--secondary',
-          href: paths.bookings.cancellations.edit({ premisesId, roomId, bookingId: booking.id }),
+          href: paths.bookings.cancellations.edit({ premisesId, bedspaceId: roomId, bookingId: booking.id }),
         },
       ])
     })
@@ -432,7 +432,7 @@ describe('bookingUtils', () => {
           {
             html: `They conflict with an <a href="${paths.bookings.show({
               premisesId,
-              roomId,
+              bedspaceId: roomId,
               bookingId,
             })}">existing booking</a>`,
           },
@@ -453,7 +453,7 @@ describe('bookingUtils', () => {
           {
             html: `They conflict with an <a href="${paths.lostBeds.show({
               premisesId,
-              roomId,
+              bedspaceId: roomId,
               lostBedId,
             })}">existing void</a>`,
           },
@@ -491,7 +491,7 @@ describe('bookingUtils', () => {
           {
             html: `It conflicts with an <a href="${paths.bookings.show({
               premisesId,
-              roomId,
+              bedspaceId: roomId,
               bookingId,
             })}">existing booking</a>`,
           },
@@ -514,7 +514,7 @@ describe('bookingUtils', () => {
           {
             html: `The new turnaround time would conflict with an <a href="${paths.bookings.show({
               premisesId,
-              roomId,
+              bedspaceId: roomId,
               bookingId,
             })}">existing booking</a>`,
           },
@@ -535,7 +535,7 @@ describe('bookingUtils', () => {
           {
             html: `The new turnaround time would conflict with an <a href="${paths.lostBeds.show({
               premisesId,
-              roomId,
+              bedspaceId: roomId,
               lostBedId,
             })}">existing void</a>`,
           },

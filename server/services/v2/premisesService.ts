@@ -16,7 +16,7 @@ import {
   ProbationDeliveryUnit,
   ProbationRegion,
 } from '@approved-premises/api'
-import { SummaryList, TableRow } from '@approved-premises/ui'
+import { PlaceContext, SummaryList, TableRow } from '@approved-premises/ui'
 import { PremisesClientV2 as PremisesClient, ReferenceDataClient, RestClientBuilder } from '../../data'
 
 import { CallConfig } from '../../data/restClient'
@@ -24,6 +24,7 @@ import paths from '../../paths/temporary-accommodation/manage'
 import { DateFormats } from '../../utils/dateUtils'
 import { convertToTitleCase } from '../../utils/utils'
 import { filterCharacteristics } from '../../utils/characteristicUtils'
+import { addPlaceContext } from '../../utils/placeUtils'
 
 const ARCHIVE_HISTORY_THRESHOLD = 14
 
@@ -43,6 +44,7 @@ export default class PremisesService {
   async searchDataAndGenerateTableRows(
     callConfig: CallConfig,
     postcodeOrAddress: string | undefined,
+    placeContext: PlaceContext,
     status: Cas3PremisesStatus = 'online',
     premisesSortBy: Cas3PremisesSortBy = 'pdu',
   ): Promise<Cas3PremisesSearchResults & { tableRows: Array<TableRow> }> {
@@ -52,7 +54,7 @@ export default class PremisesService {
 
     return {
       ...premises,
-      tableRows: this.tableRows(premises, premisesSortBy),
+      tableRows: this.tableRows(premises, placeContext, premisesSortBy),
     }
   }
 
@@ -132,15 +134,19 @@ export default class PremisesService {
     return premisesClient.unarchive(premisesId, unarchivePayload)
   }
 
-  tableRows(premises: Cas3PremisesSearchResults, premisesSortBy: Cas3PremisesSortBy = 'pdu'): Array<TableRow> {
+  tableRows(
+    premises: Cas3PremisesSearchResults,
+    placeContext: PlaceContext,
+    premisesSortBy: Cas3PremisesSortBy = 'pdu',
+  ): Array<TableRow> {
     return premises.results === undefined
       ? []
       : premises.results.map(entry => {
           return [
             this.htmlValue(this.formatAddress(entry)),
-            this.htmlValue(this.formatBedspaces(entry)),
+            this.htmlValue(this.formatBedspaces(entry, placeContext)),
             this.textValue(premisesSortBy === 'pdu' ? entry.pdu : entry.localAuthorityAreaName),
-            this.htmlValue(this.formatPremisesManageLink(entry)),
+            this.htmlValue(this.formatPremisesManageLink(entry, placeContext)),
           ]
         })
   }
@@ -237,31 +243,37 @@ export default class PremisesService {
   }
 
   private bedspaceUrl(premisesId: string, bedspaceId: string): string {
-    return paths.premises.v2.bedspaces.show({ premisesId, bedspaceId })
+    return paths.premises.bedspaces.show({ premisesId, bedspaceId })
   }
 
   private premisesUrl(premisesId: string): string {
-    return paths.premises.v2.show({ premisesId })
+    return paths.premises.show({ premisesId })
   }
 
-  private formatPremisesManageLink(premises: Cas3PremisesSearchResult): string {
+  private formatPremisesManageLink(premises: Cas3PremisesSearchResult, placeContext: PlaceContext): string {
     const hidden = `<span class="govuk-visually-hidden"> property at ${premises.addressLine1}, ${premises.postcode}</span>`
-    return `<a href="${this.premisesUrl(premises.id)}">Manage${hidden}</a>`
+    const premisesUrl = this.premisesUrl(premises.id)
+    const showPremisesLinkWithPlaceContext = addPlaceContext(premisesUrl, placeContext)
+    return `<a href="${showPremisesLinkWithPlaceContext}">Manage${hidden}</a>`
   }
 
-  private formatBedspace(premisesId: string, bedspace: Cas3BedspacePremisesSearchResult): string {
+  private formatBedspace(
+    premisesId: string,
+    bedspace: Cas3BedspacePremisesSearchResult,
+    placeContext: PlaceContext,
+  ): string {
     const archived =
       bedspace.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
-
-    return `<a href="${this.bedspaceUrl(premisesId, bedspace.id)}">${bedspace.reference}</a>${archived}`
+    const showBedspaceLinkWithPlaceContext = addPlaceContext(this.bedspaceUrl(premisesId, bedspace.id), placeContext)
+    return `<a href="${showBedspaceLinkWithPlaceContext}">${bedspace.reference}</a>${archived}`
   }
 
-  private formatBedspaces(premises: Cas3PremisesSearchResult): string {
+  private formatBedspaces(premises: Cas3PremisesSearchResult, placeContext: PlaceContext): string {
     if (premises.bedspaces === undefined || premises.bedspaces.length === 0) {
-      return `No bedspaces<br /><a href="${paths.premises.v2.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
+      return `No bedspaces<br /><a href="${paths.premises.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
     }
 
-    return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace)).join('<br />')
+    return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace, placeContext)).join('<br />')
   }
 
   private formatDate(dateString: string | undefined | null): string {
@@ -320,7 +332,8 @@ export default class PremisesService {
 
     return archiveHistory
       .map(action => {
-        return `<div>${convertToTitleCase(action.status)} date ${this.formatDate(action.date)}</div>`
+        const verb = action.status === 'online' ? 'Online' : 'Archive'
+        return `<div>${verb} date ${this.formatDate(action.date)}</div>`
       })
       .join('')
   }

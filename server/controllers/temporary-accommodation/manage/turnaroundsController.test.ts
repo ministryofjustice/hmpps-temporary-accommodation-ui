@@ -3,12 +3,12 @@ import type { NextFunction, Request, Response } from 'express'
 import { BespokeError } from '../../../@types/ui'
 import { CallConfig } from '../../../data/restClient'
 import paths from '../../../paths/temporary-accommodation/manage'
-import { BedspaceService, BookingService, PremisesService, TurnaroundService } from '../../../services'
+import { BookingService, PremisesService, TurnaroundService } from '../../../services'
 import {
   bookingFactory,
+  cas3BedspaceFactory,
   newTurnaroundFactory,
   premisesFactory,
-  roomFactory,
   turnaroundFactory,
 } from '../../../testutils/factories'
 import { generateTurnaroundConflictBespokeError } from '../../../utils/bookingUtils'
@@ -20,6 +20,7 @@ import {
   insertGenericError,
 } from '../../../utils/validation'
 import TurnaroundsController from './turnaroundsController'
+import BedspaceService from '../../../services/v2/bedspaceService'
 
 jest.mock('../../../utils/validation')
 jest.mock('../../../utils/bookingUtils')
@@ -28,7 +29,7 @@ jest.mock('../../../utils/restUtils')
 describe('TurnaroundsController', () => {
   const callConfig = { token: 'some-call-config-token' } as CallConfig
   const premisesId = 'premisesId'
-  const roomId = 'roomId'
+  const bedspaceId = 'bedspaceId'
   const bookingId = 'bookingId'
 
   let request: Request
@@ -56,17 +57,17 @@ describe('TurnaroundsController', () => {
   describe('new', () => {
     it('renders the form prepopulated with the current turnaround days', async () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       request.params = {
         premisesId: premises.id,
-        roomId: room.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 
       premisesService.getPremises.mockResolvedValue(premises)
-      bedspaceService.getRoom.mockResolvedValue(room)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
       bookingService.getBooking.mockResolvedValue(booking)
 
       const requestHandler = turnaroundsController.new()
@@ -78,7 +79,7 @@ describe('TurnaroundsController', () => {
 
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/turnarounds/new', {
         premises,
-        room,
+        bedspace,
         booking,
         errors: {},
         errorSummary: [],
@@ -98,7 +99,7 @@ describe('TurnaroundsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -118,7 +119,7 @@ describe('TurnaroundsController', () => {
       )
 
       expect(request.flash).toHaveBeenCalledWith('success', 'Turnaround time changed')
-      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, roomId, bookingId }))
+      expect(response.redirect).toHaveBeenCalledWith(paths.bookings.show({ premisesId, bedspaceId, bookingId }))
     })
 
     it('renders with errors if the API returns an error', async () => {
@@ -131,7 +132,7 @@ describe('TurnaroundsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -150,7 +151,7 @@ describe('TurnaroundsController', () => {
         request,
         response,
         err,
-        paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+        paths.bookings.turnarounds.new({ premisesId, bedspaceId, bookingId }),
       )
     })
 
@@ -164,7 +165,7 @@ describe('TurnaroundsController', () => {
 
       request.params = {
         premisesId,
-        roomId,
+        bedspaceId,
         bookingId,
       }
       request.body = {
@@ -186,14 +187,14 @@ describe('TurnaroundsController', () => {
 
       await requestHandler(request, response, next)
 
-      expect(generateTurnaroundConflictBespokeError).toHaveBeenCalledWith(err, premisesId, roomId)
+      expect(generateTurnaroundConflictBespokeError).toHaveBeenCalledWith(err, premisesId, bedspaceId)
       expect(insertBespokeError).toHaveBeenCalledWith(err, bespokeError)
       expect(insertGenericError).toHaveBeenCalledWith(err, 'workingDays', 'conflict')
       expect(catchValidationErrorOrPropogate).toHaveBeenCalledWith(
         request,
         response,
         err,
-        paths.bookings.turnarounds.new({ premisesId, roomId, bookingId }),
+        paths.bookings.turnarounds.new({ premisesId, bedspaceId, bookingId }),
       )
     })
   })

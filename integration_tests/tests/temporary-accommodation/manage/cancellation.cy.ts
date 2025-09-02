@@ -18,17 +18,17 @@ context('Booking cancellation', () => {
 
     // And there is a premises, a room, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the cancel booking action
     cy.task('stubCancellationReferenceData')
     bookingShow.clickCancelBookingButton()
 
     // Then I navigate to the booking cancellation page
-    Page.verifyOnPage(BookingCancellationNewPage, premises, room, booking)
+    Page.verifyOnPage(BookingCancellationNewPage, premises, null, bedspace, booking)
   })
 
   it('navigates to the edit booking cancellation page', () => {
@@ -37,17 +37,17 @@ context('Booking cancellation', () => {
 
     // And there is a premises, a room, and a cancelled booking in the database
     const booking = bookingFactory.cancelled().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the cancel booking action
     cy.task('stubCancellationReferenceData')
     bookingShow.clickEditCancelledBookingButton()
 
     // Then I navigate to the edit cancelled booking page
-    Page.verifyOnPage(BookingCancellationEditPage, premises, room, booking)
+    Page.verifyOnPage(BookingCancellationEditPage, premises, null, bedspace, booking)
   })
 
   it('allows me to mark a booking as cancelled', () => {
@@ -56,11 +56,11 @@ context('Booking cancellation', () => {
 
     // And there is a premises, a room, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationNewPage.visit(premises, room, booking)
+    const page = BookingCancellationNewPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -84,7 +84,7 @@ context('Booking cancellation', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Booking cancelled')
   })
 
@@ -94,11 +94,11 @@ context('Booking cancellation', () => {
 
     // And there is a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationNewPage.visit(premises, room, booking)
+    const page = BookingCancellationNewPage.visit(premises, null, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubCancellationCreateErrors', {
@@ -118,17 +118,17 @@ context('Booking cancellation', () => {
 
     // And there is a premises, a room, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking cancellation page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationNewPage.visit(premises, room, booking)
+    const page = BookingCancellationNewPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 
   it('allows me to edit a cancelled booking', () => {
@@ -137,11 +137,11 @@ context('Booking cancellation', () => {
 
     // And there is a premises, a room, and a cancelled booking in the database
     const booking = bookingFactory.cancelled().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit cancelled booking page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationEditPage.visit(premises, room, booking)
+    const page = BookingCancellationEditPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -165,7 +165,7 @@ context('Booking cancellation', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Cancelled booking updated')
   })
 
@@ -175,11 +175,11 @@ context('Booking cancellation', () => {
 
     // And there is a cancelled booking in the database
     const booking = bookingFactory.cancelled().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit cancelled booking page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationEditPage.visit(premises, room, booking)
+    const page = BookingCancellationEditPage.visit(premises, null, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubCancellationCreateErrors', {
@@ -200,16 +200,16 @@ context('Booking cancellation', () => {
 
     // And there is a premises, a room, and a cancelled booking in the database
     const booking = bookingFactory.cancelled().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit cancelled booking page
     cy.task('stubCancellationReferenceData')
-    const page = BookingCancellationEditPage.visit(premises, room, booking)
+    const page = BookingCancellationEditPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 })

@@ -8,7 +8,7 @@ import { arrivalFactory, bookingFactory, newArrivalFactory } from '../../../../s
 
 Given('I mark the booking as arrived', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.clickMarkArrivedBookingButton()
 
     const newArrival = newArrivalFactory.build()
@@ -16,7 +16,7 @@ Given('I mark the booking as arrived', () => {
       ...newArrival,
     })
 
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalNewPage, this.premises, this.room, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalNewPage, this.premises, this.room, null, this.booking)
     bookingArrivalPage.shouldShowBookingDetails()
     bookingArrivalPage.completeForm(newArrival)
 
@@ -35,10 +35,10 @@ Given('I mark the booking as arrived', () => {
 
 Given('I attempt to mark the booking as arrived with required details missing', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.clickMarkArrivedBookingButton()
 
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalNewPage, this.premises, this.room, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalNewPage, this.premises, this.room, null, this.booking)
     bookingArrivalPage.clearForm()
     bookingArrivalPage.clickSubmit()
   })
@@ -46,13 +46,13 @@ Given('I attempt to mark the booking as arrived with required details missing', 
 
 Then('I should see the booking with the arrived status', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.shouldShowBanner('Booking marked as active')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })
@@ -60,7 +60,7 @@ Then('I should see the booking with the arrived status', () => {
 
 Then('I should see a list of the problems encountered marking the booking as arrived', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingArrivalNewPage, this.premises, this.room, this.booking)
+    const page = Page.verifyOnPage(BookingArrivalNewPage, this.premises, this.room, null, this.booking)
     page.shouldShowErrorMessagesForFields(['arrivalDate', 'expectedDepartureDate'])
 
     page.clickBack()
@@ -69,14 +69,14 @@ Then('I should see a list of the problems encountered marking the booking as arr
 
 When('I navigate to change the booking arrival', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.clickEditArrivalButton()
   })
 })
 
 When('I enter the change arrival data incorrectly', () => {
   cy.then(function _() {
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, null, this.booking)
     bookingArrivalPage.shouldShowBookingDetails()
     bookingArrivalPage.clearForm()
     bookingArrivalPage.clickSubmit()
@@ -85,7 +85,7 @@ When('I enter the change arrival data incorrectly', () => {
 
 Then('I should see a list of the problems encountered whilst changing the booking arrival', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, this.booking)
+    const page = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, null, this.booking)
     page.shouldShowErrorMessagesForFields(['arrivalDate'])
   })
 })
@@ -94,7 +94,7 @@ When('I enter change booking data correctly', () => {
   cy.then(function _() {
     const newArrival = newArrivalFactory.build()
 
-    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, this.booking)
+    const bookingArrivalPage = Page.verifyOnPage(BookingArrivalEditPage, this.premises, this.room, null, this.booking)
     bookingArrivalPage.shouldShowBookingDetails()
     bookingArrivalPage.completeForm(newArrival)
 
@@ -108,7 +108,7 @@ When('I enter change booking data correctly', () => {
 
 Then('I should see the booking with confirmation of arrival change', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
     bookingShowPage.shouldShowBanner('Arrival updated')
     bookingShowPage.shouldShowBookingDetails()
     bookingShowPage.clickBreadCrumbUp()

@@ -13,7 +13,7 @@
 {% block beforeContent %}
     {{ govukBackLink({
         text: 'Back',
-        href: paths.premises.v2.index({}),
+        href: paths.premises.online({}),
         classes: 'govuk-!-display-none-print'
     }) }}
 {% endblock %}
@@ -27,7 +27,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <form action="{{ paths.premises.v2.create({}) }}" method="post">
+            <form action="{{ paths.premises.create({}) }}" method="post">
                 <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                 {% include "./_editable.njk" %}
             </form>

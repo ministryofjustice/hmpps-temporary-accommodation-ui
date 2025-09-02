@@ -18,10 +18,10 @@ context('Booking history', () => {
 
     // And there is a premises, a room, and a booking in the database
     const booking = bookingFactory.build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShowPage = BookingShowPage.visit(premises, room, booking)
+    const bookingShowPage = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the history link
     bookingShowPage.clickHistoryLink()
@@ -30,7 +30,8 @@ context('Booking history', () => {
     Page.verifyOnPage(
       BookingHistoryPage,
       premises,
-      room,
+      null,
+      bedspace,
       booking,
       deriveBookingHistory(booking).map(({ booking: historicBooking }) => historicBooking),
     )
@@ -42,12 +43,13 @@ context('Booking history', () => {
 
     // And there is a premises, a room, and a booking in the database
     const booking = bookingFactory.build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking history page
     const bookingHistoryPage = BookingHistoryPage.visit(
       premises,
-      room,
+      null,
+      bedspace,
       booking,
       deriveBookingHistory(booking).map(({ booking: historicBooking }) => historicBooking),
     )
@@ -62,12 +64,13 @@ context('Booking history', () => {
 
     // And there is a premises, a room, and a booking in the database
     const booking = bookingFactory.build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking history page
     const bookingHistoryPage = BookingHistoryPage.visit(
       premises,
-      room,
+      null,
+      bedspace,
       booking,
       deriveBookingHistory(booking).map(({ booking: historicBooking }) => historicBooking),
     )
@@ -76,6 +79,6 @@ context('Booking history', () => {
     bookingHistoryPage.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 })

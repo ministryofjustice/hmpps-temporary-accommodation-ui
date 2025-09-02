@@ -1,6 +1,8 @@
 {% from "../../../components/moj-cas-page-header-actions/macro.njk" import mojCasPageHeaderActions %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "../../../components/booking-listing/macro.njk" import bookingListing %}
+{% from "../../../components/lost-bed-listing/macro.njk" import lostBedListing %}
 
 {% extends "../../../partials/layout.njk" %}
 
@@ -12,10 +14,10 @@
     {{ govukBreadcrumbs({
         items: [
             { text: "Home", href: "/" },
-            { text: "List of properties", href: addPlaceContext(paths.premises.v2.index()) },
+            { text: "List of properties", href: addPlaceContext(paths.premises.online()) },
             {
                 text: premises.addressLine1 + ", " + premises.postcode,
-                href: addPlaceContext(paths.premises.v2.show({ premisesId: premises.id }))
+                href: addPlaceContext(paths.premises.show({ premisesId: premises.id }))
             }
         ]
     }) }}
@@ -63,6 +65,22 @@
             {{ govukSummaryList({
                 rows: summary.rows
             }) }}
+        </div>
+    </div>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h2>Bookings</h2>
+
+            {% for listingEntry in listingEntries %}
+                {% if listingEntry.type == 'booking' %}
+                    {{ bookingListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
+                {% elif listingEntry.type === 'lost-bed' %}
+                    {{ lostBedListing(listingEntry.body, addPlaceContext(listingEntry.path)) }}
+                {% endif %}
+            {% else %}
+                <p>No bookings.</p>
+            {% endfor %}
         </div>
     </div>
 

@@ -18,17 +18,17 @@ context('Booking departure', () => {
 
     // And there is a premises, a room, and an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the marked departed booking action
     cy.task('stubDepartureReferenceData')
     bookingShow.clickMarkDepartedBookingButton()
 
     // Then I navigate to the booking departure page
-    Page.verifyOnPage(BookingDepartureNewPage, premises, room, booking)
+    Page.verifyOnPage(BookingDepartureNewPage, premises, null, bedspace, booking)
   })
 
   it('navigates to the edit booking departure page', () => {
@@ -37,17 +37,17 @@ context('Booking departure', () => {
 
     // And there is a premises, a room, and a departed booking in the database
     const booking = bookingFactory.departed().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, room, booking)
+    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
     // Add I click the marked departed booking action
     cy.task('stubDepartureReferenceData')
     bookingShow.clickEditDepartedBookingButton()
 
     // Then I navigate to the booking departure page
-    Page.verifyOnPage(BookingDepartureEditPage, premises, room, booking)
+    Page.verifyOnPage(BookingDepartureEditPage, premises, null, bedspace, booking)
   })
 
   it('allows me to mark a booking as departed', () => {
@@ -56,11 +56,11 @@ context('Booking departure', () => {
 
     // And there is a premises, a room, and an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureNewPage.visit(premises, room, booking)
+    const page = BookingDepartureNewPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -86,7 +86,7 @@ context('Booking departure', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Booking marked as departed')
   })
 
@@ -96,11 +96,11 @@ context('Booking departure', () => {
 
     // And there is an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureNewPage.visit(premises, room, booking)
+    const page = BookingDepartureNewPage.visit(premises, null, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubDepartureCreateErrors', {
@@ -120,17 +120,17 @@ context('Booking departure', () => {
 
     // And there is a premises, a room, and an arrived booking in the database
     const booking = bookingFactory.arrived().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking departure page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureNewPage.visit(premises, room, booking)
+    const page = BookingDepartureNewPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 
   it('allows me to edit a departed booking', () => {
@@ -139,11 +139,11 @@ context('Booking departure', () => {
 
     // And there is a premises, a room, and a departed booking in the database
     const booking = bookingFactory.departed().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit departed booking page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureEditPage.visit(premises, room, booking)
+    const page = BookingDepartureEditPage.visit(premises, null, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -169,7 +169,7 @@ context('Booking departure', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     bookingShowPage.shouldShowBanner('Departure details changed')
   })
 
@@ -179,11 +179,11 @@ context('Booking departure', () => {
 
     // And there is a departed booking in the database
     const booking = bookingFactory.departed().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit departed booking page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureEditPage.visit(premises, room, booking)
+    const page = BookingDepartureEditPage.visit(premises, null, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubDepartureCreateErrors', {
@@ -204,16 +204,16 @@ context('Booking departure', () => {
 
     // And there is a premises, a room, and a departed booking in the database
     const booking = bookingFactory.departed().build()
-    const { premises, room } = setupBookingStateStubs(booking)
+    const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the edit departed booking page
     cy.task('stubDepartureReferenceData')
-    const page = BookingDepartureEditPage.visit(premises, room, booking)
+    const page = BookingDepartureEditPage.visit(premises, null, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, room, booking)
+    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
   })
 })

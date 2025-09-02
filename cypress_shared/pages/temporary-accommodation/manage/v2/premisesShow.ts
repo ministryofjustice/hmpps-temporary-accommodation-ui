@@ -10,7 +10,7 @@ export default class PremisesShowPage extends Page {
   }
 
   static visit(premises: Cas3Premises): PremisesShowPage {
-    cy.visit(paths.premises.v2.show({ premisesId: premises.id }))
+    cy.visit(paths.premises.show({ premisesId: premises.id }))
     return new PremisesShowPage(premises)
   }
 
@@ -28,8 +28,9 @@ export default class PremisesShowPage extends Page {
       .parent()
       .within(() => {
         archiveHistory.forEach(action => {
-          cy.contains(convertToTitleCase(action.status))
-          cy.contains(DateFormats.isoDateToUIDate(action.date))
+          const verb = action.status === 'online' ? 'Online' : 'Archive'
+          const dateString = DateFormats.isoDateToUIDate(action.date)
+          cy.contains(`${verb} date ${dateString}`)
         })
       })
   }

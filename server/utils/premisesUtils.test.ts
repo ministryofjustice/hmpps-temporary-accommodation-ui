@@ -1,5 +1,5 @@
 import paths from '../paths/temporary-accommodation/manage'
-import { premisesFactory } from '../testutils/factories'
+import { assessmentFactory, placeContextFactory, premisesFactory } from '../testutils/factories'
 import {
   getActiveStatuses,
   premisesActions,
@@ -10,6 +10,11 @@ import {
 } from './premisesUtils'
 
 describe('premisesUtils', () => {
+  const placeContext = placeContextFactory.build({
+    assessment: assessmentFactory.build({
+      accommodationRequiredFromDate: '2025-08-27',
+    }),
+  })
   describe('premisesActions', () => {
     it('returns add a bedspace for an active premises', () => {
       const premises = premisesFactory.active().build()
@@ -93,17 +98,17 @@ describe('premisesUtils', () => {
       const expectedResult = [
         {
           text: 'Property overview',
-          href: '/v2/properties/83b4062f-963e-450d-b912-589eab7ca91c',
+          href: `/properties/83b4062f-963e-450d-b912-589eab7ca91c?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
           active: true,
         },
         {
           text: 'Bedspaces overview',
-          href: '/v2/properties/83b4062f-963e-450d-b912-589eab7ca91c/bedspaces',
+          href: `/properties/83b4062f-963e-450d-b912-589eab7ca91c/bedspaces?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
           active: false,
         },
       ]
 
-      const result = showPropertySubNavArray('83b4062f-963e-450d-b912-589eab7ca91c', 'premises')
+      const result = showPropertySubNavArray('83b4062f-963e-450d-b912-589eab7ca91c', placeContext, 'premises')
 
       expect(result).toEqual(expectedResult)
     })
@@ -112,17 +117,17 @@ describe('premisesUtils', () => {
       const expectedResult = [
         {
           text: 'Property overview',
-          href: '/v2/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47',
+          href: `/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
           active: false,
         },
         {
           text: 'Bedspaces overview',
-          href: '/v2/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47/bedspaces',
+          href: `/properties/6a2fc984-8cdd-4eef-8736-cc74f845ee47/bedspaces?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}`,
           active: true,
         },
       ]
 
-      const result = showPropertySubNavArray('6a2fc984-8cdd-4eef-8736-cc74f845ee47', 'bedspaces')
+      const result = showPropertySubNavArray('6a2fc984-8cdd-4eef-8736-cc74f845ee47', placeContext, 'bedspaces')
 
       expect(result).toEqual(expectedResult)
     })

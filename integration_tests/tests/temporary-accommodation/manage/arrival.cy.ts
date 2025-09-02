@@ -8,9 +8,9 @@ import { setupTestUser } from '../../../../cypress_shared/utils/setupTestUser'
 import {
   arrivalFactory,
   bookingFactory,
+  cas3BedspaceFactory,
   newArrivalFactory,
   premisesFactory,
-  roomFactory,
 } from '../../../../server/testutils/factories'
 import { DateFormats } from '../../../../server/utils/dateUtils'
 
@@ -27,16 +27,16 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and a confirmed booking in the database
       const booking = bookingFactory.confirmed().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the show booking page
-      const bookingShow = BookingShowPage.visit(premises, room, booking)
+      const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
       // Add I click the marked arrived booking action
       bookingShow.clickMarkArrivedBookingButton()
 
       // Then I navigate to the booking confirmation page
-      Page.verifyOnPage(BookingArrivalNewPage, premises, room, booking)
+      Page.verifyOnPage(BookingArrivalNewPage, premises, null, bedspace, booking)
     })
 
     it('allows me to mark a booking as arrived', () => {
@@ -45,10 +45,10 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and a confirmed booking in the database
       const booking = bookingFactory.confirmed().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalNewPage.visit(premises, room, booking)
+      const page = BookingArrivalNewPage.visit(premises, null, bedspace, booking)
       page.shouldShowBookingDetails()
 
       // And I fill out the form
@@ -71,7 +71,7 @@ context('Booking arrival', () => {
       })
 
       // And I should be redirected to the show booking page
-      const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+      const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
       bookingShowPage.shouldShowBanner('Booking marked as active')
     })
 
@@ -81,15 +81,15 @@ context('Booking arrival', () => {
 
       // And there is a confirmed booking in the database
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.confirmed().build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubSingleRoom', { premisesId: premises.id, room })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalNewPage.visit(premises, room, booking)
+      const page = BookingArrivalNewPage.visit(premises, null, bedspace, booking)
 
       // And I miss required fields
       cy.task('stubArrivalCreateErrors', {
@@ -110,17 +110,17 @@ context('Booking arrival', () => {
 
       // And there is a confirmed booking and a conflicting booking in the database
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.confirmed().build()
       const conflictingBooking = bookingFactory.build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubSingleRoom', { premisesId: premises.id, room })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
       cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalNewPage.visit(premises, room, booking)
+      const page = BookingArrivalNewPage.visit(premises, null, bedspace, booking)
 
       // And I fill out the form with dates that conflict with an existing booking
       const arrival = arrivalFactory.build()
@@ -149,10 +149,10 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and a confirmed booking in the database
       const booking = bookingFactory.confirmed().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalNewPage.visit(premises, room, booking)
+      const page = BookingArrivalNewPage.visit(premises, null, bedspace, booking)
       page.shouldShowBookingDetails()
 
       // And I fill out the form
@@ -174,16 +174,16 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and a confirmed booking in the database
       const booking = bookingFactory.confirmed().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the booking arrival page
-      const page = BookingArrivalNewPage.visit(premises, room, booking)
+      const page = BookingArrivalNewPage.visit(premises, null, bedspace, booking)
 
       // And I click the back link
       page.clickBack()
 
       // Then I navigate to the show bedspace page
-      Page.verifyOnPage(BookingShowPage, premises, room, booking)
+      Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     })
   })
 
@@ -194,16 +194,16 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and an active booking in the database
       const booking = bookingFactory.arrived().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the show booking page
-      const bookingShow = BookingShowPage.visit(premises, room, booking)
+      const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
 
       // Add I click the change arrival action
       bookingShow.clickEditArrivalButton()
 
       // Then I navigate to the change arrival page
-      Page.verifyOnPage(BookingArrivalEditPage, premises, room, booking)
+      Page.verifyOnPage(BookingArrivalEditPage, premises, null, bedspace, booking)
     })
 
     it('allows me to update an arrival', () => {
@@ -212,10 +212,10 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and an active booking in the database
       const booking = bookingFactory.arrived().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalEditPage.visit(premises, room, booking)
+      const page = BookingArrivalEditPage.visit(premises, null, bedspace, booking)
       page.shouldShowBookingDetails()
 
       // And I fill out the form
@@ -234,7 +234,7 @@ context('Booking arrival', () => {
 
       cy.then(() => {
         // And I should be redirected to the show booking page
-        const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, room, booking)
+        const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
         bookingShowPage.shouldShowBanner('Arrival updated')
       })
     })
@@ -245,15 +245,15 @@ context('Booking arrival', () => {
 
       // And there is a confirmed booking in the database
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubSingleRoom', { premisesId: premises.id, room })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalEditPage.visit(premises, room, booking)
+      const page = BookingArrivalEditPage.visit(premises, null, bedspace, booking)
 
       // And I miss required fields
       cy.task('stubArrivalCreateErrors', {
@@ -274,17 +274,17 @@ context('Booking arrival', () => {
 
       // And there is an arrived booking and a conflicting booking in the database
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
       const conflictingBooking = bookingFactory.build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubSingleRoom', { premisesId: premises.id, room })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
       cy.task('stubBooking', { premisesId: premises.id, booking: conflictingBooking })
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalEditPage.visit(premises, room, booking)
+      const page = BookingArrivalEditPage.visit(premises, null, bedspace, booking)
 
       // And I fill out the form with dates that conflict with an existing booking
       const newArrival = newArrivalFactory.build()
@@ -310,15 +310,15 @@ context('Booking arrival', () => {
 
       // And there is a confirmed booking in the database
       const premises = premisesFactory.build()
-      const room = roomFactory.build()
+      const bedspace = cas3BedspaceFactory.build()
       const booking = bookingFactory.arrived().build()
 
       cy.task('stubSinglePremises', premises)
-      cy.task('stubSingleRoom', { premisesId: premises.id, room })
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
       cy.task('stubBooking', { premisesId: premises.id, booking })
 
       // When I visit the booking confirmation page
-      const page = BookingArrivalEditPage.visit(premises, room, booking)
+      const page = BookingArrivalEditPage.visit(premises, null, bedspace, booking)
 
       // And I fill out the form
       const newArrival = newArrivalFactory.build()
@@ -337,16 +337,16 @@ context('Booking arrival', () => {
 
       // And there is a premises, a room, and a confirmed booking in the database
       const booking = bookingFactory.arrived().build()
-      const { premises, room } = setupBookingStateStubs(booking)
+      const { premises, bedspace } = setupBookingStateStubs(booking)
 
       // When I visit the booking arrival page
-      const page = BookingArrivalEditPage.visit(premises, room, booking)
+      const page = BookingArrivalEditPage.visit(premises, null, bedspace, booking)
 
       // And I click the back link
       page.clickBack()
 
       // Then I navigate to the show bedspace page
-      Page.verifyOnPage(BookingShowPage, premises, room, booking)
+      Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
     })
   })
 })

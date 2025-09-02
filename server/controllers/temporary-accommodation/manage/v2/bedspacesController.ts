@@ -59,7 +59,7 @@ export default class BedspacesController {
       const [premises, bedspace, listingEntries, placeContext] = await Promise.all([
         this.premisesService.getSinglePremisesDetails(callConfig, premisesId),
         this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId),
-        this.bookingService.getListingEntriesForBedspace(callConfig, premisesId, bedspaceId),
+        this.bookingService.getListingEntries(callConfig, premisesId, bedspaceId),
         preservePlaceContext(req, res, this.assessmentService),
       ])
 

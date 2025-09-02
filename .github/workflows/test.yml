@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - manage_properties_v2
   workflow_call:
 
 concurrency:

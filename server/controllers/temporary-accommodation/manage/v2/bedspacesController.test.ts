@@ -341,7 +341,7 @@ describe('BedspacesController', () => {
         premisesService.getSinglePremisesDetails.mockResolvedValue(premisesWithFullAddress)
         bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
         bedspaceService.summaryList.mockReturnValue(summary)
-        bookingService.getListingEntriesForBedspace.mockResolvedValue(bookingsAndLostBeds)
+        bookingService.getListingEntries.mockResolvedValue(bookingsAndLostBeds)
 
         request = createMock<Request>({
           session: {
@@ -368,7 +368,7 @@ describe('BedspacesController', () => {
         expect(premisesService.getSinglePremisesDetails).toHaveBeenCalledWith(callConfig, premisesId)
         expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
         expect(bedspaceService.summaryList).toHaveBeenCalledWith(bedspace)
-        expect(bookingService.getListingEntriesForBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+        expect(bookingService.getListingEntries).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       },
     )
   })

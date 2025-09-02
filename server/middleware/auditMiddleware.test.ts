@@ -164,13 +164,13 @@ describe('auditMiddleware', () => {
   })
 
   it('returns an audited request handler, that sends an audit message based on the redirect destination of the given request handler', async () => {
-    const somePath = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
+    const somePath = path('/').path('premises').path(':premisesId').path('bedspace').path(':bedspaceId')
 
     const handler = jest.fn()
     const response = createMock<Response>({
       locals: { user: { username } },
       get: field => {
-        return field === 'Location' ? somePath({ premisesId: 'some-premises', roomId: 'some-room' }) : undefined
+        return field === 'Location' ? somePath({ premisesId: 'some-premises', bedspaceId: 'some-bedspace' }) : undefined
       },
     })
     const request = createMock<Request>()
@@ -187,14 +187,14 @@ describe('auditMiddleware', () => {
     expect(handler).toHaveBeenCalled()
     expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
       premisesId: 'some-premises',
-      roomId: 'some-room',
+      bedspaceId: 'some-bedspace',
     })
   })
 
   it('sends an audit message only for the first matching RedirectAuditEventSpec', async () => {
     const nonMatchingPath = path('/').path('some-path-component')
-    const matchingPath1 = path('/').path('premises').path(':premisesId').path('room').path('new')
-    const matchingPath2 = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
+    const matchingPath1 = path('/').path('premises').path(':premisesId').path('bedspace').path('new')
+    const matchingPath2 = path('/').path('premises').path(':premisesId').path('bedspace').path(':bedspaceId')
 
     const handler = jest.fn()
     const response = createMock<Response>({
@@ -225,13 +225,13 @@ describe('auditMiddleware', () => {
   })
 
   it('includes additional metadata if provided, as part of the audit message based on the redirect destination', async () => {
-    const somePath = path('/').path('premises').path(':premisesId').path('room').path(':roomId')
+    const somePath = path('/').path('premises').path(':premisesId').path('bedspace').path(':bedspaceId')
 
     const handler = jest.fn()
     const response = createMock<Response>({
       locals: { user: { username } },
       get: field => {
-        return field === 'Location' ? somePath({ premisesId: 'some-premises', roomId: 'some-room' }) : undefined
+        return field === 'Location' ? somePath({ premisesId: 'some-premises', bedspaceId: 'some-bedspace' }) : undefined
       },
     })
     const request = createMock<Request>()
@@ -249,7 +249,7 @@ describe('auditMiddleware', () => {
     expect(handler).toHaveBeenCalled()
     expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditEvent, username, {
       premisesId: 'some-premises',
-      roomId: 'some-room',
+      bedspaceId: 'some-bedspace',
       foo: 'bar',
     })
   })

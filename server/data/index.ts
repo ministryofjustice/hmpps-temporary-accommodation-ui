@@ -25,7 +25,6 @@ import LostBedClient from './lostBedClient'
 import { createRedisClient } from './redisClient'
 import ReportClient from './reportClient'
 import { CallConfig } from './restClient'
-import RoomClient from './roomClient'
 import TokenStore from './tokenStore'
 import UserClient from './userClient'
 import TimelineClient from './timelineClient'
@@ -45,7 +44,6 @@ export const dataAccess = () => ({
   personClientBuilder: ((callConfig: CallConfig) => new PersonClient(callConfig)) as RestClientBuilder<PersonClient>,
   applicationClientBuilder: ((callConfig: CallConfig) =>
     new ApplicationClient(callConfig)) as RestClientBuilder<ApplicationClient>,
-  roomClientBuilder: ((callConfig: CallConfig) => new RoomClient(callConfig)) as RestClientBuilder<RoomClient>,
   reportClientBuilder: ((callConfig: CallConfig) => new ReportClient(callConfig)) as RestClientBuilder<ReportClient>,
   userClientBuilder: ((callConfig: CallConfig) => new UserClient(callConfig)) as RestClientBuilder<UserClient>,
   bedspaceClientBuilder: ((callConfig: CallConfig) =>

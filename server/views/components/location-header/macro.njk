@@ -4,13 +4,13 @@
 
 <div class="location-header">
   {% set premises = locationDetails.premises %}
-      {% set room = locationDetails.room %}
+      {% set bedspace = locationDetails.bedspace %}
 
   {% if premises %}
     {% if not hideAddress %}
       <h2{% if headingClass %} class="{{ headingClass }}"{% endif %}>Property address</h2>
       <p>
-            {% if room.reference.length %}{{ room.reference }}<br/>{% endif %}
+            {% if bedspace.reference.length %}{{ bedspace.reference }}<br/>{% endif %}
             {{ premises.addressLine1 }}
             {% if premises.addressLine2.length %}<br/>{{ premises.addressLine2 }}{% endif %}
             {% if premises.town.length %}<br/>{{ premises.town }}{% endif %}

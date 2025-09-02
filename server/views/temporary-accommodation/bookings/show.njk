@@ -31,7 +31,7 @@
     }) }}
 
     {{ popDetailsHeader(booking.person, { nameLink: addPlaceContext(paths.assessments.summary({ id: booking.assessmentId })) if booking.assessmentId else "" }) }}
-    {{ locationHeader({ room: bedspace, premises: premises }) }}
+    {{ locationHeader({ bedspace: bedspace, premises: premises }) }}
 
     {{ bookingInfo(booking, addPlaceContext(paths.bookings.history({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))) }}
 

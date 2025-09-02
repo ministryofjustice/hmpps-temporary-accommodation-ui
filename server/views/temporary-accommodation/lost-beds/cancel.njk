@@ -28,7 +28,7 @@
     }
   }) }}
 
-  {{ locationHeader({ premises: premises, room: bedspace }) }}
+  {{ locationHeader({ premises: premises, bedspace: bedspace }) }}
   {{ lostBedInfo(lostBed) }}
 
   <form action="{{ paths.lostBeds.cancellations.create({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }) }}" method="post">

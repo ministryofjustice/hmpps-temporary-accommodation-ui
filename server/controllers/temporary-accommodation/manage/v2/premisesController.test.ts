@@ -83,13 +83,13 @@ describe('PremisesController', () => {
     ]
     const premisesRow2 = [
       { html: '221c Baker Street<br />London<br />NW1 6XE' },
-      { html: '<a>Room 1</a><br /><a>Room 2</a>(Archived)' },
+      { html: '<a>Bedspace 1</a><br /><a>Bedspace 2</a>(Archived)' },
       { text: 'Hammersmith, Fulham, Kensington, Chelsea and Westminster' },
       { html: 'Manage' },
     ]
     const premisesRow3 = [
       { html: '62 West Wallaby Street<br />Wigan<br />WG7 7FU' },
-      { html: '<a>Room A</a><br /><a>Room B</a>' },
+      { html: '<a>Bedspace A</a><br /><a>Bedspace B</a>' },
       { text: 'Wigan' },
       { html: 'Manage' },
     ]

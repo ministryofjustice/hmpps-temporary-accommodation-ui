@@ -15,8 +15,6 @@ const premisesUnarchivePath = singlePremisesCas3Path.path('unarchive')
 const lostBedsPath = singlePremisesPath.path('lost-beds')
 const singleLostBedPath = lostBedsPath.path(':lostBedId')
 const cancelLostBedPath = singleLostBedPath.path('cancellations')
-const roomsPath = singlePremisesPath.path('rooms')
-const singleRoomPath = singlePremisesPath.path('rooms').path(':roomId')
 
 const bedspacesCas3Path = singlePremisesCas3Path.path('bedspaces')
 const singleBedspacePath = bedspacesCas3Path.path(':bedspaceId')
@@ -47,12 +45,6 @@ const managePaths = {
     update: singlePremisesPath,
     index: premisesSummaryPath,
     show: singlePremisesPath,
-    rooms: {
-      index: roomsPath,
-      show: singleRoomPath,
-      create: roomsPath,
-      update: singleRoomPath,
-    },
     lostBeds: {
       show: singleLostBedPath,
       create: lostBedsPath,
@@ -157,12 +149,6 @@ export default {
       index: managePaths.premises.lostBeds.index,
       cancel: managePaths.premises.lostBeds.cancel,
       update: managePaths.premises.lostBeds.update,
-    },
-    rooms: {
-      index: managePaths.premises.rooms.index,
-      show: managePaths.premises.rooms.show,
-      create: managePaths.premises.rooms.create,
-      update: managePaths.premises.rooms.update,
     },
     staffMembers: {
       index: managePaths.premises.show.path('staff'),

@@ -687,7 +687,7 @@ describe('BookingsController', () => {
   })
 
   describe('create', () => {
-    it('creates a booking and redirects to the show room page', async () => {
+    it('creates a booking and redirects to the show bedspace page', async () => {
       const requestHandler = bookingsController.create()
 
       const bedspace = cas3BedspaceFactory.build({ id: bedspaceId })
@@ -967,7 +967,7 @@ describe('BookingsController', () => {
 
       request.params = {
         premisesId: premises.id,
-        roomId: bedspace.id,
+        bedspaceId: bedspace.id,
         bookingId: booking.id,
       }
 

@@ -22,7 +22,7 @@
   <h1 class="govuk-heading-l">Booking history</h1>
 
   {{ popDetailsHeader(booking.person) }}
-  {{ locationHeader({ room: bedspace, premises: premises }) }}
+  {{ locationHeader({ bedspace: bedspace, premises: premises }) }}
 
   {% for historicBookingDetail in history | reverse %}
     <div data-cy-history-index="{{ loop.revindex0 }}">

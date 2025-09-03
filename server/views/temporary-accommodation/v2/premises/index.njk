@@ -74,7 +74,7 @@
                             text: 'Find an ' + status + ' property'
                         },
                         hint: {
-                            text: 'Search by road or postcode'
+                            text: 'Search by road or full address'
                         },
                         name: 'postcodeOrAddress',
                         id: 'postcodeOrAddress',
@@ -99,7 +99,14 @@
                     {% if params.postcodeOrAddress %}
                     <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties matching ‘{{ params.postcodeOrAddress }}’</h2>
                     {% else %}
-                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">{{ totalPremises }} {{ status }} properties</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-bottom-6">
+                        {{ totalPremises }} {{ status }}
+                        {% if totalPremises == 1 %}
+                            property
+                        {% else %}
+                            properties
+                        {% endif %}
+                    </h2>
                     {% endif %}
                     {% if totalPremises is defined and totalPremises > 0 %}
                         {% if status === 'online' and totalOnlineBedspaces is defined %}

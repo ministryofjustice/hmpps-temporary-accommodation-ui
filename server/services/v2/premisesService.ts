@@ -262,10 +262,14 @@ export default class PremisesService {
     bedspace: Cas3BedspacePremisesSearchResult,
     placeContext: PlaceContext,
   ): string {
-    const archived =
-      bedspace.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
+    let statusTag = ''
+    if (bedspace.status === 'archived') {
+      statusTag = ` <strong class="govuk-tag govuk-tag--grey govuk-!-margin-left-2">Archived</strong>`
+    } else if (bedspace.status === 'upcoming') {
+      statusTag = ` <strong class="govuk-tag govuk-tag--blue govuk-!-margin-left-2">Upcoming</strong>`
+    }
     const showBedspaceLinkWithPlaceContext = addPlaceContext(this.bedspaceUrl(premisesId, bedspace.id), placeContext)
-    return `<a href="${showBedspaceLinkWithPlaceContext}">${bedspace.reference}</a>${archived}`
+    return `<a href="${showBedspaceLinkWithPlaceContext}">${bedspace.reference}</a>${statusTag}`
   }
 
   private formatBedspaces(premises: Cas3PremisesSearchResult, placeContext: PlaceContext): string {
@@ -273,7 +277,24 @@ export default class PremisesService {
       return `No bedspaces<br /><a href="${paths.premises.bedspaces.new({ premisesId: premises.id })}">Add a bedspace</a>`
     }
 
-    return premises.bedspaces.map(bedspace => this.formatBedspace(premises.id, bedspace, placeContext)).join('<br />')
+    const sortedBedspaces = premises.bedspaces.sort((a, b) => {
+      const statusPriority = { online: 1, upcoming: 2, archived: 3 }
+      const aPriority = statusPriority[a.status]
+      const bPriority = statusPriority[b.status]
+
+      if (aPriority !== bPriority) {
+        return aPriority - bPriority
+      }
+
+      return a.reference.localeCompare(b.reference)
+    })
+
+    return sortedBedspaces
+      .map(
+        bedspace =>
+          `<div class="govuk-!-margin-bottom-3">${this.formatBedspace(premises.id, bedspace, placeContext)}</div>`,
+      )
+      .join('')
   }
 
   private formatDate(dateString: string | undefined | null): string {

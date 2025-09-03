@@ -1,4 +1,4 @@
-import type { TemporaryAccommodationPremises as Premises, Room } from '@approved-premises/api'
+import type { TemporaryAccommodationPremises as Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import { characteristicFactory, pduFactory, premisesFactory } from '../../../../server/testutils/factories'
@@ -66,21 +66,6 @@ export default class PremisesShowPage extends Page {
         }
       })
     })
-  }
-
-  clickPremisesEditLink(): void {
-    cy.get(`[data-cy-premises]`).within(() => {
-      cy.get('a').contains('Edit').click()
-    })
-  }
-
-  clickBedpaceViewLink(room: Room): void {
-    cy.get('h4')
-      .contains(`Bedspace name: ${room.name}`)
-      .parents('[data-cy-bedspace]')
-      .within(() => {
-        cy.get('a').contains('View').click()
-      })
   }
 
   private parsePremises(

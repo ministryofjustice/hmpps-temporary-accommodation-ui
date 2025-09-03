@@ -43,7 +43,6 @@ import newLostBedFactory from './newLostBed'
 import newLostBedCancellationFactory from './newLostBedCancellation'
 import newPremisesFactory from './newPremises'
 import newReferralHistoryUserNoteFactory from './newReferralHistoryUserNote'
-import newRoomFactory from './newRoom'
 import newTurnaroundFactory from './newTurnaround'
 import oasysSectionsFactory, { roshSummaryFactory } from './oasysSections'
 import overlapFactory from './overlap'
@@ -76,7 +75,6 @@ import referralHistoryDomainEventNoteFactory from './referralHistoryDomainEventN
 import referralHistorySystemNoteFactory from './referralHistorySystemNote'
 import referralHistoryUserNoteFactory from './referralHistoryUserNote'
 import risksFactory from './risks'
-import roomFactory from './room'
 import roshRisksFactory from './roshRisks'
 import staffMemberFactory from './staffMember'
 import tierEnvelopeFactory from './tierEnvelopeFactory'
@@ -84,7 +82,6 @@ import { timelineEventsFactory } from './timelineEvents'
 import turnaroundFactory from './turnaround'
 import updateLostBedFactory from './updateLostBed'
 import updatePremisesFactory from './updatePremises'
-import updateRoomFactory from './updateRoom'
 import userFactory, { userProfileFactory } from './user'
 
 export {
@@ -133,7 +130,6 @@ export {
   newLostBedFactory,
   newPremisesFactory,
   newReferralHistoryUserNoteFactory,
-  newRoomFactory,
   newTurnaroundFactory,
   oasysSectionsFactory,
   overlapFactory,
@@ -167,7 +163,6 @@ export {
   referralHistoryUserNoteFactory,
   restrictedPersonFactory,
   risksFactory,
-  roomFactory,
   roshRisksFactory,
   roshSummaryFactory,
   staffMemberFactory,
@@ -176,7 +171,6 @@ export {
   turnaroundFactory,
   updateLostBedFactory,
   updatePremisesFactory,
-  updateRoomFactory,
   userFactory,
   userProfileFactory,
 }

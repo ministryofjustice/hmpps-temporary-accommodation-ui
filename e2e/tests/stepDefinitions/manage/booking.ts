@@ -11,10 +11,10 @@ import { person } from '../utils'
 
 Given("I'm creating a booking", () => {
   cy.then(function _() {
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
     bedspaceShowPage.clickBookBedspaceLink()
 
-    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
     bookingNewPage.shouldShowBookingDetails()
 
     cy.wrap([]).as('historicBookings')
@@ -23,7 +23,7 @@ Given("I'm creating a booking", () => {
 
 Given('I create a booking with all necessary details', () => {
   cy.then(function _() {
-    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
     bookingNewPage.assignTurnaroundDays('turnaroundDays')
 
     cy.then(function __() {
@@ -53,7 +53,7 @@ Given('I create a booking with all necessary details', () => {
         }
         bookingSelectAssessmentPage.clickSubmit()
 
-        const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, null, person)
+        const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.bedspace, person)
         bookingConfirmPage.shouldShowBookingDetails()
 
         bookingConfirmPage.clickSubmit()
@@ -67,7 +67,7 @@ Given('I create a booking with all necessary details', () => {
 
 Given('I attempt to create a booking with required details missing', () => {
   cy.then(function _() {
-    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
     bookingNewPage.enterCrn(person.crn)
     bookingNewPage.clickSubmit()
   })
@@ -75,7 +75,7 @@ Given('I attempt to create a booking with required details missing', () => {
 
 Given('I attempt to create a conflicting booking', () => {
   cy.then(function _() {
-    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
 
     const newBooking = newBookingFactory.build({
       ...this.booking,
@@ -92,7 +92,7 @@ Given('I attempt to create a conflicting booking', () => {
       }
       bookingSelectAssessmentPage.clickSubmit()
 
-      const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, null, person)
+      const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.bedspace, person)
       bookingConfirmPage.shouldShowBookingDetails()
 
       bookingConfirmPage.clickSubmit()
@@ -102,13 +102,13 @@ Given('I attempt to create a conflicting booking', () => {
 
 Then('I should see a confirmation for my new booking', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.shouldShowBanner('Booking created')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })
@@ -116,14 +116,13 @@ Then('I should see a confirmation for my new booking', () => {
 
 Then('I should see previous booking states in the booking history', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.clickHistoryLink()
 
     const bookingHistoryPage = Page.verifyOnPage(
       BookingHistoryPage,
       this.premises,
-      this.room,
-      null,
+      this.bedspace,
       this.booking,
       this.historicBookings,
     )
@@ -135,14 +134,14 @@ Then('I should see previous booking states in the booking history', () => {
 
 Then('I should see a list of the problems encountered creating the booking', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
+    const page = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
     page.shouldShowErrorMessagesForFields(['arrivalDate', 'departureDate'])
   })
 })
 
 Then('I should see errors for the conflicting booking', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
+    const page = Page.verifyOnPage(BookingNewPage, this.premises, this.bedspace)
     page.shouldShowDateConflictErrorMessages(this.booking, 'booking')
   })
 })

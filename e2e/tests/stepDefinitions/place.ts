@@ -98,7 +98,7 @@ Then('I can place the assessment', () => {
       assessment,
     })
 
-    const placeHelper = new PlaceHelper(placeContext, this.premises, this.room, null, null)
+    const placeHelper = new PlaceHelper(placeContext, this.premises, null, this.bedspace)
     placeHelper.completePlace()
   })
 })

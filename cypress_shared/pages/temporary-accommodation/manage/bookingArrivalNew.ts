@@ -1,11 +1,4 @@
-import type {
-  Booking,
-  Cas3Bedspace,
-  LostBed,
-  NewCas3Arrival as NewArrival,
-  Premises,
-  Room,
-} from '@approved-premises/api'
+import type { Booking, Cas3Bedspace, LostBed, NewCas3Arrival as NewArrival, Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import BedspaceConflictErrorComponent from '../../../components/bedspaceConflictError'
 import BookingInfoComponent from '../../../components/bookingInfo'
@@ -24,25 +17,20 @@ export default class BookingArrivalNewPage extends Page {
 
   constructor(
     premises: Premises,
-    room: Room,
     bedspace: Cas3Bedspace,
     private readonly booking: Booking,
   ) {
     super('Mark booking as active')
 
-    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, room, null, 'booking')
+    this.bedspaceConflictErrorComponent = new BedspaceConflictErrorComponent(premises, bedspace, 'booking')
     this.bookingInfoComponent = new BookingInfoComponent(booking)
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(booking.person)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
   }
 
-  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, booking: Booking): BookingArrivalNewPage {
-    if (room) {
-      cy.visit(paths.bookings.arrivals.new({ premisesId: premises.id, bedspaceId: room.id, bookingId: booking.id }))
-    } else {
-      cy.visit(paths.bookings.arrivals.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
-    }
-    return new BookingArrivalNewPage(premises, room, bedspace, booking)
+  static visit(premises: Premises, bedspace: Cas3Bedspace, booking: Booking): BookingArrivalNewPage {
+    cy.visit(paths.bookings.arrivals.new({ premisesId: premises.id, bedspaceId: bedspace.id, bookingId: booking.id }))
+    return new BookingArrivalNewPage(premises, bedspace, booking)
   }
 
   shouldShowBookingDetails(): void {

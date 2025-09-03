@@ -1,22 +1,22 @@
-import type { NewRoom, UpdateRoom } from '@approved-premises/api'
 import Page from '../../page'
+import { Cas3Bedspace } from '../../../../server/@types/shared'
 
 export default abstract class BedspaceEditablePage extends Page {
-  protected completeEditableForm(newOrUpdateRoom: NewRoom | UpdateRoom): void {
+  protected completeEditableForm(newOrUpdateBedspace: Cas3Bedspace): void {
     this.getLabel('Enter a bedspace reference')
-    this.getTextInputByIdAndEnterDetails('reference', newOrUpdateRoom.name)
+    this.getTextInputByIdAndEnterDetails('reference', newOrUpdateBedspace.reference)
 
-    if (this.bedStartDateIsEditable() && newOrUpdateRoom.bedEndDate) {
+    if (this.bedStartDateIsEditable() && newOrUpdateBedspace.endDate) {
       this.getLegend('Enter the bedspace end date (optional)')
-      this.completeDateInputs('startDate', newOrUpdateRoom.bedEndDate)
+      this.completeDateInputs('startDate', newOrUpdateBedspace.endDate)
     }
 
-    newOrUpdateRoom.characteristicIds.forEach(characteristicId => {
-      this.checkCheckboxByNameAndValue('characteristicIds[]', characteristicId)
+    newOrUpdateBedspace.characteristics.forEach(characteristic => {
+      this.checkCheckboxByNameAndValue('characteristicIds[]', characteristic.id)
     })
 
     this.getLabel('Additional bedspace details')
-    this.getTextInputByIdAndEnterDetails('notes', newOrUpdateRoom.notes)
+    this.getTextInputByIdAndEnterDetails('notes', newOrUpdateBedspace.notes)
 
     this.clickSubmit()
   }

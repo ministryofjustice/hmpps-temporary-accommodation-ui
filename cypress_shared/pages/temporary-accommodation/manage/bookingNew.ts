@@ -1,5 +1,5 @@
 import type { NewBooking } from '@approved-premises/api'
-import { Cas3Bedspace, TemporaryAccommodationPremises as Premises, Room } from '../../../../server/@types/shared'
+import { Cas3Bedspace, TemporaryAccommodationPremises as Premises } from '../../../../server/@types/shared'
 import { PlaceContext } from '../../../../server/@types/ui'
 import errorLookups from '../../../../server/i18n/en/errors.json'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
@@ -14,22 +14,17 @@ export default class BookingNewPage extends BookingEditablePage {
 
   constructor(
     private readonly premises: Premises,
-    room: Room,
     bedspace: Cas3Bedspace,
   ) {
-    super('Book bedspace', premises, room, bedspace)
+    super('Book bedspace', premises, bedspace)
 
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
-    this.bedspaceStatusComponent = new BedspaceStatusComponent(room, bedspace)
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
+    this.bedspaceStatusComponent = new BedspaceStatusComponent(bedspace)
   }
 
-  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace): BookingNewPage {
-    if (room) {
-      cy.visit(paths.bookings.new({ premisesId: premises.id, bedspaceId: room.id }))
-    } else {
-      cy.visit(paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }))
-    }
-    return new BookingNewPage(premises, room, bedspace)
+  static visit(premises: Premises, bedspace: Cas3Bedspace): BookingNewPage {
+    cy.visit(paths.bookings.new({ premisesId: premises.id, bedspaceId: bedspace.id }))
+    return new BookingNewPage(premises, bedspace)
   }
 
   assignTurnaroundDays(alias: string): void {

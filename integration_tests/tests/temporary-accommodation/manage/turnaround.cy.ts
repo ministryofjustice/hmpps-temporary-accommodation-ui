@@ -25,13 +25,13 @@ context('Booking turnarounds', () => {
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
+    const bookingShow = BookingShowPage.visit(premises, bedspace, booking)
 
     // Add I click the extend booking action
     bookingShow.clickChangeTurnaround()
 
     // Then I navigate to the change turnaround page
-    Page.verifyOnPage(BookingTurnaroundNewPage, premises, null, bedspace, booking)
+    Page.verifyOnPage(BookingTurnaroundNewPage, premises, bedspace, booking)
   })
 
   it('allows me to change a turnaround', () => {
@@ -43,7 +43,7 @@ context('Booking turnarounds', () => {
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -64,7 +64,7 @@ context('Booking turnarounds', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, bedspace, booking)
     bookingShowPage.shouldShowBanner('Turnaround time changed')
   })
 
@@ -77,7 +77,7 @@ context('Booking turnarounds', () => {
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, bedspace, booking)
 
     // And I miss required fields
     cy.task('stubTurnaroundCreateErrors', {
@@ -104,7 +104,7 @@ context('Booking turnarounds', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: conflictingLostBed })
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, bedspace, booking)
 
     // And I fill out the form with days that conflict with an existing booking
     const turnaround = turnaroundFactory.build()
@@ -133,12 +133,12 @@ context('Booking turnarounds', () => {
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the change turnaround page
-    const page = BookingTurnaroundNewPage.visit(premises, null, bedspace, booking)
+    const page = BookingTurnaroundNewPage.visit(premises, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
+    Page.verifyOnPage(BookingShowPage, premises, bedspace, booking)
   })
 })

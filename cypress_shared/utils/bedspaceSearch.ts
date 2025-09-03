@@ -1,7 +1,7 @@
-import { Characteristic, Room, TemporaryAccommodationPremises } from '../../server/@types/shared'
+import { Cas3Bedspace, Characteristic, TemporaryAccommodationPremises } from '../../server/@types/shared'
 import { BedspaceSearchFormParameters } from '../../server/@types/ui'
 
-export const characteristicsToSearchAttributes = (premises: TemporaryAccommodationPremises, room: Room) => {
+export const characteristicsToSearchAttributes = (premises: TemporaryAccommodationPremises, bedspace: Cas3Bedspace) => {
   const occupancyAttributesMap: Record<string, BedspaceSearchFormParameters['occupancyAttribute']> = {
     All: 'all',
     'Shared property': '62a38d3a-4797-4b0f-8681-7befea1035a4',
@@ -27,7 +27,7 @@ export const characteristicsToSearchAttributes = (premises: TemporaryAccommodati
     attr => !matchedSexualRiskAttributes.includes(attr),
   ) as BedspaceSearchFormParameters['sexualRiskAttributes']
 
-  const wheelchairAccessibility = room.characteristics
+  const wheelchairAccessibility = bedspace.characteristics
     .map((characteristic: Characteristic) => wheelchairAccessibilityMap[characteristic.name])
     .find(attribute => attribute !== undefined)
 

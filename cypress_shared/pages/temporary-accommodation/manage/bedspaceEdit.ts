@@ -1,87 +1,15 @@
-import type { Premises, Room, UpdateRoom } from '@approved-premises/api'
+import type { Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
-import LocationHeaderComponent from '../../../components/locationHeader'
 import BedspaceEditablePage from './bedspaceEditable'
-import { DateFormats } from '../../../../server/utils/dateUtils'
+import { Cas3Bedspace } from '../../../../server/@types/shared'
 
 export default class BedspaceEditPage extends BedspaceEditablePage {
-  private readonly locationHeaderComponent: LocationHeaderComponent
-
-  constructor(
-    premises: Premises,
-    private readonly room: Room,
-  ) {
+  constructor() {
     super('Edit a bedspace')
-
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room })
   }
 
-  static visit(premises: Premises, room: Room): BedspaceEditPage {
-    cy.visit(paths.premises.bedspaces.edit({ premisesId: premises.id, roomId: room.id }))
-    return new BedspaceEditPage(premises, room)
-  }
-
-  shouldShowBedspaceDetails(): void {
-    this.locationHeaderComponent.shouldShowLocationDetails()
-
-    cy.get('legend')
-      .contains('Does the bedspace have any of the following attributes?')
-      .parent()
-      .within(() => {
-        this.room.characteristics.forEach(characteristic => {
-          cy.get('label').contains(characteristic.name).siblings('input').should('be.checked')
-        })
-      })
-
-    cy.get('label')
-      .contains('Please provide any further bedspace details')
-      .siblings('textarea')
-      .should('contain', this.room.notes)
-  }
-
-  completeForm(updateRoom: UpdateRoom): void {
-    this.clearForm()
-
-    super.completeEditableForm(updateRoom)
-  }
-
-  clearForm(): void {
-    this.getTextInputByIdAndClear('name')
-    cy.get('legend')
-      .contains('Does the bedspace have any of the following attributes?')
-      .parent()
-      .within(() => {
-        cy.get('label').siblings('input').uncheck()
-      })
-
-    this.getTextInputByIdAndClear('notes')
-  }
-
-  showCannotEditBedspaceEndDate(bedEndDate: string) {
-    cy.get('dt').contains('Bedspace end date')
-    cy.get('dd').contains(
-      `${DateFormats.isoDateToUIDate(bedEndDate)} (${DateFormats.isoDateToDaysFromNow(bedEndDate)})`,
-    )
-    cy.get('p').contains('The bedspace end date cannot be edited.')
-    cy.get('label').contains('Enter the bedspace end date (optional)').should('not.exist')
-  }
-
-  shouldShowErrorMessageForEndDateBeforeCreationDate(createdAt: string) {
-    cy.get('.govuk-error-summary').should(
-      'contain',
-      `The bedspace end date must be on or after the date the bedspace was created (${DateFormats.isoDateToUIDate(
-        createdAt,
-      )})`,
-    )
-    cy.get(`[data-cy-error-bedEndDate]`).should(
-      'contain',
-      'The bedspace end date must be on or after the date the bedspace was created',
-    )
-  }
-
-  shouldShowErrorMessageForBookingConflict(bookingPath: string) {
-    cy.get('.govuk-error-summary').should('contain', `This bedspace end date conflicts with an existing booking`)
-    cy.get('a').contains('an existing booking').should('have.attr', 'href', bookingPath)
-    cy.get(`[data-cy-error-bedEndDate]`).should('contain', 'This bedspace end date conflicts with an existing booking')
+  static visit(premises: Premises, bedspace: Cas3Bedspace): BedspaceEditPage {
+    cy.visit(paths.premises.bedspaces.edit({ premisesId: premises.id, bedspaceId: bedspace.id }))
+    return new BedspaceEditPage()
   }
 }

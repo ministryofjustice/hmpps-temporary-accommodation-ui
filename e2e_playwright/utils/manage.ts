@@ -20,7 +20,7 @@ export function getProperty(): Property {
 
 export function getBedspace(): Bedspace {
   return {
-    reference: `Room ${faker.number.int({ min: 1, max: 9999 })}`,
+    reference: `Bedspace ${faker.number.int({ min: 1, max: 9999 })}`,
     startDate: new Date(),
     details: [],
     additionalDetails: faker.lorem.sentences(5),

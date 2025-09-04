@@ -8,7 +8,7 @@ import { bookingFactory, cancellationFactory, newCancellationFactory } from '../
 
 Given('I cancel the booking', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.clickCancelBookingButton()
 
     const cancellation = cancellationFactory.build()
@@ -20,8 +20,7 @@ Given('I cancel the booking', () => {
     const bookingCancellationPage = Page.verifyOnPage(
       BookingCancellationNewPage,
       this.premises,
-      this.room,
-      null,
+      this.bedspace,
       this.booking,
     )
     bookingCancellationPage.shouldShowBookingDetails()
@@ -40,14 +39,13 @@ Given('I cancel the booking', () => {
 
 Given('I attempt to cancel the booking with required details missing', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.clickCancelBookingButton()
 
     const bookingCancellationPage = Page.verifyOnPage(
       BookingCancellationNewPage,
       this.premises,
-      this.room,
-      null,
+      this.bedspace,
       this.booking,
     )
     bookingCancellationPage.clickSubmit()
@@ -56,7 +54,7 @@ Given('I attempt to cancel the booking with required details missing', () => {
 
 Given('I edit the cancelled booking', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.clickEditCancelledBookingButton()
 
     const cancellation = cancellationFactory.build()
@@ -68,8 +66,7 @@ Given('I edit the cancelled booking', () => {
     const bookingCancellationPage = Page.verifyOnPage(
       BookingCancellationEditPage,
       this.premises,
-      this.room,
-      null,
+      this.bedspace,
       this.booking,
     )
     bookingCancellationPage.shouldShowBookingDetails()
@@ -88,14 +85,13 @@ Given('I edit the cancelled booking', () => {
 
 Given('I attempt to edit the cancelled booking with required details missing', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.clickEditCancelledBookingButton()
 
     const bookingCancellationPage = Page.verifyOnPage(
       BookingCancellationEditPage,
       this.premises,
-      this.room,
-      null,
+      this.bedspace,
       this.booking,
     )
     bookingCancellationPage.clearForm()
@@ -105,13 +101,13 @@ Given('I attempt to edit the cancelled booking with required details missing', (
 
 Then('I should see the booking with the cancelled status', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.shouldShowBanner('Booking cancelled')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })
@@ -119,13 +115,13 @@ Then('I should see the booking with the cancelled status', () => {
 
 Then('I should see the booking with the edited cancellation details', () => {
   cy.then(function _() {
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, this.booking)
     bookingShowPage.shouldShowBanner('Cancelled booking updated')
     bookingShowPage.shouldShowBookingDetails()
 
     bookingShowPage.clickBreadCrumbUp()
 
-    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.bedspace)
     bedspaceShowPage.shouldShowBookingDetails(this.booking)
     bedspaceShowPage.clickBookingLink(this.booking)
   })
@@ -133,7 +129,7 @@ Then('I should see the booking with the edited cancellation details', () => {
 
 Then('I should see a list of the problems encountered cancelling the booking', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingCancellationNewPage, this.premises, this.room, null, this.booking)
+    const page = Page.verifyOnPage(BookingCancellationNewPage, this.premises, this.bedspace, this.booking)
     page.shouldShowErrorMessagesForFields(['date'], 'empty', 'bookingCancellation')
 
     page.clickBack()
@@ -142,7 +138,7 @@ Then('I should see a list of the problems encountered cancelling the booking', (
 
 Then('I should see a list of the problems encountered editing the cancelling booking', () => {
   cy.then(function _() {
-    const page = Page.verifyOnPage(BookingCancellationEditPage, this.premises, this.room, null, this.booking)
+    const page = Page.verifyOnPage(BookingCancellationEditPage, this.premises, this.bedspace, this.booking)
     page.shouldShowErrorMessagesForFields(['date'], 'empty', 'bookingCancellation')
 
     page.clickBack()

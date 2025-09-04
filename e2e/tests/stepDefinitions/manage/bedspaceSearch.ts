@@ -21,10 +21,13 @@ Given('I search for a bedspace', () => {
   cy.then(function _() {
     const page = Page.verifyOnPage(BedspaceSearchPage)
 
-    const occupancyAttribute = characteristicsToSearchAttributes(this.premises, this.room).premisesOccupancyAttribute
+    const occupancyAttribute = characteristicsToSearchAttributes(
+      this.premises,
+      this.bedspace,
+    ).premisesOccupancyAttribute
     const { wheelchairAccessibility, sexualRiskAttributes } = characteristicsToSearchAttributes(
       this.premises,
-      this.room,
+      this.bedspace,
     )
 
     const searchParameters = bedspaceSearchFormParametersFactory.build({
@@ -54,13 +57,13 @@ Then('I should see the bedspace search results', () => {
   cy.then(function _() {
     const results = bedspaceSearchResultsFactory.build({
       results: [
-        bedspaceSearchResultFactory.forBedspace(this.premises, this.room, null).build({
+        bedspaceSearchResultFactory.forBedspace(this.premises, this.bedspace).build({
           overlaps: [],
         }),
       ],
     })
 
-    cy.wrap({ room: this.room, sr: results })
+    cy.wrap({ bedspace: this.bedspace, sr: results })
 
     const page = Page.verifyOnPage(BedspaceSearchPage, results)
 

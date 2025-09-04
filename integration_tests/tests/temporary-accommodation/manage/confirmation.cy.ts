@@ -15,30 +15,30 @@ context('Booking confirmation', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a provisional booking in the database
+    // And there is a premises, a bedspace, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the show booking page
-    const bookingShow = BookingShowPage.visit(premises, null, bedspace, booking)
+    const bookingShow = BookingShowPage.visit(premises, bedspace, booking)
 
     // Add I click the confim booking action
     bookingShow.clickConfirmBookingButton()
 
     // Then I navigate to the booking confirmation page
-    Page.verifyOnPage(BookingConfirmationNewPage, premises, null, bedspace, booking)
+    Page.verifyOnPage(BookingConfirmationNewPage, premises, bedspace, booking)
   })
 
   it('allows me to confirm a booking', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a provisional booking in the database
+    // And there is a premises, a bedspace, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page
-    const page = BookingConfirmationNewPage.visit(premises, null, bedspace, booking)
+    const page = BookingConfirmationNewPage.visit(premises, bedspace, booking)
     page.shouldShowBookingDetails()
 
     // And I fill out the form
@@ -60,7 +60,7 @@ context('Booking confirmation', () => {
     })
 
     // And I should be redirected to the show booking page
-    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, premises, bedspace, booking)
     bookingShowPage.shouldShowBanner('Booking confirmed')
   })
 
@@ -68,17 +68,17 @@ context('Booking confirmation', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and a provisional booking in the database
+    // And there is a premises, a bedspace, and a provisional booking in the database
     const booking = bookingFactory.provisional().build()
     const { premises, bedspace } = setupBookingStateStubs(booking)
 
     // When I visit the booking confirmation page
-    const page = BookingConfirmationNewPage.visit(premises, null, bedspace, booking)
+    const page = BookingConfirmationNewPage.visit(premises, bedspace, booking)
 
     // And I click the back link
     page.clickBack()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BookingShowPage, premises, null, bedspace, booking)
+    Page.verifyOnPage(BookingShowPage, premises, bedspace, booking)
   })
 })

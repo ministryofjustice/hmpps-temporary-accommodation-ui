@@ -1,4 +1,4 @@
-import type { Person, Premises, Room } from '@approved-premises/api'
+import type { Person, Premises } from '@approved-premises/api'
 
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -11,21 +11,15 @@ export default class BookingConfirmPage extends Page {
 
   private readonly locationHeaderComponent: LocationHeaderComponent
 
-  constructor(premises: Premises, room: Room, bedspace: Cas3Bedspace, person: Person) {
+  constructor(premises: Premises, bedspace: Cas3Bedspace, person: Person) {
     super('Confirm CRN')
-
     this.popDetailsHeaderComponent = new PopDetailsHeaderComponent(person)
-
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
   }
 
-  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, person: Person): BookingConfirmPage {
-    if (room) {
-      cy.visit(paths.bookings.confirm({ premisesId: premises.id, roomId: room.id }))
-    } else {
-      cy.visit(paths.bookings.confirm({ premisesId: premises.id, bedspaceId: bedspace.id }))
-    }
-    return new BookingConfirmPage(premises, room, bedspace, person)
+  static visit(premises: Premises, bedspace: Cas3Bedspace, person: Person): BookingConfirmPage {
+    cy.visit(paths.bookings.confirm({ premisesId: premises.id, bedspaceId: bedspace.id }))
+    return new BookingConfirmPage(premises, bedspace, person)
   }
 
   shouldShowBookingDetails(): void {

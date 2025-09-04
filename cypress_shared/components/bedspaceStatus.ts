@@ -1,20 +1,13 @@
 import Component from './component'
-import { Cas3Bedspace, Room } from '../../server/@types/shared'
+import { Cas3Bedspace } from '../../server/@types/shared'
 import { DateFormats } from '../../server/utils/dateUtils'
 
 export default class bedspaceStatusComponent extends Component {
   private readonly bedEndDate: string
 
-  constructor(
-    private readonly room: Room,
-    private readonly bedspace: Cas3Bedspace,
-  ) {
+  constructor(private readonly bedspace: Cas3Bedspace) {
     super()
-    if (room) {
-      this.bedEndDate = this.room.beds[0].bedEndDate
-    } else {
-      this.bedEndDate = this.bedspace.endDate
-    }
+    this.bedEndDate = this.bedspace.endDate
   }
 
   shouldShowStatusDetails(status: 'Online' | 'Archived'): void {

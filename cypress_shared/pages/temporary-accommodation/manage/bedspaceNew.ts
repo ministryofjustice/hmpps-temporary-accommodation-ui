@@ -1,4 +1,4 @@
-import type { NewRoom } from '@approved-premises/api'
+import type { Cas3Bedspace } from '@approved-premises/api'
 import { Premises } from '../../../../server/@types/shared'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import LocationHeaderComponent from '../../../components/locationHeader'
@@ -20,7 +20,7 @@ export default class BedspaceNewPage extends BedspaceEditablePage {
     this.locationHeaderComponent.shouldShowLocationDetails()
   }
 
-  completeForm(newRoom: NewRoom): void {
-    super.completeEditableForm(newRoom)
+  completeForm(bedspace: Cas3Bedspace): void {
+    super.completeEditableForm(bedspace)
   }
 }

@@ -1,4 +1,4 @@
-import type { Booking, LostBed, Premises, Room } from '@approved-premises/api'
+import type { Booking, LostBed, Premises } from '@approved-premises/api'
 import errorLookups from '../../server/i18n/en/errors.json'
 import Page from '../pages/page'
 import BookingShowPage from '../pages/temporary-accommodation/manage/bookingShow'
@@ -9,7 +9,6 @@ import { Cas3Bedspace } from '../../server/@types/shared'
 export default class BedspaceConflictErrorComponent extends Component {
   constructor(
     private readonly premises: Premises,
-    private readonly room: Room,
     private readonly bedspace: Cas3Bedspace,
     private readonly source: 'booking' | 'lost-bed' | 'turnaround',
   ) {
@@ -35,9 +34,9 @@ export default class BedspaceConflictErrorComponent extends Component {
       cy.get('.govuk-error-summary a').click()
 
       if (conflictingEntityType === 'booking') {
-        Page.verifyOnPage(BookingShowPage, this.premises, this.room, this.bedspace, conflictingEntity as Booking)
+        Page.verifyOnPage(BookingShowPage, this.premises, this.bedspace, conflictingEntity as Booking)
       } else {
-        Page.verifyOnPage(LostBedShowPage, this.premises, this.room, this.bedspace, conflictingEntity as LostBed)
+        Page.verifyOnPage(LostBedShowPage, this.premises, this.bedspace, conflictingEntity as LostBed)
       }
       cy.go('back')
     }

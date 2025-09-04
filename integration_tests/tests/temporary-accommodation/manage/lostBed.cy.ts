@@ -50,21 +50,21 @@ context('Lost bed', () => {
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the show bedspace page
-    const bedspaceShow = BedspaceShowPage.visit(premises, null, bedspace)
+    const bedspaceShow = BedspaceShowPage.visit(premises, bedspace)
 
     // Add I click the void bedspace link
     cy.task('stubLostBedReferenceData')
     bedspaceShow.clickVoidBedspaceLink()
 
     // Then I navigate to the new lost bed page
-    Page.verifyOnPage(LostBedNewPage, premises, null, bedspace)
+    Page.verifyOnPage(LostBedNewPage, premises, bedspace)
   })
 
   it('navigates to the show void bedspace page', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room, and lost beds the database
+    // And there is a premises, a bedspace, and lost beds the database
     const premises = premisesFactory.build()
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const bedspace = cas3BedspaceFactory.build({ status: 'online', startDate: '2023-10-18' })
@@ -88,13 +88,13 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: lostBeds[0] })
 
     // When I visit the show bedspace page
-    const bedspaceShowPage = BedspaceShowPage.visit(premises, null, bedspace)
+    const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
 
     // Add I click the lost bed link
     bedspaceShowPage.clickLostBedLink(lostBeds[0])
 
     // Then I navigate to the show lost bed page
-    Page.verifyOnPage(LostBedShowPage, premises, null, bedspace, lostBeds[0])
+    Page.verifyOnPage(LostBedShowPage, premises, bedspace, lostBeds[0])
   })
 
   it('allows me to create a void booking', () => {
@@ -112,7 +112,7 @@ context('Lost bed', () => {
 
     // When I visit the void a bedspace page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedNewPage.visit(premises, null, bedspace)
+    const page = LostBedNewPage.visit(premises, bedspace)
 
     // I should see the bedspace details
     page.shouldShowBedspaceDetails()
@@ -146,7 +146,7 @@ context('Lost bed', () => {
     })
 
     // And I should be redirected to the show booking page
-    const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, premises, null, bedspace, lostBed)
+    const lostBedShowPage = Page.verifyOnPage(LostBedShowPage, premises, bedspace, lostBed)
     lostBedShowPage.shouldShowBanner('Void created')
   })
 
@@ -165,7 +165,7 @@ context('Lost bed', () => {
 
     // When I visit the new lost bed page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedNewPage.visit(premises, null, bedspace)
+    const page = LostBedNewPage.visit(premises, bedspace)
 
     // And I miss required fields
     cy.task('stubLostBedErrors', {
@@ -195,7 +195,7 @@ context('Lost bed', () => {
 
     // When I visit the new lost bed page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedNewPage.visit(premises, null, bedspace)
+    const page = LostBedNewPage.visit(premises, bedspace)
 
     // And I fill out the form with dates that conflict with an existing lost bed
     const lostBed = lostBedFactory.build({
@@ -246,13 +246,13 @@ context('Lost bed', () => {
 
     // When I visit the new lost bed page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedNewPage.visit(premises, null, bedspace)
+    const page = LostBedNewPage.visit(premises, bedspace)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises, null, bedspace, bedspace.reference)
+    Page.verifyOnPage(BedspaceShowPage, bedspace)
   })
 
   it('shows a single active lost bed', () => {
@@ -271,7 +271,7 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
-    const page = LostBedShowPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedShowPage.visit(premises, bedspace, lostBed)
 
     // Then I should see the booking details
     page.shouldShowLostBedDetails()
@@ -293,7 +293,7 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
-    const page = LostBedShowPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedShowPage.visit(premises, bedspace, lostBed)
 
     // Then I should see the booking details
     page.shouldShowLostBedDetails()
@@ -320,13 +320,13 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed: lostBeds[0] })
 
     // When I visit the show lost bed page
-    const page = LostBedShowPage.visit(premises, null, bedspace, lostBeds[0])
+    const page = LostBedShowPage.visit(premises, bedspace, lostBeds[0])
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
     // Then I navigate to the show bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises, null, bedspace, bedspace.reference)
+    Page.verifyOnPage(BedspaceShowPage, bedspace)
   })
 
   it('navigates to the update void bedspace page', () => {
@@ -345,14 +345,14 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
-    const page = LostBedShowPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedShowPage.visit(premises, bedspace, lostBed)
 
     // Add I click the 'Edit this void' link
     cy.task('stubLostBedReferenceData')
     page.clickEditVoidLink()
 
     // Then I navigate to the edit void booking page
-    Page.verifyOnPage(LostBedEditPage, premises, null, bedspace)
+    Page.verifyOnPage(LostBedEditPage, premises, bedspace)
   })
 
   it('navigates back from the update void booking page to the view void booking page', () => {
@@ -385,13 +385,13 @@ context('Lost bed', () => {
 
     // When I visit the edit void booking page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedEditPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedEditPage.visit(premises, bedspace, lostBed)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
     // Then I navigate to the view bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises, null, bedspace, bedspace.reference)
+    Page.verifyOnPage(BedspaceShowPage, bedspace)
   })
 
   it('allows me to update a void booking', () => {
@@ -411,7 +411,7 @@ context('Lost bed', () => {
 
     // When I visit the edit void booking page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedEditPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedEditPage.visit(premises, bedspace, lostBed)
 
     // I should see the bedspace details
     page.shouldShowBedspaceDetails()
@@ -451,7 +451,7 @@ context('Lost bed', () => {
 
     // When I visit the edit void booking page
     cy.task('stubLostBedReferenceData')
-    const page = LostBedEditPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedEditPage.visit(premises, bedspace, lostBed)
 
     // And I miss required fields
     page.clearForm()
@@ -482,20 +482,20 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the show lost bed page
-    const page = LostBedShowPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedShowPage.visit(premises, bedspace, lostBed)
 
     // Add I click the 'Cancel this void' link
     page.clickCancelVoidLink()
 
     // Then I navigate to the edit void booking page
-    Page.verifyOnPage(LostBedCancelPage, premises, null, bedspace, lostBed)
+    Page.verifyOnPage(LostBedCancelPage, premises, bedspace, lostBed)
   })
 
   it('navigates back from the cancel void booking page to the view void booking page', () => {
     // Given I am signed in
     cy.signIn()
 
-    // And there is a premises, a room and an active lost bed the database
+    // And there is a premises, a bedspace and an active lost bed the database
     const premises = premisesFactory.build()
     const cas3Premises = cas3PremisesFactory.build({ id: premises.id, status: 'online' })
     const bedspace = cas3BedspaceFactory.build()
@@ -515,13 +515,13 @@ context('Lost bed', () => {
     cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
 
     // When I visit the cancel void booking page
-    const page = LostBedCancelPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedCancelPage.visit(premises, bedspace, lostBed)
 
     // And I click the previous bread crumb
     page.clickBreadCrumbUp()
 
     // Then I navigate to the view bedspace page
-    Page.verifyOnPage(BedspaceShowPage, premises, null, bedspace, bedspace.reference)
+    Page.verifyOnPage(BedspaceShowPage, bedspace)
   })
 
   it('allows me to cancel a void booking', () => {
@@ -540,7 +540,7 @@ context('Lost bed', () => {
     cy.task('stubSingleLostBed', { premisesId: premises.id, lostBed })
 
     // When I visit the cancel void booking page
-    const page = LostBedCancelPage.visit(premises, null, bedspace, lostBed)
+    const page = LostBedCancelPage.visit(premises, bedspace, lostBed)
 
     // I should see the bedspace details
     page.shouldShowBedspaceDetails()

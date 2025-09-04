@@ -1,4 +1,4 @@
-import type { LostBed, Premises, Room } from '@approved-premises/api'
+import type { LostBed, Premises } from '@approved-premises/api'
 import paths from '../../../../server/paths/temporary-accommodation/manage'
 import Page from '../../page'
 import LostBedInfoComponent from '../../../components/lostBedInfo'
@@ -12,23 +12,18 @@ export default class LostBedShowPage extends Page {
 
   constructor(
     private readonly premises: Premises,
-    private readonly room: Room,
     private readonly bedspace: Cas3Bedspace,
     private readonly lostBed: LostBed,
   ) {
     super('Void booking')
 
     this.lostBedInfoComponent = new LostBedInfoComponent(lostBed)
-    this.locationHeaderComponent = new LocationHeaderComponent({ premises, room, bedspace })
+    this.locationHeaderComponent = new LocationHeaderComponent({ premises, bedspace })
   }
 
-  static visit(premises: Premises, room: Room, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedShowPage {
-    if (room) {
-      cy.visit(paths.lostBeds.show({ premisesId: premises.id, roomId: room.id, lostBedId: lostBed.id }))
-    } else {
-      cy.visit(paths.lostBeds.show({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }))
-    }
-    return new LostBedShowPage(premises, room, bedspace, lostBed)
+  static visit(premises: Premises, bedspace: Cas3Bedspace, lostBed: LostBed): LostBedShowPage {
+    cy.visit(paths.lostBeds.show({ premisesId: premises.id, bedspaceId: bedspace.id, lostBedId: lostBed.id }))
+    return new LostBedShowPage(premises, bedspace, lostBed)
   }
 
   shouldShowLostBedDetails(): void {

@@ -19,7 +19,6 @@ import {
   personFactory,
   placeContextFactory,
   premisesFactory,
-  roomFactory,
   timelineEventsFactory,
 } from '../../../../server/testutils/factories'
 
@@ -183,7 +182,7 @@ context('Bedspace Search', () => {
       .buildList(5)
 
     const results = bedspaceSearchResultsFactory.build({
-      results: [bedspaceSearchResultFactory.forBedspace(premises, null, cas3Bedspace).build()],
+      results: [bedspaceSearchResultFactory.forBedspace(premises, cas3Bedspace).build()],
     })
 
     cy.task('stubBedspaceSearch', results)
@@ -199,9 +198,8 @@ context('Bedspace Search', () => {
 
     // I should be able to navigate to a bedspace
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
-    postSearchPage.clickBedspaceLinkV2(cas3Bedspace)
-
-    Page.verifyOnPage(BedspaceShowPage, premises, null, cas3Bedspace, cas3Bedspace.reference)
+    postSearchPage.clickBedspaceLink(cas3Bedspace)
+    Page.verifyOnPage(BedspaceShowPage, cas3Bedspace)
   })
 
   it("allows me to view an overlapping offender's referral", () => {
@@ -217,20 +215,19 @@ context('Bedspace Search', () => {
     // And there is a bedspace with an overlap in the database
     const person = personFactory.build({ crn: 'known-crn' })
     const premises = premisesFactory.build()
-    const room = roomFactory.build()
-
+    const bedspace = cas3BedspaceFactory.build({ status: 'online' })
     const assessment = assessmentFactory.build({ status: 'closed' })
     const timeline = timelineEventsFactory.build()
 
     const results = bedspaceSearchResultsFactory.build({
       results: [
-        bedspaceSearchResultFactory.forBedspace(premises, room, null).build({
+        bedspaceSearchResultFactory.forBedspace(premises, bedspace).build({
           overlaps: [
             overlapFactory.build({
               name: person.name,
               crn: person.crn,
               personType: person.type,
-              roomId: room.id,
+              roomId: bedspace.id,
               assessmentId: assessment.id,
               days: 5,
               sex: person.sex,
@@ -255,7 +252,7 @@ context('Bedspace Search', () => {
 
     // I should be able to navigate to the overlapping booking
     const postSearchPage = Page.verifyOnPage(BedspaceSearchPage, results)
-    postSearchPage.clickOverlapLink(room, person.crn)
+    postSearchPage.clickOverlapLink(bedspace, person.crn)
 
     Page.verifyOnPage(AssessmentSummaryPage, assessment, timeline)
   })

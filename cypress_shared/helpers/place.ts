@@ -7,7 +7,6 @@ import {
   LostBed,
   Person,
   TemporaryAccommodationPremises as Premises,
-  Room,
 } from '../../server/@types/shared'
 import { PlaceContext } from '../../server/@types/ui'
 import {
@@ -49,41 +48,24 @@ export default class PlaceHelper {
   constructor(
     private readonly placeContext: NonNullable<PlaceContext>,
     private readonly premises: Premises,
-    private readonly room: Room,
     private readonly cas3Premises: Cas3Premises,
     private readonly cas3Bedspace: Cas3Bedspace,
   ) {
-    if (room) {
-      this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
-        results: [bedspaceSearchResultFactory.forBedspace(this.premises, this.room, null).build()],
+    this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
+      results: [bedspaceSearchResultFactory.forBedspace(this.premises, this.cas3Bedspace).build()],
+    })
+    this.person = this.placeContext.assessment.application.person
+    this.booking = bookingFactory.build({
+      person: this.person,
+      bed: bedFactory.build({ id: cas3Bedspace.id }),
+    })
+    this.lostBeds = lostBedFactory
+      .active()
+      .params({
+        bedId: cas3Bedspace.id,
       })
-      this.person = this.placeContext.assessment.application.person
-      this.booking = bookingFactory.build({
-        person: this.person,
-        bed: bedFactory.build({ id: room.beds[0].id }),
-      })
-      this.lostBeds = lostBedFactory
-        .active()
-        .params({
-          bedId: room.beds[0].id,
-        })
-        .buildList(5)
-    } else {
-      this.bedspaceSearchResults = bedspaceSearchResultsFactory.build({
-        results: [bedspaceSearchResultFactory.forBedspace(this.premises, null, this.cas3Bedspace).build()],
-      })
-      this.person = this.placeContext.assessment.application.person
-      this.booking = bookingFactory.build({
-        person: this.person,
-        bed: bedFactory.build({ id: cas3Bedspace.id }),
-      })
-      this.lostBeds = lostBedFactory
-        .active()
-        .params({
-          bedId: cas3Bedspace.id,
-        })
-        .buildList(5)
-    }
+      .buildList(5)
+
     this.assessmentSummaries = [
       assessmentSummaryFactory.build({
         ...this.placeContext.assessment,
@@ -171,45 +153,21 @@ export default class PlaceHelper {
     const resultsBedspaceSearchPage = Page.verifyOnPage(BedspaceSearchPage, this.bedspaceSearchResults)
 
     // When I click a bedspace
-    if (this.room) {
-      resultsBedspaceSearchPage.clickBedspaceLink(this.room)
-    } else {
-      resultsBedspaceSearchPage.clickBedspaceLinkV2(this.cas3Bedspace)
-    }
+    resultsBedspaceSearchPage.clickBedspaceLink(this.cas3Bedspace)
 
-    if (this.room) {
-      Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
-    } else {
-      // I am taken to the bedspace show page
-      Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, this.cas3Bedspace, this.cas3Bedspace.reference)
-    }
+    // I am taken to the bedspace show page
+    Page.verifyOnPage(BedspaceShowPage, this.cas3Bedspace)
   }
 
   private bedspaceToNewBooking() {
     // Given I am viewing the bedspace show page
-    let bedspaceShowPage: BedspaceShowPage
-    if (this.room) {
-      bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.premises, this.room, null, this.room.name)
-    } else {
-      bedspaceShowPage = Page.verifyOnPage(
-        BedspaceShowPage,
-        this.premises,
-        null,
-        this.cas3Bedspace,
-        this.cas3Bedspace.reference,
-      )
-    }
+    const bedspaceShowPage = Page.verifyOnPage(BedspaceShowPage, this.cas3Bedspace)
 
     // And I click "Book bedspace"
     bedspaceShowPage.clickBookBedspaceLink()
 
     // I am taken to the new booking page
-    let bookingNewPage: BookingNewPage
-    if (this.room) {
-      bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
-    } else {
-      bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, null, this.cas3Bedspace)
-    }
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.cas3Bedspace)
 
     // And the place context banner is visible
     bookingNewPage.shouldShowPlaceContextHeader(this.placeContext)
@@ -220,12 +178,7 @@ export default class PlaceHelper {
 
   private newBookingToSelectAssessment() {
     // Given I am viewing the new booking page
-    let bookingNewPage: BookingNewPage
-    if (this.room) {
-      bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.room, null)
-    } else {
-      bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, null, this.cas3Bedspace)
-    }
+    const bookingNewPage = Page.verifyOnPage(BookingNewPage, this.premises, this.cas3Bedspace)
 
     // When I fill out the form
     const newBooking = newBookingFactory.build({
@@ -254,12 +207,7 @@ export default class PlaceHelper {
     selectAssessmentPage.clickSubmit()
 
     // I am taken to the booking confirm page
-    let bookingConfirmPage: BookingConfirmPage
-    if (this.room) {
-      bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, null, this.person)
-    } else {
-      bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, null, this.cas3Bedspace, this.person)
-    }
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.cas3Bedspace, this.person)
 
     // And the place context header is visible
     bookingConfirmPage.shouldShowPlaceContextHeader(this.placeContext)
@@ -267,23 +215,13 @@ export default class PlaceHelper {
 
   private confirmToShowBooking() {
     // Given I am viewing the booking confirm page
-    let bookingConfirmPage: BookingConfirmPage
-    if (this.room) {
-      bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.room, null, this.person)
-    } else {
-      bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, null, this.cas3Bedspace, this.person)
-    }
+    const bookingConfirmPage = Page.verifyOnPage(BookingConfirmPage, this.premises, this.cas3Bedspace, this.person)
 
     // When I click submit
     bookingConfirmPage.clickSubmit()
 
     // I am taken to the show booking page
-    let bookingShowPage: BookingShowPage
-    if (this.room) {
-      bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.room, null, this.booking)
-    } else {
-      bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, null, this.cas3Bedspace, this.booking)
-    }
+    const bookingShowPage = Page.verifyOnPage(BookingShowPage, this.premises, this.cas3Bedspace, this.booking)
 
     // And the place context header is not visible
     bookingShowPage.shouldNotShowPlaceContextHeader()

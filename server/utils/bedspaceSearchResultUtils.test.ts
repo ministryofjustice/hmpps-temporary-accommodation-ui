@@ -2,10 +2,10 @@ import { Cas3BedspaceSearchResultOverlap, FullPerson, RestrictedPerson } from '@
 import {
   assessmentFactory,
   bedspaceSearchResultFactory,
+  cas3BedspaceFactory,
   characteristicFactory,
   premisesFactory,
   restrictedPersonFactory,
-  roomFactory,
 } from '../testutils/factories'
 import {
   bedspaceKeyCharacteristics,
@@ -40,7 +40,7 @@ describe('BedspaceSearchResultUtils', () => {
   describe('bedspaceKeyCharacteristics', () => {
     it('returns a sorted list of the characteristic names for the bedspace', () => {
       const premises = premisesFactory.build()
-      const room = roomFactory.build({
+      const bedspace = cas3BedspaceFactory.build({
         characteristics: [
           characteristicFactory.build({
             name: 'Wheelchair accessible',
@@ -54,7 +54,7 @@ describe('BedspaceSearchResultUtils', () => {
         ],
       })
 
-      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, room, null).build()
+      const searchResult = bedspaceSearchResultFactory.forBedspace(premises, bedspace).build()
 
       expect(bedspaceKeyCharacteristics(searchResult)).toEqual([
         'Shared bathroom',
@@ -75,7 +75,7 @@ describe('BedspaceSearchResultUtils', () => {
         crn: person.crn,
         days: overLapDays,
         personType: person.type,
-        roomId: roomFactory.build().id,
+        roomId: cas3BedspaceFactory.build().id,
         bookingId: '123456789',
         assessmentId: overLapAssessmentId,
         name: person.type === 'FullPerson' ? (person as FullPerson).name : 'Limited access offender',

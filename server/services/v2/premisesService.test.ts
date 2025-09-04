@@ -166,12 +166,25 @@ describe('PremisesService', () => {
           prem.bedspaces.length === 0
             ? `No bedspaces<br /><a href="/properties/${prem.id}/bedspaces/new">Add a bedspace</a>`
             : prem.bedspaces
-                .map(bed => {
-                  const archivedTag =
-                    bed.status === 'archived' ? ` <strong class="govuk-tag govuk-tag--grey">Archived</strong>` : ''
-                  return `<a href="/properties/${prem.id}/bedspaces/${bed.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">${bed.reference}</a>${archivedTag}`
+                .sort((a, b) => {
+                  const statusPriority = { online: 1, upcoming: 2, archived: 3 }
+                  const aPriority = statusPriority[a.status]
+                  const bPriority = statusPriority[b.status]
+                  if (aPriority !== bPriority) {
+                    return aPriority - bPriority
+                  }
+                  return a.reference.localeCompare(b.reference)
                 })
-                .join('<br />')
+                .map(bed => {
+                  let bedspaceStatusTag = ''
+                  if (bed.status === 'archived') {
+                    bedspaceStatusTag = ` <strong class="govuk-tag govuk-tag--grey govuk-!-margin-left-2">Archived</strong>`
+                  } else if (bed.status === 'upcoming') {
+                    bedspaceStatusTag = ` <strong class="govuk-tag govuk-tag--blue govuk-!-margin-left-2">Upcoming</strong>`
+                  }
+                  return `<div class="govuk-!-margin-bottom-3"><a href="/properties/${prem.id}/bedspaces/${bed.id}?placeContextAssessmentId=${placeContext.assessment.id}&placeContextArrivalDate=${placeContext.arrivalDate}">${bed.reference}</a>${bedspaceStatusTag}</div>`
+                })
+                .join('')
 
         return [
           { html: address },

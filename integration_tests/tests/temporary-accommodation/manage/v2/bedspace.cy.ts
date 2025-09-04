@@ -391,7 +391,7 @@ context('Bedspace', () => {
     })
 
     describe('cancel archive', () => {
-      it('allows cancelling of an upcoming archive', () => {
+      it.skip('allows cancelling of an upcoming archive', () => {
         // And there is an active premises in the database
         const premises = cas3PremisesFactory.build({ status: 'online' })
         // And there is an online bedspace in the database scheduled for archive
@@ -443,7 +443,7 @@ context('Bedspace', () => {
         page.shouldShowBanner('Bedspace archive cancelled')
       })
 
-      it('shows the premise archive message if the premises is scheduled to be archived', () => {
+      it.skip('shows the premise archive message if the premises is scheduled to be archived', () => {
         // And there is an active premises in the database
         const premises = cas3PremisesFactory.build({ status: 'online' })
         // And there is an online bedspace in the database scheduled for archive
@@ -486,7 +486,7 @@ context('Bedspace', () => {
         cy.get('main').contains('The scheduled archive of the property and any other bedspaces will also be cancelled.')
       })
 
-      it('shows an error if cancelling the archive fails', () => {
+      it.skip('shows an error if cancelling the archive fails', () => {
         // And there is an active premises in the database
         const premises = cas3PremisesFactory.build({ status: 'online' })
         // And there is an online bedspace in the database scheduled for archive

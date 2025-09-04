@@ -187,10 +187,10 @@ export default class PremisesController {
         addressLine2: premises.addressLine2,
         town: premises.town,
         postcode: premises.postcode,
-        localAuthorityAreaId: premises.localAuthorityArea.id,
+        localAuthorityAreaId: premises.localAuthorityArea?.id,
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
-        characteristicIds: premises.characteristics.map(ch => ch.id),
+        characteristicIds: premises.characteristics?.map(ch => ch.id),
         notes: premises.notes,
         turnaroundWorkingDays: premises.turnaroundWorkingDays,
         ...errorsAndUserInput.userInput,
@@ -294,7 +294,7 @@ export default class PremisesController {
       if (Object.keys(errors).length > 0) {
         req.flash('errors', errors)
         req.flash('userInput', req.body)
-        return res.redirect(paths.premises.premises.archive({ premisesId }))
+        return res.redirect(paths.premises.archive({ premisesId }))
       }
 
       try {

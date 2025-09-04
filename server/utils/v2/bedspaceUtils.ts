@@ -18,11 +18,11 @@ const archivedBedspaceActions = (premises: Cas3Premises, bedspace: Cas3Bedspace)
   const actions: Array<PageHeadingBarItem> = []
 
   if (bedspace.startDate && new Date(bedspace.startDate) > new Date()) {
-    actions.push({
-      text: 'Cancel scheduled bedspace online date',
-      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      classes: 'govuk-button--secondary',
-    })
+    // actions.push({
+    //   text: 'Cancel scheduled bedspace online date',
+    //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    //   classes: 'govuk-button--secondary',
+    // })
   } else {
     actions.push({
       text: 'Make bedspace online',
@@ -57,11 +57,11 @@ const onlineBedspaceActions = (
     },
   ]
   if (bedspace.endDate) {
-    actions.push({
-      text: 'Cancel scheduled bedspace archive',
-      href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
-      classes: 'govuk-button--secondary',
-    })
+    // actions.push({
+    //   text: 'Cancel scheduled bedspace archive',
+    //   href: paths.premises.bedspaces.cancelArchive({ premisesId: premises.id, bedspaceId: bedspace.id }),
+    //   classes: 'govuk-button--secondary',
+    // })
   } else {
     actions.push({
       text: 'Archive bedspace',

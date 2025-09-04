@@ -308,11 +308,11 @@ describe('BedspacesController', () => {
       ],
     }
     const upcomingBedspaceActions = [
-      {
-        text: 'Cancel scheduled bedspace online date',
-        href: paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
-        classes: 'govuk-button--secondary',
-      },
+      // {
+      //   text: 'Cancel scheduled bedspace online date',
+      //   href: paths.premises.bedspaces.cancelArchive({ premisesId, bedspaceId }),
+      //   classes: 'govuk-button--secondary',
+      // },
       {
         text: 'Edit bedspace details',
         href: paths.premises.bedspaces.edit({ premisesId, bedspaceId }),

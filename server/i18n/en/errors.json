@@ -342,7 +342,8 @@
       "existingBookings": "Earliest archive date is :earliestDate because of a booking",
       "existingVoid": "Earliest archive date is :earliestDate because of a void period",
       "existingTurnaround": "Earliest archive date is :earliestDate because of a turnaround",
-      "endDateOverlapPreviousPremisesArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate"
+      "endDateOverlapPreviousPremisesArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate",
+      "endDateBeforePremisesStartDate": "Archive date must be later than start date"
     }
   },
   "premisesUnarchive": {

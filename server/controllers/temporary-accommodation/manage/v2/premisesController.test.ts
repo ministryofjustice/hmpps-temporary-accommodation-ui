@@ -2,7 +2,7 @@ import { DeepMocked, createMock } from '@golevelup/ts-jest'
 import type { NextFunction, Request, Response } from 'express'
 
 import { ErrorsAndUserInput, PremisesShowTabs, SummaryList } from '@approved-premises/ui'
-import type { Cas3PremisesSearchResult } from '@approved-premises/api'
+import type { Cas3Premises, Cas3PremisesSearchResult } from '@approved-premises/api'
 import { CallConfig } from '../../../../data/restClient'
 import PremisesService from '../../../../services/v2/premisesService'
 import {
@@ -1123,6 +1123,48 @@ describe('PremisesController', () => {
         probationRegionId: premises.probationRegion.id,
         probationDeliveryUnitId: premises.probationDeliveryUnit.id,
         characteristicIds: premises.characteristics.map(ch => ch.id),
+        notes: premises.notes,
+        turnaroundWorkingDays: premises.turnaroundWorkingDays,
+      })
+    })
+
+    it('should render the form when optional parameters are missing', async () => {
+      const premisesWithMissingOptionalFields: Cas3Premises = {
+        ...premises,
+        localAuthorityArea: undefined,
+        characteristics: undefined,
+      }
+      premisesService.getSinglePremises.mockResolvedValue(premisesWithMissingOptionalFields)
+      premisesService.shortSummaryList.mockReturnValue(summaryList)
+      premisesService.getReferenceData.mockResolvedValue(referenceData)
+      ;(filterProbationRegions as jest.MockedFunction<typeof filterProbationRegions>).mockReturnValue(filteredRegions)
+
+      const requestHandler = premisesController.edit()
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request.params.premisesId = premises.id
+
+      await requestHandler(request, response, next)
+
+      expect(premisesService.getReferenceData).toHaveBeenCalledWith(callConfig)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/edit', {
+        premisesId: premises.id,
+        errors: {},
+        errorSummary: [],
+        localAuthorities: referenceData.localAuthorities,
+        characteristics: referenceData.characteristics,
+        probationRegions: filteredRegions,
+        pdus: referenceData.pdus,
+        summary: summaryList,
+        reference: premises.reference,
+        addressLine1: premises.addressLine1,
+        addressLine2: premises.addressLine2,
+        town: premises.town,
+        postcode: premises.postcode,
+        localAuthorityAreaId: undefined,
+        probationRegionId: premises.probationRegion.id,
+        probationDeliveryUnitId: premises.probationDeliveryUnit.id,
+        characteristicIds: undefined,
         notes: premises.notes,
         turnaroundWorkingDays: premises.turnaroundWorkingDays,
       })

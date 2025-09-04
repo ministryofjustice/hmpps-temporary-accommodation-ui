@@ -207,30 +207,9 @@ export default class BedspacesController {
     }
   }
 
-  canArchive(): RequestHandler {
+  archive(): RequestHandler {
     return async (req: Request, res: Response) => {
-      const callConfig = extractCallConfig(req)
-      const { premisesId, bedspaceId } = req.params
-
-      try {
-        const canArchiveResponse = await this.bedspaceService.canArchiveBedspace(callConfig, premisesId, bedspaceId)
-
-        // If response has a blocking date, redirect to cannot-archive page
-        if (canArchiveResponse.date) {
-          return res.redirect(paths.premises.bedspaces.cannotArchive({ premisesId, bedspaceId }))
-        }
-
-        // If no blocking date, proceed to archive page
-        return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
-      } catch (err) {
-        // Handle any errors by redirecting back to bedspace details
-        return res.redirect(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
-      }
-    }
-  }
-
-  cannotArchive(): RequestHandler {
-    return async (req: Request, res: Response) => {
+      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
       const callConfig = extractCallConfig(req)
       const { premisesId, bedspaceId } = req.params
 
@@ -240,24 +219,16 @@ export default class BedspacesController {
         this.bedspaceService.canArchiveBedspace(callConfig, premisesId, bedspaceId).catch((): null => null),
       ])
 
-      const blockingDate = canArchiveResponse?.date ? DateFormats.isoDateToUIDate(canArchiveResponse.date) : null
+      if (canArchiveResponse?.date) {
+        const blockingDate = DateFormats.isoDateToUIDate(canArchiveResponse.date)
+        return res.render('temporary-accommodation/v2/bedspaces/cannot-archive', {
+          bedspace,
+          premises,
+          blockingDate,
+          params: req.params,
+        })
+      }
 
-      return res.render('temporary-accommodation/v2/bedspaces/cannot-archive', {
-        bedspace,
-        premises,
-        blockingDate,
-        params: req.params,
-      })
-    }
-  }
-
-  archive(): RequestHandler {
-    return async (req: Request, res: Response) => {
-      const { errors, errorSummary, userInput } = fetchErrorsAndUserInput(req)
-      const callConfig = extractCallConfig(req)
-      const { premisesId, bedspaceId } = req.params
-
-      const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
       const archiveOption = userInput.archiveOption || 'today'
 
       return res.render('temporary-accommodation/v2/bedspaces/archive', {

@@ -2,9 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type Cas3ValidationResult = {
-    date?: string;
-    entityId: string;
-    entityReference: string;
+export type Cas3VoidBedspaceCancellation = {
+    cancellationNotes?: string;
 };
 

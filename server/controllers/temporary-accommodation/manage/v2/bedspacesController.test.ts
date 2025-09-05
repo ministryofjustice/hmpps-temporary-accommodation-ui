@@ -234,7 +234,7 @@ describe('BedspacesController', () => {
       },
       {
         text: 'Archive bedspace',
-        href: paths.premises.bedspaces.canArchive({ premisesId, bedspaceId }),
+        href: paths.premises.bedspaces.archive({ premisesId, bedspaceId }),
         classes: 'govuk-button--secondary',
       },
       {
@@ -616,15 +616,15 @@ describe('BedspacesController', () => {
   })
 
   describe('archive', () => {
-    it('renders the archive form', async () => {
+    it('renders the archive form when bedspace can be archived', async () => {
       const bedspace = cas3BedspaceFactory.build()
-      const bedspaceWithSummary: Cas3Bedspace & { summary: SummaryList } = {
-        ...bedspace,
-        summary: { rows: [] },
-      }
+      const premises = cas3PremisesFactory.build()
+      const canArchiveResponse = {}
       const params = { premisesId, bedspaceId }
 
-      bedspaceService.getSingleBedspace.mockResolvedValue(bedspaceWithSummary)
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
       ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
 
       request = createMock<Request>({
@@ -638,12 +638,46 @@ describe('BedspacesController', () => {
       await requestHandler(request, response, next)
 
       expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.canArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/archive', {
-        bedspace: bedspaceWithSummary,
+        bedspace,
         params,
         errors: {},
         errorSummary: [],
         archiveOption: 'today',
+      })
+    })
+
+    it('renders the cannot-archive page when bedspace has blocking date', async () => {
+      const bedspace = cas3BedspaceFactory.build()
+      const premises = cas3PremisesFactory.build()
+      const canArchiveResponse = { date: '2025-08-28', entityId: 'some-id', entityReference: 'some-ref' }
+      const params = { premisesId, bedspaceId }
+
+      bedspaceService.getSingleBedspace.mockResolvedValue(bedspace)
+      premisesService.getSinglePremises.mockResolvedValue(premises)
+      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
+      ;(fetchErrorsAndUserInput as jest.Mock).mockReturnValue({ errors: {}, errorSummary: [], userInput: {} })
+
+      request = createMock<Request>({
+        session: {
+          probationRegion: probationRegionFactory.build(),
+        },
+        params,
+      })
+
+      const requestHandler = bedspacesController.archive()
+      await requestHandler(request, response, next)
+
+      expect(bedspaceService.getSingleBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(premisesService.getSinglePremises).toHaveBeenCalledWith(callConfig, premisesId)
+      expect(bedspaceService.canArchiveBedspace).toHaveBeenCalledWith(callConfig, premisesId, bedspaceId)
+      expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/bedspaces/cannot-archive', {
+        bedspace,
+        premises,
+        blockingDate: '28 August 2025',
+        params,
       })
     })
   })
@@ -836,64 +870,6 @@ describe('BedspacesController', () => {
         'bedspaceArchive',
         undefined,
       )
-    })
-  })
-
-  describe('canArchive', () => {
-    it('redirects to cannot-archive page when blocking date exists', async () => {
-      const params = { premisesId, bedspaceId }
-      const canArchiveResponse = { date: '2025-08-28', entityId: 'some-id', entityReference: 'some-ref' }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-      })
-
-      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
-
-      const requestHandler = bedspacesController.canArchive()
-      await requestHandler(request, response, next)
-
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.cannotArchive({ premisesId, bedspaceId }))
-    })
-
-    it('redirects to archive page when no blocking date exists', async () => {
-      const params = { premisesId, bedspaceId }
-      const canArchiveResponse = {}
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-      })
-
-      bedspaceService.canArchiveBedspace.mockResolvedValue(canArchiveResponse)
-
-      const requestHandler = bedspacesController.canArchive()
-      await requestHandler(request, response, next)
-
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
-    })
-
-    it('redirects to bedspace show page on error', async () => {
-      const params = { premisesId, bedspaceId }
-
-      request = createMock<Request>({
-        session: {
-          probationRegion: probationRegionFactory.build(),
-        },
-        params,
-      })
-
-      bedspaceService.canArchiveBedspace.mockRejectedValue(new Error('API Error'))
-
-      const requestHandler = bedspacesController.canArchive()
-      await requestHandler(request, response, next)
-
-      expect(response.redirect).toHaveBeenCalledWith(paths.premises.bedspaces.show({ premisesId, bedspaceId }))
     })
   })
 

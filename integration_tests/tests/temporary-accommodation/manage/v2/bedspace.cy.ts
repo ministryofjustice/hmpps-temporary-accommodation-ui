@@ -887,6 +887,55 @@ context('Bedspace', () => {
       finalBedspaceShowPage.shouldNotShowArchiveLink()
     })
 
+    it('should show a "Cannot archive" page when the bedspace has a booking or void that prevents archiving', () => {
+      // Given there is an active premises in the database
+      const premises = cas3PremisesFactory.build({ status: 'online' })
+      // And there is an online bedspace in the database
+      const bedspace = cas3BedspaceFactory.build({ status: 'online' })
+      const bookings = bookingFactory
+        .params({
+          bed: bedFactory.build({ id: bedspace.id }),
+        })
+        .buildList(1)
+      const lostBeds = lostBedFactory.buildList(1)
+
+      cy.task('stubSinglePremisesV2', premises)
+      cy.task('stubBedspaceV2', { premisesId: premises.id, bedspace })
+      cy.task('stubBookingsForPremisesId', { premisesId: premises.id, bookings })
+      cy.task('stubLostBedsForPremisesId', { premisesId: premises.id, lostBeds })
+
+      // And the bedspace cannot be archived due to a blocking booking/void
+      cy.task('stubBedspaceCanArchiveV2WithBlocking', {
+        premisesId: premises.id,
+        bedspaceId: bedspace.id,
+        blockingDate: '2025-12-25',
+        entityId: bookings[0].id,
+        entityReference: bookings[0].id,
+      })
+
+      // When I visit the show bedspace page
+      const bedspaceShowPage = BedspaceShowPage.visit(premises, bedspace)
+
+      // And I click the archive button
+      bedspaceShowPage.clickArchiveLink()
+
+      // Then I should see the cannot archive page
+      cy.get('h1').should('contain', `You cannot archive ${bedspace.reference}`)
+      cy.get('p').should('contain', 'This bedspace has a booking or void that prevents it from being archived.')
+
+      // And I should see the "View bedspace details" button
+      cy.get('a').contains('View bedspace details').should('be.visible')
+
+      // And I should see the back link
+      cy.get('a').contains('Back').should('be.visible')
+
+      // When I click the back link
+      cy.get('a').contains('Back').click()
+
+      // Then I should be redirected back to the bedspace show page
+      Page.verifyOnPage(BedspaceShowPage, premises, bedspace)
+    })
+
     it('navigates to archive page, and fails to archive with error based on the API response', () => {
       // Given there is an active premises in the database
       const premises = cas3PremisesFactory.build({ status: 'online' })

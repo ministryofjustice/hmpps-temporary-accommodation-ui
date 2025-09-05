@@ -254,9 +254,12 @@ export default class PremisesController {
       ])
 
       if (blockingBedspaceReferences && blockingBedspaceReferences.items.length > 0) {
+        const sortedBedspaceReferences = blockingBedspaceReferences.items.sort((a, b) =>
+          a.entityReference.localeCompare(b.entityReference),
+        )
         return res.render('temporary-accommodation/v2/premises/cannot-archive', {
           premises,
-          bedspaces: blockingBedspaceReferences.items,
+          bedspaces: sortedBedspaceReferences,
         })
       }
 

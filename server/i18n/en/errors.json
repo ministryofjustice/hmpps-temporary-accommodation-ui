@@ -220,10 +220,14 @@
       "existingBookings": "Earliest archive date is :earliestDate because of a booking",
       "existingVoid": "Earliest archive date is :earliestDate because of a void period",
       "existingTurnaround": "Earliest archive date is :earliestDate because of a turnaround",
-      "endDateOverlapPreviousBedspaceArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate"
+      "endDateOverlapPreviousBedspaceArchiveEndDate": "Archive conflicts with an earlier archive ending on :endDate",
+      "endDateBeforeBedspaceStartDate": "Archive date must be later than start date"
     }
   },
   "bedspaceUnarchive": {
+    "bedspaceId": {
+      "bedspaceNotArchived": "The bedspace is not archived"
+    },
     "restartDate": {
       "empty": "You must enter a date",
       "invalid": "You must enter a real date",
@@ -347,6 +351,9 @@
     }
   },
   "premisesUnarchive": {
+    "premisesId": {
+      "premisesNotArchived": "The property is not archived"
+    },
     "restartDate": {
       "empty": "You must enter a date",
       "invalid": "You must enter a real date",

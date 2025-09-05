@@ -16,6 +16,8 @@ export type Cas3SubmitApplication = {
     isHistoryOfSexualOffence?: boolean;
     isRegisteredSexOffender?: boolean;
     needsAccessibleProperty?: boolean;
+    outOfRegionPduId?: string;
+    outOfRegionProbationRegionId?: string;
     personReleaseDate?: string;
     prisonReleaseTypes?: Array<string>;
     probationDeliveryUnitId: string;

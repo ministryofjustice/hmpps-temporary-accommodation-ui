@@ -1427,6 +1427,9 @@ context('Premises', () => {
       cy.task('stubPremisesArchiveV2', expectedPremises)
       cy.task('stubSinglePremisesV2', expectedPremises)
 
+      // And I click the option for "today"
+      archivePage.selectToday()
+
       // And I submit the form
       archivePage.clickSubmit()
 
@@ -1530,6 +1533,9 @@ context('Premises', () => {
         premisesId: premises.id,
         endDate: DateFormats.dateObjToIsoDate(oneWeek),
       })
+
+      // And I select the "today" option
+      archivePage.selectToday()
 
       // And I submit the form
       archivePage.clickSubmit()
@@ -1691,6 +1697,9 @@ context('Premises', () => {
       cy.task('stubPremisesUnarchiveV2', expectedPremises)
       cy.task('stubSinglePremisesV2', expectedPremises)
 
+      // And I select the "today" option
+      unarchivePage.selectToday()
+
       // And I submit the form
       unarchivePage.clickSubmit()
 
@@ -1780,6 +1789,9 @@ context('Premises', () => {
 
       // When the backend responds with 400 bad request
       cy.task('stubPremisesUnarchiveErrorsV2', premises.id)
+
+      // And I select the "today" option
+      unarchivePage.selectToday()
 
       // And I submit the form
       unarchivePage.clickSubmit()

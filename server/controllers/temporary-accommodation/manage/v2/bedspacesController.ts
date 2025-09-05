@@ -13,6 +13,8 @@ import {
   InvalidParams,
   catchValidationErrorOrPropogate,
   fetchErrorsAndUserInput,
+  generateErrorMessages,
+  generateErrorSummary,
   generateMergeParameters,
 } from '../../../../utils/validation'
 // eslint-disable-next-line import/named
@@ -229,15 +231,12 @@ export default class BedspacesController {
         })
       }
 
-      const archiveOption = userInput.archiveOption || 'today'
-
       return res.render('temporary-accommodation/v2/bedspaces/archive', {
         bedspace,
         params: req.params,
         errors,
         errorSummary,
         ...userInput,
-        archiveOption,
       })
     }
   }
@@ -258,11 +257,12 @@ export default class BedspacesController {
         const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'endDate')
         endDate = parsedDate.endDate
       } else {
-        errors.archiveOption = 'Select a date to archive the bedspace'
+        errors.today = 'Select a date to archive the bedspace'
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', errors)
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
         req.flash('userInput', req.body)
         return res.redirect(paths.premises.bedspaces.archive({ premisesId, bedspaceId }))
       }
@@ -321,7 +321,6 @@ export default class BedspacesController {
       const { premisesId, bedspaceId } = req.params
 
       const bedspace = await this.bedspaceService.getSingleBedspace(callConfig, premisesId, bedspaceId)
-      const unarchiveOption = userInput.unarchiveOption || 'today'
 
       return res.render('temporary-accommodation/v2/bedspaces/unarchive', {
         bedspace,
@@ -329,7 +328,6 @@ export default class BedspacesController {
         errors,
         errorSummary,
         ...userInput,
-        unarchiveOption,
       })
     }
   }
@@ -350,11 +348,12 @@ export default class BedspacesController {
         const parsedDate = DateFormats.dateAndTimeInputsToIsoString(req.body, 'restartDate')
         restartDate = parsedDate.restartDate
       } else {
-        errors.unarchiveOption = 'Select a date for the bedspace to go online'
+        errors.today = 'Select a date for the bedspace to go online'
       }
 
       if (Object.keys(errors).length > 0) {
-        req.flash('errors', errors)
+        req.flash('errors', generateErrorMessages(errors))
+        req.flash('errorSummary', generateErrorSummary(errors))
         req.flash('userInput', req.body)
         return res.redirect(paths.premises.bedspaces.unarchive({ premisesId, bedspaceId }))
       }

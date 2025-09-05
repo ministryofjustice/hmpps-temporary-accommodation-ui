@@ -29,6 +29,7 @@ import {
 import BedspaceService from '../../../../services/v2/bedspaceService'
 import { DateFormats } from '../../../../utils/dateUtils'
 import { AssessmentsService } from '../../../../services'
+import cas3BedspaceReferenceFactory from '../../../../testutils/factories/cas3BedspaceReference'
 
 jest.mock('../../../../utils/validation')
 jest.mock('../../../../utils/restUtils')
@@ -1287,7 +1288,6 @@ describe('PremisesController', () => {
         premises,
         errors: {},
         errorSummary: [],
-        archiveOption: 'today',
       })
     })
 
@@ -1305,13 +1305,17 @@ describe('PremisesController', () => {
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
-        archiveOption: 'today',
       })
     })
 
     it('should tell the user they cannot archive a premises when some of its bedspaces have bookings further in the future than it can be archived', async () => {
       premisesService.getSinglePremises.mockResolvedValue(premises)
-      const bedspaces = cas3BedspacesReferenceFactory.build()
+      const bedspace1 = cas3BedspaceReferenceFactory.build({ entityReference: 'Apple' })
+      const bedspace2 = cas3BedspaceReferenceFactory.build({ entityReference: 'Banana' })
+      const bedspace3 = cas3BedspaceReferenceFactory.build({ entityReference: 'Cherry' })
+      const bedspaces = cas3BedspacesReferenceFactory.build({
+        items: [bedspace2, bedspace3, bedspace1],
+      })
       premisesService.canArchivePremises.mockResolvedValue(bedspaces)
 
       const requestHandler = premisesController.archive()
@@ -1325,7 +1329,7 @@ describe('PremisesController', () => {
       expect(premisesService.canArchivePremises).toHaveBeenCalledWith(callConfig, premises.id)
       expect(response.render).toHaveBeenCalledWith('temporary-accommodation/v2/premises/cannot-archive', {
         premises,
-        bedspaces: bedspaces.items,
+        bedspaces: [bedspace1, bedspace2, bedspace3],
       })
     })
   })
@@ -1417,7 +1421,6 @@ describe('PremisesController', () => {
         premises,
         errors: {},
         errorSummary: [],
-        unarchiveOption: 'today',
       })
     })
 
@@ -1435,7 +1438,6 @@ describe('PremisesController', () => {
         errors: errorsAndUserInput.errors,
         errorSummary: errorsAndUserInput.errorSummary,
         ...errorsAndUserInput.userInput,
-        unarchiveOption: 'today',
       })
     })
   })

@@ -72,7 +72,7 @@
                             }
                         }
                     ],
-                    errorMessage: errors.restartDate if unarchiveOption == "today"
+                    errorMessage: errors.restartDate if unarchiveOption == "today" else errors.today
                 }) }}
 
                 {{ govukButton({

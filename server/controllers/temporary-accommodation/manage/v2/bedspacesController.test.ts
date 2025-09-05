@@ -645,7 +645,6 @@ describe('BedspacesController', () => {
         params,
         errors: {},
         errorSummary: [],
-        archiveOption: 'today',
       })
     })
 
@@ -894,7 +893,6 @@ describe('BedspacesController', () => {
         params: request.params,
         errors: {},
         errorSummary: [],
-        unarchiveOption: 'today',
       })
     })
   })

@@ -165,7 +165,8 @@ export const archiveBedspace = async (page: Page, property: Property, bedspace: 
   await showBedspacePage.clickArchiveButton()
 
   const archiveBedspacePage = await ArchiveBedspacePage.initialise(page, bedspace.reference)
-  await archiveBedspacePage.clickSubmit()
+  await archiveBedspacePage.archiveToday()
+  // await archiveBedspacePage.clickSubmit()
 
   const showArchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
   const isArchiveBedspaceOnlyMessageDisplayed =
@@ -181,7 +182,8 @@ export const unarchiveBedspace = async (page: Page, property: Property, bedspace
   const showBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
   await showBedspacePage.clickUnarchiveButton()
   const unarchiveBedspacePage = await UnarchiveBedspacePage.initialise(page, bedspace.reference)
-  await unarchiveBedspacePage.clickSubmit()
+  // await unarchiveBedspacePage.clickSubmit()
+  await unarchiveBedspacePage.unarchiveToday()
   const showUnarchivedBedspacePage = await ViewBedspacePage.initialise(page, bedspace.reference)
   const isArchiveBedspaceOnlyMessageDisplayed =
     await showUnarchivedBedspacePage.isBannerMessageDisplayed('Bedspace online')

@@ -70,7 +70,7 @@
                             }
                         }
                     ],
-                    errorMessage: errors.endDate if archiveOption == "today"
+                    errorMessage: errors.endDate if archiveOption == "today" else errors.today
                 }) }}
 
                 <p>This propertyʼs bedspaces will also be archived.</p>

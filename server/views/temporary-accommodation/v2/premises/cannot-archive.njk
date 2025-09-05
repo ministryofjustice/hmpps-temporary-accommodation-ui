@@ -3,6 +3,8 @@
 
 {% extends "../../../partials/layout.njk" %}
 
+{% set mainClasses = "govuk-body" %}
+
 {% block beforeContent %}
     {{ govukBackLink({
         text: "Back",
@@ -16,7 +18,7 @@
 
     <h1 class="govuk-heading-l">You cannot archive {{ premises.addressLine1 }}</h1>
 
-    <div class="govuk-row">
+    <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p>This property has a booking or void that prevents it from being archived</p>
 

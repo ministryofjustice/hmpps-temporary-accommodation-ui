@@ -212,6 +212,8 @@ describe('BedspacesController', () => {
         response,
         err,
         paths.premises.bedspaces.new({ premisesId }),
+        undefined,
+        undefined,
       )
     })
   })

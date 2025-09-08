@@ -65,6 +65,10 @@
     errorMessage: errors.notes
 }) }}
 
+{% if hasScheduledArchive %}
+    <p>The scheduled archive of the property will be cancelled when this bedspace is added.</p>
+{% endif %}
+
 {{ govukButton({
     text: "Submit",
     preventDoubleClick: true

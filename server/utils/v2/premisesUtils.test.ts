@@ -1,6 +1,6 @@
 import paths from '../../paths/temporary-accommodation/manage'
-import { cas3PremisesFactory } from '../../testutils/factories'
-import { premisesActions } from './premisesUtils'
+import { cas3PremisesBedspaceTotalsFactory, cas3PremisesFactory } from '../../testutils/factories'
+import { isPremiseScheduledToBeArchived, premisesActions } from './premisesUtils'
 
 describe('premisesV2Utils', () => {
   describe('premisesActions', () => {
@@ -43,6 +43,54 @@ describe('premisesV2Utils', () => {
           href: paths.premises.unarchive({ premisesId: premises.id }),
         },
       ])
+    })
+  })
+
+  describe('isPremiseScheduledToBeArchived', () => {
+    it('returns false when premisesEndDate is null', () => {
+      const totals = cas3PremisesBedspaceTotalsFactory.build({ premisesEndDate: null })
+
+      expect(isPremiseScheduledToBeArchived(totals)).toBe(false)
+    })
+
+    it('returns false when premisesEndDate is undefined', () => {
+      const totals = cas3PremisesBedspaceTotalsFactory.build()
+      totals.premisesEndDate = undefined
+
+      expect(isPremiseScheduledToBeArchived(totals)).toBe(false)
+    })
+
+    it('returns false when premisesEndDate is in the past', () => {
+      const pastDate = new Date()
+      pastDate.setDate(pastDate.getDate() - 1)
+      const totals = cas3PremisesBedspaceTotalsFactory.build({
+        premisesEndDate: pastDate.toISOString(),
+        status: 'online',
+      })
+
+      expect(isPremiseScheduledToBeArchived(totals)).toBe(false)
+    })
+
+    it('returns false when premises is already archived', () => {
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 1)
+      const totals = cas3PremisesBedspaceTotalsFactory.build({
+        premisesEndDate: futureDate.toISOString(),
+        status: 'archived',
+      })
+
+      expect(isPremiseScheduledToBeArchived(totals)).toBe(false)
+    })
+
+    it('returns true when premisesEndDate is in the future and status is online', () => {
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 1)
+      const totals = cas3PremisesBedspaceTotalsFactory.build({
+        premisesEndDate: futureDate.toISOString(),
+        status: 'online',
+      })
+
+      expect(isPremiseScheduledToBeArchived(totals)).toBe(true)
     })
   })
 })
